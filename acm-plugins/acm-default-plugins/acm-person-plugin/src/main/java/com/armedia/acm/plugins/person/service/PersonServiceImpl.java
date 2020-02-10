@@ -222,12 +222,18 @@ public class PersonServiceImpl implements PersonService
     }
 
     @Override
-    public EcmFile changeDescriptionForImage(Long imageId, Boolean isDefault, String imageDescription, Authentication auth) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmUpdateObjectFailedException
-    {
+    public EcmFile changeDescriptionForImage(Long personId, Long imageId, Boolean isDefault, String imageDescription, Authentication auth) throws AcmObjectNotFoundException, AcmUpdateObjectFailedException, PipelineProcessException, AcmCreateObjectFailedException {
         EcmFile imageFile = ecmFileService.findById(imageId);
         if (imageFile == null)
         {
             throw new AcmObjectNotFoundException("Image",  imageId, "Image not found with ID:[{}];");
+        }
+        if (isDefault)
+        {
+            Person person = get(personId);
+            Objects.requireNonNull(person, "Person not found.");
+            person.setDefaultPicture(imageFile);
+            savePerson(person, auth);
         }
         imageFile.setDescription(imageDescription);
         return ecmFileService.updateFile(imageFile);
