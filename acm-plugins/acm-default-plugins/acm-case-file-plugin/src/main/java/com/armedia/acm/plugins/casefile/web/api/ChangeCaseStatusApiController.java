@@ -34,10 +34,10 @@ import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.ChangeCaseStateContants;
 import com.armedia.acm.plugins.casefile.model.ChangeCaseStatus;
 import com.armedia.acm.plugins.casefile.service.ChangeCaseFileStateService;
-
 import com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility;
-import org.apache.logging.log4j.Logger;
+
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -78,12 +78,18 @@ public class ChangeCaseStatusApiController
             message = new HashMap<>();
             changeCaseFileStateService.save(form, auth, "");
 
-            if(form.isChangeCaseStatusFlow()){
+            if (form.isChangeCaseStatusFlow())
+            {
                 message.put("info", "The case file is in approval mode");
-            } else {
+            }
+            else
+            {
                 message.put("info", "The case file status has changed");
                 CaseFile caseFile = getDao().find(form.getCaseId());
-                getCaseFileEventUtility().raiseEvent(caseFile, caseFile.getStatus(), caseFile.getModified(), ((AcmAuthenticationDetails) auth.getDetails()).getRemoteAddress(), auth.getName(), auth);
+                // Allow Solr to index Change Case File data before raising event
+                Thread.sleep(3000);
+                getCaseFileEventUtility().raiseEvent(caseFile, caseFile.getStatus(), caseFile.getModified(),
+                        ((AcmAuthenticationDetails) auth.getDetails()).getRemoteAddress(), auth.getName(), auth);
             }
         }
         catch (Exception e)
@@ -93,7 +99,8 @@ public class ChangeCaseStatusApiController
             {
                 message.put("info", e.getMessage());
             }
-            AcmAppErrorJsonMsg acmAppErrorJsonMsg = new AcmAppErrorJsonMsg("Changing case status with id %d failed", ChangeCaseStateContants.CHANGE_CASE_STATUS,
+            AcmAppErrorJsonMsg acmAppErrorJsonMsg = new AcmAppErrorJsonMsg("Changing case status with id %d failed",
+                    ChangeCaseStateContants.CHANGE_CASE_STATUS,
                     form.getCaseId().toString(), e);
             throw acmAppErrorJsonMsg;
         }
