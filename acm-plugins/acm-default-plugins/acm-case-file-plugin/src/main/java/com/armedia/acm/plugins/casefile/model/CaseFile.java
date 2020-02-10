@@ -32,9 +32,9 @@ import com.armedia.acm.core.AcmNotificationReceiver;
 import com.armedia.acm.core.AcmObjectNumber;
 import com.armedia.acm.core.AcmStatefulEntity;
 import com.armedia.acm.core.AcmTitleEntity;
+import com.armedia.acm.data.AcmAssignee;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.AcmLegacySystemEntity;
-import com.armedia.acm.data.AcmAssignee;
 import com.armedia.acm.data.converter.BooleanToStringConverter;
 import com.armedia.acm.data.converter.LocalDateConverter;
 import com.armedia.acm.data.converter.LocalDateTimeConverter;
@@ -195,6 +195,9 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
 
     @Transient
     private ChangeCaseStatus changeCaseStatus;
+
+    @Transient
+    private boolean hasAnyAssociatedTimesheets;
 
     /**
      * These approvers are added by the web application and they become the assignees of the Activiti business process.
@@ -943,5 +946,15 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
     public PersonAssociation getAcmObjectOriginator()
     {
         return getOriginator();
+    }
+
+    public boolean getHasAnyAssociatedTimesheets()
+    {
+        return hasAnyAssociatedTimesheets;
+    }
+
+    public void setHasAnyAssociatedTimesheets(boolean hasAnyAssociatedTimesheets)
+    {
+        this.hasAnyAssociatedTimesheets = hasAnyAssociatedTimesheets;
     }
 }

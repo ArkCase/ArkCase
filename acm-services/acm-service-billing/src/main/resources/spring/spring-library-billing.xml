@@ -35,6 +35,8 @@
         <property name="acmCostsheetDao" ref="acmCostsheetDao"/>
         <property name="billingService" ref="billingService"/>
         <property name="timesheetService" ref="timesheetService"/>
+        <property name="timesheetConfig" ref="timesheetConfig"/>
+        <property name="costsheetConfig" ref="costsheetConfig"/>
     </bean>
 
     <bean id="timesheetBillingListener"
@@ -42,11 +44,13 @@
         <property name="acmTimesheetDao" ref="acmTimesheetDao"/>
         <property name="billingService" ref="billingService"/>
         <property name="timesheetService" ref="timesheetService"/>
+        <property name="timesheetConfig" ref="timesheetConfig"/>
     </bean>
 
     <bean id="costsheetBillingListener"
         class="com.armedia.acm.services.billing.listener.CostsheetBillingListener">
         <property name="acmCostsheetDao" ref="acmCostsheetDao"/>
         <property name="billingService" ref="billingService"/>
+        <property name="costsheetConfig" ref="costsheetConfig"/>
     </bean>
 </beans>
