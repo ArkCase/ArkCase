@@ -107,7 +107,7 @@ public interface PersonService
     void deleteImageForPerson(Long personId, Long imageId) throws AcmObjectNotFoundException, AcmUserActionFailedException;
 
     @Transactional
-    EcmFile changeDescriptionForImage(Long imageId, Boolean isDefault, String imageDescription, Authentication auth) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmUpdateObjectFailedException;
+    EcmFile changeDescriptionForImage(Long personId, Long imageId, Boolean isDefault, String imageDescription, Authentication auth) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmUpdateObjectFailedException, PipelineProcessException, AcmCreateObjectFailedException;
 
     /**
      * insert image for a person. If is the only image than is set as default image for the person
