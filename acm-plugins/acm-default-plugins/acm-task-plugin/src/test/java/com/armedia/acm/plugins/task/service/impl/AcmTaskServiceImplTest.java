@@ -114,8 +114,8 @@ public class AcmTaskServiceImplTest extends EasyMockSupport
         pVars.put("OBJECT_TYPE", "FILE");
         pVars.put("OBJECT_ID", 500l);
         pVars.put("OBJECT_NAME", "Test File");
-        pVars.put("PARENT_OBJECT_TYPE", reviewTask.getParentObjectType());
-        pVars.put("PARENT_OBJECT_ID", reviewTask.getParentObjectId());
+        pVars.put("PARENT_OBJECT_TYPE", attachedToObjectType);
+        pVars.put("PARENT_OBJECT_ID", attachedToObjectId);
         pVars.put("REQUEST_TYPE", "DOCUMENT_REVIEW");
         pVars.put("DETAILS", "Details");
 
