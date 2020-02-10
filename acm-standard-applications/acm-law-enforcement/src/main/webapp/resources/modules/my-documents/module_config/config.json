@@ -449,7 +449,7 @@
         },
         {
             "id": "tasks",
-            "title": "document-repository.comp.tasks.comp.tasks.title",
+            "title": "document-repository.comp.tasks.title",
             "icon": "fa fa-check-circle",
             "enabled": true,
             "configurable": true,
