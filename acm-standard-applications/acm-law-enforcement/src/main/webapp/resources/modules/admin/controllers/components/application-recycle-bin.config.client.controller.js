@@ -122,6 +122,8 @@ angular.module('admin').controller('Admin.RecycleBin',
                             return response.config.data.indexOf(object) < 0;
                         });
                         reloadGrid($scope.gridData);
+                    }, function () {
+                            MessageService.error($translate.instant("admin.application.recycleBin.error"));
                     });
                     $scope.selectedRows = [];
                 }]);
@@ -132,6 +134,8 @@ angular.module('admin').controller('Admin.RecycleBin',
                             return response.config.data.indexOf(object) < 0;
                         });
                         reloadGrid($scope.gridData);
+                    }, function() {
+                            MessageService.error($translate.instant("admin.application.recycleBin.error"))
                     });
                     $scope.selectedRows = [];
                 }]);
