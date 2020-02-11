@@ -2575,6 +2575,8 @@ angular.module('directives').directive(
                                             }
                                         }
                                     }).then(function(replacedFile) {
+                                    var parentNode = fileNode.getParent();
+                                    var childrenNodes = parentNode.children;
                                         if (replacedFile && fileNode) {
                                             fileNode.data.ext = replacedFile.ext;
                                             fileNode.data.mimeType = replacedFile.mimeType;
