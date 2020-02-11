@@ -51,7 +51,7 @@ angular.module('cases').controller(
                 $scope.objectInfo = objectInfo;
                 retrieveGridData();
                 PermissionsService.getActionPermission('addTasksToDocRepo', objectInfo, {
-                    objectType: ObjectService.ObjectTypes.CASE_FILE
+                    objectType: ObjectService.ObjectTypes.DOC_REPO
                 }).then(function(result) {
                     $scope.isReadOnly = !result;
                 });
@@ -59,11 +59,13 @@ angular.module('cases').controller(
 
             var retrieveGridData = function() {
                 var currentObjectId = Util.goodMapValue($scope.objectInfo, "id");
+                $scope.startRow = Util.goodValue($scope.start, 0);
+                $scope.maxRows = Util.goodValue($scope.config.paginationPageSize, 10)
                 if (Util.goodPositive(currentObjectId, false)) {
 
-                    ObjectTaskService.resetChildTasks(ObjectService.ObjectTypes.CASE_FILE, currentObjectId);
+                    ObjectTaskService.resetChildTasks(ObjectService.ObjectTypes.DOC_REPO, currentObjectId);
 
-                    DocumentRepositoryInfoService.getDocumentRepositoryTasks($scope.objectInfo.id).then(function(data) {
+                    DocumentRepositoryInfoService.getDocumentRepositoryTasks($scope.objectInfo.id, $scope.startRow, $scope.maxRows).then(function(data) {
                         var tasks = data.response.docs;
                         angular.forEach(tasks, function(task) {
                             //calculate to show alert icons if task is in overdue or deadline is approaching if the status of the task is in different state than CLOSED.
@@ -82,9 +84,9 @@ angular.module('cases').controller(
             $scope.addNew = function() {
                 var modalParams = {};
                 modalParams.parentType = ObjectService.ObjectTypes.DOC_REPO;
-                modalParams.parentObject = $scope.objectInfo.container.id;
+                modalParams.parentObject = $scope.objectInfo.name;;
                 modalParams.parentId = $scope.objectInfo.id;
-                modalParams.parentTitle = $scope.objectInfo.title;
+                modalParams.parentTitle = $scope.objectInfo.name;;
                 modalParams.taskType = 'ACM_TASK';
 
                 var modalMetadata = {
