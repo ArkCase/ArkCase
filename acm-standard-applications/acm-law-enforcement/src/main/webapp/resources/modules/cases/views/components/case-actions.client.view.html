@@ -28,11 +28,6 @@
                 <i class="fa fa-edit"></i>
                 <span translate>cases.comp.actions.status.button</span>
             </a>
-            <a class="btn btn-sm btn-default" ui-sref="frevvo.reinvestigate(reinvestigateParams)" permission="reinvestigateCase"
-                    permission-object-type="CASE_FILE" permission-properties="objectInfo" permission-action="hide">
-                <i class="fa fa-reply"></i>
-                <span translate>cases.comp.actions.reinvestigate.button</span>
-            </a>
             <button class="btn btn-sm btn-default" ng-click="onClickChildOutcome(outcome.name)"
                     ng-repeat="outcome in availableChildOutcomes" ng-show="showBtnChildOutcomes">
                 {{outcome.description}}
