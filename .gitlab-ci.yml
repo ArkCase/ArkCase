@@ -81,6 +81,7 @@ stages:
   script:
     # get arkcase.war version from Nexus
     - mvn -B dependency:get -DremoteRepositories=http://***REMOVED***/repository/$ARKCASE_REPOSITORY -DgroupId=com.armedia.acm.acm-standard-applications -DartifactId=acm-law-enforcement -Dversion=$ARKCASE_VERSION -Dpackaging=war -Dtransitive=false
+    - find ~/.m2/repository/com/armedia/acm -name _maven.repositories -exec rm -v {} \;
     - mvn -B dependency:copy -Dartifact=com.armedia.acm.acm-standard-applications:acm-law-enforcement:$ARKCASE_VERSION:war -DoutputDirectory=.
     - mv acm-law-enforcement-*.war arkcase.war
     # copy artifacts to the environment
@@ -101,6 +102,7 @@ stages:
   script:
     # download ui from Nexus
     - mvn -B dependency:get -DremoteRepositories=http://***REMOVED***/repository/$ARKCASE_REPOSITORY -DgroupId=com.armedia.acm -DartifactId=$ARKCASE_UI_VARIANT -Dversion=$ARKCASE_VERSION -Dpackaging=zip -Dtransitive=false
+    - find ~/.m2/repository/com/armedia/acm -name _maven.repositories -exec rm -v {} \;
     - mvn -B dependency:copy -Dartifact=com.armedia.acm:$ARKCASE_UI_VARIANT:$ARKCASE_VERSION:zip -DoutputDirectory=.
     - mv ui-*.zip ui.zip
     # copy artifacts to the environment
@@ -253,6 +255,7 @@ deploy_backend_bcgeu_dev:
     - echo "veracode_api_key_secret = $VERACODE_API_SECRET" >> credentials
     # get arkcase.war version from Nexus
     - mvn -B dependency:get -DremoteRepositories=http://***REMOVED***/repository/$ARKCASE_REPOSITORY -DgroupId=com.armedia.acm.acm-standard-applications -DartifactId=acm-law-enforcement -Dversion=$ARKCASE_VERSION -Dpackaging=war -Dtransitive=false
+    - find ~/.m2/repository/com/armedia/acm -name _maven.repositories -exec rm -v {} \;
     - mvn -B dependency:copy -Dartifact=com.armedia.acm.acm-standard-applications:acm-law-enforcement:$ARKCASE_VERSION:war -DoutputDirectory=.
     # Upload war
     - 'curl -k --compressed -H "Authorization: $(./vcodeHMAC-CLI_linux -credsFile credentials -url https://analysiscenter.veracode.com/api/5.0/uploadfile.do -method POST)" https://analysiscenter.veracode.com/api/5.0/uploadfile.do -F "app_id=529559" -F "file=@acm-law-enforcement-$ARKCASE_VERSION.war"'
