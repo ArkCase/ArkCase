@@ -188,7 +188,7 @@ public class DocumentRepositoryServiceImpl implements DocumentRepositoryService
             throws SolrException
     {
         String rowQueryParameters = String.format(
-                "q1=object_type_s:FILE AND parent_object_id_i:%s AND parent_object_type_s: DOC_REPO&fq=object_type_s:TASK&fq=-status_s:DELETE",
+                "q1=parent_object_id_i:%s AND parent_object_type_s: DOC_REPO&fq=object_type_s:TASK&fq=-status_s:DELETE",
                 id);
         String query = "({!join from=parent_object_id_i to=parent_object_id_i v=$q1})";
 
