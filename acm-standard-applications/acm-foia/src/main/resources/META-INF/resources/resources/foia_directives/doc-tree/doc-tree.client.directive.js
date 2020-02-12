@@ -277,6 +277,9 @@ angular
                                 } else if (DocTree.NODE_TYPE_NEXT == nodeType) {
                                     acmIcon = "<i class='i i-arrow-down'></i>";
                                 }
+                                if (Util.goodValue(node.data.link)) {
+                                    acmIcon = "<i class='fa fa-link'></i>";
+                                }
                                 if (acmIcon) {
                                     var span = node.span;
                                     var $spanIcon = $(span.children[1]);
@@ -1332,8 +1335,7 @@ angular
                                 {
                                     name : "title",
                                     renderer : function(element, node, columnDef, isReadOnly) {
-                                        if (node.data.link)
-                                            $(element).html("<span class=\"fancytree-node\" style=\"margin-left: 10px;\"><span class=\"fancytree-expander\"></span><span class=\"fancytree-icon\"></span><span class=\"fancytree-title\" title=\"" + node.data.name + "\">" + node.data.name + "&nbsp;&nbsp;<i class=\"fa fa-link\"></i></span></span>");
+                                        ;
                                     }
                                 },
                                 {
@@ -1395,6 +1397,9 @@ angular
                                             }
                                         }
                                         $(element).replaceWith($td);
+                                        if (Util.goodValue(node.data.link)) {
+                                            $select.attr("disabled", true);
+                                        }
                                     }
                                 },
                                 {
@@ -1417,6 +1422,9 @@ angular
                                             }
                                         }
                                         $(element).replaceWith($td);
+                                        if (Util.goodValue(node.data.link)) {
+                                            $select.attr("disabled", true);
+                                        }
                                     }
                                 },
                                 {
@@ -1441,6 +1449,9 @@ angular
 
                                                         //versionDate = UtilDateService.getDatePart(node.data.versionList[v].created);
                                                         //versionUser = Util.goodValue(node.data.versionList[v].creator);
+                                                    }
+                                                    if (Util.goodValue(node.data.link)) {
+                                                        $select.attr("disabled", true);
                                                     }
                                                 }
                                             }
@@ -2923,19 +2934,22 @@ angular
                                 var toCacheKey = DocTree.getCacheKeyByNode(toFolderNode);
                                 var frCacheKey = DocTree.getCacheKeyByNode(srcNode.parent);
                                 var copyService = actionName === 'pasteAsLink' ? Ecm.copyFileAsLink : Ecm.copyFile;
+                                if (srcNode.data.link === true) {
+                                    copyService = Ecm.copyFileAsLink;
+                                }
 
                                 Util.serviceCall(
                                     {
-                                        service : copyService,
-                                        param : {
-                                            objType : DocTree.getObjType(),
-                                            objId : DocTree.getObjId()
+                                        service: copyService,
+                                        param: {
+                                            objType: DocTree.getObjType(),
+                                            objId: DocTree.getObjId()
                                         },
-                                        data : {
-                                            id : fileId,
-                                            folderId : toFolderId
+                                        data: {
+                                            id: fileId,
+                                            folderId: toFolderId
                                         },
-                                        onSuccess : function(data) {
+                                        onSuccess: function (data) {
                                             if (Validator.validateCopyFileInfo(data)) {
                                                 var copyFileInfo = data;
                                                 if (copyFileInfo.originalId == fileId
