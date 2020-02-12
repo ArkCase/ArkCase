@@ -2014,8 +2014,11 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     public void updateFileLinks(EcmFile file) throws AcmObjectNotFoundException
     {
         List<EcmFile> links = getFileLinks(file.getFileId());
-        int activeVersionIndex = (int) Double.parseDouble(file.getActiveVersionTag());
-        String cmisObjectId = file.getVersions().get(activeVersionIndex - 1).getCmisObjectId();
+        EcmFileVersion activeFileVersion = file.getVersions()
+                .stream()
+                .filter(ecmFileVersion -> ecmFileVersion.getVersionTag().equals(file.getActiveVersionTag()))
+                .findFirst().orElse(null);
+
         links.forEach(f -> {
             f.setFileType(file.getFileType());
             f.setActiveVersionTag(file.getActiveVersionTag());
@@ -2031,7 +2034,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             f.setPageCount(file.getPageCount());
             f.setSecurityField(file.getSecurityField());
             f.getVersions().get(0).setVersionTag(file.getActiveVersionTag());
-            f.getVersions().get(0).setCmisObjectId(cmisObjectId);
+            f.getVersions().get(0).setCmisObjectId(activeFileVersion.getCmisObjectId());
 
             getEcmFileDao().save(f);
         });
