@@ -84,9 +84,9 @@ angular.module('cases').controller(
             $scope.addNew = function() {
                 var modalParams = {};
                 modalParams.parentType = ObjectService.ObjectTypes.DOC_REPO;
-                modalParams.parentObject = $scope.objectInfo.name;;
+                modalParams.parentObject = $scope.objectInfo.name;
                 modalParams.parentId = $scope.objectInfo.id;
-                modalParams.parentTitle = $scope.objectInfo.name;;
+                modalParams.parentTitle = $scope.objectInfo.name;
                 modalParams.taskType = 'ACM_TASK';
 
                 var modalMetadata = {
