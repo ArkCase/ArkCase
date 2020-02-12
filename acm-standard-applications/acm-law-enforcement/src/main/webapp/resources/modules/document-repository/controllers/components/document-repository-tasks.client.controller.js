@@ -84,9 +84,9 @@ angular.module('cases').controller(
             $scope.addNew = function() {
                 var modalParams = {};
                 modalParams.parentType = ObjectService.ObjectTypes.DOC_REPO;
-                modalParams.parentObject = $scope.objectInfo.name;;
+                modalParams.parentObject = $scope.objectInfo.name;
                 modalParams.parentId = $scope.objectInfo.id;
-                modalParams.parentTitle = $scope.objectInfo.name;;
+                modalParams.parentTitle = $scope.objectInfo.name;
                 modalParams.taskType = 'ACM_TASK';
 
                 var modalMetadata = {
@@ -105,12 +105,12 @@ angular.module('cases').controller(
             };
 
             $scope.deleteRow = function(rowEntity) {
-                var caseInfo = Util.omitNg($scope.objectInfo);
-                if (CaseInfoService.validateCaseInfo(caseInfo)) {
-                    TaskWorkflowService.deleteTask(rowEntity.object_id_s).then(function(caseInfo) {
+                var docRepoInfo = Util.omitNg($scope.objectInfo);
+                if (DocumentRepositoryInfoService.validateDocumentRepositoryInfo(docRepoInfo)) {
+                    TaskWorkflowService.deleteTask(rowEntity.object_id_s).then(function(docRepoInfo) {
                         gridHelper.deleteRow(rowEntity);
-                        $scope.$emit("report-object-updated", caseInfo);
-                        return caseInfo;
+                        $scope.$emit("report-object-updated", docRepoInfo);
+                        return docRepoInfo;
                     });
                 }
             };
