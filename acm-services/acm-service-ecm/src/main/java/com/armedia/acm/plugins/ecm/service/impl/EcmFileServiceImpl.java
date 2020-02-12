@@ -117,6 +117,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -2034,7 +2035,10 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             f.setPageCount(file.getPageCount());
             f.setSecurityField(file.getSecurityField());
             f.getVersions().get(0).setVersionTag(file.getActiveVersionTag());
-            f.getVersions().get(0).setCmisObjectId(activeFileVersion.getCmisObjectId());
+            if (Objects.nonNull(activeFileVersion))
+            {
+                f.getVersions().get(0).setCmisObjectId(activeFileVersion.getCmisObjectId());
+            }
 
             getEcmFileDao().save(f);
         });

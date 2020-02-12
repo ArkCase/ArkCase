@@ -335,9 +335,12 @@ public class FOIAEcmFileServiceImpl extends EcmFileServiceImpl implements FOIAEc
 
             FOIAEcmFileVersion linkVersion = (FOIAEcmFileVersion) f.getVersions().get(0);
             linkVersion.setVersionTag(file.getActiveVersionTag());
-            linkVersion.setCmisObjectId(activeFileVersion.getCmisObjectId());
-            linkVersion.setRedactionStatus(activeFileVersion.getRedactionStatus());
-            linkVersion.setReviewStatus(activeFileVersion.getReviewStatus());
+            if (Objects.nonNull(activeFileVersion))
+            {
+                linkVersion.setCmisObjectId(activeFileVersion.getCmisObjectId());
+                linkVersion.setRedactionStatus(activeFileVersion.getRedactionStatus());
+                linkVersion.setReviewStatus(activeFileVersion.getReviewStatus());
+            }
             f.getVersions().set(0, linkVersion);
 
             getEcmFileDao().save(f);
