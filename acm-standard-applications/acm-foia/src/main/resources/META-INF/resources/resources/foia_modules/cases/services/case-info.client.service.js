@@ -261,7 +261,42 @@ angular.module('services').factory('Case.InfoService', [ '$resource', '$translat
             headers: {
                 'Content-Type': 'application/json'
             }
-        }).then(function(result) {
+        }).then(function (result) {
+            if (Service.validateCaseInfo(result.data)) {
+                var caseInfo = result.data;
+                if (caseInfo.id) {
+                    caseCache.put(caseGetUrl + caseInfo.id, caseInfo);
+                }
+                return caseInfo;
+            }
+        });
+    };
+
+    /**
+     * @ngdoc method
+     * @name saveFoiaRequestInfoMassAssigment
+     * @methodOf services:Case.InfoService
+     *
+     * @description
+     * Save FoiaRequest info for cases assigned via mass assignment functionality
+     *
+     * @param {Object} caseInfo  Case data
+     *
+     * @returns {Object} Promise
+     */
+    Service.saveFoiaRequestInfoMassAssigment = function (caseInfo) {
+        if (!Service.validateCaseInfo(caseInfo)) {
+            return Util.errorPromise($translate.instant("common.service.error.invalidData"));
+        }
+        caseInfo.modified = null;
+        return $http({
+            method: 'POST',
+            url: 'api/latest/plugin/foiarequest/massAssigment',
+            data: JSOG.encode(caseInfo),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(function (result) {
             if (Service.validateCaseInfo(result.data)) {
                 var caseInfo = result.data;
                 if (caseInfo.id) {
