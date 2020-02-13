@@ -30,8 +30,8 @@ package gov.foia.web.api;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -43,16 +43,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpSession;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import gov.foia.service.SaveFOIARequestService;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 /**
  * @author sasko.tanaskoski
@@ -72,6 +71,15 @@ public class SaveFOIARequestAPIController
             MediaType.TEXT_XML_VALUE })
     @ResponseBody
     public CaseFile saveFOIARequest(@RequestBody CaseFile in, HttpSession session, Authentication auth)
+            throws AcmCreateObjectFailedException
+    {
+        return getSaveFOIARequestService().saveFOIARequest(in, null, session, auth);
+    }
+
+    @RequestMapping(value = "/massAssigment", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE,
+            MediaType.TEXT_XML_VALUE })
+    @ResponseBody
+    public CaseFile saveMassAssignedFOIARequest(@RequestBody CaseFile in, HttpSession session, Authentication auth)
             throws AcmCreateObjectFailedException
     {
         return getSaveFOIARequestService().saveFOIARequest(in, null, session, auth);
