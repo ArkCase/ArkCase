@@ -27,10 +27,12 @@ package com.armedia.acm.plugins.task.service;
  * #L%
  */
 
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.model.TaskNotificationConfig;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
+import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
@@ -64,6 +66,8 @@ public abstract class AbstractTaskNotifier
 
     private TaskNotificationConfig taskNotificationConfig;
 
+    private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
+
     /**
      * @param activitiTaskService
      *            the activitiTaskService to set
@@ -84,6 +88,7 @@ public abstract class AbstractTaskNotifier
 
     public void notifyTaskAssignees()
     {
+        getAuditPropertyEntityAdapter().setUserId(NotificationConstants.SYSTEM_USER);
         if (getTaskNotificationConfig().getDueTasksNotificationEnabled())
         {
             Date now = new Date();
@@ -97,15 +102,16 @@ public abstract class AbstractTaskNotifier
                 notification.setParentId(task.getTaskId());
                 notification.setEmailAddresses(user.getMail());
                 notification.setAttachFiles(false);
-                notification.setTitle("Task overdue notification");
-
+                notification.setUser(user.getUserId());
                 if (task.getDueDate().compareTo(now) > 0)
                 {
                     notification.setTemplateModelName("taskUpcoming");
+                    notification.setTitle("Task upcoming notification");
                 }
                 else
                 {
                     notification.setTemplateModelName("taskOverdue");
+                    notification.setTitle("Task overdue notification");
                 }
                 notificationDao.save(notification);
             }
@@ -158,5 +164,15 @@ public abstract class AbstractTaskNotifier
     public void setTaskNotificationConfig(TaskNotificationConfig taskNotificationConfig)
     {
         this.taskNotificationConfig = taskNotificationConfig;
+    }
+
+    public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter() 
+    {
+        return auditPropertyEntityAdapter;
+    }
+
+    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter) 
+    {
+        this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
     }
 }
