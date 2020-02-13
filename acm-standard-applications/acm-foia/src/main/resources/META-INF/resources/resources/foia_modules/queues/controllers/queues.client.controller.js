@@ -73,7 +73,7 @@ angular.module('queues').controller(
                                 request.recordSearchDateFrom = UtilDateService.dateToIsoDateTime(request.recordSearchDateFrom);
                                 request.recordSearchDateTo = UtilDateService.dateToIsoDateTime(request.recordSearchDateTo);
                                 var objectInfo = Util.omitNg(request);
-                                promises.push(CaseInfoService.saveFoiaRequestInfo(objectInfo));
+                                promises.push(CaseInfoService.saveFoiaRequestInfoMassAssigment(objectInfo));
                             }
                         });
                         $q.all(promises).then(function(caseInfo) {
@@ -303,4 +303,4 @@ angular.module('queues').controller(
                     }
                 }
 
-        ])
+        ]);
