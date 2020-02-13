@@ -66,11 +66,20 @@ public class SaveFOIARequestAPIController
     private final Logger log = LogManager.getLogger(getClass());
     private SaveFOIARequestService saveFOIARequestService;
 
-    @PreAuthorize("#in.id == null or hasPermission(#in.id, 'CASE_FILE', 'saveCase') or hasPermission(#in.queue.id, 'QUEUE', 'massAssigment')")
+    @PreAuthorize("#in.id == null or hasPermission(#in.id, 'CASE_FILE', 'saveCase')")
     @RequestMapping(method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE,
             MediaType.TEXT_XML_VALUE })
     @ResponseBody
     public CaseFile saveFOIARequest(@RequestBody CaseFile in, HttpSession session, Authentication auth)
+            throws AcmCreateObjectFailedException
+    {
+        return getSaveFOIARequestService().saveFOIARequest(in, null, session, auth);
+    }
+
+    @RequestMapping(value = "/massAssigment", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE,
+            MediaType.TEXT_XML_VALUE })
+    @ResponseBody
+    public CaseFile saveMassAssignedFOIARequest(@RequestBody CaseFile in, HttpSession session, Authentication auth)
             throws AcmCreateObjectFailedException
     {
         return getSaveFOIARequestService().saveFOIARequest(in, null, session, auth);
