@@ -32,6 +32,7 @@ import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.AcmUsersConstants;
 import com.armedia.acm.services.users.model.ApplicationRolesToPrivilegesConfig;
 
 import org.springframework.security.core.Authentication;
@@ -117,7 +118,9 @@ public class AcmUserServiceImpl implements AcmUserService
             throws SolrException
     {
 
-        String query = "object_type_s:USER AND status_lcs:VALID";
+        String query = "object_type_s:USER AND status_lcs:VALID"
+                + " AND -name:" + AcmUsersConstants.OCR_SYSTEM_USER
+                + " AND -name:" + AcmUsersConstants.TRANSCRIBE_SYSTEM_USER;
 
         return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows,
                 sortBy + " " + sortDirection);
