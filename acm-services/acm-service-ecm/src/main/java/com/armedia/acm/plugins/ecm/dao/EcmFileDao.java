@@ -116,28 +116,24 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
         return retval;
     }
 
-    public EcmFile findForContainerAndFileType(Long containerId, String fileType)
+    public List<EcmFile> findForContainerAndFileType(Long containerId, String fileType)
     {
         String jpql = "SELECT e " +
                 "FROM EcmFile e " +
                 "WHERE e.container.id = :containerId " +
-                "AND e.fileType = :fileType";
+                "AND e.fileType = :fileType " +
+                "ORDER BY e.created ASC";
 
-        return executeJpqlForContainerIdAndFileType(jpql, containerId, fileType);
-    }
-
-    public EcmFile executeJpqlForContainerIdAndFileType(String jpql, Long containerId, String fileType)
-    {
-        Query query = getEm().createQuery(jpql);
+        Query query = getEm().createQuery(jpql, getPersistenceClass());
 
         query.setParameter("containerId", containerId);
         query.setParameter("fileType", fileType);
 
-        EcmFile result = null;
+        List<EcmFile> result = null;
 
         try
         {
-            result = (EcmFile) query.getResultList().get(0);
+            result = query.getResultList();
         }
         catch (NoResultException e)
         {
