@@ -1858,9 +1858,15 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
-    public EcmFile findFileByContainerAndFileType(Long containerId, String fileType)
+    public List<EcmFile> findFileByContainerAndFileType(Long containerId, String fileType)
     {
         return getEcmFileDao().findForContainerAndFileType(containerId, fileType);
+    }
+
+    @Override
+    public EcmFile findOldestFileByContainerAndFileType(Long containerId, String fileType)
+    {
+        return findFileByContainerAndFileType(containerId, fileType).get(0);
     }
 
     @Override
