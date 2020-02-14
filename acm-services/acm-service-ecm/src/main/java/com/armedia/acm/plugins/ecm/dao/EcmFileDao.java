@@ -137,20 +137,14 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
 
         try
         {
-            result = (EcmFile) query.getSingleResult();
+            result = (EcmFile) query.getResultList().get(0);
         }
         catch (NoResultException e)
         {
             LOG.debug("Cannot find EcmFile for containerId=[{}] and fileType=[{}]", containerId, fileType, e);
         }
-        catch (NonUniqueResultException e1)
-        {
-            LOG.error("Cannot find unique EcmFile for containerId=[{}] and fileType=[{}]. Multiple files found ...",
-                    containerId, fileType, e1);
-        }
 
         return result;
-
     }
 
     public EcmFile findForContainerAttachmentFolderAndFileType(Long containerId, Long folderId, String fileType)
