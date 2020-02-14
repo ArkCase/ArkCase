@@ -13,14 +13,15 @@
             <div class="clearfix well-sm">
                 <div class="pull-right">
                     <div class="btn-group">
-                        <button permission="massAssigment" permission-properties="selectedQueue" permission-object-type="QUEUE"
-                                permission-action="hide" ng-click="assignSelectedQueues()" class="btn btn-sm btn-primary">
+                        <button permission="massAssigment" permission-properties="selectedQueue"
+                                permission-object-type="QUEUE" permission-action="hide"
+                                ng-click="assignSelectedQueues()" class="btn btn-sm btn-primary">
                             <span translate>queues.assignSelected.btn</span>
                             <i class="fa fa-caret-right"></i>
                         </button>
                     </div>
-                    <div class="btn-group">
-                        <button permission="startWork" permission-properties="selectedQueue" permission-action="hide"
+                    <div class="btn-group" ng-if="selectedQueue.name != 'Release'">
+                        <button permission=" startWork" permission-properties="selectedQueue" permission-action="hide"
                                 ng-click="startWorking()" class="btn btn-sm btn-primary">
                             <span translate>queues.startWorking.btn</span>
                             <i class="fa fa-caret-right"></i>
