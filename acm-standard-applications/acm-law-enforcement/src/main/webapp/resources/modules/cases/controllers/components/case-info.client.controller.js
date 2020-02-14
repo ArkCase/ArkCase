@@ -174,7 +174,15 @@ angular.module('cases').controller(
 
                     var onObjectInfoRetrieved = function(data) {
                         $scope.dateInfo = $scope.dateInfo || {};
-                        $scope.dateInfo.dueDate = $scope.objectInfo.dueDate;
+                if(!Util.isEmpty($scope.objectInfo.dueDate)){
+                    $scope.dateInfo.dueDate = moment.utc($scope.objectInfo.dueDate).local().format('MM/DD/YYYY HH:mm');
+                    $scope.dueDateInfo = $scope.dateInfo.dueDate;
+                }
+                else {
+                    $scope.dateInfo.dueDate = null;
+                    $scope.dueDateInfo = new Date();
+                    $scope.dueDateInfo = moment($scope.dueDateInfo).format('MM/DD/YYYY HH:mm');
+                }
                         $scope.dueDateBeforeChange = $scope.dateInfo.dueDate;
                         $scope.owningGroup = ObjectModelService.getGroup(data);
                         $scope.assignee = ObjectModelService.getAssignee(data);
@@ -227,16 +235,20 @@ angular.module('cases').controller(
                     $scope.updateDueDate = function(data) {
                         if (!Util.isEmpty(data)) {
                             var correctedDueDate = new Date(data);
-                            var startDate = new Date($scope.objectInfo.create_date_tdt);
+                    var startDate = new Date($scope.objectInfo.created);
                             if(correctedDueDate < startDate){
                                 $scope.dateInfo.dueDate = $scope.dueDateBeforeChange;
                                 DialogService.alert($translate.instant("cases.comp.info.alertMessage ") + $filter("date")(startDate, $translate.instant('common.defaultDateTimeUIFormat')));
                             }else {
-                                $scope.objectInfo.dueDate = moment.utc(UtilDateService.dateToIso(correctedDueDate)).format();
+                        $scope.objectInfo.dueDate = moment.utc(correctedDueDate).format();
+                        $scope.dueDateInfo = moment($scope.objectInfo.dueDate).format('MM/DD/YYYY HH:mm');
+                        $scope.dateInfo.dueDate = $scope.dueDateInfo;
                                 $scope.saveCase();
                             }
                         }else {
                             $scope.objectInfo.dueDate = $scope.dueDateBeforeChange;
+                    $scope.dueDateInfo = moment($scope.objectInfo.dueDate).format('MM/DD/YYYY HH:mm');
+                    $scope.dateInfo.dueDate = moment($scope.dueDateInfo).local().format('MM/DD/YYYY HH:mm');
                             $scope.saveCase();
                         }
                     };
