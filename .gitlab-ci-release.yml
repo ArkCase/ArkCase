@@ -12,7 +12,8 @@ variables:
   # Release RC1 (X) from release branch
   # -----------------------------------
   # RELEASE_CANDIDATE_X: true
-  # RELEASE_VERSION: 3.3.3-RC1
+  # RELEASE_VERSION: 3.3.3
+  # RELEASE_CANDIDATE_SUFFIX: RC1
   # RELEASE_ALL: true (Optional: if you want to trigger the release pipeline on all othe projects: configuration, externa-portal-ui, external-portal-backend, configuration server)
 
   # Release final version, merges release branch in master (after no more release candidates are planned)
@@ -98,8 +99,9 @@ release_candidate_X:
     - export SSHPASS=$SSHPASS_ARKCASE
     - curl --silent --create-dirs -o /usr/share/maven/lib/ext/pom-manipulation-ext-3.8.1.jar https://repo1.maven.org/maven2/org/commonjava/maven/ext/pom-manipulation-ext/3.8.1/pom-manipulation-ext-3.8.1.jar
     - git checkout --track release/$RELEASE_VERSION
-    - mvn -DskipTests -T 4 -B deploy "-DaltDeploymentRepository=arkcase.release::default::https://***REMOVED***/repository/arkcase.release/" -DversionOverride=$RELEASE_VERSION
-    - sshpass -e sftp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ***REMOVED*** <<< $'put acm-standard-applications/acm-law-enforcement/target/*.war /from-arkcase/arkcase-'$RELEASE_VERSION'.war' 
+    - git push origin HEAD:refs/tags/$RELEASE_VERSION-$RELEASE_CANDIDATE_SUFFIX
+    - mvn -DskipTests -T 4 -B deploy "-DaltDeploymentRepository=arkcase.release::default::https://***REMOVED***/repository/arkcase.release/" -DversionOverride=$RELEASE_VERSION-$RELEASE_CANDIDATE_SUFFIX
+    - sshpass -e sftp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ***REMOVED*** <<< $'put acm-standard-applications/acm-law-enforcement/target/*.war /from-arkcase/arkcase-'$RELEASE_VERSION-$RELEASE_CANDIDATE_SUFFIX'.war' 
     # Deploy on test servers
 
 release:
