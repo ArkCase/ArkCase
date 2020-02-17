@@ -100,7 +100,7 @@ public class HoldBusinessProcessIT
         processVariables.put("OBJECT_TYPE", objectType);
         processVariables.put("OBJECT_ID", foiaId);
 
-        changeObjectStatusService.change(foiaId, objectType, "Hold");
+        changeObjectStatusService.changeIfNoPermanentStatusIsSet(foiaId, objectType, "Hold", "Closed");
         expect(queueCaseService.enqueue(foiaId, "Hold")).andReturn(new FOIARequest());
 
         replay(changeObjectStatusService, queueCaseService);

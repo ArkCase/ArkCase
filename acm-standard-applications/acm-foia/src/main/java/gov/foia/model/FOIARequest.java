@@ -159,6 +159,11 @@ public class FOIARequest extends CaseFile implements FOIAObject
     @Convert(converter = LocalDateTimeConverter.class)
     private LocalDateTime recordSearchDateTo;
 
+    @Column(name = "fo_disposition_closed_date")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @Convert(converter = LocalDateTimeConverter.class)
+    private LocalDateTime dispositionClosedDate;
+
     @Column(name = "fo_processing_fee_waive")
     private double processingFeeWaive;
 
@@ -730,6 +735,16 @@ public class FOIARequest extends CaseFile implements FOIAObject
 
     }
 
+    public LocalDateTime getDispositionClosedDate()
+    {
+        return dispositionClosedDate;
+    }
+
+    public void setDispositionClosedDate(LocalDateTime dispositionClosedDate)
+    {
+        this.dispositionClosedDate = dispositionClosedDate;
+    }
+
     public Boolean getExtensionFlag()
     {
         return extensionFlag;
@@ -756,6 +771,7 @@ public class FOIARequest extends CaseFile implements FOIAObject
                 + ", recordSearchDateFrom=" + recordSearchDateFrom + ", recordSearchDateTo=" + recordSearchDateTo + ", processingFeeWaive="
                 + processingFeeWaive + ", requestFeeWaiveReason=" + requestFeeWaiveReason + ", payFee=" + payFee
                 + ", requestExpediteReason=" + requestExpediteReason + ", extensionFlag=" + extensionFlag + ", amendmentFlag=" + amendmentFlag 
-                + ", requestAmendmentDetails=" + requestAmendmentDetails + "} " + super.toString();
+                + ", requestAmendmentDetails=" + requestAmendmentDetails + ", dispositionClosedDate=" + dispositionClosedDate + "} "
+                + super.toString();
     }
 }
