@@ -71,7 +71,7 @@ release_start:
     - apt-get update
     - apt-get install -y zip sshpass
     - export SSHPASS=$SSHPASS_ARKCASE
-    - mvn -B gitflow:release-start -DreleaseVersion=$RELEASE_VERSION -DcommitDevelopmentVersionAtStart=true -DdevelopmentVersion=$DEVELOP_NEW_VERSION
+    - mvn -B gitflow:release-start -DpushRemote=true -DreleaseVersion=$RELEASE_VERSION -DcommitDevelopmentVersionAtStart=true -DdevelopmentVersion=$DEVELOP_NEW_VERSION
     # Deploy on test servers
     
 release_candidate_X:
