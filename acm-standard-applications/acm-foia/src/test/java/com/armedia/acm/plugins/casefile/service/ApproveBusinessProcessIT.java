@@ -100,7 +100,7 @@ public class ApproveBusinessProcessIT
         processVariables.put("OBJECT_TYPE", objectType);
         processVariables.put("OBJECT_ID", foiaId);
 
-        changeObjectStatusService.change(foiaId, objectType, "In Approval");
+        changeObjectStatusService.changeIfNoPermanentStatusIsSet(foiaId, objectType, "In Approval", "Closed");
         expect(queueCaseService.enqueue(foiaId, "Approve")).andReturn(new FOIARequest());
 
         replay(changeObjectStatusService, queueCaseService);

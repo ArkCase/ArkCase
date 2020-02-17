@@ -105,7 +105,7 @@ public class FulfillBusinessProcessIT
         processVariables.put("OBJECT_TYPE", objectType);
         processVariables.put("OBJECT_ID", foiaId);
 
-        changeObjectStatusService.change(foiaId, objectType, "In Fulfillment");
+        changeObjectStatusService.changeIfNoPermanentStatusIsSet(foiaId, objectType, "In Fulfillment", "Closed");
         expect(queueCaseService.enqueue(foiaId, "Fulfill")).andReturn(new FOIARequest());
 
         replay(changeObjectStatusService, queueCaseService);

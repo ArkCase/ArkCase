@@ -11,7 +11,7 @@
         <sequenceFlow id="sid-2ECFBB0E-7B21-4B25-9FA3-6D8134E86DA4" sourceRef="startEvent1"
             targetRef="sid-E0905ADB-9340-49AC-ADA5-3AD0B417D585"/>
         <serviceTask id="sid-E0905ADB-9340-49AC-ADA5-3AD0B417D585" name="Set FOIA Request status"
-            activiti:expression="#{changeObjectStatusService.change(OBJECT_ID, OBJECT_TYPE, 'Hold')}"/>
+                     activiti:expression="#{changeObjectStatusService.changeIfNoPermanentStatusIsSet(OBJECT_ID, OBJECT_TYPE, 'Hold', 'Closed')}"/>
         <sequenceFlow id="sid-A1A80BC3-B3F3-472A-8187-6EF2428E1D51" sourceRef="sid-E0905ADB-9340-49AC-ADA5-3AD0B417D585"
             targetRef="sid-F88A33F4-A31E-43B6-A65C-0921762C023D"/>
         <serviceTask id="sid-F88A33F4-A31E-43B6-A65C-0921762C023D" name="Place FOIA Request in Hold queue"
@@ -23,7 +23,7 @@
             <text>This process orchestrates all the actions needed when a FOIA request is entering the Hold queue.
                 Currently there are two such actions:
 
-                1. Set the status to Hold
+                1. Set the status to Hold, if status is not Closed
                 2. Set the queue name to 'Hold'
             </text>
         </textAnnotation>

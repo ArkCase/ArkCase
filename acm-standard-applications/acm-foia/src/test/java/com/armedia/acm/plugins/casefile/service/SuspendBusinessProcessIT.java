@@ -100,7 +100,7 @@ public class SuspendBusinessProcessIT
         processVariables.put("OBJECT_TYPE", objectType);
         processVariables.put("OBJECT_ID", foiaId);
 
-        changeObjectStatusService.change(foiaId, objectType, "Suspended");
+        changeObjectStatusService.changeIfNoPermanentStatusIsSet(foiaId, objectType, "Suspended", "Closed");
         expect(queueCaseService.enqueue(foiaId, "Suspend")).andReturn(new FOIARequest());
 
         replay(changeObjectStatusService, queueCaseService);
