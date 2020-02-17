@@ -2,27 +2,21 @@ variables:
   # Release new Arkcase version
   # ============================
 
-  # Release RC1 from develop branch (sets the develop branch new snapshot version)
-  # ------------------------------------------------------------------------------
-  # RELEASE_CANDIDATE_1: true
-  # RELEASE_VERSION: 3.3.3-RC1
+  # Start a release branch from develop branch. Sets the develop branch to new snapshot version
+  # --------------------------------------------------------------------------------------------
+  # RELEASE_START: true
+  # RELEASE_VERSION: 3.3.3
   # DEVELOP_NEW_VERSION: 3.3.4-SNAPSHOT
   # RELEASE_ALL: true (Optional: if you want to trigger the release pipeline on all othe projects: configuration, externa-portal-ui, external-portal-backend, configuration server)
 
-  # Start RC2 to push commits to branch (from master branch) (**** repeat this for all additional release candididates ****)
-  # ------------------------------------------------------------------------------------------------------------------------
-  # START_RELEASE_CANDIDATE_X: true
-  # RELEASE_VERSION: 3.3.3-RC2
-  # RELEASE_ALL: true (Optional: if you want to trigger the release pipeline on all othe projects: configuration, externa-portal-ui, external-portal-backend, configuration server)
-
-  # Release RC2 (merges changes to master branch. Note: hotfix commits should be merged to both the hotfix and develop branches)
-  # ----------------------------------------------------------------------------------------------------------------------------
+  # Release RC1 (X) from release branch
+  # -----------------------------------
   # RELEASE_CANDIDATE_X: true
-  # RELEASE_VERSION: 3.3.3-RC2
+  # RELEASE_VERSION: 3.3.3-RC1
   # RELEASE_ALL: true (Optional: if you want to trigger the release pipeline on all othe projects: configuration, externa-portal-ui, external-portal-backend, configuration server)
 
-  # Release final version in master (after no more release candidates are planned)
-  # ------------------------------------------------------------------------------
+  # Release final version, merges release branch in master (after no more release candidates are planned)
+  # -----------------------------------------------------------------------------------------------------
   # RELEASE: true
   # RELEASE_VERSION: 3.3.3
   # RELEASE_ALL: true (Optional: if you want to trigger the release pipeline on all othe projects: configuration, externa-portal-ui, external-portal-backend, configuration server)
@@ -55,11 +49,11 @@ variables:
   GIT_URL: 'git@gitlab.armedia.com:arkcase/ArkCase.git'
 
 
-release_candidate_1:
+release_start:
   stage: release
   only: 
     variables:
-     - $RELEASE_CANDIDATE_1
+     - $RELEASE_START
   script:
     - echo '<settings>' > /root/.m2/settings.xml
     - echo '  <servers>' >> /root/.m2/settings.xml
@@ -78,23 +72,8 @@ release_candidate_1:
     - apt-get install -y zip sshpass
     - export SSHPASS=$SSHPASS_ARKCASE
     - mvn -B gitflow:release-start -DreleaseVersion=$RELEASE_VERSION -DcommitDevelopmentVersionAtStart=true -DdevelopmentVersion=$DEVELOP_NEW_VERSION
-    - mvn -B gitflow:release-finish -DskipTestProject=true -DcommitDevelopmentVersionAtStart=true
-    - git checkout master
-    - mvn -DskipITs -T 4 -B deploy "-DaltDeploymentRepository=arkcase.release::default::https://project.armedia.com/nexus/repository/arkcase.release/"
-    - sshpass -e sftp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null arkcase@fileshare.armedia.com <<< $'put acm-standard-applications/acm-law-enforcement/target/*.war /from-arkcase/arkcase-'$RELEASE_VERSION'.war' 
     # Deploy on test servers
     
-start_release_candidate_X:
-  stage: release
-  only: 
-    variables:
-     - $START_RELEASE_CANDIDATE_X
-  script:
-    - git config --global user.name "$GIT_USERNAME"
-    - git config --global user.email "$GIT_USERMAIL"
-    - git remote set-url origin "$GIT_URL"
-    - mvn -B gitflow:hotfix-start -DpushRemote=true -DhotfixVersion=$RELEASE_VERSION
-
 release_candidate_X:
   stage: release
   only: 
@@ -117,11 +96,9 @@ release_candidate_X:
     - apt-get update
     - apt-get install -y zip sshpass
     - export SSHPASS=$SSHPASS_ARKCASE
-    - git checkout --track origin/hotfix/$RELEASE_VERSION
-    - git checkout develop
-    - mvn -B gitflow:hotfix-finish -DpushRemote=true -DhotfixVersion=$RELEASE_VERSION -DskipTestProject=true -DskipMergeDevBranch=true
-    - git checkout master
-    - mvn -DskipITs -T 4 -B deploy "-DaltDeploymentRepository=arkcase.release::default::https://project.armedia.com/nexus/repository/arkcase.release/"
+    - curl --silent --create-dirs -o /usr/share/maven/lib/ext/pom-manipulation-ext-3.8.1.jar https://repo1.maven.org/maven2/org/commonjava/maven/ext/pom-manipulation-ext/3.8.1/pom-manipulation-ext-3.8.1.jar
+    - git checkout --track release/$RELEASE_VERSION
+    - mvn -DskipTests -T 4 -B deploy "-DaltDeploymentRepository=arkcase.release::default::https://project.armedia.com/nexus/repository/arkcase.release/" -DversionOverride=$RELEASE_VERSION
     - sshpass -e sftp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null arkcase@fileshare.armedia.com <<< $'put acm-standard-applications/acm-law-enforcement/target/*.war /from-arkcase/arkcase-'$RELEASE_VERSION'.war' 
     # Deploy on test servers
 
@@ -147,7 +124,6 @@ release:
     - apt-get update
     - apt-get install -y zip sshpass
     - export SSHPASS=$SSHPASS_ARKCASE
-    - mvn -B gitflow:hotfix-start -DhotfixVersion=$RELEASE_VERSION
     - mvn -B gitflow:hotfix-finish -DhotfixVersion=$RELEASE_VERSION -DskipTestProject=true -DskipMergeDevBranch=true
     - git checkout master
     - mvn -DskipITs -T 4 -B deploy "-DaltDeploymentRepository=arkcase.release::default::https://project.armedia.com/nexus/repository/arkcase.release/"
