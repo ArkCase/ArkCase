@@ -100,7 +100,7 @@ release_candidate_X:
     - curl --silent --create-dirs -o /usr/share/maven/lib/ext/pom-manipulation-ext-3.8.1.jar https://repo1.maven.org/maven2/org/commonjava/maven/ext/pom-manipulation-ext/3.8.1/pom-manipulation-ext-3.8.1.jar
     - git checkout --track release/$RELEASE_VERSION
     - git push origin HEAD:refs/tags/$RELEASE_VERSION-$RELEASE_CANDIDATE_SUFFIX
-    - mvn -DskipTests -T 4 -B deploy "-DaltDeploymentRepository=arkcase.release::default::https://***REMOVED***/repository/arkcase.release/" -DversionOverride=$RELEASE_VERSION-$RELEASE_CANDIDATE_SUFFIX
+    - mvn -DskipTests -T 4 -B deploy "-DaltDeploymentRepository=arkcase.release::default::https://***REMOVED***/repository/arkcase.release/" -DversionOverride=$RELEASE_VERSION-$RELEASE_CANDIDATE_SUFFIX -DversionOsgi=false
     - sshpass -e sftp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ***REMOVED*** <<< $'put acm-standard-applications/acm-law-enforcement/target/*.war /from-arkcase/arkcase-'$RELEASE_VERSION-$RELEASE_CANDIDATE_SUFFIX'.war' 
     # Deploy on test servers
 
