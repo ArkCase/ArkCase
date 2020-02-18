@@ -142,6 +142,10 @@ import java.util.stream.Collectors;
         "/spring/spring-library-camel-context.xml",
         "/spring/spring-integration-case-file-test.xml",
         "/spring/spring-library-object-title.xml",
+        "/spring/spring-library-functional-access-control.xml",
+        "/spring/spring-library-service-timesheet.xml",
+        "/spring/spring-library-timesheet-save.xml",
+        "/spring/spring-library-timesheet-rules.xml",
         "/spring/spring-library-user-tracker.xml"
 })
 @TransactionConfiguration(defaultRollback = true)
