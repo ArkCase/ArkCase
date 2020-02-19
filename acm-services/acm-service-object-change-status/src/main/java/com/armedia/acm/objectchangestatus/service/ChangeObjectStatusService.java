@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.armedia.acm.objectchangestatus.service;
 
 /*-
@@ -38,4 +35,5 @@ public interface ChangeObjectStatusService
 
     void change(Long objectId, String objectType, String status);
 
+    void changeIfNoPermanentStatusIsSet(Long objectId, String objectType, String status, String permanentStatus);
 }

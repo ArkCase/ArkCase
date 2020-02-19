@@ -83,7 +83,7 @@ public class GeneralCounselBusinessProcessIT
     {
         // deploy
         repo.createDeployment()
-                .addClasspathResource("activiti/foia-extension-generalcounsel-process.bpmn20.xml")
+                .addClasspathResource("activiti/foia-extension-generalcounsel-process_v2.bpmn20.xml")
                 .deploy();
     }
 
@@ -103,7 +103,7 @@ public class GeneralCounselBusinessProcessIT
         processVariables.put("OBJECT_TYPE", objectType);
         processVariables.put("OBJECT_ID", foiaId);
 
-        changeObjectStatusService.change(foiaId, objectType, "GC Review");
+        changeObjectStatusService.changeIfNoPermanentStatusIsSet(foiaId, objectType, "GC Review", "Closed");
         expect(queueCaseService.enqueue(foiaId, "General Counsel")).andReturn(new FOIARequest());
 
         replay(changeObjectStatusService, queueCaseService);

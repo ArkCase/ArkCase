@@ -42,6 +42,12 @@ public class MockChangeObjectStatusService implements ChangeObjectStatusService
         ++timesCalled;
     }
 
+    @Override
+    public void changeIfNoPermanentStatusIsSet(Long objectId, String objectType, String status, String permanentStatus)
+    {
+
+    }
+
     public int getTimesCalled()
     {
         return timesCalled;
