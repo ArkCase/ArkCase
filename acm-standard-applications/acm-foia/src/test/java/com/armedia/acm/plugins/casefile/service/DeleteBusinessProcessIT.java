@@ -80,7 +80,7 @@ public class DeleteBusinessProcessIT
     {
         // deploy
         repo.createDeployment()
-                .addClasspathResource("activiti/foia-extension-delete-process_v4.bpmn20.xml")
+                .addClasspathResource("activiti/foia-extension-delete-process_v5.bpmn20.xml")
                 .deploy();
     }
 
@@ -100,7 +100,7 @@ public class DeleteBusinessProcessIT
         processVariables.put("OBJECT_TYPE", objectType);
         processVariables.put("OBJECT_ID", foiaId);
 
-        changeObjectStatusService.change(foiaId, objectType, "Deleted");
+        changeObjectStatusService.changeIfNoPermanentStatusIsSet(foiaId, objectType, "Deleted", "Closed");
         expect(queueCaseService.enqueue(foiaId, "Delete")).andReturn(new FOIARequest());
 
         replay(changeObjectStatusService, queueCaseService);

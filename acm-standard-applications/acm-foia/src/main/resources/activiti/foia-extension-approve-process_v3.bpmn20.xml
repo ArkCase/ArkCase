@@ -1,5 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/processdef" xmlns:modeler="http://activiti.com/modeler" modeler:version="1.0ev" modeler:exportDateTime="20180903141222" modeler:modelId="1048079" modeler:modelVersion="1" modeler:modelLastUpdated="1535980222415">
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:activiti="http://activiti.org/bpmn"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC"
+             xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema"
+             expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/processdef"
+             xmlns:modeler="http://activiti.com/modeler" modeler:version="1.0ev" modeler:exportDateTime="20180903141222"
+             modeler:modelId="1048079" modeler:modelVersion="1" modeler:modelLastUpdated="1535980222415">
   <process id="foia-extension-approve-process" name="foia-extension-approve-process" isExecutable="true">
     <documentation>This business process runs when the FOIA request enters the Approve queue.</documentation>
     <startEvent id="startEvent1">
@@ -7,32 +12,38 @@
         <modeler:editor-resource-id><![CDATA[startEvent1]]></modeler:editor-resource-id>
       </extensionElements>
     </startEvent>
-    <sequenceFlow id="sid-2ECFBB0E-7B21-4B25-9FA3-6D8134E86DA4" sourceRef="startEvent1" targetRef="sid-E0905ADB-9340-49AC-ADA5-3AD0B417D585">
+    <sequenceFlow id="sid-2ECFBB0E-7B21-4B25-9FA3-6D8134E86DA4" sourceRef="startEvent1"
+                  targetRef="sid-E0905ADB-9340-49AC-ADA5-3AD0B417D585">
       <extensionElements>
         <modeler:editor-resource-id><![CDATA[sid-2ECFBB0E-7B21-4B25-9FA3-6D8134E86DA4]]></modeler:editor-resource-id>
       </extensionElements>
     </sequenceFlow>
-    <serviceTask id="sid-E0905ADB-9340-49AC-ADA5-3AD0B417D585" name="Set FOIA Request status" activiti:expression="#{changeObjectStatusService.change(OBJECT_ID, OBJECT_TYPE, 'In Approval')}">
+    <serviceTask id="sid-E0905ADB-9340-49AC-ADA5-3AD0B417D585" name="Set FOIA Request status"
+                 activiti:expression="#{changeObjectStatusService.changeIfNoPermanentStatusIsSet(OBJECT_ID, OBJECT_TYPE, 'In Approval', 'Closed')}">
       <extensionElements>
         <modeler:editor-resource-id><![CDATA[sid-E0905ADB-9340-49AC-ADA5-3AD0B417D585]]></modeler:editor-resource-id>
       </extensionElements>
     </serviceTask>
-    <sequenceFlow id="sid-A1A80BC3-B3F3-472A-8187-6EF2428E1D51" sourceRef="sid-E0905ADB-9340-49AC-ADA5-3AD0B417D585" targetRef="sid-F88A33F4-A31E-43B6-A65C-0921762C023D">
+    <sequenceFlow id="sid-A1A80BC3-B3F3-472A-8187-6EF2428E1D51" sourceRef="sid-E0905ADB-9340-49AC-ADA5-3AD0B417D585"
+                  targetRef="sid-F88A33F4-A31E-43B6-A65C-0921762C023D">
       <extensionElements>
         <modeler:editor-resource-id><![CDATA[sid-A1A80BC3-B3F3-472A-8187-6EF2428E1D51]]></modeler:editor-resource-id>
       </extensionElements>
     </sequenceFlow>
-    <serviceTask id="sid-F88A33F4-A31E-43B6-A65C-0921762C023D" name="Place FOIA Request in Approve queue" activiti:expression="#{queueCaseService.enqueue(OBJECT_ID, 'Approve')}">
+    <serviceTask id="sid-F88A33F4-A31E-43B6-A65C-0921762C023D" name="Place FOIA Request in Approve queue"
+                 activiti:expression="#{queueCaseService.enqueue(OBJECT_ID, 'Approve')}">
       <extensionElements>
         <modeler:editor-resource-id><![CDATA[sid-F88A33F4-A31E-43B6-A65C-0921762C023D]]></modeler:editor-resource-id>
       </extensionElements>
     </serviceTask>
-    <sequenceFlow id="sid-F1D7A8E5-79D7-4990-A8B6-52AA679B0632" sourceRef="sid-F88A33F4-A31E-43B6-A65C-0921762C023D" targetRef="sid-8E8C5937-19EC-44A0-BFA3-86603AB81714">
+    <sequenceFlow id="sid-F1D7A8E5-79D7-4990-A8B6-52AA679B0632" sourceRef="sid-F88A33F4-A31E-43B6-A65C-0921762C023D"
+                  targetRef="sid-8E8C5937-19EC-44A0-BFA3-86603AB81714">
       <extensionElements>
         <modeler:editor-resource-id><![CDATA[sid-F1D7A8E5-79D7-4990-A8B6-52AA679B0632]]></modeler:editor-resource-id>
       </extensionElements>
     </sequenceFlow>
-    <serviceTask id="sid-8E8C5937-19EC-44A0-BFA3-86603AB81714" name="Generate Correspondence Letter" activiti:expression="#{foiaQueueCorrespondenceService.handleApproveCorrespondence(OBJECT_ID)}">
+    <serviceTask id="sid-8E8C5937-19EC-44A0-BFA3-86603AB81714" name="Generate Correspondence Letter"
+                 activiti:expression="#{foiaQueueCorrespondenceService.handleApproveCorrespondence(OBJECT_ID)}">
       <extensionElements>
         <modeler:editor-resource-id><![CDATA[sid-8E8C5937-19EC-44A0-BFA3-86603AB81714]]></modeler:editor-resource-id>
       </extensionElements>
@@ -52,11 +63,12 @@
         <modeler:editor-resource-id><![CDATA[sid-A4DD8BA4-1458-4B2D-A55F-9098105D10A5]]></modeler:editor-resource-id>
       </extensionElements>
       <text>This process orchestrates all the actions needed when a FOIA request is entering the Approve queue.
-                Currently there are three such actions:
+        Currently there are three such actions:
 
-                1. Set the status to In Approval
-                2. Set the queue name to 'Approve'
-                3. Generate Correspondence Letter</text>
+        1. Set the status to In Approval, if status is not Closed
+        2. Set the queue name to 'Approve'
+        3. Generate Correspondence Letter
+      </text>
     </textAnnotation>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_foia-extension-approve-process">

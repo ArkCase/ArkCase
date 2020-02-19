@@ -173,6 +173,9 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
         // we don't need to explicitly save the case file. Since the casefile is a managed entity (because we did
         // not detach it) any changes we made are automatically applied at the end of the transaction.
 
+        caseFileEventUtility.raiseCaseFileModifiedEvent(caseFile, ipAddress, "queue.changed",
+                "from " + caseFile.getPreviousQueue().getName() + " to " + nextQueue);
+
         return new CaseFileEnqueueResponse(ErrorReason.NO_ERROR, nextQueue, caseFile);
     }
 
