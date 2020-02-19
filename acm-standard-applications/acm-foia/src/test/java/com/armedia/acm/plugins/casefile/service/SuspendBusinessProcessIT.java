@@ -80,7 +80,7 @@ public class SuspendBusinessProcessIT
     {
         // deploy
         repo.createDeployment()
-                .addClasspathResource("activiti/foia-extension-suspend-process.bpmn20.xml")
+                .addClasspathResource("activiti/foia-extension-suspend-process_v2.bpmn20.xml")
                 .deploy();
     }
 

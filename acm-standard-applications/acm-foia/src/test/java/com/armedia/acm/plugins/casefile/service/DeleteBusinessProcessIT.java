@@ -80,7 +80,7 @@ public class DeleteBusinessProcessIT
     {
         // deploy
         repo.createDeployment()
-                .addClasspathResource("activiti/foia-extension-delete-process_v4.bpmn20.xml")
+                .addClasspathResource("activiti/foia-extension-delete-process_v5.bpmn20.xml")
                 .deploy();
     }
 

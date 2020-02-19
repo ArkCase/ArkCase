@@ -80,7 +80,7 @@ public class HoldBusinessProcessIT
     {
         // deploy
         repo.createDeployment()
-                .addClasspathResource("activiti/foia-extension-hold-process.bpmn20.xml")
+                .addClasspathResource("activiti/foia-extension-hold-process_v2.bpmn20.xml")
                 .deploy();
     }
 
