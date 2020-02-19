@@ -273,4 +273,13 @@
         <property name="jobFactory" ref="acmJobFactory"/>
     </bean>
 
+    <bean id="acmSpringLdapConfig" class="com.armedia.acm.services.users.service.ldap.AcmLdapConfiguration" scope="refresh">
+        <aop:scoped-proxy/>
+    </bean>
+
+    <bean id="acmLdapBeanSyncService" class="com.armedia.acm.services.users.service.ldap.AcmLdapBeanSyncServiceImpl">
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
+        <property name="acmLdapConfig" ref="acmSpringLdapConfig"/>
+    </bean>
+
 </beans>
