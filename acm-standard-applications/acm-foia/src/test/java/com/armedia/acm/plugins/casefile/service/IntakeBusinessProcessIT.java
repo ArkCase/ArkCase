@@ -96,7 +96,7 @@ public class IntakeBusinessProcessIT
 
         // deploy
         repo.createDeployment()
-                .addClasspathResource("activiti/foia-extension-intake-process_v2.bpmn20.xml")
+                .addClasspathResource("activiti/foia-extension-intake-process_v3.bpmn20.xml")
                 .deploy();
     }
 

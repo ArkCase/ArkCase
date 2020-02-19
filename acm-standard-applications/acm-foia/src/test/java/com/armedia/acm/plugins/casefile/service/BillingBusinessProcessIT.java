@@ -80,7 +80,7 @@ public class BillingBusinessProcessIT
     {
         // deploy
         repo.createDeployment()
-                .addClasspathResource("activiti/foia-extension-billing-process.bpmn20.xml")
+                .addClasspathResource("activiti/foia-extension-billing-process_v2.bpmn20.xml")
                 .deploy();
     }
 

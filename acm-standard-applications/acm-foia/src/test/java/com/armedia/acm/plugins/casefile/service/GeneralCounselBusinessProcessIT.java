@@ -83,7 +83,7 @@ public class GeneralCounselBusinessProcessIT
     {
         // deploy
         repo.createDeployment()
-                .addClasspathResource("activiti/foia-extension-generalcounsel-process.bpmn20.xml")
+                .addClasspathResource("activiti/foia-extension-generalcounsel-process_v2.bpmn20.xml")
                 .deploy();
     }
 
