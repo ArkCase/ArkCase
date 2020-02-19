@@ -19,6 +19,8 @@
             </map>
         </property>
         <property name="contextHolder" ref="acmContextHolder"/>
+        <property name="acmLdapConfig" ref="acmSpringLdapConfig"/>
+        <property name="acmLdapBeanSyncService" ref="acmLdapBeanSyncService"/>
     </bean>
 
     <bean id="workflowConfigurationService" class="com.armedia.acm.plugins.admin.service.WorkflowConfigurationService">
@@ -99,14 +101,6 @@
     </bean>
 
     <bean id="openLdapTemplateConfig" class="com.armedia.acm.plugins.admin.model.LdapTemplateConfig">
-        <property name="userPropertiesTemplate" value="spring-config-user-openldap.properties.ftl"/>
-        <property name="userPropertiesTemplateName" value="spring-config-user-%s-openldap.properties"/>
-        <property name="userFileTemplate" value="spring-config-user-openldap.xml.ftl"/>
-        <property name="userFileTemplateName" value="spring-config-user-%s-openldap.xml"/>
-        <property name="groupPropertiesTemplate" value="spring-config-group-openldap.properties.ftl"/>
-        <property name="groupPropertiesTemplateName" value="spring-config-group-%s-openldap.properties"/>
-        <property name="groupFileTemplate" value="spring-config-group-openldap.xml.ftl"/>
-        <property name="groupFileTemplateName" value="spring-config-group-%s-openldap.xml"/>
     </bean>
 
     <bean id="adTemplateConfig" class="com.armedia.acm.plugins.admin.model.LdapTemplateConfig">

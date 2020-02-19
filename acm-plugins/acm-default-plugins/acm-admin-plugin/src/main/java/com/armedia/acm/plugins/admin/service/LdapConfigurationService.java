@@ -33,6 +33,8 @@ import com.armedia.acm.plugins.admin.exception.AcmLdapConfigurationException;
 import com.armedia.acm.plugins.admin.model.LdapConfigurationProperties;
 import com.armedia.acm.plugins.admin.model.LdapDirectoryConfig;
 import com.armedia.acm.plugins.admin.model.LdapTemplateConfig;
+import com.armedia.acm.services.users.service.ldap.AcmLdapBeanSyncService;
+import com.armedia.acm.services.users.service.ldap.AcmLdapConfiguration;
 import com.armedia.acm.spring.SpringContextHolder;
 
 import org.apache.commons.io.FileUtils;
@@ -96,6 +98,10 @@ public class LdapConfigurationService implements InitializingBean
     private Pattern ldapPropertiesFilePattern;
 
     private SpringContextHolder contextHolder;
+
+    private AcmLdapConfiguration acmLdapConfig;
+
+    private AcmLdapBeanSyncService acmLdapBeanSyncService;
 
     /**
      * Create LDAP Directory config files
@@ -558,9 +564,14 @@ public class LdapConfigurationService implements InitializingBean
     public void createLdapDirectoryConfigurations(String id, String directoryType, Map<String, Object> props)
             throws AcmLdapConfigurationException
     {
+        Map<String, Map<String, Object>> properties = new HashMap<>();
+
         createLdapDirectory(id, props);
-        createLdapAddUserTemplateFiles(id, directoryType, new HashMap<>());
-        createLdapAddGroupTemplate(id, directoryType, new HashMap<>());
+        acmLdapBeanSyncService.createLdapUserConfig(id, directoryType, new HashMap<>(), properties);
+        acmLdapBeanSyncService.createLdapGroupConfig(id, directoryType, new HashMap<>(), properties);
+
+        // createLdapAddUserTemplateFiles(id, directoryType, new HashMap<>());
+        // createLdapAddGroupTemplate(id, directoryType, new HashMap<>());
     }
 
     public void deleteLdapDirectoryConfigurationFiles(String directoryId) throws AcmLdapConfigurationException
@@ -578,6 +589,7 @@ public class LdapConfigurationService implements InitializingBean
             deletePatterns.forEach(pattern -> getDirectoryConfigurationFiles(directoryId, configurationLocation, pattern)
                     .ifPresent(deleteFile));
         }
+
     }
 
     public String retrieveDirectoriesConfiguration() throws IOException
@@ -611,21 +623,17 @@ public class LdapConfigurationService implements InitializingBean
 
                 String directory = prop.getProperty(LdapConfigurationProperties.LDAP_PROP_ID);
 
-                getDirectoryConfigurationFiles(directory, configurationLocation,
-                        ldapUserPropertiesFilePattern)
-                                .map(jsonTemplate)
-                                .ifPresent(
-                                        jsonObject -> dirJsonObj.put(LdapConfigurationProperties.LDAP_PROP_ADD_USER_TEMPLATE, jsonObject));
+                dirJsonObj.put(LdapConfigurationProperties.LDAP_PROP_ADD_USER_TEMPLATE,
+                        acmLdapConfig.getAttributes().get("ldapAddUserConfig").get(directory));
 
-                getDirectoryConfigurationFiles(directory, configurationLocation,
-                        ldapGroupPropertiesFilePattern)
-                                .map(jsonTemplate)
-                                .ifPresent(
-                                        jsonObject -> dirJsonObj.put(LdapConfigurationProperties.LDAP_PROP_ADD_GROUP_TEMPLATE, jsonObject));
+                dirJsonObj.put(LdapConfigurationProperties.LDAP_PROP_ADD_GROUP_TEMPLATE,
+                        acmLdapConfig.getAttributes().get("ldapAddGroupConfig").get(directory));
 
                 dirsJsonArr.put(dirJsonObj);
+
             }
         }
+
         return dirsJsonArr.toString();
     }
 
@@ -682,5 +690,15 @@ public class LdapConfigurationService implements InitializingBean
     public void setContextHolder(SpringContextHolder contextHolder)
     {
         this.contextHolder = contextHolder;
+    }
+
+    public void setAcmLdapConfig(AcmLdapConfiguration acmLdapConfig)
+    {
+        this.acmLdapConfig = acmLdapConfig;
+    }
+
+    public void setAcmLdapBeanSyncService(AcmLdapBeanSyncService acmLdapBeanSyncService)
+    {
+        this.acmLdapBeanSyncService = acmLdapBeanSyncService;
     }
 }

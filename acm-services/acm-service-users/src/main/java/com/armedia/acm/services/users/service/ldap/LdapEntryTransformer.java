@@ -34,8 +34,8 @@ import com.armedia.acm.services.users.model.ldap.MapperUtils;
 import com.armedia.acm.spring.SpringContextHolder;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
 
@@ -74,55 +74,58 @@ public class LdapEntryTransformer
             String value = attributeEntry.getValue();
 
             String key = ldapAddUserPropertiesFile.getProperty(attr);
-            if (key.equals(AcmLdapConstants.LDAP_OBJECT_CLASS_ATTR))
+            if (key != null)
             {
-                String[] classes = value.split(",");
-                context.setAttributeValues(attr, classes);
-            }
-            else if (key.equals(AcmLdapConstants.LDAP_USER_ID_ATTR))
-            {
-                context.setAttributeValue(attr, userId);
-            }
-            else if (key.equals(AcmLdapConstants.LDAP_FIRST_NAME_ATTR))
-            {
-                context.setAttributeValue(attr, user.getFirstName());
-            }
-            else if (key.equals(AcmLdapConstants.LDAP_LAST_NAME_ATTR))
-            {
-                context.setAttributeValue(attr, user.getLastName());
-            }
-            else if (key.equals(AcmLdapConstants.LDAP_MAIL_ATTR))
-            {
-                context.setAttributeValue(attr, user.getMail());
-            }
-            else if (key.equals(AcmLdapConstants.LDAP_FULL_NAME_ATTR))
-            {
-                context.setAttributeValue(attr, user.getFullName());
-            }
-            else if (key.equals(AcmLdapConstants.LDAP_PASSWORD_ATTR))
-            {
-                context.setAttributeValue(attr, userPassword);
+                if (key.equals(AcmLdapConstants.LDAP_OBJECT_CLASS_ATTR))
+                {
+                    String[] classes = value.split(",");
+                    context.setAttributeValues(attr, classes);
+                }
+                else if (key.equals(AcmLdapConstants.LDAP_USER_ID_ATTR))
+                {
+                    context.setAttributeValue(attr, userId);
+                }
+                else if (key.equals(AcmLdapConstants.LDAP_FIRST_NAME_ATTR))
+                {
+                    context.setAttributeValue(attr, user.getFirstName());
+                }
+                else if (key.equals(AcmLdapConstants.LDAP_LAST_NAME_ATTR))
+                {
+                    context.setAttributeValue(attr, user.getLastName());
+                }
+                else if (key.equals(AcmLdapConstants.LDAP_MAIL_ATTR))
+                {
+                    context.setAttributeValue(attr, user.getMail());
+                }
+                else if (key.equals(AcmLdapConstants.LDAP_FULL_NAME_ATTR))
+                {
+                    context.setAttributeValue(attr, user.getFullName());
+                }
+                else if (key.equals(AcmLdapConstants.LDAP_PASSWORD_ATTR))
+                {
+                    context.setAttributeValue(attr, userPassword);
 
-            }
-            else if (key.equals(AcmLdapConstants.LDAP_UNICODE_PASSWORD_ATTR))
-            {
-                context.setAttributeValue(attr, MapperUtils.encodeUTF16LE(userPassword));
-            }
-            else if (key.equals(AcmLdapConstants.LDAP_UID_NUMBER_ATTR))
-            {
-                context.setAttributeValue(attr, Long.toString(timestamp));
-            }
-            else if (key.equals(AcmLdapConstants.LDAP_GID_NUMBER_ATTR))
-            {
-                context.setAttributeValue(attr, Long.toString(timestamp));
-            }
-            else if (key.equals(AcmLdapConstants.LDAP_HOME_DIRECTORY_ATTR))
-            {
-                context.setAttributeValue(attr, String.format("/home/%s", userId));
-            }
-            else
-            {
-                context.setAttributeValue(attr, value);
+                }
+                else if (key.equals(AcmLdapConstants.LDAP_UNICODE_PASSWORD_ATTR))
+                {
+                    context.setAttributeValue(attr, MapperUtils.encodeUTF16LE(userPassword));
+                }
+                else if (key.equals(AcmLdapConstants.LDAP_UID_NUMBER_ATTR))
+                {
+                    context.setAttributeValue(attr, Long.toString(timestamp));
+                }
+                else if (key.equals(AcmLdapConstants.LDAP_GID_NUMBER_ATTR))
+                {
+                    context.setAttributeValue(attr, Long.toString(timestamp));
+                }
+                else if (key.equals(AcmLdapConstants.LDAP_HOME_DIRECTORY_ATTR))
+                {
+                    context.setAttributeValue(attr, String.format("/home/%s", userId));
+                }
+                else
+                {
+                    context.setAttributeValue(attr, value);
+                }
             }
         }
 
@@ -181,27 +184,25 @@ public class LdapEntryTransformer
 
         groupAttributes.forEach((attr, value) -> {
             String key = ldapAddGroupPropertiesFile.getProperty(attr);
-            if (key.equals(AcmLdapConstants.LDAP_OBJECT_CLASS_ATTR))
+            switch (key)
             {
+            case AcmLdapConstants.LDAP_OBJECT_CLASS_ATTR:
                 String[] classes = value.split(",");
                 context.setAttributeValues(attr, classes);
-            }
-            else if (key.equals(AcmLdapConstants.LDAP_GID_NUMBER_ATTR))
-            {
+                break;
+            case AcmLdapConstants.LDAP_GID_NUMBER_ATTR:
                 context.setAttributeValue(attr, Long.toString(timestamp));
-            }
-            else if (key.equals(AcmLdapConstants.LDAP_FULL_NAME_ATTR))
-            {
+                break;
+            case AcmLdapConstants.LDAP_FULL_NAME_ATTR:
                 context.setAttributeValue(attr, groupName);
-            }
-            else if (key.equals(AcmLdapConstants.LDAP_MEMBER_ATTR))
-            {
+                break;
+            case AcmLdapConstants.LDAP_MEMBER_ATTR:
                 // set member attribute which is required to create a group entry
                 context.setAttributeValue(attr, "");
-            }
-            else
-            {
+                break;
+            default:
                 context.setAttributeValue(attr, value);
+                break;
             }
         });
 
