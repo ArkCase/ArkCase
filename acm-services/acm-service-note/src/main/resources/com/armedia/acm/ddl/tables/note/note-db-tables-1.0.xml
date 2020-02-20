@@ -29,7 +29,7 @@
             </column>
         </createTable>
 
-        <createIndex tableName="acm_note" indexName="idx_parent_object_id">
+        <createIndex tableName="acm_note" indexName="idx_note_parent_object_id">
             <column name="cm_parent_object_id"/>
         </createIndex>
 

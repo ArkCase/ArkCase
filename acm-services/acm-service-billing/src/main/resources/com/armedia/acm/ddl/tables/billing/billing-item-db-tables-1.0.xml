@@ -40,7 +40,7 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <createIndex tableName="acm_billing_item" indexName="idx_parent_object_id">
+        <createIndex tableName="acm_billing_item" indexName="idx_billing_item_parent_object_id">
             <column name="cm_parent_object_id"/>
         </createIndex>
     </changeSet>
