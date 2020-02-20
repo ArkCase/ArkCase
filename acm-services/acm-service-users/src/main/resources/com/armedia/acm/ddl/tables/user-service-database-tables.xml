@@ -558,9 +558,9 @@
 
     <changeSet id="37-populate-group-identifier-column" author="ncuculova" dbms="postgresql">
         <sql>
-            UPDATE acm_group ag SET cm_identifier = (r.num + 100) from
+            UPDATE acm_group SET cm_identifier = (r.num + 100) from
             (SELECT r.*, row_number() over () AS num FROM acm_group r) r
-            where r.cm_group_name = au.cm_group_name;
+            where r.cm_group_name = acm_group.cm_group_name;
         </sql>
     </changeSet>
 
