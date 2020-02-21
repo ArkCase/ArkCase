@@ -230,7 +230,16 @@
         </addColumn>
     </changeSet>
 
-    <changeSet id="13-populate-number-in-acm-costsheet-table" author="marjan.trifunov">
+    <changeSet id="13-populate-number-in-acm-costsheet-table" author="marjan.trifunov" dbms="mysql,mssql,oracle">
+        <sql>
+            <comment>Populate costsheet number column</comment>
+            UPDATE acm_costsheet c
+            SET c.cm_costsheet_number = c.cm_costsheet_id
+            WHERE c.cm_costsheet_number IS NULL OR c.cm_costsheet_number = ''
+        </sql>
+    </changeSet>
+
+    <changeSet id="13-populate-number-in-acm-costsheet-table" author="marjan.trifunov" dbms="postgresql">
         <sql>
             <comment>Populate costsheet number column</comment>
             UPDATE acm_costsheet
