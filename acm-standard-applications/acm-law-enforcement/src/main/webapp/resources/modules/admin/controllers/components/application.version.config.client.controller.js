@@ -5,6 +5,6 @@ angular.module('admin').controller('Admin.ApplicationVersionController', [ '$sco
     $scope.applicationVersion = "";
     ApplicationVersionService.getApplicationVersion().then(function (result) {
         var applicationVersion = result.data.applicationVersion;
-        $scope.applicationVersion = "v" + applicationVersion.substring(0, applicationVersion.indexOf("-"));
+        $scope.applicationVersion = applicationVersion;
     });
 }]);
