@@ -204,7 +204,7 @@ public class BillingInvoiceDocumentGenerator<T extends AcmContainerEntity & AcmO
      * @param required
      *            if true, insert 'required="true"' attribute.
      */
-    private void addElement(Document doc, Element parent, String elemName,
+    public void addElement(Document doc, Element parent, String elemName,
             String elemValue, boolean required)
     {
         Element elem = doc.createElement(elemName);

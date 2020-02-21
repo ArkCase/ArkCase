@@ -34,13 +34,13 @@
     </bean>
 
     <bean id="acmLoginSuccessOperations" class="com.armedia.acm.auth.AcmLoginSuccessOperations">
-        <property name="acmPluginManager" ref="acmPluginManager"/>
         <property name="acmApplication" ref="acmApplication"/>
         <property name="userDao" ref="userJpaDao"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="objectConverter" ref="objectConverter"/>
         <property name="applicationConfig" ref="applicationProperties"/>
         <property name="externalAuthenticationUtils" ref="externalAuthenticationUtils"/>
+        <property name="rolesToPrivilegesConfig" ref="rolesToPrivileges"/>
     </bean>
 
     <bean id="acmLoginFailureListener" class="com.armedia.acm.auth.AcmLoginFailureEventListener"/>

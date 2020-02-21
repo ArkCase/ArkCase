@@ -14,6 +14,7 @@
         <property name="rolesConfig" ref="applicationRolesConfig"/>
         <property name="rolesToGroupsConfig" ref="rolesToGroupsConfig"/>
         <property name="collectionPropertiesConfigurationService" ref="collectionPropertiesConfigurationService"/>
+        <property name="rolesToPrivilegesConfig" ref="rolesToPrivileges"/>
     </bean>
 
 </beans>

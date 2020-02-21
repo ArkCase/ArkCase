@@ -44,8 +44,10 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
+        "/spring/spring-library-person-plugin-test.xml",
         "/spring/spring-library-data-source.xml",
         "/spring/spring-library-person.xml",
+        "/spring/spring-library-addressable-plugin.xml",
         "/spring/spring-library-context-holder.xml",
         "/spring/spring-library-property-file-manager.xml",
         "/spring/spring-library-acm-encryption.xml",
@@ -68,6 +70,15 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
         "/spring/spring-library-service-data.xml",
         "/spring/spring-library-acm-email.xml",
         "/spring/spring-library-configuration.xml",
+        "/spring/spring-test-quartz-scheduler.xml",
+        "/spring/spring-library-websockets.xml",
+        "/spring/spring-library-activemq.xml",
+        "/spring/spring-library-addressable-plugin.xml",
+        "/spring/spring-library-user-login.xml",
+        "/spring/spring-library-core-api.xml",
+        "/spring/spring-library-camel-context.xml",
+        "/spring/spring-library-authentication-token.xml",
+        "/spring/spring-library-plugin-manager.xml",
         "/spring/spring-library-folder-watcher.xml" })
 @TransactionConfiguration(defaultRollback = true)
 public class PersonServiceIT

@@ -27,9 +27,9 @@ package com.armedia.acm.plugins.casefile.service;
  * #L%
  */
 
+import static org.easymock.EasyMock.anyObject;
 import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import static org.easymock.EasyMock.expectLastCall;
 
 import com.armedia.acm.objectchangestatus.service.ChangeObjectStatusService;
 import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
@@ -37,12 +37,15 @@ import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
+import org.easymock.EasyMockSupport;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -59,9 +62,10 @@ import gov.foia.service.ResponseFolderNotifyService;
  * Created by dmiller on 8/9/16.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
+@DirtiesContext
 @ContextConfiguration(locations = { "classpath:/spring/spring-library-foia-activiti-test.xml",
         "classpath:/spring/spring-library-notification-test.xml" })
-public class ReleaseBusinessProcessIT
+public class ReleaseBusinessProcessIT extends EasyMockSupport
 {
     private final String processName = "foia-extension-release-process";
     @Autowired
@@ -94,11 +98,16 @@ public class ReleaseBusinessProcessIT
     @Qualifier("responseFolderNotifyService")
     private ResponseFolderNotifyService responseFolderNotifyService;
 
+    private ApplicationEventPublisher mockedApplicationEventPublisher;
+
     @Before
     public void setUp() throws Exception
     {
         // deploy
         repo.createDeployment().addClasspathResource("activiti/foia-extension-release-process_v11.bpmn20.xml").deploy();
+
+        mockedApplicationEventPublisher = createMock(ApplicationEventPublisher.class);
+        responseFolderCompressorService.setApplicationEventPublisher(mockedApplicationEventPublisher);
     }
 
     @After
@@ -121,16 +130,16 @@ public class ReleaseBusinessProcessIT
         changeObjectStatusService.change(foiaId, objectType, "Released");
         expect(queueCaseService.enqueue(foiaId, "Release")).andReturn(new FOIARequest());
         expect(responseFolderCompressorService.compressResponseFolder(foiaId)).andReturn("temp-file-name.zip");
+        mockedApplicationEventPublisher.publishEvent(anyObject());
+        expectLastCall().anyTimes();
 
         foiaRequestFileBrokerClient.sendReleaseFile(foiaId);
         responseFolderNotifyService.sendEmailNotification(foiaId);
 
-        replay(changeObjectStatusService, queueCaseService, responseFolderCompressorService, foiaRequestFileBrokerClient,
-                responseFolderNotifyService);
+        replayAll();
 
         rt.startProcessInstanceByKey(processName, processVariables);
 
-        verify(changeObjectStatusService, queueCaseService, responseFolderCompressorService, foiaRequestFileBrokerClient,
-                responseFolderNotifyService);
+        verifyAll();
     }
 }

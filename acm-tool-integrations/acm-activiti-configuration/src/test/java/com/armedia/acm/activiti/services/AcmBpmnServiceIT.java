@@ -81,6 +81,7 @@ import java.util.Set;
         "/spring/spring-library-context-holder.xml",
         "/spring/spring-library-property-file-manager.xml",
         "/spring/spring-library-acm-encryption.xml",
+        "/spring/spring-library-websockets.xml",
         "/spring/spring-library-test-activiti-configuration.xml"
 })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")

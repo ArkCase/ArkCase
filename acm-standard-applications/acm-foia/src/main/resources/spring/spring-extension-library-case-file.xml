@@ -259,6 +259,7 @@
             <beans:property name="acmObjectLockService" ref="objectLockService"/>
             <beans:property name="systemConfigurationService" ref="foiaConfigurationService"/>
             <beans:property name="caseFileEventUtility" ref="caseFileEventUtility"/>
+            <beans:property name="timesheetService" ref="timesheetService"/>
         </beans:bean>
 
         <beans:bean id="requestResponseFolderService" class="gov.foia.service.RequestResponseFolderService">

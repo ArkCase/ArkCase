@@ -79,6 +79,10 @@ import java.util.List;
         "/spring/spring-library-configuration.xml",
         "/spring/spring-library-convert-folder-service.xml",
         "/spring/spring-library-folder-watcher.xml",
+        "/spring/spring-library-websockets.xml",
+        "/spring/spring-library-camel-context.xml",
+        "/spring/spring-library-activemq.xml",
+        "/spring/spring-test-quartz-scheduler.xml",
         "/spring/spring-library-calendar-integration-exchange-service.xml"
 })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")

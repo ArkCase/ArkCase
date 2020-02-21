@@ -66,8 +66,6 @@ public class AcmAuthenticationManager implements AuthenticationManager
     {
         Exception lastException = null;
 
-        try
-        {
             String principal = authentication.getName();
 
             Map<String, AuthenticationProvider> providerMap = getSpringContextHolder().getAllBeansOfType(AuthenticationProvider.class);
@@ -84,7 +82,7 @@ public class AcmAuthenticationManager implements AuthenticationManager
                         }
                         AcmLdapAuthenticationProvider provider = (AcmLdapAuthenticationProvider) providerEntry.getValue();
                         String userDomain = provider.getLdapSyncService().getLdapSyncConfig().getUserDomain();
-                        if (principal.endsWith(userDomain))
+                    if (principal.endsWith(userDomain))
                         {
                             providerAuthentication = provider.authenticate(authentication);
                         }
@@ -98,7 +96,7 @@ public class AcmAuthenticationManager implements AuthenticationManager
                         AcmActiveDirectoryAuthenticationProvider provider = (AcmActiveDirectoryAuthenticationProvider) providerEntry
                                 .getValue();
                         String userDomain = provider.getLdapSyncService().getLdapSyncConfig().getUserDomain();
-                        if (principal.endsWith(userDomain))
+                    if (principal.endsWith(userDomain))
                         {
                             providerAuthentication = provider.authenticate(authentication);
                         }
@@ -156,37 +154,28 @@ public class AcmAuthenticationManager implements AuthenticationManager
 
                 }
 
-                else
+            else if (ExceptionUtils.getRootCauseMessage(lastException).contains("UnknownHostException"))
                 {
-                    ae = ExceptionUtils.getRootCauseMessage(lastException).contains("UnknownHostException")
-                            ? new AuthenticationServiceException(
-                                    "There was an unknown error in connecting with the authentication services!", lastException)
-                            : new AuthenticationServiceException(ExceptionUtils.getRootCauseMessage(lastException),
-                                    lastException);
-                }
-                getAuthenticationEventPublisher().publishAuthenticationFailure(ae, authentication);
-                log.debug("Detailed exception: ", lastException);
-                lastException = ae;
-                throw ae;
+                ae = new AuthenticationServiceException(
+                        "There was an unknown error in connecting with the authentication services!", lastException);
             }
-        }
-        catch (RuntimeException e)
-        {
-            log.debug("Runtime exception: ", e);
-            if (e instanceof NoProviderFoundException)
-                throw e;
-            else if (lastException != null)
-                throw new AuthenticationServiceException(ExceptionUtils.getRootCauseMessage(lastException));
+            else if (lastException instanceof RuntimeException)
+            {
+                throw new InternalAuthenticationServiceException("Unknown server error", lastException);
+            }
             else
             {
-                throw new InternalAuthenticationServiceException("Unknown server error", e);
+                ae = new AuthenticationServiceException(ExceptionUtils.getRootCauseMessage(lastException),
+                        lastException);
             }
-        }
+                getAuthenticationEventPublisher().publishAuthenticationFailure(ae, authentication);
+                log.debug("Detailed exception: ", lastException);
+                throw ae;
+            }
         // didn't get an exception, or an authentication either, so we can throw a provider not found exception,
         // since
         // either there are no providers, or no providers can handle the incoming authentication
         throw new NoProviderFoundException("Authentication problem. Please contact your administrator.");
-
     }
 
     public AcmAuthentication getAcmAuthentication(Authentication providerAuthentication)

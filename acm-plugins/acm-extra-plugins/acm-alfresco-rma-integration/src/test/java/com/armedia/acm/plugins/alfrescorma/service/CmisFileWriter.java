@@ -61,7 +61,7 @@ public class CmisFileWriter
     {
         CmisConfigUtils cmisConfigUtils = new CmisConfigUtils();
         cmisConfigUtils.setCamelContextManager(camelContextManager);
-        String testPath = "/acm/test/folder";
+        String testPath = "/Sites/acm/documentLibrary/test/folder";
 
         // create a file that we can then declare as a record and set metadata on it
         Map<String, Object> properties = new HashMap<>();

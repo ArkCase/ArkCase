@@ -58,11 +58,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.ldap.AuthenticationException;
+import org.springframework.ldap.InvalidAttributeValueException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Base64Utils;
-
-import javax.naming.AuthenticationException;
 
 import java.nio.charset.Charset;
 import java.util.Arrays;
@@ -484,16 +484,22 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
 
         catch (AcmUserActionFailedException e)
         {
-            if (e.getCause() instanceof AuthenticationException)
-            {
-                return UserResetResponse.invalidCredentials();
-            }
-            else
-            {
-                log.debug(String.format("Couldn't update password for LDAP user %s %s.", acmUserId, userId));
-                throw new PortalUserServiceException(String.format("Couldn't update password for user %s.", userId), e);
-            }
-
+            log.debug(String.format("Couldn't update password for LDAP user %s %s.", acmUserId, userId));
+            throw new PortalUserServiceException(String.format("Couldn't update password for user %s.", userId), e);
+        }
+        catch (AuthenticationException e)
+        {
+            log.debug(String.format("Failed to authenticate! Wrong password for LDAP user %s %s.", acmUserId, userId));
+            return UserResetResponse.invalidCredentials();
+        }
+        catch (InvalidAttributeValueException e)
+        {
+            log.debug(String.format("Password policy error for LDAP user %s %s.", acmUserId, userId));
+            throw new PortalUserServiceException(String.format("Password fails quality checking policy for user %s.", userId), e);
+        }
+        catch (Exception e)
+        {
+            throw new PortalUserServiceException("Unknown error occurred", e);
         }
 
         return UserResetResponse.passwordUpdated();

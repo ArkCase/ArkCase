@@ -27,7 +27,6 @@ package com.armedia.acm.services.functionalaccess.web.api;
  * #L%
  */
 
-import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService;
 import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.users.dao.UserDao;
@@ -51,7 +50,6 @@ import java.util.Map;
 public class GetGroupsByPrivilegeAPIController
 {
     private Logger log = LogManager.getLogger(getClass());
-    private AcmPluginManager pluginManager;
     private UserDao userDao;
     private FunctionalAccessService functionalAccessService;
 
@@ -67,22 +65,10 @@ public class GetGroupsByPrivilegeAPIController
             log.debug("Looking for users for privilege '" + privilege);
         }
 
-        List<String> rolesForPrivilege = getPluginManager().getRolesForPrivilege(privilege);
+        List<String> rolesForPrivilege = getFunctionalAccessService().getRolesByPrivilege(privilege);
         Map<String, List<String>> rolesToGroups = getFunctionalAccessService().getApplicationRolesToGroups();
 
-        String retval = getFunctionalAccessService().getGroupsByPrivilege(rolesForPrivilege, rolesToGroups, startRow, maxRows, sort, auth);
-
-        return retval;
-    }
-
-    public AcmPluginManager getPluginManager()
-    {
-        return pluginManager;
-    }
-
-    public void setPluginManager(AcmPluginManager pluginManager)
-    {
-        this.pluginManager = pluginManager;
+        return getFunctionalAccessService().getGroupsByPrivilege(rolesForPrivilege, rolesToGroups, startRow, maxRows, sort, auth);
     }
 
     public UserDao getUserDao()

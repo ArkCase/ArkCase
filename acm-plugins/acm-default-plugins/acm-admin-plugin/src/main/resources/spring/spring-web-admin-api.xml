@@ -108,6 +108,7 @@
     <bean id="rolesPrivilegesRetrieveRolesByPrivilege"
         class="com.armedia.acm.plugins.admin.web.api.RolesPrivilegesRetrieveRolesByPrivilege">
         <property name="rolesPrivilegesService" ref="rolesPrivilegesService"/>
+        <property name="functionalAccessService" ref="functionalAccessService"/>
     </bean>
 
     <bean id="rolesPrivilegesUpdateRolePrivileges" class="com.armedia.acm.plugins.admin.web.api.RolesPrivilegesUpdateRolePrivileges">

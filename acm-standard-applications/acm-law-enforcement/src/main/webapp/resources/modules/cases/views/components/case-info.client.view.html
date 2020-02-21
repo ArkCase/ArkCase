@@ -73,10 +73,10 @@
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold popup-move-on-left">
-                    <a href="#" editable-combodate="dateInfo.dueDate" e-template="MMM/DD/YYYY HH:mm"
+                    <a href="#" editable-combodate="dueDateInfo" e-template="MMM/DD/YYYY HH:mm"
                        e-min-year="{{minYear}}" e-max-year="{{maxYear}}" e-minute-step="1" onaftersave="updateDueDate($data, dateInfo.dueDate)"
                        permission="editCase" permission-object-type="CASE_FILE" permission-properties="objectInfo" permission-action="disable">
-                        {{ (dateInfo.dueDate | date: ('common.defaultDateTimeUIFormat' | translate)) || ('common.value.unknown' | translate) }}</a>
+                        {{dateInfo.dueDate || ('common.value.unknown' | translate) }}</a>
                 </div>
                 <small class="text-muted"><span translate>cases.comp.info.dueDate.label</span></small>
             </div>

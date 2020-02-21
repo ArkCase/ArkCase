@@ -191,13 +191,15 @@ angular.module('services').factory(
                      *
                      * @returns {Object} Promise
                      */
-                    Service.getDocumentRepositoryTasks = function(id) {
+                    Service.getDocumentRepositoryTasks = function(id, startRow, maxRows) {
                         var cacheDocumentRepositoryInfo = new Store.CacheFifo(Service.CacheNames.DOC_REPO_TASKS);
                         var docRepoTasks = cacheDocumentRepositoryInfo.get(id);
                         return Util.serviceCall({
                             service : Service._getDocumentReposioryTasks,
                             param : {
-                                id : id
+                                id : id,
+                                start: startRow,
+                                n: maxRows
                             },
                             result : docRepoTasks,
                             onSuccess : function(data) {

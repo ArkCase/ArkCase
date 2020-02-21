@@ -40,7 +40,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -62,7 +61,7 @@ public class RolesPrivilegesRemoveRolesPrivileges implements RolePrivilegesConst
     @ResponseBody
     public String removeRolesPrivileges(
             @PathVariable(PROP_ROLES_NAMES) String rolesNames,
-            @PathVariable(PROP_PRIVILEGES_NAMES) String privilegesNames) throws IOException, AcmRolesPrivilegesException
+            @PathVariable(PROP_PRIVILEGES_NAMES) String privilegesNames) throws AcmRolesPrivilegesException
     {
 
         try

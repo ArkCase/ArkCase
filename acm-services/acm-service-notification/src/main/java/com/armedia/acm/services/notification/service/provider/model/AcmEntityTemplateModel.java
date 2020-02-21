@@ -35,7 +35,7 @@ public class AcmEntityTemplateModel
     public String assigneeUserId;
     public String modifierUserId;
     public String assigneeGroupId;
-    public Boolean isTitleEnabled;
+    public String titleEnabled;
     public String modifierEmail;
     public String assigneeEmail;
 
@@ -79,14 +79,14 @@ public class AcmEntityTemplateModel
         this.assigneeGroupId = assigneeGroupId;
     }
 
-    public Boolean getTitleEnabled()
+    public String getTitleEnabled()
     {
-        return isTitleEnabled;
+        return titleEnabled;
     }
 
-    public void setTitleEnabled(Boolean titleEnabled)
+    public void setTitleEnabled(String titleEnabled)
     {
-        isTitleEnabled = titleEnabled;
+        this.titleEnabled = titleEnabled;
     }
 
     /**

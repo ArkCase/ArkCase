@@ -60,6 +60,7 @@ import java.util.UUID;
         "/spring/spring-library-context-holder.xml",
         "/spring/spring-library-search.xml",
         "/spring/spring-library-user-service.xml",
+        "/spring/spring-library-core-api.xml",
         "/spring/spring-library-data-access-control.xml",
         "/spring/spring-library-particpants.xml",
         "/spring/spring-library-activiti-configuration.xml",
@@ -74,6 +75,10 @@ import java.util.UUID;
         "/spring/spring-library-authentication-token.xml",
         "/spring/spring-library-configuration.xml",
         "/spring/spring-library-acm-email.xml",
+        "/spring/spring-library-websockets.xml",
+        "/spring/spring-library-camel-context.xml",
+        "/spring/spring-library-activemq.xml",
+        "/spring/spring-test-quartz-scheduler.xml",
         "/spring/spring-library-folder-watcher.xml"
 })
 public class FindFolderServiceIT

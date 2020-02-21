@@ -34,7 +34,7 @@ angular.module('cases').controller('Cases.ExemptionController',
             });
 
             $scope.isEditDisabled = function(rowEntity) {
-                if (rowEntity.exemptionCode != 'X3') {
+                if (rowEntity.exemptionCode != 'Ex.3') {
                    return true;
                 }
             };

@@ -54,11 +54,17 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
         "/spring/spring-library-drools-rule-monitor.xml",
         "/spring/spring-library-particpants.xml",
         "/spring/spring-library-user-service.xml",
+        "/spring/spring-library-core-api.xml",
         "/spring/spring-library-search.xml",
         "/spring/test-case-file-context.xml",
         "/spring/spring-library-data-access-control.xml",
         "/spring/spring-library-audit-service.xml",
         "/spring/spring-library-case-plugin-test.xml",
+        "/spring/spring-test-quartz-scheduler.xml",
+        "/spring/spring-library-activemq.xml",
+        "/spring/spring-library-websockets.xml",
+        "/spring/spring-library-camel-context.xml",
+        "/spring/spring-integration-case-file-test.xml",
         "/spring/spring-library-service-data.xml"
 })
 @TransactionConfiguration(defaultRollback = true)

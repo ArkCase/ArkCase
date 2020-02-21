@@ -58,7 +58,8 @@ import javax.persistence.PersistenceContext;
         "/spring/spring-library-property-file-manager.xml",
         "/spring/spring-library-acm-encryption.xml",
         "/spring/spring-library-configuration.xml",
-        "/spring/spring-library-object-converter.xml"
+        "/spring/spring-library-object-converter.xml",
+        "/spring/spring-library-websockets.xml"
 })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class ComplaintDaoIT

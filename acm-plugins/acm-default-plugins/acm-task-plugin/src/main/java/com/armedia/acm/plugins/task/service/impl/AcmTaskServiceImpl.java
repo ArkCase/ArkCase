@@ -632,8 +632,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
         AcmContainer container = ecmFileService.createContainerFolder(businessProcess.getObjectType(), businessProcess.getId(),
                 EcmFileConstants.DEFAULT_CMIS_REPOSITORY_ID);
         getAcmContainerDao().getEm().flush();
-        
-	businessProcess.setContainer(container);
+        businessProcess.setContainer(container);
 
         AcmFolder folder = container.getAttachmentFolder();
 
@@ -660,7 +659,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
             }
         }
         List<EcmFile> documentsToReview = task.getDocumentsToReview();
-        if (documentsToReview != null)
+        if (!documentsToReview.isEmpty())
         {
             documentsToReview.addAll(uploadedFiles);
             task.setDocumentsToReview(documentsToReview);

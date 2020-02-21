@@ -31,4 +31,18 @@
     <bean id="auditEventConfig" class="com.armedia.acm.audit.model.AuditEventConfig">
         <property name="jsonUnmarshaller" ref="jsonUnmarshaller"/>
     </bean>
+
+    <bean id="externalAuthenticationUtils" class="com.armedia.acm.auth.ExternalAuthenticationUtils"/>
+
+    <bean id="alfrescoSyncConfig" class="com.armedia.acm.plugins.ecm.service.sync.AlfrescoSyncConfig"/>
+
+    <bean id="cacheManager" class="org.springframework.cache.support.SimpleCacheManager">
+        <property name="caches">
+            <set>
+                <bean class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean">
+                    <property name="name" value="default"/>
+                </bean>
+            </set>
+        </property>
+    </bean>
 </beans>

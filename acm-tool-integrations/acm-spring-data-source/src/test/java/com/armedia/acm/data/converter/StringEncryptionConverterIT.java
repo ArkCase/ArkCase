@@ -42,6 +42,7 @@ import java.io.IOException;
         "/spring/spring-library-configuration.xml",
         "/spring/spring-library-object-converter.xml",
         "/spring/spring-library-data-source.xml",
+        "/spring/spring-library-data-source-test.xml",
         "/spring/spring-library-context-holder.xml",
         "/spring/spring-library-property-file-manager.xml",
         "/spring/spring-library-acm-encryption.xml"

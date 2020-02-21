@@ -37,7 +37,6 @@ import com.armedia.acm.objectonverter.AcmMarshaller;
 import com.armedia.acm.objectonverter.AcmUnmarshaller;
 import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.objectonverter.ObjectConverter;
-import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
@@ -107,7 +106,6 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
     private ObjectAssociationDao objectAssociationDao;
     private FunctionalAccessService functionalAccessService;
     private SearchResults searchResults;
-    private AcmPluginManager acmPluginManager;
     private FolderAndFilesUtils folderAndFilesUtils;
     private AcmFolderService acmFolderService;
     private LookupDao lookupDao;
@@ -763,7 +761,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
 
             try
             {
-                List<String> rolesForPrivilege = getAcmPluginManager().getRolesForPrivilege(privilege);
+                List<String> rolesForPrivilege = getFunctionalAccessService().getRolesByPrivilege(privilege);
                 Map<String, List<String>> rolesToGroups = getFunctionalAccessService().getApplicationRolesToGroups();
 
                 Map<String, String> groups = getGroups(rolesForPrivilege, rolesToGroups, 0, 1000, "name ASC", getAuthentication());
@@ -936,16 +934,6 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
     public void setSearchResults(SearchResults searchResults)
     {
         this.searchResults = searchResults;
-    }
-
-    public AcmPluginManager getAcmPluginManager()
-    {
-        return acmPluginManager;
-    }
-
-    public void setAcmPluginManager(AcmPluginManager acmPluginManager)
-    {
-        this.acmPluginManager = acmPluginManager;
     }
 
     public Gson getGson()

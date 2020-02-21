@@ -69,6 +69,13 @@ import java.util.UUID;
         "/spring/spring-library-case-file-events.xml",
         "/spring/spring-library-case-file-rules.xml",
         "/spring/spring-library-case-file-save.xml",
+        "/spring/spring-library-billing.xml",
+        "/spring/spring-library-service-timesheet.xml",
+        "/spring/spring-library-timesheet-save.xml",
+        "/spring/spring-library-timesheet-rules.xml",
+        "/spring/spring-library-service-costsheet.xml",
+        "/spring/spring-library-costsheet-save.xml",
+        "/spring/spring-library-costsheet-rules.xml",
         "/spring/spring-library-complaint.xml",
         "/spring/spring-library-complaint-plugin-test.xml",
         "/spring/spring-library-context-holder.xml",
@@ -108,6 +115,13 @@ import java.util.UUID;
         "/spring/spring-library-ecm-file-lock.xml",
         "/spring/spring-library-audit-service.xml",
         "/spring/spring-library-core-api.xml",
+        "/spring/spring-library-activemq.xml",
+        "/spring/spring-test-quartz-scheduler.xml",
+        "/spring/spring-library-addressable-plugin.xml",
+        "/spring/spring-library-camel-context.xml",
+        "/spring/spring-library-websockets.xml",
+        "/spring/spring-library-object-title.xml",
+        "/spring/spring-library-convert-file-service.xml",
         "/spring/spring-library-convert-folder-service.xml"
 })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
