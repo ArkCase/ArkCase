@@ -55,6 +55,7 @@ import javax.persistence.Query;
         "/spring/spring-library-property-file-manager.xml",
         "/spring/spring-library-acm-encryption.xml",
         "/spring/spring-library-configuration.xml",
+        "/spring/spring-library-websockets.xml",
         "/spring/spring-library-object-converter.xml"
 })
 @TransactionConfiguration(defaultRollback = true)

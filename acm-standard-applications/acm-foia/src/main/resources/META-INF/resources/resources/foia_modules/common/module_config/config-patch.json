@@ -49,7 +49,10 @@
         "path": "/docTree/columnDefs/8",
         "value": {
             "name": "reviewStatus",
+            "field": "reviewStatus",
             "displayName": "common.directive.docTree.table.columns.reviewStatus",
+            "headTemplate": "<label id='reviewStatus' class='doc-tree-header' style='cursor: pointer;'></label>",
+            "icon": "<i class='fa fa-fw' data-sort='reviewStatus' data-dir='ASC'></i>",
             "__todo__cellTemplate": "<div>{{ row.entity.reviewStatus }}</div>",
             "width": "8%",
             "index": 8
@@ -60,7 +63,10 @@
         "path": "/docTree/columnDefs/9",
         "value": {
             "name": "redactionStatus",
+            "field": "redactionStatus",
             "displayName": "common.directive.docTree.table.columns.redactionStatus ",
+            "headTemplate": "<label id='redactionStatus' class='doc-tree-header' style='cursor: pointer;'></label>",
+            "icon": "<i class='fa fa-fw' data-sort='redactionStatus' data-dir='ASC'></i>",
             "__todo__cellTemplate": "<div>{{ row.entity.redactionStatus }}</div>",
             "width": "8%",
             "index": 9

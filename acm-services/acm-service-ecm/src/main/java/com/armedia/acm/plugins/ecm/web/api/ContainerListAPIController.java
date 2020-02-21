@@ -35,8 +35,8 @@ import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -82,11 +82,11 @@ public class ContainerListAPIController
 
     @RequestMapping(value = "/container/file/{containerId}/{fileType}", method = RequestMethod.GET)
     @ResponseBody
-    public EcmFile findFileByContainerAndFileType(@PathVariable("containerId") Long containerId,
+    public EcmFile findOldestFileByContainerAndFileType(@PathVariable("containerId") Long containerId,
             @PathVariable("fileType") String fileType)
     {
 
-        EcmFile ecmFile = getEcmFileService().findFileByContainerAndFileType(containerId, fileType);
+        EcmFile ecmFile = getEcmFileService().findOldestFileByContainerAndFileType(containerId, fileType);
         if (ecmFile == null)
         {
             throw new IllegalStateException("Container '" + containerId + "' does not have a file of type " + fileType + "!");

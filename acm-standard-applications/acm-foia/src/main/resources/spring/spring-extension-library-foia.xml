@@ -95,6 +95,7 @@
             <property name="foiaRequestDao" ref="foiaRequestDao"/>
             <property name="holidayConfigurationService" ref="holidayConfigurationService"/>
             <property name="userDao" ref="userJpaDao"/>
+            <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         </beans:bean>
 
         <beans:bean id="dueDateReminderJobDescriptor" class="gov.foia.service.DueDateReminderJobDescriptor">
@@ -133,10 +134,15 @@
             <beans:property name="solrReindexService" ref="solrReindexService"/>
         </beans:bean>
 
+        <beans:bean id="solrReindexFOIAFileExecutor" class="gov.foia.service.dataupdate.SolrReindexFoiaFileExecutor">
+            <property name="solrReindexService" ref="solrReindexService"/>
+        </beans:bean>
+
         <beans:bean id="foiaExtensionDataUpdateExecutor" class="gov.foia.service.dataupdate.FoiaExtensionDataUpdateExecutor">
             <beans:property name="foiaDataUpdateExecutors">
                 <beans:list>
                     <beans:ref bean="foiaNotificationDataUpdateExecutor"/>
+                    <beans:ref bean="solrReindexFOIAFileExecutor"/>
                 </beans:list>
             </beans:property>
 
@@ -310,6 +316,10 @@
                     <entry key="creator" value="author"/>
                     <entry key="modifier" value="modifier_s"/>
                     <entry key="category" value="category_s"/>
+                    <entry key="redactionStatus" value="redaction_status_s"/>
+                    <entry key="reviewStatus" value="review_status_s"/>
+                    <entry key="status" value="status_s"/>
+                    <entry key="public" value="public_flag_b"/>
                 </map>
             </beans:property>
             <beans:property name="solrObjectTypeToAcmType">

@@ -32,9 +32,9 @@ import com.armedia.acm.core.AcmNotificationReceiver;
 import com.armedia.acm.core.AcmObjectNumber;
 import com.armedia.acm.core.AcmStatefulEntity;
 import com.armedia.acm.core.AcmTitleEntity;
+import com.armedia.acm.data.AcmAssignee;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.AcmLegacySystemEntity;
-import com.armedia.acm.data.AcmAssignee;
 import com.armedia.acm.data.converter.BooleanToStringConverter;
 import com.armedia.acm.data.converter.LocalDateConverter;
 import com.armedia.acm.data.converter.LocalDateTimeConverter;
@@ -143,6 +143,10 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
     @Column(name = "cm_case_details")
     private String details;
 
+    @Lob
+    @Column(name = "cm_case_details_summary")
+    private String caseDetailsSummary;
+
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @Column(name = "cm_case_incident_date")
     @Temporal(TemporalType.TIMESTAMP)
@@ -191,6 +195,9 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
 
     @Transient
     private ChangeCaseStatus changeCaseStatus;
+
+    @Transient
+    private boolean hasAnyAssociatedTimesheets;
 
     /**
      * These approvers are added by the web application and they become the assignees of the Activiti business process.
@@ -746,6 +753,14 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
         this.securityField = securityField;
     }
 
+    public String getCaseDetailsSummary() {
+        return caseDetailsSummary;
+    }
+
+    public void setCaseDetailsSummary(String caseDetailsSummary) {
+        this.caseDetailsSummary = caseDetailsSummary;
+    }
+
     @Override
     @JsonIgnore
     public String getObjectType()
@@ -763,6 +778,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
                 ", title='" + title + '\'' +
                 ", status='" + status + '\'' +
                 ", details='" + details + '\'' +
+                ", caseDetailsSummary='" + caseDetailsSummary + '\'' +
                 ", incidentDate=" + incidentDate +
                 ", created=" + created +
                 ", creator='" + creator + '\'' +
@@ -930,5 +946,15 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
     public PersonAssociation getAcmObjectOriginator()
     {
         return getOriginator();
+    }
+
+    public boolean getHasAnyAssociatedTimesheets()
+    {
+        return hasAnyAssociatedTimesheets;
+    }
+
+    public void setHasAnyAssociatedTimesheets(boolean hasAnyAssociatedTimesheets)
+    {
+        this.hasAnyAssociatedTimesheets = hasAnyAssociatedTimesheets;
     }
 }

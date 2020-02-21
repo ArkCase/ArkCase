@@ -70,8 +70,8 @@ angular.module('tasks').controller(
                     var onObjectInfoRetrieved = function(objectInfo) {
                         $scope.objectInfo = objectInfo;
                         $scope.objectId = objectInfo.taskId;
-                        $scope.parentObjectId = objectInfo.parentObjectId;
-                        $scope.parentObjectType = objectInfo.parentObjectType;
+                        $scope.parentObjectId = objectInfo.documentsToReview ? objectInfo.parentObjectId : null;
+                        $scope.parentObjectType = objectInfo.documentsToReview ? objectInfo.parentObjectType : null;
                         var documentsUnderReview = [];
                         if (Util.isArray($scope.objectInfo.documentsToReview) && !Util.isArrayEmpty($scope.objectInfo.documentsToReview)) {
                             documentsUnderReview = $scope.objectInfo.documentsToReview;

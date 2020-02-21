@@ -61,6 +61,9 @@ import java.util.Optional;
         "/spring/spring-library-user-service-test-user-home-files.xml",
         "/spring/spring-library-search.xml",
         "/spring/spring-library-object-converter.xml",
+        "/spring/spring-test-quartz-scheduler.xml",
+        "/spring/spring-library-websockets.xml",
+        "/spring/spring-library-activemq.xml",
         "/spring/spring-library-configuration.xml" })
 
 public class SpringLdapDaoIT

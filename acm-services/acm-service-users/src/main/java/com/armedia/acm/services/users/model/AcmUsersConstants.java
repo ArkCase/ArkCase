@@ -43,4 +43,8 @@ public interface AcmUsersConstants
 
     int USER_ID_MIN_CHAR_LENGTH = 3;
 
+    String OCR_SYSTEM_USER = "OCR_SERVICE";
+
+    String TRANSCRIBE_SYSTEM_USER = "TRANSCRIBE_SERVICE";
+
 }

@@ -30,6 +30,7 @@ package com.armedia.acm.plugins.task.service.impl;
 import com.armedia.acm.core.AcmNotifiableEntity;
 import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.data.AcmNotificationDao;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
@@ -269,7 +270,14 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
             {
                 in.setTaskStartDate(activitiTask.getCreateTime());
             }
+            if (in.getDocumentsToReview() != null)
+            {
+                for (EcmFile file : in.getDocumentsToReview())
+                {
+                    getActivitiTaskService().setVariableLocal(activitiTask.getId(), TaskConstants.VARIABLE_NAME_PDF_RENDITION_ID, file.getId().toString());
+                }
 
+            }
             getActivitiTaskService().setVariableLocal(activitiTask.getId(), TaskConstants.VARIABLE_NAME_OBJECT_TYPE,
                     in.getAttachedToObjectType());
             getActivitiTaskService().setVariableLocal(activitiTask.getId(), TaskConstants.VARIABLE_NAME_OBJECT_ID,
@@ -377,6 +385,24 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
                     }
                 }
             }
+            AcmContainer container = null;
+            try
+            {
+                
+                
+                container = fileService.getOrCreateContainer(TaskConstants.OBJECT_TYPE, in.getId(),
+                        EcmFileConstants.DEFAULT_CMIS_REPOSITORY_ID);
+                if(container.getAttachmentFolder().getParticipants().isEmpty()) 
+                {
+                    container.getAttachmentFolder().setParticipants(getFileParticipantService().getFolderParticipantsFromAssignedObject(in.getParticipants()));
+                }
+            }
+            catch (AcmCreateObjectFailedException | AcmUserActionFailedException e)
+            {
+                log.error("Can not create container folder for TASK with ID: [{}]", in.getId());
+            }
+            in.setContainer(container);
+            
 
             return in;
         }
@@ -1419,6 +1445,12 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
             if (reworkInstructions != null)
             {
                 acmTask.setReworkInstructions(reworkInstructions);
+            }
+            
+            String docUnderReview = (String) localVariables.get(TaskConstants.VARIABLE_NAME_PDF_RENDITION_ID);
+            if (docUnderReview != null)
+            {
+                acmTask.setReviewDocumentPdfRenditionId(docUnderReview);    
             }
 
         }

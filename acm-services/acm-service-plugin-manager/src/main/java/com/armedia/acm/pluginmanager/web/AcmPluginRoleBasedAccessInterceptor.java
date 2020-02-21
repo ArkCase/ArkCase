@@ -28,11 +28,14 @@ package com.armedia.acm.pluginmanager.web;
  */
 
 import com.armedia.acm.core.exceptions.AcmNotAuthorizedException;
+import com.armedia.acm.pluginmanager.model.AcmPluginPrivilege;
 import com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege;
+import com.armedia.acm.pluginmanager.model.ApplicationPluginPrivilegesConfig;
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.http.HttpMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -49,6 +52,7 @@ import java.util.Map;
 public class AcmPluginRoleBasedAccessInterceptor extends HandlerInterceptorAdapter
 {
     private AcmPluginManager acmPluginManager;
+    private ApplicationPluginPrivilegesConfig pluginPrivilegesConfig;
 
     private Logger log = LogManager.getLogger(getClass());
 
@@ -78,7 +82,7 @@ public class AcmPluginRoleBasedAccessInterceptor extends HandlerInterceptorAdapt
         }
         else
         {
-            List<AcmPluginUrlPrivilege> urlPrivileges = getAcmPluginManager().getUrlPrivileges();
+            Map<String, Map<String, List<String>>> urlPrivileges = pluginPrivilegesConfig.getPluginPrivilegeToUrls();
             boolean hasPrivilege = determinePrivilege(method, url, userPrivileges, urlPrivileges);
 
             if (!hasPrivilege)
@@ -90,31 +94,60 @@ public class AcmPluginRoleBasedAccessInterceptor extends HandlerInterceptorAdapt
         return true;
     }
 
-    protected boolean determinePrivilege(String method, String url, Map<String, Boolean> userPrivileges,
-            List<AcmPluginUrlPrivilege> urlPrivileges)
+    protected boolean determinePrivilege(String method, String urlToCheck, Map<String, Boolean> userPrivileges,
+            Map<String, Map<String, List<String>>> urlPrivileges)
     {
         boolean hasPrivilege = false;
-        for (AcmPluginUrlPrivilege urlPrivilege : urlPrivileges)
+
+        for (Map.Entry<String, Map<String, List<String>>> acmPrivilegeEntry : urlPrivileges.entrySet())
         {
-            if (urlPrivilege.matches(url, method))
+            Map<String, List<String>> privilegeByMethod = acmPrivilegeEntry.getValue();
+
+            for (Map.Entry<String, List<String>> privilegeByMethodEntry : privilegeByMethod.entrySet())
             {
-                String requiredPrivilege = urlPrivilege.getRequiredPrivilege().getPrivilegeName();
-                log.debug("Required privilege for {} {}: {}; user has privilege: {}", method, url, requiredPrivilege,
-                        userPrivileges.containsKey(requiredPrivilege));
-                hasPrivilege = userPrivileges.containsKey(requiredPrivilege) ? userPrivileges.get(requiredPrivilege) : false;
-                break;
+                List<String> urls = privilegeByMethodEntry.getValue();
+
+                for (String url : urls)
+                {
+                    AcmPluginUrlPrivilege urlPrivilege = createAcmPluginPrivilegeObject(acmPrivilegeEntry, privilegeByMethodEntry, url);
+
+                    if (urlPrivilege.matches(urlToCheck, method))
+                    {
+                        String requiredPrivilege = urlPrivilege.getRequiredPrivilege().getPrivilegeName();
+                        log.debug("Required privilege for {} {}: {}; user has privilege: {}", method, url, requiredPrivilege,
+                                userPrivileges.containsKey(requiredPrivilege));
+                        hasPrivilege = userPrivileges.getOrDefault(requiredPrivilege, false);
+                        break;
+                    }
+                }
             }
         }
+
         return hasPrivilege;
     }
 
-    public AcmPluginManager getAcmPluginManager()
+    private AcmPluginUrlPrivilege createAcmPluginPrivilegeObject(Map.Entry<String, Map<String, List<String>>> acmPrivilegeEntry,
+            Map.Entry<String, List<String>> privilegeByMethodEntry, String url)
     {
-        return acmPluginManager;
+        AcmPluginUrlPrivilege urlPrivilege = new AcmPluginUrlPrivilege();
+
+        AcmPluginPrivilege plgPrivilege = new AcmPluginPrivilege();
+        plgPrivilege.setPrivilegeName(acmPrivilegeEntry.getKey());
+
+        urlPrivilege.setUrl(url);
+        urlPrivilege.setHttpMethod(HttpMethod.resolve(privilegeByMethodEntry.getKey()));
+        urlPrivilege.setRequiredPrivilege(plgPrivilege);
+
+        return urlPrivilege;
     }
 
     public void setAcmPluginManager(AcmPluginManager acmPluginManager)
     {
         this.acmPluginManager = acmPluginManager;
+    }
+
+    public void setPluginPrivilegesConfig(ApplicationPluginPrivilegesConfig pluginPrivilegesConfig)
+    {
+        this.pluginPrivilegesConfig = pluginPrivilegesConfig;
     }
 }

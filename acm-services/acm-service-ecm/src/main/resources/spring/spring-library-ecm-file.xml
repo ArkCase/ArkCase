@@ -351,6 +351,7 @@
                 <entry key="creator" value="author"/>
                 <entry key="modifier" value="modifier_s"/>
                 <entry key="category" value="category_s"/>
+                <entry key="status" value="status_s"/>
             </map>
         </property>
         <property name="solrObjectTypeToAcmType">

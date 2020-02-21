@@ -20,6 +20,15 @@ angular.module('cases').controller(
                         usersMentioned: []
                     };
 
+                    $scope.saveDetailsSummary = function() {
+                        var caseInfo = Util.omitNg($scope.objectInfo);
+                        CaseInfoService.saveCaseInfo(caseInfo).then(function(caseInfo) {
+                            MessageService.info($translate.instant("cases.comp.details.caseSummary.informSaved"));
+                            return caseInfo;
+                        });
+                    };
+
+
                     $scope.saveDetails = function() {
                         var caseInfo = Util.omitNg($scope.objectInfo);
                         CaseInfoService.saveCaseInfo(caseInfo).then(function(caseInfo) {

@@ -31,6 +31,7 @@ import com.armedia.acm.configuration.service.ConfigurationPropertyException;
 import com.armedia.acm.plugins.admin.exception.AcmRolesPrivilegesException;
 import com.armedia.acm.plugins.admin.model.RolePrivilegesConstants;
 import com.armedia.acm.plugins.admin.service.RolesPrivilegesService;
+import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -57,6 +58,7 @@ public class RolesPrivilegesRetrieveRolesByPrivilege implements RolePrivilegesCo
     private Logger log = LogManager.getLogger(getClass());
 
     private RolesPrivilegesService rolesPrivilegesService;
+    private FunctionalAccessService functionalAccessService;
 
     @RequestMapping(value = "/rolesprivileges/privileges/{privilegeName}/roles", method = RequestMethod.GET, produces = {
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
@@ -69,7 +71,7 @@ public class RolesPrivilegesRetrieveRolesByPrivilege implements RolePrivilegesCo
 
         try
         {
-            return rolesPrivilegesService.retrieveRolesByPrivilege(privilegeName);
+            return functionalAccessService.getRolesByPrivilege(privilegeName);
         }
         catch (Exception e)
         {
@@ -133,5 +135,10 @@ public class RolesPrivilegesRetrieveRolesByPrivilege implements RolePrivilegesCo
     public void setRolesPrivilegesService(RolesPrivilegesService rolesPrivilegesService)
     {
         this.rolesPrivilegesService = rolesPrivilegesService;
+    }
+
+    public void setFunctionalAccessService(FunctionalAccessService functionalAccessService)
+    {
+        this.functionalAccessService = functionalAccessService;
     }
 }

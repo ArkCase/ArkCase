@@ -46,4 +46,8 @@ public class ApplicationRolesToPrivilegesConfig
         return rolesToPrivileges;
     }
 
+    public void setRolesToPrivileges(Map<String, List<Object>> rolesToPrivileges)
+    {
+        this.rolesToPrivileges = rolesToPrivileges;
+    }
 }

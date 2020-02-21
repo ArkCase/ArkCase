@@ -116,41 +116,31 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
         return retval;
     }
 
-    public EcmFile findForContainerAndFileType(Long containerId, String fileType)
+    public List<EcmFile> findForContainerAndFileType(Long containerId, String fileType)
     {
         String jpql = "SELECT e " +
                 "FROM EcmFile e " +
                 "WHERE e.container.id = :containerId " +
-                "AND e.fileType = :fileType";
+                "AND e.fileType = :fileType " +
+                "ORDER BY e.created ASC";
 
-        return executeJpqlForContainerIdAndFileType(jpql, containerId, fileType);
-    }
-
-    public EcmFile executeJpqlForContainerIdAndFileType(String jpql, Long containerId, String fileType)
-    {
-        Query query = getEm().createQuery(jpql);
+        Query query = getEm().createQuery(jpql, getPersistenceClass());
 
         query.setParameter("containerId", containerId);
         query.setParameter("fileType", fileType);
 
-        EcmFile result = null;
+        List<EcmFile> result = null;
 
         try
         {
-            result = (EcmFile) query.getSingleResult();
+            result = query.getResultList();
         }
         catch (NoResultException e)
         {
             LOG.debug("Cannot find EcmFile for containerId=[{}] and fileType=[{}]", containerId, fileType, e);
         }
-        catch (NonUniqueResultException e1)
-        {
-            LOG.error("Cannot find unique EcmFile for containerId=[{}] and fileType=[{}]. Multiple files found ...",
-                    containerId, fileType, e1);
-        }
 
         return result;
-
     }
 
     public EcmFile findForContainerAttachmentFolderAndFileType(Long containerId, Long folderId, String fileType)

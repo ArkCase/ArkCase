@@ -87,14 +87,20 @@
       },
       {
         "name": "version",
+        "field": "version",
         "displayName": "common.directive.docTree.table.columns.version",
+        "headTemplate": "<label id='version' class='doc-tree-header' style='cursor: pointer;'></label>",
+        "icon": "<i class='fa fa-fw' data-sort='version' data-dir='ASC'></i>",
         "__todo__cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
         "width": "6%",
         "index": 8
       },
       {
         "name": "status",
+        "field": "status",
         "displayName": "common.directive.docTree.table.columns.status",
+        "headTemplate": "<label id='status' class='doc-tree-header' style='cursor: pointer;'></label>",
+        "icon": "<i class='fa fa-fw' data-sort='status' data-dir='ASC'></i>",
         "__todo__cellTemplate": "{{node.data.status}}",
         "width": "8%",
         "index": 9
@@ -574,24 +580,6 @@
             }
           },
           {
-            "titleKey": "common.directive.docTree.menu.editWithWebDAV",
-            "cmd": "editWithWebDAV",
-            "uiIcon": "ui-icon-pencil",
-            "disabled": true
-          },
-          {
-            "titleKey": "common.directive.docTree.menu.editWithOfficeOnline",
-            "cmd": "collaborate",
-            "uiIcon": "ui-icon-person",
-            "disabledExpression": true
-          },
-          {
-            "titleKey": "common.directive.docTree.menu.coEdit",
-            "cmd": "co-edit",
-            "uiIcon": "ui-icon-document",
-            "disabled": true
-          },
-          {
             "titleKey": "common.directive.docTree.menu.email",
             "cmd": "email",
             "uiIcon": "ui-icon-mail-closed",
@@ -606,30 +594,6 @@
             "data": {
               "readOnly": true
             }
-          },
-          {
-            "title": "----"
-          },
-          {
-            "titleKey": "common.directive.docTree.menu.checkout",
-            "cmd": "checkout",
-            "uiIcon": "ui-icon-check",
-            "disabled": true
-          },
-          {
-            "titleKey": "common.directive.docTree.menu.checkin",
-            "cmd": "checkin",
-            "uiIcon": "ui-icon-check",
-            "data": {
-              "uploadFile": true
-            },
-            "disabled": true
-          },
-          {
-            "titleKey": "common.directive.docTree.menu.cancelEditing",
-            "cmd": "cancelEditing",
-            "uiIcon": "ui-icon-close",
-            "disabled": true
           },
           {
             "title": "----"
@@ -669,13 +633,6 @@
             "title": "----"
           },
           {
-            "___title": "Rename <kbd>[F2]</kbd>",
-            "titleKey": "common.directive.docTree.menu.rename",
-            "cmd": "rename",
-            "uiIcon": "ui-icon-pencil",
-            "disabled": true
-          },
-          {
             "___title": "Delete <kbd>Ctrl+D</kbd>",
             "titleKey": "common.directive.docTree.menu.delete",
             "cmd": "remove",
@@ -691,22 +648,6 @@
             "data": {
               "readOnly": true
             }
-          },
-          {
-            "titleKey": "common.directive.docTree.menu.replace",
-            "cmd": "replace",
-            "uiIcon": "",
-            "data": {
-              "uploadFile": true
-            },
-            "disabled": true
-          },
-          {
-            "titleKey": "common.directive.docTree.menu.declareRecord",
-            "cmd": "declare",
-            "uiIcon": "ui-icon-locked",
-            "plugin": "RMA",
-            "disabled": true
           }
         ]
       }

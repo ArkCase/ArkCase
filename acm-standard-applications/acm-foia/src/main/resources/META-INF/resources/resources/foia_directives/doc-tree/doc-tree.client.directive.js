@@ -277,6 +277,9 @@ angular
                                 } else if (DocTree.NODE_TYPE_NEXT == nodeType) {
                                     acmIcon = "<i class='i i-arrow-down'></i>";
                                 }
+                                if (Util.goodValue(node.data.link)) {
+                                    acmIcon = "<i class='fa fa-link'></i>";
+                                }
                                 if (acmIcon) {
                                     var span = node.span;
                                     var $spanIcon = $(span.children[1]);
@@ -446,12 +449,14 @@ angular
                         //todo: move to column renderer
                         jqTreeBody.on("change", "select.docversion", DocTree.onChangeVersion);
                         jqTreeBody.on("dblclick", "select.docversion", DocTree.onDblClickVersion);
+                        jqTreeBody.on("change", "select.reviewstatus", DocTree.onChangeReviewStatus);
+                        jqTreeBody.on("change", "select.redactionstatus", DocTree.onChangeRedactionStatus);
 
                         var jqTreeHead = jqTree.find("thead");
-                        jqTreeHead.find("input:checkbox").on("click", function(e) {
+                        jqTreeHead.find("input:checkbox").on("click", function (e) {
                             DocTree.onClickBtnChkAllDocument(e, this);
                         });
-                        jqTreeHead.find("label").on("click", function(e) {
+                        jqTreeHead.find("label").on("click", function (e) {
                             DocTree.onClickBtnSort(e, this);
                         });
 
@@ -1330,8 +1335,7 @@ angular
                                 {
                                     name : "title",
                                     renderer : function(element, node, columnDef, isReadOnly) {
-                                        if (node.data.link)
-                                            $(element).html("<span class=\"fancytree-node\" style=\"margin-left: 10px;\"><span class=\"fancytree-expander\"></span><span class=\"fancytree-icon\"></span><span class=\"fancytree-title\" title=\"" + node.data.name + "\">" + node.data.name + "&nbsp;&nbsp;<i class=\"fa fa-link\"></i></span></span>");
+                                        ;
                                     }
                                 },
                                 {
@@ -1393,9 +1397,9 @@ angular
                                             }
                                         }
                                         $(element).replaceWith($td);
-
-                                        var jqTreeBody = DocTree.jqTree.find("tbody");
-                                        jqTreeBody.on("change", "select.reviewstatus", DocTree.onChangeReviewStatus);
+                                        if (Util.goodValue(node.data.link)) {
+                                            $select.attr("disabled", true);
+                                        }
                                     }
                                 },
                                 {
@@ -1418,9 +1422,9 @@ angular
                                             }
                                         }
                                         $(element).replaceWith($td);
-
-                                        var jqTreeBody = DocTree.jqTree.find("tbody");
-                                        jqTreeBody.on("change", "select.redactionstatus", DocTree.onChangeRedactionStatus);
+                                        if (Util.goodValue(node.data.link)) {
+                                            $select.attr("disabled", true);
+                                        }
                                     }
                                 },
                                 {
@@ -1446,6 +1450,9 @@ angular
                                                         //versionDate = UtilDateService.getDatePart(node.data.versionList[v].created);
                                                         //versionUser = Util.goodValue(node.data.versionList[v].creator);
                                                     }
+                                                    if (Util.goodValue(node.data.link)) {
+                                                        $select.attr("disabled", true);
+                                                    }
                                                 }
                                             }
                                             $(element).replaceWith($td);
@@ -1460,13 +1467,9 @@ angular
                                 {
                                     name : "public",
                                     renderer : function(element, node, columnDef, isReadOnly) {
-                                        Ecm.getFile({
-                                            fileId: node.data.objectId
-                                        }).$promise.then(function(file) {
-                                            if(file.publicFlag === true){
-                                                $(element).text("PUBLIC");
-                                            }
-                                        });
+                                        if (node.data.publicFlag === true) {
+                                            $(element).text("PUBLIC");
+                                        }
                                     }
                                 }];
                         }
@@ -2931,19 +2934,22 @@ angular
                                 var toCacheKey = DocTree.getCacheKeyByNode(toFolderNode);
                                 var frCacheKey = DocTree.getCacheKeyByNode(srcNode.parent);
                                 var copyService = actionName === 'pasteAsLink' ? Ecm.copyFileAsLink : Ecm.copyFile;
+                                if (srcNode.data.link === true) {
+                                    copyService = Ecm.copyFileAsLink;
+                                }
 
                                 Util.serviceCall(
                                     {
-                                        service : copyService,
-                                        param : {
-                                            objType : DocTree.getObjType(),
-                                            objId : DocTree.getObjId()
+                                        service: copyService,
+                                        param: {
+                                            objType: DocTree.getObjType(),
+                                            objId: DocTree.getObjId()
                                         },
-                                        data : {
-                                            id : fileId,
-                                            folderId : toFolderId
+                                        data: {
+                                            id: fileId,
+                                            folderId: toFolderId
                                         },
-                                        onSuccess : function(data) {
+                                        onSuccess: function (data) {
                                             if (Validator.validateCopyFileInfo(data)) {
                                                 var copyFileInfo = data;
                                                 if (copyFileInfo.originalId == fileId
@@ -3885,6 +3891,7 @@ angular
                             nodeData.data.category = Util.goodValue(fileData.category);
                             nodeData.data.version = Util.goodValue(fileData.version);
                             nodeData.data.lock = Util.goodValue(fileData.lock);
+                            nodeData.data.publicFlag = Util.goodValue(fileData.publicFlag);
                             nodeData.data.modifier = Util.goodValue(fileData.modifier);
                             nodeData.data.link = Util.goodValue(fileData.link);
 

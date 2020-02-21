@@ -117,6 +117,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -962,6 +963,12 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
         object.setStatus(getSearchResults().extractString(doc, SearchConstants.PROPERTY_STATUS));
 
+        object.setPublicFlag(getSearchResults().extractBoolean(doc, SearchConstants.PROPERTY_PUBLIC_FLAG));
+
+        object.setRedactionStatus(getSearchResults().extractString(doc, SearchConstants.PROPERTY_REDACTION_STATUS));
+
+        object.setReviewStatus(getSearchResults().extractString(doc, SearchConstants.PROPERTY_REVIEW_STATUS));
+
         object.setLink(getSearchResults().extractBoolean(doc, SearchConstants.PROPERTY_LINK));
 
         if (object.getObjectType().equals(EcmFileConstants.FILE))
@@ -1052,7 +1059,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             fileCopyVersion.setVersionTag(cmisdocument.getVersionLabel());
             copyFileVersionMetadata(file, fileCopyVersion);
 
-            EcmFile fileCopy = copyEcmFile(file, targetFolder, targetContainer, fileCopyVersion, cmisdocument.getVersionSeriesId(),
+            EcmFile fileCopy = copyEcmFile(file, targetFolder, targetContainer, fileCopyVersion,
+                    cmisdocument.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID),
                     cmisdocument.getVersionLabel());
 
             EcmFile result = getEcmFileDao().save(fileCopy);
@@ -1850,9 +1858,15 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
-    public EcmFile findFileByContainerAndFileType(Long containerId, String fileType)
+    public List<EcmFile> findFileByContainerAndFileType(Long containerId, String fileType)
     {
         return getEcmFileDao().findForContainerAndFileType(containerId, fileType);
+    }
+
+    @Override
+    public EcmFile findOldestFileByContainerAndFileType(Long containerId, String fileType)
+    {
+        return findFileByContainerAndFileType(containerId, fileType).get(0);
     }
 
     @Override
@@ -2007,8 +2021,11 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     public void updateFileLinks(EcmFile file) throws AcmObjectNotFoundException
     {
         List<EcmFile> links = getFileLinks(file.getFileId());
-        int activeVersionIndex = (int) Double.parseDouble(file.getActiveVersionTag());
-        String cmisObjectId = file.getVersions().get(activeVersionIndex - 1).getCmisObjectId();
+        EcmFileVersion activeFileVersion = file.getVersions()
+                .stream()
+                .filter(ecmFileVersion -> ecmFileVersion.getVersionTag().equals(file.getActiveVersionTag()))
+                .findFirst().orElse(null);
+
         links.forEach(f -> {
             f.setFileType(file.getFileType());
             f.setActiveVersionTag(file.getActiveVersionTag());
@@ -2024,7 +2041,10 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             f.setPageCount(file.getPageCount());
             f.setSecurityField(file.getSecurityField());
             f.getVersions().get(0).setVersionTag(file.getActiveVersionTag());
-            f.getVersions().get(0).setCmisObjectId(cmisObjectId);
+            if (Objects.nonNull(activeFileVersion))
+            {
+                f.getVersions().get(0).setCmisObjectId(activeFileVersion.getCmisObjectId());
+            }
 
             getEcmFileDao().save(f);
         });

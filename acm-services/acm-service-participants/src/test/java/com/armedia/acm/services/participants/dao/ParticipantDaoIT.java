@@ -65,6 +65,7 @@ import java.util.List;
         "/spring/spring-config-participant-service-test-beans.xml",
         "/spring/spring-library-drools-rule-monitor.xml",
         "/spring/spring-library-configuration.xml",
+        "/spring/spring-library-websockets.xml",
         "/spring/spring-library-object-converter.xml"
 })
 @TransactionConfiguration(defaultRollback = true)

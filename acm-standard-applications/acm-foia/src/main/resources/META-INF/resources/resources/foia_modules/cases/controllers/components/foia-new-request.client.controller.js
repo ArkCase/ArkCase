@@ -166,40 +166,23 @@ angular.module('cases').controller(
             });
 
             $scope.isEmailDaliveryMethod = false;
-            
+
             $scope.validateForm = function (requestForm) {
 
                 $scope.formInvalid = false;
-                $scope.prefixEmpty = false;
-                $scope.firstNameEmpty = false;
-                $scope.lastNameEmpty = false;
                 $scope.phoneEmpty = false;
                 $scope.phoneInvalid = false;
                 $scope.emailEmpty = false;
                 $scope.emailInvalid = false;
                 $scope.confirmEmailEmpty = false;
                 $scope.confirmEmailInvalid = false;
-                $scope.addressEmpty = false;
-                $scope.cityEmpty = false;
-                $scope.stateEmpty = false;
                 $scope.zipCodeEmpty = false;
                 $scope.zipCodeInvalid = false;
                 $scope.subjectEmpty = false;
-                $scope.deliveryMethodOfResponseEmpty = false;
-                $scope.requestCategoryEmpty = false;
                 $scope.dateRangeInvalid = false;
 
                 if ($scope.isNewRequestType()) {
 
-                    if (requestForm.prefix.$invalid) {
-                        $scope.prefixEmpty = true;
-                    }
-                    if (requestForm.firstName.$invalid) {
-                        $scope.firstNameEmpty = true;
-                    }
-                    if (requestForm.lastName.$invalid) {
-                        $scope.lastNameEmpty = true;
-                    }
                     if (requestForm.phone.$viewValue === undefined || requestForm.phone.$viewValue === '') {
                         $scope.phoneEmpty = true;
                     } else if (requestForm.phone.$invalid) {
@@ -216,15 +199,6 @@ angular.module('cases').controller(
                         $scope.confirmEmailInvalid = true;
                         $scope.formInvalid = true;
                     }
-                    if (requestForm.address1.$invalid) {
-                        $scope.addressEmpty = true;
-                    }
-                    if (requestForm.city.$invalid) {
-                        $scope.cityEmpty = true;
-                    }
-                    if (requestForm.state.$invalid) {
-                        $scope.stateEmpty = true;
-                    }
                     if (requestForm.zip.$viewValue === undefined || requestForm.zip.$viewValue === '') {
                         $scope.zipCodeEmpty = true;
                     } else if (requestForm.zip.$invalid) {
@@ -233,11 +207,9 @@ angular.module('cases').controller(
                     if (requestForm.subject.$invalid) {
                         $scope.subjectEmpty = true;
                     }
-                    if (requestForm.requesterCategory.$invalid) {
-                        $scope.requestCategoryEmpty = true;
-                    }
-                    if (requestForm.deliveryMethodOfResponse.$invalid) {
-                        $scope.deliveryMethodOfResponseEmpty = true;
+                    if ($scope.config.data.recordSearchDateFrom > $scope.config.data.recordSearchDateTo) {
+                        $scope.formInvalid = true;
+                        $scope.dateRangeInvalid = true;
                     }
                     if ($scope.config.data.recordSearchDateFrom > $scope.config.data.recordSearchDateTo) {
                         $scope.formInvalid = true;

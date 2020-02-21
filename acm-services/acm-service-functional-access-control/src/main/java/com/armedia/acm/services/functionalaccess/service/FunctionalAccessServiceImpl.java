@@ -40,6 +40,7 @@ import com.armedia.acm.services.users.model.AcmRoleToGroupMapping;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.ApplicationRolesConfig;
 import com.armedia.acm.services.users.model.ApplicationRolesToGroupsConfig;
+import com.armedia.acm.services.users.model.ApplicationRolesToPrivilegesConfig;
 import com.armedia.acm.services.users.model.event.AdHocGroupDeletedEvent;
 import com.armedia.acm.services.users.model.event.LdapGroupDeletedEvent;
 import com.armedia.acm.services.users.model.group.AcmGroup;
@@ -73,6 +74,7 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
     private ExecuteSolrQuery executeSolrQuery;
     private ApplicationRolesConfig rolesConfig;
     private ApplicationRolesToGroupsConfig rolesToGroupsConfig;
+    private ApplicationRolesToPrivilegesConfig rolesToPrivilegesConfig;
     private ConfigurationPropertyService configurationPropertyService;
     private CollectionPropertiesConfigurationService collectionPropertiesConfigurationService;
 
@@ -387,6 +389,18 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
         return response;
     }
 
+    @Override
+    public List<String> getRolesByPrivilege(String privilege)
+    {
+        // iterate over the role-to-privileges map; if the value list includes this privilege, the role (i.e. the
+        // map key) is included in the return list.
+        return rolesToPrivilegesConfig.getRolesToPrivileges().entrySet()
+                .stream()
+                .filter(entry -> entry.getValue().contains(privilege))
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
+    }
+
     public ApplicationRolesToGroupsConfig getRolesToGroupsConfig()
     {
         return rolesToGroupsConfig;
@@ -466,5 +480,10 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
             CollectionPropertiesConfigurationService collectionPropertiesConfigurationService)
     {
         this.collectionPropertiesConfigurationService = collectionPropertiesConfigurationService;
+    }
+
+    public void setRolesToPrivilegesConfig(ApplicationRolesToPrivilegesConfig rolesToPrivilegesConfig)
+    {
+        this.rolesToPrivilegesConfig = rolesToPrivilegesConfig;
     }
 }

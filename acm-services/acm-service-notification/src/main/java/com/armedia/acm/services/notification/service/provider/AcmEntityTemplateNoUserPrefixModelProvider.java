@@ -85,10 +85,16 @@ public class AcmEntityTemplateNoUserPrefixModelProvider implements TemplateModel
         acmEntityTemplateModel.modifierEmail = modifierEmail;
         acmEntityTemplateModel.assigneeEmail = assigneeEmail;
 
+        Boolean isTitleEnabled = false;
         Map<String, TitleConfiguration> titleConfigurationMap = objectTitleConfigurationService.getObjectTitleConfig();
         for (TitleConfiguration value : titleConfigurationMap.values())
         {
-            acmEntityTemplateModel.setTitleEnabled(value.getEnableTitleField());
+            isTitleEnabled = value.getEnableTitleField();
+
+        }
+        if(isTitleEnabled)
+        {
+            acmEntityTemplateModel.setTitleEnabled("Title enabled");
         }
 
         return acmEntityTemplateModel;

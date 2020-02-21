@@ -31,20 +31,19 @@ package com.armedia.acm.services.timesheet.service;
  */
 
 import com.armedia.acm.objectonverter.DateFormats;
-import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
-import com.armedia.acm.plugins.ecm.workflow.EcmFileWorkflowConfiguration;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.ParticipantTypes;
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
 import com.armedia.acm.services.timesheet.model.AcmTimesheetEvent;
+import com.armedia.acm.services.timesheet.model.TimesheetConfig;
 import com.armedia.acm.services.timesheet.model.TimesheetConstants;
 
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationListener;
 
 import java.text.SimpleDateFormat;
@@ -64,11 +63,12 @@ public class TimesheetWorkflowListener implements ApplicationListener<AcmTimeshe
 
     private FileWorkflowBusinessRule fileWorkflowBusinessRule;
     private RuntimeService activitiRuntimeService;
+    private TimesheetConfig timesheetConfig;
 
     @Override
     public void onApplicationEvent(AcmTimesheetEvent event)
     {
-        if (event != null && event.isStartWorkflow())
+        if (event != null && event.isStartWorkflow() && timesheetConfig.getUseApprovalWorkflow())
         {
             startWorkflow(event);
         }
@@ -76,31 +76,8 @@ public class TimesheetWorkflowListener implements ApplicationListener<AcmTimeshe
 
     protected void startWorkflow(AcmTimesheetEvent event)
     {
-        EcmFile pdfRendition = event.getUploadedFiles().getPdfRendition();
-        EcmFileWorkflowConfiguration configuration = new EcmFileWorkflowConfiguration();
-
-        configuration.setEcmFile(pdfRendition);
-
-        LOG.debug("Calling business rules");
-
-        configuration = getFileWorkflowBusinessRule().applyRules(configuration);
-        if (configuration.isBuckslipProcess())
-        {
-            // TimesheetWorkflowListener is not handling buckslip process
-            return;
-        }
-        LOG.debug("Start process? " + configuration.isStartProcess());
-
-        if (configuration.isStartProcess())
-        {
-            startWorkflow(event, configuration);
-        }
-    }
-
-    private void startWorkflow(AcmTimesheetEvent event, EcmFileWorkflowConfiguration configuration)
-    {
         AcmTimesheet timesheet = (AcmTimesheet) event.getSource();
-        String processName = configuration.getProcessName();
+        String processName = timesheetConfig.getWorkflowProcessName();
 
         String author = event.getUserId();
         List<String> reviewers = findReviewers(event);
@@ -192,5 +169,15 @@ public class TimesheetWorkflowListener implements ApplicationListener<AcmTimeshe
     public void setActivitiRuntimeService(RuntimeService activitiRuntimeService)
     {
         this.activitiRuntimeService = activitiRuntimeService;
+    }
+
+    public TimesheetConfig getTimesheetConfig()
+    {
+        return timesheetConfig;
+    }
+
+    public void setTimesheetConfig(TimesheetConfig timesheetConfig)
+    {
+        this.timesheetConfig = timesheetConfig;
     }
 }
