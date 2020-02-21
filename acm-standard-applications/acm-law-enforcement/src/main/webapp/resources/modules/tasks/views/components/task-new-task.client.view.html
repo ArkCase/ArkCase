@@ -113,7 +113,7 @@
                                 </ul>
                             </label>
                         </fieldset>
-                        <span ng-if="documentsToReviewIds.length === 0 && filesToUpload.length === 0 && selectedBusinessProcessType != 'notDefinedWorkflow' " class="text-danger" translate>
+                        <span ng-if="(!documentsToReviewIds || documentsToReviewIds.length === 0) && filesToUpload.length === 0 && selectedBusinessProcessType != 'notDefinedWorkflow')" class="text-danger" translate>
                           tasks.newTask.noSelectedReviewDocsErrorMsg
                         </span>
                 </div>
@@ -131,7 +131,7 @@
             <span translate> tasks.newTask.cancelButton </span>
         </button>
         <button type="submit"
-                ng-disabled="task.$invalid || saved || (documentsToReviewIds.length === 0 && filesToUpload.length === 0 && selectedBusinessProcessType != 'notDefinedWorkflow') "
+                ng-disabled="task.$invalid || saved || ((!documentsToReviewIds || documentsToReviewIds.length === 0) && filesToUpload.length === 0 && selectedBusinessProcessType != 'notDefinedWorkflow') "
                 class="btn btn-primary btn-sm" data-toggle="tooltip" id="saveButton" data-title="Save">
             <i class="fa fa-floppy-o" ng-hide="loading"></i>
             <i class="fa fa-circle-o-notch fa-spin" ng-if="loading"></i>
