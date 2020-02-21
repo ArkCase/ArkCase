@@ -2,7 +2,7 @@
     xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="01-create-billing-invoice-table" author="sasko.tanaskoski">
+    <changeSet id="01-create-billing-invoice-table" author="sasko.tanaskoski" dbms="mysql,mssql">
         <createTable tableName="acm_billing_invoice">
             <column name="cm_billing_invoice_id" type="${idType}">
                 <constraints primaryKey="true" primaryKeyName="pk_billing_invoice"/>
@@ -33,6 +33,41 @@
             </column>
         </createTable>
         <createIndex tableName="acm_billing_invoice" indexName="idx_parent_object_id">
+            <column name="cm_parent_object_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="01-create-billing-invoice-table" author="sasko.tanaskoski" dbms="oracle,postgres">
+        <createTable tableName="acm_billing_invoice">
+            <column name="cm_billing_invoice_id" type="${idType}">
+                <constraints primaryKey="true" primaryKeyName="pk_billing_invoice"/>
+            </column>
+
+            <column name="cm_billing_invoice_number" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="cm_parent_object_id" type="${fkIdType}">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="cm_parent_object_type" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="cm_billing_invoice_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="cm_billing_invoice_created" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="cm_class_name" type="VARCHAR(400)" defaultValue="com.armedia.acm.services.billing.model.BillingInvoice">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createIndex tableName="acm_billing_invoice" indexName="idx_billing_invoice_parent_object_id">
             <column name="cm_parent_object_id"/>
         </createIndex>
     </changeSet>

@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.armedia.acm.objectchangestatus.service;
 
 /*-
@@ -36,8 +33,8 @@ import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.data.service.AcmDataService;
 import com.armedia.acm.services.users.service.tracker.UserTrackerService;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
@@ -65,29 +62,56 @@ public class ChangeObjectStatusServiceImpl implements ChangeObjectStatusService
 
         if (dao != null)
         {
-            AcmStatefulEntity entity;
-
-            try
-            {
-                entity = (AcmStatefulEntity) dao.find(objectId);
-            }
-            catch (EntityNotFoundException e)
-            {
-                // try and flush our SQL in case we are trying to operate on a brand new object
-                entityManager.flush();
-                entity = (AcmStatefulEntity) dao.find(objectId);
-            }
-
+            AcmStatefulEntity entity = getAcmStatefulEntity(dao, objectId);
             if (entity != null)
             {
-                log.debug("Found object of type [{}], setting status to [{}]", entity.getClass().getName(), status);
-                entity.setStatus(status);
-                dao.save((AcmObject) entity);
-
-                // now we have to flush our changes so other objects in a workflow will see our changes.
-                entityManager.flush();
+                setStatusAndSaveEntity(dao, entity, status);
             }
         }
+    }
+
+    @Override
+    public void changeIfNoPermanentStatusIsSet(Long objectId, String objectType, String status, String permanentStatus)
+    {
+        log.debug("Changing object status: type [{}], id [{}], new status: [{}]",
+                objectType, objectId, status);
+
+        AcmAbstractDao<AcmObject> dao = getAcmDataService().getDaoByObjectType(objectType);
+
+        if (dao != null)
+        {
+            AcmStatefulEntity entity = getAcmStatefulEntity(dao, objectId);
+            if (entity != null && !entity.getStatus().equals(permanentStatus))
+            {
+                setStatusAndSaveEntity(dao, entity, status);
+            }
+        }
+    }
+
+    private AcmStatefulEntity getAcmStatefulEntity(AcmAbstractDao<AcmObject> dao, Long objectId)
+    {
+        AcmStatefulEntity entity;
+        try
+        {
+            entity = (AcmStatefulEntity) dao.find(objectId);
+        }
+        catch (EntityNotFoundException e)
+        {
+            // try and flush our SQL in case we are trying to operate on a brand new object
+            entityManager.flush();
+            entity = (AcmStatefulEntity) dao.find(objectId);
+        }
+        return entity;
+    }
+
+    private void setStatusAndSaveEntity(AcmAbstractDao<AcmObject> dao, AcmStatefulEntity entity, String status)
+    {
+        log.debug("Found object of type [{}], setting status to [{}]", entity.getClass().getName(), status);
+        entity.setStatus(status);
+        dao.save((AcmObject) entity);
+
+        // now we have to flush our changes so other objects in a workflow will see our changes.
+        entityManager.flush();
     }
 
     public AcmDataService getAcmDataService()

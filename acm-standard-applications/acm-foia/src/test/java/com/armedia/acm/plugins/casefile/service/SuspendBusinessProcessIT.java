@@ -80,7 +80,7 @@ public class SuspendBusinessProcessIT
     {
         // deploy
         repo.createDeployment()
-                .addClasspathResource("activiti/foia-extension-suspend-process.bpmn20.xml")
+                .addClasspathResource("activiti/foia-extension-suspend-process_v2.bpmn20.xml")
                 .deploy();
     }
 
@@ -100,7 +100,7 @@ public class SuspendBusinessProcessIT
         processVariables.put("OBJECT_TYPE", objectType);
         processVariables.put("OBJECT_ID", foiaId);
 
-        changeObjectStatusService.change(foiaId, objectType, "Suspended");
+        changeObjectStatusService.changeIfNoPermanentStatusIsSet(foiaId, objectType, "Suspended", "Closed");
         expect(queueCaseService.enqueue(foiaId, "Suspend")).andReturn(new FOIARequest());
 
         replay(changeObjectStatusService, queueCaseService);

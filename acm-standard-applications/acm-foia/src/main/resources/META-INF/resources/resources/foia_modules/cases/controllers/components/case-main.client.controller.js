@@ -61,6 +61,7 @@ angular.module('cases').controller(
                 populateRequestTrack($scope.objectInfo);
                 $scope.populateDispositionSubTypes($scope.objectInfo.requestType);
                 $scope.originalDueDate = objectInfo.dueDate;
+                $scope.enableDispositionClosedDate = objectInfo.dispositionClosedDate == null;
 
             };
 

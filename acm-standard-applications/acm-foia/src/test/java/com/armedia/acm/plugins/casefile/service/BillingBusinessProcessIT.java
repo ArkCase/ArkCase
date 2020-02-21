@@ -80,7 +80,7 @@ public class BillingBusinessProcessIT
     {
         // deploy
         repo.createDeployment()
-                .addClasspathResource("activiti/foia-extension-billing-process.bpmn20.xml")
+                .addClasspathResource("activiti/foia-extension-billing-process_v2.bpmn20.xml")
                 .deploy();
     }
 
@@ -100,7 +100,7 @@ public class BillingBusinessProcessIT
         processVariables.put("OBJECT_TYPE", objectType);
         processVariables.put("OBJECT_ID", foiaId);
 
-        changeObjectStatusService.change(foiaId, objectType, "Billing");
+        changeObjectStatusService.changeIfNoPermanentStatusIsSet(foiaId, objectType, "Billing", "Closed");
         expect(queueCaseService.enqueue(foiaId, "Billing")).andReturn(new FOIARequest());
 
         replay(changeObjectStatusService, queueCaseService);
