@@ -80,7 +80,7 @@ public class ApproveBusinessProcessIT
     {
         // deploy
         repo.createDeployment()
-                .addClasspathResource("activiti/foia-extension-approve-process_v2.bpmn20.xml")
+                .addClasspathResource("activiti/foia-extension-approve-process_v3.bpmn20.xml")
                 .deploy();
     }
 
@@ -100,7 +100,7 @@ public class ApproveBusinessProcessIT
         processVariables.put("OBJECT_TYPE", objectType);
         processVariables.put("OBJECT_ID", foiaId);
 
-        changeObjectStatusService.change(foiaId, objectType, "In Approval");
+        changeObjectStatusService.changeIfNoPermanentStatusIsSet(foiaId, objectType, "In Approval", "Closed");
         expect(queueCaseService.enqueue(foiaId, "Approve")).andReturn(new FOIARequest());
 
         replay(changeObjectStatusService, queueCaseService);
