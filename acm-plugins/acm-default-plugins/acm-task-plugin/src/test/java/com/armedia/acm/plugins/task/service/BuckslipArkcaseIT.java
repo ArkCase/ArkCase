@@ -111,6 +111,7 @@ import java.util.UUID;
         "/spring/spring-library-camel-context.xml",
         "/spring/spring-library-ecm-file-sync.xml",
         "/spring/spring-library-object-title.xml",
+        "/spring/spring-library-labels-service.xml",
         "/spring/spring-library-business-process.xml"
 })
 @TransactionConfiguration(defaultRollback = true)

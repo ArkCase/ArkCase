@@ -30,6 +30,7 @@
         <property name="ecmFileTransaction" ref="ecmFileTransaction"/>
         <property name="transcribeConfigurationService" ref="transcribeConfigurationService"/>
         <property name="auditDao" ref="auditDao"/>
+        <property name="translationService" ref="translationService" />
     </bean>
 
     <bean id="transcribeToSolrTransformer" class="com.armedia.acm.services.transcribe.transformer.TranscribeToSolrTransformer">

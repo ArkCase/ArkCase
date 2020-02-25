@@ -115,4 +115,22 @@ public interface NotificationConstants
     String PARTICIPANT_TYPE_GROUP = "owning group";
     String SPECIAL_PARTICIPANT_TYPE = "*";
 
+    /**
+     * This constants are for setting the titles of notifications, defined in notifications- yaml file
+     */
+    String NOTIFICATION_TASK_COMPLETED = "notifications.task.completed";
+    String NOTIFICATION_FOIA_EXTENSION = "notifications.foia.extension.notification";
+    String PASSWORD_RESET = "notifications.password.reset";
+    String USERNAME_FORGOT = "notifications.username.forgot";
+    String STATUS_TRANSCRIPTION = "notifications.status.transcription";
+    String COMPLAINT_INVOICE = "notifications.complaint.invoice";
+    String TASK_UPCOMING = "notifications.task.upcoming";
+    String TASK_OVERDUE = "notifications.task.overdue";
+    String ARREST_WARRANT = "notifications.arrest.warrant";
+    String EMAIL_MENTIONS = "notifications.email.mentions";
+    String REQUEST_ASSIGNED = "notifications.request.assigned";
+    String REQUEST_DOWNLOADED = "notifications.request.downloaded";
+    String PORTAL_REGISTRATION = "notifications.portal.registration";
+    String PASSWORD_RESET_REQUEST = "notifications.password.request";
+
 }
