@@ -45,8 +45,10 @@ import com.armedia.acm.portalgateway.service.PortalUserServiceProvider;
 import com.armedia.acm.services.email.model.EmailBodyBuilder;
 import com.armedia.acm.services.email.model.EmailBuilder;
 import com.armedia.acm.services.email.service.AcmEmailSenderService;
+import com.armedia.acm.services.labels.service.TranslationService;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
+import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
@@ -117,6 +119,8 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
 
     private SpringContextHolder acmContextHolder;
 
+    private TranslationService translationService;
+
     /*
      * (non-Javadoc)
      * @see com.armedia.acm.portalgateway.service.PortalUserServiceProvider#requestRegistration(java.lang.String,
@@ -155,7 +159,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
 
                 Notification notification = new Notification();
                 notification.setTemplateModelName("portalRequestRegistrationLink");
-                notification.setTitle("Web Portal Registration");
+                notification.setTitle(translationService.translate(NotificationConstants.PORTAL_REGISTRATION));
                 notification.setCreator(registrationRequest.getEmailAddress());
                 notification.setNote(registrationLink);
                 notification.setEmailAddresses(registrationRequest.getEmailAddress());
@@ -373,7 +377,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
 
             Notification notification = new Notification();
             notification.setTemplateModelName("portalPasswordResetRequestLink");
-            notification.setTitle("Request password reset");
+            notification.setTitle(translationService.translate(NotificationConstants.PASSWORD_RESET_REQUEST));
             notification.setCreator(resetRequest.getEmailAddress());
             notification.setNote(resetLink);
             notification.setEmailAddresses(resetRequest.getEmailAddress());
@@ -862,5 +866,15 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     public void setAcmContextHolder(SpringContextHolder acmContextHolder)
     {
         this.acmContextHolder = acmContextHolder;
+    }
+
+    public TranslationService getTranslationService()
+    {
+        return translationService;
+    }
+
+    public void setTranslationService(TranslationService translationService)
+    {
+        this.translationService = translationService;
     }
 }

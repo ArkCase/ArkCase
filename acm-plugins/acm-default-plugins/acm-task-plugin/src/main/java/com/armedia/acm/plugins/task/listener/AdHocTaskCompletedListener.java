@@ -30,8 +30,10 @@ package com.armedia.acm.plugins.task.listener;
 import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.model.TaskConfig;
+import com.armedia.acm.services.labels.service.TranslationService;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
+import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.users.dao.UserDao;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -41,6 +43,7 @@ public class AdHocTaskCompletedListener implements ApplicationListener<AcmApplic
     private NotificationDao notificationDao;
     private TaskConfig taskConfig;
     private UserDao userDao;
+    private TranslationService translationService;
 
     @Override
     public void onApplicationEvent(AcmApplicationTaskEvent event)
@@ -59,7 +62,7 @@ public class AdHocTaskCompletedListener implements ApplicationListener<AcmApplic
     {
         Notification notification = new Notification();
         notification.setTemplateModelName("taskCompletedNotifyCreator");
-        notification.setTitle("Task has been completed");
+        notification.setTitle(translationService.translate(NotificationConstants.NOTIFICATION_TASK_COMPLETED));
         notification.setUser(SecurityContextHolder.getContext().getAuthentication().getName());
         notification.setParentType(acmTask.getObjectType());
         notification.setParentId(acmTask.getTaskId());
@@ -95,5 +98,15 @@ public class AdHocTaskCompletedListener implements ApplicationListener<AcmApplic
     public void setUserDao(UserDao userDao)
     {
         this.userDao = userDao;
+    }
+
+    public TranslationService getTranslationService()
+    {
+        return translationService;
+    }
+
+    public void setTranslationService(TranslationService translationService)
+    {
+        this.translationService = translationService;
     }
 }
