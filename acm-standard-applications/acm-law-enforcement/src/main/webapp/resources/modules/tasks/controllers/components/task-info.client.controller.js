@@ -163,7 +163,7 @@ angular.module('tasks').controller(
                         $scope.objectInfo = objectInfo;
                         $scope.dateInfo = $scope.dateInfo || {};
                         if(!Util.isEmpty($scope.objectInfo.dueDate)){
-                            $scope.dateInfo.dueDate = moment.utc($scope.objectInfo.dueDate).format('MM/DD/YYYY HH:mm');
+                            $scope.dateInfo.dueDate = moment.utc($scope.objectInfo.dueDate).local().format('MM/DD/YYYY HH:mm');
                             $scope.dueDateInfo = $scope.dateInfo.dueDate;
                         }
                         else {
@@ -172,7 +172,7 @@ angular.module('tasks').controller(
                             $scope.dueDateInfo = moment($scope.dueDateInfo).format('MM/DD/YYYY HH:mm');
                         }
                         if(!Util.isEmpty($scope.objectInfo.taskStartDate)){
-                            $scope.dateInfo.taskStartDate = moment.utc($scope.objectInfo.taskStartDate).format('MM/DD/YYYY HH:mm');
+                            $scope.dateInfo.taskStartDate = moment.utc($scope.objectInfo.taskStartDate).local().format('MM/DD/YYYY HH:mm');
                             $scope.startDateInfo = $scope.dateInfo.taskStartDate;
                         }
                         else {
