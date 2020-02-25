@@ -39,8 +39,10 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
+import com.armedia.acm.services.labels.service.TranslationService;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
+import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.notification.service.NotificationSender;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
@@ -74,6 +76,7 @@ public class FOIAExtensionEmailHandler implements PipelineHandler<FOIARequest, C
     private NotificationSender notificationSender;
     private UserDao userDao;
     private NotificationDao notificationDao;
+    private TranslationService translationService;
 
     @Override
     public void execute(FOIARequest entity, CaseFilePipelineContext pipelineContext)
@@ -105,7 +108,7 @@ public class FOIAExtensionEmailHandler implements PipelineHandler<FOIARequest, C
             notification.setTemplateModelName("requestExtension");
             notification.setParentType(entity.getObjectType());
             notification.setParentId(entity.getId());
-            notification.setTitle(String.format("FOIA Extension Notification %s", entity.getCaseNumber()));
+            notification.setTitle(String.format(translationService.translate(NotificationConstants.NOTIFICATION_FOIA_EXTENSION), entity.getCaseNumber()));
             notification.setAttachFiles(true);
             notification.setEmailAddresses(emailAddress);
             notification.setFiles(Arrays.asList(ecmFileVersion));
@@ -262,5 +265,15 @@ public class FOIAExtensionEmailHandler implements PipelineHandler<FOIARequest, C
     public void setNotificationDao(NotificationDao notificationDao)
     {
         this.notificationDao = notificationDao;
+    }
+
+    public TranslationService getTranslationService()
+    {
+        return translationService;
+    }
+
+    public void setTranslationService(TranslationService translationService)
+    {
+        this.translationService = translationService;
     }
 }

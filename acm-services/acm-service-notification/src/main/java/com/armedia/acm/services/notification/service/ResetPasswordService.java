@@ -28,8 +28,10 @@ package com.armedia.acm.services.notification.service;
  */
 
 import com.armedia.acm.core.AcmSpringActiveProfile;
+import com.armedia.acm.services.labels.service.TranslationService;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
+import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.PasswordResetToken;
@@ -42,6 +44,7 @@ public class ResetPasswordService {
     private UserDao userDao;
     private AcmSpringActiveProfile acmSpringActiveProfile;
     private final Logger log = LogManager.getLogger(getClass());
+    private TranslationService translationService;
     
     public void sendPasswordResetNotification(AcmUser user)
     {
@@ -59,7 +62,7 @@ public class ResetPasswordService {
         notification.setParentName(user.getUserId());
         notification.setAttachFiles(false);
         notification.setEmailAddresses(user.getMail());
-        notification.setTitle("Reset password");
+        notification.setTitle(translationService.translate(NotificationConstants.PASSWORD_RESET));
         notification.setUser(user.getUserId());
         notificationDao.save(notification);
     }
@@ -92,5 +95,15 @@ public class ResetPasswordService {
     public void setAcmSpringActiveProfile(AcmSpringActiveProfile acmSpringActiveProfile) 
     {
         this.acmSpringActiveProfile = acmSpringActiveProfile;
+    }
+
+    public TranslationService getTranslationService()
+    {
+        return translationService;
+    }
+
+    public void setTranslationService(TranslationService translationService)
+    {
+        this.translationService = translationService;
     }
 }

@@ -79,6 +79,7 @@ import org.springframework.transaction.annotation.Transactional;
         "/spring/spring-library-camel-context.xml",
         "/spring/spring-library-websockets.xml",
         "/spring/spring-library-object-title.xml",
+        "/spring/spring-library-labels-service.xml",
         "/spring/spring-test-quartz-scheduler.xml"
 })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
