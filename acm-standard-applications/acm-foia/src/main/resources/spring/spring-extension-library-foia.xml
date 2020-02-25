@@ -59,6 +59,7 @@
             <beans:property name="notificationDao" ref="notificationDao"/>
             <beans:property name="acmContextHolder" ref="acmContextHolder"/>
             <beans:property name="userDao" ref="userJpaDao"/>
+            <beans:property name="translationService" ref="translationService" />
         </beans:bean>
 
         <beans:bean id="portalCreateRequestService" class="gov.foia.service.PortalCreateRequestService">
@@ -78,6 +79,7 @@
             <beans:property name="notificationDao" ref="notificationDao"/>
             <beans:property name="groupService" ref="groupService"/>
             <beans:property name="searchResults" ref="searchResults"/>
+            <beans:property name="translationService" ref="translationService" />
         </beans:bean>
 
         <beans:bean id="holdedAndAppealedRequestsDueDateUpdate" class="gov.foia.service.HoldedAndAppealedRequestsDueDateUpdate">
@@ -96,6 +98,7 @@
             <property name="holidayConfigurationService" ref="holidayConfigurationService"/>
             <property name="userDao" ref="userJpaDao"/>
             <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+            <property name="translationService" ref="translationService" />
         </beans:bean>
 
         <beans:bean id="dueDateReminderJobDescriptor" class="gov.foia.service.DueDateReminderJobDescriptor">
@@ -288,6 +291,7 @@
             <beans:property name="templatingEngine" ref="templatingEngine"/>
             <beans:property name="emailBodyTemplate" value="file:${user.home}/.arkcase/acm/templates/requestAssigned.html"/>
             <beans:property name="notificationDao" ref="notificationDao"/>
+            <beans:property name="translationService" ref="translationService" />
         </beans:bean>
 
         <beans:bean id="foiaExecutiveGroupNotificationService" class="gov.foia.service.FOIAExecutiveGroupNotificationService">

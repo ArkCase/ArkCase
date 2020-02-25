@@ -36,8 +36,10 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.billing.model.BillingInvoice;
 import com.armedia.acm.services.billing.model.BillingInvoiceRequest;
 import com.armedia.acm.services.billing.service.BillingService;
+import com.armedia.acm.services.labels.service.TranslationService;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
+import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.notification.service.NotificationSender;
 import com.armedia.acm.services.users.model.AcmUser;
 
@@ -58,6 +60,7 @@ public class ComplaintBillingInvoiceEmailSenderService
     private NotificationSender notificationSender;
     private NotificationDao notificationDao;
     private EcmFileService fileService;
+    private TranslationService translationService;
 
     public void sendBillingInvoiceByEmail(BillingInvoiceRequest billingInvoiceRequest, AcmUser acmUser, Authentication authentication)
             throws Exception
@@ -86,7 +89,7 @@ public class ComplaintBillingInvoiceEmailSenderService
         notification.setAttachFiles(true);
         notification.setFiles(notificationFiles);
         notification.setEmailAddresses(emailAddress);
-        notification.setTitle(String.format("Complaint%s invoice", complaint.getComplaintNumber()));
+        notification.setTitle(String.format(translationService.translate(NotificationConstants.COMPLAINT_INVOICE), complaint.getComplaintNumber()));
         notification.setUser(acmUser.getUserId());
         getNotificationDao().save(notification);
 
@@ -138,5 +141,15 @@ public class ComplaintBillingInvoiceEmailSenderService
     public void setFileService(EcmFileService fileService)
     {
         this.fileService = fileService;
+    }
+
+    public TranslationService getTranslationService()
+    {
+        return translationService;
+    }
+
+    public void setTranslationService(TranslationService translationService)
+    {
+        this.translationService = translationService;
     }
 }

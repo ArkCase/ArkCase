@@ -52,6 +52,7 @@
             <beans:property name="userDao" ref="userJpaDao"/>
             <beans:property name="ecmFileService" ref="ecmFileService"/>
             <beans:property name="notificationDao" ref="notificationDao"/>
+            <beans:property name="translationService" ref="translationService" />
         </beans:bean>
 
         <beans:bean id="caseFilePipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
