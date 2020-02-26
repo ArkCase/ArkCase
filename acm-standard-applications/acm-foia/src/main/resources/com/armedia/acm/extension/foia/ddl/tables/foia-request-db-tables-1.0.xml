@@ -629,7 +629,7 @@ LANGUAGE plpgsql;
             <column name="fo_external_identifier" type="TEXT"/>
         </addColumn>
     </changeSet>
-    
+
     <changeSet id="39-acm-case-file-add-disposition-closed-date-column" author="aleksandar.acevski" dbms="oracle,mssql,postgres,mysql"
                logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
         <addColumn tableName="acm_case_file">
