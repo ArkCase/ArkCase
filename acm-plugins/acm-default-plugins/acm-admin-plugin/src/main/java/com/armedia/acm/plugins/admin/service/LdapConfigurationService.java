@@ -51,7 +51,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -84,14 +83,6 @@ public class LdapConfigurationService implements InitializingBean
     private Pattern ldapConfigurationLocationPattern;
 
     private Pattern ldapDirectoryNamePattern;
-
-    private Pattern ldapUserFilePattern;
-
-    private Pattern ldapUserPropertiesFilePattern;
-
-    private Pattern ldapGroupFilePattern;
-
-    private Pattern ldapGroupPropertiesFilePattern;
 
     private Pattern ldapPropertiesFilePattern;
 
@@ -460,11 +451,6 @@ public class LdapConfigurationService implements InitializingBean
         {
             String configurationLocation = ldapDirectoryConfig.getLdapConfigurationLocation();
             Consumer<File> deleteFile = file -> forceDeleteFileQuietly(configurationLocation + file.getName());
-            List<Pattern> deletePatterns = Arrays.asList(ldapGroupPropertiesFilePattern,
-                    ldapGroupFilePattern, ldapUserPropertiesFilePattern, ldapUserFilePattern);
-
-            deletePatterns.forEach(pattern -> getDirectoryConfigurationFiles(directoryId, configurationLocation, pattern)
-                    .ifPresent(deleteFile));
         }
 
     }
@@ -543,10 +529,6 @@ public class LdapConfigurationService implements InitializingBean
     {
         this.ldapConfigurationLocationPattern = Pattern.compile(ldapDirectoryConfig.getLdapPropertiesFileRegex());
         this.ldapDirectoryNamePattern = Pattern.compile("^[a-zA-Z0-9_]+$");
-        this.ldapUserFilePattern = Pattern.compile(ldapDirectoryConfig.getLdapUserFileRegex());
-        this.ldapUserPropertiesFilePattern = Pattern.compile(ldapDirectoryConfig.getLdapUserPropertiesFileRegex());
-        this.ldapGroupFilePattern = Pattern.compile(ldapDirectoryConfig.getLdapGroupFileRegex());
-        this.ldapGroupPropertiesFilePattern = Pattern.compile(ldapDirectoryConfig.getLdapGroupPropertiesFileRegex());
         this.ldapPropertiesFilePattern = Pattern.compile(ldapDirectoryConfig.getLdapPropertiesFileRegex());
     }
 

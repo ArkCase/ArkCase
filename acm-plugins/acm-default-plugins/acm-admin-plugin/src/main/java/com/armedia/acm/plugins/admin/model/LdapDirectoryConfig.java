@@ -37,12 +37,6 @@ public class LdapDirectoryConfig
     private String ldapTemplatePropertiesFile;
     private String ldapPropertiesFileRegex;
 
-    private String ldapUserPropertiesFileRegex;
-    private String ldapUserFileRegex;
-
-    private String ldapGroupPropertiesFileRegex;
-    private String ldapGroupFileRegex;
-
     public String getLdapConfigurationLocation()
     {
         return ldapConfigurationLocation;
@@ -111,45 +105,5 @@ public class LdapDirectoryConfig
     public void setLdapPropertiesFileRegex(String ldapPropertiesFileRegex)
     {
         this.ldapPropertiesFileRegex = ldapPropertiesFileRegex;
-    }
-
-    public String getLdapUserPropertiesFileRegex()
-    {
-        return ldapUserPropertiesFileRegex;
-    }
-
-    public void setLdapUserPropertiesFileRegex(String ldapUserPropertiesFileRegex)
-    {
-        this.ldapUserPropertiesFileRegex = ldapUserPropertiesFileRegex;
-    }
-
-    public String getLdapUserFileRegex()
-    {
-        return ldapUserFileRegex;
-    }
-
-    public void setLdapUserFileRegex(String ldapUserFileRegex)
-    {
-        this.ldapUserFileRegex = ldapUserFileRegex;
-    }
-
-    public String getLdapGroupPropertiesFileRegex()
-    {
-        return ldapGroupPropertiesFileRegex;
-    }
-
-    public void setLdapGroupPropertiesFileRegex(String ldapGroupPropertiesFileRegex)
-    {
-        this.ldapGroupPropertiesFileRegex = ldapGroupPropertiesFileRegex;
-    }
-
-    public String getLdapGroupFileRegex()
-    {
-        return ldapGroupFileRegex;
-    }
-
-    public void setLdapGroupFileRegex(String ldapGroupFileRegex)
-    {
-        this.ldapGroupFileRegex = ldapGroupFileRegex;
     }
 }
