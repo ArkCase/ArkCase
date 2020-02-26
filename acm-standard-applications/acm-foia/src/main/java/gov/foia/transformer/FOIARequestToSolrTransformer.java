@@ -132,6 +132,7 @@ public class FOIARequestToSolrTransformer extends CaseFileToSolrTransformer
         additionalProperties.put("request_object_type_lcs", requestIn.getObjectType());
         additionalProperties.put("request_id_lcs", requestIn.getId().toString());
         additionalProperties.put("tolling_flag_b", requestIn.getTollingFlag());
+        additionalProperties.put("limited_delivery_flag_b", requestIn.getLimitedDeliveryFlag());
 
         if (requestIn.getQueue() != null)
         {

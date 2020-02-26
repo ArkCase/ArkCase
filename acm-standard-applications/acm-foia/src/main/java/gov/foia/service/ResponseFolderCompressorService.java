@@ -34,11 +34,18 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
+import gov.foia.model.FOIARequest;
+import gov.foia.model.FoiaConfig;
 import gov.foia.model.event.RequestResponseFolderCompressedEvent;
 
 /**
@@ -57,20 +64,61 @@ public class ResponseFolderCompressorService implements ApplicationEventPublishe
 
     private AcmFolderService acmFolderService;
 
+    private FoiaConfig foiaConfig;
+
     public String compressResponseFolder(Long requestId)
             throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmFolderException
     {
-        CaseFile request = caseFileDao.find(requestId);
+        FOIARequest request = (FOIARequest) caseFileDao.find(requestId);
+
+        Long responseFolderId = getResponseFolderService().getResponseFolder(request).getId();
+
         String compressFileName = "";
 
-        if(getAcmFolderService().getFolderChildren(getResponseFolderService().getResponseFolder(request).getId()).size() <= 0)
+        if (getAcmFolderService().getFolderChildren(responseFolderId).size() <= 0)
         {
             return compressFileName;
         }
 
-        compressFileName = compressor.compressFolder(getResponseFolderService().getResponseFolder(request).getId());
+        if (isResponseLimited(request))
+        {
+            List<Long> compressFileIds = getFilesForLimitedRelease(responseFolderId);
+            compressFileName = compressor.compressFiles(compressFileIds);
+        }
+        else
+        {
+            compressFileName = compressor.compressFolder(responseFolderId);
+        }
         publishResponseFolderCompressedEvent(request);
         return compressFileName;
+    }
+
+    private List<Long> getFilesForLimitedRelease(Long responseFolderId)
+    {
+        List<Long> compressFileIds = new ArrayList<>();
+
+        int limitedPageCount = getFoiaConfig().getLimitedDeliveryToSpecificPageCount();
+        int currentPageCount = 0;
+
+        List<EcmFile> allFiles = getAcmFolderService().getFilesInFolderAndSubfolders(responseFolderId);
+        allFiles.sort(Comparator.comparing(EcmFile::getCreated));
+
+        for (EcmFile file : allFiles)
+        {
+            compressFileIds.add(file.getId());
+            currentPageCount += file.getPageCount();
+
+            if (currentPageCount > limitedPageCount)
+            {
+                break;
+            }
+        }
+        return compressFileIds;
+    }
+
+    private boolean isResponseLimited(FOIARequest request)
+    {
+        return getFoiaConfig().getLimitedDeliveryToSpecificPageCountEnabled() && request.getLimitedDeliveryFlag();
     }
 
     private void publishResponseFolderCompressedEvent(CaseFile source)
@@ -138,4 +186,15 @@ public class ResponseFolderCompressorService implements ApplicationEventPublishe
     {
         this.acmFolderService = acmFolderService;
     }
+
+    public FoiaConfig getFoiaConfig()
+    {
+        return foiaConfig;
+    }
+
+    public void setFoiaConfig(FoiaConfig foiaConfig)
+    {
+        this.foiaConfig = foiaConfig;
+    }
+
 }

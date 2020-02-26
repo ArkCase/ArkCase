@@ -505,7 +505,6 @@ angular.module('request-info').controller(
                         }
                         if (defaultNextQueue) {
                             availableQueues.push("Complete");
-                            availableQueues.push("Next");
                         }
                     }
                     availableQueues = availableQueues.map(function (item) {
@@ -992,6 +991,8 @@ angular.module('request-info').controller(
             }
             
             AdminFoiaConfigService.getFoiaConfig().then(function (response) {
+                $scope.limitedDeliveryToSpecificPageCountEnabled = response.data.limitedDeliveryToSpecificPageCountEnabled;
+                $scope.limitedDeliveryToSpecificPageCount = response.data.limitedDeliveryToSpecificPageCount;
                 $scope.provideReasonToHoldRequestEnabled = response.data.provideReasonToHoldRequestEnabled;
             });
             
@@ -1023,11 +1024,38 @@ angular.module('request-info').controller(
                         parentId: $stateParams['id'],
                         parentType: 'CASE_FILE',
                         type: 'HOLD_REASON'
-                    }).then(function(addedNote) {
+                    }).then(function (addedNote) {
                         // Note saved
                         deferred.resolve();
                     });
-                }, function() {
+                }, function () {
+                    deferred.reject();
+                    $scope.loading = false;
+                    $scope.loadingIcon = "fa fa-check";
+                });
+            }
+
+            function openLimitedPageReleaseModal(deferred) {
+                var params = {};
+                params.pageCount = $scope.limitedDeliveryToSpecificPageCount;
+
+                var modalInstance = $modal.open({
+                    animation: $scope.animationsEnabled,
+                    templateUrl: 'modules/cases/views/components/limited-release-modal.client.view.html',
+                    controller: 'Cases.LimitedReleaseModalController',
+                    size: 'md',
+                    backdrop: 'static',
+                    resolve: {
+                        params: function () {
+                            return params;
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function (limitedDeliveryFlag) {
+                    $scope.objectInfo.limitedDeliveryFlag = limitedDeliveryFlag;
+                    deferred.resolve();
+                }, function () {
                     deferred.reject();
                     $scope.loading = false;
                     $scope.loadingIcon = "fa fa-check";
@@ -1057,7 +1085,6 @@ angular.module('request-info').controller(
                         }
                         if (defaultNextQueue) {
                             availableQueues.push("Complete");
-                            availableQueues.push("Next");
                         }
                     }
 
@@ -1066,7 +1093,7 @@ angular.module('request-info').controller(
                     $scope.defaultReturnQueue = defaultReturnQueue;
                     $scope.defaultDenyQueue = defaultDenyQueue;
 
-                    if (name === 'Complete' || name === 'Next') {
+                    if (name === 'Complete') {
                         nextQueue = $scope.defaultNextQueue;
                     } else if (name === 'Return') {
                         nextQueue = $scope.defaultReturnQueue;
@@ -1126,11 +1153,13 @@ angular.module('request-info').controller(
                     openDeleteCommentModal(deferred);
                 } else if (name === 'Hold') {
                     if ($scope.provideReasonToHoldRequestEnabled) {
-                      openHoldReasonModal(deferred, $scope.objectInfo.tollingFlag);    
+                        openHoldReasonModal(deferred, $scope.objectInfo.tollingFlag);
                     } else {
                         $scope.objectInfo.status = 'Hold';
                         deferred.resolve();
                     }
+                } else if (name === 'Complete' && $scope.defaultNextQueue === "Release" && $scope.limitedDeliveryToSpecificPageCountEnabled) {
+                    openLimitedPageReleaseModal(deferred);
                 } else {
                     deferred.resolve();
                 }
