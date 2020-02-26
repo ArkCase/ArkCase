@@ -41,6 +41,8 @@ public class FoiaConfiguration extends SystemConfiguration
     private Boolean requestExtensionWorkingDaysEnabled;
     private Boolean purgeRequestWhenInHoldEnabled;
     private Boolean moveToBillingQueueEnabled;
+    private Boolean limitedDeliveryToSpecificPageCountEnabled;
+    private Integer limitedDeliveryToSpecificPageCount;
     private Boolean requireTimesheetToCompleteStandardRequest;
     private Boolean requireTimesheetToCompleteDeniedRequest;
     private Boolean provideReasonToHoldRequestEnabled;
@@ -180,5 +182,25 @@ public class FoiaConfiguration extends SystemConfiguration
     public void setProvideReasonToHoldRequestEnabled(Boolean provideReasonToHoldRequestEnabled)
     {
         this.provideReasonToHoldRequestEnabled = provideReasonToHoldRequestEnabled;
+    }
+
+    public Boolean getLimitedDeliveryToSpecificPageCountEnabled()
+    {
+        return limitedDeliveryToSpecificPageCountEnabled;
+    }
+
+    public void setLimitedDeliveryToSpecificPageCountEnabled(Boolean limitedDeliveryToSpecificPageCountEnabled)
+    {
+        this.limitedDeliveryToSpecificPageCountEnabled = limitedDeliveryToSpecificPageCountEnabled;
+    }
+
+    public Integer getLimitedDeliveryToSpecificPageCount()
+    {
+        return limitedDeliveryToSpecificPageCount;
+    }
+
+    public void setLimitedDeliveryToSpecificPageCount(Integer limitedDeliveryToSpecificPageCount)
+    {
+        this.limitedDeliveryToSpecificPageCount = limitedDeliveryToSpecificPageCount;
     }
 }

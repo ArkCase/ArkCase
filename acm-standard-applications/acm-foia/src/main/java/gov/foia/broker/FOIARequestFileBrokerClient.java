@@ -37,8 +37,8 @@ import com.armedia.acm.web.api.MDCConstants;
 import com.armedia.broker.AcmFileBrokerClient;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.slf4j.MDC;
 
 import javax.jms.JMSException;
@@ -84,6 +84,12 @@ public class FOIARequestFileBrokerClient extends AcmFileBrokerClient
         sendReleaseFile(request);
     }
 
+    public void sendReleaseFile(Long requestId, String filePath)
+    {
+        CaseFile request = caseFileDao.find(requestId);
+        sendReleaseFile(request, filePath);
+    }
+
     /**
      * Send request release file to outbound queue
      *
@@ -91,21 +97,32 @@ public class FOIARequestFileBrokerClient extends AcmFileBrokerClient
      * @throws AcmObjectNotFoundException
      * @throws AcmUserActionFailedException
      * @throws AcmFolderException
-     * @throws IOException
-     * @throws JMSException
      */
     private void sendReleaseFile(CaseFile request)
             throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmFolderException
     {
+        AcmFolder responseFolder = responseFolderCompressorService.getResponseFolderService().getResponseFolder(request);
+        String filePath = responseFolderCompressorService.getCompressor().getCompressedFolderFilePath(responseFolder);
 
+        sendReleaseFile(request, filePath);
+    }
+
+    /**
+     * Send request release file to outbound queue
+     *
+     * @param request
+     * @param filePath
+     * @throws IOException
+     * @throws JMSException
+     */
+    private void sendReleaseFile(CaseFile request, String filePath)
+    {
         // since this code is run via a batch job, there is no authenticated user, so we need to specify the user
         // to be used for CMIS connections. Similar to the requiremnt to 'getAuditPropertyEntityAdapter().setUserId',
         // only this user has to be a real Alfresco user.
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
 
-        AcmFolder responseFolder = responseFolderCompressorService.getResponseFolderService().getResponseFolder(request);
-        String filePath = responseFolderCompressorService.getCompressor().getCompressedFolderFilePath(responseFolder);
         File file = new File(filePath);
         if (!file.exists())
         {

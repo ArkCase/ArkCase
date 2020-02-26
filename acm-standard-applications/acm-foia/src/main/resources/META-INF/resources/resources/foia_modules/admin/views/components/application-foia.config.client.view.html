@@ -14,8 +14,31 @@
 
             <panel-view header="{{'admin.application.foia.config.title' | translate}}" collapsible="false">
                 <div class="row">
+                    <div class="col-lg-4"></div>
                     <div class="col-lg-4">
+                        <label translate>admin.application.foia.config.labels.limitedDeliveryToSpecificPageCount</label>
                     </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox"
+                                        ng-model="configDataModel.limitedDeliveryToSpecificPageCountEnabled">
+                                <span translate>
+                                    admin.application.foia.config.labels.limitedDeliveryToSpecificPageCountEnabled
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <input type="number" min="1" ng-model="configDataModel.limitedDeliveryToSpecificPageCount"
+                                ng-disabled="!configDataModel.limitedDeliveryToSpecificPageCountEnabled"
+                                class="form-control">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4"></div>
                     <div class="col-lg-4">
                         <label translate>admin.application.foia.config.labels.requestExtensionWorkingDays</label>
                     </div>

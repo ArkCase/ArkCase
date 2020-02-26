@@ -27,12 +27,17 @@ package com.armedia.acm.plugins.ecm.service.impl;
  * #L%
  */
 
+import static org.junit.Assert.assertEquals;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.util.StopWatch;
+
+import java.io.IOException;
 
 /**
  * Created by armdev on 3/11/15.
@@ -52,10 +57,57 @@ public class PageCountServiceImplTest
     public void findPageCountForLargePdf() throws Exception
     {
         Resource classPathResource = new ClassPathResource("adobe/oversized.pdf");
+        String MIME_TYPE_PDF = "application/pdf";
+        int numberOfPagesExpected = 41944;
+        int numberOfPagesActual = findNumberOfPagesAndLogTime(classPathResource, MIME_TYPE_PDF);
 
-        String mimeType = "application/pdf";
-        int numberOfPages = unit.getNumberOfPages(mimeType, classPathResource.getFile());
-        LOGGER.debug("Number of pages found: [{}]", numberOfPages);
+        assertEquals(numberOfPagesExpected, numberOfPagesActual);
     }
 
+    @Test
+    public void findPageCountForDocFile() throws Exception
+    {
+        Resource classPathResource = new ClassPathResource("office/Testdoc.doc");
+        String MIME_TYPE_DOC = "application/msword";
+        int numberOfPagesExpected = 1;
+        int numberOfPagesActual = findNumberOfPagesAndLogTime(classPathResource, MIME_TYPE_DOC);
+
+        assertEquals(numberOfPagesExpected, numberOfPagesActual);
+    }
+
+    @Test
+    public void findPageCountForDocxFile() throws Exception
+    {
+        Resource classPathResource = new ClassPathResource("office/hds.docx");
+        String MIME_TYPE_DOCX = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+        int numberOfPagesExpected = 145;
+        int numberOfPagesActual = findNumberOfPagesAndLogTime(classPathResource, MIME_TYPE_DOCX);
+
+        assertEquals(numberOfPagesExpected, numberOfPagesActual);
+    }
+
+    @Test
+    public void findPageCountForPptxFile() throws Exception
+    {
+        Resource classPathResource = new ClassPathResource("office/slideshow.pptx");
+        String MIME_TYPE_PPTX = "application/vnd.openxmlformats-officedocument.presentationml.presentation";
+        int numberOfPagesExpected = 4;
+        int numberOfPagesActual = findNumberOfPagesAndLogTime(classPathResource, MIME_TYPE_PPTX);
+
+        assertEquals(numberOfPagesExpected, numberOfPagesActual);
+    }
+
+    private int findNumberOfPagesAndLogTime(Resource classPathResource, String mimeType) throws IOException
+    {
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+
+        int numberOfPagesActual = unit.getNumberOfPages(mimeType, classPathResource.getFile());
+
+        stopWatch.stop();
+
+        LOGGER.debug("Number of pages found: [{}]", numberOfPagesActual);
+        LOGGER.debug("Time needed to find the pages: [{}]", stopWatch.getTotalTimeSeconds());
+        return numberOfPagesActual;
+    }
 }
