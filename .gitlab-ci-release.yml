@@ -193,11 +193,11 @@ release_all:
     # Trigger other project releases:
     # Configuration
     - curl -k --request POST --form token=$CONFIGURATION_PROJECT_TOKEN --form ref=core
-      --form "variables[RELEASE_CANDIDATE_1]=$RELEASE_CANDIDATE_1"
+      --form "variables[RELEASE_START]=$RELEASE_START"
       --form "variables[RELEASE_VERSION]=$RELEASE_VERSION"
       --form "variables[DEVELOP_NEW_VERSION]=$DEVELOP_NEW_VERSION"
-      --form "variables[START_RELEASE_CANDIDATE_X]=$START_RELEASE_CANDIDATE_X"
       --form "variables[RELEASE_CANDIDATE_X]=$RELEASE_CANDIDATE_X"
+      --form "variables[RELEASE_CANDIDATE_SUFFIX]=$RELEASE_CANDIDATE_SUFFIX"
       --form "variables[RELEASE]=$RELEASE"
       --form "variables[START_SUPPORT_BRANCH]=$START_SUPPORT_BRANCH"
       --form "variables[RELEASE_TAG]=$RELEASE_TAG"
@@ -207,11 +207,10 @@ release_all:
       https://***REMOVED***/api/v4/projects/30/trigger/pipeline
     # Portal backend
     - curl -k --request POST --form token=$EXTERNAL_WEB_PORTAL_PROJECT_TOKEN --form ref=develop
-      --form "variables[RELEASE_CANDIDATE_1]=$RELEASE_CANDIDATE_1"
       --form "variables[RELEASE_VERSION]=$RELEASE_VERSION"
       --form "variables[DEVELOP_NEW_VERSION]=$DEVELOP_NEW_VERSION"
-      --form "variables[START_RELEASE_CANDIDATE_X]=$START_RELEASE_CANDIDATE_X"
       --form "variables[RELEASE_CANDIDATE_X]=$RELEASE_CANDIDATE_X"
+      --form "variables[RELEASE_CANDIDATE_SUFFIX]=$RELEASE_CANDIDATE_SUFFIX"
       --form "variables[RELEASE]=$RELEASE"
       --form "variables[START_SUPPORT_BRANCH]=$START_SUPPORT_BRANCH"
       --form "variables[RELEASE_TAG]=$RELEASE_TAG"
@@ -221,11 +220,10 @@ release_all:
       https://***REMOVED***/api/v4/projects/193/trigger/pipeline
     # Portal UI
     - curl -k --request POST --form token=$EXTERNAL_WEB_PORTAL_UI_PROJECT_TOKEN --form ref=develop
-      --form "variables[RELEASE_CANDIDATE_1]=$RELEASE_CANDIDATE_1"
       --form "variables[RELEASE_VERSION]=$RELEASE_VERSION"
       --form "variables[DEVELOP_NEW_VERSION]=$DEVELOP_NEW_VERSION"
-      --form "variables[START_RELEASE_CANDIDATE_X]=$START_RELEASE_CANDIDATE_X"
       --form "variables[RELEASE_CANDIDATE_X]=$RELEASE_CANDIDATE_X"
+      --form "variables[RELEASE_CANDIDATE_SUFFIX]=$RELEASE_CANDIDATE_SUFFIX"
       --form "variables[RELEASE]=$RELEASE"
       --form "variables[START_SUPPORT_BRANCH]=$START_SUPPORT_BRANCH"
       --form "variables[RELEASE_TAG]=$RELEASE_TAG"
@@ -235,11 +233,10 @@ release_all:
       https://***REMOVED***/api/v4/projects/237/trigger/pipeline
     # Config server
     - curl -k --request POST --form token=$CONFIG_SERVER_PROJECT_TOKEN --form ref=develop
-      --form "variables[RELEASE_CANDIDATE_1]=$RELEASE_CANDIDATE_1"
       --form "variables[RELEASE_VERSION]=$RELEASE_VERSION"
       --form "variables[DEVELOP_NEW_VERSION]=$DEVELOP_NEW_VERSION"
-      --form "variables[START_RELEASE_CANDIDATE_X]=$START_RELEASE_CANDIDATE_X"
       --form "variables[RELEASE_CANDIDATE_X]=$RELEASE_CANDIDATE_X"
+      --form "variables[RELEASE_CANDIDATE_SUFFIX]=$RELEASE_CANDIDATE_SUFFIX"
       --form "variables[RELEASE]=$RELEASE"
       --form "variables[START_SUPPORT_BRANCH]=$START_SUPPORT_BRANCH"
       --form "variables[RELEASE_TAG]=$RELEASE_TAG"
@@ -249,11 +246,10 @@ release_all:
       https://***REMOVED***/api/v4/projects/322/trigger/pipeline
     # Snowbound
     - curl -k --request POST --form token=$SNOWBOUND_PROJECT_TOKEN --form ref=snowbound-4.10
-      --form "variables[RELEASE_CANDIDATE_1]=$RELEASE_CANDIDATE_1"
       --form "variables[RELEASE_VERSION]=$RELEASE_VERSION"
       --form "variables[DEVELOP_NEW_VERSION]=$DEVELOP_NEW_VERSION"
-      --form "variables[START_RELEASE_CANDIDATE_X]=$START_RELEASE_CANDIDATE_X"
       --form "variables[RELEASE_CANDIDATE_X]=$RELEASE_CANDIDATE_X"
+      --form "variables[RELEASE_CANDIDATE_SUFFIX]=$RELEASE_CANDIDATE_SUFFIX"
       --form "variables[RELEASE]=$RELEASE"
       --form "variables[START_SUPPORT_BRANCH]=$START_SUPPORT_BRANCH"
       --form "variables[RELEASE_TAG]=$RELEASE_TAG"
