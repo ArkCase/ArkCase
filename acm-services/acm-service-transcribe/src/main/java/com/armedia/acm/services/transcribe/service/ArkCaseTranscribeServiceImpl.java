@@ -42,6 +42,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.services.labels.service.LabelManagementService;
+import com.armedia.acm.services.labels.service.TranslationService;
 import com.armedia.acm.services.mediaengine.exception.CreateMediaEngineException;
 import com.armedia.acm.services.mediaengine.exception.GetMediaEngineException;
 import com.armedia.acm.services.mediaengine.exception.MediaEngineProviderNotFound;
@@ -59,6 +60,7 @@ import com.armedia.acm.services.mediaengine.model.MediaEngineUserType;
 import com.armedia.acm.services.mediaengine.service.ArkCaseMediaEngineServiceImpl;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
+import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
 import com.armedia.acm.services.transcribe.dao.TranscribeDao;
@@ -120,6 +122,7 @@ public class ArkCaseTranscribeServiceImpl extends ArkCaseMediaEngineServiceImpl<
     private NotificationDao notificationDao;
     private EcmFileDao ecmFileDao;
     private TranscribeConfigurationService transcribeConfigurationService;
+    private TranslationService translationService;
 
     @Override
     public void notify(Long id, String action)
@@ -135,7 +138,7 @@ public class ArkCaseTranscribeServiceImpl extends ArkCaseMediaEngineServiceImpl<
                 getUsersToNotify(users, transcribe);
 
                 Notification notification = new Notification();
-                notification.setTitle("Transcription status");
+                notification.setTitle(translationService.translate(NotificationConstants.STATUS_TRANSCRIPTION));
                 if(!action.equals("QUEUED"))
                 {
                     notification.setTemplateModelName("transcribeStatus");
@@ -973,5 +976,15 @@ public class ArkCaseTranscribeServiceImpl extends ArkCaseMediaEngineServiceImpl<
     public void setTranscribeConfigurationService(TranscribeConfigurationService transcribeConfigurationService)
     {
         this.transcribeConfigurationService = transcribeConfigurationService;
+    }
+
+    public TranslationService getTranslationService()
+    {
+        return translationService;
+    }
+
+    public void setTranslationService(TranslationService translationService)
+    {
+        this.translationService = translationService;
     }
 }

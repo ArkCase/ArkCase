@@ -201,12 +201,14 @@
         <property name="notificationDao" ref="notificationDao"/>
         <property name="userDao" ref="userJpaDao"/>
         <property name="acmSpringActiveProfile" ref="acmSpringActiveProfile"/>
+        <property name="translationService" ref="translationService" />
     </bean>
 
     <bean id="onForgotUsername" class="com.armedia.acm.services.notification.service.OnForgotUsername">
         <property name="notificationDao" ref="notificationDao"/>
         <property name="userDao" ref="userJpaDao"/>
         <property name="acmSpringActiveProfile" ref="acmSpringActiveProfile"/>
+        <property name="translationService" ref="translationService" />
     </bean>
 
     <bean id="onLoginCheckPasswordExpiration" class="com.armedia.acm.services.notification.service.OnLoginCheckPasswordExpiration">
@@ -219,6 +221,7 @@
         <property name="templatingEngine" ref="templatingEngine"/>
         <property name="notificationDao" ref="notificationDao"/>
         <property name="applicationConfig" ref="applicationProperties"/>
+        <property name="translationService" ref="translationService" />
     </bean>
 
     <bean id="userInfoHelper" class="com.armedia.acm.services.notification.helper.UserInfoHelper">
