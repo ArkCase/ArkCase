@@ -939,8 +939,8 @@ angular.module('request-info').controller(
             function openReturnReasonModal(deferred) {
                 var modalInstance = $modal.open({
                     animation: $scope.animationsEnabled,
-                    templateUrl: 'modules/request-info/views/components/return-reason-modal.client.view.html',
-                    controller: 'RequestInfo.ReturnReasonModalController',
+                    templateUrl: 'modules/cases/views/components/return-reason-modal.client.view.html',
+                    controller: 'Cases.ReturnReasonModalController',
                     size: 'lg',
                     backdrop: 'static'
                 });
@@ -967,8 +967,8 @@ angular.module('request-info').controller(
             function openDeleteCommentModal(deferred) {
                 var modalInstance = $modal.open({
                     animation: $scope.animationsEnabled,
-                    templateUrl: 'modules/request-info/views/components/delete-comment-modal.client.view.html',
-                    controller: 'RequestInfo.DeleteCommentModalController',
+                    templateUrl: 'modules/cases/views/components/delete-comment-modal.client.view.html',
+                    controller: 'Cases.DeleteCommentModalController',
                     size: 'lg',
                     backdrop: 'static'
                 });
@@ -985,6 +985,49 @@ angular.module('request-info').controller(
                         deferred.resolve();
                     });
                 }, function () {
+                    deferred.reject();
+                    $scope.loading = false;
+                    $scope.loadingIcon = "fa fa-check";
+                });
+            }
+            
+            AdminFoiaConfigService.getFoiaConfig().then(function (response) {
+                $scope.provideReasonToHoldRequestEnabled = response.data.provideReasonToHoldRequestEnabled;
+            });
+            
+            function openHoldReasonModal(deferred, tollingFlag) {
+                var params = {};
+                params.tollingFlag = tollingFlag;
+                
+                var modalInstance = $modal.open({
+                    animation: $scope.animationsEnabled,
+                    templateUrl: 'modules/cases/views/components/hold-reason-modal.client.view.html',
+                    controller: 'Cases.HoldReasonModalController',
+                    size: 'md',
+                    backdrop: 'static',
+                    resolve: {
+                        params: function() {
+                            return params;
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function(data) {
+                    $scope.objectInfo.status = data.status;
+                    if (data.isSelectedTolling) {
+                      $scope.objectInfo.tollingFlag = true;
+                    }
+                    //save note
+                    NotesService.saveNote({
+                        note: data.holdReason,
+                        parentId: $stateParams['id'],
+                        parentType: 'CASE_FILE',
+                        type: 'HOLD_REASON'
+                    }).then(function(addedNote) {
+                        // Note saved
+                        deferred.resolve();
+                    });
+                }, function() {
                     deferred.reject();
                     $scope.loading = false;
                     $scope.loadingIcon = "fa fa-check";
@@ -1081,6 +1124,13 @@ angular.module('request-info').controller(
                     openReturnReasonModal(deferred);
                 } else if (name === 'Delete') {
                     openDeleteCommentModal(deferred);
+                } else if (name === 'Hold') {
+                    if ($scope.provideReasonToHoldRequestEnabled) {
+                      openHoldReasonModal(deferred, $scope.objectInfo.tollingFlag);    
+                    } else {
+                        $scope.objectInfo.status = 'Hold';
+                        deferred.resolve();
+                    }
                 } else {
                     deferred.resolve();
                 }

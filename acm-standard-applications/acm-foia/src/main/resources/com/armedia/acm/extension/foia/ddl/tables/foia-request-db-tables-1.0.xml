@@ -637,5 +637,17 @@ LANGUAGE plpgsql;
         </addColumn>
     </changeSet>
 
+    <changeSet id="40-01-acm_case_file-add-column-fo_tolling_flag" author="sasko.tanaskoski" dbms="oracle,mssql,postgres"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_case_file">
+            <column name="fo_tolling_flag" type="VARCHAR(10)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="40-02-acm_case_file-add-column-fo_tolling_flag" author="sasko.tanaskoski" dbms="mysql"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_case_file">
+            <column name="fo_tolling_flag" type="TEXT"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
 
