@@ -201,7 +201,7 @@ public class ExemptionCodesAPIController
      *            HTTP session
      */
     @RequestMapping(value = "/{caseId}/tags/{fileId}", method = RequestMethod.GET)
-        public @ResponseBody List<ExemptionCodeDto> getExemptionCodes(
+    public @ResponseBody List<ExemptionCodeDto> getExemptionCodes(
             @PathVariable(value = "caseId") Long caseId,
             @PathVariable(value = "fileId") Long fileId,
             Authentication auth,
