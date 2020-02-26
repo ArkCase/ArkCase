@@ -33,6 +33,9 @@ import com.armedia.acm.services.users.service.tracker.UserTrackerService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -109,6 +112,85 @@ public class ExemptionCodesAPIController
     }
 
     /**
+     * Update FOIA document exemption codes status
+     *
+     * @param fileId
+     *            FOIA document identifier
+     * @param status
+     *            status of redaction tags (exemption codes)
+     * @param auth
+     *            authentication token
+     * @param session
+     *            HTTP session
+     */
+    @RequestMapping(value = "/{fileId}/update/tags", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity updateExemptionCodesStatusFromSnowbound(
+            @PathVariable(value = "fileId") String fileId,
+            @RequestParam(value = "status") String status,
+            Authentication auth,
+            HttpSession session)
+    {
+        String user = auth.getName();
+        getAuditPropertyEntityAdapter().setUserId(user);
+        String ipAddress = (String) session.getAttribute("acm_ip_address");
+        getUserTrackerService().trackUser(ipAddress);
+
+        // the file id may have a version identifier attached eg. 479:13.0
+        String fileIdOnly = fileId == null ? null
+                : fileId.contains(":") ? StringUtils.substringBefore(fileId, ":")
+                : fileId;
+        log.debug("File id without version identifier: {}", fileIdOnly);/**/
+
+        Long realFileId = Long.valueOf(fileIdOnly);
+
+        foiaFileService.updateExemptionCodesFromSnowbound(realFileId, status, user);
+
+        log.debug("updateExemptionCodesStatusFromSnowbound return: {}",  "{\"success\": \"true\"}");
+
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    /**
+     * Update FOIA document exemption codes.
+     *
+     * @param fileId
+     *            FOIA document identifier
+     * @param tags
+     *            list of redaction tags (exemption codes)
+     * @param auth
+     *            authentication token
+     * @param session
+     *            HTTP session
+     */
+    @RequestMapping(value = "/{fileId}/update/tags/manually", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public void setExemptionCodesManually(
+            @PathVariable(value = "fileId") String fileId,
+            @RequestParam(value = "tags") List<String> tags,
+            Authentication auth,
+            HttpSession session)
+    {
+        String user = auth.getName();
+        getAuditPropertyEntityAdapter().setUserId(user);
+        String ipAddress = (String) session.getAttribute("acm_ip_address");
+        getUserTrackerService().trackUser(ipAddress);
+
+        // the file id may have a version identifier attached eg. 479:13.0
+        String fileIdOnly = fileId == null ? null
+                : fileId.contains(":") ? StringUtils.substringBefore(fileId, ":")
+                : fileId;
+        log.debug("File id without version identifier: {}", fileIdOnly);
+
+        Long realFileId = Long.valueOf(fileIdOnly);
+
+
+        log.debug("User [{}] coming from [{}] is updating exemption codes [{}] of document [{}]", user, ipAddress, tags, fileId);
+        foiaFileService.updateExemptionCodesManually(realFileId, tags, user);
+        log.debug("Exemption codes [{}] of document [{}] updated", tags, fileId);
+    }
+
+    /**
      * Get FOIA document exemption codes.
      *
      * @param caseId
@@ -118,9 +200,10 @@ public class ExemptionCodesAPIController
      * @param session
      *            HTTP session
      */
-    @RequestMapping(value = "/{caseId}/tags", method = RequestMethod.GET)
+    @RequestMapping(value = "/{caseId}/tags/{fileId}", method = RequestMethod.GET)
     public @ResponseBody List<ExemptionCodeDto> getExemptionCodes(
             @PathVariable(value = "caseId") Long caseId,
+            @PathVariable(value = "fileId") Long fileId,
             Authentication auth,
             HttpSession session) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException
     {
@@ -131,7 +214,7 @@ public class ExemptionCodesAPIController
         getUserTrackerService().trackUser(ipAddress);
 
         log.debug("User [{}] coming from [{}] is getting exemption codes of foia request (case file) [{}]", user, ipAddress, caseId);
-        tags = foiaFileService.getExemptionCodes(caseId);
+        tags = foiaFileService.getExemptionCodes(caseId, fileId);
         log.debug("Exemption codes [{}] of foia request (case file) [{}] returned", tags, caseId);
         return tags;
     }
