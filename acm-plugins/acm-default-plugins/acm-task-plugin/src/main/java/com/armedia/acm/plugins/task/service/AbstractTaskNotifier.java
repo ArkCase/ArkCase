@@ -30,6 +30,7 @@ package com.armedia.acm.plugins.task.service;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.model.TaskNotificationConfig;
+import com.armedia.acm.services.labels.service.TranslationService;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
@@ -68,6 +69,7 @@ public abstract class AbstractTaskNotifier
 
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
 
+    private TranslationService translationService;
     /**
      * @param activitiTaskService
      *            the activitiTaskService to set
@@ -106,12 +108,12 @@ public abstract class AbstractTaskNotifier
                 if (task.getDueDate().compareTo(now) > 0)
                 {
                     notification.setTemplateModelName("taskUpcoming");
-                    notification.setTitle("Task upcoming notification");
+                    notification.setTitle(translationService.translate(NotificationConstants.TASK_UPCOMING));
                 }
                 else
                 {
                     notification.setTemplateModelName("taskOverdue");
-                    notification.setTitle("Task overdue notification");
+                    notification.setTitle(translationService.translate(NotificationConstants.TASK_OVERDUE));
                 }
                 notificationDao.save(notification);
             }
@@ -174,5 +176,15 @@ public abstract class AbstractTaskNotifier
     public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter) 
     {
         this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
+    }
+
+    public TranslationService getTranslationService()
+    {
+        return translationService;
+    }
+
+    public void setTranslationService(TranslationService translationService)
+    {
+        this.translationService = translationService;
     }
 }

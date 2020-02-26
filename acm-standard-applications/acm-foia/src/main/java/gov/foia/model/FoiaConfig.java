@@ -81,7 +81,9 @@ public class FoiaConfig
     @Value("${requireTimesheetToCompleteDeniedRequest}")
     private Boolean requireTimesheetToCompleteDeniedRequest;
 
-
+    @JsonProperty("provideReasonToHoldRequestEnabled")
+    @Value("${provideReasonToHoldRequestEnabled}")
+    private Boolean provideReasonToHoldRequestEnabled;
 
     public Integer getMaxDaysInHoldQueue()
     {
@@ -201,5 +203,22 @@ public class FoiaConfig
     public void setRequireTimesheetToCompleteDeniedRequest(Boolean requireTimesheetToCompleteDeniedRequest)
     {
         this.requireTimesheetToCompleteDeniedRequest = requireTimesheetToCompleteDeniedRequest;
+    }
+
+    /**
+     * @return the provideReasonToHoldRequestEnabled
+     */
+    public Boolean getProvideReasonToHoldRequestEnabled()
+    {
+        return provideReasonToHoldRequestEnabled;
+    }
+
+    /**
+     * @param provideReasonToHoldRequestEnabled
+     *            the provideReasonToHoldRequestEnabled to set
+     */
+    public void setProvideReasonToHoldRequestEnabled(Boolean provideReasonToHoldRequestEnabled)
+    {
+        this.provideReasonToHoldRequestEnabled = provideReasonToHoldRequestEnabled;
     }
 }
