@@ -637,16 +637,6 @@ LANGUAGE plpgsql;
         </addColumn>
     </changeSet>
 
-    <changeSet id="40-alter-table-foia_file_exemption_code" author="ana.serafimoska" dbms="oracle,mssql,postgres,mysql"
-               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
-        <addColumn tableName="foia_file_exemption_code">
-            <column name="fo_exemption_status" type="VARCHAR(128)" defaultValue="DRAFT"></column>
-            <column name="fo_exemption_code_manually_flag" type="BOOLEAN" defaultValueBoolean="false">
-                <constraints nullable="false"/>
-            </column>
-        </addColumn>
-    </changeSet>
-
     <changeSet id="40-01-acm_case_file-add-column-fo_tolling_flag" author="sasko.tanaskoski" dbms="oracle,mssql,postgres"
                logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
         <addColumn tableName="acm_case_file">
@@ -657,6 +647,26 @@ LANGUAGE plpgsql;
                logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
         <addColumn tableName="acm_case_file">
             <column name="fo_tolling_flag" type="TEXT"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="41-01-alter-table-foia_file_exemption_code" author="ana.serafimoska" dbms="oracle,mssql,postgres"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <addColumn tableName="foia_file_exemption_code">
+            <column name="fo_exemption_status" type="VARCHAR(128)" defaultValue="DRAFT"></column>
+            <column name="fo_exemption_code_manually_flag" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="41-02-alter-table-foia_file_exemption_code" author="ana.serafimoska" dbms="mysql"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <addColumn tableName="foia_file_exemption_code">
+            <column name="fo_exemption_status" type="VARCHAR(128)" defaultValue="DRAFT"></column>
+            <column name="fo_exemption_code_manually_flag" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
         </addColumn>
     </changeSet>
 
