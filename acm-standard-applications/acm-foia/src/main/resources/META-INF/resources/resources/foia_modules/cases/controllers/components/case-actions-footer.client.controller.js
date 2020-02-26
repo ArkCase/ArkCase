@@ -105,8 +105,6 @@ angular.module('cases').controller('Cases.ActionsFooterController',
             var saveCasePromise = $q.defer();
             $scope.$bus.publish('ACTION_SAVE_CASE', {
                 returnAction: "CASE_SAVED"
-                //status: $scope.objectInfo.status,
-                //tollingFlag: $scope.objectInfo.tollingFlag
             });
             var subscription = $scope.$bus.subscribe('CASE_SAVED', function(objectInfo) {
                 //after case is saved we are going to get new buttons
@@ -216,7 +214,6 @@ angular.module('cases').controller('Cases.ActionsFooterController',
                 if (data.isSelectedTolling) {
                   $scope.objectInfo.tollingFlag = true;
                 }
-                deferred.resolve();
                 //save note
                 NotesService.saveNote({
                     note: data.holdReason,
@@ -225,6 +222,7 @@ angular.module('cases').controller('Cases.ActionsFooterController',
                     type: 'HOLD_REASON'
                 }).then(function(addedNote) {
                     // Note saved
+                    deferred.resolve();
                 });
             }, function() {
                 deferred.reject();
