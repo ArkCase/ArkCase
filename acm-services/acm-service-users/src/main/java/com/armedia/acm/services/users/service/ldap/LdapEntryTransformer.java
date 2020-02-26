@@ -41,16 +41,13 @@ import org.springframework.ldap.core.DirContextOperations;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
-import java.util.Properties;
 
 /**
  * Creates LDAP context for the new entries with the specified attributes
  */
 public class LdapEntryTransformer
 {
-    private Properties ldapAddUserPropertiesFile;
-    private Properties ldapEditUserPropertiesFile;
-    private Properties ldapAddGroupPropertiesFile;
+    private AcmLdapConfiguration ldapConfiguration;
 
     private SpringContextHolder acmContextHolder;
 
@@ -73,7 +70,7 @@ public class LdapEntryTransformer
             String attr = attributeEntry.getKey();
             String value = attributeEntry.getValue();
 
-            String key = ldapAddUserPropertiesFile.getProperty(attr);
+            String key = (String) ldapConfiguration.getAttributes().get("ldapAddUserProperties").get(attr);
             if (key != null)
             {
                 if (key.equals(AcmLdapConstants.LDAP_OBJECT_CLASS_ATTR))
@@ -138,12 +135,13 @@ public class LdapEntryTransformer
                 .get(String.format("%s_userSync", directoryName));
 
         Map<String, String> userAttributes = config.getAttributes();
+        Map<String, Object> ldapEditUserProperties = ldapConfiguration.getAttributes().get("ldapEditUserProperties");
 
-        ldapEditUserPropertiesFile.stringPropertyNames().forEach(propertyName -> {
+        ldapEditUserProperties.keySet().forEach(propertyName -> {
             // get user's editable properties for the specific directory user-attributes config
             if (userAttributes.containsKey(propertyName))
             {
-                String propertyValue = ldapAddUserPropertiesFile.getProperty(propertyName);
+                String propertyValue = (String) ldapConfiguration.getAttributes().get("ldapAddUserProperties").get(propertyName);
 
                 if (propertyValue.equals(AcmLdapConstants.LDAP_FIRST_NAME_ATTR))
                 {
@@ -183,7 +181,7 @@ public class LdapEntryTransformer
         String groupName = StringUtils.substringBeforeLast(group.getName(), "@");
 
         groupAttributes.forEach((attr, value) -> {
-            String key = ldapAddGroupPropertiesFile.getProperty(attr);
+            String key = (String) ldapConfiguration.getAttributes().get("ldapAddGroupProperties").get(attr);
             switch (key)
             {
             case AcmLdapConstants.LDAP_OBJECT_CLASS_ATTR:
@@ -209,16 +207,6 @@ public class LdapEntryTransformer
         return context;
     }
 
-    public Properties getLdapAddUserPropertiesFile()
-    {
-        return ldapAddUserPropertiesFile;
-    }
-
-    public void setLdapAddUserPropertiesFile(Properties ldapAddUserPropertiesFile)
-    {
-        this.ldapAddUserPropertiesFile = ldapAddUserPropertiesFile;
-    }
-
     public SpringContextHolder getAcmContextHolder()
     {
         return acmContextHolder;
@@ -229,23 +217,8 @@ public class LdapEntryTransformer
         this.acmContextHolder = acmContextHolder;
     }
 
-    public Properties getLdapEditUserPropertiesFile()
+    public void setLdapConfiguration(AcmLdapConfiguration ldapConfiguration)
     {
-        return ldapEditUserPropertiesFile;
-    }
-
-    public void setLdapEditUserPropertiesFile(Properties ldapEditUserProperiesFile)
-    {
-        this.ldapEditUserPropertiesFile = ldapEditUserProperiesFile;
-    }
-
-    public Properties getLdapAddGroupPropertiesFile()
-    {
-        return ldapAddGroupPropertiesFile;
-    }
-
-    public void setLdapAddGroupPropertiesFile(Properties ldapAddGroupPropertiesFile)
-    {
-        this.ldapAddGroupPropertiesFile = ldapAddGroupPropertiesFile;
+        this.ldapConfiguration = ldapConfiguration;
     }
 }

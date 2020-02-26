@@ -18,6 +18,10 @@ import javax.jms.Session;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author mario.gjurcheski
+ *
+ */
 @Configuration
 @ManagedResource(objectName = "configuration:name=ldap-service,type=com.armedia.acm.configuration.ConfigurationService,artifactId=ldap-service")
 public class LdapConfiguration implements ConfigurationFacade

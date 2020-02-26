@@ -137,7 +137,7 @@
         <camel.cmis.version>3.0.0-M3-rc2</camel.cmis.version>
         <camel.support.version>3.0.0-M3</camel.support.version>
         <camel.api.version>3.0.0-M3</camel.api.version>
-
+        <javax.jms.version>1.1</javax.jms.version>
         <kryo.version>5.0.0-RC4</kryo.version>
         <subzero.version>0.9</subzero.version>
         <xsync-version>1.2</xsync-version>
@@ -903,6 +903,11 @@
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
                 <version>${apache-commons-io.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.jms</groupId>
+                <artifactId>jms</artifactId>
+                <version>{javax.jms.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-lang</groupId>
