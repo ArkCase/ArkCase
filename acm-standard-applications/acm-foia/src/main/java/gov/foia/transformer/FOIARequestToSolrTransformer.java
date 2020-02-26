@@ -32,13 +32,9 @@ import com.armedia.acm.plugins.casefile.service.CaseFileToSolrTransformer;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.Map;
 
 import gov.foia.model.FOIARequest;
@@ -135,6 +131,7 @@ public class FOIARequestToSolrTransformer extends CaseFileToSolrTransformer
         additionalProperties.put("request_status_lcs", requestIn.getStatus());
         additionalProperties.put("request_object_type_lcs", requestIn.getObjectType());
         additionalProperties.put("request_id_lcs", requestIn.getId().toString());
+        additionalProperties.put("tolling_flag_b", requestIn.getTollingFlag());
 
         if (requestIn.getQueue() != null)
         {

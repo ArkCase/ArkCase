@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('cases').controller('Cases.ActionsFooterController',
-    [ '$q', '$scope', '$state', '$stateParams', 'Case.InfoService', 'Helper.ObjectBrowserService', 'QueuesService', '$modal', 'Object.NoteService', function($q, $scope, $state, $stateParams, CaseInfoService, HelperObjectBrowserService, QueuesService, $modal, NotesService) {
+    [ '$q', '$scope', '$state', '$stateParams', 'Case.InfoService', 'Helper.ObjectBrowserService', 'QueuesService', '$modal', 'Object.NoteService', 'Admin.FoiaConfigService', function($q, $scope, $state, $stateParams, CaseInfoService, HelperObjectBrowserService, QueuesService, $modal, NotesService, AdminFoiaConfigService) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope,
@@ -24,6 +24,10 @@ angular.module('cases').controller('Cases.ActionsFooterController',
                 setQueueButtons(data);
             });
         };
+        
+        AdminFoiaConfigService.getFoiaConfig().then(function (response) {
+            $scope.provideReasonToHoldRequestEnabled = response.data.provideReasonToHoldRequestEnabled;
+        });
 
         function setupNextQueue(name, deferred) {
             var nextQueue = name;
@@ -62,6 +66,13 @@ angular.module('cases').controller('Cases.ActionsFooterController',
                 openReturnReasonModal(deferred);
             } else if (name === 'Delete') {
                 openDeleteCommentModal(deferred);
+            } else if (name === 'Hold') {
+                if ($scope.provideReasonToHoldRequestEnabled) {
+                  openHoldReasonModal(deferred, $scope.objectInfo.tollingFlag);    
+                } else {
+                    $scope.objectInfo.status = 'Hold';
+                    deferred.resolve();
+                }
             } else {
                 deferred.resolve();
             }
@@ -94,6 +105,8 @@ angular.module('cases').controller('Cases.ActionsFooterController',
             var saveCasePromise = $q.defer();
             $scope.$bus.publish('ACTION_SAVE_CASE', {
                 returnAction: "CASE_SAVED"
+                //status: $scope.objectInfo.status,
+                //tollingFlag: $scope.objectInfo.tollingFlag
             });
             var subscription = $scope.$bus.subscribe('CASE_SAVED', function(objectInfo) {
                 //after case is saved we are going to get new buttons
@@ -171,6 +184,47 @@ angular.module('cases').controller('Cases.ActionsFooterController',
                 }).then(function(addedNote) {
                     // Note saved
                     deferred.resolve();
+                });
+            }, function() {
+                deferred.reject();
+                $scope.loading = false;
+                $scope.loadingIcon = "fa fa-check";
+            });
+        }
+        
+        
+        function openHoldReasonModal(deferred, tollingFlag) {
+            var params = {};
+            params.tollingFlag = tollingFlag;
+            
+            
+            var modalInstance = $modal.open({
+                animation: $scope.animationsEnabled,
+                templateUrl: 'modules/cases/views/components/hold-reason-modal.client.view.html',
+                controller: 'Cases.HoldReasonModalController',
+                size: 'md',
+                backdrop: 'static',
+                resolve: {
+                    params: function() {
+                        return params;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function(data) {
+                $scope.objectInfo.status = data.status;
+                if (data.isSelectedTolling) {
+                  $scope.objectInfo.tollingFlag = true;
+                }
+                deferred.resolve();
+                //save note
+                NotesService.saveNote({
+                    note: data.holdReason,
+                    parentId: $stateParams['id'],
+                    parentType: 'CASE_FILE',
+                    type: 'HOLD_REASON'
+                }).then(function(addedNote) {
+                    // Note saved
                 });
             }, function() {
                 deferred.reject();
