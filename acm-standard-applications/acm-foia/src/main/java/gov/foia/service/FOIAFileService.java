@@ -87,7 +87,8 @@ public class FOIAFileService implements ApplicationEventPublisherAware
         EcmFile ecmFile = ecmFileDao.find(fileId);
         Objects.requireNonNull(ecmFile, "File not found");
 
-        String selectPersistedExemptionCodesSql = "SELECT fo_exemption_code FROM foia_file_exemption_code WHERE ecm_file_id = ?1 AND ecm_file_version = ?2";
+        // select all exemption codes that are not manually added
+        String selectPersistedExemptionCodesSql = "SELECT fo_exemption_code FROM foia_file_exemption_code WHERE ecm_file_id = ?1 AND ecm_file_version = ?2  AND fo_exemption_code_manually_flag != TRUE ";
         Query selectPersistedExemptionCodesQuery = ecmFileDao.getEm().createNativeQuery(selectPersistedExemptionCodesSql);
         selectPersistedExemptionCodesQuery.setParameter(1, fileId);
         selectPersistedExemptionCodesQuery.setParameter(2, ecmFile.getActiveVersionTag());
@@ -114,7 +115,8 @@ public class FOIAFileService implements ApplicationEventPublisherAware
         exemptionCodes.removeAll(currentList);
         if (!exemptionCodes.isEmpty())
         {
-            String insertExemptionCodeSql = "INSERT INTO foia_file_exemption_code (ecm_file_id, ecm_file_version, fo_exemption_code, fo_code_creator, fo_code_created) VALUES (?1,?2,?3,?4,?5)";
+
+            String insertExemptionCodeSql = "INSERT INTO foia_file_exemption_code (ecm_file_id, ecm_file_version, fo_exemption_code, fo_code_creator, fo_code_created, fo_exemption_status) VALUES (?1,?2,?3,?4,?5,?6)";
             Query insertExemptionCodeQuery = ecmFileDao.getEm().createNativeQuery(insertExemptionCodeSql);
             Date dateCreated = new Date();
             for (String exemptionCode : exemptionCodes)
@@ -124,6 +126,7 @@ public class FOIAFileService implements ApplicationEventPublisherAware
                 insertExemptionCodeQuery.setParameter(3, exemptionCode);
                 insertExemptionCodeQuery.setParameter(4, user);
                 insertExemptionCodeQuery.setParameter(5, dateCreated);
+                insertExemptionCodeQuery.setParameter(6, "DRAFT");
                 insertExemptionCodeQuery.executeUpdate();
                 DocumentRedactionEvent insertedEvent = new DocumentRedactionEvent(ecmFile, user, RedactionType.ADDED, exemptionCode);
                 insertedEvent.setSucceeded(true);
@@ -133,17 +136,74 @@ public class FOIAFileService implements ApplicationEventPublisherAware
         log.debug("Updated exemption codes [{}] of document [{}]", exemptionCodes, fileId);
     }
 
-    public List<ExemptionCodeDto> getExemptionCodes(Long caseId)
+    @Transactional
+    public Integer updateExemptionCodesFromSnowbound(Long fileId, String status, String user)
+    {
+        // update status of the exemption codes associated with the given fileId
+        String updateExemptionCodeSql = "UPDATE foia_file_exemption_code"
+                + " SET fo_exemption_status = ?1"
+                + " WHERE ecm_file_id = ?2";
+
+        Query query = ecmFileDao.getEm().createNativeQuery(updateExemptionCodeSql);
+        query.setParameter(1, status);
+        query.setParameter(2, fileId);
+
+        return query.executeUpdate();
+    }
+
+    /**
+     * Update exemption codes list for FOIA file which are associated toFOIAFile entity as an element collection.
+     * <p>
+     * NOTE: until we refactor the EcmFile pipelines, it would be difficult to subclass EcmFile entity. Thus, we leave
+     * the entity intact (its discriminator value is not changed), and we just modify associated table containing codes
+     *
+     * @param fileId
+     *            file identifier
+     * @param exemptionCodes
+     *            list of exemption codes (redaction tags)
+     * @param user
+     */
+    @Transactional
+    public void updateExemptionCodesManually(Long fileId, List<String> exemptionCodes, String user)
+    {
+        // check if such database record exists
+        EcmFile ecmFile = ecmFileDao.find(fileId);
+        if (!exemptionCodes.isEmpty())
+        {
+            String insertExemptionCodeSql = "INSERT INTO foia_file_exemption_code (ecm_file_id, ecm_file_version, fo_exemption_code, fo_code_creator, fo_code_created, fo_exemption_status, fo_exemption_code_manually_flag) VALUES (?1,?2,?3,?4,?5,?6,?7)";
+            Query insertExemptionCodeQuery = ecmFileDao.getEm().createNativeQuery(insertExemptionCodeSql);
+            Date dateCreated = new Date();
+            for (String exemptionCode : exemptionCodes)
+            {
+                insertExemptionCodeQuery.setParameter(1, fileId);
+                insertExemptionCodeQuery.setParameter(2, ecmFile.getActiveVersionTag());
+                insertExemptionCodeQuery.setParameter(3, exemptionCode);
+                insertExemptionCodeQuery.setParameter(4, user);
+                insertExemptionCodeQuery.setParameter(5, dateCreated);
+                insertExemptionCodeQuery.setParameter(6, "APPROVED");
+                insertExemptionCodeQuery.setParameter(7, true);
+                insertExemptionCodeQuery.executeUpdate();
+                DocumentRedactionEvent insertedEvent = new DocumentRedactionEvent(ecmFile, user, RedactionType.ADDED, exemptionCode);
+                insertedEvent.setSucceeded(true);
+                eventPublisher.publishEvent(insertedEvent);
+            }
+        }
+        log.debug("Updated exemption codes [{}] of document [{}]", exemptionCodes, fileId);
+    }
+
+    public List<ExemptionCodeDto> getExemptionCodes(Long caseId, Long fileId)
     {
 
         // select all existing exemption codes associated with given foia request (case file) id
-        String sql = "SELECT cont.cm_object_id as object_id, file.cm_file_id as file_id,codes.ecm_file_version as file_version, file.cm_file_name as file_name, codes.fo_exemption_code as exemption_code, codes.fo_code_creator as creator, codes.fo_exemption_statute as exemption_statute "
+        String sql = "SELECT cont.cm_object_id as object_id, file.cm_file_id as file_id,codes.ecm_file_version as file_version, file.cm_file_name as file_name, codes.fo_exemption_code as exemption_code, codes.fo_code_creator as creator, codes.fo_exemption_statute as exemption_statute, codes.fo_exemption_status as status, codes.fo_code_created as created "
                 + "FROM acm_container as cont JOIN acm_file as file ON cont.cm_container_id = file.cm_container_id "
                 + "JOIN foia_file_exemption_code as codes ON file.cm_file_id = codes.ecm_file_id "
-                + "WHERE cont.cm_object_id = ?1 AND cont.cm_object_type = 'CASE_FILE'";
+                + "WHERE cont.cm_object_id = ?1 AND cont.cm_object_type = 'CASE_FILE' AND file.cm_file_id = ?2 "
+                + "GROUP BY fo_exemption_code";
         Query query = ecmFileDao.getEm().createNativeQuery(sql, "ExemptionCodeResults");
 
         query.setParameter(1, caseId);
+        query.setParameter(2,fileId);
         List<ExemptionCodeDto> exemptionCodes = query.getResultList();
 
         log.debug("Exemption codes of foia request (case file) [{}] selected", caseId);

@@ -14,12 +14,15 @@ angular.module('services').factory('ExemptionService', [ '$http', function($http
 
     return {
 
-        getExemptionCodes: function(caseId) {
+        getExemptionCodes: function(caseId, fileId) {
             return $http({
-                url: 'api/latest/service/ecm/file/' + caseId + '/tags',
+                url: 'api/latest/service/ecm/file/' + caseId + '/tags/' + fileId,
                 method: 'GET',
                 isArray: true,
-                params: caseId
+                params: {
+                    caseId: caseId,
+                    fileId: fileId
+                }
             });
         },
 
@@ -28,6 +31,16 @@ angular.module('services').factory('ExemptionService', [ '$http', function($http
                 url: 'api/latest/service/ecm/file/exemption/statutes',
                 method: 'PUT',
                 data: exemptionData
+            });
+        },
+
+        saveExemptionCode: function(fileId, exemptionData) {
+            return $http({
+                url: 'api/latest/service/ecm/file/' + fileId + '/update/tags/manually',
+                method: 'POST',
+                params: {
+                    tags: exemptionData
+                }
             });
         }
 
