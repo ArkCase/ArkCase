@@ -12,6 +12,10 @@ import org.springframework.core.env.MutablePropertySources;
 import org.springframework.core.env.PropertySource;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author mario.gjurcheski
+ *
+ */
 @Component("ldapConfig")
 @DependsOn("bootstrapConfig")
 public class LdapConfigurationPropertySourceInitializer implements Ordered, InitializingBean

@@ -1,6 +1,7 @@
 package com.armedia.acm.services.users.service.ldap;
 
 import com.armedia.acm.configuration.service.ConfigurationPropertyService;
+import com.armedia.acm.services.users.model.ldap.AcmLdapConstants;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,8 +16,15 @@ import org.springframework.messaging.Message;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author mario.gjurcheski
+ *
+ */
 public class AcmLdapBeanSyncServiceImpl implements AcmLdapBeanSyncService, InitializingBean
 {
+
+    public static final String LDAP_ADD_USER_CONFIG = "ldapAddUserConfig";
+    public static final String LDAP_ADD_GROUP_CONFIG = "ldapAddGroupConfig";
 
     @Autowired
     private BeanFactory beanFactory;
@@ -33,7 +41,6 @@ public class AcmLdapBeanSyncServiceImpl implements AcmLdapBeanSyncService, Initi
     public void onLdapChanged(Message message)
     {
         logger.info("Refreshing on ldap change...");
-
         sync();
     }
 
@@ -47,9 +54,10 @@ public class AcmLdapBeanSyncServiceImpl implements AcmLdapBeanSyncService, Initi
     @Override
     public void syncLdapGroupConfigAttributes()
     {
-        Map<String, Object> ldapGroupSyncConfigAttributes = acmLdapConfig.getAttributes().get("ldapAddGroupConfig");
+        Map<String, Object> ldapGroupSyncConfigAttributes = acmLdapConfig.getAttributes().get(LDAP_ADD_GROUP_CONFIG);
 
         ldapGroupSyncConfigAttributes.keySet().forEach(directory -> {
+            logger.debug("Register bean definition for: [{}]", AcmLdapGroupSyncConfig.class);
             logger.debug("Register bean definition for: [{}]", AcmLdapGroupSyncConfig.class);
             BeanDefinitionBuilder jobDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(AcmLdapGroupSyncConfig.class);
             jobDefinitionBuilder.addPropertyValue("attributes", ldapGroupSyncConfigAttributes.get(directory));
@@ -60,7 +68,7 @@ public class AcmLdapBeanSyncServiceImpl implements AcmLdapBeanSyncService, Initi
     @Override
     public void syncLdapUserConfigAttributes()
     {
-        Map<String, Object> ldapUserSyncConfigAttributes = acmLdapConfig.getAttributes().get("ldapAddUserConfig");
+        Map<String, Object> ldapUserSyncConfigAttributes = acmLdapConfig.getAttributes().get(LDAP_ADD_USER_CONFIG);
 
         ldapUserSyncConfigAttributes.keySet().forEach(directory -> {
             logger.debug("Register bean definition for: [{}]", AcmLdapUserSyncConfig.class);
@@ -79,83 +87,77 @@ public class AcmLdapBeanSyncServiceImpl implements AcmLdapBeanSyncService, Initi
     }
 
     @Override
-    public void createLdapUserConfig(String id, String directoryType, Map<String, Object> props,
-            Map<String, Map<String, Object>> properties)
+    public void createLdapUserConfig(String id, String directoryType)
     {
-        if (directoryType.equals("openldap"))
-        {
-            props.put("id", id);
-            props.put("cn", "cn");
-            props.put("givenName", "givenName");
-            props.put("sn", "sn");
-            props.put("uid", "uid");
-            props.put("mail", "mail");
-            props.put("userAccountControl", "userAccountControl");
-            props.put("userPassword", "userPassword");
-            props.put("uidNumber", "userPassword");
-            props.put("gidNumber", "userPassword");
-            props.put("homeDirectory", "homeDirectory");
-            props.put("objectClass", "top,person,inetOrgPerson,organizationalPerson,posixAccount,uacPerson,shadowAccount");
-            props.put("shadowWarning", 7);
-            props.put("shadowLastChange", 12994);
-            props.put("shadowMax", 99999);
+        Map<String, Map<String, Object>> properties = new HashMap<>();
+        Map<String, Object> ldapConfiguration = new HashMap<>();
 
-            properties.put(AcmLdapConfiguration.LDAP_SYNC_CONFIG_PROP_KEY + "." + "~ldapAddUserConfig" + "." + id, props);
+        if (directoryType.equals(AcmLdapConstants.DEFAULT_OPEN_LDAP_DIRECTORY_NAME))
+        {
+            ldapConfiguration.put(AcmLdapConstants.LDAP_ID_ATTR, id);
+            ldapConfiguration.put(AcmLdapConstants.LDAP_CN_ATTR, AcmLdapConstants.LDAP_CN_ATTR);
+            ldapConfiguration.put(AcmLdapConstants.LDAP_SN, AcmLdapConstants.LDAP_SN);
+            ldapConfiguration.put(AcmLdapConstants.LDAP_GIVEN_NAME, AcmLdapConstants.LDAP_GIVEN_NAME);
+            ldapConfiguration.put(AcmLdapConstants.LDAP_UID, AcmLdapConstants.LDAP_UID);
+            ldapConfiguration.put(AcmLdapConstants.LDAP_MAIL_ATTR, AcmLdapConstants.LDAP_MAIL_ATTR);
+            ldapConfiguration.put(AcmLdapConstants.LDAP_USER_ACCOUNT_CONTROL, AcmLdapConstants.LDAP_USER_ACCOUNT_CONTROL);
+            ldapConfiguration.put(AcmLdapConstants.LDAP_USER_PASSWORD_ATTR, AcmLdapConstants.LDAP_USER_PASSWORD_ATTR);
+            ldapConfiguration.put(AcmLdapConstants.LDAP_UID_NUMBER_ATTR, AcmLdapConstants.LDAP_UID_NUMBER_ATTR);
+            ldapConfiguration.put(AcmLdapConstants.LDAP_GID_NUMBER_ATTR, AcmLdapConstants.LDAP_GID_NUMBER_ATTR);
+            ldapConfiguration.put(AcmLdapConstants.LDAP_HOME_DIRECTORY_ATTR, AcmLdapConstants.LDAP_HOME_DIRECTORY_ATTR);
+            ldapConfiguration.put(AcmLdapConstants.LDAP_OBJECT_CLASS_ATTR, AcmLdapConstants.LDAP_USER_OBJECT_CLASS_VALUE);
+            ldapConfiguration.put(AcmLdapConstants.SHADOW_WARNING_ATTR, 7);
+            ldapConfiguration.put(AcmLdapConstants.SHADOW_LAST_CHANGE_ATTR, 12994);
+            ldapConfiguration.put(AcmLdapConstants.SHADOW_MAX_ATTR, 99999);
+
+            properties.put(AcmLdapConfiguration.LDAP_SYNC_CONFIG_PROP_KEY + "." + LDAP_ADD_USER_CONFIG + "." + id, ldapConfiguration);
             configurationPropertyService.updateProperties(properties, "ldap");
         }
         else
         {
-            props.put("id", id);
-            props.put("cn", "cn");
-            props.put("sAMAccountName", "sAMAccountName");
-            props.put("userPrincipalName", "userPrincipalName");
-            props.put("givenName", "givenName");
-            props.put("sn", "sn");
-            props.put("mail", "mail");
-            props.put("userAccountControl", "userAccountControl");
-            props.put("unicodePwd", "unicodePwd");
-            props.put("homeDirectory", "homeDirectory");
-            props.put("objectClass", "top,person,user,organizationalPerson");
+            ldapConfiguration.put(AcmLdapConstants.LDAP_ID_ATTR, id);
+            ldapConfiguration.put(AcmLdapConstants.LDAP_CN_ATTR, AcmLdapConstants.LDAP_CN_ATTR);
+            ldapConfiguration.put(AcmLdapConstants.LDAP_SAMA_ACCOUNT_NAME_ATTR, AcmLdapConstants.LDAP_SAMA_ACCOUNT_NAME_ATTR);
+            ldapConfiguration.put(AcmLdapConstants.LDAP_USER_PRINCIPAL_NAME_ATTR, AcmLdapConstants.LDAP_USER_PRINCIPAL_NAME_ATTR);
+            ldapConfiguration.put(AcmLdapConstants.LDAP_GIVEN_NAME, AcmLdapConstants.LDAP_GIVEN_NAME);
+            ldapConfiguration.put(AcmLdapConstants.LDAP_SN, AcmLdapConstants.LDAP_SN);
+            ldapConfiguration.put(AcmLdapConstants.LDAP_MAIL_ATTR, AcmLdapConstants.LDAP_MAIL_ATTR);
+            ldapConfiguration.put(AcmLdapConstants.LDAP_USER_ACCOUNT_CONTROL, AcmLdapConstants.LDAP_USER_ACCOUNT_CONTROL);
+            ldapConfiguration.put(AcmLdapConstants.LDAP_UNICODE_PWD_ATTR, AcmLdapConstants.LDAP_UNICODE_PWD_ATTR);
+            ldapConfiguration.put(AcmLdapConstants.LDAP_HOME_DIRECTORY_ATTR, AcmLdapConstants.LDAP_HOME_DIRECTORY_ATTR);
+            ldapConfiguration.put(AcmLdapConstants.LDAP_OBJECT_CLASS_ATTR, AcmLdapConstants.ACTIVE_DIRECTORY_USER_OBJECT_CLASS_VALUE);
 
-            properties.put(AcmLdapConfiguration.LDAP_SYNC_CONFIG_PROP_KEY + "." + "~ldapAddUserConfig" + "." + id, props);
+            properties.put(AcmLdapConfiguration.LDAP_SYNC_CONFIG_PROP_KEY + "." + LDAP_ADD_USER_CONFIG + "." + id, ldapConfiguration);
             configurationPropertyService.updateProperties(properties, "ldap");
         }
     }
 
     @Override
-    public void createLdapGroupConfig(String id, String directoryType, Map<String, Object> props,
-            Map<String, Map<String, Object>> properties)
+    public void createLdapGroupConfig(String id, String directoryType)
     {
-        if (directoryType.equals("activeDirectory"))
-        {
-            props.put("cn", "cn");
-            props.put("sAMAccountName", "sAMAccountName");
-            props.put("objectClass", "top,group");
+        Map<String, Map<String, Object>> properties = new HashMap<>();
 
-            properties.put(AcmLdapConfiguration.LDAP_SYNC_CONFIG_PROP_KEY + "." + "~ldapAddGroupConfig" + "." + id, props);
+        Map<String, Object> ldapConfiguration = new HashMap<>();
+
+        if (directoryType.equals(AcmLdapConstants.DEFAULT_OPEN_ACTIVE_DIRECTORY_NAME))
+        {
+            ldapConfiguration.put(AcmLdapConstants.LDAP_CN_ATTR, AcmLdapConstants.LDAP_CN_ATTR);
+            ldapConfiguration.put(AcmLdapConstants.LDAP_SAMA_ACCOUNT_NAME_ATTR, AcmLdapConstants.LDAP_SAMA_ACCOUNT_NAME_ATTR);
+            ldapConfiguration.put(AcmLdapConstants.LDAP_OBJECT_CLASS_ATTR, AcmLdapConstants.ACTIVE_DIRECTORY_GROUP_OBJECT_CLASS_VALUE);
+
+            properties.put(AcmLdapConfiguration.LDAP_SYNC_CONFIG_PROP_KEY + "." + LDAP_ADD_GROUP_CONFIG + "." + id, ldapConfiguration);
             configurationPropertyService.updateProperties(properties, "ldap");
         }
         else
         {
-            props.put("cn", "cn");
-            props.put("member", "member");
-            props.put("gidNumber", "userPassword");
-            props.put("objectClass", "top,groupOfNames,sortableGroupofnames");
+            ldapConfiguration.put(AcmLdapConstants.LDAP_CN_ATTR, AcmLdapConstants.LDAP_CN_ATTR);
+            ldapConfiguration.put(AcmLdapConstants.LDAP_MEMBER_ATTR, AcmLdapConstants.LDAP_MEMBER_ATTR);
+            ldapConfiguration.put(AcmLdapConstants.LDAP_GID_NUMBER_ATTR, AcmLdapConstants.LDAP_GID_NUMBER_ATTR);
+            ldapConfiguration.put(AcmLdapConstants.LDAP_OBJECT_CLASS_ATTR, AcmLdapConstants.LDAP_GROUP_OBJECT_CLASS_VALUE);
 
-            properties.put(AcmLdapConfiguration.LDAP_SYNC_CONFIG_PROP_KEY + "." + "~ldapAddGroupConfig" + "." + id, props);
+            properties.put(AcmLdapConfiguration.LDAP_SYNC_CONFIG_PROP_KEY + "." + LDAP_ADD_GROUP_CONFIG + "." + id, ldapConfiguration);
             configurationPropertyService.updateProperties(properties, "ldap");
         }
-    }
-
-    @Override
-    public void deleteLdapDirectoryConfig(String directoryId)
-    {
-        Map<String, String> properties = new HashMap();
-        properties.put(AcmLdapConfiguration.LDAP_SYNC_CONFIG_PROP_KEY + "." + "^ldapAddGroupConfig:" + directoryId, "");
-        properties.put(AcmLdapConfiguration.LDAP_SYNC_CONFIG_PROP_KEY + "." + "^ldapAddUserConfig:" + directoryId, "");
-        configurationPropertyService.updateProperties(properties, "ldap");
-
-        sync();
     }
 
     public void setAcmLdapConfig(AcmLdapConfiguration acmLdapConfig)

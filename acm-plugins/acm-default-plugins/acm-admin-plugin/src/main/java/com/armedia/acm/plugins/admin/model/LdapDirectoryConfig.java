@@ -27,8 +27,6 @@ package com.armedia.acm.plugins.admin.model;
  * #L%
  */
 
-import java.util.Properties;
-
 public class LdapDirectoryConfig
 {
     private String ldapConfigurationLocation;
@@ -39,11 +37,9 @@ public class LdapDirectoryConfig
     private String ldapTemplatePropertiesFile;
     private String ldapPropertiesFileRegex;
 
-    private Properties ldapUserPropertiesFile;
     private String ldapUserPropertiesFileRegex;
     private String ldapUserFileRegex;
 
-    private Properties ldapGroupPropertiesFile;
     private String ldapGroupPropertiesFileRegex;
     private String ldapGroupFileRegex;
 
@@ -117,16 +113,6 @@ public class LdapDirectoryConfig
         this.ldapPropertiesFileRegex = ldapPropertiesFileRegex;
     }
 
-    public Properties getLdapUserPropertiesFile()
-    {
-        return ldapUserPropertiesFile;
-    }
-
-    public void setLdapUserPropertiesFile(Properties ldapUserPropertiesFile)
-    {
-        this.ldapUserPropertiesFile = ldapUserPropertiesFile;
-    }
-
     public String getLdapUserPropertiesFileRegex()
     {
         return ldapUserPropertiesFileRegex;
@@ -145,16 +131,6 @@ public class LdapDirectoryConfig
     public void setLdapUserFileRegex(String ldapUserFileRegex)
     {
         this.ldapUserFileRegex = ldapUserFileRegex;
-    }
-
-    public Properties getLdapGroupPropertiesFile()
-    {
-        return ldapGroupPropertiesFile;
-    }
-
-    public void setLdapGroupPropertiesFile(Properties ldapGroupPropertiesFile)
-    {
-        this.ldapGroupPropertiesFile = ldapGroupPropertiesFile;
     }
 
     public String getLdapGroupPropertiesFileRegex()

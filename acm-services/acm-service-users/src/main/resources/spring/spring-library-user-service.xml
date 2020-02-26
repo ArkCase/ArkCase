@@ -118,76 +118,9 @@
 
     <bean id="ldapGroupNameValidator" class="com.armedia.acm.services.users.service.group.LdapGroupNameValidator"/>
 
-    <bean id="ldapAddUserPropertiesFile" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-        <!-- note: must leave "file:" at the start of the file name for spring
-        to be able to read the file; otherwise it will try to read from the
-        classpath -->
-        <property name="location" value="file:${user.home}/.arkcase/acm/spring/spring-config-ldap-add-user.properties"/>
-        <property name="ignoreResourceNotFound" value="true"/>
-        <property name="localOverride" value="false"/>
-        <property name="properties">
-            <props>
-                <prop key="cn">fullName</prop>
-                <prop key="givenName">firstName</prop>
-                <prop key="sn">lastName</prop>
-                <prop key="uid">userId</prop>
-                <prop key="mail">mail</prop>
-                <prop key="userAccountControl">userAccountControl</prop>
-                <prop key="userPassword">userPassword</prop>
-                <prop key="unicodePwd">unicodePwd</prop>
-                <prop key="uidNumber">uidNumber</prop>
-                <prop key="gidNumber">gidNumber</prop>
-                <prop key="shadowWarning">shadowWarning</prop>
-                <prop key="shadowLastChange">shadowLastChange</prop>
-                <prop key="shadowMax">shadowMax</prop>
-                <prop key="homeDirectory">homeDirectory</prop>
-                <prop key="objectClass">objectClass</prop>
-                <prop key="sAMAccountName">sAMAccountName</prop>
-            </props>
-        </property>
-    </bean>
-
-    <bean id="ldapAddGroupPropertiesFile" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-        <!-- note: must leave "file:" at the start of the file name for spring
-        to be able to read the file; otherwise it will try to read from the
-        classpath -->
-        <property name="location"
-            value="file:${user.home}/.arkcase/acm/spring/spring-config-ldap-add-group.properties"/>
-        <property name="ignoreResourceNotFound" value="true"/>
-        <property name="localOverride" value="false"/>
-        <property name="properties">
-            <props>
-                <prop key="cn">fullName</prop>
-                <prop key="member">member</prop>
-                <prop key="gidNumber">gidNumber</prop>
-                <prop key="objectClass">objectClass</prop>
-                <prop key="sAMAccountName">fullName</prop>
-            </props>
-        </property>
-    </bean>
-
-    <bean id="ldapEditUserPropertiesFile" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-        <!-- note: must leave "file:" at the start of the file name for spring
-        to be able to read the file; otherwise it will try to read from the
-        classpath -->
-        <property name="location"
-            value="file:${user.home}/.arkcase/acm/spring/spring-config-ldap-edit-user.properties"/>
-        <property name="ignoreResourceNotFound" value="true"/>
-        <property name="localOverride" value="false"/>
-        <property name="properties">
-            <props>
-                <prop key="sn">lastName</prop>
-                <prop key="mail">mail</prop>
-                <prop key="givenName">firstName</prop>
-            </props>
-        </property>
-    </bean>
-
     <bean id="ldapEntryTransformer" class="com.armedia.acm.services.users.service.ldap.LdapEntryTransformer">
-        <property name="ldapAddUserPropertiesFile" ref="ldapAddUserPropertiesFile"/>
-        <property name="ldapAddGroupPropertiesFile" ref="ldapAddGroupPropertiesFile"/>
-        <property name="ldapEditUserPropertiesFile" ref="ldapEditUserPropertiesFile"/>
         <property name="acmContextHolder" ref="acmContextHolder"/>
+        <property name="ldapConfiguration" ref="acmSpringLdapConfig"/>
     </bean>
 
     <!-- password validation -->

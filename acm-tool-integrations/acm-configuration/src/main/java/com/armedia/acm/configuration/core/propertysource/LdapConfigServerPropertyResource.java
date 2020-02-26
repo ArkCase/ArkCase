@@ -4,6 +4,10 @@ import com.armedia.acm.configuration.core.LdapConfiguration;
 
 import org.springframework.core.env.PropertySource;
 
+/**
+ * @author mario.gjurcheski
+ *
+ */
 public class LdapConfigServerPropertyResource extends PropertySource<LdapConfiguration>
 {
 

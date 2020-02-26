@@ -65,7 +65,7 @@ public class MapValueAspect
     {
         Map<String, Object> propsFromConfiguration;
 
-        if (propertyKey.configurationName().equals("labelConfiguration"))
+        if (propertyKey.configurationName().equals("ldapConfiguration"))
         {
             propsFromConfiguration = ldapConfiguration.getLdapDefaultMap();
         }
