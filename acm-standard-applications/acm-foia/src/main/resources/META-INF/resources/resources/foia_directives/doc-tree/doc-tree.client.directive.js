@@ -572,12 +572,11 @@ angular
 
                         return false;
                     },
-                    isNodeInResponseFolder: function (node) {
+                    isNodeInResponseFolder : function(node) {
                         if (node.parent == null) {
                             return false;
                         }
-                        if (node.data.name === "03 Response" ||
-                            node.parent.data.hasOwnProperty('name') && node.parent.data.name === "03 Response") {
+                        if (node.data.name === "03 Response" && DocTree.getTopNode() === node.parent) {
                             return true;
                         }
                         return DocTree.isNodeInResponseFolder(node.parent);
