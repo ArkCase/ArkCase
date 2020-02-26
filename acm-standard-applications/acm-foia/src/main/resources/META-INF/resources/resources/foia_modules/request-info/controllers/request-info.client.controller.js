@@ -1017,7 +1017,6 @@ angular.module('request-info').controller(
                     if (data.isSelectedTolling) {
                       $scope.objectInfo.tollingFlag = true;
                     }
-                    deferred.resolve();
                     //save note
                     NotesService.saveNote({
                         note: data.holdReason,
@@ -1026,6 +1025,7 @@ angular.module('request-info').controller(
                         type: 'HOLD_REASON'
                     }).then(function(addedNote) {
                         // Note saved
+                        deferred.resolve();
                     });
                 }, function() {
                     deferred.reject();
