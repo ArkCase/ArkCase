@@ -1,0 +1,33 @@
+<div class="modal-header">
+    <h3>
+        <span translate>cases.comp.holdReason.modal.title</span>
+    </h3>
+
+</div>
+
+<div class="modal-body">
+    <label for="status" translate>
+        cases.comp.holdReason.modal.statusLabel
+    </label>
+    <select id="status" class="form-control" ng-model="status">
+        <option value="" disabled selected hidden translate>
+            cases.comp.holdReason.modal.statusPlaceholder
+        </option>
+        <option ng-repeat="option in statusOptions" value="{{option.key}}" translate>
+            {{option.value | translate}}
+        </option>
+    </select>
+    
+    <label><span translate>cases.comp.holdReason.modal.reason</span><span class="required-asterisk">*</span></label>
+    <input type="text" id="holdReason" ng-required="true" ng-model="holdReason" name="holdReason" class="input-md form-control"
+            placeholder="{{ 'cases.comp.holdReason.modal.placeholder' | translate }}">
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-secondary" ng-click="onClickCancel()">
+        <span translate>cases.comp.holdReason.modal.buttons.cancel</span>
+    </button>
+    <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="holdReason == '' || holdReason == null">
+        <span translate>cases.comp.holdReason.modal.buttons.ok</span>
+    </button>
+</div>

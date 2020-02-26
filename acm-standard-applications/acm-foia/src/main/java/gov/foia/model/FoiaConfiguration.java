@@ -43,6 +43,7 @@ public class FoiaConfiguration extends SystemConfiguration
     private Boolean moveToBillingQueueEnabled;
     private Boolean requireTimesheetToCompleteStandardRequest;
     private Boolean requireTimesheetToCompleteDeniedRequest;
+    private Boolean provideReasonToHoldRequestEnabled;
 
     public Integer getMaxDaysInBillingQueue()
     {
@@ -162,5 +163,22 @@ public class FoiaConfiguration extends SystemConfiguration
     public void setRequireTimesheetToCompleteDeniedRequest(Boolean requireTimesheetToCompleteDeniedRequest)
     {
         this.requireTimesheetToCompleteDeniedRequest = requireTimesheetToCompleteDeniedRequest;
+    }
+
+    /**
+     * @return the provideReasonToHoldRequestEnabled
+     */
+    public Boolean getProvideReasonToHoldRequestEnabled()
+    {
+        return provideReasonToHoldRequestEnabled;
+    }
+
+    /**
+     * @param provideReasonToHoldRequestEnabled
+     *            the provideReasonToHoldRequestEnabled to set
+     */
+    public void setProvideReasonToHoldRequestEnabled(Boolean provideReasonToHoldRequestEnabled)
+    {
+        this.provideReasonToHoldRequestEnabled = provideReasonToHoldRequestEnabled;
     }
 }
