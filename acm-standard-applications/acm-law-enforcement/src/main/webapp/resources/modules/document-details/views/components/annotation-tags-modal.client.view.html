@@ -10,35 +10,9 @@
         <div class="row">
             <object-authorization data="data" object-display-name="name" on-object-selected="init" role-display-name="name"
                     on-auth-role-change="onChange" object-title="{{'admin.security.functionalAccessControl.applicationRole' | translate}}"
-                    object-type="!role" />
+                    object-type="!role" show-tooltip="true"/>
         </div>
         <br>
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="col-lg-9">
-                    <input type="text" class="form-control" name="newNote" ng-model="newNote" placeholder="Add Note" />
-                </div>
-                <div class="col-lg-3">
-                    <button class="btn btn-default" ng-click="addNote()">Add</button>
-                </div>
-            </div>
-        </div>
-        <br>
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="col-lg-11">
-                    <ul class="list-group" style="">
-                        <div ng-repeat="note in annotationNotes" class="{'fadeOut' : note.done}; list-group-item clearfix"
-                                style="margin-right:12px;">
-                            <span>{{note.key}}</span>
-                            <span class="pull-right button-group">
-                                <span class="fa fa-trash" ng-click="deleteNote($index)"></span>
-                            </span>
-                        </div>
-                    </ul>
-                </div>
-            </div>
-        </div>
     </div>
     <div class="modal-footer">
         <button class="btn btn-secondary" ng-click="onClickCancel()">

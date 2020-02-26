@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('request-info').controller('RequestInfo.ExemptionController',
-        [ '$scope', '$stateParams', '$q', 'Case.InfoService', 'Profile.UserInfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'ExemptionService', '$modal', 'Object.LookupService',
-                function($scope, $stateParams, $q, CaseInfoService, UserInfoService, HelperUiGridService, HelperObjectBrowserService, ExemptionService, $modal, ObjectLookupService) {
+        [ '$scope', '$stateParams', '$q', 'Case.InfoService', 'Profile.UserInfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'ExemptionService', '$modal', 'Object.LookupService', '$state','$location',
+                function($scope, $stateParams, $q, CaseInfoService, UserInfoService, HelperUiGridService, HelperObjectBrowserService, ExemptionService, $modal, ObjectLookupService, $state, $location) {
 
             var componentHelper = new HelperObjectBrowserService.Component({
                 scope: $scope,
@@ -27,7 +27,7 @@ angular.module('request-info').controller('RequestInfo.ExemptionController',
                 gridHelper.disableGridScrolling(config);
                 gridHelper.setUserNameFilterToConfig(promiseUsers);
                 gridHelper.addButton(config, 'edit', null, null, "isEditDisabled");
-                retrieveGridData();
+                retrieveGridData($stateParams.id, $stateParams.fileId);
             };
 
             $scope.isEditDisabled = function(rowEntity) {
@@ -38,6 +38,10 @@ angular.module('request-info').controller('RequestInfo.ExemptionController',
 
             ObjectLookupService.getExemptionStatutes().then(function(exemptionStatute) {
                 $scope.exemptionStatutes = exemptionStatute;
+            });
+
+            ObjectLookupService.getAnnotationTags().then(function(annotationTags) {
+                $scope.annotationTags = annotationTags;
             });
 
             $scope.editRow = function(rowEntity) {
@@ -77,13 +81,38 @@ angular.module('request-info').controller('RequestInfo.ExemptionController',
             }
 
             $scope.refresh = function() {
-                    retrieveGridData();
+                    retrieveGridData($stateParams.id, $stateParams.fileId);
             };
 
-             function retrieveGridData() {
+            $scope.addNew = function() {
                 var params = {};
-                params.caseId = $stateParams.id;
-                var promiseQueryCodes = ExemptionService.getExemptionCodes(params.caseId);
+                params.annotationTags = $scope.annotationTags;
+                params.existingAnnotationTags = $scope.gridOptions.data;
+                var modalInstance = $modal.open({
+                    animation: true,
+                    templateUrl: 'modules/document-details/views/components/annotation-tags-modal.client.view.html',
+                    controller: 'RequestInfo.AnnotationTagsManuallyModalController',
+                    backdrop: 'static',
+                    resolve: {
+                        params: function () {
+                            return params;
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function() {
+                    // Do nothing
+                }, function(error) {
+                    // Do nothing
+                });
+            };
+
+
+             function retrieveGridData(caseId, fileId) {
+                var params = {};
+                params.caseId = caseId;
+                params.fileId = fileId;
+                var promiseQueryCodes = ExemptionService.getExemptionCodes(params.caseId, params.fileId);
                 $q.all([ promiseQueryCodes ]).then(function(data) {
                     $scope.codes = data[0];
 
@@ -109,6 +138,12 @@ angular.module('request-info').controller('RequestInfo.ExemptionController',
                     });
                 });
             }
+
+            $scope.$bus.subscribe('reload-exemption-code-grid', function(data) {
+                // reload the exemption code table without reloading the page
+                $state.transitionTo("request-info", { id: data.id, fileId: data.fileId }, {notify: false});
+                retrieveGridData(data.id, data.fileId)
+            });
 
             $scope.checkCodesDescription = function(){
                 $modal.open({

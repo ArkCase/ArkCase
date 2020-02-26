@@ -127,6 +127,8 @@ angular.module('request-info').controller(
                                     });
                                 }
 
+                                $scope.$bus.publish('reload-exemption-code-grid', {id: files[0].id, fileId: files[0].fileId});
+
                                 $scope.$bus.publish('update-viewer-open-documents', files);
                             }
                         });
