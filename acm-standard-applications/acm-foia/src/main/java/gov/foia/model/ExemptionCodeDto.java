@@ -32,6 +32,7 @@ import javax.persistence.ConstructorResult;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.SqlResultSetMapping;
+import java.util.Date;
 
 /**
  * Created by dragan.simonovski on 09/27/2016.
@@ -45,7 +46,9 @@ import javax.persistence.SqlResultSetMapping;
                 @ColumnResult(name = "file_name"),
                 @ColumnResult(name = "exemption_code"),
                 @ColumnResult(name = "creator"),
-                @ColumnResult(name = "exemption_statute", type = String.class)
+                @ColumnResult(name = "exemption_statute", type = String.class),
+                @ColumnResult(name = "status", type = String.class),
+                @ColumnResult(name = "created", type = Date.class)
         })
 })
 @Entity
@@ -64,15 +67,16 @@ public class ExemptionCodeDto
     private String fileName;
     private String exemptionCode;
     private String creator;
-
     private String exemptionStatute;
+    private String status;
+    private Date created;
 
     public ExemptionCodeDto()
     {
     }
 
     public ExemptionCodeDto(Long requestId, Long fileId, String fileVersion, String fileName, String exemptionCode, String creator,
-            String exemptionStatute)
+            String exemptionStatute, String status, Date created)
     {
         this.requestId = requestId;
         this.fileId = fileId;
@@ -81,6 +85,8 @@ public class ExemptionCodeDto
         this.exemptionCode = exemptionCode;
         this.creator = creator;
         this.exemptionStatute = exemptionStatute;
+        this.status = status;
+        this.created = created;
     }
 
     public Long getRequestId()
@@ -152,4 +158,25 @@ public class ExemptionCodeDto
     {
         this.fileVersion = fileVersion;
     }
+
+    public String getStatus()
+    {
+        return status;
+    }
+
+    public void setStatus(String status)
+    {
+        this.status = status;
+    }
+
+    public Date getCreated()
+    {
+        return created;
+    }
+
+    public void setCreated(Date created)
+    {
+        this.created = created;
+    }
+
 }
