@@ -107,7 +107,8 @@ public class AcmUserServiceImpl implements AcmUserService
 
         String query = "object_type_s:USER AND status_lcs:VALID";
 
-        String fq = String.format("fq=name_partial:%s", searchFilter);
+        String fq = String.format("fq=name_partial:%s&fq=-name:%s&fq=-name:%s", searchFilter, AcmUsersConstants.OCR_SYSTEM_USER,
+                AcmUsersConstants.TRANSCRIBE_SYSTEM_USER);
 
         return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows,
                 sortBy + " " + sortDirection, fq);
@@ -118,12 +119,13 @@ public class AcmUserServiceImpl implements AcmUserService
             throws SolrException
     {
 
-        String query = "object_type_s:USER AND status_lcs:VALID"
-                + " AND -name:" + AcmUsersConstants.OCR_SYSTEM_USER
-                + " AND -name:" + AcmUsersConstants.TRANSCRIBE_SYSTEM_USER;
+        String query = "object_type_s:USER AND status_lcs:VALID";
+
+        String filterSystemUsers = String.format("fq=-name:%s&fq=-name:%s", AcmUsersConstants.OCR_SYSTEM_USER,
+                AcmUsersConstants.TRANSCRIBE_SYSTEM_USER);
 
         return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows,
-                sortBy + " " + sortDirection);
+                sortBy + " " + sortDirection, filterSystemUsers);
     }
 
     @Override
