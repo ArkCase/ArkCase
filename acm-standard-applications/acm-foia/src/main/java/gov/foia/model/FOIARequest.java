@@ -199,6 +199,10 @@ public class FOIARequest extends CaseFile implements FOIAObject
     @Convert(converter = BooleanToStringConverter.class)
     private Boolean tollingFlag;
 
+    @Column(name = "fo_limited_delivery_flag")
+    @Convert(converter = BooleanToStringConverter.class)
+    private boolean limitedDeliveryFlag = false;
+
     @Transient
     private String originalRequestNumber;
 
@@ -663,32 +667,30 @@ public class FOIARequest extends CaseFile implements FOIAObject
         this.notificationGroup = notificationGroup;
     }
 
-    public FoiaConfiguration getFoiaConfiguration()
-    {
+    public FoiaConfiguration getFoiaConfiguration() {
         return foiaConfiguration;
     }
 
-    public void setFoiaConfiguration(FoiaConfiguration foiaConfiguration)
-    {
+    public void setFoiaConfiguration(FoiaConfiguration foiaConfiguration) {
         this.foiaConfiguration = foiaConfiguration;
     }
 
-    public Boolean getAmendmentFlag()
+    public Boolean getAmendmentFlag() 
     {
         return amendmentFlag;
     }
 
-    public void setAmendmentFlag(Boolean amendmentFlag)
+    public void setAmendmentFlag(Boolean amendmentFlag) 
     {
         this.amendmentFlag = amendmentFlag;
     }
 
-    public String getRequestAmendmentDetails()
+    public String getRequestAmendmentDetails() 
     {
         return requestAmendmentDetails;
     }
 
-    public void setRequestAmendmentDetails(String requestAmendmentDetails)
+    public void setRequestAmendmentDetails(String requestAmendmentDetails) 
     {
         this.requestAmendmentDetails = requestAmendmentDetails;
     }
@@ -778,6 +780,16 @@ public class FOIARequest extends CaseFile implements FOIAObject
         this.tollingFlag = tollingFlag;
     }
 
+    public boolean getLimitedDeliveryFlag()
+    {
+        return limitedDeliveryFlag;
+    }
+
+    public void setLimitedDeliveryFlag(boolean limitedDeliveryFlag)
+    {
+        this.limitedDeliveryFlag = limitedDeliveryFlag;
+    }
+
     /*
      * (non-Javadoc)
      * @see java.lang.Object#toString()
@@ -796,7 +808,7 @@ public class FOIARequest extends CaseFile implements FOIAObject
                 + ", requestExpediteReason=" + requestExpediteReason + ", extensionFlag=" + extensionFlag + ", amendmentFlag="
                 + amendmentFlag
                 + ", requestAmendmentDetails=" + requestAmendmentDetails + ", dispositionClosedDate=" + dispositionClosedDate
-                + ", tollingFlag=" + tollingFlag + "} "
+                + ", tollingFlag=" + tollingFlag + ", limitedDeliveryFlag=" + limitedDeliveryFlag + "} "
                 + super.toString();
     }
 }

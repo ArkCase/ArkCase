@@ -1,53 +1,58 @@
 'use strict';
 
 angular.module('cases').controller('Cases.ActionsFooterController',
-    [ '$q', '$scope', '$state', '$stateParams', 'Case.InfoService', 'Helper.ObjectBrowserService', 'QueuesService', '$modal', 'Object.NoteService', 'Admin.FoiaConfigService', function($q, $scope, $state, $stateParams, CaseInfoService, HelperObjectBrowserService, QueuesService, $modal, NotesService, AdminFoiaConfigService) {
+    ['$q', '$scope', '$state', '$stateParams', 'Case.InfoService', 'Helper.ObjectBrowserService', 'QueuesService', '$modal', 'Object.NoteService', 'Admin.FoiaConfigService',
+        function ($q, $scope, $state, $stateParams, CaseInfoService, HelperObjectBrowserService, QueuesService, $modal, NotesService, AdminFoiaConfigService) {
 
-        new HelperObjectBrowserService.Component({
-            scope: $scope,
-            stateParams: $stateParams,
-            moduleId: "cases",
-            componentId: "actionFooter",
-            retrieveObjectInfo: CaseInfoService.getCaseInfo,
-            validateObjectInfo: CaseInfoService.validateCaseInfo,
-            onObjectInfoRetrieved: function(objectInfo) {
-                onObjectInfoRetrieved(objectInfo);
-            }
-        });
-
-        $scope.loading = false;
-        $scope.loadingIcon = "fa fa-check";
-
-        $scope.availableQueues = [];
-        var onObjectInfoRetrieved = function(objectInfo) {
-            QueuesService.queryNextPossibleQueues(objectInfo.id).then(function(data) {
-                setQueueButtons(data);
+            new HelperObjectBrowserService.Component({
+                scope: $scope,
+                stateParams: $stateParams,
+                moduleId: "cases",
+                componentId: "actionFooter",
+                retrieveObjectInfo: CaseInfoService.getCaseInfo,
+                validateObjectInfo: CaseInfoService.validateCaseInfo,
+                onObjectInfoRetrieved: function (objectInfo) {
+                    onObjectInfoRetrieved(objectInfo);
+                }
             });
-        };
-        
-        AdminFoiaConfigService.getFoiaConfig().then(function (response) {
-            $scope.provideReasonToHoldRequestEnabled = response.data.provideReasonToHoldRequestEnabled;
-        });
 
-        function setupNextQueue(name, deferred) {
-            var nextQueue = name;
-            if (name === 'Complete') {
-                nextQueue = $scope.defaultNextQueue;
-            } else if (name === 'Return') {
-                nextQueue = $scope.defaultReturnQueue;
-            } else if (name === 'Deny') {
-                nextQueue = $scope.defaultDenyQueue;
-            }
-            QueuesService.nextQueue($scope.objectInfo.id, nextQueue, name).then(function(data) {
-                $scope.loading = false;
-                $scope.loadingIcon = "fa fa-check";
+            AdminFoiaConfigService.getFoiaConfig().then(function (response) {
+                $scope.limitedDeliveryToSpecificPageCountEnabled = response.data.limitedDeliveryToSpecificPageCountEnabled;
+                $scope.limitedDeliveryToSpecificPageCount = response.data.limitedDeliveryToSpecificPageCount;
+                $scope.provideReasonToHoldRequestEnabled = response.data.provideReasonToHoldRequestEnabled;
+            }, function (err) {
+                MessageService.errorAction();
+            });
 
-                if (data.success) {
-                    $scope.$emit("report-object-updated", data.caseFile);
-                } else {
+            $scope.loading = false;
+            $scope.loadingIcon = "fa fa-check";
+
+            $scope.availableQueues = [];
+            var onObjectInfoRetrieved = function (objectInfo) {
+                QueuesService.queryNextPossibleQueues(objectInfo.id).then(function (data) {
+                    setQueueButtons(data);
+                });
+            };
+
+            function setupNextQueue(name, deferred) {
+                var nextQueue = name;
+                if (name === 'Complete') {
+                    nextQueue = $scope.defaultNextQueue;
+                } else if (name === 'Return') {
+                    nextQueue = $scope.defaultReturnQueue;
+                } else if (name === 'Deny') {
+                    nextQueue = $scope.defaultDenyQueue;
+                }
+                QueuesService.nextQueue($scope.objectInfo.id, nextQueue, name).then(function (data) {
                     $scope.loading = false;
                     $scope.loadingIcon = "fa fa-check";
-                    $scope.showErrorDialog(data.errors[0]);
+
+                    if (data.success) {
+                        $scope.$emit("report-object-updated", data.caseFile);
+                    } else {
+                        $scope.loading = false;
+                        $scope.loadingIcon = "fa fa-check";
+                        $scope.showErrorDialog(data.errors[0]);
                 }
             });
         }
@@ -68,11 +73,13 @@ angular.module('cases').controller('Cases.ActionsFooterController',
                 openDeleteCommentModal(deferred);
             } else if (name === 'Hold') {
                 if ($scope.provideReasonToHoldRequestEnabled) {
-                  openHoldReasonModal(deferred, $scope.objectInfo.tollingFlag);    
+                    openHoldReasonModal(deferred, $scope.objectInfo.tollingFlag);
                 } else {
                     $scope.objectInfo.status = 'Hold';
                     deferred.resolve();
                 }
+            } else if (name === 'Complete' && $scope.defaultNextQueue === "Release" && $scope.limitedDeliveryToSpecificPageCountEnabled) {
+                openLimitedPageReleaseModal(deferred);
             } else {
                 deferred.resolve();
             }
@@ -194,8 +201,7 @@ angular.module('cases').controller('Cases.ActionsFooterController',
         function openHoldReasonModal(deferred, tollingFlag) {
             var params = {};
             params.tollingFlag = tollingFlag;
-            
-            
+
             var modalInstance = $modal.open({
                 animation: $scope.animationsEnabled,
                 templateUrl: 'modules/cases/views/components/hold-reason-modal.client.view.html',
@@ -220,36 +226,63 @@ angular.module('cases').controller('Cases.ActionsFooterController',
                     parentId: $stateParams['id'],
                     parentType: 'CASE_FILE',
                     type: 'HOLD_REASON'
-                }).then(function(addedNote) {
+                }).then(function (addedNote) {
                     // Note saved
                     deferred.resolve();
                 });
-            }, function() {
+            }, function () {
                 deferred.reject();
                 $scope.loading = false;
                 $scope.loadingIcon = "fa fa-check";
             });
         }
 
-        function setQueueButtons(data) {
-            var availableQueues = data.nextPossibleQueues;
-            var defaultNextQueue = data.defaultNextQueue;
-            var defaultReturnQueue = data.defaultReturnQueue;
-            var defaultDenyQueue = data.defaultDenyQueue;
+            function openLimitedPageReleaseModal(deferred) {
+                var params = {};
+                params.pageCount = $scope.limitedDeliveryToSpecificPageCount;
 
-            if (defaultNextQueue || defaultReturnQueue) {
-                //if there is default next or return queue, then remove it from the list
-                //and add Complete, and Return queue aliases into list
-                _.remove(availableQueues, function(currentObject) {
-                    return currentObject === defaultNextQueue || currentObject === defaultReturnQueue || currentObject === defaultDenyQueue;
+                var modalInstance = $modal.open({
+                    animation: $scope.animationsEnabled,
+                    templateUrl: 'modules/cases/views/components/limited-release-modal.client.view.html',
+                    controller: 'Cases.LimitedReleaseModalController',
+                    size: 'md',
+                    backdrop: 'static',
+                    resolve: {
+                        params: function () {
+                            return params;
+                        }
+                    }
                 });
-                if (defaultDenyQueue) {
-                    availableQueues.unshift("Deny");
-                }
-                if (defaultReturnQueue) {
-                    availableQueues.unshift("Return");
-                }
-                if (defaultNextQueue) {
+
+                modalInstance.result.then(function (limitedDeliveryFlag) {
+                    $scope.objectInfo.limitedDeliveryFlag = limitedDeliveryFlag;
+                    deferred.resolve();
+                }, function () {
+                    deferred.reject();
+                    $scope.loading = false;
+                    $scope.loadingIcon = "fa fa-check";
+                });
+            }
+
+            function setQueueButtons(data) {
+                var availableQueues = data.nextPossibleQueues;
+                var defaultNextQueue = data.defaultNextQueue;
+                var defaultReturnQueue = data.defaultReturnQueue;
+                var defaultDenyQueue = data.defaultDenyQueue;
+
+                if (defaultNextQueue || defaultReturnQueue) {
+                    //if there is default next or return queue, then remove it from the list
+                    //and add Complete, and Return queue aliases into list
+                    _.remove(availableQueues, function (currentObject) {
+                        return currentObject === defaultNextQueue || currentObject === defaultReturnQueue || currentObject === defaultDenyQueue;
+                    });
+                    if (defaultDenyQueue) {
+                        availableQueues.unshift("Deny");
+                    }
+                    if (defaultReturnQueue) {
+                        availableQueues.unshift("Return");
+                    }
+                    if (defaultNextQueue) {
                     availableQueues.push("Complete");
                 }
             }

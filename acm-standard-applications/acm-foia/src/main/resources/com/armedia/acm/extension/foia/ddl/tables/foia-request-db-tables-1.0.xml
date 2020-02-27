@@ -670,5 +670,19 @@ LANGUAGE plpgsql;
         </addColumn>
     </changeSet>
 
+    <changeSet id="42-01-acm-limited-delivery-flag-column" author="aleksandar.acevski" dbms="oracle,mssql,postgres"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_case_file">
+            <column name="fo_limited_delivery_flag" type="VARCHAR(10)" defaultValue="false"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="42-02-acm-limited-delivery-flag-column" author="aleksandar.acevski" dbms="mysql"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_case_file">
+            <column name="fo_limited_delivery_flag" type="TEXT" defaultValue="false"/>
+        </addColumn>
+    </changeSet>
+
+
 </databaseChangeLog>
 

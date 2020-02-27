@@ -239,6 +239,13 @@ public class DefaultFolderCompressor implements FolderCompressor, ApplicationEve
     @Async("fileCompressThreadPoolTaskExecutor")
     public void compressFiles(List<Long> fileIds, Authentication auth)
     {
+        String filePath = compressFiles(fileIds);
+        send(filePath, auth);
+    }
+
+    @Override
+    public String compressFiles(List<Long> fileIds)
+    {
 
         String filePath = null;
         getAuditPropertyEntityAdapter().setUserId(PROCESS_USER);
@@ -307,17 +314,14 @@ public class DefaultFolderCompressor implements FolderCompressor, ApplicationEve
                 log.warn("Could not close CMIS content stream: {}", e.getMessage(), e);
             }
 
-            filesForCompression.forEach(fileForCompression -> {
-                publishFileDownloadEvent(fileForCompression);
-            });
+            filesForCompression.forEach(this::publishFileDownloadEvent);
         }
         catch (IOException e)
         {
             log.warn("Could not create zip file: {}", e.getMessage(), e);
         }
 
-        send(filePath, auth);
-
+        return filePath;
     }
 
     private void send(String filePath, Authentication auth)
