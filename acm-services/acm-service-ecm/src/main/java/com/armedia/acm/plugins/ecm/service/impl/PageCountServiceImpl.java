@@ -28,8 +28,8 @@ package com.armedia.acm.plugins.ecm.service.impl;
  */
 
 import com.armedia.acm.plugins.ecm.service.PageCountService;
-import com.itextpdf.text.pdf.PdfReader;
-import com.itextpdf.text.pdf.RandomAccessFileOrArray;
+import com.lowagie.text.pdf.PdfReader;
+import com.lowagie.text.pdf.RandomAccessFileOrArray;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
