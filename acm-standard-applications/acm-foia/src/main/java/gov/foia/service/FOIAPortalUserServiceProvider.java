@@ -556,7 +556,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     {
         UserDTO userDTO = new UserDTO();
 
-        userDTO.setUserId(buildUserIdFromEmail(user.getEmail()));
+        userDTO.setUserId(user.getEmail());
         userDTO.setFirstName(user.getFirstName());
         userDTO.setLastName(user.getLastName());
         userDTO.setMail(user.getEmail());
@@ -565,15 +565,6 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         userDTO.setGroupNames(Arrays.asList(group));
 
         return userDTO;
-    }
-
-    private String buildUserIdFromEmail(String emailAddress)
-    {
-        if (StringUtils.isNotEmpty(emailAddress) && emailAddress.contains("@"))
-        {
-            return emailAddress.substring(0, emailAddress.lastIndexOf("@"));
-        }
-        return emailAddress;
     }
 
     /**
