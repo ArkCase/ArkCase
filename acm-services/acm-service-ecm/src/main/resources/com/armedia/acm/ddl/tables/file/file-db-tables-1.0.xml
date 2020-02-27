@@ -723,5 +723,23 @@
             constraintName="uk_file_folder_link"/>
     </changeSet>
 
+    <changeSet id="68-add-folder-link-flag" author="martin.jovanovski">
+        <dropColumn tableName="acm_folder" columnName="cm_folder_is_link"/>
+        <addColumn tableName="acm_folder">
+            <column name="cm_folder_is_link" type="VARCHAR(32)" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="dropconstraint" author="martin.jovanovski">
+        <dropUniqueConstraint tableName="acm_folder" constraintName="allow_folder_link"/>
+    </changeSet>
+
+    <changeSet id="folder-69-allow-folder-link" author="aleksandar.bujaroski">
+        <addUniqueConstraint tableName="acm_folder" columnNames="cm_cmis_folder_id, cm_parent_folder_id"
+            constraintName="deny_same_cmis_folder_id"/>
+    </changeSet>
+
 </databaseChangeLog>
 

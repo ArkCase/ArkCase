@@ -28,7 +28,9 @@ package com.armedia.acm.plugins.task.web.api;
  */
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.plugins.ecm.exception.LinkAlreadyExistException;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
@@ -70,20 +72,19 @@ public class CreateBusinessProcessTasksAPIController
     public List<AcmTask> reviewDocuments(@RequestBody AcmTask in,
             @RequestParam(value = "businessProcessName", defaultValue = "acmDocumentWorkflow") String businessProcessName,
             Authentication authentication, HttpSession httpSession)
-            throws AcmCreateObjectFailedException
-    {
+            throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException, LinkAlreadyExistException {
         try
         {
             List<AcmTask> acmTasks = null;
-            if(businessProcessName.equals("arrestWarrant"))
+            if (businessProcessName.equals("arrestWarrant"))
             {
                 getTaskService().startArrestWarrantWorkflow(in);
             }
             else
             {
-                acmTasks = getTaskService().startReviewDocumentsWorkflow(in, businessProcessName, authentication);   
+                acmTasks = getTaskService().startReviewDocumentsWorkflow(in, businessProcessName, authentication);
             }
-             
+
             return acmTasks;
         }
         catch (AcmTaskException e)
@@ -98,19 +99,21 @@ public class CreateBusinessProcessTasksAPIController
 
     @RequestMapping(value = "/newdocuments/review", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseBody
-    public List<AcmTask> reviewNewDocuments(@RequestPart (name = "task")AcmTask task,
-                                         @RequestParam(name = "businessProcessName") String businessProcessType,
-                                         @RequestPart(name = "files") List<MultipartFile> filesToUpload,
-                                         Authentication authentication, HttpSession httpSession)
-            throws AcmCreateObjectFailedException, IOException, AcmUserActionFailedException
+    public List<AcmTask> reviewNewDocuments(@RequestPart(name = "task") AcmTask task,
+            @RequestParam(name = "businessProcessName") String businessProcessType,
+            @RequestPart(name = "files") List<MultipartFile> filesToUpload,
+            Authentication authentication, HttpSession httpSession)
+            throws AcmCreateObjectFailedException, AcmUserActionFailedException, LinkAlreadyExistException,
+            AcmObjectNotFoundException
     {
-        
+
         try
         {
-            
-            List<AcmTask> acmTasks = getTaskService().startReviewDocumentsWorkflow(task, businessProcessType, authentication, filesToUpload);
+
+            List<AcmTask> acmTasks = getTaskService().startReviewDocumentsWorkflow(task, businessProcessType, authentication,
+                    filesToUpload);
             return acmTasks;
-            
+
         }
         catch (AcmTaskException e)
         {

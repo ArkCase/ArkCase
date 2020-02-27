@@ -29,13 +29,16 @@ package com.armedia.acm.plugins.task.service.impl;
 
 import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.plugins.ecm.exception.LinkAlreadyExistException;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.model.TaskConstants;
+import com.armedia.acm.plugins.task.service.AcmTaskService;
 import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
 import com.armedia.acm.services.search.exception.SolrException;
@@ -59,12 +62,12 @@ public class CreateAdHocTaskService {
     private TaskEventPublisher taskEventPublisher;
     private ExecuteSolrQuery executeSolrQuery;
     private EcmFileService ecmFileService;
+    private AcmTaskService acmTaskService;
 
     private SearchResults searchResults = new SearchResults();
     private Logger log = LogManager.getLogger(getClass());
 
-    public AcmTask createAdHocTask(AcmTask in, List<MultipartFile> filesToUpload, Authentication authentication,  String ipAddress) throws AcmCreateObjectFailedException, AcmAppErrorJsonMsg, AcmUserActionFailedException
-    {
+    public AcmTask createAdHocTask(AcmTask in, List<MultipartFile> filesToUpload, Authentication authentication,  String ipAddress) throws AcmCreateObjectFailedException, AcmAppErrorJsonMsg, AcmUserActionFailedException, LinkAlreadyExistException, AcmObjectNotFoundException {
         log.info("Creating ad-hoc task.");
         String user = authentication.getName();
         String attachedToObjectType = in.getAttachedToObjectType();
@@ -123,6 +126,12 @@ public class CreateAdHocTaskService {
                         adHocTask.getTaskId());
             }
 
+            if (adHocTask.getParentObjectId() != null) {
+
+                getAcmTaskService().createTaskFolderStructureInParentObject(adHocTask);
+            }
+
+
             publishAdHocTaskCreatedEvent(authentication, ipAddress, adHocTask, true);
             return adHocTask;
         }
@@ -177,8 +186,7 @@ public class CreateAdHocTaskService {
         return retval;
     }
 
-    public AcmTask createTask(AcmTask in, Authentication authentication, String ipAddress) throws AcmCreateObjectFailedException
-    {
+    public AcmTask createTask(AcmTask in, Authentication authentication, String ipAddress) throws AcmCreateObjectFailedException, AcmUserActionFailedException {
         log.info("Creating task.");
         String user = authentication.getName();
 
@@ -254,14 +262,23 @@ public class CreateAdHocTaskService {
         this.log = log;
     }
 
-    public EcmFileService getEcmFileService() 
+    public EcmFileService getEcmFileService()
     {
         return ecmFileService;
     }
 
-    public void setEcmFileService(EcmFileService ecmFileService) 
+    public void setEcmFileService(EcmFileService ecmFileService)
     {
         this.ecmFileService = ecmFileService;
     }
 
+    public AcmTaskService getAcmTaskService()
+    {
+        return acmTaskService;
+    }
+
+    public void setAcmTaskService(AcmTaskService acmTaskService)
+    {
+        this.acmTaskService = acmTaskService;
+    }
 }
