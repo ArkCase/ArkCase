@@ -97,6 +97,10 @@ angular.module('request-info').controller(
                 }
             };
 
+            $scope.showFailureMessage = function showFailureMessage() {
+                DialogService.alert($scope.transcribeObjectModel.failureReason);
+            };
+
             $scope.iframeLoaded = function () {
                 ArkCaseCrossWindowMessagingService.addHandler('close-document', onCloseDocument);
                 ObjectLookupService.getLookupByLookupName("annotationTags").then(function (allAnnotationTags) {
