@@ -31,9 +31,11 @@ import com.armedia.acm.convertfolder.ConversionException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
-import gov.foia.broker.FOIARequestFileBrokerClient;
-import org.apache.logging.log4j.Logger;
+
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import gov.foia.broker.FOIARequestFileBrokerClient;
 
 public class RequestResponseFolderService
 {
@@ -50,10 +52,10 @@ public class RequestResponseFolderService
         getResponseFolderConverterService().convertResponseFolder(requestId, userName);
 
         log.debug("Compressing the Response folder for the request [{}]", requestId);
-        getResponseFolderCompressorService().compressResponseFolder(requestId);
+        String filePath = getResponseFolderCompressorService().compressResponseFolder(requestId);
 
         log.debug("Sending the compressed Response folder file to outbound message queue the request [{}]", requestId);
-        getFoiaRequestFileBrokerClient().sendReleaseFile(requestId);
+        getFoiaRequestFileBrokerClient().sendReleaseFile(requestId, filePath);
 
         log.debug("Sending Email notification Response folder zip completed for the request [{}]", requestId);
         getResponseFolderNotifyService().sendEmailResponseCompressNotification(requestId);

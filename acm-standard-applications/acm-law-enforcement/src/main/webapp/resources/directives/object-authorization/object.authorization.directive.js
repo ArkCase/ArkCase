@@ -24,7 +24,8 @@
  * @param {object} selectedObject - An object that has information for the pre-selected/selected user
  * @param {boolean} member - An object that has information if an adhoc group is a member of another adhoc group
  * @param {string} objectType string value for the object, to check whether it is, role or something else. This is used for filtering data in tree panel view
- *
+ * @param {boolean} showTooltip true/false, on this variable depends the visibility of the tooltip over the elements, default value is false,
+ *                  usage: <object-authorization show-tooltip="true" />
  * @scope
  *
  * @example
@@ -66,7 +67,7 @@
  </file>
  </example>
  */
-angular.module('directives').directive('objectAuthorization', [ 'Menus', 'MessageService', '$q', function(Menus, messageService, $q) {
+angular.module('directives').directive('objectAuthorization', [ 'Menus', 'MessageService', '$q', '$timeout', '$translate', function(Menus, messageService, $q, $timeout, $translate) {
     return {
         restrict: 'E',
         scope: {
@@ -81,13 +82,15 @@ angular.module('directives').directive('objectAuthorization', [ 'Menus', 'Messag
             filterDataControl: "=?",
             selectedObject: "=?",
             member: "=?",
-            objectType: '@'
+            objectType: '@',
+            showTooltip: "=?"
         },
         templateUrl: 'directives/object-authorization/object.authorization.html',
         link: function(scope) {
 
             scope.firstSelectHide = scope.data.firstSelectHide;
             scope.hideFilter = scope.data.hideFilter;
+            scope.showTooltip = scope.showTooltip;
 
             //authorize button is clicked
             scope.authorize = function() {
@@ -102,6 +105,19 @@ angular.module('directives').directive('objectAuthorization', [ 'Menus', 'Messag
                         _unAuthorize(toAdd, scope.data);
                     });
                 }
+            };
+
+           scope.showTooltipFunction = function() {
+               if(scope.showTooltip) {
+                   $timeout(function () {
+                       $("#selectedNotAuthorized option").each(function (index, element) {
+                           $(element).attr("title", $translate.instant(scope.data.selectedNotAuthorized[index].value));
+                       });
+                       $("#selectedAuthorized option").each(function (index, element) {
+                           $(element).attr("title", $translate.instant(scope.data.selectedAuthorized[index].value));
+                       });
+                   });
+               }
             };
 
             var _unAuthorize = function(toRemove, data) {

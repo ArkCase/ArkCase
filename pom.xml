@@ -141,6 +141,7 @@
         <subzero.version>0.9</subzero.version>
         <xsync-version>1.2</xsync-version>
         <nimbusds.version>5.8</nimbusds.version>
+        <openpdf.version>1.2.10</openpdf.version>
     </properties>
     <organization>
         <name>ArkCase LLC</name>
@@ -1482,6 +1483,11 @@
                 <artifactId>nimbus-jose-jwt</artifactId>
                 <version>${nimbusds.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.github.librepdf</groupId>
+                <artifactId>openpdf</artifactId>
+                <version>${openpdf.version}</version>
+            </dependency>
 
             <!-- concurrency -->
             <dependency>
@@ -1489,6 +1495,7 @@
                 <artifactId>xsync</artifactId>
                 <version>${xsync-version}</version>
             </dependency>
+
 
         </dependencies>
     </dependencyManagement>

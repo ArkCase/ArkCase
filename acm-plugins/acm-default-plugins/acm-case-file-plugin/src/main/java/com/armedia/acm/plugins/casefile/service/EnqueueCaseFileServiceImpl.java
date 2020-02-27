@@ -254,6 +254,7 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
         Map<String, Object> processVariables = new HashMap<>();
         processVariables.put("OBJECT_TYPE", "CASE_FILE");
         processVariables.put("OBJECT_ID", caseFile.getId());
+        processVariables.put("OBJECT_STATUS", caseFile.getStatus());
         return processVariables;
     }
 

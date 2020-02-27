@@ -63,10 +63,12 @@ import com.armedia.acm.plugins.task.model.TaskConstants;
 import com.armedia.acm.plugins.task.service.AcmTaskService;
 import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
+import com.armedia.acm.services.labels.service.TranslationService;
 import com.armedia.acm.services.note.dao.NoteDao;
 import com.armedia.acm.services.note.model.Note;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
+import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.participants.dao.AcmParticipantDao;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.search.exception.SolrException;
@@ -134,6 +136,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
     private AcmDataService acmDataService;
     private FileWorkflowBusinessRule fileWorkflowBusinessRule;
     private RuntimeService activitiRuntimeService;
+    private TranslationService translationService;
 
     @Override
     public List<BuckslipProcess> getBuckslipProcessesForObject(String objectType, Long objectId)
@@ -682,7 +685,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
         Notification notification = new Notification();
         notification.setParentId(objectId);
         notification.setParentType(objectType);
-        notification.setTitle(String.format("%s - Arrest Warrant", ((AcmNotifiableEntity) object).getNotifiableEntityNumber()));
+        notification.setTitle(String.format(translationService.translate(NotificationConstants.ARREST_WARRANT), ((AcmNotifiableEntity) object).getNotifiableEntityNumber()));
         notification.setEmailAddresses(approvers);
         notification.setTemplateModelName("arrestWarrant");
         notificationDao.save(notification);
@@ -904,5 +907,15 @@ public class AcmTaskServiceImpl implements AcmTaskService
     public void setActivitiRuntimeService(RuntimeService activitiRuntimeService)
     {
         this.activitiRuntimeService = activitiRuntimeService;
+    }
+
+    public TranslationService getTranslationService()
+    {
+        return translationService;
+    }
+
+    public void setTranslationService(TranslationService translationService)
+    {
+        this.translationService = translationService;
     }
 }

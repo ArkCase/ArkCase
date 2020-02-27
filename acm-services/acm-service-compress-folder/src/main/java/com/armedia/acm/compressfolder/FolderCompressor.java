@@ -104,6 +104,8 @@ public interface FolderCompressor
 
     void compressFiles(List<Long> fileIds, Authentication authentication) throws Exception;
 
+    String compressFiles(List<Long> fileIds);
+
     /**
      * Returns path for the compressed folder file
      * 
