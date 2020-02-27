@@ -162,6 +162,7 @@
             <beans:property name="compressor" ref="folderCompressor"/>
             <beans:property name="responseFolderService" ref="responseFolderService"/>
             <beans:property name="acmFolderService" ref="acmFolderService"/>
+            <beans:property name="foiaConfig" ref="foiaConfig"/>
         </beans:bean>
 
         <beans:bean id="responseFolderNotifyService" class="gov.foia.service.ResponseFolderNotifyService">

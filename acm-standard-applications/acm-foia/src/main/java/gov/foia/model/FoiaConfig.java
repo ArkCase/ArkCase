@@ -73,6 +73,14 @@ public class FoiaConfig
     @Value("${moveToBillingQueueEnabled}")
     private Boolean moveToBillingQueueEnabled;
 
+    @JsonProperty("limitedDeliveryToSpecificPageCountEnabled")
+    @Value("${limitedDeliveryToSpecificPageCountEnabled}")
+    private Boolean limitedDeliveryToSpecificPageCountEnabled;
+
+    @JsonProperty("limitedDeliveryToSpecificPageCount")
+    @Value("${limitedDeliveryToSpecificPageCount}")
+    private Integer limitedDeliveryToSpecificPageCount;
+
     @JsonProperty("requireTimesheetToCompleteStandardRequest")
     @Value("${requireTimesheetToCompleteStandardRequest}")
     private Boolean requireTimesheetToCompleteStandardRequest;
@@ -183,6 +191,26 @@ public class FoiaConfig
     public void setMoveToBillingQueueEnabled(Boolean moveToBillingQueueEnabled)
     {
         this.moveToBillingQueueEnabled = moveToBillingQueueEnabled;
+    }
+
+    public Boolean getLimitedDeliveryToSpecificPageCountEnabled()
+    {
+        return limitedDeliveryToSpecificPageCountEnabled;
+    }
+
+    public void setLimitedDeliveryToSpecificPageCountEnabled(Boolean limitedDeliveryToSpecificPageCountEnabled)
+    {
+        this.limitedDeliveryToSpecificPageCountEnabled = limitedDeliveryToSpecificPageCountEnabled;
+    }
+
+    public Integer getLimitedDeliveryToSpecificPageCount()
+    {
+        return limitedDeliveryToSpecificPageCount;
+    }
+
+    public void setLimitedDeliveryToSpecificPageCount(Integer limitedDeliveryToSpecificPageCount)
+    {
+        this.limitedDeliveryToSpecificPageCount = limitedDeliveryToSpecificPageCount;
     }
 
     public Boolean getRequireTimesheetToCompleteStandardRequest()
