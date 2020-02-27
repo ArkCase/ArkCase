@@ -73,6 +73,14 @@ public class FoiaConfig
     @Value("${moveToBillingQueueEnabled}")
     private Boolean moveToBillingQueueEnabled;
 
+    @JsonProperty("limitedDeliveryToSpecificPageCountEnabled")
+    @Value("${limitedDeliveryToSpecificPageCountEnabled}")
+    private Boolean limitedDeliveryToSpecificPageCountEnabled;
+
+    @JsonProperty("limitedDeliveryToSpecificPageCount")
+    @Value("${limitedDeliveryToSpecificPageCount}")
+    private Integer limitedDeliveryToSpecificPageCount;
+
     @JsonProperty("requireTimesheetToCompleteStandardRequest")
     @Value("${requireTimesheetToCompleteStandardRequest}")
     private Boolean requireTimesheetToCompleteStandardRequest;
@@ -81,7 +89,9 @@ public class FoiaConfig
     @Value("${requireTimesheetToCompleteDeniedRequest}")
     private Boolean requireTimesheetToCompleteDeniedRequest;
 
-
+    @JsonProperty("provideReasonToHoldRequestEnabled")
+    @Value("${provideReasonToHoldRequestEnabled}")
+    private Boolean provideReasonToHoldRequestEnabled;
 
     public Integer getMaxDaysInHoldQueue()
     {
@@ -183,6 +193,26 @@ public class FoiaConfig
         this.moveToBillingQueueEnabled = moveToBillingQueueEnabled;
     }
 
+    public Boolean getLimitedDeliveryToSpecificPageCountEnabled()
+    {
+        return limitedDeliveryToSpecificPageCountEnabled;
+    }
+
+    public void setLimitedDeliveryToSpecificPageCountEnabled(Boolean limitedDeliveryToSpecificPageCountEnabled)
+    {
+        this.limitedDeliveryToSpecificPageCountEnabled = limitedDeliveryToSpecificPageCountEnabled;
+    }
+
+    public Integer getLimitedDeliveryToSpecificPageCount()
+    {
+        return limitedDeliveryToSpecificPageCount;
+    }
+
+    public void setLimitedDeliveryToSpecificPageCount(Integer limitedDeliveryToSpecificPageCount)
+    {
+        this.limitedDeliveryToSpecificPageCount = limitedDeliveryToSpecificPageCount;
+    }
+
     public Boolean getRequireTimesheetToCompleteStandardRequest()
     {
         return requireTimesheetToCompleteStandardRequest;
@@ -201,5 +231,22 @@ public class FoiaConfig
     public void setRequireTimesheetToCompleteDeniedRequest(Boolean requireTimesheetToCompleteDeniedRequest)
     {
         this.requireTimesheetToCompleteDeniedRequest = requireTimesheetToCompleteDeniedRequest;
+    }
+
+    /**
+     * @return the provideReasonToHoldRequestEnabled
+     */
+    public Boolean getProvideReasonToHoldRequestEnabled()
+    {
+        return provideReasonToHoldRequestEnabled;
+    }
+
+    /**
+     * @param provideReasonToHoldRequestEnabled
+     *            the provideReasonToHoldRequestEnabled to set
+     */
+    public void setProvideReasonToHoldRequestEnabled(Boolean provideReasonToHoldRequestEnabled)
+    {
+        this.provideReasonToHoldRequestEnabled = provideReasonToHoldRequestEnabled;
     }
 }

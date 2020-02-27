@@ -29,8 +29,10 @@ package com.armedia.acm.services.notification.service;
 
 import com.armedia.acm.auth.web.ForgotUsernameEvent;
 import com.armedia.acm.core.AcmSpringActiveProfile;
+import com.armedia.acm.services.labels.service.TranslationService;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
+import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import org.apache.logging.log4j.Logger;
@@ -45,6 +47,7 @@ public class OnForgotUsername implements ApplicationListener<ForgotUsernameEvent
     private UserDao userDao;
     private final Logger log = LogManager.getLogger(getClass());
     private AcmSpringActiveProfile acmSpringActiveProfile;
+    private TranslationService translationService;
 
     @Override
     public void onApplicationEvent(ForgotUsernameEvent forgotUsernameEvent)
@@ -65,7 +68,7 @@ public class OnForgotUsername implements ApplicationListener<ForgotUsernameEvent
             notification.setUser(user.getUserId());
             notification.setAttachFiles(false);
             notification.setEmailAddresses(user.getMail());
-            notification.setTitle("Forgot Username");
+            notification.setTitle(translationService.translate(NotificationConstants.USERNAME_FORGOT));
             notificationDao.save(notification);
         }
     }
@@ -91,5 +94,15 @@ public class OnForgotUsername implements ApplicationListener<ForgotUsernameEvent
     public void setAcmSpringActiveProfile(AcmSpringActiveProfile acmSpringActiveProfile) 
     {
         this.acmSpringActiveProfile = acmSpringActiveProfile;
+    }
+
+    public TranslationService getTranslationService()
+    {
+        return translationService;
+    }
+
+    public void setTranslationService(TranslationService translationService)
+    {
+        this.translationService = translationService;
     }
 }

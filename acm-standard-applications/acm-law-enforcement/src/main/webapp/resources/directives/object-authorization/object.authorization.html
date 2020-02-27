@@ -12,7 +12,7 @@
         <select ng-model="selectedNotAuthorized"
                 ng-options="na[roleDisplayName] for na in data.selectedNotAuthorized | filter:'{{objectType}}'" name="" size="15" multiple
                 class="form-control" pagination-on-scroll load-more="paginationDataControl.loadUnauthorizedScroll()"
-                reset-scroll-px="resetScrollOnSelect">
+                reset-scroll-px="resetScrollOnSelect" id="selectedNotAuthorized" ng-mouseover="showTooltipFunction()">
         </select>
         <object-authorization-roles-filter filter="filterDataControl.unauthorizedFilter(data)" ng-hide="hideFilter" />
     </div>
@@ -32,7 +32,7 @@
         'common.directive.objectAuthorization.authorized' | translate}}</label>
         <select ng-model="selectedAuthorized" ng-options="a[roleDisplayName] for a in data.selectedAuthorized | filter:'{{objectType}}'"
                 size="15" multiple class="form-control" pagination-on-scroll load-more="paginationDataControl.loadAuthorizedScroll()"
-                reset-scroll-px="resetScrollOnSelect">
+                reset-scroll-px="resetScrollOnSelect" id="selectedAuthorized" ng-mouseover="showTooltipFunction()">
         </select>
         <object-authorization-roles-filter filter="filterDataControl.authorizedFilter(data)" ng-hide="hideFilter" />
     </div>

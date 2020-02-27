@@ -32,8 +32,10 @@ import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.service.GetCaseByNumberService;
 import com.armedia.acm.services.config.lookups.model.StandardLookupEntry;
 import com.armedia.acm.services.config.lookups.service.LookupDao;
+import com.armedia.acm.services.labels.service.TranslationService;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
+import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
@@ -94,6 +96,8 @@ public class PortalRequestService
     private GroupService groupService;
 
     private SearchResults searchResults;
+
+    private TranslationService translationService;
 
     public List<PortalFOIARequestStatus> getExternalRequests(PortalFOIARequestStatus portalRequestStatus) throws AcmObjectNotFoundException
     {
@@ -259,7 +263,7 @@ public class PortalRequestService
             OffsetDateTime downloadedDateTime = OffsetDateTime.now(ZoneOffset.UTC);
             String downloadedDateTimeFormatted = DateTimeFormatter.ofPattern("yyyy-MM-dd / HH:mm:ss").format(downloadedDateTime);
 
-            notification.setTitle(String.format("Request:%s Downloaded", request.getCaseNumber()));
+            notification.setTitle(String.format(translationService.translate(NotificationConstants.REQUEST_DOWNLOADED), request.getCaseNumber()));
             notification.setTemplateModelName("requestDownloaded");
             notification.setParentId(request.getId());
             notification.setParentType(request.getRequestType());
@@ -410,5 +414,15 @@ public class PortalRequestService
 
         }
         return responseRequests;
+    }
+
+    public TranslationService getTranslationService()
+    {
+        return translationService;
+    }
+
+    public void setTranslationService(TranslationService translationService)
+    {
+        this.translationService = translationService;
     }
 }

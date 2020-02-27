@@ -29,6 +29,7 @@ package gov.foia.service;
 
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.services.holiday.service.HolidayConfigurationService;
+import com.armedia.acm.services.labels.service.TranslationService;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
@@ -51,6 +52,7 @@ public class DueDateReminder
     private HolidayConfigurationService holidayConfigurationService;
     private UserDao userDao;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
+    private TranslationService translationService;
 
     public void sendDueDateReminder()
     {
@@ -77,7 +79,7 @@ public class DueDateReminder
 
                     Notification notification = new Notification();
                     notification.setNote(dueDateRemainingDays);
-                    notification.setTitle(String.format("Request:%s assigned to %s", request.getCaseNumber(), user.getFullName()));
+                    notification.setTitle(String.format(translationService.translate(NotificationConstants.REQUEST_ASSIGNED), request.getCaseNumber(), user.getFullName()));
                     notification.setParentId(request.getId());
                     notification.setParentType(request.getObjectType());
                     notification.setParentName(request.getCaseNumber());
@@ -140,5 +142,15 @@ public class DueDateReminder
     public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
     {
         this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
+    }
+
+    public TranslationService getTranslationService()
+    {
+        return translationService;
+    }
+
+    public void setTranslationService(TranslationService translationService)
+    {
+        this.translationService = translationService;
     }
 }

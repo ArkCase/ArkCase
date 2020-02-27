@@ -277,6 +277,10 @@
             <groupId>com.antkorwin</groupId>
             <artifactId>xsync</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.github.librepdf</groupId>
+            <artifactId>openpdf</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

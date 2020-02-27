@@ -195,6 +195,14 @@ public class FOIARequest extends CaseFile implements FOIAObject
     @Column(name = "fo_external_identifier")
     private String externalIdentifier;
 
+    @Column(name = "fo_tolling_flag")
+    @Convert(converter = BooleanToStringConverter.class)
+    private Boolean tollingFlag;
+
+    @Column(name = "fo_limited_delivery_flag")
+    @Convert(converter = BooleanToStringConverter.class)
+    private boolean limitedDeliveryFlag = false;
+
     @Transient
     private String originalRequestNumber;
 
@@ -755,6 +763,33 @@ public class FOIARequest extends CaseFile implements FOIAObject
         this.extensionFlag = extensionFlag;
     }
 
+    /**
+     * @return the tollingFlag
+     */
+    public Boolean getTollingFlag()
+    {
+        return tollingFlag;
+    }
+
+    /**
+     * @param tollingFlag
+     *            the tollingFlag to set
+     */
+    public void setTollingFlag(Boolean tollingFlag)
+    {
+        this.tollingFlag = tollingFlag;
+    }
+
+    public boolean getLimitedDeliveryFlag()
+    {
+        return limitedDeliveryFlag;
+    }
+
+    public void setLimitedDeliveryFlag(boolean limitedDeliveryFlag)
+    {
+        this.limitedDeliveryFlag = limitedDeliveryFlag;
+    }
+
     /*
      * (non-Javadoc)
      * @see java.lang.Object#toString()
@@ -770,8 +805,10 @@ public class FOIARequest extends CaseFile implements FOIAObject
                 + ", paidFlag=" + paidFlag + ", publicFlag=" + publicFlag + ", deliveryMethodOfResponse=" + deliveryMethodOfResponse
                 + ", recordSearchDateFrom=" + recordSearchDateFrom + ", recordSearchDateTo=" + recordSearchDateTo + ", processingFeeWaive="
                 + processingFeeWaive + ", requestFeeWaiveReason=" + requestFeeWaiveReason + ", payFee=" + payFee
-                + ", requestExpediteReason=" + requestExpediteReason + ", extensionFlag=" + extensionFlag + ", amendmentFlag=" + amendmentFlag 
-                + ", requestAmendmentDetails=" + requestAmendmentDetails + ", dispositionClosedDate=" + dispositionClosedDate + "} "
+                + ", requestExpediteReason=" + requestExpediteReason + ", extensionFlag=" + extensionFlag + ", amendmentFlag="
+                + amendmentFlag
+                + ", requestAmendmentDetails=" + requestAmendmentDetails + ", dispositionClosedDate=" + dispositionClosedDate
+                + ", tollingFlag=" + tollingFlag + ", limitedDeliveryFlag=" + limitedDeliveryFlag + "} "
                 + super.toString();
     }
 }

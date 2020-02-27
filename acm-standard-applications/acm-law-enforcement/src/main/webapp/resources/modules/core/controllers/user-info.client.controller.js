@@ -14,11 +14,11 @@ angular.module('core').controller('UserInfoController', ['$scope', 'Profile.User
             userId: data.userId,
             userName: data.fullName
         };
-        $scope.imgSrc = !$scope.profileEcmFileID ? 'modules/profile/img/nopic.png' : 'api/latest/plugin/ecm/download?ecmFileId=' + $scope.profileEcmFileID + '&parentObjectType=USER_ORG' + '&inline=true';
+        $scope.imgSrc = !$scope.profileEcmFileID ? 'modules/profile/img/arkcase_logo.png' : 'api/latest/plugin/ecm/download?ecmFileId=' + $scope.profileEcmFileID + '&parentObjectType=USER_ORG' + '&inline=true';
     });
 
     $scope.$on('uploadedPicture', function(event, arg) {
-        $scope.imgSrc = !arg ? 'modules/profile/img/nopic.png' : 'api/latest/plugin/ecm/download?ecmFileId=' + arg + '&parentObjectType=USER_ORG' + '&inline=true';
+        $scope.imgSrc = !arg ? 'modules/profile/img/arkcase_logo.png' : 'api/latest/plugin/ecm/download?ecmFileId=' + arg + '&parentObjectType=USER_ORG' + '&inline=true';
     });
 
     $scope.onClickLogout = function() {

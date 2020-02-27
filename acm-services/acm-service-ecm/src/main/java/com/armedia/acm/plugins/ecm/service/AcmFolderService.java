@@ -35,6 +35,7 @@ import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.DeleteFolderInfo;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
 
 import org.json.JSONArray;
 import org.springframework.retry.annotation.Backoff;
@@ -63,6 +64,8 @@ public interface AcmFolderService
 
     AcmFolder renameFolder(Long folderId, String newFolderName)
             throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmFolderException;
+
+    List<EcmFile> getFilesInFolderAndSubfolders(Long folderId);
 
     AcmFolder moveFolder(AcmFolder folderForMoving, AcmFolder dstFolder)
             throws AcmObjectNotFoundException, AcmUserActionFailedException, AcmFolderException;
