@@ -136,8 +136,7 @@ public class DocumentRepositoryServiceImpl implements DocumentRepositoryService
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void delete(Long id, Authentication authentication) throws AcmUserActionFailedException
-    {
+    public void delete(Long id, Authentication authentication) throws AcmUserActionFailedException, AcmObjectNotFoundException {
         DocumentRepository documentRepository = documentRepositoryDao.find(id);
         log.info("Deleting Document Repository: {} with id: {}", documentRepository.getName(), id);
         documentRepositoryDao.deleteDocumentRepository(id);

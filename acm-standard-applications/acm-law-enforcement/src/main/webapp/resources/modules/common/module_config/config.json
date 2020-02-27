@@ -448,6 +448,79 @@
           }
         ]
       },
+      "read-only": {
+        "root": [
+          {
+            "title": "Participants",
+            "cmd": "showParticipants"
+          }
+        ],
+        "folder": [
+          {
+            "title": "Participants",
+            "cmd": "showParticipants"
+          },
+          {
+            "title": "----"
+          },
+          {
+            "___title": "Copy <kbd>Ctrl+C</kbd>",
+            "titleKey": "common.directive.docTree.menu.copy",
+            "cmd": "copy",
+            "uiIcon": "ui-icon-copy"
+          }
+        ],
+        "file": [
+          {
+            "titleKey": "common.directive.docTree.menu.open",
+            "cmd": "open",
+            "uiIcon": "ui-icon-folder-open"
+          },
+          {
+            "titleKey": "common.directive.docTree.menu.email",
+            "cmd": "email",
+            "uiIcon": "ui-icon-mail-closed",
+            "data": {
+              "readOnly": true
+            }
+          },
+          {
+            "title": "New Task",
+            "cmd": "reviewDocument",
+            "uiIcon": "ui-icon-circle-check",
+            "data": {
+              "readOnly": true
+            }
+          },
+          {
+            "title": "----"
+          },
+          {
+            "title": "Participants",
+            "cmd": "showParticipants"
+          },
+          {
+            "title": "----"
+          },
+          {
+            "___title": "Copy <kbd>Ctrl+C</kbd>",
+            "titleKey": "common.directive.docTree.menu.copy",
+            "cmd": "copy",
+            "uiIcon": "ui-icon-copy"
+          },
+          {
+            "title": "----"
+          },
+          {
+            "titleKey": "common.directive.docTree.menu.download",
+            "cmd": "download",
+            "uiIcon": "ui-icon-arrowthickstop-1-s",
+            "data": {
+              "readOnly": true
+            }
+          }
+        ]
+      },
       "batch": {
         "files": [
           {

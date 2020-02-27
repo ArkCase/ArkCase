@@ -28,6 +28,7 @@ package com.armedia.acm.plugins.task.service;
  */
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.model.NumberOfDays;
@@ -50,7 +51,7 @@ public interface TaskDao
 {
 
     @Transactional
-    AcmTask createAdHocTask(AcmTask in) throws AcmTaskException;
+    AcmTask createAdHocTask(AcmTask in) throws AcmTaskException, AcmUserActionFailedException, AcmCreateObjectFailedException;
 
     <T> T readProcessVariable(String businessProcessId, String processVariableKey, boolean readFromHistory) throws AcmTaskException;
 

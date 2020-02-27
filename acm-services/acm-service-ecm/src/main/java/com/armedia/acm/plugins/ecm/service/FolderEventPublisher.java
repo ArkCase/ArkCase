@@ -30,11 +30,7 @@ package com.armedia.acm.plugins.ecm.service;
 import com.armedia.acm.auth.AcmAuthenticationDetails;
 import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
-import com.armedia.acm.plugins.ecm.model.event.AcmFolderCopiedEvent;
-import com.armedia.acm.plugins.ecm.model.event.AcmFolderCreatedEvent;
-import com.armedia.acm.plugins.ecm.model.event.AcmFolderDeletedEvent;
-import com.armedia.acm.plugins.ecm.model.event.AcmFolderMovedEvent;
-import com.armedia.acm.plugins.ecm.model.event.AcmFolderRenamedEvent;
+import com.armedia.acm.plugins.ecm.model.event.*;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
@@ -127,5 +123,14 @@ public class FolderEventPublisher implements ApplicationEventPublisherAware
         folderCopiedEvent.setSucceeded(succeeded);
         eventPublisher.publishEvent(folderCopiedEvent);
     }
+
+    public void publishFolderCopiedAsLinkEvent(AcmFolder source, Authentication auth, String ipAddress, boolean succeeded)
+    {
+        log.debug("Publishing a folder copied as link event.");
+        AcmFolderCopiedAsLinkEvent folderCopiedAsLinkEvent = new AcmFolderCopiedAsLinkEvent(source, auth.getName(), ipAddress);
+        folderCopiedAsLinkEvent.setSucceeded(succeeded);
+        eventPublisher.publishEvent(folderCopiedAsLinkEvent);
+    }
+
 
 }
