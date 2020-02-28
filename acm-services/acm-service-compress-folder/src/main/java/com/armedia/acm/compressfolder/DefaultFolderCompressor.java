@@ -364,7 +364,7 @@ public class DefaultFolderCompressor implements FolderCompressor, ApplicationEve
         List<String> fileFolderList = new ArrayList<>();
 
         // all child objects of OBJECT_FILE_TYPE
-        List<AcmObject> files = folderChildren.stream().filter(c -> OBJECT_FILE_TYPE.equals(c.getObjectType().toUpperCase()))
+        List<AcmObject> files = folderChildren.stream().filter(c -> OBJECT_FILE_TYPE.equalsIgnoreCase(c.getObjectType()))
                 .collect(Collectors.toList());
         files.forEach(c -> {
             try
@@ -396,7 +396,7 @@ public class DefaultFolderCompressor implements FolderCompressor, ApplicationEve
         });
 
         // all child objects of OBJECT_FOLDER_TYPE
-        List<AcmObject> folders = folderChildren.stream().filter(c -> OBJECT_FOLDER_TYPE.equals(c.getObjectType().toUpperCase()))
+        List<AcmObject> folders = folderChildren.stream().filter(c -> OBJECT_FOLDER_TYPE.equalsIgnoreCase(c.getObjectType()))
                 .collect(Collectors.toList());
         folders.forEach(c -> {
             try
@@ -440,7 +440,7 @@ public class DefaultFolderCompressor implements FolderCompressor, ApplicationEve
             List<AcmObject> folderChildren = folderService.getFolderChildren(folder.getId());
 
             // all child objects of OBJECT_FILE_TYPE
-            List<AcmObject> files = folderChildren.stream().filter(c -> OBJECT_FILE_TYPE.equals(c.getObjectType().toUpperCase()))
+            List<AcmObject> files = folderChildren.stream().filter(c -> OBJECT_FILE_TYPE.equalsIgnoreCase(c.getObjectType()))
                     .collect(Collectors.toList());
             for (AcmObject acmObject : files)
             {
@@ -452,7 +452,7 @@ public class DefaultFolderCompressor implements FolderCompressor, ApplicationEve
             }
 
             // all child objects of OBJECT_FOLDER_TYPE
-            List<AcmObject> folders = folderChildren.stream().filter(c -> OBJECT_FOLDER_TYPE.equals(c.getObjectType().toUpperCase()))
+            List<AcmObject> folders = folderChildren.stream().filter(c -> OBJECT_FOLDER_TYPE.equalsIgnoreCase(c.getObjectType()))
                     .collect(Collectors.toList());
             for (AcmObject acmObject : folders)
             {
