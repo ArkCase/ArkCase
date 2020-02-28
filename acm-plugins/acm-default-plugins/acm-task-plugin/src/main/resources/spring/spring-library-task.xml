@@ -111,11 +111,6 @@
         <property name="activitiTaskDao" ref="acmTaskDao"/>
     </bean>
 
-    <bean id="taskChangeStatusListener" class="com.armedia.acm.plugins.task.service.TaskChangeStatusListener">
-        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
-        <property name="acmTaskService" ref="acmTaskService"/>
-    </bean>
-
     <bean id="taskDataAccessUpdateLocator" class="com.armedia.acm.plugins.task.service.impl.TaskDataAccessUpdateLocator">
         <property name="taskDao" ref="acmTaskDao"/>
     </bean>
@@ -221,6 +216,7 @@
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
         <property name="searchResults" ref="searchResults"/>
         <property name="ecmFileService" ref="ecmFileService"/>
+        <property name="acmTaskService" ref="acmTaskService"/>
     </bean>
 
     <bean id="taskNotificationConfig" class="com.armedia.acm.plugins.task.model.TaskNotificationConfig" scope="refresh">
