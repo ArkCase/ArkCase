@@ -724,7 +724,6 @@
     </changeSet>
 
     <changeSet id="68-add-folder-link-flag" author="martin.jovanovski">
-        <dropColumn tableName="acm_folder" columnName="cm_folder_is_link"/>
         <addColumn tableName="acm_folder">
             <column name="cm_folder_is_link" type="VARCHAR(32)" defaultValue="false">
                 <constraints nullable="false"/>
