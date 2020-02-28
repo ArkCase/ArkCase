@@ -70,14 +70,12 @@
         <dependency>
             <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
             <artifactId>acm-task-plugin</artifactId>
-            <version>3.3.5-SNAPSHOT</version>
-            <scope>compile</scope>
+            <version>${acm.version}</version>
         </dependency>
         <dependency>
             <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
             <artifactId>acm-task-plugin</artifactId>
-            <version>3.3.5-SNAPSHOT</version>
-            <scope>compile</scope>
+            <version>${acm.version}</version>
         </dependency>
     </dependencies>
 

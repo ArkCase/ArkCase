@@ -65,7 +65,7 @@ public class CreateTaskFolderStructureInParentObjectUpdateExecutor implements Ac
             for (AcmTask task : allTasksFromSolr)
             {
                 String taskFolderName = "Task-" + task.getTitle() + "-" + task.getId();
-                if (getAcmFolderDao().findAnyFolderByName(taskFolderName) != null)
+                if (getAcmFolderDao().findAnyFolderByName(taskFolderName) == null)
                 {
                     getAcmTaskService().createTaskFolderStructureInParentObject(task);
                 }
@@ -73,7 +73,7 @@ public class CreateTaskFolderStructureInParentObjectUpdateExecutor implements Ac
         }
         catch (AcmCreateObjectFailedException | AcmUserActionFailedException | AcmObjectNotFoundException | LinkAlreadyExistException e)
         {
-                log.error("Error on creating Task Folder Structure in Parent Object");
+                log.error("Error on creating Task Folder Structure in Parent Object", e);
         }
     }
 

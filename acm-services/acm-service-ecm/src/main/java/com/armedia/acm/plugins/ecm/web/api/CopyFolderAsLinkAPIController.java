@@ -71,19 +71,18 @@ public class CopyFolderAsLinkAPIController
                                 @PathVariable("targetObjectType") String targetObjectType, @PathVariable("targetObjectId") Long targetObjectId,
                                 Authentication authentication, HttpSession session) throws AcmUserActionFailedException, LinkAlreadyExistException {
 
-        if (log.isInfoEnabled())
-        {
-            log.info("Folder with id: " + folderId + " will be a link into folder with id: " + dstFolderId);
-        }
+
+        log.debug("Folder with id: {} will be a link into folder with id: {}", folderId, dstFolderId);
+
         String ipAddress = (String) session.getAttribute(AcmFolderConstants.IP_ADDRESS_ATTRIBUTE);
         AcmFolder source = getFolderService().findById(folderId);
         AcmFolder dstFolder = getFolderService().findById(dstFolderId);
+
         try
         {
-            if (log.isInfoEnabled())
-            {
-                log.info("A Link for folder with id: " + folderId + " was successfully created to the location with id: " + dstFolderId);
-            }
+
+            log.debug("A Link for folder with id: {} was successfully created to the location with id: {}", folderId, dstFolderId);
+
             AcmFolder folder = getFolderService().copyFolderAsLink(source, dstFolder, targetObjectId, targetObjectType);
             getFolderEventPublisher().publishFolderCopiedAsLinkEvent(source, authentication, ipAddress, true);
             FolderDTO folderDTO = new FolderDTO();
@@ -94,11 +93,9 @@ public class CopyFolderAsLinkAPIController
         }
         catch (AcmObjectNotFoundException e)
         {
-            if (log.isErrorEnabled())
-            {
-                log.error("Exception occurred while trying to copy folder with id: " + folderId + " to the location with id:" + dstFolderId
-                        + "  " + e.getMessage(), e);
-            }
+
+            log.error("Exception occurred while trying to copy folder with id: {} to the location with id: {}" + e.getMessage(), folderId, dstFolderId, e);
+
             getFolderEventPublisher().publishFolderCopiedAsLinkEvent(source, authentication, ipAddress, false);
             throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_COPY_FOLDER_AS_LINK, AcmFolderConstants.OBJECT_FOLDER_TYPE,
                     source.getId(), "Exception occurred while trying to copy folder " + e.getMessage(), e);
