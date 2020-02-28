@@ -74,8 +74,8 @@
                             <div class="col-sm-2 form-group">
                                 <label translate>costTracking.comp.newCostsheet.cost.amount</label>
                                 <span class="required-asterisk">*</span>
-                                <input type="number" step=".01" class="form-control" ng-model="cost.value"
-                                        ng-blur="updateBalance(costsheet.costs)" required />
+                                <input type="text" format-currency step=".01" class="form-control" ng-model="cost.value"
+                                       ng-blur="updateBalance(costsheet.costs)" required />
                             </div>
                             <div class="col-sm-2 form-group">
                                 <label class="control-label">&nbsp;</label>
@@ -100,7 +100,7 @@
                                     placeholder="{{'costTracking.comp.newCostsheet.cost.balance' | translate}}" />
                         </div>
                         <div class="col-sm-2 form-group">
-                            <input readonly class="input-md form-control" ng-value="sumAmount | number:2" />
+                            <span class="input-md form-control">${{sumAmount | number:2}}</span>
                         </div>
                     </div>
                 </div>
