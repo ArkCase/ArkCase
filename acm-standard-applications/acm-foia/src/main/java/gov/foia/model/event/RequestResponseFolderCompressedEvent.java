@@ -42,19 +42,36 @@ public class RequestResponseFolderCompressedEvent extends AcmEvent
     {
         super(source);
 
-        if(source instanceof FOIARequest)
+        if (source instanceof FOIARequest)
         {
-            FOIARequest foiaRequest = (FOIARequest)source;
-
-            setObjectId(foiaRequest.getId());
-            setObjectType(foiaRequest.getObjectType());
-            setUserId(AuthenticationUtils.getUsername());
-            setIpAddress(AuthenticationUtils.getUserIpAddress());
-            setEventType(EVENT_TYPE);
-            setEventDate(new Date());
-            setSucceeded(true);
-            setIpAddress(ipAddress);
+            setBaseProperties(source, ipAddress);
+            setEventDescription("In Full");
         }
+    }
+
+    public RequestResponseFolderCompressedEvent(Object source, int pageCount, String ipAddress)
+    {
+        super(source);
+
+        if (source instanceof FOIARequest)
+        {
+            setBaseProperties(source, ipAddress);
+            setEventDescription("Limited to " + pageCount + " pages");
+        }
+    }
+
+    private void setBaseProperties(Object source, String ipAddress)
+    {
+        FOIARequest foiaRequest = (FOIARequest) source;
+
+        setObjectId(foiaRequest.getId());
+        setObjectType(foiaRequest.getObjectType());
+        setUserId(AuthenticationUtils.getUsername());
+        setIpAddress(AuthenticationUtils.getUserIpAddress());
+        setEventType(EVENT_TYPE);
+        setEventDate(new Date());
+        setSucceeded(true);
+        setIpAddress(ipAddress);
     }
 
     @Override

@@ -58,7 +58,7 @@ public class RequestResponseFolderAPIController
     @PreAuthorize("hasPermission(#requestId, 'CASE_FILE', 'saveCase')")
     @RequestMapping(value = "/{caseId}/compressAndSendResponseFolder", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<?> compressAndSendResponseFolderToPortal(@PathVariable("caseId") Long requestId, Authentication authentication)
+    public ResponseEntity compressAndSendResponseFolderToPortal(@PathVariable("caseId") Long requestId, Authentication authentication)
             throws AcmObjectNotFoundException, AcmUserActionFailedException, ConversionException, AcmFolderException
     {
         try
