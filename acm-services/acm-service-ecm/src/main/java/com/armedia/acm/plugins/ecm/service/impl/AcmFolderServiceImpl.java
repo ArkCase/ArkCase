@@ -1338,12 +1338,12 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     {
         for (AcmObject obj : folderChildren)
         {
-            if (EcmFileConstants.OBJECT_FILE_TYPE.equals(obj.getObjectType().toUpperCase()))
+            if (EcmFileConstants.OBJECT_FILE_TYPE.equalsIgnoreCase(obj.getObjectType()))
             {
                 fileService.copyFile(obj.getId(), destinationFolder, containerOfCopy);
 
             }
-            else if (EcmFileConstants.OBJECT_FOLDER_TYPE.equals(obj.getObjectType().toUpperCase()))
+            else if (EcmFileConstants.OBJECT_FOLDER_TYPE.equalsIgnoreCase(obj.getObjectType()))
             {
                 copyFolderInnerStructure(obj.getId(), containerOfCopy, destinationFolder);
             }
@@ -1500,7 +1500,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         List<AcmObject> folderChildren = getFolderChildren(folder.getId());
 
         List<EcmFile> files = folderChildren.stream()
-                .filter(c -> OBJECT_FILE_TYPE.equals(c.getObjectType().toUpperCase()))
+                .filter(c -> OBJECT_FILE_TYPE.equalsIgnoreCase(c.getObjectType()))
                 .map(c -> ((EcmFile) c))
                 .collect(Collectors.toList());
 
@@ -1517,7 +1517,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         }
 
         folderChildren.stream()
-                .filter(c -> OBJECT_FOLDER_TYPE.equals(c.getObjectType().toUpperCase()))
+                .filter(c -> OBJECT_FOLDER_TYPE.equalsIgnoreCase(c.getObjectType()))
                 .map(c -> ((AcmFolder) c))
                 .forEach(this::removeLinksFromFilesInFolder);
 

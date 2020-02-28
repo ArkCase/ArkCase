@@ -75,7 +75,7 @@ public class ResponseFolderCompressorService implements ApplicationEventPublishe
 
         String compressFileName = "";
 
-        if (getAcmFolderService().getFolderChildren(responseFolderId).size() <= 0)
+        if (getAcmFolderService().getFolderChildren(responseFolderId).isEmpty())
         {
             return compressFileName;
         }
@@ -84,12 +84,13 @@ public class ResponseFolderCompressorService implements ApplicationEventPublishe
         {
             List<Long> compressFileIds = getFilesForLimitedRelease(responseFolderId);
             compressFileName = compressor.compressFiles(compressFileIds);
+            publishLimitedResponseFolderCompressedEvent(request, getFoiaConfig().getLimitedDeliveryToSpecificPageCount());
         }
         else
         {
             compressFileName = compressor.compressFolder(responseFolderId);
+            publishResponseFolderCompressedEvent(request);
         }
-        publishResponseFolderCompressedEvent(request);
         return compressFileName;
     }
 
@@ -124,6 +125,13 @@ public class ResponseFolderCompressorService implements ApplicationEventPublishe
     private void publishResponseFolderCompressedEvent(CaseFile source)
     {
         RequestResponseFolderCompressedEvent event = new RequestResponseFolderCompressedEvent(source,
+                AuthenticationUtils.getUserIpAddress());
+        applicationEventPublisher.publishEvent(event);
+    }
+
+    private void publishLimitedResponseFolderCompressedEvent(CaseFile source, int pageCount)
+    {
+        RequestResponseFolderCompressedEvent event = new RequestResponseFolderCompressedEvent(source, pageCount,
                 AuthenticationUtils.getUserIpAddress());
         applicationEventPublisher.publishEvent(event);
     }
