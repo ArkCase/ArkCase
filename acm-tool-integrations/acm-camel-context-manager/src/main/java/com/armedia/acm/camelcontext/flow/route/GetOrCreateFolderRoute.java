@@ -34,6 +34,7 @@ import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;
 import org.apache.camel.component.cmis.CamelCMISActions;
 import org.apache.camel.component.cmis.CamelCMISConstants;
+import org.apache.camel.component.cmis.exception.CamelCmisObjectNotFoundException;
 import org.apache.chemistry.opencmis.commons.PropertyIds;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisObjectNotFoundException;
 import org.apache.logging.log4j.LogManager;
@@ -60,7 +61,7 @@ public class GetOrCreateFolderRoute extends ArkCaseAbstractRoute
                     throw new ArkCaseFileRepositoryException(exception);
                 });
 
-        onException(CmisObjectNotFoundException.class).handled(true)
+        onException(CamelCmisObjectNotFoundException.class).handled(true)
                 .process(exchange -> {
                     String path = (String) routeProperties.get(PropertyIds.PATH);
                     String name = path.substring(path.lastIndexOf("/") + 1);

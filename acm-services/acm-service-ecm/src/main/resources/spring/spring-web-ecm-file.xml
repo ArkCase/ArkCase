@@ -112,6 +112,11 @@
         <property name="folderEventPublisher" ref="folderEventPublisher"/>
     </bean>
 
+    <bean id="copyFolderAsLinkAPIController" class="com.armedia.acm.plugins.ecm.web.api.CopyFolderAsLinkAPIController">
+        <property name="folderService" ref="acmFolderService"/>
+        <property name="folderEventPublisher" ref="folderEventPublisher"/>
+    </bean>
+
     <bean id="createFolderByPathAPIController" class="com.armedia.acm.plugins.ecm.web.api.CreateFolderByPathAPIController">
         <property name="containerDao" ref="acmContainerFolderDao"/>
         <property name="folderService" ref="acmFolderService"/>
