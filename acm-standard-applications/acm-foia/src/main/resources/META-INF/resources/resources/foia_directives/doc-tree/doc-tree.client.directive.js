@@ -214,28 +214,16 @@ angular
                 }
 
 
-                function saveCaseAndGenerateZipResponse() {
+                function saveCase() {
                     var saveCasePromise = $q.defer();
                     DocTree.scope.$bus.publish('ACTION_SAVE_CASE', {
                         returnAction: "CASE_SAVED"
                     });
                     var subscription = DocTree.scope.$bus.subscribe('CASE_SAVED', function (objectInfo) {
-                        //after case is saved we are going to compress and send folder
-                        RequestResponseFolderService.compressAndSendResponseFolder(objectInfo.id).then(
-                            function (response) {
-                                saveCasePromise.resolve();
-                                MessageService.succsessAction();
-                            },
-                            function (reason) {
-                                MessageService.errorAction();
-                            });
-                    });
-
-                    //when case file is saved and we get next possible queue, unsubscribe
-                    saveCasePromise.promise.then(function () {
+                        saveCasePromise.resolve();
                         DocTree.scope.$bus.unsubscribe(subscription);
                     });
-
+                    
                     return saveCasePromise.promise;
                 }
 
@@ -572,7 +560,7 @@ angular
 
                         return false;
                     },
-                    isNodeInResponseFolder : function(node) {
+                    isNodeInResponseFolder: function (node) {
                         if (node.parent == null) {
                             return false;
                         }
@@ -1999,7 +1987,15 @@ angular
                                             var deferred = $q.defer();
                                             openLimitedPageReleaseModal(deferred);
                                             deferred.promise.then(function () {
-                                                saveCaseAndGenerateZipResponse();
+                                                saveCase().then(function () {
+                                                    RequestResponseFolderService.compressAndSendResponseFolder(objectInfo.id).then(
+                                                        function (response) {
+                                                            MessageService.succsessAction();
+                                                        },
+                                                        function (reason) {
+                                                            MessageService.errorAction();
+                                                        });
+                                                });
                                             });
                                         } else {
                                             RequestResponseFolderService.compressAndSendResponseFolder(objectInfo.id).then(

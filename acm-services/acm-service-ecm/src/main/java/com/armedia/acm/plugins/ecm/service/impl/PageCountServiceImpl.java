@@ -46,12 +46,12 @@ public class PageCountServiceImpl implements PageCountService
 {
     private transient final Logger log = LogManager.getLogger(getClass());
 
-    private final String MIME_TYPE_PDF = "application/pdf";
-    private final String MIME_TYPE_DOC = "application/msword";
-    private final String MIME_TYPE_DOCX = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
-    private final String MIME_TYPE_PPTX = "application/vnd.openxmlformats-officedocument.presentationml.presentation";
+    private final static String MIME_TYPE_PDF = "application/pdf";
+    private final static String MIME_TYPE_DOC = "application/msword";
+    private final static String MIME_TYPE_DOCX = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+    private final static String MIME_TYPE_PPTX = "application/vnd.openxmlformats-officedocument.presentationml.presentation";
 
-    private final int DEFAULT_NUMBER_OF_PAGES = 1;
+    private final static int DEFAULT_NUMBER_OF_PAGES = 1;
 
     @Override
     @Deprecated
@@ -118,19 +118,25 @@ public class PageCountServiceImpl implements PageCountService
     private int getNumberOfPagesDocFile(File file) throws IOException
     {
         HWPFDocument wordDoc = new HWPFDocument(new FileInputStream(file));
-        return wordDoc.getSummaryInformation().getPageCount();
+        int numberOfPages = wordDoc.getSummaryInformation().getPageCount();
+        wordDoc.close();
+        return numberOfPages;
     }
 
     private int getNumberOfPagesDocxFile(File file) throws IOException
     {
         XWPFDocument wordDocx = new XWPFDocument(new FileInputStream(file));
-        return wordDocx.getProperties().getExtendedProperties().getUnderlyingProperties().getPages();
+        int numberOfPages = wordDocx.getProperties().getExtendedProperties().getUnderlyingProperties().getPages();
+        wordDocx.close();
+        return numberOfPages;
     }
 
     private int getNumberOfPagesPptxFile(File file) throws IOException
     {
         XMLSlideShow pptxSlideShow = new XMLSlideShow(new FileInputStream(file));
-        return pptxSlideShow.getSlides().size();
+        int numberOfPages = pptxSlideShow.getSlides().size();
+        pptxSlideShow.close();
+        return numberOfPages;
     }
 
 }
