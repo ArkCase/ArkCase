@@ -64,10 +64,11 @@ public class CreateTaskFolderStructureInParentObjectUpdateExecutor implements Ac
         {
             for (AcmTask task : allTasksFromSolr)
             {
-                String taskFolderName = "Task-" + task.getTitle() + "-" + task.getId();
-                if (getAcmFolderDao().findAnyFolderByName(taskFolderName) == null)
-                {
-                    getAcmTaskService().createTaskFolderStructureInParentObject(task);
+                if (task .getParentObjectId() != null) {
+                    String taskFolderName = "Task-" + task.getTitle() + "-" + task.getId();
+                    if (getAcmFolderDao().findAnyFolderByName(taskFolderName) == null) {
+                        getAcmTaskService().createTaskFolderStructureInParentObject(task);
+                    }
                 }
             }
         }
