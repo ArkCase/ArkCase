@@ -45,7 +45,7 @@
                 <div class="row">
                     <div class="col-xs-12 col-md-4">
                         <span class="h4 font-bold">
-                            {{objectInfo.defaultIdentification.identificationType || 'common.value.unknown' | translate}}
+                            {{objectInfo.defaultIdentification.identificationType.toUpperCase() || 'common.value.unknown' | translate}}
                         </span><br>
                         <small class="text-muted"><span translate>people.comp.info.identification.type</span></small>
                     </div>
