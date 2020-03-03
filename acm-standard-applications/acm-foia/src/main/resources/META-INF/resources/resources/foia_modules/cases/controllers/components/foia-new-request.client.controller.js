@@ -462,6 +462,7 @@ angular.module('cases').controller(
                 RequestsService.getRequestByNumber(param).$promise.then(function (originalRequest) {
                     if (originalRequest.status === 'Released') {
                         $scope.config.data.details = originalRequest.details;
+                        $scope.config.data.title = originalRequest.title;
                         $scope.config.data.requestCategory = originalRequest.requestCategory;
                         $scope.config.data.deliveryMethodOfResponse = originalRequest.deliveryMethodOfResponse;
                         $scope.config.data.originator.person.addresses[0].streetAddress = originalRequest.originator.person.addresses[0].streetAddress;
