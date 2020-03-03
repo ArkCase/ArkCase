@@ -582,6 +582,13 @@ public class DefaultFolderCompressor implements FolderCompressor, ApplicationEve
         return false;
     }
 
+    @Override
+    public List<EcmFile> filterConvertedFiles(List<EcmFile> files)
+    {
+        List<AcmObject> objects = files.stream().map(obj -> (AcmObject) obj).collect(Collectors.toList());
+        return files.stream().filter(f -> !isConverted(f, objects)).collect(Collectors.toList());
+    }
+
     /**
      * @param
      * @param files
