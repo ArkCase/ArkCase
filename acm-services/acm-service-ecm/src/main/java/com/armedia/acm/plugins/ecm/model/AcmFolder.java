@@ -317,11 +317,13 @@ public class AcmFolder implements AcmEntity, Serializable, AcmObject, AcmAssigne
         this.restricted = restricted;
     }
 
-    public Boolean isLink() {
+    public Boolean isLink()
+    {
         return link;
     }
 
-    public void setLink(Boolean link) {
+    public void setLink(Boolean link)
+    {
         this.link = link;
     }
 
