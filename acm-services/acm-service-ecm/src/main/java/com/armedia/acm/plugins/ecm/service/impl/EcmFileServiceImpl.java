@@ -639,7 +639,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             throws AcmListObjectsFailedException
     {
         AcmFolder folder = getFolderDao().find(folderId);
-        if (folder.isLink()) {
+        if (folder.isLink())
+        {
             folder = getFolderLinkTarget(folder);
             folderId = folder.getId();
         }
@@ -850,7 +851,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             throws AcmObjectNotFoundException, AcmListObjectsFailedException, AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         AcmFolder folder = getFolderDao().find(folderId);
-        if (folder.isLink()) {
+        if (folder.isLink())
+        {
             folder = getFolderLinkTarget(folder);
             folderId = folder.getId();
         }
@@ -883,7 +885,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             String filterQuery, int startRow, int maxRows, String sortBy, String sortDirection) throws AcmListObjectsFailedException
     {
         AcmFolder folder = getFolderDao().find(folderId);
-        if (folder.isLink()) {
+        if (folder.isLink())
+        {
             folder = getFolderLinkTarget(folder);
             folderId = folder.getId();
         }
@@ -931,7 +934,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             String sortDirection, int startRow, int maxRows)
     {
         AcmFolder folder = getFolderDao().find(folderId);
-        if (folder.isLink()) {
+        if (folder.isLink())
+        {
             folder = getFolderLinkTarget(folder);
             folderId = folder.getId();
         }
@@ -1032,7 +1036,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         {
             AcmFolder folder = folderDao.find(dstFolderId);
 
-            if (folder.isLink()) {
+            if (folder.isLink())
+            {
                 folder = getFolderLinkTarget(folder);
             }
 
@@ -1062,7 +1067,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, fileId, "File or Destination folder not found", null);
         }
 
-        if (targetFolder.isLink()) {
+        if (targetFolder.isLink())
+        {
             targetFolder = getFolderLinkTarget(targetFolder);
         }
         String internalFileName = getFolderAndFilesUtils().createUniqueIdentificator(file.getFileName());
@@ -2005,7 +2011,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                 folder = getFolderLinkTarget(folder);
             }
 
-
             AcmContainer container = getOrCreateContainer(targetObjectType, targetObjectId);
 
             return copyFileAsLink(fileId, folder, container);
@@ -2123,10 +2128,10 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
     }
 
-    private AcmFolder getFolderLinkTarget(AcmFolder folderLink) {
+    private AcmFolder getFolderLinkTarget(AcmFolder folderLink)
+    {
         return getFolderDao().findByCmisFolderId(folderLink.getCmisFolderId());
     }
-
 
     public EcmFileTransaction getEcmFileTransaction()
     {
