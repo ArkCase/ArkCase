@@ -72,7 +72,8 @@ public class CreateBusinessProcessTasksAPIController
     public List<AcmTask> reviewDocuments(@RequestBody AcmTask in,
             @RequestParam(value = "businessProcessName", defaultValue = "acmDocumentWorkflow") String businessProcessName,
             Authentication authentication, HttpSession httpSession)
-            throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException, LinkAlreadyExistException {
+            throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException, LinkAlreadyExistException
+    {
         try
         {
             List<AcmTask> acmTasks = null;
@@ -112,6 +113,11 @@ public class CreateBusinessProcessTasksAPIController
 
             List<AcmTask> acmTasks = getTaskService().startReviewDocumentsWorkflow(task, businessProcessType, authentication,
                     filesToUpload);
+            // Add participant to folder links
+            for (AcmTask acmTask : acmTasks)
+            {
+                getTaskService().setParticipantsToTaskFolderLink(acmTask);
+            }
             return acmTasks;
 
         }
@@ -157,5 +163,5 @@ public class CreateBusinessProcessTasksAPIController
     {
         this.taskService = taskService;
     }
-    
+
 }

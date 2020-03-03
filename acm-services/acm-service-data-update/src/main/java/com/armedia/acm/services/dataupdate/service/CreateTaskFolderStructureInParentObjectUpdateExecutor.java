@@ -49,7 +49,8 @@ public class CreateTaskFolderStructureInParentObjectUpdateExecutor implements Ac
     private TaskDao taskDao;
 
     @Override
-    public String getUpdateId() {
+    public String getUpdateId()
+    {
         return "create_task_folder_structure_in_parent_object";
     }
 
@@ -64,40 +65,49 @@ public class CreateTaskFolderStructureInParentObjectUpdateExecutor implements Ac
         {
             for (AcmTask task : allTasksFromSolr)
             {
-                String taskFolderName = "Task-" + task.getTitle() + "-" + task.getId();
-                if (getAcmFolderDao().findAnyFolderByName(taskFolderName) == null)
+                if (task.getParentObjectId() != null)
                 {
-                    getAcmTaskService().createTaskFolderStructureInParentObject(task);
+                    String taskFolderName = "Task-" + task.getTitle() + "-" + task.getId();
+                    if (getAcmFolderDao().findAnyFolderByName(taskFolderName) == null)
+                    {
+                        getAcmTaskService().createTaskFolderStructureInParentObject(task);
+                    }
                 }
             }
         }
         catch (AcmCreateObjectFailedException | AcmUserActionFailedException | AcmObjectNotFoundException | LinkAlreadyExistException e)
         {
-                log.error("Error on creating Task Folder Structure in Parent Object", e);
+            log.error("Error on creating Task Folder Structure in Parent Object", e);
         }
     }
 
-    public AcmTaskService getAcmTaskService() {
+    public AcmTaskService getAcmTaskService()
+    {
         return acmTaskService;
     }
 
-    public void setAcmTaskService(AcmTaskService acmTaskService) {
+    public void setAcmTaskService(AcmTaskService acmTaskService)
+    {
         this.acmTaskService = acmTaskService;
     }
 
-    public AcmFolderDao getAcmFolderDao() {
+    public AcmFolderDao getAcmFolderDao()
+    {
         return acmFolderDao;
     }
 
-    public void setAcmFolderDao(AcmFolderDao acmFolderDao) {
+    public void setAcmFolderDao(AcmFolderDao acmFolderDao)
+    {
         this.acmFolderDao = acmFolderDao;
     }
 
-    public TaskDao getTaskDao() {
+    public TaskDao getTaskDao()
+    {
         return taskDao;
     }
 
-    public void setTaskDao(TaskDao taskDao) {
+    public void setTaskDao(TaskDao taskDao)
+    {
         this.taskDao = taskDao;
     }
 }

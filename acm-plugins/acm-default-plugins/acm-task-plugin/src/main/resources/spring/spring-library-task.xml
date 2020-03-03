@@ -139,6 +139,7 @@
         <property name="fileWorkflowBusinessRule" ref="fileWorkflowBusinessRule"/>
         <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
         <property name="translationService" ref="translationService" />
+        <property name="fileParticipantService" ref="fileParticipantService"/>
     </bean>
 
     <bean id="acmApplicationTaskEventHandler" class="com.armedia.acm.plugins.task.service.impl.AcmApplicationTaskEventHandler">
