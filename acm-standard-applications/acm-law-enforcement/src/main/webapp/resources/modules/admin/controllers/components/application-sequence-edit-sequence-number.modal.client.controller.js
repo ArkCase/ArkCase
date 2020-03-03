@@ -12,7 +12,7 @@ angular.module('admin').controller('Admin.SequenceEditSequenceNumberController',
             $scope.sequenceEntity.sequencePartValue = data.data.sequencePartValue;
 
         } else {
-            MessageService.errorAction();;
+            document.getElementById("sequencePartValue").disabled = true;
         }
     });
 
