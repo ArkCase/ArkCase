@@ -112,6 +112,10 @@ public class CreateBusinessProcessTasksAPIController
 
             List<AcmTask> acmTasks = getTaskService().startReviewDocumentsWorkflow(task, businessProcessType, authentication,
                     filesToUpload);
+            //Add participant to folder links
+            for (AcmTask acmTask : acmTasks) {
+                getTaskService().setParticipantsToTaskFolderLink(acmTask);
+            }
             return acmTasks;
 
         }

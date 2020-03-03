@@ -1686,8 +1686,6 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         folderLink.setName(newFolderName);
         folderLink.setLink(true);
 
-        getFileParticipantService().setFolderParticipantsFromParentFolder(folderLink);
-
         AcmFolder folder = getFolderDao().save(folderLink);
 
         return folder;

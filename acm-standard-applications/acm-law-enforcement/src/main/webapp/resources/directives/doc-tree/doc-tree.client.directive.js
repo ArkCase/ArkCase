@@ -3657,6 +3657,7 @@ angular.module('directives').directive(
                                 nodeData.data.creator = Util.goodValue(folderData.creator);
                                 nodeData.data.modified = Util.goodValue(folderData.modified);
                                 nodeData.data.status = Util.goodValue(folderData.status);
+                                nodeData.data.link = Util.goodValue(folderData.link);
 
                             }
                             return nodeData;

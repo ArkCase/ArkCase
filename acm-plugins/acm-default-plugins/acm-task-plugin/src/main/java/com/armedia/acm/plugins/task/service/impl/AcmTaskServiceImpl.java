@@ -48,6 +48,7 @@ import com.armedia.acm.plugins.ecm.exception.LinkAlreadyExistException;
 import com.armedia.acm.plugins.ecm.model.*;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.plugins.ecm.service.impl.EcmFileParticipantService;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 import com.armedia.acm.plugins.ecm.workflow.EcmFileWorkflowConfiguration;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
@@ -134,6 +135,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
     private FileWorkflowBusinessRule fileWorkflowBusinessRule;
     private RuntimeService activitiRuntimeService;
     private TranslationService translationService;
+    private EcmFileParticipantService fileParticipantService;
 
     @Override
     public List<BuckslipProcess> getBuckslipProcessesForObject(String objectType, Long objectId)
@@ -800,6 +802,19 @@ public class AcmTaskServiceImpl implements AcmTaskService
             getEcmFileService().copyFileAsLink(documentUnderReview.getFileId(), parentObjectId, parentObjectType, dstFolderId);
         }
     }
+    @Override
+    public void setParticipantsToTaskFolderLink(AcmTask task) throws AcmObjectNotFoundException {
+
+        AcmFolder folder = task.getContainer().getFolder();
+        List<AcmFolder> folderLinks = getAcmFolderService().getFolderLinks(folder.getId());
+        if (!folderLinks.isEmpty())
+        {
+            for (AcmFolder folderLink : folderLinks)
+            {
+                getFileParticipantService().setFolderParticipantsFromParentFolder(folderLink);
+            }
+        }
+    }
 
     private Long getBusinessProcessIdFromSolr(String objectType, Long objectId, Authentication authentication)
     {
@@ -975,5 +990,13 @@ public class AcmTaskServiceImpl implements AcmTaskService
     public void setTranslationService(TranslationService translationService)
     {
         this.translationService = translationService;
+    }
+
+    public EcmFileParticipantService getFileParticipantService() {
+        return fileParticipantService;
+    }
+
+    public void setFileParticipantService(EcmFileParticipantService fileParticipantService) {
+        this.fileParticipantService = fileParticipantService;
     }
 }
