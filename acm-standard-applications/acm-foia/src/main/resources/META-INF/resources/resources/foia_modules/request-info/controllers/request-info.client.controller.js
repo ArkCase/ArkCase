@@ -511,6 +511,9 @@ angular.module('request-info').controller(
                             availableQueues.push("Complete");
                         }
                     }
+                    if ($scope.objectInfo.queue.name === 'Hold') {
+                        availableQueues = ["Complete"];
+                    }
                     availableQueues = availableQueues.map(function (item) {
                         var tmpObj = {};
                         tmpObj.name = item;
@@ -1091,6 +1094,10 @@ angular.module('request-info').controller(
                             availableQueues.push("Complete");
                         }
                     }
+                    
+                    if ($scope.objectInfo.queue.name === 'Hold') {
+                        availableQueues = ["Complete"];
+                    }
 
                     $scope.availableQueues = availableQueues;
                     $scope.defaultNextQueue = defaultNextQueue;
@@ -1098,7 +1105,11 @@ angular.module('request-info').controller(
                     $scope.defaultDenyQueue = defaultDenyQueue;
 
                     if (name === 'Complete') {
-                        nextQueue = $scope.defaultNextQueue;
+                        if ($scope.objectInfo.queue.name === 'Hold') {
+                            nextQueue = $scope.objectInfo.previousQueue.name;
+                        } else {
+                            nextQueue = $scope.defaultNextQueue;   
+                        }
                     } else if (name === 'Return') {
                         nextQueue = $scope.defaultReturnQueue;
                     } else if (name === 'Deny') {
