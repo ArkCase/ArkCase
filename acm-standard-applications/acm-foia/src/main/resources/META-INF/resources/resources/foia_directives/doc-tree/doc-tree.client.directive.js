@@ -206,7 +206,7 @@ angular
                     });
 
                     modalInstance.result.then(function (limitedDeliveryFlag) {
-                        DocTree.objectInfo.limitedDeliveryFlag = limitedDeliveryFlag;
+                        DocTree.limitedDeliveryFlag = limitedDeliveryFlag;
                         deferred.resolve();
                     }, function () {
                         deferred.reject();
@@ -214,16 +214,17 @@ angular
                 }
 
 
-                function saveCase() {
+                function saveCaseAndSelectLimitedDeliveryFlag(limitedDeliveryFlag) {
                     var saveCasePromise = $q.defer();
                     DocTree.scope.$bus.publish('ACTION_SAVE_CASE', {
-                        returnAction: "CASE_SAVED"
+                        returnAction: "CASE_SAVED",
+                        limitedDeliveryFlag: limitedDeliveryFlag
                     });
                     var subscription = DocTree.scope.$bus.subscribe('CASE_SAVED', function (objectInfo) {
                         saveCasePromise.resolve();
                         DocTree.scope.$bus.unsubscribe(subscription);
                     });
-                    
+
                     return saveCasePromise.promise;
                 }
 
@@ -1987,7 +1988,7 @@ angular
                                             var deferred = $q.defer();
                                             openLimitedPageReleaseModal(deferred);
                                             deferred.promise.then(function () {
-                                                saveCase().then(function () {
+                                                saveCaseAndSelectLimitedDeliveryFlag(DocTree.limitedDeliveryFlag).then(function () {
                                                     RequestResponseFolderService.compressAndSendResponseFolder(objectInfo.id).then(
                                                         function (response) {
                                                             MessageService.succsessAction();
