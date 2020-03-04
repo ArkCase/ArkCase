@@ -461,19 +461,28 @@ angular.module('cases').controller(
                 param.caseNumber = $scope.config.data.originalRequestNumber;
                 RequestsService.getRequestByNumber(param).$promise.then(function (originalRequest) {
                     if (originalRequest.status === 'Released') {
+                        $scope.personOriginator = originalRequest.originator.person;
+                        $scope.confirmationEmail = originalRequest.originator.person.defaultEmail.value;
                         $scope.config.data.details = originalRequest.details;
                         $scope.config.data.title = originalRequest.title;
                         $scope.config.data.requestCategory = originalRequest.requestCategory;
                         $scope.config.data.deliveryMethodOfResponse = originalRequest.deliveryMethodOfResponse;
-                        $scope.config.data.originator.person.addresses[0].streetAddress = originalRequest.originator.person.addresses[0].streetAddress;
-                        $scope.config.data.originator.person.addresses[0].streetAddress2 = originalRequest.originator.person.addresses[0].streetAddress2;
-                        $scope.config.data.originator.person.addresses[0].city = originalRequest.originator.person.addresses[0].city;
-                        $scope.config.data.originator.person.addresses[0].state = originalRequest.originator.person.addresses[0].state;
-                        $scope.config.data.originator.person.addresses[0].country = originalRequest.originator.person.addresses[0].country;
-                        $scope.config.data.originator.person.addresses[0].zip = originalRequest.originator.person.addresses[0].zip;
+                        $scope.appealPopulated = true;
                     }
                 });
+                $scope.cleanPopulatedAppeal();
             };
+            $scope.cleanPopulatedAppeal = function() {
+                if ($scope.config.data != null) {
+                    if ($scope.config.data.requestType == "New Request" || !$scope.config.data.originalRequestNumber) {
+                        $scope.personOriginator = null;
+                        $scope.confirmationEmail = null;
+                        $scope.appealPopulated = false;
+                        $scope.config.data.details = null;
+                        $scope.config.data.title = null;
+                    }
+                }
+            };;
 
             $scope.requestInReleaseStatusSearch = function () {
                 var modalInstance = $modal.open({
