@@ -30,14 +30,10 @@ package gov.foia.service;
  * #L%
  */
 import static org.easymock.EasyMock.anyObject;
-import static org.easymock.EasyMock.anyString;
 import static org.easymock.EasyMock.capture;
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
 
-import com.armedia.acm.configuration.service.ConfigurationPropertyService;
 import com.armedia.acm.pdf.service.PdfService;
 import com.armedia.acm.pdf.service.PdfServiceImpl;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
@@ -48,24 +44,16 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
-import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
-import com.armedia.acm.services.email.service.TemplatingEngine;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.service.NotificationSender;
 import com.armedia.acm.services.users.dao.UserDao;
-import com.armedia.acm.services.users.model.AcmUser;
 
-import gov.foia.model.FOIADocumentDescriptor;
-import gov.foia.model.FOIAObject;
-import gov.foia.model.FOIARequest;
-import gov.foia.model.FoiaConfiguration;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.springframework.security.core.Authentication;
 
 import java.io.File;
 import java.util.Arrays;
@@ -74,6 +62,10 @@ import java.util.List;
 import java.util.Map;
 
 import gov.foia.dao.FOIARequestDao;
+import gov.foia.model.FOIADocumentDescriptor;
+import gov.foia.model.FOIAObject;
+import gov.foia.model.FOIARequest;
+import gov.foia.model.FoiaConfiguration;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Aug 17, 2016
@@ -206,6 +198,7 @@ public class AcknowledgementDocumentServiceTest extends EasyMockSupport
         expect(mockedFoiaConfiguration.getReceivedDateEnabled()).andReturn(false);
         expect(mockedFoiaConfigurationService.readConfiguration()).andReturn(mockedFoiaConfiguration);
         expect(mockedFOIARequestFileDao.find(requestId)).andReturn(mockedRequest);
+        expect(mockedRequest.getPreviousQueue()).andReturn(null);
         expect(mockedRequest.getOriginator()).andReturn(mockedPersonAssociation);
         expect(mockedRequest.getCreator()).andReturn(userId);
         expect(mockedRequest.getObjectType()).andReturn("CASE_FILE");
