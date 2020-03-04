@@ -169,6 +169,10 @@ angular.module('cases').controller(
                     $scope.originalDueDate = objectInfo.dueDate;
                     $scope.extendedDueDate = undefined;
 
+                    if (conf != null && typeof conf.limitedDeliveryFlag !== 'undefined') {
+                        objectInfo.limitedDeliveryFlag = conf.limitedDeliveryFlag;
+                    }
+
                     promiseSaveInfo = CaseInfoService.saveFoiaRequestInfo(objectInfo);
                     promiseSaveInfo.then(function (caseInfo) {
                         if (conf != null && conf.returnAction) {
