@@ -1530,20 +1530,20 @@ angular.module('request-info').controller(
 
             // Release editing lock on window unload, if acquired
             $window.addEventListener('unload', function () {
-            	$scope.data = {
+                $scope.data = {
                         objectId: $scope.ecmFile.fileId,
                         objectType: ObjectService.ObjectTypes.FILE,
                         lockType: ObjectService.LockTypes.WRITE
                     };
 
                 var data = angular.toJson($scope.data);
-            	
+                
                 var url = 'api/v1/plugin/' + ObjectService.ObjectTypes.FILE + '/' + $scope.ecmFile.fileId + '/lock?lockType=' + ObjectService.LockTypes.WRITE;
                 
                 if ($scope.editingMode) {
-                	if("sendBeacon" in navigator)
+                        if("sendBeacon" in navigator)
                     {
-                		navigator.sendBeacon(url, data);
+                                navigator.sendBeacon(url, data);
                     } else {
                         var xmlhttp = new XMLHttpRequest();
                         xmlhttp.open("POST", url, false); //false - synchronous call
