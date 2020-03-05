@@ -45,10 +45,11 @@ import java.util.Map;
 /**
  * Created by dmiller on 11/7/2016.
  */
-public class CreateOrFindRecordFolderService extends AlfrescoService<String>
+public class CreateOrFindRecordFolderOrRecordCategoryService extends AlfrescoService<String>
 {
 
-    private final String service = "/s/api/type/rma%3arecordFolder/formprocessor";
+    private final String folderService = "/s/api/type/rma%3arecordFolder/formprocessor";
+    private final String categoryService = "/s/api/type/rma%3arecordCategory/formprocessor";
     private transient final Logger LOG = LogManager.getLogger(getClass());
     private EcmFileService ecmFileService;
 
@@ -70,12 +71,20 @@ public class CreateOrFindRecordFolderService extends AlfrescoService<String>
 
         Folder parentFolder = (Folder) context.get("parentFolder");
         String recordFolderName = (String) context.get("recordFolderName");
+        String type = (String) context.get("type");
 
         LOG.debug("Searching for folder {} under category folder {}", recordFolderName, parentFolder.getName());
 
         JSONObject createFolderPayload = buildPost(parentFolder, recordFolderName);
 
-        String url = baseUrl() + "/" + service;
+        String url = baseUrl();
+        if(type.equalsIgnoreCase("Record Category"))
+        {
+            url +=  "/"  + categoryService;
+        }
+        else {
+             url += "/" + folderService;
+        }
 
         HttpEntity<String> entity = buildRestEntity(createFolderPayload);
 
@@ -91,7 +100,7 @@ public class CreateOrFindRecordFolderService extends AlfrescoService<String>
         catch (HttpServerErrorException e)
         {
             LOG.debug("Error creating folder {} under {}, presumably it already exists, looking for it now.", recordFolderName,
-                    parentFolder.getName());
+                parentFolder.getName());
             String path = parentFolder.getPath() + "/" + recordFolderName;
             try
             {

@@ -110,7 +110,7 @@ public class CompleteRecordServiceIT
     @Qualifier("findFolderService")
     private AlfrescoService<Folder> findFolderService;
     @Autowired
-    @Qualifier("createOrFindRecordFolderService")
+    @Qualifier("createOrFindRecordFolderOrRecordCategoryService")
     private AlfrescoService<String> findRecordFolderService;
     @Autowired
     @Qualifier("moveToRecordFolderService")
