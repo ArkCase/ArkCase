@@ -27,7 +27,6 @@ package gov.foia.service;
  * #L%
  */
 
-
 import static gov.foia.model.FOIARequestUtils.extractRequestorEmailAddress;
 
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
@@ -39,14 +38,15 @@ import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.service.NotificationSender;
 import com.armedia.acm.services.users.dao.UserDao;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.core.io.Resource;
 
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
+import java.util.Objects;
 
 import gov.foia.dao.FOIARequestDao;
 import gov.foia.model.FOIAConstants;
@@ -76,38 +76,46 @@ public class AcknowledgementDocumentService
         if (!foiaConfigurationService.readConfiguration().getReceivedDateEnabled())
         {
             FOIARequest request = getRequestDao().find(requestId);
-            String emailAddress = extractRequestorEmailAddress(request.getOriginator().getPerson());
-            if (emailAddress != null && !emailAddress.isEmpty())
+            if (Objects.isNull(request.getPreviousQueue()))
             {
-                FOIADocumentDescriptor documentDescriptor = documentGeneratorService.getDocumentDescriptor(request, FOIAConstants.ACK);
-                EcmFile letter = getEcmFileDao().findForContainerAttachmentFolderAndFileType(request.getContainer().getId(), request.getContainer().getAttachmentFolder().getId(), documentDescriptor.getDoctype());
+                String emailAddress = extractRequestorEmailAddress(request.getOriginator().getPerson());
+                if (emailAddress != null && !emailAddress.isEmpty())
+                {
+                    FOIADocumentDescriptor documentDescriptor = documentGeneratorService.getDocumentDescriptor(request, FOIAConstants.ACK);
+                    EcmFile letter = getEcmFileDao().findForContainerAttachmentFolderAndFileType(request.getContainer().getId(),
+                            request.getContainer().getAttachmentFolder().getId(), documentDescriptor.getDoctype());
 
-                EcmFileVersion ecmFileVersion = letter.getVersions().stream()
-                        .filter(fv -> fv.getVersionTag().equals(letter.getActiveVersionTag())).findFirst().get();
+                    EcmFileVersion ecmFileVersion = letter.getVersions().stream()
+                            .filter(fv -> fv.getVersionTag().equals(letter.getActiveVersionTag())).findFirst().get();
 
-                Notification notification = new Notification();
-                notification.setTemplateModelName("requestDocumentAttached");
-                notification.setEmailAddresses(emailAddress);
-                notification.setAttachFiles(true);
-                notification.setFiles(Arrays.asList(ecmFileVersion));
-                notification.setParentId(requestId);
-                notification.setParentType(request.getObjectType());
-                notification.setTitle(String.format("%s %s", request.getRequestType(), request.getCaseNumber()));
-                notification.setUser(request.getCreator());
-                notificationDao.save(notification);
+                    Notification notification = new Notification();
+                    notification.setTemplateModelName("requestDocumentAttached");
+                    notification.setEmailAddresses(emailAddress);
+                    notification.setAttachFiles(true);
+                    notification.setFiles(Arrays.asList(ecmFileVersion));
+                    notification.setParentId(requestId);
+                    notification.setParentType(request.getObjectType());
+                    notification.setTitle(String.format("%s %s", request.getRequestType(), request.getCaseNumber()));
+                    notification.setUser(request.getCreator());
+                    notificationDao.save(notification);
+                }
             }
         }
     }
 
     public void generateAndUpload(String objectType, Long requestId) throws DocumentGeneratorException
     {
-        if (foiaConfigurationService.readConfiguration().getReceivedDateEnabled())
+        FOIARequest request = getRequestDao().find(requestId);
+        if (Objects.isNull(request.getPreviousQueue()))
         {
-            foiaQueueCorrespondenceService.handleRequestReceivedAcknowledgementLetter(requestId);
-        }
-        else
-        {
-            generateAndUploadACK(requestId);
+            if (foiaConfigurationService.readConfiguration().getReceivedDateEnabled())
+            {
+                foiaQueueCorrespondenceService.handleRequestReceivedAcknowledgementLetter(requestId);
+            }
+            else
+            {
+                generateAndUploadACK(requestId);
+            }
         }
     }
 
