@@ -81,11 +81,11 @@
                         <span class="required-asterisk">*</span>
                     </div>
                     <div class="col-sm-4">
-                        <select ng-model="personOriginator.title" id="prefix" name="prefix"
+                        <select ng-model="config.data.originator.person.title" id="prefix" name="prefix"
                                 ng-options="prefix.key as prefix.value | translate for prefix in prefixes"
                                 class="form-control input-md" required ng-disabled="appealPopulated">
                         </select>
-                        <span class="text-danger" ng-if="!personOriginator.title && formInvalid" translate>
+                        <span class="text-danger" ng-if="!config.data.originator.person.title && formInvalid" translate>
                             cases.newRequest.prefix.validation.error</span>
                     </div>
                 </div>
@@ -96,17 +96,17 @@
                     </div>
                     <div class="col-sm-4">
                         <input type="text" class="form-control" id="firstName" name="firstName"
-                                ng-model="personOriginator.givenName"
+                                ng-model="config.data.originator.person.givenName"
                                 placeholder="{{'cases.newRequest.firstName.placeholder' | translate}}"
                                 required="required" ng-disabled="appealPopulated">
-                        <span class="text-danger" ng-if="!personOriginator.givenName && formInvalid" translate>
+                        <span class="text-danger" ng-if="!config.data.originator.person.givenName && formInvalid" translate>
                                 cases.newRequest.firstName.validation.error</span>
                     </div>
                     <div class="col-sm-2">
                         <label for="middleName" translate>cases.newRequest.middleName.label</label>
                     </div>
                     <div class="col-sm-4">
-                        <input type="text" class="form-control" id="middleName" ng-model="personOriginator.middleName"
+                        <input type="text" class="form-control" id="middleName" ng-model="config.data.originator.person.middleName"
                                 placeholder="{{'cases.newRequest.middleName.placeholder' | translate}}" name="middleName" ng-disabled="appealPopulated">
                     </div>
                 </div>
@@ -116,17 +116,17 @@
                         <span class="required-asterisk">*</span>
                     </div>
                     <div class="col-sm-4">
-                        <input type="text" class="form-control" id="lastName" ng-model="personOriginator.familyName"
+                        <input type="text" class="form-control" id="lastName" ng-model="config.data.originator.person.familyName"
                                 placeholder="{{'cases.newRequest.lastName.placeholder' | translate}}" name="lastName"
                                 required="required" ng-disabled="appealPopulated">
-                        <span class="text-danger" ng-if="!personOriginator.familyName && formInvalid" translate>
+                        <span class="text-danger" ng-if="!config.data.originator.person.familyName && formInvalid" translate>
                                 cases.newRequest.lastName.validation.error</span>
                     </div>
                     <div class="col-sm-2">
                         <label for="position" translate>cases.newRequest.position.label</label>
                     </div>
                     <div class="col-sm-4">
-                        <input type="position" class="form-control" id="position" ng-model="personOriginator.position"
+                        <input type="position" class="form-control" id="position" ng-model="config.data.originator.person.position"
                                 placeholder="{{'cases.newRequest.position.placeholder' | translate}}" name="position" ng-disabled="appealPopulated">
                     </div>
                 </div>
@@ -137,11 +137,11 @@
                     </div>
                     <div class="col-sm-4 form-group">
                         <input type="text" class="form-control" id="phone" pattern="^\d{3}[\-]\d{3}[\-]\d{4}"
-                                ng-model="personOriginator.defaultPhone.value"
+                                ng-model="config.data.originator.person.defaultPhone.value"
                                 placeholder="{{'cases.newRequest.phone.placeholder' | translate}}" name="phone" required="required" ng-disabled="appealPopulated">
-                        <span class="text-danger" ng-if="!personOriginator.defaultPhone.value && formInvalid" translate>
+                        <span class="text-danger" ng-if="!config.data.originator.person.defaultPhone.value && formInvalid" translate>
                                 cases.newRequest.phone.validation.error</span>
-                        <span class="text-danger" ng-if="!personOriginator.defaultPhone.value && formInvalid && !phoneEmpty" translate>
+                        <span class="text-danger" ng-if="!config.data.originator.person.defaultPhone.value && formInvalid && !phoneEmpty" translate>
                                 cases.newRequest.phone.validation.errorInvalid</span>
                     </div>
                     <div class="col-sm-2 form-group">
@@ -160,15 +160,15 @@
                     </div>
                     <div class="col-sm-4">
                         <input type="text" class="form-control" id="email"
-                                ng-model="personOriginator.defaultEmail.value"
+                                ng-model="config.data.originator.person.defaultEmail.value"
                                 placeholder="{{'cases.newRequest.email.placeholder' | translate}}" name="email"
                                 pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
                                 ng-required="config.data.deliveryMethodOfResponse == 'Email'"
                                 ng-disabled="appealPopulated">
-                        <span class="text-danger" ng-if="config.data.deliveryMethodOfResponse == 'Email' && !personOriginator.defaultEmail.value"
+                        <span class="text-danger" ng-if="config.data.deliveryMethodOfResponse == 'Email' && !config.data.originator.person.defaultEmail.value"
                                 translate>
                                 cases.newRequest.email.validation.error</span>
-                        <span class="text-danger" ng-if="!personOriginator.defaultEmail.value && formInvalid && !emailEmpty" translate>
+                        <span class="text-danger" ng-if="!config.data.originator.person.defaultEmail.value && formInvalid && !emailEmpty" translate>
                                 cases.newRequest.email.validation.errorInvalid</span>
                     </div>
                     <div class="col-sm-2">
@@ -180,10 +180,10 @@
                                 placeholder="{{'cases.newRequest.confirmationEmail.placeholder' | translate}}" name="confirmationEmail"
                                 ng-required="config.data.deliveryMethodOfResponse == 'Email'"
                                 ng-disabled="appealPopulated">
-                        <span class="text-danger" ng-if="(confirmationEmail !== personOriginator.defaultEmail.value) && formInvalid && !confirmEmailEmpty" translate>
+                        <span class="text-danger" ng-if="(confirmationEmail !== config.data.originator.person.defaultEmail.value) && formInvalid && !confirmEmailEmpty" translate>
                                 cases.newRequest.confirmationEmail.validation.errorInvalid</span>
                         <span class="text-danger"
-                                ng-if="config.data.deliveryMethodOfResponse == 'Email' && (confirmationEmail !== personOriginator.defaultEmail.value)" translate>
+                                ng-if="config.data.deliveryMethodOfResponse == 'Email' && (confirmationEmail !== config.data.originator.person.defaultEmail.value)" translate>
                                 cases.newRequest.confirmationEmail.validation.error</span>
                     </div>
                 </div>
@@ -195,12 +195,12 @@
                     </div>
                     <div class="col-sm-4">
                         <input type="text" class="form-control" id="address1"
-                                ng-model="personOriginator.addresses[0].streetAddress"
+                                ng-model="config.data.originator.person.addresses[0].streetAddress"
                                 placeholder="{{'cases.newRequest.address.placeholder' | translate}}" name="address1"
                                 ng-required="config.data.deliveryMethodOfResponse == 'Mail'"
                                 ng-disabled="appealPopulated">
                         <span class="text-danger"
-                                ng-if="config.data.deliveryMethodOfResponse == 'Mail' && !personOriginator.addresses[0].streetAddress"
+                                ng-if="config.data.deliveryMethodOfResponse == 'Mail' && !config.data.originator.person.addresses[0].streetAddress"
                                 translate>
                                 cases.newRequest.address.validation.error</span>
                     </div>
@@ -210,7 +210,7 @@
                     </div>
                     <div class="col-sm-4">
                         <input type="text" class="form-control" id="address2"
-                                ng-model="personOriginator.addresses[0].streetAddress2"
+                                ng-model="config.data.originator.person.addresses[0].streetAddress2"
                                 placeholder="{{'cases.newRequest.address2.placeholder' | translate}}" name="address2"
                                 ng-disabled="appealPopulated">
                     </div>
@@ -221,12 +221,12 @@
                         <span ng-if="config.data.deliveryMethodOfResponse == 'Mail'" class="required-asterisk">*</span>
                     </div>
                     <div class="col-sm-4">
-                        <input type="text" class="form-control" id="city" ng-model="personOriginator.addresses[0].city"
+                        <input type="text" class="form-control" id="city" ng-model="config.data.originator.person.addresses[0].city"
                                 placeholder="{{'cases.newRequest.city.placeholder' | translate}}" name="city"
                                 ng-required="config.data.deliveryMethodOfResponse == 'Mail'"
                                 ng-disabled="appealPopulated">
                         <span class="text-danger"
-                                ng-if="config.data.deliveryMethodOfResponse == 'Mail' && !personOriginator.addresses[0].city" translate>
+                                ng-if="config.data.deliveryMethodOfResponse == 'Mail' && !config.data.originator.person.addresses[0].city" translate>
                                 cases.newRequest.city.validation.error</span>
                     </div>
                     <div class="col-sm-2">
@@ -234,12 +234,12 @@
                         <span ng-if="config.data.deliveryMethodOfResponse == 'Mail'" class="required-asterisk">*</span>
                     </div>
                     <div class="col-sm-4">
-                        <select id="state" name="state" ng-model="personOriginator.addresses[0].state"
+                        <select id="state" name="state" ng-model="config.data.originator.person.addresses[0].state"
                                 ng-options="state.key as state.value | translate for state in states" class="form-control input-md"
                                 ng-required="config.data.deliveryMethodOfResponse == 'Mail'"
                                 ng-disabled="appealPopulated">
                         </select>
-                        <span class="text-danger" ng-if="config.data.deliveryMethodOfResponse == 'Mail' && !personOriginator.addresses[0].state" translate>
+                        <span class="text-danger" ng-if="config.data.deliveryMethodOfResponse == 'Mail' && !config.data.originator.person.addresses[0].state" translate>
                                 cases.newRequest.state.validation.error</span>
                     </div>
                 </div>
@@ -250,14 +250,14 @@
                     </div>
                     <div class="col-sm-4">
                         <input type="text" class="form-control" id="zip" name="zip" pattern="[0-9]{5}"
-                                ng-model="personOriginator.addresses[0].zip"
+                                ng-model="config.data.originator.person.addresses[0].zip"
                                 placeholder="{{'cases.newRequest.zip.placeholder' | translate}}"
                                 ng-required="config.data.deliveryMethodOfResponse == 'Mail'"
                                 ng-disabled="appealPopulated">
                         <span class="text-danger"
-                                ng-if="config.data.deliveryMethodOfResponse == 'Mail' && !personOriginator.addresses[0].zip" translate>
+                                ng-if="config.data.deliveryMethodOfResponse == 'Mail' && !config.data.originator.person.addresses[0].zip" translate>
                                 cases.newRequest.zip.validation.error</span>
-                        <span class="text-danger" ng-if="!personOriginator.addresses[0].zip && formInvalid && !zipCodeEmpty" translate>
+                        <span class="text-danger" ng-if="!config.data.originator.person.addresses[0].zip && formInvalid && !zipCodeEmpty" translate>
                                 cases.newRequest.zip.validation.errorInvalid</span>
                     </div>
                 </div>
