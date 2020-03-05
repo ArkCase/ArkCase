@@ -69,6 +69,10 @@ public class AuditConfig
     @Value("${audit.plugin.purge.days}")
     private Integer purgeDays;
 
+    @JsonProperty("audit.plugin.purge.days")
+    @Value("${audit.plugin.quartz.purge.days}")
+    private Integer quartzAuditPurgeDays;
+
     @JsonProperty("audit.plugin.requests.logging.enabled")
     @Value("${audit.plugin.requests.logging.enabled}")
     private Boolean requestsLoggingEnabled;
@@ -219,6 +223,16 @@ public class AuditConfig
     public void setPurgeDays(Integer purgeDays)
     {
         this.purgeDays = purgeDays;
+    }
+
+    public Integer getQuartzAuditPurgeDays()
+    {
+        return quartzAuditPurgeDays;
+    }
+
+    public void setQuartzAuditPurgeDays(Integer quartzAuditPurgeDays)
+    {
+        this.quartzAuditPurgeDays = quartzAuditPurgeDays;
     }
 
     public Boolean getRequestsLoggingEnabled()
