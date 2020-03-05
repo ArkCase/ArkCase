@@ -37,11 +37,7 @@ angular.module('cases').controller('Cases.ActionsFooterController',
             function setupNextQueue(name, deferred) {
                 var nextQueue = name;
                 if (name === 'Complete') {
-                    if ($scope.objectInfo.queue.name === 'Hold') {
-                        nextQueue = $scope.objectInfo.previousQueue.name;
-                    } else {
-                        nextQueue = $scope.defaultNextQueue;   
-                    }
+                    nextQueue = $scope.defaultNextQueue;
                 } else if (name === 'Return') {
                     nextQueue = $scope.defaultReturnQueue;
                 } else if (name === 'Deny') {
@@ -287,24 +283,21 @@ angular.module('cases').controller('Cases.ActionsFooterController',
                         availableQueues.unshift("Return");
                     }
                     if (defaultNextQueue) {
-                        availableQueues.push("Complete");
-                    }
+                    availableQueues.push("Complete");
                 }
-                if ($scope.objectInfo.queue.name === 'Hold') {
-                    availableQueues = ["Complete"];
+            }
+            availableQueues = availableQueues.map(function (item) {
+                var tmpObj = {};
+                tmpObj.name = item;
+                if (item != 'Complete'){
+                    tmpObj.disabled = true;
                 }
-                availableQueues = availableQueues.map(function (item) {
-                    var tmpObj = {};
-                    tmpObj.name = item;
-                    if (item != 'Complete'){
-                        tmpObj.disabled = true;
-                    }
-                    return tmpObj;
-                });
-                $scope.availableQueues = availableQueues;
-                $scope.defaultNextQueue = defaultNextQueue;
-                $scope.defaultReturnQueue = defaultReturnQueue;
-                $scope.defaultDenyQueue = defaultDenyQueue;
+                return tmpObj;
+            });
+            $scope.availableQueues = availableQueues;
+            $scope.defaultNextQueue = defaultNextQueue;
+            $scope.defaultReturnQueue = defaultReturnQueue;
+            $scope.defaultDenyQueue = defaultDenyQueue;
         }
     } ]);
 angular.module('cases').controller('Cases.ActionsErrorDialogController', [ '$scope', '$modalInstance', 'errorMessage', function($scope, $modalInstance, errorMessage) {
