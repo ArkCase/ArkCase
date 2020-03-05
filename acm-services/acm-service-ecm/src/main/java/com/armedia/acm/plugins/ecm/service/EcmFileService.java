@@ -411,4 +411,6 @@ public interface EcmFileService
 
     @Transactional
     void updateFileLinks(EcmFile file) throws AcmObjectNotFoundException;
+
+    String addDateInPath(String folderPath, Boolean flag) throws AcmCreateObjectFailedException;
 }

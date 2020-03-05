@@ -16,7 +16,7 @@
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="completeRecordService" ref="completeRecordService"/>
         <property name="moveToRecordFolderService" ref="moveToRecordFolderService"/>
-        <property name="createOrFindRecordFolderService" ref="createOrFindRecordFolderService"/>
+        <property name="createOrFindRecordFolderOrRecordCategoryService" ref="createOrFindRecordFolderOrRecordCategoryService"/>
         <property name="declareRecordService" ref="declareRecordService"/>
         <property name="findFolderService" ref="findFolderService"/>
         <property name="setRecordMetadataService" ref="setRecordMetadataService"/>
