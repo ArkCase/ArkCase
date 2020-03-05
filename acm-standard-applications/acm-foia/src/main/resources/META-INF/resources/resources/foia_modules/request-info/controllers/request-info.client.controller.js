@@ -511,9 +511,6 @@ angular.module('request-info').controller(
                             availableQueues.push("Complete");
                         }
                     }
-                    if ($scope.objectInfo.queue.name === 'Hold') {
-                        availableQueues = ["Complete"];
-                    }
                     availableQueues = availableQueues.map(function (item) {
                         var tmpObj = {};
                         tmpObj.name = item;
@@ -1094,10 +1091,6 @@ angular.module('request-info').controller(
                             availableQueues.push("Complete");
                         }
                     }
-                    
-                    if ($scope.objectInfo.queue.name === 'Hold') {
-                        availableQueues = ["Complete"];
-                    }
 
                     $scope.availableQueues = availableQueues;
                     $scope.defaultNextQueue = defaultNextQueue;
@@ -1105,11 +1098,7 @@ angular.module('request-info').controller(
                     $scope.defaultDenyQueue = defaultDenyQueue;
 
                     if (name === 'Complete') {
-                        if ($scope.objectInfo.queue.name === 'Hold') {
-                            nextQueue = $scope.objectInfo.previousQueue.name;
-                        } else {
-                            nextQueue = $scope.defaultNextQueue;   
-                        }
+                        nextQueue = $scope.defaultNextQueue;
                     } else if (name === 'Return') {
                         nextQueue = $scope.defaultReturnQueue;
                     } else if (name === 'Deny') {
@@ -1541,20 +1530,20 @@ angular.module('request-info').controller(
 
             // Release editing lock on window unload, if acquired
             $window.addEventListener('unload', function () {
-            	$scope.data = {
+                $scope.data = {
                         objectId: $scope.ecmFile.fileId,
                         objectType: ObjectService.ObjectTypes.FILE,
                         lockType: ObjectService.LockTypes.WRITE
                     };
 
                 var data = angular.toJson($scope.data);
-            	
+                
                 var url = 'api/v1/plugin/' + ObjectService.ObjectTypes.FILE + '/' + $scope.ecmFile.fileId + '/lock?lockType=' + ObjectService.LockTypes.WRITE;
                 
                 if ($scope.editingMode) {
-                	if("sendBeacon" in navigator)
+                        if("sendBeacon" in navigator)
                     {
-                		navigator.sendBeacon(url, data);
+                                navigator.sendBeacon(url, data);
                     } else {
                         var xmlhttp = new XMLHttpRequest();
                         xmlhttp.open("POST", url, false); //false - synchronous call
