@@ -6,22 +6,22 @@ package com.armedia.acm.audit.dao;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
@@ -29,9 +29,9 @@ package com.armedia.acm.audit.dao;
 
 import com.armedia.acm.audit.model.AuditEvent;
 import com.armedia.acm.data.AcmAbstractDao;
-
-import org.apache.logging.log4j.Logger;
+import com.armedia.acm.quartz.scheduler.AcmJobEventPublisher;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -42,7 +42,6 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -58,6 +57,16 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
 
     @PersistenceContext
     private EntityManager em;
+
+    @Transactional
+    public int purgeQuartzAudits(Date threshold)
+    {
+        TypedQuery<AuditEvent> deleteQuartzAudits = getEm().createQuery("DELETE FROM AuditEvent audit "
+                + "WHERE audit.fullEventType LIKE :eventType AND audit.eventDate <= :threshold", AuditEvent.class);
+        deleteQuartzAudits.setParameter("eventType", AcmJobEventPublisher.BASE_JOB_AUDIT_TYPE + "%");
+        deleteQuartzAudits.setParameter("threshold", threshold);
+        return deleteQuartzAudits.executeUpdate();
+    }
 
     @Transactional
     public int purgeAudits(Date threshold)
@@ -145,7 +154,7 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
             " WHERE ae.cm_audit_status != 'DELETE'" +
             " AND ((ae.cm_object_type = ?2 AND ae.cm_object_id = ?1) OR" +
             " (ae.cm_parent_object_type = ?2 AND ae.cm_parent_object_id = ?1))" +
-            eventTypeClause + 
+            eventTypeClause +
             "      AND ae.cm_audit_activity_result = 'success'" +
             "  ) tmp" +
             " JOIN acm_audit_log al" +
