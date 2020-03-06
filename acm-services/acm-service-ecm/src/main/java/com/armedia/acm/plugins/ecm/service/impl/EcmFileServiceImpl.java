@@ -496,23 +496,25 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             path = path + folderPath.substring(endIndex);
             return createFolder(path, ecmFileConfig.getDefaultCmisId());
         }
-        else {
+        else
+        {
             return createFolder(folderPath, ecmFileConfig.getDefaultCmisId());
         }
     }
 
-    public String addDateInPath(String folderPath, Boolean flag) throws AcmCreateObjectFailedException {
+    public String addDateInPath(String folderPath, Boolean flag) throws AcmCreateObjectFailedException
+    {
         String path = folderPath;
+
         if(flag)
         {
-        int endIndex = folderPath.lastIndexOf("/");
-        if (endIndex == -1)
-        {
-            return null;
+            int endIndex = folderPath.lastIndexOf("/");
+            if (endIndex == -1)
+            {
+                return null;
+            }
+            path = folderPath.substring(0, endIndex);
         }
-        path = folderPath.substring(0, endIndex);
-        }
-
 
         Date date = new Date();
         Calendar calendar = Calendar.getInstance();
@@ -532,11 +534,15 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         return path;
     }
 
-    private String addValueToPath(String path, int dayOrMonth) {
+    private String addValueToPath(String path, int dayOrMonth)
+    {
         String value;
-        if (dayOrMonth < 10) {
+        if (dayOrMonth < 10)
+        {
             value = "0" + String.valueOf(dayOrMonth);
-        } else {
+        }
+        else
+        {
             value = String.valueOf(dayOrMonth);
         }
         path = path + "/" + value;
