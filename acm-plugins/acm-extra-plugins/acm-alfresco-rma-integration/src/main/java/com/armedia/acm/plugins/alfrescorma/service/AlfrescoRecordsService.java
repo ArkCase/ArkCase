@@ -50,6 +50,7 @@ import org.slf4j.MDC;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.Authentication;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -68,7 +69,7 @@ public class AlfrescoRecordsService implements AcmConfigurablePlugin
     private DeclareRecordService declareRecordService;
     private SetRecordMetadataService setRecordMetadataService;
     private FindFolderService findFolderService;
-    private CreateOrFindRecordFolderService createOrFindRecordFolderService;
+    private CreateOrFindRecordFolderOrRecordCategoryService createOrFindRecordFolderOrRecordCategoryService;
     private MoveToRecordFolderService moveToRecordFolderService;
     private CompleteRecordService completeRecordService;
     private AlfrescoRmaConfig rmaConfig;
@@ -142,15 +143,48 @@ public class AlfrescoRecordsService implements AcmConfigurablePlugin
 
             Folder categoryFolder = findFolder(container.getContainerObjectType());
 
-            String recordFolderId = createOrFindRecordFolder(recordFolderName, categoryFolder);
+            Folder parentFolder = addDateInAlfrescoStructure(categoryFolder, container.getContainerObjectType());
 
+            String recordFolderId = createOrFindRecordFolderOrRecordCategory(recordFolderName, parentFolder, "Record Folder");
             log.debug("recordFolderId: {}", recordFolderId);
-
             moveToRecordFolder(recordFolderId, cmisObjectId);
 
             completeRecord(cmisObjectId);
 
             setFileStatusAsRecord(ecmFileId);
+        }
+    }
+
+    public Folder addDateInAlfrescoStructure(Folder categoryFolder, String objectType) throws AlfrescoServiceException
+    {
+
+        Calendar calendar = Calendar.getInstance();
+        String year = String.valueOf(calendar.get(Calendar.YEAR));
+        String month = parseMonthOrDay(calendar.get(Calendar.MONTH) + 1);
+        String day = parseMonthOrDay(calendar.get(Calendar.DAY_OF_MONTH));
+
+        String yearFolderId = createOrFindRecordFolderOrRecordCategory(year, categoryFolder, "Record Category");
+        log.debug("yearFolderId: {}", yearFolderId);
+        String yearPath = rmaConfig.getCategoryFolderForObject(objectType) + "/" + year;
+        Folder yearFolder = findRecordFolder(yearPath);
+
+        String monthFolderId = createOrFindRecordFolderOrRecordCategory(month, yearFolder, "Record Category");
+        log.debug("monthFolderId: {}", monthFolderId);
+        String monthPath = yearPath + "/" + month;
+        Folder monthFolder = findRecordFolder(monthPath);
+
+        String dayFolderId = createOrFindRecordFolderOrRecordCategory(day, monthFolder, "Record Category");
+        log.debug("dayFolderId: {}", monthFolderId);
+        String dayPath = monthPath + "/" + day;
+        return findRecordFolder(dayPath);
+
+    }
+
+    private String parseMonthOrDay(int value) {
+        if (value < 10) {
+            return  "0" + String.valueOf(value);
+        } else {
+            return String.valueOf(value);
         }
     }
 
@@ -169,12 +203,13 @@ public class AlfrescoRecordsService implements AcmConfigurablePlugin
         getMoveToRecordFolderService().service(moveToRecordFolderContext);
     }
 
-    protected String createOrFindRecordFolder(String recordFolderName, Folder folder) throws AlfrescoServiceException
+    protected String createOrFindRecordFolderOrRecordCategory(String recordFolderName, Folder folder, String type) throws AlfrescoServiceException
     {
         Map<String, Object> findRecordFolderContext = new HashMap<>();
         findRecordFolderContext.put("parentFolder", folder);
         findRecordFolderContext.put("recordFolderName", recordFolderName);
-        return getCreateOrFindRecordFolderService().service(findRecordFolderContext);
+        findRecordFolderContext.put("type", type);
+        return getCreateOrFindRecordFolderOrRecordCategoryService().service(findRecordFolderContext);
     }
 
     protected Folder findFolder(String containerObjectType) throws AlfrescoServiceException
@@ -182,6 +217,15 @@ public class AlfrescoRecordsService implements AcmConfigurablePlugin
         // find the category folder
         Map<String, Object> findCategoryFolderContext = new HashMap<>();
         findCategoryFolderContext.put("objectType", containerObjectType);
+        Folder folder = getFindFolderService().service(findCategoryFolderContext);
+        return folder;
+    }
+
+    private Folder findRecordFolder(String recordFolderId) throws AlfrescoServiceException
+    {
+        // find the record folder
+        Map<String, Object> findCategoryFolderContext = new HashMap<>();
+        findCategoryFolderContext.put("folderPath", recordFolderId);
         Folder folder = getFindFolderService().service(findCategoryFolderContext);
         return folder;
     }
@@ -287,14 +331,14 @@ public class AlfrescoRecordsService implements AcmConfigurablePlugin
         this.findFolderService = findFolderService;
     }
 
-    public CreateOrFindRecordFolderService getCreateOrFindRecordFolderService()
+    public CreateOrFindRecordFolderOrRecordCategoryService getCreateOrFindRecordFolderOrRecordCategoryService()
     {
-        return createOrFindRecordFolderService;
+        return createOrFindRecordFolderOrRecordCategoryService;
     }
 
-    public void setCreateOrFindRecordFolderService(CreateOrFindRecordFolderService createOrFindRecordFolderService)
+    public void setCreateOrFindRecordFolderOrRecordCategoryService(CreateOrFindRecordFolderOrRecordCategoryService createOrFindRecordFolderOrRecordCategoryService)
     {
-        this.createOrFindRecordFolderService = createOrFindRecordFolderService;
+        this.createOrFindRecordFolderOrRecordCategoryService = createOrFindRecordFolderOrRecordCategoryService;
     }
 
     public MoveToRecordFolderService getMoveToRecordFolderService()
