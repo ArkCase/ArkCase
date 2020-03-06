@@ -1022,16 +1022,20 @@ angular.module('request-info').controller(
                     if (data.isSelectedTolling) {
                       $scope.objectInfo.tollingFlag = true;
                     }
-                    //save note
-                    NotesService.saveNote({
-                        note: data.holdReason,
-                        parentId: $stateParams['id'],
-                        parentType: 'CASE_FILE',
-                        type: 'HOLD_REASON'
-                    }).then(function (addedNote) {
-                        // Note saved
+                    if (data.holdReason) {
+                        //save note
+                        NotesService.saveNote({
+                            note: data.holdReason,
+                            parentId: $stateParams['id'],
+                            parentType: 'CASE_FILE',
+                            type: 'HOLD_REASON'
+                        }).then(function (addedNote) {
+                            // Note saved
+                            deferred.resolve();
+                        });
+                    } else {
                         deferred.resolve();
-                    });
+                    };
                 }, function () {
                     deferred.reject();
                     $scope.loading = false;

@@ -17,9 +17,9 @@
             {{option.value | translate}}
         </option>
     </select>
-    
-    <label><span translate>cases.comp.holdReason.modal.reason</span><span class="required-asterisk">*</span></label>
-    <input type="text" id="holdReason" ng-required="true" ng-model="holdReason" name="holdReason" class="input-md form-control"
+    </br>
+    <label><span translate>cases.comp.holdReason.modal.reason</span></label>
+    <input type="text" id="holdReason" ng-model="holdReason" name="holdReason" class="input-md form-control"
             placeholder="{{ 'cases.comp.holdReason.modal.placeholder' | translate }}">
 </div>
 
@@ -27,7 +27,7 @@
     <button class="btn btn-secondary" ng-click="onClickCancel()">
         <span translate>cases.comp.holdReason.modal.buttons.cancel</span>
     </button>
-    <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="holdReason == '' || holdReason == null">
+    <button class="btn btn-primary" ng-click="onClickOk()">
         <span translate>cases.comp.holdReason.modal.buttons.ok</span>
     </button>
 </div>
