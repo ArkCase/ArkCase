@@ -82,7 +82,8 @@ public class CreateOrFindRecordFolderOrRecordCategoryService extends AlfrescoSer
         {
             url +=  "/"  + categoryService;
         }
-        else {
+        else
+        {
              url += "/" + folderService;
         }
 
