@@ -55,7 +55,6 @@ import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationTokenConstants;
 import com.armedia.acm.web.api.MDCConstants;
 
-import com.sun.javaws.exceptions.InvalidArgumentException;
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.client.api.Folder;
@@ -357,24 +356,32 @@ public class EcmFileServiceImplTest extends EasyMockSupport
         assertEquals(id, folderId);
     }
 
-    private String getCalendarValue(int field) {
+    private String getCalendarValue(int field)
+    {
         Calendar calendar = Calendar.getInstance();
-        if (Calendar.YEAR == field) {
+        if (Calendar.YEAR == field)
+        {
             return String.valueOf(calendar.get(Calendar.YEAR));
         }
-        if (Calendar.MONTH == field) {
+        if (Calendar.MONTH == field)
+        {
             return parseMonthOrDay(calendar.get(Calendar.MONTH) + 1);
         }
-        if (Calendar.DAY_OF_MONTH == field) {
+        if (Calendar.DAY_OF_MONTH == field)
+        {
             return parseMonthOrDay(calendar.get(Calendar.DAY_OF_MONTH));
         }
         throw new IllegalArgumentException("Not valid field");
     }
 
-    private String parseMonthOrDay(int value) {
-        if (value < 10) {
+    private String parseMonthOrDay(int value)
+    {
+        if (value < 10)
+        {
             return  "0" + String.valueOf(value);
-        } else {
+        }
+        else
+        {
             return String.valueOf(value);
         }
     }
