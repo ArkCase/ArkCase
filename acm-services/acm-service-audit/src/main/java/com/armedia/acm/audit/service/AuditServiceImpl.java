@@ -68,7 +68,7 @@ public class AuditServiceImpl implements AuditService
         }
 
         Date quartzAuditsPurgeThreshold = createPurgeThreshold(auditConfig.getQuartzAuditPurgeDays());
-        int deletedAudits = getAuditDao().purgeQuartzAudits(quartzAuditsPurgeThreshold);
+        int deletedAudits = getAuditDao().purgeQuartzAudits(quartzAuditsPurgeThreshold, auditConfig.getQuartzAuditPurgeNumber());
         LOG.debug("[{}] scheduled jobs audits were deleted.", deletedAudits);
     }
 

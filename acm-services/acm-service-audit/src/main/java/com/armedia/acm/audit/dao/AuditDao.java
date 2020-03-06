@@ -30,6 +30,7 @@ package com.armedia.acm.audit.dao;
 import com.armedia.acm.audit.model.AuditEvent;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.quartz.scheduler.AcmJobEventPublisher;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,6 +43,7 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -59,12 +61,20 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
     private EntityManager em;
 
     @Transactional
-    public int purgeQuartzAudits(Date threshold)
+    public int purgeQuartzAudits(Date threshold, int limitTo)
     {
-        TypedQuery<AuditEvent> deleteQuartzAudits = getEm().createQuery("DELETE FROM AuditEvent audit "
-                + "WHERE audit.fullEventType LIKE :eventType AND audit.eventDate <= :threshold", AuditEvent.class);
-        deleteQuartzAudits.setParameter("eventType", AcmJobEventPublisher.BASE_JOB_AUDIT_TYPE + "%");
-        deleteQuartzAudits.setParameter("threshold", threshold);
+        TypedQuery<Long> getQuartzAuditIds = getEm().createQuery("SELECT audit.id FROM AuditEvent audit "
+                + "WHERE audit.fullEventType LIKE :eventType AND audit.eventDate <= :threshold", Long.class);
+        getQuartzAuditIds.setParameter("eventType", AcmJobEventPublisher.BASE_JOB_AUDIT_TYPE + "%");
+        getQuartzAuditIds.setParameter("threshold", threshold);
+        List<Long> quartzAudits = getQuartzAuditIds.setMaxResults(limitTo).getResultList();
+
+        if (quartzAudits.isEmpty())
+        {
+            return 0;
+        }
+        Query deleteQuartzAudits = getEm().createQuery("DELETE FROM AuditEvent audit WHERE audit.id in :ids");
+        deleteQuartzAudits.setParameter("ids", quartzAudits);
         return deleteQuartzAudits.executeUpdate();
     }
 
