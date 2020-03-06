@@ -13,7 +13,7 @@
                             ng-model="config.data.requestType"
                             ng-options="requestType.key as requestType.value for requestType in requestTypes"
                             class="form-control input-md"
-                            ng-change="cleanPopulatedAppeal()">
+                            ng-change="clearPersonContactInfo()">
                     </select>
                 </div>
             </div>
@@ -67,7 +67,7 @@
         </div>
         <div class="panel panel-default">
             <div class="panel-heading">
-                <div class="pull-right" ng-if="!appealPopulated">
+                <div class="pull-right" ng-if="!isAppealPopulated">
                     <button class="btn btn-primary btn-xs" ng-click="searchPerson()" translate>cases.newRequest.searchPerson</button>
                 </div>
                 <h4 class="panel-title">
@@ -83,7 +83,7 @@
                     <div class="col-sm-4">
                         <select ng-model="config.data.originator.person.title" id="prefix" name="prefix"
                                 ng-options="prefix.key as prefix.value | translate for prefix in prefixes"
-                                class="form-control input-md" required ng-disabled="appealPopulated">
+                                class="form-control input-md" required ng-disabled="isAppealPopulated">
                         </select>
                         <span class="text-danger" ng-if="!config.data.originator.person.title && formInvalid" translate>
                             cases.newRequest.prefix.validation.error</span>
@@ -98,7 +98,7 @@
                         <input type="text" class="form-control" id="firstName" name="firstName"
                                 ng-model="config.data.originator.person.givenName"
                                 placeholder="{{'cases.newRequest.firstName.placeholder' | translate}}"
-                                required="required" ng-disabled="appealPopulated">
+                                required="required" ng-disabled="isAppealPopulated">
                         <span class="text-danger" ng-if="!config.data.originator.person.givenName && formInvalid" translate>
                                 cases.newRequest.firstName.validation.error</span>
                     </div>
@@ -107,7 +107,7 @@
                     </div>
                     <div class="col-sm-4">
                         <input type="text" class="form-control" id="middleName" ng-model="config.data.originator.person.middleName"
-                                placeholder="{{'cases.newRequest.middleName.placeholder' | translate}}" name="middleName" ng-disabled="appealPopulated">
+                                placeholder="{{'cases.newRequest.middleName.placeholder' | translate}}" name="middleName" ng-disabled="isAppealPopulated">
                     </div>
                 </div>
                 <div class="row form-group">
@@ -118,7 +118,7 @@
                     <div class="col-sm-4">
                         <input type="text" class="form-control" id="lastName" ng-model="config.data.originator.person.familyName"
                                 placeholder="{{'cases.newRequest.lastName.placeholder' | translate}}" name="lastName"
-                                required="required" ng-disabled="appealPopulated">
+                                required="required" ng-disabled="isAppealPopulated">
                         <span class="text-danger" ng-if="!config.data.originator.person.familyName && formInvalid" translate>
                                 cases.newRequest.lastName.validation.error</span>
                     </div>
@@ -127,7 +127,7 @@
                     </div>
                     <div class="col-sm-4">
                         <input type="position" class="form-control" id="position" ng-model="config.data.originator.person.position"
-                                placeholder="{{'cases.newRequest.position.placeholder' | translate}}" name="position" ng-disabled="appealPopulated">
+                                placeholder="{{'cases.newRequest.position.placeholder' | translate}}" name="position" ng-disabled="isAppealPopulated">
                     </div>
                 </div>
                 <div class="row form-group">
@@ -138,7 +138,7 @@
                     <div class="col-sm-4 form-group">
                         <input type="text" class="form-control" id="phone" pattern="^\d{3}[\-]\d{3}[\-]\d{4}"
                                 ng-model="config.data.originator.person.defaultPhone.value"
-                                placeholder="{{'cases.newRequest.phone.placeholder' | translate}}" name="phone" required="required" ng-disabled="appealPopulated">
+                                placeholder="{{'cases.newRequest.phone.placeholder' | translate}}" name="phone" required="required" ng-disabled="isAppealPopulated">
                         <span class="text-danger" ng-if="!config.data.originator.person.defaultPhone.value && formInvalid" translate>
                                 cases.newRequest.phone.validation.error</span>
                         <span class="text-danger" ng-if="!config.data.originator.person.defaultPhone.value && formInvalid && !phoneEmpty" translate>
@@ -164,7 +164,7 @@
                                 placeholder="{{'cases.newRequest.email.placeholder' | translate}}" name="email"
                                 pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
                                 ng-required="config.data.deliveryMethodOfResponse == 'Email'"
-                                ng-disabled="appealPopulated">
+                                ng-disabled="isAppealPopulated">
                         <span class="text-danger" ng-if="config.data.deliveryMethodOfResponse == 'Email' && !config.data.originator.person.defaultEmail.value"
                                 translate>
                                 cases.newRequest.email.validation.error</span>
@@ -179,7 +179,7 @@
                         <input type="text" class="form-control" id="confirmationEmail" ng-model="confirmationEmail"
                                 placeholder="{{'cases.newRequest.confirmationEmail.placeholder' | translate}}" name="confirmationEmail"
                                 ng-required="config.data.deliveryMethodOfResponse == 'Email'"
-                                ng-disabled="appealPopulated">
+                                ng-disabled="isAppealPopulated">
                         <span class="text-danger" ng-if="(confirmationEmail !== config.data.originator.person.defaultEmail.value) && formInvalid && !confirmEmailEmpty" translate>
                                 cases.newRequest.confirmationEmail.validation.errorInvalid</span>
                         <span class="text-danger"
@@ -198,7 +198,7 @@
                                 ng-model="config.data.originator.person.addresses[0].streetAddress"
                                 placeholder="{{'cases.newRequest.address.placeholder' | translate}}" name="address1"
                                 ng-required="config.data.deliveryMethodOfResponse == 'Mail'"
-                                ng-disabled="appealPopulated">
+                                ng-disabled="isAppealPopulated">
                         <span class="text-danger"
                                 ng-if="config.data.deliveryMethodOfResponse == 'Mail' && !config.data.originator.person.addresses[0].streetAddress"
                                 translate>
@@ -212,7 +212,7 @@
                         <input type="text" class="form-control" id="address2"
                                 ng-model="config.data.originator.person.addresses[0].streetAddress2"
                                 placeholder="{{'cases.newRequest.address2.placeholder' | translate}}" name="address2"
-                                ng-disabled="appealPopulated">
+                                ng-disabled="isAppealPopulated">
                     </div>
                 </div>
                 <div class="row form-group">
@@ -224,7 +224,7 @@
                         <input type="text" class="form-control" id="city" ng-model="config.data.originator.person.addresses[0].city"
                                 placeholder="{{'cases.newRequest.city.placeholder' | translate}}" name="city"
                                 ng-required="config.data.deliveryMethodOfResponse == 'Mail'"
-                                ng-disabled="appealPopulated">
+                                ng-disabled="isAppealPopulated">
                         <span class="text-danger"
                                 ng-if="config.data.deliveryMethodOfResponse == 'Mail' && !config.data.originator.person.addresses[0].city" translate>
                                 cases.newRequest.city.validation.error</span>
@@ -237,7 +237,7 @@
                         <select id="state" name="state" ng-model="config.data.originator.person.addresses[0].state"
                                 ng-options="state.key as state.value | translate for state in states" class="form-control input-md"
                                 ng-required="config.data.deliveryMethodOfResponse == 'Mail'"
-                                ng-disabled="appealPopulated">
+                                ng-disabled="isAppealPopulated">
                         </select>
                         <span class="text-danger" ng-if="config.data.deliveryMethodOfResponse == 'Mail' && !config.data.originator.person.addresses[0].state" translate>
                                 cases.newRequest.state.validation.error</span>
@@ -253,7 +253,7 @@
                                 ng-model="config.data.originator.person.addresses[0].zip"
                                 placeholder="{{'cases.newRequest.zip.placeholder' | translate}}"
                                 ng-required="config.data.deliveryMethodOfResponse == 'Mail'"
-                                ng-disabled="appealPopulated">
+                                ng-disabled="isAppealPopulated">
                         <span class="text-danger"
                                 ng-if="config.data.deliveryMethodOfResponse == 'Mail' && !config.data.originator.person.addresses[0].zip" translate>
                                 cases.newRequest.zip.validation.error</span>
