@@ -180,10 +180,14 @@ public class AlfrescoRecordsService implements AcmConfigurablePlugin
 
     }
 
-    private String parseMonthOrDay(int value) {
-        if (value < 10) {
+    private String parseMonthOrDay(int value)
+    {
+        if (value < 10)
+        {
             return  "0" + String.valueOf(value);
-        } else {
+        }
+        else
+        {
             return String.valueOf(value);
         }
     }
