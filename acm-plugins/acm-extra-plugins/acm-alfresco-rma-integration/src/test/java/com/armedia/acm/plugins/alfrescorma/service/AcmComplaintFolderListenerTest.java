@@ -38,6 +38,11 @@ import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.mail.Flags;
+import javax.mail.Folder;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+
 public class AcmComplaintFolderListenerTest extends EasyMockSupport
 {
     private AcmComplaintFolderListener unit;
@@ -76,11 +81,13 @@ public class AcmComplaintFolderListenerTest extends EasyMockSupport
         Complaint complaint = new Complaint();
         complaint.setComplaintNumber("complaintNumber");
 
+
         rmaConfig.setCreateRecordFolderOnComplaintCreate(true);
         expect(mockService.getRmaConfig()).andReturn(rmaConfig);
 
         expect(mockService.findFolder(ComplaintConstants.OBJECT_TYPE)).andReturn(null);
-        expect(mockService.createOrFindRecordFolder(complaint.getComplaintNumber(), null)).andReturn(null);
+        expect(mockService.addDateInAlfrescoStructure(null, ComplaintConstants.OBJECT_TYPE)).andReturn(null);
+        expect(mockService.createOrFindRecordFolderOrRecordCategory(complaint.getComplaintNumber(), null, "Record Folder")).andReturn(null);
 
         ComplaintCreatedEvent event = new ComplaintCreatedEvent(new Complaint());
         event.setSucceeded(true);

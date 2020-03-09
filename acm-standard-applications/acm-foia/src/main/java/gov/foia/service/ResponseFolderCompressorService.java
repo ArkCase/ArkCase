@@ -102,6 +102,7 @@ public class ResponseFolderCompressorService implements ApplicationEventPublishe
         int currentPageCount = 0;
 
         List<EcmFile> allFiles = getAcmFolderService().getFilesInFolderAndSubfolders(responseFolderId);
+        allFiles = getCompressor().filterConvertedFiles(allFiles);
         allFiles.sort(Comparator.comparing(EcmFile::getCreated));
 
         for (EcmFile file : allFiles)

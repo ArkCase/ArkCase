@@ -113,6 +113,7 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -489,7 +490,63 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     @Transactional(rollbackFor = AcmCreateObjectFailedException.class)
     public String createFolder(String folderPath) throws AcmCreateObjectFailedException
     {
-        return createFolder(folderPath, ecmFileConfig.getDefaultCmisId());
+        String path = addDateInPath(folderPath, true);
+        if( path != null){
+            int endIndex = folderPath.lastIndexOf("/");
+            path = path + folderPath.substring(endIndex);
+            return createFolder(path, ecmFileConfig.getDefaultCmisId());
+        }
+        else
+        {
+            return createFolder(folderPath, ecmFileConfig.getDefaultCmisId());
+        }
+    }
+
+    public String addDateInPath(String folderPath, Boolean flag) throws AcmCreateObjectFailedException
+    {
+        String path = folderPath;
+
+        if(flag)
+        {
+            int endIndex = folderPath.lastIndexOf("/");
+            if (endIndex == -1)
+            {
+                return null;
+            }
+            path = folderPath.substring(0, endIndex);
+        }
+
+        Date date = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        path = path +"/"+ String.valueOf(calendar.get(Calendar.YEAR));
+        createFolder(path, ecmFileConfig.getDefaultCmisId());
+
+        int month = calendar.get(Calendar.MONTH) + 1;
+        path = addValueToPath(path, month);
+        createFolder(path, ecmFileConfig.getDefaultCmisId());
+
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        path = addValueToPath(path, day);
+        createFolder(path, ecmFileConfig.getDefaultCmisId());
+
+        return path;
+    }
+
+    private String addValueToPath(String path, int dayOrMonth)
+    {
+        String value;
+        if (dayOrMonth < 10)
+        {
+            value = "0" + String.valueOf(dayOrMonth);
+        }
+        else
+        {
+            value = String.valueOf(dayOrMonth);
+        }
+        path = path + "/" + value;
+        return path;
     }
 
     @Override
@@ -561,6 +618,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
         String path = ecmFileConfig.getDefaultBasePath();
         path += ecmFileConfig.getDefaultPathForObject(objectType);
+        path = addDateInPath(path, false);
         path += "/" + objectId;
 
         String cmisFolderId = createFolder(path, cmisRepositoryId);
