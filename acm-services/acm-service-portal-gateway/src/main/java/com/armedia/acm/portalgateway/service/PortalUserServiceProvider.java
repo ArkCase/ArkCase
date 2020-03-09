@@ -73,6 +73,9 @@ public interface PortalUserServiceProvider
      */
     PortalUser updateUser(String portalId, PortalUser user) throws PortalUserServiceException;
 
+    UserRegistrationResponse registerUserFromRequester(String portalId, PortalUser user)
+            throws PortalUserServiceException;
+
     /**
      * @param portalId
      * @param credentials
