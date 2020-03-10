@@ -15,6 +15,7 @@
         <property name="emailConfig" ref="emailSenderConfig"/>
         <property name="smtpMailSender" ref="smtpMailSender"/>
         <property name="smtpsMailSender" ref="smtpsMailSender"/>
+        <property name="trackOutgoingEmailService" ref="trackOutgoingEmailService"/>
     </bean>
 
     <bean id="smtpMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl"/>
@@ -28,6 +29,15 @@
                 <prop key="mail.smtps.auth">true</prop>
             </props>
         </property>
+    </bean>
+    
+    <bean id="trackOutgoingEmailService" class="com.armedia.acm.services.email.smtp.TrackOutgoingEmailService">
+        <property name="acmFolderService" ref="acmFolderService"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="emailReceiverConfig" ref="emailReceiverConfig"/>
+        <property name="ecmFileService" ref="ecmFileService"/>
+        <property name="ecmFileDao" ref="ecmFileDao"/>
+        <property name="captureConfig" ref="captureConfig"/>
     </bean>
 
 </beans>
