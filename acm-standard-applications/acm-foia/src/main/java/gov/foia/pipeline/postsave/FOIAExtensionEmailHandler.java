@@ -49,8 +49,8 @@ import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -101,18 +101,20 @@ public class FOIAExtensionEmailHandler implements PipelineHandler<FOIARequest, C
 
             log.debug("Emailing extension document");
 
-            AcmUser user = userDao.findByUserId(entity.getAssigneeLdapId());
+            AcmUser user = entity.getAssigneeLdapId() != null ? userDao.findByUserId(entity.getAssigneeLdapId()) : null;
+
             String emailAddress = extractRequestorEmailAddress(entity.getOriginator().getPerson());
 
             Notification notification = new Notification();
             notification.setTemplateModelName("requestExtension");
             notification.setParentType(entity.getObjectType());
             notification.setParentId(entity.getId());
-            notification.setTitle(String.format(translationService.translate(NotificationConstants.NOTIFICATION_FOIA_EXTENSION), entity.getCaseNumber()));
+            notification.setTitle(
+                    String.format(translationService.translate(NotificationConstants.NOTIFICATION_FOIA_EXTENSION), entity.getCaseNumber()));
             notification.setAttachFiles(true);
             notification.setEmailAddresses(emailAddress);
             notification.setFiles(Arrays.asList(ecmFileVersion));
-            notification.setUser(user.getUserId());
+            notification.setUser(user != null ? user.getUserId() : null);
             notificationDao.save(notification);
 
         }
