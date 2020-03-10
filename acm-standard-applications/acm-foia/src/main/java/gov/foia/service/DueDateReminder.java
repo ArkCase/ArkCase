@@ -73,19 +73,20 @@ public class DueDateReminder
 
                 if (daysDiffOneDay == 0 || daysDiffFiveDays == 0)
                 {
-                    AcmUser user = getUserDao().findByUserId(request.getAssigneeLdapId());
+                    AcmUser user = request.getAssigneeLdapId() != null ? userDao.findByUserId(request.getAssigneeLdapId()) : null;
 
                     String dueDateRemainingDays = daysDiffOneDay == 0 ? "1" : "5";
 
                     Notification notification = new Notification();
                     notification.setNote(dueDateRemainingDays);
-                    notification.setTitle(String.format(translationService.translate(NotificationConstants.REQUEST_ASSIGNED), request.getCaseNumber(), user.getFullName()));
+                    notification.setTitle(String.format(translationService.translate(NotificationConstants.REQUEST_ASSIGNED),
+                            request.getCaseNumber(), user != null ? user.getFullName() : ""));
                     notification.setParentId(request.getId());
                     notification.setParentType(request.getObjectType());
                     notification.setParentName(request.getCaseNumber());
                     notification.setParentTitle(request.getTitle());
                     notification.setUser(request.getAssigneeLdapId());
-                    notification.setEmailAddresses(user.getMail());
+                    notification.setEmailAddresses(user != null ? user.getMail() : "");
                     notification.setTemplateModelName("requestAssigneeDueDateReminder");
                     notification.setAttachFiles(false);
                     notificationDao.save(notification);

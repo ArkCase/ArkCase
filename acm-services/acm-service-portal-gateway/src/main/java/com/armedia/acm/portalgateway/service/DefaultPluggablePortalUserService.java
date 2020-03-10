@@ -90,6 +90,14 @@ public class DefaultPluggablePortalUserService implements PortalUserService
         return getServiceProvider().registerUser(portalId, registrationId, user, password);
     }
 
+    @Override
+    public UserRegistrationResponse registerUserFromRequester(String portalId, PortalUser user)
+            throws PortalUserServiceException
+    {
+        log.debug("Registering user [{}] at portal with ID [{}] from Arkcase.", PortalUser.composeUserName(user), portalId);
+        return getServiceProvider().registerUserFromRequester(portalId, user);
+    }
+
     /*
      * (non-Javadoc)
      * @see com.armedia.acm.portalgateway.service.PortalUserService#updateUser(java.lang.String,

@@ -2,10 +2,15 @@
 
 angular.module('services').factory('Request.InfoService', [ '$resource', 'UtilService', 'Object.InfoService', 'ObjectService', '$http', function($resource, Util, ObjectInfoService, ObjectService, $http) {
     var Service = $resource('api/latest/plugin', {}, {
-
+        _saveNewPortalUser: {
+            method: 'POST',
+            url: 'api/latest/service/portalgateway/:portalId/users/registrations/requester',
+            isArray: false,
+            cache: false
+        }
     });
 
-    Service.saveRequestInfoWithFiles = function(formData) {
+    Service.saveRequestInfoWithFiles = function (formData) {
         return $http({
             method: 'POST',
             url: 'api/latest/plugin/foiarequest',
@@ -16,6 +21,19 @@ angular.module('services').factory('Request.InfoService', [ '$resource', 'UtilSe
         })
     };
 
+    Service.saveNewPortalUser = function (user, portalId) {
+        return Util.serviceCall({
+            service: Service._saveNewPortalUser,
+            data: user,
+            param: {
+                portalId: portalId
+            },
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+    };
+    
     /**
      * @ngdoc method
      * @name saveRequestInfo
