@@ -318,7 +318,8 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
                 {
                     ecmFile.setMailAddress(mailAddress);
                 }
-                sentEvents.add(new SmtpEventSentEvent(ecmFile, user.getUserId(), ecmFile.getId(), ecmFile.getObjectType(), ecmFile.getParentObjectId(), ecmFile.getParentObjectType(), ipAddress));
+                sentEvents.add(new SmtpEventSentEvent(ecmFile, user != null ? user.getUserId() : null, ecmFile.getId(),
+                        ecmFile.getObjectType(), ecmFile.getParentObjectId(), ecmFile.getParentObjectType(), ipAddress));
             }
         }
 
