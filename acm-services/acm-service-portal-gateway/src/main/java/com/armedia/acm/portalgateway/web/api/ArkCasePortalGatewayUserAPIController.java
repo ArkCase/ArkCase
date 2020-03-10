@@ -106,6 +106,18 @@ public class ArkCasePortalGatewayUserAPIController
         return portalUserService.registerUser(portalId, registrationId, user, password);
     }
 
+    @RequestMapping(value = "/registrations/requester", method = RequestMethod.POST, produces = {
+            MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE })
+    @ResponseBody
+    public UserRegistrationResponse registerUserFromRequester(Authentication auth,
+            @PortalId @PathVariable(value = "portalId") String portalId,
+            @RequestBody PortalUser user)
+            throws PortalUserServiceException
+    {
+        log.debug("Registering [{}] user for portal with [{}] ID.", PortalUser.composeUserName(user), portalId);
+        return portalUserService.registerUserFromRequester(portalId, user);
+    }
+
     @CheckPortalUserAssignement
     @RequestMapping(value = "/logins", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE,
             MediaType.TEXT_PLAIN_VALUE })
@@ -116,7 +128,7 @@ public class ArkCasePortalGatewayUserAPIController
         PortalUser portalUser = new PortalUser();
         log.debug("Requesting user authentication for user at portal with [{}] ID.", portalId);
         portalUser = portalUserService.authenticateUser(portalId, credentials);
-        return new ResponseEntity<PortalUser>(portalUser, HttpStatus.OK);
+        return new ResponseEntity<>(portalUser, HttpStatus.OK);
     }
 
     @CheckPortalUserAssignement
