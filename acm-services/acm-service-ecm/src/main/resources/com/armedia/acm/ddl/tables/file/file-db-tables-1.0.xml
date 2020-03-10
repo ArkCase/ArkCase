@@ -733,7 +733,7 @@
 
     <changeSet id="folder-69-allow-folder-link" author="martin.jovanovski">
         <addUniqueConstraint tableName="acm_folder" columnNames="cm_cmis_folder_id, cm_parent_folder_id"
-            constraintName="deny_same_cmis_folder_id"/>
+                             constraintName="deny_same_cmis_folder_id"/>
     </changeSet>
 
     <changeSet id="folder-70-allow-folder-link" author="martin.jovanovski">
@@ -741,6 +741,12 @@
         <dropUniqueConstraint tableName="acm_folder" constraintName="deny_same_cmis_folder_id"/>
         <addUniqueConstraint tableName="acm_folder" columnNames="cm_cmis_folder_id, cm_folder_is_link"
                              constraintName="allow_folder_link"/>
+    </changeSet>
+
+    <changeSet id="folder-71-allow-folder-link" author="aleksandar.acevski">
+        <dropUniqueConstraint tableName="acm_folder" constraintName="allow_folder_link"/>
+        <addUniqueConstraint tableName="acm_folder" columnNames="cm_cmis_folder_id, cm_parent_folder_id"
+                             constraintName="disallow_folder_link"/>
     </changeSet>
 
 </databaseChangeLog>
