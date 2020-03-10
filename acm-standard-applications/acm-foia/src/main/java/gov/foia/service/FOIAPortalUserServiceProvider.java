@@ -26,6 +26,7 @@ package gov.foia.service;
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
+
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
@@ -221,69 +222,107 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         Optional<UserRegistrationRequestRecord> registrationRecord = registrationDao.findByRegistrationId(registrationId);
         Optional<PortalFOIAPerson> registeredPerson = portalPersonDao.findByEmail(key);
 
-        if (registeredPerson.isPresent() && registeredPerson.get().getPortalRoles().containsKey(portalId))
+        if (isUserRejectedForPortal(portalId, registeredPerson))
         {
-            if (registeredPerson.get().getPortalRoles().get(portalId).equals(PortalUser.REJECTED_USER))
-            {
-                return UserRegistrationResponse.rejected();
-            }
-            else
-            {
-                return UserRegistrationResponse.exists();
-            }
+            return UserRegistrationResponse.rejected();
+        }
+        else if (registeredPerson.isPresent() && registeredPerson.get().getPortalRoles().containsKey(portalId))
+        {
+            return UserRegistrationResponse.exists();
+        }
+        else if (!registrationRecord.isPresent())
+        {
+            return UserRegistrationResponse.requestRequired();
+        }
+        else if (registrationRecord.get().getRegistrationTime() + REGISTRATION_EXPIRATION < System.currentTimeMillis())
+        {
+            return UserRegistrationResponse.requestExpired();
+        }
+        else if (!registrationRecord.get().getRegistrationKey().equals(registrationId))
+        {
+            return UserRegistrationResponse.invalid();
         }
         else
         {
-            if (!registrationRecord.isPresent())
-            {
-                return UserRegistrationResponse.requestRequired();
-            }
-            else if (registrationRecord.get().getRegistrationTime() + REGISTRATION_EXPIRATION < System.currentTimeMillis())
-            {
-                return UserRegistrationResponse.requestExpired();
-            }
-            else
-            {
-                UserRegistrationRequestRecord record = registrationRecord.get();
-
-                if (!record.getRegistrationKey().equals(registrationId))
-                {
-                    return UserRegistrationResponse.invalid();
-                }
-                else
-                {
-                    PortalFOIAPerson person;
-                    if (registeredPerson.isPresent())
-                    {
-                        person = registeredPerson.get();
-                        person.getPortalRoles().put(portalId, PortalUser.PENDING_USER);
-                    }
-                    else
-                    {
-                        user.setRole(PortalUser.PENDING_USER);
-                        person = portalPersonFromPortalUser(portalId, user);
-                    }
-
-                    try
-                    {
-                        PortalInfo portalInfo = portalInfoDAO.findByPortalId(portalId);
-                        UserDTO userDto = userDTOFromPortalUser(user,
-                                new String(Base64Utils.decodeFromString(password), Charset.forName("UTF-8")),
-                                portalInfo.getGroup().getName());
-                        portalPersonDao.save(person);
-                        ldapUserService.createLdapUser(userDto, directoryName);
-                    }
-                    catch (Exception e)
-                    {
-                        log.debug(e.getMessage(), e);
-                        throw new PortalUserServiceException(String.format("Couldn't create LDAP user for %s", user.getEmail()), e);
-                    }
-
-                    return UserRegistrationResponse.accepted();
-                }
-            }
+            PortalFOIAPerson person = getPortalFOIAPerson(portalId, user, registeredPerson);
+            createPortalUser(portalId, user, person);
+            return UserRegistrationResponse.accepted();
         }
 
+    }
+
+    private boolean isUserRejectedForPortal(String portalId, Optional<PortalFOIAPerson> registeredPerson)
+    {
+        return registeredPerson.isPresent() && registeredPerson.get().getPortalRoles().containsKey(portalId)
+                && registeredPerson.get().getPortalRoles().get(portalId).equals(PortalUser.REJECTED_USER);
+    }
+
+    public PortalFOIAPerson getPortalFOIAPerson(String portalId, PortalUser user, Optional<PortalFOIAPerson> registeredPerson)
+    {
+        PortalFOIAPerson person;
+        if (registeredPerson.isPresent())
+        {
+            person = registeredPerson.get();
+            person.getPortalRoles().put(portalId, PortalUser.PENDING_USER);
+        }
+        else
+        {
+            user.setRole(PortalUser.PENDING_USER);
+            person = portalPersonFromPortalUser(portalId, user);
+        }
+        return person;
+    }
+
+    @Override
+    @Transactional
+    public UserRegistrationResponse registerUserFromRequester(String portalId, PortalUser user)
+            throws PortalUserServiceException
+    {
+        Optional<PortalFOIAPerson> registeredPerson = portalPersonDao.findByEmail(user.getEmail());
+
+        if (isUserRejectedForPortal(portalId, registeredPerson))
+        {
+            return UserRegistrationResponse.rejected();
+        }
+        else if (registeredPerson.isPresent() && registeredPerson.get().getPortalRoles().containsKey(portalId))
+        {
+            return UserRegistrationResponse.exists();
+        }
+
+        PortalFOIAPerson person = getPortalFOIAPerson(portalId, user, registeredPerson);
+        createPortalUser(portalId, user, person);
+
+        UserResetRequest resetRequest = createUserResetRequest(user, portalId);
+        requestPasswordReset(portalId, resetRequest);
+
+        return UserRegistrationResponse.accepted();
+    }
+
+    public UserResetRequest createUserResetRequest(PortalUser user, String portalId)
+    {
+        UserResetRequest resetRequest = new UserResetRequest();
+        resetRequest.setEmailAddress(user.getEmail());
+        PortalInfo portal = portalInfoDAO.findByPortalId(portalId);
+        String baseUrl = Base64Utils
+                .encodeToString((new String(portal.getPortalUrl() + "portal/login/reset")).getBytes());
+        resetRequest.setResetUrl(baseUrl);
+        return resetRequest;
+    }
+
+    public void createPortalUser(String portalId, PortalUser user, PortalFOIAPerson person) throws PortalUserServiceException
+    {
+        try
+        {
+            PortalInfo portalInfo = portalInfoDAO.findByPortalId(portalId);
+            UserDTO userDto = userDTOFromPortalUser(user, null, portalInfo.getGroup().getName());
+            portalPersonDao.save(person);
+            ldapUserService.createLdapUser(userDto, directoryName);
+        }
+        catch (Exception e)
+        {
+            log.debug(e.getMessage(), e);
+            throw new PortalUserServiceException(String.format("Couldn't create LDAP user for %s", user.getEmail()), e);
+        }
     }
 
     /*
