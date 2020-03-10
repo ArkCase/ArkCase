@@ -45,10 +45,11 @@ public class AcmMailSender
     private JavaMailSenderImpl smtpMailSender;
     private JavaMailSenderImpl smtpsMailSender;
     private EmailSenderConfig emailConfig;
+    private TrackOutgoingEmailService trackOutgoingEmailService;
 
     private static final Logger log = LogManager.getLogger(AcmMailSender.class);
 
-    public void sendEmail(String recipient, String subject, String body) throws Exception
+    public void sendEmail(String recipient, String subject, String body, String parentType, String parentId) throws Exception
     {
         JavaMailSender mailSender = getMailSender();
         MimeMessage mimeMessage = mailSender.createMimeMessage();
@@ -58,9 +59,10 @@ public class AcmMailSender
         helper.setSubject(subject);
         helper.setText(body, true);
         mailSender.send(helper.getMimeMessage());
+        trackOutgoingEmailService.trackEmail(mimeMessage, recipient, subject, parentType, parentId, null);
     }
 
-    public void sendMultipartEmail(String recipient, String subject, String body, List<InputStreamDataSource> attachments)
+    public void sendMultipartEmail(String recipient, String subject, String body, List<InputStreamDataSource> attachments, String parentType, String parentId)
             throws Exception
     {
         JavaMailSender mailSender = getMailSender();
@@ -81,6 +83,7 @@ public class AcmMailSender
             }
         });
         mailSender.send(helper.getMimeMessage());
+        trackOutgoingEmailService.trackEmail(mimeMessage, recipient, subject, parentType, parentId, attachments);
     }
 
     public EmailSenderConfig getEmailConfig()
@@ -133,5 +136,15 @@ public class AcmMailSender
             smtpMailSender.setPassword(emailConfig.getPassword());
             return smtpMailSender;
         }
+    }
+
+    public TrackOutgoingEmailService getTrackOutgoingEmailService() 
+    {
+        return trackOutgoingEmailService;
+    }
+
+    public void setTrackOutgoingEmailService(TrackOutgoingEmailService trackOutgoingEmailService) 
+    {
+        this.trackOutgoingEmailService = trackOutgoingEmailService;
     }
 }
