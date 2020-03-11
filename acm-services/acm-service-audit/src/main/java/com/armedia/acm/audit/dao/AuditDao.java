@@ -63,18 +63,20 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
     @Transactional
     public int purgeQuartzAudits(Date threshold, int limitTo)
     {
-        TypedQuery<Long> getQuartzAuditIds = getEm().createQuery("SELECT audit.id FROM AuditEvent audit "
-                + "WHERE audit.fullEventType LIKE :eventType AND audit.eventDate <= :threshold", Long.class);
+        TypedQuery<Long[]> getQuartzAuditIds = getEm().createQuery("SELECT MIN(audit.id), MAX(audit.id) FROM AuditEvent audit "
+                + "WHERE audit.fullEventType LIKE :eventType AND audit.eventDate <= :threshold", Long[].class);
         getQuartzAuditIds.setParameter("eventType", AcmJobEventPublisher.BASE_JOB_AUDIT_TYPE + "%");
         getQuartzAuditIds.setParameter("threshold", threshold);
-        List<Long> quartzAudits = getQuartzAuditIds.setMaxResults(limitTo).getResultList();
+        List<Long[]> quartzAudits = getQuartzAuditIds.setMaxResults(limitTo).getResultList();
 
-        if (quartzAudits.isEmpty())
+        Object[] ids = quartzAudits.get(0);
+        if (ids[0] == null && ids[1] == null)
         {
             return 0;
         }
-        Query deleteQuartzAudits = getEm().createQuery("DELETE FROM AuditEvent audit WHERE audit.id in :ids");
-        deleteQuartzAudits.setParameter("ids", quartzAudits);
+        Query deleteQuartzAudits = getEm().createQuery("DELETE FROM AuditEvent audit WHERE audit.id >= :startId AND audit.id <= :endId");
+        deleteQuartzAudits.setParameter("startId", ids[0]);
+        deleteQuartzAudits.setParameter("endId", ids[1]);
         return deleteQuartzAudits.executeUpdate();
     }
 
@@ -137,14 +139,14 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
          * we need to use this trick to increase performance when there are lot of rows.
          */
         String eventTypeClause = "";
-        if ( eventTypes != null && !eventTypes.isEmpty() )
+        if (eventTypes != null && !eventTypes.isEmpty())
         {
             StringBuilder builder = new StringBuilder(" AND ae.cm_audit_activity IN ( ");
             int paramIndex = 3;
             boolean first = true;
-            for ( String eventType : eventTypes )
+            for (String eventType : eventTypes)
             {
-                if ( first )
+                if (first)
                 {
                     first = false;
                 }
@@ -159,17 +161,17 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
             eventTypeClause = builder.toString();
         }
         String queryText = "SELECT al.* " +
-            "FROM (SELECT ae.cm_audit_id AS id" +
-            " FROM acm_audit_log ae" +
-            " WHERE ae.cm_audit_status != 'DELETE'" +
-            " AND ((ae.cm_object_type = ?2 AND ae.cm_object_id = ?1) OR" +
-            " (ae.cm_parent_object_type = ?2 AND ae.cm_parent_object_id = ?1))" +
-            eventTypeClause +
-            "      AND ae.cm_audit_activity_result = 'success'" +
-            "  ) tmp" +
-            " JOIN acm_audit_log al" +
-            "    ON al.cm_audit_id = tmp.id" +
-            "  LEFT OUTER JOIN acm_audit_event_type_lu lu ON al.cm_audit_activity = lu.cm_key";
+                "FROM (SELECT ae.cm_audit_id AS id" +
+                " FROM acm_audit_log ae" +
+                " WHERE ae.cm_audit_status != 'DELETE'" +
+                " AND ((ae.cm_object_type = ?2 AND ae.cm_object_id = ?1) OR" +
+                " (ae.cm_parent_object_type = ?2 AND ae.cm_parent_object_id = ?1))" +
+                eventTypeClause +
+                "      AND ae.cm_audit_activity_result = 'success'" +
+                "  ) tmp" +
+                " JOIN acm_audit_log al" +
+                "    ON al.cm_audit_id = tmp.id" +
+                "  LEFT OUTER JOIN acm_audit_event_type_lu lu ON al.cm_audit_activity = lu.cm_key";
 
         switch (sort)
         {
@@ -184,7 +186,7 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
             break;
         }
 
-        if ( "DESC".equals(direction) )
+        if ("DESC".equals(direction))
         {
             queryText += " DESC, al.cm_audit_id DESC";
         }
@@ -198,10 +200,10 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
         query.setMaxResults(maxRows);
         query.setParameter(1, objectId);
         query.setParameter(2, objectType);
-        if ( eventTypes != null && !eventTypes.isEmpty() )
+        if (eventTypes != null && !eventTypes.isEmpty())
         {
             int paramIndex = 3;
-            for ( String event : eventTypes )
+            for (String event : eventTypes)
             {
                 query.setParameter(paramIndex, event);
                 paramIndex++;
