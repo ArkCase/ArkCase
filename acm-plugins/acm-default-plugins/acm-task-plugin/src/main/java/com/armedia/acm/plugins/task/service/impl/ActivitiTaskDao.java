@@ -1446,13 +1446,19 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
             {
                 acmTask.setReworkInstructions(reworkInstructions);
             }
-            
-            String docUnderReview = (String) localVariables.get(TaskConstants.VARIABLE_NAME_PDF_RENDITION_ID);
-            if (docUnderReview != null)
-            {
-                acmTask.setReviewDocumentPdfRenditionId(docUnderReview);    
-            }
 
+            String docUnderReview = null;
+            if (localVariables.get(TaskConstants.VARIABLE_NAME_PDF_RENDITION_ID) instanceof Long)
+            {
+                docUnderReview = String.valueOf(localVariables.get(TaskConstants.VARIABLE_NAME_PDF_RENDITION_ID));
+            } else
+            {
+                docUnderReview = (String) localVariables.get(TaskConstants.VARIABLE_NAME_PDF_RENDITION_ID);
+            }
+            if(docUnderReview != null)
+            {
+                acmTask.setReviewDocumentPdfRenditionId(docUnderReview);
+            }
         }
 
         // If start date is not provided, set start date as creation date
