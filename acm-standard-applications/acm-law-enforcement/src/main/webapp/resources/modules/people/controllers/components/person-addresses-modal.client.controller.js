@@ -8,10 +8,24 @@ angular.module('people').controller('People.AddressesModalController', [ '$scope
     ObjectLookupService.getCountries().then(function(countries) {
         $scope.countries = countries;
     });
-
-    ObjectLookupService.getStates().then(function(states) {
-        $scope.states = states;
-    });
+    
+    $scope.changeStates = function(country){
+        $scope.state = "";
+        if(country == 'US') {
+            $scope.state = 'states';
+        } else if (country == 'CA') {
+            $scope.state = 'canadaStates';
+        } else if (country == 'JP') {
+            $scope.state = 'japanStates';
+        }
+        $scope.updateStates();
+    };
+    
+    $scope.updateStates = function(){
+        ObjectLookupService.getLookupByLookupName($scope.state) .then(function(states) {
+            $scope.states = states;
+        });
+    };
 
     $scope.address = params.address;
     $scope.isEdit = params.isEdit;
