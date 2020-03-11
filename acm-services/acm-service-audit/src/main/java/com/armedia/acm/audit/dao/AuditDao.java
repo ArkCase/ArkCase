@@ -63,20 +63,25 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
     @Transactional
     public int purgeQuartzAudits(Date threshold, int limitTo)
     {
-        TypedQuery<Long[]> getQuartzAuditIds = getEm().createQuery("SELECT MIN(audit.id), MAX(audit.id) FROM AuditEvent audit "
-                + "WHERE audit.fullEventType LIKE :eventType AND audit.eventDate <= :threshold", Long[].class);
+        TypedQuery<Long> getQuartzAuditIds = getEm().createQuery("SELECT audit.id FROM AuditEvent audit "
+                + "WHERE audit.fullEventType LIKE :eventType AND audit.eventDate <= :threshold ORDER BY audit.id ASC", Long.class);
         getQuartzAuditIds.setParameter("eventType", AcmJobEventPublisher.BASE_JOB_AUDIT_TYPE + "%");
         getQuartzAuditIds.setParameter("threshold", threshold);
-        List<Long[]> quartzAudits = getQuartzAuditIds.setMaxResults(limitTo).getResultList();
+        List<Long> quartzAudits = getQuartzAuditIds.setMaxResults(limitTo).getResultList();
 
-        Object[] ids = quartzAudits.get(0);
-        if (ids[0] == null && ids[1] == null)
+        if (quartzAudits.isEmpty())
         {
             return 0;
         }
-        Query deleteQuartzAudits = getEm().createQuery("DELETE FROM AuditEvent audit WHERE audit.id >= :startId AND audit.id <= :endId");
-        deleteQuartzAudits.setParameter("startId", ids[0]);
-        deleteQuartzAudits.setParameter("endId", ids[1]);
+
+        Long minId = quartzAudits.get(0);
+        Long maxId = quartzAudits.get(quartzAudits.size() - 1);
+
+        Query deleteQuartzAudits = getEm().createQuery("DELETE FROM AuditEvent audit WHERE audit.id >= :startId "
+                + "AND audit.id <= :endId AND audit.fullEventType LIKE :eventType");
+        deleteQuartzAudits.setParameter("startId", minId);
+        deleteQuartzAudits.setParameter("endId", maxId);
+        deleteQuartzAudits.setParameter("eventType", AcmJobEventPublisher.BASE_JOB_AUDIT_TYPE + "%");
         return deleteQuartzAudits.executeUpdate();
     }
 
