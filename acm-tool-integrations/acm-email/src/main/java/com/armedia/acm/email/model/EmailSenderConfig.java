@@ -78,6 +78,10 @@ public class EmailSenderConfig
     @JsonProperty("email.sender.convertDocumentsToPdf")
     @Value("${email.sender.convertDocumentsToPdf}")
     private Boolean convertDocumentsToPdf;
+    
+    @JsonProperty("email.sender.outgoingEmail.folderName")
+    @Value("${email.sender.outgoingEmail.folderName}")
+    private String outgoingEmailFolderName;
 
     public void setType(String type)
     {
@@ -190,5 +194,15 @@ public class EmailSenderConfig
     public void setConvertDocumentsToPdf(Boolean convertDocumentsToPdf)
     {
         this.convertDocumentsToPdf = convertDocumentsToPdf;
+    }
+
+    public String getOutgoingEmailFolderName() 
+    {
+        return outgoingEmailFolderName;
+    }
+
+    public void setOutgoingEmailFolderName(String outgoingEmailFolderName) 
+    {
+        this.outgoingEmailFolderName = outgoingEmailFolderName;
     }
 }
