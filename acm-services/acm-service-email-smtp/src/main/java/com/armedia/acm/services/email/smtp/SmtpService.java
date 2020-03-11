@@ -136,16 +136,8 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
 
         List<AcmEvent> sentEvents = new ArrayList<>();
         Map<String, InputStreamDataSource> attachments = processAttachments(in, user, sentEvents);
-        String objectType = null;
-        if (in.getObjectType() == null && !in.getParentType().isEmpty())
-        {
-            objectType = in.getParentType().contains("Case") ? "CASE_FILE" : in.getParentType().toUpperCase();
-        }
-        String objectId = null;
-        if (in.getObjectId() == null && in.getParentNumber() != null)
-        {
-            objectId = in.getParentNumber().contains("_") ? StringUtils.substringAfter(in.getParentNumber(), "_") : in.getParentNumber();
-        }
+        String objectId = extractIdFromEmailWithAttachmentsDTO(in);
+        String objectType = extractObjectTypeFromEmailWithAttachmentsDTO(in);
         for (String emailAddress : in.getEmailAddresses())
         {
             
@@ -372,11 +364,7 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
         Exception exception = null;
 
         Long parentId = setFilenames(in);
-        String objectId = null;
-        if (in.getParentNumber() != null)
-        {
-            objectId = in.getParentNumber().contains("_") ? StringUtils.substringAfter(in.getParentNumber(), "_") : in.getParentNumber();
-        }
+        String objectId = extractIdFromEmailWithEmbeddedLinkDTO(in);
 
         for (String emailAddress : in.getEmailAddresses())
         {
@@ -405,6 +393,36 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
     private String makeNote(String emailAddress, EmailWithEmbeddedLinksDTO emailWithEmbeddedLinksDTO, Authentication authentication)
     {
         return getAcmEmailContentGeneratorService().generateEmailBody(emailWithEmbeddedLinksDTO, emailAddress, authentication);
+    }
+    
+    private String extractIdFromEmailWithEmbeddedLinkDTO (EmailWithEmbeddedLinksDTO in)
+    {
+        String objectId = null;
+        if (in.getParentNumber() != null)
+        {
+            objectId = in.getParentNumber().contains("_") ? StringUtils.substringAfter(in.getParentNumber(), "_") : in.getParentNumber();
+        }
+        return objectId;
+    }
+    
+    private String extractIdFromEmailWithAttachmentsDTO (EmailWithAttachmentsDTO in)
+    {
+        String objectId = null;
+        if (in.getObjectId() == null && in.getParentNumber() != null)
+        {
+            objectId = in.getParentNumber().contains("_") ? StringUtils.substringAfter(in.getParentNumber(), "_") : in.getParentNumber();
+        }
+        return objectId;
+    }
+    
+    private String extractObjectTypeFromEmailWithAttachmentsDTO (EmailWithAttachmentsDTO in)
+    {
+        String objectType = null;
+        if (in.getObjectType() == null && !in.getParentType().isEmpty())
+        {
+            objectType = in.getParentType().contains("Case") ? "CASE_FILE" : in.getParentType().toUpperCase();
+        }
+        return objectType;
     }
 
     /**

@@ -69,9 +69,6 @@ public class CaptureConfig
 
     @Value("${capture.oxm.file.path}")
     private String oxmFilePath;
-    
-    @Value("${capture.outgoingEmail.folderName}")
-    private String outgoingEmailFolderName;
 
     public String getFileExtension()
     {
@@ -203,13 +200,4 @@ public class CaptureConfig
         this.oxmFilePath = oxmFilePath;
     }
 
-    public String getOutgoingEmailFolderName() 
-    {
-        return outgoingEmailFolderName;
-    }
-
-    public void setOutgoingEmailFolderName(String outgoingEmailFolderName) 
-    {
-        this.outgoingEmailFolderName = outgoingEmailFolderName;
-    }
 }

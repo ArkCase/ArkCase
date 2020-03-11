@@ -5,6 +5,7 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.core.model.AcmEvent;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.email.model.EmailReceiverConfig;
+import com.armedia.acm.email.model.EmailSenderConfig;
 import com.armedia.acm.files.capture.CaptureConfig;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
@@ -42,7 +43,7 @@ public class TrackOutgoingEmailService implements ApplicationEventPublisherAware
     private EcmFileService ecmFileService;
     private EcmFileDao ecmFileDao;
     private ApplicationEventPublisher eventPublisher;
-    private CaptureConfig captureConfig;
+    private EmailSenderConfig emailSenderConfig;
 
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
@@ -59,7 +60,6 @@ public class TrackOutgoingEmailService implements ApplicationEventPublisherAware
         String currentDate = formatter.format(date);
         String messageFileName = emailAddress + "-" + currentDate + "-" + subject.replaceAll(":", "_") + ".eml";
         File messageFile = new File(tempDir + File.separator + messageFileName);
-        Exception exception = null;
 
         String userId = emailReceiverConfig.getEmailUserId();
         auditPropertyEntityAdapter.setUserId(userId);
@@ -74,7 +74,7 @@ public class TrackOutgoingEmailService implements ApplicationEventPublisherAware
                 message.writeTo(os);
             }
 
-            AcmFolder folder = getAcmFolderService().addNewFolderByPath(objectType, Long.parseLong(objectId), captureConfig.getOutgoingEmailFolderName());
+            AcmFolder folder = getAcmFolderService().addNewFolderByPath(objectType, Long.parseLong(objectId), emailSenderConfig.getOutgoingEmailFolderName());
             try (InputStream is = new FileInputStream(messageFile))
             {
                 messageFileName = checkDuplicateFileName(messageFileName, folder.getId());
@@ -92,6 +92,7 @@ public class TrackOutgoingEmailService implements ApplicationEventPublisherAware
                                 attachmentFileName, auth,
                                 folder.getCmisFolderId(), objectType, Long.parseLong(objectId));
                     }
+                    //File upload falling should not break the flow 
                     catch (IOException | AcmUserActionFailedException | AcmCreateObjectFailedException e)
                     {
                         log.error("Failed to upload attachments to Outgoing Email folder for object with ID '{}' ", objectId,
@@ -106,10 +107,10 @@ public class TrackOutgoingEmailService implements ApplicationEventPublisherAware
             eventPublisher.publishEvent(event);
             
         }
+        //File upload falling should not break the flow 
         catch (Exception e)
         {
             log.error("Failed to upload mail into object with ID '{}'. Exception msg: '{}' ", objectId, e.getMessage());
-            exception = e;
         }
 
     }
@@ -124,7 +125,7 @@ public class TrackOutgoingEmailService implements ApplicationEventPublisherAware
         if (sameFilesName.isPresent())
         {
             ZonedDateTime date = ZonedDateTime.now(ZoneOffset.UTC);
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmssZ");
             String timestampName = formatter.format(date);
             newFileName = newFileName + "-" + timestampName;
         }
@@ -181,13 +182,13 @@ public class TrackOutgoingEmailService implements ApplicationEventPublisherAware
         this.ecmFileDao = ecmFileDao;
     }
 
-    public CaptureConfig getCaptureConfig() 
+    public EmailSenderConfig getEmailSenderConfig() 
     {
-        return captureConfig;
+        return emailSenderConfig;
     }
 
-    public void setCaptureConfig(CaptureConfig captureConfig) 
+    public void setEmailSenderConfig(EmailSenderConfig emailSenderConfig) 
     {
-        this.captureConfig = captureConfig;
+        this.emailSenderConfig = emailSenderConfig;
     }
 }

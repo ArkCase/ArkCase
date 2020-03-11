@@ -37,7 +37,7 @@
         <property name="emailReceiverConfig" ref="emailReceiverConfig"/>
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
-        <property name="captureConfig" ref="captureConfig"/>
+        <property name="emailSenderConfig" ref="emailSenderConfig"/>
     </bean>
 
 </beans>
