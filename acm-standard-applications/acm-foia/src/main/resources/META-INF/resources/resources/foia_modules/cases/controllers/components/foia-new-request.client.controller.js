@@ -498,19 +498,55 @@ angular.module('cases').controller(
                 var param = {};
                 param.caseNumber = $scope.config.data.originalRequestNumber;
                 RequestsService.getRequestByNumber(param).$promise.then(function (originalRequest) {
-                    if (originalRequest.status === 'Released') {
-                        $scope.config.data.details = originalRequest.details;
-                        $scope.config.data.title = originalRequest.title;
-                        $scope.config.data.requestCategory = originalRequest.requestCategory;
-                        $scope.config.data.deliveryMethodOfResponse = originalRequest.deliveryMethodOfResponse;
-                        $scope.config.data.originator.person.addresses[0].streetAddress = originalRequest.originator.person.addresses[0].streetAddress;
-                        $scope.config.data.originator.person.addresses[0].streetAddress2 = originalRequest.originator.person.addresses[0].streetAddress2;
-                        $scope.config.data.originator.person.addresses[0].city = originalRequest.originator.person.addresses[0].city;
-                        $scope.config.data.originator.person.addresses[0].state = originalRequest.originator.person.addresses[0].state;
-                        $scope.config.data.originator.person.addresses[0].country = originalRequest.originator.person.addresses[0].country;
-                        $scope.config.data.originator.person.addresses[0].zip = originalRequest.originator.person.addresses[0].zip;
+                    if (originalRequest.status === 'Released' && !Util.isEmpty(originalRequest.caseNumber)) {
+                        $scope.populatePersonContactInfo(originalRequest);
+                    } else {
+                        $scope.clearPersonContactInfo();
                     }
                 });
+            };
+            $scope.clearPersonContactInfo = function() {
+                if ($scope.config.data.originator.person) {
+                    $scope.config.data.originator.person.title = null;
+                    $scope.config.data.originator.person.givenName = null;
+                    $scope.confirmationEmail = null;
+                    $scope.isAppealPopulated = false;
+                    $scope.config.data.details = null;
+                    $scope.config.data.title = null;
+                    $scope.config.data.originator.person.middleName = null;
+                    $scope.config.data.originator.person.familyName = null;
+                    $scope.config.data.originator.person.position = null;
+                    $scope.config.data.originator.person.defaultPhone.value = null;
+                    $scope.config.data.originator.person.defaultEmail.value = null;
+                    $scope.config.data.originator.person.addresses[0].streetAddress = null;
+                    $scope.config.data.originator.person.addresses[0].streetAddress2 = null;
+                    $scope.config.data.originator.person.addresses[0].city = null;
+                    $scope.config.data.originator.person.addresses[0].state = null;
+                    $scope.config.data.originator.person.addresses[0].country = null;
+                    $scope.config.data.originator.person.addresses[0].zip = null;
+                }
+            };
+
+            $scope.populatePersonContactInfo = function(originalRequest) {
+                    $scope.config.data.originator.person.title = originalRequest.originator.person.title;
+                    $scope.config.data.originator.person.givenName = originalRequest.originator.person.givenName;
+                    $scope.config.data.originator.person.middleName = originalRequest.originator.person.middleName;
+                    $scope.config.data.originator.person.familyName = originalRequest.originator.person.familyName;
+                    $scope.config.data.originator.person.position = originalRequest.originator.person.position;
+                    $scope.config.data.originator.person.defaultPhone.value = originalRequest.originator.person.defaultPhone.value;
+                    $scope.config.data.originator.person.defaultEmail.value = originalRequest.originator.person.defaultEmail.value;
+                    $scope.confirmationEmail = originalRequest.originator.person.defaultEmail.value;
+                    $scope.config.data.details = originalRequest.details;
+                    $scope.config.data.title = originalRequest.title;
+                    $scope.config.data.requestCategory = originalRequest.requestCategory;
+                    $scope.config.data.deliveryMethodOfResponse = originalRequest.deliveryMethodOfResponse;
+                    $scope.config.data.originator.person.addresses[0].streetAddress = originalRequest.originator.person.addresses[0].streetAddress;
+                    $scope.config.data.originator.person.addresses[0].streetAddress2 = originalRequest.originator.person.addresses[0].streetAddress2;
+                    $scope.config.data.originator.person.addresses[0].city = originalRequest.originator.person.addresses[0].city;
+                    $scope.config.data.originator.person.addresses[0].state = originalRequest.originator.person.addresses[0].state;
+                    $scope.config.data.originator.person.addresses[0].country = originalRequest.originator.person.addresses[0].country;
+                    $scope.config.data.originator.person.addresses[0].zip = originalRequest.originator.person.addresses[0].zip;
+                    $scope.isAppealPopulated = true;
             };
 
             $scope.requestInReleaseStatusSearch = function () {
