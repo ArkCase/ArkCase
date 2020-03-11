@@ -29,7 +29,9 @@ package com.armedia.acm.plugins.task.web.api;
 
 import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.plugins.ecm.exception.LinkAlreadyExistException;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.service.impl.CreateAdHocTaskService;
 
@@ -54,8 +56,7 @@ public class CreateAdHocTaskAPIController
     @ResponseBody
     public AcmTask createAdHocTask(@RequestPart(name = "task") AcmTask in,
             @RequestPart(name = "files") List<MultipartFile> filesToUpload, Authentication authentication, HttpSession httpSession)
-            throws AcmAppErrorJsonMsg, AcmCreateObjectFailedException, AcmUserActionFailedException
-    {
+            throws AcmAppErrorJsonMsg, AcmCreateObjectFailedException, AcmUserActionFailedException, LinkAlreadyExistException, AcmObjectNotFoundException {
 
         String ipAddress = (String) httpSession.getAttribute("acm_ip_address");
         return createAdHocTaskService.createAdHocTask(in, filesToUpload, authentication, ipAddress);

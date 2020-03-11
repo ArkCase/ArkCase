@@ -31,9 +31,9 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
                     $scope.dateInPicker = new Date();
                 } else {
                     if ($scope.timeFormatDisabled === "true") {
-                        $scope.today = (date instanceof String || typeof date == 'string') ? moment.utc(date).local().format(UtilDateService.defaultDateFormat) : moment(date).format(UtilDateService.defaultDateFormat);
+                        $scope.today = (date instanceof String || typeof date == 'string') ? moment(date).local().format("MM/DD/YYYY") : moment(date).format("MM/DD/YYYY");
                     } else {
-                        $scope.today = (date instanceof String || typeof date == 'string') ? moment.utc(date).local().format(UtilDateService.defaultDateTimeFormat) : moment(date).format(UtilDateService.defaultDateTimeFormat);
+                        $scope.today = (date instanceof String || typeof date == 'string') ? moment.utc(date).local().format("MM/DD/YYYY HH:mm") : moment(date).format("MM/DD/YYYY HH:mm");
                     }
                     $scope.dateInPicker = UtilDateService.isoToDate($scope.today);
                 }
@@ -63,7 +63,7 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
                         value: $scope.dateInPicker
                     });
                     if(!UtilService.isEmpty($scope.data)) {
-                        $scope.today = ($scope.data instanceof String || typeof $scope.data == 'string') ? moment.utc($scope.data).local().format(UtilDateService.defaultDateFormat) : moment($scope.data).format(UtilDateService.defaultDateFormat);
+                        $scope.today = ($scope.data instanceof String || typeof $scope.data == 'string') ? moment.utc($scope.data).local().format("MM/DD/YYYY") : moment($scope.data).format("MM/DD/YYYY");
                     } else {
                         $scope.today = "";
                     }
@@ -79,7 +79,7 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
                         value: $scope.dateInPicker
                     });
                     if(!UtilService.isEmpty($scope.data)) {
-                        $scope.today = ($scope.data instanceof String || typeof $scope.data == 'string') ? moment.utc($scope.data).local().format(UtilDateService.defaultDateTimeFormat) : moment($scope.data).format(UtilDateService.defaultDateTimeFormat);
+                        $scope.today = ($scope.data instanceof String || typeof $scope.data == 'string') ? moment.utc($scope.data).local().format('MM/DD/YYYY HH:mm') : moment($scope.data).format('MM/DD/YYYY HH:mm');
                     } else {
                         $scope.today = "";
                     }

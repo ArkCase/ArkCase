@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm-services</artifactId>
         <groupId>com.armedia.acm</groupId>
-        <version>3.3.4</version>
+        <version>3.3.5</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -276,6 +276,10 @@
         <dependency>
             <groupId>com.antkorwin</groupId>
             <artifactId>xsync</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.librepdf</groupId>
+            <artifactId>openpdf</artifactId>
         </dependency>
     </dependencies>
 

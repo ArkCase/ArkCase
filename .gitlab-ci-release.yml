@@ -98,7 +98,7 @@ release_candidate_X:
     - apt-get install -y zip sshpass
     - export SSHPASS=$SSHPASS_ARKCASE
     - curl --silent --create-dirs -o /usr/share/maven/lib/ext/pom-manipulation-ext-3.8.1.jar https://repo1.maven.org/maven2/org/commonjava/maven/ext/pom-manipulation-ext/3.8.1/pom-manipulation-ext-3.8.1.jar
-    - git checkout --track release/$RELEASE_VERSION
+    - git checkout release/$RELEASE_VERSION
     - git push origin HEAD:refs/tags/$RELEASE_VERSION-$RELEASE_CANDIDATE_SUFFIX
     - mvn -DskipTests -T 4 -B deploy "-DaltDeploymentRepository=arkcase.release::default::https://***REMOVED***/repository/arkcase.release/" -DversionOverride=$RELEASE_VERSION-$RELEASE_CANDIDATE_SUFFIX -DversionOsgi=false
     - sshpass -e sftp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ***REMOVED*** <<< $'put acm-standard-applications/acm-law-enforcement/target/*.war /from-arkcase/arkcase-'$RELEASE_VERSION-$RELEASE_CANDIDATE_SUFFIX'.war' 
@@ -126,9 +126,9 @@ release:
     - apt-get update
     - apt-get install -y zip sshpass
     - export SSHPASS=$SSHPASS_ARKCASE
-    - mvn -B gitflow:hotfix-finish -DhotfixVersion=$RELEASE_VERSION -DskipTestProject=true -DskipMergeDevBranch=true
+    - mvn -B gitflow:release-finish -DskipTestProject=true -DcommitDevelopmentVersionAtStart=true
     - git checkout master
-    - mvn -DskipITs -T 4 -B deploy "-DaltDeploymentRepository=arkcase.release::default::https://***REMOVED***/repository/arkcase.release/"
+    - mvn -DskipTests -T 4 -B deploy "-DaltDeploymentRepository=arkcase.release::default::https://***REMOVED***/repository/arkcase.release/"
     - sshpass -e sftp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ***REMOVED*** <<< $'put acm-standard-applications/acm-law-enforcement/target/*.war /from-arkcase/arkcase-'$RELEASE_VERSION'.war' 
     # Deploy on test servers
     
@@ -180,7 +180,7 @@ release_hotfix:
     - git checkout hotfix/support/$HOTFIX_SUPPORT_VERSION/$RELEASE_VERSION
     - git checkout support/$HOTFIX_SUPPORT_VERSION
     - mvn -B gitflow:hotfix-finish -DpushRemote=true -DhotfixVersion=support/$HOTFIX_SUPPORT_VERSION/$RELEASE_VERSION -DskipTestProject=true -DskipMergeDevBranch=true
-    - mvn -DskipITs -T 4 -B deploy "-DaltDeploymentRepository=arkcase.release::default::https://***REMOVED***/repository/arkcase.release/"
+    - mvn -DskipTests -T 4 -B deploy "-DaltDeploymentRepository=arkcase.release::default::https://***REMOVED***/repository/arkcase.release/"
     - sshpass -e sftp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ***REMOVED*** <<< $'put acm-standard-applications/acm-law-enforcement/target/*.war /from-arkcase/arkcase-'$RELEASE_VERSION'.war' 
     # Deploy on test servers
 
@@ -193,11 +193,11 @@ release_all:
     # Trigger other project releases:
     # Configuration
     - curl -k --request POST --form token=$CONFIGURATION_PROJECT_TOKEN --form ref=core
-      --form "variables[RELEASE_CANDIDATE_1]=$RELEASE_CANDIDATE_1"
+      --form "variables[RELEASE_START]=$RELEASE_START"
       --form "variables[RELEASE_VERSION]=$RELEASE_VERSION"
       --form "variables[DEVELOP_NEW_VERSION]=$DEVELOP_NEW_VERSION"
-      --form "variables[START_RELEASE_CANDIDATE_X]=$START_RELEASE_CANDIDATE_X"
       --form "variables[RELEASE_CANDIDATE_X]=$RELEASE_CANDIDATE_X"
+      --form "variables[RELEASE_CANDIDATE_SUFFIX]=$RELEASE_CANDIDATE_SUFFIX"
       --form "variables[RELEASE]=$RELEASE"
       --form "variables[START_SUPPORT_BRANCH]=$START_SUPPORT_BRANCH"
       --form "variables[RELEASE_TAG]=$RELEASE_TAG"
@@ -207,11 +207,10 @@ release_all:
       https://***REMOVED***/api/v4/projects/30/trigger/pipeline
     # Portal backend
     - curl -k --request POST --form token=$EXTERNAL_WEB_PORTAL_PROJECT_TOKEN --form ref=develop
-      --form "variables[RELEASE_CANDIDATE_1]=$RELEASE_CANDIDATE_1"
       --form "variables[RELEASE_VERSION]=$RELEASE_VERSION"
       --form "variables[DEVELOP_NEW_VERSION]=$DEVELOP_NEW_VERSION"
-      --form "variables[START_RELEASE_CANDIDATE_X]=$START_RELEASE_CANDIDATE_X"
       --form "variables[RELEASE_CANDIDATE_X]=$RELEASE_CANDIDATE_X"
+      --form "variables[RELEASE_CANDIDATE_SUFFIX]=$RELEASE_CANDIDATE_SUFFIX"
       --form "variables[RELEASE]=$RELEASE"
       --form "variables[START_SUPPORT_BRANCH]=$START_SUPPORT_BRANCH"
       --form "variables[RELEASE_TAG]=$RELEASE_TAG"
@@ -221,11 +220,10 @@ release_all:
       https://***REMOVED***/api/v4/projects/193/trigger/pipeline
     # Portal UI
     - curl -k --request POST --form token=$EXTERNAL_WEB_PORTAL_UI_PROJECT_TOKEN --form ref=develop
-      --form "variables[RELEASE_CANDIDATE_1]=$RELEASE_CANDIDATE_1"
       --form "variables[RELEASE_VERSION]=$RELEASE_VERSION"
       --form "variables[DEVELOP_NEW_VERSION]=$DEVELOP_NEW_VERSION"
-      --form "variables[START_RELEASE_CANDIDATE_X]=$START_RELEASE_CANDIDATE_X"
       --form "variables[RELEASE_CANDIDATE_X]=$RELEASE_CANDIDATE_X"
+      --form "variables[RELEASE_CANDIDATE_SUFFIX]=$RELEASE_CANDIDATE_SUFFIX"
       --form "variables[RELEASE]=$RELEASE"
       --form "variables[START_SUPPORT_BRANCH]=$START_SUPPORT_BRANCH"
       --form "variables[RELEASE_TAG]=$RELEASE_TAG"
@@ -235,11 +233,10 @@ release_all:
       https://***REMOVED***/api/v4/projects/237/trigger/pipeline
     # Config server
     - curl -k --request POST --form token=$CONFIG_SERVER_PROJECT_TOKEN --form ref=develop
-      --form "variables[RELEASE_CANDIDATE_1]=$RELEASE_CANDIDATE_1"
       --form "variables[RELEASE_VERSION]=$RELEASE_VERSION"
       --form "variables[DEVELOP_NEW_VERSION]=$DEVELOP_NEW_VERSION"
-      --form "variables[START_RELEASE_CANDIDATE_X]=$START_RELEASE_CANDIDATE_X"
       --form "variables[RELEASE_CANDIDATE_X]=$RELEASE_CANDIDATE_X"
+      --form "variables[RELEASE_CANDIDATE_SUFFIX]=$RELEASE_CANDIDATE_SUFFIX"
       --form "variables[RELEASE]=$RELEASE"
       --form "variables[START_SUPPORT_BRANCH]=$START_SUPPORT_BRANCH"
       --form "variables[RELEASE_TAG]=$RELEASE_TAG"
@@ -249,11 +246,10 @@ release_all:
       https://***REMOVED***/api/v4/projects/322/trigger/pipeline
     # Snowbound
     - curl -k --request POST --form token=$SNOWBOUND_PROJECT_TOKEN --form ref=snowbound-4.10
-      --form "variables[RELEASE_CANDIDATE_1]=$RELEASE_CANDIDATE_1"
       --form "variables[RELEASE_VERSION]=$RELEASE_VERSION"
       --form "variables[DEVELOP_NEW_VERSION]=$DEVELOP_NEW_VERSION"
-      --form "variables[START_RELEASE_CANDIDATE_X]=$START_RELEASE_CANDIDATE_X"
       --form "variables[RELEASE_CANDIDATE_X]=$RELEASE_CANDIDATE_X"
+      --form "variables[RELEASE_CANDIDATE_SUFFIX]=$RELEASE_CANDIDATE_SUFFIX"
       --form "variables[RELEASE]=$RELEASE"
       --form "variables[START_SUPPORT_BRANCH]=$START_SUPPORT_BRANCH"
       --form "variables[RELEASE_TAG]=$RELEASE_TAG"

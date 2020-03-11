@@ -5,33 +5,31 @@
     expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/processdef"
     xmlns:modeler="http://activiti.com/modeler" modeler:version="1.0ev" modeler:exportDateTime="20160707202747" modeler:modelId="981819"
     modeler:modelVersion="1" modeler:modelLastUpdated="1467919659458">
-    <process id="foia-extension-generalcounsel-process" name="foia-extension-generalcounsel-process" isExecutable="true">
-        <documentation>This business process runs when the FOIA request enters the General Counsel queue.
-        </documentation>
+    <process id="foia-extension-hold-process" name="foia-extension-hold-process" isExecutable="true">
+        <documentation>This business process runs when the FOIA request enters the Hold queue.</documentation>
         <startEvent id="startEvent1"/>
         <sequenceFlow id="sid-2ECFBB0E-7B21-4B25-9FA3-6D8134E86DA4" sourceRef="startEvent1"
             targetRef="sid-E0905ADB-9340-49AC-ADA5-3AD0B417D585"/>
         <serviceTask id="sid-E0905ADB-9340-49AC-ADA5-3AD0B417D585" name="Set FOIA Request status"
-            activiti:expression="#{changeObjectStatusService.change(OBJECT_ID, OBJECT_TYPE, 'GC Review')}"/>
+                     activiti:expression="#{changeObjectStatusService.changeIfNoPermanentStatusIsSet(OBJECT_ID, OBJECT_TYPE, OBJECT_STATUS, 'Closed')}"/>
         <sequenceFlow id="sid-A1A80BC3-B3F3-472A-8187-6EF2428E1D51" sourceRef="sid-E0905ADB-9340-49AC-ADA5-3AD0B417D585"
             targetRef="sid-F88A33F4-A31E-43B6-A65C-0921762C023D"/>
-        <serviceTask id="sid-F88A33F4-A31E-43B6-A65C-0921762C023D" name="Place FOIA Request in General Counsel queue"
-            activiti:expression="#{queueCaseService.enqueue(OBJECT_ID, 'General Counsel')}"/>
+        <serviceTask id="sid-F88A33F4-A31E-43B6-A65C-0921762C023D" name="Place FOIA Request in Hold queue"
+            activiti:expression="#{queueCaseService.enqueue(OBJECT_ID, 'Hold')}"/>
         <endEvent id="sid-2158CAAD-78C1-465F-B109-70C2FCF1FF39"/>
         <sequenceFlow id="sid-9CC4EEEB-90ED-4DEC-9FBC-0F27FC1CE629" sourceRef="sid-F88A33F4-A31E-43B6-A65C-0921762C023D"
             targetRef="sid-2158CAAD-78C1-465F-B109-70C2FCF1FF39"/>
         <textAnnotation id="sid-A4DD8BA4-1458-4B2D-A55F-9098105D10A5">
-            <text>This process orchestrates all the actions needed when a FOIA request is entering the General Counsel
-                queue.
+            <text>This process orchestrates all the actions needed when a FOIA request is entering the Hold queue.
                 Currently there are two such actions:
 
-                1. Set the status to GC Review
-                2. Set the queue name to 'General Counsel'
+                1. Set the status to Hold, if status is not Closed
+                2. Set the queue name to 'Hold'
             </text>
         </textAnnotation>
     </process>
-    <bpmndi:BPMNDiagram id="BPMNDiagram_foia-extension-generalcounsel-process">
-        <bpmndi:BPMNPlane bpmnElement="foia-extension-generalcounsel-process" id="BPMNPlane_foia-extension-generalcounsel-process">
+    <bpmndi:BPMNDiagram id="BPMNDiagram_foia-extension-hold-process">
+        <bpmndi:BPMNPlane bpmnElement="foia-extension-hold-process" id="BPMNPlane_foia-extension-hold-process">
             <bpmndi:BPMNShape bpmnElement="startEvent1" id="BPMNShape_startEvent1">
                 <omgdc:Bounds height="30.0" width="30.0" x="100.0" y="163.0"/>
             </bpmndi:BPMNShape>

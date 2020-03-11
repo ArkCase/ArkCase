@@ -31,9 +31,9 @@ import com.armedia.acm.convertfolder.ConversionException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
-import gov.foia.service.RequestResponseFolderService;
-import org.apache.logging.log4j.Logger;
+
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -44,6 +44,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import gov.foia.service.RequestResponseFolderService;
 
 @Controller
 @RequestMapping({ "/api/v1/plugin/casefile", "/api/latest/plugin/casefile" })
@@ -56,7 +58,9 @@ public class RequestResponseFolderAPIController
     @PreAuthorize("hasPermission(#requestId, 'CASE_FILE', 'saveCase')")
     @RequestMapping(value = "/{caseId}/compressAndSendResponseFolder", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<?> compressAndSendResponseFolderToPortal(@PathVariable("caseId") Long requestId, Authentication authentication) throws AcmObjectNotFoundException, AcmUserActionFailedException, ConversionException, AcmFolderException {
+    public ResponseEntity compressAndSendResponseFolderToPortal(@PathVariable("caseId") Long requestId, Authentication authentication)
+            throws AcmObjectNotFoundException, AcmUserActionFailedException, ConversionException, AcmFolderException
+    {
         try
         {
             log.debug("Trying to Compress and Send the Response folder for the request [{}] to Portal", requestId);

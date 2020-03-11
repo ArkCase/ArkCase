@@ -80,11 +80,23 @@
             <div class="row">
                 <div class="col-sm-3" ng-if="enableTitle">
                     <label for="title" translate> cases.comp.main.title.label </label>
-                    <input type="text" id="title" ng-model="objectInfo.title" class="input-md form-control" ng-disabled="true" maxlength="50"/>
+                    <input type="text" id="title" ng-model="objectInfo.title" class="input-md form-control" ng-disabled="true"
+                            maxlength="50" />
                 </div>
                 <div class="col-sm-3">
                     <label translate> cases.comp.main.description.label </label>
                     <textarea rows=5 ng-model="objectInfo.details" class="input-md form-control" ng-disabled="true"></textarea>
+                </div>
+                <div class="col-sm-3">
+                    <label for="dispositionClosedDate" translate> cases.comp.main.dispositionClosedDate.label</label>
+                    <div>
+                        <fieldset ng-disabled="!enableDispositionClosedDate">
+                            <div class="form-group">
+                                <date-time-picker data="objectInfo.dispositionClosedDate" property="startDate"
+                                        date-picker-id="comboDate1"></date-time-picker>
+                            </div>
+                        </fieldset>
+                    </div>
                 </div>
                 <div class="col-sm-3">
                     <label for="releasedDate" translate> cases.comp.main.releasedDate.label</label>

@@ -239,6 +239,13 @@ public class DefaultFolderCompressor implements FolderCompressor, ApplicationEve
     @Async("fileCompressThreadPoolTaskExecutor")
     public void compressFiles(List<Long> fileIds, Authentication auth)
     {
+        String filePath = compressFiles(fileIds);
+        send(filePath, auth);
+    }
+
+    @Override
+    public String compressFiles(List<Long> fileIds)
+    {
 
         String filePath = null;
         getAuditPropertyEntityAdapter().setUserId(PROCESS_USER);
@@ -307,17 +314,14 @@ public class DefaultFolderCompressor implements FolderCompressor, ApplicationEve
                 log.warn("Could not close CMIS content stream: {}", e.getMessage(), e);
             }
 
-            filesForCompression.forEach(fileForCompression -> {
-                publishFileDownloadEvent(fileForCompression);
-            });
+            filesForCompression.forEach(this::publishFileDownloadEvent);
         }
         catch (IOException e)
         {
             log.warn("Could not create zip file: {}", e.getMessage(), e);
         }
 
-        send(filePath, auth);
-
+        return filePath;
     }
 
     private void send(String filePath, Authentication auth)
@@ -360,7 +364,7 @@ public class DefaultFolderCompressor implements FolderCompressor, ApplicationEve
         List<String> fileFolderList = new ArrayList<>();
 
         // all child objects of OBJECT_FILE_TYPE
-        List<AcmObject> files = folderChildren.stream().filter(c -> OBJECT_FILE_TYPE.equals(c.getObjectType().toUpperCase()))
+        List<AcmObject> files = folderChildren.stream().filter(c -> OBJECT_FILE_TYPE.equalsIgnoreCase(c.getObjectType()))
                 .collect(Collectors.toList());
         files.forEach(c -> {
             try
@@ -392,7 +396,7 @@ public class DefaultFolderCompressor implements FolderCompressor, ApplicationEve
         });
 
         // all child objects of OBJECT_FOLDER_TYPE
-        List<AcmObject> folders = folderChildren.stream().filter(c -> OBJECT_FOLDER_TYPE.equals(c.getObjectType().toUpperCase()))
+        List<AcmObject> folders = folderChildren.stream().filter(c -> OBJECT_FOLDER_TYPE.equalsIgnoreCase(c.getObjectType()))
                 .collect(Collectors.toList());
         folders.forEach(c -> {
             try
@@ -436,7 +440,7 @@ public class DefaultFolderCompressor implements FolderCompressor, ApplicationEve
             List<AcmObject> folderChildren = folderService.getFolderChildren(folder.getId());
 
             // all child objects of OBJECT_FILE_TYPE
-            List<AcmObject> files = folderChildren.stream().filter(c -> OBJECT_FILE_TYPE.equals(c.getObjectType().toUpperCase()))
+            List<AcmObject> files = folderChildren.stream().filter(c -> OBJECT_FILE_TYPE.equalsIgnoreCase(c.getObjectType()))
                     .collect(Collectors.toList());
             for (AcmObject acmObject : files)
             {
@@ -448,7 +452,7 @@ public class DefaultFolderCompressor implements FolderCompressor, ApplicationEve
             }
 
             // all child objects of OBJECT_FOLDER_TYPE
-            List<AcmObject> folders = folderChildren.stream().filter(c -> OBJECT_FOLDER_TYPE.equals(c.getObjectType().toUpperCase()))
+            List<AcmObject> folders = folderChildren.stream().filter(c -> OBJECT_FOLDER_TYPE.equalsIgnoreCase(c.getObjectType()))
                     .collect(Collectors.toList());
             for (AcmObject acmObject : folders)
             {

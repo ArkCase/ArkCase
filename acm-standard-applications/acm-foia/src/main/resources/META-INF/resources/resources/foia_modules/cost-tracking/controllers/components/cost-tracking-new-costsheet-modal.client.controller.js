@@ -35,7 +35,9 @@ angular.module('cost-tracking').controller(
                                     parentType: '',
                                     parentNumber: '',
                                     details: '',
-                                    costs: [ {} ],
+                                    costs: [ {
+                                        date: new Date()
+                                    } ],
                                     participants: []
                                 };
                                 $scope.costsheet.user = infoData;
@@ -81,6 +83,7 @@ angular.module('cost-tracking').controller(
                     $scope.updateBalance = function(costs) {
                         $scope.sumAmount = 0;
                         _.forEach(costs, function(cost) {
+                            cost.value = parseFloat(cost.value);
                             $scope.sumAmount += cost.value;
                             if (Util.isEmpty(cost.value))
                                 $scope.sumAmount = 0;
@@ -200,7 +203,9 @@ angular.module('cost-tracking').controller(
                     $scope.addCost = function() {
                         $timeout(function() {
                             if (!_.isEmpty($scope.costsheet.costs[0])) {
-                                $scope.costsheet.costs.push({});
+                                $scope.costsheet.costs.push({
+                                    date: new Date()
+                                });
                             }
                         }, 0);
                     };

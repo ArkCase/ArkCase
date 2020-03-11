@@ -32,9 +32,11 @@ import com.armedia.acm.core.model.ApplicationConfig;
 import com.armedia.acm.services.email.model.EmailMentionsDTO;
 import com.armedia.acm.services.email.service.AcmEmailServiceException;
 import com.armedia.acm.services.email.service.TemplatingEngine;
+import com.armedia.acm.services.labels.service.TranslationService;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
 
+import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.users.model.AcmUser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -54,6 +56,7 @@ public class AcmEmailMentionsService
     private TemplatingEngine templatingEngine;
     private NotificationDao notificationDao;
     private ApplicationConfig applicationConfig;
+    private TranslationService translationService;
 
     private String buildObjectUrl(EmailMentionsDTO in)
     {
@@ -78,7 +81,7 @@ public class AcmEmailMentionsService
 
         Notification notification = new Notification();
         notification.setTemplateModelName("mentions");
-        notification.setTitle(String.format("%s mentioned you in %s %d", user.getFullName(), in.getObjectType(), in.getObjectId()));
+        notification.setTitle(String.format(translationService.translate(NotificationConstants.EMAIL_MENTIONS), user.getFullName(), in.getObjectType(), in.getObjectId()));
         notification.setAttachFiles(false);
         notification.setParentType(in.getObjectType());
         notification.setParentId(in.getObjectId());
@@ -118,5 +121,15 @@ public class AcmEmailMentionsService
     public void setApplicationConfig(ApplicationConfig applicationConfig)
     {
         this.applicationConfig = applicationConfig;
+    }
+
+    public TranslationService getTranslationService()
+    {
+        return translationService;
+    }
+
+    public void setTranslationService(TranslationService translationService)
+    {
+        this.translationService = translationService;
     }
 }
