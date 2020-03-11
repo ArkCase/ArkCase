@@ -1,24 +1,27 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
-    xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema"
-    expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/processdef" xmlns:modeler="http://activiti.com/modeler"
-    modeler:version="1.0ev" modeler:exportDateTime="20180521235445" modeler:modelId="1045197" modeler:modelVersion="1"
-    modeler:modelLastUpdated="1526943075833">
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI"
+             typeLanguage="http://www.w3.org/2001/XMLSchema"
+             expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/processdef"
+             xmlns:modeler="http://activiti.com/modeler"
+             modeler:version="1.0ev" modeler:exportDateTime="20180521235445" modeler:modelId="1045197" modeler:modelVersion="1"
+             modeler:modelLastUpdated="1526943075833">
     <process id="foia-extension-release-process" name="foia-extension-release-process" isExecutable="true">
         <documentation>This business process runs when the FOIA request enters the Release queue.</documentation>
         <startEvent id="startEvent1"/>
-        <sequenceFlow id="sid-2ECFBB0E-7B21-4B25-9FA3-6D8134E86DA4" sourceRef="startEvent1" targetRef="sid-E0905ADB-9340-49AC-ADA5-3AD0B417D585"/>
+        <sequenceFlow id="sid-2ECFBB0E-7B21-4B25-9FA3-6D8134E86DA4" sourceRef="startEvent1"
+                      targetRef="sid-E0905ADB-9340-49AC-ADA5-3AD0B417D585"/>
         <serviceTask id="sid-E0905ADB-9340-49AC-ADA5-3AD0B417D585" name="Set FOIA Request status"
-            activiti:expression="#{changeObjectStatusService.change(OBJECT_ID, OBJECT_TYPE, 'Released')}"/>
+                     activiti:expression="#{changeObjectStatusService.changeIfNoPermanentStatusIsSet(OBJECT_ID, OBJECT_TYPE, 'Released', 'Closed')}"/>
         <sequenceFlow id="sid-A1A80BC3-B3F3-472A-8187-6EF2428E1D51" sourceRef="sid-E0905ADB-9340-49AC-ADA5-3AD0B417D585"
-            targetRef="sid-F88A33F4-A31E-43B6-A65C-0921762C023D"/>
+                      targetRef="sid-F88A33F4-A31E-43B6-A65C-0921762C023D"/>
         <serviceTask id="sid-F88A33F4-A31E-43B6-A65C-0921762C023D" name="Place FOIA Request in Release queue"
-            activiti:expression="#{queueCaseService.enqueue(OBJECT_ID, 'Release')}"/>
+                     activiti:expression="#{queueCaseService.enqueue(OBJECT_ID, 'Release')}"/>
         <sequenceFlow id="sid-7C860A67-DA43-4076-B2BE-B87497585AF2" sourceRef="sid-F88A33F4-A31E-43B6-A65C-0921762C023D"
-            targetRef="sid-C5A79729-8BB7-431C-AB69-7A5A2F2F81E3"/>
+                      targetRef="sid-C5A79729-8BB7-431C-AB69-7A5A2F2F81E3"/>
         <serviceTask id="sid-C5A79729-8BB7-431C-AB69-7A5A2F2F81E3" name="Convert the Response folder"
-            activiti:expression="#{responseFolderConverterService.convertResponseFolder(OBJECT_ID, USERNAME)}"/>
+                     activiti:expression="#{responseFolderConverterService.convertResponseFolder(OBJECT_ID, USERNAME)}"/>
         <sequenceFlow id="sid-C6395A53-D720-4191-9FAB-41B52B5EED79" sourceRef="sid-C5A79729-8BB7-431C-AB69-7A5A2F2F81E3"
             targetRef="sid-59B480D3-8042-491C-89F9-A490BC2B8106"/>
         <serviceTask id="sid-59B480D3-8042-491C-89F9-A490BC2B8106" name="Compress the Response folder"
@@ -37,7 +40,7 @@
                 Currently there are seven
                 such actions:
 
-                1. Set the status to Released
+                1. Set the status to Released, if status is not Closed
                 2. Set the queue name to 'Release'
                 3. Converts the 'Response' folder
                 4. Compress the 'Response' folder

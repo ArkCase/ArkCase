@@ -112,7 +112,7 @@
             "titleKey": "common.directive.docTree.menu.generateZip",
             "cmd": "generateZipFile",
             "uiIcon": "ui-icon-suitcase",
-            "disabledExpression": "nodes[0].data.name !== '03 Response' || nodes[0].parent.title !== '/'"
+            "disabledExpression": "!DocTree.isNodeInResponseFolder(nodes[0])"
         }
     },
     {
@@ -184,7 +184,7 @@
             "titleKey": "common.directive.docTree.menu.generateZip",
             "cmd": "generateZipFile",
             "uiIcon": "ui-icon-suitcase",
-            "disabledExpression": "nodes[0].data.name !== '03 Response' || nodes[0].parent.title !== '/'"
+            "disabledExpression": "!DocTree.isNodeInResponseFolder(nodes[0])"
         }
     },
     {

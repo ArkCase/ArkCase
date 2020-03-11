@@ -42,6 +42,7 @@ import org.springframework.context.ApplicationContextAware;
 import javax.persistence.PersistenceException;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -109,6 +110,9 @@ public class InsertEventTypeNames implements ApplicationContextAware
             auditLookup.setAuditEventName(key);
             auditLookup.setCreator(AuditConstants.ARK_AUDIT_USER);
             auditLookup.setModifier(AuditConstants.ARK_AUDIT_USER);
+            Date created = new Date();
+            auditLookup.setCreated(created);
+            auditLookup.setModified(created);
             getAuditLookupDao().save(auditLookup);
         }
     }

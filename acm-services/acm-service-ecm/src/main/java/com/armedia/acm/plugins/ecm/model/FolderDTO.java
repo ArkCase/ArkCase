@@ -34,6 +34,7 @@ public class FolderDTO
 {
     private Long originalFolderId;
     private AcmFolder newFolder;
+    private boolean link;
 
     public Long getOriginalFolderId()
     {
@@ -53,5 +54,13 @@ public class FolderDTO
     public void setNewFolder(AcmFolder newFolder)
     {
         this.newFolder = newFolder;
+    }
+
+    public boolean isLink() {
+        return link;
+    }
+
+    public void setLink(boolean link) {
+        this.link = link;
     }
 }

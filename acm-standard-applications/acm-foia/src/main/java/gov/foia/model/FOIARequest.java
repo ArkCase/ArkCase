@@ -159,6 +159,11 @@ public class FOIARequest extends CaseFile implements FOIAObject
     @Convert(converter = LocalDateTimeConverter.class)
     private LocalDateTime recordSearchDateTo;
 
+    @Column(name = "fo_disposition_closed_date")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @Convert(converter = LocalDateTimeConverter.class)
+    private LocalDateTime dispositionClosedDate;
+
     @Column(name = "fo_processing_fee_waive")
     private double processingFeeWaive;
 
@@ -189,6 +194,14 @@ public class FOIARequest extends CaseFile implements FOIAObject
 
     @Column(name = "fo_external_identifier")
     private String externalIdentifier;
+
+    @Column(name = "fo_tolling_flag")
+    @Convert(converter = BooleanToStringConverter.class)
+    private Boolean tollingFlag;
+
+    @Column(name = "fo_limited_delivery_flag")
+    @Convert(converter = BooleanToStringConverter.class)
+    private boolean limitedDeliveryFlag = false;
 
     @Transient
     private String originalRequestNumber;
@@ -730,6 +743,16 @@ public class FOIARequest extends CaseFile implements FOIAObject
 
     }
 
+    public LocalDateTime getDispositionClosedDate()
+    {
+        return dispositionClosedDate;
+    }
+
+    public void setDispositionClosedDate(LocalDateTime dispositionClosedDate)
+    {
+        this.dispositionClosedDate = dispositionClosedDate;
+    }
+
     public Boolean getExtensionFlag()
     {
         return extensionFlag;
@@ -738,6 +761,33 @@ public class FOIARequest extends CaseFile implements FOIAObject
     public void setExtensionFlag(Boolean extensionFlag)
     {
         this.extensionFlag = extensionFlag;
+    }
+
+    /**
+     * @return the tollingFlag
+     */
+    public Boolean getTollingFlag()
+    {
+        return tollingFlag;
+    }
+
+    /**
+     * @param tollingFlag
+     *            the tollingFlag to set
+     */
+    public void setTollingFlag(Boolean tollingFlag)
+    {
+        this.tollingFlag = tollingFlag;
+    }
+
+    public boolean getLimitedDeliveryFlag()
+    {
+        return limitedDeliveryFlag;
+    }
+
+    public void setLimitedDeliveryFlag(boolean limitedDeliveryFlag)
+    {
+        this.limitedDeliveryFlag = limitedDeliveryFlag;
     }
 
     /*
@@ -755,7 +805,10 @@ public class FOIARequest extends CaseFile implements FOIAObject
                 + ", paidFlag=" + paidFlag + ", publicFlag=" + publicFlag + ", deliveryMethodOfResponse=" + deliveryMethodOfResponse
                 + ", recordSearchDateFrom=" + recordSearchDateFrom + ", recordSearchDateTo=" + recordSearchDateTo + ", processingFeeWaive="
                 + processingFeeWaive + ", requestFeeWaiveReason=" + requestFeeWaiveReason + ", payFee=" + payFee
-                + ", requestExpediteReason=" + requestExpediteReason + ", extensionFlag=" + extensionFlag + ", amendmentFlag=" + amendmentFlag 
-                + ", requestAmendmentDetails=" + requestAmendmentDetails + "} " + super.toString();
+                + ", requestExpediteReason=" + requestExpediteReason + ", extensionFlag=" + extensionFlag + ", amendmentFlag="
+                + amendmentFlag
+                + ", requestAmendmentDetails=" + requestAmendmentDetails + ", dispositionClosedDate=" + dispositionClosedDate
+                + ", tollingFlag=" + tollingFlag + ", limitedDeliveryFlag=" + limitedDeliveryFlag + "} "
+                + super.toString();
     }
 }

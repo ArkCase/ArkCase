@@ -28,12 +28,15 @@ package com.armedia.acm.plugins.ecm.service.impl;
  */
 
 import com.armedia.acm.plugins.ecm.service.PageCountService;
+import com.lowagie.text.pdf.PdfReader;
+import com.lowagie.text.pdf.RandomAccessFileOrArray;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.pdfbox.io.MemoryUsageSetting;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.poi.hwpf.HWPFDocument;
+import org.apache.poi.xslf.usermodel.XMLSlideShow;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -43,8 +46,12 @@ public class PageCountServiceImpl implements PageCountService
 {
     private transient final Logger log = LogManager.getLogger(getClass());
 
-    private MemoryUsageSetting mixedMemoryAndTempFile = MemoryUsageSetting.setupMixed(1024 * 1024).setTempDir(
-            new File(System.getProperty("java.io.tmpdir")));
+    private final static String MIME_TYPE_PDF = "application/pdf";
+    private final static String MIME_TYPE_DOC = "application/msword";
+    private final static String MIME_TYPE_DOCX = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+    private final static String MIME_TYPE_PPTX = "application/vnd.openxmlformats-officedocument.presentationml.presentation";
+
+    private final static int DEFAULT_NUMBER_OF_PAGES = 1;
 
     @Override
     @Deprecated
@@ -70,21 +77,65 @@ public class PageCountServiceImpl implements PageCountService
     public int getNumberOfPages(String mimeType, File file) throws IOException
     {
         int numberOfPages = -1;
-        if ("application/pdf".equals(mimeType))
+
+        try
         {
-            try (PDDocument pdDocument = PDDocument.load(new FileInputStream(file), mixedMemoryAndTempFile))
-            {
-                numberOfPages = pdDocument.getNumberOfPages();
-            }
-            catch (Exception e)
-            {
-                log.warn("Failed to find number of pages for PDF document", e);
-            }
+            numberOfPages = getNumberOfPagesPerMimeType(mimeType, file);
         }
-        else
+        catch (Exception e)
         {
+            log.warn("Failed to find number of pages for document", e);
+        }
+        return numberOfPages;
+    }
+
+    private int getNumberOfPagesPerMimeType(String mimeType, File file) throws IOException
+    {
+        switch (mimeType)
+        {
+        case MIME_TYPE_PDF:
+            return getNumberOfPagesPdfFile(file);
+        case MIME_TYPE_DOCX:
+            return getNumberOfPagesDocxFile(file);
+        case MIME_TYPE_DOC:
+            return getNumberOfPagesDocFile(file);
+        case MIME_TYPE_PPTX:
+            return getNumberOfPagesPptxFile(file);
+        default:
             log.warn("Still don't know how to retrieve the page count for [{}] mime type", mimeType);
+            return DEFAULT_NUMBER_OF_PAGES;
         }
+    }
+
+    private int getNumberOfPagesPdfFile(File file) throws IOException
+    {
+        PdfReader reader = new PdfReader(new RandomAccessFileOrArray(file.getAbsolutePath()), null);
+        int numberOfPages = reader.getNumberOfPages();
+        reader.close();
+        return numberOfPages;
+    }
+
+    private int getNumberOfPagesDocFile(File file) throws IOException
+    {
+        HWPFDocument wordDoc = new HWPFDocument(new FileInputStream(file));
+        int numberOfPages = wordDoc.getSummaryInformation().getPageCount();
+        wordDoc.close();
+        return numberOfPages;
+    }
+
+    private int getNumberOfPagesDocxFile(File file) throws IOException
+    {
+        XWPFDocument wordDocx = new XWPFDocument(new FileInputStream(file));
+        int numberOfPages = wordDocx.getProperties().getExtendedProperties().getUnderlyingProperties().getPages();
+        wordDocx.close();
+        return numberOfPages;
+    }
+
+    private int getNumberOfPagesPptxFile(File file) throws IOException
+    {
+        XMLSlideShow pptxSlideShow = new XMLSlideShow(new FileInputStream(file));
+        int numberOfPages = pptxSlideShow.getSlides().size();
+        pptxSlideShow.close();
         return numberOfPages;
     }
 

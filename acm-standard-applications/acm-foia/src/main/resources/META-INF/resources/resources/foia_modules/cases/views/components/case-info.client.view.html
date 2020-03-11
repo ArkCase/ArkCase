@@ -51,27 +51,27 @@
                 <small class="text-muted"><span translate>cases.comp.info.assignee.label</span></small>
             </div>
 
-            <div class="col-xs-12 col-md-4">
+            <div class="col-xs-12 col-md-2">
                 <div class="h4 font-bold">
                     <a href="#" editable-select="objectInfo.priority" onaftersave="saveCase()" permission="editCase"
                             permission-object-type="CASE_FILE" permission-properties="objectInfo" permission-action="disable"
                             e-ng-options="p.key as (p.key | translateData: 'core.lookups.priorities' : lang) for p in priorities">
-                        {{ (objectInfo.priority | translateData: 'core.lookups.priorities' : lang) || ('common.value.unknown' | translate)
+                        {{ (objectInfo.priority | translateData: 'core.lookups.priorities' : lang) ||
+                        ('common.value.unknown' | translate)
                         }}</a>
                 </div>
                 <small class="text-muted"><span translate>cases.comp.info.priority.label</span></small>
+            </div>
+            <div class="col-xs-12 col-md-2">
+                <div class="h4 font-bold">{{objectInfo.status }}
+                </div>
+                <small class="text-muted"><span translate>cases.comp.info.status</span></small>
             </div>
             <div class="col-xs-12 col-md-2">
                 <div class="h4 font-bold">
                     <user-full-name userId="objectInfo.modifier" fallback="{{'cases.comp.approvalRouting.assigne.none' | translate}}" />
                 </div>
                 <small class="text-muted"><span translate>cases.comp.info.modifier</span></small>
-            </div>
-            <div class="col-xs-12 col-md-2">
-                <div class="h4 font-bold editable-margin-left">
-                    <a href="#" editable-text="objectInfo.externalIdentifier" onaftersave="setExternalIdentifier($data, objectInfo.externalIdentifier)">{{ objectInfo.externalIdentifier || ('common.value.unknown' | translate) }}</a>
-                </div>
-                <small class="text-muted"><span translate>cases.comp.info.externalIdentifier.label</span></small>
             </div>
         </div>
         <div class="row">
@@ -97,8 +97,8 @@
             <div class="col-xs-12 col-md-2" ng-if="isNotificationGroupEnabled">
                 <div class="h4 font-bold">
                     <a href="#" editable-select="objectInfo.notificationGroup" onaftersave="updateNotificationGroup()"
-                       e-ng-options="g.key as (g.value | translate) for g in notificationGroups" permission="editCaseOwningGroup" permission-object-type="CASE_FILE"
-                       permission-properties="objectInfo" permission-action="disable">
+                            e-ng-options="g.key as (g.value | translate) for g in notificationGroups" permission="editCaseOwningGroup"
+                            permission-object-type="CASE_FILE" permission-properties="objectInfo" permission-action="disable">
                         {{notificationGroup || 'common.value.unknown' | translate}}
                     </a>
                 </div>
@@ -112,8 +112,17 @@
                 <small class="text-muted"><span translate>cases.comp.info.dueDate.label</span></small>
             </div>
             <div class="col-xs-12 col-md-2">
+                <div class="h4 font-bold editable-margin-left">
+                    <a href="#" editable-text="objectInfo.externalIdentifier"
+                            onaftersave="setExternalIdentifier($data, objectInfo.externalIdentifier)">{{
+                        objectInfo.externalIdentifier || ('common.value.unknown' | translate) }}</a>
+                </div>
+                <small class="text-muted"><span translate>cases.comp.info.externalIdentifier.label</span></small>
+            </div>
+            <div class="col-xs-12 col-md-2">
                 <div class="h4 font-bold">
-                    {{ (objectInfo.modified | date: ('common.defaultDateTimeUIFormat' | translate)) || 'common.value.unknown' | translate }}
+                    {{ (objectInfo.modified | date: ('common.defaultDateTimeUIFormat' | translate)) ||
+                    'common.value.unknown' | translate }}
                 </div>
                 <small class="text-muted"><span translate>cases.comp.info.modified</span></small>
             </div>

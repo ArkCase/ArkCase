@@ -1226,23 +1226,13 @@
             "paginationPageSize": 5,
             "columnDefs": [
                 {
-                    "name": "requestId",
-                    "displayName": "requests.comp.exemption.table.columns.requestId",
-                    "headerCellFilter": "translate"
-                },
-                {
-                    "name": "fileId",
-                    "displayName": "requests.comp.exemption.table.columns.docId",
-                    "headerCellFilter": "translate"
-                },
-                {
-                    "name": "fileName",
-                    "displayName": "requests.comp.exemption.table.columns.docName",
-                    "headerCellFilter": "translate"
-                },
-                {
                     "name": "exemptionCode",
                     "displayName": "requests.comp.exemption.table.columns.exemptionCode",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "status",
+                    "displayName": "requests.comp.exemption.table.columns.status",
                     "headerCellFilter": "translate"
                 },
                 {
@@ -1251,6 +1241,12 @@
                     "headerCellFilter": "translate",
                     "enableCellEdit": false,
                     "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.exemptionStatutes, row.entity.exemptionStatute) | translate }}</div>"
+                },
+                {
+                    "name": "created",
+                    "displayName": "requests.comp.exemption.table.columns.dateCreated",
+                    "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
+                    "headerCellFilter": "translate"
                 },
                 {
                     "name": "creator",

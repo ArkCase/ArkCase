@@ -205,8 +205,7 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
 
     @Override
     @Transactional
-    public AcmTask createAdHocTask(AcmTask in) throws AcmTaskException
-    {
+    public AcmTask createAdHocTask(AcmTask in) throws AcmTaskException, AcmUserActionFailedException, AcmCreateObjectFailedException {
         Task activitiTask = getActivitiTaskService().newTask();
 
         AcmTask out = updateExistingActivitiTask(in, activitiTask);
@@ -215,7 +214,8 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
             String taskId = String.valueOf(out.getId());
             getActivitiTaskService().complete(taskId);
         }
-
+        AcmContainer container = getFileService().getOrCreateContainer(out.getObjectType(), out.getId());
+        out.setContainer(container);
         return out;
     }
 
@@ -1613,6 +1613,8 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
         Task activitiTask = getActivitiTaskService().createTaskQuery().processInstanceId(pi.getProcessInstanceId()).singleResult();
         AcmTask createdAcmTask = acmTaskFromActivitiTask(activitiTask, activitiTask.getProcessVariables(),
                 activitiTask.getTaskLocalVariables());
+        createdAcmTask.setParentObjectId((Long) pVars.get("PARENT_OBJECT_ID"));
+        createdAcmTask.setParentObjectType((String) pVars.get("PARENT_OBJECT_TYPE"));
 
         return createdAcmTask;
     }
