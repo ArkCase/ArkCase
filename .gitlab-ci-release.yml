@@ -56,22 +56,9 @@ release_start:
     variables:
      - $RELEASE_START
   script:
-    - echo '<settings>' > /root/.m2/settings.xml
-    - echo '  <servers>' >> /root/.m2/settings.xml
-    - echo '    <server>' >> /root/.m2/settings.xml
-    - echo '      <id>arkcase.release</id>' >> /root/.m2/settings.xml
-    - echo '      <username>admin</username>' >> /root/.m2/settings.xml
-    - echo "      <password>$MVN_PASSWORD</password>" >> /root/.m2/settings.xml
-    - echo '    </server>' >> /root/.m2/settings.xml
-    - echo '  </servers>' >> /root/.m2/settings.xml
-    - echo '</settings>' >> /root/.m2/settings.xml
-    - export MAVEN_OPTS="-Xmx2048M -Xss256M -XX:MetaspaceSize=2048M -XX:+CMSClassUnloadingEnabled"
     - git config --global user.name "$GIT_USERNAME"
     - git config --global user.email "$GIT_USERMAIL"
     - git remote set-url origin "$GIT_URL"
-    - apt-get update
-    - apt-get install -y zip sshpass
-    - export SSHPASS=$SSHPASS_ARKCASE
     - mvn -B gitflow:release-start -DpushRemote=true -DreleaseVersion=$RELEASE_VERSION -DcommitDevelopmentVersionAtStart=true -DdevelopmentVersion=$DEVELOP_NEW_VERSION
     # Deploy on test servers
     
