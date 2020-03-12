@@ -122,7 +122,7 @@ deploy_server:
     name: $ENVIRONMENT_NAME
     url: $ENVIRONMENT_URL
   script:
-    - 'curl -H "Content-Type: application/json" -X POST -s -u gitlabci:$GITLABCI_TOWER_PASSWORD -d ''{ "inventory": ''$INVENTORY'', "job_tags": "''$TAGS''", "extra_vars": "{\"arkcase_version\": \"''$ARKCASE_VERSION''\", \"arkcase_configuration_version\":\"''$ARKCASE_VERSION''\", \"arkcase_config_server_version\":\"''$ARKCASE_VERSION''\", \"snowbound_arkcase_version\":\"''$ARKCASE_VERSION''\"}"}'' -k https://tower.armedia.com/api/v2/job_templates/129/launch/'
+    - 'curl -H "Content-Type: application/json" -X POST -s -u gitlabci:''$GITLABCI_TOWER_PASSWORD'' -d ''{ "inventory": ''$INVENTORY'', "job_tags": "''$TAGS''", "extra_vars": "{\"arkcase_version\": \"''$ARKCASE_VERSION''\", \"arkcase_configuration_version\":\"''$ARKCASE_VERSION''\", \"arkcase_config_server_version\":\"''$ARKCASE_VERSION''\", \"snowbound_arkcase_version\":\"''$ARKCASE_VERSION''\"}"}'' -k https://tower.armedia.com/api/v2/job_templates/129/launch/'
 
 deploy_backend_core_dev:
   stage: deploy
@@ -136,7 +136,7 @@ deploy_backend_core_dev:
     url: https://dev.core.arkcase.com
   script:
     # Dev Core repository ID on tower.armedia.com is 44
-    - 'curl -H "Content-Type: application/json" -X POST -s -u gitlabci:$GITLABCI_TOWER_PASSWORD -d ''{ "inventory": 44, "job_tags": "core", "extra_vars": "{\"arkcase_version\": \"\", \"arkcase_configuration_version\":\"\", \"arkcase_config_server_version\":\"\", \"snowbound_arkcase_version\":\"\"}"}'' -k https://tower.armedia.com/api/v2/job_templates/129/launch/'
+    - 'curl -H "Content-Type: application/json" -X POST -s -u gitlabci:''$GITLABCI_TOWER_PASSWORD'' -d ''{ "inventory": 44, "job_tags": "core", "extra_vars": "{\"arkcase_version\": \"\", \"arkcase_configuration_version\":\"\", \"arkcase_config_server_version\":\"\", \"snowbound_arkcase_version\":\"\"}"}'' -k https://tower.armedia.com/api/v2/job_templates/129/launch/'
 
 deploy_backend_foia_dev:
   stage: deploy
@@ -150,7 +150,7 @@ deploy_backend_foia_dev:
     url: https://dev.foia.arkcase.com
   script:
     # Dev Foia repository ID on tower.armedia.com is 45
-    - 'curl -H "Content-Type: application/json" -X POST -s -u gitlabci:$GITLABCI_TOWER_PASSWORD -d ''{ "inventory": 45, "job_tags": "core,foia", "extra_vars": "{\"arkcase_version\": \"\", \"arkcase_configuration_version\":\"\", \"arkcase_config_server_version\":\"\", \"snowbound_arkcase_version\":\"\"}"}'' -k https://tower.armedia.com/api/v2/job_templates/129/launch/'
+    - 'curl -H "Content-Type: application/json" -X POST -s -u gitlabci:''$GITLABCI_TOWER_PASSWORD'' -d ''{ "inventory": 45, "job_tags": "core,foia", "extra_vars": "{\"arkcase_version\": \"\", \"arkcase_configuration_version\":\"\", \"arkcase_config_server_version\":\"\", \"snowbound_arkcase_version\":\"\"}"}'' -k https://tower.armedia.com/api/v2/job_templates/129/launch/'
 
 .deploy_backend:
   stage: deploy
