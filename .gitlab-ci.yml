@@ -122,10 +122,6 @@ deploy_server:
     name: $ENVIRONMENT_NAME
     url: $ENVIRONMENT_URL
   script:
-    - echo $GITLABCI_TOWER_PASSWORD
-    - echo $INVENTORY
-    - echo $TAGS
-    - echo $ARKCASE_VERSION
     - 'curl -H "Content-Type: application/json" -X POST -s -u gitlabci:$GITLABCI_TOWER_PASSWORD -d ''{ "inventory": ''$INVENTORY'', "job_tags": "''$TAGS''", "extra_vars": "{\"arkcase_version\": \"''$ARKCASE_VERSION''\", \"arkcase_configuration_version\":\"''$ARKCASE_VERSION''\", \"arkcase_config_server_version\":\"''$ARKCASE_VERSION''\", \"snowbound_arkcase_version\":\"''$ARKCASE_VERSION''\"}"}'' -k https://tower.armedia.com/api/v2/job_templates/129/launch/'
 
 deploy_backend_core_dev:
