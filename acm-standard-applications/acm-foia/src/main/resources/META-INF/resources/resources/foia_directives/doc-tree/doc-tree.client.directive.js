@@ -2168,7 +2168,7 @@ angular
                                     } else if ("RECORD" == Util.goodValue(node.data.status)) {
                                         menuResource = DocTree.Menu.getRecordResource(node);
                                     } else if (node.data.link) {
-                                        menuResource = 'menu.link.file';
+                                        menuResource = node.data.objectType === "folder" ? "menu.link.folder" : "menu.link.file";
                                     } else {
                                         menuResource = DocTree.Menu.getBasicResource(node);
                                     }
@@ -2931,7 +2931,7 @@ angular
                                 var frCacheKey = DocTree.getCacheKeyByNode(srcNode.parent);
                                 var copyService = actionName === 'pasteAsLink' ? Ecm.copyFolderAsLink : Ecm.copyFolder;
                                 if (srcNode.data.link === true) {
-                                    copyService = Ecm.copyFileAsLink;
+                                    copyService = Ecm.copyFolderAsLink;
                                 }
 
                                 Util.serviceCall(
