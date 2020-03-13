@@ -35,6 +35,7 @@ import com.armedia.acm.email.model.EmailReceiverConfig;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.service.SaveCaseService;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.services.config.lookups.model.StandardLookupEntry;
@@ -44,6 +45,7 @@ import com.armedia.acm.services.email.handler.AcmObjectMailHandler;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.web.api.MDCConstants;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.slf4j.MDC;
@@ -62,6 +64,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -170,10 +175,21 @@ public class NewCaseFileMailHandler extends AcmObjectMailHandler
 
         if (caseFile != null)
         {
+
+            ZonedDateTime date = ZonedDateTime.now(ZoneOffset.UTC);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+            String currentDate = formatter.format(date);
+            String fullAddress = message.getFrom()[0].toString();
+            String emailSender = StringUtils.substringBetween(fullAddress, "<", ">");
+            String fileAndFolderName = emailSender + "-" + currentDate + message.getSubject().replaceAll(":", "_");
+            
             String tempDir = System.getProperty("java.io.tmpdir");
-            String messageFileName = System.currentTimeMillis() + "_" + caseFile.getId() + ".eml";
+            String messageFileName = fileAndFolderName + ".eml";
             File messageFile = new File(tempDir + File.separator + messageFileName);
+            
+            AcmFolder emailReceivedFolder = null;
             Exception exception = null;
+            EcmFile mailFile = null;
 
             try
             {
@@ -183,11 +199,12 @@ public class NewCaseFileMailHandler extends AcmObjectMailHandler
                 }
 
                 AcmFolder folder = getAcmFolderService().addNewFolderByPath(caseFile.getObjectType(), caseFile.getId(), getMailDirectory());
+                emailReceivedFolder = getAcmFolderService().addNewFolder(folder.getId(), fileAndFolderName);
                 try (InputStream is = new FileInputStream(messageFile))
                 {
                     Authentication auth = new UsernamePasswordAuthenticationToken(userId, "");
-                    getEcmFileService().upload(messageFileName, "mail", "Document", is, "message/rfc822", messageFileName, auth,
-                            folder.getCmisFolderId(), caseFile.getObjectType(), caseFile.getId());
+                    mailFile = getEcmFileService().upload(messageFileName, "mail", "Document", is, "message/rfc822", messageFileName, auth,
+                            emailReceivedFolder.getCmisFolderId(), caseFile.getObjectType(), caseFile.getId());
 
                 }
 
@@ -200,10 +217,10 @@ public class NewCaseFileMailHandler extends AcmObjectMailHandler
 
             if (message.getContent() instanceof Multipart)
             {
-                uploadAttachments(message, caseFile, userId);
+                uploadAttachments(message, caseFile, userId, emailReceivedFolder);
             }
 
-            SmtpEmailReceivedEvent event = new SmtpEmailReceivedEvent(message, userId, caseFile.getId(), caseFile.getObjectType(),
+            SmtpEmailReceivedEvent event = new SmtpEmailReceivedEvent(emailSender, userId, mailFile.getId(), mailFile.getObjectType(), caseFile.getId(), caseFile.getObjectType(),
                     AuthenticationUtils.getUserIpAddress());
             boolean success = (exception == null);
             event.setSucceeded(success);
