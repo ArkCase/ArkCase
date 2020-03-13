@@ -49,6 +49,19 @@ public class SmtpEmailReceivedEvent extends AcmEvent
 
     }
 
+    public SmtpEmailReceivedEvent(Object source, String userId, Long objectId, String objectType, Long parentId, String parentType, String ipAddress)
+    {
+        super(source);
+        setUserId(userId);
+        setEventDate(new Date());
+        setObjectId(objectId);
+        setObjectType(objectType);
+        setParentObjectId(parentId);
+        setParentObjectType(parentType);
+        setIpAddress(ipAddress);
+
+    }
+
     @Override
     public String getEventType()
     {
