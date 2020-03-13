@@ -722,6 +722,55 @@
               "readOnly": true
             }
           }
+        ],
+        "folder": [
+          {
+            "title": "Participants",
+            "cmd": "showParticipants"
+          },
+          {
+            "title": "----"
+          },
+          {
+            "___title": "Cut <kbd>Ctrl+X</kbd>",
+            "titleKey": "common.directive.docTree.menu.cut",
+            "cmd": "cut",
+            "uiIcon": "ui-icon-scissors"
+          },
+          {
+            "___title": "Copy <kbd>Ctrl+C</kbd>",
+            "titleKey": "common.directive.docTree.menu.copy",
+            "cmd": "copy",
+            "uiIcon": "ui-icon-copy"
+          },
+          {
+            "___title": "Paste <kbd>Ctrl+V</kbd>",
+            "titleKey": "common.directive.docTree.menu.paste",
+            "cmd": "paste",
+            "uiIcon": "ui-icon-clipboard",
+            "disabled": true
+          },
+          {
+            "titleKey": "common.directive.docTree.menu.pasteAsLink",
+            "cmd": "pasteAsLink",
+            "uiIcon": "ui-icon-link",
+            "disabled": true
+          },
+          {
+            "title": "----"
+          },
+          {
+            "___title": "Rename <kbd>[F2]</kbd>",
+            "titleKey": "common.directive.docTree.menu.rename",
+            "cmd": "rename",
+            "uiIcon": "ui-icon-pencil"
+          },
+          {
+            "___title": "Delete <kbd>Ctrl+D</kbd>",
+            "titleKey": "common.directive.docTree.menu.delete",
+            "cmd": "remove",
+            "uiIcon": "ui-icon-trash"
+          }
         ]
       }
     },
