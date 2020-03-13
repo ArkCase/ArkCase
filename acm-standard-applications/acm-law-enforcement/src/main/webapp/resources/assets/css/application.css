@@ -1722,8 +1722,9 @@ a.primary {
     padding: 7px;
     width: auto;
     display: block;
-    z-index: 2000;
+    z-index: 3000;
     white-space: nowrap;
+    right: 2.5%;
 }
 
 .date-picker-popover:before {
@@ -1735,7 +1736,7 @@ a.primary {
     border-bottom: 10px solid #AAA;
     position: absolute;
     top: -10px;
-    left: 10%;
+    right: 2.5%;
 }
 
 .arkcase-snackbar {
