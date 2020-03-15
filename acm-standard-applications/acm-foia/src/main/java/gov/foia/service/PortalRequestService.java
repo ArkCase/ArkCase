@@ -43,7 +43,6 @@ import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.service.group.GroupService;
 
-import gov.foia.model.FOIAPerson;
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -67,6 +66,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import gov.foia.dao.FOIARequestDao;
+import gov.foia.model.FOIAPerson;
 import gov.foia.model.FOIARequest;
 import gov.foia.model.PortalFOIAReadingRoom;
 import gov.foia.model.PortalFOIARequest;
@@ -168,8 +168,16 @@ public class PortalRequestService
         portalFOIARequest.setLastName(person.getFamilyName());
         portalFOIARequest.setPosition(person.getPosition());
         portalFOIARequest.setOrganization(person.getCompany());
-        portalFOIARequest.setEmail(person.getDefaultEmail().getValue());
-        portalFOIARequest.setPhone(person.getDefaultPhone().getValue());
+
+        if (person.getDefaultEmail() != null)
+        {
+            portalFOIARequest.setEmail(person.getDefaultEmail().getValue());
+        }
+
+        if (person.getDefaultPhone() != null)
+        {
+            portalFOIARequest.setPhone(person.getDefaultPhone().getValue());
+        }
 
         if (!person.getAddresses().isEmpty()) {
             portalFOIARequest.setCity(person.getAddresses().get(0).getCity());

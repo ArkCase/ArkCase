@@ -5,11 +5,11 @@
         </h4>
     </div>
     <div class="modal-body">
-        <div class="form-group required" ng-class="{ 'has-error' : error}" ng-if="addUser">
+        <div class="form-group required" ng-class="{ 'has-error' : error}">
             <label for="username">{{"admin.security.organizationalHierarchy.createUserDialog.username" |translate}}</label>
             <input class="form-control" id="username" name="username" ng-change="clearUsernameError()"
                     placeholder="{{ 'admin.security.organizationalHierarchy.createUserDialog.addLdapMember.username' | translate}}"
-                    ng-model="user.userId" required>
+                    ng-model="user.userId" ng-disabled="!enableUsernameEdit" required>
             <p class="help-block" ng-show="error">
                 {{ error }} </p>
         </div>
@@ -36,7 +36,7 @@
         <button type="button" class="btn btn-secondary" ng-click="$dismiss()">
             {{ cancelBtn | translate }}
         </button>
-        <button class="btn btn-primary" ng-disabled="userForm.$invalid">
+        <button class="btn btn-primary" ng-disabled="userForm.$invalid || error">
             {{ okBtn | translate }}
         </button>
     </div>
