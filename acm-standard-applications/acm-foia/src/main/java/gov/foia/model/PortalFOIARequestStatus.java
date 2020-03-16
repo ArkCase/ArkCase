@@ -51,6 +51,8 @@ public class PortalFOIARequestStatus implements Serializable
 
     private String queue;
 
+    private Boolean isDenied;
+
     private Boolean isPublic;
 
     private String requestType;
@@ -135,6 +137,16 @@ public class PortalFOIARequestStatus implements Serializable
         this.queue = queue;
     }
 
+    public Boolean getIsDenied()
+    {
+        return isDenied;
+    }
+
+    public void setIsDenied(Boolean denied)
+    {
+        isDenied = denied;
+    }
+
     /*
      * (non-Javadoc)
      * @see java.lang.Object#toString()
@@ -143,7 +155,7 @@ public class PortalFOIARequestStatus implements Serializable
     public String toString()
     {
         return "PortalFOIARequestStatus [requestId=" + requestId + ", lastName=" + lastName + ", requestType=" + requestType
-                + ", requestStatus=" + requestStatus + ", requestState=" + queue
+                + ", requestStatus=" + requestStatus + ", queue=" + queue + ", isDenied=" + isDenied
                 + ", isPublic=" + isPublic + ", updateDate=" + updateDate + "]";
     }
 }
