@@ -190,27 +190,22 @@ public class MapperUtils
     public static String buildUserId(String userId, AcmLdapSyncConfig ldapSyncConfig)
     {
         String userPrefix = ldapSyncConfig.getUserPrefix();
-        if (StringUtils.isNotBlank(userPrefix) &&
-                ldapSyncConfig.getUserIdAttributeName().equalsIgnoreCase("samaccountname")
-                && !userId.startsWith(userPrefix))
+
+        if (StringUtils.isNotBlank(userPrefix) && !userId.startsWith(userPrefix))
         {
-            String username = String.format("%s%s", prefixTrailingDot(userPrefix), userId);
+            userId = String.format("%s%s", prefixTrailingDot(userPrefix), userId);
+        }
+
+        if (ldapSyncConfig.getUserIdAttributeName().equalsIgnoreCase("samaccountname"))
+        {
             if (ldapSyncConfig.isGenerateUsernameEnabled())
             {
-                username = StringUtils.left(username, userPrefix.length())
-                        .concat(RandomStringUtils.random(20 - userPrefix.length(),
-                                "abcdefghijklmnopqrstuvwxyz0123456789"));
+                userId = String.format("%s%s", prefixTrailingDot(userPrefix),
+                        RandomStringUtils.randomAlphanumeric(20 - userPrefix.length()));
             }
-            else
-            {
-                username = StringUtils.left(username, 20);
-            }
-
-            username = StringUtils.left(username, 20);
-            return buildUserId(username, ldapSyncConfig.getUserDomain());
+            userId = StringUtils.left(userId, 20);
         }
         return buildUserId(userId, ldapSyncConfig.getUserDomain());
-
     }
 
     public static byte[] encodeUTF16LE(String str)
