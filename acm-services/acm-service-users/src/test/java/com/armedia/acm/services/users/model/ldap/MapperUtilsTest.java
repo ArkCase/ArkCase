@@ -126,7 +126,7 @@ public class MapperUtilsTest
         config.setUserDomain("armedia.com");
         config.setUserIdAttributeName("uid");
         String userId = MapperUtils.buildUserId("veryyyyyylongusername", config);
-        assertEquals("veryyyyyylongusername@armedia.com", userId);
+        assertEquals("dcoveryyyyyylongusername@armedia.com", userId);
     }
 
     @Test
