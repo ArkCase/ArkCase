@@ -207,6 +207,7 @@ public class FOIARequestDao extends AcmAbstractDao<FOIARequest>
             requestStatus.setRequestStatus(request.getStatus());
             requestStatus.setQueue(request.getQueue().getName());
             requestStatus.setUpdateDate(request.getModified());
+            requestStatus.setIsDenied(request.getDeniedFlag());
             requestStatus.setIsPublic(request.getPublicFlag());
             requestStatus.setRequestType(request.getRequestType());
             requestStatusList.add(requestStatus);
