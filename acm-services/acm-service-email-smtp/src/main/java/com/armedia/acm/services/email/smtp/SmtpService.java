@@ -419,7 +419,7 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
     private String extractObjectTypeFromEmailWithAttachmentsDTO (EmailWithAttachmentsDTO in)
     {
         String objectType = null;
-        if (in.getObjectType() == null && !in.getParentType().isEmpty())
+        if (in.getObjectType() == null && in.getParentType() != null)
         {
             objectType = in.getParentType().contains("Case") ? "CASE_FILE" : in.getParentType().toUpperCase();
         }
