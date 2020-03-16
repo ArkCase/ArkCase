@@ -49,6 +49,8 @@ public class PortalFOIARequestStatus implements Serializable
 
     private String requestStatus;
 
+    private String queue;
+
     private Boolean isPublic;
 
     private String requestType;
@@ -123,6 +125,16 @@ public class PortalFOIARequestStatus implements Serializable
         this.requestType = requestType;
     }
 
+    public String getQueue()
+    {
+        return queue;
+    }
+
+    public void setQueue(String queue)
+    {
+        this.queue = queue;
+    }
+
     /*
      * (non-Javadoc)
      * @see java.lang.Object#toString()
@@ -131,8 +143,7 @@ public class PortalFOIARequestStatus implements Serializable
     public String toString()
     {
         return "PortalFOIARequestStatus [requestId=" + requestId + ", lastName=" + lastName + ", requestType=" + requestType
-                + ", requestStatus=" + requestStatus
+                + ", requestStatus=" + requestStatus + ", requestState=" + queue
                 + ", isPublic=" + isPublic + ", updateDate=" + updateDate + "]";
     }
-
 }
