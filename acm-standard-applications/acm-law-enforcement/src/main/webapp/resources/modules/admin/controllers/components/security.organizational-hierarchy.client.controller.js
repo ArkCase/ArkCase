@@ -372,7 +372,7 @@ angular.module('admin').controller(
                                 };
                                 $scope.clearUsernameError = function () {
                                     if (group.directory.checkUsernameLength && $scope.user.userId.length > 20) {
-                                        $scope.error = $translate.instant('admin.security.organizationalHierarchy.createUserDialog.addLdapMember.samlMaxPasswordLengthError');
+                                        $scope.error = $translate.instant('admin.security.organizationalHierarchy.createUserDialog.addLdapMember.samlMaxUsernameLengthError');
                                     } else if ($scope.error) {
                                         $scope.error = '';
                                     }
