@@ -50,11 +50,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.mail.Address;
 import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Part;
+import javax.mail.internet.InternetAddress;
 import javax.persistence.EntityNotFoundException;
 
 import java.io.File;
@@ -131,12 +133,9 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
 
-        ZonedDateTime date = ZonedDateTime.now(ZoneOffset.UTC);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-        String currentDate = formatter.format(date);
-        String fullAddress = message.getFrom()[0].toString();
-        String emailSender = StringUtils.substringBetween(fullAddress, "<", ">");
-        String fileAndFolderName = emailSender + "-" + currentDate + message.getSubject().replaceAll(":", "_");
+        
+        String emailSender = extractEmailAddressFromMessage(message);
+        String fileAndFolderName = makeFileOrFolderName(message, emailSender);
         
         String tempDir = System.getProperty("java.io.tmpdir");
         String messageFileName = fileAndFolderName + ".eml";
@@ -267,6 +266,22 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
             newFileName = newFileName + "-" + timestampName;
         }
         return newFileName;
+    }
+    
+    public String makeFileOrFolderName(Message message, String emailSender) throws MessagingException
+    {
+        ZonedDateTime date = ZonedDateTime.now(ZoneOffset.UTC);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        String currentDate = formatter.format(date);
+        String fileAndFolderName = emailSender + "-" + currentDate + message.getSubject().replaceAll("\\W+", "");
+        return fileAndFolderName;
+    }
+    
+    public String extractEmailAddressFromMessage(Message message) throws MessagingException
+    {
+        Address[] froms = message.getFrom();
+        String emailSender = froms == null ? "" : ((InternetAddress) froms[0]).getAddress();
+        return emailSender;
     }
 
     public void setObjectIdRegexPattern(String objectIdRegexPattern)
