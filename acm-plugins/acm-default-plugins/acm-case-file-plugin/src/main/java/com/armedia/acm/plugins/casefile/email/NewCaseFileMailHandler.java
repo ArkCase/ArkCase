@@ -176,12 +176,9 @@ public class NewCaseFileMailHandler extends AcmObjectMailHandler
         if (caseFile != null)
         {
 
-            ZonedDateTime date = ZonedDateTime.now(ZoneOffset.UTC);
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-            String currentDate = formatter.format(date);
-            String fullAddress = message.getFrom()[0].toString();
-            String emailSender = StringUtils.substringBetween(fullAddress, "<", ">");
-            String fileAndFolderName = emailSender + "-" + currentDate + message.getSubject().replaceAll(":", "_");
+            
+            String emailSender = extractEmailAddressFromMessage(message);
+            String fileAndFolderName = makeFileOrFolderName(message, emailSender);
             
             String tempDir = System.getProperty("java.io.tmpdir");
             String messageFileName = fileAndFolderName + ".eml";
