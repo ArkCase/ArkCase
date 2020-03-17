@@ -36,6 +36,7 @@ import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.services.config.lookups.model.StandardLookupEntry;
@@ -45,6 +46,7 @@ import com.armedia.acm.services.email.handler.AcmObjectMailHandler;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.web.api.MDCConstants;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.slf4j.MDC;
@@ -63,6 +65,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 
@@ -176,10 +181,17 @@ public class NewComplaintMailHandler extends AcmObjectMailHandler
 
         if (complaint != null)
         {
+
+            String emailSender = extractEmailAddressFromMessage(message);
+            String fileAndFolderName = makeFileOrFolderName(message, emailSender);
+            
             String tempDir = System.getProperty("java.io.tmpdir");
-            String messageFileName = System.currentTimeMillis() + "_" + complaint.getId() + ".eml";
+            String messageFileName = fileAndFolderName + ".eml";
             File messageFile = new File(tempDir + File.separator + messageFileName);
+            
+            AcmFolder emailReceivedFolder = null;
             Exception exception = null;
+            EcmFile mailFile = null;
 
             try
             {
@@ -190,11 +202,12 @@ public class NewComplaintMailHandler extends AcmObjectMailHandler
 
                 AcmFolder folder = getAcmFolderService().addNewFolderByPath(complaint.getObjectType(), complaint.getId(),
                         getMailDirectory());
+                emailReceivedFolder = getAcmFolderService().addNewFolder(folder.getId(), fileAndFolderName);
                 try (InputStream is = new FileInputStream(messageFile))
                 {
                     Authentication auth = new UsernamePasswordAuthenticationToken(userId, "");
-                    getEcmFileService().upload(messageFileName, "mail", "Document", is, "message/rfc822", messageFileName, auth,
-                            folder.getCmisFolderId(), complaint.getObjectType(), complaint.getId());
+                    mailFile = getEcmFileService().upload(messageFileName, "mail", "Document", is, "message/rfc822", messageFileName, auth,
+                            emailReceivedFolder.getCmisFolderId(), complaint.getObjectType(), complaint.getId());
 
                 }
 
@@ -207,10 +220,10 @@ public class NewComplaintMailHandler extends AcmObjectMailHandler
 
             if (message.getContent() instanceof Multipart)
             {
-                uploadAttachments(message, complaint, userId);
+                uploadAttachments(message, complaint, userId, emailReceivedFolder);
             }
 
-            SmtpEmailReceivedEvent event = new SmtpEmailReceivedEvent(message, userId, complaint.getId(), complaint.getObjectType(),
+            SmtpEmailReceivedEvent event = new SmtpEmailReceivedEvent(emailSender, userId, mailFile.getId(), mailFile.getObjectType(), complaint.getId(), complaint.getObjectType(), 
                     AuthenticationUtils.getUserIpAddress());
             boolean success = (exception == null);
             event.setSucceeded(success);
