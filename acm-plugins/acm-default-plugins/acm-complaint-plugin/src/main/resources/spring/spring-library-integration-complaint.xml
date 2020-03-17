@@ -20,6 +20,7 @@
         <property name="acmFolderService" ref="acmFolderService"/>
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="ecmFileDao" ref="ecmFileDao"/>
     </bean>
 
     <int:service-activator input-channel="complaintFilteredMailChannel" ref="complaintMailHandler" method="handle"/>
