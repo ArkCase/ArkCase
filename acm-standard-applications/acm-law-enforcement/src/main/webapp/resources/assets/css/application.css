@@ -1832,6 +1832,20 @@ a.primary {
     right:5px
 }
 
+/* Wrapping required asterisk for state label in forms */
+.required-asterisk-state-label {
+    color: #dd1144;
+    position: absolute;
+    right: 5px;
+}
+
+/* Wrapping required asterisk for state label in modals */
+.required-asterisk-state-label-modals {
+    color: #dd1144;
+    position: absolute;
+    right: 14px;
+}
+
 .ui-grid .ui-grid-render-container-body .ui-grid-viewport {
     overflow-x: auto !important;
 }

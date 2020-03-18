@@ -45,19 +45,19 @@ angular.module('complaints').controller(
                             incidentDate: new Date(),
                             tag: '',
                             frequency: '',
-                            defaultAddress: {
-                                created: new Date()
-                            },
+                            // defaultAddress: {
+                            //     created: new Date()
+                            // },
                             initiator: '',
                             addresses: [],
                             personAssociations: [ {} ],
                             participants: []
                         };
 
-                        UserInfoService.getUserInfo().then(function(data) {
-                            $scope.complaint.defaultAddress.creator = data.userId;
-                            $scope.complaint.defaultAddress.creatorFullName = data.fullName;
-                        });
+                        // UserInfoService.getUserInfo().then(function(data) {
+                        //     $scope.complaint.defaultAddress.creator = data.userId;
+                        //     $scope.complaint.defaultAddress.creatorFullName = data.fullName;
+                        // });
 
                         $scope.userSearchConfig = _.find(moduleConfig.components, {
                             id: "userSearch"
@@ -118,6 +118,24 @@ angular.module('complaints').controller(
                     ObjectLookupService.getComplaintParticipantTypes().then(function(complaintParticipantTypes) {
                         $scope.complaintParticipantTypes = complaintParticipantTypes;
                     });
+
+                    $scope.changeStates = function (country) {
+                        $scope.state = "";
+                        if (country == 'US') {
+                            $scope.state = 'states';
+                        } else if (country == 'CA') {
+                            $scope.state = 'canadaProvinces';
+                        } else if (country == 'JP') {
+                            $scope.state = 'japanStates';
+                        }
+                        $scope.updateStates();
+                    };
+
+                    $scope.updateStates = function () {
+                        ObjectLookupService.getLookupByLookupName($scope.state).then(function (states) {
+                            $scope.states = states;
+                        });
+                    };
 
                     // --------------  mention --------------
                     $scope.params = {
@@ -415,6 +433,22 @@ angular.module('complaints').controller(
                     };
 
                     //-----------------------------------------------------------------------------------------------
+
+                    $scope.addAddress = function () {
+                        $timeout(function () {
+                            //add empty address
+                            $scope.complaint.addresses.push({});
+                        }, 0);
+                    };
+
+                    $scope.removeAddress = function (address) {
+                        $timeout(function () {
+                            _.remove($scope.complaint.addresses, function (object) {
+                                return object === address;
+                            });
+                        }, 0);
+                    };
+
 
                     $scope.save = function() {
                         $scope.loading = true;

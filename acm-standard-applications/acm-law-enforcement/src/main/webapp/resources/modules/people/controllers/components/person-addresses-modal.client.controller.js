@@ -14,7 +14,7 @@ angular.module('people').controller('People.AddressesModalController', [ '$scope
         if(country == 'US') {
             $scope.state = 'states';
         } else if (country == 'CA') {
-            $scope.state = 'canadaStates';
+            $scope.state = 'canadaProvinces';
         } else if (country == 'JP') {
             $scope.state = 'japanStates';
         }
@@ -22,7 +22,7 @@ angular.module('people').controller('People.AddressesModalController', [ '$scope
     };
     
     $scope.updateStates = function(){
-        ObjectLookupService.getLookupByLookupName($scope.state) .then(function(states) {
+        ObjectLookupService.getLookupByLookupName($scope.state).then(function (states) {
             $scope.states = states;
         });
     };
@@ -31,6 +31,8 @@ angular.module('people').controller('People.AddressesModalController', [ '$scope
     $scope.isEdit = params.isEdit;
     $scope.isDefault = params.isDefault;
     $scope.hideNoField = params.isDefault;
+
+    $scope.changeStates($scope.address.country);
 
     $scope.onClickCancel = function() {
         $modalInstance.dismiss('Cancel');

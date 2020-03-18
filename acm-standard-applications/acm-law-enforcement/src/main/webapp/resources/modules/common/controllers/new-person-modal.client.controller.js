@@ -68,6 +68,23 @@ angular.module('common').controller(
                         return organizationTypes;
                     });
 
+            $scope.changeStates = function (country) {
+                $scope.state = "";
+                if (country == 'US') {
+                    $scope.state = 'states';
+                } else if (country == 'CA') {
+                    $scope.state = 'canadaProvinces';
+                } else if (country == 'JP') {
+                    $scope.state = 'japanStates';
+                }
+                $scope.updateStates();
+            };
+
+            $scope.updateStates = function () {
+                ObjectLookupService.getLookupByLookupName($scope.state).then(function (states) {
+                    $scope.states = states;
+                });
+            };
                     
                     $scope.addContactMethod = function(contactType) {
                         $timeout(function() {
