@@ -1,4 +1,4 @@
-angular.module('complaints').controller('Complaint.AddressesModalController', [ '$scope', '$modalInstance', 'Object.LookupService', 'params', function($scope, $modalInstance, ObjectLookupService, params) {
+angular.module('complaints').controller('Complaint.AddressesModalController', ['$scope', '$modalInstance', 'Object.LookupService', 'params', 'UtilService', function ($scope, $modalInstance, ObjectLookupService, params, Util) {
 
     ObjectLookupService.getAddressTypes().then(function(addressTypes) {
         $scope.addressTypes = addressTypes;
@@ -14,13 +14,15 @@ angular.module('complaints').controller('Complaint.AddressesModalController', [ 
         } else if (country == 'JP') {
             $scope.state = 'japanStates';
         }
-        $scope.updateStates();
+        $scope.updateStates($scope.state);
     };
 
-    $scope.updateStates = function () {
-        ObjectLookupService.getLookupByLookupName($scope.state).then(function (states) {
-            $scope.states = states;
-        });
+    $scope.updateStates = function (state) {
+        if (!Util.isEmpty(state)) {
+            ObjectLookupService.getLookupByLookupName($scope.state).then(function (states) {
+                $scope.states = states;
+            });
+        }
     };
 
     ObjectLookupService.getCountries().then(function(countries) {
