@@ -68,13 +68,15 @@ angular.module('people').controller(
                 } else if (country == 'JP') {
                     $scope.state = 'japanStates';
                 }
-                $scope.updateStates();
+                $scope.updateStates($scope.state);
             };
 
-            $scope.updateStates = function () {
-                ObjectLookupService.getLookupByLookupName($scope.state).then(function (states) {
-                    $scope.states = states;
-                });
+            $scope.updateStates = function (state) {
+                if (!Util.isEmpty(state)) {
+                    ObjectLookupService.getLookupByLookupName($scope.state).then(function (states) {
+                        $scope.states = states;
+                    });
+                }
             };
 
             ObjectLookupService.getCountries().then(function(countries) {

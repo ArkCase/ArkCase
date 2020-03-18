@@ -52,7 +52,7 @@
             <div class="col-sm-3 form-group" ng-if="address.country == 'US' || address.country == 'CA' || address.country == 'JP'">
                 <label for="state" translate>
                     organizations.comp.addresses.modal.state.label</label>
-                <select id="state" class="form-control" ng-model="address.state">
+                <select id="state" class="form-control" ng-model="address.state" required>
                     <option ng-repeat="option in states" value="{{option.key}}">
                         {{option.value | translate}}
                     </option>
@@ -64,7 +64,7 @@
                 </label>
                 <span class="required-asterisk-state-label-modals">*</span>
                 <input id="txtState" type="text" ng-model="address.state" class="input-md form-control"
-                        placeholder="{{ 'organizations.comp.addresses.modal.state.placeholder' | translate }}">
+                        placeholder="{{ 'organizations.comp.addresses.modal.state.placeholder' | translate }}" required>
             </div>
             <div class="col-sm-3 form-group">
                 <label for="zip" translate>
