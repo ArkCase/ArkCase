@@ -45,19 +45,11 @@ angular.module('complaints').controller(
                             incidentDate: new Date(),
                             tag: '',
                             frequency: '',
-                            // defaultAddress: {
-                            //     created: new Date()
-                            // },
                             initiator: '',
                             addresses: [],
                             personAssociations: [ {} ],
                             participants: []
                         };
-
-                        // UserInfoService.getUserInfo().then(function(data) {
-                        //     $scope.complaint.defaultAddress.creator = data.userId;
-                        //     $scope.complaint.defaultAddress.creatorFullName = data.fullName;
-                        // });
 
                         $scope.userSearchConfig = _.find(moduleConfig.components, {
                             id: "userSearch"
