@@ -144,22 +144,25 @@ angular.module('services').factory(
                             };
 
                             that.scope.$on("object-updated", function(e, objectInfo) {
+                                var title;
                                 var node = that.makeTreeNode(objectInfo);
                                 if (!Util.isEmpty(that.scope.treeData) && !Util.isEmpty(that.scope.treeData.configTitleList[node.nodeType]))
                                 {
                                     var configurationTitle = that.scope.treeData.configTitleList[node.nodeType].title;
                                     if (configurationTitle === "objectId") {
-                                        var title = node.nodeId;
+                                        title = node.nodeId;
                                     } else if (configurationTitle === "titleTitle") {
-                                        var title = node.nodeTitle;
+                                        title = node.nodeTitle;
                                     } else if (configurationTitle === "objectIdTitle") {
-                                        var title = node.nodeId + " - " + node.nodeTitle;
+                                        title = node.nodeId + " - " + node.nodeTitle;
                                     } else if (configurationTitle === "titleObjectId") {
-                                        var title = node.nodeTitle + " - " + node.nodeId;
+                                        title = node.nodeTitle + " - " + node.nodeId;
+                                    } else if (configurationTitle === 'numberTitle') {
+                                        title = node.nodeNumber + " - " + node.nodeTitle;
                                     }
                                 }
                                 else {
-                                    var title = node.nodeTitle;
+                                    title = node.nodeTitle;
                                 }
 
                                 that.scope.treeControl.setTitle(node.nodeType, node.nodeId, title, node.nodeToolTip);
