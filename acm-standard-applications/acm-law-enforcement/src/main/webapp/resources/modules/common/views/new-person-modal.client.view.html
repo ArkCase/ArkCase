@@ -238,9 +238,8 @@
                     <div class="row">
                         <div class="col-sm-6 form-group">
                             <label translate> common.newPerson.locations.country</label>
-                            <span class="required-asterisk">*</span>
                             <select class="form-control" ng-model="person.defaultAddress.country"
-                                    ng-change="changeStates(person.defaultAddress.country)" required>
+                                    ng-change="changeStates(person.defaultAddress.country)">
                                 <option ng-repeat="option in countries" value="{{option.key}}">
                                     {{option.value | translate}}
                                 </option>
@@ -248,9 +247,8 @@
                         </div>
                         <div class="col-sm-6 form-group">
                             <label translate> common.newPerson.locations.type</label>
-                            <span class="required-asterisk">*</span>
                             <select class="form-control" ng-model="person.defaultAddress.type"
-                                    ng-change="changeStates(person.defaultAddress.country)" required>
+                                    ng-change="changeStates(person.defaultAddress.country)">
                                 <option ng-repeat="option in addressTypes" value="{{option.key}}">
                                     {{option.value | translate}}
                                 </option>
@@ -261,9 +259,8 @@
                         <div class="col-sm-6 form-group">
                             <label translate>
                                 common.newPerson.locations.streetAddress</label>
-                            <span class="required-asterisk">*</span>
                             <input type="text" ng-model="person.defaultAddress.streetAddress" class="input-md form-control"
-                                    placeholder="{{ 'common.newPerson.locations.streetAddress.placeholder' | translate }}" required>
+                                    placeholder="{{ 'common.newPerson.locations.streetAddress.placeholder' | translate }}">
                         </div>
                         <div class="col-sm-6 form-group">
                             <label translate>
@@ -276,16 +273,14 @@
                         <div class="col-sm-6 form-group">
                             <label translate>
                                 common.newPerson.locations.city</label>
-                            <span class="required-asterisk">*</span>
                             <input type="text" ng-model="person.defaultAddress.city" class="input-md form-control"
-                                    placeholder="{{ 'common.newPerson.locations.city.placeholder' | translate }}" required>
+                                    placeholder="{{ 'common.newPerson.locations.city.placeholder' | translate }}">
                         </div>
                         <div class="col-sm-2 form-group"
                                 ng-if="person.defaultAddress.country == 'US' || person.defaultAddress.country == 'CA' || person.defaultAddress.country == 'JP'">
                             <label translate>
                                 common.newPerson.locations.state</label>
-                            <span class="required-asterisk-state-label">*</span>
-                            <select class="form-control" ng-model="person.defaultAddress.state" required>
+                            <select class="form-control" ng-model="person.defaultAddress.state">
                                 <option ng-repeat="option in states" value="{{option.key}}">
                                     {{option.value | translate}}
                                 </option>
@@ -296,16 +291,14 @@
                             <label for="txtState" translate>
                                 common.newPerson.locations.state
                             </label>
-                            <span class="required-asterisk-state-label">*</span>
                             <input id="txtState" type="text" ng-model="person.defaultAddress.state" class="input-md form-control"
-                                    placeholder="{{ 'common.newPerson.locations.state.placeholder' | translate }}" required>
+                                    placeholder="{{ 'common.newPerson.locations.state.placeholder' | translate }}">
                         </div>
                         <div class="col-sm-2 form-group">
                             <label translate>
                                 common.newPerson.locations.zip</label>
-                            <span class="required-asterisk">*</span>
                             <input type="text" ng-model="person.defaultAddress.zip" class="input-md form-control"
-                                    placeholder="{{ 'common.newPerson.locations.zip.placeholder' | translate }}" required>
+                                    placeholder="{{ 'common.newPerson.locations.zip.placeholder' | translate }}">
                         </div>
 
                         <div class="col-sm-2 form-group">
@@ -323,8 +316,7 @@
                         <div class="row">
                             <div class="col-sm-6 form-group">
                                 <label translate> common.newPerson.locations.country</label>
-                                <span class="required-asterisk">*</span>
-                                <select class="form-control" ng-model="address.country" ng-change="changeStates(address.country)" required>
+                                <select class="form-control" ng-model="address.country" ng-change="changeStates(address.country)">
                                     <option ng-repeat="option in countries" value="{{option.key}}">
                                         {{option.value | translate}}
                                     </option>
@@ -332,8 +324,7 @@
                             </div>
                             <div class="col-sm-6 form-group">
                                 <label translate> common.newPerson.locations.type</label>
-                                <span class="required-asterisk">*</span>
-                                <select class="form-control" ng-model="address.type" required>
+                                <select class="form-control" ng-model="address.type">
                                     <option ng-repeat="option in addressTypes" value="{{option.key}}">
                                         {{option.value | translate}}
                                     </option>
@@ -344,14 +335,12 @@
                             <div class="col-sm-6 form-group">
                                 <label translate>
                                     common.newPerson.locations.streetAddress</label>
-                                <span class="required-asterisk">*</span>
                                 <input type="text" ng-model="address.streetAddress" class="input-md form-control"
-                                        placeholder="{{ 'common.newPerson.locations.streetAddress.placeholder' | translate }}" required>
+                                        placeholder="{{ 'common.newPerson.locations.streetAddress.placeholder' | translate }}">
                             </div>
                             <div class="col-sm-6 form-group">
                                 <label translate>
                                     common.newPerson.locations.streetAddress2</label>
-                                <span class="required-asterisk">*</span>
                                 <input type="text" ng-model="address.streetAddress2" class="input-md form-control"
                                         placeholder="{{ 'common.newPerson.locations.streetAddress2.placeholder' | translate }}">
                             </div>
@@ -360,33 +349,29 @@
                             <div class="col-sm-6 form-group">
                                 <label translate>
                                     common.newPerson.locations.city</label>
-                                <span class="required-asterisk">*</span>
                                 <input type="text" ng-model="address.city" class="input-md form-control"
-                                        placeholder="{{ 'common.newPerson.locations.city.placeholder' | translate }}" required>
+                                        placeholder="{{ 'common.newPerson.locations.city.placeholder' | translate }}">
                             </div>
                             <div class="col-sm-2 form-group"
                                     ng-if="address.country == 'US' || address.country == 'CA' || address.country == 'JP'">
                                 <label translate>
                                     common.newPerson.locations.state</label>
-                                <span class="required-asterisk-state-label">*</span>
                                 <input type="text" ng-model="address.state" class="input-md form-control"
-                                        placeholder="{{ 'common.newPerson.locations.state.placeholder' | translate }}" required>
+                                        placeholder="{{ 'common.newPerson.locations.state.placeholder' | translate }}">
                             </div>
                             <div class="col-sm-2 form-group"
                                     ng-if="address.country != 'US' && address.country != 'CA' && address.country != 'JP'">
                                 <label for="txtState" translate>
                                     common.newPerson.locations.state
                                 </label>
-                                <span class="required-asterisk-state-label">*</span>
                                 <input type="text" ng-model="address.state" class="input-md form-control"
-                                        placeholder="{{ 'common.newPerson.locations.state.placeholder' | translate }}" required>
+                                        placeholder="{{ 'common.newPerson.locations.state.placeholder' | translate }}">
                             </div>
                             <div class="col-sm-2 form-group">
                                 <label translate>
                                     common.newPerson.locations.zip</label>
-                                <span class="required-asterisk">*</span>
                                 <input type="text" ng-model="address.zip" class="input-md form-control"
-                                        placeholder="{{ 'common.newPerson.locations.zip.placeholder' | translate }}" required>
+                                        placeholder="{{ 'common.newPerson.locations.zip.placeholder' | translate }}">
                             </div>
                             <div class="col-sm-2 form-group">
                                 <div class="pull-left">
