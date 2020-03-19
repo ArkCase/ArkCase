@@ -49,7 +49,7 @@
                 <input id="city" type="text" ng-model="address.city" required="required" class="input-md form-control"
                         placeholder="{{ 'complaints.comp.addresses.modal.city.placeholder' | translate }}">
             </div>
-            <div class="col-sm-3 form-group">
+            <div class="col-sm-3 form-group" ng-if="address.country == 'US' || address.country == 'CA' || address.country == 'JP'">
                 <label for="state" translate>
                     complaints.comp.addresses.modal.state.label</label>
                 <select id="state" class="form-control" ng-model="address.state">
@@ -58,11 +58,20 @@
                     </option>
                 </select>
             </div>
+            <div class="col-sm-3 form-group" ng-if="address.country != 'US' && address.country != 'CA' && address.country != 'JP'">
+                <label for="txtState" translate>
+                    complaints.comp.addresses.modal.state.label
+                </label>
+                <span class="required-asterisk-state-label-modals">*</span>
+                <input id="txtState" type="text" ng-model="address.state" class="input-md form-control"
+                        placeholder="{{ 'complaints.comp.addresses.modal.state.placeholder' | translate }}" required>
+            </div>
             <div class="col-sm-3 form-group">
                 <label for="zip" translate>
                     complaints.comp.addresses.modal.zip.label</label>
+                <span class="required-asterisk">*</span>
                 <input id="zip" type="text" ng-model="address.zip" class="input-md form-control"
-                        placeholder="{{ 'complaints.comp.addresses.modal.zip.placeholder' | translate }}">
+                        placeholder="{{ 'complaints.comp.addresses.modal.zip.placeholder' | translate }}" required>
             </div>
         </div>
         <div class="row">
