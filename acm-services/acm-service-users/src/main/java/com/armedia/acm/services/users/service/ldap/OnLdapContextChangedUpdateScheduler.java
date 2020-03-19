@@ -37,15 +37,12 @@ import com.armedia.acm.spring.events.ContextAddedEvent;
 import com.armedia.acm.spring.events.ContextRemovedEvent;
 import com.armedia.acm.spring.events.ContextReplacedEvent;
 
-import org.apache.commons.lang3.StringUtils;
 import org.quartz.JobDetail;
 import org.quartz.Trigger;
+import org.quartz.impl.triggers.CronTriggerImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class OnLdapContextChangedUpdateScheduler implements ApplicationListener<AbstractContextHolderEvent>
 {
@@ -54,8 +51,6 @@ public class OnLdapContextChangedUpdateScheduler implements ApplicationListener<
     private SpringContextHolder contextHolder;
 
     private AcmJobFactory jobFactory;
-
-    private Pattern pattern = Pattern.compile(".*spring-config(-\\w+)+-ldap\\.xml");
 
     private static final Logger logger = LoggerFactory.getLogger(OnLdapContextChangedUpdateScheduler.class);
 
@@ -66,8 +61,7 @@ public class OnLdapContextChangedUpdateScheduler implements ApplicationListener<
 
         if (isSpringLdapConfigFile(contextName))
         {
-            String directoryId = StringUtils.substringBeforeLast(contextName, "-ldap.xml");
-            directoryId = StringUtils.substringAfter(directoryId, "spring-config-");
+            String directoryId = contextName.substring(0, contextName.indexOf("_"));
 
             AcmLdapSyncConfig ldapSyncConfig = contextHolder.getBeanByNameIncludingChildContexts(String.format("%s_sync", directoryId),
                     AcmLdapSyncConfig.class);
@@ -118,7 +112,11 @@ public class OnLdapContextChangedUpdateScheduler implements ApplicationListener<
     {
         JobDetail jobDetail = contextHolder.getBeanByNameIncludingChildContexts(syncJobName, JobDetail.class);
         Trigger trigger = jobFactory.createTrigger(getJobConfig(cronExpression, syncJobName), jobDetail);
-        schedulerService.rescheduleJob(trigger.getKey().getName(), trigger);
+
+        if (((CronTriggerImpl) trigger).getCronExpression().equals(cronExpression))
+        {
+            schedulerService.rescheduleJob(trigger.getKey().getName(), trigger);
+        }
     }
 
     private void scheduleJob(String syncJobName, String cronExpression)
@@ -138,8 +136,7 @@ public class OnLdapContextChangedUpdateScheduler implements ApplicationListener<
 
     private boolean isSpringLdapConfigFile(String name)
     {
-        Matcher matcher = pattern.matcher(name);
-        return matcher.matches();
+        return name.endsWith("_ldap");
     }
 
     public AcmSchedulerService getSchedulerService()

@@ -66,5 +66,6 @@
 
     <bean id="ldapSyncAPIController" class="com.armedia.acm.services.users.web.api.LdapSyncAPIController">
         <property name="acmContextHolder" ref="acmContextHolder"/>
+        <property name="ldapSyncService" ref="ldapSyncService"/>
     </bean>
 </beans>

@@ -20,7 +20,7 @@
  * #L%
  */
 
-package com.armedia.acm.auth.ad;
+package com.armedia.acm.services.users.service.ldap;
 
 public enum ActiveDirectoryError
 {

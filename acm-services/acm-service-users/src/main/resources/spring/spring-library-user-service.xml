@@ -215,4 +215,11 @@
         <property name="acmLdapConfig" ref="acmSpringLdapConfig"/>
     </bean>
 
+    <bean id="ldapSyncService" class="com.armedia.acm.services.users.service.ldap.LdapSyncService">
+        <property name="ldapDao" ref="customPagedLdapDao"/>
+        <property name="springLdapUserDao" ref="springLdapUserDao"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="ldapSyncProcessor" ref="ldapSyncProcessor"/>
+        <property name="schedulerService" ref="acmSchedulerService"/>
+    </bean>
 </beans>

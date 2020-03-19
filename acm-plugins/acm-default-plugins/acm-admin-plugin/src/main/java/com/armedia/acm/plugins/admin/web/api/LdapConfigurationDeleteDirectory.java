@@ -55,7 +55,7 @@ public class LdapConfigurationDeleteDirectory
         {
             throw new AcmLdapConfigurationException("Directory Id is undefined");
         }
-        ldapConfigurationService.deleteLdapDirectoryConfigurationFiles(directoryId);
+        ldapConfigurationService.deleteLdapDirectoryConfiguration(directoryId);
         return "{}";
     }
 

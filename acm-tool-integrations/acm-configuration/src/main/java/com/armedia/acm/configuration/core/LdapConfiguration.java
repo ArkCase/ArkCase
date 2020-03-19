@@ -29,10 +29,13 @@ package com.armedia.acm.configuration.core;
 
 import com.armedia.acm.configuration.api.ConfigurationFacade;
 import com.armedia.acm.configuration.client.ConfigurationServiceBootClient;
+import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
+import com.armedia.acm.crypto.properties.AcmEncryptablePropertyUtils;
 
 import org.apache.activemq.command.ActiveMQTopic;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.bouncycastle.crypto.RuntimeCryptoException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -44,6 +47,7 @@ import javax.jms.Session;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author mario.gjurcheski
@@ -59,6 +63,9 @@ public class LdapConfiguration implements ConfigurationFacade
 
     @Autowired
     private ConfigurationServiceBootClient configurationServiceBootClient;
+
+    @Autowired
+    private AcmEncryptablePropertyUtils encryptablePropertyUtils;
 
     @Autowired
     private JmsTemplate jmsTemplate;
@@ -86,7 +93,28 @@ public class LdapConfiguration implements ConfigurationFacade
 
     private synchronized void initializeLdapMap()
     {
-        ldapDefaultMap = this.configurationServiceBootClient.loadLdapConfiguration("ldap", new HashMap<>(), null);
+        Map<String, Object> configurationMap = this.configurationServiceBootClient.loadLdapConfiguration("ldap", new HashMap<>(), null);
+
+        ldapDefaultMap = configurationMap.entrySet()
+                .stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, it -> {
+                    if (it.getValue() instanceof String)
+                    {
+                        try
+                        {
+                            return encryptablePropertyUtils.decryptPropertyValue(it.getValue().toString());
+                        }
+                        catch (AcmEncryptionException e)
+                        {
+                            log.error("Property [{}] can't be decrypted", it.getValue().toString());
+                            throw new RuntimeCryptoException("Failed to convert property value. Reason:" + e.getMessage());
+                        }
+                    }
+                    else
+                    {
+                        return it.getValue();
+                    }
+                }));
 
         sendMessageForRecreatingOfLdapBeans();
 

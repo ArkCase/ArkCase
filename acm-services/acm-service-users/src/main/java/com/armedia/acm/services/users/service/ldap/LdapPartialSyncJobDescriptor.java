@@ -28,6 +28,7 @@ package com.armedia.acm.services.users.service.ldap;
  */
 
 import com.armedia.acm.quartz.scheduler.AcmJobDescriptor;
+import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobExecutionContext;
@@ -39,17 +40,18 @@ import org.quartz.PersistJobDataAfterExecution;
 public class LdapPartialSyncJobDescriptor extends AcmJobDescriptor
 {
     private LdapSyncService ldapSyncService;
+    private AcmLdapSyncConfig acmLdapSyncConfig;
 
     @Override
     public String getJobName()
     {
-        return String.format("%s_ldapPartialSyncJob", ldapSyncService.getLdapSyncConfig().getDirectoryName());
+        return String.format("%s_ldapPartialSyncJob", acmLdapSyncConfig.getDirectoryName());
     }
 
     @Override
     public void executeJob(JobExecutionContext context) throws JobExecutionException
     {
-        ldapSyncService.ldapPartialSync(context.getPreviousFireTime());
+        ldapSyncService.ldapPartialSync(context.getPreviousFireTime(), acmLdapSyncConfig);
     }
 
     public LdapSyncService getLdapSyncService()
@@ -60,5 +62,15 @@ public class LdapPartialSyncJobDescriptor extends AcmJobDescriptor
     public void setLdapSyncService(LdapSyncService ldapSyncService)
     {
         this.ldapSyncService = ldapSyncService;
+    }
+
+    public AcmLdapSyncConfig getAcmLdapSyncConfig()
+    {
+        return acmLdapSyncConfig;
+    }
+
+    public void setAcmLdapSyncConfig(AcmLdapSyncConfig ldapSyncConfig)
+    {
+        this.acmLdapSyncConfig = ldapSyncConfig;
     }
 }

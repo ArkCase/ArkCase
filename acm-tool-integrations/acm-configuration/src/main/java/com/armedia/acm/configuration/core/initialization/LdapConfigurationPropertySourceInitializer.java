@@ -37,6 +37,7 @@ import org.springframework.core.Ordered;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.MutablePropertySources;
 import org.springframework.core.env.PropertySource;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
 
 /**
@@ -47,12 +48,14 @@ import org.springframework.stereotype.Component;
 @DependsOn("bootstrapConfig")
 public class LdapConfigurationPropertySourceInitializer implements Ordered, InitializingBean
 {
-
     @Autowired
     ConfigurableEnvironment configurableEnvironment;
 
     @Autowired
     LdapConfiguration ldapConfiguration;
+
+    @Autowired
+    JmsTemplate jmsTemplate;
 
     private PropertySource getPropertySource()
     {
@@ -72,4 +75,5 @@ public class LdapConfigurationPropertySourceInitializer implements Ordered, Init
     {
         return Ordered.HIGHEST_PRECEDENCE + 2;
     }
+
 }
