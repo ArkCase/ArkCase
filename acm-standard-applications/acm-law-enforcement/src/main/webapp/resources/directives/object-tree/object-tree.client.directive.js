@@ -482,28 +482,33 @@ angular.module('directives').directive('objectTree', [ '$q', '$translate', 'Util
                     var nodeStatus = obj.nodeStatus;
                     var nodeStatusColor = obj.nodeStatusColor;
                     var nodeTitleLabel = obj.nodeTitleLabel;
+                    var nodeTitle;
                     if(!Util.isEmpty(treeData.configTitleList) && !Util.isEmpty(treeData.configTitleList[obj.nodeType])){
                         var configurationTitle = treeData.configTitleList[obj.nodeType].title;
                         if(configurationTitle === "objectId")
                         {
-                            var nodeTitle = obj.nodeId;
+                            nodeTitle = obj.nodeId;
                         }
                         else if(configurationTitle === "titleTitle")
                         {
-                            var nodeTitle = obj.nodeTitle;
+                            nodeTitle = obj.nodeTitle;
                         }
                         else if(configurationTitle === "objectIdTitle")
                         {
-                            var nodeTitle = obj.nodeId + " - "+ obj.nodeTitle;
+                            nodeTitle = obj.nodeId + " - "+ obj.nodeTitle;
                         }
                         else if(configurationTitle === "titleObjectId")
                         {
-                            var nodeTitle = obj.nodeTitle + " - " + obj.nodeId;
+                            nodeTitle = obj.nodeTitle + " - " + obj.nodeId;
+                        }
+                        else if (configurationTitle === 'numberTitle')
+                        {
+                            nodeTitle = obj.nodeNumber + " - " + obj.nodeTitle;
                         }
                     }
                     else
                     {
-                        var nodeTitle = nodeTitleLabel ? $translate.instant(nodeTitleLabel) : obj.nodeTitle;
+                        nodeTitle = nodeTitleLabel ? $translate.instant(nodeTitleLabel) : obj.nodeTitle;
                     }
                     var nodeToolTipLabel = obj.nodeToolTipLabel;
                     var nodeToolTip = nodeToolTipLabel ? $translate.instant(nodeToolTipLabel) : obj.nodeToolTip;
