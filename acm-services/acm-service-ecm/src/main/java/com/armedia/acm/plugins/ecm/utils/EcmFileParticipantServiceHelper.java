@@ -27,6 +27,7 @@ package com.armedia.acm.plugins.ecm.utils;
  * #L%
  */
 
+import com.armedia.acm.auth.AcmAuthentication;
 import com.armedia.acm.auth.ExternalAuthenticationUtils;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
@@ -37,6 +38,7 @@ import com.armedia.acm.plugins.ecm.model.ChangedParticipantConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileParticipantChangedEvent;
+import com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.web.api.MDCConstants;
 
@@ -45,6 +47,9 @@ import org.apache.logging.log4j.Logger;
 import org.slf4j.MDC;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -67,6 +72,7 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private ApplicationEventPublisher applicationEventPublisher;
     private ExternalAuthenticationUtils externalAuthenticationUtils;
+    private ArkPermissionEvaluator arkPermissionEvaluator;
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void setParticipantsToFolderChildren(AcmFolder folder, List<AcmParticipant> participants, boolean restricted, String auditEntityUserId)
@@ -174,6 +180,16 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
     {
         log.trace("Setting participant [{}] with privilege [{}] for folder children [{}-{}]", participant.getParticipantLdapId(),
                 participant.getParticipantType(), folder.getId(), folder.getName());
+        if (folder.isLink()) {
+            AcmFolder targetFolder = getFolderDao().findByCmisFolderId(folder.getCmisFolderId());
+            Authentication _auth = new UsernamePasswordAuthenticationToken(auditEntityUserId, auditEntityUserId);
+            AcmAuthentication auth = new AcmAuthentication(_auth);
+            if (!getArkPermissionEvaluator().hasPermission(auth, targetFolder.getId(), "FOLDER", "write|group-write"))
+            {
+                log.debug("Folder [{}-{}] is a link. Participants won't be inherited to children.", folder.getId(), folder.getName());
+                return;
+            }
+        }
         getAuditPropertyEntityAdapter().setUserId(auditEntityUserId);
         setParticipantToFolderChildrenRecursively(folder, participant, restricted, auditEntityUserId);
     }
@@ -578,5 +594,13 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
     public void setExternalAuthenticationUtils(ExternalAuthenticationUtils externalAuthenticationUtils)
     {
         this.externalAuthenticationUtils = externalAuthenticationUtils;
+    }
+
+    public ArkPermissionEvaluator getArkPermissionEvaluator() {
+        return arkPermissionEvaluator;
+    }
+
+    public void setArkPermissionEvaluator(ArkPermissionEvaluator arkPermissionEvaluator) {
+        this.arkPermissionEvaluator = arkPermissionEvaluator;
     }
 }

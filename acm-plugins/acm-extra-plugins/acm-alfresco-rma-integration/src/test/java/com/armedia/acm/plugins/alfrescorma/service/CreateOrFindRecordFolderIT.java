@@ -94,7 +94,7 @@ public class CreateOrFindRecordFolderIT
 
     private transient final Logger LOG = LogManager.getLogger(getClass());
     @Autowired
-    @Qualifier("createOrFindRecordFolderService")
+    @Qualifier("createOrFindRecordFolderOrRecordCategoryService")
     private AlfrescoService<String> service;
     @Autowired
     @Qualifier("findFolderService")

@@ -170,7 +170,7 @@ public class FOIARequestDao extends AcmAbstractDao<FOIARequest>
 
     public List<PortalFOIARequestStatus> getLoggedUserExternalRequests(String emailAddress, String requestId)
     {
-        String queryText = "SELECT cf.caseNumber, cf.status, cf.modified, cf.publicFlag, cf.requestType FROM FOIARequest cf JOIN PersonAssociation pa JOIN pa.person p"
+        String queryText = "SELECT cf FROM FOIARequest cf JOIN PersonAssociation pa JOIN pa.person p"
                 + " WHERE cf.id = pa.parentId"
                 + " AND pa.parentType='CASE_FILE'"
                 + " AND pa.personType = 'Requester'";
@@ -197,17 +197,19 @@ public class FOIARequestDao extends AcmAbstractDao<FOIARequest>
             foiaRequests.setParameter("caseNumber", requestId);
         }
 
-        List<Object[]> resultList = foiaRequests.getResultList();
+        List<FOIARequest> resultList = foiaRequests.getResultList();
 
         List<PortalFOIARequestStatus> requestStatusList = new ArrayList<>();
-        for (Object[] record : resultList)
+        for (FOIARequest request : resultList)
         {
             PortalFOIARequestStatus requestStatus = new PortalFOIARequestStatus();
-            requestStatus.setRequestId((String) record[0]);
-            requestStatus.setRequestStatus((String) record[1]);
-            requestStatus.setUpdateDate((Date) record[2]);
-            requestStatus.setIsPublic((Boolean) record[3]);
-            requestStatus.setRequestType((String) record[4]);
+            requestStatus.setRequestId(request.getCaseNumber());
+            requestStatus.setRequestStatus(request.getStatus());
+            requestStatus.setQueue(request.getQueue().getName());
+            requestStatus.setUpdateDate(request.getModified());
+            requestStatus.setIsDenied(request.getDeniedFlag());
+            requestStatus.setIsPublic(request.getPublicFlag());
+            requestStatus.setRequestType(request.getRequestType());
             requestStatusList.add(requestStatus);
         }
 

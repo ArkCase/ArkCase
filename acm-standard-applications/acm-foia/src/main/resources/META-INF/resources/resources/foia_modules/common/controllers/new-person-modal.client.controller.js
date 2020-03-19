@@ -74,7 +74,27 @@ angular.module('common').controller(
                         return prefixes;
                     });
 
-                    $scope.addContactMethod = function(contactType) {
+            $scope.changeStates = function (country) {
+                $scope.state = "";
+                if (country == 'US') {
+                    $scope.state = 'states';
+                } else if (country == 'CA') {
+                    $scope.state = 'canadaProvinces';
+                } else if (country == 'JP') {
+                    $scope.state = 'japanStates';
+                }
+                $scope.updateStates($scope.state);
+            };
+
+            $scope.updateStates = function (state) {
+                if (!Util.isEmpty(state)) {
+                    ObjectLookupService.getLookupByLookupName($scope.state).then(function (states) {
+                        $scope.states = states;
+                    });
+                }
+            };
+
+            $scope.addContactMethod = function (contactType) {
                         $timeout(function() {
                             contactMethodsCounts[contactType]++;
                             $scope.person.contactMethods.push({

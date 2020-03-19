@@ -1906,16 +1906,28 @@ angular.module('directives').directive(
                                         var selNodes = DocTree.getSelectedNodes();
                                         var batchMode = !Util.isArrayEmpty(selNodes);
                                         var nodes = (batchMode) ? selNodes : [ node ];
+                                        var isReadOnly = hasReadOnlyParentNode(node);
                                         if (batchMode) {
                                             menuResource = DocTree.Menu.getBatchResource(nodes);
+                                        } else if (isReadOnly) {
+                                            menuResource = DocTree.Menu.getReadOnlyResource(node);
                                         } else if ("RECORD" == Util.goodValue(node.data.status)) {
                                             menuResource = DocTree.Menu.getRecordResource(node);
                                         } else if (node.data.link) {
-                                            menuResource = 'menu.link.file';
+                                            menuResource = node.data.objectType === "folder" ? "menu.link.folder" : "menu.link.file";
                                         } else {
                                             menuResource = DocTree.Menu.getBasicResource(node);
                                         }
                                         var menu = DocTree.Menu.makeContextMenu(menuResource, nodes, DocTree.pluginsConfig);
+
+                                        function hasReadOnlyParentNode(node) {
+                                            while(node.parent) {
+                                                if(node.data.status === "READ ONLY"){
+                                                    return true;
+                                                }
+                                                node = node.parent;
+                                            }
+                                        }
 
                                         $q.when(menu).then(function(menuResult) {
                                             $s.contextmenu("replaceMenu", menuResult);
@@ -1983,6 +1995,19 @@ angular.module('directives').directive(
                                         menuResource = "menu.record.folder";
                                     } else if (DocTree.isFileNode(node)) {
                                         menuResource = "menu.record.file";
+                                    }
+                                }
+                                return menuResource;
+                            },
+                            getReadOnlyResource: function(node) {
+                                var menuResource = null;
+                                if (node) {
+                                    if (DocTree.isTopNode(node)) {
+                                        menuResource = "menu.read-only.root";
+                                    } else if (DocTree.isFolderNode(node)) {
+                                        menuResource = "menu.read-only.folder";
+                                    } else if (DocTree.isFileNode(node)) {
+                                        menuResource = "menu.read-only.file";
                                     }
                                 }
                                 return menuResource;
@@ -2405,7 +2430,6 @@ angular.module('directives').directive(
                                         }
                                     }).then(function(folderList) {
                                         if (folderList) {
-                                            folderNode.data.objectId = Util.goodValue(folderList.folderId, 0);
                                             folderNode.data.totalChildren = Util.goodValue(folderList.totalChildren, 0);
                                             folderNode.renderTitle();
                                             DocTree.markNodeOk(folderNode);
@@ -2605,7 +2629,7 @@ angular.module('directives').directive(
                                 }
                                 return dfd.promise();
                             },
-                            copyFolder: function(srcNode, frNode, toNode, mode) {
+                            copyFolder: function(srcNode, frNode, toNode, mode, actionName) {
                                 var dfd = $.Deferred();
 
                                 //var toFolderNode = DocTree.isFolderNode(toNode)? toNode : toNode.parent;
@@ -2641,9 +2665,13 @@ angular.module('directives').directive(
                                     var toFolderId = toFolderNode.data.objectId;
                                     var toCacheKey = DocTree.getCacheKeyByNode(toFolderNode);
                                     var frCacheKey = DocTree.getCacheKeyByNode(srcNode.parent);
+                                    var copyService = actionName === 'pasteAsLink' ? Ecm.copyFolderAsLink : Ecm.copyFolder;
+                                    if (srcNode.data.link === true) {
+                                        copyService = Ecm.copyFolderAsLink;
+                                    }
 
                                     Util.serviceCall({
-                                        service: Ecm.copyFolder,
+                                        service: copyService,
                                         param: {
                                             subFolderId: subFolderId,
                                             folderId: toFolderId,
@@ -2682,6 +2710,7 @@ angular.module('directives').directive(
                                         newNode.renderTitle();
                                         dfd.resolve(copyFolderInfo);
                                     }, function(errorData) {
+                                        MessageService.error(errorData.data)
                                         DocTree.markNodeError(newNode);
                                         dfd.reject();
                                     });
@@ -2797,7 +2826,7 @@ angular.module('directives').directive(
                                     var requests = [];
                                     for (var i = 0; i < srcNodesToCopy.length; i++) {
                                         if (DocTree.isFolderNode(srcNodesToCopy[i])) {
-                                            requests.push(DocTree.Op.copyFolder(srcNodesToCopy[i], frNodesToCopy[i], toNode, mode));
+                                            requests.push(DocTree.Op.copyFolder(srcNodesToCopy[i], frNodesToCopy[i], toNode, mode, actionName));
                                         } else if (DocTree.isFileNode(srcNodesToCopy[i])) {
                                             requests.push(DocTree.Op.copyFile(srcNodesToCopy[i], frNodesToCopy[i], toNode, mode, actionName));
                                         }
@@ -3471,11 +3500,17 @@ angular.module('directives').directive(
                         },
                         uploadFile: function() {
                             DocTree.jqFileInput.attr("multiple", '');
-                            DocTree.jqFileInput.click();
+                            DocTree.makeUploadDocForm(DocTree.jqTree);
+                            setTimeout(function () {
+                                DocTree.jqFileInput.click();
+                            });
                         },
                         replaceFile: function() {
                             DocTree.jqFileInput.removeAttr("multiple");
-                            DocTree.jqFileInput.click();
+                            DocTree.makeUploadDocForm(DocTree.jqTree);
+                            setTimeout(function () {
+                                DocTree.jqFileInput.click();
+                            });
                         }
 
                         ,
@@ -3628,6 +3663,7 @@ angular.module('directives').directive(
                                 nodeData.data.creator = Util.goodValue(folderData.creator);
                                 nodeData.data.modified = Util.goodValue(folderData.modified);
                                 nodeData.data.status = Util.goodValue(folderData.status);
+                                nodeData.data.link = Util.goodValue(folderData.link);
 
                             }
                             return nodeData;

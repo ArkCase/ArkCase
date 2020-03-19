@@ -109,6 +109,7 @@ public class AcmFolderToSolrTransformer implements AcmObjectToSolrDocTransformer
                 AcmContainer container = getFolderService().findContainerByFolderIdTransactionIndependent(parentFolder.getId());
                 doc.getAdditionalProperties().put("parent_container_object_type_s", container.getContainerObjectType());
                 doc.getAdditionalProperties().put("parent_container_object_id_s", container.getContainerObjectId());
+                doc.getAdditionalProperties().put("link_b", in.isLink());
             }
             catch (AcmObjectNotFoundException e)
             {

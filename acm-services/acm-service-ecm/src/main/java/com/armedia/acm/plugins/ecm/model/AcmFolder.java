@@ -127,6 +127,10 @@ public class AcmFolder implements AcmEntity, Serializable, AcmObject, AcmAssigne
     @Convert(converter = BooleanToStringConverter.class)
     private Boolean restricted = Boolean.FALSE;
 
+    @Column(name = "cm_folder_is_link", nullable = false)
+    @Convert(converter = BooleanToStringConverter.class)
+    private Boolean link = Boolean.FALSE;
+
     @PrePersist
     protected void beforeInsert()
     {
@@ -311,6 +315,16 @@ public class AcmFolder implements AcmEntity, Serializable, AcmObject, AcmAssigne
     public void setRestricted(Boolean restricted)
     {
         this.restricted = restricted;
+    }
+
+    public Boolean isLink()
+    {
+        return link;
+    }
+
+    public void setLink(Boolean link)
+    {
+        this.link = link;
     }
 
     @Override

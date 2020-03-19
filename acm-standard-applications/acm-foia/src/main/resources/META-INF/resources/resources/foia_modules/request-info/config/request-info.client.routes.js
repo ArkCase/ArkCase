@@ -31,7 +31,6 @@ angular.module('request-info').config([ '$stateProvider', function($stateProvide
                 $translatePartialLoader.addPart('common');
                 $translatePartialLoader.addPart('core');
                 $translatePartialLoader.addPart('request-info');
-                $translatePartialLoader.addPart('requests');
                 $translatePartialLoader.addPart('cases');
                 $translatePartialLoader.addPart('document-details');
                 return $translate.refresh();
@@ -45,7 +44,6 @@ angular.module('request-info').config([ '$stateProvider', function($stateProvide
             translatePartialLoader: [ '$translate', '$translatePartialLoader', function($translate, $translatePartialLoader) {
                 $translatePartialLoader.addPart('common');
                 $translatePartialLoader.addPart('request-info');
-                $translatePartialLoader.addPart('requests');
                 return $translate.refresh();
             } ]
         }

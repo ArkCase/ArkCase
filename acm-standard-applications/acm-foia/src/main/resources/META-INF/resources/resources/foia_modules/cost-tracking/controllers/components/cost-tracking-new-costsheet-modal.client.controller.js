@@ -83,6 +83,7 @@ angular.module('cost-tracking').controller(
                     $scope.updateBalance = function(costs) {
                         $scope.sumAmount = 0;
                         _.forEach(costs, function(cost) {
+                            cost.value = parseFloat(cost.value);
                             $scope.sumAmount += cost.value;
                             if (Util.isEmpty(cost.value))
                                 $scope.sumAmount = 0;

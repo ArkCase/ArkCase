@@ -148,7 +148,7 @@ angular.module('cases').controller('Cases.ActionsFooterController',
                 animation: $scope.animationsEnabled,
                 templateUrl: 'modules/cases/views/components/delete-comment-modal.client.view.html',
                 controller: 'Cases.DeleteCommentModalController',
-                size: 'lg',
+                size: 'md',
                 backdrop: 'static'
             });
 
@@ -175,7 +175,7 @@ angular.module('cases').controller('Cases.ActionsFooterController',
                 animation: $scope.animationsEnabled,
                 templateUrl: 'modules/cases/views/components/return-reason-modal.client.view.html',
                 controller: 'Cases.ReturnReasonModalController',
-                size: 'lg',
+                size: 'md',
                 backdrop: 'static'
             });
 
@@ -220,16 +220,20 @@ angular.module('cases').controller('Cases.ActionsFooterController',
                 if (data.isSelectedTolling) {
                   $scope.objectInfo.tollingFlag = true;
                 }
-                //save note
-                NotesService.saveNote({
-                    note: data.holdReason,
-                    parentId: $stateParams['id'],
-                    parentType: 'CASE_FILE',
-                    type: 'HOLD_REASON'
-                }).then(function (addedNote) {
-                    // Note saved
+                if (data.holdReason) {
+                    //save note
+                    NotesService.saveNote({
+                        note: data.holdReason,
+                        parentId: $stateParams['id'],
+                        parentType: 'CASE_FILE',
+                        type: 'HOLD_REASON'
+                    }).then(function (addedNote) {
+                        // Note saved
+                        deferred.resolve();
+                    });
+                } else {
                     deferred.resolve();
-                });
+                };
             }, function () {
                 deferred.reject();
                 $scope.loading = false;
