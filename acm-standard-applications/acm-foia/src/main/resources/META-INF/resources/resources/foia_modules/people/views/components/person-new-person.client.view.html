@@ -241,9 +241,8 @@
                     <div class="row">
                         <div class="col-sm-6 form-group">
                             <label translate> people.comp.editPerson.locations.country</label>
-                            <span class="required-asterisk">*</span>
                             <select class="form-control" ng-model="person.defaultAddress.country"
-                                    ng-change="changeStates(person.defaultAddress.country)" required>
+                                    ng-change="changeStates(person.defaultAddress.country)">
                                 <option ng-repeat="option in countries" value="{{option.key}}">
                                     {{option.value | translate}}
                                 </option>
@@ -251,8 +250,7 @@
                         </div>
                         <div class="col-sm-6 form-group">
                             <label translate> people.comp.editPerson.locations.type</label>
-                            <span class="required-asterisk">*</span>
-                            <select class="form-control" ng-model="person.defaultAddress.type" required>
+                            <select class="form-control" ng-model="person.defaultAddress.type">
                                 <option ng-repeat="option in addressTypes" value="{{option.key}}">
                                     {{option.value | translate}}
                                 </option>
