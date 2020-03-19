@@ -27,6 +27,8 @@ package com.armedia.acm.services.users.service.ldap;
  * #L%
  */
 
+import java.util.Map;
+
 /**
  * @author mario.gjurcheski
  *
@@ -51,6 +53,11 @@ public interface AcmLdapBeanSyncService
      */
     void syncLdapUserConfigAttributes();
 
+    /**
+     * synchronizes the ldap directory beans when ldap configuration is updated.
+     *
+     */
+    void syncLdapDirectoryConfig();
 
     /**
      * Creates ldap user configuration in config server.
@@ -68,4 +75,18 @@ public interface AcmLdapBeanSyncService
      */
     void createLdapGroupConfig(String id, String directoryType);
 
+    /**
+     * Creates ldap directory configuration in config server.
+     *
+     * @params directoryId,
+     *         properties
+     */
+    void createLdapDirectoryConfig(String id, Map<String, Object> properties);
+
+    /**
+     * Deletes ldap directory configuration in config server.
+     *
+     * @params directoryId,
+     */
+    void deleteLdapDirectoryConfig(String id);
 }
