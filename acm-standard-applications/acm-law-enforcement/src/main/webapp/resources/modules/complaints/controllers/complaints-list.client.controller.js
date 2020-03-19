@@ -50,6 +50,7 @@ angular.module('complaints').controller(
                             return {
                                 nodeId: Util.goodValue(complaintInfo.complaintId, 0),
                                 nodeType: ObjectService.ObjectTypes.COMPLAINT,
+                                nodeNumber: Util.goodValue(complaintInfo.complaintNumber),
                                 nodeTitle: Util.goodValue(complaintInfo.complaintTitle),
                                 nodeToolTip: Util.goodValue(complaintInfo.complaintTitle)
                             };
