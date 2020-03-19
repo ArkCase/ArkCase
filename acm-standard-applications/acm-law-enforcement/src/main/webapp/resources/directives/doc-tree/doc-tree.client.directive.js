@@ -3500,11 +3500,17 @@ angular.module('directives').directive(
                         },
                         uploadFile: function() {
                             DocTree.jqFileInput.attr("multiple", '');
-                            DocTree.jqFileInput.click();
+                            DocTree.makeUploadDocForm(DocTree.jqTree);
+                            setTimeout(function () {
+                                DocTree.jqFileInput.click();
+                            });
                         },
                         replaceFile: function() {
                             DocTree.jqFileInput.removeAttr("multiple");
-                            DocTree.jqFileInput.click();
+                            DocTree.makeUploadDocForm(DocTree.jqTree);
+                            setTimeout(function () {
+                                DocTree.jqFileInput.click();
+                            });
                         }
 
                         ,
