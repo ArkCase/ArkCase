@@ -1,4 +1,4 @@
-angular.module('people').controller('People.AddressesModalController', [ '$scope', '$translate', '$modalInstance', 'Object.LookupService', 'params', function($scope, $translate, $modalInstance, ObjectLookupService, params) {
+angular.module('people').controller('People.AddressesModalController', ['$scope', '$translate', '$modalInstance', 'Object.LookupService', 'params', 'UtilService', function ($scope, $translate, $modalInstance, ObjectLookupService, params, Util) {
 
     ObjectLookupService.getAddressTypes().then(function(addressTypes) {
         $scope.addressTypes = addressTypes;
@@ -14,15 +14,16 @@ angular.module('people').controller('People.AddressesModalController', [ '$scope
         if(country == 'US') {
             $scope.state = 'states';
         } else if (country == 'CA') {
-            $scope.state = 'canadaStates';
+            $scope.state = 'canadaProvinces';
         } else if (country == 'JP') {
             $scope.state = 'japanStates';
         }
-        $scope.updateStates();
+        $scope.updateStates($scope.state);
     };
-    
-    $scope.updateStates = function(){
-        ObjectLookupService.getLookupByLookupName($scope.state) .then(function(states) {
+
+    $scope.updateStates = function (state) {
+        if (!Util.isEmpty(state))
+        ObjectLookupService.getLookupByLookupName($scope.state).then(function (states) {
             $scope.states = states;
         });
     };
@@ -31,6 +32,8 @@ angular.module('people').controller('People.AddressesModalController', [ '$scope
     $scope.isEdit = params.isEdit;
     $scope.isDefault = params.isDefault;
     $scope.hideNoField = params.isDefault;
+
+    $scope.changeStates($scope.address.country);
 
     $scope.onClickCancel = function() {
         $modalInstance.dismiss('Cancel');
