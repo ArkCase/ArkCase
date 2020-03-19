@@ -93,9 +93,8 @@
                         <div class="col-sm-6 form-group">
                             <label for="country" translate>
                                 complaints.comp.newComplaint.location.country</label>
-                            <span class="required-asterisk">*</span>
                             <select id="country" class="form-control" ng-model="complaint.defaultAddress.country"
-                                    ng-change="changeStates(complaint.defaultAddress.country)" required>
+                                    ng-change="changeStates(complaint.defaultAddress.country)">
                                 <option ng-repeat="option in countries" value="{{option.key}}">
                                     {{option.value | translate}}
                                 </option>
@@ -103,9 +102,7 @@
                         </div>
                         <div class="col-sm-6">
                             <label translate>complaints.comp.newComplaint.location.addressType</label>
-                            <span class="required-asterisk">*</span>
-                            <select ng-model="complaint.defaultAddress.type" ng-change="selectChanged()" class="form-control input-md"
-                                    required>
+                            <select ng-model="complaint.defaultAddress.type" ng-change="selectChanged()" class="form-control input-md">
                                 <option ng-repeat="option in addressTypes" value="{{option.key}}">
                                     {{option.value | translate}}
                                 </option>
@@ -115,10 +112,8 @@
                     <div class="row form-group">
                         <div class="col-sm-6">
                             <label translate>complaints.comp.newComplaint.location.streetAddress</label>
-                            <span class="required-asterisk">*</span>
                             <input type="text" ng-model="complaint.defaultAddress.streetAddress" class="input-md form-control"
-                                    placeholder="{{ 'complaints.comp.newComplaint.location.streetAddress.placeholder' | translate }}"
-                                    required>
+                                    placeholder="{{ 'complaints.comp.newComplaint.location.streetAddress.placeholder' | translate }}">
                         </div>
                         <div class="col-sm-6">
                             <label translate>complaints.comp.newComplaint.location.streetAddress2 </label>
@@ -129,17 +124,13 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <label translate>complaints.comp.newComplaint.location.city</label>
-                            <span class="required-asterisk">*</span>
                             <input type="text" ng-model="complaint.defaultAddress.city" class="input-md form-control"
-                                    placeholder="{{ 'complaints.comp.newComplaint.location.city.placeholder' | translate }}"
-                                    required>
+                                    placeholder="{{ 'complaints.comp.newComplaint.location.city.placeholder' | translate }}">
                         </div>
                         <div class="col-sm-2"
                                 ng-if="complaint.defaultAddress.country == 'US' || complaint.defaultAddress.country == 'CA' || complaint.defaultAddress.country == 'JP'">
                             <label translate>complaints.comp.newComplaint.location.state</label>
-                            <span class="required-asterisk-state-label">*</span>
-                            <select ng-model="complaint.defaultAddress.state" class="form-control input-md"
-                                    required>
+                            <select ng-model="complaint.defaultAddress.state" class="form-control input-md">
                                 <option ng-repeat="option in states" value="{{option.key}}">
                                     {{option.value | translate}}
                                 </option>
@@ -150,17 +141,13 @@
                             <label for="txtState" translate>
                                 complaints.comp.newComplaint.location.state
                             </label>
-                            <span class="required-asterisk-state-label">*</span>
                             <input id="txtState" type="text" ng-model="complaint.defaultAddress.state" class="input-md form-control"
-                                    placeholder="{{ 'complaints.comp.newComplaint.location.state.placeholder' | translate }}"
-                                    required>
+                                    placeholder="{{ 'complaints.comp.newComplaint.location.state.placeholder' | translate }}">
                         </div>
                         <div class="col-sm-2">
                             <label translate>complaints.comp.newComplaint.location.zip</label>
-                            <span class="required-asterisk">*</span>
                             <input type="text" ng-model="complaint.defaultAddress.zip" class="input-md form-control"
-                                    placeholder="{{ 'complaints.comp.newComplaint.location.zip.placeholder' | translate }}"
-                                    required>
+                                    placeholder="{{ 'complaints.comp.newComplaint.location.zip.placeholder' | translate }}">
                         </div>
 
                         <div class="col-sm-2 form-group">
@@ -182,9 +169,8 @@
                             <div class="col-sm-6 form-group">
                                 <label for="country" translate>
                                     complaints.comp.newComplaint.location.country</label>
-                                <span class="required-asterisk">*</span>
                                 <select id="country" class="form-control" ng-model="address.country"
-                                        ng-change="changeStates(address.country)" required>
+                                        ng-change="changeStates(address.country)">
                                     <option ng-repeat="option in countries" value="{{option.key}}">
                                         {{option.value | translate}}
                                     </option>
@@ -193,8 +179,7 @@
                             <div class="col-sm-6 form-group">
                                 <label for="locationType" translate>
                                     complaints.comp.newComplaint.location.addressType</label>
-                                <span class="required-asterisk">*</span>
-                                <select id="" class="form-control" ng-model="address.type" required>
+                                <select id="" class="form-control" ng-model="address.type">
                                     <option ng-repeat="option in addressTypes" value="{{option.key}}">
                                         {{option.value | translate}}
                                     </option>
@@ -205,10 +190,8 @@
                             <div class="col-sm-6 form-group">
                                 <label for="streetAddress" translate>
                                     complaints.comp.newComplaint.location.streetAddress</label>
-                                <span class="required-asterisk">*</span>
                                 <input id="streetAddress" type="text" ng-model="address.streetAddress" class="input-md form-control"
-                                        placeholder="{{ 'complaints.comp.newComplaint.location.streetAddress.placeholder' | translate }}"
-                                        required>
+                                        placeholder="{{ 'complaints.comp.newComplaint.location.streetAddress.placeholder' | translate }}">
                             </div>
                             <div class="col-sm-6 form-group">
                                 <label for="streetAddress2" translate>
@@ -221,17 +204,14 @@
                             <div class="col-sm-6 form-group">
                                 <label for="city" translate>
                                     complaints.comp.newComplaint.location.city</label>
-                                <span class="required-asterisk">*</span>
                                 <input id="city" type="text" ng-model="address.city" class="input-md form-control"
-                                        placeholder="{{ 'complaints.comp.newComplaint.location.city.placeholder' | translate }}"
-                                        required>
+                                        placeholder="{{ 'complaints.comp.newComplaint.location.city.placeholder' | translate }}">
                             </div>
                             <div class="col-sm-2 form-group"
                                     ng-if="address.country == 'US' || address.country == 'CA' || address.country == 'JP'">
                                 <label for="state" translate>
                                     complaints.comp.newComplaint.location.state</label>
-                                <span class="required-asterisk-state-label">*</span>
-                                <select id="state" class="form-control" ng-model="address.state" required>
+                                <select id="state" class="form-control" ng-model="address.state">
                                     <option ng-repeat="option in states" value="{{option.key}}">
                                         {{option.value | translate}}
                                     </option>
@@ -242,18 +222,14 @@
                                 <label for="txtState" translate>
                                     complaints.comp.newComplaint.location.state
                                 </label>
-                                <span class="required-asterisk-state-label">*</span>
                                 <input type="text" ng-model="address.state" class="input-md form-control"
-                                        placeholder="{{ 'complaints.comp.newComplaint.location.state.placeholder' | translate }}"
-                                        required>
+                                        placeholder="{{ 'complaints.comp.newComplaint.location.state.placeholder' | translate }}">
                             </div>
                             <div class="col-sm-2 form-group">
                                 <label for="zip" translate>
                                     complaints.comp.newComplaint.location.zip</label>
-                                <span class="required-asterisk">*</span>
                                 <input id="zip" type="text" ng-model="address.zip" class="input-md form-control"
-                                        placeholder="{{ 'complaints.comp.newComplaint.location.zip.placeholder' | translate }}"
-                                        required>
+                                        placeholder="{{ 'complaints.comp.newComplaint.location.zip.placeholder' | translate }}">
                             </div>
                             <div class="col-sm-2 form-group">
                                 <div class="pull-left">
