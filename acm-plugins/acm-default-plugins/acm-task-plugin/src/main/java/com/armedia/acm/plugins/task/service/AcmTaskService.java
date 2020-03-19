@@ -28,8 +28,10 @@ package com.armedia.acm.plugins.task.service;
  */
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.data.BuckslipFutureTask;
+import com.armedia.acm.plugins.ecm.exception.LinkAlreadyExistException;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmTask;
@@ -53,7 +55,7 @@ public interface AcmTaskService
             String toObjectType,
             String toObjectName,
             Authentication auth,
-            String ipAddress) throws AcmTaskException, AcmCreateObjectFailedException;
+            String ipAddress) throws AcmTaskException, AcmCreateObjectFailedException, AcmUserActionFailedException;
 
     void copyTaskFilesAndFoldersToParent(AcmTask task);
 
@@ -62,7 +64,7 @@ public interface AcmTaskService
     AcmTask retrieveTask(Long id);
 
     void createTasks(String taskAssignees, String taskName, String owningGroup, String parentType,
-            Long parentId);
+            Long parentId) throws AcmCreateObjectFailedException, AcmUserActionFailedException;
 
     byte[] getDiagram(Long id) throws AcmTaskException;
 
@@ -227,14 +229,16 @@ public interface AcmTaskService
      */
     BuckslipProcess updateBuckslipProcess(BuckslipProcess in) throws AcmTaskException;
 
-    List<AcmTask> startReviewDocumentsWorkflow(AcmTask task, String businessProcessName, Authentication authentication)
-            throws AcmTaskException;
+    List<AcmTask> startReviewDocumentsWorkflow(AcmTask task, String businessProcessName, Authentication authentication) throws AcmCreateObjectFailedException, AcmUserActionFailedException, LinkAlreadyExistException, AcmObjectNotFoundException;
 
-    List<AcmTask> startReviewDocumentsWorkflow(AcmTask task, String businessProcessName, Authentication authentication, List<MultipartFile> filesToUpload)
-            throws AcmTaskException, IOException, AcmCreateObjectFailedException, AcmUserActionFailedException;
-    
-    void startArrestWarrantWorkflow(AcmTask task);
+    List<AcmTask> startReviewDocumentsWorkflow(AcmTask task, String businessProcessName, Authentication authentication,
+            List<MultipartFile> filesToUpload) throws AcmCreateObjectFailedException, AcmUserActionFailedException, LinkAlreadyExistException, AcmObjectNotFoundException;
+
+    void startArrestWarrantWorkflow(AcmTask task) throws AcmCreateObjectFailedException, AcmUserActionFailedException, LinkAlreadyExistException, AcmObjectNotFoundException;
 
     void sendArrestWarrantMail(Long objectId, String objectType, String approvers);
 
+    void createTaskFolderStructureInParentObject(AcmTask task) throws AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException, LinkAlreadyExistException;
+
+    public void setParticipantsToTaskFolderLink(AcmTask task) throws AcmObjectNotFoundException;
 }

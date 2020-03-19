@@ -43,16 +43,20 @@ angular.module('admin').controller(
                             var dirEnabled = ds["ldapConfig.enableEditingLdapUsers"] === true;
                             var groupControlGroup = ds["ldapConfig.groupControlGroup"];
                             var userControlGroup = ds["ldapConfig.userControlGroup"];
-                            if(groupControlGroup.trim() !== ''){
+                            var userIdAttributeName = ds["ldapConfig.userIdAttributeName"];
+
+                            if (groupControlGroup.trim() !== '') {
                                 controlGroups.push(groupControlGroup);
                             }
-                            if(userControlGroup.trim() !== ''){
+                            if (userControlGroup.trim() !== '') {
                                 controlGroups.push(userControlGroup);
                             }
+
                             $scope.ldapEditingEnabledPerDirectoryServer[dirId] = dirEnabled;
                             return {
                                 id: dirId,
-                                enabled: dirEnabled
+                                enabled: dirEnabled,
+                                checkUsernameLength: userIdAttributeName === 'sAMAccountName'
                             }
                         });
                     });
@@ -123,6 +127,13 @@ angular.module('admin').controller(
                             $scope.data = [];
                             groupsMap = {};
                             $scope.totalGroups = _.get(payload, 'data.response.numFound');
+
+                            groups.forEach(function (group) {
+                                group.directory = _.find($scope.directoryServers, function (directoryServer) {
+                                    return directoryServer.id === group.directory_name_s
+                                });
+                            });
+
                             addToGroupsMap(groups);
                             createTreeData(groups);
                         };
@@ -347,19 +358,22 @@ angular.module('admin').controller(
                         return $modal.open({
                             animation: $scope.animationsEnabled,
                             templateUrl: 'modules/admin/views/components/security.organizational-hierarchy.create-user.dialog.html',
-                            controller: [ '$scope', '$modalInstance', function($scope, $modalInstance) {
-                                $scope.addUser = true;
+                            controller: ['$scope', '$modalInstance', function ($scope, $modalInstance) {
+                                $scope.enableUsernameEdit = true;
                                 $scope.header = "admin.security.organizationalHierarchy.createUserDialog.addLdapMember.title";
                                 $scope.okBtn = "admin.security.organizationalHierarchy.createUserDialog.addLdapMember.btn.ok";
                                 $scope.cancelBtn = "admin.security.organizationalHierarchy.createUserDialog.addLdapMember.btn.cancel";
                                 $scope.error = error;
                                 $scope.user = user;
-                                $scope.user.groupNames = [ group.object_id_s ];
-                                $scope.ok = function() {
+                                $scope.user.groupNames = [group.object_id_s];
+
+                                $scope.ok = function () {
                                     $modalInstance.close($scope.user);
                                 };
-                                $scope.clearUsernameError = function() {
-                                    if ($scope.error) {
+                                $scope.clearUsernameError = function () {
+                                    if (group.directory.checkUsernameLength && $scope.user.userId.length > 20) {
+                                        $scope.error = $translate.instant('admin.security.organizationalHierarchy.createUserDialog.addLdapMember.samlMaxUsernameLengthError');
+                                    } else if ($scope.error) {
                                         $scope.error = '';
                                     }
                                 };
@@ -473,7 +487,7 @@ angular.module('admin').controller(
                             animation: $scope.animationsEnabled,
                             templateUrl: 'modules/admin/views/components/security.organizational-hierarchy.create-user.dialog.html',
                             controller: [ '$scope', '$modalInstance', function($scope, $modalInstance) {
-                                $scope.addUser = false;
+                                $scope.enableUsernameEdit = false;
                                 $scope.cloneUser = false;
                                 $scope.header = "admin.security.organizationalHierarchy.createUserDialog.editLdapMember.title";
                                 $scope.okBtn = "admin.security.organizationalHierarchy.createUserDialog.editLdapMember.btn.ok";

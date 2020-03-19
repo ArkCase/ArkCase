@@ -174,8 +174,7 @@ public class SmtpServiceTest
         EmailWithEmbeddedLinksResultDTO resultDTO = results.get(0);
         assertThat(resultDTO.isState(), is(true));
         assertThat(resultDTO.getEmailAddress(), is(email));
-        verify(mockMailSender, times(1)).sendEmail(eq(email), anyString(), eq(note));
-        verify(mockApplicationEventPublisher).publishEvent(any(SmtpSentEventHyperlink.class));
+        verify(mockMailSender, times(1)).sendEmail(eq(email), anyString(), eq(note), anyString(), anyString());
 
     }
 
@@ -235,11 +234,12 @@ public class SmtpServiceTest
         whenNew(FileInputStream.class).withArguments(mockFile).thenReturn(mockFileInputStream);
         when(mockFile.getName()).thenReturn("temp.zip");
 
+        inputDTO.setObjectType("ObjectType");
         // when
         service.sendEmailWithAttachments(inputDTO, mockAuthentication, mockAcmUser);
 
         // then
-        verify(mockMailSender).sendMultipartEmail(eq(email), anyString(), capturedNote.capture(), capturedAttachments.capture());
+        verify(mockMailSender).sendMultipartEmail(eq(email), anyString(), capturedNote.capture(), capturedAttachments.capture(), anyString(), anyString());
         assertThat(Pattern.compile(note).matcher(capturedNote.getValue()).matches(), is(true));
         assertThat(capturedAttachments.getValue(), notNullValue());
         assertThat(capturedAttachments.getValue().size(), is(2));
@@ -315,11 +315,13 @@ public class SmtpServiceTest
         whenNew(FileInputStream.class).withArguments(mockFile).thenReturn(mockFileInputStream);
         when(mockFile.getName()).thenReturn("temp.zip");
 
+        inputDTO.setParentType("ParentType");
+        inputDTO.setParentNumber("ParentNumber");
         // when
         service.sendEmailWithAttachmentsAndLinks(inputDTO, mockAuthentication, mockAcmUser);
 
         // then
-        verify(mockMailSender).sendMultipartEmail(eq(email), anyString(), capturedNote.capture(), capturedAttachments.capture());
+        verify(mockMailSender).sendMultipartEmail(eq(email), anyString(), capturedNote.capture(), capturedAttachments.capture(), anyString(), anyString());
         assertEquals(note, capturedNote.getValue());
         assertThat(capturedAttachments.getValue(), notNullValue());
         assertThat(capturedAttachments.getValue().size(), is(2));

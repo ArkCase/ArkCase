@@ -54,7 +54,7 @@ public class AcmFolderDao extends AcmAbstractDao<AcmFolder>
 
     public AcmFolder findByCmisFolderId(String cmisFolderId)
     {
-        String jpql = "SELECT e FROM AcmFolder e WHERE e.cmisFolderId =:cmisFolderId";
+        String jpql = "SELECT e FROM AcmFolder e WHERE e.cmisFolderId =:cmisFolderId AND e.link = false";
 
         TypedQuery<AcmFolder> query = getEm().createQuery(jpql, getPersistenceClass());
 
@@ -67,7 +67,11 @@ public class AcmFolderDao extends AcmAbstractDao<AcmFolder>
 
     public AcmFolder findFolderByNameInTheGivenParentFolder(String folderName, Long parentFolderId) throws NoResultException
     {
-
+        AcmFolder parentFolder = find(parentFolderId);
+        if (parentFolder.isLink())
+        {
+            parentFolderId = findByCmisFolderId(parentFolder.getCmisFolderId()).getId();
+        }
         String jpql = "SELECT e FROM AcmFolder e WHERE e.name=:folderName AND e.parentFolder.id = :parentFolderId";
 
         TypedQuery<AcmFolder> query = getEm().createQuery(jpql, getPersistenceClass());
@@ -107,7 +111,7 @@ public class AcmFolderDao extends AcmAbstractDao<AcmFolder>
 
     public List<AcmFolder> getFoldersWithoutParticipants()
     {
-        String jpql = "SELECT f FROM AcmFolder e WHERE e.id  NOT IN " +
+        String jpql = "SELECT f FROM AcmFolder f WHERE f.id  NOT IN " +
                 "(SELECT p.objectId FROM AcmParticipant p WHERE p.objectType ='FOLDER')";
 
         TypedQuery<AcmFolder> query = getEm().createQuery(jpql, getPersistenceClass());
@@ -115,8 +119,34 @@ public class AcmFolderDao extends AcmAbstractDao<AcmFolder>
         return query.getResultList();
     }
 
+    public List<AcmFolder> getFolderLinks(String cmisFolderId)
+    {
+        String jpql = "SELECT f FROM AcmFolder f WHERE f.cmisFolderId = :cmisFolderId AND f.link = true";
+        TypedQuery<AcmFolder> query = getEm().createQuery(jpql, getPersistenceClass());
+        query.setParameter("cmisFolderId", cmisFolderId);
+        return query.getResultList();
+    }
+
+    public AcmFolder findAnyFolderByName(String name)
+    {
+        String jpql = "SELECT f FROM AcmFolder f WHERE f.name = :name";
+        TypedQuery<AcmFolder> query = getEm().createQuery(jpql, getPersistenceClass());
+        query.setParameter("name", name);
+
+        List<AcmFolder> folderList = query.getResultList();
+        if (!folderList.isEmpty())
+        {
+            return folderList.get(0);
+        }
+        else
+        {
+            return null;
+        }
+
+    }
+
     @Override
-    public String getSupportedObjectType() 
+    public String getSupportedObjectType()
     {
         return AcmFolderConstants.OBJECT_FOLDER_TYPE;
     }

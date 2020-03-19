@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.armedia</groupId>
     <artifactId>acm</artifactId>
-    <version>3.3.5-SNAPSHOT</version>
+    <version>3.3.7-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>ArkCase Case Management System</name>
     <description>Cloud-based case management system with a very nice UI</description>
@@ -1376,6 +1376,14 @@
                     <exclusion>
                         <groupId>log4j</groupId>
                         <artifactId>log4j</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>xml-apis</groupId>
+                        <artifactId>xml-apis</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>xml-apis</groupId>
+                        <artifactId>xmlParserAPIs</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>

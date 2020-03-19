@@ -1,5 +1,8 @@
 package com.armedia.acm.plugins.person.service;
 
+import com.armedia.acm.plugins.addressable.model.ContactMethod;
+import com.armedia.acm.plugins.addressable.model.PostalAddress;
+
 /*-
  * #%L
  * ACM Default Plugin: Person
@@ -28,7 +31,10 @@ package com.armedia.acm.plugins.person.service;
  */
 
 import com.armedia.acm.plugins.person.dao.OrganizationDao;
+import com.armedia.acm.plugins.person.model.Identification;
 import com.armedia.acm.plugins.person.model.Organization;
+import com.armedia.acm.plugins.person.model.Person;
+import com.armedia.acm.plugins.person.model.PersonOrganizationAssociation;
 import com.armedia.acm.services.dataaccess.service.SearchAccessControlFields;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
@@ -108,39 +114,46 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
 
     private String getPrimaryContact(Organization organization)
     {
-        if (organization.getPrimaryContact() == null)
+        PersonOrganizationAssociation primaryContact = organization.getPrimaryContact();
+        if (primaryContact == null)
         {
             return null;
         }
         StringBuilder sb = new StringBuilder();
-        if (!StringUtils.isEmpty(organization.getPrimaryContact().getPerson().getGivenName().trim()))
+        Person person = primaryContact.getPerson();
+        if (person != null)
         {
-            sb.append(organization.getPrimaryContact().getPerson().getGivenName());
-        }
-        if (!StringUtils.isEmpty(organization.getPrimaryContact().getPerson().getFamilyName().trim()))
-        {
-            if (sb.length() > 0)
+            if (person.getGivenName() != null
+                    && !StringUtils.isEmpty(person.getGivenName().trim()))
             {
-                sb.append(" ");
+                sb.append(person.getGivenName());
             }
-            sb.append(organization.getPrimaryContact().getPerson().getFamilyName());
+            if (person.getFamilyName() != null && !StringUtils.isEmpty(person.getFamilyName().trim()))
+            {
+                if (sb.length() > 0)
+                {
+                    sb.append(" ");
+                }
+                sb.append(person.getFamilyName());
+            }
         }
         return sb.toString().trim();
     }
 
     private String getDefaultIdentification(Organization organization)
     {
-        if (organization.getDefaultIdentification() == null)
+        Identification identification = organization.getDefaultIdentification();
+        if (identification == null)
         {
             return null;
         }
         StringBuilder sb = new StringBuilder();
-        if (!StringUtils.isEmpty(organization.getDefaultIdentification().getIdentificationNumber().trim()))
+        if (identification.getIdentificationNumber() != null && !StringUtils.isEmpty(identification.getIdentificationNumber().trim()))
         {
-            sb.append(organization.getDefaultIdentification().getIdentificationNumber());
-            if (!StringUtils.isEmpty(organization.getDefaultIdentification().getIdentificationType().trim()))
+            sb.append(identification.getIdentificationNumber());
+            if (identification.getIdentificationType() != null && !StringUtils.isEmpty(identification.getIdentificationType().trim()))
             {
-                sb.append(" [" + organization.getDefaultIdentification().getIdentificationType() + "]");
+                sb.append(" [" + identification.getIdentificationType() + "]");
             }
         }
         return sb.toString();
@@ -148,17 +161,18 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
 
     private String getDefaultPhone(Organization organization)
     {
-        if (organization.getDefaultPhone() == null)
+        ContactMethod phoneContactMethod = organization.getDefaultPhone();
+        if (phoneContactMethod == null)
         {
             return null;
         }
         StringBuilder sb = new StringBuilder();
-        if (!StringUtils.isEmpty(organization.getDefaultPhone().getValue().trim()))
+        if (phoneContactMethod.getValue() != null && !StringUtils.isEmpty(phoneContactMethod.getValue().trim()))
         {
-            sb.append(organization.getDefaultPhone().getValue());
-            if (!StringUtils.isEmpty(organization.getDefaultPhone().getSubType().trim()))
+            sb.append(phoneContactMethod.getValue());
+            if (phoneContactMethod.getSubType() != null && !StringUtils.isEmpty(phoneContactMethod.getSubType().trim()))
             {
-                sb.append(" [" + organization.getDefaultPhone().getSubType() + "]");
+                sb.append(" [" + phoneContactMethod.getSubType() + "]");
             }
         }
         return sb.toString();
@@ -166,20 +180,21 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
 
     private String getDefaultAddress(Organization organization)
     {
-        if (organization.getDefaultAddress() == null)
+        PostalAddress address = organization.getDefaultAddress();
+        if (address == null)
         {
             return null;
         }
 
         StringBuilder sb = new StringBuilder();
-        if (!StringUtils.isEmpty(organization.getDefaultAddress().getCity().trim()))
+        if (address.getCity() != null && !StringUtils.isEmpty(address.getCity().trim()))
         {
-            sb.append(organization.getDefaultAddress().getCity());
-            if (!StringUtils.isEmpty(organization.getDefaultAddress().getState().trim()))
+            sb.append(address.getCity());
+            if (address.getState() != null && !StringUtils.isEmpty(address.getState().trim()))
             {
                 if (sb.length() > 0)
                 {
-                    sb.append(", " + organization.getDefaultAddress().getState());
+                    sb.append(", " + address.getState());
                 }
             }
         }

@@ -94,6 +94,10 @@ angular.module('services').factory('EcmService', [ '$resource', 'UtilService', f
             method: 'POST',
             url: 'api/latest/service/ecm/folder/copy/:subFolderId/:folderId/:objType/:objId'
         },
+        copyFolderAsLink: {
+            method: 'POST',
+            url: 'api/latest/service/ecm/folder/copyAsLink/:subFolderId/:folderId/:objType/:objId'
+        },
         setActiveVersion: {
             method: 'POST',
             url: 'api/latest/service/ecm/file/:fileId?versionTag=:version'

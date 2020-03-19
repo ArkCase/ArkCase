@@ -24,6 +24,7 @@
         <property name="folderDao" ref="acmFolderDao"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="externalAuthenticationUtils" ref="externalAuthenticationUtils"/>
+        <property name="arkPermissionEvaluator" ref="arkPermissionEvaluator"/>
     </bean>
 
     <bean id="xSync" class="com.antkorwin.xsync.XSync"/>

@@ -45,7 +45,7 @@
     <bean id="organizationAPIController" class="com.armedia.acm.plugins.person.web.api.OrganizationAPIController">
         <property name="organizationService" ref="organizationService"/>
         <property name="organizationEventPublisher" ref="organizationEventPublisher"/>
-        <property name="facetedSearchPath" value="forward:/api/v1/plugin/search/facetedSearch?filters=%s"/>
+        <property name="facetedSearchPath" value="forward:/api/v2/plugin/search/facetedSearch?filters=%s"/>
         <property name="objectConverter" ref="objectConverter"/>
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>

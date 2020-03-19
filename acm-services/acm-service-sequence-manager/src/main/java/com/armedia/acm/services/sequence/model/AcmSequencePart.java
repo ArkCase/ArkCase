@@ -37,6 +37,8 @@ public class AcmSequencePart
     private String sequencePartName;
     private String sequencePartType;
 
+    private String sequenceCondition;
+
     private String sequenceArbitraryText;
 
     private String sequenceObjectPropertyName;
@@ -80,6 +82,23 @@ public class AcmSequencePart
     public void setSequencePartType(String sequencePartType)
     {
         this.sequencePartType = sequencePartType;
+    }
+
+    /**
+     * @return the sequenceCondition
+     */
+    public String getSequenceCondition()
+    {
+        return sequenceCondition;
+    }
+
+    /**
+     * @param sequenceCondition
+     *            the sequenceCondition to set
+     */
+    public void setSequenceCondition(String sequenceCondition)
+    {
+        this.sequenceCondition = sequenceCondition;
     }
 
     /**

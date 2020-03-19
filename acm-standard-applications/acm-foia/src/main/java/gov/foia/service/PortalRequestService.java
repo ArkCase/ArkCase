@@ -66,6 +66,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import gov.foia.dao.FOIARequestDao;
+import gov.foia.model.FOIAPerson;
 import gov.foia.model.FOIARequest;
 import gov.foia.model.PortalFOIAReadingRoom;
 import gov.foia.model.PortalFOIARequest;
@@ -154,16 +155,38 @@ public class PortalRequestService
 
     public void populateResponseRequest(FOIARequest foiaRequest, PortalFOIARequest portalFOIARequest)
     {
+
+        FOIAPerson person = (FOIAPerson) foiaRequest.getOriginator().getPerson();
         portalFOIARequest.setOriginalRequestNumber(foiaRequest.getCaseNumber());
         portalFOIARequest.setTitle(foiaRequest.getTitle());
         portalFOIARequest.setSubject(foiaRequest.getDetails());
         portalFOIARequest.setRequestCategory(foiaRequest.getRequestCategory());
         portalFOIARequest.setDeliveryMethodOfResponse(foiaRequest.getDeliveryMethodOfResponse());
-        portalFOIARequest.setAddress1(foiaRequest.getOriginator().getPerson().getAddresses().get(0).getStreetAddress());
-        portalFOIARequest.setCity(foiaRequest.getOriginator().getPerson().getAddresses().get(0).getCity());
-        portalFOIARequest.setCountry(foiaRequest.getOriginator().getPerson().getAddresses().get(0).getCountry());
-        portalFOIARequest.setState(foiaRequest.getOriginator().getPerson().getAddresses().get(0).getState());
-        portalFOIARequest.setZip(foiaRequest.getOriginator().getPerson().getAddresses().get(0).getZip());
+        portalFOIARequest.setPrefix(person.getTitle());
+        portalFOIARequest.setFirstName(person.getGivenName());
+        portalFOIARequest.setMiddleName(person.getMiddleName());
+        portalFOIARequest.setLastName(person.getFamilyName());
+        portalFOIARequest.setPosition(person.getPosition());
+        portalFOIARequest.setOrganization(person.getCompany());
+
+        if (person.getDefaultEmail() != null)
+        {
+            portalFOIARequest.setEmail(person.getDefaultEmail().getValue());
+        }
+
+        if (person.getDefaultPhone() != null)
+        {
+            portalFOIARequest.setPhone(person.getDefaultPhone().getValue());
+        }
+
+        if (!person.getAddresses().isEmpty()) {
+            portalFOIARequest.setCity(person.getAddresses().get(0).getCity());
+            portalFOIARequest.setCountry(person.getAddresses().get(0).getCountry());
+            portalFOIARequest.setState(person.getAddresses().get(0).getState());
+            portalFOIARequest.setZip(person.getAddresses().get(0).getZip());
+            portalFOIARequest.setAddress1(person.getAddresses().get(0).getStreetAddress());
+            portalFOIARequest.setAddress2(person.getAddresses().get(0).getStreetAddress2());
+        }
     }
 
     public List<PortalFOIAReadingRoom> getReadingRoom(PortalFOIAReadingRoom readingRoom, Authentication auth)

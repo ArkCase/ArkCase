@@ -32,6 +32,7 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
+import com.armedia.acm.plugins.ecm.exception.LinkAlreadyExistException;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.DeleteFolderInfo;
@@ -81,11 +82,16 @@ public interface AcmFolderService
 
     void deleteFolderTree(Long folderId, Authentication authentication) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
+    List<AcmFolder> getFolderLinks(Long folderId) throws AcmObjectNotFoundException;
+
+    void deleteFolderLinks(AcmFolder folder);
+
     void deleteFolderContent(AcmFolder folder, String user);
 
-    void deleteContainerSafe(AcmContainer container, Authentication authentication) throws AcmUserActionFailedException;
+    void deleteContainerSafe(AcmContainer container, Authentication authentication)
+            throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
-    void deleteContainer(Long containerId, Authentication authentication) throws AcmUserActionFailedException;
+    void deleteContainer(Long containerId, Authentication authentication) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
     void deleteContainerAndContent(AcmContainer container, String username);
 
@@ -142,6 +148,12 @@ public interface AcmFolderService
     AcmFolder removeLinksFromFilesInFolder(AcmFolder folder);
 
     AcmFolder saveFolder(AcmFolder folder);
+
+    AcmFolder copyFolderAsLink(AcmFolder toBeCopied, AcmFolder dstFolder, Long targetObjectId, String targetObjectType)
+            throws AcmObjectNotFoundException, LinkAlreadyExistException;
+
+    AcmFolder copyFolderAsLink(AcmFolder originalFolder, AcmFolder copyDstFolder, Long targetObjectId, String targetObjectType,
+            String newFolderName) throws AcmObjectNotFoundException;
 
     @Retryable(maxAttempts = 3, value = Exception.class, backoff = @Backoff(delay = 500))
     AcmFolder createFolder(AcmFolder targetParentFolder, String cmisFolderId, String folderName)

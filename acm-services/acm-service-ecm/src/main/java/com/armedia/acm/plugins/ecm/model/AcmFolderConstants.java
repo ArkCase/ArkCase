@@ -45,9 +45,12 @@ public interface AcmFolderConstants
     String USER_ACTION_MOVE_FOLDER = "MOVE";
     String USER_ACTION_COPY_FOLDER = "COPY";
     String USER_ACTION_GET_FOLDER = "GET";
+    String USER_ACTION_COPY_FOLDER_AS_LINK = "LINK FOLDER";
+    String READ_ONLY = "READ ONLY";
 
     String EVENT_TYPE_FOLDER_MOVED = "com.armedia.acm.folder.moved";
     String EVENT_TYPE_FOLDER_COPIED = "com.armedia.acm.folder.copied";
+    String EVENT_TYPE_FOLDER_COPIED_AS_LINK = "com.armedia.acm.folder.copiedAsLink";
 
     String PARENT_FOLDER_ID = "parentFolderId";
     String ACM_FOLDER_ID = "acmFolderId";

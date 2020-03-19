@@ -97,6 +97,10 @@ angular.module('request-info').controller(
                 }
             };
 
+            $scope.showFailureMessage = function showFailureMessage() {
+                DialogService.alert($scope.transcribeObjectModel.failureReason);
+            };
+
             $scope.iframeLoaded = function () {
                 ArkCaseCrossWindowMessagingService.addHandler('close-document', onCloseDocument);
                 ObjectLookupService.getLookupByLookupName("annotationTags").then(function (allAnnotationTags) {
@@ -1018,16 +1022,20 @@ angular.module('request-info').controller(
                     if (data.isSelectedTolling) {
                       $scope.objectInfo.tollingFlag = true;
                     }
-                    //save note
-                    NotesService.saveNote({
-                        note: data.holdReason,
-                        parentId: $stateParams['id'],
-                        parentType: 'CASE_FILE',
-                        type: 'HOLD_REASON'
-                    }).then(function (addedNote) {
-                        // Note saved
+                    if (data.holdReason) {
+                        //save note
+                        NotesService.saveNote({
+                            note: data.holdReason,
+                            parentId: $stateParams['id'],
+                            parentType: 'CASE_FILE',
+                            type: 'HOLD_REASON'
+                        }).then(function (addedNote) {
+                            // Note saved
+                            deferred.resolve();
+                        });
+                    } else {
                         deferred.resolve();
-                    });
+                    };
                 }, function () {
                     deferred.reject();
                     $scope.loading = false;
@@ -1526,20 +1534,20 @@ angular.module('request-info').controller(
 
             // Release editing lock on window unload, if acquired
             $window.addEventListener('unload', function () {
-            	$scope.data = {
+                $scope.data = {
                         objectId: $scope.ecmFile.fileId,
                         objectType: ObjectService.ObjectTypes.FILE,
                         lockType: ObjectService.LockTypes.WRITE
                     };
 
                 var data = angular.toJson($scope.data);
-            	
+                
                 var url = 'api/v1/plugin/' + ObjectService.ObjectTypes.FILE + '/' + $scope.ecmFile.fileId + '/lock?lockType=' + ObjectService.LockTypes.WRITE;
                 
                 if ($scope.editingMode) {
-                	if("sendBeacon" in navigator)
+                        if("sendBeacon" in navigator)
                     {
-                		navigator.sendBeacon(url, data);
+                                navigator.sendBeacon(url, data);
                     } else {
                         var xmlhttp = new XMLHttpRequest();
                         xmlhttp.open("POST", url, false); //false - synchronous call

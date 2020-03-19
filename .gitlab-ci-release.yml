@@ -56,22 +56,9 @@ release_start:
     variables:
      - $RELEASE_START
   script:
-    - echo '<settings>' > /root/.m2/settings.xml
-    - echo '  <servers>' >> /root/.m2/settings.xml
-    - echo '    <server>' >> /root/.m2/settings.xml
-    - echo '      <id>arkcase.release</id>' >> /root/.m2/settings.xml
-    - echo '      <username>admin</username>' >> /root/.m2/settings.xml
-    - echo "      <password>$MVN_PASSWORD</password>" >> /root/.m2/settings.xml
-    - echo '    </server>' >> /root/.m2/settings.xml
-    - echo '  </servers>' >> /root/.m2/settings.xml
-    - echo '</settings>' >> /root/.m2/settings.xml
-    - export MAVEN_OPTS="-Xmx2048M -Xss256M -XX:MetaspaceSize=2048M -XX:+CMSClassUnloadingEnabled"
     - git config --global user.name "$GIT_USERNAME"
     - git config --global user.email "$GIT_USERMAIL"
     - git remote set-url origin "$GIT_URL"
-    - apt-get update
-    - apt-get install -y zip sshpass
-    - export SSHPASS=$SSHPASS_ARKCASE
     - mvn -B gitflow:release-start -DpushRemote=true -DreleaseVersion=$RELEASE_VERSION -DcommitDevelopmentVersionAtStart=true -DdevelopmentVersion=$DEVELOP_NEW_VERSION
     # Deploy on test servers
     
@@ -128,7 +115,7 @@ release:
     - export SSHPASS=$SSHPASS_ARKCASE
     - mvn -B gitflow:release-finish -DskipTestProject=true -DcommitDevelopmentVersionAtStart=true
     - git checkout master
-    - mvn -DskipITs -T 4 -B deploy "-DaltDeploymentRepository=arkcase.release::default::https://***REMOVED***/repository/arkcase.release/"
+    - mvn -DskipTests -T 4 -B deploy "-DaltDeploymentRepository=arkcase.release::default::https://***REMOVED***/repository/arkcase.release/"
     - sshpass -e sftp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ***REMOVED*** <<< $'put acm-standard-applications/acm-law-enforcement/target/*.war /from-arkcase/arkcase-'$RELEASE_VERSION'.war' 
     # Deploy on test servers
     
@@ -180,7 +167,7 @@ release_hotfix:
     - git checkout hotfix/support/$HOTFIX_SUPPORT_VERSION/$RELEASE_VERSION
     - git checkout support/$HOTFIX_SUPPORT_VERSION
     - mvn -B gitflow:hotfix-finish -DpushRemote=true -DhotfixVersion=support/$HOTFIX_SUPPORT_VERSION/$RELEASE_VERSION -DskipTestProject=true -DskipMergeDevBranch=true
-    - mvn -DskipITs -T 4 -B deploy "-DaltDeploymentRepository=arkcase.release::default::https://***REMOVED***/repository/arkcase.release/"
+    - mvn -DskipTests -T 4 -B deploy "-DaltDeploymentRepository=arkcase.release::default::https://***REMOVED***/repository/arkcase.release/"
     - sshpass -e sftp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ***REMOVED*** <<< $'put acm-standard-applications/acm-law-enforcement/target/*.war /from-arkcase/arkcase-'$RELEASE_VERSION'.war' 
     # Deploy on test servers
 
@@ -207,6 +194,7 @@ release_all:
       https://***REMOVED***/api/v4/projects/30/trigger/pipeline
     # Portal backend
     - curl -k --request POST --form token=$EXTERNAL_WEB_PORTAL_PROJECT_TOKEN --form ref=develop
+      --form "variables[RELEASE_START]=$RELEASE_START"
       --form "variables[RELEASE_VERSION]=$RELEASE_VERSION"
       --form "variables[DEVELOP_NEW_VERSION]=$DEVELOP_NEW_VERSION"
       --form "variables[RELEASE_CANDIDATE_X]=$RELEASE_CANDIDATE_X"
@@ -220,6 +208,7 @@ release_all:
       https://***REMOVED***/api/v4/projects/193/trigger/pipeline
     # Portal UI
     - curl -k --request POST --form token=$EXTERNAL_WEB_PORTAL_UI_PROJECT_TOKEN --form ref=develop
+      --form "variables[RELEASE_START]=$RELEASE_START"
       --form "variables[RELEASE_VERSION]=$RELEASE_VERSION"
       --form "variables[DEVELOP_NEW_VERSION]=$DEVELOP_NEW_VERSION"
       --form "variables[RELEASE_CANDIDATE_X]=$RELEASE_CANDIDATE_X"
@@ -233,6 +222,7 @@ release_all:
       https://***REMOVED***/api/v4/projects/237/trigger/pipeline
     # Config server
     - curl -k --request POST --form token=$CONFIG_SERVER_PROJECT_TOKEN --form ref=develop
+      --form "variables[RELEASE_START]=$RELEASE_START"
       --form "variables[RELEASE_VERSION]=$RELEASE_VERSION"
       --form "variables[DEVELOP_NEW_VERSION]=$DEVELOP_NEW_VERSION"
       --form "variables[RELEASE_CANDIDATE_X]=$RELEASE_CANDIDATE_X"
@@ -246,6 +236,7 @@ release_all:
       https://***REMOVED***/api/v4/projects/322/trigger/pipeline
     # Snowbound
     - curl -k --request POST --form token=$SNOWBOUND_PROJECT_TOKEN --form ref=snowbound-4.10
+      --form "variables[RELEASE_START]=$RELEASE_START"
       --form "variables[RELEASE_VERSION]=$RELEASE_VERSION"
       --form "variables[DEVELOP_NEW_VERSION]=$DEVELOP_NEW_VERSION"
       --form "variables[RELEASE_CANDIDATE_X]=$RELEASE_CANDIDATE_X"
