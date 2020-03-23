@@ -105,13 +105,14 @@ angular
             'Helper.LocaleService',
             'PublicFlag.Service',
             'RequestResponseFolder.Service',
+            'LookupService',
             'MessageService',
             'Object.LookupService',
             '$timeout',
             'Websockets.MessageHandler',
             'Admin.FoiaConfigService',
             function ($q, $translate, $modal, $filter, $log, $injector, Store, Util, UtilDateService, ConfigService,
-                      PluginService, UserInfoService, Ecm, EmailSenderConfigurationService, LocaleHelper, PublicFlagService, RequestResponseFolderService, MessageService, ObjectLookupService, $timeout, MessageHandler, AdminFoiaConfigService) {
+                      PluginService, UserInfoService, Ecm, EmailSenderConfigurationService, LocaleHelper, PublicFlagService, RequestResponseFolderService, LookupService, MessageService, ObjectLookupService, $timeout, MessageHandler, AdminFoiaConfigService) {
                 var cacheTree = new Store.CacheFifo();
                 var cacheFolderList = new Store.CacheFifo();
 
@@ -1414,10 +1415,9 @@ angular
                                     renderer: function (element, node, columnDef, isReadOnly) {
                                         var versionUser = Util.goodValue(node.data.modifier);
                                         if (versionUser) {
-                                            //UserInfoService.getUserInfoByIdQuietly(versionUser).then(function (userInfo) {
-                                            UserInfoService.getUserInfoById(versionUser).then(function (userInfo) {
-                                                $(element).text(Util.goodMapValue(userInfo, "fullName"));
-                                            })
+                                            LookupService.getUserFullName(versionUser).then(function(userName) {
+                                                $(element).text(userName);
+                                            });
                                         }
                                     }
                                 },
