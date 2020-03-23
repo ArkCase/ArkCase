@@ -253,7 +253,7 @@ public class MapperUtils
     {
         if (!prefix.endsWith("."))
         {
-            prefix.concat(".");
+            return prefix.concat(".");
         }
         return prefix;
     }
