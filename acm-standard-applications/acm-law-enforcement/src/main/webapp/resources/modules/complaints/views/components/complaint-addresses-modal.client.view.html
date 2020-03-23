@@ -14,7 +14,7 @@
             <div class="col-sm-6 form-group">
                 <label for="country" translate> complaints.comp.addresses.modal.country.label</label><span
                     class="required-asterisk">*</span>
-                <select id="country" class="form-control" required="required" ng-model="address.country">
+                <select id="country" class="form-control" required="required" ng-model="address.country" ng-change="changeStates(address.country)">
                     <option ng-repeat="option in countries" value="{{option.key}}">
                         {{option.value | translate}}
                     </option>
