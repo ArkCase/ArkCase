@@ -102,6 +102,7 @@ angular.module('services').factory('Complaint.ListService', [ '$resource', '$tra
                             node = {
                                 nodeId: Util.goodValue(doc.object_id_s, 0),
                                 nodeType: ObjectService.ObjectTypes.COMPLAINT,
+                                nodeNumber: Util.goodValue(doc.name),
                                 nodeTitle: Util.goodValue(doc.title_parseable),
                                 nodeToolTip: Util.goodValue(doc.title_parseable)
                             };
