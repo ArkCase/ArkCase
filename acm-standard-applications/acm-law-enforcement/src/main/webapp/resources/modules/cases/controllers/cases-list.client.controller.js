@@ -68,6 +68,7 @@ angular.module('cases').controller(
                             return {
                                 nodeId: Util.goodValue(caseInfo.id, 0),
                                 nodeType: ObjectService.ObjectTypes.CASE_FILE,
+                                nodeNumber: Util.goodValue(caseInfo.caseNumber),
                                 nodeTitle: Util.goodValue(caseInfo.title),
                                 nodeToolTip: Util.goodValue(caseInfo.title)
                             };
