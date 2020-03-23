@@ -231,7 +231,16 @@
             <div id="collapseLocations" class="panel-collapse collapse">
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-sm-4 form-group">
+                        <div class="col-sm-6 form-group">
+                            <label translate> people.comp.editPerson.locations.country</label>
+                            <select class="form-control" ng-model="person.defaultAddress.country"
+                                    ng-change="changeStates(person.defaultAddress.country)">
+                                <option ng-repeat="option in countries" value="{{option.key}}">
+                                    {{option.value | translate}}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-sm-6 form-group">
                             <label translate> people.comp.editPerson.locations.type</label>
                             <select class="form-control" ng-model="person.defaultAddress.type">
                                 <option ng-repeat="option in addressTypes" value="{{option.key}}">
@@ -239,29 +248,30 @@
                                 </option>
                             </select>
                         </div>
-                        <div class="col-sm-4 form-group">
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6 form-group">
                             <label translate>
                                 people.comp.editPerson.locations.streetAddress</label>
                             <input type="text" ng-model="person.defaultAddress.streetAddress" class="input-md form-control"
                                     placeholder="{{ 'people.comp.editPerson.locations.streetAddress.placeholder' | translate }}">
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-4 form-group">
+                        <div class="col-sm-6 form-group">
                             <label translate>
                                 people.comp.editPerson.locations.streetAddress2</label>
                             <input type="text" ng-model="person.defaultAddress.streetAddress2" class="input-md form-control"
                                     placeholder="{{ 'people.comp.editPerson.locations.streetAddress2.placeholder' | translate }}">
                         </div>
-                        <div class="col-sm-4 form-group">
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6 form-group">
                             <label translate>
                                 people.comp.editPerson.locations.city</label>
                             <input type="text" ng-model="person.defaultAddress.city" class="input-md form-control"
                                     placeholder="{{ 'people.comp.editPerson.locations.city.placeholder' | translate }}">
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-2 form-group">
+                        <div class="col-sm-2 form-group"
+                                ng-if="person.defaultAddress.country == 'US' || person.defaultAddress.country == 'CA' || person.defaultAddress.country == 'JP'">
                             <label translate>
                                 people.comp.editPerson.locations.state</label>
                             <select class="form-control" ng-model="person.defaultAddress.state">
@@ -270,20 +280,21 @@
                                 </option>
                             </select>
                         </div>
+                        <div class="col-sm-2 form-group"
+                                ng-if="person.defaultAddress.country != 'US' && person.defaultAddress.country != 'CA' && person.defaultAddress.country != 'JP'">
+                            <label for="txtState" translate>
+                                people.comp.addresses.modal.state.label
+                            </label>
+                            <input id="txtState" type="text" ng-model="person.defaultAddress.state" class="input-md form-control"
+                                    placeholder="{{ 'people.comp.addresses.modal.state.placeholder' | translate }}">
+                        </div>
                         <div class="col-sm-2 form-group">
                             <label translate>
                                 people.comp.editPerson.locations.zip</label>
                             <input type="text" ng-model="person.defaultAddress.zip" class="input-md form-control"
                                     placeholder="{{ 'people.comp.editPerson.locations.zip.placeholder' | translate }}">
                         </div>
-                        <div class="col-sm-4 form-group">
-                            <label translate> people.comp.editPerson.locations.country</label>
-                            <select class="form-control" ng-model="person.defaultAddress.country">
-                                <option ng-repeat="option in countries" value="{{option.key}}">
-                                    {{option.value | translate}}
-                                </option>
-                            </select>
-                        </div>
+
                         <div class="col-sm-2 form-group">
                             <div class="pull-left">
                                 <label class="control-label">&nbsp;</label>
@@ -293,19 +304,20 @@
                                 </button>
                             </div>
                         </div>
+
                     </div>
 
                     <div ng-repeat="address in person.addresses">
                         <div class="row">
-                            <div class="col-sm-4 form-group">
+                            <div class="col-sm-6 form-group">
                                 <label translate> people.comp.editPerson.locations.country</label>
-                                <select class="form-control" ng-model="address.country">
+                                <select class="form-control" ng-model="address.country" ng-change="changeStates(address.country)">
                                     <option ng-repeat="option in countries" value="{{option.key}}">
                                         {{option.value | translate}}
                                     </option>
                                 </select>
                             </div>
-                            <div class="col-sm-4 form-group">
+                            <div class="col-sm-6 form-group">
                                 <label translate> people.comp.editPerson.locations.type</label>
                                 <select class="form-control" ng-model="address.type">
                                     <option ng-repeat="option in addressTypes" value="{{option.key}}">
@@ -315,13 +327,13 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-sm-4 form-group">
+                            <div class="col-sm-6 form-group">
                                 <label translate>
                                     people.comp.editPerson.locations.streetAddress</label>
                                 <input type="text" ng-model="address.streetAddress" class="input-md form-control"
                                         placeholder="{{ 'people.comp.editPerson.locations.streetAddress.placeholder' | translate }}">
                             </div>
-                            <div class="col-sm-4 form-group">
+                            <div class="col-sm-6 form-group">
                                 <label translate>
                                     people.comp.editPerson.locations.streetAddress2</label>
                                 <input type="text" ng-model="address.streetAddress2" class="input-md form-control"
@@ -329,13 +341,14 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-sm-4 form-group">
+                            <div class="col-sm-6 form-group">
                                 <label translate>
                                     people.comp.editPerson.locations.city</label>
                                 <input type="text" ng-model="address.city" class="input-md form-control"
                                         placeholder="{{ 'people.comp.editPerson.locations.city.placeholder' | translate }}">
                             </div>
-                            <div class="col-sm-3 form-group">
+                            <div class="col-sm-2 form-group"
+                                    ng-if="address.country == 'US' || address.country == 'CA' || address.country == 'JP'">
                                 <label translate>
                                     people.comp.editPerson.locations.state</label>
                                 <select class="form-control" ng-model="address.state">
@@ -344,7 +357,15 @@
                                     </option>
                                 </select>
                             </div>
-                            <div class="col-sm-3 form-group">
+                            <div class="col-sm-2 form-group"
+                                    ng-if="address.country != 'US' && address.country != 'CA' && address.country != 'JP'">
+                                <label for="txtState" translate>
+                                    people.comp.addresses.modal.state.label
+                                </label>
+                                <input type="text" ng-model="address.state" class="input-md form-control"
+                                        placeholder="{{ 'people.comp.addresses.modal.state.placeholder' | translate }}">
+                            </div>
+                            <div class="col-sm-2 form-group">
                                 <label translate>
                                     people.comp.editPerson.locations.zip</label>
                                 <input type="text" ng-model="address.zip" class="input-md form-control"
