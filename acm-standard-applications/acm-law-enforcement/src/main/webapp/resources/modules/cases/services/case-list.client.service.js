@@ -92,8 +92,9 @@ angular.module('services').factory('Case.ListService', [ '$resource', '$translat
                             node = {
                                 nodeId: Util.goodValue(doc.object_id_s, 0),
                                 nodeType: ObjectService.ObjectTypes.CASE_FILE,
-                                nodeTitle: Util.goodValue(doc.title_parseable),
-                                nodeToolTip: Util.goodValue(doc.title_parseable)
+                                nodeNumber: Util.goodValue(doc.name),
+                                nodeTitle: Util.goodValue(doc.title_parseable_lcs),
+                                nodeToolTip: Util.goodValue(doc.title_parseable_lcs)
                             };
                         }
                         treeData.docs.push(node);

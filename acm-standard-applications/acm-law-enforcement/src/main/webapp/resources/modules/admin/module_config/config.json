@@ -1219,7 +1219,8 @@
                 "objectId": "admin.application.objectTitleConfiguration.objectId",
                 "titleTitle": "admin.application.objectTitleConfiguration.titleTitle",
                 "objectIdTitle": "admin.application.objectTitleConfiguration.objectIdTitle",
-                "titleObjectId": "admin.application.objectTitleConfiguration.titleObjectId"
+                "titleObjectId": "admin.application.objectTitleConfiguration.titleObjectId",
+                "numberTitle": "admin.application.objectTitleConfiguration.numberTitle"
             },
             "objectTypeValue":{
                 "CASE_FILE": "admin.application.objectTitleConfiguration.caseFile",
