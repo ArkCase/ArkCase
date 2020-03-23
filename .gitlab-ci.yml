@@ -26,10 +26,10 @@ image: arkcase-gitlab-ci:1.0.2
 
 stages:
   - build
-  - deploy
   - trigger
   - restart
   - release
+  - deploy
   - start_security_scan
   - security_scan_results
   
@@ -119,7 +119,6 @@ deploy_server:
       #- .gitlab-ci.yaml
   only:
     variables:
-      - $CI_PIPELINE_SOURCE == "web"
       - $DEPLOY_SERVER
   environment:
     name: $ENVIRONMENT_NAME
