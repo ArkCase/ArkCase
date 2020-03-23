@@ -57,6 +57,12 @@ public class PortalFOIARequestStatus implements Serializable
 
     private String requestType;
 
+    private String requesterFirstName;
+
+    private String requesterLastName;
+
+    private String requesterEmail;
+
     @JsonSerialize(using = JsonDateSerializer.class)
     private Date updateDate;
 
@@ -147,6 +153,36 @@ public class PortalFOIARequestStatus implements Serializable
         isDenied = denied;
     }
 
+    public String getRequesterFirstName()
+    {
+        return requesterFirstName;
+    }
+
+    public void setRequesterFirstName(String requesterFirstName)
+    {
+        this.requesterFirstName = requesterFirstName;
+    }
+
+    public String getRequesterLastName()
+    {
+        return requesterLastName;
+    }
+
+    public void setRequesterLastName(String requesterLastName)
+    {
+        this.requesterLastName = requesterLastName;
+    }
+
+    public String getRequesterEmail()
+    {
+        return requesterEmail;
+    }
+
+    public void setRequesterEmail(String requesterEmail)
+    {
+        this.requesterEmail = requesterEmail;
+    }
+
     /*
      * (non-Javadoc)
      * @see java.lang.Object#toString()
@@ -156,6 +192,7 @@ public class PortalFOIARequestStatus implements Serializable
     {
         return "PortalFOIARequestStatus [requestId=" + requestId + ", lastName=" + lastName + ", requestType=" + requestType
                 + ", requestStatus=" + requestStatus + ", queue=" + queue + ", isDenied=" + isDenied
-                + ", isPublic=" + isPublic + ", updateDate=" + updateDate + "]";
+                + ", isPublic=" + isPublic + ", updateDate=" + updateDate + ", requesterFirstName=" + requesterFirstName
+                + ", requesterLastName=" + requesterLastName + ", requesterEmail+" + requesterEmail + "]";
     }
 }
