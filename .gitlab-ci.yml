@@ -114,6 +114,9 @@ build_backend_develop:
 
 deploy_server:
   stage: deploy
+  except:
+    changes:
+      #- .gitlab-ci.yaml
   only:
     variables:
       - $CI_PIPELINE_SOURCE == "web"
