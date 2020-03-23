@@ -69,7 +69,7 @@ public class AuditConfig
     @Value("${audit.plugin.purge.days}")
     private Integer purgeDays;
 
-    @JsonProperty("audit.plugin.purge.days")
+    @JsonProperty("audit.plugin.quartz.purge.days")
     @Value("${audit.plugin.quartz.purge.days}")
     private Integer quartzAuditPurgeDays;
 
