@@ -31,13 +31,12 @@ import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
 import com.armedia.acm.crypto.properties.AcmEncryptablePropertyUtils;
 import com.armedia.acm.plugins.admin.exception.AcmLdapConfigurationException;
 import com.armedia.acm.plugins.admin.model.LdapConfigurationProperties;
-import com.armedia.acm.services.users.service.ldap.AcmLdapBeanSyncService;
 import com.armedia.acm.services.users.service.ldap.AcmLdapConfiguration;
-import com.armedia.acm.spring.events.ContextRemovedEvent;
+import com.armedia.acm.services.users.service.ldap.AcmLdapRegistryService;
+import com.armedia.acm.spring.events.LdapDirectoryDeleted;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.quartz.CronExpression;
@@ -58,7 +57,7 @@ public class LdapConfigurationService implements ApplicationEventPublisherAware
 
     private AcmLdapConfiguration acmLdapConfig;
 
-    private AcmLdapBeanSyncService acmLdapBeanSyncService;
+    private AcmLdapRegistryService acmLdapBeanSyncService;
 
     private ApplicationEventPublisher applicationEventPublisher;
 
@@ -76,7 +75,6 @@ public class LdapConfigurationService implements ApplicationEventPublisherAware
     {
         HashMap<String, Object> props = new HashMap<>();
         props.put(LdapConfigurationProperties.LDAP_PROP_ID, jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_ID));
-        props.put("id", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_ID));
         props.put("base", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_BASE));
         props.put("authUserDn", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_AUTH_USER_DN));
         props.put("authUserPassword",
@@ -145,12 +143,10 @@ public class LdapConfigurationService implements ApplicationEventPublisherAware
         return props;
     }
 
-    public void createLdapDirectoryConfigurations(String id, String directoryType, Map<String, Object> props)
+    public void createLdapDirectoryConfigurations(String id, Map<String, Object> props)
     {
         props.put("status", "new");
         acmLdapBeanSyncService.createLdapDirectoryConfig(id, props);
-        acmLdapBeanSyncService.createLdapUserConfig(id, directoryType);
-        acmLdapBeanSyncService.createLdapGroupConfig(id, directoryType);
     }
 
     /**
@@ -171,33 +167,35 @@ public class LdapConfigurationService implements ApplicationEventPublisherAware
     public void deleteLdapDirectoryConfiguration(String directoryId)
     {
         acmLdapBeanSyncService.deleteLdapDirectoryConfig(directoryId);
-        applicationEventPublisher.publishEvent(new ContextRemovedEvent(this, directoryId + "_ldap"));
+        applicationEventPublisher.publishEvent(new LdapDirectoryDeleted(this, directoryId + "_ldap"));
 
     }
 
-    public String retrieveDirectoriesConfiguration()
+    public Map retrieveDirectoriesConfiguration()
     {
-        JSONArray dirsJsonArr = new JSONArray();
 
+        Map<Object, Object> dirsConfiguration = new HashMap<>();
         Map<String, Object> directories = acmLdapConfig.getAttributes().get("ldapDirectoryConfig");
 
         directories.forEach((dirName, properties) -> {
-            JSONObject dirJsonObj = new JSONObject();
+            Map<Object, Object> dirConfiguration = new HashMap<>();
 
             Map<String, Object> dirProperties = (Map<String, Object>) properties;
 
-            dirProperties.forEach((key, value) -> dirJsonObj.put("ldapConfig." + key, value));
+            dirConfiguration.put("ldapConfig.id", dirName);
+            dirProperties.forEach((key, value) -> dirConfiguration.put("ldapConfig." + key, value));
 
-            dirJsonObj.put(LdapConfigurationProperties.LDAP_PROP_ADD_USER_TEMPLATE,
-                    acmLdapConfig.getAttributes().get("ldapAddUserConfig").get(dirName));
+            dirConfiguration.put(LdapConfigurationProperties.LDAP_PROP_ADD_USER_TEMPLATE,
+                    acmLdapBeanSyncService.getLdapUserConfig(dirName, (String) ((Map<String, Object>) properties).get("directoryType")));
 
-            dirJsonObj.put(LdapConfigurationProperties.LDAP_PROP_ADD_GROUP_TEMPLATE,
-                    acmLdapConfig.getAttributes().get("ldapAddGroupConfig").get(dirName));
+            dirConfiguration.put(LdapConfigurationProperties.LDAP_PROP_ADD_GROUP_TEMPLATE,
+                    acmLdapBeanSyncService.getLdapGroupConfig(dirName, (String) ((Map<String, Object>) properties).get("directoryType")));
 
-            dirsJsonArr.put(dirJsonObj);
+            dirsConfiguration.put(dirName, dirConfiguration);
+
         });
 
-        return dirsJsonArr.toString();
+        return dirsConfiguration;
     }
 
     public AcmEncryptablePropertyUtils getEncryptablePropertyUtils()
@@ -215,7 +213,7 @@ public class LdapConfigurationService implements ApplicationEventPublisherAware
         this.acmLdapConfig = acmLdapConfig;
     }
 
-    public void setAcmLdapBeanSyncService(AcmLdapBeanSyncService acmLdapBeanSyncService)
+    public void setAcmLdapBeanSyncService(AcmLdapRegistryService acmLdapBeanSyncService)
     {
         this.acmLdapBeanSyncService = acmLdapBeanSyncService;
     }

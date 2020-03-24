@@ -29,7 +29,7 @@ package com.armedia.acm.configuration.core.jmx;
 
 import com.armedia.acm.configuration.core.ConfigurationContainer;
 import com.armedia.acm.configuration.core.LabelsConfiguration;
-import com.armedia.acm.configuration.core.LdapConfiguration;
+import com.armedia.acm.configuration.core.LdapConfigurationContainer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -52,7 +52,7 @@ public class JmxInitializer
     LabelsConfiguration labelsConfiguration;
 
     @Autowired
-    LdapConfiguration ldapConfiguration;
+    LdapConfigurationContainer ldapConfiguration;
 
     @Bean(name = "coreRegisterer")
     public MBeanExporter getMBeanExporter()
