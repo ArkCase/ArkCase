@@ -771,6 +771,11 @@ public class AcmTaskServiceImpl implements AcmTaskService
         Long parentObjectId = task.getParentObjectId() == null ? task.getAttachedToObjectId() : task.getParentObjectId();
         String parentObjectType = task.getParentObjectType() == null ? task.getAttachedToObjectType() : task.getParentObjectType();
 
+        if(parentObjectType == "BUSINESS_PROCESS")
+        {
+            return;
+        }
+
         AcmAbstractDao<AcmObject> acmObjectAcmAbstractDao = getAcmDataService().getDaoByObjectType(parentObjectType);
         AcmContainerEntity containerEntity = (AcmContainerEntity) acmObjectAcmAbstractDao.find(parentObjectId);
         Long parentFolderId = containerEntity.getContainer().getFolder().getId();
