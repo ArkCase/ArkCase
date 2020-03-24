@@ -55,11 +55,11 @@ import java.util.stream.Collectors;
  */
 @Configuration
 @ManagedResource(objectName = "configuration:name=ldap-service,type=com.armedia.acm.configuration.ConfigurationService,artifactId=ldap-service")
-public class LdapConfiguration implements ConfigurationFacade
+public class LdapConfigurationContainer implements ConfigurationFacade
 {
-    private static final Logger log = LogManager.getLogger(LdapConfiguration.class);
+    private static final Logger log = LogManager.getLogger(LdapConfigurationContainer.class);
 
-    private volatile static LdapConfiguration INSTANCE;
+    private volatile static LdapConfigurationContainer INSTANCE;
 
     @Autowired
     private ConfigurationServiceBootClient configurationServiceBootClient;
@@ -73,7 +73,7 @@ public class LdapConfiguration implements ConfigurationFacade
     private Map<String, Object> ldapDefaultMap = new HashMap<>();
 
     @Bean
-    public static LdapConfiguration ldapConfiguration()
+    public static LdapConfigurationContainer ldapConfiguration()
     {
 
         if (INSTANCE == null)
@@ -87,7 +87,7 @@ public class LdapConfiguration implements ConfigurationFacade
     {
         if (INSTANCE == null)
         {
-            INSTANCE = new LdapConfiguration();
+            INSTANCE = new LdapConfigurationContainer();
         }
     }
 

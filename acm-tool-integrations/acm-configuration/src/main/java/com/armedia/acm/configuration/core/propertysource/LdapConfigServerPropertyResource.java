@@ -27,7 +27,7 @@ package com.armedia.acm.configuration.core.propertysource;
  * #L%
  */
 
-import com.armedia.acm.configuration.core.LdapConfiguration;
+import com.armedia.acm.configuration.core.LdapConfigurationContainer;
 
 import org.springframework.core.env.PropertySource;
 
@@ -35,12 +35,12 @@ import org.springframework.core.env.PropertySource;
  * @author mario.gjurcheski
  *
  */
-public class LdapConfigServerPropertyResource extends PropertySource<LdapConfiguration>
+public class LdapConfigServerPropertyResource extends PropertySource<LdapConfigurationContainer>
 {
 
     private final static String CONFIGURATION_SERVER_SOURCE_NAME = "ldap-configuration-server";
 
-    public LdapConfigServerPropertyResource(String name, LdapConfiguration source)
+    public LdapConfigServerPropertyResource(String name, LdapConfigurationContainer source)
     {
         super(name, source);
     }
@@ -50,7 +50,7 @@ public class LdapConfigServerPropertyResource extends PropertySource<LdapConfigu
         super(name);
     }
 
-    public LdapConfigServerPropertyResource(LdapConfiguration source)
+    public LdapConfigServerPropertyResource(LdapConfigurationContainer source)
     {
         super(CONFIGURATION_SERVER_SOURCE_NAME, source);
     }

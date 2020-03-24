@@ -33,7 +33,7 @@ import java.util.Map;
  * @author mario.gjurcheski
  *
  */
-public interface AcmLdapBeanSyncService
+public interface AcmLdapRegistryService
 {
 
     /**
@@ -45,19 +45,19 @@ public interface AcmLdapBeanSyncService
      * synchronizes the ldap group beans when ldap configuration is updated.
      *
      */
-    void syncLdapGroupConfigAttributes();
+    void registerLdapGroupConfigBeanDefinition();
 
     /**
      * synchronizes the ldap user beans when ldap configuration is updated.
      *
      */
-    void syncLdapUserConfigAttributes();
+    void registerLdapUserConfigBeanDefinition();
 
     /**
      * synchronizes the ldap directory beans when ldap configuration is updated.
      *
      */
-    void syncLdapDirectoryConfig();
+    void registerLdapDirectoryConfigBeanDefinition();
 
     /**
      * Creates ldap user configuration in config server.
@@ -65,7 +65,7 @@ public interface AcmLdapBeanSyncService
      * @params directoryType,
      *         props, properties
      */
-    void createLdapUserConfig(String id, String directoryType);
+    Map<String, Object> getLdapUserConfig(String id, String directoryType);
 
     /**
      * Creates ldap group configuration in config server.
@@ -73,7 +73,7 @@ public interface AcmLdapBeanSyncService
      * @params directoryType,
      *         props, properties
      */
-    void createLdapGroupConfig(String id, String directoryType);
+    Map<String, Object> getLdapGroupConfig(String id, String directoryType);
 
     /**
      * Creates ldap directory configuration in config server.

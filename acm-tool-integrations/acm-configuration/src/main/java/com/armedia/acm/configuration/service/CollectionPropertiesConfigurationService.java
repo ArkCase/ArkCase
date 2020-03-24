@@ -115,6 +115,6 @@ public interface CollectionPropertiesConfigurationService
      * Removes nested map property keys
      *
      */
-    public Map<String, Object> deleteMapProperty(String mapPropertyKey, String mapEntryKey, String action);
+    public Map<String, Object> deleteMapProperty(String mapPropertyKey, String mapEntryKey, String mapEntryPrefix);
 
 }

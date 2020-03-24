@@ -36,8 +36,8 @@ import com.armedia.acm.services.users.model.ldap.AcmLdapConstants;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.ActiveDirectoryLdapSearchConfig;
 import com.armedia.acm.services.users.service.AcmLdapUserDetailsService;
-import com.armedia.acm.spring.events.ContextAddedEvent;
-import com.armedia.acm.spring.events.ContextReplacedEvent;
+import com.armedia.acm.spring.events.LdapDirectoryAdded;
+import com.armedia.acm.spring.events.LdapDirectoryReplaced;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -67,11 +67,9 @@ import java.util.Map;
  * @author mario.gjurcheski
  *
  */
-public class AcmLdapBeanSyncServiceImpl implements AcmLdapBeanSyncService, InitializingBean, ApplicationEventPublisherAware
+public class AcmLdapRegistryServiceImpl implements AcmLdapRegistryService, InitializingBean, ApplicationEventPublisherAware
 {
 
-    public static final String LDAP_ADD_USER_CONFIG = "ldapAddUserConfig";
-    public static final String LDAP_ADD_GROUP_CONFIG = "ldapAddGroupConfig";
     public static final String LDAP_DIRECTORY_CONFIG = "ldapDirectoryConfig";
 
     @Autowired
@@ -88,7 +86,7 @@ public class AcmLdapBeanSyncServiceImpl implements AcmLdapBeanSyncService, Initi
 
     private ConfigurationPropertyService configurationPropertyService;
 
-    private static final Logger logger = LogManager.getLogger(AcmLdapBeanSyncServiceImpl.class);
+    private static final Logger logger = LogManager.getLogger(AcmLdapRegistryServiceImpl.class);
 
     @JmsListener(destination = "reload.ldap.beans", containerFactory = "jmsTopicListenerContainerFactory")
     public void onLdapChanged(Message message)
@@ -100,39 +98,47 @@ public class AcmLdapBeanSyncServiceImpl implements AcmLdapBeanSyncService, Initi
     @Override
     public void sync()
     {
-        syncLdapGroupConfigAttributes();
-        syncLdapUserConfigAttributes();
-        syncLdapDirectoryConfig();
+        registerLdapGroupConfigBeanDefinition();
+        registerLdapUserConfigBeanDefinition();
+        registerLdapDirectoryConfigBeanDefinition();
     }
 
     @Override
-    public void syncLdapGroupConfigAttributes()
+    public void registerLdapGroupConfigBeanDefinition()
     {
-        Map<String, Object> ldapGroupSyncConfigAttributes = acmLdapConfig.getAttributes().get(LDAP_ADD_GROUP_CONFIG);
+        Map<String, Object> ldapDirsConfig = acmLdapConfig.getAttributes().get(LDAP_DIRECTORY_CONFIG);
 
-        ldapGroupSyncConfigAttributes.keySet().forEach(directory -> {
+        ldapDirsConfig.keySet().forEach(directory -> {
+
             logger.debug("Register bean definition for: [{}]", AcmLdapGroupSyncConfig.class);
+
+            Map<String, Object> dirProperties = (Map<String, Object>) ldapDirsConfig.get(directory);
             BeanDefinitionBuilder jobDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(AcmLdapGroupSyncConfig.class);
-            jobDefinitionBuilder.addPropertyValue("attributes", ldapGroupSyncConfigAttributes.get(directory));
+            jobDefinitionBuilder.addPropertyValue("attributes",
+                    getLdapGroupConfig(directory, (String) dirProperties.get("directoryType")));
             beanDefinitionRegistry.registerBeanDefinition(directory + "_groupSync", jobDefinitionBuilder.getBeanDefinition());
         });
     }
 
     @Override
-    public void syncLdapUserConfigAttributes()
+    public void registerLdapUserConfigBeanDefinition()
     {
-        Map<String, Object> ldapUserSyncConfigAttributes = acmLdapConfig.getAttributes().get(LDAP_ADD_USER_CONFIG);
+        Map<String, Object> ldapDirConfig = acmLdapConfig.getAttributes().get(LDAP_DIRECTORY_CONFIG);
 
-        ldapUserSyncConfigAttributes.keySet().forEach(directory -> {
+        ldapDirConfig.keySet().forEach(directory -> {
+
             logger.debug("Register bean definition for: [{}]", AcmLdapUserSyncConfig.class);
+
+            Map<String, Object> dirProperties = (Map<String, Object>) ldapDirConfig.get(directory);
             BeanDefinitionBuilder jobDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(AcmLdapUserSyncConfig.class);
-            jobDefinitionBuilder.addPropertyValue("attributes", ldapUserSyncConfigAttributes.get(directory));
+            jobDefinitionBuilder.addPropertyValue("attributes",
+                    getLdapUserConfig(directory, (String) dirProperties.get("directoryType")));
             beanDefinitionRegistry.registerBeanDefinition(directory + "_userSync", jobDefinitionBuilder.getBeanDefinition());
         });
     }
 
     @Override
-    public void syncLdapDirectoryConfig()
+    public void registerLdapDirectoryConfigBeanDefinition()
     {
         Map<String, Object> ldapDirectoryConfigAttributes = acmLdapConfig.getAttributes().get(LDAP_DIRECTORY_CONFIG);
 
@@ -180,9 +186,8 @@ public class AcmLdapBeanSyncServiceImpl implements AcmLdapBeanSyncService, Initi
     }
 
     @Override
-    public void createLdapUserConfig(String id, String directoryType)
+    public Map<String, Object> getLdapUserConfig(String id, String directoryType)
     {
-        Map<String, Map<String, Object>> properties = new HashMap<>();
         Map<String, Object> ldapConfiguration = new HashMap<>();
 
         if (directoryType.equals(AcmLdapConstants.DEFAULT_OPEN_LDAP_DIRECTORY_NAME))
@@ -203,8 +208,7 @@ public class AcmLdapBeanSyncServiceImpl implements AcmLdapBeanSyncService, Initi
             ldapConfiguration.put(AcmLdapConstants.SHADOW_LAST_CHANGE_ATTR, 12994);
             ldapConfiguration.put(AcmLdapConstants.SHADOW_MAX_ATTR, 99999);
 
-            properties.put(AcmLdapConfiguration.LDAP_SYNC_CONFIG_PROP_KEY + "." + LDAP_ADD_USER_CONFIG + "." + id, ldapConfiguration);
-            configurationPropertyService.updateProperties(properties, "ldap");
+            return ldapConfiguration;
         }
         else
         {
@@ -220,15 +224,13 @@ public class AcmLdapBeanSyncServiceImpl implements AcmLdapBeanSyncService, Initi
             ldapConfiguration.put(AcmLdapConstants.LDAP_HOME_DIRECTORY_ATTR, AcmLdapConstants.LDAP_HOME_DIRECTORY_ATTR);
             ldapConfiguration.put(AcmLdapConstants.LDAP_OBJECT_CLASS_ATTR, AcmLdapConstants.ACTIVE_DIRECTORY_USER_OBJECT_CLASS_VALUE);
 
-            properties.put(AcmLdapConfiguration.LDAP_SYNC_CONFIG_PROP_KEY + "." + LDAP_ADD_USER_CONFIG + "." + id, ldapConfiguration);
-            configurationPropertyService.updateProperties(properties, "ldap");
+            return ldapConfiguration;
         }
     }
 
     @Override
-    public void createLdapGroupConfig(String id, String directoryType)
+    public Map<String, Object> getLdapGroupConfig(String id, String directoryType)
     {
-        Map<String, Map<String, Object>> properties = new HashMap<>();
 
         Map<String, Object> ldapConfiguration = new HashMap<>();
 
@@ -238,8 +240,7 @@ public class AcmLdapBeanSyncServiceImpl implements AcmLdapBeanSyncService, Initi
             ldapConfiguration.put(AcmLdapConstants.LDAP_SAMA_ACCOUNT_NAME_ATTR, AcmLdapConstants.LDAP_SAMA_ACCOUNT_NAME_ATTR);
             ldapConfiguration.put(AcmLdapConstants.LDAP_OBJECT_CLASS_ATTR, AcmLdapConstants.ACTIVE_DIRECTORY_GROUP_OBJECT_CLASS_VALUE);
 
-            properties.put(AcmLdapConfiguration.LDAP_SYNC_CONFIG_PROP_KEY + "." + LDAP_ADD_GROUP_CONFIG + "." + id, ldapConfiguration);
-            configurationPropertyService.updateProperties(properties, "ldap");
+            return ldapConfiguration;
         }
         else
         {
@@ -248,8 +249,7 @@ public class AcmLdapBeanSyncServiceImpl implements AcmLdapBeanSyncService, Initi
             ldapConfiguration.put(AcmLdapConstants.LDAP_GID_NUMBER_ATTR, AcmLdapConstants.LDAP_GID_NUMBER_ATTR);
             ldapConfiguration.put(AcmLdapConstants.LDAP_OBJECT_CLASS_ATTR, AcmLdapConstants.LDAP_GROUP_OBJECT_CLASS_VALUE);
 
-            properties.put(AcmLdapConfiguration.LDAP_SYNC_CONFIG_PROP_KEY + "." + LDAP_ADD_GROUP_CONFIG + "." + id, ldapConfiguration);
-            configurationPropertyService.updateProperties(properties, "ldap");
+            return ldapConfiguration;
         }
     }
 
@@ -571,11 +571,11 @@ public class AcmLdapBeanSyncServiceImpl implements AcmLdapBeanSyncService, Initi
     {
         if (dirProperties.get("status").equals("new"))
         {
-            applicationEventPublisher.publishEvent(new ContextAddedEvent(this, directory + "_ldap"));
+            applicationEventPublisher.publishEvent(new LdapDirectoryAdded(this, directory + "_ldap"));
         }
         else if (dirProperties.get("status").equals("updated"))
         {
-            applicationEventPublisher.publishEvent(new ContextReplacedEvent(this, directory + "_ldap"));
+            applicationEventPublisher.publishEvent(new LdapDirectoryReplaced(this, directory + "_ldap"));
         }
     }
 

@@ -36,8 +36,8 @@ import com.armedia.acm.spring.events.ContextRemovedEvent;
 import com.armedia.acm.spring.events.ContextReplacedEvent;
 import com.armedia.acm.spring.exceptions.AcmContextHolderException;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.aop.scope.ScopedProxyUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;

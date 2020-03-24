@@ -74,7 +74,7 @@ public @interface MapValue
      * 
      * @see com.armedia.acm.configuration.core.ConfigurationContainer
      * @see com.armedia.acm.configuration.core.LabelsConfiguration
-     * @see com.armedia.acm.configuration.core.LdapConfiguration
+     * @see com.armedia.acm.configuration.core.LdapConfigurationContainer
      *
      */
     String configurationName() default "";

@@ -70,7 +70,7 @@ public class LdapEntryTransformer
             String attr = attributeEntry.getKey();
             String value = attributeEntry.getValue();
 
-            String key = (String) ldapConfiguration.getAttributes().get("ldapAddUserProperties").get(attr);
+            String key = (String) ldapConfiguration.getAttributes().get("ldapAddUserValuesTransformations").get(attr);
             if (key != null)
             {
                 if (key.equals(AcmLdapConstants.LDAP_OBJECT_CLASS_ATTR))
@@ -135,13 +135,13 @@ public class LdapEntryTransformer
                 .get(String.format("%s_userSync", directoryName));
 
         Map<String, String> userAttributes = config.getAttributes();
-        Map<String, Object> ldapEditUserProperties = ldapConfiguration.getAttributes().get("ldapEditUserProperties");
+        Map<String, Object> ldapEditUserProperties = ldapConfiguration.getAttributes().get("ldapEditUserValuesTransformation");
 
         ldapEditUserProperties.keySet().forEach(propertyName -> {
             // get user's editable properties for the specific directory user-attributes config
             if (userAttributes.containsKey(propertyName))
             {
-                String propertyValue = (String) ldapConfiguration.getAttributes().get("ldapAddUserProperties").get(propertyName);
+                String propertyValue = (String) ldapConfiguration.getAttributes().get("ldapAddUserValuesTransformations").get(propertyName);
 
                 if (propertyValue.equals(AcmLdapConstants.LDAP_FIRST_NAME_ATTR))
                 {
@@ -181,7 +181,7 @@ public class LdapEntryTransformer
         String groupName = StringUtils.substringBeforeLast(group.getName(), "@");
 
         groupAttributes.forEach((attr, value) -> {
-            String key = (String) ldapConfiguration.getAttributes().get("ldapAddGroupProperties").get(attr);
+            String key = (String) ldapConfiguration.getAttributes().get("ldapAddGroupValuesTransformations").get(attr);
             switch (key)
             {
             case AcmLdapConstants.LDAP_OBJECT_CLASS_ATTR:

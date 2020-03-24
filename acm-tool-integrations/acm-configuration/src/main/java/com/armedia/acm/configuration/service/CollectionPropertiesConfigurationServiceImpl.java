@@ -243,7 +243,7 @@ public class CollectionPropertiesConfigurationServiceImpl implements CollectionP
     }
 
     @Override
-    public Map<String, Object> deleteMapProperty(String mapPropertyKey, String mapEntryKey, String action)
+    public Map<String, Object> deleteMapProperty(String mapPropertyKey, String mapEntryKey, String mapEntryPrefix)
     {
         Map<String, Object> configurationMap = configurationContainer.getConfigurationMap();
 
@@ -258,7 +258,7 @@ public class CollectionPropertiesConfigurationServiceImpl implements CollectionP
 
             if (entry.getKey().startsWith(mapPropertyKey + "." + mapEntryKey))
             {
-                modifiedProperties.put(action + mapEntryKey, "");
+                modifiedProperties.put(mapEntryPrefix + mapEntryKey, "");
                 it.remove();
             }
             else

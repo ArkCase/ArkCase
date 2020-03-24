@@ -27,7 +27,7 @@ package com.armedia.acm.configuration.core.initialization;
  * #L%
  */
 
-import com.armedia.acm.configuration.core.LdapConfiguration;
+import com.armedia.acm.configuration.core.LdapConfigurationContainer;
 import com.armedia.acm.configuration.core.propertysource.LdapConfigServerPropertyResource;
 
 import org.springframework.beans.factory.InitializingBean;
@@ -52,7 +52,7 @@ public class LdapConfigurationPropertySourceInitializer implements Ordered, Init
     ConfigurableEnvironment configurableEnvironment;
 
     @Autowired
-    LdapConfiguration ldapConfiguration;
+    LdapConfigurationContainer ldapConfiguration;
 
     @Autowired
     JmsTemplate jmsTemplate;

@@ -210,7 +210,7 @@
         <aop:scoped-proxy/>
     </bean>
 
-    <bean id="acmLdapBeanSyncService" class="com.armedia.acm.services.users.service.ldap.AcmLdapBeanSyncServiceImpl">
+    <bean id="acmLdapBeanSyncService" class="com.armedia.acm.services.users.service.ldap.AcmLdapRegistryServiceImpl">
         <property name="configurationPropertyService" ref="configurationPropertyService"/>
         <property name="acmLdapConfig" ref="acmSpringLdapConfig"/>
     </bean>

@@ -28,7 +28,7 @@ package com.armedia.acm.configuration.annotations;
  */
 
 import com.armedia.acm.configuration.core.ConfigurationContainer;
-import com.armedia.acm.configuration.core.LdapConfiguration;
+import com.armedia.acm.configuration.core.LdapConfigurationContainer;
 import com.armedia.acm.configuration.service.CollectionPropertiesConfigurationService;
 
 import org.aspectj.lang.annotation.Around;
@@ -51,7 +51,7 @@ public class MapValueAspect
     private ConfigurationContainer configurationContainer;
 
     @Autowired
-    private LdapConfiguration ldapConfiguration;
+    private LdapConfigurationContainer ldapConfiguration;
 
     @Autowired
     private CollectionPropertiesConfigurationService collectionPropertiesConfigurationService;
