@@ -32,6 +32,8 @@ import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserState;
 
+import com.armedia.acm.web.api.MDCConstants;
+import org.slf4j.MDC;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.http.HttpStatus;
@@ -63,6 +65,7 @@ public class ForgotUsernamePasswordUIController implements ApplicationEventPubli
         }
         else
         {
+            MDC.put(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY, users.get(0).getUserId());
             ForgotUsernameEvent forgotUsernameEvent = new ForgotUsernameEvent(users.get(0), AuthenticationUtils.getUserIpAddress());
             forgotUsernameEvent.setSucceeded(true);
             eventPublisher.publishEvent(forgotUsernameEvent);
@@ -80,6 +83,7 @@ public class ForgotUsernamePasswordUIController implements ApplicationEventPubli
         }
         else
         {
+            MDC.put(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY, user.getUserId());
             ForgotPasswordEvent forgotPasswordEvent = new ForgotPasswordEvent(user, AuthenticationUtils.getUserIpAddress());
             forgotPasswordEvent.setSucceeded(true);
             eventPublisher.publishEvent(forgotPasswordEvent);
