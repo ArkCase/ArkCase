@@ -79,6 +79,7 @@
             <property name="ecmFileService" ref="ecmFileService"/>
             <property name="portalRequestService" ref="portalRequestService"/>
             <property name="taskEventPublisher" ref="taskEventPublisher"/>
+            <property name="portalRequestService" ref="portalRequestService"/>
         </beans:bean>
 
         <beans:bean id="portalRequestService" class="gov.foia.service.PortalRequestService">
