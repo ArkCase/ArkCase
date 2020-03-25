@@ -115,7 +115,7 @@ public class PortalCreateRequestService
                 {
                     try
                     {
-                        files.add(getPortalRequestService().convertPortalRequestFileToMultipartFile(requestFile));
+                        files.add(portalRequestFileToMultipartFile(requestFile));
                     }
                     catch (IOException e)
                     {
