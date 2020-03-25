@@ -41,9 +41,6 @@ import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.users.service.tracker.UserTrackerService;
 import com.armedia.acm.web.api.MDCConstants;
 
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.disk.DiskFileItem;
-import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.slf4j.MDC;
@@ -51,18 +48,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -84,6 +72,8 @@ public class PortalCreateRequestService
     private SaveFOIARequestService saveFOIARequestService;
 
     private OrganizationDao organizationDao;
+
+    private PortalRequestService portalRequestService;
 
     public FOIARequest createFOIARequest(PortalFOIARequest in)
             throws PipelineProcessException, AcmUserActionFailedException, AcmCreateObjectFailedException
@@ -113,7 +103,7 @@ public class PortalCreateRequestService
                 {
                     try
                     {
-                        files.add(portalRequestFileToMultipartFile(requestFile));
+                        files.add(getPortalRequestService().convertPortalRequestFileToMultipartFile(requestFile));
                     }
                     catch (IOException e)
                     {
@@ -129,27 +119,6 @@ public class PortalCreateRequestService
         log.debug("FOIA Request: {}", saved);
 
         return saved;
-    }
-
-    private MultipartFile portalRequestFileToMultipartFile(PortalFOIARequestFile requestFile) throws IOException
-    {
-        byte[] content = Base64.getDecoder().decode(requestFile.getContent());
-
-        File file = new File(requestFile.getFileName());
-        Path path = Paths.get(file.getAbsolutePath());
-        Files.write(path, content);
-
-        FileItem fileItem = new DiskFileItem("", requestFile.getContentType(), false, file.getName(), (int) file.length(),
-                file.getParentFile());
-
-        try (InputStream input = new FileInputStream(file))
-        {
-            OutputStream os = fileItem.getOutputStream();
-            IOUtils.copy(input, os);
-        }
-
-        return new CommonsMultipartFile(fileItem);
-
     }
 
     public FOIARequest populateRequest(PortalFOIARequest in)
@@ -322,6 +291,16 @@ public class PortalCreateRequestService
     public void setSaveFOIARequestService(SaveFOIARequestService saveFOIARequestService)
     {
         this.saveFOIARequestService = saveFOIARequestService;
+    }
+
+    public PortalRequestService getPortalRequestService()
+    {
+        return portalRequestService;
+    }
+
+    public void setPortalRequestService(PortalRequestService portalRequestService)
+    {
+        this.portalRequestService = portalRequestService;
     }
 
     public OrganizationDao getOrganizationDao()

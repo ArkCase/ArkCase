@@ -209,6 +209,9 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
     {
         Task activitiTask = getActivitiTaskService().newTask();
 
+        // This could set assignee and owning group if not specified earlier
+        getTaskBusinessRule().applyRules(in);
+
         AcmTask out = updateExistingActivitiTask(in, activitiTask);
         if (out.getStatus().equalsIgnoreCase(TaskConstants.STATE_CLOSED))
         {
@@ -390,8 +393,6 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
             AcmContainer container = null;
             try
             {
-                
-                
                 container = fileService.getOrCreateContainer(TaskConstants.OBJECT_TYPE, in.getId(),
                         EcmFileConstants.DEFAULT_CMIS_REPOSITORY_ID);
                 if(container.getAttachmentFolder().getParticipants().isEmpty()) 
