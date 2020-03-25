@@ -85,6 +85,8 @@ public class PortalCreateRequestService
 
     private OrganizationDao organizationDao;
 
+    private PortalRequestService portalRequestService;
+
     public FOIARequest createFOIARequest(PortalFOIARequest in)
             throws PipelineProcessException, AcmUserActionFailedException, AcmCreateObjectFailedException
     {
@@ -113,7 +115,7 @@ public class PortalCreateRequestService
                 {
                     try
                     {
-                        files.add(portalRequestFileToMultipartFile(requestFile));
+                        files.add(getPortalRequestService().convertPortalRequestFileToMultipartFile(requestFile));
                     }
                     catch (IOException e)
                     {
@@ -321,6 +323,16 @@ public class PortalCreateRequestService
     public void setSaveFOIARequestService(SaveFOIARequestService saveFOIARequestService)
     {
         this.saveFOIARequestService = saveFOIARequestService;
+    }
+
+    public PortalRequestService getPortalRequestService()
+    {
+        return portalRequestService;
+    }
+
+    public void setPortalRequestService(PortalRequestService portalRequestService)
+    {
+        this.portalRequestService = portalRequestService;
     }
 
     public OrganizationDao getOrganizationDao()

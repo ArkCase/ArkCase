@@ -69,6 +69,7 @@
             <beans:property name="userTrackerService" ref="userTrackerService"/>
             <beans:property name="saveFOIARequestService" ref="saveFOIARequestService"/>
             <beans:property name="organizationDao" ref="acmOrganizationDao"/>
+            <beans:property name="portalRequestService" ref="portalRequestService"/>
         </beans:bean>
         <beans:bean id="portalCreateInquiryService" class="gov.foia.service.PortalCreateInquiryService">
             <property name="taskDao" ref="acmTaskDao"/>
@@ -91,6 +92,7 @@
             <beans:property name="groupService" ref="groupService"/>
             <beans:property name="searchResults" ref="searchResults"/>
             <beans:property name="translationService" ref="translationService" />
+            <beans:property name="createAdHocTaskService" ref="createAdHocTaskService"/>
         </beans:bean>
 
         <beans:bean id="holdedAndAppealedRequestsDueDateUpdate" class="gov.foia.service.HoldedAndAppealedRequestsDueDateUpdate">
