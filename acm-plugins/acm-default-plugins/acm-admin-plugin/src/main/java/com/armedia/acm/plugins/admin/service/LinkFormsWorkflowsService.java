@@ -35,17 +35,17 @@ import com.armedia.acm.plugins.ecm.service.AcmFileTypesService;
 
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.util.SheetUtil;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
-import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.JSONObject;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -104,13 +104,13 @@ public class LinkFormsWorkflowsService implements LinkFormsWorkflowsConstants
             for (int rowNum = 0; rowNum < sheet.getLastRowNum(); rowNum++)
             {
                 List<Map<String, Object>> cellsRow = new ArrayList();
-                XSSFRow row = (XSSFRow) sheet.getRow(rowNum);
+                XSSFRow row = sheet.getRow(rowNum);
                 if (row != null)
                 {
                     for (int colNum = 0; colNum < row.getLastCellNum(); colNum++)
                     {
 
-                        XSSFCell cell = (XSSFCell) row.getCell(colNum);
+                        XSSFCell cell = row.getCell(colNum);
 
                         // Get type if available
                         String type = "";
@@ -294,17 +294,17 @@ public class LinkFormsWorkflowsService implements LinkFormsWorkflowsConstants
      */
     private Map<String, Object> getCellValueAndType(XSSFCell cell, String type)
     {
-        Map<String, Object> cellObj = new HashMap();
+        Map<String, Object> cellObj = new HashMap<>();
         Object value = "";
-        if (cell.getCellType() == XSSFCell.CELL_TYPE_STRING)
+        if (cell.getCellType() == CellType.STRING)
         {
             value = cell.getStringCellValue();
         }
-        else if (cell.getCellType() == XSSFCell.CELL_TYPE_BOOLEAN)
+        else if (cell.getCellType() == CellType.BOOLEAN)
         {
             value = String.valueOf(cell.getBooleanCellValue());
         }
-        else if (cell.getCellType() == XSSFCell.CELL_TYPE_NUMERIC)
+        else if (cell.getCellType() == CellType.NUMERIC)
         {
             value = cell.getNumericCellValue();
         }
@@ -334,11 +334,11 @@ public class LinkFormsWorkflowsService implements LinkFormsWorkflowsConstants
         {
             if (cellStyle.getFillForegroundColorColor() != null)
             {
-                bgColor = "#" + Hex.encodeHexString(((XSSFColor) cellStyle.getFillForegroundColorColor()).getRGB());
+                bgColor = "#" + Hex.encodeHexString(cellStyle.getFillForegroundColorColor().getRGB());
             }
             else if (cellStyle.getFillBackgroundColorColor() != null)
             {
-                bgColor = "#" + Hex.encodeHexString(((XSSFColor) cellStyle.getFillBackgroundColorColor()).getRGB());
+                bgColor = "#" + Hex.encodeHexString(cellStyle.getFillBackgroundColorColor().getRGB());
             }
             else
             {

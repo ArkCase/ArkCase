@@ -34,7 +34,7 @@
         <apache-commons-vfs2.version>2.0</apache-commons-vfs2.version>
         <apache-commons-text.version>1.6</apache-commons-text.version>
         <apache-httpcomponents-httpclient.version>4.5</apache-httpcomponents-httpclient.version>
-        <apache-tika-parsers.version>1.17</apache-tika-parsers.version>
+        <apache-tika-parsers.version>1.24</apache-tika-parsers.version>
         <asm.version>5.0.3</asm.version>
         <aspectj.version>1.7.4</aspectj.version>
         <barcode4j.version>2.1</barcode4j.version>
@@ -46,7 +46,7 @@
         <com.google.guava.version>18.0</com.google.guava.version>
         <docx4j.core>3.3.7</docx4j.core>
         <docx4j.export.fo>3.3.6</docx4j.export.fo>
-        <drools.version>6.1.0.Final</drools.version>
+        <drools.version>7.34.0.Final</drools.version>
         <easymock.version>4.1</easymock.version>
         <easymock-extension.version>3.2</easymock-extension.version>
         <eclipselink-jpa.version>2.6.0</eclipselink-jpa.version>
@@ -82,6 +82,7 @@
         <magic.matcher.version>0.1.2</magic.matcher.version>
         <mariadb.jdbc.version>2.2.6</mariadb.jdbc.version>
         <maven.checkstyle.plugin.version>2.15</maven.checkstyle.plugin.version>
+        <xalan.version>2.7.2</xalan.version>
 	<gitflow-maven-plugin.version>1.14.0</gitflow-maven-plugin.version>
 	<milton.version>2.7.3.5</milton.version>
         <mockito.version>1.10.19</mockito.version>
@@ -90,11 +91,11 @@
         <!-- by default spring.security.saml2.core uses opensaml version 2.6.1, which uses bouncycastle version 1.46, but we require version
             1.54 -->
         <opensaml.version>2.6.4</opensaml.version>
-        <org.apache.poi.version>3.17</org.apache.poi.version>
+        <org.apache.poi.version>4.1.2</org.apache.poi.version>
         <com.itextpdf.version>5.5.10</com.itextpdf.version>
         <net.sf.jtidy.version>r938</net.sf.jtidy.version>
         <org.json.version>20140107</org.json.version>
-        <org.mvel.version>2.2.1.Final</org.mvel.version>
+        <org.mvel.version>2.4.7.Final</org.mvel.version>
         <pdfbox.version>2.0.11</pdfbox.version>
         <postgresql.version>9.3-1100-jdbc41</postgresql.version>
         <powermock.version>1.7.0</powermock.version>
@@ -102,7 +103,7 @@
         <reactor.version>2.0.8.RELEASE</reactor.version>
         <reactor-spring.version>2.0.7.RELEASE</reactor-spring.version>
         <rome.version>1.0</rome.version>
-        <slf4j.version>1.7.25</slf4j.version>
+        <slf4j.version>1.7.30</slf4j.version>
         <solr-solrj.version>7.6.0</solr-solrj.version>
         <sonar.version>3.5.0.1254</sonar.version>
         <spring.integration.version>4.2.9.RELEASE</spring.integration.version>
@@ -1360,6 +1361,10 @@
                         <groupId>com.tdunning</groupId>
                         <artifactId>json</artifactId>
                     </exclusion>
+                    <exclusion> 
+                        <groupId>xerces</groupId> 
+                        <artifactId>xercesImpl</artifactId>
+                    </exclusion>
                 </exclusions>
             </dependency>
             <dependency>
@@ -1501,6 +1506,17 @@
                 <version>${xsync-version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>xalan</groupId>
+                <artifactId>xalan</artifactId>
+                <version>${xalan.version}</version>
+                <exclusions> 
+                    <exclusion> 
+                        <groupId>xerces</groupId> 
+                        <artifactId>xercesImpl</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
 
         </dependencies>
     </dependencyManagement>

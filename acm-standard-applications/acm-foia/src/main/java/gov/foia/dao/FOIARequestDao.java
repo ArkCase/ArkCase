@@ -33,7 +33,6 @@ import static gov.foia.model.FOIARequest.REQUESTS_BY_STATUS;
 
 import com.armedia.acm.data.AcmAbstractDao;
 
-import com.armedia.acm.plugins.person.model.Person;;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.NoResultException;
@@ -44,7 +43,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import gov.foia.model.FOIARequest;
@@ -193,7 +191,7 @@ public class FOIARequestDao extends AcmAbstractDao<FOIARequest>
         return populateRequestStatus(resultList);
     }
 
-    private List<PortalFOIARequestStatus> populateRequestStatus (List<FOIARequest> requests)
+    private List<PortalFOIARequestStatus> populateRequestStatus(List<FOIARequest> requests)
     {
         List<PortalFOIARequestStatus> requestStatusList = new ArrayList<>();
         for (FOIARequest request : requests)
