@@ -46,6 +46,7 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.JSONObject;
+import org.openxmlformats.schemas.spreadsheetml.x2006.main.STCellType;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -389,7 +390,21 @@ public class LinkFormsWorkflowsService implements LinkFormsWorkflowsConstants
                             {
                                 if (!cell.getCellStyle().getLocked())
                                 {
-                                    cell.setCellValue(value);
+                                    if (cell.getCTCell().getT() == STCellType.INLINE_STR)
+                                    { // cell has inline string in it
+                                        if (cell.getCTCell().isSetIs())
+                                        { // inline string has is element
+                                            cell.getCTCell().getIs().setT(value); // set t element in is element
+                                        }
+                                        else
+                                        {
+                                            cell.getCTCell().setV(value); // set v element of inline string
+                                        }
+                                    }
+                                    else
+                                    {
+                                        cell.setCellValue(value); // set shared string cell value
+                                    }
                                 }
                             }
                         }
