@@ -125,6 +125,7 @@ public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer
 
         // This property is used for showin the owning group for the object
         solr.setAdditionalProperty("owning_group_id_lcs", ParticipantUtils.getOwningGroupIdFromParticipants(in.getParticipants()));
+        solr.setAdditionalProperty("owning_group_id_s", ParticipantUtils.getOwningGroupIdFromParticipants(in.getParticipants()));
 
         return solr;
     }
