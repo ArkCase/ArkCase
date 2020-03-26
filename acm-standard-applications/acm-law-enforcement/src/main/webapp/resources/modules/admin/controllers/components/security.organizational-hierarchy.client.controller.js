@@ -380,7 +380,7 @@ angular.module('admin').controller(
                                     }
                                 };
                             } ],
-                            size: 'sm',
+                            size: 'md',
                             backdrop: 'static'
                         });
                     }
@@ -499,7 +499,7 @@ angular.module('admin').controller(
                                     $modalInstance.close($scope.user);
                                 };
                             } ],
-                            size: 'sm',
+                            size: 'md',
                             backdrop: 'static'
                         });
 
