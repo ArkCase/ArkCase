@@ -50,7 +50,12 @@ import org.slf4j.MDC;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.Authentication;
 
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+import java.util.List;
 
 
 /**
@@ -124,7 +129,7 @@ public class AlfrescoRecordsService implements AcmConfigurablePlugin
 
     @Async
     protected void declareFileAsRecord(AcmContainer container, Date receiveDate, String recordFolderName, String originatorOrg,
-                                       String originator, String cmisObjectId, String objectStatus, Long ecmFileId) throws AlfrescoServiceException
+            String originator, String cmisObjectId, String objectStatus, Long ecmFileId) throws AlfrescoServiceException
     {
         declareFileAsRecord(container, receiveDate, recordFolderName, originatorOrg, cmisObjectId, cmisObjectId,
                 objectStatus, ecmFileId, false);
