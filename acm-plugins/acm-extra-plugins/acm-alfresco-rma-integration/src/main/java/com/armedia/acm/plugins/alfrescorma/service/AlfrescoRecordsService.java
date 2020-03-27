@@ -55,6 +55,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.List;
 
 
 /**
@@ -117,9 +118,8 @@ public class AlfrescoRecordsService implements AcmConfigurablePlugin
             for (AcmCmisObject file : files.getChildren())
             {
                 declareFileAsRecord(container, receiveDate, recordFolderName, originatorOrg, file.getModifier(), file.getCmisObjectId(),
-                        file.getStatus(), file.getObjectId());
+                        file.getStatus(), file.getObjectId(), file.isLink());
             }
-
         }
         catch (AlfrescoServiceException e)
         {
@@ -131,27 +131,38 @@ public class AlfrescoRecordsService implements AcmConfigurablePlugin
     protected void declareFileAsRecord(AcmContainer container, Date receiveDate, String recordFolderName, String originatorOrg,
             String originator, String cmisObjectId, String objectStatus, Long ecmFileId) throws AlfrescoServiceException
     {
-        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
-        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
-        getAuditPropertyEntityAdapter().setUserId("RECORDS_SERVICE_USER");
+        declareFileAsRecord(container, receiveDate, recordFolderName, originatorOrg, cmisObjectId, cmisObjectId,
+                objectStatus, ecmFileId, false);
+    }
 
-        if (!((EcmFileConstants.RECORD).equals(objectStatus)))
-        {
-            declareRecord(cmisObjectId);
+    @Async
+    protected void declareFileAsRecord(AcmContainer container, Date receiveDate, String recordFolderName, String originatorOrg,
+            String originator, String cmisObjectId, String objectStatus, Long ecmFileId, boolean isFileLink) throws AlfrescoServiceException
+    {
+        if (!isFileLink) {
+            MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
+            MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
+            getAuditPropertyEntityAdapter().setUserId("RECORDS_SERVICE_USER");
 
-            writeRecordMetadata(receiveDate, originatorOrg, cmisObjectId, originator);
+            if (!((EcmFileConstants.RECORD).equals(objectStatus))) {
+                declareRecord(cmisObjectId);
 
-            Folder categoryFolder = findFolder(container.getContainerObjectType());
+                writeRecordMetadata(receiveDate, originatorOrg, cmisObjectId, originator);
 
-            Folder parentFolder = addDateInAlfrescoStructure(categoryFolder, container.getContainerObjectType());
+                Folder categoryFolder = findFolder(container.getContainerObjectType());
 
-            String recordFolderId = createOrFindRecordFolderOrRecordCategory(recordFolderName, parentFolder, "Record Folder");
-            log.debug("recordFolderId: {}", recordFolderId);
-            moveToRecordFolder(recordFolderId, cmisObjectId);
+                Folder parentFolder = addDateInAlfrescoStructure(categoryFolder, container.getContainerObjectType());
 
-            completeRecord(cmisObjectId);
+                String recordFolderId = createOrFindRecordFolderOrRecordCategory(recordFolderName, parentFolder, "Record Folder");
+                log.debug("recordFolderId: {}", recordFolderId);
+                moveToRecordFolder(recordFolderId, cmisObjectId);
 
-            setFileStatusAsRecord(ecmFileId);
+                completeRecord(cmisObjectId);
+
+                setFileStatusAsRecord(ecmFileId);
+
+                setFileLinksStatusAsRecord(ecmFileId);
+            }
         }
     }
 
@@ -272,6 +283,21 @@ public class AlfrescoRecordsService implements AcmConfigurablePlugin
         catch (AcmObjectNotFoundException e)
         {
             log.error("File with id: [{}] does not exists - ", fileId, e.getMessage());
+        }
+    }
+
+    public void setFileLinksStatusAsRecord(Long fileId) {
+        try
+        {
+            List<EcmFile> ecmFileLinks = getEcmFileService().getFileLinks(fileId);
+            for (EcmFile ecmFileLink : ecmFileLinks) {
+                ecmFileLink.setStatus(EcmFileConstants.RECORD);
+                getEcmFileDao().save(ecmFileLink);
+                log.debug("For file link with ID: [{}] status is changed to [{}]", ecmFileLink.getFileId(), EcmFileConstants.RECORD);
+            }
+        }
+        catch (AcmObjectNotFoundException e) {
+            log.error("File link with id: [{}] does not exists - ", fileId, e.getMessage());
         }
     }
 
