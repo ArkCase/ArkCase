@@ -137,7 +137,7 @@ angular.module('directives').directive(
                                     if (scope.isMultiFilter) {
                                         if (scope.searchQuery) {
                                             // AFDP-3698: use Solr join query in tags module
-                                            var joinQueryStr = scope.multiFilter.replace("${tagName}", scope.searchQuery);
+                                            var joinQueryStr = scope.multiFilter.replace("${tagName}", "\"" + scope.searchQuery + "\"");
                                             scope.join = joinQueryStr;
                                         }
                                     }
@@ -147,7 +147,7 @@ angular.module('directives').directive(
                                         isSelected = false;
                                     } else {
                                         scope.searchQuery = searchObject.searchQuery;
-                                        var query = SearchQueryBuilder.buildFacetedSearchQuerySorted((scope.multiFilter ? "*" : scope.searchQuery + "*"), scope.filters, scope.join, scope.pageSize, scope.start, scope.sort);
+                                        var query = SearchQueryBuilder.buildFacetedSearchQuerySorted((scope.multiFilter ? "*" : "\"" + scope.searchQuery + "\"" + "*"), scope.filters, scope.join, scope.pageSize, scope.start, scope.sort);
                                     }
 
                                     setExportQuery(query);
