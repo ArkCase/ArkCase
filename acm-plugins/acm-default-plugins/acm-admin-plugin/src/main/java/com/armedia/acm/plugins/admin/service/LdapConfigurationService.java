@@ -98,7 +98,7 @@ public class LdapConfigurationService implements ApplicationEventPublisherAware
         props.put("enableEditingLdapUsers", jsonObj.getBoolean(LdapConfigurationProperties.LDAP_PROP_ENABLE_EDITING_LDAP_USERS));
         props.put("syncEnabled", jsonObj.getBoolean(LdapConfigurationProperties.LDAP_PROP_SYNC_ENABLED));
         props.put("directoryType", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_DIRECTORY_TYPE).toLowerCase());
-        props.put("syncPageSize", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_SYNC_PAGE_SIZE));
+        props.put("syncPageSize", jsonObj.getInt(LdapConfigurationProperties.LDAP_PROP_SYNC_PAGE_SIZE));
         props.put("userIdAttributeName", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_USER_ID_ATTR_NAME));
         props.put("userDomain", jsonObj.has(LdapConfigurationProperties.LDAP_PROP_USER_DOMAIN)
                 ? jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_USER_DOMAIN)
