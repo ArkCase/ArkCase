@@ -87,7 +87,7 @@ import gov.foia.model.UserResetRequestRecord;
 public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
 {
 
-    public static final int REGISTRATION_EXPIRATION = 24 * 60 * 60 * 1000;
+    public static final int REGISTRATION_EXPIRATION = 3 * 24 * 60 * 60 * 1000; // 3 days in milliseconds
 
     private Logger log = LogManager.getLogger(getClass());
 
@@ -293,9 +293,18 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         createPortalUser(portalId, user, person);
 
         UserResetRequest resetRequest = createUserResetRequest(user, portalId);
-        requestPasswordReset(portalId, resetRequest);
+        requestPasswordResetForRequester(portalId, resetRequest);
 
         return UserRegistrationResponse.accepted();
+    }
+
+    @Override
+    public UserResetResponse requestPasswordResetForRequester(String portalId, UserResetRequest resetRequest)
+            throws PortalUserServiceException
+    {
+        String templateName = "portalUserCreatedFromArkcasePasswordResetLink";
+        String emailTitle = translationService.translate(NotificationConstants.NEW_PORTAL_USER_PASSWORD_RESET_REQUEST);
+        return requestPasswordReset(portalId, resetRequest, templateName, emailTitle);
     }
 
     public UserResetRequest createUserResetRequest(PortalUser user, String portalId)
@@ -391,6 +400,15 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     @Override
     public UserResetResponse requestPasswordReset(String portalId, UserResetRequest resetRequest) throws PortalUserServiceException
     {
+        String templateName = "portalPasswordResetRequestLink";
+        String emailTitle = translationService.translate(NotificationConstants.PASSWORD_RESET_REQUEST);
+        return requestPasswordReset(portalId, resetRequest, templateName, emailTitle);
+    }
+
+    @Override
+    public UserResetResponse requestPasswordReset(String portalId, UserResetRequest resetRequest, String templateName, String emailTitle)
+            throws PortalUserServiceException
+    {
         Optional<UserResetRequestRecord> resetRecord = resetDao.findByEmail(resetRequest.getEmailAddress());
         if (!isRegisteredUser(resetRequest.getEmailAddress()))
         {
@@ -402,7 +420,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         }
         else
         {
-            UserResetRequestRecord record = new UserResetRequestRecord();
+            UserResetRequestRecord record = resetRecord.isPresent() ? resetRecord.get() : new UserResetRequestRecord();
 
             String resetKey = UUID.randomUUID().toString();
             record.setResetKey(resetKey);
@@ -415,8 +433,8 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
                     + resetKey;
 
             Notification notification = new Notification();
-            notification.setTemplateModelName("portalPasswordResetRequestLink");
-            notification.setTitle(translationService.translate(NotificationConstants.PASSWORD_RESET_REQUEST));
+            notification.setTemplateModelName(templateName);
+            notification.setTitle(emailTitle);
             notification.setCreator(resetRequest.getEmailAddress());
             notification.setNote(resetLink);
             notification.setEmailAddresses(resetRequest.getEmailAddress());
