@@ -31,6 +31,7 @@ import com.armedia.acm.core.AcmSpringActiveProfile;
 import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.services.ldap.syncer.AcmLdapSyncEvent;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
 import com.armedia.acm.services.users.model.ldap.UserDTO;
@@ -38,8 +39,8 @@ import com.armedia.acm.services.users.service.AcmUserEventPublisher;
 import com.armedia.acm.services.users.service.ldap.LdapAuthenticateService;
 import com.armedia.acm.services.users.service.ldap.LdapUserService;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -112,6 +113,7 @@ public class AcmUserAPIController extends SecureLdapController
             AcmUser acmUser = ldapUserService.createLdapUser(ldapUserCreateRequest, directory);
             ldapUserService.publishSetPasswordEmailEvent(acmUser);
             ldapUserService.publishUserCreatedEvent(httpSession, authentication, acmUser, true);
+            acmUserEventPublisher.getApplicationEventPublisher().publishEvent(new AcmLdapSyncEvent(acmUser.getUserId()));
             return acmUser;
         }
         catch (NameAlreadyBoundException e)
@@ -213,6 +215,7 @@ public class AcmUserAPIController extends SecureLdapController
         {
             AcmUser acmUser = ldapUserService.cloneLdapUser(userId, ldapUserCloneRequest, directory);
             ldapUserService.publishSetPasswordEmailEvent(acmUser);
+            acmUserEventPublisher.getApplicationEventPublisher().publishEvent(new AcmLdapSyncEvent(acmUser.getUserId()));
             return acmUser;
         }
         catch (NameAlreadyBoundException e)
