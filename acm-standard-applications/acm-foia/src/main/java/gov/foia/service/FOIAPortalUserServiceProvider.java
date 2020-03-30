@@ -47,6 +47,7 @@ import com.armedia.acm.services.email.model.EmailBodyBuilder;
 import com.armedia.acm.services.email.model.EmailBuilder;
 import com.armedia.acm.services.email.service.AcmEmailSenderService;
 import com.armedia.acm.services.labels.service.TranslationService;
+import com.armedia.acm.services.ldap.syncer.AcmLdapSyncEvent;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
@@ -54,6 +55,7 @@ import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.UserDTO;
+import com.armedia.acm.services.users.service.AcmUserEventPublisher;
 import com.armedia.acm.services.users.service.ldap.LdapUserService;
 import com.armedia.acm.spring.SpringContextHolder;
 
@@ -121,6 +123,8 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     private SpringContextHolder acmContextHolder;
 
     private TranslationService translationService;
+
+    private AcmUserEventPublisher acmUserEventPublisher;
 
     /*
      * (non-Javadoc)
@@ -245,7 +249,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         else
         {
             PortalFOIAPerson person = getPortalFOIAPerson(portalId, user, registeredPerson);
-            createPortalUser(portalId, user, person);
+            createPortalUser(portalId, user, person, password);
             return UserRegistrationResponse.accepted();
         }
 
@@ -290,7 +294,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         }
 
         PortalFOIAPerson person = getPortalFOIAPerson(portalId, user, registeredPerson);
-        createPortalUser(portalId, user, person);
+        createPortalUser(portalId, user, person, null);
 
         UserResetRequest resetRequest = createUserResetRequest(user, portalId);
         requestPasswordResetForRequester(portalId, resetRequest);
@@ -313,19 +317,23 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         resetRequest.setEmailAddress(user.getEmail());
         PortalInfo portal = portalInfoDAO.findByPortalId(portalId);
         String baseUrl = Base64Utils
-                .encodeToString((new String(portal.getPortalUrl() + "portal/login/reset")).getBytes());
+                .encodeToString((new String(portal.getPortalUrl() + "/portal/login/reset")).getBytes());
         resetRequest.setResetUrl(baseUrl);
         return resetRequest;
     }
 
-    public void createPortalUser(String portalId, PortalUser user, PortalFOIAPerson person) throws PortalUserServiceException
+    public void createPortalUser(String portalId, PortalUser user, PortalFOIAPerson person, String password)
+            throws PortalUserServiceException
     {
         try
         {
             PortalInfo portalInfo = portalInfoDAO.findByPortalId(portalId);
-            UserDTO userDto = userDTOFromPortalUser(user, null, portalInfo.getGroup().getName());
+            UserDTO userDto = userDTOFromPortalUser(user,
+                    password != null ? new String(Base64Utils.decodeFromString(password), Charset.forName("UTF-8")) : null,
+                    portalInfo.getGroup().getName());
             portalPersonDao.save(person);
-            ldapUserService.createLdapUser(userDto, directoryName);
+            AcmUser acmUser = ldapUserService.createLdapUser(userDto, directoryName);
+            acmUserEventPublisher.getApplicationEventPublisher().publishEvent(new AcmLdapSyncEvent(acmUser.getUserId()));
         }
         catch (Exception e)
         {
@@ -933,5 +941,10 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     public void setTranslationService(TranslationService translationService)
     {
         this.translationService = translationService;
+    }
+
+    public void setAcmUserEventPublisher(AcmUserEventPublisher acmUserEventPublisher)
+    {
+        this.acmUserEventPublisher = acmUserEventPublisher;
     }
 }

@@ -60,6 +60,7 @@
             <beans:property name="acmContextHolder" ref="acmContextHolder"/>
             <beans:property name="userDao" ref="userJpaDao"/>
             <beans:property name="translationService" ref="translationService" />
+            <beans:property name="acmUserEventPublisher" ref="acmUserEventPublisher"/>
         </beans:bean>
 
         <beans:bean id="portalCreateRequestService" class="gov.foia.service.PortalCreateRequestService">
