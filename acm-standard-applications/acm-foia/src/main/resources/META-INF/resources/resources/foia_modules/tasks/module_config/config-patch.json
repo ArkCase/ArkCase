@@ -27,12 +27,25 @@
             "workflow",
             "history",
             "signatures",
-            "tags"
+            "tags",
+            "people"
         ]
     },
     {
         "op": "remove",
         "path": "/tree/nodeTypes/?@.type=='p/ADHOC/docrev'"
+    },
+    {
+        "op": "add",
+        "path": "/tree/nodeTypes/-",
+        "value": {
+            "type": "p/ADHOC/people",
+            "label": "tasks.tree.nodeTypes.people.label",
+            "icon": "fa fa-user",
+            "components": [
+                "people"
+            ]
+        }
     },
     {
         "op": "remove",
@@ -89,5 +102,51 @@
                 "id": "CASE_FILE"
             }
         ]
+    },
+    {
+        "op": "add",
+        "path": "/components/-",
+        "value": {
+            "id": "people",
+            "title": "tasks.comp.people.title",
+            "icon": "fa fa-user",
+            "className": "com.armedia.acm.plugins.person.model.FOIAPerson",
+            "personAssociationClassName": "com.armedia.acm.plugins.person.model.PersonAssociation",
+            "enabled": true,
+            "configurable": true,
+            "type": "grid",
+            "enableFiltering": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 5,
+            "columnDefs": [
+                {
+                    "name": "personType",
+                    "displayName": "tasks.comp.people.table.columns.type",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.personTypes, row.entity.personType) | translate }}</div>",
+                    "lookup": "personTypes"
+                },
+                {
+                    "name": "lastName",
+                    "field": "givenName",
+                    "displayName": "tasks.comp.people.table.columns.firstName",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<a data-ui-sref=\"people.main({id: row.entity.lastName})\">{{COL_FIELD}}<\/a>"
+                },
+                {
+                    "name": "firstName",
+                    "field": "familyName",
+                    "displayName": "tasks.comp.people.table.columns.lastName",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<a data-ui-sref=\"people.main({id: row.entity.firstName})\">{{COL_FIELD}}<\/a>"
+                }
+            ]
+
+        }
     }
 ]

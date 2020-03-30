@@ -209,6 +209,8 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
     {
         Task activitiTask = getActivitiTaskService().newTask();
 
+        getTaskBusinessRule().applyRules(in);
+
         AcmTask out = updateExistingActivitiTask(in, activitiTask);
         if (out.getStatus().equalsIgnoreCase(TaskConstants.STATE_CLOSED))
         {
@@ -304,6 +306,7 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
                     in.getParentObjectName());
             getActivitiTaskService().setVariableLocal(activitiTask.getId(), TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TITLE,
                     in.getParentObjectTitle());
+            getActivitiTaskService().setVariableLocal(activitiTask.getId(), TaskConstants.VARIABLE_NAME_TASK_TYPE, in.getType());
 
             getActivitiTaskService().setVariableLocal(activitiTask.getId(), TaskConstants.VARIABLE_NAME_REWORK_INSTRUCTIONS,
                     in.getReworkInstructions());
@@ -1376,6 +1379,11 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
         {
             String workflowRequestType = (String) taskLocal.get(TaskConstants.VARIABLE_NAME_REQUEST_TYPE);
             acmTask.setWorkflowRequestType(workflowRequestType);
+        }
+        if (acmTask.getType() == null)
+        {
+            String taskType = (String) taskLocal.get(TaskConstants.VARIABLE_NAME_TASK_TYPE);
+            acmTask.setType(taskType);
         }
         Date startDate = (Date) taskLocal.get(TaskConstants.VARIABLE_NAME_START_DATE);
         acmTask.setTaskStartDate(startDate);

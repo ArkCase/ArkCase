@@ -81,4 +81,6 @@ public interface TaskConstants
     String VARIABLE_NAME_NON_CONCUR_ENDS_APPROVALS = "nonConcurEndsApprovals";
     String INITIATE_TASK_NAME = "rtInitiate";
     String VARIABLE_NAME_TASK_DUE_DATE_EXPRESSION = "taskDueDateExpression";
+    String VARIABLE_NAME_TASK_TYPE = "TASK_TYPE";
+
 }

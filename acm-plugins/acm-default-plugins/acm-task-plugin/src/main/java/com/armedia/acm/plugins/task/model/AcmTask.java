@@ -81,6 +81,7 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
     private String pendingStatus;
     private Integer percentComplete;
     private String details;
+    private String type;
 
     private Date createDate;
     private Date taskStartDate;
@@ -358,6 +359,16 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
         this.details = details;
     }
 
+    public String getType()
+    {
+        return type;
+    }
+
+    public void setType(String type)
+    {
+        this.type = type;
+    }
+
     public String getAttachedToObjectName()
     {
         return attachedToObjectName;
@@ -582,7 +593,7 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
                 + ", attachedToObjectId=" + attachedToObjectId + ", assignee='" + assignee + '\'' + ", owner='" + owner + '\''
                 + ", businessProcessName='" + businessProcessName + '\'' + ", businessProcessId=" + businessProcessId + ", adhocTask="
                 + adhocTask + ", completed=" + completed + ", status='" + status + '\'' + ", percentComplete=" + percentComplete
-                + ", details='" + details + '\'' + ", createDate=" + createDate + ", taskStartDate=" + taskStartDate + ", taskFinishedDate="
+                + ", details='" + details + '\'' + ", type='" + type + '\'' + ", createDate=" + createDate + ", taskStartDate=" + taskStartDate + ", taskFinishedDate="
                 + taskFinishedDate + ", taskDurationInMillis=" + taskDurationInMillis + ", workflowRequestType='" + workflowRequestType
                 + '\'' + ", workflowRequestId=" + workflowRequestId + ", reviewDocumentPdfRenditionId=" + reviewDocumentPdfRenditionId
                 + ", reviewDocumentFormXmlId=" + reviewDocumentFormXmlId + ", documentUnderReview=" + documentUnderReview
