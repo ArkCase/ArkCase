@@ -33,6 +33,7 @@ import com.armedia.acm.portalgateway.service.PortalRequestService;
 import com.armedia.acm.portalgateway.service.PortalRequestServiceException;
 import com.armedia.acm.portalgateway.service.PortalServiceExceptionMapper;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
@@ -46,6 +47,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -53,7 +55,7 @@ import java.util.List;
  *
  */
 @Controller
-@RequestMapping(value = { "/api/v1/service/portalgateway/{portalId}/requests", "/api/latest/service/portalgateway/{portalId}/requests" })
+@RequestMapping(value = { "/api/v1/service/portalgateway", "/api/latest/service/portalgateway" })
 public class ArkCasePortalGatewayRequestAPIController
 {
     private transient final Logger log = LogManager.getLogger(getClass());
@@ -61,7 +63,7 @@ public class ArkCasePortalGatewayRequestAPIController
     private PortalRequestService portalRequestService;
 
     @CheckPortalUserAssignement
-    @RequestMapping(method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE })
+    @RequestMapping(value = "/{portalId}/requests", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE })
     @ResponseBody
     public PortalResponse submitRequest(Authentication auth, @PortalId @PathVariable(value = "portalId") String portalId,
             @RequestBody PortalRequest request) throws PortalRequestServiceException
@@ -72,7 +74,7 @@ public class ArkCasePortalGatewayRequestAPIController
     }
 
     @CheckPortalUserAssignement
-    @RequestMapping(value = "/{portalUserId}/{requestType:.+}", method = RequestMethod.GET, produces = {
+    @RequestMapping(value = "/{portalId}/requests/{portalUserId}/{requestType:.+}", method = RequestMethod.GET, produces = {
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE })
     @ResponseBody
     public List<PortalResponse> listRequests(Authentication auth, @PortalId @PathVariable(value = "portalId") String portalId,
@@ -85,7 +87,7 @@ public class ArkCasePortalGatewayRequestAPIController
     }
 
     @CheckPortalUserAssignement
-    @RequestMapping(value = "/{portalUserId}/{requestType}/{requestId}", method = RequestMethod.GET, produces = {
+    @RequestMapping(value = "/{portalId}/requests/{portalUserId}/{requestType}/{requestId}", method = RequestMethod.GET, produces = {
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE })
     @ResponseBody
     public PortalResponse getRequestStatus(Authentication auth, @PortalId @PathVariable(value = "portalId") String portalId,
@@ -96,6 +98,23 @@ public class ArkCasePortalGatewayRequestAPIController
         log.debug("Getting request status from portal with [{}] ID for portal user with [{}] ID of [{}] type.", portalId, portalUserId,
                 requestType);
         return portalRequestService.getRequestStatus(portalId, portalUserId, requestType, requestId);
+    }
+
+    @RequestMapping(value = "/inquiry", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE})
+    @ResponseBody
+    public String submitInquiry(Authentication auth, @RequestBody String inquiry)
+    {
+        log.debug("Submitting request from portal for portal user with [{}] ID of [{}] type.", auth.getName(),
+                inquiry);
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            PortalRequest portalRequest = mapper.readValue(inquiry, PortalRequest.class);
+            portalRequestService.submitInquiry(portalRequest);
+            return "{\"success\":true}";
+        }
+        catch (PortalRequestServiceException | IOException e){
+            return "{\"success\":false}";
+        }
     }
 
     @ExceptionHandler(PortalRequestServiceException.class)

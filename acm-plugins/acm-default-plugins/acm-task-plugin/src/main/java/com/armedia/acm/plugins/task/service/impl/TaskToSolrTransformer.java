@@ -89,6 +89,7 @@ public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmT
         doc.setObject_type_s("TASK");
         doc.setObject_sub_type_s(in.getBusinessProcessName());
         doc.setPriority_lcs(in.getPriority());
+        doc.setType_lcs(in.getType());
         if (in.getParentObjectId() != null)
         {
             doc.setParent_type_s(in.getParentObjectType());
@@ -163,6 +164,7 @@ public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmT
         doc.setOwner_s(in.getOwner());
         doc.setId(in.getId() + "-TASK");
         doc.setPriority_s(in.getPriority());
+        doc.setType_s(in.getType());
 
         if (in.getParentObjectId() != null)
         {

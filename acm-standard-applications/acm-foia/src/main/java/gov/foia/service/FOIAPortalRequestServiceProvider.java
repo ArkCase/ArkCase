@@ -37,6 +37,7 @@ import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import gov.foia.model.PortalFOIAInquiry;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
@@ -61,6 +62,8 @@ public class FOIAPortalRequestServiceProvider implements PortalRequestServicePro
     private PortalCreateRequestService createRequestService;
 
     private PortalRequestService portalRequestService;
+
+    private PortalCreateInquiryService portalCreateInquiryService;
 
     /*
      * (non-Javadoc)
@@ -193,6 +196,32 @@ public class FOIAPortalRequestServiceProvider implements PortalRequestServicePro
         }
     }
 
+
+    /*
+     * (non-Javadoc)
+     * @see com.armedia.acm.portalgateway.service.PortalRequestServiceProvider#submitInquiry(com.armedia.acm.portalgateway.web.api.PortalRequest)
+     */
+    @Override
+    public void submitInquiry(PortalRequest request) throws PortalRequestServiceException
+    {
+        log.debug("Submitting request from portal with [{}] ID for portal user with [{}] ID of [{}] type.",
+                request.getRequestType());
+        String rawRequestContent = request.getRawRequestContent();
+        ObjectMapper mapper = new ObjectMapper();
+        try
+        {
+            PortalFOIAInquiry foiaInquiry = mapper.readValue(rawRequestContent, PortalFOIAInquiry.class);
+            portalCreateInquiryService.createFOIAInquiry(foiaInquiry);
+        }
+        catch (IOException e)
+        {
+            log.warn("Error deserializing raw request [{}] from user with ID [{}] from portal with ID [{}].", rawRequestContent);
+            throw new PortalRequestServiceException(String.format(
+                    "Error deserializing raw request [%s] from user with ID [%s] from portal with ID [%s].", rawRequestContent), e, SUBMIT_REQUEST_METHOD_DESERIALIZE);
+        }
+
+    }
+
     /**
      * @param createRequestService
      *            the createRequestService to set
@@ -211,4 +240,13 @@ public class FOIAPortalRequestServiceProvider implements PortalRequestServicePro
         this.portalRequestService = portalRequestService;
     }
 
+    public PortalCreateInquiryService getPortalCreateInquiryService()
+    {
+        return portalCreateInquiryService;
+    }
+
+    public void setPortalCreateInquiryService(PortalCreateInquiryService portalCreateInquiryService)
+    {
+        this.portalCreateInquiryService = portalCreateInquiryService;
+    }
 }

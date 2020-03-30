@@ -131,7 +131,7 @@ public class PortalCreateRequestService
         return saved;
     }
 
-    private MultipartFile portalRequestFileToMultipartFile(PortalFOIARequestFile requestFile) throws IOException
+    public MultipartFile portalRequestFileToMultipartFile(PortalFOIARequestFile requestFile) throws IOException
     {
         byte[] content = Base64.getDecoder().decode(requestFile.getContent());
 
@@ -149,7 +149,6 @@ public class PortalCreateRequestService
         }
 
         return new CommonsMultipartFile(fileItem);
-
     }
 
     public FOIARequest populateRequest(PortalFOIARequest in)
