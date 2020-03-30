@@ -77,7 +77,7 @@
             <property name="personDao" ref="acmPersonDao"/>
             <property name="caseFileDao" ref="caseFileDao"/>
             <property name="ecmFileService" ref="ecmFileService"/>
-            <property name="portalCreateRequestService" ref="portalCreateRequestService"/>
+            <property name="portalRequestService" ref="portalRequestService"/>
             <property name="taskEventPublisher" ref="taskEventPublisher"/>
         </beans:bean>
 

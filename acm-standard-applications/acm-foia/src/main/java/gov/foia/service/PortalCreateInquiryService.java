@@ -10,18 +10,12 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.person.dao.PersonAssociationDao;
 import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Person;
-import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.model.TaskConstants;
 import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
-import com.armedia.acm.plugins.task.service.impl.ActivitiTaskDao;
-import gov.foia.model.FOIAPerson;
-import gov.foia.model.FOIARequest;
-import gov.foia.model.FOIARequesterAssociation;
-import gov.foia.model.PortalFOIAInquiry;
-import gov.foia.model.PortalFOIARequestFile;
+
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.logging.log4j.LogManager;
@@ -43,14 +37,21 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
-public class PortalCreateInquiryService {
+import gov.foia.model.FOIAPerson;
+import gov.foia.model.FOIARequest;
+import gov.foia.model.FOIARequesterAssociation;
+import gov.foia.model.PortalFOIAInquiry;
+import gov.foia.model.PortalFOIARequestFile;
+
+public class PortalCreateInquiryService
+{
     private final Logger log = LogManager.getLogger(getClass());
     private TaskDao taskDao;
     private PersonAssociationDao personAssociationDao;
     private PersonDao personDao;
     private CaseFileDao caseFileDao;
     private EcmFileService ecmFileService;
-    private PortalCreateRequestService portalCreateRequestService;
+    private PortalRequestService portalRequestService;
     private TaskEventPublisher taskEventPublisher;
 
     public void createFOIAInquiry(PortalFOIAInquiry inquiry)
@@ -58,17 +59,18 @@ public class PortalCreateInquiryService {
         FOIARequesterAssociation personAssociation = new FOIARequesterAssociation();
         Authentication auth = new UsernamePasswordAuthenticationToken(inquiry.getUserId(), "");
 
-        try {
+        try
+        {
             AcmTask saved = getTaskDao().createAdHocTask(populateTask(inquiry));
-            populatePersonAssociation(personAssociation,  inquiry, saved);
+            populatePersonAssociation(personAssociation, inquiry, saved);
             getPersonAssociationDao().save(personAssociation);
 
             AcmFolder folder = saved.getContainer().getAttachmentFolder();
-            if(!inquiry.getDocuments().isEmpty())
+            if (!inquiry.getDocuments().isEmpty())
             {
                 for (PortalFOIARequestFile document : inquiry.getDocuments())
                 {
-                    MultipartFile file = getPortalCreateRequestService().portalRequestFileToMultipartFile(document);
+                    MultipartFile file = getPortalRequestService().convertPortalRequestFileToMultipartFile(document);
                     ecmFileService.upload(file.getOriginalFilename(), "Other", file, auth,
                             folder.getCmisFolderId(),
                             saved.getObjectType(),
@@ -78,11 +80,17 @@ public class PortalCreateInquiryService {
             AcmApplicationTaskEvent event = new AcmApplicationTaskEvent(saved, "create", inquiry.getUserId(), true, null);
             getTaskEventPublisher().publishTaskEvent(event);
 
-        } catch (AcmCreateObjectFailedException e) {
+        }
+        catch (AcmCreateObjectFailedException e)
+        {
             e.printStackTrace();
-        } catch (IOException e) {
+        }
+        catch (IOException e)
+        {
             e.printStackTrace();
-        } catch (AcmUserActionFailedException e) {
+        }
+        catch (AcmUserActionFailedException e)
+        {
             e.printStackTrace();
         }
     }
@@ -98,7 +106,7 @@ public class PortalCreateInquiryService {
         task.setType("web-portal-inquiry");
         task.setAdhocTask(true);
 
-        if(request != null)
+        if (request != null)
         {
             task.setAttachedToObjectId(request.getId());
             task.setAttachedToObjectType(request.getObjectType());
@@ -115,6 +123,7 @@ public class PortalCreateInquiryService {
         }
         return task;
     }
+
     private FOIARequesterAssociation populatePersonAssociation(FOIARequesterAssociation pa, PortalFOIAInquiry in, AcmTask task)
     {
         pa.setParentId(task.getTaskId());
@@ -123,7 +132,7 @@ public class PortalCreateInquiryService {
         pa.setCreator(in.getUserId());
         List<Person> personList = getPersonDao().findByNameOrContactValue("", in.getEmailAddress());
         FOIAPerson person;
-        if(personList.isEmpty())
+        if (personList.isEmpty())
         {
             person = new FOIAPerson();
             person.setGivenName(in.getFirstName());
@@ -136,7 +145,7 @@ public class PortalCreateInquiryService {
             person.setContactMethods(contactMethods);
         }
         else
-         {
+        {
             person = (FOIAPerson) personList.get(0);
         }
 
@@ -144,6 +153,7 @@ public class PortalCreateInquiryService {
         pa.setPersonType("Creator");
         return pa;
     }
+
     public MultipartFile convertPortalRequestFileToMultipartFile(PortalFOIARequestFile requestFile) throws IOException
     {
         byte[] content = Base64.getDecoder().decode(requestFile.getContent());
@@ -164,55 +174,64 @@ public class PortalCreateInquiryService {
         return new CommonsMultipartFile(fileItem);
     }
 
-
-    public CaseFileDao getCaseFileDao() {
+    public CaseFileDao getCaseFileDao()
+    {
         return caseFileDao;
     }
 
-    public void setCaseFileDao(CaseFileDao caseFileDao) {
+    public void setCaseFileDao(CaseFileDao caseFileDao)
+    {
         this.caseFileDao = caseFileDao;
     }
 
-    public TaskDao getTaskDao() {
+    public TaskDao getTaskDao()
+    {
         return taskDao;
     }
 
-    public void setTaskDao(TaskDao taskDao) {
+    public void setTaskDao(TaskDao taskDao)
+    {
         this.taskDao = taskDao;
     }
 
-    public EcmFileService getEcmFileService() {
+    public EcmFileService getEcmFileService()
+    {
         return ecmFileService;
     }
 
-    public void setEcmFileService(EcmFileService ecmFileService) {
+    public void setEcmFileService(EcmFileService ecmFileService)
+    {
         this.ecmFileService = ecmFileService;
     }
 
-    public PersonAssociationDao getPersonAssociationDao() {
+    public PersonAssociationDao getPersonAssociationDao()
+    {
         return personAssociationDao;
     }
 
-    public void setPersonAssociationDao(PersonAssociationDao personAssociationDao) {
+    public void setPersonAssociationDao(PersonAssociationDao personAssociationDao)
+    {
         this.personAssociationDao = personAssociationDao;
     }
 
-    public PersonDao getPersonDao() {
+    public PersonDao getPersonDao()
+    {
         return personDao;
     }
 
-    public void setPersonDao(PersonDao personDao) {
+    public void setPersonDao(PersonDao personDao)
+    {
         this.personDao = personDao;
     }
 
-    public PortalCreateRequestService getPortalCreateRequestService()
+    public PortalRequestService getPortalRequestService()
     {
-        return portalCreateRequestService;
+        return portalRequestService;
     }
 
-    public void setPortalCreateRequestService(PortalCreateRequestService portalCreateRequestService)
+    public void setPortalRequestService(PortalRequestService portalRequestService)
     {
-        this.portalCreateRequestService = portalCreateRequestService;
+        this.portalRequestService = portalRequestService;
     }
 
     public TaskEventPublisher getTaskEventPublisher()
