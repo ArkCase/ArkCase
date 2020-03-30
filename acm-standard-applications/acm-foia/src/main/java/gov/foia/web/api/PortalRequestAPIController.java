@@ -37,6 +37,7 @@ import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.service.PersonService;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.search.exception.SolrException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -47,6 +48,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -63,6 +65,7 @@ import java.util.List;
 import gov.foia.model.PortalFOIAReadingRoom;
 import gov.foia.model.PortalFOIARequest;
 import gov.foia.model.PortalFOIARequestStatus;
+import gov.foia.model.WithdrawRequest;
 import gov.foia.service.PortalRequestService;
 
 /**
@@ -117,6 +120,24 @@ public class PortalRequestAPIController
         try
         {
             getPortalRequestService().sendRequestDownloadedEmailToOfficersGroup(requestNumber);
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        }
+        catch (Exception e)
+        {
+            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/external/withdrawRequest", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Boolean> withdrawRequest(@RequestBody String withdrawRequestMessage, Authentication auth)
+    {
+        try
+        {
+            ObjectMapper mapper = new ObjectMapper();
+            WithdrawRequest withdrawRequest = mapper.readValue(withdrawRequestMessage, WithdrawRequest.class);
+
+            getPortalRequestService().createRequestWithdrawalTask(withdrawRequest, auth);
             return new ResponseEntity<>(true, HttpStatus.OK);
         }
         catch (Exception e)
