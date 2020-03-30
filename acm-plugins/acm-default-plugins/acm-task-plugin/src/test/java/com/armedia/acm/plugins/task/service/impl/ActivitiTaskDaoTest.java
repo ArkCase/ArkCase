@@ -268,6 +268,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         mockTaskService.setVariable(taskId.toString(), TaskConstants.VARIABLE_NAME_REQUEST_TYPE, in.getWorkflowRequestType());
         mockTaskService.setVariableLocal(taskId.toString(), TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TITLE, null);
         mockTaskService.setVariableLocal(taskId.toString(), TaskConstants.VARIABLE_NAME_LEGACY_SYSTEM_ID, null);
+        mockTaskService.setVariableLocal(taskId.toString(), TaskConstants.VARIABLE_NAME_TASK_TYPE, null);
         // data access and assignment rules
         mockDataAccessPrivilegeListener.applyAssignmentAndAccessRules(in);
 
