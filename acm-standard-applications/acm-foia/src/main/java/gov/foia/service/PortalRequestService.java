@@ -359,6 +359,7 @@ public class PortalRequestService
         String requestTitle = String.format("%s %s: %s", WITHDRAW_REQUEST_TITLE, withdrawRequestDetails.getOriginalRequestNumber(),
                 withdrawRequestDetails.getSubject());
         requestWithdrawalTask.setTitle(requestTitle);
+        requestWithdrawalTask.setType("web-portal-withdrawal");
         requestWithdrawalTask.setDetails(withdrawRequestDetails.getDescription());
         requestWithdrawalTask.setAttachedToObjectType("CASE_FILE");
         requestWithdrawalTask.setParentObjectType("CASE_FILE");
