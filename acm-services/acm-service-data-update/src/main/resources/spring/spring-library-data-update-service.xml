@@ -39,6 +39,7 @@
                 <ref bean="acmGroupSolrReindexExecutor"/>
                 <ref bean="cmisRepositoryRecycleBinContainerExecutor"/>
                 <ref bean="createTaskFolderStructureInParentObjectUpdateExecutor"/>
+                <ref bean="solrReindexCaseComplaintDocumentRepositoryExecutor"/>
             </list>
         </property>
         <property name="dataUpdateService" ref="dataUpdateService"/>
@@ -137,9 +138,15 @@
         <property name="solrReindexService" ref="solrReindexService"/>
     </bean>
 
-    <bean id="createTaskFolderStructureInParentObjectUpdateExecutor" class="com.armedia.acm.services.dataupdate.service.CreateTaskFolderStructureInParentObjectUpdateExecutor">
+    <bean id="createTaskFolderStructureInParentObjectUpdateExecutor"
+          class="com.armedia.acm.services.dataupdate.service.CreateTaskFolderStructureInParentObjectUpdateExecutor">
         <property name="acmTaskService" ref="acmTaskService"/>
         <property name="acmFolderDao" ref="acmFolderDao"/>
         <property name="taskDao" ref="acmTaskDao"/>
+    </bean>
+
+    <bean id="solrReindexCaseComplaintDocumentRepositoryExecutor"
+          class="com.armedia.acm.services.dataupdate.service.SolrReindexCaseComplaintDocumentRepositoryExecutor">
+        <property name="solrReindexService" ref="solrReindexService"/>
     </bean>
 </beans>
