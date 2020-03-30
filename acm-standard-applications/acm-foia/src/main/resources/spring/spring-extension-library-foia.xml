@@ -40,6 +40,7 @@
         <beans:bean id="foiaPortalRequestServiceProvider" class="gov.foia.service.FOIAPortalRequestServiceProvider">
             <beans:property name="createRequestService" ref="portalCreateRequestService"/>
             <beans:property name="portalRequestService" ref="portalRequestService"/>
+            <beans:property name="portalCreateInquiryService" ref="portalCreateInquiryService"/>
         </beans:bean>
 
         <beans:bean id="userRegistrationRequestDao" class="gov.foia.dao.UserRegistrationRequestDao"/>
@@ -68,6 +69,15 @@
             <beans:property name="userTrackerService" ref="userTrackerService"/>
             <beans:property name="saveFOIARequestService" ref="saveFOIARequestService"/>
             <beans:property name="organizationDao" ref="acmOrganizationDao"/>
+        </beans:bean>
+        <beans:bean id="portalCreateInquiryService" class="gov.foia.service.PortalCreateInquiryService">
+            <property name="taskDao" ref="acmTaskDao"/>
+            <property name="personAssociationDao" ref="acmPersonAssociationDao"/>
+            <property name="personDao" ref="acmPersonDao"/>
+            <property name="caseFileDao" ref="caseFileDao"/>
+            <property name="ecmFileService" ref="ecmFileService"/>
+            <property name="portalCreateRequestService" ref="portalCreateRequestService"/>
+            <property name="taskEventPublisher" ref="taskEventPublisher"/>
         </beans:bean>
 
         <beans:bean id="portalRequestService" class="gov.foia.service.PortalRequestService">

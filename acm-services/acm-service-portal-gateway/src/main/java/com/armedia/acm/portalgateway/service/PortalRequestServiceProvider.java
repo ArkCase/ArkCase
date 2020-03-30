@@ -80,4 +80,12 @@ public interface PortalRequestServiceProvider
      */
     PortalResponse getRequestStatus(String portalId, String portalUserId, String requestId)
             throws PortalRequestServiceException;
+
+
+    /**
+     * @param request
+     * @return
+     * @throws PortalRequestServiceException
+     */
+    void submitInquiry(PortalRequest request) throws PortalRequestServiceException;
 }
