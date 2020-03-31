@@ -29,7 +29,6 @@ package com.armedia.acm.services.users.service.ldap;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.services.ldap.syncer.AcmLdapSyncEvent;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapDao;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapGroupDao;
@@ -50,8 +49,8 @@ import com.armedia.acm.services.users.service.group.GroupService;
 import com.armedia.acm.spring.SpringContextHolder;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.ldap.NameAlreadyBoundException;
@@ -191,8 +190,6 @@ public class LdapUserService implements ApplicationEventPublisherAware
             ldapUserDao.deleteUserEntry(acmUser.getDistinguishedName(), ldapSyncConfig);
             throw new AcmUserActionFailedException("create LDAP user", null, null, "Creating LDAP user failed!", e);
         }
-
-        eventPublisher.publishEvent(new AcmLdapSyncEvent(acmUser.getUserId()));
 
         return acmUser;
     }
