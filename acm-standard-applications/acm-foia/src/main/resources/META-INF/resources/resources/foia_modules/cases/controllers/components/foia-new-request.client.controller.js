@@ -428,10 +428,6 @@ angular.module('cases').controller(
                     }
                 }
 
-                if ($scope.config.data.createNewPortalUser) {
-                    createNewPortalUser();
-                }
-
                 if ($scope.isNewRequestType()) {
                     saveRequestInfoWithFiles(formdata);
                 } else {
@@ -482,6 +478,9 @@ angular.module('cases').controller(
                     $scope.loading = false;
                     $scope.loadingIcon = "fa fa-floppy-o";
                     ObjectService.showObject(ObjectService.ObjectTypes.CASE_FILE, response.id);
+                    if ($scope.config.data.createNewPortalUser) {
+                        createNewPortalUser();
+                    }
                 }, function (error) {
                     $scope.loading = false;
                     $scope.loadingIcon = "fa fa-floppy-o";
