@@ -169,7 +169,7 @@
                     "minWidth": 80
                 },
                 {
-                    "name": "owning_group_id_lcs",
+                    "name": "owning_group_id_s",
                     "displayName": "queues.table.header.group",
                     "headerCellFilter": "translate",
                     "headerTooltip": "queues.table.headerTooltip.owningGroup",

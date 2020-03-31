@@ -12,14 +12,14 @@
                         </button>
                     </div>
                     <select ng-model="selectedLookupDef" ng-change="selectLookupDef()" class="form-control"
-                            ng-options="lookupDef.name for lookupDef in lookupsDefs | orderObjectBy:'name'" name="" size="10">
+                            ng-options="lookupDef.name for lookupDef in lookupsDefs | orderObjectBy:'name'" name="" size={{lookupsDefs.length}} style="height: 70vh">
                     </select>
                 </div>
                 <div class="col-xs-9 b-r">
                     <div ng-include="view"></ng-include>
                     </div>
                 </div>
-
             </div>
+        </div>
     </panel-view>
 </div>
