@@ -85,7 +85,6 @@
         <dependency>
             <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
             <artifactId>acm-document-repository-plugin</artifactId>
->>>>>>> 0e98182f1e... Solr data reindexing as owning_group_id_s attribute was added.
             <version>${acm.version}</version>
         </dependency>
     </dependencies>
