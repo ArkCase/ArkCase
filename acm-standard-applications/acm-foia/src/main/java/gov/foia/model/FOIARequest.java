@@ -203,7 +203,7 @@ public class FOIARequest extends CaseFile implements FOIAObject
     @Convert(converter = BooleanToStringConverter.class)
     private boolean limitedDeliveryFlag = false;
 
-    @Column(name = "fo_original_request_number")
+    @Transient
     private String originalRequestNumber;
 
     @Transient

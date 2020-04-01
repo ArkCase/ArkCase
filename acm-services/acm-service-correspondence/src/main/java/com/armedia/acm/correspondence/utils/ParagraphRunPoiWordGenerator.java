@@ -28,6 +28,7 @@ package com.armedia.acm.correspondence.utils;
  */
 
 import com.armedia.acm.core.model.ApplicationConfig;
+import com.armedia.acm.core.provider.TemplateModelProvider;
 import com.armedia.acm.correspondence.model.CorrespondenceMergeField;
 import com.armedia.acm.correspondence.service.CorrespondenceMergeFieldManager;
 import com.armedia.acm.correspondence.service.CorrespondenceService;
@@ -38,6 +39,7 @@ import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -46,6 +48,9 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.io.Resource;
 import org.springframework.expression.spel.SpelEvaluationException;
 import org.springframework.expression.spel.SpelParserConfiguration;
@@ -67,7 +72,7 @@ import java.util.StringJoiner;
 /**
  * Created by armdev on 12/11/14.
  */
-public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGenerator
+public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGenerator, ApplicationContextAware
 {
     public static final String DATE_TYPE = "Date";
     public static final String DATE_TIME_TYPE = "LocalDateTime";
@@ -84,20 +89,26 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
     private ObjectConverter objectConverter;
     private CorrespondenceMergeFieldManager mergeFieldManager;
     private ApplicationConfig appConfig;
+    private ApplicationContext applicationContext;
 
     @Override
-    public void generate(Resource wordTemplate, OutputStream targetStream, String objectType, Long parentObjectId) throws IOException
+    public void generate(Resource wordTemplate, OutputStream targetStream, String objectType, Long parentObjectId, String templateModelProvider) throws IOException
     {
         try (XWPFDocument template = new XWPFDocument(wordTemplate.getInputStream()))
         {
             List<XWPFParagraph> graphs = template.getParagraphs();
             List<XWPFTable> tables = template.getTables();
 
+            AcmAbstractDao<AcmEntity> correspondedObjectDao = getCorrespondenceService().getAcmAbstractDao(objectType);
+            Object correspondenedObject = correspondedObjectDao.find(parentObjectId);
+            templateModelProvider = generateBeanName(templateModelProvider);
+            TemplateModelProvider modelProvider = (TemplateModelProvider) applicationContext.getBean(templateModelProvider);
+            correspondenedObject = modelProvider.getModel(correspondenedObject);
             // Update all plain text in the word document who is outside any tables
-            updateGraphs(graphs, objectType, parentObjectId);
+            updateGraphs(graphs, correspondenedObject, objectType);
 
             // Update all text in the word document who is inside tables/rows/cells
-            updateTables(tables, objectType, parentObjectId);
+            updateTables(tables, correspondenedObject, objectType);
 
             log.debug("writing correspondence to stream: " + targetStream);
 
@@ -162,11 +173,11 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
         }
     }
 
-    private List<XWPFParagraph> updateGraphs(List<XWPFParagraph> graphs, String objectType, Long parentObjectId)
+    private List<XWPFParagraph> updateGraphs(List<XWPFParagraph> graphs, Object object, String objectType)
     {
         for (XWPFParagraph graph : graphs)
         {
-            replace(graph, objectType, parentObjectId);
+            replace(graph, object, objectType);
         }
 
         return graphs;
@@ -268,7 +279,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
         }
     }
 
-    private <V> void replace(XWPFParagraph paragraph, String objectType, Long parentObjectId)
+    private <V> void replace(XWPFParagraph paragraph, Object object, String objectType)
     {
         boolean found = true;
         while (found)
@@ -302,7 +313,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                 String spelExpressionToBeEvaluted = sb.toString();
                 if (spelExpressionToBeEvaluted != null)
                 {
-                    texts = evaluateSpelExpression(objectType, parentObjectId, spelExpressionToBeEvaluted).split("\n");
+                    texts = evaluateSpelExpression(object, spelExpressionToBeEvaluted, objectType).split("\n");
                 }
 
                 // Snowbound throws error on runs with empty text (see AFDP-6414). So we just delete these runs
@@ -383,39 +394,39 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
         return (map);
     }
 
-    private List<XWPFTable> updateTables(List<XWPFTable> tables, String objectType, Long parentObjectId)
+    private List<XWPFTable> updateTables(List<XWPFTable> tables, Object object, String objectType)
     {
         if (tables != null)
         {
             tables.stream().forEach(table -> {
                 List<XWPFTableRow> rows = table.getRows();
-                updateRows(rows, objectType, parentObjectId);
+                updateRows(rows, object, objectType);
             });
         }
 
         return tables;
     }
 
-    private List<XWPFTableRow> updateRows(List<XWPFTableRow> rows, String objectType, Long parentObjectId)
+    private List<XWPFTableRow> updateRows(List<XWPFTableRow> rows, Object object, String objectType)
     {
         if (rows != null)
         {
             rows.stream().forEach(row -> {
                 List<XWPFTableCell> cells = row.getTableCells();
-                updateCells(cells, objectType, parentObjectId);
+                updateCells(cells, object, objectType);
             });
         }
 
         return rows;
     }
 
-    private List<XWPFTableCell> updateCells(List<XWPFTableCell> cells, String objectType, Long parentObjectId)
+    private List<XWPFTableCell> updateCells(List<XWPFTableCell> cells, Object object, String objectType)
     {
         if (cells != null)
         {
             cells.stream().forEach(cell -> {
                 List<XWPFParagraph> graphs = cell.getParagraphs();
-                updateGraphs(graphs, objectType, parentObjectId);
+                updateGraphs(graphs, object, objectType);
             });
         }
 
@@ -461,19 +472,16 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
         return cells;
     }
 
-    private String evaluateSpelExpression(String objectType, Long parentObjectId, String spelExpression)
+    private String evaluateSpelExpression(Object object, String spelExpression, String objectType)
     {
         String generatedExpression = "";
         boolean isExistingMergeField = false;
         SimpleDateFormat formatter = new SimpleDateFormat(DateFormats.WORKFLOW_DATE_FORMAT);
         SimpleDateFormat dateTimeFormatter = new SimpleDateFormat(DateFormats.CORRESPONDENCE_DATE_FORMAT);
 
-        AcmAbstractDao<AcmEntity> correspondedObjectDao = getCorrespondenceService().getAcmAbstractDao(objectType);
-        Object correspondenedObject = correspondedObjectDao.find(parentObjectId);
-
         // Passing the object of Corresponded Object class to StandardEvaluationContext, which is going to evaluate the
         // expressions in the context of this object.
-        StandardEvaluationContext stContext = new StandardEvaluationContext(correspondenedObject);
+        StandardEvaluationContext stContext = new StandardEvaluationContext(object);
 
         // Creating an object of SpelExpressionParser class, used to parse the SpEL expression
         SpelParserConfiguration config = new SpelParserConfiguration(true, true);
@@ -518,7 +526,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
             }
             catch (Exception e)
             {
-                log.error("Error while retrieving some property from object {}, with parentObjectId {}", objectType, parentObjectId, e);
+                log.error("Error while retrieving some property from object [{}] ", object, e);
                 generatedExpression = "";
             }
         }
@@ -592,6 +600,17 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
             }
         }
         return generatedExpression;
+    }
+    
+    private String generateBeanName(String templateModelProvider)
+    {
+        templateModelProvider = StringUtils.substringAfterLast(templateModelProvider, ".");
+        if(templateModelProvider.contains("FOIA"))
+        {
+            templateModelProvider = templateModelProvider.replace("FOIA", "foia");
+        }
+        templateModelProvider = Character.toLowerCase(templateModelProvider.charAt(0)) + templateModelProvider.substring(1);
+        return templateModelProvider;
     }
 
     public void fixParagraphRuns(XWPFParagraph paragraph)
@@ -736,5 +755,11 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
     public void setAppConfig(ApplicationConfig appConfig)
     {
         this.appConfig = appConfig;
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException 
+    {
+        this.applicationContext = applicationContext;
     }
 }

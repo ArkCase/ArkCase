@@ -276,6 +276,7 @@
         </beans:bean>
 
         <beans:bean id="foiaRequestTemplateModelProvider" class="gov.foia.model.provider.FOIARequestTemplateModelProvider">
+            <beans:property name="objectAssociationDao" ref="objectAssociationDao"/>
         </beans:bean>
 
         <beans:bean id="holdQueuePurgerJobDescriptor" class="gov.foia.service.HoldQueuePurgerJobDescriptor" parent="acmJobDescriptor">
