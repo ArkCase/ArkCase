@@ -137,7 +137,8 @@ deploy_backend_core_dev:
     # Dev Core repository ID on ***REMOVED*** is 44
     - 'curl -H "Content-Type: application/json" -X POST -s -u gitlabci:$GITLABCI_TOWER_PASSWORD -d ''{ "inventory": 44, "job_tags": "core", "extra_vars": "{\"arkcase_version\": \"\", \"arkcase_configuration_version\":\"\", \"arkcase_config_server_version\":\"\", \"snowbound_arkcase_version\":\"\"}"}'' -k https://***REMOVED***/api/v2/job_templates/129/launch/'
 
-deploy_backend_foia_dev:
+# 2020-04-01 temporarily stopping FOIA dev deployments per @mmaines request
+.deploy_backend_foia_dev:
   stage: deploy
   only:
     - develop
