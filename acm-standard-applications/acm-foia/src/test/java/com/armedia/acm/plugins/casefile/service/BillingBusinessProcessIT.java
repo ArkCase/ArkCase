@@ -100,13 +100,12 @@ public class BillingBusinessProcessIT
         processVariables.put("OBJECT_TYPE", objectType);
         processVariables.put("OBJECT_ID", foiaId);
 
-        changeObjectStatusService.changeIfNoPermanentStatusIsSet(foiaId, objectType, "Billing", "Closed");
         expect(queueCaseService.enqueue(foiaId, "Billing")).andReturn(new FOIARequest());
 
-        replay(changeObjectStatusService, queueCaseService);
+        replay(queueCaseService);
 
         rt.startProcessInstanceByKey(processName, processVariables);
 
-        verify(changeObjectStatusService, queueCaseService);
+        verify(queueCaseService);
     }
 }

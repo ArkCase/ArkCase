@@ -80,7 +80,7 @@ public class HoldBusinessProcessIT
     {
         // deploy
         repo.createDeployment()
-                .addClasspathResource("activiti/foia-extension-hold-process_v2.bpmn20.xml")
+                .addClasspathResource("activiti/foia-extension-hold-process_v3.bpmn20.xml")
                 .deploy();
     }
 
@@ -95,12 +95,14 @@ public class HoldBusinessProcessIT
     {
         Long foiaId = 500L;
         String objectType = CaseFileConstants.OBJECT_TYPE;
+        String objectStatus = "Unperfected";
 
         Map<String, Object> processVariables = new HashMap<>();
         processVariables.put("OBJECT_TYPE", objectType);
         processVariables.put("OBJECT_ID", foiaId);
+        processVariables.put("OBJECT_STATUS", objectStatus);
 
-        changeObjectStatusService.changeIfNoPermanentStatusIsSet(foiaId, objectType, "Hold", "Closed");
+        changeObjectStatusService.changeIfNoPermanentStatusIsSet(foiaId, objectType, objectStatus, "Closed");
         expect(queueCaseService.enqueue(foiaId, "Hold")).andReturn(new FOIARequest());
 
         replay(changeObjectStatusService, queueCaseService);
