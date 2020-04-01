@@ -683,19 +683,6 @@ LANGUAGE plpgsql;
         </addColumn>
     </changeSet>
 
-    <changeSet id="43-01-fo_original_request_number" author="stefan.sanevski" dbms="oracle, mssql, postgres"
-               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
-        <addColumn tableName="acm_case_file">
-            <column name="fo_original_request_number" type="VARCHAR(128)"></column>
-        </addColumn>
-    </changeSet>
-    <changeSet id="43-02-fo_original_request_number" author="stefan.sanevski" dbms="mysql"
-               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
-        <addColumn tableName="acm_case_file">
-            <column name="fo_original_request_number" type="TEXT"></column>
-        </addColumn>
-    </changeSet>
-
 
 </databaseChangeLog>
 

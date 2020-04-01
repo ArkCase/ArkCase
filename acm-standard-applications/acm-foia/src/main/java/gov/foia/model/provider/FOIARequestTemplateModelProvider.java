@@ -28,22 +28,45 @@ package gov.foia.model.provider;
  */
 
 import com.armedia.acm.core.provider.TemplateModelProvider;
+import com.armedia.acm.plugins.objectassociation.dao.ObjectAssociationDao;
+import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import gov.foia.model.FOIARequest;
+
+import java.util.List;
 
 /**
  * @author darko.dimitrievski
  */
 public class FOIARequestTemplateModelProvider implements TemplateModelProvider<FOIARequest>
 {
+    
+    private ObjectAssociationDao objectAssociationDao;
+    
     @Override
     public FOIARequest getModel(Object foiaRequest)
     {
-        return (FOIARequest)foiaRequest;
+        FOIARequest request = (FOIARequest) foiaRequest;
+        if(request.getRequestType().equals("Appeal"))
+        {
+            List<ObjectAssociation> objectAssociations = objectAssociationDao.findByParentTypeAndId(request.getObjectType(), request.getId());
+            request.setOriginalRequestNumber(objectAssociations.get(0).getTargetName());
+        }
+        return request;
     }
 
     @Override
     public Class<FOIARequest> getType()
     {
         return FOIARequest.class;
+    }
+
+    public ObjectAssociationDao getObjectAssociationDao() 
+    {
+        return objectAssociationDao;
+    }
+
+    public void setObjectAssociationDao(ObjectAssociationDao objectAssociationDao) 
+    {
+        this.objectAssociationDao = objectAssociationDao;
     }
 }
