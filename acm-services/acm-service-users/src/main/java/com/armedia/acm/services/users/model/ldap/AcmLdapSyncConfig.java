@@ -54,6 +54,7 @@ public class AcmLdapSyncConfig extends AcmLdapConfig
     private String partialSyncCron;
     private String fullSyncCron;
     private Boolean syncEnabled;
+    private String status;
 
     public String getGroupSearchBase()
     {
@@ -303,5 +304,15 @@ public class AcmLdapSyncConfig extends AcmLdapConfig
     public void setSyncEnabled(Boolean syncEnabled)
     {
         this.syncEnabled = syncEnabled;
+    }
+
+    public String getStatus()
+    {
+        return status;
+    }
+
+    public void setStatus(String status)
+    {
+        this.status = status;
     }
 }

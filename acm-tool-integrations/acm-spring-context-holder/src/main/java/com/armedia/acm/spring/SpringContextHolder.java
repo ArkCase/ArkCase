@@ -31,9 +31,6 @@ import com.armedia.acm.files.AbstractConfigurationFileEvent;
 import com.armedia.acm.files.ConfigurationFileAddedEvent;
 import com.armedia.acm.files.ConfigurationFileChangedEvent;
 import com.armedia.acm.files.ConfigurationFileDeletedEvent;
-import com.armedia.acm.spring.events.ContextAddedEvent;
-import com.armedia.acm.spring.events.ContextRemovedEvent;
-import com.armedia.acm.spring.events.ContextReplacedEvent;
 import com.armedia.acm.spring.exceptions.AcmContextHolderException;
 
 import org.apache.logging.log4j.LogManager;
@@ -43,8 +40,6 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
@@ -64,13 +59,12 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class SpringContextHolder
-        implements ApplicationContextAware, ApplicationListener<AbstractConfigurationFileEvent>, ApplicationEventPublisherAware
+        implements ApplicationContextAware, ApplicationListener<AbstractConfigurationFileEvent>
 {
     private ApplicationContext toplevelContext;
     private Map<String, AbstractApplicationContext> childContextMap = new ConcurrentHashMap<>();
 
     private Logger log = LogManager.getLogger(getClass());
-    private ApplicationEventPublisher applicationEventPublisher;
 
     // parent folder is "spring" and name is like spring-config-*[-*].xml
     private Pattern pattern = Pattern.compile(".*\\.arkcase/acm/spring/spring-config(-\\w+)+\\.xml");
@@ -184,7 +178,6 @@ public class SpringContextHolder
         {
             oldContext.close();
         }
-        applicationEventPublisher.publishEvent(new ContextReplacedEvent(this, contextName));
     }
 
     private AbstractApplicationContext createContextFromFile(File configFile) throws BeansException, IOException
@@ -332,7 +325,6 @@ public class SpringContextHolder
         {
             AbstractApplicationContext child = new FileSystemXmlApplicationContext(filesPaths, true, toplevelContext);
             childContextMap.put(name, child);
-            applicationEventPublisher.publishEvent(new ContextAddedEvent(this, name));
         }
         catch (BeansException be)
         {
@@ -349,15 +341,7 @@ public class SpringContextHolder
             AbstractApplicationContext child = childContextMap.get(configFileName);
             childContextMap.remove(configFileName);
             child.close();
-            applicationEventPublisher.publishEvent(new ContextRemovedEvent(this, configFileName));
         }
-    }
-
-    @Override
-    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
-    {
-        log.debug("The application event publisher has been set!");
-        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     public <T> T getBeanByName(String name, Class<T> type)

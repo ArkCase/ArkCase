@@ -252,14 +252,11 @@ public class CollectionPropertiesConfigurationServiceImpl implements CollectionP
 
         Map<String, Object> modifiedProperties = new HashMap<>();
 
-        for (Iterator<Map.Entry<String, Object>> it = filteredProperties.entrySet().iterator(); it.hasNext();)
+        for (Map.Entry<String, Object> entry : filteredProperties.entrySet())
         {
-            Map.Entry<String, Object> entry = it.next();
-
             if (entry.getKey().startsWith(mapPropertyKey + "." + mapEntryKey))
             {
                 modifiedProperties.put(mapEntryPrefix + mapEntryKey, "");
-                it.remove();
             }
             else
             {
