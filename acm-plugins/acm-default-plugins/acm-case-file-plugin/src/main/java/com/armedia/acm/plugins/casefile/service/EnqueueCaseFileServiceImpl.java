@@ -122,6 +122,7 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
         }
 
         context.setNewCase(false);
+        context.setQueueName(caseFile.getQueue().getName());
         context.setEnqueueName(nextQueue);
 
         List<String> cannotLeaveReasons = verifyLeaveConditions(context, caseFile);
@@ -153,6 +154,11 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
         {
             caseFile.setDeniedFlag(oldDeniedFlag);
             return new CaseFileEnqueueResponse(ErrorReason.ENTER, cannotEnterReasons, nextQueue, caseFile);
+        }
+
+        if (caseFile.getQueue().getName().equals("Hold"))
+        {
+            // caseFile.setStatus("Perfected");
         }
 
         startLeaveProcess(context, caseFile);
