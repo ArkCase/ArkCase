@@ -75,7 +75,7 @@
         "value": {
             "desc": "cases.tree.filters.openAppeals",
             "name": "all-open-appeals",
-            "value": "fq=request_type_lcs:Appeal AND status_s:Appealed"
+            "value": "fq=request_type_lcs:Appeal AND -queue_name_s:Release"
         }
     },
     {
