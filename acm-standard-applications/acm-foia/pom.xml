@@ -180,6 +180,10 @@
             <artifactId>h2</artifactId>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-exemption</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
     </dependencies>
 </project>

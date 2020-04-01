@@ -92,6 +92,16 @@
 
         <beans:bean id="foiaFileDao" class="gov.foia.dao.FOIAFileDao"/>
 
+        <beans:bean id="foiaExemptionCodeDao" class="gov.foia.dao.FOIAExemptionCodeDao">
+            <beans:property name="acmFolderService" ref="acmFolderService"/>
+            <beans:property name="caseFileDao" ref="caseFileDao"/>
+            <beans:property name="exemptionCodeDao" ref="exemptionCodeDao"/>
+        </beans:bean>
+
+        <beans:bean id="foiaExemptionService" class="gov.foia.service.FOIAExemptionService">
+            <beans:property name="foiaExemptionCodeDao" ref="foiaExemptionCodeDao"/>
+        </beans:bean>
+
         <beans:bean id="foiaRequesterAssociationToSolrTransformer" class="gov.foia.transformer.FOIARequesterAssociationToSolrTransformer"
             parent="personAssociationToSolrTransformer"/>
 
@@ -205,10 +215,6 @@
             <beans:property name="templatingEngine" ref="templatingEngine"/>
             <beans:property name="emailBodyTemplate" value="file:${user.home}/.arkcase/acm/templates/requestDocumentAttached.html"/>
             <beans:property name="notificationDao" ref="notificationDao"/>
-        </beans:bean>
-
-        <beans:bean id="foiaFileService" class="gov.foia.service.FOIAFileService">
-            <beans:property name="ecmFileDao" ref="ecmFileDao"/>
         </beans:bean>
 
         <beans:bean id="requestAssignmentService" class="gov.foia.service.RequestAssignmentService">
