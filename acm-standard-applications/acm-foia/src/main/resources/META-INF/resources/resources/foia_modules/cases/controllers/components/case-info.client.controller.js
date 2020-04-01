@@ -120,9 +120,9 @@ angular.module('cases').controller(
                 AdminFoiaConfigService.getFoiaConfig().then(function (response) {
                     $scope.foiaConfig = response.data;
                     $scope.foiaConfig.receivedDateEnabled = response.data.receivedDateEnabled;
-                    if ($scope.foiaConfig.receivedDateEnabled || $scope.objectInfo.status !='In Review'){
+                    if ($scope.foiaConfig.receivedDateEnabled || $scope.objectInfo.status !== 'Perfected') {
                         $scope.receivedDateDisabledLink = true;
-                    }else {
+                    } else {
                         $scope.receivedDateDisabledLink = false;
                     }
                 });

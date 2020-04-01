@@ -59,7 +59,7 @@
     {
         "op": "replace",
         "path": "/tree/filters/?@.name=='all-open-cases'/value",
-        "value": "fq=-status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED AND -status_s:Released"
+        "value": "fq=-status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED AND -queue_name_s:Release"
     },
     {
         "op": "remove",
@@ -84,13 +84,13 @@
         "value": {
             "desc": "cases.tree.filters.released",
             "name": "all-released-cases",
-            "value": "fq=status_s:Released"
+            "value": "fq=queue_name_s:Release"
         }
     },
     {
         "op": "replace",
         "path": "/tree/filters/?@.name=='my-assigned-cases'/value",
-        "value": "fq=assignee_s:${user} AND -status_s:Released"
+        "value": "fq=assignee_s:${user} AND -queue_name_s:Release"
     },
     {
         "op": "add",
@@ -310,7 +310,7 @@
         "value": {
                 "id": "new-foia-request",
                 "objectSearch": {
-                    "objectFacetFilter": "\"Object Type\": CASE_FILE&fq=\"status_lcs\":Released&fq=\"request_type_lcs\":NewRequest"
+                    "objectFacetFilter": "\"Object Type\": CASE_FILE&fq=\"queue_name_s\":Release&fq=\"request_type_lcs\":NewRequest"
                 }
         }
     },

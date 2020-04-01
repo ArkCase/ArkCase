@@ -80,7 +80,7 @@ public class ApproveBusinessProcessIT
     {
         // deploy
         repo.createDeployment()
-                .addClasspathResource("activiti/foia-extension-approve-process_v3.bpmn20.xml")
+                .addClasspathResource("activiti/foia-extension-approve-process_v4.bpmn20.xml")
                 .deploy();
     }
 
