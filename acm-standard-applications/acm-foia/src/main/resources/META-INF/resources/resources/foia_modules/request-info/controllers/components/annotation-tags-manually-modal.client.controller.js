@@ -39,12 +39,12 @@ angular.module('request-info').controller('RequestInfo.AnnotationTagsManuallyMod
 
             if(arr.length == 0)
             {
-                ExemptionService.saveExemptionCode($stateParams.fileId, $scope.annotationTags).then(
-                    function (value) {
-                        console.log(value);
+                ExemptionService.saveDocumentExemptionCode($stateParams.fileId, $scope.annotationTags).then(
+                    function () {
+                        MessageService.succsessAction();
                     },
-                    function (err) {
-                        console.log(err);
+                    function () {
+                        MessageService.errorAction();
                     }
                 );
             }
