@@ -156,11 +156,6 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
             return new CaseFileEnqueueResponse(ErrorReason.ENTER, cannotEnterReasons, nextQueue, caseFile);
         }
 
-        if (caseFile.getQueue().getName().equals("Hold"))
-        {
-            // caseFile.setStatus("Perfected");
-        }
-
         startLeaveProcess(context, caseFile);
         startEnterProcess(context, caseFile);
 
