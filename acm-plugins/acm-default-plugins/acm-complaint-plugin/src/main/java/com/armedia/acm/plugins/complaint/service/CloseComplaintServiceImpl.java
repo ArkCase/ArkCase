@@ -31,21 +31,28 @@ import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.plugins.complaint.dao.CloseComplaintRequestDao;
 import com.armedia.acm.plugins.complaint.model.CloseComplaintRequest;
 import com.armedia.acm.plugins.complaint.pipeline.CloseComplaintPipelineContext;
+import com.armedia.acm.plugins.person.dao.OrganizationDao;
+import com.armedia.acm.plugins.person.dao.PersonDao;
+import com.armedia.acm.plugins.person.model.Organization;
+import com.armedia.acm.plugins.person.model.Person;
+import com.armedia.acm.plugins.person.model.PersonOrganizationAssociation;
 import com.armedia.acm.services.pipeline.PipelineManager;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
-public class CloseComplaintServiceImpl implements CloseComplaintService
-{
+import java.util.List;
+
+public class CloseComplaintServiceImpl implements CloseComplaintService {
 
     private CloseComplaintRequestDao closeComplaintRequestDao;
     private PipelineManager<CloseComplaintRequest, CloseComplaintPipelineContext> pipelineManager;
+    private PersonDao personDao;
+    private OrganizationDao organizationDao;
 
     @Override
     @Transactional
-    public void save(CloseComplaintRequest form, Authentication auth, String mode) throws Exception
-    {
+    public void save(CloseComplaintRequest form, Authentication auth, String mode) throws Exception {
         CloseComplaintPipelineContext pipelineContext = new CloseComplaintPipelineContext();
         pipelineContext.setAuthentication(auth);
         String ipAddress = AuthenticationUtils.getUserIpAddress();
@@ -58,6 +65,57 @@ public class CloseComplaintServiceImpl implements CloseComplaintService
             pipelineContext.setCloseComplaintRequest(savedRequest);
             return savedRequest;
         });
+    }
+
+    @Override
+    public void createPersonOrganizationAssociation(CloseComplaintRequest form)
+
+    {
+
+        Person person = getPersonDao().find(form.getReferExternalPersonId());
+        Organization organization = getOrganizationDao().find(form.getReferExternalOrganizationId());
+
+        List<PersonOrganizationAssociation> organizationAssociationList = organization.getPersonAssociations();
+        List<PersonOrganizationAssociation> personAssociationList = person.getOrganizationAssociations();
+
+        PersonOrganizationAssociation personOrganizationAssociation = new PersonOrganizationAssociation();
+        personOrganizationAssociation.setOrganization(organization);
+        personOrganizationAssociation.setDefaultOrganization(false);
+        personOrganizationAssociation.setPerson(person);
+        personOrganizationAssociation.setPersonToOrganizationAssociationType("");
+        personOrganizationAssociation.setOrganizationToPersonAssociationType("");
+        if (person.getOrganizationAssociations().isEmpty()) {
+
+            personOrganizationAssociation.setDefaultOrganization(true);
+        }
+
+        boolean isPersonOrganizationExists = false;
+
+        for (PersonOrganizationAssociation orgAss : organizationAssociationList) {
+
+            if (orgAss.getOrganization().getId() == organization.getId()) {
+                isPersonOrganizationExists = true;
+                break;
+            }
+        }
+        if (!isPersonOrganizationExists) {
+            organization.getPersonAssociations().add(personOrganizationAssociation);
+
+        }
+        isPersonOrganizationExists = false;
+        for (PersonOrganizationAssociation orgAss : personAssociationList) {
+
+            if (orgAss.getPerson().getId() == person.getId()) {
+                isPersonOrganizationExists = true;
+                break;
+            }
+        }
+        if (!isPersonOrganizationExists) {
+            person.getOrganizationAssociations().add(personOrganizationAssociation);
+        }
+
+        getPersonDao().save(person);
+        getOrganizationDao().save(organization);
     }
 
     public CloseComplaintRequestDao getCloseComplaintRequestDao()
@@ -78,5 +136,21 @@ public class CloseComplaintServiceImpl implements CloseComplaintService
     public void setPipelineManager(PipelineManager<CloseComplaintRequest, CloseComplaintPipelineContext> pipelineManager)
     {
         this.pipelineManager = pipelineManager;
+    }
+
+    public PersonDao getPersonDao() {
+        return personDao;
+    }
+
+    public void setPersonDao(PersonDao personDao) {
+        this.personDao = personDao;
+    }
+
+    public OrganizationDao getOrganizationDao() {
+        return organizationDao;
+    }
+
+    public void setOrganizationDao(OrganizationDao organizationDao) {
+        this.organizationDao = organizationDao;
     }
 }
