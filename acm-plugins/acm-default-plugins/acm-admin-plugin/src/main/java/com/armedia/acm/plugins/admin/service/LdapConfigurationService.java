@@ -145,7 +145,6 @@ public class LdapConfigurationService implements ApplicationEventPublisherAware
 
     public void createLdapDirectoryConfigurations(String id, Map<String, Object> props)
     {
-        props.put("status", "new");
         acmLdapBeanSyncService.createLdapDirectoryConfig(id, props);
     }
 
@@ -159,15 +158,13 @@ public class LdapConfigurationService implements ApplicationEventPublisherAware
      */
     public void updateLdapDirectory(String dirId, Map<String, Object> props)
     {
-        props.put("status", "updated");
         acmLdapBeanSyncService.createLdapDirectoryConfig(dirId, props);
-
     }
 
     public void deleteLdapDirectoryConfiguration(String directoryId)
     {
         acmLdapBeanSyncService.deleteLdapDirectoryConfig(directoryId);
-        applicationEventPublisher.publishEvent(new LdapDirectoryDeleted(this, directoryId + "_ldap"));
+        applicationEventPublisher.publishEvent(new LdapDirectoryDeleted(this, directoryId));
 
     }
 

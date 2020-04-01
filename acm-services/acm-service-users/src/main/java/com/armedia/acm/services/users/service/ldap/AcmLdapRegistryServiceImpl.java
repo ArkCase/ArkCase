@@ -36,6 +36,7 @@ import com.armedia.acm.services.users.model.ldap.AcmLdapConstants;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.ActiveDirectoryLdapSearchConfig;
 import com.armedia.acm.services.users.service.AcmLdapUserDetailsService;
+import com.armedia.acm.spring.SpringContextHolder;
 import com.armedia.acm.spring.events.LdapDirectoryAdded;
 import com.armedia.acm.spring.events.LdapDirectoryReplaced;
 
@@ -86,6 +87,9 @@ public class AcmLdapRegistryServiceImpl implements AcmLdapRegistryService, Initi
 
     private ConfigurationPropertyService configurationPropertyService;
 
+    @Autowired
+    private SpringContextHolder contextHolder;
+
     private static final Logger logger = LogManager.getLogger(AcmLdapRegistryServiceImpl.class);
 
     @JmsListener(destination = "reload.ldap.beans", containerFactory = "jmsTopicListenerContainerFactory")
@@ -114,8 +118,7 @@ public class AcmLdapRegistryServiceImpl implements AcmLdapRegistryService, Initi
 
             Map<String, Object> dirProperties = (Map<String, Object>) ldapDirsConfig.get(directory);
             BeanDefinitionBuilder jobDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(AcmLdapGroupSyncConfig.class);
-            jobDefinitionBuilder.addPropertyValue("attributes",
-                    getLdapGroupConfig(directory, (String) dirProperties.get("directoryType")));
+            jobDefinitionBuilder.addPropertyValue("attributes", dirProperties.get("ldapAddGroupConfig"));
             beanDefinitionRegistry.registerBeanDefinition(directory + "_groupSync", jobDefinitionBuilder.getBeanDefinition());
         });
     }
@@ -131,8 +134,7 @@ public class AcmLdapRegistryServiceImpl implements AcmLdapRegistryService, Initi
 
             Map<String, Object> dirProperties = (Map<String, Object>) ldapDirConfig.get(directory);
             BeanDefinitionBuilder jobDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(AcmLdapUserSyncConfig.class);
-            jobDefinitionBuilder.addPropertyValue("attributes",
-                    getLdapUserConfig(directory, (String) dirProperties.get("directoryType")));
+            jobDefinitionBuilder.addPropertyValue("attributes", dirProperties.get("ldapAddUserConfig"));
             beanDefinitionRegistry.registerBeanDefinition(directory + "_userSync", jobDefinitionBuilder.getBeanDefinition());
         });
     }
@@ -173,7 +175,7 @@ public class AcmLdapRegistryServiceImpl implements AcmLdapRegistryService, Initi
             syncLdapSyncJobDescriptorBean(directory);
             syncLdapSyncPartialJobDescriptorBean(directory);
 
-            raiseContextEvent(directory, dirProperties);
+            raiseContextEvent(directory);
         });
     }
 
@@ -302,6 +304,8 @@ public class AcmLdapRegistryServiceImpl implements AcmLdapRegistryService, Initi
         beanDefinitionBuilder.addPropertyValue("partialSyncCron", ldapDirectoryConfigAttributes.get("partialSyncCron"));
         beanDefinitionBuilder.addPropertyValue("fullSyncCron", ldapDirectoryConfigAttributes.get("fullSyncCron"));
         beanDefinitionBuilder.addPropertyValue("syncEnabled", ldapDirectoryConfigAttributes.get("syncEnabled"));
+
+        defineTheStatusOfTheBean(directory, beanDefinitionBuilder);
 
         beanDefinitionBuilder.setParentName(directory + "_ldap_config");
 
@@ -542,11 +546,26 @@ public class AcmLdapRegistryServiceImpl implements AcmLdapRegistryService, Initi
         return beanDefinitionBuilder;
     }
 
+    private void defineTheStatusOfTheBean(String directory, BeanDefinitionBuilder beanDefinitionBuilder)
+    {
+        if (!beanDefinitionRegistry.containsBeanDefinition(directory + "_sync"))
+        {
+            beanDefinitionBuilder.addPropertyValue("status", "new");
+        }
+        else
+        {
+            beanDefinitionBuilder.addPropertyValue("status", "updated");
+        }
+    }
+
     @Override
     public void createLdapDirectoryConfig(String directoryId, Map<String, Object> properties)
     {
         Map<String, Map<String, Object>> ldapConfiguration = new HashMap<>();
         Map<String, Object> dirConfig = new HashMap<>();
+
+        properties.put("ldapAddGroupConfig", getLdapGroupConfig(directoryId, (String) properties.get("directoryType")));
+        properties.put("ldapAddUserConfig", getLdapUserConfig(directoryId, (String) properties.get("directoryType")));
         dirConfig.put(directoryId, properties);
 
         ldapConfiguration.put(AcmLdapConfiguration.LDAP_SYNC_CONFIG_PROP_KEY + "." + LDAP_DIRECTORY_CONFIG, dirConfig);
@@ -567,15 +586,18 @@ public class AcmLdapRegistryServiceImpl implements AcmLdapRegistryService, Initi
         configurationPropertyService.updateProperties(directoryConfig, "ldap");
     }
 
-    private void raiseContextEvent(String directory, Map<String, Object> dirProperties)
+    private void raiseContextEvent(String directory)
     {
-        if (dirProperties.get("status").equals("new"))
+        AcmLdapSyncConfig ldapSyncConfig = contextHolder.getBeanByNameIncludingChildContexts(String.format("%s_sync", directory),
+                AcmLdapSyncConfig.class);
+
+        if (ldapSyncConfig.getStatus().equals("new"))
         {
-            applicationEventPublisher.publishEvent(new LdapDirectoryAdded(this, directory + "_ldap"));
+            applicationEventPublisher.publishEvent(new LdapDirectoryAdded(this, directory));
         }
-        else if (dirProperties.get("status").equals("updated"))
+        else if (ldapSyncConfig.getStatus().equals("updated"))
         {
-            applicationEventPublisher.publishEvent(new LdapDirectoryReplaced(this, directory + "_ldap"));
+            applicationEventPublisher.publishEvent(new LdapDirectoryReplaced(this, directory));
         }
     }
 

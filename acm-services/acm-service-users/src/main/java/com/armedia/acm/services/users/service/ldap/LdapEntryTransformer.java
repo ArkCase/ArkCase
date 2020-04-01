@@ -39,7 +39,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 /**
@@ -54,7 +53,6 @@ public class LdapEntryTransformer
     private Logger log = LogManager.getLogger(getClass());
 
     public DirContextAdapter createContextForNewUserEntry(String directoryName, AcmUser user, String userPassword, String baseDC)
-            throws UnsupportedEncodingException
     {
         DirContextAdapter context = new DirContextAdapter(MapperUtils.stripBaseFromDn(user.getDistinguishedName(), baseDC));
 
