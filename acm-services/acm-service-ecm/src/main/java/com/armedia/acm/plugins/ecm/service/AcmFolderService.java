@@ -68,8 +68,6 @@ public interface AcmFolderService
 
     List<EcmFile> getFilesInFolderAndSubfolders(Long folderId);
 
-    List<EcmFile> getFilesIdsInFolderAndSubfolders(Long folderId);
-
     AcmFolder moveFolder(AcmFolder folderForMoving, AcmFolder dstFolder)
             throws AcmObjectNotFoundException, AcmUserActionFailedException, AcmFolderException;
 

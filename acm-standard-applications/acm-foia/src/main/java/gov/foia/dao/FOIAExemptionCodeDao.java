@@ -7,8 +7,6 @@ import java.util.stream.Collectors;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
-import org.springframework.transaction.annotation.Transactional;
-
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
@@ -33,14 +31,14 @@ public class FOIAExemptionCodeDao extends AcmAbstractDao<ExemptionCode>
         return ExemptionCode.class;
     }
 
-    @Transactional
     public List<ExemptionCode> getExemptionCodesByParentObjectIdAndType(Long parentObjectId, String parentObjectType)
     {
 
         List<ExemptionCode> combineResult = new ArrayList<>();
         FOIARequest request = (FOIARequest) caseFileDao.find(parentObjectId);
 
-        if (request.getStatus().equals("Released") || (request.getGeneratedZipFlag() != null && request.getGeneratedZipFlag() == true))
+        if (request.getQueue().getName().equals("Release")
+                || (request.getGeneratedZipFlag() != null && request.getGeneratedZipFlag() == true))
         {
 
             String queryText = "SELECT af.id " +
@@ -55,7 +53,7 @@ public class FOIAExemptionCodeDao extends AcmAbstractDao<ExemptionCode>
             query.setParameter("parentObjectType", parentObjectType);
 
             Long result = (Long) query.getSingleResult();
-            List<EcmFile> files = getAcmFolderService().getFilesIdsInFolderAndSubfolders(result); // check the fileIds
+            List<EcmFile> files = getAcmFolderService().getFilesInFolderAndSubfolders(result);
 
             if (files != null)
             {

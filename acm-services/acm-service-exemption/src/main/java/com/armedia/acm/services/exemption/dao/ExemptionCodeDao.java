@@ -67,7 +67,6 @@ public class ExemptionCodeDao extends AcmAbstractDao<ExemptionCode>
         }
     }
 
-    @Transactional
     public List<ExemptionCode> getExemptionCodesByFileIdAndVersionTag(Long fileId, String fileVersion, List<String> exemptionCodes)
     {
         String queryText = "SELECT exemptionCode " +
@@ -123,7 +122,6 @@ public class ExemptionCodeDao extends AcmAbstractDao<ExemptionCode>
         return query.executeUpdate();
     }
 
-    @Transactional
     public List<ExemptionCode> getExemptionCodesByFileIdAndCaseId(Long caseId, Long fileId)
     {
         String queryText = "SELECT codes.id, codes.exemptionCode, codes.exemptionStatus, codes.exemptionStatute, codes.creator, codes.created, file.fileId, codes.fileVersion, cont.containerObjectId, codes.manuallyFlag "
