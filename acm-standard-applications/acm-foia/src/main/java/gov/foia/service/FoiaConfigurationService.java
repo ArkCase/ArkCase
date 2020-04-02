@@ -48,6 +48,8 @@ public class FoiaConfigurationService extends SystemConfigurationService
         foiaConfig.setReceivedDateEnabled(foiaConfiguration.getReceivedDateEnabled());
         foiaConfig.setNotificationGroupsEnabled(foiaConfiguration.getNotificationGroupsEnabled());
         foiaConfig.setRequestExtensionWorkingDaysEnabled(foiaConfiguration.getRequestExtensionWorkingDaysEnabled());
+        foiaConfig.setExpediteWorkingDaysEnabled(foiaConfiguration.getExpediteWorkingDaysEnabled());
+        foiaConfig.setExpediteWorkingDays(foiaConfiguration.getExpediteWorkingDays());
         foiaConfig.setPurgeRequestWhenInHoldEnabled(foiaConfiguration.getPurgeRequestWhenInHoldEnabled());
         foiaConfig.setMoveToBillingQueueEnabled(foiaConfiguration.getMoveToBillingQueueEnabled());
         foiaConfig.setLimitedDeliveryToSpecificPageCountEnabled(foiaConfiguration.getLimitedDeliveryToSpecificPageCountEnabled());
@@ -70,6 +72,8 @@ public class FoiaConfigurationService extends SystemConfigurationService
         foiaConfiguration.setReceivedDateEnabled(foiaConfig.getReceivedDateEnabled());
         foiaConfiguration.setNotificationGroupsEnabled(foiaConfig.getNotificationGroupsEnabled());
         foiaConfiguration.setRequestExtensionWorkingDaysEnabled(foiaConfig.getRequestExtensionWorkingDaysEnabled());
+        foiaConfiguration.setExpediteWorkingDaysEnabled(foiaConfig.getExpediteWorkingDaysEnabled());
+        foiaConfiguration.setExpediteWorkingDays(foiaConfig.getExpediteWorkingDays());
         foiaConfiguration.setPurgeRequestWhenInHoldEnabled(foiaConfig.getPurgeRequestWhenInHoldEnabled());
         foiaConfiguration.setMoveToBillingQueueEnabled(foiaConfig.getMoveToBillingQueueEnabled());
         foiaConfiguration.setLimitedDeliveryToSpecificPageCountEnabled(foiaConfig.getLimitedDeliveryToSpecificPageCountEnabled());
