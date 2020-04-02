@@ -34,6 +34,7 @@ import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.dao.RecycleBinItemDao;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
+import com.armedia.acm.plugins.ecm.exception.LinkAlreadyExistException;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.AcmFolderConstants;
@@ -92,8 +93,7 @@ public class RecycleBinItemServiceImpl implements RecycleBinItemService
     @Override
     @Transactional(rollbackFor = Exception.class)
     public RecycleBinItem putFileIntoRecycleBin(EcmFile ecmFile, Authentication authentication, HttpSession session)
-            throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException
-    {
+            throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException, LinkAlreadyExistException {
         String ipAddress = (String) session.getAttribute(EcmFileConstants.IP_ADDRESS_ATTRIBUTE);
         AcmContainer destinationContainer = getOrCreateContainerForRecycleBin(RecycleBinConstants.OBJECT_TYPE,
                 ecmFile.getCmisRepositoryId());
@@ -129,8 +129,7 @@ public class RecycleBinItemServiceImpl implements RecycleBinItemService
 
     private EcmFile moveToCMISFolder(EcmFile ecmFile, Long sourceContainerObjectId, String sourceContainerObjectType,
             Long destinationFolderId)
-            throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException
-    {
+            throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException, LinkAlreadyExistException {
         return getEcmFileService().moveFile(ecmFile.getId(), sourceContainerObjectId,
                 sourceContainerObjectType, destinationFolderId);
     }
@@ -182,8 +181,7 @@ public class RecycleBinItemServiceImpl implements RecycleBinItemService
     @Override
     @Transactional(rollbackFor = Exception.class)
     public List<RecycleBinItemDTO> restoreItemsFromRecycleBin(List<RecycleBinItemDTO> itemsToBeRestored, Authentication authentication)
-            throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException, AcmFolderException
-    {
+            throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException, AcmFolderException, LinkAlreadyExistException {
         for (RecycleBinItemDTO fileFromTrash : itemsToBeRestored)
         {
 

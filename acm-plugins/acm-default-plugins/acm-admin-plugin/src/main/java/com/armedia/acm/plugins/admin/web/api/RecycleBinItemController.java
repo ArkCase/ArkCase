@@ -31,6 +31,7 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
+import com.armedia.acm.plugins.ecm.exception.LinkAlreadyExistException;
 import com.armedia.acm.plugins.ecm.model.AcmFolderConstants;
 import com.armedia.acm.plugins.ecm.model.RecycleBinDTO;
 import com.armedia.acm.plugins.ecm.model.RecycleBinItemDTO;
@@ -86,8 +87,7 @@ public class RecycleBinItemController
     @ResponseBody
     public void restoreItemsFromRecycleBin(@RequestBody List<RecycleBinItemDTO> filesToBeRestored, Authentication authentication)
             throws AcmUserActionFailedException,
-            AcmObjectNotFoundException, AcmCreateObjectFailedException, AcmFolderException
-    {
+            AcmObjectNotFoundException, AcmCreateObjectFailedException, AcmFolderException, LinkAlreadyExistException {
         recycleBinItemService.restoreItemsFromRecycleBin(filesToBeRestored, authentication);
     }
 
