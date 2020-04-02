@@ -38,8 +38,8 @@ import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.spring.SpringContextHolder;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -48,9 +48,6 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.io.Resource;
 import org.springframework.expression.spel.SpelEvaluationException;
 import org.springframework.expression.spel.SpelParserConfiguration;
@@ -72,7 +69,7 @@ import java.util.StringJoiner;
 /**
  * Created by armdev on 12/11/14.
  */
-public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGenerator, ApplicationContextAware
+public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGenerator
 {
     public static final String DATE_TYPE = "Date";
     public static final String DATE_TIME_TYPE = "LocalDateTime";
@@ -89,7 +86,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
     private ObjectConverter objectConverter;
     private CorrespondenceMergeFieldManager mergeFieldManager;
     private ApplicationConfig appConfig;
-    private ApplicationContext applicationContext;
+    private SpringContextHolder contextHolder;
 
     @Override
     public void generate(Resource wordTemplate, OutputStream targetStream, String objectType, Long parentObjectId, String templateModelProvider) throws IOException
@@ -101,8 +98,16 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
 
             AcmAbstractDao<AcmEntity> correspondedObjectDao = getCorrespondenceService().getAcmAbstractDao(objectType);
             Object correspondenedObject = correspondedObjectDao.find(parentObjectId);
-            templateModelProvider = generateBeanName(templateModelProvider);
-            TemplateModelProvider modelProvider = (TemplateModelProvider) applicationContext.getBean(templateModelProvider);
+            Class templateModelProviderClass = null;
+            try
+            {
+                templateModelProviderClass = Class.forName(templateModelProvider);
+            }
+            catch (Exception e)
+            {
+                log.error("Can not find class for provided classpath {}", e.getMessage());
+            }
+            TemplateModelProvider modelProvider = getTemplateModelProvider(templateModelProviderClass);
             correspondenedObject = modelProvider.getModel(correspondenedObject);
             // Update all plain text in the word document who is outside any tables
             updateGraphs(graphs, correspondenedObject, objectType);
@@ -602,15 +607,20 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
         return generatedExpression;
     }
     
-    private String generateBeanName(String templateModelProvider)
+    private TemplateModelProvider getTemplateModelProvider(Class templateModelProviderClass)
     {
-        templateModelProvider = StringUtils.substringAfterLast(templateModelProvider, ".");
-        if(templateModelProvider.contains("FOIA"))
+        Map<String, TemplateModelProvider> templateModelproviders = contextHolder.getAllBeansOfType(templateModelProviderClass);
+        if (templateModelproviders.size() > 1)
         {
-            templateModelProvider = templateModelProvider.replace("FOIA", "foia");
+            for (TemplateModelProvider provider : templateModelproviders.values())
+            {
+                if (provider.getClass().equals(templateModelProviderClass))
+                {
+                    return provider;
+                }
+            }
         }
-        templateModelProvider = Character.toLowerCase(templateModelProvider.charAt(0)) + templateModelProvider.substring(1);
-        return templateModelProvider;
+        return templateModelproviders.values().iterator().next();
     }
 
     public void fixParagraphRuns(XWPFParagraph paragraph)
@@ -757,9 +767,8 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
         this.appConfig = appConfig;
     }
 
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException 
+    public void setContextHolder(SpringContextHolder contextHolder) 
     {
-        this.applicationContext = applicationContext;
+        this.contextHolder = contextHolder;
     }
 }
