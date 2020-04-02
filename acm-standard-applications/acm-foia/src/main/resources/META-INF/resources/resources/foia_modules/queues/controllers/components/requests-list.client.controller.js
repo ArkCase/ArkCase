@@ -259,7 +259,7 @@ angular.module('queues').controller(
                                         //calculate to show how many days until time to complete per queue / per request
                                     }
 
-                                    if (!(request.status_lcs === "Released")) {
+                                    if (request.queue_name_s !== "Release") {
                                         request.isOverdue = TaskAlertsService.calculateOverdue(new Date(request.queueDueDate));
                                         request.isDeadline = TaskAlertsService.deadlineCalculate(new Date(request.queueDueDate), $scope.timeToComplete.request.deadlineIndicator);
                                         //calculate to show alert icons if task is in overdue or deadline is approaching

@@ -122,6 +122,7 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
         }
 
         context.setNewCase(false);
+        context.setQueueName(caseFile.getQueue().getName());
         context.setEnqueueName(nextQueue);
 
         List<String> cannotLeaveReasons = verifyLeaveConditions(context, caseFile);

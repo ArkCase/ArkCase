@@ -52,12 +52,13 @@ public final class ContactMethodsUtil
         Pattern phoneRegex = Pattern.compile(phoneRegexConfig.getPhoneRegex(), Pattern.CASE_INSENSITIVE);
         List<ContactMethod> invalidEmails = contactMethods.stream()
                 .filter(m -> "email".equals(m.getType().toLowerCase()))
+                .filter(m -> m.getValue() != null && !m.getValue().isEmpty())
                 .filter(m -> !ContactMethod.EMAIL_ADDRESS_REGEX.matcher(m.getValue()).matches())
                 .collect(Collectors.toList());
 
         List<ContactMethod> invalidPhones = contactMethods.stream()
                 .filter(m -> "phone".equals(m.getType().toLowerCase()))
-                .filter(m -> !m.getValue().isEmpty())
+                .filter(m -> m.getValue() != null && !m.getValue().isEmpty())
                 .filter(m -> !phoneRegex.matcher(m.getValue()).matches())
                 .collect(Collectors.toList());
 
