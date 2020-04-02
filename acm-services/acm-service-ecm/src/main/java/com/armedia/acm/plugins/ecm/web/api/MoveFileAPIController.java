@@ -30,6 +30,7 @@ package com.armedia.acm.plugins.ecm.web.api;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.plugins.ecm.exception.LinkAlreadyExistException;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.MoveCopyFileDto;
@@ -67,8 +68,7 @@ public class MoveFileAPIController
     @ResponseBody
     public EcmFile moveFile(@RequestBody MoveCopyFileDto in, @PathVariable("targetObjectType") String targetObjectType,
             @PathVariable("targetObjectId") Long targetObjectId, Authentication authentication, HttpSession session)
-            throws AcmUserActionFailedException
-    {
+            throws AcmUserActionFailedException, LinkAlreadyExistException {
 
         if (log.isInfoEnabled())
         {

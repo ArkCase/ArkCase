@@ -34,6 +34,7 @@ import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
+import com.armedia.acm.plugins.ecm.exception.LinkAlreadyExistException;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.AcmFolderConstants;
@@ -85,8 +86,7 @@ public class CreateFolderByPathAPIController
             @RequestParam(value = "docIds", required = false) String docIds,
             @RequestParam(value = "isCopy", required = false, defaultValue = "false") boolean isCopy, Authentication authentication,
             HttpSession session) throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException,
-            AcmFolderException, AcmAccessControlException
-    {
+            AcmFolderException, AcmAccessControlException, LinkAlreadyExistException {
         /**
          * This API is documented in ark-document-management.raml. If you update the API, also update the RAML.
          */
@@ -189,8 +189,7 @@ public class CreateFolderByPathAPIController
 
     private void moveDocumentsToNewFolder(String targetObjectType, Long targetObjectId, String docIds, AcmFolder newFolder,
             Authentication auth, String ipAddress)
-            throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException
-    {
+            throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException, LinkAlreadyExistException {
         if (docIds != null)
         {
             String[] arrDocIds = docIds.split(",");
