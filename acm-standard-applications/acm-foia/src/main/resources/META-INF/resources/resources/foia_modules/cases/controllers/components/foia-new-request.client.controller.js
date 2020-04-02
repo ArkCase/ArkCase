@@ -434,7 +434,7 @@ angular.module('cases').controller(
                     var param = {};
                     param.caseNumber = $scope.config.data.originalRequestNumber;
                     RequestsService.getRequestByNumber(param).$promise.then(function (originalRequest) {
-                        if (originalRequest.status === 'Released') {
+                        if (originalRequest.queue.name === 'Release') {
                             saveRequestInfoWithFiles(formdata);
 
                         }
@@ -497,7 +497,7 @@ angular.module('cases').controller(
                 var param = {};
                 param.caseNumber = $scope.config.data.originalRequestNumber;
                 RequestsService.getRequestByNumber(param).$promise.then(function (originalRequest) {
-                    if (originalRequest.status === 'Released' && !Util.isEmpty(originalRequest.caseNumber)) {
+                    if (originalRequest.queue.name === 'Release' && !Util.isEmpty(originalRequest.caseNumber)) {
                         $scope.populatePersonContactInfo(originalRequest);
                     } else {
                         $scope.clearPersonContactInfo();
