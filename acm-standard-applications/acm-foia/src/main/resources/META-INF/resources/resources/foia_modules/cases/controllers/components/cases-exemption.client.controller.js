@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('cases').controller('Cases.ExemptionController',
-    [ '$scope', '$stateParams', '$q', 'Case.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'ExemptionService', '$modal', 'Object.LookupService', 'Profile.UserInfoService', 'ConfigService',
-        function($scope, $stateParams, $q, CaseInfoService, HelperUiGridService, HelperObjectBrowserService, ExemptionService, $modal, ObjectLookupService, UserInfoService, ConfigService) {
+    ['$scope', '$stateParams', '$q', 'Case.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Case.ExemptionService', '$modal', 'Object.LookupService', 'Profile.UserInfoService', 'UtilService', 'MessageService',
+        function ($scope, $stateParams, $q, CaseInfoService, HelperUiGridService, HelperObjectBrowserService, CaseExemptionService, $modal, ObjectLookupService, UserInfoService, Util, MessageService) {
 
             var componentHelper = new HelperObjectBrowserService.Component({
                 scope: $scope,
@@ -25,7 +25,8 @@ angular.module('cases').controller('Cases.ExemptionController',
                 gridHelper.setColumnDefs(config);
                 gridHelper.setBasicOptions(config);
                 gridHelper.disableGridScrolling(config);
-                gridHelper.addButton(config, 'edit', null, null, "isEditDisabled");
+                gridHelper.addButton(config, "edit", null, null, "isEditDisabled");
+                gridHelper.addButton(config, "delete", null, null, "isDeleteDisabled");
                 retrieveGridData();
             };
 
@@ -33,9 +34,33 @@ angular.module('cases').controller('Cases.ExemptionController',
                 $scope.exemptionStatutes = exemptionStatute;
             });
 
+            ObjectLookupService.getAnnotationTags().then(function (annotationTags) {
+                $scope.annotationTags = annotationTags;
+            });
+
             $scope.isEditDisabled = function(rowEntity) {
                 if (rowEntity.exemptionCode != 'Ex.3') {
                    return true;
+                }
+            };
+
+            $scope.isDeleteDisabled = function (rowEntity) {
+                if (rowEntity.exemptionStatus != "MANUAL") {
+                    return true;
+                }
+            };
+
+            $scope.deleteRow = function (rowEntity) {
+                var id = Util.goodMapValue(rowEntity, "id", 0);
+                if (0 < id) { //do not need to call service when deleting a new row with id==0
+                    CaseExemptionService.deleteExemptionCode(id).then(function () {
+                        _.remove($scope.gridOptions.data, function (row) {
+                            return row === rowEntity;
+                        });
+                        MessageService.succsessAction();
+                    }, function () {
+                        MessageService.errorAction();
+                    });
                 }
             };
 
@@ -71,18 +96,45 @@ angular.module('cases').controller('Cases.ExemptionController',
             }
 
             function saveExemptionRule() {
-                 var exemptionData = $scope.entry;
-                 ExemptionService.saveExemptionStatutes(exemptionData);
+                var exemptionData = $scope.entry;
+                CaseExemptionService.saveExemptionStatute(exemptionData).then(function (value) {
+                    MessageService.succsessAction();
+                }, function () {
+                    MessageService.errorAction();
+                });
             }
 
             $scope.refresh = function() {
                 retrieveGridData();
             };
 
+            $scope.addNew = function () {
+                var params = {};
+                params.annotationTags = $scope.annotationTags;
+                params.existingAnnotationTags = $scope.gridOptions.data;
+                var modalInstance = $modal.open({
+                    animation: true,
+                    templateUrl: 'modules/document-details/views/components/annotation-tags-modal.client.view.html',
+                    controller: 'Case.AnnotationTagsModalController',
+                    backdrop: 'static',
+                    resolve: {
+                        params: function () {
+                            return params;
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function () {
+                    retrieveGridData();
+                }, function (error) {
+                    // Do nothing
+                });
+            };
+
             function retrieveGridData() {
                 var params = {};
                 params.caseId = $stateParams.id;
-                        var promiseQueryCodes = ExemptionService.getExemptionCodes(params.caseId);
+                var promiseQueryCodes = CaseExemptionService.getExemptionCode(params.caseId, 'CASE_FILE');
                 $q.all([ promiseQueryCodes ]).then(function(data) {
                     $scope.codes = data[0];
 

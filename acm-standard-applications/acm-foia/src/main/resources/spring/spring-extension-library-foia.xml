@@ -164,10 +164,16 @@
                     <beans:ref bean="foiaNotificationDataUpdateExecutor"/>
                     <beans:ref bean="solrReindexFOIAFileExecutor"/>
                     <beans:ref bean="foiaRequestStatusChangeExecutor"/>
+                    <beans:ref bean="foiaExemptionCodeMigrationExecutor"/>
                 </beans:list>
             </beans:property>
 
         </beans:bean>
+
+        <beans:bean id="foiaExemptionCodeMigrationExecutor" class="gov.foia.service.dataupdate.FOIAExemptionCodeMigrationExecutor">
+            <beans:property name="foiaExemptionService" ref="foiaExemptionService"/>
+        </beans:bean>
+
         <beans:bean id="queuesTimeToCompleteService" class="gov.foia.service.QueuesTimeToCompleteService">
             <beans:property name="queueConfigFile" value="file:${user.home}/.arkcase/acm/queuesConfiguration.json"/>
             <beans:property name="objectConverter" ref="objectConverter"/>
