@@ -85,7 +85,7 @@ public class FulfillBusinessProcessIT
     {
         // deploy
         repo.createDeployment()
-                .addClasspathResource("activiti/foia-extension-fulfill-process_v4.bpmn20.xml")
+                .addClasspathResource("activiti/foia-extension-fulfill-process_v5.bpmn20.xml")
                 .deploy();
     }
 
@@ -105,13 +105,12 @@ public class FulfillBusinessProcessIT
         processVariables.put("OBJECT_TYPE", objectType);
         processVariables.put("OBJECT_ID", foiaId);
 
-        changeObjectStatusService.changeIfNoPermanentStatusIsSet(foiaId, objectType, "In Fulfillment", "Closed");
         expect(queueCaseService.enqueue(foiaId, "Fulfill")).andReturn(new FOIARequest());
 
-        replay(changeObjectStatusService, queueCaseService);
+        replay(queueCaseService);
 
         rt.startProcessInstanceByKey(processName, processVariables);
 
-        verify(changeObjectStatusService, queueCaseService);
+        verify(queueCaseService);
     }
 }

@@ -150,6 +150,10 @@
             <beans:property name="solrReindexService" ref="solrReindexService"/>
         </beans:bean>
 
+        <beans:bean id="foiaRequestStatusChangeExecutor" class="gov.foia.service.dataupdate.FoiaRequestStatusChangeExecutor">
+            <beans:property name="requestDao" ref="foiaRequestDao"/>
+        </beans:bean>
+
         <beans:bean id="solrReindexFOIAFileExecutor" class="gov.foia.service.dataupdate.SolrReindexFoiaFileExecutor">
             <property name="solrReindexService" ref="solrReindexService"/>
         </beans:bean>
@@ -159,6 +163,7 @@
                 <beans:list>
                     <beans:ref bean="foiaNotificationDataUpdateExecutor"/>
                     <beans:ref bean="solrReindexFOIAFileExecutor"/>
+                    <beans:ref bean="foiaRequestStatusChangeExecutor"/>
                     <beans:ref bean="foiaExemptionCodeMigrationExecutor"/>
                 </beans:list>
             </beans:property>

@@ -96,7 +96,7 @@ public class IntakeBusinessProcessIT
 
         // deploy
         repo.createDeployment()
-                .addClasspathResource("activiti/foia-extension-intake-process_v3.bpmn20.xml")
+                .addClasspathResource("activiti/foia-extension-intake-process_v4.bpmn20.xml")
                 .deploy();
     }
 
@@ -116,7 +116,7 @@ public class IntakeBusinessProcessIT
         processVariables.put("OBJECT_TYPE", objectType);
         processVariables.put("OBJECT_ID", foiaId);
 
-        changeObjectStatusService.changeIfNoPermanentStatusIsSet(foiaId, objectType, "In Review", "Closed");
+        changeObjectStatusService.changeIfNoPermanentStatusIsSet(foiaId, objectType, "Perfected", "Closed");
         expect(queueCaseService.enqueue(foiaId, "Intake")).andReturn(new FOIARequest());
         FOIARequest foiaRequest = new FOIARequest();
         foiaRequest.setId(foiaId);
