@@ -13,6 +13,7 @@
         <property name="objectConverter" ref="objectConverter" />
         <property name="mergeFieldManager" ref="correspondenceMergeFieldManager"/>
         <property name="appConfig" ref="applicationProperties"/>
+        <property name="contextHolder" ref="acmContextHolder"/>
     </bean>
 
     <import resource="file:${user.home}/.arkcase/acm/app-config.xml"/>

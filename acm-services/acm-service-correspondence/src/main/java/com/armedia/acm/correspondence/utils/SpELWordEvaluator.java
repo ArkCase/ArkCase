@@ -47,5 +47,5 @@ public interface SpELWordEvaluator
      *
      * @throws IOException
      */
-    void generate(Resource wordTemplate, OutputStream targetStream, String objectType, Long parentObjectId) throws IOException;
+    void generate(Resource wordTemplate, OutputStream targetStream, String objectType, Long parentObjectId, String templateModelProvider) throws IOException;
 }
