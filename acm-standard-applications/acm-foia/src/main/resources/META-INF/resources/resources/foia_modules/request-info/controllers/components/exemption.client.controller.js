@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('request-info').controller('RequestInfo.ExemptionController',
-        [ '$scope', '$stateParams', '$q', 'Case.InfoService', 'Profile.UserInfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'ExemptionService', '$modal', 'Object.LookupService', '$state',
-                function($scope, $stateParams, $q, CaseInfoService, UserInfoService, HelperUiGridService, HelperObjectBrowserService, ExemptionService, $modal, ObjectLookupService, $state) {
+    ['$scope', '$stateParams', '$q', 'Case.InfoService', 'Profile.UserInfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'ExemptionService', '$modal', 'Object.LookupService', '$state', 'Case.ExemptionService', 'UtilService', 'MessageService',
+        function ($scope, $stateParams, $q, CaseInfoService, UserInfoService, HelperUiGridService, HelperObjectBrowserService, ExemptionService, $modal, ObjectLookupService, $state, CaseExemptionService, Util, MessageService) {
 
             var componentHelper = new HelperObjectBrowserService.Component({
                 scope: $scope,
@@ -26,13 +26,35 @@ angular.module('request-info').controller('RequestInfo.ExemptionController',
                 gridHelper.setBasicOptions(config);
                 gridHelper.disableGridScrolling(config);
                 gridHelper.setUserNameFilterToConfig(promiseUsers);
-                gridHelper.addButton(config, 'edit', null, null, "isEditDisabled");
+                gridHelper.addButton(config, "edit", null, null, "isEditDisabled");
+                gridHelper.addButton(config, "delete", null, null, "isDeleteDisabled");
                 retrieveGridData($stateParams.id, $stateParams.fileId);
             };
 
             $scope.isEditDisabled = function(rowEntity) {
                 if (rowEntity.exemptionCode != 'Ex.3') {
                     return true;
+                }
+            };
+
+            $scope.isDeleteDisabled = function (rowEntity) {
+                if (rowEntity.exemptionStatus != "MANUAL") {
+                    return true;
+                }
+            };
+
+            $scope.deleteRow = function (rowEntity) {
+                var id = Util.goodMapValue(rowEntity, "id", 0);
+                if (0 < id) { //do not need to call service when deleting a new row with id==0
+                    CaseExemptionService.deleteExemptionCode(id).then(function () {
+                        //remove it from the grid immediately
+                        _.remove($scope.gridOptions.data, function (row) {
+                            return row === rowEntity;
+                        });
+                        MessageService.succsessAction();
+                    }, function () {
+                        MessageService.errorAction();
+                    });
                 }
             };
 
@@ -76,8 +98,12 @@ angular.module('request-info').controller('RequestInfo.ExemptionController',
             }
 
             function saveExemptionRule() {
-                     var exemptionData = $scope.entry;
-                     ExemptionService.saveExemptionStatutes(exemptionData);
+                var exemptionData = $scope.entry;
+                CaseExemptionService.saveExemptionStatute(exemptionData).then(function () {
+                    MessageService.succsessAction();
+                }, function () {
+                    MessageService.errorAction();
+                });
             }
 
             $scope.refresh = function() {
@@ -112,7 +138,7 @@ angular.module('request-info').controller('RequestInfo.ExemptionController',
                 var params = {};
                 params.caseId = caseId;
                 params.fileId = fileId;
-                var promiseQueryCodes = ExemptionService.getExemptionCodes(params.caseId, params.fileId);
+                 var promiseQueryCodes = ExemptionService.getDocumentExemptionCodes(params.caseId, params.fileId);
                 $q.all([ promiseQueryCodes ]).then(function(data) {
                     $scope.codes = data[0];
 

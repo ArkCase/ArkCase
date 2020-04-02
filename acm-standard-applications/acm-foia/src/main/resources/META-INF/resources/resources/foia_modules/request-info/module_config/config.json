@@ -1231,7 +1231,7 @@
                     "headerCellFilter": "translate"
                 },
                 {
-                    "name": "status",
+                    "name": "exemptionStatus",
                     "displayName": "requests.comp.exemption.table.columns.status",
                     "headerCellFilter": "translate"
                 },

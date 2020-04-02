@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="exemptionCodeDao" class="com.armedia.acm.services.exemption.dao.ExemptionCodeDao"/>
+
+    <bean id="exemptionService" class="com.armedia.acm.services.exemption.service.impl.ExemptionServiceImpl">
+        <property name="exemptionCodeDao" ref="exemptionCodeDao"/>
+        <property name="exemptionCodeEventPublisher" ref="exemptionCodeEventPublisher"/>
+    </bean>
+
+    <bean id="exemptionCodeEventPublisher" class="com.armedia.acm.services.exemption.model.ExemptionCodeEventPublisher"/>
+
+    <bean id="documentRedactionEventPublisher" class="com.armedia.acm.services.exemption.model.DocumentRedactionEventPublisher"/>
+
+    <bean id="documentExemptionService" class="com.armedia.acm.services.exemption.service.impl.DocumentExemptionServiceImpl">
+        <property name="ecmFileDao" ref="ecmFileDao"/>
+        <property name="exemptionCodeDao" ref="exemptionCodeDao"/>
+        <property name="documentRedactionEventPublisher" ref="documentRedactionEventPublisher"/>
+    </bean>
+
+</beans>

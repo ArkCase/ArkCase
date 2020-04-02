@@ -683,6 +683,17 @@ LANGUAGE plpgsql;
         </addColumn>
     </changeSet>
 
+    <changeSet id="43-add-generate-zip-flag-column" author="ana.serafimoska" dbms="oracle,mssql,postgres">
+        <addColumn tableName="acm_case_file">
+            <column name="fo_generated_zip_flag" type="BOOLEAN" defaultValueBoolean="false"></column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="43-add-generate-zip-flag-column" author="ana.serafimoska" dbms="mysql">
+        <addColumn tableName="acm_case_file">
+            <column name="fo_generated_zip_flag" type="BOOLEAN" defaultValueBoolean="false"></column>
+        </addColumn>
+    </changeSet>
 
 </databaseChangeLog>
 

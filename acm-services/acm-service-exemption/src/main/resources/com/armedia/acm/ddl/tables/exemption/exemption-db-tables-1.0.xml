@@ -1,0 +1,60 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="01-create-table-acm_exemption_code" author="ana.serafimoska" dbms="oracle,mssql,postgres">
+        <createTable tableName="acm_exemption_code">
+            <column name="cm_exemption_id" type="${idType}">
+                <constraints primaryKey="true" primaryKeyName="pk_exemption_code"></constraints>
+            </column>
+            <column name="cm_parent_object_id" type="${fkIdType}"></column>
+            <column name="cm_parent_object_type" type="VARCHAR(128)"></column>
+            <column name="cm_exemption_code" type="VARCHAR(64)">
+                <constraints nullable="false"></constraints>
+            </column>
+            <column name="cm_exemption_status" type="VARCHAR(128)" defaultValue="DRAFT"></column>
+            <column name="cm_exemption_created" type="${timestampType}"></column>
+            <column name="cm_exemption_creator" type="VARCHAR(1024)"></column>
+            <column name="cm_exemption_statute" type="VARCHAR(512)"></column>
+            <column name="cm_file_id" type="${idType}"></column>
+            <column name="cm_file_version" type="VARCHAR(10)" defaultValue="0.0"></column>
+            <column name="cm_manually_flag" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="01-create-table-acm_exemption_code" author="ana.serafimoska" dbms="mysql">
+        <createTable tableName="acm_exemption_code">
+            <column name="cm_exemption_id" type="${idType}" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="pk_exemption_code"></constraints>
+            </column>
+            <column name="cm_parent_object_id" type="${fkIdType}"></column>
+            <column name="cm_parent_object_type" type="TEXT"></column>
+            <column name="cm_exemption_code" type="TEXT">
+                <constraints nullable="false"></constraints>
+            </column>
+            <column name="cm_exemption_status" type="TEXT" defaultValue="DRAFT"></column>
+            <column name="cm_exemption_created" type="${timestampType}"></column>
+            <column name="cm_exemption_creator" type="TEXT"></column>
+            <column name="cm_exemption_statute" type="TEXT"></column>
+            <column name="cm_file_id" type="${idType}"></column>
+            <column name="cm_file_version" type="TEXT" defaultValue="0.0"></column>
+            <column name="cm_manually_flag" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="02-create-acm_exemption_code_id" author="ana.serafimoska">
+        <createTable tableName="acm_exemption_code_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_exemption_code_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_exemption_code"></column>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
