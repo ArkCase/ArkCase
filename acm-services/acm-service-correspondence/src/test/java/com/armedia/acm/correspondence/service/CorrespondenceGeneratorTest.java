@@ -27,6 +27,7 @@ package com.armedia.acm.correspondence.service;
  * #L%
  */
 
+import static org.easymock.EasyMock.anyString;
 import static org.easymock.EasyMock.capture;
 import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
@@ -226,7 +227,7 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
 
         expect(mockLookupDao.getMergedLookups()).andReturn(lookupData()).anyTimes();
 
-        mockWordGenerator.generate(capture(captureResourceTemplate), eq(mockOutputStream), eq(objectCaseFile), eq(parentObjectId));
+        mockWordGenerator.generate(capture(captureResourceTemplate), eq(mockOutputStream), eq(objectCaseFile), eq(parentObjectId), anyString());
 
         expect(mockEcmFileDao.findSingleFileByParentObjectAndFolderCmisIdAndFileType(eq(objectCaseFile), eq(parentObjectId),
                 eq(targetFolderCmisId),
@@ -264,7 +265,7 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
 
         expect(mockLookupDao.getMergedLookups()).andReturn(lookupData()).anyTimes();
 
-        mockWordGenerator.generate(capture(captureResourceTemplate), eq(mockOutputStream), eq(parentObjectType), eq(parentObjectId));
+        mockWordGenerator.generate(capture(captureResourceTemplate), eq(mockOutputStream), eq(parentObjectType), eq(parentObjectId), anyString());
 
         expect(mockEcmFileDao.findSingleFileByParentObjectAndFolderCmisIdAndFileType(eq(parentObjectType), eq(parentObjectId),
                 eq(targetFolderCmisId),

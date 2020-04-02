@@ -112,7 +112,7 @@ public class CorrespondenceGenerator
 
         log.debug("Generating correspondence from template '{}'", templateFile.getFile().getAbsolutePath());
 
-        getSpelWordGenerator().generate(templateFile, correspondenceOutputStream, template.getObjectType(), parentObjectId);
+        getSpelWordGenerator().generate(templateFile, correspondenceOutputStream, template.getObjectType(), parentObjectId, template.getTemplateModelProvider());
 
         EcmFile retval = null;
 
@@ -143,7 +143,7 @@ public class CorrespondenceGenerator
         Resource templateFile = new FileSystemResource(getCorrespondenceFolderName() + File.separator + template.getTemplateFilename());
 
         log.debug("Generating correspondence from template '{}'", templateFile.getFile().getAbsolutePath());
-        getSpelWordGenerator().generate(templateFile, correspondenceOutputStream, template.getObjectType(), parentObjectId);
+        getSpelWordGenerator().generate(templateFile, correspondenceOutputStream, template.getObjectType(), parentObjectId, template.getTemplateModelProvider());
 
         return correspondenceOutputStream;
     }
