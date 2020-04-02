@@ -397,32 +397,6 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     }
 
     @Override
-    @Transactional
-    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FOLDER", lockType = "READ", lockChildObjects = false, unlockChildObjects = false)
-    public List<EcmFile> getFilesIdsInFolderAndSubfolders(Long folderId)
-    {
-        List<EcmFile> objectList = new ArrayList<>();
-
-        List<AcmFolder> subfolders = getFolderDao().findSubFolders(folderId);
-
-        if (subfolders != null && !subfolders.isEmpty())
-        {
-            for (AcmFolder subFolder : subfolders)
-            {
-                objectList.addAll(getFilesInFolderAndSubfolders(subFolder.getId()));
-            }
-        }
-
-        List<EcmFile> files = getFileDao().findByFolderId(folderId);
-        if (files != null && !files.isEmpty())
-        {
-            objectList.addAll(files);
-        }
-
-        return objectList;
-    }
-
-    @Override
     @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 0, objectType = "FOLDER", lockType = "DELETE")
     @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 1, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
     public AcmFolder moveFolder(AcmFolder folderForMoving, AcmFolder dstFolder)

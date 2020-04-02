@@ -23,7 +23,6 @@ public class FOIAExemptionService
     private Logger log = LogManager.getLogger(getClass());
     private FOIAExemptionCodeDao foiaExemptionCodeDao;
 
-    @Transactional
     public List<ExemptionCode> getExemptionCodes(Long parentObjectId, String parentObjectType) throws GetExemptionCodeException
     {
         log.info("Finding  exemption codes for objectId: {}", parentObjectId);
