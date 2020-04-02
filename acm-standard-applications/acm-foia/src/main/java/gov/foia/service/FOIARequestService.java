@@ -124,7 +124,7 @@ public class FOIARequestService
                     }
                 }
 
-                if (foiaRequest.getId() != null && foiaRequest.getStatus().equalsIgnoreCase("In Review")
+                if (foiaRequest.getId() != null && foiaRequest.getQueue().getName().equalsIgnoreCase("Intake")
                         && !foiaConfigurationService.readConfiguration().getReceivedDateEnabled())
                 {
                     if (foiaRequest.getReceivedDate() != null)
@@ -148,7 +148,7 @@ public class FOIARequestService
                     FOIARequest originalRequest = (FOIARequest) getCaseFileDao()
                             .findByCaseNumber(foiaRequest.getOriginalRequestNumber());
                     if (originalRequest != null && !originalRequest.getRequestType().equals(FOIAConstants.APPEAL_REQUEST_TYPE)
-                            && originalRequest.getStatus().toUpperCase().equals("RELEASED"))
+                            && originalRequest.getQueue().getName().toUpperCase().equals("RELEASE"))
                     {
                         in = populateAppealFromOriginalRequest(in, originalRequest);
                         in = createReference(in, originalRequest);

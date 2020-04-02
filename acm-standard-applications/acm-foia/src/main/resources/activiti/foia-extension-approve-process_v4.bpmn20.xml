@@ -12,19 +12,7 @@
         <modeler:editor-resource-id><![CDATA[startEvent1]]></modeler:editor-resource-id>
       </extensionElements>
     </startEvent>
-    <sequenceFlow id="sid-2ECFBB0E-7B21-4B25-9FA3-6D8134E86DA4" sourceRef="startEvent1"
-                  targetRef="sid-E0905ADB-9340-49AC-ADA5-3AD0B417D585">
-      <extensionElements>
-        <modeler:editor-resource-id><![CDATA[sid-2ECFBB0E-7B21-4B25-9FA3-6D8134E86DA4]]></modeler:editor-resource-id>
-      </extensionElements>
-    </sequenceFlow>
-    <serviceTask id="sid-E0905ADB-9340-49AC-ADA5-3AD0B417D585" name="Set FOIA Request status"
-                 activiti:expression="#{changeObjectStatusService.changeIfNoPermanentStatusIsSet(OBJECT_ID, OBJECT_TYPE, 'In Approval', 'Closed')}">
-      <extensionElements>
-        <modeler:editor-resource-id><![CDATA[sid-E0905ADB-9340-49AC-ADA5-3AD0B417D585]]></modeler:editor-resource-id>
-      </extensionElements>
-    </serviceTask>
-    <sequenceFlow id="sid-A1A80BC3-B3F3-472A-8187-6EF2428E1D51" sourceRef="sid-E0905ADB-9340-49AC-ADA5-3AD0B417D585"
+    <sequenceFlow id="sid-A1A80BC3-B3F3-472A-8187-6EF2428E1D51" sourceRef="startEvent1"
                   targetRef="sid-F88A33F4-A31E-43B6-A65C-0921762C023D">
       <extensionElements>
         <modeler:editor-resource-id><![CDATA[sid-A1A80BC3-B3F3-472A-8187-6EF2428E1D51]]></modeler:editor-resource-id>
@@ -48,7 +36,8 @@
         <modeler:editor-resource-id><![CDATA[sid-8E8C5937-19EC-44A0-BFA3-86603AB81714]]></modeler:editor-resource-id>
       </extensionElements>
     </serviceTask>
-    <sequenceFlow id="sid-2E97F8D2-157B-4FCA-AC6E-8A0BED1F4470" sourceRef="sid-8E8C5937-19EC-44A0-BFA3-86603AB81714" targetRef="sid-2158CAAD-78C1-465F-B109-70C2FCF1FF39">
+    <sequenceFlow id="sid-2E97F8D2-157B-4FCA-AC6E-8A0BED1F4470" sourceRef="sid-8E8C5937-19EC-44A0-BFA3-86603AB81714"
+                  targetRef="sid-2158CAAD-78C1-465F-B109-70C2FCF1FF39">
       <extensionElements>
         <modeler:editor-resource-id><![CDATA[sid-2E97F8D2-157B-4FCA-AC6E-8A0BED1F4470]]></modeler:editor-resource-id>
       </extensionElements>
@@ -63,11 +52,10 @@
         <modeler:editor-resource-id><![CDATA[sid-A4DD8BA4-1458-4B2D-A55F-9098105D10A5]]></modeler:editor-resource-id>
       </extensionElements>
       <text>This process orchestrates all the actions needed when a FOIA request is entering the Approve queue.
-        Currently there are three such actions:
+        Currently there are 2 such actions:
 
-        1. Set the status to In Approval, if status is not Closed
-        2. Set the queue name to 'Approve'
-        3. Generate Correspondence Letter
+        1. Set the queue name to 'Approve'
+        2. Generate Correspondence Letter
       </text>
     </textAnnotation>
   </process>
@@ -76,19 +64,16 @@
       <bpmndi:BPMNShape bpmnElement="startEvent1" id="BPMNShape_startEvent1">
         <omgdc:Bounds height="30.0" width="30.0" x="100.0" y="163.0"/>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="sid-E0905ADB-9340-49AC-ADA5-3AD0B417D585" id="BPMNShape_sid-E0905ADB-9340-49AC-ADA5-3AD0B417D585">
-        <omgdc:Bounds height="80.0" width="100.0" x="219.75" y="138.0"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="sid-F88A33F4-A31E-43B6-A65C-0921762C023D" id="BPMNShape_sid-F88A33F4-A31E-43B6-A65C-0921762C023D">
+      <bpmndi:BPMNShape bpmnElement="sid-F88A33F4-A31E-43B6-A65C-0921762C023D"
+                        id="BPMNShape_sid-F88A33F4-A31E-43B6-A65C-0921762C023D">
         <omgdc:Bounds height="80.0" width="100.0" x="384.75" y="138.0"/>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="sid-2158CAAD-78C1-465F-B109-70C2FCF1FF39" id="BPMNShape_sid-2158CAAD-78C1-465F-B109-70C2FCF1FF39">
+      <bpmndi:BPMNShape bpmnElement="sid-2158CAAD-78C1-465F-B109-70C2FCF1FF39"
+                        id="BPMNShape_sid-2158CAAD-78C1-465F-B109-70C2FCF1FF39">
         <omgdc:Bounds height="28.0" width="28.0" x="750.0" y="164.0"/>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="sid-A4DD8BA4-1458-4B2D-A55F-9098105D10A5" id="BPMNShape_sid-A4DD8BA4-1458-4B2D-A55F-9098105D10A5">
-        <omgdc:Bounds height="227.0" width="294.0" x="195.0" y="255.0"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="sid-8E8C5937-19EC-44A0-BFA3-86603AB81714" id="BPMNShape_sid-8E8C5937-19EC-44A0-BFA3-86603AB81714">
+      <bpmndi:BPMNShape bpmnElement="sid-8E8C5937-19EC-44A0-BFA3-86603AB81714"
+                        id="BPMNShape_sid-8E8C5937-19EC-44A0-BFA3-86603AB81714">
         <omgdc:Bounds height="80.0" width="107.0" x="570.0" y="138.0"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge bpmnElement="sid-F1D7A8E5-79D7-4990-A8B6-52AA679B0632" id="BPMNEdge_sid-F1D7A8E5-79D7-4990-A8B6-52AA679B0632">
