@@ -8,8 +8,8 @@
                 <entry key="Content-Type" value="contentType"/>
                 <entry key="GPS-Coordinates-Readable" value="gpsReadable"/>
                 <entry key="GPS-Coordinates-ISO6709" value="gpsIso6709"/>
-                <entry key="Make" value="deviceMake"/>
-                <entry key="Model" value="deviceModel"/>
+                <entry key="tiff:Make" value="deviceMake"/>
+                <entry key="tiff:Model" value="deviceModel"/>
                 <entry key="tiff:ImageLength" value="heightPixels"/>
                 <entry key="tiff:ImageWidth" value="widthPixels"/>
                 <entry key="GPS-Coordinates-Longitude" value="gpsLongitudeDegrees"/>

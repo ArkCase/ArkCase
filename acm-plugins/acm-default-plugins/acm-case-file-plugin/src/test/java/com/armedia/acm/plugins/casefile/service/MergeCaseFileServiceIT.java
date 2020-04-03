@@ -146,6 +146,7 @@ import java.util.stream.Collectors;
         "/spring/spring-library-service-timesheet.xml",
         "/spring/spring-library-timesheet-save.xml",
         "/spring/spring-library-timesheet-rules.xml",
+        "/spring/spring-library-labels-service.xml",
         "/spring/spring-library-user-tracker.xml"
 })
 @TransactionConfiguration(defaultRollback = true)
@@ -154,10 +155,10 @@ public class MergeCaseFileServiceIT
     static
     {
         String userHomePath = System.getProperty("user.home");
-        System.setProperty("acm.configurationserver.propertyfile",
-
-                userHomePath + "/.arkcase/acm/conf.yml");
+        System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
         System.setProperty("configuration.server.url", "http://localhost:9999");
+        System.setProperty("javax.net.ssl.trustStore", userHomePath + "/.arkcase/acm/private/arkcase.ts");
+        System.setProperty("javax.net.ssl.trustStorePassword", "password");
     }
 
     private final Logger log = LogManager.getLogger(getClass());

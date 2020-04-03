@@ -16,9 +16,9 @@
         <property name="propertiesEncryptionPassPhraseHashAlgorithm" value="MD5"/>
         <property name="encryptedSymmetricKeyEncryptionAlgorithm" value="RSA/ECB/PKCS1Padding"/>
         <property name="encryptedSymmetricKeyFilePath"
-            value="#{systemProperties['user.home']}/.arkcase/acm/encryption/symmetricKey.encrypted"/>
+                  value="#{systemProperties['user.home']}/.arkcase/acm/encryption/symmetricKey.encrypted"/>
         <property name="keystoreType" value="JKS"/>
-        <property name="keystorePath" value="#{systemProperties['user.home']}/.arkcase/acm/private/keystore.old"/>
+        <property name="keystorePath" value="#{systemProperties['user.home']}/.arkcase/acm/private/encryption-keystore"/>
         <property name="keystorePassword" value="password"/>
         <property name="privateKeyAlias" value="armedia"/>
     </bean>

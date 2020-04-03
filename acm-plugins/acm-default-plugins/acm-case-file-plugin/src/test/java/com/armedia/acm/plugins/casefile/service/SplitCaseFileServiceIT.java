@@ -136,6 +136,7 @@ import java.util.UUID;
         "/spring/spring-library-websockets.xml",
         "/spring/spring-library-object-title.xml",
         "/spring/spring-library-functional-access-control.xml",
+        "/spring/spring-library-labels-service.xml",
         "/spring/spring-library-camel-context.xml"
 })
 @TransactionConfiguration(defaultRollback = true)
