@@ -219,6 +219,10 @@
             </column>
         </addColumn>
     </changeSet>
+    
+    <changeSet id="07-update-cm_address_type-column" author="stefan.sanevski" >
+        <dropNotNullConstraint tableName="acm_postal_address" columnName="cm_address_type" columnDataType="VARCHAR(128)"></dropNotNullConstraint>
+    </changeSet>
 
 </databaseChangeLog>
 
