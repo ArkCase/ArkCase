@@ -81,7 +81,7 @@ public class FileConfigurationServiceImpl implements FileConfigurationService
     }
 
     @Override
-    public void getFileFromConfiguration(String fileName, String customFilesLocation) throws IOException
+    public void getFileFromConfiguration(String fileName, String folderName, String customFilesLocation) throws IOException
     {
 
         HttpHeaders headers = new HttpHeaders();
@@ -91,20 +91,21 @@ public class FileConfigurationServiceImpl implements FileConfigurationService
 
         ResponseEntity<Resource> exchange = configRestTemplate.exchange(
                 configurationClientConfig.getConfigurationUrl() + "/" + configurationClientConfig.getDefaultApplicationName() + "/"
-                        + configurationClientConfig.getActiveProfile() + "/*/" + BRANDING_LOCATION + "/" + fileName,
+                        + configurationClientConfig.getActiveProfile() + "/*/" + folderName + "/" + fileName,
                 HttpMethod.GET, entity,
                 Resource.class);
 
-        File logoFile = new File(customFilesLocation + "/" + BRANDING_LOCATION + "/" + fileName);
+        File file = new File(customFilesLocation + "/" + folderName + "/" + fileName);
 
-        FileUtils.copyInputStreamToFile(exchange.getBody().getInputStream(), logoFile);
+        FileUtils.copyInputStreamToFile(exchange.getBody().getInputStream(), file);
 
     }
 
+    // TODO Not sure why is it here. Is to safe to delete it?
     @JmsListener(destination = "VirtualTopic.ConfigFileUpdated", containerFactory = "jmsTopicListenerContainerFactory")
     public void downloadFileFromConfiguration(Message message) throws IOException
     {
-        getFileFromConfiguration(message.getPayload().toString(), customFilesLocation);
+        getFileFromConfiguration(message.getPayload().toString(), BRANDING_LOCATION, customFilesLocation);
     }
 
     private HttpEntity<LinkedMultiValueMap<String, Object>> prepareFileProperties(InputStreamResource file, String fileName)
