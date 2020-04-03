@@ -63,6 +63,28 @@
                 <div class="row">
                     <div class="col-lg-4"></div>
                     <div class="col-lg-4">
+                        <label for="expediteWorkingDaysEnabled" translate>admin.application.foia.config.labels.expediteWorkingDays</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" ng-model="configDataModel.expediteWorkingDaysEnabled">
+                                <span translate>
+                                    admin.application.foia.config.labels.expediteWorkingDaysEnabled
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <input id="expediteWorkingDaysEnabled" type="number" min="1" ng-model="configDataModel.expediteWorkingDays"
+                               ng-disabled="!configDataModel.expediteWorkingDaysEnabled" class="form-control">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4"></div>
+                    <div class="col-lg-4">
                         <label translate>admin.application.foia.config.labels.maxDaysHoldQueue</label>
                     </div>
                 </div>

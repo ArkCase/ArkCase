@@ -45,6 +45,14 @@ public class FoiaConfig
     @Value("${requestExtensionWorkingDaysEnabled}")
     private Boolean requestExtensionWorkingDaysEnabled;
 
+    @JsonProperty("expediteWorkingDaysEnabled")
+    @Value("${expediteWorkingDaysEnabled}")
+    private Boolean expediteWorkingDaysEnabled;
+
+    @JsonProperty("expediteWorkingDays")
+    @Value("${expediteWorkingDays}")
+    private Integer expediteWorkingDays;
+
     @JsonProperty("maxDaysInBillingQueue")
     @Value("${maxDaysInBillingQueue}")
     private Integer maxDaysInBillingQueue;
@@ -121,6 +129,26 @@ public class FoiaConfig
     public void setRequestExtensionWorkingDaysEnabled(Boolean requestExtensionWorkingDaysEnabled)
     {
         this.requestExtensionWorkingDaysEnabled = requestExtensionWorkingDaysEnabled;
+    }
+
+    public Boolean getExpediteWorkingDaysEnabled()
+    {
+        return expediteWorkingDaysEnabled;
+    }
+
+    public void setExpediteWorkingDaysEnabled(Boolean expediteWorkingDaysEnabled)
+    {
+        this.expediteWorkingDaysEnabled = expediteWorkingDaysEnabled;
+    }
+
+    public Integer getExpediteWorkingDays()
+    {
+        return expediteWorkingDays;
+    }
+
+    public void setExpediteWorkingDays(Integer expediteWorkingDays)
+    {
+        this.expediteWorkingDays = expediteWorkingDays;
     }
 
     public Integer getMaxDaysInBillingQueue()
