@@ -89,28 +89,28 @@ public class CloseComplaintServiceImpl implements CloseComplaintService {
             personOrganizationAssociation.setDefaultOrganization(true);
         }
 
-        boolean isPersonOrganizationExists = false;
+        boolean isPersonOrganizationAssociationExists = false;
 
         for (PersonOrganizationAssociation orgAss : organizationAssociationList) {
 
             if (orgAss.getOrganization().getId() == organization.getId()) {
-                isPersonOrganizationExists = true;
+                isPersonOrganizationAssociationExists = true;
                 break;
             }
         }
-        if (!isPersonOrganizationExists) {
+        if (!isPersonOrganizationAssociationExists) {
             organization.getPersonAssociations().add(personOrganizationAssociation);
 
         }
-        isPersonOrganizationExists = false;
+        isPersonOrganizationAssociationExists = false;
         for (PersonOrganizationAssociation orgAss : personAssociationList) {
 
             if (orgAss.getPerson().getId() == person.getId()) {
-                isPersonOrganizationExists = true;
+                isPersonOrganizationAssociationExists = true;
                 break;
             }
         }
-        if (!isPersonOrganizationExists) {
+        if (!isPersonOrganizationAssociationExists) {
             person.getOrganizationAssociations().add(personOrganizationAssociation);
         }
 
