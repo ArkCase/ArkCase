@@ -228,20 +228,22 @@
     </bean>
 
     <bean id="passwordShouldMatchSpecialCharPattern"
-        class="com.armedia.acm.services.users.model.ldap.PasswordShouldMatchPattern">
+          class="com.armedia.acm.services.users.model.ldap.PasswordShouldMatchPattern">
         <constructor-arg type="java.lang.String" name="pattern">
             <value><![CDATA[^.*?[[~!@#$%^&*_+=`|\(){}:;"'<>,.?/-]].*$]]></value>
         </constructor-arg>
         <constructor-arg type="java.lang.String" name="message"
-            value="Password must contain at least one special character"/>
+                         value="Password must contain at least one special character"/>
     </bean>
 
-    <bean id="passwordLengthValidationRule"
-        class="com.armedia.acm.services.users.model.ldap.PasswordLengthValidationRule">
-        <constructor-arg type="int" name="minLength" value="7"/>
-        <constructor-arg type="java.lang.String" name="message" value="Password must be of minimum length of 7"/>
+    <bean id="passwordLengthValidationRule" class="com.armedia.acm.services.users.model.ldap.PasswordLengthValidationRule">
+        <property name="passwordConfig" ref="passwordConfig"/>
     </bean>
     <!-- end of password validation -->
+
+    <bean id="passwordConfig" class="com.armedia.acm.services.users.model.PasswordConfig" scope="refresh">
+        <aop:scoped-proxy/>
+    </bean>
 
     <bean id="acmUserEventPublisher" class="com.armedia.acm.services.users.service.AcmUserEventPublisher"/>
 
