@@ -73,6 +73,8 @@ public class SpringLdapDaoIT
         String userHomePath = System.getProperty("user.home");
         System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
         System.setProperty("configuration.server.url", "http://localhost:9999");
+        System.setProperty("javax.net.ssl.trustStore", userHomePath + "/.arkcase/acm/private/arkcase.ts");
+        System.setProperty("javax.net.ssl.trustStorePassword", "password");
     }
 
     static final Logger log = LogManager.getLogger(SpringLdapDaoIT.class);
@@ -160,7 +162,7 @@ public class SpringLdapDaoIT
         assertNotNull(result);
         assertTrue(!result.isEmpty());
 
-        String userName = result.get(0).getUid();
+        String userName = result.get(0).getsAMAccountName();
 
         long start = System.currentTimeMillis();
         LdapUser ldapUser = springLdapUserDao.findUser(userName, ldapTemplate, acmSyncLdapConfig,
@@ -178,7 +180,7 @@ public class SpringLdapDaoIT
         assertNotNull(result);
         assertTrue(!result.isEmpty());
 
-        String userName = result.get(0).getUid();
+        String userName = result.get(0).getsAMAccountName();
 
         LdapUser testUser = springLdapUserDao.findUser(userName, ldapTemplate, acmSyncLdapConfig,
                 acmSyncLdapConfig.getUserSyncAttributes());

@@ -99,6 +99,8 @@ public class ContentFileToSolrFlowIT
         String userHomePath = System.getProperty("user.home");
         System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
         System.setProperty("configuration.server.url", "http://localhost:9999");
+        System.setProperty("javax.net.ssl.trustStore", userHomePath + "/.arkcase/acm/private/arkcase.ts");
+        System.setProperty("javax.net.ssl.trustStorePassword", "password");
     }
 
     private transient final Logger log = LogManager.getLogger(getClass());
@@ -115,8 +117,10 @@ public class ContentFileToSolrFlowIT
 
         String testPath = "/Sites/acm/documentLibrary/test/folder";
         Map<String, Object> folderMessageProperties = new HashMap<>();
+
         folderMessageProperties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
         folderMessageProperties.put(PropertyIds.PATH, testPath);
+        folderMessageProperties.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "");
 
         Folder folder = (Folder) camelContextManager.send(ArkCaseCMISActions.GET_OR_CREATE_FOLDER_BY_PATH, folderMessageProperties);
 

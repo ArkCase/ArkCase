@@ -122,6 +122,7 @@ import java.util.UUID;
         "/spring/spring-library-websockets.xml",
         "/spring/spring-library-object-title.xml",
         "/spring/spring-library-convert-file-service.xml",
+        "/spring/spring-library-labels-service.xml",
         "/spring/spring-library-convert-folder-service.xml"
 })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
@@ -133,6 +134,8 @@ public class ComplaintServiceIT
         String userHomePath = System.getProperty("user.home");
         System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
         System.setProperty("configuration.server.url", "http://localhost:9999");
+        System.setProperty("javax.net.ssl.trustStore", userHomePath + "/.arkcase/acm/private/arkcase.ts");
+        System.setProperty("javax.net.ssl.trustStorePassword", "password");
     }
 
     private ComplaintService service;

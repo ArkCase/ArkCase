@@ -95,6 +95,8 @@ public class MoveToRecordFolderServiceIT
         String userHomePath = System.getProperty("user.home");
         System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
         System.setProperty("configuration.server.url", "http://localhost:9999");
+        System.setProperty("javax.net.ssl.trustStore", userHomePath + "/.arkcase/acm/private/arkcase.ts");
+        System.setProperty("javax.net.ssl.trustStorePassword", "password");
     }
 
     private transient final Logger LOG = LogManager.getLogger(getClass());
@@ -162,12 +164,14 @@ public class MoveToRecordFolderServiceIT
         recordFolderContext.put("parentFolder", cmisObject);
         String folderName = UUID.randomUUID().toString();
         recordFolderContext.put("recordFolderName", folderName);
+        recordFolderContext.put("type", "Record Folder");
         String recordFolderId = findRecordFolderService.service(recordFolderContext);
 
         // now we can finally move our record
         Map<String, Object> context = new HashMap<>();
         context.put("ecmFileId", ecmFileId);
         context.put("recordFolderId", recordFolderId);
+        context.put("type", "Record Folder");
         String movedId = service.service(context);
 
         assertEquals(ecmFileId, movedId);
