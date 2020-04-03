@@ -317,7 +317,7 @@ public interface EcmFileService
     EcmFile moveFile(Long fileId, Long targetObjectId, String targetObjectType, AcmFolder folder)
             throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException;
 
-    EcmFile moveFileAsLink(Long fileId, Long targetObjectId, String targetObjectType, AcmFolder folder)
+    EcmFile moveFileLink(Long fileId, Long targetObjectId, String targetObjectType, AcmFolder folder)
             throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException, LinkAlreadyExistException;
 
     @Retryable(maxAttempts = 3, value = Exception.class, backoff = @Backoff(delay = 500))

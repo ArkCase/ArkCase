@@ -1555,7 +1555,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
         else
         {
-            return moveFileAsLink(fileId, targetObjectId, targetObjectType, folder);
+            return moveFileLink(fileId, targetObjectId, targetObjectType, folder);
         }
 
     }
@@ -1564,7 +1564,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     @Transactional(rollbackFor = Exception.class)
     @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 3, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "DELETE")
-    public EcmFile moveFileAsLink(Long fileId, Long targetObjectId, String targetObjectType, AcmFolder folder)
+    public EcmFile moveFileLink(Long fileId, Long targetObjectId, String targetObjectType, AcmFolder folder)
             throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException, LinkAlreadyExistException
     {
 
