@@ -429,6 +429,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         if (folderForMoving.isLink())
         {
             movedFolder = moveFolderInArkcase(folderForMoving, dstFolder);
+            return movedFolder;
         }
         else
         {
