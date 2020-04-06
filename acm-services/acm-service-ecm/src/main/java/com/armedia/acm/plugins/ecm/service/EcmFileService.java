@@ -312,10 +312,13 @@ public interface EcmFileService
             throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
     EcmFile moveFile(Long fileId, Long targetObjectId, String targetObjectType, Long dstFolderId)
-            throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException;
+            throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException, LinkAlreadyExistException;
 
     EcmFile moveFile(Long fileId, Long targetObjectId, String targetObjectType, AcmFolder folder)
             throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException;
+
+    EcmFile moveFileLink(Long fileId, Long targetObjectId, String targetObjectType, AcmFolder folder)
+            throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException, LinkAlreadyExistException;
 
     @Retryable(maxAttempts = 3, value = Exception.class, backoff = @Backoff(delay = 500))
     EcmFile moveFileInArkcase(EcmFile file, AcmFolder targetParentFolder, String targetObjectType)

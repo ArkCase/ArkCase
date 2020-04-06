@@ -95,6 +95,8 @@ public class CompleteRecordServiceIT
         String userHomePath = System.getProperty("user.home");
         System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
         System.setProperty("configuration.server.url", "http://localhost:9999");
+        System.setProperty("javax.net.ssl.trustStore", userHomePath + "/.arkcase/acm/private/arkcase.ts");
+        System.setProperty("javax.net.ssl.trustStorePassword", "password");
     }
 
     private transient final Logger LOG = LogManager.getLogger(getClass());
@@ -163,6 +165,7 @@ public class CompleteRecordServiceIT
         // create a record folder
         Map<String, Object> recordFolderContext = new HashMap<>();
         recordFolderContext.put("parentFolder", folder);
+        recordFolderContext.put("type", "Record Folder");
         String folderName = UUID.randomUUID().toString();
         recordFolderContext.put("recordFolderName", folderName);
         String recordFolderId = findRecordFolderService.service(recordFolderContext);

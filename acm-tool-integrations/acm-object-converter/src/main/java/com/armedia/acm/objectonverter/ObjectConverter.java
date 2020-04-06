@@ -34,24 +34,15 @@ import com.armedia.acm.objectonverter.json.JSONMarshaller;
 import com.armedia.acm.objectonverter.json.JSONUnmarshaller;
 import com.armedia.acm.objectonverter.xml.XMLMarshaller;
 import com.armedia.acm.objectonverter.xml.XMLUnmarshaller;
-import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.DateSerializer;
-import com.fasterxml.jackson.databind.ser.std.DateTimeSerializerBase;
-import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
-import com.fasterxml.jackson.databind.util.StdDateFormat;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
-import java.io.IOException;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
@@ -70,16 +61,26 @@ public class ObjectConverter
 
     public static AcmMarshaller createJSONMarshallerForTests()
     {
-        // Make sure all mapper features are in line with the 'sourceObjectMapper' bean defined in spring-library-object-converter.xml
+        // Make sure all mapper features are in line with the 'sourceObjectMapper' bean defined in
+        // spring-library-object-converter.xml
         ObjectMapper mapper = new ObjectMapper();
+
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        mapper.findAndRegisterModules();
-        JavaTimeModule javaTimeModule=new JavaTimeModule();
+
         // Always format dates with Z at the end
-        javaTimeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")));
-        javaTimeModule.addSerializer(Date.class, new DateSerializer(false, new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")));
+        JavaTimeModule javaTimeModule = new JavaTimeModule();
+
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        LocalDateTimeSerializer localDateTimeSerializer = new LocalDateTimeSerializer(dateTimeFormatter);
+        javaTimeModule.addSerializer(LocalDateTime.class, localDateTimeSerializer);
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        DateSerializer dateSerializer = new DateSerializer(false, simpleDateFormat);
+        javaTimeModule.addSerializer(Date.class, dateSerializer);
+
         mapper.registerModule(javaTimeModule);
+        mapper.findAndRegisterModules();
 
         JSONMarshaller jsonMarshaller = new JSONMarshaller();
         jsonMarshaller.setMapper(mapper);
@@ -89,15 +90,21 @@ public class ObjectConverter
 
     public static JSONUnmarshaller createJSONUnmarshallerForTests()
     {
-        // Make sure all mapper features are in line with the 'sourceObjectMapper' bean defined in spring-library-object-converter.xml
+        // Make sure all mapper features are in line with the 'sourceObjectMapper' bean defined in
+        // spring-library-object-converter.xml
         ObjectMapper mapper = new ObjectMapper();
+
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        mapper.findAndRegisterModules();
-        JavaTimeModule javaTimeModule=new JavaTimeModule();
+
         // Hack time module to allow 'Z' at the end of string (i.e. javascript json's)
-        javaTimeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(DateTimeFormatter.ISO_DATE_TIME));
+        JavaTimeModule javaTimeModule = new JavaTimeModule();
+
+        LocalDateTimeDeserializer localDateTimeDeserializer = new LocalDateTimeDeserializer(DateTimeFormatter.ISO_DATE_TIME);
+        javaTimeModule.addDeserializer(LocalDateTime.class, localDateTimeDeserializer);
+
         mapper.registerModule(javaTimeModule);
+        mapper.findAndRegisterModules();
 
         JSONUnmarshaller jsonUnmarshaller = new JSONUnmarshaller();
         jsonUnmarshaller.setMapper(mapper);
@@ -115,7 +122,8 @@ public class ObjectConverter
         return objectConverter;
     }
 
-    public DateTimeFormatter getISODateTimeFormatter() {
+    public DateTimeFormatter getISODateTimeFormatter()
+    {
         return DateTimeFormatter.ISO_DATE_TIME;
     }
 

@@ -75,7 +75,6 @@ angular.module('cases').controller('Cases.ActionsFooterController',
                 if ($scope.provideReasonToHoldRequestEnabled) {
                     openHoldReasonModal(deferred, $scope.objectInfo.tollingFlag);
                 } else {
-                    $scope.objectInfo.status = 'Hold';
                     deferred.resolve();
                 }
             } else if (name === 'Complete' && $scope.defaultNextQueue === "Release" && $scope.limitedDeliveryToSpecificPageCountEnabled) {

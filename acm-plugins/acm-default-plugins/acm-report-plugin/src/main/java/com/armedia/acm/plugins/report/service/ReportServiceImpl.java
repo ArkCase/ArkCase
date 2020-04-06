@@ -120,7 +120,7 @@ public class ReportServiceImpl implements ReportService
             LOG.debug("Response status: = [{}]", response.getStatusLine().toString());
 
             HttpEntity entity = response.getEntity();
-            xml = EntityUtils.toString(entity);
+            xml = EntityUtils.toString(entity, "utf-8");
         }
         catch (Exception e)
         {

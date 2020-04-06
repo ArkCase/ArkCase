@@ -2,8 +2,8 @@
 
 angular.module('complaints').controller(
         'Complaints.CloseComplaintController',
-        [ '$scope', '$http', '$stateParams', '$translate', '$modalInstance', 'Complaint.InfoService', '$state', 'Object.LookupService', 'MessageService', 'UtilService', '$modal', 'ConfigService', 'ObjectService', 'modalParams', 'Case.InfoService', 'Object.ParticipantService',
-                function($scope, $http, $stateParams, $translate, $modalInstance, ComplaintInfoService, $state, ObjectLookupService, MessageService, Util, $modal, ConfigService, ObjectService, modalParams, CaseInfoService, ObjectParticipantService) {
+        [ '$scope', '$http', '$stateParams', '$translate', '$modalInstance', 'Complaint.InfoService', 'Organization.InfoService', 'Person.InfoService', 'Profile.UserInfoService','$state', 'Object.LookupService', 'MessageService', 'UtilService', '$modal', 'ConfigService', 'ObjectService', 'modalParams', 'Case.InfoService', 'Object.ParticipantService',
+                function($scope, $http, $stateParams, $translate, $modalInstance, ComplaintInfoService, OrganizationInfoService, PersonInfoService, UserInfoService, $state, ObjectLookupService, MessageService, Util, $modal, ConfigService, ObjectService, modalParams, CaseInfoService, ObjectParticipantService) {
 
                     $scope.modalParams = modalParams;
                     $scope.approverName = "";
@@ -17,6 +17,7 @@ angular.module('complaints').controller(
                     $scope.complaintInfo = {};
                     $scope.closeComplaintRequest = {
                         complaintId: modalParams.info.complaintId,
+                        complaintNumber : modalParams.info.complaintNumber,
                         disposition: {
                             closeDate: new Date(),
                             dispositionType: "",
@@ -41,7 +42,9 @@ angular.module('complaints').controller(
                         creator: null,
                         modified: null,
                         modifier: null,
-                        description: ""
+                        description: "",
+                        referExternalPersonId: undefined,
+                        referExternalOrganizationId: undefined
                     };
                     $scope.complaintDispositions = [];
                     $scope.contactTypes = [];
@@ -50,21 +53,25 @@ angular.module('complaints').controller(
                     $scope.showReferExternal = false;
                     $scope.loadingIcon = "fa fa-floppy-o";
                     $scope.futureTaskConfig = null;
+                    $scope.complaintPeopleConfig = null;
                     $scope.isDescriptionRequired = false;
 
                     var participantTypeApprover = 'approver';
                     var participantTypeOwningGroup = "owning group";
 
                     ConfigService.getModuleConfig("complaints").then(function(moduleConfig) {
+                        $scope.complaintInfo = moduleConfig;
+
                         $scope.futureTaskConfig = _.find(moduleConfig.components, {
                             id: "newFutureTask"
                         });
-                        $scope.complaintInfo = moduleConfig;
+                        $scope.participantsConfig = _.find(moduleConfig.components, {
+                            id: "participants"
+                        });
+                        $scope.complaintPeopleConfig = _.find(moduleConfig.components, {
+                            id: "people"
+                        });
                         $scope.closeComplaintRequest.disposition.className = moduleConfig.closeComplaintClassNames.disposition.className;
-                    });
-
-                    ConfigService.getComponentConfig("complaints", "participants").then(function(componentConfig) {
-                        $scope.participantsConfig = componentConfig;
                     });
 
                     ObjectLookupService.getDispositionTypes().then(function(dispositionTypes) {
@@ -77,14 +84,10 @@ angular.module('complaints').controller(
                         })
                     });
 
-                    ObjectLookupService.getContactMethodTypes().then(function(contactTypes) {
-                        _.forEach(contactTypes, function(item) {
-                            var dispositionType = {
-                                "key": item.key,
-                                "value": $translate.instant(item.value)
-                            };
-                            $scope.contactTypes.push(dispositionType);
-                        });
+                    ObjectLookupService.getPersonTypes(ObjectService.ObjectTypes.COMPLAINT).then(function(personTypes) {
+                        personTypes = personTypes.filter(x => x.key === "ExternalReferal");
+                        $scope.personTypeExternalReferal = personTypes;
+                        return personTypes;
                     });
 
                     function dispositionTypeChanged() {
@@ -209,6 +212,129 @@ angular.module('complaints').controller(
                                 $scope.closeComplaintRequest.participants.push(newParticipant);
                             }
                         }
+                    }
+
+                    // -------------------  people --------------------------------------------------------------------
+
+                    var ExternalReferalType = 'External Referal';
+
+                    var newPersonAssociation = function() {
+                        return {
+                            id: null,
+                            personType: "",
+                            parentId: $scope.closeComplaintRequest.complaintId,
+                            parentType: ObjectService.ObjectTypes.COMPLAINT,
+                            parentTitle: $scope.closeComplaintRequest.complaintNumber,
+                            personDescription: "",
+                            notes: "",
+                            person: null,
+                            className: $scope.complaintPeopleConfig.personAssociationClassName
+                        };
+                    };
+                    $scope.addPerson = function() {
+                        pickPerson(null);
+                    };
+
+                    function pickPerson(association) {
+
+                        var params = {};
+                        params.types = $scope.personTypeExternalReferal;
+                        params.type = ExternalReferalType;
+                        params.typeEnabled = true;
+                        association = new newPersonAssociation();
+
+                        var modalInstance = $modal.open({
+                            scope: $scope,
+                            animation: true,
+                            templateUrl: 'modules/common/views/add-person-modal.client.view.html',
+                            controller: 'Common.AddPersonModalController',
+                            size: 'md',
+                            backdrop: 'static',
+                            resolve: {
+                                params: function() {
+                                    return params;
+                                }
+                            }
+                        });
+
+                        modalInstance.result.then(function(data) {
+                            if (data.isNew) {
+                                PersonInfoService.savePersonInfoWithPictures(data.person, data.personImages).then(function(response) {
+                                    data.person = response.data;
+                                    $scope.closeComplaintRequest.disposition.referExternalContactPersonName = data.person.givenName + " " + data.person.familyName;
+                                    $scope.contactTypes = data.person.contactMethods;
+                                    $scope.closeComplaintRequest.referExternalPersonId = data.person.id;
+                                });
+                            } else {
+                                PersonInfoService.getPersonInfo(data.personId).then(function(person) {
+                                    $scope.closeComplaintRequest.disposition.referExternalContactPersonName = person.givenName + " " + person.familyName;
+                                    $scope.contactTypes = person.contactMethods;
+                                    $scope.closeComplaintRequest.referExternalPersonId = person.id;
+                                });
+                            }
+                        });
+                    }
+
+
+                    //------------------------------- Organizations --------------------------------------------
+
+                    var newOrganizationAssociation = function() {
+                        return {
+                            id: null,
+                            associationType: "",
+                            parentId: $scope.closeComplaintRequest.complaintId,
+                            parentType: ObjectService.ObjectTypes.COMPLAINT,
+                            parentTitle: $scope.closeComplaintRequest.complaintNumber,
+                            organization: null,
+                            className: "com.armedia.acm.plugins.person.model.OrganizationAssociation"
+                        };
+                    };
+
+                    $scope.addOrganization = function() {
+                        pickOrganization(null);
+                    };
+
+                    function pickOrganization(association) {
+                        var params = {};
+                        params.types = $scope.personTypeExternalReferal;
+
+                        if (association) {
+                            angular.extend(params, {
+                                organizationId: association.organization.organizationId,
+                                organizationValue: association.organization.organizationValue,
+                                type: association.personTypeExternalReferal,
+                                description: association.description
+                            });
+                        } else {
+                            association = new newOrganizationAssociation();
+                        }
+
+                        var modalInstance = $modal.open({
+                            scope: $scope,
+                            animation: true,
+                            templateUrl: 'modules/common/views/add-organization-modal.client.view.html',
+                            controller: 'Common.AddOrganizationModalController',
+                            size: 'md',
+                            backdrop: 'static',
+                            resolve: {
+                                params: function() {
+                                    return params;
+                                }
+                            }
+                        });
+
+                        modalInstance.result.then(function(data) {
+                            if (data.isNew) {
+                                $scope.closeComplaintRequest.disposition.referExternalOrganizationName = data.organization.organizationValue;
+                                $scope.closeComplaintRequest.referExternalOrganizationId = data.organization.organizationId;
+                            } else {
+                                OrganizationInfoService.getOrganizationInfo(data.organizationId).then(function(organization) {
+
+                                    $scope.closeComplaintRequest.disposition.referExternalOrganizationName = organization.organizationValue;
+                                    $scope.closeComplaintRequest.referExternalOrganizationId = organization.organizationId;
+                                })
+                            }
+                        });
                     }
 
                     function searchCase() {
