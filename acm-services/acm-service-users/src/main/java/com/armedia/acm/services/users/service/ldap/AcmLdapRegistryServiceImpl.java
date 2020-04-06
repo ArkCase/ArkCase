@@ -304,6 +304,7 @@ public class AcmLdapRegistryServiceImpl implements AcmLdapRegistryService, Initi
         beanDefinitionBuilder.addPropertyValue("partialSyncCron", ldapDirectoryConfigAttributes.get("partialSyncCron"));
         beanDefinitionBuilder.addPropertyValue("fullSyncCron", ldapDirectoryConfigAttributes.get("fullSyncCron"));
         beanDefinitionBuilder.addPropertyValue("syncEnabled", ldapDirectoryConfigAttributes.get("syncEnabled"));
+        beanDefinitionBuilder.addPropertyValue("autoGenerateUserId", ldapDirectoryConfigAttributes.get("autoGenerateUserId"));
 
         defineTheStatusOfTheBean(directory, beanDefinitionBuilder);
 
