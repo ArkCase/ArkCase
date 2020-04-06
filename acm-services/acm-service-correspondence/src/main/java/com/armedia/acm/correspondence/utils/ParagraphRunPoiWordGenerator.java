@@ -89,7 +89,8 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
     private SpringContextHolder contextHolder;
 
     @Override
-    public void generate(Resource wordTemplate, OutputStream targetStream, String objectType, Long parentObjectId, String templateModelProvider) throws IOException
+    public void generate(Resource wordTemplate, OutputStream targetStream, String objectType, Long parentObjectId,
+            String templateModelProvider) throws IOException
     {
         try (XWPFDocument template = new XWPFDocument(wordTemplate.getInputStream()))
         {
@@ -198,7 +199,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
         return graphs;
     }
 
-    private <V> void replace(XWPFParagraph paragraph, String searchText, V replacement)
+    public <V> void replace(XWPFParagraph paragraph, String searchText, V replacement)
     {
         boolean found = true;
         while (found)
@@ -276,7 +277,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
         }
     }
 
-    private <V> void replace(XWPFParagraph paragraph, Map<String, V> map)
+    public <V> void replace(XWPFParagraph paragraph, Map<String, V> map)
     {
         for (Map.Entry<String, V> entry : map.entrySet())
         {
@@ -284,7 +285,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
         }
     }
 
-    private <V> void replace(XWPFParagraph paragraph, Object object, String objectType)
+    public <V> void replace(XWPFParagraph paragraph, Object object, String objectType)
     {
         boolean found = true;
         while (found)
@@ -380,7 +381,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
         }
     }
 
-    private Map<Integer, XWPFRun> getPosToRuns(XWPFParagraph paragraph)
+    public Map<Integer, XWPFRun> getPosToRuns(XWPFParagraph paragraph)
     {
         int pos = 0;
         Map<Integer, XWPFRun> map = new HashMap<>(10);
@@ -425,7 +426,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
         return rows;
     }
 
-    private List<XWPFTableCell> updateCells(List<XWPFTableCell> cells, Object object, String objectType)
+    public List<XWPFTableCell> updateCells(List<XWPFTableCell> cells, Object object, String objectType)
     {
         if (cells != null)
         {
@@ -438,7 +439,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
         return cells;
     }
 
-    private List<XWPFTable> updateTables(List<XWPFTable> tables, Map<String, String> substitutions)
+    public List<XWPFTable> updateTables(List<XWPFTable> tables, Map<String, String> substitutions)
     {
         if (tables != null)
         {
@@ -451,7 +452,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
         return tables;
     }
 
-    private List<XWPFTableRow> updateRows(List<XWPFTableRow> rows, Map<String, String> substitutions)
+    public List<XWPFTableRow> updateRows(List<XWPFTableRow> rows, Map<String, String> substitutions)
     {
         if (rows != null)
         {
@@ -464,7 +465,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
         return rows;
     }
 
-    private List<XWPFTableCell> updateCells(List<XWPFTableCell> cells, Map<String, String> substitutions)
+    public List<XWPFTableCell> updateCells(List<XWPFTableCell> cells, Map<String, String> substitutions)
     {
         if (cells != null)
         {
@@ -477,7 +478,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
         return cells;
     }
 
-    private String evaluateSpelExpression(Object object, String spelExpression, String objectType)
+    public String evaluateSpelExpression(Object object, String spelExpression, String objectType)
     {
         String generatedExpression = "";
         boolean isExistingMergeField = false;
@@ -606,8 +607,8 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
         }
         return generatedExpression;
     }
-    
-    private TemplateModelProvider getTemplateModelProvider(Class templateModelProviderClass)
+
+    public TemplateModelProvider getTemplateModelProvider(Class templateModelProviderClass)
     {
         Map<String, TemplateModelProvider> templateModelproviders = contextHolder.getAllBeansOfType(templateModelProviderClass);
         if (templateModelproviders.size() > 1)
@@ -767,7 +768,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
         this.appConfig = appConfig;
     }
 
-    public void setContextHolder(SpringContextHolder contextHolder) 
+    public void setContextHolder(SpringContextHolder contextHolder)
     {
         this.contextHolder = contextHolder;
     }
