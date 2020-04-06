@@ -231,6 +231,8 @@
     <bean id="closeComplaint" class="com.armedia.acm.plugins.complaint.service.CloseComplaintServiceImpl">
         <property name="closeComplaintRequestDao" ref="closeComplaintRequestDao"/>
         <property name="pipelineManager" ref="closeComplaintPipelineManager"/>
+        <property name="organizationDao" ref="acmOrganizationDao"/>
+        <property name="personDao" ref="acmPersonDao"/>
     </bean>
 
     <bean id="pdfCloseComplaintDocumentGeneratorHandler"
