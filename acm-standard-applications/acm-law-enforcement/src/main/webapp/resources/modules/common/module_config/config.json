@@ -389,12 +389,6 @@
             "titleKey": "common.directive.docTree.menu.rename",
             "cmd": "rename",
             "uiIcon": "ui-icon-pencil"
-          },
-          {
-            "___title": "Copy <kbd>Ctrl+C</kbd>",
-            "titleKey": "common.directive.docTree.menu.copy",
-            "cmd": "copy",
-            "uiIcon": "ui-icon-copy"
           }
         ],
         "file": [
@@ -425,15 +419,6 @@
           {
             "title": "Participants",
             "cmd": "showParticipants"
-          },
-          {
-            "title": "----"
-          },
-          {
-            "___title": "Copy <kbd>Ctrl+C</kbd>",
-            "titleKey": "common.directive.docTree.menu.copy",
-            "cmd": "copy",
-            "uiIcon": "ui-icon-copy"
           },
           {
             "title": "----"
