@@ -23,49 +23,47 @@
     </bean>
 
     <bean id="brandingFileConfigurationService"
-        class="com.armedia.acm.configuration.core.initialization.CustomFilesConfigurationInitialization">
-        <property name="customFilesLocation" value="#{ systemProperties ['user.home'] }/.arkcase/custom/"/>
+        class="com.armedia.acm.configuration.core.initialization.FilesConfigurationInitialization">
+        <property name="filesLocation" value="#{ systemProperties ['user.home'] }/.arkcase/custom/"/>
         <property name="fileConfigurationService" ref="fileConfigurationServiceImpl"/>
-        <property name="customFolder" value="branding"/>
-        <property name="customFiles">
+        <property name="files">
             <list value-type="java.lang.String">
-                <value>header-logo.png</value>
-                <value>login-logo.png</value>
-                <value>email-logo.png</value>
-                <value>custom.css</value>
+                <value>branding/header-logo.png</value>
+                <value>branding/login-logo.png</value>
+                <value>branding/email-logo.png</value>
+                <value>branding/custom.css</value>
             </list>
         </property>
     </bean>
 
     <bean id="rulesFileConfigurationService"
-          class="com.armedia.acm.configuration.core.initialization.CustomFilesConfigurationInitialization">
-        <property name="customFilesLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/"/>
+          class="com.armedia.acm.configuration.core.initialization.FilesConfigurationInitialization">
+        <property name="filesLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/"/>
         <property name="fileConfigurationService" ref="fileConfigurationServiceImpl"/>
-        <property name="customFolder" value="rules"/>
-        <property name="customFiles">
+        <property name="files">
             <list value-type="java.lang.String">
-                <value>drools-access-control-rules.xlsx</value>
-                <value>drools-assignment-rules.xlsx</value>
-                <value>drools-billing-invoice-rules.xlsx</value>
-                <value>drools-case-file-rules.xlsx</value>
-                <value>drools-complaint-number-rules.xlsx</value>
-                <value>drools-costsheet-rules.xlsx</value>
-                <value>drools-document-repository-rules.xlsx</value>
-                <value>drools-enter-queue-rules.xlsx</value>
-                <value>drools-form-business-process-rules.xlsx</value>
-                <value>drools-leave-current-queue-rules.xlsx</value>
-                <value>drools-next-possible-queues-rules.xlsx</value>
-                <value>drools-ocr-business-process-rules.xlsx</value>
-                <value>drools-ocr-rules.xlsx</value>
-                <value>drools-on-enter-queue-rules.xlsx</value>
-                <value>drools-on-leave-queue-rules.xlsx</value>
-                <value>drools-participant-assignment-rules.xlsx</value>
-                <value>drools-split-case-file-rules.xlsx</value>
-                <value>drools-start-business-process-rules.xlsx</value>
-                <value>drools-task-rules.xlsx</value>
-                <value>drools-timesheet-rules.xlsx</value>
-                <value>drools-transcribe-business-process-rules.xlsx</value>
-                <value>drools-transcribe-rules.xlsx</value>
+                <value>rules/drools-access-control-rules.xlsx</value>
+                <value>rules/drools-assignment-rules.xlsx</value>
+                <value>rules/drools-billing-invoice-rules.xlsx</value>
+                <value>rules/drools-case-file-rules.xlsx</value>
+                <value>rules/drools-complaint-number-rules.xlsx</value>
+                <value>rules/drools-costsheet-rules.xlsx</value>
+                <value>rules/drools-document-repository-rules.xlsx</value>
+                <value>rules/drools-enter-queue-rules.xlsx</value>
+                <value>rules/drools-form-business-process-rules.xlsx</value>
+                <value>rules/drools-leave-current-queue-rules.xlsx</value>
+                <value>rules/drools-next-possible-queues-rules.xlsx</value>
+                <value>rules/drools-ocr-business-process-rules.xlsx</value>
+                <value>rules/drools-ocr-rules.xlsx</value>
+                <value>rules/drools-on-enter-queue-rules.xlsx</value>
+                <value>rules/drools-on-leave-queue-rules.xlsx</value>
+                <value>rules/drools-participant-assignment-rules.xlsx</value>
+                <value>rules/drools-split-case-file-rules.xlsx</value>
+                <value>rules/drools-start-business-process-rules.xlsx</value>
+                <value>rules/drools-task-rules.xlsx</value>
+                <value>rules/drools-timesheet-rules.xlsx</value>
+                <value>rules/drools-transcribe-business-process-rules.xlsx</value>
+                <value>rules/drools-transcribe-rules.xlsx</value>
             </list>
         </property>
     </bean>
