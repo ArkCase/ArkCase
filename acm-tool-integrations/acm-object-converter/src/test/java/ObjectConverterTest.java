@@ -200,10 +200,6 @@ public class ObjectConverterTest extends EasyMockSupport
     @Test
     public void dateTests()
     {
-        System.setProperty("user.timezone", "GMT");
-        TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
-
-        ObjectConverter objectConverter = ObjectConverter.createObjectConverterForTests();
         // ---------------- marshal ------------
         String marshalledLocalDateTime = objectConverter.getJsonMarshaller().marshal(LocalDateTime.now());
         marshalledLocalDateTime = marshalledLocalDateTime.substring(1, marshalledLocalDateTime.length() - 1);

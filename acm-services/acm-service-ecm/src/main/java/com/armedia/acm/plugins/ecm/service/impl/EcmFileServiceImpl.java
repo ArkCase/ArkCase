@@ -491,7 +491,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     public String createFolder(String folderPath) throws AcmCreateObjectFailedException
     {
         String path = addDateInPath(folderPath, true);
-        if( path != null){
+        if (path != null)
+        {
             int endIndex = folderPath.lastIndexOf("/");
             path = path + folderPath.substring(endIndex);
             return createFolder(path, ecmFileConfig.getDefaultCmisId());
@@ -506,7 +507,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     {
         String path = folderPath;
 
-        if(flag)
+        if (flag)
         {
             int endIndex = folderPath.lastIndexOf("/");
             if (endIndex == -1)
@@ -520,7 +521,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
 
-        path = path +"/"+ String.valueOf(calendar.get(Calendar.YEAR));
+        path = path + "/" + String.valueOf(calendar.get(Calendar.YEAR));
         createFolder(path, ecmFileConfig.getDefaultCmisId());
 
         int month = calendar.get(Calendar.MONTH) + 1;
@@ -1535,9 +1536,10 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 3, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "DELETE")
     public EcmFile moveFile(Long fileId, Long targetObjectId, String targetObjectType, Long dstFolderId)
-            throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException
+            throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException, LinkAlreadyExistException
     {
         AcmFolder folder = getFolderDao().find(dstFolderId);
+        EcmFile file = getEcmFileDao().find(fileId);
         if (folder == null)
         {
             throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE, dstFolderId, "Folder  not found", null);
@@ -1547,8 +1549,62 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         {
             folder = getFolderLinkTarget(folder);
         }
+        if (!file.isLink())
+        {
+            return moveFile(fileId, targetObjectId, targetObjectType, folder);
+        }
+        else
+        {
+            return moveFileLink(fileId, targetObjectId, targetObjectType, folder);
+        }
 
-        return moveFile(fileId, targetObjectId, targetObjectType, folder);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 3, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
+    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "DELETE")
+    public EcmFile moveFileLink(Long fileId, Long targetObjectId, String targetObjectType, AcmFolder folder)
+            throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException, LinkAlreadyExistException
+    {
+
+        EcmFile file = getEcmFileDao().find(fileId);
+        if (file == null)
+        {
+            throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, fileId, "File  not found", null);
+        }
+
+        // Check if link already exists in same directory
+        if (getEcmFileDao().getFileLinkInCurrentDirectory(file.getVersionSeriesId(), folder.getId()) != null)
+        {
+            log.error("File with version series id {} already exist in current directory", file.getVersionSeriesId());
+            throw new LinkAlreadyExistException("Link for file " + file.getFileName() + " already exist " +
+                    "in current directory");
+        }
+
+        AcmContainer container = getOrCreateContainer(targetObjectType, targetObjectId);
+
+        EcmFile movedFile;
+
+        try
+        {
+
+            file.setContainer(container);
+
+            file.setFolder(folder);
+
+            movedFile = getEcmFileDao().save(file);
+
+            movedFile = getFileParticipantService().setFileParticipantsFromParentFolder(movedFile);
+
+            return movedFile;
+        }
+        catch (PersistenceException e)
+        {
+            log.error("Could not move file {} ", e.getMessage(), e);
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_MOVE_FILE, EcmFileConstants.OBJECT_FILE_TYPE, file.getId(),
+                    "Could not move file", e);
+        }
     }
 
     @Override
@@ -1775,7 +1831,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             }
 
         }
-        catch (PersistenceException e)
+        catch (PersistenceException | LinkAlreadyExistException e)
         {
             log.error("Could not put file {} into recycle bin, reason {} ", objectId, e.getMessage(), e);
             throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_DELETE_FILE, EcmFileConstants.OBJECT_FILE_TYPE,

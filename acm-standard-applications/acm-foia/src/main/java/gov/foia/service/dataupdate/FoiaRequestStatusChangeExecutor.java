@@ -119,8 +119,13 @@ public class FoiaRequestStatusChangeExecutor implements AcmDataUpdateExecutor
 
     private boolean isQueueAndStatusEqualTo(String queueName, String statusName, FOIARequest request)
     {
-        return request.getQueue().getName().equalsIgnoreCase(queueName)
-                && request.getStatus().equalsIgnoreCase(statusName);
+        boolean isProperQueueAndStatus = false;
+        if (request.getQueue() != null && request.getQueue().getName() != null && request.getStatus() != null)
+        {
+            isProperQueueAndStatus = request.getQueue().getName().equalsIgnoreCase(queueName)
+                    && request.getStatus().equalsIgnoreCase(statusName);
+        }
+        return isProperQueueAndStatus;
     }
 
     public FOIARequestDao getRequestDao()

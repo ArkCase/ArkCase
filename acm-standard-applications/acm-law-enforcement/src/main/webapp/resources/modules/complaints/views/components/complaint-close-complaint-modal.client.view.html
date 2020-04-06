@@ -107,8 +107,8 @@
                         <div class="col-sm-4">
                             <label translate>complaints.comp.closeComplaint.refer.external.name </label>
                             <span class="required-asterisk">*</span>
-                            <input type="text" class="form-control"
-                                    ng-model="closeComplaintRequest.disposition.referExternalOrganizationName" required />
+                            <input type="text" class="input-md form-control" ng-model="closeComplaintRequest.disposition.referExternalOrganizationName"
+                                   ng-click="addOrganization()" required />
                         </div>
                         <div class="col-sm-4">
                             <label translate>complaints.comp.closeComplaint.refer.external.date</label>
@@ -120,11 +120,11 @@
                         <div class="col-sm-4">
                             <label translate>complaints.comp.closeComplaint.refer.external.contact.name </label>
                             <span class="required-asterisk">*</span>
-                            <input type="text" class="form-control"
-                                    ng-model="closeComplaintRequest.disposition.referExternalContactPersonName" required />
+                            <input type="text" class="input-md form-control" ng-model="closeComplaintRequest.disposition.referExternalContactPersonName"
+                                   ng-click="addPerson()" required/>
                         </div>
                     </div>
-
+                    <br>
                     <div class="row">
                         <div class="panel panel-default">
                             <div class="panel-heading">
@@ -137,21 +137,17 @@
                                     <div class="col-sm-6">
                                         <label translate>complaints.comp.closeComplaint.refer.external.contact.type </label>
                                         <span class="required-asterisk">*</span>
-                                        <select ng-model="closeComplaintRequest.disposition.referExternalContactMethod.type"
+                                        <select ng-model="closeComplaintRequest.disposition.referExternalContactMethod"
                                                 class="form-control input-md"
+                                                ng-options="contact as contact.type for contact in contactTypes track by contact.id"
                                                 required>
-                                            <option ng-repeat="option in contactTypes" ng-value="option.value">
-                                                {{option.value}}
-                                            </option>
                                         </select>
                                     </div>
                                     <div class="col-sm-6">
                                         <label translate>complaints.comp.closeComplaint.refer.external.contact.value</label>
                                         <span class="required-asterisk">*</span>
-                                        <input type="text" class="form-control"
-                                                ng-model="closeComplaintRequest.disposition.referExternalContactMethod.value"
-                                                required />
-                                    </div>
+                                        <input class="input-md form-control" ng-disabled="true" ng-model="closeComplaintRequest.disposition.referExternalContactMethod.value">
+                                        </div>
                                 </div>
                             </div>
                         </div>

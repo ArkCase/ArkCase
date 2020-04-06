@@ -52,7 +52,7 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -107,6 +107,12 @@ public class CloseComplaintRequest implements Serializable, AcmObject, AcmEntity
 
     @Column(name = "cm_close_complaint_description")
     private String description;
+
+    @Transient
+    private Long referExternalPersonId;
+
+    @Transient
+    private Long referExternalOrganizationId;
 
     @PrePersist
     public void beforeInsert()
@@ -256,5 +262,21 @@ public class CloseComplaintRequest implements Serializable, AcmObject, AcmEntity
     public void setDescription(String description)
     {
         this.description = description;
+    }
+
+    public Long getReferExternalPersonId() {
+        return referExternalPersonId;
+    }
+
+    public void setReferExternalPersonId(Long referExternalPersonId) {
+        this.referExternalPersonId = referExternalPersonId;
+    }
+
+    public Long getReferExternalOrganizationId() {
+        return referExternalOrganizationId;
+    }
+
+    public void setReferExternalOrganizationId(Long referExternalOrganizationId) {
+        this.referExternalOrganizationId = referExternalOrganizationId;
     }
 }

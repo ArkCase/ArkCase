@@ -65,6 +65,7 @@ public class CloseComplaintFormAPIController
         Map<String, String> message = new HashMap<>();
         try
         {
+            closeComplaintService.createPersonOrganizationAssociation(form);
             closeComplaintService.save(form, auth, mode);
             message.put("info", "The complaint is in approval mode");
         }

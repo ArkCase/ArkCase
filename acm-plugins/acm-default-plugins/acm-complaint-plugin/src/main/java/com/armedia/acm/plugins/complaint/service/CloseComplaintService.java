@@ -36,4 +36,6 @@ public interface CloseComplaintService
 {
     @Transactional
     void save(CloseComplaintRequest form, Authentication auth, String mode) throws Exception;
+
+    void createPersonOrganizationAssociation(CloseComplaintRequest form);
 }
