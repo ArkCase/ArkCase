@@ -33,44 +33,32 @@ import org.springframework.beans.factory.InitializingBean;
 
 import java.util.List;
 
-public class CustomFilesConfigurationInitialization implements InitializingBean
+public class FilesConfigurationInitialization implements InitializingBean
 {
 
-    private String customFilesLocation;
+    private String filesLocation;
 
-    private String customFolder;
-
-    private List<String> customFiles;
+    private List<String> files;
 
     private FileConfigurationService fileConfigurationService;
 
     @Override
     public void afterPropertiesSet() throws Exception
     {
-        for (String file : customFiles)
+        for (String file : files)
         {
-            fileConfigurationService.getFileFromConfiguration(file, customFolder, customFilesLocation);
+            fileConfigurationService.getFileFromConfiguration(file, filesLocation);
         }
     }
 
-    public String getCustomFolder()
+    public List<String> getFiles()
     {
-        return customFolder;
+        return files;
     }
 
-    public void setCustomFolder(String customFolder)
+    public void setFiles(List<String> files)
     {
-        this.customFolder = customFolder;
-    }
-
-    public List<String> getCustomFiles()
-    {
-        return customFiles;
-    }
-
-    public void setCustomFiles(List<String> customFiles)
-    {
-        this.customFiles = customFiles;
+        this.files = files;
     }
 
     public void setFileConfigurationService(FileConfigurationService fileConfigurationService)
@@ -78,13 +66,13 @@ public class CustomFilesConfigurationInitialization implements InitializingBean
         this.fileConfigurationService = fileConfigurationService;
     }
 
-    public String getCustomFilesLocation()
+    public String getFilesLocation()
     {
-        return customFilesLocation;
+        return filesLocation;
     }
 
-    public void setCustomFilesLocation(String customFilesLocation)
+    public void setFilesLocation(String filesLocation)
     {
-        this.customFilesLocation = customFilesLocation;
+        this.filesLocation = filesLocation;
     }
 }

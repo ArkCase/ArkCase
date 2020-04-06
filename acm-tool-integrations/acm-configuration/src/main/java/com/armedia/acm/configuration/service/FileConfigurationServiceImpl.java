@@ -81,7 +81,7 @@ public class FileConfigurationServiceImpl implements FileConfigurationService
     }
 
     @Override
-    public void getFileFromConfiguration(String fileName, String folderName, String customFilesLocation) throws IOException
+    public void getFileFromConfiguration(String filePath, String filesLocation) throws IOException
     {
 
         HttpHeaders headers = new HttpHeaders();
@@ -91,21 +91,21 @@ public class FileConfigurationServiceImpl implements FileConfigurationService
 
         ResponseEntity<Resource> exchange = configRestTemplate.exchange(
                 configurationClientConfig.getConfigurationUrl() + "/" + configurationClientConfig.getDefaultApplicationName() + "/"
-                        + configurationClientConfig.getActiveProfile() + "/*/" + folderName + "/" + fileName,
+                        + configurationClientConfig.getActiveProfile() + "/*/" + filePath,
                 HttpMethod.GET, entity,
                 Resource.class);
 
-        File file = new File(customFilesLocation + "/" + folderName + "/" + fileName);
+        File file = new File(filesLocation + "/" + filePath);
 
         FileUtils.copyInputStreamToFile(exchange.getBody().getInputStream(), file);
 
     }
 
-    // TODO Not sure why is it here. Is to safe to delete it?
+    // TODO Add support for files other than branding.
     @JmsListener(destination = "VirtualTopic.ConfigFileUpdated", containerFactory = "jmsTopicListenerContainerFactory")
     public void downloadFileFromConfiguration(Message message) throws IOException
     {
-        getFileFromConfiguration(message.getPayload().toString(), BRANDING_LOCATION, customFilesLocation);
+        getFileFromConfiguration(BRANDING_LOCATION + "/" + message.getPayload().toString(), customFilesLocation);
     }
 
     private HttpEntity<LinkedMultiValueMap<String, Object>> prepareFileProperties(InputStreamResource file, String fileName)

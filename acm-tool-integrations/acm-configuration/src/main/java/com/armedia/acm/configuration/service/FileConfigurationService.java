@@ -36,6 +36,6 @@ public interface FileConfigurationService
 
     void moveFileToConfiguration(InputStreamResource file, String fileName) throws IOException;
 
-    void getFileFromConfiguration(String fileName, String folderName, String customFilesLocation) throws IOException;
+    void getFileFromConfiguration(String filePath, String filesLocation) throws IOException;
 
 }
