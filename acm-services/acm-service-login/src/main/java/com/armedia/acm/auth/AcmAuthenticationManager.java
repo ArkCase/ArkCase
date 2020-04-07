@@ -27,11 +27,12 @@ package com.armedia.acm.auth;
  * #L%
  */
 
-import com.armedia.acm.auth.ad.AcmActiveDirectoryAuthenticationException;
-import com.armedia.acm.auth.ad.AcmActiveDirectoryAuthenticationProvider;
 import com.armedia.acm.auth.okta.model.OktaAPIConstants;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.service.ldap.AcmActiveDirectoryAuthenticationException;
+import com.armedia.acm.services.users.service.ldap.AcmActiveDirectoryAuthenticationProvider;
+import com.armedia.acm.services.users.service.ldap.AcmLdapAuthenticationProvider;
 import com.armedia.acm.spring.SpringContextHolder;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -81,7 +82,7 @@ public class AcmAuthenticationManager implements AuthenticationManager
                             throw new BadCredentialsException("Empty Username");
                         }
                         AcmLdapAuthenticationProvider provider = (AcmLdapAuthenticationProvider) providerEntry.getValue();
-                        String userDomain = provider.getLdapSyncService().getLdapSyncConfig().getUserDomain();
+                    String userDomain = provider.getAcmLdapSyncConfig().getUserDomain();
                     if (principal.endsWith(userDomain))
                         {
                             providerAuthentication = provider.authenticate(authentication);
@@ -95,7 +96,7 @@ public class AcmAuthenticationManager implements AuthenticationManager
                         }
                         AcmActiveDirectoryAuthenticationProvider provider = (AcmActiveDirectoryAuthenticationProvider) providerEntry
                                 .getValue();
-                        String userDomain = provider.getLdapSyncService().getLdapSyncConfig().getUserDomain();
+                    String userDomain = provider.getAcmLdapSyncConfig().getUserDomain();
                     if (principal.endsWith(userDomain))
                         {
                             providerAuthentication = provider.authenticate(authentication);

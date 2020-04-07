@@ -242,6 +242,30 @@ public class CollectionPropertiesConfigurationServiceImpl implements CollectionP
         return runtimeMapWithRootKey;
     }
 
+    @Override
+    public Map<String, Object> deleteMapProperty(String mapPropertyKey, String mapEntryKey, String mapEntryPrefix)
+    {
+        Map<String, Object> configurationMap = configurationContainer.getConfigurationMap();
+
+        Map<String, Object> filteredProperties = filterPropertiesFromRuntimeConfiguration(mapPropertyKey + "." + mapEntryKey,
+                configurationMap);
+
+        Map<String, Object> modifiedProperties = new HashMap<>();
+
+        for (Map.Entry<String, Object> entry : filteredProperties.entrySet())
+        {
+            if (entry.getKey().startsWith(mapPropertyKey + "." + mapEntryKey))
+            {
+                modifiedProperties.put(mapEntryPrefix + mapEntryKey, "");
+            }
+            else
+            {
+                modifiedProperties.put(entry.getKey(), entry.getValue());
+            }
+        }
+
+        return modifiedProperties;
+    }
 
     /**
      * Removes the old state of the properties from the runtime file if they exist.
@@ -494,4 +518,5 @@ public class CollectionPropertiesConfigurationServiceImpl implements CollectionP
     {
         this.configurationContainer = configurationContainer;
     }
+
 }

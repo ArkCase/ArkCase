@@ -20,7 +20,9 @@
  * #L%
  */
 
-package com.armedia.acm.auth.ad;
+package com.armedia.acm.services.users.service.ldap;
+
+import static com.armedia.acm.services.users.service.ldap.ActiveDirectoryError.toActiveDirectoryError;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,7 +58,7 @@ public class ActiveDirectoryUtils
     {
         String hexString = Integer.toHexString(code);
         Throwable cause = new AcmActiveDirectoryAuthenticationException(hexString, exception.getMessage(), exception);
-        switch (ActiveDirectoryError.toActiveDirectoryError(code))
+        switch (toActiveDirectoryError(code))
         {
         case PASSWORD_EXPIRED:
             throw new CredentialsExpiredException(USER_PASSWORD_HAS_EXPIRED, cause);
@@ -75,7 +77,7 @@ public class ActiveDirectoryUtils
 
     public static String subCodeToLogMessage(int code)
     {
-        switch (ActiveDirectoryError.toActiveDirectoryError(code))
+        switch (toActiveDirectoryError(code))
         {
 
         case USERNAME_NOT_FOUND:

@@ -20,7 +20,7 @@
  * #L%
  */
 
-package com.armedia.acm.auth.ad;
+package com.armedia.acm.services.users.model.ldap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -107,6 +107,7 @@ public class ActiveDirectoryLdapSearchConfig implements InitializingBean
         searchControls.setReturningAttributes(attrs);
     }
 
+    @Override
     public String toString()
     {
 
