@@ -30,6 +30,8 @@ package com.armedia.acm.services.users.service.ldap;
 import com.armedia.acm.configuration.service.CollectionPropertiesConfigurationService;
 import com.armedia.acm.configuration.service.ConfigurationPropertyService;
 import com.armedia.acm.configuration.util.MergeFlags;
+import com.armedia.acm.services.users.model.event.LdapDirectoryAdded;
+import com.armedia.acm.services.users.model.event.LdapDirectoryReplaced;
 import com.armedia.acm.services.users.model.ldap.AcmLdapAuthenticateConfig;
 import com.armedia.acm.services.users.model.ldap.AcmLdapConfig;
 import com.armedia.acm.services.users.model.ldap.AcmLdapConstants;
@@ -37,8 +39,6 @@ import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.ActiveDirectoryLdapSearchConfig;
 import com.armedia.acm.services.users.service.AcmLdapUserDetailsService;
 import com.armedia.acm.spring.SpringContextHolder;
-import com.armedia.acm.spring.events.LdapDirectoryAdded;
-import com.armedia.acm.spring.events.LdapDirectoryReplaced;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -567,6 +567,7 @@ public class AcmLdapRegistryServiceImpl implements AcmLdapRegistryService, Initi
 
         properties.put("ldapAddGroupConfig", getLdapGroupConfig(directoryId, (String) properties.get("directoryType")));
         properties.put("ldapAddUserConfig", getLdapUserConfig(directoryId, (String) properties.get("directoryType")));
+        properties.put("autoGenerateUserId", false);
         dirConfig.put(directoryId, properties);
 
         ldapConfiguration.put(AcmLdapConfiguration.LDAP_SYNC_CONFIG_PROP_KEY + "." + LDAP_DIRECTORY_CONFIG, dirConfig);
