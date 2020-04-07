@@ -27,15 +27,15 @@ package com.armedia.acm.services.users.service.ldap;
  * #L%
  */
 
+import com.armedia.acm.core.model.AcmEvent;
 import com.armedia.acm.quartz.scheduler.AcmJobConfig;
 import com.armedia.acm.quartz.scheduler.AcmJobFactory;
 import com.armedia.acm.quartz.scheduler.AcmSchedulerService;
+import com.armedia.acm.services.users.model.event.LdapDirectoryAdded;
+import com.armedia.acm.services.users.model.event.LdapDirectoryDeleted;
+import com.armedia.acm.services.users.model.event.LdapDirectoryReplaced;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.spring.SpringContextHolder;
-import com.armedia.acm.spring.events.AbstractContextHolderEvent;
-import com.armedia.acm.spring.events.LdapDirectoryAdded;
-import com.armedia.acm.spring.events.LdapDirectoryDeleted;
-import com.armedia.acm.spring.events.LdapDirectoryReplaced;
 
 import org.quartz.JobDetail;
 import org.quartz.Trigger;
@@ -44,7 +44,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 
-public class OnLdapContextChangedUpdateScheduler implements ApplicationListener<AbstractContextHolderEvent>
+public class OnLdapContextChangedUpdateScheduler implements ApplicationListener<AcmEvent>
 {
     private AcmSchedulerService schedulerService;
 
@@ -55,51 +55,54 @@ public class OnLdapContextChangedUpdateScheduler implements ApplicationListener<
     private static final Logger logger = LoggerFactory.getLogger(OnLdapContextChangedUpdateScheduler.class);
 
     @Override
-    public void onApplicationEvent(AbstractContextHolderEvent event)
+    public void onApplicationEvent(AcmEvent event)
     {
-        String directoryId = event.getContextName();
-
-        AcmLdapSyncConfig ldapSyncConfig = contextHolder.getBeanByNameIncludingChildContexts(String.format("%s_sync", directoryId),
-                AcmLdapSyncConfig.class);
-
-        String ldapSyncJobName = String.format("%s_ldapSyncJob", directoryId);
-        String ldapSyncTriggerName = String.format("%s_ldapSyncJobTrigger", directoryId);
-
-        String ldapPartialSyncJobName = String.format("%s_ldapPartialSyncJob", directoryId);
-        String ldapPartialSyncTriggerName = String.format("%s_ldapPartialSyncJobTrigger", directoryId);
-
-        if (event instanceof LdapDirectoryAdded)
+        if (event instanceof LdapDirectoryAdded || event instanceof LdapDirectoryReplaced || event instanceof LdapDirectoryDeleted)
         {
-            if (!schedulerService.isJobScheduled(ldapSyncTriggerName))
+            String directoryId = event.getEventDescription();
+
+            AcmLdapSyncConfig ldapSyncConfig = contextHolder.getBeanByNameIncludingChildContexts(String.format("%s_sync", directoryId),
+                    AcmLdapSyncConfig.class);
+
+            String ldapSyncJobName = String.format("%s_ldapSyncJob", directoryId);
+            String ldapSyncTriggerName = String.format("%s_ldapSyncJobTrigger", directoryId);
+
+            String ldapPartialSyncJobName = String.format("%s_ldapPartialSyncJob", directoryId);
+            String ldapPartialSyncTriggerName = String.format("%s_ldapPartialSyncJobTrigger", directoryId);
+
+            if (event instanceof LdapDirectoryAdded)
             {
-                scheduleJob(ldapSyncJobName, ldapSyncConfig.getFullSyncCron());
-                logger.info("Schedule ldap sync job [{}] for directory [{}].", ldapSyncJobName, directoryId);
+                if (!schedulerService.isJobScheduled(ldapSyncTriggerName))
+                {
+                    scheduleJob(ldapSyncJobName, ldapSyncConfig.getFullSyncCron());
+                    logger.info("Schedule ldap sync job [{}] for directory [{}].", ldapSyncJobName, directoryId);
+                }
+                if (!schedulerService.isJobScheduled(ldapPartialSyncTriggerName))
+                {
+                    scheduleJob(ldapPartialSyncJobName, ldapSyncConfig.getPartialSyncCron());
+                    logger.info("Schedule ldap partial sync job [{}] for directory [{}].", ldapPartialSyncJobName, directoryId);
+                }
+
+                // when new ldap configuration added trigger full ldap sync
+                schedulerService.triggerJob(ldapSyncJobName);
             }
-            if (!schedulerService.isJobScheduled(ldapPartialSyncTriggerName))
+            else if (event instanceof LdapDirectoryReplaced)
             {
-                scheduleJob(ldapPartialSyncJobName, ldapSyncConfig.getPartialSyncCron());
-                logger.info("Schedule ldap partial sync job [{}] for directory [{}].", ldapPartialSyncJobName, directoryId);
+                rescheduleJob(ldapSyncJobName, ldapSyncConfig.getFullSyncCron());
+                logger.info("On ldap context replaced, reschedule job [{}] with trigger [{}].", ldapSyncJobName, ldapSyncTriggerName);
+
+                rescheduleJob(ldapPartialSyncJobName, ldapSyncConfig.getPartialSyncCron());
+                logger.info("On ldap context replaced, reschedule job [{}] with trigger [{}].",
+                        ldapPartialSyncJobName, ldapPartialSyncJobName);
             }
+            else if (event instanceof LdapDirectoryDeleted)
+            {
+                logger.info("On ldap context removed, remove ldap sync job [{}] from scheduler.", ldapSyncJobName);
+                schedulerService.deleteJob(ldapSyncJobName);
 
-            // when new ldap configuration added trigger full ldap sync
-            schedulerService.triggerJob(ldapSyncJobName);
-        }
-        else if (event instanceof LdapDirectoryReplaced)
-        {
-            rescheduleJob(ldapSyncJobName, ldapSyncConfig.getFullSyncCron());
-            logger.info("On ldap context replaced, reschedule job [{}] with trigger [{}].", ldapSyncJobName, ldapSyncTriggerName);
-
-            rescheduleJob(ldapPartialSyncJobName, ldapSyncConfig.getPartialSyncCron());
-            logger.info("On ldap context replaced, reschedule job [{}] with trigger [{}].",
-                    ldapPartialSyncJobName, ldapPartialSyncJobName);
-        }
-        else if (event instanceof LdapDirectoryDeleted)
-        {
-            logger.info("On ldap context removed, remove ldap sync job [{}] from scheduler.", ldapSyncJobName);
-            schedulerService.deleteJob(ldapSyncJobName);
-
-            logger.info("On ldap context removed, remove ldap partial sync job [{}] from scheduler.", ldapPartialSyncJobName);
-            schedulerService.deleteJob(ldapPartialSyncJobName);
+                logger.info("On ldap context removed, remove ldap partial sync job [{}] from scheduler.", ldapPartialSyncJobName);
+                schedulerService.deleteJob(ldapPartialSyncJobName);
+            }
         }
     }
 

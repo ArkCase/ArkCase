@@ -1,4 +1,4 @@
-package com.armedia.acm.spring.events;
+package com.armedia.acm.services.users.model.event;
 
 /*-
  * #%L
@@ -27,11 +27,13 @@ package com.armedia.acm.spring.events;
  * #L%
  */
 
+import com.armedia.acm.core.model.AcmEvent;
+
 /**
  * @author mario.gjurcheski
  *
  */
-public class LdapDirectoryDeleted extends AbstractContextHolderEvent
+public class LdapDirectoryReplaced extends AcmEvent
 {
 
     /**
@@ -41,8 +43,9 @@ public class LdapDirectoryDeleted extends AbstractContextHolderEvent
      *            the component that published the event (never {@code null})
      * @param name
      */
-    public LdapDirectoryDeleted(Object source, String name)
+    public LdapDirectoryReplaced(Object source, String name)
     {
-        super(source, name);
+        super(source);
+        setEventDescription(name);
     }
 }

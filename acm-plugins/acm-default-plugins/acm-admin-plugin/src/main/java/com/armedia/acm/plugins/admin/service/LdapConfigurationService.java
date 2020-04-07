@@ -31,9 +31,9 @@ import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
 import com.armedia.acm.crypto.properties.AcmEncryptablePropertyUtils;
 import com.armedia.acm.plugins.admin.exception.AcmLdapConfigurationException;
 import com.armedia.acm.plugins.admin.model.LdapConfigurationProperties;
+import com.armedia.acm.services.users.model.event.LdapDirectoryDeleted;
 import com.armedia.acm.services.users.service.ldap.AcmLdapConfiguration;
 import com.armedia.acm.services.users.service.ldap.AcmLdapRegistryService;
-import com.armedia.acm.spring.events.LdapDirectoryDeleted;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -168,10 +168,10 @@ public class LdapConfigurationService implements ApplicationEventPublisherAware
 
     }
 
-    public Map retrieveDirectoriesConfiguration()
+    public Map<String, Object> retrieveDirectoriesConfiguration()
     {
 
-        Map<Object, Object> dirsConfiguration = new HashMap<>();
+        Map<String, Object> dirsConfiguration = new HashMap<>();
         Map<String, Object> directories = acmLdapConfig.getAttributes().get("ldapDirectoryConfig");
 
         directories.forEach((dirName, properties) -> {
