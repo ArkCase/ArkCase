@@ -71,6 +71,7 @@
         <property name="groupDao" ref="groupDao"/>
         <property name="userIdGroupNameDomainUpdateDao" ref="userIdGroupNameDomainUpdateDao"/>
         <property name="contextHolder" ref="acmContextHolder"/>
+        <property name="ldapSyncService" ref="ldapSyncService"/>
     </bean>
 
     <bean id="groupRemoveUUIDExecutor" class="com.armedia.acm.services.dataupdate.service.GroupRemoveUUIDExecutor">

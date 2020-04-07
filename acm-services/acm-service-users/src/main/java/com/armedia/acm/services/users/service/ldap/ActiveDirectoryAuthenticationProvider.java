@@ -19,9 +19,9 @@
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-package com.armedia.acm.auth.ad;
+package com.armedia.acm.services.users.service.ldap;
 
-import static com.armedia.acm.auth.ad.ActiveDirectoryUtils.subCodeToLogMessage;
+import com.armedia.acm.services.users.model.ldap.ActiveDirectoryLdapSearchConfig;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -163,7 +163,7 @@ public class ActiveDirectoryAuthenticationProvider extends
             // If we found no results, then the username/password did not match
             // Do not send user not found message to client side, send invalid password instead.
             AcmActiveDirectoryAuthenticationException userNameNotFoundException = new AcmActiveDirectoryAuthenticationException(
-                    subCodeToLogMessage(ActiveDirectoryError.INVALID_PASSWORD.getCode()),
+                    ActiveDirectoryUtils.subCodeToLogMessage(ActiveDirectoryError.INVALID_PASSWORD.getCode()),
                     incorrectResults);
             LOGGER.error("Unable to authenticate user - {}", ExceptionUtils.getRootCauseMessage(userNameNotFoundException));
             throw badCredentials(userNameNotFoundException);

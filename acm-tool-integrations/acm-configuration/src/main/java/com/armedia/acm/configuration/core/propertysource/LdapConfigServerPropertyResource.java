@@ -1,10 +1,10 @@
-package com.armedia.acm.spring.events;
+package com.armedia.acm.configuration.core.propertysource;
 
 /*-
  * #%L
- * Tool Integrations: Spring Child Context Holder
+ * ACM Tool Integrations: Configuration Library
  * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
+ * Copyright (C) 2014 - 2020 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 
@@ -27,19 +27,37 @@ package com.armedia.acm.spring.events;
  * #L%
  */
 
+import com.armedia.acm.configuration.core.LdapConfigurationContainer;
+
+import org.springframework.core.env.PropertySource;
+
 /**
- * Created by nebojsha on 26.04.2015.
+ * @author mario.gjurcheski
+ *
  */
-public class ContextRemovedEvent extends AbstractContextHolderEvent
+public class LdapConfigServerPropertyResource extends PropertySource<LdapConfigurationContainer>
 {
-    /**
-     * Create a new ApplicationEvent.
-     *
-     * @param source
-     *            the component that published the event (never {@code null})
-     */
-    public ContextRemovedEvent(Object source, String name)
+
+    private final static String CONFIGURATION_SERVER_SOURCE_NAME = "ldap-configuration-server";
+
+    public LdapConfigServerPropertyResource(String name, LdapConfigurationContainer source)
     {
-        super(source, name);
+        super(name, source);
+    }
+
+    public LdapConfigServerPropertyResource(String name)
+    {
+        super(name);
+    }
+
+    public LdapConfigServerPropertyResource(LdapConfigurationContainer source)
+    {
+        super(CONFIGURATION_SERVER_SOURCE_NAME, source);
+    }
+
+    @Override
+    public Object getProperty(String s)
+    {
+        return null;
     }
 }

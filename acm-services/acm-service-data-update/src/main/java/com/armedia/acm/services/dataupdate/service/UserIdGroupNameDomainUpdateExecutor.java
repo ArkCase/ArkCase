@@ -6,22 +6,22 @@ package com.armedia.acm.services.dataupdate.service;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
@@ -36,12 +36,13 @@ import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.group.AcmGroupStatus;
 import com.armedia.acm.services.users.model.group.AcmGroupType;
+import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.service.ldap.LdapSyncService;
 import com.armedia.acm.spring.SpringContextHolder;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
@@ -70,6 +71,8 @@ public class UserIdGroupNameDomainUpdateExecutor implements AcmDataUpdateExecuto
 
     private SpringContextHolder contextHolder;
 
+    private LdapSyncService ldapSyncService;
+
     private Function<String, String> idStripDomain = it -> StringUtils.substringBeforeLast(it, "@");
 
     @Override
@@ -82,13 +85,13 @@ public class UserIdGroupNameDomainUpdateExecutor implements AcmDataUpdateExecuto
     @Transactional
     public void execute()
     {
-        Map<String, LdapSyncService> ldapSyncServices = contextHolder.getAllBeansOfType(LdapSyncService.class);
-        ldapSyncServices.forEach((beanId, service) -> {
+        Map<String, AcmLdapSyncConfig> ldapSyncConfigMap = contextHolder.getAllBeansOfType(AcmLdapSyncConfig.class);
+        ldapSyncConfigMap.forEach((beanId, config) -> {
             if (beanId.endsWith("_ldapSyncJob"))
             {
-                int n = userIdGroupNameDomainUpdateDao.setUserIdAsDn(service.getLdapSyncConfig().getDirectoryName());
+                int n = userIdGroupNameDomainUpdateDao.setUserIdAsDn(config.getDirectoryName());
                 log.debug("User dn changed in [{}] rows", n);
-                service.ldapSync();
+                ldapSyncService.ldapSync(config);
             }
         });
 
@@ -394,5 +397,10 @@ public class UserIdGroupNameDomainUpdateExecutor implements AcmDataUpdateExecuto
     public void setContextHolder(SpringContextHolder contextHolder)
     {
         this.contextHolder = contextHolder;
+    }
+
+    public void setLdapSyncService(LdapSyncService ldapSyncService)
+    {
+        this.ldapSyncService = ldapSyncService;
     }
 }

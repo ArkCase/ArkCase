@@ -72,4 +72,15 @@ public class JmxProxyInitializer
 
         return mBeanProxyFactoryBean;
     }
+
+    @Bean(name = "proxyLdapFacade")
+    public MBeanProxyFactoryBean getMBeanProxyLdapFactoryBean() throws MalformedObjectNameException
+    {
+        MBeanProxyFactoryBean mBeanProxyFactoryBean = new MBeanProxyFactoryBean();
+        mBeanProxyFactoryBean.setObjectName(
+                "configuration:name=ldap-service,type=com.armedia.acm.configuration.ConfigurationService,artifactId=ldap-service");
+        mBeanProxyFactoryBean.setProxyInterface(ConfigurationFacade.class);
+
+        return mBeanProxyFactoryBean;
+    }
 }

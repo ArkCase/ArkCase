@@ -32,9 +32,9 @@ import com.armedia.acm.plugins.admin.exception.AcmLdapConfigurationException;
 import com.armedia.acm.plugins.admin.model.LdapConfigurationProperties;
 import com.armedia.acm.plugins.admin.service.LdapConfigurationService;
 
-import org.json.JSONObject;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.json.JSONObject;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -60,7 +60,6 @@ public class LdapConfigurationCreateDirectory
     {
         JSONObject newLdapObject = new JSONObject(resource);
         String id = newLdapObject.getString(LdapConfigurationProperties.LDAP_PROP_ID);
-        String directoryType = newLdapObject.getString(LdapConfigurationProperties.LDAP_PROP_DIRECTORY_TYPE);
 
         if (id == null)
         {
@@ -76,7 +75,7 @@ public class LdapConfigurationCreateDirectory
         {
             throw new AcmLdapConfigurationException("Encryption failed. Cause is: ", e);
         }
-        ldapConfigurationService.createLdapDirectoryConfigurations(id, directoryType, props);
+        ldapConfigurationService.createLdapDirectoryConfigurations(id, props);
         return newLdapObject.toString();
     }
 

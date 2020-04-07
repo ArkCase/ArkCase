@@ -33,6 +33,7 @@ import static org.quartz.TriggerBuilder.newTrigger;
 
 import com.armedia.acm.objectonverter.json.JSONUnmarshaller;
 import com.armedia.acm.spring.SpringContextHolder;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -57,10 +58,6 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
-import static org.quartz.CronScheduleBuilder.cronSchedule;
-import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
-import static org.quartz.TriggerBuilder.newTrigger;
 
 /**
  * This class applies scheduler context, for job dependencies.
