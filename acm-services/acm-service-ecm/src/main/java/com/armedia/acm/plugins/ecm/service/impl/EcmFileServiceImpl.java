@@ -40,6 +40,7 @@ import com.armedia.acm.objectonverter.ArkCaseBeanUtils;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
+import com.armedia.acm.plugins.ecm.exception.EcmFileLinkException;
 import com.armedia.acm.plugins.ecm.exception.LinkAlreadyExistException;
 import com.armedia.acm.plugins.ecm.model.AcmCmisObject;
 import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
@@ -2233,17 +2234,17 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
-    public LinkTargetFileDTO getLinkTargetFileInfo(EcmFile ecmFile) throws AcmObjectNotFoundException
+    public LinkTargetFileDTO getLinkTargetFileInfo(EcmFile ecmFile) throws EcmFileLinkException
     {
         log.info("Get target file info for the linked file: {}", ecmFile.getId());
         try
         {
             return getEcmFileDao().getLinkTargetFileInfo(ecmFile);
         }
-        catch (Exception e)
+        catch (EcmFileLinkException e)
         {
             log.error("Could not find the target file info for the linked file {} ", e.getMessage(), e);
-            throw new AcmObjectNotFoundException("EcmFile", ecmFile.getId(), "Object not found", e.getCause());
+            throw new EcmFileLinkException("EcmFile target not found for linked file with id: {} " + ecmFile.getId(), e.getCause());
         }
     }
 

@@ -1,0 +1,14 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="01-acm-exemption-code-foreign-key" author="ana.serafimoska"
+               logicalFilePath="/ddl/constraints/foia-request-constraints-1.0.xml">
+        <addForeignKeyConstraint baseTableName="acm_exemption_code" baseColumnNames="cm_file_id"
+                                 constraintName="fk_exemption_file_id"
+                                 referencedTableName="acm_file"
+                                 referencedColumnNames="cm_file_id" deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
+    </changeSet>
+
+</databaseChangeLog>
+
