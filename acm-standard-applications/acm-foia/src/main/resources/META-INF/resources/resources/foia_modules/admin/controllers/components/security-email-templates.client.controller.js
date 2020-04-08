@@ -146,4 +146,21 @@ angular.module('admin').controller('Admin.SecurityEmailTemplatesController',
                 }
             }
 
+            emailTemplatesService.getEmailReceiverConfiguration().then(function(result) {
+                $scope.emailReceiverConfiguration = {
+                    enableBurstingAttachments: result.data["email.enableBurstingAttachments"]
+                };
+            });
+            
+            $scope.saveBurstingConfiguration = function () {
+                var emailReceiverConfiguration = {
+                    "email.enableBurstingAttachments": $scope.emailReceiverConfiguration.enableBurstingAttachments
+                };
+                emailTemplatesService.saveEmailReceiverConfiguration(emailReceiverConfiguration).then(function() {
+                    MessageService.succsessAction();
+                }, function() {
+                    MessageService.errorAction();
+                });
+            };
+
         } ]);
