@@ -54,6 +54,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFileDeclareRequestEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFileUpdatedEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.model.EcmFolderDeclareRequestEvent;
+import com.armedia.acm.plugins.ecm.model.LinkTargetFileDTO;
 import com.armedia.acm.plugins.ecm.model.ProgressbarDetails;
 import com.armedia.acm.plugins.ecm.model.RecycleBinItem;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileConvertEvent;
@@ -503,6 +504,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
     }
 
+    @Override
     public String addDateInPath(String folderPath, Boolean flag) throws AcmCreateObjectFailedException
     {
         String path = folderPath;
@@ -2228,6 +2230,21 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
             getEcmFileDao().save(f);
         });
+    }
+
+    @Override
+    public LinkTargetFileDTO getLinkTargetFileInfo(EcmFile ecmFile) throws AcmObjectNotFoundException
+    {
+        log.info("Get target file info for the linked file: {}", ecmFile.getId());
+        try
+        {
+            return getEcmFileDao().getLinkTargetFileInfo(ecmFile);
+        }
+        catch (Exception e)
+        {
+            log.error("Could not find the target file info for the linked file {} ", e.getMessage(), e);
+            throw new AcmObjectNotFoundException("EcmFile", ecmFile.getId(), "Object not found", e.getCause());
+        }
     }
 
     private void deleteAuthenticationTokens(Long fileId)
