@@ -90,6 +90,10 @@ public class EmailReceiverConfig
     @Value("${email.userId}")
     private String emailUserId;
 
+    @JsonProperty("email.enableBurstingAttachments")
+    @Value("${email.enableBurstingAttachments}")
+    private Boolean enableBurstingAttachments;
+
     public String getCaseFileUser()
     {
         return caseFileUser;
@@ -258,5 +262,15 @@ public class EmailReceiverConfig
     public void setEmailUserId(String emailUserId)
     {
         this.emailUserId = emailUserId;
+    }
+
+    public Boolean getEnableBurstingAttachments() 
+    {
+        return enableBurstingAttachments;
+    }
+
+    public void setEnableBurstingAttachments(Boolean enableBurstingAttachments) 
+    {
+        this.enableBurstingAttachments = enableBurstingAttachments;
     }
 }
