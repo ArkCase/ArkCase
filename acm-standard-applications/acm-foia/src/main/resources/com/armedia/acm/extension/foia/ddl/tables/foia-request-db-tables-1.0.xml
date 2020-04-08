@@ -695,5 +695,12 @@ LANGUAGE plpgsql;
         </addColumn>
     </changeSet>
 
+    <changeSet id="44-acm-exemption-code-foreign-key" author="ana.serafimoska">
+        <addForeignKeyConstraint baseTableName="acm_exemption_code" baseColumnNames="cm_file_id"
+             constraintName="fk_exemption_file_id"
+             referencedTableName="acm_file"
+             referencedColumnNames="cm_file_id" deferrable="${deferrable}" initiallyDeferred="${initially.deferred}" />
+    </changeSet>
+
 </databaseChangeLog>
 

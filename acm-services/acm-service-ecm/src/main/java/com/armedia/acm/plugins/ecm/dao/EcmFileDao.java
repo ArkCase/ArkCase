@@ -31,6 +31,7 @@ import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
+import com.armedia.acm.plugins.ecm.model.LinkTargetFileDTO;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -348,4 +349,25 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
         deleteQuery.setParameter("versionSeriesId", versionSeriesId);
         deleteQuery.executeUpdate();
     }
+
+    public LinkTargetFileDTO getLinkTargetFileInfo(EcmFile ecmFile)
+    {
+        String queryText = "SELECT ecmFile.fileId, container.containerObjectType, container.containerObjectId " +
+                "FROM EcmFile ecmFile JOIN " +
+                "AcmContainer container ON container.id = ecmFile.container.id " +
+                "WHERE ecmFile.versionSeriesId = :versionSeriesId " +
+                "AND ecmFile.link <> TRUE";
+
+        TypedQuery<Object[]> query = getEm().createQuery(queryText, Object[].class);
+        query.setParameter("versionSeriesId", ecmFile.getVersionSeriesId());
+
+        Object[] result = query.getSingleResult();
+        LinkTargetFileDTO linkTargetFileDTO = new LinkTargetFileDTO();
+        linkTargetFileDTO.setOriginalFileId((Long) result[0]);
+        linkTargetFileDTO.setParentObjectType((String) result[1]);
+        linkTargetFileDTO.setParentObjectId((Long) result[2]);
+
+        return linkTargetFileDTO;
+    }
+
 }

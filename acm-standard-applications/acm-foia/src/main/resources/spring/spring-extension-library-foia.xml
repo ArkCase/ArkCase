@@ -378,5 +378,10 @@
         <beans:bean id="foiaRequestBrokerConfig" class="gov.foia.model.FoiaRequestBrokerConfig" scope="refresh">
             <aop:scoped-proxy/>
         </beans:bean>
+
+        <beans:bean id="ecmFileCopiedExemptionCodeListener" class="gov.foia.listener.EcmFileCopiedExemptionCodeListener">
+            <beans:property name="foiaExemptionService" ref="foiaExemptionService"/>
+        </beans:bean>
+
     </beans:beans>
 </beans:beans>

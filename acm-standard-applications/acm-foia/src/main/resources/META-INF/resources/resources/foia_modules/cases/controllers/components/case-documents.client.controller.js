@@ -32,8 +32,8 @@ angular.module('cases').controller(
                 'ModalDialogService',
                 'Websockets.MessageHandler',
                 'Case.FolderStructureService',
-                function($scope, $state, $stateParams, $modal, $q, $timeout, $translate, Util, LocaleService, ConfigService, ObjectService, ObjectLookupService, CaseInfoService, DocTreeService, HelperObjectBrowserService, Authentication, PermissionsService, ObjectModelService, DocTreeExtWebDAV,
-                         DocTreeExtCheckin, CorrespondenceService, DocTreeExtEmail, Ecm, MessageService, EmailSenderConfigurationService, MultiCorrespondenceService, ModalDialogService, messageHandler, CaseFolderStructureService) {
+                function ($scope, $state, $stateParams, $modal, $q, $timeout, $translate, Util, LocaleService, ConfigService, ObjectService, ObjectLookupService, CaseInfoService, DocTreeService, HelperObjectBrowserService, Authentication, PermissionsService, ObjectModelService, DocTreeExtWebDAV,
+                          DocTreeExtCheckin, CorrespondenceService, DocTreeExtEmail, EcmService, MessageService, EmailSenderConfigurationService, MultiCorrespondenceService, ModalDialogService, messageHandler, CaseFolderStructureService) {
 
                     Authentication.queryUserInfo().then(function(userInfo) {
                         $scope.user = userInfo.userId;
@@ -208,11 +208,24 @@ angular.module('cases').controller(
                             name: "open",
                             execute: function(nodes) {
                                 var node = nodes[0];
-
-                                $state.go('request-info', {
-                                    id: $stateParams.id,
-                                    fileId: node.data.objectId
-                                }, true);
+                                if (node.data.link) {
+                                    var params = {};
+                                    params.fileId = node.data.objectId;
+                                    EcmService.getLinkTargetEcmFile(params).then(function (ecmFileInfo) {
+                                        var parentObjectId = ecmFileInfo.parentObjectId;
+                                        var originalFileId = ecmFileInfo.originalFileId;
+ 
+                                        $state.go('request-info', {
+                                            id: parentObjectId,
+                                            fileId: originalFileId
+                                        }, true);
+                                    })
+                                } else {
+                                    $state.go('request-info', {
+                                        id: $stateParams.id,
+                                        fileId: node.data.objectId
+                                    }, true);
+                                }
                             }
                         });
                     }
