@@ -17,9 +17,7 @@ angular.module('admin').controller(
                         tempLdapPromise.then(function(directories) {
                             removePrefixInKey(directories.data);
                             _.forEach(directories.data , function (data) {
-                                if(data.enableEditingLdapUsers === 'true'){
-                                    enableEditingLdapUsers = true;
-                                }
+                                enableEditingLdapUsers = data.enableEditingLdapUsers;
                             });
                             $scope.showButton = enableEditingLdapUsers;
                         });
@@ -42,7 +40,7 @@ angular.module('admin').controller(
                         $scope.ldapEditingEnabledPerDirectoryServer = {};
                         $scope.directoryServers = _.map(directories.data, function(ds) {
                             var dirId = ds["ldapConfig.id"];
-                            var dirEnabled = ds["ldapConfig.enableEditingLdapUsers"] === "true";
+                            var dirEnabled = ds["ldapConfig.enableEditingLdapUsers"] === true;
                             var groupControlGroup = ds["ldapConfig.groupControlGroup"];
                             var userControlGroup = ds["ldapConfig.userControlGroup"];
                             var userIdAttributeName = ds["ldapConfig.userIdAttributeName"];

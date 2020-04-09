@@ -1,4 +1,4 @@
-package com.armedia.acm.auth;
+package com.armedia.acm.services.users.service;
 
 /*-
  * #%L
@@ -30,8 +30,8 @@ package com.armedia.acm.auth;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.AcmUserContextMapper;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

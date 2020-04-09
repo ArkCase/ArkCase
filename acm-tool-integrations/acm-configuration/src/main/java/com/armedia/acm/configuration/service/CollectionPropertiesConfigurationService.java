@@ -111,4 +111,10 @@ public interface CollectionPropertiesConfigurationService
      */
     List<String> getMapValueAnnotatedKeys(String packages);
 
+    /**
+     * Removes nested map property keys
+     *
+     */
+    public Map<String, Object> deleteMapProperty(String mapPropertyKey, String mapEntryKey, String mapEntryPrefix);
+
 }

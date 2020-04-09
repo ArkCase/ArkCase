@@ -38,8 +38,8 @@ import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.LdapUser;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.ldap.AuthenticationException;
 import org.springframework.ldap.core.LdapTemplate;
 
@@ -131,7 +131,7 @@ public class LdapAuthenticateService
         }
     }
 
-    protected void savePasswordExpirationDate(AcmUser acmUser, LdapTemplate ldapTemplate)
+    public void savePasswordExpirationDate(AcmUser acmUser, LdapTemplate ldapTemplate)
     {
         // passwordExpirationDate is set by ldap after the entry is there
         LdapUser userEntry = getLdapUserDao().lookupUser(acmUser.getDistinguishedName(), ldapTemplate, ldapSyncConfig);
@@ -139,7 +139,7 @@ public class LdapAuthenticateService
         userDao.save(acmUser);
     }
 
-    protected void invalidateToken(AcmUser acmUser)
+    public void invalidateToken(AcmUser acmUser)
     {
         acmUser.setPasswordResetToken(null);
         userDao.save(acmUser);

@@ -84,8 +84,14 @@ angular.module('complaints').controller(
                         })
                     });
 
-                    ObjectLookupService.getPersonTypes(ObjectService.ObjectTypes.COMPLAINT).then(function(personTypes) {
-                        personTypes = personTypes.filter(x => x.key === "ExternalReferal");
+                    ObjectLookupService.getPersonTypes(ObjectService.ObjectTypes.COMPLAINT).then(function(data) {
+                        var personTypes = [];
+                        for (var i = 0 ; i < data.length ; i++)
+                        {
+                            if (data[i].key === "ExternalReferal") {
+                                personTypes.push(data[i]);
+                            }
+                        }
                         $scope.personTypeExternalReferal = personTypes;
                         return personTypes;
                     });

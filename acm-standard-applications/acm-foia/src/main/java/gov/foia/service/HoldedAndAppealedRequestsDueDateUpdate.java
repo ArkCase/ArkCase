@@ -53,7 +53,7 @@ public class HoldedAndAppealedRequestsDueDateUpdate
 
     public void updateDueDate()
     {
-        if (getFoiaConfig().getHoldedAndAppealedRequestsDueDateUpdateEnabled())
+        if (!getFoiaConfig().getHoldedAndAppealedRequestsDueDateUpdateEnabled())
         {
             return;
         }

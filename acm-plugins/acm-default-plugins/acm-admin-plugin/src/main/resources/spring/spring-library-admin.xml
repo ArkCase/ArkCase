@@ -11,14 +11,8 @@
     <!-- LDAP configuration API -->
     <bean id="ldapConfigurationService" class="com.armedia.acm.plugins.admin.service.LdapConfigurationService">
         <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
-        <property name="ldapDirectoryConfig" ref="ldapDirectoryConfig"/>
-        <property name="templatesConfigMap">
-            <map>
-                <entry key="openldap" value-ref="openLdapTemplateConfig"/>
-                <entry key="activedirectory" value-ref="adTemplateConfig"/>
-            </map>
-        </property>
-        <property name="contextHolder" ref="acmContextHolder"/>
+        <property name="acmLdapConfig" ref="acmSpringLdapConfig"/>
+        <property name="acmLdapBeanSyncService" ref="acmLdapBeanSyncService"/>
     </bean>
 
     <bean id="workflowConfigurationService" class="com.armedia.acm.plugins.admin.service.WorkflowConfigurationService">
@@ -80,44 +74,6 @@
         <property name="historyCleanService" ref="historyCleanJob"/>
     </bean>
 
-    <bean id="ldapDirectoryConfig" class="com.armedia.acm.plugins.admin.model.LdapDirectoryConfig">
-        <property name="ldapConfigurationTemplatesLocation"
-                  value="#{ systemProperties ['user.home'] }/.arkcase/acm/spring/ldap-config-templates/"/>
-        <property name="ldapTemplateFile" value="spring-config-ldap.xml.ftl"/>
-        <property name="ldapTemplatePropertiesFile" value="spring-config-ldap.properties.ftl"/>
-        <property name="ldapConfigurationLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/spring/"/>
-        <property name="ldapFile" value="spring-config-%s-ldap.xml"/>
-        <property name="ldapPropertiesFile" value="spring-config-%s-ldap.properties"/>
-        <property name="ldapPropertiesFileRegex" value="^spring[-d]config[-d][a-zA-Z0-9._]+[-d]ldap.properties$"/>
-        <property name="ldapUserPropertiesFile" ref="ldapAddUserPropertiesFile"/>
-        <property name="ldapUserPropertiesFileRegex" value="^spring[-d]config[-d]user[-d][a-zA-Z0-9-._]+.properties$"/>
-        <property name="ldapUserFileRegex" value="^spring[-d]config[-d]user[-d][a-zA-Z0-9-._]+.xml$"/>
-        <property name="ldapGroupPropertiesFile" ref="ldapAddGroupPropertiesFile"/>
-        <property name="ldapGroupPropertiesFileRegex" value="^spring[-d]config[-d]group[-d][a-zA-Z0-9-._]+.properties$"/>
-        <property name="ldapGroupFileRegex" value="^spring[-d]config[-d]group[-d][a-zA-Z0-9-._]+.xml$"/>
-    </bean>
-
-    <bean id="openLdapTemplateConfig" class="com.armedia.acm.plugins.admin.model.LdapTemplateConfig">
-        <property name="userPropertiesTemplate" value="spring-config-user-openldap.properties.ftl"/>
-        <property name="userPropertiesTemplateName" value="spring-config-user-%s-openldap.properties"/>
-        <property name="userFileTemplate" value="spring-config-user-openldap.xml.ftl"/>
-        <property name="userFileTemplateName" value="spring-config-user-%s-openldap.xml"/>
-        <property name="groupPropertiesTemplate" value="spring-config-group-openldap.properties.ftl"/>
-        <property name="groupPropertiesTemplateName" value="spring-config-group-%s-openldap.properties"/>
-        <property name="groupFileTemplate" value="spring-config-group-openldap.xml.ftl"/>
-        <property name="groupFileTemplateName" value="spring-config-group-%s-openldap.xml"/>
-    </bean>
-
-    <bean id="adTemplateConfig" class="com.armedia.acm.plugins.admin.model.LdapTemplateConfig">
-        <property name="userPropertiesTemplate" value="spring-config-user-ad.properties.ftl"/>
-        <property name="userFileTemplate" value="spring-config-user-ad.xml.ftl"/>
-        <property name="userPropertiesTemplateName" value="spring-config-user-%s-ad.properties"/>
-        <property name="userFileTemplateName" value="spring-config-user-%s-ad.xml"/>
-        <property name="groupPropertiesTemplate" value="spring-config-group-ad.properties.ftl"/>
-        <property name="groupFileTemplate" value="spring-config-group-ad.xml.ftl"/>
-        <property name="groupPropertiesTemplateName" value="spring-config-group-%s-ad.properties"/>
-        <property name="groupFileTemplateName" value="spring-config-group-%s-ad.xml"/>
-    </bean>
     <bean id="cmisConfigurationService" class="com.armedia.acm.plugins.admin.service.CmisConfigurationService">
         <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
         <property name="cmisConfigurationTemplatesLocation" value="${user.home}/.arkcase/acm/cmis/cmis-config-templates/"/>
