@@ -56,6 +56,7 @@ import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.UserDTO;
 import com.armedia.acm.services.users.service.AcmUserEventPublisher;
+import com.armedia.acm.services.users.service.ldap.LdapAuthenticateService;
 import com.armedia.acm.services.users.service.ldap.LdapUserService;
 import com.armedia.acm.spring.SpringContextHolder;
 
@@ -378,14 +379,14 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
                 }
             }
 
-            FOIALdapAuthenticationService ldapAuthenticateService = getLdapAuthenticateService(directoryName);
-            if (ldapAuthenticateService == null)
+            FOIALdapAuthenticationService foiaLdapAuthenticationService = getFOIALdapAuthenticationService(directoryName);
+            if (foiaLdapAuthenticationService == null)
             {
                 log.debug("LDAP authentication service problem");
                 throw new PortalUserServiceException(
                         String.format("LDAP authentication service problem!"));
             }
-            if (!ldapAuthenticateService.authenticate(ldapUserId, password))
+            if (!foiaLdapAuthenticationService.authenticate(ldapUserId, password))
             {
                 log.debug("User %s provided wrong password!", portalAcmUser.getMail());
                 throw new PortalUserServiceException(
@@ -505,8 +506,8 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
             {
                 AcmUser acmPortalUser = getPortalAcmUser(reset.getEmailAddress());
 
-                FOIALdapAuthenticationService ldapAuthenticateService = getLdapAuthenticateService(directoryName);
-                if (ldapAuthenticateService == null)
+                FOIALdapAuthenticationService foiaLdapAuthenticationService = getFOIALdapAuthenticationService(directoryName);
+                if (foiaLdapAuthenticationService == null)
                 {
                     log.debug("LDAP authentication service problem");
                     throw new PortalUserServiceException(
@@ -514,7 +515,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
                 }
                 try
                 {
-                    ldapAuthenticateService.resetPortalUserPassword(acmPortalUser.getUserId(), password);
+                    foiaLdapAuthenticationService.resetPortalUserPassword(acmPortalUser.getUserId(), password);
                 }
                 catch (AcmUserActionFailedException e)
                 {
@@ -538,8 +539,8 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
             throws PortalUserServiceException
     {
 
-        FOIALdapAuthenticationService ldapAuthenticateService = getLdapAuthenticateService(directoryName);
-        if (ldapAuthenticateService == null)
+        FOIALdapAuthenticationService foiaLdapAuthenticationService = getFOIALdapAuthenticationService(directoryName);
+        if (foiaLdapAuthenticationService == null)
         {
             log.debug("LDAP authentication service problem");
             throw new PortalUserServiceException(
@@ -547,7 +548,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         }
         try
         {
-            ldapAuthenticateService.changeUserPassword(acmUserId, portalUserCredentials.getPassword(),
+            foiaLdapAuthenticationService.getLdapAuthenticateService().changeUserPassword(acmUserId, portalUserCredentials.getPassword(),
                     portalUserCredentials.getNewPassword());
         }
 
@@ -614,7 +615,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     /**
      * @param user
      * @param group
-     * @param password2
+     * @param password
      * @return
      */
     private UserDTO userDTOFromPortalUser(PortalUser user, String password, String group)
@@ -644,7 +645,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
 
     /**
      * @param portalId
-     * @param portalFOIAPerson
+     * @param person
      * @return
      */
     private PortalUser portaluserFromPortalPerson(String portalId, PortalFOIAPerson person)
@@ -793,10 +794,11 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         return acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).get(String.format("%s_sync", directoryName));
     }
 
-    private FOIALdapAuthenticationService getLdapAuthenticateService(String directoryName)
+    private FOIALdapAuthenticationService getFOIALdapAuthenticationService(String directoryName)
     {
-        return acmContextHolder.getAllBeansOfType(FOIALdapAuthenticationService.class)
+        LdapAuthenticateService ldapAuthenticateService = acmContextHolder.getAllBeansOfType(LdapAuthenticateService.class)
                 .get(String.format("%s_ldapAuthenticateService", directoryName));
+        return ldapAuthenticateService != null ? FOIALdapAuthenticationService.getInstance(ldapAuthenticateService) : null;
     }
 
     private AcmUser getPortalAcmUser(String username) throws PortalUserServiceException

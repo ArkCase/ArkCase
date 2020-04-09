@@ -1,10 +1,10 @@
-package com.armedia.acm.spring.events;
+package com.armedia.acm.services.users.model.event;
 
 /*-
  * #%L
  * Tool Integrations: Spring Child Context Holder
  * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
+ * Copyright (C) 2014 - 2020 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 
@@ -27,19 +27,25 @@ package com.armedia.acm.spring.events;
  * #L%
  */
 
+import com.armedia.acm.core.model.AcmEvent;
+
 /**
- * Created by nebojsha on 26.04.2015.
+ * @author mario.gjurcheski
+ *
  */
-public class ContextAddedEvent extends AbstractContextHolderEvent
+public class LdapDirectoryReplaced extends AcmEvent
 {
+
     /**
      * Create a new ApplicationEvent.
      *
      * @param source
      *            the component that published the event (never {@code null})
+     * @param name
      */
-    public ContextAddedEvent(Object source, String name)
+    public LdapDirectoryReplaced(Object source, String name)
     {
-        super(source, name);
+        super(source);
+        setEventDescription(name);
     }
 }

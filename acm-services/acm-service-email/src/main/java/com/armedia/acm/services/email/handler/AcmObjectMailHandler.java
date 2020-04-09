@@ -31,6 +31,7 @@ import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmNameDao;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
+import com.armedia.acm.email.model.EmailReceiverConfig;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
@@ -90,6 +91,7 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private ApplicationEventPublisher eventPublisher;
     private EcmFileDao ecmFileDao;
+    private EmailReceiverConfig emailReceiverConfig;
 
     private String objectIdRegexPattern;
     private String mailDirectory;
@@ -208,7 +210,7 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
 
     public void uploadAttachments(Message message, AcmObject entity, String userId, AcmFolder emailReceivedFolder)
     {
-        if (message != null && entity != null)
+        if (message != null && entity != null && emailReceiverConfig.getEnableBurstingAttachments())
         {
             try
             {
@@ -273,7 +275,7 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
         ZonedDateTime date = ZonedDateTime.now(ZoneOffset.UTC);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         String currentDate = formatter.format(date);
-        String fileAndFolderName = emailSender + "-" + currentDate + message.getSubject().replaceAll("\\W+", "");
+        String fileAndFolderName = emailSender + "-" + currentDate + "-" + message.getSubject().replaceAll("\\W+", "");
         return fileAndFolderName;
     }
     
@@ -357,5 +359,15 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
     public void setEcmFileDao(EcmFileDao ecmFileDao) 
     {
         this.ecmFileDao = ecmFileDao;
+    }
+
+    public EmailReceiverConfig getEmailReceiverConfig() 
+    {
+        return emailReceiverConfig;
+    }
+
+    public void setEmailReceiverConfig(EmailReceiverConfig emailReceiverConfig) 
+    {
+        this.emailReceiverConfig = emailReceiverConfig;
     }
 }
