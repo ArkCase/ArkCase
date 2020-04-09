@@ -33,32 +33,32 @@ import org.springframework.beans.factory.InitializingBean;
 
 import java.util.List;
 
-public class FilesConfigurationInitialization implements InitializingBean
+public class BrandingConfigurationInitialization implements InitializingBean
 {
 
-    private String filesLocation;
+    private String customFilesLocation;
 
-    private List<String> files;
+    private List<String> brandingFiles;
 
     private FileConfigurationService fileConfigurationService;
 
     @Override
     public void afterPropertiesSet() throws Exception
     {
-        for (String file : files)
+        for (String file : brandingFiles)
         {
-            fileConfigurationService.getFileFromConfiguration(file, filesLocation);
+            fileConfigurationService.getFileFromConfiguration(file, customFilesLocation);
         }
     }
 
-    public List<String> getFiles()
+    public List<String> getBrandingFiles()
     {
-        return files;
+        return brandingFiles;
     }
 
-    public void setFiles(List<String> files)
+    public void setBrandingFiles(List<String> brandingFiles)
     {
-        this.files = files;
+        this.brandingFiles = brandingFiles;
     }
 
     public void setFileConfigurationService(FileConfigurationService fileConfigurationService)
@@ -66,13 +66,13 @@ public class FilesConfigurationInitialization implements InitializingBean
         this.fileConfigurationService = fileConfigurationService;
     }
 
-    public String getFilesLocation()
+    public String getCustomFilesLocation()
     {
-        return filesLocation;
+        return customFilesLocation;
     }
 
-    public void setFilesLocation(String filesLocation)
+    public void setCustomFilesLocation(String customFilesLocation)
     {
-        this.filesLocation = filesLocation;
+        this.customFilesLocation = customFilesLocation;
     }
 }
