@@ -40,17 +40,7 @@ public class GetLinkTargetEcmFileAPIController
             throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, fileId, "File not found", null);
         }
 
-        try
-        {
-            if (ecmFile.isLink())
-            {
-                linkTargetFileDTO = getFileService().getLinkTargetFileInfo(ecmFile);
-            }
-        }
-        catch (EcmFileLinkException e)
-        {
-            throw new EcmFileLinkException("Target EcmFile not found for linked document with id: {} " + fileId, e.getCause());
-        }
+        linkTargetFileDTO = getFileService().getLinkTargetFileInfo(ecmFile);
 
         return linkTargetFileDTO;
     }

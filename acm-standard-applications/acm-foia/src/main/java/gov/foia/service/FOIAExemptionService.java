@@ -43,8 +43,7 @@ public class FOIAExemptionService
     {
         Long copiedFileId = copiedFile.getFileId();
         List<ExemptionCode> exemptionCodeList = getFoiaExemptionCodeDao().findExemptionCodesByFileId(originalFile.getFileId());
-        if (exemptionCodeList.size() > 0)
-        {
+
             for (ExemptionCode exemptionCode : exemptionCodeList)
             {
                 ExemptionCode exemptionCodeObj = new ExemptionCode();
@@ -59,7 +58,7 @@ public class FOIAExemptionService
                 exemptionCodeObj.setManuallyFlag(exemptionCode.getManuallyFlag());
                 getFoiaExemptionCodeDao().save(exemptionCodeObj);
             }
-        }
+
     }
 
     @Transactional
