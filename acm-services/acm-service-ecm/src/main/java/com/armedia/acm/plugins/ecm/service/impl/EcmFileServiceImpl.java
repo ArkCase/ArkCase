@@ -2237,15 +2237,12 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     public LinkTargetFileDTO getLinkTargetFileInfo(EcmFile ecmFile) throws EcmFileLinkException
     {
         log.info("Get target file info for the linked file: {}", ecmFile.getId());
-        try
+        if (!ecmFile.isLink())
         {
-            return getEcmFileDao().getLinkTargetFileInfo(ecmFile);
+            throw new EcmFileLinkException("Ecm file: " + ecmFile.getId() + " is not a link");
         }
-        catch (EcmFileLinkException e)
-        {
-            log.error("Could not find the target file info for the linked file {} ", e.getMessage(), e);
-            throw new EcmFileLinkException("EcmFile target not found for linked file with id: {} " + ecmFile.getId(), e.getCause());
-        }
+        return getEcmFileDao().getLinkTargetFileInfo(ecmFile);
+
     }
 
     private void deleteAuthenticationTokens(Long fileId)

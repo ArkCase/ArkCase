@@ -28,7 +28,6 @@ package com.armedia.acm.plugins.ecm.dao;
  */
 
 import com.armedia.acm.data.AcmAbstractDao;
-import com.armedia.acm.plugins.ecm.exception.EcmFileLinkException;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
@@ -351,7 +350,7 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
         deleteQuery.executeUpdate();
     }
 
-    public LinkTargetFileDTO getLinkTargetFileInfo(EcmFile ecmFile) throws EcmFileLinkException
+    public LinkTargetFileDTO getLinkTargetFileInfo(EcmFile ecmFile)
     {
         String queryText = "SELECT ecmFile.fileId, container.containerObjectType, container.containerObjectId " +
                 "FROM EcmFile ecmFile JOIN " +
@@ -363,20 +362,12 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
         query.setParameter("versionSeriesId", ecmFile.getVersionSeriesId());
 
         LinkTargetFileDTO linkTargetFileDTO = new LinkTargetFileDTO();
-        try
-        {
-            Object[] result = query.getSingleResult();
-            linkTargetFileDTO.setOriginalFileId((Long) result[0]);
-            linkTargetFileDTO.setParentObjectType((String) result[1]);
-            linkTargetFileDTO.setParentObjectId((Long) result[2]);
 
-        }
-        catch (NoResultException e)
-        {
-            LOG.debug("Cannot find target EcmFile for linked document with id: [{}]", ecmFile.getId());
-            throw new EcmFileLinkException("Cannot find target EcmFile for linked document with id: [{}]" + ecmFile.getId());
+        Object[] result = query.getSingleResult();
+        linkTargetFileDTO.setOriginalFileId((Long) result[0]);
+        linkTargetFileDTO.setParentObjectType((String) result[1]);
+        linkTargetFileDTO.setParentObjectId((Long) result[2]);
 
-        }
         return linkTargetFileDTO;
     }
 

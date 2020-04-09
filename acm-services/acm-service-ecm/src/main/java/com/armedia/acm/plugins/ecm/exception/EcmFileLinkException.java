@@ -12,9 +12,4 @@ public class EcmFileLinkException extends Exception
         super(message);
     }
 
-    public EcmFileLinkException(String message, Throwable cause)
-    {
-        super(message, cause);
-    }
-
 }
