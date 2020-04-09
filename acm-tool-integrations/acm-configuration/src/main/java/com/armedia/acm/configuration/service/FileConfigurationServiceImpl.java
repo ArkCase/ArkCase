@@ -81,7 +81,7 @@ public class FileConfigurationServiceImpl implements FileConfigurationService
     }
 
     @Override
-    public void getFileFromConfiguration(String filePath, String filesLocation) throws IOException
+    public void getFileFromConfiguration(String fileName, String customFilesLocation) throws IOException
     {
 
         HttpHeaders headers = new HttpHeaders();
@@ -91,21 +91,20 @@ public class FileConfigurationServiceImpl implements FileConfigurationService
 
         ResponseEntity<Resource> exchange = configRestTemplate.exchange(
                 configurationClientConfig.getConfigurationUrl() + "/" + configurationClientConfig.getDefaultApplicationName() + "/"
-                        + configurationClientConfig.getActiveProfile() + "/*/" + filePath,
+                        + configurationClientConfig.getActiveProfile() + "/*/" + BRANDING_LOCATION + "/" + fileName,
                 HttpMethod.GET, entity,
                 Resource.class);
 
-        File file = new File(filesLocation + "/" + filePath);
+        File logoFile = new File(customFilesLocation + "/" + BRANDING_LOCATION + "/" + fileName);
 
-        FileUtils.copyInputStreamToFile(exchange.getBody().getInputStream(), file);
+        FileUtils.copyInputStreamToFile(exchange.getBody().getInputStream(), logoFile);
 
     }
 
-    // TODO Add support for files other than branding.
     @JmsListener(destination = "VirtualTopic.ConfigFileUpdated", containerFactory = "jmsTopicListenerContainerFactory")
     public void downloadFileFromConfiguration(Message message) throws IOException
     {
-        getFileFromConfiguration(BRANDING_LOCATION + "/" + message.getPayload().toString(), customFilesLocation);
+        getFileFromConfiguration(message.getPayload().toString(), customFilesLocation);
     }
 
     private HttpEntity<LinkedMultiValueMap<String, Object>> prepareFileProperties(InputStreamResource file, String fileName)
