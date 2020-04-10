@@ -105,13 +105,14 @@ angular
             'Helper.LocaleService',
             'PublicFlag.Service',
             'RequestResponseFolder.Service',
+            'LookupService',
             'MessageService',
             'Object.LookupService',
             '$timeout',
             'Websockets.MessageHandler',
             'Admin.FoiaConfigService',
             function ($q, $translate, $modal, $filter, $log, $injector, Store, Util, UtilDateService, ConfigService,
-                      PluginService, UserInfoService, Ecm, EmailSenderConfigurationService, LocaleHelper, PublicFlagService, RequestResponseFolderService, MessageService, ObjectLookupService, $timeout, MessageHandler, AdminFoiaConfigService) {
+                      PluginService, UserInfoService, Ecm, EmailSenderConfigurationService, LocaleHelper, PublicFlagService, RequestResponseFolderService, LookupService, MessageService, ObjectLookupService, $timeout, MessageHandler, AdminFoiaConfigService) {
                 var cacheTree = new Store.CacheFifo();
                 var cacheFolderList = new Store.CacheFifo();
 
@@ -206,7 +207,7 @@ angular
                     });
 
                     modalInstance.result.then(function (limitedDeliveryFlag) {
-                        DocTree.objectInfo.limitedDeliveryFlag = limitedDeliveryFlag;
+                        DocTree.limitedDeliveryFlag = limitedDeliveryFlag;
                         deferred.resolve();
                     }, function () {
                         deferred.reject();
@@ -214,16 +215,17 @@ angular
                 }
 
 
-                function saveCase() {
+                function saveCaseAndSelectLimitedDeliveryFlag(limitedDeliveryFlag) {
                     var saveCasePromise = $q.defer();
                     DocTree.scope.$bus.publish('ACTION_SAVE_CASE', {
-                        returnAction: "CASE_SAVED"
+                        returnAction: "CASE_SAVED",
+                        limitedDeliveryFlag: limitedDeliveryFlag
                     });
                     var subscription = DocTree.scope.$bus.subscribe('CASE_SAVED', function (objectInfo) {
                         saveCasePromise.resolve();
                         DocTree.scope.$bus.unsubscribe(subscription);
                     });
-                    
+
                     return saveCasePromise.promise;
                 }
 
@@ -1413,10 +1415,9 @@ angular
                                     renderer: function (element, node, columnDef, isReadOnly) {
                                         var versionUser = Util.goodValue(node.data.modifier);
                                         if (versionUser) {
-                                            //UserInfoService.getUserInfoByIdQuietly(versionUser).then(function (userInfo) {
-                                            UserInfoService.getUserInfoById(versionUser).then(function (userInfo) {
-                                                $(element).text(Util.goodMapValue(userInfo, "fullName"));
-                                            })
+                                            LookupService.getUserFullName(versionUser).then(function(userName) {
+                                                $(element).text(userName);
+                                            });
                                         }
                                     }
                                 },
@@ -1987,7 +1988,7 @@ angular
                                             var deferred = $q.defer();
                                             openLimitedPageReleaseModal(deferred);
                                             deferred.promise.then(function () {
-                                                saveCase().then(function () {
+                                                saveCaseAndSelectLimitedDeliveryFlag(DocTree.limitedDeliveryFlag).then(function () {
                                                     RequestResponseFolderService.compressAndSendResponseFolder(objectInfo.id).then(
                                                         function (response) {
                                                             MessageService.succsessAction();
@@ -2167,7 +2168,7 @@ angular
                                     } else if ("RECORD" == Util.goodValue(node.data.status)) {
                                         menuResource = DocTree.Menu.getRecordResource(node);
                                     } else if (node.data.link) {
-                                        menuResource = 'menu.link.file';
+                                        menuResource = node.data.objectType === "folder" ? "menu.link.folder" : "menu.link.file";
                                     } else {
                                         menuResource = DocTree.Menu.getBasicResource(node);
                                     }
@@ -2930,7 +2931,7 @@ angular
                                 var frCacheKey = DocTree.getCacheKeyByNode(srcNode.parent);
                                 var copyService = actionName === 'pasteAsLink' ? Ecm.copyFolderAsLink : Ecm.copyFolder;
                                 if (srcNode.data.link === true) {
-                                    copyService = Ecm.copyFileAsLink;
+                                    copyService = Ecm.copyFolderAsLink;
                                 }
 
                                 Util.serviceCall(
@@ -3799,11 +3800,17 @@ angular
                     },
                     uploadFile: function () {
                         DocTree.jqFileInput.attr("multiple", '');
-                        DocTree.jqFileInput.click();
+                        DocTree.makeUploadDocForm(DocTree.jqTree);
+                        setTimeout(function () {
+                            DocTree.jqFileInput.click();
+                        });
                     },
                     replaceFile: function () {
                         DocTree.jqFileInput.removeAttr("multiple");
-                        DocTree.jqFileInput.click();
+                        DocTree.makeUploadDocForm(DocTree.jqTree);
+                        setTimeout(function () {
+                            DocTree.jqFileInput.click();
+                        });
                     }
 
                     ,
@@ -3956,6 +3963,7 @@ angular
                             nodeData.data.creator = Util.goodValue(folderData.creator);
                             nodeData.data.modified = Util.goodValue(folderData.modified);
                             nodeData.data.status = Util.goodValue(folderData.status);
+                            nodeData.data.link = Util.goodValue(folderData.link);
 
                         }
                         return nodeData;

@@ -240,4 +240,5 @@ public interface AcmTaskService
 
     void createTaskFolderStructureInParentObject(AcmTask task) throws AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException, LinkAlreadyExistException;
 
+    public void setParticipantsToTaskFolderLink(AcmTask task) throws AcmObjectNotFoundException;
 }

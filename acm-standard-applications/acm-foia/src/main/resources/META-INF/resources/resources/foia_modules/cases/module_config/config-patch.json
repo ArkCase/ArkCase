@@ -73,6 +73,15 @@
         "op": "add",
         "path": "/tree/filters/1",
         "value": {
+            "desc": "cases.tree.filters.openAppeals",
+            "name": "all-open-appeals",
+            "value": "fq=request_type_lcs:Appeal AND status_s:Appealed"
+        }
+    },
+    {
+        "op": "add",
+        "path": "/tree/filters/2",
+        "value": {
             "desc": "cases.tree.filters.released",
             "name": "all-released-cases",
             "value": "fq=status_s:Released"

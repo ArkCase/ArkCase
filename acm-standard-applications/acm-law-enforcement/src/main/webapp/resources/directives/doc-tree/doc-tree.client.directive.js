@@ -1914,7 +1914,7 @@ angular.module('directives').directive(
                                         } else if ("RECORD" == Util.goodValue(node.data.status)) {
                                             menuResource = DocTree.Menu.getRecordResource(node);
                                         } else if (node.data.link) {
-                                            menuResource = 'menu.link.file';
+                                            menuResource = node.data.objectType === "folder" ? "menu.link.folder" : "menu.link.file";
                                         } else {
                                             menuResource = DocTree.Menu.getBasicResource(node);
                                         }
@@ -2667,7 +2667,7 @@ angular.module('directives').directive(
                                     var frCacheKey = DocTree.getCacheKeyByNode(srcNode.parent);
                                     var copyService = actionName === 'pasteAsLink' ? Ecm.copyFolderAsLink : Ecm.copyFolder;
                                     if (srcNode.data.link === true) {
-                                        copyService = Ecm.copyFileAsLink;
+                                        copyService = Ecm.copyFolderAsLink;
                                     }
 
                                     Util.serviceCall({
@@ -3500,11 +3500,17 @@ angular.module('directives').directive(
                         },
                         uploadFile: function() {
                             DocTree.jqFileInput.attr("multiple", '');
-                            DocTree.jqFileInput.click();
+                            DocTree.makeUploadDocForm(DocTree.jqTree);
+                            setTimeout(function () {
+                                DocTree.jqFileInput.click();
+                            });
                         },
                         replaceFile: function() {
                             DocTree.jqFileInput.removeAttr("multiple");
-                            DocTree.jqFileInput.click();
+                            DocTree.makeUploadDocForm(DocTree.jqTree);
+                            setTimeout(function () {
+                                DocTree.jqFileInput.click();
+                            });
                         }
 
                         ,
@@ -3657,6 +3663,7 @@ angular.module('directives').directive(
                                 nodeData.data.creator = Util.goodValue(folderData.creator);
                                 nodeData.data.modified = Util.goodValue(folderData.modified);
                                 nodeData.data.status = Util.goodValue(folderData.status);
+                                nodeData.data.link = Util.goodValue(folderData.link);
 
                             }
                             return nodeData;

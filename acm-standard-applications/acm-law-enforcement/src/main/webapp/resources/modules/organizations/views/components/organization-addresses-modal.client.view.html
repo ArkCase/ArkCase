@@ -11,56 +11,67 @@
     <form name="addressesForm">
         <div class="row">
             <div class="col-sm-6 form-group">
-                <label for="addressTypes" translate> organizations.comp.addresses.modal.type.label</label><span
-                    class="required-asterisk">*</span>
-                <select id="addressTypes" class="form-control" required="required" ng-model="address.addressType"
-                        ng-options="item.key as item.value | translate for item in addressTypes"></select>
+                <label for="country" translate> organizations.comp.addresses.modal.country.label</label>
+                <span class="required-asterisk">*</span>
+                <select id="country" class="form-control" ng-model="address.country" ng-change="changeStates(address.country)" required>
+                    <option ng-repeat="option in countries" value="{{option.key}}">
+                        {{option.value | translate}}
+                    </option>
+                </select>
             </div>
             <div class="col-sm-6 form-group">
-                <label for="streetAddress" translate>
-                    organizations.comp.addresses.modal.streetAddress.label</label><span class="required-asterisk">*</span>
-                <input id="streetAddress" type="text" ng-model="address.streetAddress" required="required" class="input-md form-control"
-                        placeholder="{{ 'organizations.comp.addresses.modal.streetAddress.placeholder' | translate }}">
+                <label for="addressTypes" translate> organizations.comp.addresses.modal.type.label</label>
+                <span class="required-asterisk">*</span>
+                <select id="addressTypes" class="form-control" ng-model="address.addressType"
+                        ng-options="item.key as item.value | translate for item in addressTypes" required></select>
             </div>
         </div>
         <div class=" row">
+            <div class="col-sm-6 form-group">
+                <label for="streetAddress" translate>
+                    organizations.comp.addresses.modal.streetAddress.label</label>
+                <span class="required-asterisk">*</span>
+                <input id="streetAddress" type="text" ng-model="address.streetAddress" class="input-md form-control"
+                        placeholder="{{ 'organizations.comp.addresses.modal.streetAddress.placeholder' | translate }}" required>
+            </div>
             <div class="col-sm-6 form-group">
                 <label for="streetAddress2" translate>
                     organizations.comp.addresses.modal.streetAddress2.label</label>
                 <input id="streetAddress2" type="text" ng-model="address.streetAddress2" class="input-md form-control"
                         placeholder="{{ 'organizations.comp.addresses.modal.streetAddress2.placeholder' | translate }}">
             </div>
-            <div class="col-sm-6 form-group">
-                <label for="city" translate>
-                    organizations.comp.addresses.modal.city.label</label><span class="required-asterisk">*</span>
-                <input id="city" type="text" ng-model="address.city" required="required" class="input-md form-control"
-                        placeholder="{{ 'organizations.comp.addresses.modal.city.placeholder' | translate }}">
-            </div>
         </div>
         <div class="row">
-            <div class="col-sm-3 form-group">
+            <div class="col-sm-6 form-group">
+                <label for="city" translate>
+                    organizations.comp.addresses.modal.city.label</label>
+                <span class="required-asterisk">*</span>
+                <input id="city" type="text" ng-model="address.city" class="input-md form-control"
+                        placeholder="{{ 'organizations.comp.addresses.modal.city.placeholder' | translate }}" required>
+            </div>
+            <div class="col-sm-3 form-group" ng-if="address.country == 'US' || address.country == 'CA' || address.country == 'JP'">
                 <label for="state" translate>
                     organizations.comp.addresses.modal.state.label</label>
-                <select id="state" class="form-control" ng-model="address.state">
+                <select id="state" class="form-control" ng-model="address.state" required>
                     <option ng-repeat="option in states" value="{{option.key}}">
                         {{option.value | translate}}
                     </option>
                 </select>
             </div>
+            <div class="col-sm-3 form-group" ng-if="address.country != 'US' && address.country != 'CA' && address.country != 'JP'">
+                <label for="txtState" translate>
+                    organizations.comp.addresses.modal.state.label
+                </label>
+                <span class="required-asterisk-state-label-modals">*</span>
+                <input id="txtState" type="text" ng-model="address.state" class="input-md form-control"
+                        placeholder="{{ 'organizations.comp.addresses.modal.state.placeholder' | translate }}" required>
+            </div>
             <div class="col-sm-3 form-group">
                 <label for="zip" translate>
                     organizations.comp.addresses.modal.zip.label</label>
+                <span class="required-asterisk">*</span>
                 <input id="zip" type="text" ng-model="address.zip" class="input-md form-control"
-                        placeholder="{{ 'organizations.comp.addresses.modal.zip.placeholder' | translate }}">
-            </div>
-            <div class="col-sm-6 form-group">
-                <label for="country" translate> organizations.comp.addresses.modal.country.label</label><span
-                    class="required-asterisk">*</span>
-                <select id="country" class="form-control" ng-model="address.country">
-                    <option ng-repeat="option in countries" value="{{option.key}}">
-                        {{option.value | translate}}
-                    </option>
-                </select>
+                        placeholder="{{ 'organizations.comp.addresses.modal.zip.placeholder' | translate }}" required>
             </div>
         </div>
         <div class="row">

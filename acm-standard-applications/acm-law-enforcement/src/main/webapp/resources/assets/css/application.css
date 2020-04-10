@@ -1722,8 +1722,9 @@ a.primary {
     padding: 7px;
     width: auto;
     display: block;
-    z-index: 2000;
+    z-index: 3000;
     white-space: nowrap;
+    right: 2.5%;
 }
 
 .date-picker-popover:before {
@@ -1735,7 +1736,7 @@ a.primary {
     border-bottom: 10px solid #AAA;
     position: absolute;
     top: -10px;
-    left: 10%;
+    right: 2.5%;
 }
 
 .arkcase-snackbar {
@@ -1829,6 +1830,19 @@ a.primary {
     position:absolute;
     top:0;
     right:5px
+}
+
+/* Wrapping required asterisk for state label in forms */
+.required-asterisk-state-label {
+    color: #dd1144;
+    position: absolute;
+    right: 5px;
+}
+
+/* Wrapping required asterisk for state label in modals */
+.required-asterisk-state-label-modals {
+    color: #dd1144;
+    position: absolute;
 }
 
 .ui-grid .ui-grid-render-container-body .ui-grid-viewport {

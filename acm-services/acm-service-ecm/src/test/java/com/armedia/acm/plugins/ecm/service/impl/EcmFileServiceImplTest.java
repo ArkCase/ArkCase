@@ -70,6 +70,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import javax.persistence.EntityManager;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -332,16 +333,19 @@ public class EcmFileServiceImplTest extends EasyMockSupport
     {
         String path = "/some/path";
         String id = "id";
-        Map<String, Object> messageProps = new HashMap<>();
-        messageProps.put(PropertyIds.PATH, path);
-        messageProps.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
-        messageProps.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "");
 
         Folder result = createMock(Folder.class);
 
-        expect(mockAuthentication.getDetails()).andReturn(AcmAuthenticationDetails.class);
-        expect(camelContextManager.send(ArkCaseCMISActions.GET_OR_CREATE_FOLDER_BY_PATH, messageProps)).andReturn(result);
-        expect(result.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID)).andReturn(id);
+        expect(mockAuthentication.getDetails()).andReturn(AcmAuthenticationDetails.class).times(4);
+        String yearPath = "/some/" + getCalendarValue(Calendar.YEAR);
+        String monthPath = yearPath + "/" + getCalendarValue(Calendar.MONTH);
+        String dayPath = monthPath + "/" + getCalendarValue(Calendar.DAY_OF_MONTH);
+        String finalPath = dayPath + "/" + "path";
+        expect(camelContextManager.send(ArkCaseCMISActions.GET_OR_CREATE_FOLDER_BY_PATH, createMessageProps(yearPath))).andReturn(result);
+        expect(camelContextManager.send(ArkCaseCMISActions.GET_OR_CREATE_FOLDER_BY_PATH, createMessageProps(monthPath))).andReturn(result);
+        expect(camelContextManager.send(ArkCaseCMISActions.GET_OR_CREATE_FOLDER_BY_PATH, createMessageProps(dayPath))).andReturn(result);
+        expect(camelContextManager.send(ArkCaseCMISActions.GET_OR_CREATE_FOLDER_BY_PATH, createMessageProps(finalPath))).andReturn(result);
+        expect(result.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID)).andReturn(id).times(4);
 
         replayAll();
 
@@ -350,6 +354,44 @@ public class EcmFileServiceImplTest extends EasyMockSupport
         verifyAll();
 
         assertEquals(id, folderId);
+    }
+
+    private String getCalendarValue(int field)
+    {
+        Calendar calendar = Calendar.getInstance();
+        if (Calendar.YEAR == field)
+        {
+            return String.valueOf(calendar.get(Calendar.YEAR));
+        }
+        if (Calendar.MONTH == field)
+        {
+            return parseMonthOrDay(calendar.get(Calendar.MONTH) + 1);
+        }
+        if (Calendar.DAY_OF_MONTH == field)
+        {
+            return parseMonthOrDay(calendar.get(Calendar.DAY_OF_MONTH));
+        }
+        throw new IllegalArgumentException("Not valid field");
+    }
+
+    private String parseMonthOrDay(int value)
+    {
+        if (value < 10)
+        {
+            return  "0" + String.valueOf(value);
+        }
+        else
+        {
+            return String.valueOf(value);
+        }
+    }
+
+    private Map<String, Object> createMessageProps(String path) {
+        Map<String, Object> messageProps = new HashMap<>();
+        messageProps.put(PropertyIds.PATH, path);
+        messageProps.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+        messageProps.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "");
+        return messageProps;
     }
 
     @Test

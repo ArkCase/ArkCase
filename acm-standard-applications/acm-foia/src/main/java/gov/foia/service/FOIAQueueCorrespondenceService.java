@@ -44,10 +44,10 @@ import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.service.NotificationSender;
 import com.armedia.acm.services.users.dao.UserDao;
-
 import com.armedia.acm.services.users.model.AcmUser;
-import org.apache.logging.log4j.Logger;
+
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.security.core.Authentication;
@@ -58,8 +58,6 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
 
 import freemarker.template.TemplateException;
 import gov.foia.dao.FOIARequestDao;
@@ -184,10 +182,12 @@ public class FOIAQueueCorrespondenceService
         try
         {
             FOIADocumentDescriptor documentDescriptor;
-            if (request.getRequestType().equals(FOIAConstants.APPEAL_REQUEST_TYPE)) {
+            if (request.getRequestType().equals(FOIAConstants.APPEAL_REQUEST_TYPE))
+            {
                 documentDescriptor = documentGeneratorService.getDocumentDescriptor(request, FOIAConstants.ACK);
             }
-            else {
+            else
+            {
                 documentDescriptor = documentGeneratorService.getDocumentDescriptor(request, FOIAConstants.RECEIVE_ACK);
             }
 
@@ -198,13 +198,13 @@ public class FOIAQueueCorrespondenceService
 
             FOIAFile letter = (FOIAFile) documentGenerator.generateAndUpload(documentDescriptor, request,
                     targetFolderId, arkcaseFilename, documentGeneratorService.getReportSubstitutions(request));
-            
+
             EcmFileVersion ecmFileVersions = letter.getVersions().get(letter.getVersions().size() - 1);
-            
-            AcmUser user = userDao.findByUserId(request.getAssigneeLdapId());
+
+            AcmUser user = request.getAssigneeLdapId() != null ? userDao.findByUserId(request.getAssigneeLdapId()) : null;
 
             String emailAddress = extractRequestorEmailAddress(request.getOriginator().getPerson());
-            
+
             Notification notification = new Notification();
             notification.setTemplateModelName("requestDocumentAttached");
             notification.setEmailAddresses(emailAddress);
@@ -213,7 +213,8 @@ public class FOIAQueueCorrespondenceService
             notification.setParentId(requestId);
             notification.setParentType(request.getObjectType());
             notification.setTitle(String.format("%s %s", request.getRequestType(), request.getCaseNumber()));
-            notification.setUser(user.getUserId());
+            notification
+                    .setUser(user != null ? user.getUserId() : null);
             notificationDao.save(notification);
 
         }
@@ -237,7 +238,7 @@ public class FOIAQueueCorrespondenceService
     {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String emailAddress = extractRequestorEmailAddress(request.getOriginator().getPerson());
-        if(emailAddress != null || emailAddress != "")
+        if (emailAddress != null || emailAddress != "")
         {
             if (emailAddress != null)
             {
@@ -255,7 +256,8 @@ public class FOIAQueueCorrespondenceService
                 catch (TemplateException | IOException e)
                 {
                     // failing to send an email should not break the flow
-                    log.error("Unable to generate email for {} about {} with ID [{}]", emailAddress, request.getObjectType(), request.getId(),
+                    log.error("Unable to generate email for {} about {} with ID [{}]", emailAddress, request.getObjectType(),
+                            request.getId(),
                             e);
                     emailData.setBody(EMAIL_BODY_ATTACHMENT);
                 }
@@ -404,11 +406,13 @@ public class FOIAQueueCorrespondenceService
         this.templatingEngine = templatingEngine;
     }
 
-    public NotificationDao getNotificationDao() {
+    public NotificationDao getNotificationDao()
+    {
         return notificationDao;
     }
 
-    public void setNotificationDao(NotificationDao notificationDao) {
+    public void setNotificationDao(NotificationDao notificationDao)
+    {
         this.notificationDao = notificationDao;
     }
 }

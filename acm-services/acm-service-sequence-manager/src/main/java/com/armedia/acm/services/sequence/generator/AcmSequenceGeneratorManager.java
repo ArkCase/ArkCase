@@ -34,9 +34,14 @@ import com.armedia.acm.services.sequence.model.AcmSequenceRegistry;
 import com.armedia.acm.services.sequence.service.AcmSequenceConfigurationService;
 import com.armedia.acm.services.sequence.service.AcmSequenceService;
 
-import org.apache.logging.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationListener;
+import org.springframework.expression.Expression;
+import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
+import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import java.util.HashMap;
 import java.util.List;
@@ -86,8 +91,13 @@ public class AcmSequenceGeneratorManager implements ApplicationListener<AcmSeque
         {
             if (sequencePart.getSequencePartType() != null)
             {
-                sequenceValue += generatorsMap.get(sequencePart.getSequencePartType()).generatePartValue(sequenceName, sequencePart, object,
-                        autoincrementPartNameToValue);
+                if (StringUtils.isBlank(sequencePart.getSequenceCondition()) || (StringUtils.isNotBlank(sequencePart.getSequenceCondition())
+                        && evaluateSequencePartCondition(sequencePart.getSequenceCondition(), object)))
+                {
+                    sequenceValue += generatorsMap.get(sequencePart.getSequencePartType()).generatePartValue(sequenceName, sequencePart,
+                            object,
+                            autoincrementPartNameToValue);
+                }
             }
         }
 
@@ -167,6 +177,23 @@ public class AcmSequenceGeneratorManager implements ApplicationListener<AcmSeque
             sequenceMap.put(sequenceConfiguration.getSequenceName(), sequenceConfiguration);
         }
         this.sequenceMap = sequenceMap;
+    }
+
+    private boolean evaluateSequencePartCondition(String expression, Object object)
+    {
+        Boolean evaluated = false;
+        try
+        {
+            ExpressionParser expressionParser = new SpelExpressionParser();
+            Expression exp = expressionParser.parseExpression(expression);
+            StandardEvaluationContext ec = new StandardEvaluationContext();
+            evaluated = exp.getValue(ec, object, Boolean.class);
+        }
+        catch (Exception e)
+        {
+            log.info("Error evaluating sequence part condition" + expression, e);
+        }
+        return evaluated;
     }
 
 }

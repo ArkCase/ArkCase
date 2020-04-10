@@ -88,7 +88,8 @@ public interface AcmFolderService
 
     void deleteFolderContent(AcmFolder folder, String user);
 
-    void deleteContainerSafe(AcmContainer container, Authentication authentication) throws AcmUserActionFailedException, AcmObjectNotFoundException;
+    void deleteContainerSafe(AcmContainer container, Authentication authentication)
+            throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
     void deleteContainer(Long containerId, Authentication authentication) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
