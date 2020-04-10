@@ -113,6 +113,7 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -489,7 +490,63 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     @Transactional(rollbackFor = AcmCreateObjectFailedException.class)
     public String createFolder(String folderPath) throws AcmCreateObjectFailedException
     {
-        return createFolder(folderPath, ecmFileConfig.getDefaultCmisId());
+        String path = addDateInPath(folderPath, true);
+        if( path != null){
+            int endIndex = folderPath.lastIndexOf("/");
+            path = path + folderPath.substring(endIndex);
+            return createFolder(path, ecmFileConfig.getDefaultCmisId());
+        }
+        else
+        {
+            return createFolder(folderPath, ecmFileConfig.getDefaultCmisId());
+        }
+    }
+
+    public String addDateInPath(String folderPath, Boolean flag) throws AcmCreateObjectFailedException
+    {
+        String path = folderPath;
+
+        if(flag)
+        {
+            int endIndex = folderPath.lastIndexOf("/");
+            if (endIndex == -1)
+            {
+                return null;
+            }
+            path = folderPath.substring(0, endIndex);
+        }
+
+        Date date = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        path = path +"/"+ String.valueOf(calendar.get(Calendar.YEAR));
+        createFolder(path, ecmFileConfig.getDefaultCmisId());
+
+        int month = calendar.get(Calendar.MONTH) + 1;
+        path = addValueToPath(path, month);
+        createFolder(path, ecmFileConfig.getDefaultCmisId());
+
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        path = addValueToPath(path, day);
+        createFolder(path, ecmFileConfig.getDefaultCmisId());
+
+        return path;
+    }
+
+    private String addValueToPath(String path, int dayOrMonth)
+    {
+        String value;
+        if (dayOrMonth < 10)
+        {
+            value = "0" + String.valueOf(dayOrMonth);
+        }
+        else
+        {
+            value = String.valueOf(dayOrMonth);
+        }
+        path = path + "/" + value;
+        return path;
     }
 
     @Override
@@ -561,6 +618,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
         String path = ecmFileConfig.getDefaultBasePath();
         path += ecmFileConfig.getDefaultPathForObject(objectType);
+        path = addDateInPath(path, false);
         path += "/" + objectId;
 
         String cmisFolderId = createFolder(path, cmisRepositoryId);
@@ -639,7 +697,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             throws AcmListObjectsFailedException
     {
         AcmFolder folder = getFolderDao().find(folderId);
-        if (folder.isLink()) {
+        if (folder.isLink())
+        {
             folder = getFolderLinkTarget(folder);
             folderId = folder.getId();
         }
@@ -850,7 +909,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             throws AcmObjectNotFoundException, AcmListObjectsFailedException, AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         AcmFolder folder = getFolderDao().find(folderId);
-        if (folder.isLink()) {
+        if (folder.isLink())
+        {
             folder = getFolderLinkTarget(folder);
             folderId = folder.getId();
         }
@@ -883,7 +943,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             String filterQuery, int startRow, int maxRows, String sortBy, String sortDirection) throws AcmListObjectsFailedException
     {
         AcmFolder folder = getFolderDao().find(folderId);
-        if (folder.isLink()) {
+        if (folder.isLink())
+        {
             folder = getFolderLinkTarget(folder);
             folderId = folder.getId();
         }
@@ -931,7 +992,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             String sortDirection, int startRow, int maxRows)
     {
         AcmFolder folder = getFolderDao().find(folderId);
-        if (folder.isLink()) {
+        if (folder.isLink())
+        {
             folder = getFolderLinkTarget(folder);
             folderId = folder.getId();
         }
@@ -1032,7 +1094,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         {
             AcmFolder folder = folderDao.find(dstFolderId);
 
-            if (folder.isLink()) {
+            if (folder.isLink())
+            {
                 folder = getFolderLinkTarget(folder);
             }
 
@@ -1062,7 +1125,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, fileId, "File or Destination folder not found", null);
         }
 
-        if (targetFolder.isLink()) {
+        if (targetFolder.isLink())
+        {
             targetFolder = getFolderLinkTarget(targetFolder);
         }
         String internalFileName = getFolderAndFilesUtils().createUniqueIdentificator(file.getFileName());
@@ -2005,7 +2069,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                 folder = getFolderLinkTarget(folder);
             }
 
-
             AcmContainer container = getOrCreateContainer(targetObjectType, targetObjectId);
 
             return copyFileAsLink(fileId, folder, container);
@@ -2123,10 +2186,10 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
     }
 
-    private AcmFolder getFolderLinkTarget(AcmFolder folderLink) {
+    private AcmFolder getFolderLinkTarget(AcmFolder folderLink)
+    {
         return getFolderDao().findByCmisFolderId(folderLink.getCmisFolderId());
     }
-
 
     public EcmFileTransaction getEcmFileTransaction()
     {

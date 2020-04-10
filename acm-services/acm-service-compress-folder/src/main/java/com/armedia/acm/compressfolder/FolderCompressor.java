@@ -33,6 +33,7 @@ package com.armedia.acm.compressfolder;
 import com.armedia.acm.compressfolder.model.CompressNode;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
 
 import org.springframework.security.core.Authentication;
 
@@ -105,6 +106,8 @@ public interface FolderCompressor
     void compressFiles(List<Long> fileIds, Authentication authentication) throws Exception;
 
     String compressFiles(List<Long> fileIds);
+
+    List<EcmFile> filterConvertedFiles(List<EcmFile> files);
 
     /**
      * Returns path for the compressed folder file

@@ -26,6 +26,7 @@ package gov.foia.service;
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
+
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
@@ -46,6 +47,7 @@ import com.armedia.acm.services.email.model.EmailBodyBuilder;
 import com.armedia.acm.services.email.model.EmailBuilder;
 import com.armedia.acm.services.email.service.AcmEmailSenderService;
 import com.armedia.acm.services.labels.service.TranslationService;
+import com.armedia.acm.services.ldap.syncer.AcmLdapSyncEvent;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
@@ -53,6 +55,7 @@ import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.UserDTO;
+import com.armedia.acm.services.users.service.AcmUserEventPublisher;
 import com.armedia.acm.services.users.service.ldap.LdapUserService;
 import com.armedia.acm.spring.SpringContextHolder;
 
@@ -86,7 +89,7 @@ import gov.foia.model.UserResetRequestRecord;
 public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
 {
 
-    public static final int REGISTRATION_EXPIRATION = 24 * 60 * 60 * 1000;
+    public static final int REGISTRATION_EXPIRATION = 3 * 24 * 60 * 60 * 1000; // 3 days in milliseconds
 
     private Logger log = LogManager.getLogger(getClass());
 
@@ -120,6 +123,8 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     private SpringContextHolder acmContextHolder;
 
     private TranslationService translationService;
+
+    private AcmUserEventPublisher acmUserEventPublisher;
 
     /*
      * (non-Javadoc)
@@ -221,69 +226,120 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         Optional<UserRegistrationRequestRecord> registrationRecord = registrationDao.findByRegistrationId(registrationId);
         Optional<PortalFOIAPerson> registeredPerson = portalPersonDao.findByEmail(key);
 
-        if (registeredPerson.isPresent() && registeredPerson.get().getPortalRoles().containsKey(portalId))
+        if (isUserRejectedForPortal(portalId, registeredPerson))
         {
-            if (registeredPerson.get().getPortalRoles().get(portalId).equals(PortalUser.REJECTED_USER))
-            {
-                return UserRegistrationResponse.rejected();
-            }
-            else
-            {
-                return UserRegistrationResponse.exists();
-            }
+            return UserRegistrationResponse.rejected();
+        }
+        else if (registeredPerson.isPresent() && registeredPerson.get().getPortalRoles().containsKey(portalId))
+        {
+            return UserRegistrationResponse.exists();
+        }
+        else if (!registrationRecord.isPresent())
+        {
+            return UserRegistrationResponse.requestRequired();
+        }
+        else if (registrationRecord.get().getRegistrationTime() + REGISTRATION_EXPIRATION < System.currentTimeMillis())
+        {
+            return UserRegistrationResponse.requestExpired();
+        }
+        else if (!registrationRecord.get().getRegistrationKey().equals(registrationId))
+        {
+            return UserRegistrationResponse.invalid();
         }
         else
         {
-            if (!registrationRecord.isPresent())
-            {
-                return UserRegistrationResponse.requestRequired();
-            }
-            else if (registrationRecord.get().getRegistrationTime() + REGISTRATION_EXPIRATION < System.currentTimeMillis())
-            {
-                return UserRegistrationResponse.requestExpired();
-            }
-            else
-            {
-                UserRegistrationRequestRecord record = registrationRecord.get();
-
-                if (!record.getRegistrationKey().equals(registrationId))
-                {
-                    return UserRegistrationResponse.invalid();
-                }
-                else
-                {
-                    PortalFOIAPerson person;
-                    if (registeredPerson.isPresent())
-                    {
-                        person = registeredPerson.get();
-                        person.getPortalRoles().put(portalId, PortalUser.PENDING_USER);
-                    }
-                    else
-                    {
-                        user.setRole(PortalUser.PENDING_USER);
-                        person = portalPersonFromPortalUser(portalId, user);
-                    }
-
-                    try
-                    {
-                        PortalInfo portalInfo = portalInfoDAO.findByPortalId(portalId);
-                        UserDTO userDto = userDTOFromPortalUser(user,
-                                new String(Base64Utils.decodeFromString(password), Charset.forName("UTF-8")),
-                                portalInfo.getGroup().getName());
-                        portalPersonDao.save(person);
-                        ldapUserService.createLdapUser(userDto, directoryName);
-                    }
-                    catch (Exception e)
-                    {
-                        log.debug(e.getMessage(), e);
-                        throw new PortalUserServiceException(String.format("Couldn't create LDAP user for %s", user.getEmail()), e);
-                    }
-
-                    return UserRegistrationResponse.accepted();
-                }
-            }
+            PortalFOIAPerson person = getPortalFOIAPerson(portalId, user, registeredPerson);
+            createPortalUser(portalId, user, person, password);
+            return UserRegistrationResponse.accepted();
         }
 
+    }
+
+    private boolean isUserRejectedForPortal(String portalId, Optional<PortalFOIAPerson> registeredPerson)
+    {
+        return registeredPerson.isPresent() && registeredPerson.get().getPortalRoles().containsKey(portalId)
+                && registeredPerson.get().getPortalRoles().get(portalId).equals(PortalUser.REJECTED_USER);
+    }
+
+    public PortalFOIAPerson getPortalFOIAPerson(String portalId, PortalUser user, Optional<PortalFOIAPerson> registeredPerson)
+    {
+        PortalFOIAPerson person;
+        if (registeredPerson.isPresent())
+        {
+            person = registeredPerson.get();
+            person.getPortalRoles().put(portalId, PortalUser.PENDING_USER);
+        }
+        else
+        {
+            user.setRole(PortalUser.PENDING_USER);
+            person = portalPersonFromPortalUser(portalId, user);
+        }
+        return person;
+    }
+
+    @Override
+    @Transactional
+    public UserRegistrationResponse registerUserFromRequester(String portalId, PortalUser user)
+            throws PortalUserServiceException
+    {
+        Optional<PortalFOIAPerson> registeredPerson = portalPersonDao.findByEmail(user.getEmail());
+
+        if (isUserRejectedForPortal(portalId, registeredPerson))
+        {
+            return UserRegistrationResponse.rejected();
+        }
+        else if (registeredPerson.isPresent() && registeredPerson.get().getPortalRoles().containsKey(portalId))
+        {
+            return UserRegistrationResponse.exists();
+        }
+
+        PortalFOIAPerson person = getPortalFOIAPerson(portalId, user, registeredPerson);
+        createPortalUser(portalId, user, person, null);
+
+        UserResetRequest resetRequest = createUserResetRequest(user, portalId);
+        requestPasswordResetForRequester(portalId, resetRequest);
+
+        return UserRegistrationResponse.accepted();
+    }
+
+    @Override
+    public UserResetResponse requestPasswordResetForRequester(String portalId, UserResetRequest resetRequest)
+            throws PortalUserServiceException
+    {
+        String templateName = "portalUserCreatedFromArkcasePasswordResetLink";
+        String emailTitle = translationService.translate(NotificationConstants.NEW_PORTAL_USER_PASSWORD_RESET_REQUEST);
+        return requestPasswordReset(portalId, resetRequest, templateName, emailTitle);
+    }
+
+    public UserResetRequest createUserResetRequest(PortalUser user, String portalId)
+    {
+        UserResetRequest resetRequest = new UserResetRequest();
+        resetRequest.setEmailAddress(user.getEmail());
+        PortalInfo portal = portalInfoDAO.findByPortalId(portalId);
+        String baseUrl = Base64Utils
+                .encodeToString((new String(portal.getPortalUrl() + "/portal/login/reset")).getBytes());
+        resetRequest.setResetUrl(baseUrl);
+        return resetRequest;
+    }
+
+    public void createPortalUser(String portalId, PortalUser user, PortalFOIAPerson person, String password)
+            throws PortalUserServiceException
+    {
+        try
+        {
+            PortalInfo portalInfo = portalInfoDAO.findByPortalId(portalId);
+            UserDTO userDto = userDTOFromPortalUser(user,
+                    password != null ? new String(Base64Utils.decodeFromString(password), Charset.forName("UTF-8")) : null,
+                    portalInfo.getGroup().getName());
+            portalPersonDao.save(person);
+            AcmUser acmUser = ldapUserService.createLdapUser(userDto, directoryName);
+            acmUserEventPublisher.getApplicationEventPublisher().publishEvent(new AcmLdapSyncEvent(acmUser.getUserId()));
+        }
+        catch (Exception e)
+        {
+            log.debug(e.getMessage(), e);
+            throw new PortalUserServiceException(String.format("Couldn't create LDAP user for %s", user.getEmail()), e);
+        }
     }
 
     /*
@@ -352,6 +408,15 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     @Override
     public UserResetResponse requestPasswordReset(String portalId, UserResetRequest resetRequest) throws PortalUserServiceException
     {
+        String templateName = "portalPasswordResetRequestLink";
+        String emailTitle = translationService.translate(NotificationConstants.PASSWORD_RESET_REQUEST);
+        return requestPasswordReset(portalId, resetRequest, templateName, emailTitle);
+    }
+
+    @Override
+    public UserResetResponse requestPasswordReset(String portalId, UserResetRequest resetRequest, String templateName, String emailTitle)
+            throws PortalUserServiceException
+    {
         Optional<UserResetRequestRecord> resetRecord = resetDao.findByEmail(resetRequest.getEmailAddress());
         if (!isRegisteredUser(resetRequest.getEmailAddress()))
         {
@@ -363,7 +428,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         }
         else
         {
-            UserResetRequestRecord record = new UserResetRequestRecord();
+            UserResetRequestRecord record = resetRecord.isPresent() ? resetRecord.get() : new UserResetRequestRecord();
 
             String resetKey = UUID.randomUUID().toString();
             record.setResetKey(resetKey);
@@ -376,8 +441,8 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
                     + resetKey;
 
             Notification notification = new Notification();
-            notification.setTemplateModelName("portalPasswordResetRequestLink");
-            notification.setTitle(translationService.translate(NotificationConstants.PASSWORD_RESET_REQUEST));
+            notification.setTemplateModelName(templateName);
+            notification.setTitle(emailTitle);
             notification.setCreator(resetRequest.getEmailAddress());
             notification.setNote(resetLink);
             notification.setEmailAddresses(resetRequest.getEmailAddress());
@@ -876,5 +941,10 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     public void setTranslationService(TranslationService translationService)
     {
         this.translationService = translationService;
+    }
+
+    public void setAcmUserEventPublisher(AcmUserEventPublisher acmUserEventPublisher)
+    {
+        this.acmUserEventPublisher = acmUserEventPublisher;
     }
 }

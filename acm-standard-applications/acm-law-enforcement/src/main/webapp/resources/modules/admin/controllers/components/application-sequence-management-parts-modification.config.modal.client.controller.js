@@ -46,6 +46,7 @@ angular.module('admin').controller('Admin.SequenceManagementPartsModalConfigCont
             var object = {};
             object.sequencePartType = $scope.selectedItem.key;
             object.sequencePartName = $scope.sequencePart.sequencePartName;
+            object.sequenceCondition = $scope.sequencePart.sequenceCondition;
             object.sequenceStartNumber = $scope.sequencePart.sequenceStartNumber;
             object.sequenceIncrementSize = $scope.sequencePart.sequenceIncrementSize;
             object.sequenceNumberLength = $scope.sequencePart.sequenceNumberLength;

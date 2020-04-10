@@ -270,7 +270,9 @@ angular.module('queues').factory('Queues.QueuesService', [ '$http', '$q', 'Ecm.M
                     // Remove * from request. and add '*' to the end of request
                     var filterValue = '*+AND+' + filter.column + ':*';
                     filter.value = _.contains(filter.value, ' ') ? '*' + filter.value.split(' ').join(filterValue) : filter.value.replace('*', '');
-                    filters.push(filter.column + ':' + filter.value + '*');
+                    if (filter.value != '') {
+                        filters.push(filter.column + ':' + filter.value + '*');
+                    }
                 }
             });
 

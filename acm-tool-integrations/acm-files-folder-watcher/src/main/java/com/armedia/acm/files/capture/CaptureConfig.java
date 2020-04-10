@@ -199,4 +199,5 @@ public class CaptureConfig
     {
         this.oxmFilePath = oxmFilePath;
     }
+
 }

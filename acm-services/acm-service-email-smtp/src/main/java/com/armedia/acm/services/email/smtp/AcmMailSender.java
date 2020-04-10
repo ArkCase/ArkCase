@@ -45,9 +45,11 @@ public class AcmMailSender
     private JavaMailSenderImpl smtpMailSender;
     private JavaMailSenderImpl smtpsMailSender;
     private EmailSenderConfig emailConfig;
+    private TrackOutgoingEmailService trackOutgoingEmailService;
 
     private static final Logger log = LogManager.getLogger(AcmMailSender.class);
-
+    
+    @Deprecated
     public void sendEmail(String recipient, String subject, String body) throws Exception
     {
         JavaMailSender mailSender = getMailSender();
@@ -60,6 +62,20 @@ public class AcmMailSender
         mailSender.send(helper.getMimeMessage());
     }
 
+    public void sendEmail(String recipient, String subject, String body, String parentType, String parentId) throws Exception
+    {
+        JavaMailSender mailSender = getMailSender();
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
+        helper.setFrom(emailConfig.getUserFrom());
+        helper.setTo(recipient);
+        helper.setSubject(subject);
+        helper.setText(body, true);
+        mailSender.send(helper.getMimeMessage());
+        trackOutgoingEmailService.trackEmail(mimeMessage, recipient, subject, parentType, parentId, null);
+    }
+    
+    @Deprecated
     public void sendMultipartEmail(String recipient, String subject, String body, List<InputStreamDataSource> attachments)
             throws Exception
     {
@@ -81,6 +97,30 @@ public class AcmMailSender
             }
         });
         mailSender.send(helper.getMimeMessage());
+    }
+
+    public void sendMultipartEmail(String recipient, String subject, String body, List<InputStreamDataSource> attachments, String parentType, String parentId)
+            throws Exception
+    {
+        JavaMailSender mailSender = getMailSender();
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+        helper.setFrom(emailConfig.getUserFrom());
+        helper.setTo(recipient);
+        helper.setSubject(subject);
+        helper.setText(body, true);
+        attachments.forEach(attachment -> {
+            try
+            {
+                helper.addAttachment(attachment.getName(), attachment);
+            }
+            catch (MessagingException e)
+            {
+                log.warn("Failed to add attachment [{}]. Cause: {}.", attachment.getName(), e.getMessage(), e);
+            }
+        });
+        mailSender.send(helper.getMimeMessage());
+        trackOutgoingEmailService.trackEmail(mimeMessage, recipient, subject, parentType, parentId, attachments);
     }
 
     public EmailSenderConfig getEmailConfig()
@@ -133,5 +173,15 @@ public class AcmMailSender
             smtpMailSender.setPassword(emailConfig.getPassword());
             return smtpMailSender;
         }
+    }
+
+    public TrackOutgoingEmailService getTrackOutgoingEmailService() 
+    {
+        return trackOutgoingEmailService;
+    }
+
+    public void setTrackOutgoingEmailService(TrackOutgoingEmailService trackOutgoingEmailService) 
+    {
+        this.trackOutgoingEmailService = trackOutgoingEmailService;
     }
 }

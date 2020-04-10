@@ -68,7 +68,8 @@ public class AcmFolderDao extends AcmAbstractDao<AcmFolder>
     public AcmFolder findFolderByNameInTheGivenParentFolder(String folderName, Long parentFolderId) throws NoResultException
     {
         AcmFolder parentFolder = find(parentFolderId);
-        if (parentFolder.isLink()) {
+        if (parentFolder.isLink())
+        {
             parentFolderId = findByCmisFolderId(parentFolder.getCmisFolderId()).getId();
         }
         String jpql = "SELECT e FROM AcmFolder e WHERE e.name=:folderName AND e.parentFolder.id = :parentFolderId";
@@ -118,7 +119,7 @@ public class AcmFolderDao extends AcmAbstractDao<AcmFolder>
         return query.getResultList();
     }
 
-    public List <AcmFolder> getFolderLinks(String cmisFolderId)
+    public List<AcmFolder> getFolderLinks(String cmisFolderId)
     {
         String jpql = "SELECT f FROM AcmFolder f WHERE f.cmisFolderId = :cmisFolderId AND f.link = true";
         TypedQuery<AcmFolder> query = getEm().createQuery(jpql, getPersistenceClass());
@@ -132,8 +133,8 @@ public class AcmFolderDao extends AcmAbstractDao<AcmFolder>
         TypedQuery<AcmFolder> query = getEm().createQuery(jpql, getPersistenceClass());
         query.setParameter("name", name);
 
-        List <AcmFolder> folderList = query.getResultList();
-        if(!folderList.isEmpty())
+        List<AcmFolder> folderList = query.getResultList();
+        if (!folderList.isEmpty())
         {
             return folderList.get(0);
         }

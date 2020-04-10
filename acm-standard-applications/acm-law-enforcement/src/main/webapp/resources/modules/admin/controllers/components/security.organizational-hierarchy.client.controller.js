@@ -125,6 +125,13 @@ angular.module('admin').controller(
                             $scope.data = [];
                             groupsMap = {};
                             $scope.totalGroups = _.get(payload, 'data.response.numFound');
+
+                            groups.forEach(function (group) {
+                                group.directory = _.find($scope.directoryServers, function (directoryServer) {
+                                    return directoryServer.id === group.directory_name_s
+                                });
+                            });
+
                             addToGroupsMap(groups);
                             createTreeData(groups);
                         };
@@ -366,7 +373,7 @@ angular.module('admin').controller(
                                     }
                                 };
                             } ],
-                            size: 'sm',
+                            size: 'md',
                             backdrop: 'static'
                         });
                     }
@@ -485,7 +492,7 @@ angular.module('admin').controller(
                                     $modalInstance.close($scope.user);
                                 };
                             } ],
-                            size: 'sm',
+                            size: 'md',
                             backdrop: 'static'
                         });
 
