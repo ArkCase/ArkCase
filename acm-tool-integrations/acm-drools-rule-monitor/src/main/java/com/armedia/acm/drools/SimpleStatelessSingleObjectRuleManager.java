@@ -29,8 +29,6 @@ package com.armedia.acm.drools;
 
 import com.armedia.acm.configuration.service.FileConfigurationService;
 import com.armedia.acm.files.AbstractConfigurationFileEvent;
-import com.armedia.acm.files.ConfigurationFileAddedEvent;
-import com.armedia.acm.files.ConfigurationFileChangedEvent;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -46,8 +44,6 @@ import org.kie.internal.builder.KnowledgeBuilderFactory;
 import org.kie.internal.io.ResourceFactory;
 import org.springframework.context.ApplicationListener;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -63,7 +59,6 @@ public abstract class SimpleStatelessSingleObjectRuleManager<T>
     private transient Logger log = LogManager.getLogger(getClass());
 
     private KieBase kieBase;
-    private String ruleFileLocation;
 
     private FileConfigurationService fileConfigurationService;
 
@@ -100,98 +95,22 @@ public abstract class SimpleStatelessSingleObjectRuleManager<T>
 
     public void afterPropertiesSet() throws Exception
     {
-        // TODO Always get rules from config server:
-        //  - Fix unit tests; currently they would fail due to fileConfigurationService being null.
-        if (fileConfigurationService != null)
+        log.debug("Getting rules from {}", "rules/" + getRuleSpreadsheetFilename());
+
+        try (InputStream stream = fileConfigurationService.getInputStreamFromConfiguration("rules/" + getRuleSpreadsheetFilename());)
         {
-
-            log.debug("Getting rules from {}", "rules/" + getRuleSpreadsheetFilename());
-
-            try
-            {
-                InputStream stream = fileConfigurationService.getInputStreamFromConfiguration("rules/" + getRuleSpreadsheetFilename());
-                updateRulesFromStream(stream);
-            }
-            catch (IOException e)
-            {
-                log.debug("Error getting rules {}", e.getMessage(), e);
-            }
-
-            return;
+            updateRulesFromStream(stream);
         }
-
-        String ruleFileName = getRuleFileLocation() + "/" + getRuleSpreadsheetFilename();
-        log.debug("Loading rules from {}", ruleFileName);
-
-        File ruleFile = new File(ruleFileName);
-
-        if (ruleFile.exists() && ruleFile.isFile())
+        catch (IOException e)
         {
-            updateRulesFromFile(ruleFile);
+            log.debug("Error getting rules {}", e.getMessage(), e);
         }
-        else
-        {
-            log.warn("No such file: {}", ruleFileName);
-        }
-
     }
 
     @Override
     public void onApplicationEvent(AbstractConfigurationFileEvent fileEvent)
     {
-        // TODO Always get rules from config server:
-        //  - Make watching mechanism to handle events from config server, not from local files.
-        if (fileEvent != null &&
-                fileEvent.getConfigFile() != null &&
-                getRuleSpreadsheetFilename().equals(fileEvent.getConfigFile().getName()))
-        {
-            if (fileEvent instanceof ConfigurationFileAddedEvent ||
-                    fileEvent instanceof ConfigurationFileChangedEvent)
-            {
-                updateRulesFromFile(fileEvent.getConfigFile());
-            }
-        }
-    }
-
-    public synchronized void updateRulesFromFile(File configFile)
-    {
-        SpreadsheetCompiler sc = new SpreadsheetCompiler();
-
-        try
-        {
-
-            KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
-            DecisionTableConfiguration dtconf = KnowledgeBuilderFactory.newDecisionTableConfiguration();
-            dtconf.setInputType(DecisionTableInputType.XLS);
-            kbuilder.add(ResourceFactory.newFileResource(configFile), ResourceType.DTABLE, dtconf);
-
-            if (kbuilder.hasErrors())
-            {
-                try (InputStream drlStream = new FileInputStream(configFile))
-                {
-                    String drl = sc.compile(drlStream, InputType.XLS);
-                    log.error("DRL with errors: {}", drl);
-
-                    for (KnowledgeBuilderError error : kbuilder.getErrors())
-                    {
-                        log.error("Error building rules: {}", error);
-                    }
-                }
-
-                throw new RuntimeException(String.format("Could not build rules from %s", configFile.getAbsolutePath()));
-            }
-
-            KieBase base = kbuilder.newKieBase();
-
-            setKieBase(base);
-
-            log.debug("Updated business rules from file '{}'", getRuleSpreadsheetFilename());
-
-        }
-        catch (IOException e)
-        {
-            log.error("Could not update rules: {}", e.getMessage(), e);
-        }
+        // TODO Make watching mechanism to handle events from config server, not from local files.
     }
 
     private void updateRulesFromStream(InputStream stream)
@@ -240,16 +159,6 @@ public abstract class SimpleStatelessSingleObjectRuleManager<T>
     public void setRuleSpreadsheetFilename(String ruleSpreadsheetFilename)
     {
         this.ruleSpreadsheetFilename = ruleSpreadsheetFilename;
-    }
-
-    public String getRuleFileLocation()
-    {
-        return ruleFileLocation;
-    }
-
-    public void setRuleFileLocation(String ruleFileLocation)
-    {
-        this.ruleFileLocation = ruleFileLocation;
     }
 
     public FileConfigurationService getFileConfigurationService()
