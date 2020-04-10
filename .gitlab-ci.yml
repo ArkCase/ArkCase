@@ -186,7 +186,7 @@ deploy_backend_bcgeu_dev:
     SERVER_IP: 10.60.30.34
     SSH_USER: loc.arkcasemgmtsvc
     SSH_PASSWORD: $ARKCASEMGMTSCV_PASSWORD
-    ARKCASE_VERSION: 3.3.3.1-RC1
+    ARKCASE_VERSION: 3.3.3.7
     ARKCASE_REPOSITORY: arkcase.release
     ARKCASE_SERVICE_USER_NAME: arkuser
     
@@ -262,7 +262,7 @@ deploy_backend_bcgeu_dev:
 start_security_scan_arkcase_snapshot:
   extends: .start_security_scan
   variables:
-    ARKCASE_VERSION: 3.3.7-SNAPSHOT
+    ARKCASE_VERSION: 3.3.8-SNAPSHOT
     ARKCASE_REPOSITORY: arkcase.snapshot
 
 security_scan_results:
