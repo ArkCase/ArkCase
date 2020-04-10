@@ -31,6 +31,7 @@ import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 
+import com.armedia.acm.configuration.service.FileConfigurationService;
 import com.armedia.acm.data.service.AcmDataService;
 import com.armedia.acm.services.dataaccess.annotations.DecoratedAssignedObjectParticipantAspect;
 import com.armedia.acm.services.dataaccess.service.impl.AcmAssignedObjectBusinessRule;
@@ -44,8 +45,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
+import org.springframework.core.io.InputStreamResource;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -73,15 +77,30 @@ public class DecoratedParticipantAnnotationTest
         dataAccessDao = createMock(DataAccessDao.class);
 
         assignmentBusinessRule = new AcmAssignedObjectBusinessRule();
+        assignmentBusinessRule.setFileConfigurationService(new FileConfigurationService()
+        {
+            @Override
+            public void moveFileToConfiguration(InputStreamResource file, String fileName) throws IOException
+            {
+            }
+
+            @Override
+            public void getFileFromConfiguration(String fileName, String customFilesLocation) throws IOException
+            {
+            }
+
+            @Override
+            public InputStream getInputStreamFromConfiguration(String filePath) throws IOException
+            {
+                return new FileInputStream(new ClassPathResource("/" + filePath).getFile().getCanonicalPath());
+            }
+        });
         decoratedParticipantAspect = new DecoratedAssignedObjectParticipantAspect();
         decoratedAssignedObjectParticipants = createMock(DecoratedAssignedObjectParticipants.class);
         pjp = createMock(ProceedingJoinPoint.class);
         // expect(pjp.proceed()).andReturn(new DataAccessAssignedObject());
         // DataAccessAssignedObject test = (DataAccessAssignedObject) pjp.proceed();
         // Object objecttest = pjp.proceed();
-        Resource ruleFolder = new ClassPathResource("/rules");
-        String ruleFolderPath = ruleFolder.getFile().getCanonicalPath();
-        assignmentBusinessRule.setRuleFileLocation(ruleFolderPath);
         assignmentBusinessRule.setRuleSpreadsheetFilename("drools-assigned-object-test-rules.xlsx");
         assignmentBusinessRule.afterPropertiesSet();
         decoratedParticipantAspect.setSpringAcmDataService(springAcmDataService);

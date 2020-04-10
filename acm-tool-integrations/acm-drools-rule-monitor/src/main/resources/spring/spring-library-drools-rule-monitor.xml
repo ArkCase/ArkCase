@@ -4,8 +4,6 @@
 
     <bean id="simpleStatelessSingleObjectRuleManager" class="com.armedia.acm.drools.SimpleStatelessSingleObjectRuleManager" abstract="true"
         init-method="afterPropertiesSet">
-        <!-- TODO Always get rules from config server and remove property below; see code for details. -->
-        <property name="ruleFileLocation" value="${user.home}/.arkcase/acm/acm-config-server-repo/rules"/>
         <property name="fileConfigurationService" ref="fileConfigurationServiceImpl"/>
     </bean>
 
