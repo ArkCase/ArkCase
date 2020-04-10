@@ -113,6 +113,7 @@ release:
     - apt-get update
     - apt-get install -y zip sshpass
     - export SSHPASS=$SSHPASS_ARKCASE
+    - git checkout release/$RELEASE_VERSION
     - mvn -B gitflow:release-finish -DskipTestProject=true -DcommitDevelopmentVersionAtStart=true
     - git checkout master
     - mvn -DskipTests -T 4 -B deploy "-DaltDeploymentRepository=arkcase.release::default::https://project.armedia.com/nexus/repository/arkcase.release/"
