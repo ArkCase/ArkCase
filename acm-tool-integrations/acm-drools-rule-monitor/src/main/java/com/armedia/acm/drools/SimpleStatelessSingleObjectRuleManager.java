@@ -27,6 +27,7 @@ package com.armedia.acm.drools;
  * #L%
  */
 
+import com.armedia.acm.configuration.service.FileConfigurationService;
 import com.armedia.acm.files.AbstractConfigurationFileEvent;
 import com.armedia.acm.files.ConfigurationFileAddedEvent;
 import com.armedia.acm.files.ConfigurationFileChangedEvent;
@@ -64,6 +65,8 @@ public abstract class SimpleStatelessSingleObjectRuleManager<T>
     private KieBase kieBase;
     private String ruleFileLocation;
 
+    private FileConfigurationService fileConfigurationService;
+
     public KieBase getKieBase()
     {
         return kieBase;
@@ -97,6 +100,26 @@ public abstract class SimpleStatelessSingleObjectRuleManager<T>
 
     public void afterPropertiesSet() throws Exception
     {
+        // TODO Always get rules from config server:
+        //  - Fix unit tests; currently they would fail due to fileConfigurationService being null.
+        if (fileConfigurationService != null)
+        {
+
+            log.debug("Getting rules from {}", "rules/" + getRuleSpreadsheetFilename());
+
+            try
+            {
+                InputStream stream = fileConfigurationService.getInputStreamFromConfiguration("rules/" + getRuleSpreadsheetFilename());
+                updateRulesFromStream(stream);
+            }
+            catch (IOException e)
+            {
+                log.debug("Error getting rules {}", e.getMessage(), e);
+            }
+
+            return;
+        }
+
         String ruleFileName = getRuleFileLocation() + "/" + getRuleSpreadsheetFilename();
         log.debug("Loading rules from {}", ruleFileName);
 
@@ -116,6 +139,8 @@ public abstract class SimpleStatelessSingleObjectRuleManager<T>
     @Override
     public void onApplicationEvent(AbstractConfigurationFileEvent fileEvent)
     {
+        // TODO Always get rules from config server:
+        //  - Make watching mechanism to handle events from config server, not from local files.
         if (fileEvent != null &&
                 fileEvent.getConfigFile() != null &&
                 getRuleSpreadsheetFilename().equals(fileEvent.getConfigFile().getName()))
@@ -169,6 +194,44 @@ public abstract class SimpleStatelessSingleObjectRuleManager<T>
         }
     }
 
+    private void updateRulesFromStream(InputStream stream)
+    {
+        SpreadsheetCompiler sc = new SpreadsheetCompiler();
+
+        try
+        {
+
+            KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
+            DecisionTableConfiguration dtconf = KnowledgeBuilderFactory.newDecisionTableConfiguration();
+            dtconf.setInputType(DecisionTableInputType.XLS);
+            kbuilder.add(ResourceFactory.newInputStreamResource(stream), ResourceType.DTABLE, dtconf);
+
+            if (kbuilder.hasErrors())
+            {
+                String drl = sc.compile(stream, InputType.XLS);
+                log.error("DRL with errors: {}", drl);
+
+                for (KnowledgeBuilderError error : kbuilder.getErrors())
+                {
+                    log.error("Error building rules: {}", error);
+                }
+
+                throw new RuntimeException(String.format("Could not build rules from %s", getRuleSpreadsheetFilename()));
+            }
+
+            KieBase base = kbuilder.newKieBase();
+
+            setKieBase(base);
+
+            log.debug("Updated business rules from file '{}'", getRuleSpreadsheetFilename());
+
+        }
+        catch (Exception e)
+        {
+            log.error("Could not update rules: {}", e.getMessage(), e);
+        }
+    }
+
     public String getRuleSpreadsheetFilename()
     {
         return ruleSpreadsheetFilename;
@@ -187,5 +250,15 @@ public abstract class SimpleStatelessSingleObjectRuleManager<T>
     public void setRuleFileLocation(String ruleFileLocation)
     {
         this.ruleFileLocation = ruleFileLocation;
+    }
+
+    public FileConfigurationService getFileConfigurationService()
+    {
+        return fileConfigurationService;
+    }
+
+    public void setFileConfigurationService(FileConfigurationService fileConfigurationService)
+    {
+        this.fileConfigurationService = fileConfigurationService;
     }
 }
