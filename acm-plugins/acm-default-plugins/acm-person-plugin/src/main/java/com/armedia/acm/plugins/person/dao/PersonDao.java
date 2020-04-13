@@ -31,8 +31,8 @@ package com.armedia.acm.plugins.person.dao;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.person.model.Person;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -77,6 +77,18 @@ public class PersonDao extends AcmAbstractDao<Person>
         Person personToBeDeleted = (Person) queryToDelete.getSingleResult();
         entityManager.remove(personToBeDeleted);
 
+    }
+
+    @Transactional
+    public void updatePersonClass(Long id, String className)
+    {
+        Query queryToUpdate = getEntityManager().createQuery(
+                "UPDATE Person " +
+                        "SET className = :newClassName WHERE id = :personId");
+        queryToUpdate.setParameter("personId", id);
+        queryToUpdate.setParameter("newClassName", className);
+
+        queryToUpdate.executeUpdate();
     }
 
     public List<Person> findByNameOrContactValue(String name, String contactValue)

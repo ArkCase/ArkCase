@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
-    xmlns:beans="http://www.springframework.org/schema/beans"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <beans:beans profile="extension-foia">
         <beans:bean id="caseFileStartBusinessProcessBusinessRule"
-            class="com.armedia.acm.plugins.casefile.service.CaseFileStartBusinessProcessBusinessRule">
+                    class="com.armedia.acm.plugins.casefile.service.CaseFileStartBusinessProcessBusinessRule">
             <beans:property name="ruleSpreadsheetFilename" value="drools-start-business-process-rules-foia.xlsx"/>
         </beans:bean>
 
         <beans:bean id="caseFileNextPossibleQueuesBusinessRule"
-            class="com.armedia.acm.plugins.casefile.service.CaseFileNextPossibleQueuesBusinessRule">
+                    class="com.armedia.acm.plugins.casefile.service.CaseFileNextPossibleQueuesBusinessRule">
             <beans:property name="ruleSpreadsheetFilename" value="drools-next-possible-queues-rules-foia.xlsx"/>
         </beans:bean>
 
@@ -52,7 +52,7 @@
             <beans:property name="userDao" ref="userJpaDao"/>
             <beans:property name="ecmFileService" ref="ecmFileService"/>
             <beans:property name="notificationDao" ref="notificationDao"/>
-            <beans:property name="translationService" ref="translationService" />
+            <beans:property name="translationService" ref="translationService"/>
         </beans:bean>
 
         <beans:bean id="caseFilePipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
@@ -80,13 +80,17 @@
         </beans:bean>
 
         <beans:bean id="foiaRequestToSolrTransformer" class="gov.foia.transformer.FOIARequestToSolrTransformer"
-            parent="caseFileToSolrTransformer"/>
+                    parent="caseFileToSolrTransformer"/>
 
         <beans:bean id="foiaPersonToSolrTransformer" class="gov.foia.transformer.FOIAPersonToSolrTransformer"
-            parent="personToSolrTransformer"/>
+                    parent="personToSolrTransformer"/>
+
+        <beans:bean id="portalFOIAPersonToSolrTransformer" class="gov.foia.transformer.FOIAPortalPersonToSolrTransformer"
+                    parent="foiaPersonToSolrTransformer">
+        </beans:bean>
 
         <beans:bean id="foiaFileToSolrTransformer" class="gov.foia.transformer.FOIAFileToSolrTransformer"
-            parent="ecmFileToSolrTrasnformer"/>
+                    parent="ecmFileToSolrTrasnformer"/>
 
         <beans:bean id="foiaRequestDao" class="gov.foia.dao.FOIARequestDao"/>
 
@@ -103,7 +107,7 @@
         </beans:bean>
 
         <beans:bean id="foiaRequesterAssociationToSolrTransformer" class="gov.foia.transformer.FOIARequesterAssociationToSolrTransformer"
-            parent="personAssociationToSolrTransformer"/>
+                    parent="personAssociationToSolrTransformer"/>
 
         <beans:bean id="pdfDocumentGenerator" class="gov.foia.service.PDFDocumentGenerator">
             <beans:property name="ecmFileService" ref="ecmFileService"/>
