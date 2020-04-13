@@ -6,6 +6,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.services.exemption.dao.ExemptionCodeDao;
 import com.armedia.acm.services.exemption.model.ExemptionCode;
+import com.armedia.acm.services.exemption.model.ExemptionConstants;
 
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
@@ -38,7 +39,8 @@ public class FOIAExemptionCodeDao extends AcmAbstractDao<ExemptionCode>
         FOIARequest request = (FOIARequest) caseFileDao.find(parentObjectId);
 
         if (request.getQueue().getName().equals("Release")
-                || (request.getGeneratedZipFlag() != null && request.getGeneratedZipFlag() == true))
+                || (request.getGeneratedZipFlag() != null && request.getGeneratedZipFlag() == true)
+                || request.getDispositionClosedDate() != null)
         {
 
             String queryText = "SELECT af.id " +
@@ -63,16 +65,43 @@ public class FOIAExemptionCodeDao extends AcmAbstractDao<ExemptionCode>
                 List<ExemptionCode> listCodesOnDocuments;
                 for (Long fileId : fileIds)
                 {
-                    listCodesOnDocuments = getApprovedExemptionCodesByFileId(fileId);
-                    combineResult.addAll(listCodesOnDocuments);
+                    listCodesOnDocuments = getApprovedAndManualExemptionCodesByFileId(fileId);
+                    List<ExemptionCode> filterDocumentCodesList = filterExemptionCodes(listCodesOnDocuments);
+                    combineResult.addAll(filterDocumentCodesList);
                 }
             }
         }
 
         List<ExemptionCode> listCodesOnRequest = getManuallyAddedCodesOnRequestLevel(parentObjectId, parentObjectType);
         combineResult.addAll(listCodesOnRequest);
-        return combineResult;
+        List<ExemptionCode> finalList = filterExemptionCodes(combineResult);
+        return finalList;
 
+    }
+
+    public List<ExemptionCode> filterExemptionCodes(List<ExemptionCode> exemptionCodeList)
+    {
+        List<ExemptionCode> uniqueExemptionCodesList = new ArrayList<>();
+        exemptionCodeList.forEach(item -> {
+            boolean isDuplicate = uniqueExemptionCodesList.stream()
+                    .anyMatch(newItem -> newItem.getExemptionCode().equals(item.getExemptionCode()));
+
+            if (isDuplicate)
+            {
+                if (item.getExemptionStatus().equals(ExemptionConstants.EXEMPTION_STATUS_APPROVED))
+                {
+                    List<String> codesArray = uniqueExemptionCodesList.stream()
+                            .map(ExemptionCode::getExemptionCode).collect(Collectors.toList());
+                    int index = codesArray.indexOf(item.getExemptionCode());
+                    uniqueExemptionCodesList.set(index, item);
+                }
+            }
+            else
+            {
+                uniqueExemptionCodesList.add(item);
+            }
+        });
+        return uniqueExemptionCodesList;
     }
 
     public List<ExemptionCode> getManuallyAddedCodesOnRequestLevel(Long parentObjectId, String parentObjectType)
@@ -98,11 +127,11 @@ public class FOIAExemptionCodeDao extends AcmAbstractDao<ExemptionCode>
 
     }
 
-    public List<ExemptionCode> getApprovedExemptionCodesByFileId(Long fileId)
+    public List<ExemptionCode> getApprovedAndManualExemptionCodesByFileId(Long fileId)
     {
         String queryText = "SELECT codes FROM ExemptionCode codes WHERE codes.fileId = :fileId " +
-                "AND codes.exemptionStatus = 'APPROVED' " +
-                "GROUP BY codes.exemptionCode"; // todo check to retrieve the exact version of document
+                "AND codes.exemptionStatus <> 'DRAFT' " +
+                "GROUP BY codes.exemptionCode, codes.exemptionStatus";
         TypedQuery<ExemptionCode> query = getEm().createQuery(queryText, ExemptionCode.class);
         query.setParameter("fileId", fileId);
 
