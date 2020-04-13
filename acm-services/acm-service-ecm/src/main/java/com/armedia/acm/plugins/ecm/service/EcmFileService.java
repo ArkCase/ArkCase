@@ -31,11 +31,13 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.plugins.ecm.exception.EcmFileLinkException;
 import com.armedia.acm.plugins.ecm.exception.LinkAlreadyExistException;
 import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.LinkTargetFileDTO;
 import com.armedia.acm.plugins.ecm.model.RecycleBinItem;
 
 import org.apache.chemistry.opencmis.client.api.CmisObject;
@@ -416,4 +418,6 @@ public interface EcmFileService
     void updateFileLinks(EcmFile file) throws AcmObjectNotFoundException;
 
     String addDateInPath(String folderPath, Boolean flag) throws AcmCreateObjectFailedException;
+
+    LinkTargetFileDTO getLinkTargetFileInfo(EcmFile ecmFile) throws EcmFileLinkException;
 }

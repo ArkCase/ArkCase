@@ -54,8 +54,8 @@ public class FOIAFile extends EcmFile
     private static final long serialVersionUID = 3364794434531371617L;
 
     @ElementCollection
-    @CollectionTable(name = "foia_file_exemption_code", joinColumns = @JoinColumn(name = "ecm_file_id", referencedColumnName = "cm_file_id"))
-    @Column(name = "fo_exemption_code")
+    @CollectionTable(name = "acm_exemption_code", joinColumns = @JoinColumn(name = "cm_file_id", referencedColumnName = "cm_file_id"))
+    @Column(name = "cm_exemption_code")
     private List<String> exemptionCodes;
 
     @Column(name = "fo_public_flag")

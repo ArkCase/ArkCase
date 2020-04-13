@@ -1,18 +1,18 @@
 package gov.foia.dao;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
-
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.services.exemption.dao.ExemptionCodeDao;
 import com.armedia.acm.services.exemption.model.ExemptionCode;
+
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import gov.foia.model.FOIARequest;
 
@@ -103,6 +103,20 @@ public class FOIAExemptionCodeDao extends AcmAbstractDao<ExemptionCode>
         String queryText = "SELECT codes FROM ExemptionCode codes WHERE codes.fileId = :fileId " +
                 "AND codes.exemptionStatus = 'APPROVED' " +
                 "GROUP BY codes.exemptionCode"; // todo check to retrieve the exact version of document
+        TypedQuery<ExemptionCode> query = getEm().createQuery(queryText, ExemptionCode.class);
+        query.setParameter("fileId", fileId);
+
+        List<ExemptionCode> exemptionCodeList = query.getResultList();
+        if (exemptionCodeList == null)
+        {
+            exemptionCodeList = new ArrayList<>();
+        }
+        return exemptionCodeList;
+    }
+
+    public List<ExemptionCode> findExemptionCodesByFileId(Long fileId)
+    {
+        String queryText = "SELECT codes FROM ExemptionCode codes WHERE codes.fileId = :fileId";
         TypedQuery<ExemptionCode> query = getEm().createQuery(queryText, ExemptionCode.class);
         query.setParameter("fileId", fileId);
 
