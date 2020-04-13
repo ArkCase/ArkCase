@@ -27,14 +27,16 @@ package com.armedia.acm.portalgateway.service;
  * #L%
  */
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
+
+import javax.persistence.NoResultException;
 
 import java.lang.reflect.Parameter;
 
@@ -73,7 +75,15 @@ public class CheckPortalUserAssignementAspect
         if (auth != null && portalId != null)
         {
             log.debug("Checking if user [{}] is assigned to portal with ID [{}].", auth.getName(), portalId);
-            checkUserAssignementService.isUserAssigned(auth.getName(), portalId);
+            try
+            {
+                checkUserAssignementService.isUserAssigned(auth.getName(), portalId);
+            }
+            catch (NoResultException nre)
+            {
+                log.error("Portal not configured in ArkCase [{}]", portalId, nre);
+                throw new PortalUserServiceException("Portal not configured in ArkCase!");
+            }
         }
         else
         {
