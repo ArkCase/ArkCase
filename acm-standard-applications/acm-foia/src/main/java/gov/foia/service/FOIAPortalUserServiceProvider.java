@@ -589,6 +589,10 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
             else if (reset.getRequestTime() + REGISTRATION_EXPIRATION > System.currentTimeMillis())
             {
                 AcmUser acmPortalUser = getPortalAcmUser(reset.getEmailAddress());
+                if (acmPortalUser == null)
+                {
+                    throw new PortalUserServiceException(String.format("User %s doesn't exist!", reset.getEmailAddress()));
+                }
 
                 FOIALdapAuthenticationService foiaLdapAuthenticationService = getFOIALdapAuthenticationService(directoryName);
                 if (foiaLdapAuthenticationService == null)
