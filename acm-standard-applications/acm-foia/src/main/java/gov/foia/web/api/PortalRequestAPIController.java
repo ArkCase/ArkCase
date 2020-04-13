@@ -95,7 +95,7 @@ public class PortalRequestAPIController
             @RequestParam(value = "emailAddress") String emailAddress, @RequestParam(value="requestId") String requestId)
             throws AcmObjectNotFoundException
     {
-        return getPortalRequestService().getLoggedUserExternalRequests(auth.getName(), requestId);
+        return getPortalRequestService().getLoggedUserExternalRequests(emailAddress, requestId);
     }
 
     @RequestMapping(value = "/external/readingroom", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

@@ -20,6 +20,7 @@
         "value": [
             "details",
             "rejcomments",
+            "people",
             "parentdocs",
             "attachments",
             "notes",
@@ -27,8 +28,7 @@
             "workflow",
             "history",
             "signatures",
-            "tags",
-            "people"
+            "tags"
         ]
     },
     {
@@ -37,7 +37,7 @@
     },
     {
         "op": "add",
-        "path": "/tree/nodeTypes/-",
+        "path": "/tree/nodeTypes/17",
         "value": {
             "type": "p/ADHOC/people",
             "label": "tasks.tree.nodeTypes.people.label",
@@ -128,22 +128,15 @@
                     "name": "personType",
                     "displayName": "tasks.comp.people.table.columns.type",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.personTypes, row.entity.personType) | translate }}</div>",
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.personTypes, row.entity.type_lcs) | translate }}</div>",
                     "lookup": "personTypes"
                 },
                 {
-                    "name": "lastName",
-                    "field": "givenName",
-                    "displayName": "tasks.comp.people.table.columns.firstName",
+                    "name": "fulName",
+                    "field": "creator_full_name_lcs",
+                    "displayName": "tasks.comp.people.table.columns.fullName",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<a data-ui-sref=\"people.main({id: row.entity.lastName})\">{{COL_FIELD}}<\/a>"
-                },
-                {
-                    "name": "firstName",
-                    "field": "familyName",
-                    "displayName": "tasks.comp.people.table.columns.lastName",
-                    "headerCellFilter": "translate",
-                    "cellTemplate": "<a data-ui-sref=\"people.main({id: row.entity.firstName})\">{{COL_FIELD}}<\/a>"
+                    "cellTemplate": "<a data-ui-sref=\"people.main({id: row.entity.child_id_s})\">{{COL_FIELD}}</a>"
                 }
             ]
 
