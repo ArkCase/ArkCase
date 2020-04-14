@@ -19,7 +19,7 @@
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-package com.armedia.acm.auth.ad;
+package com.armedia.acm.services.users.service.ldap;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.ldap.authentication.ad.ActiveDirectoryAuthenticationException;

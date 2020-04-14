@@ -56,6 +56,10 @@ public class ConfigurationChangedSubscriber
     @Named("proxyLabelsFacade")
     private ConfigurationFacade labelsFacade;
 
+    @Autowired
+    @Named("proxyLdapFacade")
+    private ConfigurationFacade ldapFacade;
+
     @JmsListener(destination = "configuration.changed", containerFactory = "jmsTopicListenerContainerFactory")
     public void onConfigurationChanged(Message message)
     {
@@ -78,6 +82,16 @@ public class ConfigurationChangedSubscriber
         if (labelsFacade != null)
         {
             labelsFacade.refresh();
+        }
+    }
+
+    @JmsListener(destination = "ldap.changed", containerFactory = "jmsTopicListenerContainerFactory")
+    public void onLdapChanged(Message message)
+    {
+        log.info("Refreshing on ldap change...");
+        if (ldapFacade != null)
+        {
+            ldapFacade.refresh();
         }
     }
 }

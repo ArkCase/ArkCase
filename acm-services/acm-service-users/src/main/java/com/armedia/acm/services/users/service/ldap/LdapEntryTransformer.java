@@ -34,30 +34,25 @@ import com.armedia.acm.services.users.model.ldap.MapperUtils;
 import com.armedia.acm.spring.SpringContextHolder;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Map;
-import java.util.Properties;
 
 /**
  * Creates LDAP context for the new entries with the specified attributes
  */
 public class LdapEntryTransformer
 {
-    private Properties ldapAddUserPropertiesFile;
-    private Properties ldapEditUserPropertiesFile;
-    private Properties ldapAddGroupPropertiesFile;
+    private AcmLdapConfiguration ldapConfiguration;
 
     private SpringContextHolder acmContextHolder;
 
     private Logger log = LogManager.getLogger(getClass());
 
     public DirContextAdapter createContextForNewUserEntry(String directoryName, AcmUser user, String userPassword, String baseDC)
-            throws UnsupportedEncodingException
     {
         DirContextAdapter context = new DirContextAdapter(MapperUtils.stripBaseFromDn(user.getDistinguishedName(), baseDC));
 
@@ -73,56 +68,59 @@ public class LdapEntryTransformer
             String attr = attributeEntry.getKey();
             String value = attributeEntry.getValue();
 
-            String key = ldapAddUserPropertiesFile.getProperty(attr);
-            if (key.equals(AcmLdapConstants.LDAP_OBJECT_CLASS_ATTR))
+            String key = (String) ldapConfiguration.getAttributes().get("ldapAddUserValuesTransformations").get(attr);
+            if (key != null)
             {
-                String[] classes = value.split(",");
-                context.setAttributeValues(attr, classes);
-            }
-            else if (key.equals(AcmLdapConstants.LDAP_USER_ID_ATTR))
-            {
-                context.setAttributeValue(attr, userId);
-            }
-            else if (key.equals(AcmLdapConstants.LDAP_FIRST_NAME_ATTR))
-            {
-                context.setAttributeValue(attr, user.getFirstName());
-            }
-            else if (key.equals(AcmLdapConstants.LDAP_LAST_NAME_ATTR))
-            {
-                context.setAttributeValue(attr, user.getLastName());
-            }
-            else if (key.equals(AcmLdapConstants.LDAP_MAIL_ATTR))
-            {
-                context.setAttributeValue(attr, user.getMail());
-            }
-            else if (key.equals(AcmLdapConstants.LDAP_FULL_NAME_ATTR))
-            {
-                context.setAttributeValue(attr, user.getFullName());
-            }
-            else if (key.equals(AcmLdapConstants.LDAP_PASSWORD_ATTR))
-            {
-                context.setAttributeValue(attr, userPassword);
+                if (key.equals(AcmLdapConstants.LDAP_OBJECT_CLASS_ATTR))
+                {
+                    String[] classes = value.split(",");
+                    context.setAttributeValues(attr, classes);
+                }
+                else if (key.equals(AcmLdapConstants.LDAP_USER_ID_ATTR))
+                {
+                    context.setAttributeValue(attr, userId);
+                }
+                else if (key.equals(AcmLdapConstants.LDAP_FIRST_NAME_ATTR))
+                {
+                    context.setAttributeValue(attr, user.getFirstName());
+                }
+                else if (key.equals(AcmLdapConstants.LDAP_LAST_NAME_ATTR))
+                {
+                    context.setAttributeValue(attr, user.getLastName());
+                }
+                else if (key.equals(AcmLdapConstants.LDAP_MAIL_ATTR))
+                {
+                    context.setAttributeValue(attr, user.getMail());
+                }
+                else if (key.equals(AcmLdapConstants.LDAP_FULL_NAME_ATTR))
+                {
+                    context.setAttributeValue(attr, user.getFullName());
+                }
+                else if (key.equals(AcmLdapConstants.LDAP_PASSWORD_ATTR))
+                {
+                    context.setAttributeValue(attr, userPassword);
 
-            }
-            else if (key.equals(AcmLdapConstants.LDAP_UNICODE_PASSWORD_ATTR))
-            {
-                context.setAttributeValue(attr, MapperUtils.encodeUTF16LE(userPassword));
-            }
-            else if (key.equals(AcmLdapConstants.LDAP_UID_NUMBER_ATTR))
-            {
-                context.setAttributeValue(attr, Long.toString(timestamp));
-            }
-            else if (key.equals(AcmLdapConstants.LDAP_GID_NUMBER_ATTR))
-            {
-                context.setAttributeValue(attr, Long.toString(timestamp));
-            }
-            else if (key.equals(AcmLdapConstants.LDAP_HOME_DIRECTORY_ATTR))
-            {
-                context.setAttributeValue(attr, String.format("/home/%s", userId));
-            }
-            else
-            {
-                context.setAttributeValue(attr, value);
+                }
+                else if (key.equals(AcmLdapConstants.LDAP_UNICODE_PASSWORD_ATTR))
+                {
+                    context.setAttributeValue(attr, MapperUtils.encodeUTF16LE(userPassword));
+                }
+                else if (key.equals(AcmLdapConstants.LDAP_UID_NUMBER_ATTR))
+                {
+                    context.setAttributeValue(attr, Long.toString(timestamp));
+                }
+                else if (key.equals(AcmLdapConstants.LDAP_GID_NUMBER_ATTR))
+                {
+                    context.setAttributeValue(attr, Long.toString(timestamp));
+                }
+                else if (key.equals(AcmLdapConstants.LDAP_HOME_DIRECTORY_ATTR))
+                {
+                    context.setAttributeValue(attr, String.format("/home/%s", userId));
+                }
+                else
+                {
+                    context.setAttributeValue(attr, value);
+                }
             }
         }
 
@@ -135,12 +133,13 @@ public class LdapEntryTransformer
                 .get(String.format("%s_userSync", directoryName));
 
         Map<String, String> userAttributes = config.getAttributes();
+        Map<String, Object> ldapEditUserProperties = ldapConfiguration.getAttributes().get("ldapEditUserValuesTransformation");
 
-        ldapEditUserPropertiesFile.stringPropertyNames().forEach(propertyName -> {
+        ldapEditUserProperties.keySet().forEach(propertyName -> {
             // get user's editable properties for the specific directory user-attributes config
             if (userAttributes.containsKey(propertyName))
             {
-                String propertyValue = ldapAddUserPropertiesFile.getProperty(propertyName);
+                String propertyValue = (String) ldapConfiguration.getAttributes().get("ldapAddUserValuesTransformations").get(propertyName);
 
                 if (propertyValue.equals(AcmLdapConstants.LDAP_FIRST_NAME_ATTR))
                 {
@@ -180,42 +179,30 @@ public class LdapEntryTransformer
         String groupName = StringUtils.substringBeforeLast(group.getName(), "@");
 
         groupAttributes.forEach((attr, value) -> {
-            String key = ldapAddGroupPropertiesFile.getProperty(attr);
-            if (key.equals(AcmLdapConstants.LDAP_OBJECT_CLASS_ATTR))
+            String key = (String) ldapConfiguration.getAttributes().get("ldapAddGroupValuesTransformations").get(attr);
+            switch (key)
             {
+            case AcmLdapConstants.LDAP_OBJECT_CLASS_ATTR:
                 String[] classes = value.split(",");
                 context.setAttributeValues(attr, classes);
-            }
-            else if (key.equals(AcmLdapConstants.LDAP_GID_NUMBER_ATTR))
-            {
+                break;
+            case AcmLdapConstants.LDAP_GID_NUMBER_ATTR:
                 context.setAttributeValue(attr, Long.toString(timestamp));
-            }
-            else if (key.equals(AcmLdapConstants.LDAP_FULL_NAME_ATTR))
-            {
+                break;
+            case AcmLdapConstants.LDAP_FULL_NAME_ATTR:
                 context.setAttributeValue(attr, groupName);
-            }
-            else if (key.equals(AcmLdapConstants.LDAP_MEMBER_ATTR))
-            {
+                break;
+            case AcmLdapConstants.LDAP_MEMBER_ATTR:
                 // set member attribute which is required to create a group entry
                 context.setAttributeValue(attr, "");
-            }
-            else
-            {
+                break;
+            default:
                 context.setAttributeValue(attr, value);
+                break;
             }
         });
 
         return context;
-    }
-
-    public Properties getLdapAddUserPropertiesFile()
-    {
-        return ldapAddUserPropertiesFile;
-    }
-
-    public void setLdapAddUserPropertiesFile(Properties ldapAddUserPropertiesFile)
-    {
-        this.ldapAddUserPropertiesFile = ldapAddUserPropertiesFile;
     }
 
     public SpringContextHolder getAcmContextHolder()
@@ -228,23 +215,8 @@ public class LdapEntryTransformer
         this.acmContextHolder = acmContextHolder;
     }
 
-    public Properties getLdapEditUserPropertiesFile()
+    public void setLdapConfiguration(AcmLdapConfiguration ldapConfiguration)
     {
-        return ldapEditUserPropertiesFile;
-    }
-
-    public void setLdapEditUserPropertiesFile(Properties ldapEditUserProperiesFile)
-    {
-        this.ldapEditUserPropertiesFile = ldapEditUserProperiesFile;
-    }
-
-    public Properties getLdapAddGroupPropertiesFile()
-    {
-        return ldapAddGroupPropertiesFile;
-    }
-
-    public void setLdapAddGroupPropertiesFile(Properties ldapAddGroupPropertiesFile)
-    {
-        this.ldapAddGroupPropertiesFile = ldapAddGroupPropertiesFile;
+        this.ldapConfiguration = ldapConfiguration;
     }
 }

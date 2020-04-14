@@ -198,7 +198,7 @@ public class MapperUtils
 
         if (ldapSyncConfig.getUserIdAttributeName().equalsIgnoreCase("samaccountname"))
         {
-            if (ldapSyncConfig.isGenerateUsernameEnabled())
+            if (ldapSyncConfig.isAutoGenerateUserId())
             {
                 userId = String.format("%s%s", prefixTrailingDot(userPrefix),
                         RandomStringUtils.randomAlphanumeric(20 - userPrefix.length()));

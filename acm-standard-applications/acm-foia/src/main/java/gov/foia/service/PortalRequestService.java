@@ -30,6 +30,7 @@ package gov.foia.service;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.service.GetCaseByNumberService;
+import com.armedia.acm.plugins.person.dao.PersonAssociationDao;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.service.impl.CreateAdHocTaskService;
 import com.armedia.acm.services.config.lookups.model.StandardLookupEntry;
@@ -82,8 +83,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import gov.foia.dao.FOIARequestDao;
+import gov.foia.dao.PortalFOIAPersonDao;
 import gov.foia.model.FOIAPerson;
 import gov.foia.model.FOIARequest;
+import gov.foia.model.FOIARequesterAssociation;
+import gov.foia.model.PortalFOIAPerson;
 import gov.foia.model.PortalFOIAReadingRoom;
 import gov.foia.model.PortalFOIARequest;
 import gov.foia.model.PortalFOIARequestFile;
@@ -105,6 +109,10 @@ public class PortalRequestService
     private ExecuteSolrQuery executeSolrQuery;
 
     private GetCaseByNumberService getCaseByNumberService;
+
+    private PortalFOIAPersonDao portalFOIAPersonDao;
+
+    private PersonAssociationDao personAssociationDao;
 
     private UserDao userDao;
 
@@ -354,20 +362,9 @@ public class PortalRequestService
 
     public void createRequestWithdrawalTask(WithdrawRequest withdrawRequestDetails, Authentication auth)
     {
-        AcmTask requestWithdrawalTask = new AcmTask();
+        FOIARequest request = (FOIARequest) getCaseFileDao().findByCaseNumber(withdrawRequestDetails.getOriginalRequestNumber());
 
-        String requestTitle = String.format("%s %s: %s", WITHDRAW_REQUEST_TITLE, withdrawRequestDetails.getOriginalRequestNumber(),
-                withdrawRequestDetails.getSubject());
-        requestWithdrawalTask.setTitle(requestTitle);
-        requestWithdrawalTask.setType("web-portal-withdrawal");
-        requestWithdrawalTask.setDetails(withdrawRequestDetails.getDescription());
-        requestWithdrawalTask.setAttachedToObjectType("CASE_FILE");
-        requestWithdrawalTask.setParentObjectType("CASE_FILE");
-        requestWithdrawalTask.setAttachedToObjectName(withdrawRequestDetails.getOriginalRequestNumber());
-        requestWithdrawalTask.setParentObjectName(withdrawRequestDetails.getOriginalRequestNumber());
-        requestWithdrawalTask.setAdhocTask(true);
-        requestWithdrawalTask.setCompleted(false);
-        requestWithdrawalTask.setPriority("High");
+        AcmTask requestWithdrawalTask = populateWithdrawalTask(withdrawRequestDetails, request);
 
         List<MultipartFile> files = new ArrayList<>();
         for (PortalFOIARequestFile portalFile : withdrawRequestDetails.getDocuments())
@@ -384,13 +381,62 @@ public class PortalRequestService
 
         try
         {
-            getCreateAdHocTaskService().createAdHocTask(requestWithdrawalTask, files, auth,
+            AcmTask task = getCreateAdHocTaskService().createAdHocTask(requestWithdrawalTask, files, auth,
                     withdrawRequestDetails.getIpAddress());
+
+            createTaskPersonAssociation(auth, request, task);
+
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            log.error("Withdraw task not created!", e);
         }
+
+    }
+
+    private AcmTask populateWithdrawalTask(WithdrawRequest withdrawRequestDetails, FOIARequest request)
+    {
+        AcmTask requestWithdrawalTask = new AcmTask();
+
+        String requestTitle = String.format("%s %s: %s", WITHDRAW_REQUEST_TITLE, withdrawRequestDetails.getOriginalRequestNumber(),
+                withdrawRequestDetails.getSubject());
+        requestWithdrawalTask.setTitle(requestTitle);
+        requestWithdrawalTask.setType("web-portal-withdrawal");
+        requestWithdrawalTask.setDetails(withdrawRequestDetails.getDescription());
+        requestWithdrawalTask.setAttachedToObjectType("CASE_FILE");
+        requestWithdrawalTask.setParentObjectType("CASE_FILE");
+        requestWithdrawalTask.setAttachedToObjectName(withdrawRequestDetails.getOriginalRequestNumber());
+        requestWithdrawalTask.setParentObjectName(withdrawRequestDetails.getOriginalRequestNumber());
+        requestWithdrawalTask.setAdhocTask(true);
+        requestWithdrawalTask.setCompleted(false);
+        requestWithdrawalTask.setPriority("High");
+
+        if (request != null)
+        {
+            requestWithdrawalTask.setAttachedToObjectId(request.getId());
+            requestWithdrawalTask.setAttachedToObjectType(request.getObjectType());
+            requestWithdrawalTask.setAttachedToObjectName(request.getCaseNumber());
+            requestWithdrawalTask.setParentObjectId(request.getId());
+            requestWithdrawalTask.setParentObjectType(request.getObjectType());
+            requestWithdrawalTask.setParentObjectName(request.getCaseNumber());
+        }
+        return requestWithdrawalTask;
+    }
+
+    private void createTaskPersonAssociation(Authentication auth, FOIARequest request, AcmTask task)
+    {
+        FOIARequesterAssociation personAssociation = new FOIARequesterAssociation();
+
+        FOIAPerson person = (FOIAPerson) request.getOriginator().getPerson();
+
+        personAssociation.setParentId(task.getTaskId());
+        personAssociation.setParentType("TASK");
+        personAssociation.setPersonType("Creator");
+        personAssociation.setCreator(auth.getName());
+        personAssociation.setPerson(person);
+        personAssociation.setPersonType("Creator");
+
+        getPersonAssociationDao().save(personAssociation);
     }
 
     public MultipartFile convertPortalRequestFileToMultipartFile(PortalFOIARequestFile requestFile) throws IOException
@@ -515,7 +561,8 @@ public class PortalRequestService
     public List<PortalFOIARequestStatus> getLoggedUserExternalRequests(String emailAddress, String requestId)
             throws AcmObjectNotFoundException
     {
-        List<PortalFOIARequestStatus> responseRequests = getRequestDao().getLoggedUserExternalRequests(emailAddress, requestId);
+        PortalFOIAPerson person = getPortalFOIAPersonDao().findByEmail(emailAddress).get();
+        List<PortalFOIARequestStatus> responseRequests = getRequestDao().getLoggedUserExternalRequests(person.getId());
         if (responseRequests.isEmpty())
         {
             log.info("FOIA Requests not found for the logged user [{}]]", emailAddress);
@@ -544,5 +591,25 @@ public class PortalRequestService
     public void setCreateAdHocTaskService(CreateAdHocTaskService createAdHocTaskService)
     {
         this.createAdHocTaskService = createAdHocTaskService;
+    }
+
+    public PortalFOIAPersonDao getPortalFOIAPersonDao()
+    {
+        return portalFOIAPersonDao;
+    }
+
+    public void setPortalFOIAPersonDao(PortalFOIAPersonDao portalFOIAPersonDao)
+    {
+        this.portalFOIAPersonDao = portalFOIAPersonDao;
+    }
+
+    public PersonAssociationDao getPersonAssociationDao()
+    {
+        return personAssociationDao;
+    }
+
+    public void setPersonAssociationDao(PersonAssociationDao personAssociationDao)
+    {
+        this.personAssociationDao = personAssociationDao;
     }
 }

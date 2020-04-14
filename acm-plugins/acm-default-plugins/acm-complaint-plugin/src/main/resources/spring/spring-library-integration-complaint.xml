@@ -21,6 +21,7 @@
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
+        <property name="emailReceiverConfig" ref="emailReceiverConfig"/>
     </bean>
 
     <int:service-activator input-channel="complaintFilteredMailChannel" ref="complaintMailHandler" method="handle"/>

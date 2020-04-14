@@ -27,7 +27,6 @@ package gov.foia.service;
  * #L%
  */
 
-import com.amazonaws.util.IOUtils;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
@@ -43,25 +42,14 @@ import com.armedia.acm.plugins.task.model.TaskConstants;
 import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
 
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 
 import gov.foia.model.FOIAPerson;
@@ -155,7 +143,7 @@ public class PortalCreateInquiryService
     {
         pa.setParentId(task.getTaskId());
         pa.setParentType("TASK");
-        pa.setPersonType("Creator");
+        pa.setPersonType("Inquirer");
         pa.setCreator(in.getUserId());
         List<Person> personList = getPersonDao().findByNameOrContactValue("", in.getEmailAddress());
         FOIAPerson person;
@@ -179,26 +167,6 @@ public class PortalCreateInquiryService
         pa.setPerson(person);
         pa.setPersonType("Creator");
         return pa;
-    }
-
-    public MultipartFile convertPortalRequestFileToMultipartFile(PortalFOIARequestFile requestFile) throws IOException
-    {
-        byte[] content = Base64.getDecoder().decode(requestFile.getContent());
-
-        File file = new File(requestFile.getFileName());
-        Path path = Paths.get(file.getAbsolutePath());
-        Files.write(path, content);
-
-        FileItem fileItem = new DiskFileItem("", requestFile.getContentType(), false, file.getName(), (int) file.length(),
-                file.getParentFile());
-
-        try (InputStream input = new FileInputStream(file))
-        {
-            OutputStream os = fileItem.getOutputStream();
-            IOUtils.copy(input, os);
-        }
-
-        return new CommonsMultipartFile(fileItem);
     }
 
     public CaseFileDao getCaseFileDao()

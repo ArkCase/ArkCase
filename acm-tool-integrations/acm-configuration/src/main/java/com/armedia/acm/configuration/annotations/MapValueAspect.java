@@ -28,6 +28,7 @@ package com.armedia.acm.configuration.annotations;
  */
 
 import com.armedia.acm.configuration.core.ConfigurationContainer;
+import com.armedia.acm.configuration.core.LdapConfigurationContainer;
 import com.armedia.acm.configuration.service.CollectionPropertiesConfigurationService;
 
 import org.aspectj.lang.annotation.Around;
@@ -50,6 +51,9 @@ public class MapValueAspect
     private ConfigurationContainer configurationContainer;
 
     @Autowired
+    private LdapConfigurationContainer ldapConfiguration;
+
+    @Autowired
     private CollectionPropertiesConfigurationService collectionPropertiesConfigurationService;
 
     /**
@@ -59,13 +63,19 @@ public class MapValueAspect
     @Around(value = "@annotation(propertyKey)")
     public Object aroundMapPropertyValueDecoratingMethod(MapValue propertyKey)
     {
+        Map<String, Object> propsFromConfiguration;
 
-        Map<String, Object> propsFromConfiguration = configurationContainer.getConfigurationMap();
+        if (propertyKey.configurationName().equals("ldapConfiguration"))
+        {
+            propsFromConfiguration = ldapConfiguration.getLdapDefaultMap();
+        }
+        else
+        {
+            propsFromConfiguration = configurationContainer.getConfigurationMap();
+        }
 
-        Map<String, Object> props = collectionPropertiesConfigurationService.filterAndConvertProperties(propertyKey.value() + ".",
+        return collectionPropertiesConfigurationService.filterAndConvertProperties(propertyKey.value() + ".",
                 propsFromConfiguration, false, propertyKey.convertFromTheRootKey());
-
-        return props;
     }
 
 }

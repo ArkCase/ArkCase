@@ -22,8 +22,8 @@
 
 package com.armedia.acm.auth.ad;
 
-import static com.armedia.acm.auth.ad.ActiveDirectoryUtils.badCredentials;
-import static com.armedia.acm.auth.ad.ActiveDirectoryUtils.handleBindException;
+import static com.armedia.acm.services.users.service.ldap.ActiveDirectoryUtils.badCredentials;
+import static com.armedia.acm.services.users.service.ldap.ActiveDirectoryUtils.handleBindException;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
@@ -76,6 +76,7 @@ public abstract class ActiveDirectoryAbstractContextSource implements BaseLdapPa
     private String referral = null;
     private DirContextAuthenticationStrategy authenticationStrategy = new SimpleDirContextAuthenticationStrategy();
 
+    @Override
     public DirContext getContext(String principal, String credentials)
     {
         // This method is typically called for authentication purposes, which means that we
@@ -117,6 +118,7 @@ public abstract class ActiveDirectoryAbstractContextSource implements BaseLdapPa
      * (non-Javadoc)
      * @see org.springframework.ldap.core.ContextSource#getReadOnlyContext()
      */
+    @Override
     public DirContext getReadOnlyContext()
     {
         if (!anonymousReadOnly)
@@ -136,6 +138,7 @@ public abstract class ActiveDirectoryAbstractContextSource implements BaseLdapPa
      * (non-Javadoc)
      * @see org.springframework.ldap.core.ContextSource#getReadWriteContext()
      */
+    @Override
     public DirContext getReadWriteContext()
     {
         return doGetContext(
@@ -257,6 +260,7 @@ public abstract class ActiveDirectoryAbstractContextSource implements BaseLdapPa
      * org.springframework.ldap.core.support.BaseLdapPathSource#getBaseLdapPath
      * ()
      */
+    @Override
     public DistinguishedName getBaseLdapPath()
     {
         return getBase().immutableDistinguishedName();
@@ -267,6 +271,7 @@ public abstract class ActiveDirectoryAbstractContextSource implements BaseLdapPa
      * @seeorg.springframework.ldap.core.support.BaseLdapPathSource#
      * getBaseLdapPathAsString()
      */
+    @Override
     public String getBaseLdapPathAsString()
     {
         return getBaseLdapPath().toString();
@@ -367,6 +372,7 @@ public abstract class ActiveDirectoryAbstractContextSource implements BaseLdapPa
      * call this method explicitly after setting all desired properties if using
      * the class outside of a Spring Context.
      */
+    @Override
     public void afterPropertiesSet() throws Exception
     {
         if (ArrayUtils.isEmpty(urls))
@@ -676,11 +682,13 @@ public abstract class ActiveDirectoryAbstractContextSource implements BaseLdapPa
     class SimpleAuthenticationSource implements AuthenticationSource
     {
 
+        @Override
         public String getPrincipal()
         {
             return userDn;
         }
 
+        @Override
         public String getCredentials()
         {
             return password;
