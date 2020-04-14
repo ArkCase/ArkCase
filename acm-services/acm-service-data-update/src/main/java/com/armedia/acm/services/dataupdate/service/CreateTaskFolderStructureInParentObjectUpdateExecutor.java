@@ -67,7 +67,7 @@ public class CreateTaskFolderStructureInParentObjectUpdateExecutor implements Ac
             {
                 if (task.getParentObjectId() != null)
                 {
-                    String taskFolderName = "Task-" + task.getTitle() + "-" + task.getId();
+                    String taskFolderName = getAcmTaskService().getTaskFolderNameInParentObject(task);
                     if (getAcmFolderDao().findAnyFolderByName(taskFolderName) == null)
                     {
                         getAcmTaskService().createTaskFolderStructureInParentObject(task);
