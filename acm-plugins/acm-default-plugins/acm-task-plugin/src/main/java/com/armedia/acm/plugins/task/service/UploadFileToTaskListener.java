@@ -37,6 +37,8 @@ import com.armedia.acm.plugins.ecm.model.EcmFilePostUploadEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.service.impl.ActivitiTaskDao;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationListener;
 
 public class UploadFileToTaskListener implements ApplicationListener<EcmFilePostUploadEvent>
@@ -45,6 +47,7 @@ public class UploadFileToTaskListener implements ApplicationListener<EcmFilePost
     private ActivitiTaskDao activitiTaskDao;
     private AcmFolderDao acmFolderDao;
     private AcmTaskService acmTaskService;
+    private Logger log = LogManager.getLogger(getClass());
 
     @Override
     public void onApplicationEvent(EcmFilePostUploadEvent event)
@@ -64,7 +67,7 @@ public class UploadFileToTaskListener implements ApplicationListener<EcmFilePost
 
         try
         {
-            String taskFolderName = "Task-" + acmTask.getTitle() + "-" + acmTask.getId();
+            String taskFolderName = getAcmTaskService().getTaskFolderNameInParentObject(acmTask);
             if (getAcmFolderDao().findAnyFolderByName(taskFolderName) == null)
             {
                 getAcmTaskService().createTaskFolderStructureInParentObject(acmTask);
@@ -72,7 +75,7 @@ public class UploadFileToTaskListener implements ApplicationListener<EcmFilePost
         }
         catch (AcmUserActionFailedException | AcmCreateObjectFailedException | AcmObjectNotFoundException | LinkAlreadyExistException e)
         {
-            e.printStackTrace();
+            log.error("Exception occurred while trying to create new folder structure in parent object: {}", e.getMessage());
         }
     }
 
