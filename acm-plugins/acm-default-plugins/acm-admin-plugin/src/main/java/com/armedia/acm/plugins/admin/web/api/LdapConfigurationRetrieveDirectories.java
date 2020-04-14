@@ -30,13 +30,15 @@ package com.armedia.acm.plugins.admin.web.api;
 import com.armedia.acm.plugins.admin.exception.AcmLdapConfigurationException;
 import com.armedia.acm.plugins.admin.service.LdapConfigurationService;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.Map;
 
 @Controller
 @RequestMapping({ "/api/v1/plugin/admin", "/api/latest/plugin/admin" })
@@ -50,7 +52,7 @@ public class LdapConfigurationRetrieveDirectories
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
     @ResponseBody
-    public String retrieveDirectories() throws AcmLdapConfigurationException
+    public Map<String, Object> retrieveDirectories() throws AcmLdapConfigurationException
     {
         try
         {

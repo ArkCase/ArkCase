@@ -29,6 +29,7 @@ package com.armedia.acm.configuration.core.jmx;
 
 import com.armedia.acm.configuration.core.ConfigurationContainer;
 import com.armedia.acm.configuration.core.LabelsConfiguration;
+import com.armedia.acm.configuration.core.LdapConfigurationContainer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -50,6 +51,9 @@ public class JmxInitializer
     @Autowired
     LabelsConfiguration labelsConfiguration;
 
+    @Autowired
+    LdapConfigurationContainer ldapConfiguration;
+
     @Bean(name = "coreRegisterer")
     public MBeanExporter getMBeanExporter()
     {
@@ -61,6 +65,9 @@ public class JmxInitializer
         beans.put(
                 "configuration:name=labels-service,type=com.armedia.acm.configuration.ConfigurationService,artifactId=labels-service",
                 new ConfigurationFacadeJmx(labelsConfiguration));
+        beans.put(
+                "configuration:name=ldap-service,type=com.armedia.acm.configuration.ConfigurationService,artifactId=ldap-service",
+                new ConfigurationFacadeJmx(ldapConfiguration));
         mBeanExporter.setBeans(beans);
         MetadataMBeanInfoAssembler metadataMBeanInfoAssembler = new MetadataMBeanInfoAssembler();
         metadataMBeanInfoAssembler.setAttributeSource(new AnnotationJmxAttributeSource());

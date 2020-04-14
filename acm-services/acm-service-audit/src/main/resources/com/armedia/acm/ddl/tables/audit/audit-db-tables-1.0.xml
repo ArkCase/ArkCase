@@ -80,70 +80,13 @@
         </addColumn>
     </changeSet>
 
-    <changeSet id="06-create-audit-event-type-lookup-table" author="marst" dbms="oracle,postgresql,mssql">
-        <createTable tableName="acm_audit_event_type_lu">
-            <column name="cm_id" type="${idType}">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_audit_event_type"/>
-            </column>
-            <column name="cm_key" type="VARCHAR(${cmKeyLength})">
-                <constraints nullable="false" unique="true" uniqueConstraintName="uk_audit_event_type_key"/>
-            </column>
-            <column name="cm_value" type="VARCHAR(4000)">
-                <constraints nullable="false" unique="false"/>
-            </column>
-            <column name="cm_order" type="NUMBER(32,0)">
-                <constraints nullable="false" unique="true" uniqueConstraintName="uk_audit_event_type_order"/>
-            </column>
-            <column name="cm_status" type="VARCHAR(128)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="cm_created" type="${timestampType}">
-                <constraints nullable="false"/>
-            </column>
-            <column name="cm_creator" type="VARCHAR(1024)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="cm_modified" type="${timestampType}">
-                <constraints nullable="false"/>
-            </column>
-            <column name="cm_modifier" type="VARCHAR(1024)">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
+    <changeSet id="06-acm_audit_event_type_lu-table" author="martin.bozinvski">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="acm_audit_event_type_lu" />
+        </preConditions>
+        <dropTable tableName="acm_audit_event_type_lu" cascadeConstraints="true" />
     </changeSet>
-
-    <changeSet id="06-create-audit-event-type-lookup-table" author="marst" dbms="mysql">
-        <createTable tableName="acm_audit_event_type_lu">
-            <column name="cm_id" type="${idType}">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_audit_event_type"/>
-            </column>
-            <column name="cm_key" type="VARCHAR(${cmKeyLength})">
-                <constraints nullable="false" unique="true" uniqueConstraintName="uk_audit_event_type_key"/>
-            </column>
-            <column name="cm_value" type="VARCHAR(4000)">
-                <constraints nullable="false" unique="false"/>
-            </column>
-            <column name="cm_order" type="NUMBER(32,0)">
-                <constraints nullable="false" unique="true" uniqueConstraintName="uk_audit_event_type_order"/>
-            </column>
-            <column name="cm_status" type="VARCHAR(128)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="cm_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
-                <constraints nullable="false"/>
-            </column>
-            <column name="cm_creator" type="VARCHAR(1024)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="cm_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
-                <constraints nullable="false"/>
-            </column>
-            <column name="cm_modifier" type="VARCHAR(1024)">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
-
+    
     <changeSet id="07-acm_audit_log-id" author="nebojsha.davidovikj">
         <createTable tableName="acm_audit_log_id">
             <column name="cm_seq_num" type="${idType}"/>
@@ -154,15 +97,12 @@
             <column name="cm_seq_name" value="acm_audit_log"></column>
         </insert>
     </changeSet>
-    <changeSet id="08-acm_audit_event_type_lu-id" author="nebojsha.davidovikj">
-        <createTable tableName="acm_audit_event_type_lu_id">
-            <column name="cm_seq_num" type="${idType}"/>
-            <column name="cm_seq_name" type="VARCHAR(255)"/>
-        </createTable>
-        <insert tableName="acm_audit_event_type_lu_id">
-            <column name="cm_seq_num" value="100"></column>
-            <column name="cm_seq_name" value="acm_audit_event_type_lu"></column>
-        </insert>
+
+    <changeSet id="08-acm_audit_event_type_lu_id-table" author="martin.bozinvski">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="acm_audit_event_type_lu_id" />
+        </preConditions>
+        <dropTable tableName="acm_audit_event_type_lu_id" cascadeConstraints="true" />
     </changeSet>
 
     <changeSet id="09-acm_audit_add_requestId_column" author="bojan.milenkoski">

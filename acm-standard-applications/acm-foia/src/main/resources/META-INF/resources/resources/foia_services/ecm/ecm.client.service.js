@@ -159,6 +159,10 @@ angular.module('services').factory('EcmService', [ '$resource', 'UtilService', f
             url: 'api/latest/service/ecm/fileLinks/:fileId',
             cache: false,
             isArray: true
+        },
+        getLinkTargetFile: {
+            method: 'GET',
+            url: 'api/latest/service/ecm/file/:fileId/targetLink'
         }
 
     });
@@ -174,6 +178,19 @@ angular.module('services').factory('EcmService', [ '$resource', 'UtilService', f
                 alert("Error.");
             }
         });
+    };
+
+    Service.getLinkTargetEcmFile = function (fileId) {
+        return Util.serviceCall({
+            service: Service.getLinkTargetFile,
+            param: fileId,
+            onSuccess: function (data) {
+                return data;
+            },
+            onError: function (error) {
+                return error;
+            }
+        })
     };
 
     return Service;

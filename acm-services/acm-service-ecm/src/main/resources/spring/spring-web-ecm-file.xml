@@ -166,4 +166,8 @@
     <bean id="ecmFileUploaderManagementAPIController" class="com.armedia.acm.plugins.ecm.web.api.EcmFileUploaderManagementAPIController">
         <property name="ecmFileUploaderConfigurationService" ref="ecmFileUploaderConfigurationService"/>
     </bean>
+
+    <bean id="getLinkTargetEcmFile" class="com.armedia.acm.plugins.ecm.web.api.GetLinkTargetEcmFileAPIController">
+        <property name="fileService" ref="ecmFileService"/>
+    </bean>
 </beans>

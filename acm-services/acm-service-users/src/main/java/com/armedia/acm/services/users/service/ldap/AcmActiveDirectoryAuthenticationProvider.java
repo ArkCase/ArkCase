@@ -19,12 +19,13 @@
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-package com.armedia.acm.auth.ad;
+package com.armedia.acm.services.users.service.ldap;
 
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserState;
-import com.armedia.acm.services.users.service.ldap.LdapSyncService;
+import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
+import com.armedia.acm.services.users.model.ldap.ActiveDirectoryLdapSearchConfig;
 
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.DirContextOperations;
@@ -37,6 +38,7 @@ public class AcmActiveDirectoryAuthenticationProvider extends
 
     private UserDao userDao;
     private LdapSyncService ldapSyncService;
+    private AcmLdapSyncConfig acmLdapSyncConfig;
 
     /**
      * @param domain
@@ -60,7 +62,7 @@ public class AcmActiveDirectoryAuthenticationProvider extends
 
         if (user == null || AcmUserState.VALID != user.getUserState())
         {
-            getLdapSyncService().ldapUserSync(authentication.getName());
+            getLdapSyncService().ldapUserSync(authentication.getName(), acmLdapSyncConfig);
         }
 
         return dirContextOperations;
@@ -84,5 +86,15 @@ public class AcmActiveDirectoryAuthenticationProvider extends
     public void setLdapSyncService(LdapSyncService ldapSyncService)
     {
         this.ldapSyncService = ldapSyncService;
+    }
+
+    public AcmLdapSyncConfig getAcmLdapSyncConfig()
+    {
+        return acmLdapSyncConfig;
+    }
+
+    public void setAcmLdapSyncConfig(AcmLdapSyncConfig acmLdapSyncConfig)
+    {
+        this.acmLdapSyncConfig = acmLdapSyncConfig;
     }
 }

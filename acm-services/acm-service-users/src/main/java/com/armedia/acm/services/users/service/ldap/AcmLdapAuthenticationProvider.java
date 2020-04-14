@@ -1,4 +1,4 @@
-package com.armedia.acm.auth;
+package com.armedia.acm.services.users.service.ldap;
 
 /*-
  * #%L
@@ -31,27 +31,32 @@ import com.armedia.acm.services.ldap.syncer.AcmLdapSyncEvent;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserState;
-import com.armedia.acm.services.users.service.ldap.LdapSyncService;
+import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
+import org.springframework.context.annotation.Profile;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.ldap.authentication.LdapAuthenticationProvider;
 import org.springframework.security.ldap.authentication.LdapAuthenticator;
 import org.springframework.security.ldap.userdetails.LdapAuthoritiesPopulator;
+import org.springframework.stereotype.Component;
 
 import javax.naming.Name;
 
 /**
  * Created by riste.tutureski on 4/11/2016.
  */
+@Component
+@Profile("ldap,kerberos,externalAuth,externalSaml")
 public class AcmLdapAuthenticationProvider extends LdapAuthenticationProvider implements ApplicationEventPublisherAware
 {
     private UserDao userDao;
     private LdapSyncService ldapSyncService;
     private ApplicationEventPublisher eventPublisher;
+    private AcmLdapSyncConfig acmLdapSyncConfig;
 
     public AcmLdapAuthenticationProvider(LdapAuthenticator authenticator, LdapAuthoritiesPopulator authoritiesPopulator)
     {
@@ -78,7 +83,7 @@ public class AcmLdapAuthenticationProvider extends LdapAuthenticationProvider im
         if (user == null || AcmUserState.VALID != user.getUserState())
         {
             eventPublisher.publishEvent(new AcmLdapSyncEvent(principal));
-            getLdapSyncService().syncUserByDn(dn.toString());
+            getLdapSyncService().syncUserByDn(dn.toString(), acmLdapSyncConfig);
         }
 
         return dirContextOperations;
@@ -113,5 +118,15 @@ public class AcmLdapAuthenticationProvider extends LdapAuthenticationProvider im
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
     {
         eventPublisher = applicationEventPublisher;
+    }
+
+    public AcmLdapSyncConfig getAcmLdapSyncConfig()
+    {
+        return acmLdapSyncConfig;
+    }
+
+    public void setAcmLdapSyncConfig(AcmLdapSyncConfig acmLdapSyncConfig)
+    {
+        this.acmLdapSyncConfig = acmLdapSyncConfig;
     }
 }

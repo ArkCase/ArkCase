@@ -29,9 +29,7 @@ package com.armedia.acm.plugins.casefile.service;
 
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
 
-import com.armedia.acm.objectchangestatus.service.ChangeObjectStatusService;
 import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
 
 import org.activiti.engine.ProcessEngine;
@@ -70,9 +68,6 @@ public class GeneralCounselBusinessProcessIT
     private RepositoryService repo;
     @Autowired
     private RuntimeService rt;
-    @Autowired
-    @Qualifier("changeObjectStatusService")
-    private ChangeObjectStatusService changeObjectStatusService;
 
     @Autowired
     @Qualifier("queueCaseService")
@@ -83,7 +78,7 @@ public class GeneralCounselBusinessProcessIT
     {
         // deploy
         repo.createDeployment()
-                .addClasspathResource("activiti/foia-extension-generalcounsel-process_v2.bpmn20.xml")
+                .addClasspathResource("activiti/foia-extension-generalcounsel-process_v3.bpmn20.xml")
                 .deploy();
     }
 
@@ -103,13 +98,10 @@ public class GeneralCounselBusinessProcessIT
         processVariables.put("OBJECT_TYPE", objectType);
         processVariables.put("OBJECT_ID", foiaId);
 
-        changeObjectStatusService.changeIfNoPermanentStatusIsSet(foiaId, objectType, "GC Review", "Closed");
         expect(queueCaseService.enqueue(foiaId, "General Counsel")).andReturn(new FOIARequest());
 
-        replay(changeObjectStatusService, queueCaseService);
+        replay(queueCaseService);
 
         rt.startProcessInstanceByKey(processName, processVariables);
-
-        verify(changeObjectStatusService, queueCaseService);
     }
 }

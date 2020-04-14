@@ -1,16 +1,17 @@
 package gov.foia.service;
 
-import java.util.Date;
-import java.util.List;
-
-import javax.persistence.Query;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.services.exemption.exception.GetExemptionCodeException;
+import com.armedia.acm.services.exemption.model.ExemptionCode;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.armedia.acm.services.exemption.exception.GetExemptionCodeException;
-import com.armedia.acm.services.exemption.model.ExemptionCode;
+import javax.persistence.Query;
+
+import java.util.Date;
+import java.util.List;
 
 import gov.foia.dao.FOIAExemptionCodeDao;
 
@@ -35,6 +36,29 @@ public class FOIAExemptionService
             log.error("Finding  exemption codes for objectId: {} failed", parentObjectId);
             throw new GetExemptionCodeException("Unable to get exemption codes for objectId: {}" + parentObjectId, e);
         }
+    }
+
+    @Transactional
+    public void copyFileWithExemptionCodes(EcmFile originalFile, EcmFile copiedFile)
+    {
+        Long copiedFileId = copiedFile.getFileId();
+        List<ExemptionCode> exemptionCodeList = getFoiaExemptionCodeDao().findExemptionCodesByFileId(originalFile.getFileId());
+
+            for (ExemptionCode exemptionCode : exemptionCodeList)
+            {
+                ExemptionCode exemptionCodeObj = new ExemptionCode();
+                exemptionCodeObj.setParentObjectType(exemptionCode.getParentObjectType());
+                exemptionCodeObj.setExemptionCode(exemptionCode.getExemptionCode());
+                exemptionCodeObj.setExemptionStatus(exemptionCode.getExemptionStatus());
+                exemptionCodeObj.setCreated(exemptionCode.getCreated());
+                exemptionCodeObj.setCreator(exemptionCode.getCreator());
+                exemptionCodeObj.setExemptionStatute(exemptionCode.getExemptionStatute());
+                exemptionCodeObj.setFileId(copiedFileId);
+                exemptionCodeObj.setFileVersion(exemptionCode.getFileVersion());
+                exemptionCodeObj.setManuallyFlag(exemptionCode.getManuallyFlag());
+                getFoiaExemptionCodeDao().save(exemptionCodeObj);
+            }
+
     }
 
     @Transactional
