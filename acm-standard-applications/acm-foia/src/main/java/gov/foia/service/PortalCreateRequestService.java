@@ -204,7 +204,7 @@ public class PortalCreateRequestService
         address.setStreetAddress(in.getAddress1());
         address.setStreetAddress2(in.getAddress2());
         address.setZip(in.getZip());
-        address.setType("Business");
+        address.setType(in.getAddressType());
         if ((address.getStreetAddress() != null && !address.getStreetAddress().equals(""))
                 || (address.getStreetAddress2() != null && !address.getStreetAddress2().equals(""))
                 || (address.getCity() != null && !address.getCity().equals(""))
