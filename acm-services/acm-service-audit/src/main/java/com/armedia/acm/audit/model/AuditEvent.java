@@ -30,7 +30,6 @@ package com.armedia.acm.audit.model;
 import com.armedia.acm.data.converter.UUIDToStringConverter;
 import com.fasterxml.jackson.annotation.JsonRawValue;
 import com.google.common.base.Joiner;
-
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 
@@ -44,14 +43,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -117,10 +113,6 @@ public class AuditEvent
     @MapKeyColumn(name = "cm_audit_property_name")
     @Column(name = "cm_audit_property_value")
     private Map<String, String> eventProperties = new HashMap<>();
-
-    @ManyToOne(optional = true)
-    @JoinColumn(name = "cm_audit_activity", referencedColumnName = "cm_key", nullable = true, insertable = false, updatable = false)
-    private AcmAuditLookup auditLookup;
 
     @JsonRawValue
     @Lob
@@ -257,20 +249,6 @@ public class AuditEvent
         this.id = id;
     }
 
-    @Transient
-    public String getEventType()
-    {
-        // check if auditLookup is not null and get the type
-        if (getAuditLookup() != null)
-            return getAuditLookup().getAuditBuisinessName();
-
-        /*
-         * int lastDot = getFullEventType().lastIndexOf('.'); if (lastDot >= 0) { return
-         * getFullEventType().substring(lastDot + 1, getFullEventType().length()); }
-         */
-        return getFullEventType();
-    }
-
     public UUID getRequestId()
     {
         return requestId;
@@ -279,16 +257,6 @@ public class AuditEvent
     public void setRequestId(UUID requestId)
     {
         this.requestId = requestId;
-    }
-
-    public AcmAuditLookup getAuditLookup()
-    {
-        return auditLookup;
-    }
-
-    public void setAuditLookupMap(AcmAuditLookup auditLookup)
-    {
-        this.auditLookup = auditLookup;
     }
 
     public Map<String, String> getEventProperties()

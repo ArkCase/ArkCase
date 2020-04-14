@@ -29,58 +29,21 @@ package com.armedia.acm.audit.model;
 
 import com.armedia.acm.objectonverter.json.JSONUnmarshaller;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class AuditEventConfig implements InitializingBean
+public class AuditEventConfig
 {
-    @JsonProperty("auditEvent.eventTypes")
-    @Value("${auditEvent.eventTypes}")
-    private String eventTypesMappingString;
-
-    @JsonProperty("auditEvent.eventName.insert")
-    @Value("${auditEvent.eventName.insert:false}")
-    private Boolean eventNameInsert;
 
     private JSONUnmarshaller jsonUnmarshaller;
 
     private Map<String, String> eventTypes = new HashMap<>();
 
-    public String getEventTypesMappingString()
-    {
-        return eventTypesMappingString;
-    }
-
-    public void setEventTypesMappingString(String eventTypesMappingString)
-    {
-        this.eventTypesMappingString = eventTypesMappingString;
-    }
-
-    public Boolean getEventNameInsert()
-    {
-        return eventNameInsert;
-    }
-
-    public void setEventNameInsert(Boolean eventNameInsert)
-    {
-        this.eventNameInsert = eventNameInsert;
-    }
-
     @JsonIgnore
     public Map<String, String> getEventTypes()
     {
         return eventTypes;
-    }
-
-    @Override
-    public void afterPropertiesSet()
-    {
-        eventTypes = jsonUnmarshaller.unmarshall(eventTypesMappingString, Map.class);
     }
 
     @JsonIgnore
