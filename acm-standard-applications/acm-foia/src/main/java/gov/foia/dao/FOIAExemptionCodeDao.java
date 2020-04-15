@@ -6,7 +6,6 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.services.exemption.dao.ExemptionCodeDao;
 import com.armedia.acm.services.exemption.model.ExemptionCode;
-import com.armedia.acm.services.exemption.model.ExemptionConstants;
 
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
@@ -16,6 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import gov.foia.model.FOIARequest;
+import gov.foia.service.FOIAExemptionService;
 
 /**
  * Created by ana.serafimoska
@@ -25,6 +25,7 @@ public class FOIAExemptionCodeDao extends AcmAbstractDao<ExemptionCode>
     private AcmFolderService acmFolderService;
     private CaseFileDao caseFileDao;
     private ExemptionCodeDao exemptionCodeDao;
+    private FOIAExemptionService foiaExemptionService;
 
     @Override
     protected Class<ExemptionCode> getPersistenceClass()
@@ -66,7 +67,7 @@ public class FOIAExemptionCodeDao extends AcmAbstractDao<ExemptionCode>
                 for (Long fileId : fileIds)
                 {
                     listCodesOnDocuments = getApprovedAndManualExemptionCodesByFileId(fileId);
-                    List<ExemptionCode> filterDocumentCodesList = filterExemptionCodes(listCodesOnDocuments);
+                    List<ExemptionCode> filterDocumentCodesList =  getFoiaExemptionService().filterExemptionCodes(listCodesOnDocuments);
                     combineResult.addAll(filterDocumentCodesList);
                 }
             }
@@ -74,34 +75,9 @@ public class FOIAExemptionCodeDao extends AcmAbstractDao<ExemptionCode>
 
         List<ExemptionCode> listCodesOnRequest = getManuallyAddedCodesOnRequestLevel(parentObjectId, parentObjectType);
         combineResult.addAll(listCodesOnRequest);
-        List<ExemptionCode> finalList = filterExemptionCodes(combineResult);
+        List<ExemptionCode> finalList = getFoiaExemptionService().filterExemptionCodes(combineResult);
         return finalList;
 
-    }
-
-    public List<ExemptionCode> filterExemptionCodes(List<ExemptionCode> exemptionCodeList)
-    {
-        List<ExemptionCode> uniqueExemptionCodesList = new ArrayList<>();
-        exemptionCodeList.forEach(item -> {
-            boolean isDuplicate = uniqueExemptionCodesList.stream()
-                    .anyMatch(newItem -> newItem.getExemptionCode().equals(item.getExemptionCode()));
-
-            if (isDuplicate)
-            {
-                if (item.getExemptionStatus().equals(ExemptionConstants.EXEMPTION_STATUS_APPROVED))
-                {
-                    List<String> codesArray = uniqueExemptionCodesList.stream()
-                            .map(ExemptionCode::getExemptionCode).collect(Collectors.toList());
-                    int index = codesArray.indexOf(item.getExemptionCode());
-                    uniqueExemptionCodesList.set(index, item);
-                }
-            }
-            else
-            {
-                uniqueExemptionCodesList.add(item);
-            }
-        });
-        return uniqueExemptionCodesList;
     }
 
     public List<ExemptionCode> getManuallyAddedCodesOnRequestLevel(Long parentObjectId, String parentObjectType)
@@ -194,5 +170,15 @@ public class FOIAExemptionCodeDao extends AcmAbstractDao<ExemptionCode>
     public void setExemptionCodeDao(ExemptionCodeDao exemptionCodeDao)
     {
         this.exemptionCodeDao = exemptionCodeDao;
+    }
+
+    public FOIAExemptionService getFoiaExemptionService()
+    {
+        return foiaExemptionService;
+    }
+
+    public void setFoiaExemptionService(FOIAExemptionService foiaExemptionService)
+    {
+        this.foiaExemptionService = foiaExemptionService;
     }
 }
