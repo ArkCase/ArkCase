@@ -475,22 +475,9 @@ angular.module('cases').controller(
 
             };
 
-            function createNewPortalUser() {
-                var newPortalUser = {
-                    prefix: $scope.config.data.originator.person.title,
-                    firstName: $scope.config.data.originator.person.givenName,
-                    middleName: $scope.config.data.originator.person.middleName,
-                    lastName: $scope.config.data.originator.person.familyName,
-                    email: $scope.config.data.originator.person.defaultEmail.value,
-                    phoneNumber: $scope.config.data.originator.person.defaultPhone.value,
-                    address1: $scope.config.data.originator.person.addresses[0].streetAddress,
-                    address2: $scope.config.data.originator.person.addresses[0].streetAddress2,
-                    city: $scope.config.data.originator.person.addresses[0].city,
-                    zipCode: $scope.config.data.originator.person.addresses[0].zip,
-                    state: $scope.config.data.originator.person.addresses[0].state
-                };
+            function createNewPortalUser(personId) {
 
-                RequestInfoService.saveNewPortalUser(newPortalUser, $scope.config.chosenPortal.portalId).then(function (response) {
+                RequestInfoService.saveNewPortalUser(personId, $scope.config.chosenPortal.portalId).then(function (response) {
                     if (response.registrationStatus === "REGISTRATION_EXISTS") {
                         MessageService.error($translate.instant('cases.newRequest.portalUser.message.error.exists'));
                     } else if (response.registrationStatus === "REGISTRATION_REJECTED") {
@@ -511,7 +498,7 @@ angular.module('cases').controller(
                     $scope.loadingIcon = "fa fa-floppy-o";
                     ObjectService.showObject(ObjectService.ObjectTypes.CASE_FILE, response.id);
                     if ($scope.config.data.createNewPortalUser) {
-                        createNewPortalUser();
+                        createNewPortalUser(response.data.originator.person.id);
                     }
                 }, function (error) {
                     $scope.loading = false;
