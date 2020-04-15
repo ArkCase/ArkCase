@@ -31,9 +31,12 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.plugins.person.service.PersonAssociationService;
+import com.armedia.acm.services.search.exception.SolrException;
+import com.armedia.acm.services.search.model.solr.SolrCore;
+import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
@@ -57,6 +60,8 @@ public class PersonAssociationAPIController
 
     private Logger log = LogManager.getLogger(getClass());
 
+    private ExecuteSolrQuery executeSolrQuery;
+
     private PersonAssociationService personAssociationService;
 
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -69,6 +74,27 @@ public class PersonAssociationAPIController
         log.trace("personAssociation parentType: {}", in.getParentType());
 
         return getPersonAssociationService().savePersonAssociation(in, auth);
+    }
+
+    @RequestMapping(value = "/{parentType}/{parentId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public String getPersonAssociationsByParent(Authentication auth,
+            @PathVariable String parentType, @PathVariable Long parentId,
+            @RequestParam(value = "start", required = false, defaultValue = "0") int start,
+            @RequestParam(value = "n", required = false, defaultValue = "5") int n,
+            @RequestParam(value = "s", required = false, defaultValue = "ASC") String s) throws AcmObjectNotFoundException
+    {
+        String query = String.format("object_type_s:PERSON-ASSOCIATION AND parent_type_s:%s AND parent_id_s:%s", parentType, parentId);
+        try
+        {
+            return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, start, n, "");
+
+        }
+        catch (SolrException e)
+        {
+            log.error("Error while executing Solr query: {}", query, e);
+            throw new AcmObjectNotFoundException("Person", null, "Could not retrieve person associations.", e);
+        }
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -108,6 +134,11 @@ public class PersonAssociationAPIController
     public void setPersonAssociationService(PersonAssociationService personAssociationService)
     {
         this.personAssociationService = personAssociationService;
+    }
+
+    public void setExecuteSolrQuery(ExecuteSolrQuery executeSolrQuery)
+    {
+        this.executeSolrQuery = executeSolrQuery;
     }
 
 }

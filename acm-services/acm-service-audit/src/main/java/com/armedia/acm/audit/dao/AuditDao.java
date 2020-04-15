@@ -175,8 +175,7 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
                 "      AND ae.cm_audit_activity_result = 'success'" +
                 "  ) tmp" +
                 " JOIN acm_audit_log al" +
-                "    ON al.cm_audit_id = tmp.id" +
-                "  LEFT OUTER JOIN acm_audit_event_type_lu lu ON al.cm_audit_activity = lu.cm_key";
+                "    ON al.cm_audit_id = tmp.id";
 
         switch (sort)
         {

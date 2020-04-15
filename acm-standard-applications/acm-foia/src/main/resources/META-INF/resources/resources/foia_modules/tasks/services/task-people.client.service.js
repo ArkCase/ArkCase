@@ -15,9 +15,8 @@ angular.module('tasks').factory('Task.PeopleService', [ '$resource', '$translate
 
         _findPeople: {
             method: 'GET',
-            url: 'api/latest/plugin/person/list/:parentType/:parentId',
+            url: 'api/latest/plugin/person-associations/:parentType/:parentId',
             cache: false,
-            isArray: true
         }
 
     });
@@ -31,7 +30,7 @@ angular.module('tasks').factory('Task.PeopleService', [ '$resource', '$translate
             },
             data: {},
             onSuccess: function(data) {
-                return data;
+                return data.response.docs;
 
             },
             onError: function(data) {
