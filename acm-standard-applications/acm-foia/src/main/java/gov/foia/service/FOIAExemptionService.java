@@ -3,6 +3,7 @@ package gov.foia.service;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.services.exemption.exception.GetExemptionCodeException;
 import com.armedia.acm.services.exemption.model.ExemptionCode;
+import com.armedia.acm.services.exemption.model.ExemptionConstants;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -10,8 +11,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Query;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import gov.foia.dao.FOIAExemptionCodeDao;
 
@@ -82,6 +88,29 @@ public class FOIAExemptionService
             getFoiaExemptionCodeDao().save(exemptionCodeObj);
         }
 
+    }
+
+    public List<ExemptionCode> filterExemptionCodes(List<ExemptionCode> exemptionCodeList)
+    {
+        Map<String, List<ExemptionCode>> codes = new HashMap<>();
+        exemptionCodeList.forEach(it -> {
+            List<ExemptionCode> codesForCodeName = codes.getOrDefault(it.getExemptionCode(), new ArrayList<>());
+            codesForCodeName.add(it);
+            codes.put(it.getExemptionCode(), codesForCodeName);
+        });
+
+        List<ExemptionCode> resultList = codes.values()
+                .stream()
+                .map(codeList -> {
+                    return codeList.stream()
+                            .filter(it -> it.getExemptionStatus().equals(ExemptionConstants.EXEMPTION_STATUS_APPROVED))
+                            .findFirst()
+                            .orElse(codeList.get(0));
+                }).collect(Collectors.toList());
+
+        resultList.sort(Comparator.comparing(ExemptionCode::getExemptionCode));
+
+        return resultList;
     }
 
     public FOIAExemptionCodeDao getFoiaExemptionCodeDao()
