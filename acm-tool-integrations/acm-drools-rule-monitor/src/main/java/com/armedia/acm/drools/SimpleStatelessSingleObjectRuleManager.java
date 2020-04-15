@@ -28,7 +28,6 @@ package com.armedia.acm.drools;
  */
 
 import com.armedia.acm.configuration.service.FileConfigurationService;
-import com.armedia.acm.files.AbstractConfigurationFileEvent;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,7 +41,6 @@ import org.kie.internal.builder.KnowledgeBuilder;
 import org.kie.internal.builder.KnowledgeBuilderError;
 import org.kie.internal.builder.KnowledgeBuilderFactory;
 import org.kie.internal.io.ResourceFactory;
-import org.springframework.context.ApplicationListener;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -51,8 +49,8 @@ import java.io.InputStream;
  * Created by armdev on 4/17/14.
  */
 public abstract class SimpleStatelessSingleObjectRuleManager<T>
-        implements ApplicationListener<AbstractConfigurationFileEvent>
 {
+    private static final String RULES_LOCATION = "rules";
 
     private String ruleSpreadsheetFilename;
 
@@ -95,9 +93,14 @@ public abstract class SimpleStatelessSingleObjectRuleManager<T>
 
     public void afterPropertiesSet() throws Exception
     {
-        log.debug("Getting rules from {}", "rules/" + getRuleSpreadsheetFilename());
+        updateRulesFromConfiguration();
+    }
 
-        try (InputStream stream = fileConfigurationService.getInputStreamFromConfiguration("rules/" + getRuleSpreadsheetFilename());)
+    private void updateRulesFromConfiguration()
+    {
+        log.debug("Getting rules from {}", RULES_LOCATION + "/" + getRuleSpreadsheetFilename());
+
+        try (InputStream stream = fileConfigurationService.getInputStreamFromConfiguration(RULES_LOCATION + "/" + getRuleSpreadsheetFilename());)
         {
             updateRulesFromStream(stream);
         }
@@ -105,12 +108,6 @@ public abstract class SimpleStatelessSingleObjectRuleManager<T>
         {
             log.debug("Error getting rules {}", e.getMessage(), e);
         }
-    }
-
-    @Override
-    public void onApplicationEvent(AbstractConfigurationFileEvent fileEvent)
-    {
-        // TODO Make watching mechanism to handle events from config server, not from local files.
     }
 
     private void updateRulesFromStream(InputStream stream)
