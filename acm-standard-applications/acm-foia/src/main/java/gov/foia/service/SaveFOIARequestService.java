@@ -28,15 +28,13 @@ package gov.foia.service;
  */
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
-import com.armedia.acm.objectdiff.model.AcmDiff;
 import com.armedia.acm.objectdiff.service.AcmDiffService;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility;
-
 import com.armedia.acm.plugins.person.dao.PersonDao;
-import gov.foia.model.FOIAPerson;
-import org.apache.logging.log4j.Logger;
+
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -45,6 +43,8 @@ import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import gov.foia.model.FOIAPerson;
 
 /**
  * @author sasko.tanaskoski
@@ -74,11 +74,15 @@ public class SaveFOIARequestService
         if (in.getPersonAssociations().get(0).getPerson().getId() != null)
         {
             FOIAPerson updatedPerson = (FOIAPerson) in.getPersonAssociations().get(0).getPerson();
-            FOIAPerson existingPerson =  (FOIAPerson) getPersonDao().find(in.getPersonAssociations().get(0).getPerson().getId());
-            AcmDiff acmDiff = acmDiffService.compareObjects(existingPerson, updatedPerson);
+            FOIAPerson existingPerson = (FOIAPerson) getPersonDao().find(in.getPersonAssociations().get(0).getPerson().getId());
 
-            // if there is any changes made on the existing person create a new one
-            if (acmDiff.getChangesAsList().size() != 0)
+            Boolean isEmailEqual = existingPerson.getDefaultEmail().equals(updatedPerson.getDefaultEmail());
+
+            if (isEmailEqual)
+            {
+                in.getPersonAssociations().get(0).setPerson(existingPerson);
+            }
+            else
             {
                 updatedPerson.setId(null);
                 if (updatedPerson.getDefaultPhone() != null && updatedPerson.getDefaultPhone().getId() != null)
@@ -94,10 +98,6 @@ public class SaveFOIARequestService
                     updatedPerson.getDefaultUrl().setId(null);
                 }
 
-            }
-            else
-            {
-                in.getPersonAssociations().get(0).setPerson(existingPerson);
             }
         }
     }

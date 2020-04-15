@@ -54,10 +54,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
-import gov.foia.model.FOIAPerson;
+import gov.foia.dao.PortalFOIAPersonDao;
 import gov.foia.model.FOIARequest;
 import gov.foia.model.FOIARequesterAssociation;
+import gov.foia.model.PortalFOIAPerson;
 import gov.foia.model.PortalFOIARequest;
 import gov.foia.model.PortalFOIARequestFile;
 
@@ -70,6 +72,8 @@ public class PortalCreateRequestService
     private UserTrackerService userTrackerService;
 
     private SaveFOIARequestService saveFOIARequestService;
+
+    private PortalFOIAPersonDao portalFOIAPersonDao;
 
     private OrganizationDao organizationDao;
 
@@ -152,64 +156,44 @@ public class PortalCreateRequestService
         request.setExpediteFlag(in.isRequestExpedite());
         request.setRequestExpediteReason(in.getRequestExpediteReason());
 
+        OrganizationAssociation organizationAssociation = new OrganizationAssociation();
         FOIARequesterAssociation requesterAssociation = new FOIARequesterAssociation();
         requesterAssociation.setPersonType("Requester");
 
-        FOIAPerson requester = new FOIAPerson();
+        PortalFOIAPerson requester;
+
+        Optional<PortalFOIAPerson> person = getPortalFOIAPersonDao().findByEmail(in.getEmail());
+
+        requester = person.orElseGet(() -> populateRequesterAndOrganizationFromRequest(in));
+
         requesterAssociation.setPerson(requester);
         request.getPersonAssociations().add(requesterAssociation);
+
+        if (requester.getOrganizations() != null && !requester.getOrganizations().isEmpty())
+        {
+            Organization organization = requester.getOrganizations().get(0);
+
+            organizationAssociation.setOrganization(organization);
+            organizationAssociation.setAssociationType("Other");
+
+            request.getOrganizationAssociations().add(organizationAssociation);
+        }
+
+        return request;
+    }
+
+    private PortalFOIAPerson populateRequesterAndOrganizationFromRequest(PortalFOIARequest in)
+    {
+        PortalFOIAPerson requester = new PortalFOIAPerson();
 
         requester.setGivenName(in.getFirstName());
         requester.setFamilyName(in.getLastName());
         requester.setMiddleName(in.getMiddleName());
         requester.setTitle(in.getPrefix());
         requester.setPosition(in.getPosition());
-        // requester.setCompany(in.getOrganization());
 
-        if (in.getOrganization() != null && in.getOrganization().length() > 0)
-        {
-            OrganizationAssociation organizationAssociation = new OrganizationAssociation();
-            Organization organization = null;
-
-            organization = getOrganizationDao().findByOrganizationName(in.getOrganization());
-            if (organization == null)
-            {
-                organization = new Organization();
-                organization.setOrganizationValue(in.getOrganization());
-                organization.setOrganizationType("Corporation");
-            }
-
-            organizationAssociation.setOrganization(organization);
-            organizationAssociation.setAssociationType("Other");
-
-            request.getOrganizationAssociations().add(organizationAssociation);
-
-            requester.getOrganizations().add(organization);
-
-            List<PersonOrganizationAssociation> personOrganizationAssociations = new ArrayList<>();
-            PersonOrganizationAssociation personOrganizationAssociation = new PersonOrganizationAssociation();
-            personOrganizationAssociation.setOrganization(organization);
-            personOrganizationAssociation.setDefaultOrganization(true);
-            personOrganizationAssociation.setPerson(requester);
-            personOrganizationAssociation.setPersonToOrganizationAssociationType("owner");
-            personOrganizationAssociation.setOrganizationToPersonAssociationType("owned");
-            personOrganizationAssociations.add(personOrganizationAssociation);
-            requester.setOrganizationAssociations(personOrganizationAssociations);
-        }
-
-        PostalAddress address = new PostalAddress();
-        address.setCity(in.getCity());
-        address.setCountry(in.getCountry());
-        address.setState(in.getState());
-        address.setStreetAddress(in.getAddress1());
-        address.setStreetAddress2(in.getAddress2());
-        address.setZip(in.getZip());
-        address.setType(in.getAddressType());
-        if ((address.getStreetAddress() != null && !address.getStreetAddress().equals(""))
-                || (address.getStreetAddress2() != null && !address.getStreetAddress2().equals(""))
-                || (address.getCity() != null && !address.getCity().equals(""))
-                || (address.getZip() != null && !address.getZip().equals(""))
-                || (address.getState() != null && !address.getState().equals("")))
+        PostalAddress address = getPostalAddressFromPortalFOIARequest(in);
+        if (addressHasData(address))
         {
             requester.getAddresses().add(address);
         }
@@ -245,7 +229,53 @@ public class PortalCreateRequestService
             requester.getContactMethods().add(2, null);
         }
 
-        return request;
+        if (in.getOrganization() != null && in.getOrganization().length() > 0)
+        {
+            Organization organization = null;
+
+            organization = getOrganizationDao().findByOrganizationName(in.getOrganization());
+            if (organization == null)
+            {
+                organization = new Organization();
+                organization.setOrganizationValue(in.getOrganization());
+                organization.setOrganizationType("Corporation");
+            }
+
+            requester.getOrganizations().add(organization);
+
+            List<PersonOrganizationAssociation> personOrganizationAssociations = new ArrayList<>();
+            PersonOrganizationAssociation personOrganizationAssociation = new PersonOrganizationAssociation();
+            personOrganizationAssociation.setOrganization(organization);
+            personOrganizationAssociation.setDefaultOrganization(true);
+            personOrganizationAssociation.setPerson(requester);
+            personOrganizationAssociation.setPersonToOrganizationAssociationType("owner");
+            personOrganizationAssociation.setOrganizationToPersonAssociationType("owned");
+            personOrganizationAssociations.add(personOrganizationAssociation);
+            requester.setOrganizationAssociations(personOrganizationAssociations);
+        }
+        return requester;
+    }
+
+    private boolean addressHasData(PostalAddress address)
+    {
+        return (address.getStreetAddress() != null && !address.getStreetAddress().equals(""))
+                || (address.getStreetAddress2() != null && !address.getStreetAddress2().equals(""))
+                || (address.getCity() != null && !address.getCity().equals(""))
+                || (address.getZip() != null && !address.getZip().equals(""))
+                || (address.getState() != null && !address.getState().equals(""));
+    }
+
+    private PostalAddress getPostalAddressFromPortalFOIARequest(PortalFOIARequest in)
+    {
+        PostalAddress address = new PostalAddress();
+        address.setCity(in.getCity());
+        address.setCountry(in.getCountry());
+        address.setState(in.getState());
+        address.setStreetAddress(in.getAddress1());
+        address.setStreetAddress2(in.getAddress2());
+        address.setZip(in.getZip());
+        address.setType(in.getAddressType());
+        return address;
     }
 
     private ContactMethod buildContactMethod(String type, String value)
@@ -312,4 +342,15 @@ public class PortalCreateRequestService
     {
         this.organizationDao = organizationDao;
     }
+
+    public PortalFOIAPersonDao getPortalFOIAPersonDao()
+    {
+        return portalFOIAPersonDao;
+    }
+
+    public void setPortalFOIAPersonDao(PortalFOIAPersonDao portalFOIAPersonDao)
+    {
+        this.portalFOIAPersonDao = portalFOIAPersonDao;
+    }
+
 }

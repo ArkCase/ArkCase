@@ -91,11 +91,12 @@ public class DefaultPluggablePortalUserService implements PortalUserService
     }
 
     @Override
-    public UserRegistrationResponse registerUserFromRequester(String portalId, PortalUser user)
+    public UserRegistrationResponse registerUserFromPerson(String portalId, Long personId)
             throws PortalUserServiceException
     {
-        log.debug("Registering user [{}] at portal with ID [{}] from Arkcase.", PortalUser.composeUserName(user), portalId);
-        return getServiceProvider().registerUserFromRequester(portalId, user);
+        log.debug("Registering user for person with ID [{}] at portal with ID [{}] from Arkcase.",
+                personId, portalId);
+        return getServiceProvider().registerUserFromPerson(portalId, personId);
     }
 
     /*
