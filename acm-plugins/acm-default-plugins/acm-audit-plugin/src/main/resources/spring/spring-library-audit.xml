@@ -7,15 +7,7 @@
         <property name="configurationPropertyService" ref="configurationPropertyService"/>
     </bean>
 
-    <bean id="auditLookupDao" class="com.armedia.acm.audit.dao.AuditLookupDao"/>
-
     <bean id="replaceEventTypeNames" class="com.armedia.acm.plugins.audit.service.ReplaceEventTypeNames">
         <property name="auditEventConfig" ref="auditEventConfig"/>
-    </bean>
-
-    <bean id="insertEventTypeNames" class="com.armedia.acm.plugins.audit.service.InsertEventTypeNames">
-        <property name="auditEventConfig" ref="auditEventConfig"/>
-        <property name="auditLookupDao" ref="auditLookupDao"/>
-        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
 </beans>

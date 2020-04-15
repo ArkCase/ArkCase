@@ -40,6 +40,7 @@ import com.armedia.acm.objectonverter.ArkCaseBeanUtils;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
+import com.armedia.acm.plugins.ecm.exception.EcmFileLinkException;
 import com.armedia.acm.plugins.ecm.exception.LinkAlreadyExistException;
 import com.armedia.acm.plugins.ecm.model.AcmCmisObject;
 import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
@@ -54,6 +55,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFileDeclareRequestEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFileUpdatedEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.model.EcmFolderDeclareRequestEvent;
+import com.armedia.acm.plugins.ecm.model.LinkTargetFileDTO;
 import com.armedia.acm.plugins.ecm.model.ProgressbarDetails;
 import com.armedia.acm.plugins.ecm.model.RecycleBinItem;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileConvertEvent;
@@ -503,6 +505,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
     }
 
+    @Override
     public String addDateInPath(String folderPath, Boolean flag) throws AcmCreateObjectFailedException
     {
         String path = folderPath;
@@ -2228,6 +2231,18 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
             getEcmFileDao().save(f);
         });
+    }
+
+    @Override
+    public LinkTargetFileDTO getLinkTargetFileInfo(EcmFile ecmFile) throws EcmFileLinkException
+    {
+        log.info("Get target file info for the linked file: {}", ecmFile.getId());
+        if (!ecmFile.isLink())
+        {
+            throw new EcmFileLinkException("Ecm file: " + ecmFile.getId() + " is not a link");
+        }
+        return getEcmFileDao().getLinkTargetFileInfo(ecmFile);
+
     }
 
     private void deleteAuthenticationTokens(Long fileId)
