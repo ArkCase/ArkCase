@@ -81,6 +81,7 @@ import java.util.stream.Stream;
 import gov.foia.dao.PortalFOIAPersonDao;
 import gov.foia.dao.UserRegistrationRequestDao;
 import gov.foia.dao.UserResetRequestDao;
+import gov.foia.model.FOIAPerson;
 import gov.foia.model.PortalFOIAPerson;
 import gov.foia.model.UserRegistrationRequestRecord;
 import gov.foia.model.UserResetRequestRecord;
@@ -293,12 +294,19 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     }
 
     @Override
-    @Transactional
-    public UserRegistrationResponse registerUserFromRequester(String portalId, PortalUser user)
+    public UserRegistrationResponse registerUserFromPerson(String portalId, Long personId)
             throws PortalUserServiceException
     {
-        Optional<PortalFOIAPerson> registeredPerson = portalPersonDao.findByEmail(user.getEmail());
-        AcmUser acmUser = getPortalAcmUser(user.getEmail());
+        FOIAPerson person = (FOIAPerson) personDao.find(personId);
+
+        if (person == null)
+        {
+            return UserRegistrationResponse.invalid();
+        }
+        String emailAddress = person.getDefaultEmail().getValue();
+        Optional<PortalFOIAPerson> registeredPerson = portalPersonDao.findByEmail(emailAddress);
+        AcmUser acmUser = getPortalAcmUser(emailAddress);
+
         if (acmUser != null)
         {
             if (!registeredPerson.isPresent())
@@ -307,26 +315,37 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
             }
             return UserRegistrationResponse.exists();
         }
+        else if (isUserRejectedForPortal(portalId, registeredPerson))
+        {
+            return UserRegistrationResponse.rejected();
+        }
+        else if (registeredPerson.isPresent() && registeredPerson.get().getPortalRoles().containsKey(portalId))
+        {
+            return UserRegistrationResponse.exists();
+        }
         else
         {
-            if (isUserRejectedForPortal(portalId, registeredPerson))
-            {
-                return UserRegistrationResponse.rejected();
-            }
-            else if (registeredPerson.isPresent() && registeredPerson.get().getPortalRoles().containsKey(portalId))
-            {
-                return UserRegistrationResponse.exists();
-            }
+            PortalFOIAPerson portalPerson = changePersonIntoPortalFOIAPerson(portalId, person);
 
-            PortalFOIAPerson person = getPortalFOIAPerson(portalId, user, registeredPerson);
-            createPortalUser(portalId, user, person, null);
+            PortalUser portalUser = portaluserFromPortalPerson(portalId, portalPerson);
 
-            UserResetRequest resetRequest = createUserResetRequest(user, portalId);
+            createPortalUser(portalId, portalUser, portalPerson, null);
+
+            UserResetRequest resetRequest = createUserResetRequest(portalUser, portalId);
             requestPasswordResetForRequester(portalId, resetRequest);
 
             return UserRegistrationResponse.accepted();
         }
+    }
 
+    private PortalFOIAPerson changePersonIntoPortalFOIAPerson(String portalId, Person person)
+    {
+        personDao.updatePersonClass(person.getId(), PortalFOIAPerson.class.getName());
+
+        PortalFOIAPerson portalPerson = portalPersonDao.find(person.getId());
+
+        portalPerson.getPortalRoles().put(portalId, PortalUser.PENDING_USER);
+        return portalPerson;
     }
 
     @Override
@@ -471,11 +490,11 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         orgAddress.setType("Business");
         organization.getAddresses().add(orgAddress);
         // the UI expects the contact methods in this order: Phone, Fax, Email
-        ContactMethod phone = buildContactMethod("Phone", null);
+        ContactMethod phone = buildContactMethod("phone", null);
         person.getContactMethods().add(phone);
-        ContactMethod fax = buildContactMethod("Fax", null);
+        ContactMethod fax = buildContactMethod("fax", null);
         person.getContactMethods().add(fax);
-        ContactMethod email = buildContactMethod("Email", acmUser.getMail());
+        ContactMethod email = buildContactMethod("email", acmUser.getMail());
         person.getContactMethods().add(email);
         person.setDefaultEmail(email);
         return person;
@@ -686,7 +705,8 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         person.getAddresses().get(0).setStreetAddress(user.getAddress1());
         person.getAddresses().get(0).setStreetAddress2(user.getAddress2());
         person.getAddresses().get(0).setZip(user.getZipCode());
-        person.getContactMethods().stream().filter(cm -> cm.getType().equals("Phone")).findFirst().get().setValue(user.getPhoneNumber());
+        person.getContactMethods().stream().filter(cm -> cm.getType().equalsIgnoreCase("Phone")).findFirst().get()
+                .setValue(user.getPhoneNumber());
 
         personDao.save(person);
 
@@ -747,9 +767,13 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         user.setLastName(person.getFamilyName());
         user.setPrefix(person.getTitle());
         user.setPosition(person.getPosition());
-        user.setPhoneNumber(person.getContactMethods().stream().filter(cm -> cm.getType().equals("Phone")).findFirst().get().getValue());
-
+        user.setPhoneNumber(
+                person.getContactMethods().stream().filter(cm -> cm.getType().equalsIgnoreCase("Phone")).findFirst().get().getValue());
         PostalAddress address = person.getDefaultAddress();
+        if (address == null)
+        {
+            address = person.getAddresses().get(0);
+        }
         user.setCity(address.getCity());
         user.setCountry(address.getCountry());
         user.setAddressType(address.getType());
@@ -757,7 +781,10 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         user.setAddress1(address.getStreetAddress());
         user.setAddress2(address.getStreetAddress2());
         user.setZipCode(address.getZip());
-        user.setOrganization(person.getOrganizations().get(0).getOrganizationValue());
+        if (person.getOrganizations() != null && !person.getOrganizations().isEmpty())
+        {
+            user.setOrganization(person.getOrganizations().get(0).getOrganizationValue());
+        }
         user.setEmail(person.getDefaultEmail().getValue());
 
         user.setRole(person.getPortalRoles().get(portalId));
@@ -815,11 +842,11 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         organization.getAddresses().add(orgAddress);
 
         // the UI expects the contact methods in this order: Phone, Fax, Email
-        ContactMethod phone = buildContactMethod("Phone", user.getPhoneNumber());
+        ContactMethod phone = buildContactMethod("phone", user.getPhoneNumber());
         person.getContactMethods().add(phone);
-        ContactMethod fax = buildContactMethod("Fax", null);
+        ContactMethod fax = buildContactMethod("fax", null);
         person.getContactMethods().add(fax);
-        ContactMethod email = buildContactMethod("Email", user.getEmail());
+        ContactMethod email = buildContactMethod("email", user.getEmail());
         person.getContactMethods().add(email);
         person.setDefaultEmail(email);
 
