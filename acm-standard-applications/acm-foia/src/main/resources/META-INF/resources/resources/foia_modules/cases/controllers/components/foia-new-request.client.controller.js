@@ -99,8 +99,13 @@ angular.module('cases').controller(
             var personTypesLookup = ObjectLookupService.getPersonTypes(ObjectService.ObjectTypes.CASE_FILE, true);
 
             var getPortals = AdminPortalConfigurationService.getPortals();
+            
+            var getCountries = ObjectLookupService.getCountries();
+            var getAddressTypes = ObjectLookupService.getAddressTypes();
+            var canadaProvinces = ObjectLookupService.getLookupByLookupName('canadaProvinces');
+            var japanStates = ObjectLookupService.getLookupByLookupName('japanStates');
 
-            $q.all([requestConfig, componentsAgenciesPromise, organizationTypeLookup, prefixNewRequest, newRequestTypes, deliveryMethodOfResponsesRequest, payFeesRequest, requestCategories, stateRequest, promiseConfigTitle, personTypesLookup, getPortals]).then(function (data) {
+            $q.all([requestConfig, componentsAgenciesPromise, organizationTypeLookup, prefixNewRequest, newRequestTypes, deliveryMethodOfResponsesRequest, payFeesRequest, requestCategories, stateRequest, promiseConfigTitle, personTypesLookup, getPortals, getCountries, getAddressTypes, canadaProvinces, japanStates]).then(function (data) {
 
                 var moduleConfig = data[0];
                 var componentsAgencies = data[1];
@@ -114,6 +119,11 @@ angular.module('cases').controller(
                 var configTitle = data[9];
                 var personTypes = data[10];
                 var portals = data[11];
+                var countries = data[12];
+                var addressTypes = data[13];
+                var canadaProvinces = data[14];
+                var japanStates = data[15];
+                
 
                 if (!Util.isEmpty(configTitle)) {
                     $scope.enableTitle = configTitle.data.CASE_FILE.enableTitleField;
@@ -145,7 +155,11 @@ angular.module('cases').controller(
                 $scope.deliveryMethodOfResponses = deliveryMethodOfResponses;
                 $scope.payFees = payFees;
                 $scope.prefixes = prefixesRequest;
-                $scope.states = states;
+                $scope.countries = countries;
+                $scope.addressTypes = addressTypes;
+                $scope.usStates = states;
+                $scope.canadaProvinces = canadaProvinces;
+                $scope.japanStates = japanStates;
 
                 //get json data for new foia request
                 angular.copy(Data.getData(), $scope.config.data);
@@ -158,8 +172,6 @@ angular.module('cases').controller(
 
                 $scope.config.data.componentAgency = $scope.componentsAgencies[0].key;
 
-                $scope.config.data.originator.person.addresses[0].state = $scope.states[0].key;
-
                 $scope.config.data.originator.person.title = $scope.prefixes[0].key;
 
                 $scope.config.data.deliveryMethodOfResponse = $scope.deliveryMethodOfResponses[0].key;
@@ -168,6 +180,9 @@ angular.module('cases').controller(
 
                 $scope.portals = portals.data;
                 $scope.config.chosenPortal = $scope.portals[0];
+                $scope.states = "";
+                $scope.config.data.originator.person.addresses[0].country = countries[0].key;
+                $scope.config.data.originator.person.addresses[0].type = addressTypes[0].key;
             });
 
             $scope.isEmailDaliveryMethod = false;
@@ -243,6 +258,20 @@ angular.module('cases').controller(
                 return $scope.config && $scope.config.data.requestType === 'New Request';
             };
 
+            $scope.changeStates = function(country){
+                switch (country) {
+                    case 'US':
+                        $scope.states = $scope.usStates;
+                        break;
+                    case 'CA':
+                        $scope.states = $scope.canadaProvinces;
+                        break;
+                    case 'JP':
+                        $scope.states = $scope.japanStates;
+                        break;
+                }
+            };
+            
             // -------------------  people --------------------------------------------------------------------
             $scope.searchPerson = function () {
                 var params = {
@@ -290,6 +319,9 @@ angular.module('cases').controller(
                     $scope.config.data.originator.person.personAssociations.push(association);
                 }
 
+                if(!Util.isEmpty(association.person.addresses[0].country) && !Util.isEmpty(association.person.addresses[0].state)) {
+                    $scope.changeStates(association.person.addresses[0].country);
+                }
                 //populate contact information section
                 $scope.config.data.originator.person = angular.copy(association.person);
 
@@ -544,6 +576,7 @@ angular.module('cases').controller(
                     $scope.config.data.originator.person.addresses[0].city = originalRequest.originator.person.addresses[0].city;
                     $scope.config.data.originator.person.addresses[0].state = originalRequest.originator.person.addresses[0].state;
                     $scope.config.data.originator.person.addresses[0].country = originalRequest.originator.person.addresses[0].country;
+                    $scope.config.data.originator.person.addresses[0].addressType = originalRequest.originator.person.addresses[0].addressType;
                     $scope.config.data.originator.person.addresses[0].zip = originalRequest.originator.person.addresses[0].zip;
                     $scope.isAppealPopulated = true;
             };

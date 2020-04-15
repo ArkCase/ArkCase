@@ -679,7 +679,8 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         person.setTitle(user.getPrefix());
         ((PortalFOIAPerson) person).setPosition(user.getPosition());
         person.getOrganizations().get(0).setOrganizationValue(user.getOrganization() != null ? user.getOrganization() : " ");
-
+        person.getAddresses().get(0).setCountry(user.getCountry());
+        person.getAddresses().get(0).setType(user.getAddressType());
         person.getAddresses().get(0).setCity(user.getCity());
         person.getAddresses().get(0).setState(user.getState());
         person.getAddresses().get(0).setStreetAddress(user.getAddress1());
@@ -751,6 +752,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         PostalAddress address = person.getDefaultAddress();
         user.setCity(address.getCity());
         user.setCountry(address.getCountry());
+        user.setAddressType(address.getType());
         user.setState(address.getState());
         user.setAddress1(address.getStreetAddress());
         user.setAddress2(address.getStreetAddress2());
@@ -804,7 +806,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         address.setStreetAddress(user.getAddress1());
         address.setStreetAddress2(user.getAddress2());
         address.setZip(user.getZipCode());
-        address.setType("Business");
+        address.setType(user.getAddressType());
         person.getAddresses().add(address);
         person.setDefaultAddress(address);
 
