@@ -109,13 +109,14 @@ public class ArkCasePortalGatewayUserAPIController
     @RequestMapping(value = "/registrations/requester", method = RequestMethod.POST, produces = {
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE })
     @ResponseBody
-    public UserRegistrationResponse registerUserFromRequester(Authentication auth,
+    public UserRegistrationResponse registerUserFromPerson(Authentication auth,
             @PortalId @PathVariable(value = "portalId") String portalId,
-            @RequestBody PortalUser user)
+            @RequestBody Long personId)
             throws PortalUserServiceException
     {
-        log.debug("Registering [{}] user for portal with [{}] ID.", PortalUser.composeUserName(user), portalId);
-        return portalUserService.registerUserFromRequester(portalId, user);
+        log.debug("Registering user for person with ID [{}] at portal with ID [{}] from Arkcase.",
+                personId, portalId);
+        return portalUserService.registerUserFromPerson(portalId, personId);
     }
 
     @CheckPortalUserAssignement

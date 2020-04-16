@@ -69,6 +69,7 @@
             <beans:property name="userTrackerService" ref="userTrackerService"/>
             <beans:property name="saveFOIARequestService" ref="saveFOIARequestService"/>
             <beans:property name="organizationDao" ref="acmOrganizationDao"/>
+            <beans:property name="portalFOIAPersonDao" ref="portalFOIAPersonDao"/>
             <beans:property name="portalRequestService" ref="portalRequestService"/>
         </beans:bean>
         <beans:bean id="portalCreateInquiryService" class="gov.foia.service.PortalCreateInquiryService">

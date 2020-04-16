@@ -4,6 +4,8 @@ angular.module('cases').controller('Cases.ExemptionController',
     ['$scope', '$stateParams', '$q', 'Case.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Case.ExemptionService', '$modal', 'Object.LookupService', 'Profile.UserInfoService', 'UtilService', 'MessageService',
         function ($scope, $stateParams, $q, CaseInfoService, HelperUiGridService, HelperObjectBrowserService, CaseExemptionService, $modal, ObjectLookupService, UserInfoService, Util, MessageService) {
 
+            $scope.isDisabled = false;
+
             var componentHelper = new HelperObjectBrowserService.Component({
                 scope: $scope,
                 stateParams: $stateParams,
@@ -11,17 +13,27 @@ angular.module('cases').controller('Cases.ExemptionController',
                 componentId: "exemption",
                 retrieveObjectInfo: CaseInfoService.getCaseInfo,
                 validateObjectInfo: CaseInfoService.validateCaseInfo,
-                onConfigRetrieved: function(componentConfig) {
+                onConfigRetrieved: function (componentConfig) {
                     return onConfigRetrieved(componentConfig);
+                },
+                onObjectInfoRetrieved: function (objectInfo) {
+                    onObjectInfoRetrieved(objectInfo);
                 }
             });
+
+            var onObjectInfoRetrieved = function (objectInfo) {
+                $scope.objectInfo = objectInfo;
+                if ($scope.objectInfo.generatedZipFlag || !Util.isEmpty($scope.objectInfo.dispositionClosedDate)) {
+                    $scope.isDisabled = true;
+                }
+            };
 
             var gridHelper = new HelperUiGridService.Grid({
                 scope: $scope
             });
             var promiseUsers = gridHelper.getUsers();
 
-            var onConfigRetrieved = function(config) {
+            var onConfigRetrieved = function (config) {
                 gridHelper.setColumnDefs(config);
                 gridHelper.setBasicOptions(config);
                 gridHelper.disableGridScrolling(config);
@@ -30,7 +42,7 @@ angular.module('cases').controller('Cases.ExemptionController',
                 retrieveGridData();
             };
 
-            ObjectLookupService.getExemptionStatutes().then(function(exemptionStatute) {
+            ObjectLookupService.getExemptionStatutes().then(function (exemptionStatute) {
                 $scope.exemptionStatutes = exemptionStatute;
             });
 
@@ -38,15 +50,23 @@ angular.module('cases').controller('Cases.ExemptionController',
                 $scope.annotationTags = annotationTags;
             });
 
-            $scope.isEditDisabled = function(rowEntity) {
-                if (rowEntity.exemptionCode != 'Ex.3') {
-                   return true;
+            $scope.isEditDisabled = function (rowEntity) {
+                if ($scope.isDisabled) {
+                    return true;
+                } else {
+                    if (rowEntity.exemptionCode != 'Ex.3') {
+                        return true;
+                    }
                 }
             };
 
             $scope.isDeleteDisabled = function (rowEntity) {
-                if (rowEntity.exemptionStatus != "MANUAL") {
+                if ($scope.isDisabled) {
                     return true;
+                } else {
+                    if (rowEntity.exemptionStatus != "MANUAL") {
+                        return true;
+                    }
                 }
             };
 
