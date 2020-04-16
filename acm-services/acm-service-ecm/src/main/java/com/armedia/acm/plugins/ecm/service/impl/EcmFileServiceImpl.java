@@ -2301,6 +2301,14 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
     }
 
+    @Override
+    public List<EcmFile> findFilesByFolder(Long folderId) {
+
+        List<EcmFile> files = getEcmFileDao().findByFolderId(folderId);
+
+        return files;
+    }
+
     private void deleteAuthenticationTokens(Long fileId)
     {
         List<AuthenticationToken> authenticationTokens = getAuthenticationTokenDao().findAuthenticationTokenByTokenFileId(fileId);

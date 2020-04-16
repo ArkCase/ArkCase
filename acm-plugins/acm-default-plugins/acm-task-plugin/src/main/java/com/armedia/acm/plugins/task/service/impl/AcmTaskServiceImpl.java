@@ -874,6 +874,16 @@ public class AcmTaskServiceImpl implements AcmTaskService
         return taskFolderName;
     }
 
+    @Override
+    public boolean noFilesInFolder(AcmTask acmTask) {
+
+        AcmFolder folder = acmTask.getContainer().getAttachmentFolder();
+
+        List<EcmFile> files = getEcmFileService().findFilesByFolder(folder.getId());
+
+        return files.isEmpty() ? true : false;
+    }
+
     public void setTaskEventPublisher(TaskEventPublisher taskEventPublisher)
     {
         this.taskEventPublisher = taskEventPublisher;
