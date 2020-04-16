@@ -105,6 +105,8 @@ public class PortalFOIARequest implements Serializable
     private String phone;
 
     private String organization;
+    
+    private String addressType;
 
     /**
      * @return the prefix
@@ -616,6 +618,16 @@ public class PortalFOIARequest implements Serializable
         this.organization = organization;
     }
 
+    public String getAddressType() 
+    {
+        return addressType;
+    }
+
+    public void setAddressType(String addressType) 
+    {
+        this.addressType = addressType;
+    }
+
     /*
      * (non-Javadoc)
      * @see java.lang.Object#toString()
@@ -628,7 +640,7 @@ public class PortalFOIARequest implements Serializable
                 + email + ", phone=" + phone + ", organization=" + organization + ", requestType="
                 + requestType + ", requestCategory=" + requestCategory + ", deliveryMethodOfResponse=" + deliveryMethodOfResponse
                 + ", address1=" + address1 + ", address2=" + address2 + ", city=" + city + ", state=" + state + ", country=" + country
-                + ", zip=" + zip + ", subject=" + subject + ", recordSearchDateFrom=" + recordSearchDateFrom + ", recordSearchDateTo="
+                + ", zip=" + zip + ", addressType=" + addressType + ", subject=" + subject + ", recordSearchDateFrom=" + recordSearchDateFrom + ", recordSearchDateTo="
                 + recordSearchDateTo + ", processingFeeWaive=" + processingFeeWaive + ", requestFeeWaive=" + requestFeeWaive
                 + ", requestFeeWaiveReason=" + requestFeeWaiveReason + ", payFee=" + payFee + ", requestExpedite=" + requestExpedite
                 + ", files=" + files + ", ipAddress=" + ipAddress + ", userId=" + userId + "]";

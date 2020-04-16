@@ -30,6 +30,7 @@ package com.armedia.acm.services.exemption.model;
 public interface ExemptionConstants
 {
     String EXEMPTION_STATUS_MANUAL = "MANUAL";
+    String EXEMPTION_STATUS_APPROVED = "APPROVED";
     String EXEMPTION_STATUS_DRAFT = "DRAFT";
 
     String EXEMPTION_CODE_CREATED_EVENT = "com.armedia.acm.exemption.code.created";

@@ -34,11 +34,12 @@ public class FOIAExemptionCodeDao extends AcmAbstractDao<ExemptionCode>
     public List<ExemptionCode> getExemptionCodesByParentObjectIdAndType(Long parentObjectId, String parentObjectType)
     {
 
-        List<ExemptionCode> combineResult = new ArrayList<>();
         FOIARequest request = (FOIARequest) caseFileDao.find(parentObjectId);
+        List<ExemptionCode> listCodesOnDocuments = new ArrayList<>();
 
         if (request.getQueue().getName().equals("Release")
-                || (request.getGeneratedZipFlag() != null && request.getGeneratedZipFlag() == true))
+                || (request.getGeneratedZipFlag() != null && request.getGeneratedZipFlag() == true)
+                || request.getDispositionClosedDate() != null)
         {
 
             String queryText = "SELECT af.id " +
@@ -60,18 +61,14 @@ public class FOIAExemptionCodeDao extends AcmAbstractDao<ExemptionCode>
                 List<Long> fileIds = files.stream()
                         .map(EcmFile::getFileId)
                         .collect(Collectors.toList());
-                List<ExemptionCode> listCodesOnDocuments;
+
                 for (Long fileId : fileIds)
                 {
-                    listCodesOnDocuments = getApprovedExemptionCodesByFileId(fileId);
-                    combineResult.addAll(listCodesOnDocuments);
+                    listCodesOnDocuments = getApprovedAndManualExemptionCodesByFileId(fileId);
                 }
             }
         }
-
-        List<ExemptionCode> listCodesOnRequest = getManuallyAddedCodesOnRequestLevel(parentObjectId, parentObjectType);
-        combineResult.addAll(listCodesOnRequest);
-        return combineResult;
+        return listCodesOnDocuments;
 
     }
 
@@ -98,11 +95,11 @@ public class FOIAExemptionCodeDao extends AcmAbstractDao<ExemptionCode>
 
     }
 
-    public List<ExemptionCode> getApprovedExemptionCodesByFileId(Long fileId)
+    public List<ExemptionCode> getApprovedAndManualExemptionCodesByFileId(Long fileId)
     {
         String queryText = "SELECT codes FROM ExemptionCode codes WHERE codes.fileId = :fileId " +
-                "AND codes.exemptionStatus = 'APPROVED' " +
-                "GROUP BY codes.exemptionCode"; // todo check to retrieve the exact version of document
+                "AND codes.exemptionStatus <> 'DRAFT' " +
+                "GROUP BY codes.exemptionCode, codes.exemptionStatus";
         TypedQuery<ExemptionCode> query = getEm().createQuery(queryText, ExemptionCode.class);
         query.setParameter("fileId", fileId);
 
@@ -166,4 +163,5 @@ public class FOIAExemptionCodeDao extends AcmAbstractDao<ExemptionCode>
     {
         this.exemptionCodeDao = exemptionCodeDao;
     }
+
 }
