@@ -428,4 +428,6 @@ public interface EcmFileService
     String addDateInPath(String folderPath, Boolean flag) throws AcmCreateObjectFailedException;
 
     LinkTargetFileDTO getLinkTargetFileInfo(EcmFile ecmFile) throws EcmFileLinkException;
+
+    List<EcmFile> findFilesByFolder(Long folderId);
 }
