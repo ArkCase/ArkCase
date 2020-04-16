@@ -41,6 +41,8 @@ import org.kie.internal.builder.KnowledgeBuilder;
 import org.kie.internal.builder.KnowledgeBuilderError;
 import org.kie.internal.builder.KnowledgeBuilderFactory;
 import org.kie.internal.io.ResourceFactory;
+import org.springframework.jms.annotation.JmsListener;
+import org.springframework.messaging.Message;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -94,6 +96,14 @@ public abstract class SimpleStatelessSingleObjectRuleManager<T>
     public void afterPropertiesSet() throws Exception
     {
         updateRulesFromConfiguration();
+    }
+
+    @JmsListener(destination = "rules.changed", containerFactory = "jmsTopicListenerContainerFactory")
+    public void getRulesFromConfiguration(Message message) throws IOException
+    {
+        if (getRuleSpreadsheetFilename().equals(message.getPayload().toString())) {
+            updateRulesFromConfiguration();
+        }
     }
 
     private void updateRulesFromConfiguration()
