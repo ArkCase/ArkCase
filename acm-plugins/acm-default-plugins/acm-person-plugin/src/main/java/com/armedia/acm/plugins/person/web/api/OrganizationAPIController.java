@@ -151,6 +151,26 @@ public class OrganizationAPIController
         }
 
     }
+;
+    @RequestMapping(value = "/findExistingOrganization/{organizationName:.+}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public String getOrganizationsByName(Authentication auth, @PathVariable("organizationName") String organizationName,
+            @RequestParam(value = "s", required = false, defaultValue = "name") String sortBy,
+            @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
+            @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows) throws SolrException, AcmObjectNotFoundException
+    {
+        String query = String.format("object_type_s:ORGANIZATION AND status_lcs: ACTIVE AND name:%s", organizationName);
+
+        try
+        {
+            return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows, "");
+        }
+        catch (SolrException e)
+        {
+            log.error("Error while executing Solr query: {}", query, e);
+            throw new AcmObjectNotFoundException("Organization", null, "Could not retrieve organizations.", e);
+        }
+    }
 
     @RequestMapping(value = "/{organizationId}/associations/{objectType}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody

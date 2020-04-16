@@ -8,7 +8,7 @@
                 <label translate> common.newOrganization.name</label>
                 <span class="required-asterisk">*</span>
                 <input type="text" ng-model="organization.organizationValue" class="input-md form-control" required="required"
-                        placeholder="{{ 'common.newOrganization.name.placeholder' | translate }}" style="background-color: white;">
+                        ng-blur="organizationExists()" placeholder="{{ 'common.newOrganization.name.placeholder' | translate }}" style="background-color: white;">
             </div>
             <div class="col-sm-4">
                 <label class="control-label">{{ 'common.newOrganization.type'|translate}}</label>

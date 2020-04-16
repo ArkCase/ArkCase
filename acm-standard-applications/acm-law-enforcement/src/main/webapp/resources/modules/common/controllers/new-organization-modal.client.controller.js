@@ -2,8 +2,8 @@
 
 angular.module('common').controller(
         'Common.NewOrganizationModalController',
-    ['$scope', '$stateParams', '$translate', 'Organization.InfoService', '$state', 'Object.LookupService', 'UtilService', '$modal', 'ConfigService', 'MessageService', '$timeout', '$modalInstance', 'Person.InfoService', 'PhoneValidationService',
-        function ($scope, $stateParams, $translate, OrganizationInfoService, $state, ObjectLookupService, Util, $modal, ConfigService, MessageService, $timeout, $modalInstance, PersonInfoService, PhoneValidationService) {
+    ['$scope', '$stateParams', '$translate', 'Organization.InfoService', '$state', 'Object.LookupService', 'UtilService', '$modal', 'ConfigService', 'MessageService', '$timeout', '$modalInstance', 'Person.InfoService', 'PhoneValidationService', 'SimilarOrganizationService',
+        function ($scope, $stateParams, $translate, OrganizationInfoService, $state, ObjectLookupService, Util, $modal, ConfigService, MessageService, $timeout, $modalInstance, PersonInfoService, PhoneValidationService, SimilarOrganizationService) {
 
                     //used for showing/hiding buttons in communication accounts
                     var contactMethodsCounts = {
@@ -45,6 +45,45 @@ angular.module('common').controller(
                         $scope.personAssociationTypes = types;
                         return types;
                     });
+
+                    $scope.organizationExists = function() {
+                        SimilarOrganizationService.getSimilarOrganizationsByName($scope.organization.organizationValue).then(function (result){
+                            var organizationExists = result.data.response.numFound;
+                            if (organizationExists > 0) {
+                                var params = {};
+                                params.header = $translate.instant("common.dialogOrganizationPicker.header2");
+                                params.config = Util.goodMapValue($scope.config, "dialogOrganizationPicker");
+                                params.organizations = result.data.response.docs;
+
+                                var modalInstance = $modal.open({
+                                    templateUrl: "modules/common/views/organization-exists-modal.client.view.html",
+                                        controller:"Common.OrganizationExistsModalController",
+                                        animation: true,
+                                        size: 'lg',
+                                        backdrop: 'static',
+                                        resolve: {
+                                            params: function () {
+                                                return params;
+                                            }
+                                        }
+                                });
+
+
+                                modalInstance.result.then(function (selectedOrganization) {
+                                    var organizationData = {
+                                        organizationId: selectedOrganization.object_id_s,
+                                        organizationValue: selectedOrganization.name,
+                                        organization: selectedOrganization
+                                    };
+                                    $modalInstance.close(organizationData);
+                                });
+
+                                $scope.onClickCancel = function() {
+                                    $modalInstance.dismiss('Cancel');
+                                };
+                            }
+                        });
+                    };
 
                     $scope.searchOrganization = function() {
                         var params = {};
