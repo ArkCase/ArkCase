@@ -184,8 +184,8 @@ angular.module('common').controller(
                         });
 
                         modalInstance.result.then(function(data) {
-                            $scope.organizationId = '';
-                            $scope.organizationValue = data.organization.organizationValue;
+                            $scope.organizationId = data.organizationId ? data.organizationId : '';
+                            $scope.organizationValue = data.organizationValue ? data.organizationValue : data.organization.organizationValue;
                             $scope.organization = data.organization;
                         });
                     };
