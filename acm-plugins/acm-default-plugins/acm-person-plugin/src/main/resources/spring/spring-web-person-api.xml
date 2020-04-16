@@ -36,6 +36,7 @@
 
     <bean id="personAssociationAPIController" class="com.armedia.acm.plugins.person.web.api.PersonAssociationAPIController">
         <property name="personAssociationService" ref="personAssociationService"/>
+        <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
 
     <bean id="organizationAssociationAPIController" class="com.armedia.acm.plugins.person.web.api.OrganizationAssociationAPIController">
