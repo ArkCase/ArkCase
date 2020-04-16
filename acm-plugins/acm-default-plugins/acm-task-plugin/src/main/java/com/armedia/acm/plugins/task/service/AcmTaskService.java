@@ -242,5 +242,5 @@ public interface AcmTaskService
 
     String getTaskFolderNameInParentObject(AcmTask acmTask);
 
-    boolean noFilesInFolder(AcmTask acmTask);
+    boolean existFilesInTaskAttachFolder(AcmTask acmTask);
 }
