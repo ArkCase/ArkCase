@@ -247,7 +247,6 @@
             <beans:property name="foiaRequestService" ref="foiaRequestService"/>
             <beans:property name="caseFileEventUtility" ref="caseFileEventUtility"/>
             <beans:property name="personDao" ref="acmPersonDao"/>
-            <beans:property name="acmDiffService" ref="acmDiffService"/>
         </beans:bean>
 
         <beans:bean id="originalRequestFolderNameFormat" class="java.lang.String">
