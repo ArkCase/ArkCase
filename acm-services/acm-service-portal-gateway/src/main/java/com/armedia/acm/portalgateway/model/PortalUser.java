@@ -102,6 +102,8 @@ public class PortalUser
     private String organization;
 
     private String position;
+    
+    private String addressType;
 
     /**
      * @return the portalUserId
@@ -398,6 +400,16 @@ public class PortalUser
     public void setEcmFileId(Long ecmFileId)
     {
         this.ecmFileId = ecmFileId;
+    }
+
+    public String getAddressType() 
+    {
+        return addressType;
+    }
+
+    public void setAddressType(String addressType) 
+    {
+        this.addressType = addressType;
     }
 
     public static String composeUserName(PortalUser user)

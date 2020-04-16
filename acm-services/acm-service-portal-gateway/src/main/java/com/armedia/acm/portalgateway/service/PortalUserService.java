@@ -121,7 +121,7 @@ public interface PortalUserService
     UserResetResponse changePassword(String portalId, String userId, String acmUserId, PortalUserCredentials portalUserCredentials)
             throws PortalUserServiceException;
 
-    UserRegistrationResponse registerUserFromRequester(String portalId, PortalUser user)
+    UserRegistrationResponse registerUserFromPerson(String portalId, Long personId)
             throws PortalUserServiceException;
 
     PortalUser retrieveUser(String portalUserId, String portalId) throws PortalUserServiceException;

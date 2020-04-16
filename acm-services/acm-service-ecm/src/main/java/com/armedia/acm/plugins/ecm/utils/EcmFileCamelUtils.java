@@ -43,6 +43,7 @@ import org.apache.chemistry.opencmis.commons.PropertyIds;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.slf4j.MDC;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -65,6 +66,13 @@ public class EcmFileCamelUtils
     {
         try
         {
+            // prefer the user id already set in the MDC, if there is one
+            String ecmUserId = MDC.get(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY);
+            if ( ecmUserId != null && !ecmUserId.trim().isEmpty()) 
+            {
+                return ecmUserId;
+            }
+
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             if (authentication != null)
             {
@@ -128,9 +136,11 @@ public class EcmFileCamelUtils
                 getCmisConfigUtils().getVersioningState(ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID));
         messageProps.put(PropertyIds.NAME, newEcmFile.getFileName());
         messageProps.put(PropertyIds.CONTENT_STREAM_MIME_TYPE, newEcmFile.getFileActiveVersionMimeType());
-        messageProps.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
 
-        log.debug("Invoking Camel add document route");
+        String cmisUser = getCmisUser();
+        messageProps.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, cmisUser);
+
+        log.debug("Invoking Camel add document route for user {}", cmisUser);
         try
         {
             return (Document) getCamelContextManager().send(ArkCaseCMISActions.CREATE_DOCUMENT, messageProps);
