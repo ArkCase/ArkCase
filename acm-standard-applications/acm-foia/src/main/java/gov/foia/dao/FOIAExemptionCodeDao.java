@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import gov.foia.model.FOIARequest;
-import gov.foia.service.FOIAExemptionService;
 
 /**
  * Created by ana.serafimoska
@@ -25,7 +24,6 @@ public class FOIAExemptionCodeDao extends AcmAbstractDao<ExemptionCode>
     private AcmFolderService acmFolderService;
     private CaseFileDao caseFileDao;
     private ExemptionCodeDao exemptionCodeDao;
-    private FOIAExemptionService foiaExemptionService;
 
     @Override
     protected Class<ExemptionCode> getPersistenceClass()
@@ -36,8 +34,8 @@ public class FOIAExemptionCodeDao extends AcmAbstractDao<ExemptionCode>
     public List<ExemptionCode> getExemptionCodesByParentObjectIdAndType(Long parentObjectId, String parentObjectType)
     {
 
-        List<ExemptionCode> combineResult = new ArrayList<>();
         FOIARequest request = (FOIARequest) caseFileDao.find(parentObjectId);
+        List<ExemptionCode> listCodesOnDocuments = new ArrayList<>();
 
         if (request.getQueue().getName().equals("Release")
                 || (request.getGeneratedZipFlag() != null && request.getGeneratedZipFlag() == true)
@@ -63,20 +61,14 @@ public class FOIAExemptionCodeDao extends AcmAbstractDao<ExemptionCode>
                 List<Long> fileIds = files.stream()
                         .map(EcmFile::getFileId)
                         .collect(Collectors.toList());
-                List<ExemptionCode> listCodesOnDocuments;
+
                 for (Long fileId : fileIds)
                 {
                     listCodesOnDocuments = getApprovedAndManualExemptionCodesByFileId(fileId);
-                    List<ExemptionCode> filterDocumentCodesList =  getFoiaExemptionService().filterExemptionCodes(listCodesOnDocuments);
-                    combineResult.addAll(filterDocumentCodesList);
                 }
             }
         }
-
-        List<ExemptionCode> listCodesOnRequest = getManuallyAddedCodesOnRequestLevel(parentObjectId, parentObjectType);
-        combineResult.addAll(listCodesOnRequest);
-        List<ExemptionCode> finalList = getFoiaExemptionService().filterExemptionCodes(combineResult);
-        return finalList;
+        return listCodesOnDocuments;
 
     }
 
@@ -172,13 +164,4 @@ public class FOIAExemptionCodeDao extends AcmAbstractDao<ExemptionCode>
         this.exemptionCodeDao = exemptionCodeDao;
     }
 
-    public FOIAExemptionService getFoiaExemptionService()
-    {
-        return foiaExemptionService;
-    }
-
-    public void setFoiaExemptionService(FOIAExemptionService foiaExemptionService)
-    {
-        this.foiaExemptionService = foiaExemptionService;
-    }
 }

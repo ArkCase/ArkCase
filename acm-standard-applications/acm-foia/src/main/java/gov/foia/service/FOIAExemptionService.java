@@ -35,7 +35,15 @@ public class FOIAExemptionService
         log.info("Finding  exemption codes for objectId: {}", parentObjectId);
         try
         {
-            return getFoiaExemptionCodeDao().getExemptionCodesByParentObjectIdAndType(parentObjectId, parentObjectType);
+            List<ExemptionCode> combineResult = new ArrayList<>();
+            List<ExemptionCode> listCodesOnDocuments = getFoiaExemptionCodeDao().getExemptionCodesByParentObjectIdAndType(parentObjectId, parentObjectType);
+            List<ExemptionCode> filterDocumentCodesList = filterExemptionCodes(listCodesOnDocuments);
+            combineResult.addAll(filterDocumentCodesList);
+
+            List<ExemptionCode> listCodesOnRequest = getFoiaExemptionCodeDao().getManuallyAddedCodesOnRequestLevel(parentObjectId, parentObjectType);
+            combineResult.addAll(listCodesOnRequest);
+            List<ExemptionCode> finalList = filterExemptionCodes(combineResult);
+            return finalList;
         }
         catch (Exception e)
         {

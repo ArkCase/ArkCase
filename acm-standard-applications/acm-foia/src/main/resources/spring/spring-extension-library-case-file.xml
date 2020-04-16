@@ -96,7 +96,6 @@
             <beans:property name="acmFolderService" ref="acmFolderService"/>
             <beans:property name="caseFileDao" ref="caseFileDao"/>
             <beans:property name="exemptionCodeDao" ref="exemptionCodeDao"/>
-            <beans:property name="foiaExemptionService" ref="foiaExemptionService"/>
         </beans:bean>
 
         <beans:bean id="foiaExemptionService" class="gov.foia.service.FOIAExemptionService">
