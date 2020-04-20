@@ -72,6 +72,24 @@ angular.module('profile').factory('Profile.UserInfoService', [ '$resource', '$q'
             url: 'api/latest/plugin/profile/userOrgInfo/set',
             cache: false
         }
+
+        /**
+         * @ngdoc method
+         * @name _queryUserById
+         * @methodOf profile.service:Profile.UserInfoService
+         *
+         * @description
+         * Query given user's data from Solr
+         *
+         * @returns {Object} Returned by $resource
+         */
+        ,
+        _queryUserById: {
+            method: 'GET',
+            url: 'api/v1/plugin/search/advancedSearch?q=object_type_s\\:USER+' + 'AND+object_id_s\\::user',
+            isArray: false,
+            data: ''
+        },
     });
 
     /**
@@ -97,10 +115,42 @@ angular.module('profile').factory('Profile.UserInfoService', [ '$resource', '$q'
                 user: userId
             },
             data: {},
-            onSuccess: function(data) {
+            onSuccess: function (data) {
                 return data;
             },
-            onError: function(data) {
+            onError: function (data) {
+                return data;
+            }
+        });
+    };
+
+    /**
+     * @ngdoc method
+     * @name queryUserById
+     * @methodOf profile.service:Profile.UserInfoService
+     *
+     * @description
+     * Retrieve user data from Solr for specified userId
+     *
+     * @param {String} userId id of user to fetch
+     *
+     * @returns {Promise} User data of specified user
+     */
+    Service.queryUserById = function (userId) {
+        if (!Util.goodValue(userId)) {
+            return Util.errorPromise($translate.instant("common.service.error.invalidData"))
+        }
+
+        return Util.serviceCall({
+            service: Service._queryUserById,
+            param: {
+                user: userId
+            },
+            data: {},
+            onSuccess: function (data) {
+                return data;
+            },
+            onError: function (data) {
                 return data;
             }
         });
