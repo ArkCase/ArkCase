@@ -119,8 +119,7 @@ public class AcmUserServiceImpl implements AcmUserService
             throws SolrException
     {
 
-        String query = "object_type_s:USER AND status_lcs:VALID";
-
+        String query = "object_type_s:USER AND status_lcs:VALID AND -directory_name_s:foiaportal";
         String filterSystemUsers = String.format("fq=-name:%s&fq=-name:%s", AcmUsersConstants.OCR_SYSTEM_USER,
                 AcmUsersConstants.TRANSCRIBE_SYSTEM_USER);
 

@@ -27,13 +27,17 @@ package com.armedia.acm.portalgateway.web.api;
  * #L%
  */
 
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.portalgateway.model.PortalInfo;
 import com.armedia.acm.portalgateway.service.PortalAdminService;
 import com.armedia.acm.portalgateway.service.PortalAdminServiceException;
 import com.armedia.acm.portalgateway.service.PortalServiceExceptionMapper;
+import com.armedia.acm.services.search.exception.SolrException;
+import com.armedia.acm.services.search.model.solr.SolrCore;
+import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -43,6 +47,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
@@ -59,6 +64,8 @@ public class ArkCasePortalAdminAPIController
     private transient final Logger log = LogManager.getLogger(getClass());
 
     private PortalAdminService portalAdminService;
+
+    private ExecuteSolrQuery executeSolrQuery;
 
     @RequestMapping(value = "/portals", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE,
             MediaType.TEXT_PLAIN_VALUE})
@@ -123,6 +130,29 @@ public class ArkCasePortalAdminAPIController
         return ResponseEntity.status(exceptionMapper.getStatusCode()).body(errorDetails);
     }
 
+    @RequestMapping(value = "/portal/users", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public String listPortalUsers(Authentication auth, @RequestParam(value = "start", required = false, defaultValue = "0") int start,
+            @RequestParam(value = "n", required = false, defaultValue = "10") int n,
+            @RequestParam(value = "s", required = false, defaultValue = "ASC") String s) throws AcmObjectNotFoundException
+    {
+
+        String query = String.format("object_type_s:PERSON AND object_sub_type_s:PORTAL_FOIA_PERSON");
+
+        try
+        {
+            String solrResponse = executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, start, n, "");
+            return solrResponse;
+
+        }
+        catch (SolrException e)
+        {
+            log.error("Error while executing Solr query: {}", query, e);
+            throw new AcmObjectNotFoundException("Portal Users", null, "Could not retrieve portal users.", e);
+        }
+
+    }
+
     /**
      * @param portalInfoDTO
      * @return
@@ -143,4 +173,13 @@ public class ArkCasePortalAdminAPIController
         this.portalAdminService = portalAdminService;
     }
 
+    public ExecuteSolrQuery getExecuteSolrQuery()
+    {
+        return executeSolrQuery;
+    }
+
+    public void setExecuteSolrQuery(ExecuteSolrQuery executeSolrQuery)
+    {
+        this.executeSolrQuery = executeSolrQuery;
+    }
 }
