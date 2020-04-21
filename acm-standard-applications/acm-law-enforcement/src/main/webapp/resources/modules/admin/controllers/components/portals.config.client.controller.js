@@ -8,12 +8,21 @@ angular.module('admin').controller(
                     var gridHelper = new HelperUiGridService.Grid({
                         scope: $scope
                     });
-                    $scope.config.$promise.then(function(config) {
-                        var config = angular.copy(_.find(config.components, {
+
+                    $scope.gridOptions = $scope.gridOptions || {};
+                    $scope.gridUserOptions = $scope.gridUserOptions || {};
+
+                    $scope.config.$promise.then(function (adminConfig) {
+                        var config = angular.copy(_.find(adminConfig.components, {
                             id: 'portalsConfiguration'
                         }));
 
+                        var userConfig = angular.copy(_.find(adminConfig.components, {
+                            id: 'portalUsersConfiguration'
+                        }));
+
                         $scope.config = config;
+                        $scope.userConfig = userConfig;
 
                         gridHelper.addButton(config, "edit");
                         gridHelper.addButton(config, "delete");
@@ -34,21 +43,44 @@ angular.module('admin').controller(
                             paginationPageSize: $scope.config.paginationPageSize,
                             data: []
                         };
+
+                        $scope.gridUserOptions = {
+                            enableColumnResizing: true,
+                            enableRowSelection: true,
+                            enableRowHeaderSelection: false,
+                            multiSelect: false,
+                            noUnselect: false,
+                            columnDefs: $scope.userConfig.columnDefs,
+                            totalItems: 0,
+                            paginationPageSizes: $scope.userConfig.paginationPageSizes,
+                            paginationPageSize: $scope.userConfig.paginationPageSize,
+                            data: []
+                        };
+
+                        $scope.portal = {};
+                        var reloadGrid = function(portals) {
+                            $scope.gridOptions.data = portals;
+                        };
+
+                        var getAndRefresh = function() {
+                            AdminPortalConfigurationService.getPortals().then(function(response) {
+                                if (!Util.isEmpty(response.data)) {
+                                    reloadGrid(response.data);
+                                }
+                            });
+                        };
+                        getAndRefresh();
+
+                        var getPortalUsers = function () {
+                            AdminPortalConfigurationService.getPortalUsers().then(function (response) {
+                                if (!Util.isEmpty(response.data)) {
+                                    $scope.gridUserOptions.data = response.data.response.docs;
+                                }
+                            })
+                        };
+                        getPortalUsers();
                     });
 
-                    $scope.portal = {};
-                    var reloadGrid = function(portals) {
-                        $scope.gridOptions.data = portals;
-                    };
-
-                    var getAndRefresh = function() {
-                        AdminPortalConfigurationService.getPortals().then(function(response) {
-                            if (!Util.isEmpty(response.data)) {
-                                reloadGrid(response.data);
-                            }
-                        });
-                    };
-                    getAndRefresh();
 
                     function showModal(portal) {
                         var params = {};
