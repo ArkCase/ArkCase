@@ -139,6 +139,18 @@ public class ConfigurationServiceBootClient
         return langMap;
     }
 
+    public Map<String, Object> loadLdapConfiguration(String name, Map<String, Object> defaultLdapMap, List<Environment> environments)
+    {
+        Environment result = getRemoteEnvironment(configRestTemplate(), name, environments).get(0);
+        Map<String, Object> ldapMap = getCompositeMap(result);
+
+        if (defaultLdapMap.size() != ldapMap.size())
+        {
+            defaultLdapMap.forEach(ldapMap::putIfAbsent);
+        }
+        return ldapMap;
+    }
+
     public Map<String, Object> loadRuntimeConfigurationMap(List<Environment> environments)
     {
         Environment result = getRemoteEnvironment(configRestTemplate(), null, environments).get(0);

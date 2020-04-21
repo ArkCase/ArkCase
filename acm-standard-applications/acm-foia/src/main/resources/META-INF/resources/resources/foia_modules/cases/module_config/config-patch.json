@@ -59,7 +59,7 @@
     {
         "op": "replace",
         "path": "/tree/filters/?@.name=='all-open-cases'/value",
-        "value": "fq=-status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED AND -status_s:Released"
+        "value": "fq=-status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED AND -queue_name_s:Release"
     },
     {
         "op": "remove",
@@ -75,7 +75,7 @@
         "value": {
             "desc": "cases.tree.filters.openAppeals",
             "name": "all-open-appeals",
-            "value": "fq=request_type_lcs:Appeal AND status_s:Appealed"
+            "value": "fq=request_type_lcs:Appeal AND -queue_name_s:Release"
         }
     },
     {
@@ -84,13 +84,13 @@
         "value": {
             "desc": "cases.tree.filters.released",
             "name": "all-released-cases",
-            "value": "fq=status_s:Released"
+            "value": "fq=queue_name_s:Release"
         }
     },
     {
         "op": "replace",
         "path": "/tree/filters/?@.name=='my-assigned-cases'/value",
-        "value": "fq=assignee_s:${user} AND -status_s:Released"
+        "value": "fq=assignee_s:${user} AND -queue_name_s:Release"
     },
     {
         "op": "add",
@@ -173,31 +173,26 @@
             "paginationPageSize": 5,
             "columnDefs": [
                 {
-                    "name": "requestId",
-                    "displayName": "cases.comp.exemption.table.columns.requestId",
-                    "headerCellFilter": "translate"
-                },
-                {
-                    "name": "fileId",
-                    "displayName": "cases.comp.exemption.table.columns.docId",
-                    "headerCellFilter": "translate"
-                },
-                {
-                    "name": "fileName",
-                    "displayName": "cases.comp.exemption.table.columns.docName",
-                    "headerCellFilter": "translate"
-                },
-                {
                     "name": "exemptionCode",
                     "displayName": "cases.comp.exemption.table.columns.exemptionCode",
                     "headerCellFilter": "translate"
                 },
                 {
-                    "name": "exemptionStatute",
-                    "displayName": "cases.comp.exemption.table.columns.statute",
+                    "name": "exemptionDescription",
+                    "displayName": "cases.comp.exemption.table.columns.exemptionDescription",
                     "headerCellFilter": "translate",
-                    "enableCellEdit": false,
-                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.exemptionStatutes, row.entity.exemptionStatute) | translate }}</div>"
+                    "cellTemplate": "<div class='ui-grid-cell-contents' title='{{grid.appScope.utils.getLookupValue(grid.appScope.annotationTags, row.entity.exemptionCode) | translate }}'>{{grid.appScope.utils.getLookupValue(grid.appScope.annotationTags, row.entity.exemptionCode) | translate }}</div>"
+                },
+                {
+                    "name": "exemptionStatus",
+                    "displayName": "cases.comp.exemption.table.columns.exemptionStatus",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "created",
+                    "displayName": "cases.comp.exemption.table.columns.created",
+                    "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
+                    "headerCellFilter": "translate"
                 },
                 {
                     "name": "creator",
@@ -205,6 +200,13 @@
                     "headerCellFilter": "translate",
                     "enableCellEdit": false,
                     "lookup": "userFullNames"
+                },
+                {
+                    "name": "exemptionStatute",
+                    "displayName": "cases.comp.exemption.table.columns.statute",
+                    "headerCellFilter": "translate",
+                    "enableCellEdit": false,
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.exemptionStatutes, row.entity.exemptionStatute) | translate }}</div>"
                 }
             ]
         }
@@ -310,7 +312,7 @@
         "value": {
                 "id": "new-foia-request",
                 "objectSearch": {
-                    "objectFacetFilter": "\"Object Type\": CASE_FILE&fq=\"status_lcs\":Released&fq=\"request_type_lcs\":NewRequest"
+                    "objectFacetFilter": "\"Object Type\": CASE_FILE&fq=\"queue_name_s\":Release&fq=\"request_type_lcs\":NewRequest"
                 }
         }
     },

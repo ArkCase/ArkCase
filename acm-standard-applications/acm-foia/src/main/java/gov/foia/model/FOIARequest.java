@@ -203,6 +203,9 @@ public class FOIARequest extends CaseFile implements FOIAObject
     @Convert(converter = BooleanToStringConverter.class)
     private boolean limitedDeliveryFlag = false;
 
+    @Column(name = "fo_generated_zip_flag")
+    private Boolean generatedZipFlag;
+
     @Transient
     private String originalRequestNumber;
 
@@ -790,6 +793,16 @@ public class FOIARequest extends CaseFile implements FOIAObject
         this.limitedDeliveryFlag = limitedDeliveryFlag;
     }
 
+    public Boolean getGeneratedZipFlag()
+    {
+        return generatedZipFlag;
+    }
+
+    public void setGeneratedZipFlag(Boolean generatedZipFlag)
+    {
+        this.generatedZipFlag = generatedZipFlag;
+    }
+
     /*
      * (non-Javadoc)
      * @see java.lang.Object#toString()
@@ -808,7 +821,8 @@ public class FOIARequest extends CaseFile implements FOIAObject
                 + ", requestExpediteReason=" + requestExpediteReason + ", extensionFlag=" + extensionFlag + ", amendmentFlag="
                 + amendmentFlag
                 + ", requestAmendmentDetails=" + requestAmendmentDetails + ", dispositionClosedDate=" + dispositionClosedDate
-                + ", tollingFlag=" + tollingFlag + ", limitedDeliveryFlag=" + limitedDeliveryFlag + "} "
+                + ", tollingFlag=" + tollingFlag + ", limitedDeliveryFlag=" + limitedDeliveryFlag + ", generatedZipFlag=" + generatedZipFlag
+                + "} "
                 + super.toString();
     }
 }

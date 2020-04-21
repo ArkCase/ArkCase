@@ -72,6 +72,13 @@ public interface PortalRequestService
             throws PortalRequestServiceException;
 
     /**
+     * @param request
+     * @return
+     * @throws PortalRequestServiceException
+     */
+    void submitInquiry(PortalRequest request) throws PortalRequestServiceException;
+
+    /**
      * @param se
      * @return
      */

@@ -165,42 +165,42 @@ angular.module('admin').controller('Admin.LdapConfigController',
             });
         }
 
-            function showChagePasswordModal(dir, isEdit) {
-                $scope.passwordErrorMessages = {
-                    notSamePasswordsMessage: ''
-                };
-                var modalScope = $scope.$new();
-                modalScope.authUserPassword = {};
+        function showChagePasswordModal(dir, isEdit) {
+            $scope.passwordErrorMessages = {
+                notSamePasswordsMessage: ''
+            };
+            var modalScope = $scope.$new();
+            modalScope.authUserPassword = {};
 
-                var modalInstance = $modal.open({
-                    scope: modalScope,
-                    templateUrl: 'modules/admin/views/components/security.ldap-change-password.popup.html',
-                    backdrop: 'static',
-                    controller: function($scope, $modalInstance) {
-                        $scope.ok = function() {
-                            $modalInstance.close({
-                                authUserPassword: modalScope.authUserPassword.value,
-                            });
-                        };
-                        $scope.cancel = function() {
-                            $modalInstance.dismiss('cancel');
-                        };
-                    }
+            var modalInstance = $modal.open({
+                scope: modalScope,
+                templateUrl: 'modules/admin/views/components/security.ldap-change-password.popup.html',
+                backdrop: 'static',
+                controller: function ($scope, $modalInstance) {
+                    $scope.ok = function () {
+                        $modalInstance.close({
+                            authUserPassword: modalScope.authUserPassword.value,
+                        });
+                    };
+                    $scope.cancel = function () {
+                        $modalInstance.dismiss('cancel');
+                    };
+                }
+            });
+            modalInstance.result.then(function (data) {
+
+                dir.authUserPassword = data.authUserPassword;
+
+                addPrefixInKey(dir, "ldapConfig");
+                ldapConfigService.updateDirectory(dir).then(function () {
+                    reloadGrid();
+                    messageService.info($translate.instant('admin.security.ldapConfig.messages.update.success'));
+                }, function () {
+                    messageService.error($translate.instant('admin.security.ldapConfig.messages.update.error'));
                 });
-                modalInstance.result.then(function(data) {
 
-                    dir.authUserPassword = data.authUserPassword;
-
-                    addPrefixInKey(dir, "ldapConfig");
-                    ldapConfigService.updateDirectory(dir).then(function() {
-                        reloadGrid();
-                        messageService.info($translate.instant('admin.security.ldapConfig.messages.update.success'));
-                    }, function() {
-                        messageService.error($translate.instant('admin.security.ldapConfig.messages.update.error'));
-                    });
-
-                });
-            }
+            });
+        }
 
         $scope.openSyncModal = function(rowEntity) {
             var modalScope = $scope.$new();
@@ -329,7 +329,7 @@ angular.module('admin').controller('Admin.LdapConfigController',
             var tempLdapPromise = ldapConfigService.retrieveDirectories();
             tempLdapPromise.then(function(directories) {
                 removePrefixInKey(directories.data);
-                $scope.gridOptions.data = directories.data;
+                $scope.gridOptions.data = _.values(directories.data);
             });
         }
 

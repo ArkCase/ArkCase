@@ -299,6 +299,19 @@ public class AcmSchedulerService
         return scheduler;
     }
 
+    public Trigger getTrigger(String syncJobName)
+    {
+        try
+        {
+            return this.scheduler.getTrigger(TriggerKey.triggerKey(syncJobName + "Trigger"));
+        }
+        catch (SchedulerException e)
+        {
+            logger.warn("Failed to retrieve Trigger information. Cause: {}", e.getMessage());
+            return null;
+        }
+    }
+
     public void setScheduler(Scheduler scheduler)
     {
         this.scheduler = scheduler;

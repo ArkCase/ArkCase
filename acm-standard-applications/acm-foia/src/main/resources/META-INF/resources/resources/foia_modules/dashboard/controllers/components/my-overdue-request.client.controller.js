@@ -6,7 +6,7 @@ angular.module('dashboard.my-overdue-requests').controller('Dashboard.MyOverdueR
             var vm = this;
             vm.config = null;
             var userInfo = null;
-            var requestStatus = "Released";
+            var requestQueue = "Release";
 
             var paginationOptions = {
                 pageNumber: 1,
@@ -69,7 +69,7 @@ angular.module('dashboard.my-overdue-requests').controller('Dashboard.MyOverdueR
             function getPage() {
                 DashboardService.queryMyOverdueRequests({
                     userId: userInfo.userId,
-                    status: requestStatus,
+                    queue: requestQueue,
                     sortBy: paginationOptions.sortBy,
                     sortDir: paginationOptions.sortDir,
                     startWith: (paginationOptions.pageNumber - 1) * paginationOptions.pageSize,

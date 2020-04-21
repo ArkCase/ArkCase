@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm</artifactId>
         <groupId>com.armedia</groupId>
-        <version>3.3.6</version>
+        <version>3.3.7</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -68,6 +68,7 @@
         <module>acm-service-case-suggestion</module>
         <module>acm-service-portal-gateway</module>
         <module>acm-service-object-title</module>
+        <module>acm-service-exemption</module>
     </modules>
 
 </project>

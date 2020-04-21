@@ -31,6 +31,8 @@ import com.armedia.acm.files.AbstractConfigurationFileEvent;
 import com.armedia.acm.files.ConfigurationFileAddedEvent;
 import com.armedia.acm.files.ConfigurationFileChangedEvent;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.drools.decisiontable.InputType;
 import org.drools.decisiontable.SpreadsheetCompiler;
 import org.kie.api.KieBase;
@@ -41,8 +43,6 @@ import org.kie.internal.builder.KnowledgeBuilder;
 import org.kie.internal.builder.KnowledgeBuilderError;
 import org.kie.internal.builder.KnowledgeBuilderFactory;
 import org.kie.internal.io.ResourceFactory;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationListener;
 
 import java.io.File;
@@ -156,7 +156,7 @@ public abstract class SimpleStatelessSingleObjectRuleManager<T>
                 throw new RuntimeException(String.format("Could not build rules from %s", configFile.getAbsolutePath()));
             }
 
-            KieBase base = kbuilder.newKnowledgeBase();
+            KieBase base = kbuilder.newKieBase();
 
             setKieBase(base);
 

@@ -39,6 +39,8 @@ public class FoiaConfiguration extends SystemConfiguration
     private Boolean receivedDateEnabled;
     private Boolean notificationGroupsEnabled;
     private Boolean requestExtensionWorkingDaysEnabled;
+    private Boolean expediteWorkingDaysEnabled;
+    private Integer expediteWorkingDays;
     private Boolean purgeRequestWhenInHoldEnabled;
     private Boolean moveToBillingQueueEnabled;
     private Boolean limitedDeliveryToSpecificPageCountEnabled;
@@ -125,6 +127,26 @@ public class FoiaConfiguration extends SystemConfiguration
     public void setRequestExtensionWorkingDaysEnabled(Boolean requestExtensionWorkingDaysEnabled)
     {
         this.requestExtensionWorkingDaysEnabled = requestExtensionWorkingDaysEnabled;
+    }
+
+    public Boolean getExpediteWorkingDaysEnabled()
+    {
+        return expediteWorkingDaysEnabled;
+    }
+
+    public void setExpediteWorkingDaysEnabled(Boolean expediteWorkingDaysEnabled)
+    {
+        this.expediteWorkingDaysEnabled = expediteWorkingDaysEnabled;
+    }
+
+    public Integer getExpediteWorkingDays()
+    {
+        return expediteWorkingDays;
+    }
+
+    public void setExpediteWorkingDays(Integer expediteWorkingDays)
+    {
+        this.expediteWorkingDays = expediteWorkingDays;
     }
 
     public Boolean getPurgeRequestWhenInHoldEnabled()

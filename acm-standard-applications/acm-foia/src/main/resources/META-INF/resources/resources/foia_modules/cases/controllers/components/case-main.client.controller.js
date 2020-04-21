@@ -110,6 +110,14 @@ angular.module('cases').controller(
                 });
             }
 
+            $scope.requestTrackChanged = function (requestTrack) {
+                if (requestTrack === 'expedite') {
+                    expediteDueDate();
+                } else {
+                    resetDueDate();
+                }
+            };
+
             $scope.isDisabled = true;
             $scope.isChanged = function (dispositionSubtype) {
 
@@ -139,14 +147,15 @@ angular.module('cases').controller(
             AdminFoiaConfigService.getFoiaConfig().then(function (response) {
                 $scope.extensionWorkingDays = response.data.requestExtensionWorkingDays;
                 $scope.requestExtensionWorkingDaysEnabled = response.data.requestExtensionWorkingDaysEnabled;
+                $scope.expediteWorkingDays = response.data.expediteWorkingDays;
+                $scope.expediteWorkingDaysEnabled = response.data.expediteWorkingDaysEnabled;
             }, function (err) {
                 MessageService.errorAction();
             });
 
             $scope.extensionClicked = function ($event) {
                 if (!$event.target.checked) {
-                    $scope.objectInfo.dueDate = $scope.originalDueDate;
-                    $rootScope.$broadcast('dueDate-changed', $scope.originalDueDate);
+                    resetDueDate();
                 } else {
                         if ($scope.includeWeekends) {
                             $scope.extendedDueDate = DueDateService.dueDateWithWeekends($scope.originalDueDate, $scope.extensionWorkingDays, $scope.holidays);
@@ -157,6 +166,23 @@ angular.module('cases').controller(
                     $rootScope.$broadcast('dueDate-changed', $scope.extendedDueDate);
                 }
             };
+
+            function resetDueDate() {
+                $scope.objectInfo.dueDate = $scope.originalDueDate;
+                $rootScope.$broadcast('dueDate-changed', $scope.originalDueDate);
+            }
+
+            function expediteDueDate() {
+                if ($scope.expediteWorkingDaysEnabled && !Util.isEmpty($scope.objectInfo.receivedDate)) {
+                    if ($scope.includeWeekends) {
+                        $scope.expeditedDueDate = DueDateService.dueDateWithWeekends($scope.objectInfo.receivedDate, $scope.expediteWorkingDays, $scope.holidays);
+                    } else {
+                        $scope.expeditedDueDate = DueDateService.dueDateWorkingDays($scope.objectInfo.receivedDate, $scope.expediteWorkingDays, $scope.holidays);
+                    }
+                    $scope.objectInfo.dueDate = $scope.expeditedDueDate;
+                    $rootScope.$broadcast('dueDate-changed', $scope.expeditedDueDate);
+                }
+            }
 
             /**
              * Persists the updated casefile metadata to the ArkCase database

@@ -30,6 +30,7 @@ package com.armedia.acm.services.users.service.ldap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import com.armedia.acm.services.users.model.PasswordConfig;
 import com.armedia.acm.services.users.model.ldap.MapperUtils;
 import com.armedia.acm.services.users.model.ldap.PasswordLengthValidationRule;
 import com.armedia.acm.services.users.model.ldap.PasswordShouldMatchPattern;
@@ -46,7 +47,8 @@ import java.util.stream.Stream;
 public class PasswordValidationServiceTest
 {
     private PasswordValidationService unit = new PasswordValidationService();
-    private PasswordLengthValidationRule minLengthRule;
+    private PasswordLengthValidationRule minLengthRule = new PasswordLengthValidationRule();
+    private PasswordConfig passwordConfig = new PasswordConfig();
 
     @Before
     public void setUp()
@@ -66,9 +68,9 @@ public class PasswordValidationServiceTest
         PasswordShouldMatchPattern specialCharRule = new PasswordShouldMatchPattern(
                 "^.*?[\\Q[\\E~!@#$%^&*_+=`|\\(){}:;\"'<>,.?/-\\Q]\\E].*$",
                 "Password must contain at least one special character");
-
-        minLengthRule = new PasswordLengthValidationRule(7,
-                "Password must be of minimum length of 7.");
+        passwordConfig.setPasswordLength(7);
+        passwordConfig.setPasswordLengthMessage("Password must be of minimum length of");
+        minLengthRule.setPasswordConfig(passwordConfig);
 
         unit.setPasswordRules(Arrays.asList(new PasswordShouldNotContainUserId(), lowercaseCharRule, uppercaseCharRule, digitRule,
                 specialCharRule, minLengthRule));
@@ -87,7 +89,7 @@ public class PasswordValidationServiceTest
         List<String> errorMessages = unit.validate("ann-acm", "Ac3$");
 
         assertTrue(errorMessages.size() == 1);
-        assertEquals("Password must be of minimum length of 7.", errorMessages.get(0));
+        assertEquals("Password must be of minimum length of 7", errorMessages.get(0));
     }
 
     @Test

@@ -144,4 +144,21 @@ public class PersonAssociationDao extends AcmAbstractDao<PersonAssociation>
         entityManager.remove(personAssociationToBeDeleted);
 
     }
+
+    public List<Long> findParentIdByPersonId(String parentType, Long personId)
+    {
+
+        Query personInAssociation = getEntityManager().createQuery(
+                "SELECT personAssociation.parentId " + "FROM PersonAssociation personAssociation " +
+                        "WHERE personAssociation.parentType = :parentType " +
+                        "AND personAssociation.person.id = :personId");
+
+        personInAssociation.setParameter("parentType", parentType.toUpperCase());
+        personInAssociation.setParameter("personId", personId);
+
+        List<Long> retrival = personInAssociation.getResultList();
+
+        return retrival;
+
+    }
 }

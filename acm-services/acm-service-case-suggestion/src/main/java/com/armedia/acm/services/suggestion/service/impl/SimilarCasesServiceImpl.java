@@ -101,7 +101,7 @@ public class SimilarCasesServiceImpl implements SimilarCasesService
             String query;
             if (isPortal)
             {
-                query = String.format("%s AND object_type_s:CASE_FILE AND request_status_lcs:Released", words.toString());
+                query = String.format("%s AND object_type_s:CASE_FILE AND queue_name_s:Release", words.toString());
             }
             else
             {
@@ -220,7 +220,7 @@ public class SimilarCasesServiceImpl implements SimilarCasesService
 
                     if (isPortal)
                     {
-                        caseQuery = String.format("object_type_s:CASE_FILE AND request_status_lcs:Released AND name:\"%s\"",
+                        caseQuery = String.format("object_type_s:CASE_FILE AND queue_name_s:Release AND name:\"%s\"",
                                 sc.getCaseNumber());
                     }
                     else
