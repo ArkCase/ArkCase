@@ -64,13 +64,20 @@ public class FOIAPortalPersonToSolrTransformer extends FOIAPersonToSolrTransform
             if (solr != null)
             {
                 solr.setObject_sub_type_s("PORTAL_FOIA_PERSON");
-                if(personIn.getDefaultEmail() != null)
+                if (personIn.getDefaultEmail() != null)
                 {
                     solr.setAdditionalProperty("default_email_lcs", personIn.getDefaultEmail().getValue());
                 }
                 else
                 {
-                    solr.setAdditionalProperty("default_email_lcs", personIn.getContactMethods().get(2).getValue());
+                    try
+                    {
+                        solr.setAdditionalProperty("default_email_lcs", personIn.getContactMethods().get(2).getValue());
+                    }
+                    catch (IndexOutOfBoundsException e)
+                    {
+                        throw new IndexOutOfBoundsException("Cannot access email contact method");
+                    }
                 }
             }
 
@@ -96,13 +103,20 @@ public class FOIAPortalPersonToSolrTransformer extends FOIAPersonToSolrTransform
             if (solr != null)
             {
                 solr.getAdditionalProperties().put("object_sub_type_s", "PORTAL_FOIA_PERSON");
-                if(personIn.getDefaultEmail() != null)
+                if (personIn.getDefaultEmail() != null)
                 {
                     solr.setAdditionalProperty("default_email_lcs", personIn.getDefaultEmail().getValue());
                 }
                 else
                 {
-                    solr.setAdditionalProperty("default_email_lcs", personIn.getContactMethods().get(2).getValue());
+                    try
+                    {
+                        solr.setAdditionalProperty("default_email_lcs", personIn.getContactMethods().get(2).getValue());
+                    }
+                    catch (IndexOutOfBoundsException e)
+                    {
+                        throw new IndexOutOfBoundsException("Cannot access email contact method");
+                    }
                 }
             }
 

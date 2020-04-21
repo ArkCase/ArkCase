@@ -40,7 +40,7 @@ angular.module('admin').factory('Admin.PortalConfigurationService', [ '$http', f
     var getPortalUsers = function () {
         return $http({
             method: 'GET',
-            url: 'api/latest/service/portalgateway/admin/portal/users'
+            url: 'api/latest/service/portalgateway/admin/portals/users'
         });
     };
 
