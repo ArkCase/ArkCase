@@ -130,18 +130,18 @@ public class ArkCasePortalAdminAPIController
         return ResponseEntity.status(exceptionMapper.getStatusCode()).body(errorDetails);
     }
 
-    @RequestMapping(value = "/portal/users", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/portals/users", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String listPortalUsers(Authentication auth, @RequestParam(value = "start", required = false, defaultValue = "0") int start,
             @RequestParam(value = "n", required = false, defaultValue = "10") int n,
-            @RequestParam(value = "s", required = false, defaultValue = "ASC") String s) throws AcmObjectNotFoundException
+            @RequestParam(value = "s", required = false, defaultValue = "id ASC") String s) throws AcmObjectNotFoundException
     {
 
         String query = String.format("object_type_s:PERSON AND object_sub_type_s:PORTAL_FOIA_PERSON");
 
         try
         {
-            String solrResponse = executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, start, n, "");
+            String solrResponse = executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, start, n, s);
             return solrResponse;
 
         }
