@@ -111,6 +111,13 @@
         <property name="activitiTaskDao" ref="acmTaskDao"/>
     </bean>
 
+    <bean id="uploadFileToTaskListener" class="com.armedia.acm.plugins.task.service.UploadFileToTaskListener">
+        <property name="activitiTaskDao" ref="acmTaskDao"/>
+        <property name="acmFolderDao" ref="acmFolderDao"/>
+        <property name="acmTaskService" ref="acmTaskService"/>
+    </bean>
+
+
     <bean id="taskDataAccessUpdateLocator" class="com.armedia.acm.plugins.task.service.impl.TaskDataAccessUpdateLocator">
         <property name="taskDao" ref="acmTaskDao"/>
     </bean>
