@@ -76,7 +76,7 @@ public class FOIAPortalPersonToSolrTransformer extends FOIAPersonToSolrTransform
                     }
                     catch (IndexOutOfBoundsException e)
                     {
-                        throw new IndexOutOfBoundsException("Cannot access email contact method");
+                        log.debug("Cannot access email contact method");
                     }
                 }
             }
@@ -115,7 +115,7 @@ public class FOIAPortalPersonToSolrTransformer extends FOIAPersonToSolrTransform
                     }
                     catch (IndexOutOfBoundsException e)
                     {
-                        throw new IndexOutOfBoundsException("Cannot access email contact method");
+                        log.debug("Cannot access email contact method");
                     }
                 }
             }
