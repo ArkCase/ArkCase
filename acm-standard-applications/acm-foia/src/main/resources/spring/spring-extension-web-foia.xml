@@ -4,10 +4,8 @@
              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <beans:beans profile="extension-foia">
-        <beans:bean id="exemptionCodesAPIController" class="gov.foia.web.api.ExemptionCodesAPIController">
-            <beans:property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
-            <beans:property name="userTrackerService" ref="userTrackerService"/>
-            <beans:property name="foiaFileService" ref="foiaFileService"/>
+        <beans:bean id="foiaExemptionCodeAPIController" class="gov.foia.web.api.FOIAExemptionCodeAPIController">
+            <beans:property name="foiaExemptionService" ref="foiaExemptionService"/>
         </beans:bean>
 
         <beans:bean id="printDocumentsAPIController" class="gov.foia.web.api.PrintDocumentsAPIController">

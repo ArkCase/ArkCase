@@ -28,6 +28,8 @@ package com.armedia.acm.plugins.task.web.api;
  */
 
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
+import com.armedia.acm.plugins.person.dao.PersonAssociationDao;
+import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.service.TaskDao;
@@ -43,8 +45,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpSession;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -53,6 +57,7 @@ public class ListTasksAPIController
 {
     private TaskDao taskDao;
     private TaskEventPublisher taskEventPublisher;
+    private PersonAssociationDao personAssociationDao;
 
     private Logger log = LogManager.getLogger(getClass());
 
@@ -92,6 +97,38 @@ public class ListTasksAPIController
 
     }
 
+    @RequestMapping(value = "/forPerson/{personId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<AcmTask> tasksForUser(
+            @PathVariable("personId") Long personId,
+            Authentication authentication,
+            HttpSession session) throws AcmListObjectsFailedException {
+
+        if ((personId != null))
+        {
+            try
+            {
+                String parentType = "TASK";
+                List<Long> taskIds = getPersonAssociationDao().findParentIdByPersonId(parentType, personId);
+                log.debug("personList size " + taskIds.size());
+
+                List<AcmTask> taskList = new ArrayList<>();
+                for (Long taskId : taskIds) {
+                    taskList.add(getTaskDao().findById(taskId));
+                }
+                return taskList;
+            }
+            catch (PersistenceException e)
+            {
+                throw new AcmListObjectsFailedException("p", e.getMessage(), e);
+            }
+
+        }
+
+        throw new AcmListObjectsFailedException("wrong input", "patenType or parentId are: ", null);
+    }
+
+
     public TaskDao getTaskDao()
     {
         return taskDao;
@@ -110,5 +147,15 @@ public class ListTasksAPIController
     public void setTaskEventPublisher(TaskEventPublisher taskEventPublisher)
     {
         this.taskEventPublisher = taskEventPublisher;
+    }
+
+    public PersonAssociationDao getPersonAssociationDao()
+    {
+        return personAssociationDao;
+    }
+
+    public void setPersonAssociationDao(PersonAssociationDao personAssociationDao)
+    {
+        this.personAssociationDao = personAssociationDao;
     }
 }

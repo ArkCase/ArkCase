@@ -6,22 +6,22 @@ package com.armedia.acm.services.users.service.ldap;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
@@ -30,7 +30,6 @@ package com.armedia.acm.services.users.service.ldap;
 import com.armedia.acm.data.AcmServiceLdapSyncEvent;
 import com.armedia.acm.data.AcmServiceLdapSyncResult;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
-import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.quartz.scheduler.AcmSchedulerService;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapDao;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapUserDao;
@@ -38,8 +37,8 @@ import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.LdapGroup;
 import com.armedia.acm.services.users.model.ldap.LdapUser;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.ldap.core.LdapTemplate;
@@ -77,8 +76,6 @@ public class LdapSyncService implements ApplicationEventPublisherAware
 {
     private final Logger log = LogManager.getLogger(getClass());
     private SpringLdapDao ldapDao;
-    private AcmLdapSyncConfig ldapSyncConfig;
-    private boolean syncEnabled = true;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private SpringLdapUserDao springLdapUserDao;
     private LdapSyncProcessor ldapSyncProcessor;
@@ -87,63 +84,63 @@ public class LdapSyncService implements ApplicationEventPublisherAware
 
     // this method is used by scheduled jobs in Spring beans loaded dynamically from the ACM configuration folder
     // ($HOME/.acm).
-    public void ldapSync()
+    public void ldapSync(AcmLdapSyncConfig ldapSyncConfig)
     {
-        if (!isSyncEnabled())
+        if (!ldapSyncConfig.getSyncEnabled())
         {
             log.debug("Sync is disabled - stopping now.");
             return;
         }
 
-        log.info("Starting full sync of directory: [{}]; ldap URL: [{}]", getLdapSyncConfig().getDirectoryName(),
-                getLdapSyncConfig().getLdapUrl());
+        log.info("Starting full sync of directory: [{}]; ldap URL: [{}]", ldapSyncConfig.getDirectoryName(),
+                ldapSyncConfig.getLdapUrl());
 
-        getAuditPropertyEntityAdapter().setUserId(getLdapSyncConfig().getAuditUserId());
+        getAuditPropertyEntityAdapter().setUserId(ldapSyncConfig.getAuditUserId());
 
         // all the ldap work first, then all the database work; because the ldap queries could be very time consuming.
         // If we opened up a database transaction, then spend a minute or so querying LDAP, the database transaction
         // could time out. So we run all the LDAP queries first, then do all the database operations all at once.
-        LdapTemplate template = getLdapDao().buildLdapTemplate(getLdapSyncConfig());
-        List<LdapUser> ldapUsers = getLdapDao().findUsersPaged(template, getLdapSyncConfig(), Optional.empty());
-        List<LdapGroup> ldapGroups = getLdapDao().findGroupsPaged(template, getLdapSyncConfig(), Optional.empty());
+        LdapTemplate template = getLdapDao().buildLdapTemplate(ldapSyncConfig);
+        List<LdapUser> ldapUsers = getLdapDao().findUsersPaged(template, ldapSyncConfig, Optional.empty());
+        List<LdapGroup> ldapGroups = getLdapDao().findGroupsPaged(template, ldapSyncConfig, Optional.empty());
 
         ldapSyncProcessor.sync(ldapUsers, ldapGroups, ldapSyncConfig, true);
     }
 
     // this method is used by scheduled jobs in Spring beans loaded dynamically from the ACM configuration folder
     // ($HOME/.acm).
-    public void ldapPartialSync(Date lastRun)
+    public void ldapPartialSync(Date lastRun, AcmLdapSyncConfig ldapSyncConfig)
     {
-        if (!isSyncEnabled())
+        if (!ldapSyncConfig.getSyncEnabled())
         {
             log.debug("Partial sync is disabled - stopping now.");
             return;
         }
 
-        getAuditPropertyEntityAdapter().setUserId(getLdapSyncConfig().getAuditUserId());
+        getAuditPropertyEntityAdapter().setUserId(ldapSyncConfig.getAuditUserId());
 
         Optional<String> lastRunDate = lastRun == null ? Optional.empty()
                 : Optional.of(DateTimeFormatter.ISO_INSTANT.format(lastRun.toInstant()));
 
         log.info("Starting {} sync of directory: [{}]; ldap URL: [{}]", lastRunDate.map(it -> "partial").orElse("full"),
-                getLdapSyncConfig().getDirectoryName(),
-                getLdapSyncConfig().getLdapUrl());
+                ldapSyncConfig.getDirectoryName(),
+                ldapSyncConfig.getLdapUrl());
 
-        LdapTemplate template = getLdapDao().buildLdapTemplate(getLdapSyncConfig());
+        LdapTemplate template = getLdapDao().buildLdapTemplate(ldapSyncConfig);
 
         // only changed users are retrieved
-        List<LdapUser> ldapUsers = getLdapDao().findUsersPaged(template, getLdapSyncConfig(), lastRunDate);
-        List<LdapGroup> ldapGroups = getLdapDao().findGroupsPaged(template, getLdapSyncConfig(), Optional.empty());
+        List<LdapUser> ldapUsers = getLdapDao().findUsersPaged(template, ldapSyncConfig, lastRunDate);
+        List<LdapGroup> ldapGroups = getLdapDao().findGroupsPaged(template, ldapSyncConfig, Optional.empty());
 
-        getLdapSyncProcessor().sync(ldapUsers, ldapGroups, getLdapSyncConfig(), !lastRunDate.isPresent());
+        getLdapSyncProcessor().sync(ldapUsers, ldapGroups, ldapSyncConfig, !lastRunDate.isPresent());
     }
 
     @Async
-    public void initiateSync(String principal, boolean fullSync)
+    public void initiateSync(String principal, boolean fullSync, AcmLdapSyncConfig ldapSyncConfig)
     {
         String syncType = fullSync ? "Full" : "Partial";
 
-        if (!isSyncEnabled())
+        if (!ldapSyncConfig.getSyncEnabled())
         {
             log.debug("{} sync is disabled - stopping now.", syncType);
             AcmServiceLdapSyncResult ldapSyncResult = new AcmServiceLdapSyncResult();
@@ -160,12 +157,12 @@ public class LdapSyncService implements ApplicationEventPublisherAware
         {
             if (fullSync)
             {
-                ldapSync();
+                ldapSync(ldapSyncConfig);
             }
             else
             {
                 ldapPartialSync(schedulerService.getTriggerPreviousFireTime(String.format("%s_ldapPartialSyncJobTrigger",
-                        getLdapSyncConfig().getDirectoryName())));
+                        ldapSyncConfig.getDirectoryName())), ldapSyncConfig);
             }
 
         }
@@ -189,19 +186,19 @@ public class LdapSyncService implements ApplicationEventPublisherAware
      * @param username
      *            - username of the user
      */
-    public LdapUser ldapUserSync(String username)
+    public LdapUser ldapUserSync(String username, AcmLdapSyncConfig ldapSyncConfig)
     {
-        getAuditPropertyEntityAdapter().setUserId(getLdapSyncConfig().getAuditUserId());
-        LdapTemplate template = getLdapDao().buildLdapTemplate(getLdapSyncConfig());
+        getAuditPropertyEntityAdapter().setUserId(ldapSyncConfig.getAuditUserId());
+        LdapTemplate template = getLdapDao().buildLdapTemplate(ldapSyncConfig);
 
-        log.info("Starting sync user [{}] from ldap [{}]", username, getLdapSyncConfig().getLdapUrl());
+        log.info("Starting sync user [{}] from ldap [{}]", username, ldapSyncConfig.getLdapUrl());
 
-        LdapUser user = getSpringLdapUserDao().findUser(username, template, getLdapSyncConfig(),
-                getLdapSyncConfig().getUserSyncAttributes());
+        LdapUser user = getSpringLdapUserDao().findUser(username, template, ldapSyncConfig,
+                ldapSyncConfig.getUserSyncAttributes());
         List<LdapUser> ldapUsers = Arrays.asList(user);
-        List<LdapGroup> ldapGroups = getLdapDao().findGroupsPaged(template, getLdapSyncConfig(), Optional.ofNullable(null));
+        List<LdapGroup> ldapGroups = getLdapDao().findGroupsPaged(template, ldapSyncConfig, Optional.ofNullable(null));
 
-        ldapSyncProcessor.sync(ldapUsers, ldapGroups, getLdapSyncConfig(), false);
+        ldapSyncProcessor.sync(ldapUsers, ldapGroups, ldapSyncConfig, false);
         return user;
     }
 
@@ -211,18 +208,18 @@ public class LdapSyncService implements ApplicationEventPublisherAware
      * @param dn
      *            - distinguished name of the user
      */
-    public LdapUser syncUserByDn(String dn)
+    public LdapUser syncUserByDn(String dn, AcmLdapSyncConfig ldapSyncConfig)
     {
-        getAuditPropertyEntityAdapter().setUserId(getLdapSyncConfig().getAuditUserId());
-        LdapTemplate template = getLdapDao().buildLdapTemplate(getLdapSyncConfig());
+        getAuditPropertyEntityAdapter().setUserId(ldapSyncConfig.getAuditUserId());
+        LdapTemplate template = getLdapDao().buildLdapTemplate(ldapSyncConfig);
 
-        log.info("Starting sync user with DN: [{}] from ldap [{}]", dn, getLdapSyncConfig().getLdapUrl());
+        log.info("Starting sync user with DN: [{}] from ldap [{}]", dn, ldapSyncConfig.getLdapUrl());
 
-        LdapUser user = getSpringLdapUserDao().findUserByLookup(dn, template, getLdapSyncConfig());
+        LdapUser user = getSpringLdapUserDao().findUserByLookup(dn, template, ldapSyncConfig);
         List<LdapUser> ldapUsers = Arrays.asList(user);
-        List<LdapGroup> ldapGroups = getLdapDao().findGroupsPaged(template, getLdapSyncConfig(), Optional.empty());
+        List<LdapGroup> ldapGroups = getLdapDao().findGroupsPaged(template, ldapSyncConfig, Optional.empty());
 
-        ldapSyncProcessor.sync(ldapUsers, ldapGroups, getLdapSyncConfig(), false);
+        ldapSyncProcessor.sync(ldapUsers, ldapGroups, ldapSyncConfig, false);
         return user;
     }
 
@@ -234,26 +231,6 @@ public class LdapSyncService implements ApplicationEventPublisherAware
     public void setLdapDao(SpringLdapDao ldapDao)
     {
         this.ldapDao = ldapDao;
-    }
-
-    public AcmLdapSyncConfig getLdapSyncConfig()
-    {
-        return ldapSyncConfig;
-    }
-
-    public void setLdapSyncConfig(AcmLdapSyncConfig ldapSyncConfig)
-    {
-        this.ldapSyncConfig = ldapSyncConfig;
-    }
-
-    public boolean isSyncEnabled()
-    {
-        return syncEnabled;
-    }
-
-    public void setSyncEnabled(boolean syncEnabled)
-    {
-        this.syncEnabled = syncEnabled;
     }
 
     public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()

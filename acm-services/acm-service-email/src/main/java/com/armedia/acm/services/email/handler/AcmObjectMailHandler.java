@@ -31,6 +31,7 @@ import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmNameDao;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
+import com.armedia.acm.email.model.EmailReceiverConfig;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
@@ -50,11 +51,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.mail.Address;
 import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Part;
+import javax.mail.internet.InternetAddress;
 import javax.persistence.EntityNotFoundException;
 
 import java.io.File;
@@ -88,6 +91,7 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private ApplicationEventPublisher eventPublisher;
     private EcmFileDao ecmFileDao;
+    private EmailReceiverConfig emailReceiverConfig;
 
     private String objectIdRegexPattern;
     private String mailDirectory;
@@ -131,10 +135,17 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
 
+        
+        String emailSender = extractEmailAddressFromMessage(message);
+        String fileAndFolderName = makeFileOrFolderName(message, emailSender);
+        
         String tempDir = System.getProperty("java.io.tmpdir");
-        String messageFileName = System.currentTimeMillis() + "_" + entityId + ".eml";
+        String messageFileName = fileAndFolderName + ".eml";
         File messageFile = new File(tempDir + File.separator + messageFileName);
+
+        AcmFolder emailReceivedFolder = null;
         Exception exception = null;
+        EcmFile mailFile = null;
 
         try
         {
@@ -144,11 +155,12 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
             }
 
             AcmFolder folder = acmFolderService.addNewFolderByPath(entity.getObjectType(), entity.getId(), mailDirectory);
+            emailReceivedFolder = acmFolderService.addNewFolder(folder.getId(), fileAndFolderName);
             try (InputStream is = new FileInputStream(messageFile))
             {
                 Authentication auth = new UsernamePasswordAuthenticationToken(userId, "");
-                ecmFileService.upload(messageFileName, "mail", "Document", is, "message/rfc822", messageFileName, auth,
-                        folder.getCmisFolderId(), entity.getObjectType(), entity.getId());
+                mailFile = ecmFileService.upload(messageFileName, "mail", "Document", is, "message/rfc822", messageFileName, auth,
+                        emailReceivedFolder.getCmisFolderId(), entity.getObjectType(), entity.getId());
 
             }
 
@@ -161,10 +173,10 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
 
         if (message.getContent() instanceof Multipart)
         {
-            uploadAttachments(message, entity, userId);
+            uploadAttachments(message, entity, userId, emailReceivedFolder);
         }
 
-        SmtpEmailReceivedEvent event = new SmtpEmailReceivedEvent(message, userId, entity.getId(), entity.getObjectType(),
+        SmtpEmailReceivedEvent event = new SmtpEmailReceivedEvent(emailSender, userId, mailFile.getId(), mailFile.getObjectType(), entity.getId(), entity.getObjectType(),
                 AuthenticationUtils.getUserIpAddress());
         boolean success = (exception == null);
         event.setSucceeded(success);
@@ -196,9 +208,9 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
         return result;
     }
 
-    public void uploadAttachments(Message message, AcmObject entity, String userId)
+    public void uploadAttachments(Message message, AcmObject entity, String userId, AcmFolder emailReceivedFolder)
     {
-        if (message != null && entity != null)
+        if (message != null && entity != null && emailReceiverConfig.getEnableBurstingAttachments())
         {
             try
             {
@@ -215,15 +227,14 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
 
                     try
                     {
-                        AcmContainerEntity containerEntity = (AcmContainerEntity) entity;
-                        AcmFolder folder = containerEntity.getContainer().getAttachmentFolder();
+                        
                         try (InputStream is = bodyPart.getInputStream())
                         {
-                            bodyPart.setFileName(checkDuplicateFileName(bodyPart.getFileName(),folder.getId()));
+                            bodyPart.setFileName(checkDuplicateFileName(bodyPart.getFileName(),emailReceivedFolder.getId()));
                             Authentication auth = new UsernamePasswordAuthenticationToken(userId, "");
                             getEcmFileService().upload(bodyPart.getFileName(), "attachment", "Document", is, bodyPart.getContentType(),
                                     bodyPart.getFileName(), auth,
-                                    folder.getCmisFolderId(), entity.getObjectType(), entity.getId());
+                                    emailReceivedFolder.getCmisFolderId(), entity.getObjectType(), entity.getId());
 
                         }
 
@@ -257,6 +268,22 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
             newFileName = newFileName + "-" + timestampName;
         }
         return newFileName;
+    }
+    
+    public String makeFileOrFolderName(Message message, String emailSender) throws MessagingException
+    {
+        ZonedDateTime date = ZonedDateTime.now(ZoneOffset.UTC);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        String currentDate = formatter.format(date);
+        String fileAndFolderName = emailSender + "-" + currentDate + "-" + message.getSubject().replaceAll("\\W+", "");
+        return fileAndFolderName;
+    }
+    
+    public String extractEmailAddressFromMessage(Message message) throws MessagingException
+    {
+        Address[] froms = message.getFrom();
+        String emailSender = froms == null ? "" : ((InternetAddress) froms[0]).getAddress();
+        return emailSender;
     }
 
     public void setObjectIdRegexPattern(String objectIdRegexPattern)
@@ -332,5 +359,15 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
     public void setEcmFileDao(EcmFileDao ecmFileDao) 
     {
         this.ecmFileDao = ecmFileDao;
+    }
+
+    public EmailReceiverConfig getEmailReceiverConfig() 
+    {
+        return emailReceiverConfig;
+    }
+
+    public void setEmailReceiverConfig(EmailReceiverConfig emailReceiverConfig) 
+    {
+        this.emailReceiverConfig = emailReceiverConfig;
     }
 }

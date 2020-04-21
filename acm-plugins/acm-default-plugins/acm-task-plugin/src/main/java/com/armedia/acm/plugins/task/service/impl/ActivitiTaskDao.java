@@ -205,8 +205,12 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
 
     @Override
     @Transactional
-    public AcmTask createAdHocTask(AcmTask in) throws AcmTaskException, AcmUserActionFailedException, AcmCreateObjectFailedException {
+    public AcmTask createAdHocTask(AcmTask in) throws AcmTaskException, AcmUserActionFailedException, AcmCreateObjectFailedException
+    {
         Task activitiTask = getActivitiTaskService().newTask();
+
+        // This could set assignee and owning group if not specified earlier
+        getTaskBusinessRule().applyRules(in);
 
         AcmTask out = updateExistingActivitiTask(in, activitiTask);
         if (out.getStatus().equalsIgnoreCase(TaskConstants.STATE_CLOSED))
@@ -274,7 +278,8 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
             {
                 for (EcmFile file : in.getDocumentsToReview())
                 {
-                    getActivitiTaskService().setVariableLocal(activitiTask.getId(), TaskConstants.VARIABLE_NAME_PDF_RENDITION_ID, file.getId().toString());
+                    getActivitiTaskService().setVariableLocal(activitiTask.getId(), TaskConstants.VARIABLE_NAME_PDF_RENDITION_ID,
+                            file.getId().toString());
                 }
 
             }
@@ -302,6 +307,7 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
                     in.getParentObjectName());
             getActivitiTaskService().setVariableLocal(activitiTask.getId(), TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TITLE,
                     in.getParentObjectTitle());
+            getActivitiTaskService().setVariableLocal(activitiTask.getId(), TaskConstants.VARIABLE_NAME_TASK_TYPE, in.getType());
 
             getActivitiTaskService().setVariableLocal(activitiTask.getId(), TaskConstants.VARIABLE_NAME_REWORK_INSTRUCTIONS,
                     in.getReworkInstructions());
@@ -388,8 +394,6 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
             AcmContainer container = null;
             try
             {
-                
-                
                 container = fileService.getOrCreateContainer(TaskConstants.OBJECT_TYPE, in.getId(),
                         EcmFileConstants.DEFAULT_CMIS_REPOSITORY_ID);
                 if(container.getAttachmentFolder().getParticipants().isEmpty()) 
@@ -1375,6 +1379,11 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
             String workflowRequestType = (String) taskLocal.get(TaskConstants.VARIABLE_NAME_REQUEST_TYPE);
             acmTask.setWorkflowRequestType(workflowRequestType);
         }
+        if (acmTask.getType() == null)
+        {
+            String taskType = (String) taskLocal.get(TaskConstants.VARIABLE_NAME_TASK_TYPE);
+            acmTask.setType(taskType);
+        }
         Date startDate = (Date) taskLocal.get(TaskConstants.VARIABLE_NAME_START_DATE);
         acmTask.setTaskStartDate(startDate);
 
@@ -1446,13 +1455,13 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
             {
                 acmTask.setReworkInstructions(reworkInstructions);
             }
-            
-            String docUnderReview = (String) localVariables.get(TaskConstants.VARIABLE_NAME_PDF_RENDITION_ID);
-            if (docUnderReview != null)
-            {
-                acmTask.setReviewDocumentPdfRenditionId(docUnderReview);    
-            }
 
+            if (localVariables.get(TaskConstants.VARIABLE_NAME_PDF_RENDITION_ID) != null)
+            {
+                String docUnderReview = null;
+                docUnderReview = String.valueOf(localVariables.get(TaskConstants.VARIABLE_NAME_PDF_RENDITION_ID));
+                acmTask.setReviewDocumentPdfRenditionId(docUnderReview);
+            }
         }
 
         // If start date is not provided, set start date as creation date

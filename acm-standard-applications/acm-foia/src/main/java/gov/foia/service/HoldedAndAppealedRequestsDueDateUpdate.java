@@ -34,7 +34,6 @@ import com.armedia.acm.data.AuditPropertyEntityAdapter;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -48,19 +47,18 @@ import gov.foia.model.FoiaConfig;
 public class HoldedAndAppealedRequestsDueDateUpdate
 {
 
-    private final List<String> STATUSES = Arrays.asList("APPEALED", "HOLD");
     private FOIARequestDao requestDao;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private FoiaConfig foiaConfig;
 
     public void updateDueDate()
     {
-        if (getFoiaConfig().getHoldedAndAppealedRequestsDueDateUpdateEnabled())
+        if (!getFoiaConfig().getHoldedAndAppealedRequestsDueDateUpdateEnabled())
         {
             return;
         }
         auditPropertyEntityAdapter.setUserId("DUE_DATE_UPDATER");
-        List<FOIARequest> result = requestDao.getAllRequestsByStatus(STATUSES);
+        List<FOIARequest> result = requestDao.findAllHeldAndAppealedRequests();
         for (FOIARequest request : result)
         {
             Date dueDate = request.getDueDate();

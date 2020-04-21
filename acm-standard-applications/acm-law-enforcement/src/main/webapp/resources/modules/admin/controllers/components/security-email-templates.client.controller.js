@@ -142,7 +142,8 @@ angular.module('admin').controller('Admin.SecurityEmailTemplatesController',
                     pass_case: result.data["email.CASE_FILE.password"],
                     enableComplaint: result.data["email.create.complaint.enabled"],
                     user_complaint: result.data["email.COMPLAINT.user"].replace('%40', '@'),
-                    pass_complaint: result.data["email.COMPLAINT.password"]
+                    pass_complaint: result.data["email.COMPLAINT.password"],
+                    enableBurstingAttachments: result.data["email.enableBurstingAttachments"]
                 }
             });
 
@@ -153,7 +154,8 @@ angular.module('admin').controller('Admin.SecurityEmailTemplatesController',
                     "email.CASE_FILE.password": $scope.emailReceiverConfiguration.pass_case,
                     "email.create.complaint.enabled": $scope.emailReceiverConfiguration.enableComplaint,
                     "email.COMPLAINT.user": $scope.emailReceiverConfiguration.user_complaint.replace('@', '%40'),
-                    "email.COMPLAINT.password": $scope.emailReceiverConfiguration.pass_complaint
+                    "email.COMPLAINT.password": $scope.emailReceiverConfiguration.pass_complaint,
+                    "email.enableBurstingAttachments": $scope.emailReceiverConfiguration.enableBurstingAttachments
                 };
                 emailTemplatesService.saveEmailReceiverConfiguration(newEmailReceiverConfiguration).then(function(value) {
                     MessageService.succsessAction();

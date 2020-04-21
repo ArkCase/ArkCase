@@ -33,8 +33,8 @@ package gov.foia.listener;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.QueuedEvent;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationListener;
 
 import java.time.LocalDateTime;
@@ -56,17 +56,17 @@ public class FOIAQueuedEventListener implements ApplicationListener<QueuedEvent>
     public void onApplicationEvent(QueuedEvent event)
     {
         CaseFile cf = (CaseFile) event.getSource();
-        if ((cf.getStatus().equals("Released")))
+        if ((cf.getQueue().getName().equals("Release")))
         {
             try
             {
                 FOIARequest request = requestDao.find(cf.getId());
                 request.setReleasedDate(LocalDateTime.now());
-                log.info("Status of the Request has be changed to Released for object with objectId = [{}]", cf.getId());
+                log.info("Request has been released for object with objectId = [{}]", cf.getId());
             }
             catch (Exception e)
             {
-                log.warn("Status of the Request has not be changed to Released for object with objectId = [{}]", cf.getId(), e);
+                log.warn("Request has not been released for object with objectId = [{}]", cf.getId(), e);
             }
         }
     }

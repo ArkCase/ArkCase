@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm-standard-applications</artifactId>
         <groupId>com.armedia.acm</groupId>
-        <version>3.3.6</version>
+        <version>3.3.7</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -136,6 +136,11 @@
             <artifactId>acm-service-portal-gateway</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-users</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>commons-io</groupId>
@@ -180,6 +185,10 @@
             <artifactId>h2</artifactId>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-exemption</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
     </dependencies>
 </project>

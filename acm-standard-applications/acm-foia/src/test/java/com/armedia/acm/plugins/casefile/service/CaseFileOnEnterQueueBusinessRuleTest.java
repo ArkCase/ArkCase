@@ -34,20 +34,20 @@ import static org.junit.Assert.assertTrue;
 import com.armedia.acm.plugins.businessprocess.model.OnEnterQueueModel;
 import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.drools.decisiontable.InputType;
 import org.drools.decisiontable.SpreadsheetCompiler;
 import org.junit.Before;
 import org.junit.Test;
 import org.kie.api.io.ResourceType;
+import org.kie.api.runtime.StatelessKieSession;
 import org.kie.internal.builder.DecisionTableConfiguration;
 import org.kie.internal.builder.DecisionTableInputType;
 import org.kie.internal.builder.KnowledgeBuilder;
 import org.kie.internal.builder.KnowledgeBuilderError;
 import org.kie.internal.builder.KnowledgeBuilderFactory;
 import org.kie.internal.io.ResourceFactory;
-import org.kie.internal.runtime.StatelessKnowledgeSession;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
@@ -59,7 +59,7 @@ import gov.foia.model.FOIARequest;
 public class CaseFileOnEnterQueueBusinessRuleTest
 {
     private Logger log = LogManager.getLogger(getClass());
-    private StatelessKnowledgeSession workingMemory;
+    private StatelessKieSession workingMemory;
 
     @Before
     public void setUp() throws Exception
@@ -89,7 +89,7 @@ public class CaseFileOnEnterQueueBusinessRuleTest
             throw new RuntimeException("Could not build rules from " + xls.getFile().getAbsolutePath());
         }
 
-        workingMemory = kbuilder.newKnowledgeBase().newStatelessKnowledgeSession();
+        workingMemory = kbuilder.newKieBase().newStatelessKieSession();
 
         assertNotNull(workingMemory);
     }

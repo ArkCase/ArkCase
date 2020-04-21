@@ -2,6 +2,23 @@ include:
   - local: '.gitlab-ci-release.yml'
 
 variables:
+  # Deploy server with specific Arkcase version
+  # ============================================
+  # DEPLOY_SERVER: true
+  # ENVIRONMENT_NAME: Test FOIA
+  # ENVIRONMENT_URL: https://***REMOVED***/
+  # ARKCASE_VERSION: 3.3.6-RC1
+  # INVENTORY: 47
+  # TAGS: core,foia
+  
+  # Will have more variables to support extensions.
+  # TAGS can be 'core', 'core,foia' depending of the environment
+  # INVENTORY is the ID of the inventory in ***REMOVED***. Current inventory IDs are:
+  #   44 - dev.core
+  #   45 - dev.foia
+  #   46 - test.core
+  #   47 - test.foia
+
   GIT_SSL_NO_VERIFY: "true"
   GIT_STRATEGY: clone
 
@@ -9,10 +26,10 @@ image: arkcase-gitlab-ci:1.0.2
 
 stages:
   - build
-  - deploy
   - trigger
   - restart
   - release
+  - deploy
   - start_security_scan
   - security_scan_results
   
@@ -76,6 +93,64 @@ stages:
   only:
     - feature/*
 
+build_backend_develop:
+  extends: .build_backend_snapshot
+  only:
+    - develop
+  except:
+    changes:
+      #- .gitlab-ci.yaml
+
+.build_frontend_develop:
+  extends: .build_frontend_snapshot
+  only:
+    - develop
+  variables:
+    BUILD_CORE_ARTIFACTS_DIRECTORY: ../acm-standard-applications/acm-law-enforcement/src/main/webapp/build
+    BUILD_FOIA_ARTIFACTS_DIRECTORY: ../acm-standard-applications/acm-foia/src/main/resources/build
+  except:
+    changes:
+      #- .gitlab-ci.yaml
+
+deploy_server:
+  stage: deploy
+  only:
+    variables:
+      - $DEPLOY_SERVER
+  environment:
+    name: $ENVIRONMENT_NAME
+    url: $ENVIRONMENT_URL
+  script:
+    - 'curl -H "Content-Type: application/json" -X POST -s -u gitlabci:$GITLABCI_TOWER_PASSWORD -d ''{ "inventory": ''$INVENTORY'', "job_tags": "''$TAGS''", "extra_vars": "{\"arkcase_version\": \"''$ARKCASE_VERSION''\", \"arkcase_configuration_version\":\"''$ARKCASE_VERSION''\", \"arkcase_config_server_version\":\"''$ARKCASE_VERSION''\", \"snowbound_arkcase_version\":\"''$ARKCASE_VERSION''\"}"}'' -k https://***REMOVED***/api/v2/job_templates/129/launch/'
+
+deploy_backend_core_dev:
+  stage: deploy
+  only:
+    - develop
+  except:
+    changes:
+      - .gitlab-ci.yaml
+  environment:
+    name: Dev Core
+    url: https://***REMOVED***
+  script:
+    # Dev Core repository ID on ***REMOVED*** is 44
+    - 'curl -H "Content-Type: application/json" -X POST -s -u gitlabci:$GITLABCI_TOWER_PASSWORD -d ''{ "inventory": 44, "job_tags": "core", "extra_vars": "{\"arkcase_version\": \"\", \"arkcase_configuration_version\":\"\", \"arkcase_config_server_version\":\"\", \"snowbound_arkcase_version\":\"\"}"}'' -k https://***REMOVED***/api/v2/job_templates/129/launch/'
+
+deploy_backend_foia_dev:
+  stage: deploy
+  only:
+    - develop
+  except:
+    changes:
+      - .gitlab-ci.yaml
+  environment:
+    name: Dev FOIA
+    url: https://***REMOVED***
+  script:
+    # Dev Foia repository ID on ***REMOVED*** is 45
+    - 'curl -H "Content-Type: application/json" -X POST -s -u gitlabci:$GITLABCI_TOWER_PASSWORD -d ''{ "inventory": 45, "job_tags": "core,foia", "extra_vars": "{\"arkcase_version\": \"\", \"arkcase_configuration_version\":\"\", \"arkcase_config_server_version\":\"\", \"snowbound_arkcase_version\":\"\"}"}'' -k https://***REMOVED***/api/v2/job_templates/129/launch/'
+
 .deploy_backend:
   stage: deploy
   script:
@@ -96,82 +171,6 @@ stages:
     - ARKCASE_RESULT=$?
     - if [ "$ARKCASE_RESULT" != "0" ]; then echo "ArkCase war did not start on the remote host $CI_ENVIRONMENT_URL/"; fi
     - exit $ARKCASE_RESULT
-
-.deploy_frontend:
-  stage: deploy
-  script:
-    # download ui from Nexus
-    - mvn -B dependency:get -DremoteRepositories=http://***REMOVED***/repository/$ARKCASE_REPOSITORY -DgroupId=com.armedia.acm -DartifactId=$ARKCASE_UI_VARIANT -Dversion=$ARKCASE_VERSION -Dpackaging=zip -Dtransitive=false
-    - find ~/.m2/repository/com/armedia/acm -name _remote.repositories -exec rm -v {} \;
-    - mvn -B dependency:copy -Dartifact=com.armedia.acm:$ARKCASE_UI_VARIANT:$ARKCASE_VERSION:zip -DoutputDirectory=.
-    - mv ui-*.zip ui.zip
-    # copy artifacts to the environment
-    - export SSHPASS=$SSH_PASSWORD
-    - sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ui.zip $SSH_USER@$SERVER_IP:/home/$SSH_USER/
-    - sshpass -e ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $SSH_USER@$SERVER_IP "sudo cp /home/$SSH_USER/ui.zip ~$ARKCASE_SERVICE_USER_NAME/ ; sudo chown $ARKCASE_SERVICE_USER_NAME:$ARKCASE_SERVICE_USER_NAME ~$ARKCASE_SERVICE_USER_NAME/ui.zip"
-    # deploy files
-    - sshpass -e ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $SSH_USER@$SERVER_IP "sudo su -c \"bash ~$ARKCASE_SERVICE_USER_NAME/redeploy_acm_frontend.sh\" $ARKCASE_SERVICE_USER_NAME"
-
-build_backend_develop:
-  extends: .build_backend_snapshot
-  only:
-    - develop
-  except:
-    changes:
-      #- .gitlab-ci.yaml
-
-.build_frontend_develop:
-  extends: .build_frontend_snapshot
-  only:
-    - develop
-  variables:
-    BUILD_CORE_ARTIFACTS_DIRECTORY: ../acm-standard-applications/acm-law-enforcement/src/main/webapp/build
-    BUILD_FOIA_ARTIFACTS_DIRECTORY: ../acm-standard-applications/acm-foia/src/main/resources/build
-  except:
-    changes:
-      #- .gitlab-ci.yaml
-
-.deploy_server:
-  extends: .deploy_backend
-  only:
-    variables:
-      - $CI_PIPELINE_SOURCE == "web"
-      - $DEPLOY_SERVER
-  environment:
-    name: $ENVIRONMENT_NAME
-    url: $ENVIRONMENT_URL
-
-deploy_backend_core_dev:
-  stage: deploy
-  only:
-    - develop
-  except:
-    changes:
-      - .gitlab-ci.yaml
-  environment:
-    name: Dev Core
-    url: https://***REMOVED***
-  script:
-    - export SSHPASS=$ARKCASEMGMTSCV_PASSWORD
-    - export SSH_USER=***REMOVED***
-    - export SERVER_IP=10.60.24.39
-    - sshpass -e ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $SSH_USER@$SERVER_IP "cd /etc/arkcase-install/arkcase-ce/vagrant/provisioning ; sudo ansible-playbook --connection=local -i 'localhost,' -e sftp_arkcase_password=$ARKCASE_SFTP_PASSWORD -e sftp_pentaho_password=$PENTAHO_SFTP_PASSWORD -e @dev-core-facts.yml arkcase-upgrade.yml"
-
-deploy_backend_foia_dev:
-  stage: deploy
-  only:
-    - develop
-  except:
-    changes:
-      - .gitlab-ci.yaml
-  environment:
-    name: Dev FOIA
-    url: https://***REMOVED***
-  script:
-    - export SSHPASS=$ARKCASEMGMTSCV_PASSWORD
-    - export SSH_USER=***REMOVED***
-    - export SERVER_IP=10.60.24.41
-    - sshpass -e ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $SSH_USER@$SERVER_IP "cd /etc/arkcase-install/arkcase-ce/vagrant/provisioning ; sudo ansible-playbook --connection=local -i 'localhost,' -e sftp_arkcase_password=$ARKCASE_SFTP_PASSWORD -e sftp_pentaho_password=$PENTAHO_SFTP_PASSWORD -e @dev-foia-facts.yml arkcase-foia-upgrade.yml"
 
 deploy_backend_bcgeu_dev:
   extends: .deploy_backend
@@ -202,6 +201,21 @@ deploy_backend_bcgeu_dev:
    # Tokens can be found and created on gitlab -> project -> Settings -> CI/CD -> Pipeline triggers
    - curl -k -X POST -F token=***REMOVED*** -F ref=webpack https://***REMOVED***/api/v4/projects/381/trigger/pipeline
    #- curl -k -X POST -F token=***REMOVED*** -F ref=develop https://***REMOVED***/api/v4/projects/381/trigger/pipeline
+
+.deploy_frontend:
+  stage: deploy
+  script:
+    # download ui from Nexus
+    - mvn -B dependency:get -DremoteRepositories=http://***REMOVED***/repository/$ARKCASE_REPOSITORY -DgroupId=com.armedia.acm -DartifactId=$ARKCASE_UI_VARIANT -Dversion=$ARKCASE_VERSION -Dpackaging=zip -Dtransitive=false
+    - find ~/.m2/repository/com/armedia/acm -name _remote.repositories -exec rm -v {} \;
+    - mvn -B dependency:copy -Dartifact=com.armedia.acm:$ARKCASE_UI_VARIANT:$ARKCASE_VERSION:zip -DoutputDirectory=.
+    - mv ui-*.zip ui.zip
+    # copy artifacts to the environment
+    - export SSHPASS=$SSH_PASSWORD
+    - sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ui.zip $SSH_USER@$SERVER_IP:/home/$SSH_USER/
+    - sshpass -e ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $SSH_USER@$SERVER_IP "sudo cp /home/$SSH_USER/ui.zip ~$ARKCASE_SERVICE_USER_NAME/ ; sudo chown $ARKCASE_SERVICE_USER_NAME:$ARKCASE_SERVICE_USER_NAME ~$ARKCASE_SERVICE_USER_NAME/ui.zip"
+    # deploy files
+    - sshpass -e ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $SSH_USER@$SERVER_IP "sudo su -c \"bash ~$ARKCASE_SERVICE_USER_NAME/redeploy_acm_frontend.sh\" $ARKCASE_SERVICE_USER_NAME"
             
 .deploy_frontend_core_dev:
   extends: .deploy_frontend
@@ -220,25 +234,6 @@ deploy_backend_bcgeu_dev:
     ARKCASE_VERSION: 3.3.4-SNAPSHOT
     ARKCASE_REPOSITORY: arkcase.snapshot
     ARKCASE_UI_VARIANT: ui-core
-    ARKCASE_SERVICE_USER_NAME: arkuser
-    
-.deploy_foia_dev:
-  extends: .deploy_backend
-  only:
-    - develop
-  except:
-    changes:
-      - .gitlab-ci.yaml
-  environment:
-    name: Dev FOIA
-    url: https://***REMOVED***
-  variables:
-    SERVER_IP: 10.21.10.25
-    SSH_USER: ***REMOVED***
-    SSH_PASSWORD: $ARKCASEMGMTSCV_PASSWORD
-    ARKCASE_VERSION: 3.3.4-SNAPSHOT
-    ARKCASE_REPOSITORY: arkcase.snapshot
-    ARKCASE_UI_VARIANT: ui-foia
     ARKCASE_SERVICE_USER_NAME: arkuser
 
 .start_security_scan:
@@ -267,7 +262,7 @@ deploy_backend_bcgeu_dev:
 start_security_scan_arkcase_snapshot:
   extends: .start_security_scan
   variables:
-    ARKCASE_VERSION: 3.3.4-SNAPSHOT
+    ARKCASE_VERSION: 3.3.7-SNAPSHOT
     ARKCASE_REPOSITORY: arkcase.snapshot
 
 security_scan_results:

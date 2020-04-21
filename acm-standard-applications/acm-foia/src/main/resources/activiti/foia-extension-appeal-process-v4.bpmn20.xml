@@ -1,0 +1,103 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+    xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:activiti="http://activiti.org/bpmn"
+    xmlns:modeler="http://activiti.com/modeler" targetNamespace="http://www.activiti.org/processdef" exporter="Camunda Modeler"
+    exporterVersion="1.6.0" modeler:version="1.0ev" modeler:exportDateTime="20160818194659" modeler:modelId="981819"
+    modeler:modelVersion="1" modeler:modelLastUpdated="1471546006248">
+    <process id="foia-extension-appeal-process" name="foia-extension-appeal-process" isExecutable="true">
+        <documentation>This business process runs when the FOIA request enters the Appeal queue.</documentation>
+        <startEvent id="startEvent1"/>
+        <sequenceFlow id="sid-2ECFBB0E-7B21-4B25-9FA3-6D8134E86DA4" sourceRef="startEvent1"
+                      targetRef="sid-E0905ADB-9340-49AC-ADA5-3AD0B417D585"/>
+        <serviceTask id="sid-E0905ADB-9340-49AC-ADA5-3AD0B417D585" name="Set FOIA Request status to Perfected"
+                     activiti:expression="#{changeObjectStatusService.changeIfNoPermanentStatusIsSet(OBJECT_ID, OBJECT_TYPE, 'Perfected', 'Closed')}"/>
+        <sequenceFlow id="sid-A1A80BC3-B3F3-472A-8187-6EF2428E1D51" sourceRef="sid-E0905ADB-9340-49AC-ADA5-3AD0B417D585"
+                      targetRef="sid-F88A33F4-A31E-43B6-A65C-0921762C023D"/>
+        <serviceTask id="sid-F88A33F4-A31E-43B6-A65C-0921762C023D" name="Place FOIA Request in Appeal queue"
+                     activiti:expression="#{queueCaseService.enqueue(OBJECT_ID, 'Appeal')}"/>
+        <endEvent id="sid-2158CAAD-78C1-465F-B109-70C2FCF1FF39">
+            <incoming>SequenceFlow_00mega1</incoming>
+        </endEvent>
+        <sequenceFlow id="sid-8D6D1E41-E4AD-429D-B18A-F449B0F2F214" sourceRef="sid-F88A33F4-A31E-43B6-A65C-0921762C023D"
+                      targetRef="sid-FDDF4E8E-EBFC-445C-B647-68CEC6E1315A"/>
+        <serviceTask id="sid-FDDF4E8E-EBFC-445C-B647-68CEC6E1315A" name="Generate Acknowledgement Letter"
+            activiti:expression="#{acknowledgementDocumentService.generateAndUpload(OBJECT_TYPE, OBJECT_ID)}"/>
+        <sequenceFlow id="sid-9CC4EEEB-90ED-4DEC-9FBC-0F27FC1CE629" sourceRef="sid-FDDF4E8E-EBFC-445C-B647-68CEC6E1315A"
+            targetRef="Task_0xao0ls"/>
+        <sequenceFlow id="SequenceFlow_00mega1" sourceRef="Task_0xao0ls" targetRef="sid-2158CAAD-78C1-465F-B109-70C2FCF1FF39"/>
+        <serviceTask id="Task_0xao0ls" name="Email Acknowledgement Letter"
+            activiti:expression="#{acknowledgementDocumentService.emailAcknowledgement(OBJECT_ID)}">
+            <incoming>sid-9CC4EEEB-90ED-4DEC-9FBC-0F27FC1CE629</incoming>
+            <outgoing>SequenceFlow_00mega1</outgoing>
+        </serviceTask>
+        <textAnnotation id="sid-A4DD8BA4-1458-4B2D-A55F-9098105D10A5">
+            <text><![CDATA[This process orchestrates all the actions needed when a FOIA request is entering the Appeal queue.
+Currently there are two such actions:
+
+1. Set the status to Perfected, if status is not Closed
+2. Set the queue name to 'Appeal'
+3. Generate an acknowledgement letter
+4. Email the acknowledgement letter]]></text>
+        </textAnnotation>
+    </process>
+    <bpmndi:BPMNDiagram id="BPMNDiagram_foia-extension-appeal-process">
+        <bpmndi:BPMNPlane id="BPMNPlane_foia-extension-appeal-process" bpmnElement="foia-extension-appeal-process">
+            <bpmndi:BPMNShape id="BPMNShape_startEvent1" bpmnElement="startEvent1">
+                <omgdc:Bounds x="100" y="163" width="30" height="30"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="BPMNShape_sid-E0905ADB-9340-49AC-ADA5-3AD0B417D585"
+                bpmnElement="sid-E0905ADB-9340-49AC-ADA5-3AD0B417D585">
+                <omgdc:Bounds x="219.75" y="138" width="100" height="80"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="BPMNShape_sid-F88A33F4-A31E-43B6-A65C-0921762C023D"
+                bpmnElement="sid-F88A33F4-A31E-43B6-A65C-0921762C023D">
+                <omgdc:Bounds x="384.75" y="138" width="100" height="80"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="BPMNShape_sid-2158CAAD-78C1-465F-B109-70C2FCF1FF39"
+                bpmnElement="sid-2158CAAD-78C1-465F-B109-70C2FCF1FF39">
+                <omgdc:Bounds x="867" y="164" width="28" height="28"/>
+                <bpmndi:BPMNLabel>
+                    <omgdc:Bounds x="881" y="192" width="0" height="0"/>
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="BPMNShape_sid-A4DD8BA4-1458-4B2D-A55F-9098105D10A5"
+                bpmnElement="sid-A4DD8BA4-1458-4B2D-A55F-9098105D10A5">
+                <omgdc:Bounds x="195" y="255" width="294" height="227"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="BPMNShape_sid-FDDF4E8E-EBFC-445C-B647-68CEC6E1315A"
+                bpmnElement="sid-FDDF4E8E-EBFC-445C-B647-68CEC6E1315A">
+                <omgdc:Bounds x="525" y="138" width="120" height="80"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge id="BPMNEdge_sid-8D6D1E41-E4AD-429D-B18A-F449B0F2F214" bpmnElement="sid-8D6D1E41-E4AD-429D-B18A-F449B0F2F214">
+                <omgdi:waypoint xsi:type="omgdc:Point" x="484.75" y="178"/>
+                <omgdi:waypoint xsi:type="omgdc:Point" x="525" y="178"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="BPMNEdge_sid-9CC4EEEB-90ED-4DEC-9FBC-0F27FC1CE629" bpmnElement="sid-9CC4EEEB-90ED-4DEC-9FBC-0F27FC1CE629">
+                <omgdi:waypoint xsi:type="omgdc:Point" x="645" y="178"/>
+                <omgdi:waypoint xsi:type="omgdc:Point" x="714" y="178"/>
+                <bpmndi:BPMNLabel>
+                    <omgdc:Bounds x="680" y="163" width="0" height="0"/>
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="BPMNEdge_sid-2ECFBB0E-7B21-4B25-9FA3-6D8134E86DA4" bpmnElement="sid-2ECFBB0E-7B21-4B25-9FA3-6D8134E86DA4">
+                <omgdi:waypoint xsi:type="omgdc:Point" x="130" y="178"/>
+                <omgdi:waypoint xsi:type="omgdc:Point" x="219.75" y="178"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="BPMNEdge_sid-A1A80BC3-B3F3-472A-8187-6EF2428E1D51" bpmnElement="sid-A1A80BC3-B3F3-472A-8187-6EF2428E1D51">
+                <omgdi:waypoint xsi:type="omgdc:Point" x="319.75" y="178"/>
+                <omgdi:waypoint xsi:type="omgdc:Point" x="384.75" y="178"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="SequenceFlow_00mega1_di" bpmnElement="SequenceFlow_00mega1">
+                <omgdi:waypoint xsi:type="omgdc:Point" x="814" y="178"/>
+                <omgdi:waypoint xsi:type="omgdc:Point" x="868" y="178"/>
+                <bpmndi:BPMNLabel>
+                    <omgdc:Bounds x="841" y="163" width="0" height="0"/>
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNShape id="ServiceTask_09gon1w_di" bpmnElement="Task_0xao0ls">
+                <omgdc:Bounds x="714" y="138" width="100" height="80"/>
+            </bpmndi:BPMNShape>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+</definitions>

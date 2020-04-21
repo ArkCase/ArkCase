@@ -91,6 +91,18 @@ public class DefaultPluggablePortalRequestService implements PortalRequestServic
         return getServiceProvider(requestType).getRequestStatus(portalId, portalUserId, requestId);
     }
 
+
+    /*
+     * (non-Javadoc)
+     * @see com.armedia.acm.portalgateway.service.PortalRequestService#submitInquiry(com.armedia.acm.portalgateway.web.api.PortalRequest)
+     */
+    @Override
+    public void submitInquiry(PortalRequest request) throws PortalRequestServiceException
+    {
+        log.debug("Submitting inquiry from portal with [{}] type.", request.getRequestType());
+        getServiceProvider(request.getRequestType()).submitInquiry(request);
+    }
+
     /*
      * (non-Javadoc)
      * @see com.armedia.acm.portalgateway.service.PortalRequestService#getExceptionMapper(com.armedia.acm.portalgateway.

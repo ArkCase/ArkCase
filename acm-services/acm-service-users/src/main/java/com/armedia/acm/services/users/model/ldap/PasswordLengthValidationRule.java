@@ -27,26 +27,26 @@ package com.armedia.acm.services.users.model.ldap;
  * #L%
  */
 
+import com.armedia.acm.services.users.model.PasswordConfig;
+
 public class PasswordLengthValidationRule implements PasswordValidationRule
 {
-    private final String message;
-    private final int minLength;
-
-    public PasswordLengthValidationRule(int minLength, String message)
-    {
-        this.minLength = minLength;
-        this.message = message;
-    }
+    private PasswordConfig passwordConfig;
 
     @Override
     public String runValidationAndGetMessage(String username, String password)
     {
-
-        return password.length() >= minLength ? null : message;
+        return password.length() >= passwordConfig.getPasswordLength() ? null
+                : passwordConfig.getPasswordLengthMessage() + " " + passwordConfig.getPasswordLength();
     }
 
     public int getMinLength()
     {
-        return minLength;
+        return passwordConfig.getPasswordLength();
+    }
+
+    public void setPasswordConfig(PasswordConfig passwordConfig)
+    {
+        this.passwordConfig = passwordConfig;
     }
 }

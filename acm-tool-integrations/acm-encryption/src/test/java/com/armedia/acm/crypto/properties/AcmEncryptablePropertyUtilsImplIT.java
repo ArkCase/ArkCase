@@ -27,8 +27,8 @@ package com.armedia.acm.crypto.properties;
  * #L%
  */
 
-import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
 import com.armedia.acm.crypto.AcmCryptoUtilsImpl;
+import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -59,7 +59,7 @@ public class AcmEncryptablePropertyUtilsImplIT
         encryptionProperties
                 .setEncryptedSymmetricKeyFilePath(System.getProperty("user.home") + "/.arkcase/acm/encryption/symmetricKey.encrypted");
         encryptionProperties.setKeystoreType("JKS");
-        encryptionProperties.setKeystorePath(System.getProperty("user.home") + "/.arkcase/acm/private/keystore.old");
+        encryptionProperties.setKeystorePath(System.getProperty("user.home") + "/.arkcase/acm/private/encryption-keystore");
         encryptionProperties.setKeystorePassword("password");
         encryptionProperties.setPrivateKeyAlias("armedia");
 
@@ -69,7 +69,7 @@ public class AcmEncryptablePropertyUtilsImplIT
     @Test
     public void decryptPassword() throws AcmEncryptionException
     {
-        String encryptedPassword = "ENC(Ughl/4isisjxLIQyQ4vv6201Twu/CzZwpQmi94qgC4jkO7s8+HbmjX9kh/aWZb6n)";
+        String encryptedPassword = "ENC(U2FsdGVkX18opRRmCattSZiUNjfr598Qq7P3DgZSwGw=)";
 
         String decryptedPassword = utils.decryptPropertyValue(encryptedPassword);
 
@@ -79,7 +79,7 @@ public class AcmEncryptablePropertyUtilsImplIT
     @Test
     public void encryptPassword() throws AcmEncryptionException
     {
-        String password = "@rM3diA$";
+        String password = "AcMd3v$";
 
         String encryptedPassword = utils.encryptPropertyValue(password);
 
