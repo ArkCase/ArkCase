@@ -37,11 +37,19 @@ angular.module('admin').factory('Admin.PortalConfigurationService', [ '$http', f
         })
     };
 
+    var getPortalUsers = function () {
+        return $http({
+            method: 'GET',
+            url: 'api/latest/service/portalgateway/admin/portal/users'
+        });
+    };
+
     return {
         getPortals: getPortals,
         savePortal: savePortal,
         updatePortal: updatePortal,
-        deletePortal: deletePortal
+        deletePortal: deletePortal,
+        getPortalUsers: getPortalUsers
     };
 
 } ]);
