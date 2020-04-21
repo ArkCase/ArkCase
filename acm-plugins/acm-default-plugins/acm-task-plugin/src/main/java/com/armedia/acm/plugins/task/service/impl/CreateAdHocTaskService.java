@@ -57,7 +57,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-public class CreateAdHocTaskService {
+public class CreateAdHocTaskService
+{
     private TaskDao taskDao;
     private TaskEventPublisher taskEventPublisher;
     private ExecuteSolrQuery executeSolrQuery;
@@ -67,7 +68,10 @@ public class CreateAdHocTaskService {
     private SearchResults searchResults = new SearchResults();
     private Logger log = LogManager.getLogger(getClass());
 
-    public AcmTask createAdHocTask(AcmTask in, List<MultipartFile> filesToUpload, Authentication authentication,  String ipAddress) throws AcmCreateObjectFailedException, AcmAppErrorJsonMsg, AcmUserActionFailedException, LinkAlreadyExistException, AcmObjectNotFoundException {
+    public AcmTask createAdHocTask(AcmTask in, List<MultipartFile> filesToUpload, Authentication authentication, String ipAddress)
+            throws AcmCreateObjectFailedException, AcmAppErrorJsonMsg, AcmUserActionFailedException, LinkAlreadyExistException,
+            AcmObjectNotFoundException
+    {
         log.info("Creating ad-hoc task.");
         String user = authentication.getName();
         String attachedToObjectType = in.getAttachedToObjectType();
@@ -126,11 +130,13 @@ public class CreateAdHocTaskService {
                         adHocTask.getTaskId());
             }
 
-            if (adHocTask.getParentObjectId() != null) {
-
-                getAcmTaskService().createTaskFolderStructureInParentObject(adHocTask);
+            if (adHocTask.getParentObjectId() != null)
+            {
+                if (!adHocTask.getDocumentsToReview().isEmpty() || !filesToUpload.isEmpty())
+                {
+                    getAcmTaskService().createTaskFolderStructureInParentObject(adHocTask);
+                }
             }
-
 
             publishAdHocTaskCreatedEvent(authentication, ipAddress, adHocTask, true);
             return adHocTask;
