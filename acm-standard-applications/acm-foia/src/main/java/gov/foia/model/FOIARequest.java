@@ -206,6 +206,14 @@ public class FOIARequest extends CaseFile implements FOIAObject
     @Column(name = "fo_generated_zip_flag")
     private Boolean generatedZipFlag;
 
+    @Column(name = "fo_perfected_date")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @Convert(converter = LocalDateTimeConverter.class)
+    private LocalDateTime perfectedDate;
+
+    @Column(name = "fo_time_to_complete")
+    private Integer timeToComplete;
+
     @Transient
     private String originalRequestNumber;
 
@@ -670,30 +678,32 @@ public class FOIARequest extends CaseFile implements FOIAObject
         this.notificationGroup = notificationGroup;
     }
 
-    public FoiaConfiguration getFoiaConfiguration() {
+    public FoiaConfiguration getFoiaConfiguration()
+    {
         return foiaConfiguration;
     }
 
-    public void setFoiaConfiguration(FoiaConfiguration foiaConfiguration) {
+    public void setFoiaConfiguration(FoiaConfiguration foiaConfiguration)
+    {
         this.foiaConfiguration = foiaConfiguration;
     }
 
-    public Boolean getAmendmentFlag() 
+    public Boolean getAmendmentFlag()
     {
         return amendmentFlag;
     }
 
-    public void setAmendmentFlag(Boolean amendmentFlag) 
+    public void setAmendmentFlag(Boolean amendmentFlag)
     {
         this.amendmentFlag = amendmentFlag;
     }
 
-    public String getRequestAmendmentDetails() 
+    public String getRequestAmendmentDetails()
     {
         return requestAmendmentDetails;
     }
 
-    public void setRequestAmendmentDetails(String requestAmendmentDetails) 
+    public void setRequestAmendmentDetails(String requestAmendmentDetails)
     {
         this.requestAmendmentDetails = requestAmendmentDetails;
     }
@@ -803,6 +813,26 @@ public class FOIARequest extends CaseFile implements FOIAObject
         this.generatedZipFlag = generatedZipFlag;
     }
 
+    public LocalDateTime getPerfectedDate()
+    {
+        return perfectedDate;
+    }
+
+    public void setPerfectedDate(LocalDateTime perfectedDate)
+    {
+        this.perfectedDate = perfectedDate;
+    }
+
+    public Integer getTimeToComplete()
+    {
+        return timeToComplete;
+    }
+
+    public void setTimeToComplete(Integer timeToComplete)
+    {
+        this.timeToComplete = timeToComplete;
+    }
+
     /*
      * (non-Javadoc)
      * @see java.lang.Object#toString()
@@ -822,7 +852,7 @@ public class FOIARequest extends CaseFile implements FOIAObject
                 + amendmentFlag
                 + ", requestAmendmentDetails=" + requestAmendmentDetails + ", dispositionClosedDate=" + dispositionClosedDate
                 + ", tollingFlag=" + tollingFlag + ", limitedDeliveryFlag=" + limitedDeliveryFlag + ", generatedZipFlag=" + generatedZipFlag
-                + "} "
+                + ", perfectedDate=" + perfectedDate + "} "
                 + super.toString();
     }
 }

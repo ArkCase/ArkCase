@@ -57,6 +57,7 @@ public class FoiaConfigurationService extends SystemConfigurationService
         foiaConfig.setRequireTimesheetToCompleteStandardRequest(foiaConfiguration.getRequireTimesheetToCompleteStandardRequest());
         foiaConfig.setRequireTimesheetToCompleteDeniedRequest(foiaConfiguration.getRequireTimesheetToCompleteDeniedRequest());
         foiaConfig.setProvideReasonToHoldRequestEnabled(foiaConfiguration.getProvideReasonToHoldRequestEnabled());
+        foiaConfig.setRedirectFunctionalityCalculationEnabled(foiaConfiguration.getRedirectFunctionalityCalculationEnabled());
         configurationPropertyService.updateProperties(foiaConfig);
     }
 
@@ -81,6 +82,7 @@ public class FoiaConfigurationService extends SystemConfigurationService
         foiaConfiguration.setRequireTimesheetToCompleteStandardRequest(foiaConfig.getRequireTimesheetToCompleteStandardRequest());
         foiaConfiguration.setRequireTimesheetToCompleteDeniedRequest(foiaConfig.getRequireTimesheetToCompleteDeniedRequest());
         foiaConfiguration.setProvideReasonToHoldRequestEnabled(foiaConfig.getProvideReasonToHoldRequestEnabled());
+        foiaConfiguration.setRedirectFunctionalityCalculationEnabled(foiaConfig.getRedirectFunctionalityCalculationEnabled());
         return foiaConfiguration;
     }
 
