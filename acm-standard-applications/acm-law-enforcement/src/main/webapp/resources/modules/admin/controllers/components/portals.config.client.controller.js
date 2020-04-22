@@ -9,6 +9,11 @@ angular.module('admin').controller(
                         scope: $scope
                     });
 
+                    var paginationOptions = {
+                        pageNumber: 1,
+                        pageSize: 20
+                    };
+
                     $scope.gridOptions = $scope.gridOptions || {};
                     $scope.gridUserOptions = $scope.gridUserOptions || {};
 
@@ -54,16 +59,24 @@ angular.module('admin').controller(
                             totalItems: 0,
                             paginationPageSizes: $scope.userConfig.paginationPageSizes,
                             paginationPageSize: $scope.userConfig.paginationPageSize,
-                            data: []
+                            data: [],
+                            onRegisterApi: function (gridApi) {
+                                $scope.gridApi = gridApi;
+                                gridApi.pagination.on.paginationChanged($scope, function (newPage, pageSize) {
+                                    paginationOptions.pageNumber = newPage;
+                                    paginationOptions.pageSize = pageSize;
+                                    getPortalUsers(paginationOptions);
+                                });
+                            }
                         };
 
                         $scope.portal = {};
-                        var reloadGrid = function(portals) {
+                        var reloadGrid = function (portals) {
                             $scope.gridOptions.data = portals;
                         };
 
-                        var getAndRefresh = function() {
-                            AdminPortalConfigurationService.getPortals().then(function(response) {
+                        var getAndRefresh = function () {
+                            AdminPortalConfigurationService.getPortals().then(function (response) {
                                 if (!Util.isEmpty(response.data)) {
                                     reloadGrid(response.data);
                                 }
@@ -71,14 +84,17 @@ angular.module('admin').controller(
                         };
                         getAndRefresh();
 
-                        var getPortalUsers = function () {
-                            AdminPortalConfigurationService.getPortalUsers().then(function (response) {
+                        var getPortalUsers = function (paginationOptions) {
+                            var params = {};
+                            params.start = (paginationOptions.pageNumber - 1) * paginationOptions.pageSize;
+                            params.maxRows = paginationOptions.pageSize;
+                            AdminPortalConfigurationService.getPortalUsers(Util.goodValue(params.start, 0), Util.goodValue(params.maxRows, 20)).then(function (response) {
                                 if (!Util.isEmpty(response.data)) {
                                     $scope.gridUserOptions.data = response.data.response.docs;
                                 }
                             })
                         };
-                        getPortalUsers();
+                        getPortalUsers(paginationOptions);
                     });
 
 
