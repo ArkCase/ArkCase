@@ -505,7 +505,11 @@ angular.module('cases').controller(
                     $scope.loadingIcon = "fa fa-floppy-o";
                     $scope.$emit("report-object-update-failed", error);
                     if (error.data && error.data.message) {
-                        $scope.error = error.data.message;
+                        if (error.data.field == "duplicateName") {
+                            $scope.error = MessageService.error($translate.instant("cases.newRequest.duplicateFilesName.error"));
+                        } else {
+                            $scope.error = error.data.message;
+                        }
                     } else {
                         MessageService.error(error);
                     }
