@@ -133,7 +133,7 @@ public class ArkCasePortalAdminAPIController
     @RequestMapping(value = "/portals/users", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String listPortalUsers(Authentication auth, @RequestParam(value = "start", required = false, defaultValue = "0") int start,
-            @RequestParam(value = "n", required = false, defaultValue = "10") int n,
+            @RequestParam(value = "n", required = false, defaultValue = "20") int n,
             @RequestParam(value = "s", required = false, defaultValue = "id ASC") String s) throws AcmObjectNotFoundException
     {
 
