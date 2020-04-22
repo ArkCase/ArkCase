@@ -2,14 +2,14 @@
 
 angular.module('admin').factory('Admin.PortalConfigurationService', [ '$http', function($http) {
 
-    var getPortals = function() {
+    var getPortals = function () {
         return $http({
             method: 'GET',
             url: 'api/latest/service/portalgateway/admin/portals'
         });
     };
 
-    var savePortal = function(portal) {
+    var savePortal = function (portal) {
         return $http({
             method: 'POST',
             url: 'api/latest/service/portalgateway/admin/portals',
@@ -20,7 +20,7 @@ angular.module('admin').factory('Admin.PortalConfigurationService', [ '$http', f
         });
     };
 
-    var updatePortal = function(portal) {
+    var updatePortal = function (portal) {
         return $http({
             method: 'PUT',
             url: 'api/latest/service/portalgateway/admin/portals',
@@ -30,17 +30,22 @@ angular.module('admin').factory('Admin.PortalConfigurationService', [ '$http', f
             }
         });
     };
-    var deletePortal = function(portalId) {
+    var deletePortal = function (portalId) {
         return $http({
             method: 'DELETE',
             url: 'api/latest/service/portalgateway/admin/portals/' + portalId
         })
     };
 
-    var getPortalUsers = function () {
+    var getPortalUsers = function (start, maxRows) {
         return $http({
             method: 'GET',
-            url: 'api/latest/service/portalgateway/admin/portals/users'
+            url: 'api/latest/service/portalgateway/admin/portals/users',
+            params: {
+                start: start,
+                n: maxRows,
+                s: "id ASC"
+            }
         });
     };
 
