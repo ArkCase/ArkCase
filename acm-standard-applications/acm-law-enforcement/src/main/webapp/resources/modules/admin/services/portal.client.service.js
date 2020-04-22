@@ -37,13 +37,13 @@ angular.module('admin').factory('Admin.PortalConfigurationService', [ '$http', f
         })
     };
 
-    var getPortalUsers = function (start, s) {
+    var getPortalUsers = function (start, maxRows) {
         return $http({
             method: 'GET',
             url: 'api/latest/service/portalgateway/admin/portals/users',
             params: {
                 start: start,
-                n: s,
+                n: maxRows,
                 s: "id ASC"
             }
         });
