@@ -64,7 +64,7 @@ public class FOIAExemptionCodeDao extends AcmAbstractDao<ExemptionCode>
 
                 for (Long fileId : fileIds)
                 {
-                    listCodesOnDocuments = getApprovedAndManualExemptionCodesByFileId(fileId);
+                    listCodesOnDocuments.addAll(getApprovedAndManualExemptionCodesByFileId(fileId));
                 }
             }
         }
