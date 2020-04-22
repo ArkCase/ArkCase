@@ -506,9 +506,9 @@ angular.module('cases').controller(
                     $scope.$emit("report-object-update-failed", error);
                     if (error.data && error.data.message) {
                         if (error.data.field == "duplicateName") {
-                            $scope.error = MessageService.error($translate.instant("cases.newRequest.duplicateFilesName.error"));
+                            MessageService.error($translate.instant("cases.newRequest.duplicateFilesName.error"));
                         } else {
-                            $scope.error = error.data.message;
+                            MessageService.error(error.data.message);
                         }
                     } else {
                         MessageService.error(error);
