@@ -41,6 +41,13 @@
             <beans:property name="foiaConfig" ref="foiaConfig"/>
         </beans:bean>
 
+        <beans:bean id="foiaComponentHandler" class="gov.foia.pipeline.presave.FOIARequestComponentUpdatedHandler">
+            <beans:property name="foiaRequestDao" ref="foiaRequestDao"/>
+            <beans:property name="holidayConfigurationService" ref="holidayConfigurationService"/>
+            <beans:property name="foiaConfig" ref="foiaConfig"/>
+            <beans:property name="queuesTimeToCompleteService" ref="queuesTimeToCompleteService"/>
+        </beans:bean>
+
         <beans:bean id="foiaConfigurationHandler" class="gov.foia.pipeline.postsave.FOIAConfigurationHandler">
             <beans:property name="foiaConfigurationService" ref="foiaConfigurationService"/>
         </beans:bean>
@@ -60,6 +67,7 @@
                 <beans:list value-type="com.armedia.acm.services.pipeline.handler.PipelineHandler">
                     <beans:ref bean="caseFileSetCreatorHandler"/>
                     <beans:ref bean="foiaExtensionHandler"/>
+                    <beans:ref bean="foiaComponentHandler"/>
                 </beans:list>
             </beans:property>
             <beans:property name="postSaveHandlers">
@@ -74,6 +82,7 @@
                     <beans:ref bean="requestDocumentHandler"/>
                     <beans:ref bean="caseFileStartBusinessProcessIfNeededHandler"/>
                     <beans:ref bean="foiaExtensionEmailHandler"/>
+                    <beans:ref bean="requestCreatedHandler"/>
                     <!--<ref beans:bean="caseFileAssignmentHandler"/>-->
                 </beans:list>
             </beans:property>
@@ -148,6 +157,11 @@
             <beans:property name="ecmFileService" ref="ecmFileService"/>
             <beans:property name="documentGeneratorService" ref="documentGeneratorService"/>
             <beans:property name="documentGenerator" ref="correspondenceDocumentGenerator"/>
+        </beans:bean>
+
+        <beans:bean id="requestCreatedHandler" class="gov.foia.pipeline.postsave.FOIARequestCreatedHandler">
+            <beans:property name="holidayConfigurationService" ref="holidayConfigurationService"/>
+            <beans:property name="queuesTimeToCompleteService" ref="queuesTimeToCompleteService"/>
         </beans:bean>
 
         <beans:bean id="scheduledBillingQueuePurger" class="gov.foia.service.ScheduledBillingQueuePurger">

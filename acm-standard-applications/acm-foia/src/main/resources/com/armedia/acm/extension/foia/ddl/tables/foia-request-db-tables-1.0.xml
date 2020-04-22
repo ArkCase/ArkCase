@@ -695,5 +695,22 @@ LANGUAGE plpgsql;
         </addColumn>
     </changeSet>
 
+    <changeSet id="44-01-add-perfected-date-column" author="vladimir.cherepnalkovski" dbms="oracle,mssql,postgres">
+        <addColumn tableName="acm_case_file">
+            <column name="fo_perfected_date" type="${timestampType}"></column>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="fo_time_to_complete" type="LONG"></column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="44-02-add-perfected-date-column" author="vladimir.cherepnalkovski" dbms="mysql">
+        <addColumn tableName="acm_case_file">
+            <column name="fo_perfected_date" type="${timestampType}"></column>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="fo_time_to_complete" type="LONG"></column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
 
