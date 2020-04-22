@@ -31,6 +31,7 @@ import com.armedia.acm.auth.AcmAuthenticationDetails;
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISActions;
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
 import com.armedia.acm.camelcontext.context.CamelContextManager;
+import com.armedia.acm.camelcontext.exception.ArkCaseFileNameAlreadyExistsException;
 import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
@@ -189,6 +190,11 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
                 catch (Exception e)
                 {
                     log.error("pipeline handler call failed: {}", e.getMessage(), e);
+                    if (pipelineContext.isFileNameAlreadyInEcmSystem())
+                    {
+                        log.debug("File: {} already exists in ecm system", metadata.getFileName());
+                        throw new ArkCaseFileNameAlreadyExistsException("fileName already exists");
+                    }
                     if (e.getCause() != null && ArkCaseFileRepositoryException.class.isAssignableFrom(e.getCause().getClass()))
                     {
                         throw (ArkCaseFileRepositoryException) e.getCause();
@@ -360,9 +366,10 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
                 catch (Exception e)
                 {
                     log.error("pipeline handler call failed: {}", e.getMessage(), e);
-                    if (e.getCause() != null && ArkCaseFileRepositoryException.class.isAssignableFrom(e.getCause().getClass()))
+                    if (pipelineContext.isFileNameAlreadyInEcmSystem())
                     {
-                        throw (ArkCaseFileRepositoryException) e.getCause();
+                        log.debug("File: {} already exists in ecm system", metadata.getFileName());
+                        throw new ArkCaseFileNameAlreadyExistsException("fileName already exists");
                     }
                 }
                 log.debug("Returning from addFileTransaction method");
