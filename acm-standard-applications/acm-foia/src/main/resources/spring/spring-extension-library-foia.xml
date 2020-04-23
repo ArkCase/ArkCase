@@ -168,6 +168,7 @@
                     <beans:ref bean="solrReindexFOIAFileExecutor"/>
                     <beans:ref bean="foiaRequestStatusChangeExecutor"/>
                     <beans:ref bean="foiaExemptionCodeMigrationExecutor"/>
+                    <beans:ref bean="solrReindexFOIAPortalPersonExecutor"/>
                 </beans:list>
             </beans:property>
 
@@ -175,6 +176,10 @@
 
         <beans:bean id="foiaExemptionCodeMigrationExecutor" class="gov.foia.service.dataupdate.FOIAExemptionCodeMigrationExecutor">
             <beans:property name="foiaExemptionService" ref="foiaExemptionService"/>
+        </beans:bean>
+
+        <beans:bean id="solrReindexFOIAPortalPersonExecutor" class="gov.foia.service.dataupdate.SolrReindexFOIAPortalPersonExecutor">
+            <beans:property name="solrReindexService" ref="solrReindexService"/>
         </beans:bean>
 
         <beans:bean id="queuesTimeToCompleteService" class="gov.foia.service.QueuesTimeToCompleteService">

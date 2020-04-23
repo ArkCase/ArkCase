@@ -3,7 +3,7 @@
         <fieldset permission="buttonAction" permission-object-type="CASE_FILE" permission-properties="objectInfo" permission-action="hide">
             <div class="btn-group">
                 <button class="btn btn-sm btn-default" ng-click="onClickNextQueue(nextQueue.name, clientInfo.$dirty)"
-                        ng-disabled="requestInProgress" ng-repeat="nextQueue in availableQueues">
+                        ng-disabled="requestInProgress || clientInfo.$invalid" ng-repeat="nextQueue in availableQueues">
                     <i class="{{loadingIcon}}" ng-if="nextQueue.name == nameButton && loading"></i>
                     <i class="fa" ng-hide="nextQueue.name == nameButton && loading"></i>
                     <span>{{nextQueue.name}}</span>

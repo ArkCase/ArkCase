@@ -28,7 +28,6 @@ package gov.foia.service;
  */
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
-import com.armedia.acm.objectdiff.service.AcmDiffService;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility;
 import com.armedia.acm.plugins.person.dao.PersonDao;
@@ -44,8 +43,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import gov.foia.model.FOIAPerson;
-
 /**
  * @author sasko.tanaskoski
  *
@@ -57,49 +54,14 @@ public class SaveFOIARequestService
     private FOIARequestService foiaRequestService;
     private CaseFileEventUtility caseFileEventUtility;
     private PersonDao personDao;
-    private AcmDiffService acmDiffService;
 
     public CaseFile saveFOIARequest(CaseFile in, Map<String, List<MultipartFile>> filesMap, HttpSession session, Authentication auth)
             throws AcmCreateObjectFailedException
     {
-        checkPersonAssociation(in);
         String ipAddress = (String) session.getAttribute("acm_ip_address");
         CaseFile saved = getFoiaRequestService().saveRequest(in, filesMap, auth, ipAddress);
         raiseCaseEvent(in.getId() == null, saved, auth, ipAddress);
         return saved;
-    }
-
-    private void checkPersonAssociation(CaseFile in)
-    {
-        if (in.getPersonAssociations().get(0).getPerson().getId() != null)
-        {
-            FOIAPerson updatedPerson = (FOIAPerson) in.getPersonAssociations().get(0).getPerson();
-            FOIAPerson existingPerson = (FOIAPerson) getPersonDao().find(in.getPersonAssociations().get(0).getPerson().getId());
-
-            Boolean isEmailEqual = existingPerson.getDefaultEmail().equals(updatedPerson.getDefaultEmail());
-
-            if (isEmailEqual)
-            {
-                in.getPersonAssociations().get(0).setPerson(existingPerson);
-            }
-            else
-            {
-                updatedPerson.setId(null);
-                if (updatedPerson.getDefaultPhone() != null && updatedPerson.getDefaultPhone().getId() != null)
-                {
-                    updatedPerson.getDefaultPhone().setId(null);
-                }
-                if (updatedPerson.getDefaultEmail() != null && updatedPerson.getDefaultEmail().getId() != null)
-                {
-                    updatedPerson.getDefaultEmail().setId(null);
-                }
-                if (updatedPerson.getDefaultUrl() != null && updatedPerson.getDefaultUrl().getId() != null)
-                {
-                    updatedPerson.getDefaultUrl().setId(null);
-                }
-
-            }
-        }
     }
 
     public CaseFile savePortalRequest(CaseFile in, Map<String, List<MultipartFile>> filesMap, Authentication auth, String ipAddress)
@@ -167,8 +129,4 @@ public class SaveFOIARequestService
         this.personDao = personDao;
     }
 
-    public void setAcmDiffService(AcmDiffService acmDiffService)
-    {
-        this.acmDiffService = acmDiffService;
-    }
 }

@@ -27,6 +27,8 @@ package gov.foia.web.api;
  * #L%
  */
 
+import com.armedia.acm.camelcontext.exception.ArkCaseFileNameAlreadyExistsException;
+import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 
@@ -90,7 +92,7 @@ public class SaveFOIARequestAPIController
     @ResponseBody
     public CaseFile saveFOIARequestMultipart(@RequestPart(name = "casefile") CaseFile in,
                                              MultipartHttpServletRequest request, HttpSession session, Authentication auth)
-            throws AcmCreateObjectFailedException
+            throws AcmCreateObjectFailedException, AcmAppErrorJsonMsg
     {
 
         Map<String, List<MultipartFile>> files = new HashMap<>();
@@ -105,7 +107,15 @@ public class SaveFOIARequestAPIController
             }
         }
 
-        return getSaveFOIARequestService().saveFOIARequest(in, files, session, auth);
+        try
+        {
+            return getSaveFOIARequestService().saveFOIARequest(in, files, session, auth);
+        }
+        catch (ArkCaseFileNameAlreadyExistsException e)
+        {
+            throw new AcmAppErrorJsonMsg("file with that name already exists", "FILE", "duplicateName", e);
+        }
+
     }
 
     /**

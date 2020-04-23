@@ -64,6 +64,21 @@ public class FOIAPortalPersonToSolrTransformer extends FOIAPersonToSolrTransform
             if (solr != null)
             {
                 solr.setObject_sub_type_s("PORTAL_FOIA_PERSON");
+                if (personIn.getDefaultEmail() != null)
+                {
+                    solr.setAdditionalProperty("default_email_lcs", personIn.getDefaultEmail().getValue());
+                }
+                else
+                {
+                    try
+                    {
+                        solr.setAdditionalProperty("default_email_lcs", personIn.getContactMethods().get(2).getValue());
+                    }
+                    catch (IndexOutOfBoundsException e)
+                    {
+                        log.debug("Cannot access email contact method");
+                    }
+                }
             }
 
             return solr;
@@ -88,6 +103,21 @@ public class FOIAPortalPersonToSolrTransformer extends FOIAPersonToSolrTransform
             if (solr != null)
             {
                 solr.getAdditionalProperties().put("object_sub_type_s", "PORTAL_FOIA_PERSON");
+                if (personIn.getDefaultEmail() != null)
+                {
+                    solr.setAdditionalProperty("default_email_lcs", personIn.getDefaultEmail().getValue());
+                }
+                else
+                {
+                    try
+                    {
+                        solr.setAdditionalProperty("default_email_lcs", personIn.getContactMethods().get(2).getValue());
+                    }
+                    catch (IndexOutOfBoundsException e)
+                    {
+                        log.debug("Cannot access email contact method");
+                    }
+                }
             }
 
             return solr;
