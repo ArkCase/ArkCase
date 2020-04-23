@@ -4,6 +4,7 @@
 
     <bean id="portalAdminAPIController" class="com.armedia.acm.portalgateway.web.api.ArkCasePortalAdminAPIController">
         <property name="portalAdminService" ref="portalAdminService"/>
+        <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
 
     <bean id="portalGatewayUserAPIController" class="com.armedia.acm.portalgateway.web.api.ArkCasePortalGatewayUserAPIController">

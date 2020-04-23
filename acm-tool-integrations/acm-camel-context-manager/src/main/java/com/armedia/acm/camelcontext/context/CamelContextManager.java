@@ -263,11 +263,17 @@ public class CamelContextManager implements ApplicationContextAware
 
             return queue.send(props);
         }
-        catch (AcmEncryptionException | ArkCaseFileRepositoryException e)
+        catch (AcmEncryptionException e)
         {
             log.error("Error sending message on queue={} with cmisObjectId={}", action.getQueueName(),
                     props.get("cmisDocumentId") != null ? props.get("cmisDocumentId") : props.get("cmisObjectId"));
             throw new ArkCaseFileRepositoryException(e);
+        }
+        catch (ArkCaseFileRepositoryException e)
+        {
+            log.error("Error sending message on queue={} with cmisObjectId={}", action.getQueueName(),
+                    props.get("cmisDocumentId") != null ? props.get("cmisDocumentId") : props.get("cmisObjectId"));
+            throw e;
         }
     }
 

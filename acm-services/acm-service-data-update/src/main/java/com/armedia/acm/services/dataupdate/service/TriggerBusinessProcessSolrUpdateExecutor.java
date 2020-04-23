@@ -1,10 +1,10 @@
-package com.armedia.acm.audit.dao;
+package com.armedia.acm.services.dataupdate.service;
 
 /*-
  * #%L
- * ACM Service: Audit Library
+ * ACM Service: Data Update Service
  * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
+ * Copyright (C) 2014 - 2020 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 
@@ -27,39 +27,33 @@ package com.armedia.acm.audit.dao;
  * #L%
  */
 
-import com.armedia.acm.audit.model.AcmAuditLookup;
-import com.armedia.acm.data.AcmAbstractDao;
+import com.armedia.acm.plugins.businessprocess.model.BusinessProcess;
 
-import org.springframework.transaction.annotation.Transactional;
+import java.util.Arrays;
 
-import javax.persistence.TypedQuery;
-
-import java.sql.SQLException;
-import java.util.List;
-
-public class AuditLookupDao extends AcmAbstractDao<AcmAuditLookup>
+public class TriggerBusinessProcessSolrUpdateExecutor implements AcmDataUpdateExecutor
 {
+    private SolrReindexService solrReindexService;
 
     @Override
-    protected Class<AcmAuditLookup> getPersistenceClass()
+    public String getUpdateId()
     {
-        return AcmAuditLookup.class;
+        return "solr-business-process-update-v1";
     }
 
-    @Transactional
-    public void deleteAllAuditsFormLookupTabel() throws SQLException
+    @Override
+    public void execute()
     {
+        solrReindexService.reindex(Arrays.asList(BusinessProcess.class));
+    }
 
-        TypedQuery<AcmAuditLookup> selectQuery = getEm().createQuery("SELECT a FROM AcmAuditLookup a ", AcmAuditLookup.class);
-        List<AcmAuditLookup> results;
+    public SolrReindexService getSolrReindexService()
+    {
+        return solrReindexService;
+    }
 
-        results = selectQuery.getResultList();
-        if (!results.isEmpty())
-        {
-            for (AcmAuditLookup aul : results)
-            {
-                getEm().remove(aul);
-            }
-        }
+    public void setSolrReindexService(SolrReindexService solrReindexService)
+    {
+        this.solrReindexService = solrReindexService;
     }
 }
