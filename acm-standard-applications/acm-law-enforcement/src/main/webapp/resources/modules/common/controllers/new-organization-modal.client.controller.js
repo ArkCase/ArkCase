@@ -54,6 +54,7 @@ angular.module('common').controller(
                                 params.header = $translate.instant("common.dialogOrganizationPicker.header2");
                                 params.config = Util.goodMapValue($scope.config, "dialogOrganizationPicker");
                                 params.organizations = result.data.response.docs;
+                                params.addNewEnabled = false;
 
                                 var modalInstance = $modal.open({
                                     templateUrl: "modules/common/views/organization-exists-modal.client.view.html",
@@ -70,19 +71,18 @@ angular.module('common').controller(
 
 
                                 modalInstance.result.then(function (selectedOrganization) {
-                                    var organizationData = {
-                                        organizationId: selectedOrganization.object_id_s,
-                                        organizationValue: selectedOrganization.name,
+                                    var organization = {
+                                        isNew : false,
                                         organization: selectedOrganization
                                     };
-                                    $modalInstance.close(organizationData);
+                                    $modalInstance.close(organization);
                                 });
-
                                 $scope.onClickCancel = function() {
-                                    $modalInstance.dismiss('Cancel');
-                                };
+                                    $modalInstance.dismiss('cancel');
+                                }
                             }
                         });
+                        return true;
                     };
 
                     $scope.searchOrganization = function() {

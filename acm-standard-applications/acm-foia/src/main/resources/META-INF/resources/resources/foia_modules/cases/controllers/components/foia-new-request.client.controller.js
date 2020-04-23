@@ -371,11 +371,11 @@ angular.module('cases').controller(
                     if (data.organization) {
                         $scope.config.data.originator.person.organizations.push(data.organization);
                         setOrganizationAssociation(association, data);
-                        $scope.organizationValue = data.organization.organizationValue ? data.organization.organizationValue : data.organization.name;
+                        $scope.organizationValue = data.organization.organizationValue;
                     } else {
                         OrganizationInfoService.getOrganizationInfo(data.organizationId).then(function (organization) {
                             data.organization = organization;
-                            $scope.organizationValue = data.organization.organizationValue ? data.organization.organizationValue : data.organization.name;
+                            $scope.organizationValue = data.organization.organizationValue;
                             $scope.config.data.originator.person.organizations.push(data.organization);
                             setOrganizationAssociation(association, data);
                         });

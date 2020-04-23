@@ -152,7 +152,7 @@ public class OrganizationAPIController
 
     }
 ;
-    @RequestMapping(value = "/findExistingOrganization/{organizationName:.+}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/searchExisting/{organizationName:.+}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String getOrganizationsByName(Authentication auth, @PathVariable("organizationName") String organizationName,
             @RequestParam(value = "s", required = false, defaultValue = "name") String sortBy,
