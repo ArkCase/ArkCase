@@ -170,8 +170,6 @@ angular.module('cases').controller(
                 $scope.config.data.originator.person.addresses[0].country = countries[0].key;
                 $scope.config.data.originator.person.addresses[0].type = addressTypes[0].key;
 
-                $scope.isExistingPerson = typeof $scope.config.data.originator.person.id !== 'undefined';
-
                 $scope.blankPerson = angular.copy($scope.config.data.originator.person);
             });
 
@@ -300,7 +298,8 @@ angular.module('cases').controller(
                 association.personType = data.type;
 
                 //populate contact information section
-                setPerson(association.person);
+                $scope.setPerson(association.person);
+                $scope.existingPerson = angular.copy($scope.config.data.originator.person);
 
                 //if is new created, add it to the person associations list
                 if (!$scope.config.data.originator.person.personAssociations) {
@@ -318,14 +317,13 @@ angular.module('cases').controller(
 
             $scope.pickExistingUserChange = function () {
 
-
                 if ($scope.isPickExistingPerson) {
                     $scope.newPerson = angular.copy($scope.config.data.originator.person);
-                    setPerson($scope.existingPerson);
+                    $scope.setPerson($scope.existingPerson);
 
                 } else {
                     $scope.existingPerson = angular.copy($scope.config.data.originator.person);
-                    setPerson($scope.newPerson);
+                    $scope.setPerson($scope.newPerson);
                 }
             };
 
@@ -517,14 +515,15 @@ angular.module('cases').controller(
                         $scope.config.data.requestCategory = originalRequest.requestCategory;
                         $scope.config.data.deliveryMethodOfResponse = originalRequest.deliveryMethodOfResponse;
 
-                        setPerson(originalRequest.originator.person);
+                        $scope.setPerson(originalRequest.originator.person);
+                        $scope.existingPerson = angular.copy($scope.config.data.originator.person);
                     } else {
-                        setPerson($scope.blankPerson);
+                        $scope.setPerson($scope.blankPerson);
                     }
                 });
             };
 
-            var setPerson = function (person) {
+            $scope.setPerson = function (person) {
                 if (person) {
                     $scope.config.data.originator.person = angular.copy(person);
 
