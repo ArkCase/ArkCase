@@ -35,8 +35,11 @@ import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.PasswordResetToken;
-import org.apache.logging.log4j.Logger;
+import com.armedia.acm.web.api.MDCConstants;
+
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.slf4j.MDC;
 
 public class ResetPasswordService {
 
@@ -55,6 +58,7 @@ public class ResetPasswordService {
         user.setPasswordResetToken(new PasswordResetToken());
         userDao.save(user);
         Notification notification = new Notification();
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY, user.getUserId());
         notification.setCreator(user.getUserId());
         notification.setModifier(user.getUserId());
         notification.setTemplateModelName("changePassword");
