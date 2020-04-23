@@ -2,8 +2,8 @@
 
 angular.module('organizations').controller(
         'Organizations.NewOrganizationController',
-    ['$scope', '$stateParams', '$translate', 'Organization.InfoService', '$state', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService', '$modal', 'ConfigService', 'Person.InfoService', 'ObjectService', 'modalParams', 'Mentions.Service', 'PhoneValidationService',
-        function ($scope, $stateParams, $translate, OrganizationInfoService, $state, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, PersonInfoService, ObjectService, modalParams, MentionsService, PhoneValidationService) {
+    ['$scope', '$stateParams', '$translate', 'Organization.InfoService', '$state', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService', '$modal', 'ConfigService', 'Person.InfoService', 'ObjectService', 'modalParams', 'Mentions.Service', 'PhoneValidationService', 'SimilarOrganizationService',
+        function ($scope, $stateParams, $translate, OrganizationInfoService, $state, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, PersonInfoService, ObjectService, modalParams, MentionsService, PhoneValidationService, SimilarOrganizationService) {
 
                     $scope.modalParams = modalParams;
                     $scope.loading = false;
@@ -47,6 +47,32 @@ angular.module('organizations').controller(
                         $scope.personAssociationTypes = types;
                         return types;
                     });
+
+            $scope.organizationExists = function() {
+                SimilarOrganizationService.getSimilarOrganizationsByName($scope.organization.organizationValue).then(function (result){
+                    var organizationExists = result.data.response.numFound;
+                    if (organizationExists > 0) {
+                        var params = {};
+                        params.header = $translate.instant("common.dialogOrganizationPicker.header2");
+                        params.config = Util.goodMapValue($scope.config, "dialogOrganizationPicker");
+                        params.organizations = result.data.response.docs;
+                        params.isFromNewOrganizationModal = true;
+
+                        var modalInstance = $modal.open({
+                            templateUrl: "modules/common/views/organization-exists-modal.client.view.html",
+                            controller:"Common.OrganizationExistsModalController",
+                            animation: true,
+                            size: 'lg',
+                            backdrop: 'static',
+                            resolve: {
+                                params: function () {
+                                    return params;
+                                }
+                            }
+                        });
+                    }
+                });
+            };
 
                     $scope.searchOrganization = function() {
                         var params = {};

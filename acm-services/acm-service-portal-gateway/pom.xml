@@ -21,7 +21,6 @@
             <artifactId>acm-service-ecm</artifactId>
             <version>${acm.version}</version>
         </dependency>
-
     </dependencies>
 
 </project>

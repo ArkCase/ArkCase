@@ -58,7 +58,7 @@ public interface ReportService
 
     List<String> getReportToRolesPaged(String sortDirection, Integer startRow, Integer maxRows) throws IOException;
 
-    List<String> getReportToRolesByName(String sortDirection, Integer startRow, Integer maxRows, String filterQuery)
+    List<String> getReportToRolesByName(String sortDirection, Integer startRow, Integer maxRows, String filterName)
             throws IOException;
 
     boolean saveReportToRolesMap(Map<String, List<String>> reportToRolesMap, Authentication auth);
@@ -71,6 +71,6 @@ public interface ReportService
 
     List<Report> sync() throws Exception;
 
-    List<String> getRolesForReport(Boolean authorized, String reportId, int startRow, int maxRows, String sortBy, String sortDirection);
+    List<String> getRolesForReport(Boolean authorized, String reportId, int startRow, int maxRows, String sortBy, String sortDirection, String filterName);
 
 }

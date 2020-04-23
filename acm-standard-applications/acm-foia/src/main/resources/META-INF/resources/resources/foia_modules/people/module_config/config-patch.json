@@ -34,7 +34,7 @@
     },
     {
         "op": "add",
-        "path": "/tree/nodeTypes/-",
+        "path": "/tree/nodeTypes/14",
         "value": {
             "type": "p/PERSON/tasks",
             "label": "people.tree.nodeTypes.tasks.label",
@@ -77,7 +77,7 @@
                     "sortField": "title",
                     "displayName": "people.comp.tasks.table.columns.title",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div ng-bind-html='row.entity.title' title='{{row.entity.title}}' class='ui-grid-cell-contents'></div>"
+                    "cellTemplate": "<a data-ui-sref=\"tasks.main({id: row.entity.taskId})\">{{COL_FIELD}}</a>"
                 },
                 {
                     "width": 150,

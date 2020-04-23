@@ -73,7 +73,7 @@ public interface PortalUserServiceProvider
      */
     PortalUser updateUser(String portalId, PortalUser user) throws PortalUserServiceException;
 
-    UserRegistrationResponse registerUserFromRequester(String portalId, PortalUser user)
+    UserRegistrationResponse registerUserFromPerson(String portalId, Long personId)
             throws PortalUserServiceException;
 
     UserResetResponse requestPasswordResetForRequester(String portalId, UserResetRequest resetRequest) throws PortalUserServiceException;

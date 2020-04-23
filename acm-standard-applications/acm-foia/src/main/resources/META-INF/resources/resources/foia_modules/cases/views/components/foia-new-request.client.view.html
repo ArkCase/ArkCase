@@ -193,6 +193,41 @@
                 </div>
                 <div class="row form-group">
                     <div class="col-sm-2">
+                        <label for="country" translate>cases.newRequest.country.label</label>
+                        <span ng-if="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
+                                class="required-asterisk">*</span>
+                    </div>
+                    <div class="col-sm-4">
+                        <select id="country" class="form-control" ng-model="config.data.originator.person.addresses[0].country"
+                                ng-required="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
+                                ng-disabled="isAppealPopulated"
+                                ng-change="changeStates(config.data.originator.person.addresses[0].country)">
+                            <option ng-repeat="option in countries" value="{{option.key}}">
+                                {{option.value | translate}}
+                            </option>
+                        </select>
+                        <span class="text-danger" ng-if="!config.data.originator.person.addresses[0].country && (config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser) && formInvalid" translate>
+                            cases.newRequest.country.validation.error</span>
+                    </div>
+                    <div class="col-sm-2">
+                        <label for="addressType" translate>cases.newRequest.address.type.label</label>
+                        <span ng-if="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
+                                class="required-asterisk-confirm-email">*</span>
+                    </div>
+                    <div class="col-sm-4">
+                        <select id="addressType" class="form-control" ng-model="config.data.originator.person.addresses[0].type"
+                                ng-required="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
+                                ng-disabled="isAppealPopulated">
+                            <option ng-repeat="option in addressTypes" value="{{option.key}}">
+                                {{option.value | translate}}
+                            </option>
+                        </select>
+                        <span class="text-danger" ng-if="!config.data.originator.person.addresses[0].type && (config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser) && formInvalid" translate>
+                            cases.newRequest.address.type.validation.error</span>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-sm-2">
                         <label for="address1" translate>cases.newRequest.address.label </label>
                         <span ng-if="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
                                 class="required-asterisk">*</span>
@@ -204,7 +239,7 @@
                                 ng-required="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
                                 ng-disabled="isAppealPopulated">
                         <span class="text-danger"
-                                ng-if="(config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser) && !config.data.originator.person.addresses[0].streetAddress"
+                                ng-if="(config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser) && !config.data.originator.person.addresses[0].streetAddress && formInvalid"
                                 translate>
                                 cases.newRequest.address.validation.error</span>
                     </div>
@@ -231,23 +266,31 @@
                                 ng-required="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
                                 ng-disabled="isAppealPopulated">
                         <span class="text-danger"
-                                ng-if="(config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser) && !config.data.originator.person.addresses[0].city"
+                                ng-if="(config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser) && !config.data.originator.person.addresses[0].city && formInvalid"
                                 translate>
                                 cases.newRequest.city.validation.error</span>
                     </div>
                     <div class="col-sm-2">
                         <label for="state" translate>cases.newRequest.state.label</label>
                         <span ng-if="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
-                                class="required-asterisk">*</span>
+                                class="required-asterisk-state-label-modals">*</span>
                     </div>
                     <div class="col-sm-4">
-                        <select id="state" name="state" ng-model="config.data.originator.person.addresses[0].state"
-                                ng-options="state.key as state.value | translate for state in states" class="form-control input-md"
-                                ng-required="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
-                                ng-disabled="isAppealPopulated">
-                        </select>
+                        <div ng-if="config.data.originator.person.addresses[0].country == 'US' || config.data.originator.person.addresses[0].country == 'CA' || config.data.originator.person.addresses[0].country == 'JP'">
+                            <select id="state" name="state" ng-model="config.data.originator.person.addresses[0].state" 
+                                    ng-options="state.key as state.value | translate for state in states" class="form-control input-md"
+                                    ng-required="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
+                                    ng-disabled="isAppealPopulated">
+                            </select>
+                        </div>
+                        <div ng-if="config.data.originator.person.addresses[0].country != 'US' && config.data.originator.person.addresses[0].country != 'CA' && config.data.originator.person.addresses[0].country != 'JP'">
+                            <input id="txtState" type="text" ng-model="config.data.originator.person.addresses[0].state" class="input-md form-control"
+                                    placeholder="{{ 'cases.newRequest.state.placeholder' | translate }}"
+                                    ng-required="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
+                                    ng-disabled="isAppealPopulated">
+                        </div>
                         <span class="text-danger"
-                                ng-if="(config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser) && !config.data.originator.person.addresses[0].state"
+                                ng-if="(config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser) && !config.data.originator.person.addresses[0].state && formInvalid"
                                 translate>
                                 cases.newRequest.state.validation.error</span>
                     </div>
@@ -265,7 +308,7 @@
                                 ng-required="config.data.deliveryMethodOfResponse == 'Mail'  || config.data.createNewPortalUser"
                                 ng-disabled="isAppealPopulated">
                         <span class="text-danger"
-                                ng-if="(config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser) && !config.data.originator.person.addresses[0].zip"
+                                ng-if="(config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser) && !config.data.originator.person.addresses[0].zip && formInvalid"
                                 translate>
                                 cases.newRequest.zip.validation.error</span>
                         <span class="text-danger" ng-if="!config.data.originator.person.addresses[0].zip && formInvalid && !zipCodeEmpty"

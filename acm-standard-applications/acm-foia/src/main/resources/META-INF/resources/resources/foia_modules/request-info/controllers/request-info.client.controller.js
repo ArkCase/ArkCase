@@ -901,9 +901,10 @@ angular.module('request-info').controller(
                         $scope.openOtherDocuments = _.filter($scope.openOtherDocuments, function (currentObject) {
                             if (typeof currentObject.id === 'string' || currentObject.id instanceof String) {
                                 if (data[index].removeOlderFileVersionFromSnowboundTabs) {
-                                    return !currentObject.id.startsWith(fileInfo.fileId + ":");
+                                    return !_.startsWith(currentObject.id, fileInfo.fileId + ":");
                                 }
-                                return !(currentObject.id.startsWith(fileInfo.fileId + ":") && currentObject.versionTag === fileInfo.versionTag);
+                                return !(_.startsWith(currentObject.id, fileInfo.fileId + ":") && currentObject.versionTag === fileInfo.versionTag);
+
                             }
 
                             if (data[index].removeOlderFileVersionFromSnowboundTabs) {
@@ -929,7 +930,7 @@ angular.module('request-info').controller(
             function removeFromOpenedDocumentsList(id, version) {
                 $scope.openOtherDocuments = _.filter($scope.openOtherDocuments, function (currentObject) {
                     if (typeof currentObject.id === 'string' || currentObject.id instanceof String) {
-                        return !(currentObject.id.startsWith(id + ":") && currentObject.versionTag === version);
+                        return !(_.startsWith(currentObject.id, id + ":") && currentObject.versionTag === version);
                     }
                     return !(currentObject.id === id && currentObject.versionTag === version);
                 });

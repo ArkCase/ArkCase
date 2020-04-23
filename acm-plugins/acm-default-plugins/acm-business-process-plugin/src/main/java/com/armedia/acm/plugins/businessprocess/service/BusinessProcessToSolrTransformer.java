@@ -70,6 +70,7 @@ public class BusinessProcessToSolrTransformer implements AcmObjectToSolrDocTrans
         solr.setId(String.format("%d-%s", in.getId(), in.getObjectType()));
         solr.setObject_id_s(Long.toString(in.getId()));
         solr.setObject_type_s(BusinessProcessConstants.OBJECT_TYPE);
+        solr.setName(solr.getId());
 
         solr.setCreate_date_tdt(in.getCreated());
         solr.setCreator_lcs(in.getCreator());

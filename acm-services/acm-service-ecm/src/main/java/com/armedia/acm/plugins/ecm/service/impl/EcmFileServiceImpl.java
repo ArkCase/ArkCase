@@ -47,11 +47,13 @@ import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.AcmFolderConstants;
+import com.armedia.acm.plugins.ecm.model.AcmMultipartFile;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileAddedEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFileConfig;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileDeclareRequestEvent;
+import com.armedia.acm.plugins.ecm.model.EcmFilePostUploadEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFileUpdatedEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.model.EcmFolderDeclareRequestEvent;
@@ -2190,6 +2192,60 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @Transactional
+    public List<EcmFile> uploadFiles(Authentication authentication, String parentObjectType, Long parentObjectId, String fileType,
+                                     String folderCmisId, MultipartHttpServletRequest request, HttpSession session)
+            throws AcmUserActionFailedException, AcmCreateObjectFailedException, IOException
+    {
+
+        return uploadFiles(authentication, parentObjectType, parentObjectId, fileType, null, folderCmisId, request, session);
+    }
+
+    @Override
+    @Transactional
+    public List<EcmFile> uploadFiles(Authentication authentication, String parentObjectType, Long parentObjectId, String fileType,
+                                     String fileLang, String folderCmisId, MultipartHttpServletRequest request, HttpSession session)
+            throws AcmUserActionFailedException, AcmCreateObjectFailedException, IOException
+    {
+
+        // for multiple files
+        MultiValueMap<String, MultipartFile> attachments = request.getMultiFileMap();
+
+        List<EcmFile> uploadedFiles = new ArrayList<>();
+
+        if (attachments != null)
+        {
+            for (Map.Entry<String, List<MultipartFile>> entry : attachments.entrySet())
+            {
+                final List<MultipartFile> attachmentsList = entry.getValue();
+
+                if (attachmentsList != null && !attachmentsList.isEmpty())
+                {
+                    for (final MultipartFile attachment : attachmentsList)
+                    {
+                        AcmMultipartFile acmMultipartFile = new AcmMultipartFile(attachment, true);
+
+                        EcmFile metadata = new EcmFile();
+                        metadata.setFileType(fileType);
+                        metadata.setFileLang(fileLang);
+                        metadata.setFileName(attachment.getOriginalFilename());
+                        metadata.setFileActiveVersionMimeType(acmMultipartFile.getContentType());
+                        metadata.setUuid(request.getParameter("uuid"));
+                        EcmFile temp = upload(authentication, acmMultipartFile, folderCmisId, parentObjectType,
+                                parentObjectId,
+                                metadata);
+                        uploadedFiles.add(temp);
+
+                        applicationEventPublisher.publishEvent(new EcmFilePostUploadEvent(temp, authentication.getName()));
+                    }
+                }
+            }
+        }
+
+        return uploadedFiles;
+    }
+
+    @Override
     public List<EcmFile> getFileLinks(Long fileId) throws AcmObjectNotFoundException
     {
         EcmFile file = getEcmFileDao().find(fileId);
@@ -2243,6 +2299,14 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
         return getEcmFileDao().getLinkTargetFileInfo(ecmFile);
 
+    }
+
+    @Override
+    public List<EcmFile> findFilesByFolder(Long folderId) {
+
+        List<EcmFile> files = getEcmFileDao().findByFolderId(folderId);
+
+        return files;
     }
 
     private void deleteAuthenticationTokens(Long fileId)
