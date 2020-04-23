@@ -44,7 +44,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
+            <div class="row" ng-if="objectInfo.requestType == 'New Request'">
                 <div class="form-group col-sm-3">
                     <label class="control-label" translate> cases.comp.main.deliveryMethodOfResponse.label </label>
                     <select id="deliveryMethodOfResponse" ng-model="objectInfo.deliveryMethodOfResponse"
@@ -75,6 +75,49 @@
                             ng-readonly="isDisabled" placeholder="{{ 'cases.comp.main.otherReason.placeholder'  | translate }}"
                             permission="editRequestData" permission-object-type="CASE_FILE" permission-properties="objectInfo"
                             permission-action="disable">
+                </div>
+            </div>
+            <div class="row" ng-if="objectInfo.requestType == 'Appeal'">
+                <div class="col-sm-6">
+                    <div class="row">
+                        <div class="form-group col-sm-6" style="padding-left: 0px">
+                            <label class="control-label" translate> cases.comp.main.deliveryMethodOfResponse.label </label>
+                            <select ng-model="objectInfo.deliveryMethodOfResponse"
+                                    ng-options="deliveryMethodOfResponse.key as deliveryMethodOfResponse.value for deliveryMethodOfResponse in deliveryMethodOfResponses"
+                                    class="form-control input-md" ng-disabled="true">
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-6" style="padding-right: 0px">
+                            <label class="control-label" translate> cases.comp.main.dispositionType.label</label>
+                            <input type="text" ng-model="objectInfo.disposition" class="input-md form-control" ng-readonly="true"
+                                    permission="editRequestData" permission-object-type="CASE_FILE" permission-properties="objectInfo"
+                                    permission-action="disable">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label" translate> cases.comp.main.otherReason.label</label>
+                            <button type="button" class="btn btn-default pull-right" ng-click="openAddAppealDispositionCategory()"
+                                    style="background-color: transparent;border: 0px;color: #788288;font-size: 15px;">
+                                <span translate>cases.comp.main.otherReason.addCustomValue</span>
+                            </button>
+                            <input type="text" ng-model="objectInfo.otherReason" class="input-md form-control" ng-readonly="isDisabled"
+                                    placeholder="{{ 'cases.comp.main.otherReason.placeholder'  | translate }}" permission="editRequestData"
+                                    permission-object-type="CASE_FILE" permission-properties="objectInfo" permission-action="disable">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group" style="margin-top: 10px;">
+                        <label class="control-label" translate>cases.comp.main.dispositionReasons</label>
+                        <div ng-repeat="reason in appealDispositionReasons" style="margin-left: 20px">
+                            <label class="checkbox">
+                                <input type="checkbox" value="{{reason.key}}" ng-checked="isAppealReasonChecked(reason.key)"
+                                        ng-click="onAppealReasonSelected(reason.key)" />
+                                <span translate>{{reason.value}}</span>
+                            </label>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="row">
