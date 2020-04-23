@@ -79,6 +79,10 @@ angular.module('cases').controller('Cases.ActionsFooterController',
                 }
             } else if (name === 'Complete' && $scope.defaultNextQueue === "Release" && $scope.limitedDeliveryToSpecificPageCountEnabled) {
                 openLimitedPageReleaseModal(deferred);
+            } else if(name === 'Complete' && $scope.objectInfo.queue.name === 'Fulfill') {
+                openDispositionCategoryModal(deferred);
+            } else if(name === 'Deny' && ($scope.objectInfo.queue.name === 'Intake' || $scope.objectInfo.queue.name === 'Fulfill')) {
+                openDenyDispositionCategoryModal(deferred);
             } else {
                 deferred.resolve();
             }
@@ -110,7 +114,10 @@ angular.module('cases').controller('Cases.ActionsFooterController',
         function saveCase() {
             var saveCasePromise = $q.defer();
             $scope.$bus.publish('ACTION_SAVE_CASE', {
-                returnAction: "CASE_SAVED"
+                returnAction: "CASE_SAVED",
+                requestDisposition: $scope.requestDispositionCategory,
+                dispositionValue: $scope.dispositionValue,
+                requestOtherReason: $scope.requestOtherReason
             });
             var subscription = $scope.$bus.subscribe('CASE_SAVED', function(objectInfo) {
                 //after case is saved we are going to get new buttons
@@ -187,6 +194,8 @@ angular.module('cases').controller('Cases.ActionsFooterController',
                     type: 'RETURN_REASON'
                 }).then(function(addedNote) {
                     // Note saved
+                    $scope.requestDispositionCategory = null;
+                    $scope.requestOtherReason = null;
                     deferred.resolve();
                 });
             }, function() {
@@ -262,6 +271,61 @@ angular.module('cases').controller('Cases.ActionsFooterController',
                     deferred.resolve();
                 }, function () {
                     deferred.reject();
+                    $scope.loading = false;
+                    $scope.loadingIcon = "fa fa-check";
+                });
+            }
+            
+            function openDispositionCategoryModal(deferred) {
+                var params = {};
+                params.objectId = $scope.objectInfo.id;
+                var modalInstance = $modal.open({
+                    animation: $scope.animationsEnabled,
+                    templateUrl: 'modules/cases/views/components/request-disposition-categories-modal.client.view.html',
+                    controller: 'Cases.RequestDispositionCategoriesModalController',
+                    size: 'md',
+                    backdrop: 'static',
+                    resolve: {
+                        params: function () {
+                            return params;
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function (data) {
+                    $scope.requestDispositionCategory = data.requestDispositionCategory;
+                    $scope.dispositionValue = data.dispositionValue;
+                    deferred.resolve();
+                }, function () {
+                    deferred.reject();
+                    $scope.loading = false;
+                    $scope.loadingIcon = "fa fa-check";
+                });
+            }
+            
+            function openDenyDispositionCategoryModal(deffered) {
+                var params = {};
+                params.objectId = $scope.objectInfo.id;
+                var modalInstance = $modal.open({
+                    animation: $scope.animationsEnabled,
+                    templateUrl: 'modules/cases/views/components/request-deny-disposition-categories-modal.client.view.html',
+                    controller: 'Cases.RequestDenyDispositionCategoriesModalController',
+                    size: 'lg',
+                    backdrop: 'static',
+                    resolve: {
+                        params: function () {
+                            return params;
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function (data) {
+                    $scope.requestDispositionCategory = data.requestDispositionCategory;
+                    $scope.dispositionValue = data.dispositionValue;
+                    $scope.requestOtherReason = data.requestOtherReason;
+                    deffered.resolve();
+                }, function () {
+                    deffered.reject();
                     $scope.loading = false;
                     $scope.loadingIcon = "fa fa-check";
                 });

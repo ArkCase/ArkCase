@@ -57,7 +57,9 @@ angular.module('cases').controller(
                         $scope.objectInfo.deliveryMethodOfResponse = $scope.deliveryMethodOfResponses[0].key;
                     }
                 });
-                populateDispositionTypes($scope.objectInfo);
+                populateDispositionCategories();
+                populateDeniedDispositionCategories();
+                populateOtherReasons();
                 populateRequestTrack($scope.objectInfo);
                 $scope.populateDispositionSubTypes($scope.objectInfo.requestType);
                 $scope.originalDueDate = objectInfo.dueDate;
@@ -77,22 +79,31 @@ angular.module('cases').controller(
                 $scope.includeWeekends = response.data.includeWeekends;
             });
 
-            function populateDispositionTypes(objectInfo) {
-                ObjectLookupService.getDispositionTypes(objectInfo.requestType).then(function (requestDispositionType) {
-                    $scope.dispositionTypes = requestDispositionType;
-                    if (objectInfo.disposition != null && objectInfo.disposition != '') {
-                        $scope.dispositionValue = _.find($scope.dispositionTypes, function (disposition) {
-                            if (disposition.key == objectInfo.disposition) {
-                                return disposition.key;
-                            }
-                        });
-                        $scope.objectInfo.disposition = $scope.dispositionValue.key;
-                    } else {
-                        $scope.objectInfo.disposition = $scope.dispositionTypes[0].key;
-                    }
-
+            function populateDispositionCategories() {
+                ObjectLookupService.getLookupByLookupName('requestDispositionType').then(function (requestDispositionType) {
+                    $scope.dispositionCategories = requestDispositionType;
                 });
-            }
+            };
+            function populateDeniedDispositionCategories() {
+                ObjectLookupService.getLookupByLookupName('requestDispositionSubType').then(function (requestDispositionSubType) { 
+                    $scope.dispositionDeniedCategories =  requestDispositionSubType;     
+                });
+            };
+            function populateOtherReasons() {
+                ObjectLookupService.getLookupByLookupName('requestOtherReason').then(function (requestOtherReasons) {
+                    $scope.otherReasons = requestOtherReasons;
+                    if($scope.objectInfo.otherReason) {
+                        var found = _.find(requestOtherReasons, {
+                           key: $scope.objectInfo.otherReason  
+                        });
+                        if(found) {
+                            $scope.isCustomReason = false;
+                        } else {
+                            $scope.isCustomReason = true;
+                        }
+                    }
+                });
+            };
 
             function populateRequestTrack(objectInfo) {
                 ObjectLookupService.getRequestTrack().then(function (requestTrack) {
@@ -198,7 +209,15 @@ angular.module('cases').controller(
                     if (conf != null && typeof conf.limitedDeliveryFlag !== 'undefined') {
                         objectInfo.limitedDeliveryFlag = conf.limitedDeliveryFlag;
                     }
-
+                    if (conf != null && typeof conf.requestDisposition !== 'undefined') {
+                        objectInfo.disposition = conf.requestDisposition;
+                    }
+                    if (conf != null && typeof conf.requestOtherReason !== 'undefined') {
+                        objectInfo.otherReason = conf.requestOtherReason;
+                    }
+                    if (conf != null && typeof conf.dispositionValue !== 'undefined') {
+                        objectInfo.dispositionValue = conf.dispositionValue;
+                    }
                     promiseSaveInfo = CaseInfoService.saveFoiaRequestInfo(objectInfo);
                     promiseSaveInfo.then(function (caseInfo) {
                         if (conf != null && conf.returnAction) {

@@ -3,7 +3,8 @@ angular.module('services').service('Case.ExemptionService', function ($http) {
         saveExemptionCode: saveExemptionCode,
         getExemptionCode: getExemptionCode,
         deleteExemptionCode: deleteExemptionCode,
-        saveExemptionStatute: saveExemptionStatute
+        saveExemptionStatute: saveExemptionStatute,
+        hasExemptionOnAnyDocumentsOnRequest: hasExemptionOnAnyDocumentsOnRequest
     });
 
     function saveExemptionCode(data) {
@@ -38,6 +39,13 @@ angular.module('services').service('Case.ExemptionService', function ($http) {
             url: 'api/latest/service/exemption/statute',
             data: data
         })
+    }
+
+    function hasExemptionOnAnyDocumentsOnRequest(parentObjectId, parentObjectType) {
+        return $http({
+            method: 'GET',
+            url: 'api/latest/service/exemption/' + parentObjectId + '/' + parentObjectType + '/exemptions'
+        });
     }
 
 });

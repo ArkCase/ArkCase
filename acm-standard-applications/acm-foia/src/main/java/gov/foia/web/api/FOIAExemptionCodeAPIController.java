@@ -33,6 +33,13 @@ public class FOIAExemptionCodeAPIController
         return foiaExemptionService.getExemptionCodes(parentObjectId, parentObjectType);
     }
 
+    @RequestMapping(value = "/{parentObjectId}/{parentObjectType}/exemptions", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Boolean hasExemptionOnAnyDocumentsOnRequest(@PathVariable Long parentObjectId, @PathVariable String parentObjectType)
+    {
+        return  foiaExemptionService.hasExemptionOnAnyDocumentsOnRequest(parentObjectId, parentObjectType);
+    }
+
     public FOIAExemptionService getFoiaExemptionService()
     {
         return foiaExemptionService;

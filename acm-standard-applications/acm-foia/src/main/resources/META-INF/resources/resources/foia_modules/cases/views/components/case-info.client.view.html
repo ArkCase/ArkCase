@@ -17,6 +17,7 @@
                 <div ng-if="objectInfo.queue.name == 'Release' && objectInfo.deniedFlag" class="h4 font-bold">{{objectInfo.title || 'common.value.unknown' | translate }}
                     <span ng-if="objectInfo.deniedFlag" class="icon-overdue" translate> cases.comp.info.requestDenied.label </span>
                 </div>
+                <span  ng-if="fullGrantAndExemptionWarning" class="icon-overdue h4 font-bold text-right" translate>cases.comp.info.fullGrantDispositionWithExemeption.label</span>
             </div>
             <div class="col-xs-6 text-right">
                 <h4>{{objectInfo.caseNumber}}</h4>
