@@ -41,17 +41,22 @@ import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -205,6 +210,11 @@ public class FOIARequest extends CaseFile implements FOIAObject
 
     @Column(name = "fo_generated_zip_flag")
     private Boolean generatedZipFlag;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumns({ @JoinColumn(name = "cm_case_id"),
+            @JoinColumn(name = "cm_request_type", referencedColumnName = "fo_request_type") })
+    private List<DispositionReason> dispositionReasons = new ArrayList<>();
 
     @Transient
     private String originalRequestNumber;
@@ -673,30 +683,32 @@ public class FOIARequest extends CaseFile implements FOIAObject
         this.notificationGroup = notificationGroup;
     }
 
-    public FoiaConfiguration getFoiaConfiguration() {
+    public FoiaConfiguration getFoiaConfiguration()
+    {
         return foiaConfiguration;
     }
 
-    public void setFoiaConfiguration(FoiaConfiguration foiaConfiguration) {
+    public void setFoiaConfiguration(FoiaConfiguration foiaConfiguration)
+    {
         this.foiaConfiguration = foiaConfiguration;
     }
 
-    public Boolean getAmendmentFlag() 
+    public Boolean getAmendmentFlag()
     {
         return amendmentFlag;
     }
 
-    public void setAmendmentFlag(Boolean amendmentFlag) 
+    public void setAmendmentFlag(Boolean amendmentFlag)
     {
         this.amendmentFlag = amendmentFlag;
     }
 
-    public String getRequestAmendmentDetails() 
+    public String getRequestAmendmentDetails()
     {
         return requestAmendmentDetails;
     }
 
-    public void setRequestAmendmentDetails(String requestAmendmentDetails) 
+    public void setRequestAmendmentDetails(String requestAmendmentDetails)
     {
         this.requestAmendmentDetails = requestAmendmentDetails;
     }
@@ -709,6 +721,16 @@ public class FOIARequest extends CaseFile implements FOIAObject
     public void setExternalIdentifier(String externalIdentifier)
     {
         this.externalIdentifier = externalIdentifier;
+    }
+
+    public List<DispositionReason> getDispositionReasons()
+    {
+        return dispositionReasons;
+    }
+
+    public void setDispositionReasons(List<DispositionReason> dispositionReasons)
+    {
+        this.dispositionReasons = dispositionReasons;
     }
 
     @Override

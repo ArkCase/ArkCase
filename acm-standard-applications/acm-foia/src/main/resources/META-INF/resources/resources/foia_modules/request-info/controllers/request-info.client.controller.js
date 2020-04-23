@@ -60,7 +60,7 @@ angular.module('request-info').controller(
                   HelperObjectBrowserService, ObjectLookupService, ObjectModelService, CaseLookupService, UtilDateService, QueuesSvc, ObjectSubscriptionService, Util, SnowboundService, EcmService, DocumentPrintingService, NotesService, UserInfoService, MessageService, $translate,
                   DueDateService, AdminHolidayService, AdminFoiaConfigService, TranscriptionManagementService, $window, ArkCaseCrossWindowMessagingService, ObjectLockingService, UtilTimerService, DialogService) {
 
-            if(sessionStorage.getItem("startRow") == null){
+            if (sessionStorage.getItem("startRow") == null) {
                 sessionStorage.setItem("startRow", 0);
             }
             var nextQueueId = -1;
@@ -434,10 +434,10 @@ angular.module('request-info').controller(
                 var assignee = ObjectModelService.getAssignee(objectInfo);
                 $scope.assignee = assignee;
                 nextQueueId = objectInfo.queue.id;
-                if(sessionStorage.getItem("firstOpenedRequestId") === null){
+                if (sessionStorage.getItem("firstOpenedRequestId") === null) {
                     sessionStorage.setItem("firstOpenedRequestId", objectInfo.id);
                 }
-                RequestsService.getNextAvailableRequestInQueue({queueId:nextQueueId, createdDate: objectInfo.created})
+                RequestsService.getNextAvailableRequestInQueue({queueId: nextQueueId, createdDate: objectInfo.created})
                     .$promise.then(function (data) {
                     $scope.hasNextRequest = data.availableRequests > 0;
                 });
@@ -631,7 +631,7 @@ angular.module('request-info').controller(
             
 
             var getCaseInfo = CaseInfoService.getCaseInfo($stateParams['id']);
-            
+
             $q.all([ticketInfo, userInfo, totalUserInfo, ecmFileConfig, ecmFileInfo.$promise, ecmFileEvents.$promise, ecmFileParticipants.$promise, formsConfig, transcriptionConfigurationPromise, getCaseInfo]).then(function (data) {
                 $scope.acmTicket = data[0].data;
                 $scope.userId = data[1].userId;
@@ -1001,17 +1001,17 @@ angular.module('request-info').controller(
                     $scope.loadingIcon = "fa fa-check";
                 });
             }
-            
+
             AdminFoiaConfigService.getFoiaConfig().then(function (response) {
                 $scope.limitedDeliveryToSpecificPageCountEnabled = response.data.limitedDeliveryToSpecificPageCountEnabled;
                 $scope.limitedDeliveryToSpecificPageCount = response.data.limitedDeliveryToSpecificPageCount;
                 $scope.provideReasonToHoldRequestEnabled = response.data.provideReasonToHoldRequestEnabled;
             });
-            
+
             function openHoldReasonModal(deferred, tollingFlag) {
                 var params = {};
                 params.tollingFlag = tollingFlag;
-                
+
                 var modalInstance = $modal.open({
                     animation: $scope.animationsEnabled,
                     templateUrl: 'modules/cases/views/components/hold-reason-modal.client.view.html',
@@ -1019,16 +1019,16 @@ angular.module('request-info').controller(
                     size: 'md',
                     backdrop: 'static',
                     resolve: {
-                        params: function() {
+                        params: function () {
                             return params;
                         }
                     }
                 });
 
-                modalInstance.result.then(function(data) {
+                modalInstance.result.then(function (data) {
                     $scope.objectInfo.status = data.status;
                     if (data.isSelectedTolling) {
-                      $scope.objectInfo.tollingFlag = true;
+                        $scope.objectInfo.tollingFlag = true;
                     }
                     if (data.holdReason) {
                         //save note
@@ -1561,7 +1561,7 @@ angular.module('request-info').controller(
                     }
                 });
             }
-            
+
             UserInfoService.getUserInfo().then(function (infoData) {
                 $scope.currentUserProfile = infoData;
             });
@@ -1602,51 +1602,53 @@ angular.module('request-info').controller(
             // Release editing lock on window unload, if acquired
             $window.addEventListener('unload', function () {
                 $scope.data = {
-                        objectId: $scope.ecmFile.fileId,
-                        objectType: ObjectService.ObjectTypes.FILE,
-                        lockType: ObjectService.LockTypes.WRITE
-                    };
+                    objectId: $scope.ecmFile.fileId,
+                    objectType: ObjectService.ObjectTypes.FILE,
+                    lockType: ObjectService.LockTypes.WRITE
+                };
 
                 var data = angular.toJson($scope.data);
-                
+
                 var url = 'api/v1/plugin/' + ObjectService.ObjectTypes.FILE + '/' + $scope.ecmFile.fileId + '/lock?lockType=' + ObjectService.LockTypes.WRITE;
-                
+
                 if ($scope.editingMode) {
-                        if("sendBeacon" in navigator)
-                    {
-                                navigator.sendBeacon(url, data);
+                    if ("sendBeacon" in navigator) {
+                        navigator.sendBeacon(url, data);
                     } else {
                         var xmlhttp = new XMLHttpRequest();
                         xmlhttp.open("POST", url, false); //false - synchronous call
                         xmlhttp.setRequestHeader("Content-type", "application/json");
                         xmlhttp.send(data);
                     }
-                }                        
+                }
             });
-            
-            $rootScope.$bus.subscribe("object.changed/FILE/" + $stateParams.fileId, function() {
+
+            $rootScope.$bus.subscribe("object.changed/FILE/" + $stateParams.fileId, function () {
                 var ecmFile = EcmService.getFile({
                     fileId: $scope.ecmFile.fileId
                 });
-                ecmFile.$promise.then(function(file) {
+                ecmFile.$promise.then(function (file) {
                     $scope.ecmFile = file;
                     $scope.fileId = file.fileId;
-                    $scope.fileInfo.id= file.fileId + ':' + file.activeVersionTag;
-                    $scope.fileInfo.selectedIds= file.fileId + ':' + file.activeVersionTag;
-                    $scope.fileInfo.versionTag= file.activeVersionTag;
-                    DialogService.alert($translate.instant("documentDetails.fileChangedAlert")).then(function() {
+                    $scope.fileInfo.id = file.fileId + ':' + file.activeVersionTag;
+                    $scope.fileInfo.selectedIds = file.fileId + ':' + file.activeVersionTag;
+                    $scope.fileInfo.versionTag = file.activeVersionTag;
+                    DialogService.alert($translate.instant("documentDetails.fileChangedAlert")).then(function () {
                         $scope.openSnowboundViewer();
                     });
                 });
             });
             $scope.nextAvailableRequest = function () {
-                RequestsService.getNextAvailableRequestInQueue({queueId:nextQueueId, createdDate: $scope.objectInfo.created})
+                RequestsService.getNextAvailableRequestInQueue({
+                    queueId: nextQueueId,
+                    createdDate: $scope.objectInfo.created
+                })
                     .$promise.then(function (data) {
-                        $state.go('request-info', {
-                            id: data.requestId,
-                            fileId: data.requestFormId
-                        });
+                    $state.go('request-info', {
+                        id: data.requestId,
+                        fileId: data.requestFormId
                     });
+                });
             }
         }]);
 /**
