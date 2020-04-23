@@ -57,6 +57,7 @@ angular.module('admin').controller(
                             noUnselect: false,
                             columnDefs: $scope.userConfig.columnDefs,
                             totalItems: 0,
+                            useExternalPagination: true,
                             paginationPageSizes: $scope.userConfig.paginationPageSizes,
                             paginationPageSize: $scope.userConfig.paginationPageSize,
                             data: [],
@@ -91,6 +92,7 @@ angular.module('admin').controller(
                             AdminPortalConfigurationService.getPortalUsers(Util.goodValue(params.start, 0), Util.goodValue(params.maxRows, 20)).then(function (response) {
                                 if (!Util.isEmpty(response.data)) {
                                     $scope.gridUserOptions.data = response.data.response.docs;
+                                    $scope.gridUserOptions.totalItems = response.data.response.numFound;
                                 }
                             })
                         };
