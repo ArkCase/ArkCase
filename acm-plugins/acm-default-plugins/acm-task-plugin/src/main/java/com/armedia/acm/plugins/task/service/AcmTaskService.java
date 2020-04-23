@@ -36,11 +36,9 @@ import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.model.BuckslipProcess;
-
 import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -241,4 +239,8 @@ public interface AcmTaskService
     void createTaskFolderStructureInParentObject(AcmTask task) throws AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException, LinkAlreadyExistException;
 
     public void setParticipantsToTaskFolderLink(AcmTask task) throws AcmObjectNotFoundException;
+
+    String getTaskFolderNameInParentObject(AcmTask acmTask);
+
+    boolean existFilesInTaskAttachFolder(AcmTask acmTask);
 }

@@ -160,7 +160,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
                 String registrationKey = UUID.randomUUID().toString();
                 createRegistrationRecord(registrationKey, registrationRequest.getEmailAddress(), System.currentTimeMillis(), portalId);
                 String registrationLink = new String(Base64Utils.decodeFromString(registrationRequest.getRegistrationUrl()),
-                        Charset.forName("UTF-8")) + "/" + registrationKey;
+                        Charset.forName("UTF-8")) + "/" + registrationKey + "/" + registrationRequest.getEmailAddress();
 
                 Notification notification = new Notification();
                 notification.setTemplateModelName("portalRequestRegistrationLink");
@@ -266,6 +266,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         {
             PortalFOIAPerson person = getPortalFOIAPerson(portalId, user, registeredPerson);
             createPortalUser(portalId, user, person, password);
+            registrationDao.delete(registrationRecord.get());
             return UserRegistrationResponse.accepted();
         }
 
@@ -456,8 +457,6 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     {
         try
         {
-            createRegistrationRecord(UUID.randomUUID().toString(), acmUser.getMail(), System.currentTimeMillis() - REGISTRATION_EXPIRATION,
-                    portalId);
             PortalFOIAPerson portalFOIAPerson = portalFOIAPersonFromAcmUser(acmUser);
             Map<String, String> roles = new HashMap<>();
             roles.put(portalId, PortalUser.PENDING_USER);
