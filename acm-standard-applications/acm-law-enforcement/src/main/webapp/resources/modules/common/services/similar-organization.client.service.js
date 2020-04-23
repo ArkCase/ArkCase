@@ -1,4 +1,4 @@
-angular.module('services').factory('SimilarOrganizationService', ['$http', function ($http) {
+angular.module('services').factory('SimilarOrganizationService', ['$http', 'UtilService', function ($http, Util) {
 
     return {
         getSimilarOrganizationsByName: getSimilarOrganizationsByName
@@ -7,8 +7,11 @@ angular.module('services').factory('SimilarOrganizationService', ['$http', funct
     function getSimilarOrganizationsByName(organizationName){
             return $http({
                 method: 'GET',
-                url: 'api/latest/plugin/organizations/findExistingOrganization/' + organizationName
-            });
+                url: 'api/latest/plugin/organizations/searchExisting/' + organizationName,
+                cache: false,
+                isArray: false,
+                transformResponse: Util.transformSearchResponse
+            })
     }
 
 }]);
