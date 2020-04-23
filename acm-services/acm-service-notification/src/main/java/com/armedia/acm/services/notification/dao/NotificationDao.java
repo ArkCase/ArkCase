@@ -35,8 +35,8 @@ import com.armedia.acm.services.notification.service.CustomTitleFormatter;
 import com.armedia.acm.services.notification.service.NotificationUtils;
 import com.armedia.acm.services.notification.service.UsersNotified;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -108,10 +108,10 @@ public class NotificationDao extends AcmAbstractDao<Notification>
         notification.setParameter("user", user);
         notification.setParameter("everyone", everyone);
 
-        List<Notification> notifications = (List<Notification>) notification.getResultList();
+        List<Notification> notifications = notification.getResultList();
         if (null == notifications)
         {
-            notifications = new ArrayList();
+            notifications = new ArrayList<>();
         }
         return notifications;
     }
@@ -185,38 +185,34 @@ public class NotificationDao extends AcmAbstractDao<Notification>
             String objectType = relatedObjectType != null ? relatedObjectType : parentType;
             Long objectId = relatedObjectType != null ? relatedObjectId : parentId;
             UsersNotified usersNotified = rule.getUsersNotified();
-            List<Notification> notificationsForAssociatedUsers = usersNotified.getNotifications(obj, objectId, objectType);
+            Notification notificationForAssociatedUsers = usersNotified.getNotification(obj, objectId, objectType);
 
-            setNotificationsTitle(notificationsForAssociatedUsers, rule);
-            setNotificationsRelatedObjectNumber(notificationsForAssociatedUsers);
+            setNotificationTitle(notificationForAssociatedUsers, rule);
+            setNotificationRelatedObjectNumber(notificationForAssociatedUsers);
 
-            notifications.addAll(notificationsForAssociatedUsers);
+            notifications.add(notificationForAssociatedUsers);
         }
 
         return notifications;
     }
 
-    private void setNotificationsTitle(List<Notification> notifications, NotificationRule rule)
+    private void setNotificationTitle(Notification notification, NotificationRule rule)
     {
         CustomTitleFormatter customTitleFormatter = rule.getCustomTitleFormatter();
         if (customTitleFormatter != null)
         {
-            notifications.forEach(notification -> {
-                String title = customTitleFormatter.format(notification);
-                notification.setTitle(title);
-                notification.setNote(title);
-            });
+            String title = customTitleFormatter.format(notification);
+            notification.setTitle(title);
+            notification.setNote(title);
         }
     }
 
-    private void setNotificationsRelatedObjectNumber(List<Notification> notifications)
+    private void setNotificationRelatedObjectNumber(Notification notification)
     {
-        notifications.forEach(notification -> {
-            String relatedObjectNumber = getNotificationUtils()
-                    .getNotificationParentOrRelatedObjectNumber(notification.getRelatedObjectType(),
-                            notification.getRelatedObjectId());
-            notification.setRelatedObjectNumber(relatedObjectNumber);
-        });
+        String relatedObjectNumber = getNotificationUtils()
+                .getNotificationParentOrRelatedObjectNumber(notification.getRelatedObjectType(),
+                        notification.getRelatedObjectId());
+        notification.setRelatedObjectNumber(relatedObjectNumber);
     }
 
     /**
@@ -237,7 +233,7 @@ public class NotificationDao extends AcmAbstractDao<Notification>
         select.setMaxResults(maxResult);
 
         @SuppressWarnings("unchecked")
-        List<Notification> retval = (List<Notification>) select.getResultList();
+        List<Notification> retval = select.getResultList();
 
         if (null == retval)
         {

@@ -38,13 +38,9 @@ import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ParticipantsNotified implements UsersNotified
 {
@@ -66,7 +62,7 @@ public class ParticipantsNotified implements UsersNotified
      */
 
     @Override
-    public List<Notification> getNotifications(Object[] notification, Long parentObjectId, String parentObjectType)
+    public Notification getNotification(Object[] notification, Long parentObjectId, String parentObjectType)
     {
         AcmNotificationDao notificationDao = getAcmDataService().getNotificationDaoByObjectType(parentObjectType);
         if (notificationDao != null)
@@ -79,7 +75,7 @@ public class ParticipantsNotified implements UsersNotified
                 return setNotificationForUsers(notification, receivers);
             }
         }
-        return Collections.emptyList();
+        return null;
     }
 
     private Set<AcmUser> getUsers(Set<AcmNotificationReceiver> participants)
@@ -108,17 +104,13 @@ public class ParticipantsNotified implements UsersNotified
         return receivers;
     }
 
-    private List<Notification> setNotificationForUsers(Object obj[], Set<AcmUser> users)
+    private Notification setNotificationForUsers(Object obj[], Set<AcmUser> users)
     {
-        List<Notification> notifications = new ArrayList<>();
-        for (AcmUser user : users)
-        {
-            Notification notification = setNewNotification(obj);
-            notification.setEmailAddresses(user.getMail());
-            notification.setUser(user.getUserId());
-            notifications.add(notification);
-        }
-        return notifications;
+        Notification notification = setNewNotification(obj);
+        notification.setEmailAddresses(users.stream().map(user -> user.getMail()).collect(Collectors.joining(",")));
+        // the userId is only used for audit, so any user will do here
+        notification.setUser(users.stream().findAny().get().getUserId());
+        return notification;
     }
 
     public AcmDataService getAcmDataService()
