@@ -852,7 +852,7 @@ public class FOIARequest extends CaseFile implements FOIAObject
                 + amendmentFlag
                 + ", requestAmendmentDetails=" + requestAmendmentDetails + ", dispositionClosedDate=" + dispositionClosedDate
                 + ", tollingFlag=" + tollingFlag + ", limitedDeliveryFlag=" + limitedDeliveryFlag + ", generatedZipFlag=" + generatedZipFlag
-                + ", perfectedDate=" + perfectedDate + "} "
+                + ", perfectedDate=" + perfectedDate + ", timeToComplete=" + timeToComplete + "} "
                 + super.toString();
     }
 }

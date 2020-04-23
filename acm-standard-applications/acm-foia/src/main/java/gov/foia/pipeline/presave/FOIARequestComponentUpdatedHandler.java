@@ -96,10 +96,15 @@ public class FOIARequestComponentUpdatedHandler
 
                     Integer calculatedTTC = elapsedTTC + TTC / 2;
                     calculatedTTC = calculatedTTC > TTC ? TTC : calculatedTTC;
-                    entity.setDueDate(holidayConfigurationService.addWorkingDaysToDate(
-                            Date.from(
-                                    entity.getPerfectedDate().toLocalDate().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()),
-                            calculatedTTC - 1));
+
+                    // Do not update duedate if its overdue
+                    if (!entity.getDueDate().before(new Date()))
+                    {
+                        entity.setDueDate(holidayConfigurationService.addWorkingDaysToDate(
+                                Date.from(
+                                        entity.getPerfectedDate().toLocalDate().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()),
+                                calculatedTTC - 1));
+                    }
 
                     entity.setTimeToComplete(elapsedTTC);
 
