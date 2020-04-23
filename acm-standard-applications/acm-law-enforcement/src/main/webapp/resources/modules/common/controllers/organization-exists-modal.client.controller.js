@@ -8,7 +8,6 @@
                 $scope.header = params.header;
                 $scope.config = params.config;
                 $scope.config.data = params.organizations;
-                $scope.isDefault = false;
                 $scope.selectedItem = null;
                 $scope.isFromNewOrganizationModal = params.isFromNewOrganizationModal? params.isFromNewOrganizationModal : false;
 
