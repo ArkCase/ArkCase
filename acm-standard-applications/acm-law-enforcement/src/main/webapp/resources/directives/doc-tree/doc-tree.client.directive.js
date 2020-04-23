@@ -310,7 +310,7 @@ angular.module('directives').directive(
                                                 //User renames folder right after create one, data.isNew should be false, but is still true
                                                 //When folder is created first time, key starts with "_"
                                                 var key = data.node.key + "";
-                                                isNew = key.startsWith("_");
+                                                isNew = _.startsWith(key, "_");
                                             }
 
                                             if (isNew) {

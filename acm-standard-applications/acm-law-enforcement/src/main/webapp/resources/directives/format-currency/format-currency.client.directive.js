@@ -43,7 +43,7 @@ angular
                     str = event.target.value; //contains insert input
                     if((str.length > 1 ||
                             (str.length === 1 && str !== '-')) &&
-                        !str.endsWith('.') &&
+                        !_.endsWith(str, '.') &&
                         !numberRegExp.test(str)){
                         str = strKeyPress;
                         elem.val(str);
