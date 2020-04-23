@@ -211,6 +211,9 @@ public class FOIARequest extends CaseFile implements FOIAObject
 
     @Transient
     private FoiaConfiguration foiaConfiguration;
+    
+    @Transient
+    private String dispositionValue;
 
     /**
      * @return the receivedDate
@@ -801,6 +804,16 @@ public class FOIARequest extends CaseFile implements FOIAObject
     public void setGeneratedZipFlag(Boolean generatedZipFlag)
     {
         this.generatedZipFlag = generatedZipFlag;
+    }
+
+    public String getDispositionValue() 
+    {
+        return dispositionValue;
+    }
+
+    public void setDispositionValue(String dispositionValue) 
+    {
+        this.dispositionValue = dispositionValue;
     }
 
     /*

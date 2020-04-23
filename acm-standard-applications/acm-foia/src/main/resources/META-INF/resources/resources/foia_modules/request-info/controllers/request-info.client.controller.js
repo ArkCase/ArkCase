@@ -567,23 +567,36 @@ angular.module('request-info').controller(
                     $scope.$bus.publish('required-fields-retrieved', $scope.requiredFields[$scope.requestInfo.queue.name]);
                 }
 
-                populateDispositionTypes($scope.requestInfo);
+                populateDispositionCategories($scope.requestInfo);
+                populateDeniedDispositionCategories($scope.requestInfo);
+                populateOtherReasons($scope.requestInfo);
                 populateRequestTrack($scope.requestInfo);
-                $scope.populateDispositionSubTypes($scope.objectInfo.requestType);
             };
 
-            function populateDispositionTypes(objectInfo) {
-                ObjectLookupService.getDispositionTypes(objectInfo.requestType).then(function (requestDispositionType) {
-                    $scope.dispositionTypes = requestDispositionType;
-                    if (objectInfo.disposition) {
-                        $scope.dispositionValue = _.find($scope.dispositionTypes, function (disposition) {
-                            if (disposition.key == objectInfo.disposition) {
-                                return disposition.key;
-                            }
+            function populateDispositionCategories(objectInfo) {
+                ObjectLookupService.getLookupByLookupName('requestDispositionType').then(function (requestDispositionType) {
+                    $scope.dispositionCategories = requestDispositionType;
+                });
+            }
+
+            function populateDeniedDispositionCategories(objectInfo) {
+                ObjectLookupService.getLookupByLookupName('requestDispositionSubType').then(function (requestDispositionSubType) {
+                    $scope.dispositionDeniedCategories = requestDispositionSubType;
+                });
+            }
+            
+            function populateOtherReasons(objectInfo) {
+                ObjectLookupService.getLookupByLookupName('requestOtherReason').then(function (requestOtherReasons) {
+                    $scope.otherReasons = requestOtherReasons;
+                    if($scope.objectInfo.otherReason) {
+                        var found = _.find(requestOtherReasons, {
+                            key: $scope.objectInfo.otherReason
                         });
-                        $scope.requestInfo.disposition = $scope.dispositionValue.key;
-                    } else {
-                        $scope.requestInfo.disposition = $scope.dispositionTypes[0].key;
+                        if(found) {
+                            $scope.isCustomReason = false;
+                        } else {
+                            $scope.isCustomReason = true;
+                        }
                     }
                 });
             }
@@ -615,20 +628,7 @@ angular.module('request-info').controller(
                 }
 
             };
-
-            $scope.populateDispositionSubTypes = function (requestType) {
-                if (requestType == "Appeal") {
-                    ObjectLookupService.getAppealDispositionSubTypes().then(function (appealDispositionSubType) {
-                        $scope.dispositionSubTypes = appealDispositionSubType;
-                    });
-                } else if (requestType == "New Request") {
-                    ObjectLookupService.getRequestDispositionSubTypes().then(function (requestDispositionSubType) {
-                        $scope.dispositionSubTypes = requestDispositionSubType;
-                    });
-                } else {
-                    $scope.dispositionSubTypes = "";
-                }
-            };
+            
 
             var getCaseInfo = CaseInfoService.getCaseInfo($stateParams['id']);
             
@@ -959,6 +959,13 @@ angular.module('request-info').controller(
                         type: 'RETURN_REASON'
                     }).then(function (addedNote) {
                         // Note saved
+                        var disposition = _.find($scope.dispositionCategories, {
+                            key: $scope.requestInfo.disposition
+                        });
+                        $scope.requestInfo.dispositionValue = $translate.instant(disposition.value);
+                        $scope.requestInfo.disposition = null;
+                        $scope.objectInfo.otherReason = null;
+                        $scope.isRequestFormModified = true;
                         deferred.resolve();
                     });
                 }, function () {
@@ -1071,6 +1078,62 @@ angular.module('request-info').controller(
                 });
             }
 
+            function openDispositionCategoryModal(deferred, isRequestFormModified) {
+                var params = {};
+                params.objectId = $scope.objectInfo.id;
+                var modalInstance = $modal.open({
+                    animation: $scope.animationsEnabled,
+                    templateUrl: 'modules/cases/views/components/request-disposition-categories-modal.client.view.html',
+                    controller: 'Cases.RequestDispositionCategoriesModalController',
+                    size: 'md',
+                    backdrop: 'static',
+                    resolve: {
+                        params: function () {
+                            return params;
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function (data) {
+                    $scope.requestInfo.disposition = data.requestDispositionCategory;
+                    $scope.requestInfo.dispositionValue = data.dispositionValue;
+                    $scope.isRequestFormModified = data.requestDispositionCategory ? true : false;
+                    deferred.resolve();
+                }, function () {
+                    deferred.reject();
+                    $scope.loading = false;
+                    $scope.loadingIcon = "fa fa-check";
+                });
+            }
+
+            function openDenyDispositionCategoryModal(deferred, isRequestFormModified) {
+                var params = {};
+                params.objectId = $scope.objectInfo.id;
+                var modalInstance = $modal.open({
+                    animation: $scope.animationsEnabled,
+                    templateUrl: 'modules/cases/views/components/request-deny-disposition-categories-modal.client.view.html',
+                    controller: 'Cases.RequestDenyDispositionCategoriesModalController',
+                    size: 'lg',
+                    backdrop: 'static',
+                    resolve: {
+                        params: function () {
+                            return params;
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function (data) {
+                    $scope.requestInfo.disposition = data.requestDispositionCategory;
+                    $scope.requestInfo.dispositionValue = data.dispositionValue;
+                    $scope.objectInfo.otherReason = data.requestOtherReason;
+                    deferred.resolve();
+                }, function () {
+                    deferred.reject();
+                    $scope.loading = false;
+                    $scope.loadingIcon = "fa fa-check";
+                });
+            }
+
             function setupNextQueue(name, deferred) {
 
                 var nextQueue = name;
@@ -1119,7 +1182,7 @@ angular.module('request-info').controller(
                             releaseRequestLock($scope.requestInfo.id).then(function () {
                                 $scope.$emit('report-object-refreshed', $stateParams.id);
                                 if (name === 'Next' || name === 'Return' || name === 'Deny') {
-                                    goToNextAvailableRequestOrQueueList();
+                                    goToNextAvailableRequestOrQueueList(deferred);
                                 } else {
                                     deferred.resolve();
                                 }
@@ -1150,6 +1213,7 @@ angular.module('request-info').controller(
                 $scope.loading = true;
                 $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
                 $scope.nameButton = name;
+                $scope.isRequestFormModified = isRequestFormModified;
 
                 var nextQueue = name;
                 var deferred = $q.defer();
@@ -1169,6 +1233,10 @@ angular.module('request-info').controller(
                     }
                 } else if (name === 'Complete' && $scope.defaultNextQueue === "Release" && $scope.limitedDeliveryToSpecificPageCountEnabled) {
                     openLimitedPageReleaseModal(deferred);
+                } else if(name === 'Complete' && $scope.objectInfo.queue.name === 'Fulfill') {
+                    openDispositionCategoryModal(deferred, $scope.isRequestFormModified);
+                } else if(name === 'Deny' && ($scope.objectInfo.queue.name === 'Intake' || $scope.objectInfo.queue.name === 'Fulfill')) {
+                    openDenyDispositionCategoryModal(deferred, $scope.isRequestFormModified);
                 } else {
                     deferred.resolve();
                 }
@@ -1178,7 +1246,7 @@ angular.module('request-info').controller(
                     var deferred = $q.defer();
                     var queueId = $scope.requestInfo.queue.id;
 
-                    if (isRequestFormModified == true) {
+                    if ($scope.isRequestFormModified == true) {
                         saveRequest().then(function (objectInfo) {
                             $scope.objectInfo = objectInfo;
                             setupNextQueue(name, deferred);
@@ -1236,8 +1304,6 @@ angular.module('request-info').controller(
                         $state.go('request-info', {
                             id: nextRequest.object_id_s
                         });
-                    } else {
-                        $state.go('queues');
                     }
                     deferred.resolve();
                 }, 4000);

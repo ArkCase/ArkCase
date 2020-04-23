@@ -52,29 +52,31 @@
                             class="form-control input-md" ng-disabled="true">
                     </select>
                 </div>
-                <div class="form-group col-sm-3">
+                <div class="form-group col-sm-3" ng-if="!objectInfo.deniedFlag">
                     <label class="control-label" translate> cases.comp.main.dispositionType.label</label>
                     <select ng-model="objectInfo.disposition"
-                            ng-options="dispositionType.key as dispositionType.value | translate for dispositionType in dispositionTypes"
-                            class="form-control input-md" ng-change="populateDispositionSubTypes(objectInfo.requestType)"
-                            permission="editRequestData" permission-object-type="CASE_FILE" permission-properties="objectInfo"
-                            permission-action="disable">
+                            ng-options="dispositionCategory.key as dispositionCategory.value | translate for dispositionCategory in dispositionCategories"
+                            class="form-control input-md" ng-disabled="true">
                     </select>
                 </div>
-                <div class="form-group col-sm-3">
-                    <label class="control-label" translate> cases.comp.main.dispositionSubType.label</label> <select
-                        ng-model="objectInfo.dispositionSubtype" ng-change="isChanged(objectInfo.dispositionSubtype)"
-                        ng-options="dispositionSubType.key as dispositionSubType.value | translate for dispositionSubType in dispositionSubTypes"
-                        class="form-control input-md" permission="editRequestData" permission-object-type="CASE_FILE"
-                        permission-properties="objectInfo" permission-action="disable">
-                </select>
+                <div class="form-group col-sm-3" ng-if="objectInfo.deniedFlag">
+                    <label class="control-label" translate> cases.comp.main.dispositionType.label</label>
+                    <select ng-model="objectInfo.disposition" 
+                            ng-options="dispositionCategory.key as dispositionCategory.value | translate for dispositionCategory in dispositionDeniedCategories"
+                            class="form-control input-md" ng-disabled="true">
+                    </select>
                 </div>
-                <div class="form-group col-sm-3">
+                <div class="form-group col-sm-3" ng-if="isCustomReason">
                     <label class="control-label" translate> cases.comp.main.otherReason.label</label>
                     <input type="text" id="otherReason" ng-model="objectInfo.otherReason" name="otherReason" class="input-md form-control"
-                            ng-readonly="isDisabled" placeholder="{{ 'cases.comp.main.otherReason.placeholder'  | translate }}"
-                            permission="editRequestData" permission-object-type="CASE_FILE" permission-properties="objectInfo"
-                            permission-action="disable">
+                            ng-disabled="true">
+                </div>
+                <div class="form-group col-sm-3" ng-if="!isCustomReason">
+                    <label class="control-label" translate>cases.comp.main.otherReason.label</label>
+                    <select ng-model="objectInfo.otherReason"
+                            ng-options="otherReason.key as otherReason.value | translate for otherReason in otherReasons"
+                            class="form-control input-md" ng-disabled="true" ng-disabled="true">
+                    </select>
                 </div>
             </div>
             <div class="row">
