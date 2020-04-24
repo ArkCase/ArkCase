@@ -57,8 +57,6 @@ public class RequestComponentAgencyChangedEvent extends AcmEvent
         setUserId(AuthenticationUtils.getUsername());
         setIpAddress(AuthenticationUtils.getUserIpAddress());
         setEventDescription(description);
-        setParentObjectId(originalRequest.getContainer().getContainerObjectId());
-        setParentObjectType(originalRequest.getContainer().getContainerObjectType());
     }
 
     @Override

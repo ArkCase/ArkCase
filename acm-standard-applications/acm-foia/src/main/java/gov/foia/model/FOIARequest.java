@@ -211,8 +211,8 @@ public class FOIARequest extends CaseFile implements FOIAObject
     @Convert(converter = LocalDateTimeConverter.class)
     private LocalDateTime perfectedDate;
 
-    @Column(name = "fo_time_to_complete")
-    private Integer timeToComplete;
+    @Column(name = "fo_ttc_on_last_redirection")
+    private Integer ttcOnLastRedirection;
 
     @Transient
     private String originalRequestNumber;
@@ -823,14 +823,21 @@ public class FOIARequest extends CaseFile implements FOIAObject
         this.perfectedDate = perfectedDate;
     }
 
-    public Integer getTimeToComplete()
+    /**
+     * This property is used only for misdirected request calculations.
+     * We need it in DB that so we can track the previous ttc state and calculate the current ttc state.
+     * (originalTTCstate - elapsed days from the original perfected day to current perfected day)
+     *
+     * @return ttc of last redirection.
+     */
+    public Integer getTtcOnLastRedirection()
     {
-        return timeToComplete;
+        return ttcOnLastRedirection;
     }
 
-    public void setTimeToComplete(Integer timeToComplete)
+    public void setTtcOnLastRedirection(Integer ttcOnLastRedirection)
     {
-        this.timeToComplete = timeToComplete;
+        this.ttcOnLastRedirection = ttcOnLastRedirection;
     }
 
     /*
@@ -852,7 +859,7 @@ public class FOIARequest extends CaseFile implements FOIAObject
                 + amendmentFlag
                 + ", requestAmendmentDetails=" + requestAmendmentDetails + ", dispositionClosedDate=" + dispositionClosedDate
                 + ", tollingFlag=" + tollingFlag + ", limitedDeliveryFlag=" + limitedDeliveryFlag + ", generatedZipFlag=" + generatedZipFlag
-                + ", perfectedDate=" + perfectedDate + ", timeToComplete=" + timeToComplete + "} "
+                + ", perfectedDate=" + perfectedDate + ", timeToComplete=" + ttcOnLastRedirection + "} "
                 + super.toString();
     }
 }

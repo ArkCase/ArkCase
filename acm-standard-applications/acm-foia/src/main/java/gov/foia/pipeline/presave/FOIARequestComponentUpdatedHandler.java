@@ -92,7 +92,7 @@ public class FOIARequestComponentUpdatedHandler
 
                     Integer TTC = queuesTimeToCompleteService.getTimeToComplete().getRequest().getTotalTimeToComplete();
                     Integer elapsedDays = holidayConfigurationService.countWorkingDates(originalPerfectedDate, LocalDate.now());
-                    Integer elapsedTTC = originalRequest.getTimeToComplete() - elapsedDays;
+                    Integer elapsedTTC = originalRequest.getTtcOnLastRedirection() - elapsedDays;
 
                     Integer calculatedTTC = elapsedTTC + TTC / 2;
                     calculatedTTC = calculatedTTC > TTC ? TTC : calculatedTTC;
@@ -103,10 +103,10 @@ public class FOIARequestComponentUpdatedHandler
                         entity.setDueDate(holidayConfigurationService.addWorkingDaysToDate(
                                 Date.from(
                                         entity.getPerfectedDate().toLocalDate().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()),
-                                calculatedTTC - 1));
+                                calculatedTTC));
                     }
 
-                    entity.setTimeToComplete(elapsedTTC);
+                    entity.setTtcOnLastRedirection(elapsedTTC);
 
                     sendAuditEvents(entity, originalRequest, elapsedTTC, calculatedTTC);
                 }
