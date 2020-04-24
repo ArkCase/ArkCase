@@ -565,7 +565,7 @@ angular.module('directives').directive('objectTree', [ '$q', '$translate', 'Util
             for(var i = 0; i < nodeTypes.length; i++){
                 if(nodeTypes[i].requiredPrivileges ){
                     for (var j = 0; j < nodeTypes[i].requiredPrivileges.length; j++){
-                        if(userPrivileges && !userPrivileges.includes(nodeTypes[i].requiredPrivileges[j])) {
+                        if (userPrivileges && _.indexOf(userPrivileges, nodeTypes[i].requiredPrivileges[j]) === -1) {
                             nodeTypes.splice(i,1);
                             break;
                         }
