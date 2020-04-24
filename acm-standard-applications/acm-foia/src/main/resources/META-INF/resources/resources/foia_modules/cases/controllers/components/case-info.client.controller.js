@@ -3,8 +3,8 @@
 angular.module('cases').controller(
     'Cases.InfoController',
     [ '$scope', '$stateParams', '$state', '$translate', '$timeout', 'UtilService', 'Util.DateService', 'ConfigService', 'Object.LookupService', 'Case.LookupService', 'Case.InfoService', 'Object.ModelService', 'Helper.ObjectBrowserService', 'DueDate.Service', 'Admin.HolidayService',
-        'MessageService', '$modal', 'LookupService', 'Admin.FoiaConfigService', 'Admin.ObjectTitleConfigurationService', 'Cases.SuggestedCases',
-        function($scope, $stateParams, $state, $translate, $timeout, Util, UtilDateService, ConfigService, ObjectLookupService, CaseLookupService, CaseInfoService, ObjectModelService, HelperObjectBrowserService, DueDateService, AdminHolidayService, MessageService, $modal, LookupService, AdminFoiaConfigService, AdminObjectTitleConfigurationService, SuggestedCasesService) {
+        'MessageService', '$modal', 'LookupService', 'Admin.FoiaConfigService', 'Admin.ObjectTitleConfigurationService', 'Cases.SuggestedCases', '$filter',
+        function ($scope, $stateParams, $state, $translate, $timeout, Util, UtilDateService, ConfigService, ObjectLookupService, CaseLookupService, CaseInfoService, ObjectModelService, HelperObjectBrowserService, DueDateService, AdminHolidayService, MessageService, $modal, LookupService, AdminFoiaConfigService, AdminObjectTitleConfigurationService, SuggestedCasesService, $filter) {
 
             new HelperObjectBrowserService.Component({
                 scope: $scope,
@@ -117,6 +117,20 @@ angular.module('cases').controller(
                         }
                     }
                 });
+
+                $scope.componentAgency = null;
+                ObjectLookupService.getLookupByLookupName("componentsAgencies").then(function (componentsAgencies) {
+                    $scope.componentsAgencies = componentsAgencies;
+                    if ($scope.objectInfo.hasOwnProperty('componentAgency')) {
+                        var notification = _.find($scope.componentsAgencies, {
+                            key: $scope.objectInfo.componentAgency
+                        });
+                        if (typeof notification !== "undefined") {
+                            $scope.componentAgency = notification.value;
+                        }
+                    }
+                });
+
                 AdminFoiaConfigService.getFoiaConfig().then(function (response) {
                     $scope.foiaConfig = response.data;
                     $scope.foiaConfig.receivedDateEnabled = response.data.receivedDateEnabled;
@@ -177,7 +191,7 @@ angular.module('cases').controller(
 
                             $scope.assignee = selectedUser.object_id_s;
                             $scope.updateAssignee();
-                            
+
                             //set for AFDP-6831 to inheritance in the Folder/file participants
                             var len = $scope.objectInfo.participants.length;
                             for (var i = 0; i < len; i++) {
@@ -199,7 +213,7 @@ angular.module('cases').controller(
                             var selectedGroup = selection.masterSelectedItem;
                             $scope.owningGroup = selectedGroup.object_id_s;
                             $scope.updateOwningGroup();
-                            
+
                             //set for AFDP-6831 to inheritance in the Folder/file participants
                             var len = $scope.objectInfo.participants.length;
                             for (var i = 0; i < len; i++) {
@@ -236,6 +250,28 @@ angular.module('cases').controller(
                 $timeout(function() {
                     $scope.picker.opened = true;
                 });
+            };
+
+
+            $scope.setRequestDate = function (objectInfo) {
+                if (objectInfo && objectInfo.requestType) {
+                    if (objectInfo.requestType === "New Request") {
+                        if (objectInfo.perfectedDate) {
+                            return $filter('date')(objectInfo.perfectedDate, $translate.instant("common.defaultDateTimeUIFormat"));
+                        } else {
+                            return $translate.instant("common.value.unknown");
+                        }
+                    } else {
+                        if (objectInfo.receivedDate) {
+                            return $filter('date')(objectInfo.receivedDate, $translate.instant("common.defaultDateTimeUIFormat"));
+                        } else {
+                            return $translate.instant("common.value.unknown");
+                        }
+                    }
+                } else {
+                    return $translate.instant("common.value.unknown");
+                }
+
             };
 
             /**
@@ -293,13 +329,27 @@ angular.module('cases').controller(
                 }
                 saveCase();
             };
-            $scope.setReceivedDate = function(data){
-                if (!Util.isEmpty(data)) {
-                    $scope.objectInfo.receivedDate = data;
-                    $scope.saveCase();
-                } else {
+
+            $scope.updateComponentAgency = function () {
+                var notification = _.find($scope.componentsAgencies, {
+                    key: $scope.objectInfo.componentAgency
+                });
+                if (typeof notification !== "undefined") {
+                    $scope.componentAgency = notification.value;
                 }
-            }
+                saveCase();
+            };
+
+            $scope.setDate = function (data) {
+                if (!Util.isEmpty(data)) {
+                    if ($scope.objectInfo.requestType === "New Request") {
+                        $scope.objectInfo.perfectedDate = data;
+                    } else {
+                        $scope.objectInfo.receivedDate = data;
+                    }
+                    $scope.saveCase();
+                }
+            };
 
             $scope.suggestedCases = function () {
                 $state.go('cases.suggestedCases',{
@@ -313,6 +363,6 @@ angular.module('cases').controller(
                     $scope.saveCase();
                 }
             }
-            
+
 
         } ]);
