@@ -208,6 +208,7 @@
                         <div class="col-sm-4">
                             <input type="text" class="form-control" id="confirmationEmail" ng-model="confirmationEmail"
                                     placeholder="{{'cases.newRequest.confirmationEmail.placeholder' | translate}}" name="confirmationEmail"
+                                    ng-blur="checkExistingEmail()"
                                     ng-required="config.data.deliveryMethodOfResponse == 'Email'  || config.data.createNewPortalUser"
                                     ng-disabled="isExistingPerson && (existingPerson.defaultEmail.value ||
                                     (config.data.deliveryMethodOfResponse != 'Email'  && !config.data.createNewPortalUser))">

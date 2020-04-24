@@ -96,8 +96,9 @@ angular.module('cases').controller(
             var getAddressTypes = ObjectLookupService.getAddressTypes();
             var canadaProvinces = ObjectLookupService.getLookupByLookupName('canadaProvinces');
             var japanStates = ObjectLookupService.getLookupByLookupName('japanStates');
+            var commonModuleConfig = ConfigService.getModuleConfig("common");
 
-            $q.all([requestConfig, componentsAgenciesPromise, organizationTypeLookup, prefixNewRequest, newRequestTypes, deliveryMethodOfResponsesRequest, payFeesRequest, requestCategories, stateRequest, promiseConfigTitle, personTypesLookup, getPortals, getCountries, getAddressTypes, canadaProvinces, japanStates]).then(function (data) {
+            $q.all([requestConfig, componentsAgenciesPromise, organizationTypeLookup, prefixNewRequest, newRequestTypes, deliveryMethodOfResponsesRequest, payFeesRequest, requestCategories, stateRequest, promiseConfigTitle, personTypesLookup, getPortals, getCountries, getAddressTypes, canadaProvinces, japanStates, commonModuleConfig]).then(function (data) {
 
                 var moduleConfig = data[0];
                 var componentsAgencies = data[1];
@@ -115,6 +116,7 @@ angular.module('cases').controller(
                 var addressTypes = data[13];
                 var canadaProvinces = data[14];
                 var japanStates = data[15];
+                $scope.commonModuleConfig = data[16];
 
                 if (!Util.isEmpty(configTitle)) {
                     $scope.enableTitle = configTitle.data.CASE_FILE.enableTitleField;
@@ -238,8 +240,53 @@ angular.module('cases').controller(
                         $anchorScroll();
                     }
                 }
-
             };
+
+            function openDuplicatePersonPicker(result) {
+                $scope.config.data.originator.person.defaultEmail.value = '';
+                $scope.confirmationEmail = '';
+
+                var params = {};
+
+                params.people = result.data.response.docs;
+                params.config = Util.goodMapValue($scope.commonModuleConfig, "dialogPersonPicker");
+                params.isRedirect = false;
+
+                var modalInstance = $modal.open({
+                    templateUrl: "modules/common/views/duplicate-person-picker-modal.client.view.html",
+                    controller: "Common.DuplicatePersonPickerController",
+                    animation: true,
+                    size: 'lg',
+                    backdrop: 'static',
+                    resolve: {
+                        params: function () {
+                            return params;
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function (selected) {
+                    if (!Util.isEmpty(selected)) {
+                        PersonInfoService.getPersonInfo(selected.object_id_s).then(function (person) {
+                            $scope.setPerson(person);
+                            $scope.existingPerson = angular.copy($scope.config.data.originator.person);
+                            $scope.newPerson = angular.copy($scope.blankPerson);
+                            $scope.isPickExistingPerson = true;
+                        });
+                    }
+                });
+            }
+
+            $scope.checkExistingEmail = function () {
+                if ($scope.config.data.originator.person.defaultEmail.value === $scope.confirmationEmail) {
+                    PersonInfoService.queryByEmail($scope.config.data.originator.person.defaultEmail.value).then(function (result) {
+                        if (result.data.response.numFound > 0) {
+                            openDuplicatePersonPicker(result);
+                        }
+                    });
+                }
+            };
+
 
             $scope.isNewRequestType = function () {
                 return $scope.config && $scope.config.data.requestType === 'New Request';
@@ -542,7 +589,9 @@ angular.module('cases').controller(
                     }
 
                     $scope.isExistingPerson = typeof $scope.config.data.originator.person.id !== 'undefined';
-                    $scope.confirmationEmail = angular.copy($scope.config.data.originator.person.defaultEmail.value);
+                    if ($scope.config.data.originator.person.defaultEmail) {
+                        $scope.confirmationEmail = angular.copy($scope.config.data.originator.person.defaultEmail.value);
+                    }
                 }
             };
 
