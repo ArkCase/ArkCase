@@ -29,6 +29,7 @@ package com.armedia.acm.services.email.smtp;
 
 import com.armedia.acm.email.model.EmailSenderConfig;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -48,7 +49,7 @@ public class AcmMailSender
     private TrackOutgoingEmailService trackOutgoingEmailService;
 
     private static final Logger log = LogManager.getLogger(AcmMailSender.class);
-    
+
     @Deprecated
     public void sendEmail(String recipient, String subject, String body) throws Exception
     {
@@ -56,7 +57,7 @@ public class AcmMailSender
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
         helper.setFrom(emailConfig.getUserFrom());
-        helper.setTo(recipient);
+        helper.setTo(StringUtils.split(recipient, ","));
         helper.setSubject(subject);
         helper.setText(body, true);
         mailSender.send(helper.getMimeMessage());
@@ -68,13 +69,13 @@ public class AcmMailSender
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
         helper.setFrom(emailConfig.getUserFrom());
-        helper.setTo(recipient);
+        helper.setTo(StringUtils.split(recipient, ","));
         helper.setSubject(subject);
         helper.setText(body, true);
         mailSender.send(helper.getMimeMessage());
         trackOutgoingEmailService.trackEmail(mimeMessage, recipient, subject, parentType, parentId, null);
     }
-    
+
     @Deprecated
     public void sendMultipartEmail(String recipient, String subject, String body, List<InputStreamDataSource> attachments)
             throws Exception
@@ -83,7 +84,7 @@ public class AcmMailSender
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
         helper.setFrom(emailConfig.getUserFrom());
-        helper.setTo(recipient);
+        helper.setTo(StringUtils.split(recipient, ","));
         helper.setSubject(subject);
         helper.setText(body, true);
         attachments.forEach(attachment -> {
@@ -99,14 +100,15 @@ public class AcmMailSender
         mailSender.send(helper.getMimeMessage());
     }
 
-    public void sendMultipartEmail(String recipient, String subject, String body, List<InputStreamDataSource> attachments, String parentType, String parentId)
+    public void sendMultipartEmail(String recipient, String subject, String body, List<InputStreamDataSource> attachments,
+            String parentType, String parentId)
             throws Exception
     {
         JavaMailSender mailSender = getMailSender();
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
         helper.setFrom(emailConfig.getUserFrom());
-        helper.setTo(recipient);
+        helper.setTo(StringUtils.split(recipient, ","));
         helper.setSubject(subject);
         helper.setText(body, true);
         attachments.forEach(attachment -> {
@@ -175,12 +177,12 @@ public class AcmMailSender
         }
     }
 
-    public TrackOutgoingEmailService getTrackOutgoingEmailService() 
+    public TrackOutgoingEmailService getTrackOutgoingEmailService()
     {
         return trackOutgoingEmailService;
     }
 
-    public void setTrackOutgoingEmailService(TrackOutgoingEmailService trackOutgoingEmailService) 
+    public void setTrackOutgoingEmailService(TrackOutgoingEmailService trackOutgoingEmailService)
     {
         this.trackOutgoingEmailService = trackOutgoingEmailService;
     }
