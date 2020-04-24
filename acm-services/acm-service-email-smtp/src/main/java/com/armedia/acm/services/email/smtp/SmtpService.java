@@ -65,6 +65,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -138,22 +139,21 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
         Map<String, InputStreamDataSource> attachments = processAttachments(in, user, sentEvents);
         String objectId = extractIdFromEmailWithAttachmentsDTO(in);
         String objectType = extractObjectTypeFromEmailWithAttachmentsDTO(in);
-        for (String emailAddress : in.getEmailAddresses())
+        String emailAddresses = in.getEmailAddresses().stream().collect(Collectors.joining(","));
+
+        try
         {
-            
-            try
-            {
-                acmMailSender.sendMultipartEmail(emailAddress, in.getSubject(), in.getMessageBody(),
-                        new ArrayList<>(attachments.values()), in.getObjectType() != null ? in.getObjectType() : objectType,
-                        in.getObjectId() != null ? in.getObjectId().toString() : objectId);
-            }
-            catch (Exception e)
-            {
-                exception = e;
-                log.error("Failed to send email to [{}].", emailAddress, exception);
-            }
-            in.setMailSent(exception == null);
+            acmMailSender.sendMultipartEmail(emailAddresses, in.getSubject(), in.getMessageBody(),
+                    new ArrayList<>(attachments.values()), in.getObjectType() != null ? in.getObjectType() : objectType,
+                    in.getObjectId() != null ? in.getObjectId().toString() : objectId);
         }
+        catch (Exception e)
+        {
+            exception = e;
+            log.error("Failed to send email to [{}].", emailAddresses, exception);
+        }
+        in.setMailSent(exception == null);
+
         for (AcmEvent event : sentEvents)
         {
             boolean success = (exception == null);
@@ -191,21 +191,19 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
 
         List<AcmEvent> sentEvents = new ArrayList<>();
         Map<String, InputStreamDataSource> attachments = processAttachments(in, user, sentEvents);
+        String emailAddresses = in.getEmailAddresses().stream().collect(Collectors.joining(","));
 
-        for (String emailAddress : in.getEmailAddresses())
+        try
         {
-            try
-            {
-                acmMailSender.sendMultipartEmail(emailAddress, in.getSubject(),
-                        makeNote(emailAddress, in, authentication), new ArrayList<>(attachments.values()),
-                        in.getParentType().contains("Case") ? "CASE_FILE" : in.getParentType().toUpperCase(),
-                        in.getParentNumber().contains("_") ? StringUtils.substringAfter(in.getParentNumber(), "_") : in.getParentNumber());
-            }
-            catch (Exception e)
-            {
-                exception = e;
-                log.error("Failed to send email to [{}].", emailAddress, exception);
-            }
+            acmMailSender.sendMultipartEmail(emailAddresses, in.getSubject(),
+                    makeNote(emailAddresses, in, authentication), new ArrayList<>(attachments.values()),
+                    in.getParentType().contains("Case") ? "CASE_FILE" : in.getParentType().toUpperCase(),
+                    in.getParentNumber().contains("_") ? StringUtils.substringAfter(in.getParentNumber(), "_") : in.getParentNumber());
+        }
+        catch (Exception e)
+        {
+            exception = e;
+            log.error("Failed to send email to [{}].", emailAddresses, exception);
         }
         in.setMailSent(exception == null);
         for (AcmEvent event : sentEvents)
@@ -366,28 +364,29 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
 
         Long parentId = setFilenames(in);
         String objectId = extractIdFromEmailWithEmbeddedLinkDTO(in);
+        String emailAddresses = in.getEmailAddresses().stream().collect(Collectors.joining(","));
 
-        for (String emailAddress : in.getEmailAddresses())
+        try
         {
-            try
-            {
-                acmMailSender.sendEmail(emailAddress, in.getSubject(), makeNote(emailAddress, in, authentication), in.getParentType(), objectId);
-            }
-            catch (Exception e)
-            {
-                exception = e;
-            }
-
-            if (exception != null)
-            {
-                emailResultList.add(new EmailWithEmbeddedLinksResultDTO(emailAddress, false));
-                log.error("Failed to send email to [{}].", emailAddress, exception);
-            }
-            else
-            {
-                emailResultList.add(new EmailWithEmbeddedLinksResultDTO(emailAddress, true));
-            }
+            // makeNote generates access token so any email address will do
+            acmMailSender.sendEmail(emailAddresses, in.getSubject(), makeNote(in.getEmailAddresses().get(0), in, authentication),
+                    in.getParentType(), objectId);
         }
+        catch (Exception e)
+        {
+            exception = e;
+        }
+
+        if (exception != null)
+        {
+            emailResultList.add(new EmailWithEmbeddedLinksResultDTO(emailAddresses, false));
+            log.error("Failed to send email to [{}].", emailAddresses, exception);
+        }
+        else
+        {
+            emailResultList.add(new EmailWithEmbeddedLinksResultDTO(emailAddresses, true));
+        }
+
         return emailResultList;
     }
 
@@ -395,8 +394,8 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
     {
         return getAcmEmailContentGeneratorService().generateEmailBody(emailWithEmbeddedLinksDTO, emailAddress, authentication);
     }
-    
-    private String extractIdFromEmailWithEmbeddedLinkDTO (EmailWithEmbeddedLinksDTO in)
+
+    private String extractIdFromEmailWithEmbeddedLinkDTO(EmailWithEmbeddedLinksDTO in)
     {
         String objectId = null;
         if (in.getParentNumber() != null)
@@ -405,8 +404,8 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
         }
         return objectId;
     }
-    
-    private String extractIdFromEmailWithAttachmentsDTO (EmailWithAttachmentsDTO in)
+
+    private String extractIdFromEmailWithAttachmentsDTO(EmailWithAttachmentsDTO in)
     {
         String objectId = null;
         if (in.getObjectId() == null && in.getParentNumber() != null)
@@ -415,8 +414,8 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
         }
         return objectId;
     }
-    
-    private String extractObjectTypeFromEmailWithAttachmentsDTO (EmailWithAttachmentsDTO in)
+
+    private String extractObjectTypeFromEmailWithAttachmentsDTO(EmailWithAttachmentsDTO in)
     {
         String objectType = null;
         if (in.getObjectType() == null && in.getParentType() != null)
