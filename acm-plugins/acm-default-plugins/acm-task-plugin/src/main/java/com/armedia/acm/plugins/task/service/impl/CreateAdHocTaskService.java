@@ -132,7 +132,8 @@ public class CreateAdHocTaskService
 
             if (adHocTask.getParentObjectId() != null)
             {
-                if (!adHocTask.getDocumentsToReview().isEmpty() || !filesToUpload.isEmpty())
+                if ((adHocTask.getDocumentsToReview() != null && !adHocTask.getDocumentsToReview().isEmpty())
+                        || !filesToUpload.isEmpty())
                 {
                     getAcmTaskService().createTaskFolderStructureInParentObject(adHocTask);
                 }
