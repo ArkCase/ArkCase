@@ -130,6 +130,29 @@ public class PeopleAPIController
         }
     }
 
+    @RequestMapping(value = "/queryByEmail", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public String getPeopleByEmail(Authentication auth,
+            @RequestParam(value = "emailAddress") String emailAddress,
+            @RequestParam(value = "start", required = false, defaultValue = "0") int start,
+            @RequestParam(value = "n", required = false, defaultValue = "100") int n,
+            @RequestParam(value = "s", required = false, defaultValue = "ASC") String s)
+            throws AcmObjectNotFoundException
+    {
+        String contactMethodJoin = "{!join from=id to=contact_method_ss}value_parseable:\"" + emailAddress + "\"";
+
+        String query = String.format("object_type_s:PERSON AND %s", contactMethodJoin);
+        try
+        {
+            return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, start, n, "");
+        }
+        catch (SolrException e)
+        {
+            log.error("Error while executing Solr query: {}", query, e);
+            throw new AcmObjectNotFoundException("Person", null, "Could not retrieve people.", e);
+        }
+    }
+
     @PreAuthorize("hasPermission(#personId, 'PERSON', 'viewPersonPage')")
     @RequestMapping(value = "/{personId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @DecoratedAssignedObjectParticipants
