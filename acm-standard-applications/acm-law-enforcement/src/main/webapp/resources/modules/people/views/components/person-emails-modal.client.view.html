@@ -15,7 +15,11 @@
                 <label for="emails" translate>people.comp.emails.modal.value.label</label><span class="required-asterisk">*</span>
 
                 <input id="emails" class="input-md form-control" type="{{email.type}}" ng-model="email.value" required="required"
-                        placeholder="{{ 'people.comp.emails.modal.value.placeholder' | translate }}">
+                        placeholder="{{ 'people.comp.emails.modal.value.placeholder' | translate }}"
+                        ng-blur="checkExistingEmail(email.value)">
+
+                <span class="text-danger" ng-if="isEmailTaken" translate>
+                                people.comp.emails.modal.validation.emailTaken</span>
 
             </div>
             <div class="col-sm-6 form-group">
@@ -54,7 +58,7 @@
     <button class="btn btn-secondary" ng-click="onClickCancel()">
         <span translate>people.comp.emails.modal.btnCancel.text</span>
     </button>
-    <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="emailForm.$invalid">
+    <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="emailForm.$invalid || isEmailTaken">
         <span translate>people.comp.emails.modal.btnOk.text</span>
     </button>
 </div>

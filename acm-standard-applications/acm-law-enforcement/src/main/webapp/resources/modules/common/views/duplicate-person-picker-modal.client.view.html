@@ -1,0 +1,21 @@
+<div class="modal-header">
+    <span ng-if="isRedirect" translate> common.duplicatePersonPicker.headerRedirect</span>
+    <span ng-if="!isRedirect" translate> common.duplicatePersonPicker.headerPick</span>
+</div>
+<div class="modal-grid">
+    <div class="modal-colums modal-right well-sm row">
+        <div class="col-md-12">
+            <div ui-grid="gridOptions" ui-grid-resize-columns ui-grid-pagination ui-grid-selection adjust-table-height="config.data.length"
+                    ui-grid-auto-resize class="grid"></div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary btn-sm" ng-click="onClickCancel()">
+        <span translate>common.duplicatePersonPicker.btn.cancel</span>
+    </button>
+    <button type="submit" ng-disabled="!selectedItem" class="btn btn-primary btn-sm" ng-click="onClickOk()">
+        <span ng-if="isRedirect" translate> common.duplicatePersonPicker.btn.goToPerson</span>
+        <span ng-if="!isRedirect" translate> common.duplicatePersonPicker.btn.pickPerson</span>
+    </button>
+</div>

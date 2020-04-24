@@ -85,14 +85,14 @@
                             <div class="row">
                                 <div class="col-sm-4 form-group">
                                     <label translate>common.newPerson.identification.identificationNumber</label>
-									<span class="required-asterisk">*</span>
+                                    <span class="required-asterisk">*</span>
                                     <input type="text" ng-model="identification.identificationNumber" class="input-md form-control"
                                             required="required"
                                             placeholder="{{ 'common.newPerson.identification.identificationNumber.placeholder' | translate }}">
                                 </div>
                                 <div class="col-sm-4 form-group">
                                     <label translate>common.newPerson.identification.identificationType</label>
-									<span class="required-asterisk">*</span>
+                                    <span class="required-asterisk">*</span>
                                     <select class="form-control" required="required" ng-disabled="!identification.identificationNumber"
                                             ng-model="identification.identificationType">
                                         <option ng-repeat="option in identificationTypes" value="{{option.key}}">
@@ -412,7 +412,7 @@
                                 <input type="{{caType}}" ng-model="person['default'+capitalizeFirstLetter(caType)].value"
                                         class="input-md form-control"
                                         placeholder="{{ 'common.newPerson.communicationAccounts.' + caType + '.placeholder' | translate }}"
-                                        ng-blur="validateInput(caType)">
+                                        ng-blur="validateInput(caType, person['default'+capitalizeFirstLetter(caType)].value)">
                                 <span ng-if="caType == 'phone' && showPhoneError == true" translate>common.newPerson.communicationAccounts.validationMessage</span>
                             </div>
                             <div class="col-sm-4">
@@ -443,8 +443,10 @@
                                 <label>
                                     {{'common.newPerson.communicationAccounts.' + caType |
                                     translate}} </label><span class="required-asterisk">*</span>
-                                <input type="{{contactMethod.type}}" ng-model="contactMethod.value" required="required" class="input-md form-control"
-                                        placeholder="{{ 'common.newPerson.communicationAccounts.'+ caType +'.placeholder' | translate }}">
+                                <input type="{{contactMethod.type}}" ng-model="contactMethod.value" required="required"
+                                        class="input-md form-control"
+                                        placeholder="{{ 'common.newPerson.communicationAccounts.'+ caType +'.placeholder' | translate }}"
+                                        ng-blur="validateInput(caType, contactMethod.value)">
                             </div>
                             <div class="col-sm-4">
                                 <label class="control-label">{{'common.newPerson.communicationAccounts.' +
