@@ -41,7 +41,8 @@
             <beans:property name="foiaConfig" ref="foiaConfig"/>
         </beans:bean>
 
-        <beans:bean id="foiaComponentHandler" class="gov.foia.pipeline.presave.FOIARequestComponentUpdatedHandler">
+        <beans:bean id="foiaComponentUpdatedHandler"
+                    class="gov.foia.pipeline.presave.FOIARequestComponentUpdatedHandler">
             <beans:property name="foiaRequestDao" ref="foiaRequestDao"/>
             <beans:property name="holidayConfigurationService" ref="holidayConfigurationService"/>
             <beans:property name="foiaConfig" ref="foiaConfig"/>
@@ -67,7 +68,7 @@
                 <beans:list value-type="com.armedia.acm.services.pipeline.handler.PipelineHandler">
                     <beans:ref bean="caseFileSetCreatorHandler"/>
                     <beans:ref bean="foiaExtensionHandler"/>
-                    <beans:ref bean="foiaComponentHandler"/>
+                    <beans:ref bean="foiaComponentUpdatedHandler"/>
                 </beans:list>
             </beans:property>
             <beans:property name="postSaveHandlers">
@@ -82,7 +83,7 @@
                     <beans:ref bean="requestDocumentHandler"/>
                     <beans:ref bean="caseFileStartBusinessProcessIfNeededHandler"/>
                     <beans:ref bean="foiaExtensionEmailHandler"/>
-                    <beans:ref bean="requestCreatedHandler"/>
+                    <beans:ref bean="requestPerfectedDateHandler"/>
                     <!--<ref beans:bean="caseFileAssignmentHandler"/>-->
                 </beans:list>
             </beans:property>
@@ -159,7 +160,7 @@
             <beans:property name="documentGenerator" ref="correspondenceDocumentGenerator"/>
         </beans:bean>
 
-        <beans:bean id="requestCreatedHandler" class="gov.foia.pipeline.postsave.FOIARequestCreatedHandler">
+        <beans:bean id="requestPerfectedDateHandler" class="gov.foia.pipeline.postsave.FOIARequestPerfectedDateHandler">
             <beans:property name="holidayConfigurationService" ref="holidayConfigurationService"/>
             <beans:property name="queuesTimeToCompleteService" ref="queuesTimeToCompleteService"/>
         </beans:bean>

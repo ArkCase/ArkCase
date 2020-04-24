@@ -700,7 +700,7 @@ LANGUAGE plpgsql;
             <column name="fo_perfected_date" type="${timestampType}"></column>
         </addColumn>
         <addColumn tableName="acm_case_file">
-            <column name="fo_time_to_complete" type="LONG"></column>
+            <column name="fo_ttc_on_last_redirection" type="LONG"></column>
         </addColumn>
     </changeSet>
 
@@ -709,7 +709,7 @@ LANGUAGE plpgsql;
             <column name="fo_perfected_date" type="${timestampType}"></column>
         </addColumn>
         <addColumn tableName="acm_case_file">
-            <column name="fo_time_to_complete" type="LONG"></column>
+            <column name="fo_ttc_on_last_redirection" type="LONG"></column>
         </addColumn>
     </changeSet>
 </databaseChangeLog>

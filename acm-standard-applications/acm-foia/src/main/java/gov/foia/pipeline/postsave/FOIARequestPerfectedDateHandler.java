@@ -16,7 +16,7 @@ import gov.foia.model.FOIAConstants;
 import gov.foia.model.FOIARequest;
 import gov.foia.service.QueuesTimeToCompleteService;
 
-public class FOIARequestCreatedHandler implements PipelineHandler<FOIARequest, CaseFilePipelineContext>
+public class FOIARequestPerfectedDateHandler implements PipelineHandler<FOIARequest, CaseFilePipelineContext>
 {
     private transient final Logger log = LogManager.getLogger(getClass());
 
@@ -26,7 +26,7 @@ public class FOIARequestCreatedHandler implements PipelineHandler<FOIARequest, C
     @Override
     public void execute(FOIARequest entity, CaseFilePipelineContext pipelineContext) throws PipelineProcessException
     {
-        log.debug("Entering FOIARequest post save pipeline handler for object: [{}]", entity);
+        log.debug("Entering FOIARequest perfected date pipeline handler for object: [{}]", entity);
 
         if (entity.getId() != null && pipelineContext.isNewCase())
         {
@@ -45,14 +45,14 @@ public class FOIARequestCreatedHandler implements PipelineHandler<FOIARequest, C
 
             Integer TTC = queuesTimeToCompleteService.getTimeToComplete().getRequest().getTotalTimeToComplete();
             entity.setDueDate(holidayConfigurationService
-                    .addWorkingDaysToDate(Date.from(entity.getPerfectedDate().atZone(ZoneId.systemDefault()).toInstant()), TTC - 1));
-            entity.setTimeToComplete(TTC);
+                    .addWorkingDaysToDate(Date.from(entity.getPerfectedDate().atZone(ZoneId.systemDefault()).toInstant()), TTC));
+            entity.setTtcOnLastRedirection(TTC);
 
             log.debug("Updated FOIARequest perfectedDate to : [{}] and DueDate to : [{}]", entity.getPerfectedDate(),
                     entity.getDueDate());
         }
 
-        log.debug("Exiting FOIARequest post save pipeline handler for object: [{}]", entity);
+        log.debug("Exiting FOIARequest perfected date pipeline handler for object: [{}]", entity);
     }
 
     @Override
