@@ -214,6 +214,10 @@ public class FOIARequest extends CaseFile implements FOIAObject
     @Column(name = "fo_ttc_on_last_redirection")
     private Integer ttcOnLastRedirection;
 
+    @Column(name = "fo_withdraw_requested_flag")
+    @Convert(converter = BooleanToStringConverter.class)
+    private boolean withdrawRequestedFlag = false;
+
     @Transient
     private String originalRequestNumber;
 
@@ -838,6 +842,16 @@ public class FOIARequest extends CaseFile implements FOIAObject
     public void setTtcOnLastRedirection(Integer ttcOnLastRedirection)
     {
         this.ttcOnLastRedirection = ttcOnLastRedirection;
+    }
+
+    public boolean getWithdrawRequestedFlag()
+    {
+        return withdrawRequestedFlag;
+    }
+
+    public void setWithdrawRequestedFlag(boolean withdrawRequestedFlag)
+    {
+        this.withdrawRequestedFlag = withdrawRequestedFlag;
     }
 
     /*

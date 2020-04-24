@@ -386,6 +386,8 @@ public class PortalRequestService
 
             createTaskPersonAssociation(auth, request, task);
 
+            request.setWithdrawRequestedFlag(true);
+            getRequestDao().save(request);
         }
         catch (Exception e)
         {

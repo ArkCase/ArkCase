@@ -1,5 +1,5 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="
+                   xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="01-01-alter-acm_case_file-for-foia-request" author="lazo.lazarev" dbms="oracle,mssql,postgres"
@@ -88,8 +88,9 @@
         </createTable>
         <addPrimaryKey tableName="foia_file_exemption_code" columnNames="ecm_file_id, fo_exemption_code"/>
         <addForeignKeyConstraint baseTableName="foia_file_exemption_code" baseColumnNames="ecm_file_id"
-            constraintName="fk_foia_file_exemption_code_id" referencedTableName="acm_file" referencedColumnNames="cm_file_id"
-            deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
+                                 constraintName="fk_foia_file_exemption_code_id" referencedTableName="acm_file"
+                                 referencedColumnNames="cm_file_id"
+                                 deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
     <changeSet id="01-03-alter-acm_person_assoc-for-foia-request" author="lazo.lazarev"
@@ -431,10 +432,10 @@ LANGUAGE plpgsql;
                logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">
-                select count(*) 
-                from information_schema.COLUMNS 
-                where TABLE_SCHEMA = database() 
-                and TABLE_NAME = 'acm_case_file' 
+                select count(*)
+                from information_schema.COLUMNS
+                where TABLE_SCHEMA = database()
+                and TABLE_NAME = 'acm_case_file'
                 and column_name = 'fo_notification_group'
             </sqlCheck>
         </preConditions>
@@ -445,8 +446,8 @@ LANGUAGE plpgsql;
     <changeSet id="22-acm-case-file-change-column-pay-fee-type" author="adrijana.maneva"
                logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
         <modifyDataType columnName="fo_pay_fee"
-            newDataType="VARCHAR(64)"
-            tableName="acm_case_file"/>
+                        newDataType="VARCHAR(64)"
+                        tableName="acm_case_file"/>
     </changeSet>
 
     <changeSet id="23-foia-file-exemption-code-version" author="nebojsha.davidovikj"
@@ -459,8 +460,9 @@ LANGUAGE plpgsql;
         <dropPrimaryKey tableName="foia_file_exemption_code"/>
         <addPrimaryKey tableName="foia_file_exemption_code" columnNames="ecm_file_id, ecm_file_version, fo_exemption_code"/>
         <addForeignKeyConstraint baseTableName="foia_file_exemption_code" baseColumnNames="ecm_file_id"
-            constraintName="fk_foia_file_exemption_code_id" referencedTableName="acm_file" referencedColumnNames="cm_file_id"
-            deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
+                                 constraintName="fk_foia_file_exemption_code_id" referencedTableName="acm_file"
+                                 referencedColumnNames="cm_file_id"
+                                 deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
     <changeSet id="24-foia-file-version-review-status-column" author="marko.stojanoski" dbms="oracle,mssql,postgres"
@@ -504,7 +506,7 @@ LANGUAGE plpgsql;
         </update>
     </changeSet>
 
-    <changeSet id="28-add-fields-to-foia-request" author="stefan.sanevski" 
+    <changeSet id="28-add-fields-to-foia-request" author="stefan.sanevski"
                logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
         <addColumn tableName="acm_case_file">
             <column name="fo_request_amendment_details" type="CLOB"/>
@@ -513,7 +515,7 @@ LANGUAGE plpgsql;
             <column name="fo_amendment_flag" type="VARCHAR(10)" defaultValue="false"/>
         </addColumn>
     </changeSet>
-    
+
     <changeSet id="29-acm-case-file-one-day-reminder-column" author="marko.stojanoski"
                logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
         <addColumn tableName="acm_case_file">
@@ -527,7 +529,7 @@ LANGUAGE plpgsql;
             <column name="fo_five_days_reminder_sent" type="VARCHAR(10)" defaultValue="false"/>
         </addColumn>
     </changeSet>
-    
+
     <changeSet id="31-create-table-acm_foia_portal_registration" author="lazo.lazarev" dbms="oracle,postgresql,mssql,mysql">
         <createTable tableName="acm_foia_portal_registration">
             <column name="cm_registration_id" type="${idType}">
@@ -595,7 +597,7 @@ LANGUAGE plpgsql;
     </changeSet>
 
     <changeSet id="35-foia-file-exemption-code-version" author="aleksandar.bujaroski"
-        logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
         <!-- foreign key must be removed for mysql (not tested on another database) before we drop primary key-->
         <dropForeignKeyConstraint baseTableName="foia_file_exemption_code" constraintName="fk_foia_file_exemption_code_id"/>
         <dropPrimaryKey tableName="foia_file_exemption_code"/>
@@ -605,14 +607,15 @@ LANGUAGE plpgsql;
             </column>
         </addColumn>
         <addForeignKeyConstraint baseTableName="foia_file_exemption_code" baseColumnNames="ecm_file_id"
-            constraintName="fk_foia_file_exemption_code_id" referencedTableName="acm_file" referencedColumnNames="cm_file_id"
-            deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
+                                 constraintName="fk_foia_file_exemption_code_id" referencedTableName="acm_file"
+                                 referencedColumnNames="cm_file_id"
+                                 deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
     <changeSet id="36-remove-one-day-reminder-column" author="stefan.sanevski" dbms="oracle,mssql,postgres,mysql">
-       <dropColumn tableName="acm_case_file" columnName="fo_one_day_reminder_sent"/>
+        <dropColumn tableName="acm_case_file" columnName="fo_one_day_reminder_sent"/>
     </changeSet>
-    
+
     <changeSet id="37-remove-five-days-reminder-column" author="stefan.sanevski" dbms="oracle,mssql,postgres,mysql">
         <dropColumn tableName="acm_case_file" columnName="fo_five_days_reminder_sent"/>
     </changeSet>
@@ -710,6 +713,19 @@ LANGUAGE plpgsql;
         </addColumn>
         <addColumn tableName="acm_case_file">
             <column name="fo_ttc_on_last_redirection" type="LONG"></column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="45-01-acm-withdraw_requested_flag" author="aleksandar.acevski" dbms="oracle,mssql,postgres"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_case_file">
+            <column name="fo_withdraw_requested_flag" type="VARCHAR(10)" defaultValue="false"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="45-02-acm-withdraw_requested_flag" author="aleksandar.acevski" dbms="mysql"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_case_file">
+            <column name="fo_withdraw_requested_flag" type="TEXT" defaultValue="false"/>
         </addColumn>
     </changeSet>
 </databaseChangeLog>
