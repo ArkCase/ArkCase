@@ -399,5 +399,13 @@
             <beans:property name="foiaExemptionService" ref="foiaExemptionService"/>
         </beans:bean>
 
+        <beans:bean id="acmUserService" class="gov.foia.service.FOIAAcmUserServiceImpl">
+            <beans:property name="userDao" ref="userJpaDao"/>
+            <beans:property name="executeSolrQuery" ref="executeSolrQuery"/>
+            <beans:property name="userRoleService" ref="userRoleService"/>
+            <beans:property name="rolesToPrivilegesConfig" ref="rolesToPrivileges"/>
+            <beans:property name="acmContextHolder" ref="acmContextHolder"/>
+        </beans:bean>
+
     </beans:beans>
 </beans:beans>
