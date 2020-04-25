@@ -4,7 +4,6 @@ import static com.armedia.acm.services.users.model.ldap.MapperUtils.prefixTraili
 
 import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.search.model.solr.SolrCore;
-import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.users.model.AcmUsersConstants;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.service.AcmUserServiceImpl;
@@ -22,8 +21,6 @@ public class FOIAAcmUserServiceImpl extends AcmUserServiceImpl
     private String directoryName;
 
     private SpringContextHolder acmContextHolder;
-
-    private ExecuteSolrQuery executeSolrQuery;
 
     @Override
     public String getNUsers(Authentication auth, String sortBy, String sortDirection, int startRow, int maxRows)
@@ -51,15 +48,4 @@ public class FOIAAcmUserServiceImpl extends AcmUserServiceImpl
         this.acmContextHolder = acmContextHolder;
     }
 
-    @Override
-    public ExecuteSolrQuery getExecuteSolrQuery()
-    {
-        return executeSolrQuery;
-    }
-
-    @Override
-    public void setExecuteSolrQuery(ExecuteSolrQuery executeSolrQuery)
-    {
-        this.executeSolrQuery = executeSolrQuery;
-    }
 }
