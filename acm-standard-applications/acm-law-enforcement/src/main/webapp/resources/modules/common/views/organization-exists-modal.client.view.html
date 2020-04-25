@@ -29,8 +29,9 @@
                             <button type="button" class="btn btn-secondary btn-sm" ng-click="onClickCancel()">
                                 <span translate>common.newOrganization.cancelButton</span>
                             </button>
-                            <button type="submit" ng-disabled="!selectedItem || isFromNewOrganizationModal" class="btn btn-primary btn-sm" ng-click="onClickOk()">
-                                <span translate> common.newOrganization.choose</span>
+                            <button type="submit" ng-disabled="!selectedItem " class="btn btn-primary btn-sm" ng-click="onClickOk()">
+                                <span ng-if="!isFromNewOrganizationModal"translate> common.newOrganization.choose</span>
+                                <span ng-if="isFromNewOrganizationModal" translate> common.newOrganization.goToOrganization</span>
                             </button>
                         </div>
                     </div>

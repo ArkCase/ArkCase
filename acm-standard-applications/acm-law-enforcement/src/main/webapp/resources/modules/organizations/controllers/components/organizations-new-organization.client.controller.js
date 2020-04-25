@@ -70,6 +70,13 @@ angular.module('organizations').controller(
                                 }
                             }
                         });
+                        modalInstance.result.then(function (selected) {
+                            if (!Util.isEmpty(selected)) {
+                                $state.go('organizations.main', {
+                                    id: selected.object_id_s,
+                                }, true);
+                            }
+                        });
                     }
                 });
             };
