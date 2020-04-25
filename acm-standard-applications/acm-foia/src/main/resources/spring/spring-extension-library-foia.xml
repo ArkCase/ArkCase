@@ -399,5 +399,10 @@
             <beans:property name="foiaExemptionService" ref="foiaExemptionService"/>
         </beans:bean>
 
+        <beans:bean id="acmUserService" class="gov.foia.service.FOIAAcmUserServiceImpl">
+            <beans:property name="acmContextHolder" ref="acmContextHolder"/>
+            <beans:property name="executeSolrQuery" ref="executeSolrQuery"/>
+        </beans:bean>
+
     </beans:beans>
 </beans:beans>

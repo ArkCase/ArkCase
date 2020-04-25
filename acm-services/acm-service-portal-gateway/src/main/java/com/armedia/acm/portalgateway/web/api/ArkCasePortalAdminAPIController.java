@@ -94,7 +94,7 @@ public class ArkCasePortalAdminAPIController
         log.debug("User [{}] is regitering portal for [{}] URL with [{}] user.", auth.getName(), portalInfoDTO.getPortalUrl(),
                 portalInfoDTO.getFullName());
         PortalInfo portalInfo = new PortalInfo();
-        updatePortalInfo(portalInfo, portalInfoDTO);
+        portalAdminService.updatePortalInfo(portalInfo, portalInfoDTO);
         return new PortalInfoDTO(portalAdminService.registerPortal(portalInfo, portalInfoDTO.getUserId(), portalInfoDTO.getGroupName()));
     }
 
@@ -106,7 +106,7 @@ public class ArkCasePortalAdminAPIController
         log.debug("User [{}] is updating portal for [{}] URL with [{}] user.", auth.getName(), portalInfoDTO.getPortalUrl(),
                 portalInfoDTO.getFullName());
         PortalInfo portalInfo = portalAdminService.getPortalInfo(portalInfoDTO.getPortalId());
-        updatePortalInfo(portalInfo, portalInfoDTO);
+        portalAdminService.updatePortalInfo(portalInfo, portalInfoDTO);
         return new PortalInfoDTO(portalAdminService.updatePortal(portalInfo, portalInfoDTO.getUserId()));
     }
 
@@ -134,14 +134,16 @@ public class ArkCasePortalAdminAPIController
     @ResponseBody
     public String listPortalUsers(Authentication auth, @RequestParam(value = "start", required = false, defaultValue = "0") int start,
             @RequestParam(value = "n", required = false, defaultValue = "20") int n,
-            @RequestParam(value = "s", required = false, defaultValue = "id ASC") String s) throws AcmObjectNotFoundException
+            @RequestParam(value = "sortBy", required = false, defaultValue = "id") String sortBy,
+            @RequestParam(value = "sortDir", required = false, defaultValue = "asc") String sortDir)
+            throws AcmObjectNotFoundException
     {
 
         String query = String.format("object_type_s:PERSON AND object_sub_type_s:PORTAL_FOIA_PERSON");
-
+        String sortParam = sortBy + " " + sortDir;
         try
         {
-            String solrResponse = executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, start, n, s);
+            String solrResponse = executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, start, n, sortParam);
             return solrResponse;
 
         }
@@ -151,17 +153,6 @@ public class ArkCasePortalAdminAPIController
             throw new AcmObjectNotFoundException("Portal Users", null, "Could not retrieve portal users.", e);
         }
 
-    }
-
-    /**
-     * @param portalInfoDTO
-     * @return
-     */
-    private void updatePortalInfo(PortalInfo portalInfo, PortalInfoDTO portalInfoDTO)
-    {
-        portalInfo.setPortalDescription(portalInfoDTO.getPortalDescription());
-        portalInfo.setPortalUrl(portalInfoDTO.getPortalUrl());
-        portalInfo.setPortalAuthenticationFlag(portalInfoDTO.getPortalAuthenticationFlag());
     }
 
     /**
