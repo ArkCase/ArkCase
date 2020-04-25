@@ -459,23 +459,27 @@ angular.module('cases').controller(
                 var formdata = new FormData();
                 var basicData = {};
 
-                //check if person is existing and set default contact methods
-                if ($scope.config.data.originator.person.id == null) {
 
-                    if (!$scope.config.data.originator.person.defaultPhone.value) {
-                        $scope.config.data.originator.person.defaultPhone = null;
-                    } else {
-                        $scope.config.data.originator.person.defaultPhone.type = "phone";
-                        $scope.config.data.originator.person.contactMethods.push($scope.config.data.originator.person.defaultPhone);
-                    }
-
-                    if (Util.isEmpty($scope.config.data.originator.person.defaultEmail) || !$scope.config.data.originator.person.defaultEmail.value) {
-                        $scope.config.data.originator.person.defaultEmail = null;
-                    } else {
-                        $scope.config.data.originator.person.defaultEmail.type = "email";
-                        $scope.config.data.originator.person.contactMethods.push($scope.config.data.originator.person.defaultEmail);
-                    }
+                if (!$scope.config.data.originator.person.defaultPhone.value) {
+                    $scope.config.data.originator.person.defaultPhone = null;
+                } else if (!$scope.config.data.originator.person.defaultPhone.type) {
+                    $scope.config.data.originator.person.defaultPhone.type = "phone";
                 }
+
+                if (Util.isEmpty($scope.config.data.originator.person.defaultEmail) || !$scope.config.data.originator.person.defaultEmail.value) {
+                    $scope.config.data.originator.person.defaultEmail = null;
+                } else if (!$scope.config.data.originator.person.defaultEmail.type) {
+                    $scope.config.data.originator.person.defaultEmail.type = "email";
+                }
+
+                if (!$scope.config.data.originator.person.defaultPhone.id) {
+                    $scope.config.data.originator.person.contactMethods.push($scope.config.data.originator.person.defaultPhone);
+                }
+
+                if (!$scope.config.data.originator.person.defaultEmail.id) {
+                    $scope.config.data.originator.person.contactMethods.push($scope.config.data.originator.person.defaultEmail);
+                }
+
 
                 for (var property in $scope.config.data) {
                     if ($scope.config.data.hasOwnProperty(property)) {
