@@ -222,6 +222,7 @@ public class PortalCreateRequestService
         ContactMethod email = buildContactMethod("email", in.getEmail());
         if (email.getValue() != null && !email.getValue().equals(""))
         {
+            requester.setDefaultEmail(email);
             requester.getContactMethods().add(2, email);
         }
         else
