@@ -23,7 +23,7 @@ angular.module('cases').controller('Cases.ExemptionController',
 
             var onObjectInfoRetrieved = function (objectInfo) {
                 $scope.objectInfo = objectInfo;
-                if ($scope.objectInfo.generatedZipFlag || !Util.isEmpty($scope.objectInfo.dispositionClosedDate)) {
+                if (!Util.isEmpty($scope.objectInfo.dispositionClosedDate)) {
                     $scope.isDisabled = true;
                 }
             };
