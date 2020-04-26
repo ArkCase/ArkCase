@@ -193,7 +193,7 @@
                                     ng-disabled="isExistingPerson && (existingPerson.defaultEmail.value ||
                                     (config.data.deliveryMethodOfResponse != 'Email'  && !config.data.createNewPortalUser))">
                             <span class="text-danger"
-                                    ng-if="(config.data.deliveryMethodOfResponse == 'Email'  || config.data.createNewPortalUser) && !config.data.originator.person.defaultEmail.value"
+                                    ng-if="(config.data.deliveryMethodOfResponse == 'Email'  || config.data.createNewPortalUser) && !config.data.originator.person.defaultEmail.value && formInvalid"
                                     translate>
                                 cases.newRequest.email.validation.error</span>
                             <span class="text-danger"
