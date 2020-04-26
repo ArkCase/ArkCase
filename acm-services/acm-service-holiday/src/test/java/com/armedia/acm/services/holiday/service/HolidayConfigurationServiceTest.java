@@ -164,4 +164,22 @@ public class HolidayConfigurationServiceTest extends EasyMockSupport {
         assertEquals(actualResult, expectedResult);
     }
 
+    @Test
+    public void testCalculateDueDateNoWorkingWeekend()
+    {
+        String holidayConfigurationFilePath = getClass().getClassLoader().getResource("test/holidayFile.json").getPath();
+        holidayConfigurationService.setHolidayFile(new FileSystemResource(holidayConfigurationFilePath));
+
+        LocalDate currentDate = LocalDate.parse("20200425", DateTimeFormatter.BASIC_ISO_DATE);
+        LocalDate actualResult = holidayConfigurationService.getNextWorkingDay(currentDate);
+
+        LocalDate dueDate = holidayConfigurationService.addWorkingDaysToDate(actualResult, 20);
+
+        LocalDate expectedResult = LocalDate.parse("20200427", DateTimeFormatter.BASIC_ISO_DATE);
+        LocalDate expectedDueDate = LocalDate.parse("20200525", DateTimeFormatter.BASIC_ISO_DATE);
+
+        assertEquals(actualResult, expectedResult);
+        assertEquals(dueDate, expectedDueDate);
+    }
+
 }
