@@ -96,7 +96,7 @@ angular.module('services').service('DueDate.Service', [ '$translate', function($
             dueDate = dueDate.toISOString();
         }
         var momentDueDate = moment(dueDate.replace(/(\d{4})\-(\d{2})\-(\d{2}).*/, '$1/$2/$3'));
-        var momentDate = findNextWorkingDay(moment());
+        var momentDate = findNextWorkingDay(holidays, moment());
         var days = 0;
         if (momentDueDate > momentDate) { //calculate days remaining
             while (momentDate < momentDueDate) {
@@ -171,8 +171,8 @@ angular.module('services').service('DueDate.Service', [ '$translate', function($
         return !isHoliday(holidays, date) && !isWeekend(date);
     }
 
-    function findNextWorkingDay(date) {
-        while (!isWorkingDay(date)) {
+    function findNextWorkingDay(holidays, date) {
+        while (!isWorkingDay(holidays, date)) {
             date.add(1, 'days');
         }
 
