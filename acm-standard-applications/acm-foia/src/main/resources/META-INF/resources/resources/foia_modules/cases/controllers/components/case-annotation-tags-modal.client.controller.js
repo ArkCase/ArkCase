@@ -65,9 +65,9 @@ angular.module('cases').controller('Case.AnnotationTagsModalController',
 
         function generateDuplicateCodeMessages(duplicateCodesArr) {
             if (duplicateCodesArr.length == 1) {
-                MessageService.error($translate.instant("requests.comp.exemption.determiner") + " " + duplicateCodesArr + " " + $translate.instant("requests.comp.exemption.existingExemptionCodeError"));
+                MessageService.info($translate.instant("requests.comp.exemption.determiner") + " " + duplicateCodesArr + " " + $translate.instant("requests.comp.exemption.existingExemptionCodeError"));
             } else if (duplicateCodesArr.length > 1) {
-                MessageService.error($translate.instant("requests.comp.exemption.determiner") + " " + duplicateCodesArr + " " + $translate.instant("requests.comp.exemption.existingExemptionCodesError"));
+                MessageService.info($translate.instant("requests.comp.exemption.determiner") + " " + duplicateCodesArr + " " + $translate.instant("requests.comp.exemption.existingExemptionCodesError"));
             }
         }
 
