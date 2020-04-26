@@ -27,36 +27,49 @@ angular.module('cases').controller('Case.AnnotationTagsModalController',
         $scope.init();
 
         $scope.onClickOk = function () {
-            $scope.loading = true;
             $scope.annotationTags = convertToFlatArray($scope.data.selectedAuthorized);
-            var arr = [];
-            $scope.data.selectedAuthorized.forEach(function (selected) {
-                if (!Utils.isEmpty($scope.existingAnnotationTags)) {
-                    $scope.existingAnnotationTags.forEach(function (existing) {
-                        if (selected.key === existing.exemptionCode) {
-                            arr.push(selected.key);
-                        }
-                    })
+            var existingTags = $scope.existingAnnotationTags.map(function (code) {
+                return code.exemptionCode;
+            });
+            var duplicateCodesArr = [];
+            var copyAnnotationTags = _.cloneDeep($scope.annotationTags);
+            copyAnnotationTags.forEach(function (selected, index) {
+                if (_.includes(existingTags, selected)) {
+                    duplicateCodesArr.push(selected);
+                    $scope.annotationTags.splice($scope.annotationTags.indexOf(selected), 1);
                 }
             });
 
-            if (arr.length == 0) {
+            if ($scope.annotationTags.length > 0) {
                 $scope.exemptionObjectModel.exemptionCodes = $scope.annotationTags;
                 $scope.exemptionObjectModel.parentObjectId = $stateParams.id;
                 $scope.exemptionObjectModel.parentObjectType = "CASE_FILE";
-                CaseExemptionService.saveExemptionCode($scope.exemptionObjectModel).then(function (value) {
-                    $modalInstance.close(value.data);
-                    MessageService.succsessAction();
-                }, function () {
-                    MessageService.errorAction();
-                });
-            } else if (arr.length == 1) {
-                MessageService.error($translate.instant("requests.comp.exemption.determiner") + " " + arr + " " + $translate.instant("requests.comp.exemption.existingExemptionCodeError"));
+                CaseExemptionService.saveExemptionCode($scope.exemptionObjectModel)
+                    .then(function () {
+                            if (duplicateCodesArr.length > 0) {
+                                generateDuplicateCodeMessages(duplicateCodesArr);
+                            } else {
+                                MessageService.succsessAction();
+                            }
+                            $modalInstance.close('done');
+                        }, function () {
+                            MessageService.errorAction();
+                            $modalInstance.close('done');
+                        }
+                    );
             } else {
-                MessageService.error($translate.instant("requests.comp.exemption.determiner") + " " + arr + " " + $translate.instant("requests.comp.exemption.existingExemptionCodesError"));
+                generateDuplicateCodeMessages(duplicateCodesArr);
+                $modalInstance.close('done');
             }
-            $modalInstance.close('done');
         };
+
+        function generateDuplicateCodeMessages(duplicateCodesArr) {
+            if (duplicateCodesArr.length == 1) {
+                MessageService.error($translate.instant("requests.comp.exemption.determiner") + " " + duplicateCodesArr + " " + $translate.instant("requests.comp.exemption.existingExemptionCodeError"));
+            } else if (duplicateCodesArr.length > 1) {
+                MessageService.error($translate.instant("requests.comp.exemption.determiner") + " " + duplicateCodesArr + " " + $translate.instant("requests.comp.exemption.existingExemptionCodesError"));
+            }
+        }
 
         $scope.onClickCancel = function () {
             $modalInstance.dismiss('cancel');
