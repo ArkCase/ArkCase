@@ -271,7 +271,6 @@ angular.module('cases').controller(
                             $scope.setPerson(person);
                             $scope.existingPerson = angular.copy($scope.config.data.originator.person);
                             $scope.newPerson = angular.copy($scope.blankPerson);
-                            $scope.isPickExistingPerson = true;
                         });
                     }
                 });
@@ -333,34 +332,12 @@ angular.module('cases').controller(
 
                 modalInstance.result.then(function (data) {
                     PersonInfoService.getPersonInfo(data.personId).then(function (person) {
-                        data.person = person;
-                        setPersonAssociation({}, data);
-                    })
+                        $scope.setPerson(person);
+                        $scope.existingPerson = angular.copy($scope.config.data.originator.person);
+                    });
                 });
 
             };
-
-            function setPersonAssociation(association, data) {
-                association.person = data.person;
-                association.personType = data.type;
-
-                //populate contact information section
-                $scope.setPerson(association.person);
-                $scope.existingPerson = angular.copy($scope.config.data.originator.person);
-
-                //if is new created, add it to the person associations list
-                if (!$scope.config.data.originator.person.personAssociations) {
-                    $scope.config.data.originator.person.personAssociations = [];
-                }
-
-                if (!_.includes($scope.config.data.originator.person.personAssociations, association)) {
-                    $scope.config.data.originator.person.personAssociations.push(association);
-                }
-
-                if (!Util.isEmpty(association.person.addresses[0].country) && !Util.isEmpty(association.person.addresses[0].state)) {
-                    $scope.changeStates(association.person.addresses[0].country);
-                }
-            }
 
             $scope.pickExistingUserChange = function () {
 
@@ -592,13 +569,16 @@ angular.module('cases').controller(
                         $scope.config.data.originator.person.defaultEmail = email;
                     }
 
-                    if (!Util.isEmpty(person.addresses[0].country) && !Util.isEmpty(person.addresses[0].state)) {
+                    if (person.addresses[0] && !Util.isEmpty(person.addresses[0].country) && !Util.isEmpty(person.addresses[0].state)) {
                         $scope.changeStates(person.addresses[0].country);
                     }
 
                     $scope.isExistingPerson = typeof $scope.config.data.originator.person.id !== 'undefined';
+
                     if ($scope.config.data.originator.person.defaultEmail) {
                         $scope.confirmationEmail = angular.copy($scope.config.data.originator.person.defaultEmail.value);
+                    } else {
+                        $scope.confirmationEmail = '';
                     }
                 }
             };
