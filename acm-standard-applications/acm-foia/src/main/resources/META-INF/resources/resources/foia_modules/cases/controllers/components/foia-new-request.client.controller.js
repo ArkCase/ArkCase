@@ -592,6 +592,10 @@ angular.module('cases').controller(
                         $scope.config.data.originator.person.defaultEmail = email;
                     }
 
+                    if (!Util.isEmpty(person.addresses[0].country) && !Util.isEmpty(person.addresses[0].state)) {
+                        $scope.changeStates(person.addresses[0].country);
+                    }
+
                     $scope.isExistingPerson = typeof $scope.config.data.originator.person.id !== 'undefined';
                     if ($scope.config.data.originator.person.defaultEmail) {
                         $scope.confirmationEmail = angular.copy($scope.config.data.originator.person.defaultEmail.value);
