@@ -22,7 +22,8 @@ angular.module('services').factory('ExemptionService', [ '$http', function($http
                 params: {
                     caseId: caseId,
                     fileId: fileId
-                }
+                },
+                cache: false
             });
         },
 

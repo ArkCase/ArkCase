@@ -37,6 +37,7 @@
                 <ref bean="solrReindexEcmFileExecutor"/>
                 <ref bean="configurationServerRuntimeMigrationExecutor"/>
                 <ref bean="solrReindexNotificationsExecutor"/>
+                <ref bean="solrReindexPersonExecutor"/>
                 <ref bean="acmGroupSolrReindexExecutor"/>
                 <ref bean="cmisRepositoryRecycleBinContainerExecutor"/>
                 <ref bean="createTaskFolderStructureInParentObjectUpdateExecutor"/>
@@ -137,6 +138,10 @@
     </bean>
 
     <bean id="solrReindexNotificationsExecutor" class="com.armedia.acm.services.dataupdate.service.SolrReindexNotificationsExecutor">
+        <property name="solrReindexService" ref="solrReindexService"/>
+    </bean>
+
+    <bean id="solrReindexPersonExecutor" class="com.armedia.acm.services.dataupdate.service.SolrReindexPersonExecutor">
         <property name="solrReindexService" ref="solrReindexService"/>
     </bean>
 

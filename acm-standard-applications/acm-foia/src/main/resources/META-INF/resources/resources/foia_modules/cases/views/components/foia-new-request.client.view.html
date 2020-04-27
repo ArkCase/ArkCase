@@ -9,11 +9,9 @@
                     <label for="requestType" translate>cases.newRequest.requestType.label</label>
                 </div>
                 <div class="col-sm-4 form-group">
-                    <select id="requestType"
-                            ng-model="config.data.requestType"
-                            ng-options="requestType.key as requestType.value for requestType in requestTypes"
-                            class="form-control input-md"
-                            ng-change="clearPersonContactInfo()">
+                    <select id="requestType" ng-model="config.data.requestType"
+                            ng-options="requestType.key as requestType.value for requestType in requestTypes" class="form-control input-md"
+                            ng-change="setPerson(blankPerson); config.data.originalRequestNumber = null">
                     </select>
                 </div>
             </div>
@@ -40,10 +38,9 @@
                             <span class="required-asterisk">*</span>
                         </div>
                         <div class="col-sm-5 form-group">
-                            <select name="requesterCategory" id="requesterCategory"
-                                    ng-model="config.data.requestCategory"
-                                    ng-options="category.key as category.value for category in categories"
-                                    class="form-control input-md" required="required">
+                            <select name="requesterCategory" id="requesterCategory" ng-model="config.data.requestCategory"
+                                    ng-options="category.key as category.value for category in categories" class="form-control input-md"
+                                    required="required">
                             </select>
                             <span class="text-danger" ng-if="!config.data.requestCategory && formInvalid" translate>cases.newRequest.requestCategory.validation.error</span>
                         </div>
@@ -65,274 +62,323 @@
                 </div>
             </div>
         </div>
+
         <div class="panel panel-default">
             <div class="panel-heading">
-                <div class="pull-right" ng-if="!isAppealPopulated">
-                    <button class="btn btn-primary btn-xs" ng-click="searchPerson()" translate>cases.newRequest.searchPerson</button>
-                </div>
                 <h4 class="panel-title">
                     <span translate>cases.newRequest.section2</span>
                 </h4>
             </div>
-            <div class="panel-body">
-                <div class="row form-group">
-                    <div class="col-sm-2">
-                        <label for="prefix" translate>cases.newRequest.prefix.label</label>
-                        <span class="required-asterisk">*</span>
-                    </div>
-                    <div class="col-sm-4">
-                        <select ng-model="config.data.originator.person.title" id="prefix" name="prefix"
-                                ng-options="prefix.key as prefix.value | translate for prefix in prefixes"
-                                class="form-control input-md" required ng-disabled="isAppealPopulated">
-                        </select>
-                        <span class="text-danger" ng-if="!config.data.originator.person.title && formInvalid" translate>
-                            cases.newRequest.prefix.validation.error</span>
-                    </div>
-                </div>
-                <div class="row form-group">
-                    <div class="col-sm-2">
-                        <label for="firstName" translate>cases.newRequest.firstName.label</label>
-                        <span class="required-asterisk">*</span>
-                    </div>
-                    <div class="col-sm-4">
-                        <input type="text" class="form-control" id="firstName" name="firstName"
-                                ng-model="config.data.originator.person.givenName"
-                                placeholder="{{'cases.newRequest.firstName.placeholder' | translate}}"
-                                required="required" ng-disabled="isAppealPopulated">
-                        <span class="text-danger" ng-if="!config.data.originator.person.givenName && formInvalid" translate>
-                                cases.newRequest.firstName.validation.error</span>
-                    </div>
-                    <div class="col-sm-2">
-                        <label for="middleName" translate>cases.newRequest.middleName.label</label>
-                    </div>
-                    <div class="col-sm-4">
-                        <input type="text" class="form-control" id="middleName" ng-model="config.data.originator.person.middleName"
-                                placeholder="{{'cases.newRequest.middleName.placeholder' | translate}}" name="middleName" ng-disabled="isAppealPopulated">
-                    </div>
-                </div>
-                <div class="row form-group">
-                    <div class="col-sm-2">
-                        <label for="lastName" translate>cases.newRequest.lastName.label</label>
-                        <span class="required-asterisk">*</span>
-                    </div>
-                    <div class="col-sm-4">
-                        <input type="text" class="form-control" id="lastName" ng-model="config.data.originator.person.familyName"
-                                placeholder="{{'cases.newRequest.lastName.placeholder' | translate}}" name="lastName"
-                                required="required" ng-disabled="isAppealPopulated">
-                        <span class="text-danger" ng-if="!config.data.originator.person.familyName && formInvalid" translate>
-                                cases.newRequest.lastName.validation.error</span>
-                    </div>
-                    <div class="col-sm-2">
-                        <label for="position" translate>cases.newRequest.position.label</label>
-                    </div>
-                    <div class="col-sm-4">
-                        <input type="position" class="form-control" id="position" ng-model="config.data.originator.person.position"
-                                placeholder="{{'cases.newRequest.position.placeholder' | translate}}" name="position" ng-disabled="isAppealPopulated">
-                    </div>
-                </div>
-                <div class="row form-group">
-                    <div class="col-sm-2 form-group">
-                        <label for="phone" translate>cases.newRequest.phone.label </label>
-                        <span class="required-asterisk">*</span>
-                    </div>
-                    <div class="col-sm-4 form-group">
-                        <input type="text" class="form-control" id="phone" pattern="^\d{3}[\-]\d{3}[\-]\d{4}"
-                                ng-model="config.data.originator.person.defaultPhone.value"
-                                placeholder="{{'cases.newRequest.phone.placeholder' | translate}}" name="phone" required="required" ng-disabled="isAppealPopulated">
-                        <span class="text-danger" ng-if="!config.data.originator.person.defaultPhone.value && formInvalid" translate>
-                                cases.newRequest.phone.validation.error</span>
-                        <span class="text-danger" ng-if="!config.data.originator.person.defaultPhone.value && formInvalid && !phoneEmpty" translate>
-                                cases.newRequest.phone.validation.errorInvalid</span>
-                    </div>
-                    <div class="col-sm-2 form-group">
-                        <label for="organization" translate>cases.newRequest.organization.label </label>
-                    </div>
-                    <div class="col-sm-4 form-group">
-                        <input type="text" id="organization" ng-model="organizationValue" readonly ng-click="searchOrganization()"
-                                class="input-md form-control" placeholder="{{'cases.newRequest.organization.placeholder' | translate}}"
-                                name="organization">
-                    </div>
-                </div>
-                <div class="row form-group">
-                    <div class="col-sm-2">
-                        <label for="email" translate>cases.newRequest.email.label </label>
-                        <span ng-if="config.data.deliveryMethodOfResponse == 'Email'  || config.data.createNewPortalUser"
-                                class="required-asterisk">*</span>
-                    </div>
-                    <div class="col-sm-4">
-                        <input type="text" class="form-control" id="email" ng-model="config.data.originator.person.defaultEmail.value"
-                                placeholder="{{'cases.newRequest.email.placeholder' | translate}}" name="email"
-                                pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
-                                ng-required="config.data.deliveryMethodOfResponse == 'Email'  || config.data.createNewPortalUser"
-                                ng-disabled="isAppealPopulated">
-                        <span class="text-danger"
-                                ng-if="(config.data.deliveryMethodOfResponse == 'Email'  || config.data.createNewPortalUser) && !config.data.originator.person.defaultEmail.value"
-                                translate>
-                                cases.newRequest.email.validation.error</span>
-                        <span class="text-danger" ng-if="!config.data.originator.person.defaultEmail.value && formInvalid && !emailEmpty"
-                                translate>
-                                cases.newRequest.email.validation.errorInvalid</span>
-                    </div>
-                    <div class="col-sm-2">
-                        <label for="confirmationEmail" translate>cases.newRequest.confirmationEmail.label </label>
-                        <span ng-if="config.data.deliveryMethodOfResponse == 'Email' || config.data.createNewPortalUser"
-                                class="required-asterisk-confirm-email">*</span>
-                    </div>
-                    <div class="col-sm-4">
-                        <input type="text" class="form-control" id="confirmationEmail" ng-model="confirmationEmail"
-                                placeholder="{{'cases.newRequest.confirmationEmail.placeholder' | translate}}" name="confirmationEmail"
-                                ng-required="config.data.deliveryMethodOfResponse == 'Email'  || config.data.createNewPortalUser"
-                                ng-disabled="isAppealPopulated">
-                        <span class="text-danger" ng-if="(confirmationEmail !== config.data.originator.person.defaultEmail.value) && formInvalid && !confirmEmailEmpty" translate>
-                                cases.newRequest.confirmationEmail.validation.errorInvalid</span>
-                        <span class="text-danger"
-                                ng-if="(config.data.deliveryMethodOfResponse == 'Email' || config.data.createNewPortalUser) && (confirmationEmail !== config.data.originator.person.defaultEmail.value)"
-                                translate>
-                                cases.newRequest.confirmationEmail.validation.error</span>
-                    </div>
-                </div>
-                <div class="row form-group">
-                    <div class="col-sm-2">
-                        <label for="country" translate>cases.newRequest.country.label</label>
-                        <span ng-if="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
-                                class="required-asterisk">*</span>
-                    </div>
-                    <div class="col-sm-4">
-                        <select id="country" class="form-control" ng-model="config.data.originator.person.addresses[0].country"
-                                ng-required="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
-                                ng-disabled="isAppealPopulated"
-                                ng-change="changeStates(config.data.originator.person.addresses[0].country)">
-                            <option ng-repeat="option in countries" value="{{option.key}}">
-                                {{option.value | translate}}
-                            </option>
-                        </select>
-                        <span class="text-danger" ng-if="!config.data.originator.person.addresses[0].country && (config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser) && formInvalid" translate>
-                            cases.newRequest.country.validation.error</span>
-                    </div>
-                    <div class="col-sm-2">
-                        <label for="addressType" translate>cases.newRequest.address.type.label</label>
-                        <span ng-if="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
-                                class="required-asterisk-confirm-email">*</span>
-                    </div>
-                    <div class="col-sm-4">
-                        <select id="addressType" class="form-control" ng-model="config.data.originator.person.addresses[0].type"
-                                ng-required="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
-                                ng-disabled="isAppealPopulated">
-                            <option ng-repeat="option in addressTypes" value="{{option.key}}">
-                                {{option.value | translate}}
-                            </option>
-                        </select>
-                        <span class="text-danger" ng-if="!config.data.originator.person.addresses[0].type && (config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser) && formInvalid" translate>
-                            cases.newRequest.address.type.validation.error</span>
-                    </div>
-                </div>
-                <div class="row form-group">
-                    <div class="col-sm-2">
-                        <label for="address1" translate>cases.newRequest.address.label </label>
-                        <span ng-if="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
-                                class="required-asterisk">*</span>
-                    </div>
-                    <div class="col-sm-4">
-                        <input type="text" class="form-control" id="address1"
-                                ng-model="config.data.originator.person.addresses[0].streetAddress"
-                                placeholder="{{'cases.newRequest.address.placeholder' | translate}}" name="address1"
-                                ng-required="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
-                                ng-disabled="isAppealPopulated">
-                        <span class="text-danger"
-                                ng-if="(config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser) && !config.data.originator.person.addresses[0].streetAddress && formInvalid"
-                                translate>
-                                cases.newRequest.address.validation.error</span>
-                    </div>
-                    <div class="col-sm-2">
-                        <label for="address2" translate>cases.newRequest.address2.label</label>
-
-                    </div>
-                    <div class="col-sm-4">
-                        <input type="text" class="form-control" id="address2"
-                                ng-model="config.data.originator.person.addresses[0].streetAddress2"
-                                placeholder="{{'cases.newRequest.address2.placeholder' | translate}}" name="address2"
-                                ng-disabled="isAppealPopulated">
-                    </div>
-                </div>
-                <div class="row form-group">
-                    <div class="col-sm-2">
-                        <label for="city" translate>cases.newRequest.city.label</label>
-                        <span ng-if="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
-                                class="required-asterisk">*</span>
-                    </div>
-                    <div class="col-sm-4">
-                        <input type="text" class="form-control" id="city" ng-model="config.data.originator.person.addresses[0].city"
-                                placeholder="{{'cases.newRequest.city.placeholder' | translate}}" name="city"
-                                ng-required="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
-                                ng-disabled="isAppealPopulated">
-                        <span class="text-danger"
-                                ng-if="(config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser) && !config.data.originator.person.addresses[0].city && formInvalid"
-                                translate>
-                                cases.newRequest.city.validation.error</span>
-                    </div>
-                    <div class="col-sm-2">
-                        <label for="state" translate>cases.newRequest.state.label</label>
-                        <span ng-if="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
-                                class="required-asterisk-state-label-modals">*</span>
-                    </div>
-                    <div class="col-sm-4">
-                        <div ng-if="config.data.originator.person.addresses[0].country == 'US' || config.data.originator.person.addresses[0].country == 'CA' || config.data.originator.person.addresses[0].country == 'JP'">
-                            <select id="state" name="state" ng-model="config.data.originator.person.addresses[0].state" 
-                                    ng-options="state.key as state.value | translate for state in states" class="form-control input-md"
-                                    ng-required="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
-                                    ng-disabled="isAppealPopulated">
-                            </select>
-                        </div>
-                        <div ng-if="config.data.originator.person.addresses[0].country != 'US' && config.data.originator.person.addresses[0].country != 'CA' && config.data.originator.person.addresses[0].country != 'JP'">
-                            <input id="txtState" type="text" ng-model="config.data.originator.person.addresses[0].state" class="input-md form-control"
-                                    placeholder="{{ 'cases.newRequest.state.placeholder' | translate }}"
-                                    ng-required="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
-                                    ng-disabled="isAppealPopulated">
-                        </div>
-                        <span class="text-danger"
-                                ng-if="(config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser) && !config.data.originator.person.addresses[0].state && formInvalid"
-                                translate>
-                                cases.newRequest.state.validation.error</span>
-                    </div>
-                </div>
-                <div class="row form-group">
-                    <div class="col-sm-2">
-                        <label for="zip" translate>cases.newRequest.zip.label</label>
-                        <span ng-if="config.data.deliveryMethodOfResponse == 'Mail'  || config.data.createNewPortalUser"
-                                class="required-asterisk">*</span>
-                    </div>
-                    <div class="col-sm-4">
-                        <input type="text" class="form-control" id="zip" name="zip" pattern="[0-9]{5}"
-                                ng-model="config.data.originator.person.addresses[0].zip"
-                                placeholder="{{'cases.newRequest.zip.placeholder' | translate}}"
-                                ng-required="config.data.deliveryMethodOfResponse == 'Mail'  || config.data.createNewPortalUser"
-                                ng-disabled="isAppealPopulated">
-                        <span class="text-danger"
-                                ng-if="(config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser) && !config.data.originator.person.addresses[0].zip && formInvalid"
-                                translate>
-                                cases.newRequest.zip.validation.error</span>
-                        <span class="text-danger" ng-if="!config.data.originator.person.addresses[0].zip && formInvalid && !zipCodeEmpty"
-                                translate>
-                                cases.newRequest.zip.validation.errorInvalid</span>
-                    </div>
-                </div>
-                <div class="row form-group" ng-if="portals.length !==0 && isNewRequestType()">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <label for="portals">
-                                <input type="checkbox" ng-model="config.data.createNewPortalUser">
-                                <span translate>cases.newRequest.portalUser.label</span>
+            <div class="panel-body" ng-show="config.data.requestCategory && config.data.deliveryMethodOfResponse">
+                <div class="row" ng-hide="!isNewRequestType()">
+                    <div class="col-sm-12 form-group">
+                        <div class="col-sm-4">
+                            <label>
+                                <input type="radio" ng-model="isPickExistingPerson" ng-value="false" ng-change="pickExistingUserChange()">
+                                <translate>cases.newRequest.addNewPerson</translate>
                             </label>
                         </div>
-                        <div class="col-sm-6">
-                            <select id="portals" ng-if="config.data.createNewPortalUser && portals.length > 1"
-                                    ng-model="config.chosenPortal" ng-options="portal as portal.portalUrl for portal in portals"
-                                    class="form-control input-md">
-                            </select>
+                        <div class="col-sm-4">
+                            <label>
+                                <input type="radio" ng-model="isPickExistingPerson" ng-value="true" ng-change="pickExistingUserChange()">
+                                <translate>cases.newRequest.useExistingPerson</translate>
+                            </label>
                         </div>
-
+                        <div class="col-sm-4">
+                            <label>
+                                <div class="pull-right" ng-if="isPickExistingPerson">
+                                    <button class="btn btn-primary btn-sm" ng-click="searchPerson()" translate>
+                                        cases.newRequest.searchPerson
+                                    </button>
+                                </div>
+                            </label>
+                        </div>
                     </div>
                 </div>
+
+                <div ng-show="isExistingPerson || !isPickExistingPerson">
+                    <div class="row form-group">
+                        <div class="col-sm-2">
+                            <label for="prefix" translate>cases.newRequest.prefix.label</label>
+                            <span class="required-asterisk">*</span>
+                        </div>
+                        <div class="col-sm-4">
+                            <select ng-model="config.data.originator.person.title" id="prefix" name="prefix"
+                                    ng-options="prefix.key as prefix.value | translate for prefix in prefixes" class="form-control input-md"
+                                    required ng-disabled="isExistingPerson && existingPerson.title">
+                            </select>
+                            <span class="text-danger" ng-if="!config.data.originator.person.title && formInvalid" translate>
+                            cases.newRequest.prefix.validation.error</span>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-sm-2">
+                            <label for="firstName" translate>cases.newRequest.firstName.label</label>
+                            <span class="required-asterisk">*</span>
+                        </div>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="firstName" name="firstName"
+                                    ng-model="config.data.originator.person.givenName"
+                                    placeholder="{{'cases.newRequest.firstName.placeholder' | translate}}" required="required"
+                                    ng-disabled="isExistingPerson && existingPerson.givenName">
+                            <span class="text-danger" ng-if="!config.data.originator.person.givenName && formInvalid" translate>
+                                cases.newRequest.firstName.validation.error</span>
+                        </div>
+                        <div class="col-sm-2">
+                            <label for="middleName" translate>cases.newRequest.middleName.label</label>
+                        </div>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="middleName" ng-model="config.data.originator.person.middleName"
+                                    placeholder="{{'cases.newRequest.middleName.placeholder' | translate}}" name="middleName"
+                                    ng-disabled="isExistingPerson">
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-sm-2">
+                            <label for="lastName" translate>cases.newRequest.lastName.label</label>
+                            <span class="required-asterisk">*</span>
+                        </div>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="lastName" ng-model="config.data.originator.person.familyName"
+                                    placeholder="{{'cases.newRequest.lastName.placeholder' | translate}}" name="lastName"
+                                    required="required" ng-disabled="isExistingPerson && existingPerson.familyName">
+                            <span class="text-danger" ng-if="!config.data.originator.person.familyName && formInvalid" translate>
+                                cases.newRequest.lastName.validation.error</span>
+                        </div>
+                        <div class="col-sm-2">
+                            <label for="position" translate>cases.newRequest.position.label</label>
+                        </div>
+                        <div class="col-sm-4">
+                            <input type="position" class="form-control" id="position" ng-model="config.data.originator.person.position"
+                                    placeholder="{{'cases.newRequest.position.placeholder' | translate}}" name="position"
+                                    ng-disabled="isExistingPerson">
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-sm-2 form-group">
+                            <label for="phone" translate>cases.newRequest.phone.label </label>
+                            <span class="required-asterisk">*</span>
+                        </div>
+                        <div class="col-sm-4 form-group">
+                            <input type="text" class="form-control" id="phone" pattern="^\d{3}[\-]\d{3}[\-]\d{4}"
+                                    ng-model="config.data.originator.person.defaultPhone.value"
+                                    placeholder="{{'cases.newRequest.phone.placeholder' | translate}}" name="phone" required="required"
+                                    ng-disabled="isExistingPerson && existingPerson.defaultPhone.value">
+                            <span class="text-danger" ng-if="!config.data.originator.person.defaultPhone.value && formInvalid" translate>
+                                cases.newRequest.phone.validation.error</span>
+                            <span class="text-danger"
+                                    ng-if="!config.data.originator.person.defaultPhone.value && formInvalid && !phoneEmpty" translate>
+                                cases.newRequest.phone.validation.errorInvalid</span>
+                        </div>
+                        <div class="col-sm-2 form-group">
+                            <label for="organization" translate>cases.newRequest.organization.label </label>
+                        </div>
+                        <div class="col-sm-4 form-group">
+                            <input type="text" id="organization" ng-model="organizationValue" readonly ng-click="searchOrganization()"
+                                    class="input-md form-control" placeholder="{{'cases.newRequest.organization.placeholder' | translate}}"
+                                    name="organization">
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-sm-2">
+                            <label for="email" translate>cases.newRequest.email.label </label>
+                            <span ng-if="config.data.deliveryMethodOfResponse == 'Email'  || config.data.createNewPortalUser"
+                                    class="required-asterisk">*</span>
+                        </div>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="email" ng-model="config.data.originator.person.defaultEmail.value"
+                                    placeholder="{{'cases.newRequest.email.placeholder' | translate}}" name="email"
+                                    pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+                                    ng-required="config.data.deliveryMethodOfResponse == 'Email'  || config.data.createNewPortalUser"
+                                    ng-disabled="isExistingPerson && (existingPerson.defaultEmail.value ||
+                                    (config.data.deliveryMethodOfResponse != 'Email'  && !config.data.createNewPortalUser))">
+                            <span class="text-danger"
+                                    ng-if="(config.data.deliveryMethodOfResponse == 'Email'  || config.data.createNewPortalUser) && !config.data.originator.person.defaultEmail.value && formInvalid"
+                                    translate>
+                                cases.newRequest.email.validation.error</span>
+                            <span class="text-danger"
+                                    ng-if="!config.data.originator.person.defaultEmail.value && formInvalid && !emailEmpty" translate>
+                                cases.newRequest.email.validation.errorInvalid</span>
+                        </div>
+                        <div class="col-sm-2">
+                            <label for="confirmationEmail" translate>cases.newRequest.confirmationEmail.label </label>
+                            <span ng-if="config.data.deliveryMethodOfResponse == 'Email' || config.data.createNewPortalUser"
+                                    class="required-asterisk-confirm-email">*</span>
+                        </div>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="confirmationEmail" ng-model="confirmationEmail"
+                                    placeholder="{{'cases.newRequest.confirmationEmail.placeholder' | translate}}" name="confirmationEmail"
+                                    ng-blur="checkExistingEmail()"
+                                    ng-required="config.data.deliveryMethodOfResponse == 'Email'  || config.data.createNewPortalUser"
+                                    ng-disabled="isExistingPerson && (existingPerson.defaultEmail.value ||
+                                    (config.data.deliveryMethodOfResponse != 'Email'  && !config.data.createNewPortalUser))">
+                            <span class="text-danger"
+                                    ng-if="(confirmationEmail !== config.data.originator.person.defaultEmail.value) && formInvalid && !confirmEmailEmpty"
+                                    translate>
+                                cases.newRequest.confirmationEmail.validation.errorInvalid</span>
+                            <span class="text-danger"
+                                    ng-if="(config.data.deliveryMethodOfResponse == 'Email' || config.data.createNewPortalUser) && (confirmationEmail !== config.data.originator.person.defaultEmail.value)"
+                                    translate>
+                                cases.newRequest.confirmationEmail.validation.error</span>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-sm-2">
+                            <label for="country" translate>cases.newRequest.country.label</label>
+                            <span ng-if="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
+                                    class="required-asterisk">*</span>
+                        </div>
+                        <div class="col-sm-4">
+                            <select id="country" class="form-control" ng-model="config.data.originator.person.addresses[0].country"
+                                    ng-required="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
+                                    ng-disabled="isExistingPerson && (existingPerson.addresses[0].country ||
+                                    (config.data.deliveryMethodOfResponse != 'Mail'  && !config.data.createNewPortalUser))"
+                                    ng-change="changeStates(config.data.originator.person.addresses[0].country)">
+                                <option ng-repeat="option in countries" value="{{option.key}}">
+                                    {{option.value | translate}}
+                                </option>
+                            </select>
+                            <span class="text-danger" ng-if="!config.data.originator.person.addresses[0].country &&
+                                    (config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser) && formInvalid"
+                                    translate>
+                            cases.newRequest.country.validation.error</span>
+                        </div>
+                        <div class="col-sm-2">
+                            <label for="addressType" translate>cases.newRequest.address.type.label</label>
+                            <span ng-if="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
+                                    class="required-asterisk-confirm-email">*</span>
+                        </div>
+                        <div class="col-sm-4">
+                            <select id="addressType" class="form-control" ng-model="config.data.originator.person.addresses[0].type"
+                                    ng-required="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
+                                    ng-disabled="isExistingPerson &&
+                                    ((existingPerson.addresses[0].type && existingPerson.addresses[0].streetAddress) ||
+                                    (config.data.deliveryMethodOfResponse != 'Mail'  && !config.data.createNewPortalUser))">
+                                <option ng-repeat="option in addressTypes" value="{{option.key}}">
+                                    {{option.value | translate}}
+                                </option>
+                            </select>
+                            <span class="text-danger"
+                                    ng-if="!config.data.originator.person.addresses[0].type && (config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser) && formInvalid"
+                                    translate>
+                            cases.newRequest.address.type.validation.error</span>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-sm-2">
+                            <label for="address1" translate>cases.newRequest.address.label </label>
+                            <span ng-if="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
+                                    class="required-asterisk">*</span>
+                        </div>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="address1"
+                                    ng-model="config.data.originator.person.addresses[0].streetAddress"
+                                    placeholder="{{'cases.newRequest.address.placeholder' | translate}}" name="address1"
+                                    ng-required="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
+                                    ng-disabled="isExistingPerson && (existingPerson.addresses[0].streetAddress ||
+                                    (config.data.deliveryMethodOfResponse != 'Mail'  && !config.data.createNewPortalUser))">
+                            <span class="text-danger"
+                                    ng-if="(config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser) && !config.data.originator.person.addresses[0].streetAddress && formInvalid"
+                                    translate>
+                                cases.newRequest.address.validation.error</span>
+                        </div>
+                        <div class="col-sm-2">
+                            <label for="address2" translate>cases.newRequest.address2.label</label>
+
+                        </div>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="address2"
+                                    ng-model="config.data.originator.person.addresses[0].streetAddress2"
+                                    placeholder="{{'cases.newRequest.address2.placeholder' | translate}}" name="address2" ng-disabled="isExistingPerson &&
+                                    (existingPerson.addresses[0].streetAddress || existingPerson.addresses[0].streetAddress2 ||
+                                    (config.data.deliveryMethodOfResponse != 'Mail'  && !config.data.createNewPortalUser))">
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-sm-2">
+                            <label for="city" translate>cases.newRequest.city.label</label>
+                            <span ng-if="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
+                                    class="required-asterisk">*</span>
+                        </div>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="city" ng-model="config.data.originator.person.addresses[0].city"
+                                    placeholder="{{'cases.newRequest.city.placeholder' | translate}}" name="city"
+                                    ng-required="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
+                                    ng-disabled="isExistingPerson && (existingPerson.addresses[0].city ||
+                                    (config.data.deliveryMethodOfResponse != 'Mail'  && !config.data.createNewPortalUser))">
+                            <span class="text-danger" ng-if="(config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser)
+                                    && !config.data.originator.person.addresses[0].city && formInvalid" translate>
+                                cases.newRequest.city.validation.error</span>
+                        </div>
+                        <div class="col-sm-2">
+                            <label for="state" translate>cases.newRequest.state.label</label>
+                            <span ng-if="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
+                                    class="required-asterisk-state-label-modals">*</span>
+                        </div>
+                        <div class="col-sm-4">
+                            <div ng-if="config.data.originator.person.addresses[0].country == 'US'
+                            || config.data.originator.person.addresses[0].country == 'CA'
+                            || config.data.originator.person.addresses[0].country == 'JP'">
+                                <select id="state" name="state" ng-model="config.data.originator.person.addresses[0].state"
+                                        ng-options="state.key as state.value | translate for state in states" class="form-control input-md"
+                                        ng-required="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
+                                        ng-disabled="isExistingPerson && (existingPerson.addresses[0].state ||
+                                    (config.data.deliveryMethodOfResponse != 'Mail'  && !config.data.createNewPortalUser))">
+                                </select>
+                            </div>
+                            <div ng-if="config.data.originator.person.addresses[0].country != 'US' && config.data.originator.person.addresses[0].country != 'CA' && config.data.originator.person.addresses[0].country != 'JP'">
+                                <input id="txtState" type="text" ng-model="config.data.originator.person.addresses[0].state"
+                                        class="input-md form-control" placeholder="{{ 'cases.newRequest.state.placeholder' | translate }}"
+                                        ng-required="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
+                                        ng-disabled="isExistingPerson && (existingPerson.addresses[0].state ||
+                                    (config.data.deliveryMethodOfResponse != 'Mail'  && !config.data.createNewPortalUser))">
+                            </div>
+                            <span class="text-danger"
+                                    ng-if="(config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser) && !config.data.originator.person.addresses[0].state && formInvalid"
+                                    translate>
+                                cases.newRequest.state.validation.error</span>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-sm-2">
+                            <label for="zip" translate>cases.newRequest.zip.label</label>
+                            <span ng-if="config.data.deliveryMethodOfResponse == 'Mail'  || config.data.createNewPortalUser"
+                                    class="required-asterisk">*</span>
+                        </div>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="zip" name="zip" pattern="[0-9]{5}"
+                                    ng-model="config.data.originator.person.addresses[0].zip"
+                                    placeholder="{{'cases.newRequest.zip.placeholder' | translate}}"
+                                    ng-required="config.data.deliveryMethodOfResponse == 'Mail'  || config.data.createNewPortalUser"
+                                    ng-disabled="isExistingPerson && (existingPerson.addresses[0].zip ||
+                                    (config.data.deliveryMethodOfResponse != 'Mail'  && !config.data.createNewPortalUser))">
+                            <span class="text-danger" ng-if="(config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser)
+                                    && !config.data.originator.person.addresses[0].zip && formInvalid" translate>
+                                cases.newRequest.zip.validation.error</span>
+                            <span class="text-danger"
+                                    ng-if="!config.data.originator.person.addresses[0].zip && formInvalid && !zipCodeEmpty" translate>
+                                cases.newRequest.zip.validation.errorInvalid</span>
+                        </div>
+                    </div>
+                    <div class="row form-group" ng-if="portals.length !==0 && isNewRequestType()">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label for="portals">
+                                    <input type="checkbox" ng-model="config.data.createNewPortalUser">
+                                    <span translate>cases.newRequest.portalUser.label</span>
+                                </label>
+                            </div>
+                            <div class="col-sm-6">
+                                <select id="portals" ng-if="config.data.createNewPortalUser && portals.length > 1"
+                                        ng-model="config.chosenPortal" ng-options="portal as portal.portalUrl for portal in portals"
+                                        class="form-control input-md">
+                                </select>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
         <div class="panel panel-default">
@@ -491,8 +537,7 @@
                         <label for="payFee" translate="">cases.comp.main.payFee.label</label>
                     </div>
                     <div class="col-sm-5 form-group">
-                        <select id="payFee" ng-model="config.data.payFee"
-                                ng-options="payFee.key as payFee.value for payFee in payFees"
+                        <select id="payFee" ng-model="config.data.payFee" ng-options="payFee.key as payFee.value for payFee in payFees"
                                 class="form-control input-md">
                         </select>
                     </div>
@@ -501,13 +546,11 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-secondary btn-sm" data-toggle="tooltip" data-title="Cancel"
-                ng-click="cancelModal()">
+        <button type="button" class="btn btn-secondary btn-sm" data-toggle="tooltip" data-title="Cancel" ng-click="cancelModal()">
             <span translate>cases.newRequest.cancel</span>
         </button>
-        <button type="button" class="btn btn-primary btn-sm"
-                data-toggle="tooltip" ng-click="validateForm(requestForm)"
-                title="Submit" id="saveButton">
+        <button type="button" class="btn btn-primary btn-sm" data-toggle="tooltip" ng-click="validateForm(requestForm)" title="Submit"
+                id="saveButton">
             <i class="{{loadingIcon}}"></i>
             <span translate>cases.newRequest.save.button</span>
         </button>

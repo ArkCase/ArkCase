@@ -122,11 +122,36 @@ angular.module('services').factory('Person.InfoService', [ '$resource', '$transl
             param: {
                 id: id
             },
-            onSuccess: function(data) {
+            onSuccess: function (data) {
                 if (Service.validatePersonInfo(data)) {
                     return data;
                 }
             }
+        });
+    };
+
+    /**
+     * @ngdoc method
+     * @name queryByEmail
+     * @methodOf services:Person.InfoService
+     *
+     * @description
+     * Query person data
+     *
+     * @param {String} email  Person email
+     *
+     * @returns {Object} Promise
+     */
+    Service.queryByEmail = function (email) {
+        return $http({
+            method: 'GET',
+            url: peopleBaseUrl + 'queryByEmail',
+            params: {
+                emailAddress: email
+            },
+            cache: false,
+            isArray: false,
+            transformResponse: Util.transformSearchResponse
         });
     };
 

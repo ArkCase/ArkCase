@@ -1,10 +1,13 @@
-package com.armedia.acm.services.exemption.model;
+/**
+ *
+ */
+package gov.foia.model.event;
 
 /*-
  * #%L
- * ACM Service: Exemption
+ * ACM Service: Object History Service
  * %%
- * Copyright (C) 2014 - 2020 ArkCase LLC
+ * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 
@@ -27,30 +30,39 @@ package com.armedia.acm.services.exemption.model;
  * #L%
  */
 
+import com.armedia.acm.auth.AuthenticationUtils;
+import com.armedia.acm.core.model.AcmEvent;
+
 import java.util.Date;
 
-import com.armedia.acm.core.model.AcmEvent;
-import com.armedia.acm.plugins.ecm.model.EcmFile;
+import gov.foia.model.FOIARequest;
 
 /**
- * Created by ana.serafimoska
+ * Created by Vladimir Cherepnalkovski <vladimir.cherepnalkovski@armedia.com> on Apr, 2020
  */
-public class DocumentRedactionEvent extends AcmEvent
+public class RequestComponentAgencyChangedEvent extends AcmEvent
 {
 
-    private static final long serialVersionUID = -2378737634221219733L;
+    private static final String EVENT_TYPE = "com.armedia.acm.casefile.component.changed";
 
-    public DocumentRedactionEvent(EcmFile source)
+    public RequestComponentAgencyChangedEvent(FOIARequest originalRequest, FOIARequest request, String description)
     {
-        super(source);
+        super(originalRequest);
+
+        setObjectId(originalRequest.getId());
+        setObjectType(originalRequest.getObjectType());
         setEventDate(new Date());
-        setObjectId(source.getId());
-        setObjectType(source.getParentObjectType());
+        setEventType(EVENT_TYPE);
+        setSucceeded(true);
+        setUserId(AuthenticationUtils.getUsername());
+        setIpAddress(AuthenticationUtils.getUserIpAddress());
+        setEventDescription(description);
     }
 
     @Override
-    public EcmFile getSource()
+    public String getEventType()
     {
-        return (EcmFile) super.getSource();
+        return EVENT_TYPE;
     }
+
 }
