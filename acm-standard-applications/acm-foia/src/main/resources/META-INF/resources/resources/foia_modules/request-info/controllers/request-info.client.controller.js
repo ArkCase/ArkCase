@@ -60,7 +60,7 @@ angular.module('request-info').controller(
                   HelperObjectBrowserService, ObjectLookupService, ObjectModelService, CaseLookupService, UtilDateService, QueuesSvc, ObjectSubscriptionService, Util, SnowboundService, EcmService, DocumentPrintingService, NotesService, UserInfoService, MessageService, $translate,
                   DueDateService, AdminHolidayService, AdminFoiaConfigService, TranscriptionManagementService, $window, ArkCaseCrossWindowMessagingService, ObjectLockingService, UtilTimerService, DialogService) {
 
-            if(sessionStorage.getItem("startRow") == null){
+            if (sessionStorage.getItem("startRow") == null) {
                 sessionStorage.setItem("startRow", 0);
             }
             var nextQueueId = -1;
@@ -434,10 +434,10 @@ angular.module('request-info').controller(
                 var assignee = ObjectModelService.getAssignee(objectInfo);
                 $scope.assignee = assignee;
                 nextQueueId = objectInfo.queue.id;
-                if(sessionStorage.getItem("firstOpenedRequestId") === null){
+                if (sessionStorage.getItem("firstOpenedRequestId") === null) {
                     sessionStorage.setItem("firstOpenedRequestId", objectInfo.id);
                 }
-                RequestsService.getNextAvailableRequestInQueue({queueId:nextQueueId, createdDate: objectInfo.created})
+                RequestsService.getNextAvailableRequestInQueue({queueId: nextQueueId, createdDate: objectInfo.created})
                     .$promise.then(function (data) {
                     $scope.hasNextRequest = data.availableRequests > 0;
                 });
@@ -567,23 +567,36 @@ angular.module('request-info').controller(
                     $scope.$bus.publish('required-fields-retrieved', $scope.requiredFields[$scope.requestInfo.queue.name]);
                 }
 
-                populateDispositionTypes($scope.requestInfo);
+                populateDispositionCategories($scope.requestInfo);
+                populateDeniedDispositionCategories($scope.requestInfo);
+                populateOtherReasons($scope.requestInfo);
                 populateRequestTrack($scope.requestInfo);
-                $scope.populateDispositionSubTypes($scope.objectInfo.requestType);
             };
 
-            function populateDispositionTypes(objectInfo) {
-                ObjectLookupService.getDispositionTypes(objectInfo.requestType).then(function (requestDispositionType) {
-                    $scope.dispositionTypes = requestDispositionType;
-                    if (objectInfo.disposition) {
-                        $scope.dispositionValue = _.find($scope.dispositionTypes, function (disposition) {
-                            if (disposition.key == objectInfo.disposition) {
-                                return disposition.key;
-                            }
+            function populateDispositionCategories(objectInfo) {
+                ObjectLookupService.getLookupByLookupName('requestDispositionType').then(function (requestDispositionType) {
+                    $scope.dispositionCategories = requestDispositionType;
+                });
+            }
+
+            function populateDeniedDispositionCategories(objectInfo) {
+                ObjectLookupService.getLookupByLookupName('requestDispositionSubType').then(function (requestDispositionSubType) {
+                    $scope.dispositionDeniedCategories = requestDispositionSubType;
+                });
+            }
+            
+            function populateOtherReasons(objectInfo) {
+                ObjectLookupService.getLookupByLookupName('requestOtherReason').then(function (requestOtherReasons) {
+                    $scope.otherReasons = requestOtherReasons;
+                    if($scope.objectInfo.otherReason) {
+                        var found = _.find(requestOtherReasons, {
+                            key: $scope.objectInfo.otherReason
                         });
-                        $scope.requestInfo.disposition = $scope.dispositionValue.key;
-                    } else {
-                        $scope.requestInfo.disposition = $scope.dispositionTypes[0].key;
+                        if(found) {
+                            $scope.isCustomReason = false;
+                        } else {
+                            $scope.isCustomReason = true;
+                        }
                     }
                 });
             }
@@ -615,23 +628,10 @@ angular.module('request-info').controller(
                 }
 
             };
-
-            $scope.populateDispositionSubTypes = function (requestType) {
-                if (requestType == "Appeal") {
-                    ObjectLookupService.getAppealDispositionSubTypes().then(function (appealDispositionSubType) {
-                        $scope.dispositionSubTypes = appealDispositionSubType;
-                    });
-                } else if (requestType == "New Request") {
-                    ObjectLookupService.getRequestDispositionSubTypes().then(function (requestDispositionSubType) {
-                        $scope.dispositionSubTypes = requestDispositionSubType;
-                    });
-                } else {
-                    $scope.dispositionSubTypes = "";
-                }
-            };
+            
 
             var getCaseInfo = CaseInfoService.getCaseInfo($stateParams['id']);
-            
+
             $q.all([ticketInfo, userInfo, totalUserInfo, ecmFileConfig, ecmFileInfo.$promise, ecmFileEvents.$promise, ecmFileParticipants.$promise, formsConfig, transcriptionConfigurationPromise, getCaseInfo]).then(function (data) {
                 $scope.acmTicket = data[0].data;
                 $scope.userId = data[1].userId;
@@ -959,6 +959,13 @@ angular.module('request-info').controller(
                         type: 'RETURN_REASON'
                     }).then(function (addedNote) {
                         // Note saved
+                        var disposition = _.find($scope.dispositionCategories, {
+                            key: $scope.requestInfo.disposition
+                        });
+                        $scope.requestInfo.dispositionValue = $translate.instant(disposition.value);
+                        $scope.requestInfo.disposition = null;
+                        $scope.objectInfo.otherReason = null;
+                        $scope.isRequestFormModified = true;
                         deferred.resolve();
                     });
                 }, function () {
@@ -994,17 +1001,17 @@ angular.module('request-info').controller(
                     $scope.loadingIcon = "fa fa-check";
                 });
             }
-            
+
             AdminFoiaConfigService.getFoiaConfig().then(function (response) {
                 $scope.limitedDeliveryToSpecificPageCountEnabled = response.data.limitedDeliveryToSpecificPageCountEnabled;
                 $scope.limitedDeliveryToSpecificPageCount = response.data.limitedDeliveryToSpecificPageCount;
                 $scope.provideReasonToHoldRequestEnabled = response.data.provideReasonToHoldRequestEnabled;
             });
-            
+
             function openHoldReasonModal(deferred, tollingFlag) {
                 var params = {};
                 params.tollingFlag = tollingFlag;
-                
+
                 var modalInstance = $modal.open({
                     animation: $scope.animationsEnabled,
                     templateUrl: 'modules/cases/views/components/hold-reason-modal.client.view.html',
@@ -1012,16 +1019,16 @@ angular.module('request-info').controller(
                     size: 'md',
                     backdrop: 'static',
                     resolve: {
-                        params: function() {
+                        params: function () {
                             return params;
                         }
                     }
                 });
 
-                modalInstance.result.then(function(data) {
+                modalInstance.result.then(function (data) {
                     $scope.objectInfo.status = data.status;
                     if (data.isSelectedTolling) {
-                      $scope.objectInfo.tollingFlag = true;
+                        $scope.objectInfo.tollingFlag = true;
                     }
                     if (data.holdReason) {
                         //save note
@@ -1063,6 +1070,62 @@ angular.module('request-info').controller(
 
                 modalInstance.result.then(function (limitedDeliveryFlag) {
                     $scope.objectInfo.limitedDeliveryFlag = limitedDeliveryFlag;
+                    deferred.resolve();
+                }, function () {
+                    deferred.reject();
+                    $scope.loading = false;
+                    $scope.loadingIcon = "fa fa-check";
+                });
+            }
+
+            function openDispositionCategoryModal(deferred, isRequestFormModified) {
+                var params = {};
+                params.objectId = $scope.objectInfo.id;
+                var modalInstance = $modal.open({
+                    animation: $scope.animationsEnabled,
+                    templateUrl: 'modules/cases/views/components/request-disposition-categories-modal.client.view.html',
+                    controller: 'Cases.RequestDispositionCategoriesModalController',
+                    size: 'md',
+                    backdrop: 'static',
+                    resolve: {
+                        params: function () {
+                            return params;
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function (data) {
+                    $scope.requestInfo.disposition = data.requestDispositionCategory;
+                    $scope.requestInfo.dispositionValue = data.dispositionValue;
+                    $scope.isRequestFormModified = data.requestDispositionCategory ? true : false;
+                    deferred.resolve();
+                }, function () {
+                    deferred.reject();
+                    $scope.loading = false;
+                    $scope.loadingIcon = "fa fa-check";
+                });
+            }
+
+            function openDenyDispositionCategoryModal(deferred, isRequestFormModified) {
+                var params = {};
+                params.objectId = $scope.objectInfo.id;
+                var modalInstance = $modal.open({
+                    animation: $scope.animationsEnabled,
+                    templateUrl: 'modules/cases/views/components/request-deny-disposition-categories-modal.client.view.html',
+                    controller: 'Cases.RequestDenyDispositionCategoriesModalController',
+                    size: 'lg',
+                    backdrop: 'static',
+                    resolve: {
+                        params: function () {
+                            return params;
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function (data) {
+                    $scope.requestInfo.disposition = data.requestDispositionCategory;
+                    $scope.requestInfo.dispositionValue = data.dispositionValue;
+                    $scope.objectInfo.otherReason = data.requestOtherReason;
                     deferred.resolve();
                 }, function () {
                     deferred.reject();
@@ -1119,7 +1182,7 @@ angular.module('request-info').controller(
                             releaseRequestLock($scope.requestInfo.id).then(function () {
                                 $scope.$emit('report-object-refreshed', $stateParams.id);
                                 if (name === 'Next' || name === 'Return' || name === 'Deny') {
-                                    goToNextAvailableRequestOrQueueList();
+                                    goToNextAvailableRequestOrQueueList(deferred);
                                 } else {
                                     deferred.resolve();
                                 }
@@ -1150,6 +1213,7 @@ angular.module('request-info').controller(
                 $scope.loading = true;
                 $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
                 $scope.nameButton = name;
+                $scope.isRequestFormModified = isRequestFormModified;
 
                 var nextQueue = name;
                 var deferred = $q.defer();
@@ -1169,6 +1233,10 @@ angular.module('request-info').controller(
                     }
                 } else if (name === 'Complete' && $scope.defaultNextQueue === "Release" && $scope.limitedDeliveryToSpecificPageCountEnabled) {
                     openLimitedPageReleaseModal(deferred);
+                } else if(name === 'Complete' && $scope.objectInfo.queue.name === 'Fulfill') {
+                    openDispositionCategoryModal(deferred, $scope.isRequestFormModified);
+                } else if(name === 'Deny' && ($scope.objectInfo.queue.name === 'Intake' || $scope.objectInfo.queue.name === 'Fulfill')) {
+                    openDenyDispositionCategoryModal(deferred, $scope.isRequestFormModified);
                 } else {
                     deferred.resolve();
                 }
@@ -1178,7 +1246,7 @@ angular.module('request-info').controller(
                     var deferred = $q.defer();
                     var queueId = $scope.requestInfo.queue.id;
 
-                    if (isRequestFormModified == true) {
+                    if ($scope.isRequestFormModified == true) {
                         saveRequest().then(function (objectInfo) {
                             $scope.objectInfo = objectInfo;
                             setupNextQueue(name, deferred);
@@ -1236,8 +1304,6 @@ angular.module('request-info').controller(
                         $state.go('request-info', {
                             id: nextRequest.object_id_s
                         });
-                    } else {
-                        $state.go('queues');
                     }
                     deferred.resolve();
                 }, 4000);
@@ -1495,7 +1561,7 @@ angular.module('request-info').controller(
                     }
                 });
             }
-            
+
             UserInfoService.getUserInfo().then(function (infoData) {
                 $scope.currentUserProfile = infoData;
             });
@@ -1536,51 +1602,53 @@ angular.module('request-info').controller(
             // Release editing lock on window unload, if acquired
             $window.addEventListener('unload', function () {
                 $scope.data = {
-                        objectId: $scope.ecmFile.fileId,
-                        objectType: ObjectService.ObjectTypes.FILE,
-                        lockType: ObjectService.LockTypes.WRITE
-                    };
+                    objectId: $scope.ecmFile.fileId,
+                    objectType: ObjectService.ObjectTypes.FILE,
+                    lockType: ObjectService.LockTypes.WRITE
+                };
 
                 var data = angular.toJson($scope.data);
-                
+
                 var url = 'api/v1/plugin/' + ObjectService.ObjectTypes.FILE + '/' + $scope.ecmFile.fileId + '/lock?lockType=' + ObjectService.LockTypes.WRITE;
-                
+
                 if ($scope.editingMode) {
-                        if("sendBeacon" in navigator)
-                    {
-                                navigator.sendBeacon(url, data);
+                    if ("sendBeacon" in navigator) {
+                        navigator.sendBeacon(url, data);
                     } else {
                         var xmlhttp = new XMLHttpRequest();
                         xmlhttp.open("POST", url, false); //false - synchronous call
                         xmlhttp.setRequestHeader("Content-type", "application/json");
                         xmlhttp.send(data);
                     }
-                }                        
+                }
             });
-            
-            $rootScope.$bus.subscribe("object.changed/FILE/" + $stateParams.fileId, function() {
+
+            $rootScope.$bus.subscribe("object.changed/FILE/" + $stateParams.fileId, function () {
                 var ecmFile = EcmService.getFile({
                     fileId: $scope.ecmFile.fileId
                 });
-                ecmFile.$promise.then(function(file) {
+                ecmFile.$promise.then(function (file) {
                     $scope.ecmFile = file;
                     $scope.fileId = file.fileId;
-                    $scope.fileInfo.id= file.fileId + ':' + file.activeVersionTag;
-                    $scope.fileInfo.selectedIds= file.fileId + ':' + file.activeVersionTag;
-                    $scope.fileInfo.versionTag= file.activeVersionTag;
-                    DialogService.alert($translate.instant("documentDetails.fileChangedAlert")).then(function() {
+                    $scope.fileInfo.id = file.fileId + ':' + file.activeVersionTag;
+                    $scope.fileInfo.selectedIds = file.fileId + ':' + file.activeVersionTag;
+                    $scope.fileInfo.versionTag = file.activeVersionTag;
+                    DialogService.alert($translate.instant("documentDetails.fileChangedAlert")).then(function () {
                         $scope.openSnowboundViewer();
                     });
                 });
             });
             $scope.nextAvailableRequest = function () {
-                RequestsService.getNextAvailableRequestInQueue({queueId:nextQueueId, createdDate: $scope.objectInfo.created})
+                RequestsService.getNextAvailableRequestInQueue({
+                    queueId: nextQueueId,
+                    createdDate: $scope.objectInfo.created
+                })
                     .$promise.then(function (data) {
-                        $state.go('request-info', {
-                            id: data.requestId,
-                            fileId: data.requestFormId
-                        });
+                    $state.go('request-info', {
+                        id: data.requestId,
+                        fileId: data.requestFormId
                     });
+                });
             }
         }]);
 /**

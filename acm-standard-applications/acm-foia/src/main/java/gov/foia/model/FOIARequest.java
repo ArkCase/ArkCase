@@ -41,17 +41,21 @@ import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -206,6 +210,10 @@ public class FOIARequest extends CaseFile implements FOIAObject
     @Column(name = "fo_generated_zip_flag")
     private Boolean generatedZipFlag;
 
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "cm_case_id")
+    private List<DispositionReason> dispositionReasons = new ArrayList<>();
+
     @Column(name = "fo_perfected_date")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @Convert(converter = LocalDateTimeConverter.class)
@@ -223,6 +231,9 @@ public class FOIARequest extends CaseFile implements FOIAObject
 
     @Transient
     private FoiaConfiguration foiaConfiguration;
+
+    @Transient
+    private String dispositionValue;
 
     /**
      * @return the receivedDate
@@ -722,6 +733,16 @@ public class FOIARequest extends CaseFile implements FOIAObject
         this.externalIdentifier = externalIdentifier;
     }
 
+    public List<DispositionReason> getDispositionReasons()
+    {
+        return dispositionReasons;
+    }
+
+    public void setDispositionReasons(List<DispositionReason> dispositionReasons)
+    {
+        this.dispositionReasons = dispositionReasons;
+    }
+
     @Override
     public PersonAssociation getOriginator()
     {
@@ -815,6 +836,16 @@ public class FOIARequest extends CaseFile implements FOIAObject
     public void setGeneratedZipFlag(Boolean generatedZipFlag)
     {
         this.generatedZipFlag = generatedZipFlag;
+    }
+
+    public String getDispositionValue()
+    {
+        return dispositionValue;
+    }
+
+    public void setDispositionValue(String dispositionValue)
+    {
+        this.dispositionValue = dispositionValue;
     }
 
     public LocalDateTime getPerfectedDate()
