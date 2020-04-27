@@ -143,7 +143,7 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
 
         try
         {
-            acmMailSender.sendMultipartEmail(emailAddresses, in.getSubject(), in.getMessageBody(),
+            acmMailSender.sendMultipartEmail(emailAddresses, in.getEmailGroup(), in.getSubject(), in.getMessageBody(),
                     new ArrayList<>(attachments.values()), in.getObjectType() != null ? in.getObjectType() : objectType,
                     in.getObjectId() != null ? in.getObjectId().toString() : objectId);
         }
