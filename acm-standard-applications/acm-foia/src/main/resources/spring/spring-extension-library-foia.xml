@@ -407,5 +407,14 @@
             <beans:property name="acmContextHolder" ref="acmContextHolder"/>
         </beans:bean>
 
+        <beans:bean id="groupService" class="gov.foia.service.FOIAGroupServiceImpl">
+            <beans:property name="userDao" ref="userJpaDao"/>
+            <beans:property name="groupDao" ref="groupDao"/>
+            <beans:property name="executeSolrQuery" ref="executeSolrQuery"/>
+            <beans:property name="acmGroupEventPublisher" ref="acmGroupEventPublisher"/>
+            <beans:property name="springContextHolder" ref="acmContextHolder"/>
+        </beans:bean>
+
+
     </beans:beans>
 </beans:beans>
