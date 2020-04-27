@@ -67,7 +67,12 @@ public class SaveFOIARequestService
     public CaseFile saveFOIARequest(CaseFile in, Map<String, List<MultipartFile>> filesMap, HttpSession session, Authentication auth)
             throws AcmCreateObjectFailedException
     {
-        CaseFile oldCaseFile = getFoiaRequestService().getFoiaRequestById(in.getId());
+        CaseFile oldCaseFile = null;
+        if (in.getId() != null)
+        {
+            oldCaseFile = getFoiaRequestService().getFoiaRequestById(in.getId());
+        }
+
         String ipAddress = (String) session.getAttribute("acm_ip_address");
         CaseFile saved = getFoiaRequestService().saveRequest(in, filesMap, auth, ipAddress);
         raiseCaseEvent(in.getId() == null, saved, in instanceof FOIARequest ? ((FOIARequest) in).getDispositionValue() : null, auth,
@@ -99,16 +104,21 @@ public class SaveFOIARequestService
                 FOIARequest request = (FOIARequest) saved;
                 if (request.getRequestType().equals(FOIAConstants.APPEAL_REQUEST_TYPE))
                 {
-                    FOIARequest oldRequest = (FOIARequest) oldCaseFile;
-                    if (!request.getDisposition().equals(oldRequest.getDisposition()))
+                    if (oldCaseFile != null)
                     {
-                        caseFileEventUtility.raiseCustomEvent(saved, "disposition", "<" + request.getDisposition() + "> Added", new Date(),
-                                ipAddress, auth.getName(), auth);
-                    }
-                    if (!request.getOtherReason().equals(oldRequest.getOtherReason()))
-                    {
-                        caseFileEventUtility.raiseCustomEvent(saved, "other.reason", "<" + request.getOtherReason() + "> Added", new Date(),
-                                ipAddress, auth.getName(), auth);
+                        FOIARequest oldRequest = (FOIARequest) oldCaseFile;
+                        if (!request.getDisposition().equals(oldRequest.getDisposition()))
+                        {
+                            caseFileEventUtility.raiseCustomEvent(saved, "disposition", "<" + request.getDisposition() + "> Added",
+                                    new Date(),
+                                    ipAddress, auth.getName(), auth);
+                        }
+                        if (!request.getOtherReason().equals(oldRequest.getOtherReason()))
+                        {
+                            caseFileEventUtility.raiseCustomEvent(saved, "other.reason", "<" + request.getOtherReason() + "> Added",
+                                    new Date(),
+                                    ipAddress, auth.getName(), auth);
+                        }
                     }
                 }
                 else
