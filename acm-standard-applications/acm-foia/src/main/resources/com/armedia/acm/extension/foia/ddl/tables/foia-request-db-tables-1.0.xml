@@ -728,5 +728,74 @@ LANGUAGE plpgsql;
             <column name="fo_withdraw_requested_flag" type="TEXT" defaultValue="false"/>
         </addColumn>
     </changeSet>
+    <changeSet id="44-add-disposition-reason-table" author="ivana.shekerova" dbms="oracle,postgresql,mssql">
+        <createTable tableName="acm_disposition_reason">
+            <column name="cm_disposition_reason_id" type="${idType}">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_disposition_reason"/>
+            </column>
+            <column name="cm_reason" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_case_id" type="${fkIdType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_request_type" type="VARCHAR(512)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_disposition_reason_created" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_disposition_reason_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_disposition_reason_modified" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_disposition_reason_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="44-add-disposition-reason-table" author="ivana.shekerova" dbms="mysql">
+        <createTable tableName="acm_disposition_reason">
+            <column name="cm_disposition_reason_id" type="${idType}">
+                <constraints primaryKey="true" primaryKeyName="pk_disposition_reason"/>
+            </column>
+            <column name="cm_reason" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_case_id" type="${fkIdType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_request_type" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_disposition_reason_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_disposition_reason_creator" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_disposition_reason_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_disposition_reason_modifier" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="45-add-disposition-reason-table-id" author="ivana.shekerova">
+        <createTable tableName="acm_disposition_reason_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_disposition_reason_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_disposition_reason"></column>
+        </insert>
+    </changeSet>
+
 </databaseChangeLog>
 

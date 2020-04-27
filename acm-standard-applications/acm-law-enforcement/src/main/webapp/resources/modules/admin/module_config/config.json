@@ -854,6 +854,7 @@
             "enabled": true,
             "type": "grid",
             "enableFiltering": false,
+            "configurable": true,
             "columnDefs": [
                 {
                     "name": "key",
@@ -1026,7 +1027,6 @@
                     "headerCellFilter": "translate",
                     "cellClass": "ui-grid-cell-contents-auto",
                     "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.sequences, row.entity.sequenceName) | translate }}</div>"
-
                 },
                 {
                     "name": "sequenceDescription",
@@ -1151,10 +1151,10 @@
             "enableFiltering": false,
             "configurable": true,
             "paginationPageSizes": [
-            5,
-            10,
-            20,
-            50
+                5,
+                10,
+                20,
+                50
             ],
             "paginationPageSize": 20,
             "columnDefs": [
@@ -1222,7 +1222,7 @@
                 "titleObjectId": "admin.application.objectTitleConfiguration.titleObjectId",
                 "numberTitle": "admin.application.objectTitleConfiguration.numberTitle"
             },
-            "objectTypeValue":{
+            "objectTypeValue": {
                 "CASE_FILE": "admin.application.objectTitleConfiguration.caseFile",
                 "COMPLAINT": "admin.application.objectTitleConfiguration.complaint"
             }
@@ -1235,44 +1235,44 @@
             "enableFiltering": true,
             "configurable": true,
             "columnDefs": [
-              {
-                  "name": "jobName",
-                  "displayName": "admin.application.scheduled.jobs.column.jobName.title",
-                  "visible": true,
-                  "headerCellFilter": "translate",
-                  "width": "20%"
-              },
-              {
-                  "name": "trigger",
-                  "displayName": "admin.application.scheduled.jobs.column.trigger.title",
-                  "visible": true,
-                  "headerCellFilter": "translate",
-                  "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.cronExpression != null ? row.entity.cronExpression : row.entity.repeatIntervalInSeconds}}</div>",
-                  "width": "20%"
-              },
-              {
-                  "name": "lastRun",
-                  "displayName": "admin.application.scheduled.jobs.column.lastRun.title",
-                  "headerCellFilter": "translate",
-                  "cellTemplate": "<div>{{ row.entity.lastRun | date: ('common.defaultDateTimeLongUIFormat' | translate)}}</div>",
-                  "visible": true,
-                  "width": "20%"
-              },
-              {
-                  "name": "nextRun",
-                  "displayName": "admin.application.scheduled.jobs.column.nextRun.title",
-                  "headerCellFilter": "translate",
-                  "cellTemplate": "<div>{{ row.entity.nextRun | date: ('common.defaultDateTimeLongUIFormat' | translate)}}</div>",
-                  "visible": true,
-                  "width": "20%"
-               },
-              {
-                  "name": "act",
-                  "cellEditableCondition": false,
-                  "width": "20%",
-                  "headerCellTemplate": "<span></span>",
-                  "cellTemplate": ""
-              }
+                {
+                    "name": "jobName",
+                    "displayName": "admin.application.scheduled.jobs.column.jobName.title",
+                    "visible": true,
+                    "headerCellFilter": "translate",
+                    "width": "20%"
+                },
+                {
+                    "name": "trigger",
+                    "displayName": "admin.application.scheduled.jobs.column.trigger.title",
+                    "visible": true,
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.cronExpression != null ? row.entity.cronExpression : row.entity.repeatIntervalInSeconds}}</div>",
+                    "width": "20%"
+                },
+                {
+                    "name": "lastRun",
+                    "displayName": "admin.application.scheduled.jobs.column.lastRun.title",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.lastRun | date: ('common.defaultDateTimeLongUIFormat' | translate)}}</div>",
+                    "visible": true,
+                    "width": "20%"
+                },
+                {
+                    "name": "nextRun",
+                    "displayName": "admin.application.scheduled.jobs.column.nextRun.title",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.nextRun | date: ('common.defaultDateTimeLongUIFormat' | translate)}}</div>",
+                    "visible": true,
+                    "width": "20%"
+                },
+                {
+                    "name": "act",
+                    "cellEditableCondition": false,
+                    "width": "20%",
+                    "headerCellTemplate": "<span></span>",
+                    "cellTemplate": ""
+                }
             ],
             "paginationPageSizes": [
                 5,
