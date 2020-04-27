@@ -332,6 +332,7 @@
             <beans:property name="emailBodyTemplate" value="file:${user.home}/.arkcase/acm/templates/requestAssigned.html"/>
             <beans:property name="notificationDao" ref="notificationDao"/>
             <beans:property name="translationService" ref="translationService" />
+            <beans:property name="userInfoHelper" ref="userInfoHelper"/>
         </beans:bean>
 
         <beans:bean id="foiaExecutiveGroupNotificationService" class="gov.foia.service.FOIAExecutiveGroupNotificationService">

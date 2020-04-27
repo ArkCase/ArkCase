@@ -239,7 +239,8 @@ public class SmtpServiceTest
         service.sendEmailWithAttachments(inputDTO, mockAuthentication, mockAcmUser);
 
         // then
-        verify(mockMailSender).sendMultipartEmail(eq(email), anyString(), capturedNote.capture(), capturedAttachments.capture(), anyString(), anyString());
+        verify(mockMailSender).sendMultipartEmail(eq(email), anyString(), anyString(), capturedNote.capture(),
+                capturedAttachments.capture(), anyString(), anyString());
         assertThat(Pattern.compile(note).matcher(capturedNote.getValue()).matches(), is(true));
         assertThat(capturedAttachments.getValue(), notNullValue());
         assertThat(capturedAttachments.getValue().size(), is(2));
@@ -321,7 +322,8 @@ public class SmtpServiceTest
         service.sendEmailWithAttachmentsAndLinks(inputDTO, mockAuthentication, mockAcmUser);
 
         // then
-        verify(mockMailSender).sendMultipartEmail(eq(email), anyString(), capturedNote.capture(), capturedAttachments.capture(), anyString(), anyString());
+        verify(mockMailSender).sendMultipartEmail(eq(email), anyString(), capturedNote.capture(), capturedAttachments.capture(),
+                anyString(), anyString());
         assertEquals(note, capturedNote.getValue());
         assertThat(capturedAttachments.getValue(), notNullValue());
         assertThat(capturedAttachments.getValue().size(), is(2));

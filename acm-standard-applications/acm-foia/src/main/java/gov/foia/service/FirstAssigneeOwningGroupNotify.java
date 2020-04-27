@@ -31,6 +31,7 @@ import com.armedia.acm.plugins.casefile.model.CaseEvent;
 import com.armedia.acm.services.email.service.TemplatingEngine;
 import com.armedia.acm.services.labels.service.TranslationService;
 import com.armedia.acm.services.notification.dao.NotificationDao;
+import com.armedia.acm.services.notification.helper.UserInfoHelper;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.notification.service.NotificationUtils;
@@ -70,6 +71,7 @@ public class FirstAssigneeOwningGroupNotify implements ApplicationListener<CaseE
     private TemplatingEngine templatingEngine;
     private NotificationDao notificationDao;
     private TranslationService translationService;
+    private UserInfoHelper userInfoHelper;
 
     @Override
     public void onApplicationEvent(CaseEvent event)
@@ -118,7 +120,9 @@ public class FirstAssigneeOwningGroupNotify implements ApplicationListener<CaseE
                         notification.setParentType(event.getObjectType());
                         notification.setParentId(event.getObjectId());
                         notification.setEmailAddresses(emailAddresses.stream().collect(Collectors.joining(",")));
-                        notification.setTitle(String.format(translationService.translate(NotificationConstants.REQUEST_ASSIGNED), event.getCaseFile().getCaseNumber(), assigneeFullName));
+                        notification.setEmailGroup(userInfoHelper.removeGroupPrefix(owningGroupId));
+                        notification.setTitle(String.format(translationService.translate(NotificationConstants.REQUEST_ASSIGNED),
+                                event.getCaseFile().getCaseNumber(), assigneeFullName));
                         notification.setAttachFiles(false);
                         notification.setUser(user.getUserId());
                         notificationDao.save(notification);
@@ -136,7 +140,7 @@ public class FirstAssigneeOwningGroupNotify implements ApplicationListener<CaseE
             }
         }
     }
-    
+
     public GroupService getGroupService()
     {
         return groupService;
@@ -202,11 +206,13 @@ public class FirstAssigneeOwningGroupNotify implements ApplicationListener<CaseE
         this.templatingEngine = templatingEngine;
     }
 
-    public NotificationDao getNotificationDao() {
+    public NotificationDao getNotificationDao()
+    {
         return notificationDao;
     }
 
-    public void setNotificationDao(NotificationDao notificationDao) {
+    public void setNotificationDao(NotificationDao notificationDao)
+    {
         this.notificationDao = notificationDao;
     }
 
@@ -218,5 +224,15 @@ public class FirstAssigneeOwningGroupNotify implements ApplicationListener<CaseE
     public void setTranslationService(TranslationService translationService)
     {
         this.translationService = translationService;
+    }
+
+    public UserInfoHelper getUserInfoHelper()
+    {
+        return userInfoHelper;
+    }
+
+    public void setUserInfoHelper(UserInfoHelper userInfoHelper)
+    {
+        this.userInfoHelper = userInfoHelper;
     }
 }
