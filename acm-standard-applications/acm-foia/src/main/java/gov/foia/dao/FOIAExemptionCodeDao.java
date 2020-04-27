@@ -161,7 +161,7 @@ public class FOIAExemptionCodeDao extends AcmAbstractDao<ExemptionCode>
         return getEm().createNativeQuery(queryExistingCodesText);
     }
     
-    public boolean checkForExemptionCodesByParentIdAndType(Long parentObjectId, String parentObjectType)
+    public boolean hasExemptionOnAnyDocumentsOnRequest(Long parentObjectId, String parentObjectType)
     {
         String queryText = "SELECT af.id " +
                 "FROM AcmContainer ac " +
@@ -174,25 +174,23 @@ public class FOIAExemptionCodeDao extends AcmAbstractDao<ExemptionCode>
         query.setParameter("parentObjectType", parentObjectType);
 
         List<Long> folderIds = query.getResultList();
-        if (folderIds != null)
-        {
-            for (Long folderId : folderIds)
-            {
-                List<EcmFile> files = getAcmFolderService().getFilesInFolderAndSubfolders(folderId);
 
-                if (files != null)
+        for (Long folderId : folderIds)
+        {
+            List<EcmFile> files = getAcmFolderService().getFilesInFolderAndSubfolders(folderId);
+
+            if (!files.isEmpty())
+            {
+                List<Long> fileIds = files.stream()
+                        .map(EcmFile::getFileId)
+                        .collect(Collectors.toList());
+                List<ExemptionCode> listCodesOnDocuments = new ArrayList<>();
+                for (Long fileId : fileIds)
                 {
-                    List<Long> fileIds = files.stream()
-                            .map(EcmFile::getFileId)
-                            .collect(Collectors.toList());
-                    List<ExemptionCode> listCodesOnDocuments = new ArrayList<>();
-                    for (Long fileId : fileIds)
+                    listCodesOnDocuments = findExemptionCodesByFileId(fileId);
+                    if (!listCodesOnDocuments.isEmpty())
                     {
-                        listCodesOnDocuments = findExemptionCodesByFileId(fileId);
-                        if (!listCodesOnDocuments.isEmpty())
-                        {
-                            return true;
-                        }
+                        return true;
                     }
                 }
             }
