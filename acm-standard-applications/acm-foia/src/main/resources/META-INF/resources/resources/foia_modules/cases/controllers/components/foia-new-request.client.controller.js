@@ -453,7 +453,7 @@ angular.module('cases').controller(
                     $scope.config.data.originator.person.contactMethods.push($scope.config.data.originator.person.defaultPhone);
                 }
 
-                if (!$scope.config.data.originator.person.defaultEmail.id) {
+                if ($scope.config.data.originator.person.defaultEmail && !$scope.config.data.originator.person.defaultEmail.id) {
                     $scope.config.data.originator.person.contactMethods.push($scope.config.data.originator.person.defaultEmail);
                 }
 
