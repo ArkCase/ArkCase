@@ -265,7 +265,7 @@ public class GroupServiceImpl implements GroupService
         return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, 0, 1000, "");
     }
 
-    private String buildSafeGroupNameForSolrSearch(String groupName)
+    public String buildSafeGroupNameForSolrSearch(String groupName)
     {
         if (AcmSolrUtil.hasSpecialCharacters(groupName))
         {
@@ -755,6 +755,11 @@ public class GroupServiceImpl implements GroupService
     public void setExecuteSolrQuery(ExecuteSolrQuery executeSolrQuery)
     {
         this.executeSolrQuery = executeSolrQuery;
+    }
+
+    public ExecuteSolrQuery getExecuteSolrQuery()
+    {
+        return executeSolrQuery;
     }
 
     public void setAcmGroupEventPublisher(AcmGroupEventPublisher acmGroupEventPublisher)

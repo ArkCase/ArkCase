@@ -66,7 +66,7 @@ public class SearchResults
 
         JSONObject jsonResponseHeader = new JSONObject(jsonResults);
 
-        if (jsonResponseHeader != null && jsonResponseHeader.has(SearchConstants.PROPERTY_RESPONSE))
+        if (jsonResponseHeader.has(SearchConstants.PROPERTY_RESPONSE))
         {
             JSONObject jsonResponse = jsonResponseHeader.getJSONObject(SearchConstants.PROPERTY_RESPONSE);
 
