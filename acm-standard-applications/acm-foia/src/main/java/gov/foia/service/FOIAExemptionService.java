@@ -150,7 +150,7 @@ public class FOIAExemptionService
     
     public boolean hasExemptionOnAnyDocumentsOnRequest(Long objectId, String objectType)
     {
-        return foiaExemptionCodeDao.checkForExemptionCodesByParentIdAndType(objectId,objectType);
+        return foiaExemptionCodeDao.hasExemptionOnAnyDocumentsOnRequest(objectId,objectType);
     }
 
     public FOIAExemptionCodeDao getFoiaExemptionCodeDao()
