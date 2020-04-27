@@ -1,8 +1,8 @@
-package com.armedia.acm.services.exemption.model;
+package com.armedia.acm.services.dataupdate.service;
 
 /*-
  * #%L
- * ACM Service: Exemption
+ * ACM Standard Application: Freedom of Information Act
  * %%
  * Copyright (C) 2014 - 2020 ArkCase LLC
  * %%
@@ -27,30 +27,33 @@ package com.armedia.acm.services.exemption.model;
  * #L%
  */
 
-import java.util.Date;
+import com.armedia.acm.plugins.person.model.Person;
 
-import com.armedia.acm.core.model.AcmEvent;
-import com.armedia.acm.plugins.ecm.model.EcmFile;
+import java.util.Arrays;
 
-/**
- * Created by ana.serafimoska
- */
-public class DocumentRedactionEvent extends AcmEvent
+public class SolrReindexPersonExecutor implements AcmDataUpdateExecutor
 {
+    private SolrReindexService solrReindexService;
 
-    private static final long serialVersionUID = -2378737634221219733L;
-
-    public DocumentRedactionEvent(EcmFile source)
+    @Override
+    public String getUpdateId()
     {
-        super(source);
-        setEventDate(new Date());
-        setObjectId(source.getId());
-        setObjectType(source.getParentObjectType());
+        return "solr-person-reindex-v1";
     }
 
     @Override
-    public EcmFile getSource()
+    public void execute()
     {
-        return (EcmFile) super.getSource();
+        solrReindexService.reindex(Arrays.asList(Person.class));
+    }
+
+    public SolrReindexService getSolrReindexService()
+    {
+        return solrReindexService;
+    }
+
+    public void setSolrReindexService(SolrReindexService solrReindexService)
+    {
+        this.solrReindexService = solrReindexService;
     }
 }

@@ -43,7 +43,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import gov.foia.model.FOIARequest;
 import gov.foia.model.PortalFOIARequestStatus;
@@ -153,7 +152,7 @@ public class FOIARequestDao extends AcmAbstractDao<FOIARequest>
 
         List<FOIARequest> resultList = foiaRequests.getResultList();
 
-        return populateRequestStatus(resultList);
+        return populateRequestStatusList(resultList);
 
     }
 
@@ -171,30 +170,37 @@ public class FOIARequestDao extends AcmAbstractDao<FOIARequest>
 
         List<FOIARequest> resultList = foiaRequests.getResultList();
 
-        return populateRequestStatus(resultList);
+        return populateRequestStatusList(resultList);
     }
 
-    private List<PortalFOIARequestStatus> populateRequestStatus(List<FOIARequest> requests)
+    private List<PortalFOIARequestStatus> populateRequestStatusList(List<FOIARequest> requests)
     {
         List<PortalFOIARequestStatus> requestStatusList = new ArrayList<>();
         for (FOIARequest request : requests)
         {
-            PortalFOIARequestStatus requestStatus = new PortalFOIARequestStatus();
-            requestStatus.setRequestId(request.getCaseNumber());
-            requestStatus.setRequestStatus(request.getStatus());
-            requestStatus.setQueue(request.getQueue().getName());
-            requestStatus.setUpdateDate(request.getModified());
-            requestStatus.setIsDenied(request.getDeniedFlag());
-            requestStatus.setIsPublic(request.getPublicFlag());
-            requestStatus.setRequestType(request.getRequestType());
-            requestStatus.setRequesterFirstName(request.getOriginator().getPerson().getGivenName());
-            requestStatus.setRequesterLastName(request.getOriginator().getPerson().getFamilyName());
-            requestStatus.setRequesterEmail(request.getOriginator().getPerson().getContactMethods()
-                    .stream().filter(cm -> cm.getType().equalsIgnoreCase("email")).findFirst().get().getValue());
+            PortalFOIARequestStatus requestStatus = populateRequestStatusFromRequest(request);
             requestStatusList.add(requestStatus);
         }
 
         return requestStatusList;
+    }
+
+    private PortalFOIARequestStatus populateRequestStatusFromRequest(FOIARequest request)
+    {
+        PortalFOIARequestStatus requestStatus = new PortalFOIARequestStatus();
+        requestStatus.setRequestId(request.getCaseNumber());
+        requestStatus.setRequestStatus(request.getStatus());
+        requestStatus.setQueue(request.getQueue().getName());
+        requestStatus.setUpdateDate(request.getModified());
+        requestStatus.setIsDenied(request.getDeniedFlag());
+        requestStatus.setWithdrawRequested(request.getWithdrawRequestedFlag());
+        requestStatus.setIsPublic(request.getPublicFlag());
+        requestStatus.setRequestType(request.getRequestType());
+        requestStatus.setRequesterFirstName(request.getOriginator().getPerson().getGivenName());
+        requestStatus.setRequesterLastName(request.getOriginator().getPerson().getFamilyName());
+        requestStatus.setRequesterEmail(request.getOriginator().getPerson().getContactMethods()
+                .stream().filter(cm -> cm.getType().equalsIgnoreCase("email")).findFirst().get().getValue());
+        return requestStatus;
     }
 
     /**
@@ -203,7 +209,7 @@ public class FOIARequestDao extends AcmAbstractDao<FOIARequest>
      */
     public List<PortalFOIARequestStatus> getExternalRequests(String portalUserId)
     {
-        String queryText = "SELECT cf.caseNumber, cf.status, cf.modified, cf.publicFlag, cf.requestType FROM FOIARequest cf JOIN PersonAssociation pa JOIN pa.person p"
+        String queryText = "SELECT cf FROM FOIARequest cf JOIN PersonAssociation pa JOIN pa.person p"
                 + " WHERE cf.id = pa.parentId"
                 + " AND pa.parentType='CASE_FILE'"
                 + " AND pa.personType = 'Requester'";
@@ -213,16 +219,16 @@ public class FOIARequestDao extends AcmAbstractDao<FOIARequest>
             queryText += " AND p.id = :portalUserId";
         }
 
-        TypedQuery<Object[]> foiaRequests = getEm().createQuery(queryText, Object[].class);
+        TypedQuery<FOIARequest> foiaRequests = getEm().createQuery(queryText, FOIARequest.class);
 
         if (portalUserId != null)
         {
             foiaRequests.setParameter("portalUserId", Long.valueOf(portalUserId));
         }
 
-        List<Object[]> resultList = foiaRequests.getResultList();
+        List<FOIARequest> resultList = foiaRequests.getResultList();
 
-        return resultList.stream().map(this::mapRequestStatus).collect(Collectors.toList());
+        return populateRequestStatusList(resultList);
     }
 
     /**
@@ -232,7 +238,7 @@ public class FOIARequestDao extends AcmAbstractDao<FOIARequest>
      */
     public PortalFOIARequestStatus getExternalRequest(String portalUserId, String requestId)
     {
-        String queryText = "SELECT cf.caseNumber, cf.status, cf.modified, cf.publicFlag, cf.requestType FROM FOIARequest cf JOIN PersonAssociation pa JOIN pa.person p"
+        String queryText = "SELECT cf FROM FOIARequest cf JOIN PersonAssociation pa JOIN pa.person p"
                 + " WHERE cf.id = pa.parentId"
                 + " AND pa.parentType='CASE_FILE'"
                 + " AND pa.personType = 'Requester'";
@@ -247,7 +253,7 @@ public class FOIARequestDao extends AcmAbstractDao<FOIARequest>
             queryText += " AND cf.caseNumber = :requestId";
         }
 
-        TypedQuery<Object[]> foiaRequests = getEm().createQuery(queryText, Object[].class);
+        TypedQuery<FOIARequest> foiaRequests = getEm().createQuery(queryText, FOIARequest.class);
 
         if (portalUserId != null)
         {
@@ -259,19 +265,8 @@ public class FOIARequestDao extends AcmAbstractDao<FOIARequest>
             foiaRequests.setParameter("requestId", requestId);
         }
 
-        Object[] result = foiaRequests.getSingleResult();
-        return mapRequestStatus(result);
-    }
-
-    private PortalFOIARequestStatus mapRequestStatus(Object[] r)
-    {
-        PortalFOIARequestStatus requestStatus = new PortalFOIARequestStatus();
-        requestStatus.setRequestId((String) r[0]);
-        requestStatus.setRequestStatus((String) r[1]);
-        requestStatus.setUpdateDate((Date) r[2]);
-        requestStatus.setIsPublic((Boolean) r[3]);
-        requestStatus.setRequestType((String) r[4]);
-        return requestStatus;
+        FOIARequest result = foiaRequests.getSingleResult();
+        return populateRequestStatusFromRequest(result);
     }
 
     public List<FOIARequest> findAllNotReleasedRequests()

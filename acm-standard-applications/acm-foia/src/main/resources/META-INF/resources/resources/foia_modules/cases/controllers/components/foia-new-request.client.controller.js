@@ -12,6 +12,7 @@ angular.module('cases').controller(
             $scope.loadingIcon = "fa fa-floppy-o";
             $scope.formInvalid = false;
             $scope.enableTitle = false;
+            $scope.isPickExistingPerson = false;
 
             var descriptionDocumentType = "Description Document";
             var consentDocumentType = "Consent";
@@ -80,32 +81,24 @@ angular.module('cases').controller(
                 $scope.uploadFilesDescription['Proof of Identity'].splice(index, 1);
             };
             var stateRequest = ObjectLookupService.getStates();
-
             var requestCategories = ObjectLookupService.getRequestCategories();
-
             var payFeesRequest = ObjectLookupService.getPayFees();
-
             var deliveryMethodOfResponsesRequest = ObjectLookupService.getDeliveryMethodOfResponses();
-
             var newRequestTypes = ObjectLookupService.getRequestTypes();
-
             var prefixNewRequest = ObjectLookupService.getPrefixes();
-
             var requestConfig = ConfigService.getModuleConfig("cases");
-
             var componentsAgenciesPromise = ObjectLookupService.getLookupByLookupName("componentsAgencies");
             var organizationTypeLookup = ObjectLookupService.getPersonOrganizationRelationTypes();
             var promiseConfigTitle = AdminObjectTitleConfigurationService.getObjectTitleConfiguration();
             var personTypesLookup = ObjectLookupService.getPersonTypes(ObjectService.ObjectTypes.CASE_FILE, true);
-
             var getPortals = AdminPortalConfigurationService.getPortals();
-            
             var getCountries = ObjectLookupService.getCountries();
             var getAddressTypes = ObjectLookupService.getAddressTypes();
             var canadaProvinces = ObjectLookupService.getLookupByLookupName('canadaProvinces');
             var japanStates = ObjectLookupService.getLookupByLookupName('japanStates');
+            var commonModuleConfig = ConfigService.getModuleConfig("common");
 
-            $q.all([requestConfig, componentsAgenciesPromise, organizationTypeLookup, prefixNewRequest, newRequestTypes, deliveryMethodOfResponsesRequest, payFeesRequest, requestCategories, stateRequest, promiseConfigTitle, personTypesLookup, getPortals, getCountries, getAddressTypes, canadaProvinces, japanStates]).then(function (data) {
+            $q.all([requestConfig, componentsAgenciesPromise, organizationTypeLookup, prefixNewRequest, newRequestTypes, deliveryMethodOfResponsesRequest, payFeesRequest, requestCategories, stateRequest, promiseConfigTitle, personTypesLookup, getPortals, getCountries, getAddressTypes, canadaProvinces, japanStates, commonModuleConfig]).then(function (data) {
 
                 var moduleConfig = data[0];
                 var componentsAgencies = data[1];
@@ -123,7 +116,7 @@ angular.module('cases').controller(
                 var addressTypes = data[13];
                 var canadaProvinces = data[14];
                 var japanStates = data[15];
-                
+                $scope.commonModuleConfig = data[16];
 
                 if (!Util.isEmpty(configTitle)) {
                     $scope.enableTitle = configTitle.data.CASE_FILE.enableTitleField;
@@ -165,24 +158,21 @@ angular.module('cases').controller(
                 angular.copy(Data.getData(), $scope.config.data);
 
                 $scope.config.data.organizationAssociations = [];
-
                 $scope.config.data.requestType = $scope.requestTypes[0].key;
-
                 $scope.config.data.requestCategory = $scope.categories[0].key;
-
                 $scope.config.data.componentAgency = $scope.componentsAgencies[0].key;
-
                 $scope.config.data.originator.person.title = $scope.prefixes[0].key;
-
                 $scope.config.data.deliveryMethodOfResponse = $scope.deliveryMethodOfResponses[0].key;
-
                 $scope.config.data.payFee = $scope.payFees[0].key;
 
                 $scope.portals = portals.data;
                 $scope.config.chosenPortal = $scope.portals[0];
+
                 $scope.states = "";
                 $scope.config.data.originator.person.addresses[0].country = countries[0].key;
                 $scope.config.data.originator.person.addresses[0].type = addressTypes[0].key;
+
+                $scope.blankPerson = angular.copy($scope.config.data.originator.person);
             });
 
             $scope.isEmailDaliveryMethod = false;
@@ -238,8 +228,7 @@ angular.module('cases').controller(
                         $location.hash('topSection1');
                         $anchorScroll();
                     }
-                }
-                else {
+                } else {
                     if (requestForm.subject.$invalid) {
                         $scope.subjectEmpty = true;
                     }
@@ -251,14 +240,58 @@ angular.module('cases').controller(
                         $anchorScroll();
                     }
                 }
-
             };
+
+            function openDuplicatePersonPicker(result) {
+                $scope.config.data.originator.person.defaultEmail.value = '';
+                $scope.confirmationEmail = '';
+
+                var params = {};
+
+                params.people = result.data.response.docs;
+                params.config = Util.goodMapValue($scope.commonModuleConfig, "dialogPersonPicker");
+                params.isRedirect = false;
+
+                var modalInstance = $modal.open({
+                    templateUrl: "modules/common/views/duplicate-person-picker-modal.client.view.html",
+                    controller: "Common.DuplicatePersonPickerController",
+                    animation: true,
+                    size: 'lg',
+                    backdrop: 'static',
+                    resolve: {
+                        params: function () {
+                            return params;
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function (selected) {
+                    if (!Util.isEmpty(selected)) {
+                        PersonInfoService.getPersonInfo(selected.object_id_s).then(function (person) {
+                            $scope.setPerson(person);
+                            $scope.existingPerson = angular.copy($scope.config.data.originator.person);
+                            $scope.newPerson = angular.copy($scope.blankPerson);
+                        });
+                    }
+                });
+            }
+
+            $scope.checkExistingEmail = function () {
+                if ($scope.config.data.originator.person.defaultEmail.value === $scope.confirmationEmail) {
+                    PersonInfoService.queryByEmail($scope.config.data.originator.person.defaultEmail.value).then(function (result) {
+                        if (result.data.response.numFound > 0) {
+                            openDuplicatePersonPicker(result);
+                        }
+                    });
+                }
+            };
+
 
             $scope.isNewRequestType = function () {
                 return $scope.config && $scope.config.data.requestType === 'New Request';
             };
 
-            $scope.changeStates = function(country){
+            $scope.changeStates = function (country) {
                 switch (country) {
                     case 'US':
                         $scope.states = $scope.usStates;
@@ -271,7 +304,7 @@ angular.module('cases').controller(
                         break;
                 }
             };
-            
+
             // -------------------  people --------------------------------------------------------------------
             $scope.searchPerson = function () {
                 var params = {
@@ -299,43 +332,24 @@ angular.module('cases').controller(
 
                 modalInstance.result.then(function (data) {
                     PersonInfoService.getPersonInfo(data.personId).then(function (person) {
-                        data.person = person;
-                        setPersonAssociation({}, data);
-                    })
+                        $scope.setPerson(person);
+                        $scope.existingPerson = angular.copy($scope.config.data.originator.person);
+                    });
                 });
 
             };
 
-            function setPersonAssociation(association, data) {
-                association.person = data.person;
-                association.personType = data.type;
+            $scope.pickExistingUserChange = function () {
 
-                //if is new created, add it to the person associations list
-                if (!$scope.config.data.originator.person.personAssociations) {
-                    $scope.config.data.originator.person.personAssociations = [];
+                if ($scope.isPickExistingPerson) {
+                    $scope.newPerson = angular.copy($scope.config.data.originator.person);
+                    $scope.setPerson($scope.existingPerson);
+
+                } else {
+                    $scope.existingPerson = angular.copy($scope.config.data.originator.person);
+                    $scope.setPerson($scope.newPerson);
                 }
-
-                if (!_.includes($scope.config.data.originator.person.personAssociations, association)) {
-                    $scope.config.data.originator.person.personAssociations.push(association);
-                }
-
-                if(!Util.isEmpty(association.person.addresses[0].country) && !Util.isEmpty(association.person.addresses[0].state)) {
-                    $scope.changeStates(association.person.addresses[0].country);
-                }
-                //populate contact information section
-                $scope.config.data.originator.person = angular.copy(association.person);
-
-                var phone = _.find($scope.config.data.originator.person.contactMethods, {
-                    type: 'phone'
-                });
-                $scope.config.data.originator.person.defaultPhone = phone;
-
-                var email = _.find($scope.config.data.originator.person.contactMethods, {
-                    type: 'email'
-                });
-
-                $scope.config.data.originator.person.defaultEmail = email;
-            }
+            };
 
             // ------------------ end person added ----------------- //
 
@@ -422,24 +436,27 @@ angular.module('cases').controller(
                 var formdata = new FormData();
                 var basicData = {};
 
-                //check if person is existing and remove the contactMethods array
-                if ($scope.config.data.originator.person.id != null) {
-                    $scope.config.data.originator.person.contactMethods = [];
-                }
 
                 if (!$scope.config.data.originator.person.defaultPhone.value) {
                     $scope.config.data.originator.person.defaultPhone = null;
-                } else {
+                } else if (!$scope.config.data.originator.person.defaultPhone.type) {
                     $scope.config.data.originator.person.defaultPhone.type = "phone";
-                    $scope.config.data.originator.person.contactMethods.push($scope.config.data.originator.person.defaultPhone);
                 }
 
                 if (Util.isEmpty($scope.config.data.originator.person.defaultEmail) || !$scope.config.data.originator.person.defaultEmail.value) {
                     $scope.config.data.originator.person.defaultEmail = null;
-                } else {
+                } else if (!$scope.config.data.originator.person.defaultEmail.type) {
                     $scope.config.data.originator.person.defaultEmail.type = "email";
+                }
+
+                if (!$scope.config.data.originator.person.defaultPhone.id) {
+                    $scope.config.data.originator.person.contactMethods.push($scope.config.data.originator.person.defaultPhone);
+                }
+
+                if (!$scope.config.data.originator.person.defaultEmail.id) {
                     $scope.config.data.originator.person.contactMethods.push($scope.config.data.originator.person.defaultEmail);
                 }
+
 
                 for (var property in $scope.config.data) {
                     if ($scope.config.data.hasOwnProperty(property)) {
@@ -521,55 +538,49 @@ angular.module('cases').controller(
                 param.caseNumber = $scope.config.data.originalRequestNumber;
                 RequestsService.getRequestByNumber(param).$promise.then(function (originalRequest) {
                     if (originalRequest.queue.name === 'Release' && !Util.isEmpty(originalRequest.caseNumber)) {
-                        $scope.populatePersonContactInfo(originalRequest);
+                        $scope.config.data.details = originalRequest.details;
+                        $scope.config.data.title = originalRequest.title;
+                        $scope.config.data.requestCategory = originalRequest.requestCategory;
+                        $scope.config.data.deliveryMethodOfResponse = originalRequest.deliveryMethodOfResponse;
+
+                        $scope.setPerson(originalRequest.originator.person);
+                        $scope.existingPerson = angular.copy($scope.config.data.originator.person);
                     } else {
-                        $scope.clearPersonContactInfo();
+                        $scope.setPerson($scope.blankPerson);
                     }
                 });
             };
-            $scope.clearPersonContactInfo = function() {
-                if ($scope.config.data.originator.person) {
-                    $scope.config.data.originator.person.title = null;
-                    $scope.config.data.originator.person.givenName = null;
-                    $scope.confirmationEmail = null;
-                    $scope.isAppealPopulated = false;
-                    $scope.config.data.details = null;
-                    $scope.config.data.title = null;
-                    $scope.config.data.originator.person.middleName = null;
-                    $scope.config.data.originator.person.familyName = null;
-                    $scope.config.data.originator.person.position = null;
-                    $scope.config.data.originator.person.defaultPhone.value = null;
-                    $scope.config.data.originator.person.defaultEmail.value = null;
-                    $scope.config.data.originator.person.addresses[0].streetAddress = null;
-                    $scope.config.data.originator.person.addresses[0].streetAddress2 = null;
-                    $scope.config.data.originator.person.addresses[0].city = null;
-                    $scope.config.data.originator.person.addresses[0].state = null;
-                    $scope.config.data.originator.person.addresses[0].country = null;
-                    $scope.config.data.originator.person.addresses[0].zip = null;
-                }
-            };
 
-            $scope.populatePersonContactInfo = function(originalRequest) {
-                    $scope.config.data.originator.person.title = originalRequest.originator.person.title;
-                    $scope.config.data.originator.person.givenName = originalRequest.originator.person.givenName;
-                    $scope.config.data.originator.person.middleName = originalRequest.originator.person.middleName;
-                    $scope.config.data.originator.person.familyName = originalRequest.originator.person.familyName;
-                    $scope.config.data.originator.person.position = originalRequest.originator.person.position;
-                    $scope.config.data.originator.person.defaultPhone.value = originalRequest.originator.person.defaultPhone.value;
-                    $scope.config.data.originator.person.defaultEmail.value = originalRequest.originator.person.defaultEmail.value;
-                    $scope.confirmationEmail = originalRequest.originator.person.defaultEmail.value;
-                    $scope.config.data.details = originalRequest.details;
-                    $scope.config.data.title = originalRequest.title;
-                    $scope.config.data.requestCategory = originalRequest.requestCategory;
-                    $scope.config.data.deliveryMethodOfResponse = originalRequest.deliveryMethodOfResponse;
-                    $scope.config.data.originator.person.addresses[0].streetAddress = originalRequest.originator.person.addresses[0].streetAddress;
-                    $scope.config.data.originator.person.addresses[0].streetAddress2 = originalRequest.originator.person.addresses[0].streetAddress2;
-                    $scope.config.data.originator.person.addresses[0].city = originalRequest.originator.person.addresses[0].city;
-                    $scope.config.data.originator.person.addresses[0].state = originalRequest.originator.person.addresses[0].state;
-                    $scope.config.data.originator.person.addresses[0].country = originalRequest.originator.person.addresses[0].country;
-                    $scope.config.data.originator.person.addresses[0].addressType = originalRequest.originator.person.addresses[0].addressType;
-                    $scope.config.data.originator.person.addresses[0].zip = originalRequest.originator.person.addresses[0].zip;
-                    $scope.isAppealPopulated = true;
+            $scope.setPerson = function (person) {
+                if (person) {
+                    $scope.config.data.originator.person = angular.copy(person);
+
+                    if (!$scope.config.data.originator.person.defaultPhone) {
+                        var phone = _.find($scope.config.data.originator.person.contactMethods, {
+                            type: 'phone'
+                        });
+                        $scope.config.data.originator.person.defaultPhone = phone;
+                    }
+
+                    if (!$scope.config.data.originator.person.defaultEmail) {
+                        var email = _.find($scope.config.data.originator.person.contactMethods, {
+                            type: 'email'
+                        });
+                        $scope.config.data.originator.person.defaultEmail = email;
+                    }
+
+                    if (person.addresses[0] && !Util.isEmpty(person.addresses[0].country) && !Util.isEmpty(person.addresses[0].state)) {
+                        $scope.changeStates(person.addresses[0].country);
+                    }
+
+                    $scope.isExistingPerson = typeof $scope.config.data.originator.person.id !== 'undefined';
+
+                    if ($scope.config.data.originator.person.defaultEmail) {
+                        $scope.confirmationEmail = angular.copy($scope.config.data.originator.person.defaultEmail.value);
+                    } else {
+                        $scope.confirmationEmail = '';
+                    }
+                }
             };
 
             $scope.requestInReleaseStatusSearch = function () {

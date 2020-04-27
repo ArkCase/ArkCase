@@ -28,6 +28,7 @@ package com.armedia.acm.portalgateway.service;
  */
 
 import com.armedia.acm.portalgateway.model.PortalInfo;
+import com.armedia.acm.portalgateway.web.api.PortalInfoDTO;
 
 import java.util.List;
 
@@ -92,4 +93,5 @@ public interface PortalAdminService
      */
     PortalServiceExceptionMapper getExceptionMapper(PortalAdminServiceException se);
 
+    void updatePortalInfo(PortalInfo portalInfo, PortalInfoDTO portalInfoDTO);
 }

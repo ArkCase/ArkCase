@@ -53,6 +53,7 @@ import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jun 20, 2017
@@ -83,15 +84,13 @@ public class AcmMailServiceAPIController
         try
         {
             List<String> emailAddresses = in.getEmailAddresses();
-            for (String emailAddress : emailAddresses)
+            String emailAddress = in.getEmailAddresses().stream().collect(Collectors.joining(","));
+            List<String> templates = loadTemplates(objectType, emailAddress, Arrays.asList("sendAsAttachments"));
+            for (String template : templates)
             {
-                List<String> templates = loadTemplates(objectType, emailAddress, Arrays.asList("sendAsAttachments"));
-                for (String template : templates)
-                {
-                    in.setTemplate(template);
-                    in.setEmailAddresses(Arrays.asList(emailAddress));
-                    emailSenderService.sendEmailWithAttachments(in, authentication, user);
-                }
+                in.setTemplate(template);
+                in.setEmailAddresses(emailAddresses);
+                emailSenderService.sendEmailWithAttachments(in, authentication, user);
             }
         }
         catch (Exception e)
@@ -122,15 +121,13 @@ public class AcmMailServiceAPIController
         {
             List<EmailWithEmbeddedLinksResultDTO> result = new ArrayList<>();
             List<String> emailAddresses = in.getEmailAddresses();
-            for (String emailAddress : emailAddresses)
+            String emailAddress = in.getEmailAddresses().stream().collect(Collectors.joining(","));
+            List<String> templates = loadTemplates(objectType, emailAddress, Arrays.asList("sendAsLinks"));
+            for (String template : templates)
             {
-                List<String> templates = loadTemplates(objectType, emailAddress, Arrays.asList("sendAsLinks"));
-                for (String template : templates)
-                {
-                    in.setTemplate(template);
-                    in.setEmailAddresses(Arrays.asList(emailAddress));
-                    result.addAll(emailSenderService.sendEmailWithEmbeddedLinks(in, authentication, user));
-                }
+                in.setTemplate(template);
+                in.setEmailAddresses(emailAddresses);
+                result.addAll(emailSenderService.sendEmailWithEmbeddedLinks(in, authentication, user));
             }
             return result;
         }
@@ -159,16 +156,15 @@ public class AcmMailServiceAPIController
         try
         {
             List<String> emailAddresses = in.getEmailAddresses();
-            for (String emailAddress : emailAddresses)
+            String emailAddress = in.getEmailAddresses().stream().collect(Collectors.joining(","));
+            List<String> templates = loadTemplates(objectType, emailAddress, Arrays.asList("sendAsAttachmentsAndLinks"));
+            for (String template : templates)
             {
-                List<String> templates = loadTemplates(objectType, emailAddress, Arrays.asList("sendAsAttachmentsAndLinks"));
-                for (String template : templates)
-                {
-                    in.setTemplate(template);
-                    in.setEmailAddresses(Arrays.asList(emailAddress));
-                    emailSenderService.sendEmailWithAttachmentsAndLinks(in, authentication, user);
-                }
+                in.setTemplate(template);
+                in.setEmailAddresses(emailAddresses);
+                emailSenderService.sendEmailWithAttachmentsAndLinks(in, authentication, user);
             }
+
         }
         catch (Exception e)
         {
@@ -183,7 +179,8 @@ public class AcmMailServiceAPIController
 
     @RequestMapping(value = "/plainEmail", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<EmailWithEmbeddedLinksResultDTO> createPlainEmail(@RequestBody EmailWithEmbeddedLinksDTO in, Authentication authentication, HttpSession session) throws AcmEmailServiceException
+    public List<EmailWithEmbeddedLinksResultDTO> createPlainEmail(@RequestBody EmailWithEmbeddedLinksDTO in, Authentication authentication,
+            HttpSession session) throws AcmEmailServiceException
     {
         if (null == in)
         {
@@ -196,14 +193,11 @@ public class AcmMailServiceAPIController
         {
             List<EmailWithEmbeddedLinksResultDTO> result = new ArrayList<>();
             List<String> emailAddresses = in.getEmailAddresses();
-            String templateName = String.format("%s.html",in.getModelReferenceName());
+            String templateName = String.format("%s.html", in.getModelReferenceName());
             String template = templateService.getTemplate(templateName);
-            for (String emailAddress : emailAddresses)
-            {
-                    in.setTemplate(template);
-                    in.setEmailAddresses(Arrays.asList(emailAddress));
-                    result.addAll(emailSenderService.sendEmailWithEmbeddedLinks(in, authentication, user));
-            }
+            in.setTemplate(template);
+            in.setEmailAddresses(emailAddresses);
+            result.addAll(emailSenderService.sendEmailWithEmbeddedLinks(in, authentication, user));
             return result;
         }
         catch (Exception e)
@@ -214,7 +208,6 @@ public class AcmMailServiceAPIController
                     e);
         }
     }
-
 
     /**
      * @param objectType

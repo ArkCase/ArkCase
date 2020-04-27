@@ -33,9 +33,7 @@ import com.armedia.acm.services.users.dao.UserDao;
 
 import org.apache.commons.lang.StringUtils;
 
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 public class AssigneeNotified implements UsersNotified
 {
@@ -43,7 +41,7 @@ public class AssigneeNotified implements UsersNotified
     private UserDao userDao;
 
     @Override
-    public List<Notification> getNotifications(Object[] notification, Long parentObjectId, String parentObjectType)
+    public Notification getNotification(Object[] notification, Long parentObjectId, String parentObjectType)
     {
         Notification customNotification = new Notification();
 
@@ -65,7 +63,7 @@ public class AssigneeNotified implements UsersNotified
         customNotification.setData("{\"usr\":\"/plugin/" + ((String) notification[4]).toLowerCase() + "/" + notification[3] + "\"}");
         customNotification.setAttachFiles(false);
 
-        return Arrays.asList(customNotification);
+        return customNotification;
     }
 
     private String getEmailForUser(String user)
