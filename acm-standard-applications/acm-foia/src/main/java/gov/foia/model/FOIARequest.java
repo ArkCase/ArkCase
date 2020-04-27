@@ -47,7 +47,6 @@ import javax.persistence.Convert;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -212,8 +211,7 @@ public class FOIARequest extends CaseFile implements FOIAObject
     private Boolean generatedZipFlag;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumns({ @JoinColumn(name = "cm_case_id"),
-            @JoinColumn(name = "cm_request_type", referencedColumnName = "fo_request_type") })
+    @JoinColumn(name = "cm_case_id")
     private List<DispositionReason> dispositionReasons = new ArrayList<>();
 
     @Column(name = "fo_perfected_date")
@@ -233,7 +231,7 @@ public class FOIARequest extends CaseFile implements FOIAObject
 
     @Transient
     private FoiaConfiguration foiaConfiguration;
-    
+
     @Transient
     private String dispositionValue;
 
@@ -840,12 +838,12 @@ public class FOIARequest extends CaseFile implements FOIAObject
         this.generatedZipFlag = generatedZipFlag;
     }
 
-    public String getDispositionValue() 
+    public String getDispositionValue()
     {
         return dispositionValue;
     }
 
-    public void setDispositionValue(String dispositionValue) 
+    public void setDispositionValue(String dispositionValue)
     {
         this.dispositionValue = dispositionValue;
     }

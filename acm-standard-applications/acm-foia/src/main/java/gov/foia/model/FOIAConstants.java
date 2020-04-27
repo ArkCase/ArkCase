@@ -36,33 +36,36 @@ package gov.foia.model;
 public interface FOIAConstants
 {
 
-    public String NEW_REQUEST_TYPE = "New Request";
-    public String APPEAL_REQUEST_TYPE = "Appeal";
+    String NEW_REQUEST_TYPE = "New Request";
+    String APPEAL_REQUEST_TYPE = "Appeal";
 
-    public String REQ = "REQ";
-    public String ACK = "ACK";
-    public String RECEIVE_ACK = "RECEIVE_ACK";
-    public String REQ_DELETE = "REQ_DELETE";
-    public String DENIAL = "DENIAL";
-    public String REQ_EXTENSION = "REQ_EXTENSION";
+    String REQ = "REQ";
+    String ACK = "ACK";
+    String RECEIVE_ACK = "RECEIVE_ACK";
+    String REQ_DELETE = "REQ_DELETE";
+    String DENIAL = "DENIAL";
+    String REQ_EXTENSION = "REQ_EXTENSION";
 
-    public String MIME_TYPE_PDF = "application/pdf";
-    public String MIME_TYPE_DOCX = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
-    public String NEW_FILE = "NEW_FILE";
-    public String FILE_ID = "FILE_ID";
+    String MIME_TYPE_PDF = "application/pdf";
+    String MIME_TYPE_DOCX = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+    String NEW_FILE = "NEW_FILE";
+    String FILE_ID = "FILE_ID";
 
-    public String EMAIL_HEADER_SUBJECT = "FOIA Extension Notification";
-    public String EMAIL_HEADER_ATTACHMENT = "Hello,";
-    public String EMAIL_BODY_ATTACHMENT = "Please find the attached document(s) for your review.";
-    public String EMAIL_FOOTER_ATTACHMENT = "Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com";
+    String EMAIL_HEADER_SUBJECT = "FOIA Extension Notification";
+    String EMAIL_HEADER_ATTACHMENT = "Hello,";
+    String EMAIL_BODY_ATTACHMENT = "Please find the attached document(s) for your review.";
+    String EMAIL_FOOTER_ATTACHMENT = "Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com";
 
-    public String EMAIL_RELEASE_SUBJECT = "Request Complete";
-    public String EMAIL_RESPONSE_FOLDER_INSTALLMENT_SUBJECT = "A new installment of document(s) are now available for Request";
-    public String EMAIL_RELEASE_BODY = "Your %s with number %s has been released and the document(s) are ready for download on the portal. Please go to the check status page at this <a href=\"%s\">link</a>.";
-    public String PORTAL_REQUEST_STATUS_RELATIVE_URL = "/../foia/portal/requestStatus?requestNumber=%s";
-    public String NEW_REQUEST_TITLE = "NEW REQUEST";
+    String EMAIL_RELEASE_SUBJECT = "Request Complete";
+    String EMAIL_RESPONSE_FOLDER_INSTALLMENT_SUBJECT = "A new installment of document(s) are now available for Request";
+    String EMAIL_RELEASE_BODY = "Your %s with number %s has been released and the document(s) are ready for download on the portal. Please go to the check status page at this <a href=\"%s\">link</a>.";
+    String PORTAL_REQUEST_STATUS_RELATIVE_URL = "/../foia/portal/requestStatus?requestNumber=%s";
+    String NEW_REQUEST_TITLE = "NEW REQUEST";
 
-    public String EMAIL_RESPONSE_FOLDER_ZIP = "New installment of documents is now available for your FOIA Request";
+    String EMAIL_RESPONSE_FOLDER_ZIP = "New installment of documents is now available for your FOIA Request";
 
-    public static final String FOIA_PIPELINE_EXTENSION_PROPERTY_KEY = "foia_request_extension";
+    String FOIA_PIPELINE_EXTENSION_PROPERTY_KEY = "foia_request_extension";
+
+    String FULFILL_QUEUE = "Fulfill";
+    String INTAKE_QUEUE = "Intake";
 }
