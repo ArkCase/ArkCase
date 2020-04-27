@@ -45,6 +45,7 @@ import javax.persistence.criteria.Root;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class PersonDao extends AcmAbstractDao<Person>
 {
@@ -125,6 +126,20 @@ public class PersonDao extends AcmAbstractDao<Person>
         }
 
         return result;
+    }
+
+    public Optional<Person> findByEmail(String emailAddress)
+    {
+        List<Person> resultList = getEntityManager().createQuery("SELECT p FROM Person p WHERE p.defaultEmail.value = :emailAddress")
+                .setParameter("emailAddress", emailAddress).getResultList();
+        if (resultList.isEmpty())
+        {
+            return Optional.empty();
+        }
+        else
+        {
+            return Optional.of(resultList.get(0));
+        }
     }
 
     public EntityManager getEntityManager()
