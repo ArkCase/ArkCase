@@ -226,5 +226,11 @@
             <column name="cm_email_addresses" type="CLOB"/>
         </addColumn>
     </changeSet>
+    
+    <changeSet id="20-add-column-email-group" author="bojan.milenkoski">
+        <addColumn tableName="acm_notification">
+            <column name="cm_email_group" type="VARCHAR(128)"/>
+        </addColumn>
+    </changeSet>
 
 </databaseChangeLog>
