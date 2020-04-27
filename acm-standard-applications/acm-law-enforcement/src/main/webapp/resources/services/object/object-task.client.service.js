@@ -96,7 +96,7 @@ angular.module('services').factory('Object.TaskService', [ '$resource', '$q', 'A
             var keys = cacheChildTaskData.keys();
             var keyBegin = parentType + "." + parentId + ".";
             var found = _.filter(keys, function(key) {
-                return (key && key.startsWith(keyBegin));
+                return (key && _.startsWith(key, keyBegin));
             });
             _.each(found, function(key) {
                 cacheChildTaskData.put(key, null);

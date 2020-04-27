@@ -61,6 +61,7 @@ public class EcmFileTransactionPipelineContext extends AbstractPipelineContext
     private EcmTikaFile detectedFileMetadata;
     private boolean searchablePDF;
     private File mergedFile;
+    private boolean fileNameAlreadyInEcmSystem;
 
     public String getOriginalFileName()
     {
@@ -140,6 +141,16 @@ public class EcmFileTransactionPipelineContext extends AbstractPipelineContext
     public void setIsAppend(boolean isAppend)
     {
         this.isAppend = isAppend;
+    }
+
+    public boolean isFileNameAlreadyInEcmSystem()
+    {
+        return fileNameAlreadyInEcmSystem;
+    }
+
+    public void setFileNameAlreadyInEcmSystem(boolean fileNameAlreadyInEcmSystem)
+    {
+        this.fileNameAlreadyInEcmSystem = fileNameAlreadyInEcmSystem;
     }
 
     @Deprecated

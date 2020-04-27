@@ -96,7 +96,7 @@ angular.module('services').service('DueDate.Service', [ '$translate', function($
             dueDate = dueDate.toISOString();
         }
         var momentDueDate = moment(dueDate.replace(/(\d{4})\-(\d{2})\-(\d{2}).*/, '$1/$2/$3'));
-        var momentDate = moment();
+        var momentDate = findNextWorkingDay(holidays, moment());
         var days = 0;
         if (momentDueDate > momentDate) { //calculate days remaining
             while (momentDate < momentDueDate) {
@@ -165,6 +165,18 @@ angular.module('services').service('DueDate.Service', [ '$translate', function($
         return _.find(holidays, function(holiday) {
             return holiday.holidayDate === momentObject.format($translate.instant("common.frevvo.defaultDateFormat"));
         }) !== undefined;
+    }
+
+    function isWorkingDay(holidays, date) {
+        return !isHoliday(holidays, date) && !isWeekend(date);
+    }
+
+    function findNextWorkingDay(holidays, date) {
+        while (!isWorkingDay(holidays, date)) {
+            date.add(1, 'days');
+        }
+
+        return date;
     }
 
     function calculateOverdueDays(dueDate, remainingDays, holidays){

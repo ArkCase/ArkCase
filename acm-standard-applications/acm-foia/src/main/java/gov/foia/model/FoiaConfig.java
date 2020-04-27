@@ -101,6 +101,10 @@ public class FoiaConfig
     @Value("${provideReasonToHoldRequestEnabled}")
     private Boolean provideReasonToHoldRequestEnabled;
 
+    @JsonProperty("redirectFunctionalityCalculationEnabled")
+    @Value("${redirectFunctionalityCalculationEnabled}")
+    private Boolean redirectFunctionalityCalculationEnabled;
+
     public Integer getMaxDaysInHoldQueue()
     {
         return maxDaysInHoldQueue;
@@ -276,5 +280,15 @@ public class FoiaConfig
     public void setProvideReasonToHoldRequestEnabled(Boolean provideReasonToHoldRequestEnabled)
     {
         this.provideReasonToHoldRequestEnabled = provideReasonToHoldRequestEnabled;
+    }
+
+    public Boolean getRedirectFunctionalityCalculationEnabled()
+    {
+        return redirectFunctionalityCalculationEnabled;
+    }
+
+    public void setRedirectFunctionalityCalculationEnabled(Boolean redirectFunctionalityCalculationEnabled)
+    {
+        this.redirectFunctionalityCalculationEnabled = redirectFunctionalityCalculationEnabled;
     }
 }

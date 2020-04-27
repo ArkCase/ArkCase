@@ -38,7 +38,7 @@ angular.module('request-info').controller('RequestInfo.ExemptionController',
 
             var onObjectInfoRetrieved = function (objectInfo) {
                 $scope.objectInfo = objectInfo;
-                if ($scope.objectInfo.generatedZipFlag || !Util.isEmpty($scope.objectInfo.dispositionClosedDate)) {
+                if (!Util.isEmpty($scope.objectInfo.dispositionClosedDate)) {
                     $scope.isDisabled = true;
                 }
             };
@@ -146,9 +146,9 @@ angular.module('request-info').controller('RequestInfo.ExemptionController',
                     }
                 });
 
-                modalInstance.result.then(function() {
-                    // Do nothing
-                }, function(error) {
+                modalInstance.result.then(function () {
+                    retrieveGridData($stateParams.id, $stateParams.fileId);
+                }, function (error) {
                     // Do nothing
                 });
             };
