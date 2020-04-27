@@ -84,6 +84,8 @@ angular.module('cases').controller('Cases.ActionsFooterController',
                 } else if (name === 'Complete' && ($scope.objectInfo.queue.name === 'Fulfill' || $scope.objectInfo.queue.name === 'Billing') && $scope.objectInfo.requestType === 'Appeal') {
                     if ($scope.objectInfo.disposition == null) {
                         openAppealDispositionCategoryModal(deferred);
+                    } else {
+                        deferred.resolve();
                     }
                 } else if (name === 'Deny' && ($scope.objectInfo.queue.name === 'Intake' || $scope.objectInfo.queue.name === 'Fulfill')) {
                     openDenyDispositionCategoryModal(deferred);
