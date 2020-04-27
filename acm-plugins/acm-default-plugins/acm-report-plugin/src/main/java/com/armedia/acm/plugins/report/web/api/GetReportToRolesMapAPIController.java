@@ -88,10 +88,10 @@ public class GetReportToRolesMapAPIController
         return retval;
     }
 
-    @RequestMapping(value = "/reportstoroles", params = { "fq" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/reportstoroles", params = { "fn" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<String> getReportsByName(
-            @RequestParam(value = "fq") String filterQuery,
+            @RequestParam(value = "fn") String filterName,
             @RequestParam(value = "sortBy", required = false, defaultValue = "name_lcs") String sortBy,
             @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
@@ -99,7 +99,7 @@ public class GetReportToRolesMapAPIController
     {
         LOG.debug("Getting reports ...");
 
-        List<String> retval = getReportService().getReportToRolesByName(sortDirection, startRow, maxRows, filterQuery);
+        List<String> retval = getReportService().getReportToRolesByName(sortDirection, startRow, maxRows, filterName);
         if (null == retval)
         {
             LOG.warn("Properties not available..");
@@ -108,9 +108,11 @@ public class GetReportToRolesMapAPIController
         return retval;
     }
 
-    @RequestMapping(value = "/{reportId:.+}/roles", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{reportId:.+}/roles", params = { "fn" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<String> findRolesForReport(@PathVariable("reportId") String reportId,
+    public List<String> findRolesForReport(
+            @PathVariable("reportId") String reportId,
+            @RequestParam(value = "fn") String filterName,
             @RequestParam(value = "authorized") Boolean authorized,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "10000") int maxRows,
@@ -120,7 +122,7 @@ public class GetReportToRolesMapAPIController
     {
 
         LOG.debug("Taking roles from property file for specific report");
-        return reportService.getRolesForReport(authorized, reportId, startRow, maxRows, sortBy, sortDirection);
+        return reportService.getRolesForReport(authorized, reportId, startRow, maxRows, sortBy, sortDirection, filterName);
     }
 
     public ReportService getReportService()

@@ -62,9 +62,11 @@ public class HoldedAndAppealedRequestsDueDateUpdate
         for (FOIARequest request : result)
         {
             Date dueDate = request.getDueDate();
-            LocalDateTime dueDateUpdated = dueDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime().plusDays(1);
-            request.setDueDate(Date.from(dueDateUpdated.atZone(ZoneId.systemDefault()).toInstant()));
-            requestDao.save(request);
+            if (dueDate != null) {
+                LocalDateTime dueDateUpdated = dueDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime().plusDays(1);
+                request.setDueDate(Date.from(dueDateUpdated.atZone(ZoneId.systemDefault()).toInstant()));
+                requestDao.save(request);
+            }
         }
     }
 

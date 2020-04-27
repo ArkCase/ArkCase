@@ -55,6 +55,8 @@ public class PortalFOIARequestStatus implements Serializable
 
     private Boolean isPublic;
 
+    private Boolean withdrawRequested;
+
     private String requestType;
 
     private String requesterFirstName;
@@ -181,6 +183,16 @@ public class PortalFOIARequestStatus implements Serializable
     public void setRequesterEmail(String requesterEmail)
     {
         this.requesterEmail = requesterEmail;
+    }
+
+    public Boolean getWithdrawRequested()
+    {
+        return withdrawRequested;
+    }
+
+    public void setWithdrawRequested(Boolean withdrawRequested)
+    {
+        this.withdrawRequested = withdrawRequested;
     }
 
     /*

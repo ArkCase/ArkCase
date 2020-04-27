@@ -38,7 +38,9 @@ import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 
 import org.apache.chemistry.opencmis.client.api.Document;
+import org.apache.chemistry.opencmis.commons.exceptions.CmisContentAlreadyExistsException;
 import org.apache.commons.io.input.CountingInputStream;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -101,6 +103,10 @@ public class EcmFileNewContentHandler implements PipelineHandler<EcmFile, EcmFil
             }
             catch (Exception e)
             {
+                if (ExceptionUtils.getRootCause(e) instanceof CmisContentAlreadyExistsException)
+                {
+                    pipelineContext.setFileNameAlreadyInEcmSystem(true);
+                }
                 log.error("Camel pre save handler failed: {}", e.getMessage(), e);
                 ProgressbarExecutor progressbarExecutor = progressIndicatorService.getExecutor(entity.getUuid());
                 if (StringUtils.isNotEmpty(entity.getUuid()) && progressbarExecutor != null

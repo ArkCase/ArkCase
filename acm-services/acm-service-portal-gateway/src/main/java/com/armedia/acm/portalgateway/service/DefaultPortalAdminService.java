@@ -31,13 +31,14 @@ package com.armedia.acm.portalgateway.service;
  */
 
 import com.armedia.acm.portalgateway.model.PortalInfo;
+import com.armedia.acm.portalgateway.web.api.PortalInfoDTO;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.NoResultException;
@@ -141,6 +142,7 @@ public class DefaultPortalAdminService implements PortalAdminService
             existing.setPortalDescription(portalInfo.getPortalDescription());
             existing.setPortalUrl(portalInfo.getPortalUrl());
             existing.setUser(user);
+            existing.setGroup(portalInfo.getGroup());
             existing.setPortalAuthenticationFlag(portalInfo.getPortalAuthenticationFlag());
 
             return portalInfoDao.save(existing);
@@ -187,6 +189,16 @@ public class DefaultPortalAdminService implements PortalAdminService
     public PortalServiceExceptionMapper getExceptionMapper(PortalAdminServiceException se)
     {
         return new PortalAdminServiceExceptionMapper(se);
+    }
+
+    @Override
+    public void updatePortalInfo(PortalInfo portalInfo, PortalInfoDTO portalInfoDTO)
+    {
+        AcmGroup group = groupDao.findByName(portalInfoDTO.getGroupName());
+        portalInfo.setGroup(group);
+        portalInfo.setPortalDescription(portalInfoDTO.getPortalDescription());
+        portalInfo.setPortalUrl(portalInfoDTO.getPortalUrl());
+        portalInfo.setPortalAuthenticationFlag(portalInfoDTO.getPortalAuthenticationFlag());
     }
 
     /**

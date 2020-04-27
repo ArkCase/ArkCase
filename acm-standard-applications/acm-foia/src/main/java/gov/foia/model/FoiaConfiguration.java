@@ -48,6 +48,7 @@ public class FoiaConfiguration extends SystemConfiguration
     private Boolean requireTimesheetToCompleteStandardRequest;
     private Boolean requireTimesheetToCompleteDeniedRequest;
     private Boolean provideReasonToHoldRequestEnabled;
+    private Boolean redirectFunctionalityCalculationEnabled;
 
     public Integer getMaxDaysInBillingQueue()
     {
@@ -224,5 +225,15 @@ public class FoiaConfiguration extends SystemConfiguration
     public void setLimitedDeliveryToSpecificPageCount(Integer limitedDeliveryToSpecificPageCount)
     {
         this.limitedDeliveryToSpecificPageCount = limitedDeliveryToSpecificPageCount;
+    }
+
+    public Boolean getRedirectFunctionalityCalculationEnabled()
+    {
+        return redirectFunctionalityCalculationEnabled;
+    }
+
+    public void setRedirectFunctionalityCalculationEnabled(Boolean redirectFunctionalityCalculationEnabled)
+    {
+        this.redirectFunctionalityCalculationEnabled = redirectFunctionalityCalculationEnabled;
     }
 }

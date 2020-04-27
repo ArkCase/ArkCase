@@ -144,7 +144,8 @@ angular.module('admin').service('Admin.ReportsConfigService', function($http) {
                 authorized: data.isAuthorized,
                 dir: (data.dir ? data.dir : ""),
                 n: (data.n ? data.n : 50),
-                start: (data.start ? data.start : 0)
+                start: (data.start ? data.start : 0),
+                fn: (data.filterWord ? data.filterWord : "")
             }
         });
     }
@@ -173,7 +174,7 @@ angular.module('admin').service('Admin.ReportsConfigService', function($http) {
                 dir: (data.dir ? data.dir : ""),
                 n: (data.n ? data.n : 50),
                 start: (data.start ? data.start : 0),
-                fq: (data.filterWord ? data.filterWord : "")
+                fn: (data.filterWord ? data.filterWord : "")
             }
         });
     }
