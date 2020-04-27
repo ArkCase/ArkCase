@@ -116,6 +116,8 @@
             <beans:property name="foiaExemptionCodeDao" ref="foiaExemptionCodeDao"/>
         </beans:bean>
 
+        <bean id="acmDispositionReasonDao" class="gov.foia.dao.DispositionReasonDao"/>
+
         <beans:bean id="foiaRequesterAssociationToSolrTransformer" class="gov.foia.transformer.FOIARequesterAssociationToSolrTransformer"
                     parent="personAssociationToSolrTransformer"/>
 
@@ -262,6 +264,9 @@
             <beans:property name="foiaRequestService" ref="foiaRequestService"/>
             <beans:property name="caseFileEventUtility" ref="caseFileEventUtility"/>
             <beans:property name="personDao" ref="acmPersonDao"/>
+            <beans:property name="lookupDao" ref="lookupDao"/>
+            <beans:property name="translationService" ref="translationService"/>
+            <beans:property name="foiaExemptionService" ref="foiaExemptionService"/>
         </beans:bean>
 
         <beans:bean id="originalRequestFolderNameFormat" class="java.lang.String">
