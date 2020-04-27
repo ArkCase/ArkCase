@@ -314,6 +314,10 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
             {
                 synchronizePortalUser(portalId, acmUser);
             }
+            else
+            {
+                changePersonIntoPortalFOIAPerson(portalId, person);
+            }
             return UserRegistrationResponse.exists();
         }
         else if (isUserRejectedForPortal(portalId, registeredPerson))
@@ -395,7 +399,6 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
      * java.lang.String)
      */
     @Override
-    @Transactional
     public PortalUser authenticateUser(String portalId, String credentials) throws PortalUserServiceException
     {
         // TODO Auto-generated method stubPortalUser user = new PortalUser();
@@ -444,7 +447,15 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
                 Optional<PortalFOIAPerson> portalUser = portalPersonDao.findByEmail(username);
                 if (!portalUser.isPresent())
                 {
-                    portalUser = Optional.of(synchronizePortalUser(portalId, portalAcmUser));
+                    Optional<Person> person = personDao.findByEmail(username);
+                    if (!person.isPresent())
+                    {
+                        portalUser = Optional.of(synchronizePortalUser(portalId, portalAcmUser));
+                    }
+                    else
+                    {
+                        portalUser = Optional.of(changePersonIntoPortalFOIAPerson(portalId, person.get()));
+                    }
                 }
                 PortalUser portalUserAuthenticated = portaluserFromPortalPerson(portalId, portalUser.get());
                 portalUserAuthenticated.setAcmUserId(portalAcmUser.getUserId());
@@ -766,20 +777,31 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         user.setLastName(person.getFamilyName());
         user.setPrefix(person.getTitle());
         user.setPosition(person.getPosition());
-        user.setPhoneNumber(
-                person.getContactMethods().stream().filter(cm -> cm.getType().equalsIgnoreCase("Phone")).findFirst().get().getValue());
+        Optional<ContactMethod> phoneContact = person.getContactMethods().stream().filter(cm -> cm.getType().equalsIgnoreCase("Phone"))
+                .findFirst();
+        if (phoneContact.isPresent())
+        {
+            user.setPhoneNumber(phoneContact.get().getValue());
+        }
         PostalAddress address = person.getDefaultAddress();
         if (address == null)
         {
-            address = person.getAddresses().get(0);
+            if (person.getAddresses() != null && !person.getAddresses().isEmpty())
+            {
+                address = person.getAddresses().get(0);
+            }
         }
-        user.setCity(address.getCity());
-        user.setCountry(address.getCountry());
-        user.setAddressType(address.getType());
-        user.setState(address.getState());
-        user.setAddress1(address.getStreetAddress());
-        user.setAddress2(address.getStreetAddress2());
-        user.setZipCode(address.getZip());
+        if (address != null)
+        {
+            user.setCity(address.getCity());
+            user.setCountry(address.getCountry());
+            user.setAddressType(address.getType());
+            user.setState(address.getState());
+            user.setAddress1(address.getStreetAddress());
+            user.setAddress2(address.getStreetAddress2());
+            user.setZipCode(address.getZip());
+        }
+
         if (person.getOrganizations() != null && !person.getOrganizations().isEmpty())
         {
             user.setOrganization(person.getOrganizations().get(0).getOrganizationValue());
