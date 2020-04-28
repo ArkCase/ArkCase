@@ -98,6 +98,20 @@ public class HolidayConfigurationService
         return returnDate;
     }
 
+    public LocalDate subtractWorkingDatsFromDate(LocalDate dueDate, Integer workingDays)
+    {
+        LocalDate returnDate = dueDate;
+        for (int i = 0; i < workingDays;)
+        {
+            returnDate = returnDate.minusDays(1);
+            if (isWorkingDay(returnDate))
+            {
+                i++;
+            }
+        }
+        return returnDate;
+    }
+
     public Date addWorkingDaysToDate(Date date, int workingDays)
     {
         LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -187,5 +201,4 @@ public class HolidayConfigurationService
     {
         this.objectConverter = objectConverter;
     }
-
 }

@@ -79,19 +79,19 @@ public class FOIARequestComponentUpdatedHandler
             {
                 if (holidayConfigurationService.getHolidayConfiguration().getIncludeWeekends())
                 {
-                    entity.setPerfectedDate(LocalDateTime.now());
+                    entity.setRedirectedDate(LocalDateTime.now());
                 }
                 else
                 {
-                    entity.setPerfectedDate(holidayConfigurationService.getNextWorkingDay(LocalDate.now()).atTime(LocalTime.now()));
+                    entity.setRedirectedDate(holidayConfigurationService.getNextWorkingDay(LocalDate.now()).atTime(LocalTime.now()));
                 }
 
                 if (getFoiaConfig().getRedirectFunctionalityCalculationEnabled())
                 {
-                    LocalDate originalPerfectedDate = originalRequest.getPerfectedDate().toLocalDate();
+                    LocalDate originalRedirectedDate = originalRequest.getRedirectedDate().toLocalDate();
 
                     Integer TTC = queuesTimeToCompleteService.getTimeToComplete().getRequest().getTotalTimeToComplete();
-                    Integer elapsedDays = holidayConfigurationService.countWorkingDates(originalPerfectedDate, LocalDate.now());
+                    Integer elapsedDays = holidayConfigurationService.countWorkingDates(originalRedirectedDate, LocalDate.now());
                     Integer elapsedTTC = originalRequest.getTtcOnLastRedirection() - elapsedDays;
 
                     Integer calculatedTTC = elapsedTTC + TTC / 2;
@@ -102,9 +102,13 @@ public class FOIARequestComponentUpdatedHandler
                     {
                         entity.setDueDate(holidayConfigurationService.addWorkingDaysToDate(
                                 Date.from(
-                                        entity.getPerfectedDate().toLocalDate().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()),
+                                        entity.getRedirectedDate().toLocalDate().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()),
                                 calculatedTTC));
                     }
+
+                    entity.setPerfectedDate(holidayConfigurationService
+                            .subtractWorkingDatsFromDate(entity.getDueDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), TTC)
+                            .atTime(LocalTime.now()));
 
                     entity.setTtcOnLastRedirection(elapsedTTC);
 

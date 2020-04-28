@@ -797,5 +797,17 @@ LANGUAGE plpgsql;
         </insert>
     </changeSet>
 
+    <changeSet id="46-01-add-redirected-date-column" author="vladimir.cherepnalkovski" dbms="oracle,mssql,postgres">
+        <addColumn tableName="acm_case_file">
+            <column name="fo_redirected_date" type="${timestampType}"></column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="46-02-add-redirected-date-column" author="vladimir.cherepnalkovski" dbms="mysql">
+        <addColumn tableName="acm_case_file">
+            <column name="fo_redirected_date" type="${timestampType}"></column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
 
