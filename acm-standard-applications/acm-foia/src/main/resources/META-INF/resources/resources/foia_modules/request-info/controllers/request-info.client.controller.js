@@ -576,12 +576,28 @@ angular.module('request-info').controller(
             function populateDispositionCategories(objectInfo) {
                 ObjectLookupService.getLookupByLookupName('requestDispositionType').then(function (requestDispositionType) {
                     $scope.dispositionCategories = requestDispositionType;
+                    if($scope.requestInfo.disposition) {
+                        var found = _.find(requestDispositionType, {
+                            key: $scope.requestInfo.disposition
+                        });
+                        if(!Util.isEmpty(found)) {
+                            $scope.requestInfo.disposition = $translate.instant(found.value);
+                        }
+                    }
                 });
             }
 
             function populateDeniedDispositionCategories(objectInfo) {
                 ObjectLookupService.getLookupByLookupName('requestDispositionSubType').then(function (requestDispositionSubType) {
                     $scope.dispositionDeniedCategories = requestDispositionSubType;
+                    if($scope.requestInfo.disposition) {
+                        var found = _.find(requestDispositionSubType, {
+                            key: $scope.requestInfo.disposition
+                        });
+                        if(!Util.isEmpty(found)) {
+                            $scope.requestInfo.disposition = $translate.instant(found.value);
+                        }
+                    }
                 });
             }
             
@@ -592,10 +608,8 @@ angular.module('request-info').controller(
                         var found = _.find(requestOtherReasons, {
                             key: $scope.objectInfo.otherReason
                         });
-                        if(found) {
-                            $scope.isCustomReason = false;
-                        } else {
-                            $scope.isCustomReason = true;
+                        if(!Util.isEmpty(found)) {
+                            $scope.objectInfo.otherReason = $translate.instant(found.value);
                         }
                     }
                 });
@@ -959,12 +973,15 @@ angular.module('request-info').controller(
                         type: 'RETURN_REASON'
                     }).then(function (addedNote) {
                         // Note saved
-                        var disposition = _.find($scope.dispositionCategories, {
-                            key: $scope.requestInfo.disposition
-                        });
-                        $scope.requestInfo.dispositionValue = $translate.instant(disposition.value);
                         $scope.requestInfo.disposition = null;
-                        $scope.objectInfo.otherReason = null;
+                        if ($scope.objectInfo.requestType !== 'Appeal') {
+                            if($scope.objectInfo.deniedFlag && $scope.objectInfo.queue.name === 'Approve') {
+                                $scope.objectInfo.status = 'Perfected';
+                                $scope.deleteDenialLetter = true;
+                            }
+                            $scope.objectInfo.otherReason = null;
+                            $scope.objectInfo.deniedFlag = false;
+                        }
                         $scope.isRequestFormModified = true;
                         deferred.resolve();
                     });
@@ -1126,6 +1143,7 @@ angular.module('request-info').controller(
                     $scope.requestInfo.disposition = data.requestDispositionCategory;
                     $scope.requestInfo.dispositionValue = data.dispositionValue;
                     $scope.objectInfo.otherReason = data.requestOtherReason;
+                    $scope.isRequestFormModified = data.requestDispositionCategory ? true : false;
                     deferred.resolve();
                 }, function () {
                     deferred.reject();

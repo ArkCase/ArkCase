@@ -125,11 +125,25 @@ public class SaveFOIARequestService
                 {
                     if ((request.getQueue().getName().equals(FOIAConstants.FULFILL_QUEUE)
                             || request.getQueue().getName().equals(FOIAConstants.INTAKE_QUEUE))
-                            && (request.getDisposition() != null && request.getDisposition().equals("grantedInFull"))
-                            && getFoiaExemptionService().hasExemptionOnAnyDocumentsOnRequest(request.getId(), request.getObjectType()))
+                            && (request.getDisposition() != null && request.getDisposition().equals("grantedInFull")))
                     {
-                        caseFileEventUtility.raiseCustomEvent(saved, "disposition.exemption", "", new Date(), ipAddress, auth.getName(),
-                                auth);
+                        boolean hasManuallyAddedExemeptions = false;
+                        try
+                        {
+                            hasManuallyAddedExemeptions = getFoiaExemptionService()
+                                    .getExemptionCodes(request.getId(), request.getObjectType()).size() > 0 ? true : false;
+
+                        }
+                        catch (Exception e)
+                        {
+                            log.error("Error during looking for manually added exemptions on request with ID [{}]", request.getId());
+                        }
+                        if ((getFoiaExemptionService().hasExemptionOnAnyDocumentsOnRequest(request.getId(), request.getObjectType())
+                                || hasManuallyAddedExemeptions))
+                        {
+                            caseFileEventUtility.raiseCustomEvent(saved, "disposition.exemption", "", new Date(), ipAddress, auth.getName(),
+                                    auth);
+                        }
                     }
                     if ((request.getQueue().getName().equals(FOIAConstants.INTAKE_QUEUE)
                             || request.getQueue().getName().equals(FOIAConstants.FULFILL_QUEUE))
@@ -137,12 +151,12 @@ public class SaveFOIARequestService
                     {
                         if (request.getQueue().getName().equals(FOIAConstants.FULFILL_QUEUE))
                         {
-                            caseFileEventUtility.raiseCustomEvent(saved, "disposition", "<" + dispositionValue + "> Added", new Date(),
+                            caseFileEventUtility.raiseCustomEvent(saved, "disposition",   dispositionValue + " Added", new Date(),
                                     ipAddress, auth.getName(), auth);
                         }
                         else
                         {
-                            caseFileEventUtility.raiseCustomEvent(saved, "disposition.reason", "<" + dispositionValue + "> Added",
+                            caseFileEventUtility.raiseCustomEvent(saved, "disposition.reason", dispositionValue + " Added",
                                     new Date(), ipAddress, auth.getName(), auth);
                         }
                         if (request.getOtherReason() != null)
@@ -154,14 +168,14 @@ public class SaveFOIARequestService
                             String otherReasonValue = otherReasonLookup != null
                                     ? getTranslationService().translate(otherReasonLookup.getValue())
                                     : request.getOtherReason();
-                            caseFileEventUtility.raiseCustomEvent(saved, "other.reason", "<" + otherReasonValue + "> Added", new Date(),
+                            caseFileEventUtility.raiseCustomEvent(saved, "other.reason", otherReasonValue + " Added", new Date(),
                                     ipAddress, auth.getName(), auth);
                         }
                     }
                     if (request.getDisposition() == null && !saved.getQueue().getName().equals(FOIAConstants.INTAKE_QUEUE)
                             && !request.getQueue().getName().equals(FOIAConstants.FULFILL_QUEUE))
                     {
-                        caseFileEventUtility.raiseCustomEvent(saved, "disposition", "<" + dispositionValue + "> Removed", new Date(),
+                        caseFileEventUtility.raiseCustomEvent(saved, "disposition", dispositionValue + " Removed", new Date(),
                                 ipAddress, auth.getName(), auth);
                     }
                 }
