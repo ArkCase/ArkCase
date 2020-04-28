@@ -31,15 +31,13 @@ package gov.foia.service;
  */
 
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
-
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
-import java.util.List;
-
+import com.armedia.acm.services.holiday.service.HolidayConfigurationService;
 import gov.foia.dao.FOIARequestDao;
 import gov.foia.model.FOIARequest;
 import gov.foia.model.FoiaConfig;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author riste.tutureski
@@ -50,6 +48,7 @@ public class HoldedAndAppealedRequestsDueDateUpdate
     private FOIARequestDao requestDao;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private FoiaConfig foiaConfig;
+    private HolidayConfigurationService holidayConfigurationService;
 
     public void updateDueDate()
     {
@@ -57,14 +56,14 @@ public class HoldedAndAppealedRequestsDueDateUpdate
         {
             return;
         }
+
         auditPropertyEntityAdapter.setUserId("DUE_DATE_UPDATER");
         List<FOIARequest> result = requestDao.findAllHeldAndAppealedRequests();
         for (FOIARequest request : result)
         {
             Date dueDate = request.getDueDate();
             if (dueDate != null) {
-                LocalDateTime dueDateUpdated = dueDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime().plusDays(1);
-                request.setDueDate(Date.from(dueDateUpdated.atZone(ZoneId.systemDefault()).toInstant()));
+                request.setDueDate(getHolidayConfigurationService().addWorkingDaysToDate(dueDate, 1));
                 requestDao.save(request);
             }
         }
@@ -98,4 +97,11 @@ public class HoldedAndAppealedRequestsDueDateUpdate
         this.foiaConfig = foiaConfig;
     }
 
+    public HolidayConfigurationService getHolidayConfigurationService() {
+        return holidayConfigurationService;
+    }
+
+    public void setHolidayConfigurationService(HolidayConfigurationService holidayConfigurationService) {
+        this.holidayConfigurationService = holidayConfigurationService;
+    }
 }
