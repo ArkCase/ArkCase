@@ -144,6 +144,16 @@ public class FOIARequestComponentUpdatedHandler
             event = new RequestComponentAgencyChangedEvent(entity, originalRequest, updatedDueDate);
             applicationEventPublisher.publishEvent(event);
         }
+
+        if (!originalRequest.getRedirectedDate().equals(entity.getRedirectedDate()))
+        {
+            SimpleDateFormat dateFormatter = new SimpleDateFormat("MMMM-dd-yyyy");
+            String updatedRedirectDate = String.format("which updates the Redirected Date from %s to %s",
+                    dateFormatter.format(originalRequest.getRedirectedDate()),
+                    dateFormatter.format(entity.getRedirectedDate()));
+            event = new RequestComponentAgencyChangedEvent(entity, originalRequest, updatedRedirectDate);
+            applicationEventPublisher.publishEvent(event);
+        }
     }
 
     @Override
