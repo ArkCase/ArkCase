@@ -15,20 +15,36 @@
         <serviceTask id="sid-F88A33F4-A31E-43B6-A65C-0921762C023D" name="Place FOIA Request in Release queue"
                      activiti:expression="#{queueCaseService.enqueue(OBJECT_ID, 'Release')}"/>
         <sequenceFlow id="sid-7C860A67-DA43-4076-B2BE-B87497585AF2" sourceRef="sid-F88A33F4-A31E-43B6-A65C-0921762C023D"
-                      targetRef="sid-C5A79729-8BB7-431C-AB69-7A5A2F2F81E3"/>
+                      targetRef="sid-C5A79729-8BB7-431C-AB69-7A5A2F2F81E3">
+            <conditionExpression>
+                ${!OBJECT_DENIED_FLAG}
+            </conditionExpression>
+        </sequenceFlow>
         <serviceTask id="sid-C5A79729-8BB7-431C-AB69-7A5A2F2F81E3" name="Convert the Response folder"
                      activiti:expression="#{responseFolderConverterService.convertResponseFolder(OBJECT_ID, USERNAME)}"/>
         <sequenceFlow id="sid-C6395A53-D720-4191-9FAB-41B52B5EED79" sourceRef="sid-C5A79729-8BB7-431C-AB69-7A5A2F2F81E3"
-                      targetRef="sid-59B480D3-8042-491C-89F9-A490BC2B8106"/>
+                      targetRef="sid-59B480D3-8042-491C-89F9-A490BC2B8106">
+            <conditionExpression>
+                ${!OBJECT_DENIED_FLAG}
+            </conditionExpression>
+        </sequenceFlow>
         <serviceTask id="sid-59B480D3-8042-491C-89F9-A490BC2B8106" name="Compress the Response folder"
                      activiti:expression="#{responseFolderCompressorService.compressResponseFolder(OBJECT_ID)}"
                      activiti:resultVariableName="compressFolderPath"/>
         <sequenceFlow id="sid-c6395a53-d720-4191-9fab-41b52b5eed79" sourceRef="sid-59B480D3-8042-491C-89F9-A490BC2B8106"
-                      targetRef="sid-e81ce45d-afdf-4c11-aadf-c70166212249"/>
+                      targetRef="sid-e81ce45d-afdf-4c11-aadf-c70166212249">
+            <conditionExpression>
+                ${!OBJECT_DENIED_FLAG}
+            </conditionExpression>
+        </sequenceFlow>
         <serviceTask id="sid-e81ce45d-afdf-4c11-aadf-c70166212249" name="Send the compressed Response folder file to outbound message queue"
                      activiti:expression="#{foiaRequestFileBrokerClient.sendReleaseFile(OBJECT_ID, compressFolderPath)}"/>
         <sequenceFlow id="sid-3348156b-6d27-4e6f-9a8a-760829098468" sourceRef="sid-e81ce45d-afdf-4c11-aadf-c70166212249"
-                      targetRef="Task_1ue461c"/>
+                      targetRef="Task_1ue461c">
+            <conditionExpression>
+                ${!OBJECT_DENIED_FLAG}
+            </conditionExpression>
+        </sequenceFlow>
         <serviceTask id="Task_1ue461c" name="Send Email notification"
                      activiti:expression="#{responseFolderNotifyService.sendEmailNotification(OBJECT_ID)}"/>
         <sequenceFlow id="SequenceFlow_1vtxmx2" sourceRef="Task_1ue461c" targetRef="sid-2158CAAD-78C1-465F-B109-70C2FCF1FF39"/>

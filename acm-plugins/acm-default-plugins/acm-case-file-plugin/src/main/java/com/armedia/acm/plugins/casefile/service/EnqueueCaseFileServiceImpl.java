@@ -256,6 +256,7 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
         processVariables.put("OBJECT_TYPE", "CASE_FILE");
         processVariables.put("OBJECT_ID", caseFile.getId());
         processVariables.put("OBJECT_STATUS", caseFile.getStatus());
+        processVariables.put("OBJECT_DENIED_FLAG", caseFile.getDeniedFlag());
         return processVariables;
     }
 
