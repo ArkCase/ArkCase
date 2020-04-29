@@ -77,6 +77,7 @@ angular.module('request-info').controller(
             $scope.saveIcon = false;
             $scope.saveLoadingIcon = "fa fa-floppy-o";
             $scope.viewerOnly = false;
+            $scope.loaderOpened = false;
 
             $scope.documentExpand = function () {
                 $scope.viewerOnly = true;
@@ -101,13 +102,34 @@ angular.module('request-info').controller(
                 DialogService.alert($scope.transcribeObjectModel.failureReason);
             };
 
+            function onShowLoader() {
+                var loaderModal = $modal.open({
+                    animation: true,
+                    templateUrl: 'modules/common/views/object.modal.loading-spinner.html',
+                    size: 'sm',
+                    backdrop: 'static'
+                });
+                $scope.loaderModal = loaderModal;
+                $scope.loaderOpened = true;
+            }
+
+            function onHideLoader() {
+                $scope.loaderModal.close();
+                $scope.loaderOpened = false;
+            }
+
+
             $scope.iframeLoaded = function () {
+                ArkCaseCrossWindowMessagingService.addHandler('show-loader', onShowLoader);
+                ArkCaseCrossWindowMessagingService.addHandler('hide-loader', onHideLoader);
+
                 ArkCaseCrossWindowMessagingService.addHandler('close-document', onCloseDocument);
                 ObjectLookupService.getLookupByLookupName("annotationTags").then(function (allAnnotationTags) {
                     $scope.allAnnotationTags = allAnnotationTags;
                     ArkCaseCrossWindowMessagingService.addHandler('select-annotation-tags', onSelectAnnotationTags);
                     ArkCaseCrossWindowMessagingService.start('snowbound', $scope.ecmFileProperties['ecm.viewer.snowbound']);
                 });
+                onHideLoader();
             };
 
             function onCloseDocument(data) {
@@ -828,6 +850,13 @@ angular.module('request-info').controller(
              * an iframe which points to snowbound
              */
             $scope.openSnowboundViewer = function () {
+
+                if ($scope.loaderOpened == false) {
+                    onShowLoader();
+                } else {
+                    onHideLoader();
+                }
+
                 var viewerUrl = SnowboundService.buildSnowboundUrl($scope.ecmFileProperties, $scope.acmTicket, $scope.userId, $scope.userFullName, $scope.fileInfo, !$scope.editingMode, $scope.requestInfo.caseNumber);
                 $scope.documentViewerUrl = $sce.trustAsResourceUrl(viewerUrl);
             };
@@ -1636,6 +1665,7 @@ angular.module('request-info').controller(
                     DialogService.alert($translate.instant("documentDetails.fileChangedAlert")).then(function () {
                         $scope.openSnowboundViewer();
                     });
+                    onHideLoader();
                 });
             });
             $scope.nextAvailableRequest = function () {
