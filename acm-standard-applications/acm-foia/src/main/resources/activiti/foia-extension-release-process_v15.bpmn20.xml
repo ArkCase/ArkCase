@@ -54,10 +54,10 @@
                 Currently there are 5 such actions:
 
                 1. Set the queue name to 'Release'
-                2. Converts the 'Response' folder
-                3. Compress the 'Response' folder
-                4. Send the compressed 'Response' folder file to outbound message queue
-                5. Send Email notification.
+                2. Converts the 'Response' folder for non denied requests
+                3. Compress the 'Response' folder for non denied requests
+                4. Send the compressed 'Response' folder file to outbound message queue for non denied requests
+                5. Send Email notification for non denied requests
             </text>
         </textAnnotation>
     </process>
