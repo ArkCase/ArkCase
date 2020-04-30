@@ -81,7 +81,7 @@ angular.module('cases').controller('Cases.ActionsFooterController',
                     openLimitedPageReleaseModal(deferred);
                 } else if (name === 'Complete' && $scope.objectInfo.queue.name === 'Fulfill' && $scope.objectInfo.requestType === 'New Request') {
                     openDispositionCategoryModal(deferred);
-                } else if (name === 'Complete' && ($scope.objectInfo.queue.name === 'Fulfill' || $scope.objectInfo.queue.name === 'Billing') && $scope.objectInfo.requestType === 'Appeal') {
+                } else if (name === 'Complete' && ($scope.objectInfo.queue.name === 'Fulfill' || $scope.defaultNextQueue === 'Release') && $scope.objectInfo.requestType === 'Appeal') {
                     if ($scope.objectInfo.disposition == null) {
                         openAppealDispositionCategoryModal(deferred);
                     } else {
@@ -260,7 +260,14 @@ angular.module('cases').controller('Cases.ActionsFooterController',
             }
 
             function openLimitedPageReleaseModal(deferred) {
-                var params = {};
+                var params = {
+                    disposition: $scope.objectInfo.disposition,
+                    dispositionReasons: $scope.objectInfo.dispositionReasons,
+                    otherReason: $scope.objectInfo.otherReason,
+                    caseId: $scope.objectInfo.id,
+                    queue: $scope.objectInfo.queue.name,
+                    requestType: $scope.objectInfo.requestType
+                };
                 params.pageCount = $scope.limitedDeliveryToSpecificPageCount;
 
                 var modalInstance = $modal.open({
@@ -276,8 +283,12 @@ angular.module('cases').controller('Cases.ActionsFooterController',
                     }
                 });
 
-                modalInstance.result.then(function (limitedDeliveryFlag) {
-                    $scope.objectInfo.limitedDeliveryFlag = limitedDeliveryFlag;
+                modalInstance.result.then(function (data) {
+                    $scope.objectInfo.limitedDeliveryFlag = data.limitedDeliveryFlag;
+                    $scope.requestDispositionCategory = data.requestDispositionCategory;
+                    $scope.dispositionValue = data.dispositionValue;
+                    $scope.requestOtherReason = data.requestOtherReason;
+                    $scope.dispositionReasons = data.dispositionReasons;
                     deferred.resolve();
                 }, function () {
                     deferred.reject();

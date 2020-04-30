@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
-             xmlns:beans="http://www.springframework.org/schema/beans"
-             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+    xmlns:beans="http://www.springframework.org/schema/beans"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <beans:beans profile="extension-foia">
         <beans:bean id="caseFileStartBusinessProcessBusinessRule"
-                    class="com.armedia.acm.plugins.casefile.service.CaseFileStartBusinessProcessBusinessRule">
+            class="com.armedia.acm.plugins.casefile.service.CaseFileStartBusinessProcessBusinessRule">
             <beans:property name="ruleSpreadsheetFilename" value="drools-start-business-process-rules-foia.xlsx"/>
         </beans:bean>
 
         <beans:bean id="caseFileNextPossibleQueuesBusinessRule"
-                    class="com.armedia.acm.plugins.casefile.service.CaseFileNextPossibleQueuesBusinessRule">
+            class="com.armedia.acm.plugins.casefile.service.CaseFileNextPossibleQueuesBusinessRule">
             <beans:property name="ruleSpreadsheetFilename" value="drools-next-possible-queues-rules-foia.xlsx"/>
         </beans:bean>
 
@@ -42,7 +42,7 @@
         </beans:bean>
 
         <beans:bean id="foiaComponentUpdatedHandler"
-                    class="gov.foia.pipeline.presave.FOIARequestComponentUpdatedHandler">
+            class="gov.foia.pipeline.presave.FOIARequestComponentUpdatedHandler">
             <beans:property name="foiaRequestDao" ref="foiaRequestDao"/>
             <beans:property name="holidayConfigurationService" ref="holidayConfigurationService"/>
             <beans:property name="foiaConfig" ref="foiaConfig"/>
@@ -90,17 +90,17 @@
         </beans:bean>
 
         <beans:bean id="foiaRequestToSolrTransformer" class="gov.foia.transformer.FOIARequestToSolrTransformer"
-                    parent="caseFileToSolrTransformer"/>
+            parent="caseFileToSolrTransformer"/>
 
         <beans:bean id="foiaPersonToSolrTransformer" class="gov.foia.transformer.FOIAPersonToSolrTransformer"
-                    parent="personToSolrTransformer"/>
+            parent="personToSolrTransformer"/>
 
         <beans:bean id="portalFOIAPersonToSolrTransformer" class="gov.foia.transformer.FOIAPortalPersonToSolrTransformer"
-                    parent="foiaPersonToSolrTransformer">
+            parent="foiaPersonToSolrTransformer">
         </beans:bean>
 
         <beans:bean id="foiaFileToSolrTransformer" class="gov.foia.transformer.FOIAFileToSolrTransformer"
-                    parent="ecmFileToSolrTrasnformer"/>
+            parent="ecmFileToSolrTrasnformer"/>
 
         <beans:bean id="foiaRequestDao" class="gov.foia.dao.FOIARequestDao"/>
 
@@ -119,7 +119,7 @@
         <bean id="acmDispositionReasonDao" class="gov.foia.dao.DispositionReasonDao"/>
 
         <beans:bean id="foiaRequesterAssociationToSolrTransformer" class="gov.foia.transformer.FOIARequesterAssociationToSolrTransformer"
-                    parent="personAssociationToSolrTransformer"/>
+            parent="personAssociationToSolrTransformer"/>
 
         <beans:bean id="pdfDocumentGenerator" class="gov.foia.service.PDFDocumentGenerator">
             <beans:property name="ecmFileService" ref="ecmFileService"/>
@@ -258,6 +258,17 @@
             <beans:property name="queuesTimeToCompleteService" ref="queuesTimeToCompleteService"/>
             <beans:property name="foiaConfigurationService" ref="foiaConfigurationService"/>
             <beans:property name="executeSolrQuery" ref="executeSolrQuery"/>
+        </beans:bean>
+
+        <bean id="foiaRequestEventUtility" class="gov.foia.service.FOIARequestEventUtility"/>
+
+        <beans:bean id="foiaRequestEventListener" class="gov.foia.service.FOIARequestEventListener">
+            <beans:property name="acmObjectHistoryService" ref="acmObjectHistoryService"/>
+            <beans:property name="acmObjectHistoryEventPublisher" ref="acmObjectHistoryEventPublisher"/>
+            <beans:property name="foiaRequestEventUtility" ref="foiaRequestEventUtility"/>
+            <beans:property name="objectConverter" ref="objectConverter"/>
+            <beans:property name="lookupDao" ref="lookupDao"/>
+            <beans:property name="translationService" ref="translationService"/>
         </beans:bean>
 
         <beans:bean id="saveFOIARequestService" class="gov.foia.service.SaveFOIARequestService">
