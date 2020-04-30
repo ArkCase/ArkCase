@@ -102,6 +102,7 @@
             <beans:property name="requestDao" ref="foiaRequestDao"/>
             <beans:property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
             <beans:property name="foiaConfig" ref="foiaConfig"/>
+            <beans:property name="holidayConfigurationService" ref="holidayConfigurationService"/>
         </beans:bean>
 
         <beans:bean id="dueDateUpdateJobDescriptor" class="gov.foia.service.DueDateUpdateJobDescriptor" parent="acmJobDescriptor">
