@@ -76,7 +76,7 @@ public class TrackOutgoingEmailService implements ApplicationEventPublisherAware
         eventPublisher = applicationEventPublisher;
     }
 
-    public void trackEmail(MimeMessage message, String emailAddress, String subject, String objectType, String objectId,
+    public void trackEmail(MimeMessage message, String emailAddress, String group, String subject, String objectType, String objectId,
             List<InputStreamDataSource> attachments)
     {
         String tempDir = System.getProperty("java.io.tmpdir");
@@ -86,7 +86,8 @@ public class TrackOutgoingEmailService implements ApplicationEventPublisherAware
         String messageFileName = "-" + currentDate + "-" + subject.replaceAll(":", "_") + ".eml";
         // email address might bemultiple emails concatenated with a comma. Se we cut the email adress not to exceed
         // filename limit of 255 characters
-        messageFileName = emailAddress.substring(0, Math.min(emailAddress.length(), 255 - messageFileName.length())) + messageFileName;
+        String email = group != null ? group : emailAddress;
+        messageFileName = email.substring(0, Math.min(email.length(), 255 - messageFileName.length())) + messageFileName;
         File messageFile = new File(tempDir + File.separator + messageFileName);
 
         String userId = emailReceiverConfig.getEmailUserId();
@@ -130,7 +131,7 @@ public class TrackOutgoingEmailService implements ApplicationEventPublisherAware
                 });
             }
 
-            SmtpEventMailSent event = new SmtpEventMailSent(emailAddress, userId, mailFile.getId(), mailFile.getObjectType(),
+            SmtpEventMailSent event = new SmtpEventMailSent(email, userId, mailFile.getId(), mailFile.getObjectType(),
                     Long.parseLong(objectId),
                     objectType, null);
             event.setSucceeded(true);

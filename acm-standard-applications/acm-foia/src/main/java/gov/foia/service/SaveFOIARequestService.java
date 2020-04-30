@@ -31,6 +31,9 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility;
 import com.armedia.acm.plugins.person.dao.PersonDao;
+import com.armedia.acm.services.config.lookups.model.StandardLookupEntry;
+import com.armedia.acm.services.config.lookups.service.LookupDao;
+import com.armedia.acm.services.labels.service.TranslationService;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -43,6 +46,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import gov.foia.model.FOIAConstants;
+import gov.foia.model.FOIARequest;
+
 /**
  * @author sasko.tanaskoski
  *
@@ -54,13 +60,23 @@ public class SaveFOIARequestService
     private FOIARequestService foiaRequestService;
     private CaseFileEventUtility caseFileEventUtility;
     private PersonDao personDao;
+    private LookupDao lookupDao;
+    private TranslationService translationService;
+    private FOIAExemptionService foiaExemptionService;
 
     public CaseFile saveFOIARequest(CaseFile in, Map<String, List<MultipartFile>> filesMap, HttpSession session, Authentication auth)
             throws AcmCreateObjectFailedException
     {
+        CaseFile oldCaseFile = null;
+        if (in.getId() != null)
+        {
+            oldCaseFile = getFoiaRequestService().getFoiaRequestById(in.getId());
+        }
+
         String ipAddress = (String) session.getAttribute("acm_ip_address");
         CaseFile saved = getFoiaRequestService().saveRequest(in, filesMap, auth, ipAddress);
-        raiseCaseEvent(in.getId() == null, saved, auth, ipAddress);
+        raiseCaseEvent(in.getId() == null, saved, in instanceof FOIARequest ? ((FOIARequest) in).getDispositionValue() : null, auth,
+                ipAddress, oldCaseFile);
         return saved;
     }
 
@@ -68,11 +84,12 @@ public class SaveFOIARequestService
             throws AcmCreateObjectFailedException
     {
         CaseFile saved = getFoiaRequestService().saveRequest(in, filesMap, auth, ipAddress);
-        raiseCaseEvent(in.getId() == null, saved, auth, ipAddress);
+        raiseCaseEvent(in.getId() == null, saved, null, auth, ipAddress, null);
         return saved;
     }
 
-    private void raiseCaseEvent(boolean isNew, CaseFile saved, Authentication auth, String ipAddress)
+    private void raiseCaseEvent(boolean isNew, CaseFile saved, String dispositionValue, Authentication auth, String ipAddress,
+            CaseFile oldCaseFile)
     {
         if (isNew)
         {
@@ -82,6 +99,73 @@ public class SaveFOIARequestService
         else
         {
             caseFileEventUtility.raiseEvent(saved, "updated", new Date(), ipAddress, auth.getName(), auth);
+            if (saved instanceof FOIARequest)
+            {
+                FOIARequest request = (FOIARequest) saved;
+                if (request.getRequestType().equals(FOIAConstants.APPEAL_REQUEST_TYPE))
+                {
+                    if (oldCaseFile != null)
+                    {
+                        FOIARequest oldRequest = (FOIARequest) oldCaseFile;
+                        if (!request.getDisposition().equals(oldRequest.getDisposition()))
+                        {
+                            caseFileEventUtility.raiseCustomEvent(saved, "disposition", "<" + request.getDisposition() + "> Added",
+                                    new Date(),
+                                    ipAddress, auth.getName(), auth);
+                        }
+                        if (!request.getOtherReason().equals(oldRequest.getOtherReason()))
+                        {
+                            caseFileEventUtility.raiseCustomEvent(saved, "other.reason", "<" + request.getOtherReason() + "> Added",
+                                    new Date(),
+                                    ipAddress, auth.getName(), auth);
+                        }
+                    }
+                }
+                else
+                {
+                    if ((request.getQueue().getName().equals(FOIAConstants.FULFILL_QUEUE)
+                            || request.getQueue().getName().equals(FOIAConstants.INTAKE_QUEUE))
+                            && (request.getDisposition() != null && request.getDisposition().equals("grantedInFull"))
+                            && getFoiaExemptionService().hasExemptionOnAnyDocumentsOnRequest(request.getId(), request.getObjectType()))
+                    {
+                        caseFileEventUtility.raiseCustomEvent(saved, "disposition.exemption", "", new Date(), ipAddress, auth.getName(),
+                                auth);
+                    }
+                    if ((request.getQueue().getName().equals(FOIAConstants.INTAKE_QUEUE)
+                            || request.getQueue().getName().equals(FOIAConstants.FULFILL_QUEUE))
+                            && request.getDisposition() != null)
+                    {
+                        if (request.getQueue().getName().equals(FOIAConstants.FULFILL_QUEUE))
+                        {
+                            caseFileEventUtility.raiseCustomEvent(saved, "disposition", "<" + dispositionValue + "> Added", new Date(),
+                                    ipAddress, auth.getName(), auth);
+                        }
+                        else
+                        {
+                            caseFileEventUtility.raiseCustomEvent(saved, "disposition.reason", "<" + dispositionValue + "> Added",
+                                    new Date(), ipAddress, auth.getName(), auth);
+                        }
+                        if (request.getOtherReason() != null)
+                        {
+                            List<StandardLookupEntry> lookupList = (List<StandardLookupEntry>) getLookupDao()
+                                    .getLookupByName("requestOtherReason").getEntries();
+                            StandardLookupEntry otherReasonLookup = lookupList.stream()
+                                    .filter(entry -> request.getOtherReason().equalsIgnoreCase(entry.getKey())).findFirst().orElse(null);
+                            String otherReasonValue = otherReasonLookup != null
+                                    ? getTranslationService().translate(otherReasonLookup.getValue())
+                                    : request.getOtherReason();
+                            caseFileEventUtility.raiseCustomEvent(saved, "other.reason", "<" + otherReasonValue + "> Added", new Date(),
+                                    ipAddress, auth.getName(), auth);
+                        }
+                    }
+                    if (request.getDisposition() == null && !saved.getQueue().getName().equals(FOIAConstants.INTAKE_QUEUE)
+                            && !request.getQueue().getName().equals(FOIAConstants.FULFILL_QUEUE))
+                    {
+                        caseFileEventUtility.raiseCustomEvent(saved, "disposition", "<" + dispositionValue + "> Removed", new Date(),
+                                ipAddress, auth.getName(), auth);
+                    }
+                }
+            }
         }
     }
 
@@ -129,4 +213,33 @@ public class SaveFOIARequestService
         this.personDao = personDao;
     }
 
+    public LookupDao getLookupDao()
+    {
+        return lookupDao;
+    }
+
+    public void setLookupDao(LookupDao lookupDao)
+    {
+        this.lookupDao = lookupDao;
+    }
+
+    public TranslationService getTranslationService()
+    {
+        return translationService;
+    }
+
+    public void setTranslationService(TranslationService translationService)
+    {
+        this.translationService = translationService;
+    }
+
+    public FOIAExemptionService getFoiaExemptionService()
+    {
+        return foiaExemptionService;
+    }
+
+    public void setFoiaExemptionService(FOIAExemptionService foiaExemptionService)
+    {
+        this.foiaExemptionService = foiaExemptionService;
+    }
 }

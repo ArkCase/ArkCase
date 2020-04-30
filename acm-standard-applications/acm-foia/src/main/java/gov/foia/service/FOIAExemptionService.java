@@ -147,6 +147,11 @@ public class FOIAExemptionService
 
         return resultList;
     }
+    
+    public boolean hasExemptionOnAnyDocumentsOnRequest(Long objectId, String objectType)
+    {
+        return foiaExemptionCodeDao.hasExemptionOnAnyDocumentsOnRequest(objectId,objectType);
+    }
 
     public FOIAExemptionCodeDao getFoiaExemptionCodeDao()
     {
