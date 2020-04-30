@@ -65,6 +65,11 @@ public class AcmMailSender
 
     public void sendEmail(String recipient, String subject, String body, String parentType, String parentId) throws Exception
     {
+        sendEmail(recipient, null, subject, body, parentType, parentId);
+    }
+
+    public void sendEmail(String recipient, String group, String subject, String body, String parentType, String parentId) throws Exception
+    {
         JavaMailSender mailSender = getMailSender();
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
@@ -73,7 +78,7 @@ public class AcmMailSender
         helper.setSubject(subject);
         helper.setText(body, true);
         mailSender.send(helper.getMimeMessage());
-        trackOutgoingEmailService.trackEmail(mimeMessage, recipient, subject, parentType, parentId, null);
+        trackOutgoingEmailService.trackEmail(mimeMessage, recipient, group, subject, parentType, parentId, null);
     }
 
     @Deprecated
@@ -104,6 +109,13 @@ public class AcmMailSender
             String parentType, String parentId)
             throws Exception
     {
+        sendMultipartEmail(recipient, null, subject, body, attachments, parentType, parentId);
+    }
+
+    public void sendMultipartEmail(String recipient, String group, String subject, String body, List<InputStreamDataSource> attachments,
+            String parentType, String parentId)
+            throws Exception
+    {
         JavaMailSender mailSender = getMailSender();
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
@@ -122,7 +134,7 @@ public class AcmMailSender
             }
         });
         mailSender.send(helper.getMimeMessage());
-        trackOutgoingEmailService.trackEmail(mimeMessage, recipient, subject, parentType, parentId, attachments);
+        trackOutgoingEmailService.trackEmail(mimeMessage, recipient, group, subject, parentType, parentId, attachments);
     }
 
     public EmailSenderConfig getEmailConfig()
