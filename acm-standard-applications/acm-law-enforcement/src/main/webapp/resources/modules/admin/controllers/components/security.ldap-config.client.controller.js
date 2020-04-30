@@ -43,8 +43,8 @@ angular.module('admin').controller('Admin.LdapConfigController',
         });
 
         $scope.editRow = function(rowEntity) {
-            rowEntity.enableEditingLdapUsers = rowEntity.enableEditingLdapUsers === "true";
-            rowEntity.syncEnabled = rowEntity.syncEnabled === "true";
+            rowEntity.enableEditingLdapUsers = rowEntity.enableEditingLdapUsers === true;
+            rowEntity.syncEnabled = rowEntity.syncEnabled === true;
             showModal(angular.copy(rowEntity), true);
         };
 
