@@ -190,7 +190,7 @@ public class HolidayConfigurationServiceTest extends EasyMockSupport {
 
         LocalDate currentDate = LocalDate.parse("20200525", DateTimeFormatter.BASIC_ISO_DATE);
 
-        LocalDate result = holidayConfigurationService.subtractWorkingDatsFromDate(currentDate, 20);
+        LocalDate result = holidayConfigurationService.subtractWorkingDaysFromDate(currentDate, 20);
 
         LocalDate expectedDueDate = LocalDate.parse("20200427", DateTimeFormatter.BASIC_ISO_DATE);
 

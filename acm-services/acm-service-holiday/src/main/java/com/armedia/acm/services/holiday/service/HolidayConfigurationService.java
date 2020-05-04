@@ -98,7 +98,7 @@ public class HolidayConfigurationService
         return returnDate;
     }
 
-    public LocalDate subtractWorkingDatsFromDate(LocalDate dueDate, Integer workingDays)
+    public LocalDate subtractWorkingDaysFromDate(LocalDate dueDate, Integer workingDays)
     {
         LocalDate returnDate = dueDate;
         for (int i = 0; i < workingDays;)
