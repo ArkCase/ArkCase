@@ -182,4 +182,19 @@ public class HolidayConfigurationServiceTest extends EasyMockSupport {
         assertEquals(dueDate, expectedDueDate);
     }
 
+    @Test
+    public void calculateDateSubtractBy()
+    {
+        String holidayConfigurationFilePath = getClass().getClassLoader().getResource("test/holidayFile.json").getPath();
+        holidayConfigurationService.setHolidayFile(new FileSystemResource(holidayConfigurationFilePath));
+
+        LocalDate currentDate = LocalDate.parse("20200525", DateTimeFormatter.BASIC_ISO_DATE);
+
+        LocalDate result = holidayConfigurationService.subtractWorkingDaysFromDate(currentDate, 20);
+
+        LocalDate expectedDueDate = LocalDate.parse("20200427", DateTimeFormatter.BASIC_ISO_DATE);
+
+        assertEquals(expectedDueDate, result);
+    }
+
 }
