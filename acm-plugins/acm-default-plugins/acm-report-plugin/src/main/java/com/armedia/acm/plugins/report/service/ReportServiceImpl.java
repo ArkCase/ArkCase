@@ -404,7 +404,7 @@ public class ReportServiceImpl implements ReportService
 
         Map<String, Object> runtimeMapWithRootKey = new HashMap<>();
         runtimeMapWithRootKey.put(ReportsToRolesConfig.REPORTS_TO_ROLES_PROP_KEY, reportsRolesConfig);
-        runtimeMapWithRootKey.put(PentahoReportsConfig.REPORT_CONFIG_PROP_KEY, reportsConfig);
+        runtimeMapWithRootKey.put(MergeFlags.MERGE.getSymbol() + PentahoReportsConfig.REPORT_CONFIG_PROP_KEY, reportsConfig);
 
         configurationPropertyService.updateProperties(runtimeMapWithRootKey);
 
