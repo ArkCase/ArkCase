@@ -57,6 +57,12 @@ angular.module('cases').controller('Cases.ActionsFooterController',
                 });
             }
 
+            function displayLimitedReleaseModal() {
+                return $scope.defaultNextQueue === "Release"
+                    && !$scope.objectInfo.deniedFlag
+                    && $scope.limitedDeliveryToSpecificPageCountEnabled;
+            }
+
             $scope.onClickNextQueue = function (name, isRequestFormModified) {
                 $scope.loading = true;
                 $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
@@ -77,7 +83,7 @@ angular.module('cases').controller('Cases.ActionsFooterController',
                     } else {
                         deferred.resolve();
                     }
-                } else if (name === 'Complete' && $scope.defaultNextQueue === "Release" && $scope.limitedDeliveryToSpecificPageCountEnabled) {
+                } else if (name === 'Complete' && displayLimitedReleaseModal()) {
                     openLimitedPageReleaseModal(deferred);
                 } else if (name === 'Complete' && $scope.objectInfo.queue.name === 'Fulfill' && $scope.objectInfo.requestType === 'New Request') {
                     openDispositionCategoryModal(deferred);
