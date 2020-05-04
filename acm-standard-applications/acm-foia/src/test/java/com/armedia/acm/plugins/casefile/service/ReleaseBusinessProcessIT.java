@@ -104,7 +104,7 @@ public class ReleaseBusinessProcessIT extends EasyMockSupport
     public void setUp() throws Exception
     {
         // deploy
-        repo.createDeployment().addClasspathResource("activiti/foia-extension-release-process_v14.bpmn20.xml").deploy();
+        repo.createDeployment().addClasspathResource("activiti/foia-extension-release-process_v15.bpmn20.xml").deploy();
 
         mockedApplicationEventPublisher = createMock(ApplicationEventPublisher.class);
         responseFolderCompressorService.setApplicationEventPublisher(mockedApplicationEventPublisher);
