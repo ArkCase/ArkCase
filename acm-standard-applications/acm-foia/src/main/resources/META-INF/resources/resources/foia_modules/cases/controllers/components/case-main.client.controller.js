@@ -2,9 +2,9 @@
 
 angular.module('cases').controller(
     'Cases.MainController',
-    ['$scope', '$state', '$stateParams', '$translate', '$rootScope', '$modal', 'Case.InfoService', 'Helper.ObjectBrowserService', 'ConfigService', 'UtilService', 'Util.DateService', 'Object.LookupService', 'LookupService', 'DueDate.Service', 'Admin.HolidayService', 'Admin.FoiaConfigService', 'Admin.ObjectTitleConfigurationService',
-        function ($scope, $state, $stateParams, $translate, $rootScope, $modal, CaseInfoService, HelperObjectBrowserService, ConfigService, Util, UtilDateService, ObjectLookupService, LookupService, DueDateService, AdminHolidayService, AdminFoiaConfigService, AdminObjectTitleConfigurationService) {
-
+    ['$scope', '$state', '$stateParams', '$translate', '$rootScope', '$modal', 'Case.InfoService', 'Helper.ObjectBrowserService', 'ConfigService', 'UtilService', 'Util.DateService', 'Object.LookupService', 'LookupService', 'DueDate.Service', 'Admin.HolidayService', 'Admin.FoiaConfigService', 'Admin.ObjectTitleConfigurationService', 'EcmService',
+        function ($scope, $state, $stateParams, $translate, $rootScope, $modal, CaseInfoService, HelperObjectBrowserService, ConfigService, Util, UtilDateService, ObjectLookupService, LookupService, DueDateService, AdminHolidayService, AdminFoiaConfigService, AdminObjectTitleConfigurationService, EcmService) {
+            
             new HelperObjectBrowserService.Component({
                 scope: $scope,
                 stateParams: $stateParams,
@@ -91,12 +91,28 @@ angular.module('cases').controller(
             function populateDispositionCategories() {
                 ObjectLookupService.getLookupByLookupName('requestDispositionType').then(function (requestDispositionType) {
                     $scope.dispositionCategories = requestDispositionType;
+                    if ($scope.objectInfo.disposition) {
+                        var found = _.find(requestDispositionType, {
+                            key: $scope.objectInfo.disposition
+                        });
+                        if (!Util.isEmpty(found)) {
+                            $scope.objectInfo.disposition = $translate.instant(found.value);
+                        }
+                    }
                 });
             }
 
             function populateDeniedDispositionCategories() {
                 ObjectLookupService.getLookupByLookupName('requestDispositionSubType').then(function (requestDispositionSubType) {
                     $scope.dispositionDeniedCategories = requestDispositionSubType;
+                    if ($scope.objectInfo.disposition) {
+                        var found = _.find(requestDispositionSubType, {
+                            key: $scope.objectInfo.disposition
+                        });
+                        if (!Util.isEmpty(found)) {
+                            $scope.objectInfo.disposition = $translate.instant(found.value);
+                        }
+                    }
                 });
             }
 
@@ -107,10 +123,8 @@ angular.module('cases').controller(
                         var found = _.find(requestOtherReasons, {
                             key: $scope.objectInfo.otherReason
                         });
-                        if (found) {
-                            $scope.isCustomReason = false;
-                        } else {
-                            $scope.isCustomReason = true;
+                        if (!Util.isEmpty(found)) {
+                            $scope.objectInfo.otherReason = $translate.instant(found.value);
                         }
                     }
                 });
@@ -374,8 +388,22 @@ angular.module('cases').controller(
             };
 
             $scope.$bus.subscribe('ACTION_SAVE_CASE', function (data) {
+                if(data != null && typeof data.deleteDenialLetter !== 'undefined') {
+                    removeDenialLetter();
+                }
                 saveCase(data);
             });
+            
+            function removeDenialLetter() {
+                EcmService.findFileByContainerAndFileType({
+                    containerId: $scope.objectInfo.container.id,
+                    fileType: 'Denial Letter'
+                }).$promise.then(function (fileInfo) { 
+                    EcmService.deleteFile({
+                        fileId: fileInfo.fileId
+                    })
+                });
+            } 
 
             // Updates the ArkCase database when the user changes a case attribute
             // in a case top bar menu item and clicks the save check button
