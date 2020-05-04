@@ -61,7 +61,8 @@ public class SendExecutor implements Executor
             for (NotificationSenderFactory senderFactory : senderFactoryList.values())
             {
                 // Send notification
-                if(notification.getState() == null || !notification.getState().equals(NotificationConstants.STATE_SENT)) {
+                if (notification.getState() == null || !notification.getState().equals(NotificationConstants.STATE_SENT))
+                {
                     notification = senderFactory.getNotificationSender().send(notification, templateModelProvider.getModel(notification));
                 }
             }
@@ -80,11 +81,13 @@ public class SendExecutor implements Executor
         this.springContextHolder = springContextHolder;
     }
 
-    public TemplateModelProvider getTemplateModelProvider() {
+    public TemplateModelProvider getTemplateModelProvider()
+    {
         return templateModelProvider;
     }
 
-    public void setTemplateModelProvider(TemplateModelProvider templateModelProvider) {
+    public void setTemplateModelProvider(TemplateModelProvider templateModelProvider)
+    {
         this.templateModelProvider = templateModelProvider;
     }
 }
