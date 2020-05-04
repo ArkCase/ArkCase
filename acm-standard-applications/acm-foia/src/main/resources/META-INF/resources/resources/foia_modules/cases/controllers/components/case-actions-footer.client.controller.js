@@ -57,6 +57,12 @@ angular.module('cases').controller('Cases.ActionsFooterController',
                 });
             }
 
+            function displayLimitedReleaseModal() {
+                return $scope.defaultNextQueue === "Release"
+                    && !$scope.objectInfo.deniedFlag
+                    && $scope.limitedDeliveryToSpecificPageCountEnabled;
+            }
+
             $scope.onClickNextQueue = function (name, isRequestFormModified) {
                 $scope.loading = true;
                 $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
@@ -77,7 +83,7 @@ angular.module('cases').controller('Cases.ActionsFooterController',
                     } else {
                         deferred.resolve();
                     }
-                } else if (name === 'Complete' && $scope.defaultNextQueue === "Release" && $scope.limitedDeliveryToSpecificPageCountEnabled) {
+                } else if (name === 'Complete' && displayLimitedReleaseModal()) {
                     openLimitedPageReleaseModal(deferred);
                 } else if (name === 'Complete' && $scope.objectInfo.queue.name === 'Fulfill' && $scope.objectInfo.requestType === 'New Request') {
                     openDispositionCategoryModal(deferred);
@@ -124,7 +130,8 @@ angular.module('cases').controller('Cases.ActionsFooterController',
                     requestDisposition: $scope.requestDispositionCategory,
                     dispositionValue: $scope.dispositionValue,
                     requestOtherReason: $scope.requestOtherReason,
-                    dispositionReasons: $scope.dispositionReasons
+                    dispositionReasons: $scope.dispositionReasons,
+                    deleteDenialLetter: $scope.deleteDenialLetter
                 });
                 var subscription = $scope.$bus.subscribe('CASE_SAVED', function (objectInfo) {
                     //after case is saved we are going to get new buttons
@@ -203,7 +210,12 @@ angular.module('cases').controller('Cases.ActionsFooterController',
                         // Note saved
                         $scope.requestDispositionCategory = null;
                         if ($scope.objectInfo.requestType !== 'Appeal') {
+                            if($scope.objectInfo.deniedFlag && $scope.objectInfo.queue.name === 'Approve') {
+                                $scope.objectInfo.status = 'Perfected';
+                                $scope.deleteDenialLetter = true;
+                            }
                             $scope.requestOtherReason = null;
+                            $scope.objectInfo.deniedFlag = false;
                         }
                         deferred.resolve();
                     });
