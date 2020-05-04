@@ -105,6 +105,22 @@ public class FoiaConfig
     @Value("${redirectFunctionalityCalculationEnabled}")
     private Boolean redirectFunctionalityCalculationEnabled;
 
+    @JsonProperty("feeWaivedRequestsEnabled")
+    @Value("${feeWaivedRequestsEnabled}")
+    private Boolean feeWaivedRequestsEnabled;
+
+    @JsonProperty("feeWaivedAppealsEnabled")
+    @Value("${feeWaivedAppealsEnabled}")
+    private Boolean feeWaivedAppealsEnabled;
+
+    @JsonProperty("litigationRequestsEnabled")
+    @Value("${litigationRequestsEnabled}")
+    private Boolean litigationRequestsEnabled;
+
+    @JsonProperty("litigationAppealsEnabled")
+    @Value("${litigationAppealsEnabled}")
+    private Boolean litigationAppealsEnabled;
+
     public Integer getMaxDaysInHoldQueue()
     {
         return maxDaysInHoldQueue;
@@ -290,5 +306,45 @@ public class FoiaConfig
     public void setRedirectFunctionalityCalculationEnabled(Boolean redirectFunctionalityCalculationEnabled)
     {
         this.redirectFunctionalityCalculationEnabled = redirectFunctionalityCalculationEnabled;
+    }
+
+    public Boolean getFeeWaivedRequestsEnabled()
+    {
+        return feeWaivedRequestsEnabled;
+    }
+
+    public void setFeeWaivedRequestsEnabled(Boolean feeWaivedRequestsEnabled)
+    {
+        this.feeWaivedRequestsEnabled = feeWaivedRequestsEnabled;
+    }
+
+    public Boolean getFeeWaivedAppealsEnabled()
+    {
+        return feeWaivedAppealsEnabled;
+    }
+
+    public void setFeeWaivedAppealsEnabled(Boolean feeWaivedAppealsEnabled)
+    {
+        this.feeWaivedAppealsEnabled = feeWaivedAppealsEnabled;
+    }
+
+    public Boolean getLitigationRequestsEnabled()
+    {
+        return litigationRequestsEnabled;
+    }
+
+    public void setLitigationRequestsEnabled(Boolean litigationRequestsEnabled)
+    {
+        this.litigationRequestsEnabled = litigationRequestsEnabled;
+    }
+
+    public Boolean getLitigationAppealsEnabled()
+    {
+        return litigationAppealsEnabled;
+    }
+
+    public void setLitigationAppealsEnabled(Boolean litigationAppealsEnabled)
+    {
+        this.litigationAppealsEnabled = litigationAppealsEnabled;
     }
 }
