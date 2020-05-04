@@ -71,6 +71,7 @@ import gov.foia.broker.FOIARequestFileBrokerClient;
 import gov.foia.dao.FOIARequestDao;
 import gov.foia.model.FOIAConstants;
 import gov.foia.model.FOIARequest;
+import gov.foia.model.FoiaConfig;
 
 /**
  * @author sasko.tanaskoski
@@ -92,6 +93,7 @@ public class FOIARequestService
     private QueuesTimeToCompleteService queuesTimeToCompleteService;
     private FoiaConfigurationService foiaConfigurationService;
     private ExecuteSolrQuery executeSolrQuery;
+    private FoiaConfig foiaConfig;
 
     @Transactional
     public CaseFile saveRequest(CaseFile in, Map<String, List<MultipartFile>> filesMap, Authentication auth, String ipAddress)
@@ -139,6 +141,20 @@ public class FOIARequestService
                     // calculate due date from time to complete configuration
                     // override if any due date is set from UI
                     in.setDueDate(getQueuesTimeToCompleteService().addWorkingDaysToDate(new Date(), foiaRequest.getRequestType()));
+                }
+
+                if (foiaRequest.getPaidFlag() == null || foiaRequest.getLitigationFlag() == null)
+                {
+                    if (foiaRequest.getRequestType().equals(FOIAConstants.APPEAL_REQUEST_TYPE))
+                    {
+                        foiaRequest.setPaidFlag(foiaConfig.getFeeWaivedAppealsEnabled());
+                        foiaRequest.setLitigationFlag(foiaConfig.getLitigationAppealsEnabled());
+                    }
+                    else
+                    {
+                        foiaRequest.setPaidFlag(foiaConfig.getFeeWaivedRequestsEnabled());
+                        foiaRequest.setLitigationFlag(foiaConfig.getLitigationRequestsEnabled());
+                    }
                 }
 
                 if (in.getId() == null && foiaRequest.getRequestType().equals(FOIAConstants.APPEAL_REQUEST_TYPE)
@@ -517,4 +533,8 @@ public class FOIARequestService
         this.executeSolrQuery = executeSolrQuery;
     }
 
+    public void setFoiaConfig(FoiaConfig foiaConfig)
+    {
+        this.foiaConfig = foiaConfig;
+    }
 }
