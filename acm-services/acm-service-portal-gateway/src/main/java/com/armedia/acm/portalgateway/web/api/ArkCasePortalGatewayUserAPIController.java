@@ -81,6 +81,19 @@ public class ArkCasePortalGatewayUserAPIController
     }
 
     @CheckPortalUserAssignement
+    @RequestMapping(value = "/regenerateRegistrationRequest", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE,
+            MediaType.TEXT_PLAIN_VALUE })
+    @ResponseBody
+    public UserRegistrationResponse regenerateRegistrationRequest(Authentication auth,
+            @PortalId @PathVariable(value = "portalId") String portalId,
+            @RequestBody UserRegistrationRequest registrationRequest) throws PortalUserServiceException
+    {
+        log.debug("Regenerating registration request for user with [{}] email address for portal with [{}] ID.",
+                registrationRequest.getEmailAddress(), portalId);
+        return portalUserService.regenerateRegistrationRequest(portalId, registrationRequest);
+    }
+
+    @CheckPortalUserAssignement
     @RequestMapping(value = "/registrations", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE,
             MediaType.TEXT_PLAIN_VALUE })
     @ResponseBody
