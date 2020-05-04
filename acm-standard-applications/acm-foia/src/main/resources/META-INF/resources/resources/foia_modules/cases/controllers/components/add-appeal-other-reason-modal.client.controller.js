@@ -5,7 +5,6 @@ angular.module('cases').controller('Cases.AddAppealOtherReasonModalController',
         function ($scope, $modal, $modalInstance, params, $q, Util, ObjectLookupService) {
 
             $scope.isCustomDisabled = true;
-            $scope.isOtherRequired = true;
 
             $scope.objectInfo = {};
             $scope.objectInfo.dispositionReasons = params.dispositionReasons;
@@ -30,9 +29,33 @@ angular.module('cases').controller('Cases.AddAppealOtherReasonModalController',
                 } else {
                     $scope.objectInfo.otherReason = $scope.otherReasonsLookup[0].key;
                 }
+
+                if (Util.isEmpty($scope.objectInfo.otherReason)) {
+                    var otherExistsInReason = _.some($scope.objectInfo.dispositionReasons, function (value) {
+                        return value.reason === 'other';
+                    });
+
+                    if (otherExistsInReason) {
+                        $scope.isOtherRequired = true;
+                    } else {
+                        $scope.isOtherRequired = false;
+                    }
+                }
             });
 
             $scope.changeOtherReason = function () {
+                if (Util.isEmpty($scope.objectInfo.otherReason)) {
+                    var otherExistsInReason = _.some($scope.objectInfo.dispositionReasons, function (value) {
+                        return value.reason === 'other';
+                    });
+
+                    if (otherExistsInReason) {
+                        $scope.isOtherRequired = true;
+                    } else {
+                        $scope.isOtherRequired = false;
+                    }
+                }
+
                 if ($scope.objectInfo.otherReason === 'custom') {
                     $scope.isCustomDisabled = false;
                 } else {
