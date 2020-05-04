@@ -171,6 +171,7 @@
                     <beans:ref bean="foiaExemptionCodeMigrationExecutor"/>
                     <beans:ref bean="solrReindexFOIAPortalPersonExecutor"/>
                     <beans:ref bean="foiaPortalRegistrationCleanupExecutor"/>
+                    <beans:ref bean="solrReindexAcmUserExecutor"/>
                 </beans:list>
             </beans:property>
 
@@ -189,6 +190,10 @@
             <beans:property name="userDao" ref="userJpaDao"/>
             <beans:property name="registrationDao" ref="userRegistrationRequestDao"/>
             <beans:property name="portalInfoDAO" ref="portalInfoDAO"/>
+        </beans:bean>
+
+        <beans:bean id="solrReindexAcmUserExecutor" class="gov.foia.service.dataupdate.SolrReindexAcmUserExecutor">
+            <beans:property name="solrReindexService" ref="solrReindexService"/>
         </beans:bean>
 
         <beans:bean id="queuesTimeToCompleteService" class="gov.foia.service.QueuesTimeToCompleteService">
