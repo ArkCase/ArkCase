@@ -102,6 +102,10 @@
         <beans:bean id="foiaFileToSolrTransformer" class="gov.foia.transformer.FOIAFileToSolrTransformer"
             parent="ecmFileToSolrTrasnformer"/>
 
+        <beans:bean id="foiaUserToSolrTransformer" class="gov.foia.transformer.FOIAUserToSolrTransformer" parent="userToSolrTransformer">
+            <beans:property name="acmContextHolder" ref="acmContextHolder"/>
+        </beans:bean>
+
         <beans:bean id="foiaRequestDao" class="gov.foia.dao.FOIARequestDao"/>
 
         <beans:bean id="foiaFileDao" class="gov.foia.dao.FOIAFileDao"/>
