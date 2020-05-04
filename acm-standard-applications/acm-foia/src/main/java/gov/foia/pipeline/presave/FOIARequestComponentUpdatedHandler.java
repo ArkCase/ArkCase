@@ -107,7 +107,7 @@ public class FOIARequestComponentUpdatedHandler
                     }
 
                     entity.setPerfectedDate(holidayConfigurationService
-                            .subtractWorkingDatsFromDate(entity.getDueDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), TTC)
+                            .subtractWorkingDaysFromDate(entity.getDueDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), TTC)
                             .atTime(LocalTime.now()));
 
                     entity.setTtcOnLastRedirection(elapsedTTC);
