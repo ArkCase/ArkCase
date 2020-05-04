@@ -85,7 +85,7 @@ public class FulfillBusinessProcessIT
     {
         // deploy
         repo.createDeployment()
-                .addClasspathResource("activiti/foia-extension-fulfill-process_v5.bpmn20.xml")
+                .addClasspathResource("activiti/foia-extension-fulfill-process_v6.bpmn20.xml")
                 .deploy();
     }
 
