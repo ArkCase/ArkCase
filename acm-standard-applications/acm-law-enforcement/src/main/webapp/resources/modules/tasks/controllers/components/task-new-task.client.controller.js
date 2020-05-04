@@ -164,9 +164,9 @@ angular.module('tasks').controller(
                         var taskData = angular.copy($scope.config.data);
                         taskData.dueDate = $scope.config.data.dueDate;
                         taskData.taskStartDate = $scope.config.data.taskStartDate;
-                        if($scope.modalParams.parentId !== undefined && $scope.modalParams.parentType !== undefined){
-                            taskData.parentObjectId = $scope.modalParams.parentId;
-                            taskData.parentObjectType = $scope.modalParams.parentType;
+                        if ($scope.config.data.attachedToObjectId !== undefined && $scope.config.data.attachedToObjectType !== undefined) {
+                            taskData.parentObjectId = $scope.config.data.attachedToObjectId;
+                            taskData.parentObjectType = $scope.config.data.attachedToObjectType;
                         }
                         if ($scope.documentsToReview && $scope.selectedBusinessProcessType == 'acmDocumentTaskWorkflow' && $scope.filesToUpload.length < 1) {
                             taskData.documentsToReview = processDocumentsUnderReview();
