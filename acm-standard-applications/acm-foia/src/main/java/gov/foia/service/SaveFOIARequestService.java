@@ -45,6 +45,7 @@ import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import gov.foia.model.FOIAConstants;
 import gov.foia.model.FOIARequest;
@@ -107,17 +108,68 @@ public class SaveFOIARequestService
                     if (oldCaseFile != null)
                     {
                         FOIARequest oldRequest = (FOIARequest) oldCaseFile;
-                        if (!request.getDisposition().equals(oldRequest.getDisposition()))
+                        if (!Objects.equals(request.getDisposition(), oldRequest.getDisposition()))
                         {
-                            caseFileEventUtility.raiseCustomEvent(saved, "disposition", "<" + request.getDisposition() + "> Added",
-                                    new Date(),
-                                    ipAddress, auth.getName(), auth);
+                            List<StandardLookupEntry> lookupList = (List<StandardLookupEntry>) getLookupDao()
+                                    .getLookupByName("appealDispositionType").getEntries();
+
+                            if (oldRequest.getDisposition() != null && request.getDisposition() == null)
+                            {
+                                StandardLookupEntry dispositionLookup = lookupList.stream()
+                                        .filter(entry -> oldRequest.getDisposition().equalsIgnoreCase(entry.getKey())).findFirst()
+                                        .orElse(null);
+                                String dispValue = dispositionLookup != null
+                                        ? getTranslationService().translate(dispositionLookup.getValue())
+                                        : oldRequest.getDisposition();
+
+                                caseFileEventUtility.raiseCustomEvent(saved, "disposition", dispValue + " Removed",
+                                        new Date(),
+                                        ipAddress, auth.getName(), auth);
+                            }
+                            else
+                            {
+                                StandardLookupEntry dispositionLookup = lookupList.stream()
+                                        .filter(entry -> request.getDisposition().equalsIgnoreCase(entry.getKey())).findFirst()
+                                        .orElse(null);
+                                String dispValue = dispositionLookup != null
+                                        ? getTranslationService().translate(dispositionLookup.getValue())
+                                        : request.getDisposition();
+
+                                caseFileEventUtility.raiseCustomEvent(saved, "disposition", dispValue + " Added",
+                                        new Date(),
+                                        ipAddress, auth.getName(), auth);
+                            }
                         }
-                        if (!request.getOtherReason().equals(oldRequest.getOtherReason()))
+
+                        if (!Objects.equals(request.getOtherReason(), oldRequest.getOtherReason()))
                         {
-                            caseFileEventUtility.raiseCustomEvent(saved, "other.reason", "<" + request.getOtherReason() + "> Added",
-                                    new Date(),
-                                    ipAddress, auth.getName(), auth);
+                            List<StandardLookupEntry> lookupList = (List<StandardLookupEntry>) getLookupDao()
+                                    .getLookupByName("appealOtherReasons").getEntries();
+
+                            if (oldRequest.getOtherReason() != null && request.getOtherReason() == null)
+                            {
+                                StandardLookupEntry otherReasonLookup = lookupList.stream()
+                                        .filter(entry -> oldRequest.getOtherReason().equalsIgnoreCase(entry.getKey())).findFirst()
+                                        .orElse(null);
+                                String otherReasonValue = otherReasonLookup != null
+                                        ? getTranslationService().translate(otherReasonLookup.getValue())
+                                        : oldRequest.getOtherReason();
+                                caseFileEventUtility.raiseCustomEvent(saved, "other.reason", otherReasonValue + " Removed",
+                                        new Date(),
+                                        ipAddress, auth.getName(), auth);
+                            }
+                            else
+                            {
+                                StandardLookupEntry otherReasonLookup = lookupList.stream()
+                                        .filter(entry -> request.getOtherReason().equalsIgnoreCase(entry.getKey())).findFirst()
+                                        .orElse(null);
+                                String otherReasonValue = otherReasonLookup != null
+                                        ? getTranslationService().translate(otherReasonLookup.getValue())
+                                        : request.getOtherReason();
+                                caseFileEventUtility.raiseCustomEvent(saved, "other.reason", otherReasonValue + " Added",
+                                        new Date(),
+                                        ipAddress, auth.getName(), auth);
+                            }
                         }
                     }
                 }
