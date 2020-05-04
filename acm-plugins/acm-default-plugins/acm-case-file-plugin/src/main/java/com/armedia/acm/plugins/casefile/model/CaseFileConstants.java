@@ -63,7 +63,8 @@ public interface CaseFileConstants
     String FILE_ID = "FILE_ID";
     String FILE_VERSION = "FILE_VERSION";
 
-    String CASEFILE_STYLESHEET = System.getProperty("user.home") + "/.arkcase/acm/pdf-stylesheets/casefile-document.xsl";
+    // TODO '/acm-config-server-repo' is for temporal compatibility with current configuration.
+    String CASEFILE_STYLESHEET = System.getProperty("user.home") + "/.arkcase/acm/acm-config-server-repo/pdf-stylesheets/casefile-document.xsl";
     String CASEFILE_DOCUMENT = "CASE_FILE";
     String CASEFILE_FILENAMEFORMAT = "Casefile.pdf";
 
