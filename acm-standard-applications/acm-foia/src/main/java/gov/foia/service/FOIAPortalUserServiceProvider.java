@@ -93,7 +93,8 @@ import gov.foia.model.UserResetRequestRecord;
 public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
 {
 
-    public static final int REGISTRATION_EXPIRATION = 3 * 24 * 60 * 60 * 1000; // 3 days in milliseconds
+    public static final long DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000; // 1 day in milliseconds
+    public static final long REGISTRATION_EXPIRATION = 90L * DAY_IN_MILLISECONDS; // 90 days in milliseconds
 
     private Logger log = LogManager.getLogger(getClass());
 
@@ -136,7 +137,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
      * com.armedia.acm.portalgateway.model.UserRegistrationRequest)
      */
     @Override
-    public UserRegistrationResponse requestRegistration(String portalId, UserRegistrationRequest registrationRequest)
+    public UserRegistrationResponse regenerateRegistrationRequest(String portalId, UserRegistrationRequest registrationRequest)
             throws PortalUserServiceException
     {
         if (getPortalAcmUser(registrationRequest.getEmailAddress()) != null)
@@ -146,43 +147,68 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         Optional<UserRegistrationRequestRecord> registrationRecord = registrationDao.findByEmail(registrationRequest.getEmailAddress(),
                 portalId);
 
-        if (registrationRecord.isPresent()
-                && registrationRecord.get().getRegistrationTime() + REGISTRATION_EXPIRATION > System.currentTimeMillis())
+        if (registrationRecord.isPresent())
         {
-            return UserRegistrationResponse.pending(registrationRecord.get().getEmailAddress());
+            regenerateRegistration(portalId, registrationRecord.get());
+            return UserRegistrationResponse.requestAccepted();
         }
         else
         {
-            Optional<PortalFOIAPerson> registeredPerson = portalPersonDao.findByEmail(registrationRequest.getEmailAddress());
-
-            if (!registeredPerson.isPresent() || !registeredPerson.get().getPortalRoles().containsKey(portalId))
-            {
-                String registrationKey = UUID.randomUUID().toString();
-                createRegistrationRecord(registrationKey, registrationRequest.getEmailAddress(), System.currentTimeMillis(), portalId);
-                String registrationLink = new String(Base64Utils.decodeFromString(registrationRequest.getRegistrationUrl()),
-                        Charset.forName("UTF-8")) + "/" + registrationKey + "/" + registrationRequest.getEmailAddress();
-
-                Notification notification = new Notification();
-                notification.setTemplateModelName("portalRequestRegistrationLink");
-                notification.setTitle(translationService.translate(NotificationConstants.PORTAL_REGISTRATION));
-                notification.setCreator(registrationRequest.getEmailAddress());
-                notification.setNote(registrationLink);
-                notification.setEmailAddresses(registrationRequest.getEmailAddress());
-                notification.setUser(SecurityContextHolder.getContext().getAuthentication().getName());
-
-                getNotificationDao().save(notification);
-
-                return UserRegistrationResponse.requestAccepted();
-            }
-            else if (registeredPerson.get().getPortalRoles().get(portalId).equals(PortalUser.REJECTED_USER))
-            {
-                return UserRegistrationResponse.rejected();
-            }
-            else
-            {
-                return UserRegistrationResponse.exists();
-            }
+            return UserRegistrationResponse.requestRequired();
         }
+    }
+
+    @Override
+    public UserRegistrationResponse requestRegistration(String portalId, UserRegistrationRequest registrationRequest)
+            throws PortalUserServiceException
+    {
+        if (getPortalAcmUser(registrationRequest.getEmailAddress()) != null)
+        {
+            return UserRegistrationResponse.exists();
+        }
+        Optional<UserRegistrationRequestRecord> registrationRecord = registrationDao.findByEmail(registrationRequest.getEmailAddress(),
+                portalId);
+        Optional<PortalFOIAPerson> registeredPerson = portalPersonDao.findByEmail(registrationRequest.getEmailAddress());
+
+        if (isUserRejectedForPortal(portalId, registeredPerson))
+        {
+            return UserRegistrationResponse.rejected();
+        }
+        else if (registeredPerson.isPresent() && registeredPerson.get().getPortalRoles().containsKey(portalId))
+        {
+            return UserRegistrationResponse.exists();
+        }
+        else if (registrationRecord.isPresent() && isRegistrationRecordActive(registrationRecord.get().getRegistrationTime()))
+        {
+            return UserRegistrationResponse.pending(registrationRecord.get().getEmailAddress());
+        }
+        else if (registrationRecord.isPresent() && !isRegistrationRecordActive(registrationRecord.get().getRegistrationTime()))
+        {
+            return UserRegistrationResponse.requestExpired();
+        }
+        else
+        {
+            createRegistrationRecordAndSendEmail(portalId, registrationRequest);
+            return UserRegistrationResponse.requestAccepted();
+        }
+    }
+
+    private void createRegistrationRecordAndSendEmail(String portalId, UserRegistrationRequest registrationRequest)
+    {
+        String registrationKey = UUID.randomUUID().toString();
+        createRegistrationRecord(registrationKey, registrationRequest.getEmailAddress(), System.currentTimeMillis(), portalId);
+        String registrationLink = new String(Base64Utils.decodeFromString(registrationRequest.getRegistrationUrl()),
+                Charset.forName("UTF-8")) + "/" + registrationKey + "/" + registrationRequest.getEmailAddress();
+
+        Notification notification = new Notification();
+        notification.setTemplateModelName("portalRequestRegistrationLink");
+        notification.setTitle(translationService.translate(NotificationConstants.PORTAL_REGISTRATION));
+        notification.setCreator(registrationRequest.getEmailAddress());
+        notification.setNote(registrationLink);
+        notification.setEmailAddresses(registrationRequest.getEmailAddress());
+        notification.setUser(SecurityContextHolder.getContext().getAuthentication().getName());
+
+        getNotificationDao().save(notification);
     }
 
     private void createRegistrationRecord(String registrationKey, String email, Long currentTime, String portalId)
@@ -210,18 +236,34 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         {
             return UserRegistrationResponse.requestRequired();
         }
+        else if (isRegistrationRecordActive(registrationRecord.get().getRegistrationTime()))
+        {
+            return UserRegistrationResponse.pending(registrationRecord.get().getEmailAddress());
+        }
         else
         {
-            String emailAddress = registrationRecord.get().getEmailAddress();
-            if (registrationRecord.get().getRegistrationTime() + REGISTRATION_EXPIRATION > System.currentTimeMillis())
-            {
-                return UserRegistrationResponse.pending(emailAddress);
-            }
-            else
-            {
-                return UserRegistrationResponse.requestExpired();
-            }
+            regenerateRegistration(portalId, registrationRecord.get());
+            return UserRegistrationResponse.requestExpired();
         }
+    }
+
+    private void regenerateRegistration(String portalId, UserRegistrationRequestRecord registrationRecord)
+    {
+        PortalInfo portal = portalInfoDAO.findByPortalId(portalId);
+        String portalRegistrationUrl = Base64Utils
+                .encodeToString((portal.getPortalUrl() + "/portal/login/register").getBytes());
+
+        UserRegistrationRequest newRegistrationRequest = new UserRegistrationRequest();
+        newRegistrationRequest.setEmailAddress(registrationRecord.getEmailAddress());
+        newRegistrationRequest.setRegistrationUrl(portalRegistrationUrl);
+
+        registrationDao.delete(registrationRecord);
+        createRegistrationRecordAndSendEmail(portalId, newRegistrationRequest);
+    }
+
+    private boolean isRegistrationRecordActive(long registrationTime)
+    {
+        return registrationTime + REGISTRATION_EXPIRATION > System.currentTimeMillis();
     }
 
     /*
@@ -535,7 +577,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         else
         {
             Optional<UserResetRequestRecord> resetRecord = resetDao.findByEmail(resetRequest.getEmailAddress());
-            if (resetRecord.isPresent() && resetRecord.get().getRequestTime() + REGISTRATION_EXPIRATION > System.currentTimeMillis())
+            if (resetRecord.isPresent() && isRegistrationRecordActive(resetRecord.get().getRequestTime()))
             {
                 return UserResetResponse.pending();
             }
@@ -583,7 +625,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         }
         else
         {
-            if (resetSearch.get().getRequestTime() + REGISTRATION_EXPIRATION > System.currentTimeMillis())
+            if (isRegistrationRecordActive(resetSearch.get().getRequestTime()))
             {
                 return UserResetResponse.pending();
             }
@@ -615,7 +657,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
             {
                 return UserResetResponse.invalid();
             }
-            else if (reset.getRequestTime() + REGISTRATION_EXPIRATION > System.currentTimeMillis())
+            else if (isRegistrationRecordActive(reset.getRequestTime()))
             {
                 AcmUser acmPortalUser = getPortalAcmUser(reset.getEmailAddress());
                 if (acmPortalUser == null)
