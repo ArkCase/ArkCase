@@ -42,6 +42,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.Date;
 
 import gov.foia.dao.FOIARequestDao;
@@ -147,10 +149,11 @@ public class FOIARequestComponentUpdatedHandler
 
         if (!originalRequest.getRedirectedDate().equals(entity.getRedirectedDate()))
         {
-            SimpleDateFormat dateFormatter = new SimpleDateFormat("MMMM-dd-yyyy");
-            String updatedRedirectDate = String.format("which updates the Redirected Date from %s to %s",
-                    dateFormatter.format(originalRequest.getRedirectedDate()),
-                    dateFormatter.format(entity.getRedirectedDate()));
+            String originalDate = originalRequest.getRedirectedDate()
+                    .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.MEDIUM));
+            String redirectedDate = entity.getRedirectedDate()
+                    .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.MEDIUM));
+            String updatedRedirectDate = String.format("which updates the Redirected Date from %s to %s", originalDate, redirectedDate);
             event = new RequestComponentAgencyChangedEvent(entity, originalRequest, updatedRedirectDate);
             applicationEventPublisher.publishEvent(event);
         }
