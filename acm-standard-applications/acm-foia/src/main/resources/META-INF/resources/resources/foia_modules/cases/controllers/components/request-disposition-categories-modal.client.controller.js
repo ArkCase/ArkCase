@@ -22,7 +22,7 @@ angular.module('cases').controller('Cases.RequestDispositionCategoriesModalContr
         var disposition = _.find($scope.requestDispositionCategories, {
            key: $scope.requestDispositionCategory 
         });
-        if($scope.requestDispositionCategory == 'grantedInFull' && ($scope.hasExemptionOnAnyDocumentsOnRequest || $scope.hasExemptionsOnRequestManuallyAdded)) {
+        if($scope.requestDispositionCategory == 'grantedInFull' && ($scope.hasExemptionOnAnyDocumentsOnRequest || $scope.hasExemptionsOnRequestManuallyAdded.length > 0)) {
             openConfirmationModal(deferred);
         } else {
             deferred.resolve();

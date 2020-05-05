@@ -28,9 +28,9 @@ angular.module('cases').controller('Cases.RequestDenyDispositionCategoriesModalC
             $scope.customReason = '';
             $scope.requestOtherReason = null;
         }
-        if(dispositionCategory == 'full-denial-exemption' && !$scope.hasExemptionOnAnyDocumentsOnRequest && !$scope.hasExemptionsOnRequestManuallyAdded) {
+        if(dispositionCategory == 'full-denial-exemption' && !$scope.hasExemptionOnAnyDocumentsOnRequest && $scope.hasExemptionsOnRequestManuallyAdded.length <= 0) {
             $scope.showErrorMessageNoExemptions = true;
-        } else if((dispositionCategory == 'no-record' || dispositionCategory == 'records-referred' || dispositionCategory == 'no-agency-record') && ($scope.hasExemptionOnAnyDocumentsOnRequest || $scope.hasExemptionsOnRequestManuallyAdded)) {
+        } else if((dispositionCategory == 'no-record' || dispositionCategory == 'records-referred' || dispositionCategory == 'no-agency-record') && ($scope.hasExemptionOnAnyDocumentsOnRequest || $scope.hasExemptionsOnRequestManuallyAdded.length > 0)) {
             $scope.showErrorMessageHasExemptions = true;
         } else {
             $scope.showErrorMessageNoExemptions = false;
