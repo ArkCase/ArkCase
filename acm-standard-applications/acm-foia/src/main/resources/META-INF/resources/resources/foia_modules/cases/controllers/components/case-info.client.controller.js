@@ -151,7 +151,7 @@ angular.module('cases').controller(
                 CaseExemptionService.hasExemptionOnAnyDocumentsOnRequest($scope.objectInfo.id, ObjectService.ObjectTypes.CASE_FILE).then(function (value) {
                     $scope.hasExemptionsOnAnyDocuments = value.data && $scope.objectInfo.disposition == 'grantedInFull' ? true : false;
                     CaseExemptionService.getExemptionCode($scope.objectInfo.id, ObjectService.ObjectTypes.CASE_FILE).then(function (value1) { 
-                        $scope.fullGrantAndExemptionWarning = ($scope.hasExemptionsOnAnyDocuments || value1.data) && $scope.objectInfo.disposition == 'Full Grant' ? true : false;
+                        $scope.fullGrantAndExemptionWarning = ($scope.hasExemptionsOnAnyDocuments || value1.data.length > 0) && $scope.objectInfo.disposition == 'Full Grant' ? true : false;
                     });
                 });
 
