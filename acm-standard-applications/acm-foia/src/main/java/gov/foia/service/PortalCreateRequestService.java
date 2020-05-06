@@ -33,14 +33,18 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
-import com.armedia.acm.plugins.person.dao.OrganizationDao;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.OrganizationAssociation;
 import com.armedia.acm.plugins.person.model.PersonOrganizationAssociation;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.users.service.tracker.UserTrackerService;
 import com.armedia.acm.web.api.MDCConstants;
-
+import gov.foia.dao.PortalFOIAPersonDao;
+import gov.foia.model.FOIARequest;
+import gov.foia.model.FOIARequesterAssociation;
+import gov.foia.model.PortalFOIAPerson;
+import gov.foia.model.PortalFOIARequest;
+import gov.foia.model.PortalFOIARequestFile;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.slf4j.MDC;
@@ -56,13 +60,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import gov.foia.dao.PortalFOIAPersonDao;
-import gov.foia.model.FOIARequest;
-import gov.foia.model.FOIARequesterAssociation;
-import gov.foia.model.PortalFOIAPerson;
-import gov.foia.model.PortalFOIARequest;
-import gov.foia.model.PortalFOIARequestFile;
-
 public class PortalCreateRequestService
 {
     private final Logger log = LogManager.getLogger(getClass());
@@ -75,9 +72,9 @@ public class PortalCreateRequestService
 
     private PortalFOIAPersonDao portalFOIAPersonDao;
 
-    private OrganizationDao organizationDao;
-
     private PortalRequestService portalRequestService;
+
+    private FOIAPortalUserServiceProvider portalUserServiceProvider;
 
     public FOIARequest createFOIARequest(PortalFOIARequest in)
             throws PipelineProcessException, AcmUserActionFailedException, AcmCreateObjectFailedException
@@ -160,11 +157,46 @@ public class PortalCreateRequestService
         FOIARequesterAssociation requesterAssociation = new FOIARequesterAssociation();
         requesterAssociation.setPersonType("Requester");
 
-        PortalFOIAPerson requester;
+        PortalFOIAPerson requester = null;
 
         Optional<PortalFOIAPerson> person = getPortalFOIAPersonDao().findByEmail(in.getEmail());
+        if (person.isPresent())
+        {
+            if (in.getOrganization() != null)
+            {
+                Organization organization = getPortalUserServiceProvider().checkOrganizationByName(in.getFirstName(), in.getLastName(),
+                        in.getOrganization());
+                boolean organizationExists = false;
+                for (Organization org : person.get().getOrganizations())
+                {
+                    if (org.getOrganizationValue().equalsIgnoreCase(organization.getOrganizationValue()))
+                    {
+                        organizationExists = true;
+                        break;
+                    }
+                }
+                if (!organizationExists)
+                {
+                    person.get().getOrganizations().add(organization);
+                    PersonOrganizationAssociation personOrganizationAssociation = getPortalUserServiceProvider().addPersonOrganizationAssociation(person.get(),
+                            organization);
+                    List<PersonOrganizationAssociation> poa = new ArrayList();
+                    poa.add(personOrganizationAssociation);
+                    person.get().setOrganizationAssociations(poa);
+                }
 
-        requester = person.orElseGet(() -> populateRequesterAndOrganizationFromRequest(in));
+                requester = person.get();
+            }
+            else
+            {
+                requester = person.get();
+            }
+        }
+        else
+
+        {
+            requester = populateRequesterAndOrganizationFromRequest(in);
+        }
 
         requesterAssociation.setPerson(requester);
         request.getPersonAssociations().add(requesterAssociation);
@@ -230,29 +262,16 @@ public class PortalCreateRequestService
             requester.getContactMethods().add(2, null);
         }
 
-        if (in.getOrganization() != null && in.getOrganization().length() > 0)
+        if (requester.getOrganizations() != null && !requester.getOrganizations().isEmpty())
         {
-            Organization organization = null;
-
-            organization = getOrganizationDao().findByOrganizationName(in.getOrganization());
-            if (organization == null)
+            PersonOrganizationAssociation personOrganizationAssociation = getPortalUserServiceProvider()
+                    .addPersonOrganizationAssociation(requester, requester.getOrganizations().get(0));
+            if (requester.getOrganizationAssociations().contains(personOrganizationAssociation))
             {
-                organization = new Organization();
-                organization.setOrganizationValue(in.getOrganization());
-                organization.setOrganizationType("Corporation");
+                List<PersonOrganizationAssociation> poa = new ArrayList<>();
+                poa.add(personOrganizationAssociation);
+                requester.setOrganizationAssociations(poa);
             }
-
-            requester.getOrganizations().add(organization);
-
-            List<PersonOrganizationAssociation> personOrganizationAssociations = new ArrayList<>();
-            PersonOrganizationAssociation personOrganizationAssociation = new PersonOrganizationAssociation();
-            personOrganizationAssociation.setOrganization(organization);
-            personOrganizationAssociation.setDefaultOrganization(true);
-            personOrganizationAssociation.setPerson(requester);
-            personOrganizationAssociation.setPersonToOrganizationAssociationType("owner");
-            personOrganizationAssociation.setOrganizationToPersonAssociationType("owned");
-            personOrganizationAssociations.add(personOrganizationAssociation);
-            requester.setOrganizationAssociations(personOrganizationAssociations);
         }
         return requester;
     }
@@ -334,16 +353,6 @@ public class PortalCreateRequestService
         this.portalRequestService = portalRequestService;
     }
 
-    public OrganizationDao getOrganizationDao()
-    {
-        return organizationDao;
-    }
-
-    public void setOrganizationDao(OrganizationDao organizationDao)
-    {
-        this.organizationDao = organizationDao;
-    }
-
     public PortalFOIAPersonDao getPortalFOIAPersonDao()
     {
         return portalFOIAPersonDao;
@@ -354,4 +363,13 @@ public class PortalCreateRequestService
         this.portalFOIAPersonDao = portalFOIAPersonDao;
     }
 
+    public FOIAPortalUserServiceProvider getPortalUserServiceProvider()
+    {
+        return portalUserServiceProvider;
+    }
+
+    public void setPortalUserServiceProvider(FOIAPortalUserServiceProvider portalUserServiceProvider)
+    {
+        this.portalUserServiceProvider = portalUserServiceProvider;
+    }
 }
