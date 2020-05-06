@@ -942,7 +942,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
 
         if (person.getOrganizations() != null && !person.getOrganizations().isEmpty())
         {
-            user.setOrganization(person.getOrganizations().get(0).getOrganizationValue());
+            user.setOrganization(person.getOrganizations().get(person.getOrganizations().size() - 1).getOrganizationValue());
         }
         user.setEmail(person.getDefaultEmail().getValue());
 
