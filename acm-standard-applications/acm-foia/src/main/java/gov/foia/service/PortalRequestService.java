@@ -564,7 +564,7 @@ public class PortalRequestService
             throws AcmObjectNotFoundException
     {
         PortalFOIAPerson person = getPortalFOIAPersonDao().findByEmail(emailAddress).get();
-        List<PortalFOIARequestStatus> responseRequests = getRequestDao().getLoggedUserExternalRequests(person.getId());
+        List<PortalFOIARequestStatus> responseRequests = getRequestDao().getLoggedUserExternalRequests(person.getId(), requestId);
         if (responseRequests.isEmpty())
         {
             log.info("FOIA Requests not found for the logged user [{}]]", emailAddress);
