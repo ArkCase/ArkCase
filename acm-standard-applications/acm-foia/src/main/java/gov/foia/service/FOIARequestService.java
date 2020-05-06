@@ -199,7 +199,9 @@ public class FOIARequestService
             nextRequestAndRequestNumInfo.put("availableRequests", 0L);
             return nextRequestAndRequestNumInfo;
         }
-        Long fileId = getEcmFileService().findOldestFileByContainerAndFileType(nextRequests.get(0).getContainer().getId(), "Request Form")
+        Long fileId = getEcmFileService()
+                .findOldestFileByContainerAndFileType(nextRequests.get(0).getContainer().getId(),
+                        nextRequests.get(0).getRequestType().equals(FOIAConstants.NEW_REQUEST_TYPE) ? "Request Form" : "Appeal Form")
                 .getId();
         nextRequestAndRequestNumInfo.put("requestId", nextRequests.get(0).getId());
         nextRequestAndRequestNumInfo.put("requestFormId", fileId);
