@@ -27,14 +27,9 @@ package gov.foia.service;
  * #L%
  */
 
-import static gov.foia.model.FOIARequestUtils.extractRequestorEmailAddress;
-
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
-import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.services.email.service.TemplatingEngine;
 import com.armedia.acm.services.notification.dao.NotificationDao;
-import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.service.NotificationSender;
 import com.armedia.acm.services.users.dao.UserDao;
 
@@ -45,7 +40,6 @@ import org.springframework.core.io.Resource;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.Arrays;
 import java.util.Objects;
 
 import gov.foia.dao.FOIARequestDao;
@@ -71,51 +65,12 @@ public class AcknowledgementDocumentService
     private TemplatingEngine templatingEngine;
     private NotificationDao notificationDao;
 
-    public void emailAcknowledgement(Long requestId)
-    {
-        if (!foiaConfigurationService.readConfiguration().getReceivedDateEnabled())
-        {
-            FOIARequest request = getRequestDao().find(requestId);
-            if (Objects.isNull(request.getPreviousQueue()))
-            {
-                String emailAddress = extractRequestorEmailAddress(request.getOriginator().getPerson());
-                if (emailAddress != null && !emailAddress.isEmpty())
-                {
-                    FOIADocumentDescriptor documentDescriptor = documentGeneratorService.getDocumentDescriptor(request, FOIAConstants.ACK);
-                    EcmFile letter = getEcmFileDao().findForContainerAttachmentFolderAndFileType(request.getContainer().getId(),
-                            request.getContainer().getAttachmentFolder().getId(), documentDescriptor.getDoctype());
-
-                    EcmFileVersion ecmFileVersion = letter.getVersions().stream()
-                            .filter(fv -> fv.getVersionTag().equals(letter.getActiveVersionTag())).findFirst().get();
-
-                    Notification notification = new Notification();
-                    notification.setTemplateModelName("requestDocumentAttached");
-                    notification.setEmailAddresses(emailAddress);
-                    notification.setAttachFiles(true);
-                    notification.setFiles(Arrays.asList(ecmFileVersion));
-                    notification.setParentId(requestId);
-                    notification.setParentType(request.getObjectType());
-                    notification.setTitle(String.format("%s %s", request.getRequestType(), request.getCaseNumber()));
-                    notification.setUser(request.getCreator());
-                    notificationDao.save(notification);
-                }
-            }
-        }
-    }
-
     public void generateAndUpload(String objectType, Long requestId) throws DocumentGeneratorException
     {
         FOIARequest request = getRequestDao().find(requestId);
         if (Objects.isNull(request.getPreviousQueue()))
         {
-            if (foiaConfigurationService.readConfiguration().getReceivedDateEnabled())
-            {
-                foiaQueueCorrespondenceService.handleRequestReceivedAcknowledgementLetter(requestId);
-            }
-            else
-            {
-                generateAndUploadACK(requestId);
-            }
+            foiaQueueCorrespondenceService.handleRequestReceivedAcknowledgementLetter(requestId);
         }
     }
 
