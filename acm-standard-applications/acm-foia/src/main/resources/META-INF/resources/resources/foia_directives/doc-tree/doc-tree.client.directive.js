@@ -4179,7 +4179,6 @@ angular
                                 $(node.tr).find("select.reviewstatus").prop('disabled', false);
                                 $(node.tr).find("select.redactionstatus").prop('disabled', false);
                                 node.data.reviewStatus = statusValue;
-                                DocTree.cacheFolderList.remove(cacheKey);
 
                                 return data;
                             }, function (error) {
@@ -4205,7 +4204,6 @@ angular
                                 $(node.tr).find("select.reviewstatus").prop('disabled', false);
                                 $(node.tr).find("select.redactionstatus").prop('disabled', false);
                                 node.data.redactionStatus = statusValue;
-                                DocTree.cacheFolderList.remove(cacheKey);
 
                                 return data;
                             }, function (error) {
