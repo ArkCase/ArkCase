@@ -79,7 +79,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Base64Utils;
 
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -325,7 +324,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
                     person.getOrganizations().add(organization);
                     PersonOrganizationAssociation personOrganizationAssociation = addPersonOrganizationAssociation(person,
                             organization);
-                    List<PersonOrganizationAssociation> poa = new ArrayList<>();
+                    List<PersonOrganizationAssociation> poa = person.getOrganizationAssociations();
                     poa.add(personOrganizationAssociation);
                     person.setOrganizationAssociations(poa);
                 }
@@ -799,11 +798,11 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
             }
             if (!organizationExists)
             {
-                person.getOrganizations().add(organization);
+                person.getOrganizations().add(0, organization);
                 PersonOrganizationAssociation personOrganizationAssociation = addPersonOrganizationAssociation((PortalFOIAPerson) person,
                         organization);
-                List<PersonOrganizationAssociation> poa = new ArrayList<>();
-                poa.add(personOrganizationAssociation);
+                List<PersonOrganizationAssociation> poa = person.getOrganizationAssociations();
+                poa.add(0, personOrganizationAssociation);
                 person.setOrganizationAssociations(poa);
             }
         }
@@ -942,7 +941,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
 
         if (person.getOrganizations() != null && !person.getOrganizations().isEmpty())
         {
-            user.setOrganization(person.getOrganizations().get(person.getOrganizations().size() - 1).getOrganizationValue());
+            user.setOrganization(person.getOrganizations().get(0).getOrganizationValue());
         }
         user.setEmail(person.getDefaultEmail().getValue());
 

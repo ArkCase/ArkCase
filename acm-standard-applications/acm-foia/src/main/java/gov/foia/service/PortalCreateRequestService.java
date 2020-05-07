@@ -180,7 +180,7 @@ public class PortalCreateRequestService
                     person.get().getOrganizations().add(organization);
                     PersonOrganizationAssociation personOrganizationAssociation = getPortalUserServiceProvider().addPersonOrganizationAssociation(person.get(),
                             organization);
-                    List<PersonOrganizationAssociation> poa = new ArrayList();
+                    List<PersonOrganizationAssociation> poa = person.get().getOrganizationAssociations();
                     poa.add(personOrganizationAssociation);
                     person.get().setOrganizationAssociations(poa);
                 }
