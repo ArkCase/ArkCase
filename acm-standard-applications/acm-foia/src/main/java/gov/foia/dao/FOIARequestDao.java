@@ -210,6 +210,7 @@ public class FOIARequestDao extends AcmAbstractDao<FOIARequest>
         requestStatus.setRequesterLastName(request.getOriginator().getPerson().getFamilyName());
         requestStatus.setRequesterEmail(request.getOriginator().getPerson().getContactMethods()
                 .stream().filter(cm -> cm.getType().equalsIgnoreCase("email")).findFirst().get().getValue());
+        requestStatus.setDispositionValue(request.getDisposition());
         return requestStatus;
     }
 
