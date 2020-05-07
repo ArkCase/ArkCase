@@ -211,6 +211,6 @@ public class PortalFOIARequestStatus implements Serializable
         return "PortalFOIARequestStatus [requestId=" + requestId + ", lastName=" + lastName + ", requestType=" + requestType
                 + ", requestStatus=" + requestStatus + ", queue=" + queue + ", isDenied=" + isDenied
                 + ", isPublic=" + isPublic + ", updateDate=" + updateDate + ", requesterFirstName=" + requesterFirstName
-                + ", requesterLastName=" + requesterLastName + ", requesterEmail+" + requesterEmail + ", dispositionValue+" + dispositionValue + "]";
+                + ", requesterLastName=" + requesterLastName + ", requesterEmail=" + requesterEmail + ", dispositionValue=" + dispositionValue + "]";
     }
 }
