@@ -88,6 +88,8 @@ public class FOIARequestComponentUpdatedHandler
                     entity.setRedirectedDate(holidayConfigurationService.getNextWorkingDay(LocalDate.now()).atTime(LocalTime.now()));
                 }
 
+                entity.setExtensionFlag(false);
+
                 if (getFoiaConfig().getRedirectFunctionalityCalculationEnabled())
                 {
                     LocalDate originalRedirectedDate = originalRequest.getRedirectedDate().toLocalDate();
