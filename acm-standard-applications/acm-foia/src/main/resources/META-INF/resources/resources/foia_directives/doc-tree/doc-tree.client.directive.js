@@ -4161,9 +4161,6 @@ angular
                         $(node.tr).find("select.reviewstatus").prop('disabled', true);
                         $(node.tr).find("select.redactionstatus").prop('disabled', true);
 
-                        var nodeParentFolder = node.parent;
-                        var cacheKey = DocTree.getCacheKeyByNode(nodeParentFolder);
-
                         if (statusType === "review") {
                             Util.serviceCall({
                                 service: Ecm.setFileReviewStatus,
