@@ -30,29 +30,42 @@ package com.armedia.acm.portalgateway.service;
  * #L%
  */
 
+import static com.armedia.acm.services.users.model.ldap.MapperUtils.prefixTrailingDot;
+
+import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.portalgateway.model.PortalInfo;
 import com.armedia.acm.portalgateway.web.api.PortalInfoDTO;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
+import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
+import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
+import com.armedia.acm.services.users.service.ldap.LdapUserService;
+import com.armedia.acm.services.users.web.api.SecureLdapController;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.NoResultException;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity May 29, 2018
  *
  */
 
-public class DefaultPortalAdminService implements PortalAdminService
+public class DefaultPortalAdminService extends SecureLdapController implements PortalAdminService
 {
     private transient final Logger log = LogManager.getLogger(getClass());
 
@@ -61,6 +74,11 @@ public class DefaultPortalAdminService implements PortalAdminService
     private UserDao userDao;
 
     private AcmGroupDao groupDao;
+
+    @Value("${foia.portalserviceprovider.directory.name}")
+    private String directoryName;
+
+    private LdapUserService ldapUserService;
 
     /*
      * (non-Javadoc)
@@ -201,6 +219,31 @@ public class DefaultPortalAdminService implements PortalAdminService
         portalInfo.setPortalAuthenticationFlag(portalInfoDTO.getPortalAuthenticationFlag());
     }
 
+    @Override
+    @Async
+    public void addExistingPortalUsersToGroup(String groupName, String previousGroupName)
+            throws AcmAppErrorJsonMsg, AcmLdapActionFailedException, AcmObjectNotFoundException
+    {
+
+        AcmLdapSyncConfig ldapSyncConfig = getAcmContextHolder().getAllBeansOfType(AcmLdapSyncConfig.class)
+                .get(String.format("%s_sync", directoryName));
+
+        String userPrefix = prefixTrailingDot(ldapSyncConfig.getUserPrefix());
+        List<AcmUser> acmUsers = userDao.findByPrefix(userPrefix);
+
+        List<String> userIds = acmUsers.stream().map(AcmUser::getUserId).collect(Collectors.toList());
+        List<String> groupNames = new ArrayList<>(Arrays.asList(previousGroupName));
+
+        checkIfLdapManagementIsAllowed(directoryName);
+
+        for (String userId : userIds)
+        {
+            ldapUserService.removeUserFromGroups(userId, groupNames, directoryName);
+        }
+
+        ldapUserService.addExistingLdapUsersToGroup(userIds, directoryName, groupName);
+    }
+
     /**
      * @param portalInfoDao
      *            the portalInfoDao to set
@@ -228,4 +271,13 @@ public class DefaultPortalAdminService implements PortalAdminService
         this.groupDao = groupDao;
     }
 
+    public LdapUserService getLdapUserService()
+    {
+        return ldapUserService;
+    }
+
+    public void setLdapUserService(LdapUserService ldapUserService)
+    {
+        this.ldapUserService = ldapUserService;
+    }
 }

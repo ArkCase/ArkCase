@@ -27,6 +27,7 @@ package com.armedia.acm.portalgateway.web.api;
  * #L%
  */
 
+import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.portalgateway.model.PortalInfo;
 import com.armedia.acm.portalgateway.service.PortalAdminService;
@@ -35,6 +36,7 @@ import com.armedia.acm.portalgateway.service.PortalServiceExceptionMapper;
 import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
+import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -101,11 +103,13 @@ public class ArkCasePortalAdminAPIController
     @RequestMapping(value = "/portals", method = RequestMethod.PUT, produces = { MediaType.APPLICATION_JSON_VALUE,
             MediaType.TEXT_PLAIN_VALUE })
     @ResponseBody
-    public PortalInfoDTO updatePortal(Authentication auth, @RequestBody PortalInfoDTO portalInfoDTO) throws PortalAdminServiceException
+    public PortalInfoDTO updatePortal(Authentication auth, @RequestBody PortalInfoDTO portalInfoDTO)
+            throws PortalAdminServiceException, AcmAppErrorJsonMsg, AcmLdapActionFailedException, AcmObjectNotFoundException
     {
         log.debug("User [{}] is updating portal for [{}] URL with [{}] user.", auth.getName(), portalInfoDTO.getPortalUrl(),
                 portalInfoDTO.getFullName());
         PortalInfo portalInfo = portalAdminService.getPortalInfo(portalInfoDTO.getPortalId());
+        portalAdminService.addExistingPortalUsersToGroup(portalInfoDTO.getGroupName(), portalInfo.getGroup().getName());
         portalAdminService.updatePortalInfo(portalInfo, portalInfoDTO);
         return new PortalInfoDTO(portalAdminService.updatePortal(portalInfo, portalInfoDTO.getUserId()));
     }
