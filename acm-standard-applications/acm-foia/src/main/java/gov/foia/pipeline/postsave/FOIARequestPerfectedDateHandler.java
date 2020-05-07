@@ -30,8 +30,7 @@ public class FOIARequestPerfectedDateHandler implements PipelineHandler<FOIARequ
 
         if (entity.getId() != null && pipelineContext.isNewCase() && entity.getRequestType().equals(FOIAConstants.NEW_REQUEST_TYPE))
         {
-            LocalDateTime receivedDate = entity.getReceivedDate() != null ? entity.getReceivedDate()
-                    : entity.getCreated().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+            LocalDateTime receivedDate = entity.getReceivedDate();
             if (holidayConfigurationService.getHolidayConfiguration().getIncludeWeekends())
             {
                 entity.setPerfectedDate(receivedDate);

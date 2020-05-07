@@ -61,6 +61,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashMap;
@@ -124,6 +125,11 @@ public class FOIARequestService
                     {
                         in.setTitle("Appeal of " + foiaRequest.getOriginalRequestNumber());
                     }
+                }
+
+                if (foiaRequest.getReceivedDate() == null)
+                {
+                    foiaRequest.setReceivedDate(LocalDateTime.now());
                 }
 
                 // On new Appeal, set DueDate.
