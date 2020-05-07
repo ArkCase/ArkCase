@@ -79,6 +79,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Base64Utils;
 
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -310,25 +311,6 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         else
         {
             PortalFOIAPerson person = getPortalFOIAPerson(portalId, user, registeredPerson);
-            if (user.getOrganization() != null) {
-                Organization organization = checkOrganizationByName(person.getGivenName(), person.getFamilyName(),
-                        user.getOrganization());
-                boolean organizationExists = false;
-                for (Organization org : person.getOrganizations()) {
-                    if (org.getOrganizationValue().equalsIgnoreCase(organization.getOrganizationValue())) {
-                        organizationExists = true;
-                        break;
-                    }
-                }
-                if (!organizationExists) {
-                    person.getOrganizations().add(organization);
-                    PersonOrganizationAssociation personOrganizationAssociation = addPersonOrganizationAssociation(person,
-                            organization);
-                    List<PersonOrganizationAssociation> poa = person.getOrganizationAssociations();
-                    poa.add(personOrganizationAssociation);
-                    person.setOrganizationAssociations(poa);
-                }
-            }
             createPortalUser(portalId, user, person, password);
             registrationDao.delete(registrationRecord.get());
             return UserRegistrationResponse.accepted();
@@ -785,25 +767,26 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
                 .setValue(user.getPhoneNumber());
         if (user.getOrganization() != null && !user.getOrganization().isEmpty())
         {
-            Organization organization = checkOrganizationByName(user.getFirstName(), user.getLastName(),
+            Organization organization = checkOrganizationByNameOrCreateNew(user.getFirstName(), user.getLastName(),
                     user.getOrganization());
             boolean organizationExists = false;
+            int index = 0;
             for (Organization org : person.getOrganizations())
             {
                 if (org.getOrganizationValue().equalsIgnoreCase(organization.getOrganizationValue()))
                 {
                     organizationExists = true;
+                    index = person.getOrganizations().indexOf(org);
                     break;
                 }
             }
+
             if (!organizationExists)
             {
-                person.getOrganizations().add(0, organization);
                 PersonOrganizationAssociation personOrganizationAssociation = addPersonOrganizationAssociation((PortalFOIAPerson) person,
                         organization);
-                List<PersonOrganizationAssociation> poa = person.getOrganizationAssociations();
-                poa.add(0, personOrganizationAssociation);
-                person.setOrganizationAssociations(poa);
+                person.getOrganizations().add(organization);
+                person.getOrganizationAssociations().add(personOrganizationAssociation);
             }
         }
 
@@ -820,7 +803,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         return portaluserFromPortalPerson(portalUserId, (PortalFOIAPerson) person);
     }
 
-    public Organization checkOrganizationByName(String firstName, String familyName, String organizationName)
+    public Organization checkOrganizationByNameOrCreateNew(String firstName, String familyName, String organizationName)
     {
         List<Organization> organizationList = getOrganizationDao().findOrganizationsByName(organizationName);
 
@@ -941,7 +924,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
 
         if (person.getOrganizations() != null && !person.getOrganizations().isEmpty())
         {
-            user.setOrganization(person.getOrganizations().get(0).getOrganizationValue());
+            user.setOrganization(person.getOrganizations().get(person.getOrganizations().size() - 1).getOrganizationValue());
         }
         user.setEmail(person.getDefaultEmail().getValue());
 
@@ -994,11 +977,15 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         if (user.getOrganization() != null)
         {
 
-            Organization organization = new Organization();
-            organization.setOrganizationValue(user.getOrganization());
-            organization.setOrganizationType("Corporation");
+            Organization organization = checkOrganizationByNameOrCreateNew(user.getFirstName(), user.getLastName(),
+                    user.getOrganization());
             organization.getAddresses().add(orgAddress);
             person.getOrganizations().add(organization);
+            PersonOrganizationAssociation personOrganizationAssociation = addPersonOrganizationAssociation(person,
+                    organization);
+            List<PersonOrganizationAssociation> poa = new ArrayList<>();
+            poa.add(personOrganizationAssociation);
+            person.setOrganizationAssociations(poa);
         }
 
         // the UI expects the contact methods in this order: Phone, Fax, Email

@@ -164,7 +164,7 @@ public class PortalCreateRequestService
         {
             if (in.getOrganization() != null)
             {
-                Organization organization = getPortalUserServiceProvider().checkOrganizationByName(in.getFirstName(), in.getLastName(),
+                Organization organization = getPortalUserServiceProvider().checkOrganizationByNameOrCreateNew(in.getFirstName(), in.getLastName(),
                         in.getOrganization());
                 boolean organizationExists = false;
                 for (Organization org : person.get().getOrganizations())
