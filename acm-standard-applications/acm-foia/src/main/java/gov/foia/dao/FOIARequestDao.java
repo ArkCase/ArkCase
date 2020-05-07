@@ -291,7 +291,7 @@ public class FOIARequestDao extends AcmAbstractDao<FOIARequest>
     public List<FOIARequest> findAllHeldAndAppealedRequests()
     {
         String queryText = "SELECT request FROM FOIARequest request"
-                + " WHERE request.queue.name = 'Hold' OR request.requestType = 'Appeal'";
+                + " WHERE request.queue.name = 'Hold' AND request.requestType = 'Appeal'";
         TypedQuery<FOIARequest> allRecords = getEm().createQuery(queryText, FOIARequest.class);
         List<FOIARequest> requests = allRecords.getResultList();
         return requests;
