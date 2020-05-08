@@ -14,6 +14,8 @@ angular.module('cases').controller(
             $scope.enableTitle = false;
             $scope.isPickExistingPerson = false;
 
+            $scope.receivedDate = new Date();
+
             var descriptionDocumentType = "Description Document";
             var consentDocumentType = "Consent";
             var proofOfIdentityDocumentType = "Proof of Identity";
@@ -457,6 +459,7 @@ angular.module('cases').controller(
                     $scope.config.data.originator.person.contactMethods.push($scope.config.data.originator.person.defaultEmail);
                 }
 
+                $scope.config.data.receivedDate = $scope.receivedDate;
 
                 for (var property in $scope.config.data) {
                     if ($scope.config.data.hasOwnProperty(property)) {
