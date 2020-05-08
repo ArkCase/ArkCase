@@ -89,6 +89,7 @@ public class FOIARequestComponentUpdatedHandler
                 }
 
                 entity.setExtensionFlag(false);
+                entity.setRequestTrack(FOIAConstants.SIMPLE_REQUEST_TRACK);
 
                 if (getFoiaConfig().getRedirectFunctionalityCalculationEnabled())
                 {
