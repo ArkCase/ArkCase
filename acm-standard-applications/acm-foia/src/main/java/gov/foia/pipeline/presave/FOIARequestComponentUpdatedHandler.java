@@ -39,7 +39,6 @@ import org.springframework.context.ApplicationEventPublisherAware;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -79,14 +78,7 @@ public class FOIARequestComponentUpdatedHandler
             FOIARequest originalRequest = getFoiaRequestDao().find(entity.getId());
             if (!originalRequest.getComponentAgency().equals(entity.getComponentAgency()))
             {
-                if (holidayConfigurationService.getHolidayConfiguration().getIncludeWeekends())
-                {
-                    entity.setRedirectedDate(LocalDateTime.now());
-                }
-                else
-                {
-                    entity.setRedirectedDate(holidayConfigurationService.getNextWorkingDay(LocalDate.now()).atTime(LocalTime.now()));
-                }
+                entity.setRedirectedDate(holidayConfigurationService.getFirstWorkingDay(LocalDate.now()).atTime(LocalTime.now()));
 
                 if (getFoiaConfig().getRedirectFunctionalityCalculationEnabled())
                 {
