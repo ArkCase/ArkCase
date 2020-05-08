@@ -33,6 +33,7 @@ import com.armedia.acm.objectonverter.AcmUnmarshaller;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
+import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.service.objecthistory.model.AcmObjectHistory;
 import com.armedia.acm.service.objecthistory.model.AcmObjectHistoryEvent;
 import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryEventPublisher;
@@ -54,6 +55,7 @@ import java.util.Objects;
 import gov.foia.model.DispositionReason;
 import gov.foia.model.FOIAConstants;
 import gov.foia.model.FOIARequest;
+import gov.foia.model.FOIARequesterAssociation;
 import gov.foia.model.FoiaConfig;
 
 /**
@@ -225,7 +227,14 @@ public class FOIARequestEventListener implements ApplicationListener<AcmObjectHi
         request.setOtherReason(initialRequest.getOtherReason());
         request.setComponentAgency(initialRequest.getComponentAgency());
         request.setNotificationGroup(initialRequest.getNotificationGroup());
-        request.setOriginator(initialRequest.getOriginator());
+
+        FOIARequesterAssociation requesterAssociation = new FOIARequesterAssociation();
+        PersonAssociation originator = initialRequest.getOriginator();
+        requesterAssociation.setPerson(originator.getPerson());
+        requesterAssociation.setPersonType(originator.getPersonType());
+        requesterAssociation.setParentType(originator.getParentType());
+
+        request.setOriginator(requesterAssociation);
 
         request = (FOIARequest) getSaveFOIARequestService().getFoiaRequestService().createReference(request, initialRequest);
         request = (FOIARequest) getSaveFOIARequestService().getFoiaRequestService().createReference(request, appeal);
