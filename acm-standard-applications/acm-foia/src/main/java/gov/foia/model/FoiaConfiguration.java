@@ -52,6 +52,7 @@ public class FoiaConfiguration extends SystemConfiguration
     private Boolean feeWaivedAppealsEnabled;
     private Boolean litigationRequestsEnabled;
     private Boolean litigationAppealsEnabled;
+    private Boolean automaticCreationOfRequestWhenAppealIsRemandedEnabled;
 
     public Integer getMaxDaysInBillingQueue()
     {
@@ -268,5 +269,15 @@ public class FoiaConfiguration extends SystemConfiguration
     public void setLitigationAppealsEnabled(Boolean litigationAppealsEnabled)
     {
         this.litigationAppealsEnabled = litigationAppealsEnabled;
+    }
+
+    public Boolean getAutomaticCreationOfRequestWhenAppealIsRemandedEnabled()
+    {
+        return automaticCreationOfRequestWhenAppealIsRemandedEnabled;
+    }
+
+    public void setAutomaticCreationOfRequestWhenAppealIsRemandedEnabled(Boolean automaticCreationOfRequestWhenAppealIsRemandedEnabled)
+    {
+        this.automaticCreationOfRequestWhenAppealIsRemandedEnabled = automaticCreationOfRequestWhenAppealIsRemandedEnabled;
     }
 }
