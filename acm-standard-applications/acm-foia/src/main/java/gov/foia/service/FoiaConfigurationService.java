@@ -61,6 +61,9 @@ public class FoiaConfigurationService extends SystemConfigurationService
         foiaConfig.setFeeWaivedAppealsEnabled(foiaConfiguration.getFeeWaivedAppealsEnabled());
         foiaConfig.setLitigationRequestsEnabled(foiaConfiguration.getLitigationRequestsEnabled());
         foiaConfig.setLitigationAppealsEnabled(foiaConfiguration.getLitigationAppealsEnabled());
+        foiaConfig.setAutomaticCreationOfRequestWhenAppealIsRemandedEnabled(
+                foiaConfiguration.getAutomaticCreationOfRequestWhenAppealIsRemandedEnabled());
+
         configurationPropertyService.updateProperties(foiaConfig);
     }
 
@@ -89,6 +92,8 @@ public class FoiaConfigurationService extends SystemConfigurationService
         foiaConfiguration.setFeeWaivedAppealsEnabled(foiaConfig.getFeeWaivedAppealsEnabled());
         foiaConfiguration.setLitigationRequestsEnabled(foiaConfig.getLitigationRequestsEnabled());
         foiaConfiguration.setLitigationAppealsEnabled(foiaConfig.getLitigationAppealsEnabled());
+        foiaConfiguration.setAutomaticCreationOfRequestWhenAppealIsRemandedEnabled(
+                foiaConfig.getAutomaticCreationOfRequestWhenAppealIsRemandedEnabled());
 
         return foiaConfiguration;
     }

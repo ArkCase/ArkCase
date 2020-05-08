@@ -90,7 +90,8 @@
                             </button>
                             <select ng-if="!isAppealCustomReason" ng-model="objectInfo.otherReason"
                                     ng-options="otherReason.key as otherReason.value | translate for otherReason in appealOtherReasons"
-                                    class="form-control input-md" ng-change="openAddOtherReasonInAppeal()">
+                                    class="form-control input-md" ng-change="openAddOtherReasonInAppeal()"
+                                    ng-disabled="isAppealOtherReasonDisabled">
                             </select>
                             <input ng-if="isAppealCustomReason" type="text" ng-model="objectInfo.otherReason" class="input-md form-control"
                                     ng-disabled="true">
@@ -104,7 +105,7 @@
                         <div ng-repeat="reason in appealDispositionReasons" style="margin-left: 20px">
                             <label class="checkbox">
                                 <input type="checkbox" value="{{reason.key}}" ng-checked="isAppealReasonChecked(reason.key)"
-                                        ng-click="onAppealReasonSelected(reason.key)" />
+                                        ng-click="onAppealReasonSelected(reason.key)" ng-disabled="isAppealOtherReasonDisabled" />
                                 <span translate>{{reason.value}}</span>
                             </label>
                         </div>
@@ -115,7 +116,7 @@
                 <div class="col-sm-3" ng-if="enableTitle">
                     <label for="title" translate> cases.comp.main.title.label </label>
                     <textarea rows=2 id="title" ng-model="objectInfo.title" class="input-md form-control" ng-disabled="true"
-                              maxlength="128"/>
+                            maxlength="128" />
 
                     <label class="control-label" translate>cases.comp.info.category.label</label>
                     <select id="requestCategory" ng-model="objectInfo.requestCategory"
@@ -133,8 +134,8 @@
                     <div>
                         <fieldset ng-disabled="!enableDispositionClosedDate">
                             <div class="form-group">
-                                <date-time-picker data="objectInfo.dispositionClosedDate" property="startDate"
-                                        date-picker-id="comboDate1"></date-time-picker>
+                                <date-time-picker data="objectInfo.dispositionClosedDate" property="startDate" date-picker-id="comboDate1"
+                                        ng-click="dispositionClosedDateSelected()"></date-time-picker>
                             </div>
                         </fieldset>
                     </div>

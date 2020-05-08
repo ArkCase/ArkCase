@@ -36,12 +36,13 @@
                 <label class="control-label" translate> cases.comp.main.addAppealDispositionCategory.otherReason</label>
                 <select ng-model="objectInfo.otherReason"
                         ng-options="otherReason.key as otherReason.value | translate for otherReason in otherReasonsLookup"
-                        class="form-control input-md" ng-change="changeOtherReason()" ng-required="isOtherRequired">
+                        class="form-control input-md" ng-change="changeOtherReason()" ng-required="isOtherRequired"
+                        ng-disabled="!isOtherRequired">
                 </select>
             </div>
             <div class="form-group col-sm-6">
                 <label class="control-label" translate> cases.comp.main.addAppealDispositionCategory.custom.label</label>
-                <input type="text" ng-model="customOtherReason" class="input-md form-control" ng-readonly="isCustomDisabled"
+                <input type="text" ng-model="customOtherReason" class="input-md form-control" ng-disabled="isCustomDisabled"
                         placeholder="{{ 'cases.comp.main.addAppealDispositionCategory.custom.placeholder'  | translate }}"
                         ng-required="!isCustomDisabled">
             </div>
