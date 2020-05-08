@@ -63,6 +63,18 @@ public class OrganizationDao extends AcmAbstractDao<Organization>
         return results.get(0);
     }
 
+    public List<Organization> findOrganizationsByName(String organizationName)
+    {
+        String query = "SELECT o FROM Organization o WHERE LOWER(o.organizationValue) = :organizationName";
+        TypedQuery<Organization> dbQuery = getEm().createQuery(query, Organization.class);
+        dbQuery.setParameter("organizationName", organizationName.toLowerCase());
+        List<Organization> results = dbQuery.getResultList();
+        if (results.isEmpty()) {
+            return null;
+        }
+        return results;
+    }
+
     @Transactional
     public void deleteOrganizationById(Long id)
     {

@@ -30,9 +30,11 @@ package gov.foia.service;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
+import com.armedia.acm.plugins.person.dao.OrganizationDao;
 import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.Person;
+import com.armedia.acm.plugins.person.model.PersonOrganizationAssociation;
 import com.armedia.acm.portalgateway.model.PortalInfo;
 import com.armedia.acm.portalgateway.model.PortalUser;
 import com.armedia.acm.portalgateway.model.PortalUserCredentials;
@@ -59,7 +61,13 @@ import com.armedia.acm.services.users.service.AcmUserEventPublisher;
 import com.armedia.acm.services.users.service.ldap.LdapAuthenticateService;
 import com.armedia.acm.services.users.service.ldap.LdapUserService;
 import com.armedia.acm.spring.SpringContextHolder;
-
+import gov.foia.dao.PortalFOIAPersonDao;
+import gov.foia.dao.UserRegistrationRequestDao;
+import gov.foia.dao.UserResetRequestDao;
+import gov.foia.model.FOIAPerson;
+import gov.foia.model.PortalFOIAPerson;
+import gov.foia.model.UserRegistrationRequestRecord;
+import gov.foia.model.UserResetRequestRecord;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -71,20 +79,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Base64Utils;
 
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
-
-import gov.foia.dao.PortalFOIAPersonDao;
-import gov.foia.dao.UserRegistrationRequestDao;
-import gov.foia.dao.UserResetRequestDao;
-import gov.foia.model.FOIAPerson;
-import gov.foia.model.PortalFOIAPerson;
-import gov.foia.model.UserRegistrationRequestRecord;
-import gov.foia.model.UserResetRequestRecord;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jul 12, 2018
@@ -130,6 +132,8 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     private TranslationService translationService;
 
     private AcmUserEventPublisher acmUserEventPublisher;
+
+    private OrganizationDao organizationDao;
 
     /*
      * (non-Javadoc)
@@ -530,17 +534,18 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         person.setFamilyName(acmUser.getLastName());
         person.setTitle(acmUser.getTitle());
         person.setCompany(acmUser.getCompany());
-        Organization organization = new Organization();
-        organization.setOrganizationValue(acmUser.getCompany() != null ? acmUser.getCompany() : " ");
-        organization.setOrganizationType("Corporation");
-        person.getOrganizations().add(organization);
         PostalAddress address = new PostalAddress();
         address.setType("Business");
         person.getAddresses().add(address);
         person.setDefaultAddress(address);
         PostalAddress orgAddress = new PostalAddress();
         orgAddress.setType("Business");
+        Organization organization = new Organization();
+        organization.setOrganizationValue(acmUser.getCompany() != null ? acmUser.getCompany() : " ");
+        organization.setOrganizationType("Corporation");
         organization.getAddresses().add(orgAddress);
+        person.getOrganizations().add(organization);
+
         // the UI expects the contact methods in this order: Phone, Fax, Email
         ContactMethod phone = buildContactMethod("phone", null);
         person.getContactMethods().add(phone);
@@ -749,7 +754,6 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         person.setFamilyName(user.getLastName());
         person.setTitle(user.getPrefix());
         ((PortalFOIAPerson) person).setPosition(user.getPosition());
-        person.getOrganizations().get(0).setOrganizationValue(user.getOrganization() != null ? user.getOrganization() : " ");
         person.getAddresses().get(0).setCountry(user.getCountry());
         person.getAddresses().get(0).setType(user.getAddressType());
         person.getAddresses().get(0).setCity(user.getCity());
@@ -759,6 +763,29 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         person.getAddresses().get(0).setZip(user.getZipCode());
         person.getContactMethods().stream().filter(cm -> cm.getType().equalsIgnoreCase("Phone")).findFirst().get()
                 .setValue(user.getPhoneNumber());
+        if (user.getOrganization() != null && !user.getOrganization().isEmpty())
+        {
+            person.setCompany(user.getOrganization());
+            Organization organization = checkOrganizationByNameOrCreateNew(user.getFirstName(), user.getLastName(),
+                    user.getOrganization());
+            boolean organizationExists = false;
+            for (Organization org : person.getOrganizations())
+            {
+                if (org.getOrganizationValue().equalsIgnoreCase(organization.getOrganizationValue()))
+                {
+                    organizationExists = true;
+                    break;
+                }
+            }
+
+            if (!organizationExists)
+            {
+                PersonOrganizationAssociation personOrganizationAssociation = addPersonOrganizationAssociation((PortalFOIAPerson) person,
+                        organization);
+                person.getOrganizations().add(organization);
+                person.getOrganizationAssociations().add(personOrganizationAssociation);
+            }
+        }
 
         personDao.save(person);
 
@@ -771,6 +798,54 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     {
         Person person = getPersonDao().find(Long.valueOf(portalUserId));
         return portaluserFromPortalPerson(portalUserId, (PortalFOIAPerson) person);
+    }
+
+    public Organization checkOrganizationByNameOrCreateNew(String firstName, String familyName, String organizationName)
+    {
+        List<Organization> organizationList = getOrganizationDao().findOrganizationsByName(organizationName);
+
+        if (organizationList == null)
+        {
+            Organization newOrganization = new Organization();
+            newOrganization.setOrganizationValue(organizationName);
+            newOrganization.setOrganizationType("Corporation");
+            return newOrganization;
+        }
+        else if (organizationList.size() == 1)
+        {
+            return organizationList.get(0);
+        }
+        else
+        {
+            for (Organization existingOrganization : organizationList)
+            {
+                for (PersonOrganizationAssociation poa : existingOrganization.getPersonAssociations())
+                {
+                    if (poa.getPerson().getGivenName().toLowerCase().startsWith(firstName.toLowerCase())
+                            && poa.getPerson().getFamilyName().equalsIgnoreCase(familyName))
+                    {
+                        return existingOrganization;
+                    }
+                }
+            }
+            Organization newOrganization = new Organization();
+            newOrganization.setOrganizationValue(organizationName);
+            newOrganization.setOrganizationType("Corporation");
+            return newOrganization;
+
+        }
+    }
+
+    public PersonOrganizationAssociation addPersonOrganizationAssociation(PortalFOIAPerson person, Organization organization)
+    {
+        PersonOrganizationAssociation personOrganizationAssociation = new PersonOrganizationAssociation();
+        personOrganizationAssociation.setOrganization(organization);
+        personOrganizationAssociation.setDefaultOrganization(true);
+        personOrganizationAssociation.setPerson(person);
+        personOrganizationAssociation.setPersonToOrganizationAssociationType("owner");
+        personOrganizationAssociation.setOrganizationToPersonAssociationType("owned");
+
+        return personOrganizationAssociation;
     }
 
     /**
@@ -844,9 +919,9 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
             user.setZipCode(address.getZip());
         }
 
-        if (person.getOrganizations() != null && !person.getOrganizations().isEmpty())
+        if (person.getCompany() != null)
         {
-            user.setOrganization(person.getOrganizations().get(0).getOrganizationValue());
+            user.setOrganization(person.getCompany());
         }
         user.setEmail(person.getDefaultEmail().getValue());
 
@@ -883,12 +958,6 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         person.setFamilyName(user.getLastName());
         person.setTitle(user.getPrefix());
         person.setPosition(user.getPosition());
-
-        Organization organization = new Organization();
-        organization.setOrganizationValue(user.getOrganization() != null ? user.getOrganization() : " ");
-        organization.setOrganizationType("Corporation");
-        person.getOrganizations().add(organization);
-
         PostalAddress address = new PostalAddress();
         address.setCity(user.getCity());
         address.setCountry(user.getCountry());
@@ -902,7 +971,19 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
 
         PostalAddress orgAddress = new PostalAddress();
         orgAddress.setType("Business");
-        organization.getAddresses().add(orgAddress);
+        if (user.getOrganization() != null)
+        {
+            person.setCompany(user.getOrganization());
+            Organization organization = checkOrganizationByNameOrCreateNew(user.getFirstName(), user.getLastName(),
+                    user.getOrganization());
+            organization.getAddresses().add(orgAddress);
+            person.getOrganizations().add(organization);
+            PersonOrganizationAssociation personOrganizationAssociation = addPersonOrganizationAssociation(person,
+                    organization);
+            List<PersonOrganizationAssociation> poa = new ArrayList<>();
+            poa.add(personOrganizationAssociation);
+            person.setOrganizationAssociations(poa);
+        }
 
         // the UI expects the contact methods in this order: Phone, Fax, Email
         ContactMethod phone = buildContactMethod("phone", user.getPhoneNumber());
@@ -1124,5 +1205,15 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     public void setAcmUserEventPublisher(AcmUserEventPublisher acmUserEventPublisher)
     {
         this.acmUserEventPublisher = acmUserEventPublisher;
+    }
+
+    public OrganizationDao getOrganizationDao()
+    {
+        return organizationDao;
+    }
+
+    public void setOrganizationDao(OrganizationDao organizationDao)
+    {
+        this.organizationDao = organizationDao;
     }
 }
