@@ -36,7 +36,6 @@ public class FoiaConfiguration extends SystemConfiguration
     private Boolean holdedAndAppealedRequestsDueDateUpdateEnabled;
     private Integer requestExtensionWorkingDays;
     private Boolean dashboardBannerEnabled;
-    private Boolean receivedDateEnabled;
     private Boolean notificationGroupsEnabled;
     private Boolean requestExtensionWorkingDaysEnabled;
     private Boolean expediteWorkingDaysEnabled;
@@ -102,16 +101,6 @@ public class FoiaConfiguration extends SystemConfiguration
     public void setDashboardBannerEnabled(Boolean dashboardBannerEnabled)
     {
         this.dashboardBannerEnabled = dashboardBannerEnabled;
-    }
-
-    public Boolean getReceivedDateEnabled()
-    {
-        return receivedDateEnabled;
-    }
-
-    public void setReceivedDateEnabled(Boolean receivedDateEnabled)
-    {
-        this.receivedDateEnabled = receivedDateEnabled;
     }
 
     public Boolean getNotificationGroupsEnabled()
