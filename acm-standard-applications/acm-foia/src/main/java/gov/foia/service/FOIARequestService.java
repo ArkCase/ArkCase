@@ -61,6 +61,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashMap;
@@ -116,31 +117,29 @@ public class FOIARequestService
 
                 if (in.getTitle() == null || in.getTitle().length() == 0)
                 {
-                    if (((FOIARequest) in).getRequestType().equals(FOIAConstants.NEW_REQUEST_TYPE))
+                    if (foiaRequest.getRequestType().equals(FOIAConstants.NEW_REQUEST_TYPE))
                     {
                         in.setTitle(FOIAConstants.NEW_REQUEST_TITLE);
                     }
                     else
                     {
-                        in.setTitle("Appeal of " + ((FOIARequest) in).getOriginalRequestNumber());
+                        in.setTitle("Appeal of " + foiaRequest.getOriginalRequestNumber());
                     }
                 }
 
-                if (foiaRequest.getId() != null && foiaRequest.getQueue().getName().equalsIgnoreCase("Intake")
-                        && !foiaConfigurationService.readConfiguration().getReceivedDateEnabled())
+                if (foiaRequest.getReceivedDate() == null)
                 {
-                    if (foiaRequest.getReceivedDate() != null)
-                    {
-                        in.setDueDate(getQueuesTimeToCompleteService().addWorkingDaysToDate(
-                                Date.from(foiaRequest.getReceivedDate().atZone(ZoneId.systemDefault()).toInstant()),
-                                foiaRequest.getRequestType()));
-                    }
+                    foiaRequest.setReceivedDate(LocalDateTime.now());
                 }
-                else if (foiaRequest.getId() == null && foiaConfigurationService.readConfiguration().getReceivedDateEnabled())
+
+                // On new Appeal, set DueDate.
+                // No need to do this on existing one, because received date can be set only once and Appeals are not
+                // following misdirect functionality
+                if (foiaRequest.getId() == null && foiaRequest.getRequestType().equals(FOIAConstants.APPEAL_REQUEST_TYPE))
                 {
-                    // calculate due date from time to complete configuration
-                    // override if any due date is set from UI
-                    in.setDueDate(getQueuesTimeToCompleteService().addWorkingDaysToDate(new Date(), foiaRequest.getRequestType()));
+                    in.setDueDate(getQueuesTimeToCompleteService().addWorkingDaysToDate(
+                            Date.from(foiaRequest.getReceivedDate().atZone(ZoneId.systemDefault()).toInstant()),
+                            foiaRequest.getRequestType()));
                 }
 
                 if (foiaRequest.getPaidFlag() == null || foiaRequest.getLitigationFlag() == null)
