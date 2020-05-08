@@ -8,7 +8,6 @@ import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 
@@ -30,19 +29,10 @@ public class FOIARequestPerfectedDateHandler implements PipelineHandler<FOIARequ
 
         if (entity.getId() != null && pipelineContext.isNewCase() && entity.getRequestType().equals(FOIAConstants.NEW_REQUEST_TYPE))
         {
-            LocalDateTime receivedDate = entity.getReceivedDate();
-            if (holidayConfigurationService.getHolidayConfiguration().getIncludeWeekends())
-            {
-                entity.setPerfectedDate(receivedDate);
-                entity.setRedirectedDate(receivedDate);
-            }
-            else
-            {
-                entity.setPerfectedDate(
-                        holidayConfigurationService.getNextWorkingDay(receivedDate.toLocalDate()).atTime(receivedDate.toLocalTime()));
-                entity.setRedirectedDate(
-                        holidayConfigurationService.getNextWorkingDay(receivedDate.toLocalDate()).atTime(receivedDate.toLocalTime()));
-            }
+            entity.setPerfectedDate(holidayConfigurationService.getFirstWorkingDay(entity.getReceivedDate().toLocalDate())
+                    .atTime(entity.getReceivedDate().toLocalTime()));
+            entity.setRedirectedDate(holidayConfigurationService.getFirstWorkingDay(entity.getReceivedDate().toLocalDate())
+                    .atTime(entity.getReceivedDate().toLocalTime()));
 
             Integer TTC = queuesTimeToCompleteService.getTimeToComplete().getRequest().getTotalTimeToComplete();
             entity.setDueDate(holidayConfigurationService
