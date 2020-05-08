@@ -65,7 +65,7 @@ public class OrganizationDao extends AcmAbstractDao<Organization>
 
     public List<Organization> findOrganizationsByName(String organizationName)
     {
-        String query = "SELECT o FROM Organization o where o.organizationValue = :organizationName";
+        String query = "SELECT o FROM Organization o WHERE LOWER(o.organizationValue) = :organizationName";
         TypedQuery<Organization> dbQuery = getEm().createQuery(query, Organization.class);
         dbQuery.setParameter("organizationName", organizationName);
         List<Organization> results = dbQuery.getResultList();
