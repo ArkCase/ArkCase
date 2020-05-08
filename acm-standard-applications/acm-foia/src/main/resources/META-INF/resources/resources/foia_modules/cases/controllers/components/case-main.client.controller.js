@@ -256,7 +256,6 @@ angular.module('cases').controller(
                 $scope.requestExtensionWorkingDaysEnabled = response.data.requestExtensionWorkingDaysEnabled;
                 $scope.expediteWorkingDays = response.data.expediteWorkingDays;
                 $scope.expediteWorkingDaysEnabled = response.data.expediteWorkingDaysEnabled;
-                $scope.createRequestAutomaticallyWhenAppealIsRemanded = response.data.createRequestAutomaticallyWhenAppealIsRemanded;
             }, function (err) {
                 MessageService.errorAction();
             });
