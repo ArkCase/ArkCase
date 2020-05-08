@@ -348,6 +348,8 @@ angular.module('request-info').controller(
             AdminFoiaConfigService.getFoiaConfig().then(function (response) {
                 $scope.extensionWorkingDays = response.data.requestExtensionWorkingDays;
                 $scope.requestExtensionWorkingDaysEnabled = response.data.requestExtensionWorkingDaysEnabled;
+                $scope.expediteWorkingDays = response.data.expediteWorkingDays;
+                $scope.expediteWorkingDaysEnabled = response.data.expediteWorkingDaysEnabled;
             }, function (err) {
                 MessageService.errorAction();
             });
@@ -593,6 +595,16 @@ angular.module('request-info').controller(
                 populateDeniedDispositionCategories($scope.requestInfo);
                 populateOtherReasons($scope.requestInfo);
                 populateRequestTrack($scope.requestInfo);
+                
+                $scope.previousDueDate = objectInfo.dueDate;
+                if(objectInfo.requestTrack === 'expedite'){
+                    if ($scope.includeWeekends) {
+                        $scope.previousDueDate = DueDateService.dueDateWithWeekends($scope.objectInfo.dueDate, $scope.expediteWorkingDays, $scope.holidays);
+                    } else {
+                        $scope.previousDueDate = DueDateService.dueDateWorkingDays($scope.objectInfo.dueDate, $scope.expediteWorkingDays, $scope.holidays);
+                    }
+                }
+                $scope.originalDueDate = $scope.previousDueDate;
             };
 
             function populateDispositionCategories(objectInfo) {
@@ -1253,6 +1265,31 @@ angular.module('request-info').controller(
                         }
                     });
                 });
+            }
+
+            $scope.requestTrackChanged = function (requestTrack) {
+                if (requestTrack === 'expedite') {
+                    expediteDueDate();
+                } else {
+                    resetDueDate();
+                }
+            };
+
+            function resetDueDate() {
+                $scope.objectInfo.dueDate = $scope.originalDueDate;
+                $rootScope.$broadcast('dueDate-changed', $scope.originalDueDate);
+            }
+
+            function expediteDueDate() {
+                if ($scope.expediteWorkingDaysEnabled && !Util.isEmpty($scope.objectInfo.receivedDate)) {
+                    if ($scope.includeWeekends) {
+                        $scope.expeditedDueDate = DueDateService.dueDateWithWeekends($scope.objectInfo.receivedDate, $scope.expediteWorkingDays, $scope.holidays);
+                    } else {
+                        $scope.expeditedDueDate = DueDateService.dueDateWorkingDays($scope.objectInfo.receivedDate, $scope.expediteWorkingDays, $scope.holidays);
+                    }
+                    $scope.objectInfo.dueDate = $scope.expeditedDueDate;
+                    $rootScope.$broadcast('dueDate-changed', $scope.expeditedDueDate);
+                }
             }
 
             $scope.onClickNextQueue = function (name, isRequestFormModified) {

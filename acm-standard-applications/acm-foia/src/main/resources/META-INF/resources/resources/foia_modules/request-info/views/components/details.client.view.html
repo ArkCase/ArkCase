@@ -14,7 +14,7 @@
                 <div class="form-group col-sm-6">
                     <label class="control-label"><span translate> requests.comp.details.requestTrack.label</span> <span
                             ng-if="requiredFields['requestTrack']" class="required-asterisk">*</span></label> <select
-                        ng-model="requestInfo.requestTrack" ng-required="requiredFields['requestTrack']"
+                        ng-model="requestInfo.requestTrack" ng-change="requestTrackChanged(requestInfo.requestTrack)" ng-required="requiredFields['requestTrack']"
                         ng-options="requestTrack.key as requestTrack.value | translate for requestTrack in requestTracks"
                         class="form-control input-md">
                 </select>
