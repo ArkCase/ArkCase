@@ -55,7 +55,7 @@
                     "headerTooltip": "queues.table.headerTooltip.lock",
                     "enableSorting": false,
                     "enableFiltering": false,
-                    "cellTemplate": "<div ng-click='grid.appScope.rowClick(row);' style='cursor:pointer;'  class='ui-grid-cell-contents text-center'><span ng-if='row.entity.locked' class='fa fa-lock'></span></div>",
+                    "cellTemplate": "<div ng-click='grid.appScope.rowClick(row);' style='cursor:pointer;'  class='ui-grid-cell-contents text-center'><span ng-show='row.entity.locked' class='fa fa-lock'></span></div>",
                     "width": 60
                 },
                 {
