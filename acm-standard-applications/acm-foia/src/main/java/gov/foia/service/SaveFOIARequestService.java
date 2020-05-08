@@ -81,6 +81,21 @@ public class SaveFOIARequestService
         return saved;
     }
 
+    public CaseFile saveFOIARequest(CaseFile in, Map<String, List<MultipartFile>> filesMap, Authentication auth, String ipAddress)
+            throws AcmCreateObjectFailedException
+    {
+        CaseFile oldCaseFile = null;
+        if (in.getId() != null)
+        {
+            oldCaseFile = getFoiaRequestService().getFoiaRequestById(in.getId());
+        }
+
+        CaseFile saved = getFoiaRequestService().saveRequest(in, filesMap, auth, ipAddress);
+        raiseCaseEvent(in.getId() == null, saved, in instanceof FOIARequest ? ((FOIARequest) in).getDispositionValue() : null, auth,
+                ipAddress, oldCaseFile);
+        return saved;
+    }
+
     public CaseFile savePortalRequest(CaseFile in, Map<String, List<MultipartFile>> filesMap, Authentication auth, String ipAddress)
             throws AcmCreateObjectFailedException
     {
@@ -203,7 +218,7 @@ public class SaveFOIARequestService
                     {
                         if (request.getQueue().getName().equals(FOIAConstants.FULFILL_QUEUE))
                         {
-                            caseFileEventUtility.raiseCustomEvent(saved, "disposition",   dispositionValue + " Added", new Date(),
+                            caseFileEventUtility.raiseCustomEvent(saved, "disposition", dispositionValue + " Added", new Date(),
                                     ipAddress, auth.getName(), auth);
                         }
                         else

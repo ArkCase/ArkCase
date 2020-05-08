@@ -23,8 +23,7 @@
                     <div class="col-lg-4">
                         <div class="checkbox">
                             <label>
-                                <input type="checkbox"
-                                        ng-model="configDataModel.limitedDeliveryToSpecificPageCountEnabled">
+                                <input type="checkbox" ng-model="configDataModel.limitedDeliveryToSpecificPageCountEnabled">
                                 <span translate>
                                     admin.application.foia.config.labels.limitedDeliveryToSpecificPageCountEnabled
                                 </span>
@@ -33,8 +32,7 @@
                     </div>
                     <div class="col-lg-4">
                         <input type="number" min="1" ng-model="configDataModel.limitedDeliveryToSpecificPageCount"
-                                ng-disabled="!configDataModel.limitedDeliveryToSpecificPageCountEnabled"
-                                class="form-control">
+                                ng-disabled="!configDataModel.limitedDeliveryToSpecificPageCountEnabled" class="form-control">
                     </div>
                 </div>
                 <div class="row">
@@ -136,7 +134,8 @@
                     <div class="col-lg-12">
                         <div class="checkbox">
                             <label>
-                                <input type="checkbox" ng-model="configDataModel.holdedAndAppealedRequestsDueDateUpdateEnabled" title="{{'admin.application.foia.config.labels.holdedAndAppealedRequestsDueDateUpdateEnabled.title' | translate}}">
+                                <input type="checkbox" ng-model="configDataModel.holdedAndAppealedRequestsDueDateUpdateEnabled"
+                                        title="{{'admin.application.foia.config.labels.holdedAndAppealedRequestsDueDateUpdateEnabled.title' | translate}}">
                                 <span translate>
                                     admin.application.foia.config.labels.holdedAndAppealedRequestsDueDateUpdateEnabled
                                 </span>
@@ -255,6 +254,18 @@
                                 <input type="checkbox" ng-model="configDataModel.litigationAppealsEnabled">
                                 <span translate>
                                     admin.application.foia.config.labels.litigationFlagDefaultValueForAppeals
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" ng-model="configDataModel.automaticCreationOfRequestWhenAppealIsRemandedEnabled">
+                                <span translate>
+                                    admin.application.foia.config.labels.automaticCreationOfRequestWhenAppealIsRemandedEnabled
                                 </span>
                             </label>
                         </div>

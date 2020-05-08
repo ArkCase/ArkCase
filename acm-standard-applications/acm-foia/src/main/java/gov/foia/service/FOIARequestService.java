@@ -275,7 +275,7 @@ public class FOIARequestService
 
     }
 
-    private CaseFile createReference(CaseFile in, CaseFile originalRequest)
+    public CaseFile createReference(CaseFile in, CaseFile originalRequest)
     {
         ObjectAssociation oa = new ObjectAssociation();
         oa.setTargetId(originalRequest.getId());
