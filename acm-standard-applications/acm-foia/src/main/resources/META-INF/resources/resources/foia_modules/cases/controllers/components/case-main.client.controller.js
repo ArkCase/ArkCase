@@ -71,7 +71,15 @@ angular.module('cases').controller(
                 } else {
                     $scope.showDispositionReasonsFlag = true;
                 }
-                $scope.originalDueDate = objectInfo.dueDate;
+                $scope.previousDueDate = objectInfo.dueDate;
+                if(objectInfo.requestTrack === 'expedite') {
+                    if ($scope.includeWeekends) {
+                        $scope.previousDueDate = DueDateService.dueDateWithWeekends($scope.objectInfo.dueDate, $scope.expediteWorkingDays, $scope.holidays);
+                    } else {
+                        $scope.previousDueDate = DueDateService.dueDateWorkingDays($scope.objectInfo.dueDate, $scope.expediteWorkingDays, $scope.holidays);
+                    }
+                }
+                $scope.originalDueDate =  $scope.previousDueDate;
                 $scope.enableDispositionClosedDate = objectInfo.dispositionClosedDate == null;
 
             };
