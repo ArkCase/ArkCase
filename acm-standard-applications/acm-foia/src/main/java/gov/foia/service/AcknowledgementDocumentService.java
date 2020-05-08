@@ -73,32 +73,29 @@ public class AcknowledgementDocumentService
 
     public void emailAcknowledgement(Long requestId)
     {
-        if (!foiaConfigurationService.readConfiguration().getReceivedDateEnabled())
+        FOIARequest request = getRequestDao().find(requestId);
+        if (Objects.isNull(request.getPreviousQueue()))
         {
-            FOIARequest request = getRequestDao().find(requestId);
-            if (Objects.isNull(request.getPreviousQueue()))
+            String emailAddress = extractRequestorEmailAddress(request.getOriginator().getPerson());
+            if (emailAddress != null && !emailAddress.isEmpty())
             {
-                String emailAddress = extractRequestorEmailAddress(request.getOriginator().getPerson());
-                if (emailAddress != null && !emailAddress.isEmpty())
-                {
-                    FOIADocumentDescriptor documentDescriptor = documentGeneratorService.getDocumentDescriptor(request, FOIAConstants.ACK);
-                    EcmFile letter = getEcmFileDao().findForContainerAttachmentFolderAndFileType(request.getContainer().getId(),
-                            request.getContainer().getAttachmentFolder().getId(), documentDescriptor.getDoctype());
+                FOIADocumentDescriptor documentDescriptor = documentGeneratorService.getDocumentDescriptor(request, FOIAConstants.ACK);
+                EcmFile letter = getEcmFileDao().findForContainerAttachmentFolderAndFileType(request.getContainer().getId(),
+                        request.getContainer().getAttachmentFolder().getId(), documentDescriptor.getDoctype());
 
-                    EcmFileVersion ecmFileVersion = letter.getVersions().stream()
-                            .filter(fv -> fv.getVersionTag().equals(letter.getActiveVersionTag())).findFirst().get();
+                EcmFileVersion ecmFileVersion = letter.getVersions().stream()
+                        .filter(fv -> fv.getVersionTag().equals(letter.getActiveVersionTag())).findFirst().get();
 
-                    Notification notification = new Notification();
-                    notification.setTemplateModelName("requestDocumentAttached");
-                    notification.setEmailAddresses(emailAddress);
-                    notification.setAttachFiles(true);
-                    notification.setFiles(Arrays.asList(ecmFileVersion));
-                    notification.setParentId(requestId);
-                    notification.setParentType(request.getObjectType());
-                    notification.setTitle(String.format("%s %s", request.getRequestType(), request.getCaseNumber()));
-                    notification.setUser(request.getCreator());
-                    notificationDao.save(notification);
-                }
+                Notification notification = new Notification();
+                notification.setTemplateModelName("requestDocumentAttached");
+                notification.setEmailAddresses(emailAddress);
+                notification.setAttachFiles(true);
+                notification.setFiles(Arrays.asList(ecmFileVersion));
+                notification.setParentId(requestId);
+                notification.setParentType(request.getObjectType());
+                notification.setTitle(String.format("%s %s", request.getRequestType(), request.getCaseNumber()));
+                notification.setUser(request.getCreator());
+                notificationDao.save(notification);
             }
         }
     }
@@ -108,14 +105,7 @@ public class AcknowledgementDocumentService
         FOIARequest request = getRequestDao().find(requestId);
         if (Objects.isNull(request.getPreviousQueue()))
         {
-            if (foiaConfigurationService.readConfiguration().getReceivedDateEnabled())
-            {
-                foiaQueueCorrespondenceService.handleRequestReceivedAcknowledgementLetter(requestId);
-            }
-            else
-            {
-                generateAndUploadACK(requestId);
-            }
+            foiaQueueCorrespondenceService.handleRequestReceivedAcknowledgementLetter(requestId);
         }
     }
 
