@@ -210,7 +210,7 @@ angular.module('cases').controller('Cases.ActionsFooterController',
                         // Note saved
                         $scope.requestDispositionCategory = null;
                         if ($scope.objectInfo.requestType !== 'Appeal') {
-                            if($scope.objectInfo.deniedFlag && $scope.objectInfo.queue.name === 'Approve') {
+                            if ($scope.objectInfo.deniedFlag && $scope.objectInfo.queue.name === 'Approve') {
                                 $scope.objectInfo.status = 'Perfected';
                                 $scope.deleteDenialLetter = true;
                             }
@@ -263,7 +263,6 @@ angular.module('cases').controller('Cases.ActionsFooterController',
                     } else {
                         deferred.resolve();
                     }
-                    ;
                 }, function () {
                     deferred.reject();
                     $scope.loading = false;

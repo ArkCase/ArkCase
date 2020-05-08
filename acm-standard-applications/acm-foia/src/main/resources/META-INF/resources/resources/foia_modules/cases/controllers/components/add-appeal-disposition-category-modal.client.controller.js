@@ -135,6 +135,7 @@ angular.module('cases').controller('Cases.AddAppealDispositionCategoriesModalCon
                         //if other was unchecked in reasons
                         if (reason === 'other') {
                             $scope.isOtherRequired = false;
+                            $scope.objectInfo.otherReason = null;
                         }
                     }
 
