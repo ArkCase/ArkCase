@@ -26,9 +26,14 @@ package gov.foia.service;
  * #L%
  */
 
+import com.armedia.acm.auth.AcmAuthentication;
+import com.armedia.acm.auth.AcmAuthenticationManager;
+import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.objectonverter.AcmUnmarshaller;
 import com.armedia.acm.objectonverter.ObjectConverter;
+import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
+import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.service.objecthistory.model.AcmObjectHistory;
 import com.armedia.acm.service.objecthistory.model.AcmObjectHistoryEvent;
 import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryEventPublisher;
@@ -37,13 +42,21 @@ import com.armedia.acm.services.config.lookups.model.StandardLookupEntry;
 import com.armedia.acm.services.config.lookups.service.LookupDao;
 import com.armedia.acm.services.labels.service.TranslationService;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationListener;
+import org.springframework.security.authentication.AuthenticationServiceException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import gov.foia.model.DispositionReason;
 import gov.foia.model.FOIAConstants;
 import gov.foia.model.FOIARequest;
+import gov.foia.model.FOIARequesterAssociation;
+import gov.foia.model.FoiaConfig;
 
 /**
  * Created by ivana.shekerova
@@ -51,12 +64,17 @@ import gov.foia.model.FOIARequest;
 
 public class FOIARequestEventListener implements ApplicationListener<AcmObjectHistoryEvent>
 {
+    private final Logger log = LogManager.getLogger(getClass());
+
     private AcmObjectHistoryService acmObjectHistoryService;
     private AcmObjectHistoryEventPublisher acmObjectHistoryEventPublisher;
     private FOIARequestEventUtility foiaRequestEventUtility;
     private ObjectConverter objectConverter;
     private LookupDao lookupDao;
     private TranslationService translationService;
+    private FoiaConfig foiaConfig;
+    private AcmAuthenticationManager authenticationManager;
+    private SaveFOIARequestService saveFOIARequestService;
 
     @Override
     public void onApplicationEvent(AcmObjectHistoryEvent event)
@@ -64,6 +82,19 @@ public class FOIARequestEventListener implements ApplicationListener<AcmObjectHi
         if (event != null)
         {
             AcmObjectHistory acmObjectHistory = (AcmObjectHistory) event.getSource();
+
+            String principal = event.getUserId();
+            AcmAuthentication authentication;
+            try
+            {
+                authentication = authenticationManager.getAcmAuthentication(
+                        new UsernamePasswordAuthenticationToken(principal, principal));
+            }
+            catch (AuthenticationServiceException e)
+            {
+                authentication = new AcmAuthentication(Collections.emptySet(), principal, "",
+                        true, principal);
+            }
 
             boolean isCaseFile = checkExecution(acmObjectHistory.getObjectType());
 
@@ -89,9 +120,36 @@ public class FOIARequestEventListener implements ApplicationListener<AcmObjectHi
 
                         if (existing != null)
                         {
-                            String principal = event.getUserId();
-                            checkDispositionReasons(existing, updatedCaseFile, event.getIpAddress(), principal);
+                            checkDispositionReasons(existing, updatedCaseFile, event.getIpAddress());
 
+                            if (foiaConfig.getAutomaticCreationOfRequestWhenAppealIsRemandedEnabled()
+                                    && isStatusChangedToClosed(existing, updatedCaseFile))
+                            {
+                                if (updatedCaseFile.getDisposition() != null
+                                        && (updatedCaseFile.getDisposition().equals("partially-affirmed")
+                                                || updatedCaseFile.getDisposition().equals("completely-reversed")))
+                                {
+                                    if (!updatedCaseFile.getChildObjects().isEmpty())
+                                    {
+                                        Long initialRequestId = updatedCaseFile.getChildObjects().stream().findFirst().get().getTargetId();
+                                        FOIARequest initialRequest = (FOIARequest) getSaveFOIARequestService().getFoiaRequestService()
+                                                .getCaseFileDao().find(initialRequestId);
+                                        FOIARequest newRequest = populateRequest(initialRequest, updatedCaseFile);
+                                        FOIARequest saved = null;
+                                        try
+                                        {
+                                            saved = (FOIARequest) getSaveFOIARequestService()
+                                                    .saveFOIARequest(newRequest, null, authentication, event.getIpAddress());
+                                        }
+                                        catch (AcmCreateObjectFailedException e)
+                                        {
+                                            log.error("Can't save Remanded Foia Request for Request with id [{}]", initialRequestId, e);
+                                        }
+
+                                        log.debug("Remanded FOIA Request: {}", saved);
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -99,7 +157,7 @@ public class FOIARequestEventListener implements ApplicationListener<AcmObjectHi
         }
     }
 
-    public void checkDispositionReasons(FOIARequest request, FOIARequest updatedRequest, String ipAddress, String principal)
+    public void checkDispositionReasons(FOIARequest request, FOIARequest updatedRequest, String ipAddress)
     {
         List<DispositionReason> existing = request.getDispositionReasons();
         List<DispositionReason> updated = updatedRequest.getDispositionReasons();
@@ -143,6 +201,57 @@ public class FOIARequestEventListener implements ApplicationListener<AcmObjectHi
                         dispReasonValue + " Added");
             }
         }
+    }
+
+    private boolean isStatusChangedToClosed(CaseFile caseFile, CaseFile updatedCaseFile)
+    {
+        String updatedStatus = updatedCaseFile.getStatus();
+        String status = caseFile.getStatus();
+        return !Objects.equals(updatedStatus, status) && updatedStatus.equalsIgnoreCase("Closed");
+    }
+
+    public FOIARequest populateRequest(FOIARequest initialRequest, FOIARequest appeal)
+    {
+        FOIARequest request = new FOIARequest();
+
+        request.setRequestType(initialRequest.getRequestType());
+        request.setOriginalRequestNumber(initialRequest.getOriginalRequestNumber());
+        request.setFoiaConfiguration(initialRequest.getFoiaConfiguration());
+        request.setRequestCategory(initialRequest.getRequestCategory());
+        request.setDeliveryMethodOfResponse(initialRequest.getDeliveryMethodOfResponse());
+
+        request.setTitle(initialRequest.getTitle() + " - Remanded");
+
+        request.setDetails(initialRequest.getDetails());
+        request.setRequestTrack(initialRequest.getRequestTrack());
+        request.setOtherReason(initialRequest.getOtherReason());
+        request.setComponentAgency(initialRequest.getComponentAgency());
+        request.setNotificationGroup(initialRequest.getNotificationGroup());
+
+        FOIARequesterAssociation requesterAssociation = new FOIARequesterAssociation();
+        PersonAssociation originator = initialRequest.getOriginator();
+        requesterAssociation.setPerson(originator.getPerson());
+        requesterAssociation.setPersonType(originator.getPersonType());
+        requesterAssociation.setParentType(originator.getParentType());
+
+        request.setOriginator(requesterAssociation);
+
+        request = (FOIARequest) getSaveFOIARequestService().getFoiaRequestService().createReference(request, initialRequest);
+        request = (FOIARequest) getSaveFOIARequestService().getFoiaRequestService().createReference(request, appeal);
+
+        request.setRecordSearchDateFrom(initialRequest.getRecordSearchDateFrom());
+        request.setRecordSearchDateTo(initialRequest.getRecordSearchDateTo());
+
+        request.setProcessingFeeWaive(initialRequest.getProcessingFeeWaive());
+        request.setFeeWaiverFlag(initialRequest.getFeeWaiverFlag());
+        request.setRequestFeeWaiveReason(initialRequest.getRequestFeeWaiveReason());
+
+        request.setPayFee(initialRequest.getPayFee());
+
+        request.setExpediteFlag(initialRequest.getExpediteFlag());
+        request.setRequestExpediteReason(initialRequest.getRequestExpediteReason());
+
+        return request;
     }
 
     private boolean checkExecution(String objectType)
@@ -211,5 +320,35 @@ public class FOIARequestEventListener implements ApplicationListener<AcmObjectHi
     public void setTranslationService(TranslationService translationService)
     {
         this.translationService = translationService;
+    }
+
+    public FoiaConfig getFoiaConfig()
+    {
+        return foiaConfig;
+    }
+
+    public void setFoiaConfig(FoiaConfig foiaConfig)
+    {
+        this.foiaConfig = foiaConfig;
+    }
+
+    public AcmAuthenticationManager getAuthenticationManager()
+    {
+        return authenticationManager;
+    }
+
+    public void setAuthenticationManager(AcmAuthenticationManager authenticationManager)
+    {
+        this.authenticationManager = authenticationManager;
+    }
+
+    public SaveFOIARequestService getSaveFOIARequestService()
+    {
+        return saveFOIARequestService;
+    }
+
+    public void setSaveFOIARequestService(SaveFOIARequestService saveFOIARequestService)
+    {
+        this.saveFOIARequestService = saveFOIARequestService;
     }
 }

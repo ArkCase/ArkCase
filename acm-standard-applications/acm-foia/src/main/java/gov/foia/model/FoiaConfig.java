@@ -101,6 +101,10 @@ public class FoiaConfig
     @Value("${redirectFunctionalityCalculationEnabled}")
     private Boolean redirectFunctionalityCalculationEnabled;
 
+    @JsonProperty("automaticCreationOfRequestWhenAppealIsRemandedEnabled")
+    @Value("${automaticCreationOfRequestWhenAppealIsRemandedEnabled}")
+    private Boolean automaticCreationOfRequestWhenAppealIsRemandedEnabled;
+
     @JsonProperty("feeWaivedRequestsEnabled")
     @Value("${feeWaivedRequestsEnabled}")
     private Boolean feeWaivedRequestsEnabled;
@@ -292,6 +296,16 @@ public class FoiaConfig
     public void setRedirectFunctionalityCalculationEnabled(Boolean redirectFunctionalityCalculationEnabled)
     {
         this.redirectFunctionalityCalculationEnabled = redirectFunctionalityCalculationEnabled;
+    }
+
+    public Boolean getAutomaticCreationOfRequestWhenAppealIsRemandedEnabled()
+    {
+        return automaticCreationOfRequestWhenAppealIsRemandedEnabled;
+    }
+
+    public void setAutomaticCreationOfRequestWhenAppealIsRemandedEnabled(Boolean automaticCreationOfRequestWhenAppealIsRemandedEnabled)
+    {
+        this.automaticCreationOfRequestWhenAppealIsRemandedEnabled = automaticCreationOfRequestWhenAppealIsRemandedEnabled;
     }
 
     public Boolean getFeeWaivedRequestsEnabled()
