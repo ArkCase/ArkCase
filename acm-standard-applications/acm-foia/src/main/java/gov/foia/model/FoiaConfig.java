@@ -57,10 +57,6 @@ public class FoiaConfig
     @Value("${maxDaysInBillingQueue}")
     private Integer maxDaysInBillingQueue;
 
-    @JsonProperty("receivedDateEnabled")
-    @Value("${receivedDateEnabled}")
-    private Boolean receivedDateEnabled;
-
     @JsonProperty("holdedAndAppealedRequestsDueDateUpdateEnabled")
     @Value("${holdedAndAppealedRequestsDueDateUpdateEnabled}")
     private Boolean holdedAndAppealedRequestsDueDateUpdateEnabled;
@@ -179,16 +175,6 @@ public class FoiaConfig
     public void setMaxDaysInBillingQueue(Integer maxDaysInBillingQueue)
     {
         this.maxDaysInBillingQueue = maxDaysInBillingQueue;
-    }
-
-    public Boolean getReceivedDateEnabled()
-    {
-        return receivedDateEnabled;
-    }
-
-    public void setReceivedDateEnabled(Boolean receivedDateEnabled)
-    {
-        this.receivedDateEnabled = receivedDateEnabled;
     }
 
     public Boolean getHoldedAndAppealedRequestsDueDateUpdateEnabled()
