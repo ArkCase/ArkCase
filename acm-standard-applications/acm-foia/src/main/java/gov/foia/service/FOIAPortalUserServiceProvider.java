@@ -802,7 +802,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
 
     public Organization checkOrganizationByNameOrCreateNew(String firstName, String familyName, String organizationName)
     {
-        List<Organization> organizationList = getOrganizationDao().findOrganizationsByName(organizationName);
+        List<Organization> organizationList = getOrganizationDao().findOrganizationsByName(organizationName.toLowerCase());
 
         if (organizationList == null)
         {
