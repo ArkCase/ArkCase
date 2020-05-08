@@ -36,7 +36,6 @@ public class FoiaConfiguration extends SystemConfiguration
     private Boolean holdedAndAppealedRequestsDueDateUpdateEnabled;
     private Integer requestExtensionWorkingDays;
     private Boolean dashboardBannerEnabled;
-    private Boolean receivedDateEnabled;
     private Boolean notificationGroupsEnabled;
     private Boolean requestExtensionWorkingDaysEnabled;
     private Boolean expediteWorkingDaysEnabled;
@@ -49,6 +48,10 @@ public class FoiaConfiguration extends SystemConfiguration
     private Boolean requireTimesheetToCompleteDeniedRequest;
     private Boolean provideReasonToHoldRequestEnabled;
     private Boolean redirectFunctionalityCalculationEnabled;
+    private Boolean feeWaivedRequestsEnabled;
+    private Boolean feeWaivedAppealsEnabled;
+    private Boolean litigationRequestsEnabled;
+    private Boolean litigationAppealsEnabled;
 
     public Integer getMaxDaysInBillingQueue()
     {
@@ -98,16 +101,6 @@ public class FoiaConfiguration extends SystemConfiguration
     public void setDashboardBannerEnabled(Boolean dashboardBannerEnabled)
     {
         this.dashboardBannerEnabled = dashboardBannerEnabled;
-    }
-
-    public Boolean getReceivedDateEnabled()
-    {
-        return receivedDateEnabled;
-    }
-
-    public void setReceivedDateEnabled(Boolean receivedDateEnabled)
-    {
-        this.receivedDateEnabled = receivedDateEnabled;
     }
 
     public Boolean getNotificationGroupsEnabled()
@@ -235,5 +228,45 @@ public class FoiaConfiguration extends SystemConfiguration
     public void setRedirectFunctionalityCalculationEnabled(Boolean redirectFunctionalityCalculationEnabled)
     {
         this.redirectFunctionalityCalculationEnabled = redirectFunctionalityCalculationEnabled;
+    }
+
+    public Boolean getFeeWaivedRequestsEnabled()
+    {
+        return feeWaivedRequestsEnabled;
+    }
+
+    public void setFeeWaivedRequestsEnabled(Boolean feeWaivedRequestsEnabled)
+    {
+        this.feeWaivedRequestsEnabled = feeWaivedRequestsEnabled;
+    }
+
+    public Boolean getFeeWaivedAppealsEnabled()
+    {
+        return feeWaivedAppealsEnabled;
+    }
+
+    public void setFeeWaivedAppealsEnabled(Boolean feeWaivedAppealsEnabled)
+    {
+        this.feeWaivedAppealsEnabled = feeWaivedAppealsEnabled;
+    }
+
+    public Boolean getLitigationRequestsEnabled()
+    {
+        return litigationRequestsEnabled;
+    }
+
+    public void setLitigationRequestsEnabled(Boolean litigationRequestsEnabled)
+    {
+        this.litigationRequestsEnabled = litigationRequestsEnabled;
+    }
+
+    public Boolean getLitigationAppealsEnabled()
+    {
+        return litigationAppealsEnabled;
+    }
+
+    public void setLitigationAppealsEnabled(Boolean litigationAppealsEnabled)
+    {
+        this.litigationAppealsEnabled = litigationAppealsEnabled;
     }
 }

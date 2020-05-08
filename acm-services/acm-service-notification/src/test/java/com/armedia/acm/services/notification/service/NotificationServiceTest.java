@@ -36,7 +36,6 @@ import static org.easymock.EasyMock.expectLastCall;
 import static org.junit.Assert.assertEquals;
 
 import com.armedia.acm.core.provider.TemplateModelProvider;
-import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.email.model.EmailSenderConfig;
 import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
@@ -48,6 +47,7 @@ import com.armedia.acm.services.notification.model.ApplicationNotificationEvent;
 import com.armedia.acm.services.notification.model.BasicNotificationRule;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConfig;
+import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.notification.model.NotificationRule;
 import com.armedia.acm.services.notification.model.QueryType;
 import com.armedia.acm.services.users.dao.UserDao;
@@ -67,7 +67,6 @@ import java.util.Map;
 
 public class NotificationServiceTest extends EasyMockSupport
 {
-
     private NotificationServiceImpl notificationService;
     private NotificationDao mockNotificationDao;
     private NotificationEventPublisher mockNotificationEventPublisher;
@@ -76,7 +75,6 @@ public class NotificationServiceTest extends EasyMockSupport
     private SendExecutor sendExecutor;
     private PurgeExecutor purgeExecutor;
     private NotificationFormatter mockNotificationFormatter;
-    private NotificationConfig notificationConfig;
     private EmailSenderConfig emailSenderConfig;
     private TemplateModelProvider<Notification> mockTemplateModelProvider;
     private AcmMailTemplateConfigurationService mockTemplateService;
@@ -114,7 +112,7 @@ public class NotificationServiceTest extends EasyMockSupport
         notificationService.setNotificationFormatter(mockNotificationFormatter);
         notificationService.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
 
-        notificationConfig = new NotificationConfig();
+        NotificationConfig notificationConfig = new NotificationConfig();
         notificationConfig.setUserBatchRun(true);
         notificationConfig.setUserBatchSize(10);
         notificationConfig.setPurgeDays(30);
@@ -136,7 +134,7 @@ public class NotificationServiceTest extends EasyMockSupport
         List<Notification> notifications = new ArrayList<>();
 
         Notification notification1 = new Notification();
-        notification1.setTitle("title");
+        notification1.setTitle("title1");
         notification1.setNote("note");
         notification1.setType("type");
         notification1.setParentId(2L);
@@ -152,7 +150,7 @@ public class NotificationServiceTest extends EasyMockSupport
         notification1.setEmailAddresses("user email");
 
         Notification notification2 = new Notification();
-        notification2.setTitle("title");
+        notification2.setTitle("title2");
         notification2.setNote("note");
         notification2.setType("type");
         notification2.setParentId(2L);
@@ -169,15 +167,6 @@ public class NotificationServiceTest extends EasyMockSupport
 
         notifications.add(notification1);
         notifications.add(notification2);
-
-        Map<String, Object> messageProps = new HashMap<>();
-        messageProps.put("host", "host");
-        messageProps.put("port", "port");
-        messageProps.put("user", "user");
-        messageProps.put("password", "password");
-        messageProps.put("from", "from");
-        messageProps.put("to", "user email");
-        messageProps.put("subject", "title");
 
         BasicNotificationRule assignRule = new BasicNotificationRule();
         assignRule.setGlobalRule(true);
@@ -248,10 +237,13 @@ public class NotificationServiceTest extends EasyMockSupport
             expect(mockTemplateModelProvider.getModel(notification)).andReturn(notification).times(1);
 
             smtpNotificationServer.getEmailSenderService().sendEmail(capture(emailWithAttachmentsDTOCapture), eq(null), eq(null));
-            expectLastCall().anyTimes();
+            expectLastCall().andStubAnswer(() -> {
+                emailWithAttachmentsDTOCapture.getValue().setMailSent(true);
+                return null;
+            });
+            expect(mockNotificationFormatter.replaceFormatPlaceholders(notification)).andReturn(notification).atLeastOnce();
         }
-        expect(mockNotificationFormatter.replaceFormatPlaceholders(notification1)).andReturn(notification1).atLeastOnce();
-        expect(mockNotificationFormatter.replaceFormatPlaceholders(notification2)).andReturn(notification2).atLeastOnce();
+
         expect(mockNotificationUtils.buildNotificationLink(anyString(), anyLong(), anyString(), anyLong())).andReturn(null).anyTimes();
 
         replayAll();
@@ -260,17 +252,17 @@ public class NotificationServiceTest extends EasyMockSupport
 
         verifyAll();
 
-        // Boolean starttls = (Boolean) messagePropsCapture.getValue().get(NotificationConstants.SMTP_STARTTLS);
-        // assertFalse(starttls);
+        assertEquals(NotificationConstants.STATE_SENT, notification1.getState());
+        assertEquals(NotificationConstants.STATE_SENT, notification2.getState());
     }
 
     @Test
-    public void testRunEmailNotSent() throws AcmEncryptionException, Exception
+    public void testRunEmailNotSent() throws Exception
     {
         List<Notification> notifications = new ArrayList<>();
 
         Notification notification1 = new Notification();
-        notification1.setTitle("title");
+        notification1.setTitle("title1");
         notification1.setNote("note");
         notification1.setType("type");
         notification1.setParentId(2L);
@@ -286,7 +278,7 @@ public class NotificationServiceTest extends EasyMockSupport
         notification1.setEmailAddresses("user email");
 
         Notification notification2 = new Notification();
-        notification2.setTitle("title");
+        notification2.setTitle("title2");
         notification2.setNote("note");
         notification2.setType("type");
         notification2.setParentId(2L);
@@ -304,15 +296,6 @@ public class NotificationServiceTest extends EasyMockSupport
         notifications.add(notification1);
         notifications.add(notification2);
 
-        Map<String, Object> messageProps = new HashMap<>();
-        messageProps.put("host", "host");
-        messageProps.put("port", "port");
-        messageProps.put("user", "user");
-        messageProps.put("password", "password");
-        messageProps.put("from", "from");
-        messageProps.put("to", "user email");
-        messageProps.put("subject", "title");
-
         BasicNotificationRule assignRule = new BasicNotificationRule();
         assignRule.setGlobalRule(true);
         assignRule.setJpaQuery("query");
@@ -329,15 +312,14 @@ public class NotificationServiceTest extends EasyMockSupport
         rules.put("assignRule", assignRule);
         rules.put("unassignRule", unassignRule);
 
-        NotificationUtils mockNotificationUtils = createMock(NotificationUtils.class);
-
         NotificationSenderFactory notificationSenderFactory = new NotificationSenderFactory();
         Map<String, NotificationSender> notificationSenderMap = new HashMap<>();
 
         SmtpNotificationSender smtpNotificationServer = new SmtpNotificationSender();
+
+        NotificationUtils mockNotificationUtils = createMock(NotificationUtils.class);
         smtpNotificationServer.setNotificationUtils(mockNotificationUtils);
         smtpNotificationServer.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
-        // smtpNotificationServer.setPropertyFileManager(mockPropertyFileManager);
 
         notificationSenderMap.put("smtp", smtpNotificationServer);
         notificationSenderFactory.setNotificationSenderMap(notificationSenderMap);
@@ -355,32 +337,6 @@ public class NotificationServiceTest extends EasyMockSupport
         expect(mockNotificationDao.executeQuery(capture(propertiesCapture), eq(0), eq(10), capture(ruleCapture))).andReturn(notifications)
                 .anyTimes();
 
-        String template = "Template";
-
-        smtpNotificationServer.setTemplateService(mockTemplateService);
-        smtpNotificationServer.setTemplatingEngine(mockTemplatingEngine);
-        smtpNotificationServer.setUserDao(mockUserDao);
-        smtpNotificationServer.setEmailSenderService(mockEmailSenderService);
-
-        expect(mockTemplateService.getTemplate("test.html")).andReturn(template).times(2);
-
-        for (Notification notification : notifications)
-        {
-            Capture<EmailWithAttachmentsDTO> emailWithAttachmentsDTOCapture = Capture.newInstance();
-
-            expect(smtpNotificationServer.getTemplatingEngine().process(template, notification.getTemplateModelName(), notification))
-                    .andReturn("Body").times(1);
-            expect(mockTemplateModelProvider.getModel(notification)).andReturn(notification).times(1);
-
-            smtpNotificationServer.getEmailSenderService().sendEmail(capture(emailWithAttachmentsDTOCapture), eq(null), eq(null));
-            expectLastCall().anyTimes();
-        }
-
-        mockAuditPropertyEntityAdapter.setUserId(eq("NOTIFICATION-BATCH-INSERT"));
-        expectLastCall().anyTimes();
-
-        expect(mockNotificationFormatter.replaceFormatPlaceholders(notification1)).andReturn(notification1).atLeastOnce();
-        expect(mockNotificationFormatter.replaceFormatPlaceholders(notification2)).andReturn(notification2).atLeastOnce();
         expect(mockNotificationUtils.buildNotificationLink(anyString(), anyLong(), anyString(), anyLong())).andReturn(null).anyTimes();
 
         Capture<Notification> capturedNotification = EasyMock.newCapture();
@@ -389,17 +345,43 @@ public class NotificationServiceTest extends EasyMockSupport
         Capture<ApplicationNotificationEvent> capturedEvent = EasyMock.newCapture();
         mockNotificationEventPublisher.publishNotificationEvent(capture(capturedEvent));
         expectLastCall().anyTimes();
+
         expect(mockNotificationDao.executeQuery(capture(propertiesCapture), eq(10), eq(10), capture(ruleCapture)))
                 .andReturn(new ArrayList<>()).anyTimes();
+        String template = "Template";
+
+        smtpNotificationServer.setTemplateService(mockTemplateService);
+        smtpNotificationServer.setTemplatingEngine(mockTemplatingEngine);
+        smtpNotificationServer.setUserDao(mockUserDao);
+        smtpNotificationServer.setEmailSenderService(mockEmailSenderService);
+
+        expect(mockTemplateService.getTemplate("test.html")).andReturn(template).times(4);
+
+        for (Notification notification : notifications)
+        {
+            Capture<EmailWithAttachmentsDTO> emailWithAttachmentsDTOCapture = Capture.newInstance();
+
+            expect(smtpNotificationServer.getTemplatingEngine().process(template, notification.getTemplateModelName(), notification))
+                    .andReturn("Body").times(2);
+            expect(mockTemplateModelProvider.getModel(notification)).andReturn(notification).times(2);
+
+            smtpNotificationServer.getEmailSenderService().sendEmail(capture(emailWithAttachmentsDTOCapture), eq(null), eq(null));
+            expectLastCall().andStubAnswer(() -> {
+                emailWithAttachmentsDTOCapture.getValue().setMailSent(false);
+                return null;
+            });
+
+            expect(mockNotificationFormatter.replaceFormatPlaceholders(notification)).andReturn(notification).atLeastOnce();
+        }
+
+        mockAuditPropertyEntityAdapter.setUserId(eq("NOTIFICATION-BATCH-INSERT"));
+        expectLastCall().anyTimes();
 
         replayAll();
 
         notificationService.run(new Date(0));
 
         verifyAll();
-
-        // Boolean starttls = (Boolean) messagePropsCapture.getValue().get(NotificationConstants.SMTP_STARTTLS);
-        // assertTrue(starttls);
     }
 
     @Test

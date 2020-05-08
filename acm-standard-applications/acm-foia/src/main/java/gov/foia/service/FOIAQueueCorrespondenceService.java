@@ -56,7 +56,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 
 import freemarker.template.TemplateException;
@@ -160,18 +159,6 @@ public class FOIAQueueCorrespondenceService
                 log.error("Unable to generate Delete Correspondence Letter for Request {} [{}]", request.getRequestType(), request.getId(),
                         e);
             }
-        }
-
-    }
-
-    public void handleFulfillCorrespondenceLetter(String objectType, Long requestId)
-    {
-        FOIARequest request = requestDao.find(requestId);
-        LocalDateTime receivedDate = request.getReceivedDate();
-        if (request.getQueue().getName().equals("Fulfill") && request.getPreviousQueue().getName().equals("Intake")
-                && receivedDate != null && foiaConfigurationService.readConfiguration().getReceivedDateEnabled() == false)
-        {
-            handleRequestReceivedAcknowledgementLetter(requestId);
         }
 
     }
