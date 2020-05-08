@@ -124,6 +124,9 @@ angular.module('request-info').controller(
                 ArkCaseCrossWindowMessagingService.addHandler('hide-loader', onHideLoader);
 
                 ArkCaseCrossWindowMessagingService.addHandler('close-document', onCloseDocument);
+                ArkCaseCrossWindowMessagingService.addHandler('document-saved', onDocumentSave);
+                ArkCaseCrossWindowMessagingService.addHandler('annotation-status-changed', onAnnotationStatusChange);
+
                 ObjectLookupService.getLookupByLookupName("annotationTags").then(function (allAnnotationTags) {
                     $scope.allAnnotationTags = allAnnotationTags;
                     ArkCaseCrossWindowMessagingService.addHandler('select-annotation-tags', onSelectAnnotationTags);
@@ -134,6 +137,20 @@ angular.module('request-info').controller(
 
             function onCloseDocument(data) {
                 $scope.$bus.publish('remove-from-opened-documents-list', {id: data.id, version: data.version});
+            }
+
+            function onDocumentSave(data) {
+                $scope.$bus.publish('reload-exemption-code-grid', {
+                    id: $scope.objectInfo.id,
+                    fileId: data.fileId
+                });
+            }
+
+            function onAnnotationStatusChange(data) {
+                $scope.$bus.publish('reload-exemption-code-grid', {
+                    id: $scope.objectInfo.id,
+                    fileId: data.fileId
+                });
             }
 
             function onSelectAnnotationTags(data) {
@@ -634,7 +651,7 @@ angular.module('request-info').controller(
                     }
                 });
             }
-            
+
             function populateOtherReasons(objectInfo) {
                 ObjectLookupService.getLookupByLookupName('requestOtherReason').then(function (requestOtherReasons) {
                     $scope.otherReasons = requestOtherReasons;
@@ -676,7 +693,7 @@ angular.module('request-info').controller(
                 }
 
             };
-            
+
 
             var getCaseInfo = CaseInfoService.getCaseInfo($stateParams['id']);
 
