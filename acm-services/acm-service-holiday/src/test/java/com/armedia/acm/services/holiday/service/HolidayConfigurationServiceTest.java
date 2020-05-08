@@ -130,7 +130,7 @@ public class HolidayConfigurationServiceTest extends EasyMockSupport {
         holidayConfigurationService.setHolidayFile(new FileSystemResource(holidayConfigurationFilePath));
         // memorials day 2018-05-28
         LocalDate testDate = LocalDate.parse("20180528", DateTimeFormatter.BASIC_ISO_DATE);
-        LocalDate actualResult = holidayConfigurationService.getNextWorkingDay(testDate);
+        LocalDate actualResult = holidayConfigurationService.getFirstWorkingDay(testDate);
 
         LocalDate expectedResult = LocalDate.parse("20180529", DateTimeFormatter.BASIC_ISO_DATE);
         assertEquals(actualResult, expectedResult);
@@ -143,7 +143,7 @@ public class HolidayConfigurationServiceTest extends EasyMockSupport {
         holidayConfigurationService.setHolidayFile(new FileSystemResource(holidayConfigurationFilePath));
 
         LocalDate currentDate = LocalDate.parse("20181222", DateTimeFormatter.BASIC_ISO_DATE);
-        LocalDate actualResult = holidayConfigurationService.getNextWorkingDay(currentDate);
+        LocalDate actualResult = holidayConfigurationService.getFirstWorkingDay(currentDate);
 
         LocalDate expectedResult = LocalDate.parse("20181224", DateTimeFormatter.BASIC_ISO_DATE);
 
@@ -157,7 +157,7 @@ public class HolidayConfigurationServiceTest extends EasyMockSupport {
         holidayConfigurationService.setHolidayFile(new FileSystemResource(holidayConfigurationFilePath));
 
         LocalDate currentDate = LocalDate.parse("20181222", DateTimeFormatter.BASIC_ISO_DATE);
-        LocalDate actualResult = holidayConfigurationService.getNextWorkingDay(currentDate);
+        LocalDate actualResult = holidayConfigurationService.getFirstWorkingDay(currentDate);
 
         LocalDate expectedResult = LocalDate.parse("20181222", DateTimeFormatter.BASIC_ISO_DATE);
 
@@ -171,7 +171,7 @@ public class HolidayConfigurationServiceTest extends EasyMockSupport {
         holidayConfigurationService.setHolidayFile(new FileSystemResource(holidayConfigurationFilePath));
 
         LocalDate currentDate = LocalDate.parse("20200425", DateTimeFormatter.BASIC_ISO_DATE);
-        LocalDate actualResult = holidayConfigurationService.getNextWorkingDay(currentDate);
+        LocalDate actualResult = holidayConfigurationService.getFirstWorkingDay(currentDate);
 
         LocalDate dueDate = holidayConfigurationService.addWorkingDaysToDate(actualResult, 20);
 
