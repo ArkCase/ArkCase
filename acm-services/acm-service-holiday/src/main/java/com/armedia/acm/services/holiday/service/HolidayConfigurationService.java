@@ -135,7 +135,7 @@ public class HolidayConfigurationService
         return !isHoliday(date) && !isWeekendNonWorkingDay(date);
     }
 
-    public LocalDate getNextWorkingDay(LocalDate date)
+    public LocalDate getFirstWorkingDay(LocalDate date)
     {
         LocalDate resultDate = date;
         while (!isWorkingDay(resultDate))
