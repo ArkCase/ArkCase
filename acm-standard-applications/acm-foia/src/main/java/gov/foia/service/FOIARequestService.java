@@ -132,13 +132,16 @@ public class FOIARequestService
                     foiaRequest.setReceivedDate(LocalDateTime.now());
                 }
 
-                // On new Appeal, set DueDate.
-                // No need to do this on existing one, because received date can be set only once and Appeals are not
-                // following misdirect functionality
+                // On new Appeal, set DueDate and PerfectedDate.
+                // No need to do this on existing one, because received date and perfected date can be set only once and
+                // Appeals are not following misdirect functionality.
                 if (foiaRequest.getId() == null && foiaRequest.getRequestType().equals(FOIAConstants.APPEAL_REQUEST_TYPE))
                 {
-                    in.setDueDate(getQueuesTimeToCompleteService().addWorkingDaysToDate(
-                            Date.from(foiaRequest.getReceivedDate().atZone(ZoneId.systemDefault()).toInstant()),
+                    foiaRequest.setPerfectedDate(getQueuesTimeToCompleteService().getHolidayConfigurationService()
+                            .getFirstWorkingDay(foiaRequest.getReceivedDate().toLocalDate())
+                            .atTime(foiaRequest.getReceivedDate().toLocalTime()));
+                    foiaRequest.setDueDate(getQueuesTimeToCompleteService().addWorkingDaysToDate(
+                            Date.from(foiaRequest.getPerfectedDate().atZone(ZoneId.systemDefault()).toInstant()),
                             foiaRequest.getRequestType()));
                 }
 
