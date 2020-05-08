@@ -42,6 +42,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.Date;
 
 import gov.foia.dao.FOIARequestDao;
@@ -79,19 +81,19 @@ public class FOIARequestComponentUpdatedHandler
             {
                 if (holidayConfigurationService.getHolidayConfiguration().getIncludeWeekends())
                 {
-                    entity.setPerfectedDate(LocalDateTime.now());
+                    entity.setRedirectedDate(LocalDateTime.now());
                 }
                 else
                 {
-                    entity.setPerfectedDate(holidayConfigurationService.getNextWorkingDay(LocalDate.now()).atTime(LocalTime.now()));
+                    entity.setRedirectedDate(holidayConfigurationService.getNextWorkingDay(LocalDate.now()).atTime(LocalTime.now()));
                 }
 
                 if (getFoiaConfig().getRedirectFunctionalityCalculationEnabled())
                 {
-                    LocalDate originalPerfectedDate = originalRequest.getPerfectedDate().toLocalDate();
+                    LocalDate originalRedirectedDate = originalRequest.getRedirectedDate().toLocalDate();
 
                     Integer TTC = queuesTimeToCompleteService.getTimeToComplete().getRequest().getTotalTimeToComplete();
-                    Integer elapsedDays = holidayConfigurationService.countWorkingDates(originalPerfectedDate, LocalDate.now());
+                    Integer elapsedDays = holidayConfigurationService.countWorkingDates(originalRedirectedDate, LocalDate.now());
                     Integer elapsedTTC = originalRequest.getTtcOnLastRedirection() - elapsedDays;
 
                     Integer calculatedTTC = elapsedTTC + TTC / 2;
@@ -102,9 +104,13 @@ public class FOIARequestComponentUpdatedHandler
                     {
                         entity.setDueDate(holidayConfigurationService.addWorkingDaysToDate(
                                 Date.from(
-                                        entity.getPerfectedDate().toLocalDate().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()),
+                                        entity.getRedirectedDate().toLocalDate().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()),
                                 calculatedTTC));
                     }
+
+                    entity.setPerfectedDate(holidayConfigurationService
+                            .subtractWorkingDaysFromDate(entity.getDueDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), TTC)
+                            .atTime(LocalTime.now()));
 
                     entity.setTtcOnLastRedirection(elapsedTTC);
 
@@ -138,6 +144,17 @@ public class FOIARequestComponentUpdatedHandler
                     dateFormatter.format(originalRequest.getDueDate()),
                     dateFormatter.format(entity.getDueDate()));
             event = new RequestComponentAgencyChangedEvent(entity, originalRequest, updatedDueDate);
+            applicationEventPublisher.publishEvent(event);
+        }
+
+        if (!originalRequest.getRedirectedDate().equals(entity.getRedirectedDate()))
+        {
+            String originalDate = originalRequest.getRedirectedDate()
+                    .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.MEDIUM));
+            String redirectedDate = entity.getRedirectedDate()
+                    .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.MEDIUM));
+            String updatedRedirectDate = String.format("which updates the Redirected Date from %s to %s", originalDate, redirectedDate);
+            event = new RequestComponentAgencyChangedEvent(entity, originalRequest, updatedRedirectDate);
             applicationEventPublisher.publishEvent(event);
         }
     }

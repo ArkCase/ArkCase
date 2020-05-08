@@ -57,10 +57,6 @@ public class FoiaConfig
     @Value("${maxDaysInBillingQueue}")
     private Integer maxDaysInBillingQueue;
 
-    @JsonProperty("receivedDateEnabled")
-    @Value("${receivedDateEnabled}")
-    private Boolean receivedDateEnabled;
-
     @JsonProperty("holdedAndAppealedRequestsDueDateUpdateEnabled")
     @Value("${holdedAndAppealedRequestsDueDateUpdateEnabled}")
     private Boolean holdedAndAppealedRequestsDueDateUpdateEnabled;
@@ -108,6 +104,22 @@ public class FoiaConfig
     @JsonProperty("automaticCreationOfRequestWhenAppealIsRemandedEnabled")
     @Value("${automaticCreationOfRequestWhenAppealIsRemandedEnabled}")
     private Boolean automaticCreationOfRequestWhenAppealIsRemandedEnabled;
+
+    @JsonProperty("feeWaivedRequestsEnabled")
+    @Value("${feeWaivedRequestsEnabled}")
+    private Boolean feeWaivedRequestsEnabled;
+
+    @JsonProperty("feeWaivedAppealsEnabled")
+    @Value("${feeWaivedAppealsEnabled}")
+    private Boolean feeWaivedAppealsEnabled;
+
+    @JsonProperty("litigationRequestsEnabled")
+    @Value("${litigationRequestsEnabled}")
+    private Boolean litigationRequestsEnabled;
+
+    @JsonProperty("litigationAppealsEnabled")
+    @Value("${litigationAppealsEnabled}")
+    private Boolean litigationAppealsEnabled;
 
     public Integer getMaxDaysInHoldQueue()
     {
@@ -167,16 +179,6 @@ public class FoiaConfig
     public void setMaxDaysInBillingQueue(Integer maxDaysInBillingQueue)
     {
         this.maxDaysInBillingQueue = maxDaysInBillingQueue;
-    }
-
-    public Boolean getReceivedDateEnabled()
-    {
-        return receivedDateEnabled;
-    }
-
-    public void setReceivedDateEnabled(Boolean receivedDateEnabled)
-    {
-        this.receivedDateEnabled = receivedDateEnabled;
     }
 
     public Boolean getHoldedAndAppealedRequestsDueDateUpdateEnabled()
@@ -304,5 +306,45 @@ public class FoiaConfig
     public void setAutomaticCreationOfRequestWhenAppealIsRemandedEnabled(Boolean automaticCreationOfRequestWhenAppealIsRemandedEnabled)
     {
         this.automaticCreationOfRequestWhenAppealIsRemandedEnabled = automaticCreationOfRequestWhenAppealIsRemandedEnabled;
+    }
+
+    public Boolean getFeeWaivedRequestsEnabled()
+    {
+        return feeWaivedRequestsEnabled;
+    }
+
+    public void setFeeWaivedRequestsEnabled(Boolean feeWaivedRequestsEnabled)
+    {
+        this.feeWaivedRequestsEnabled = feeWaivedRequestsEnabled;
+    }
+
+    public Boolean getFeeWaivedAppealsEnabled()
+    {
+        return feeWaivedAppealsEnabled;
+    }
+
+    public void setFeeWaivedAppealsEnabled(Boolean feeWaivedAppealsEnabled)
+    {
+        this.feeWaivedAppealsEnabled = feeWaivedAppealsEnabled;
+    }
+
+    public Boolean getLitigationRequestsEnabled()
+    {
+        return litigationRequestsEnabled;
+    }
+
+    public void setLitigationRequestsEnabled(Boolean litigationRequestsEnabled)
+    {
+        this.litigationRequestsEnabled = litigationRequestsEnabled;
+    }
+
+    public Boolean getLitigationAppealsEnabled()
+    {
+        return litigationAppealsEnabled;
+    }
+
+    public void setLitigationAppealsEnabled(Boolean litigationAppealsEnabled)
+    {
+        this.litigationAppealsEnabled = litigationAppealsEnabled;
     }
 }

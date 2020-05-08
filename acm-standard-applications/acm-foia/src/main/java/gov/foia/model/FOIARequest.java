@@ -226,6 +226,11 @@ public class FOIARequest extends CaseFile implements FOIAObject
     @Convert(converter = BooleanToStringConverter.class)
     private boolean withdrawRequestedFlag = false;
 
+    @Column(name = "fo_redirected_date")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @Convert(converter = LocalDateTimeConverter.class)
+    private LocalDateTime redirectedDate;
+
     @Transient
     private String originalRequestNumber;
 
@@ -885,6 +890,16 @@ public class FOIARequest extends CaseFile implements FOIAObject
         this.withdrawRequestedFlag = withdrawRequestedFlag;
     }
 
+    public LocalDateTime getRedirectedDate()
+    {
+        return redirectedDate;
+    }
+
+    public void setRedirectedDate(LocalDateTime redirectedDate)
+    {
+        this.redirectedDate = redirectedDate;
+    }
+
     /*
      * (non-Javadoc)
      * @see java.lang.Object#toString()
@@ -904,7 +919,8 @@ public class FOIARequest extends CaseFile implements FOIAObject
                 + amendmentFlag
                 + ", requestAmendmentDetails=" + requestAmendmentDetails + ", dispositionClosedDate=" + dispositionClosedDate
                 + ", tollingFlag=" + tollingFlag + ", limitedDeliveryFlag=" + limitedDeliveryFlag + ", generatedZipFlag=" + generatedZipFlag
-                + ", perfectedDate=" + perfectedDate + ", timeToComplete=" + ttcOnLastRedirection + "} "
+                + ", perfectedDate=" + perfectedDate + ", timeToComplete=" + ttcOnLastRedirection + ", redirectedDate=" + redirectedDate
+                + "} "
                 + super.toString();
     }
 }

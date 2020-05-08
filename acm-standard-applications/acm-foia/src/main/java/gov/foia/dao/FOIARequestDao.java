@@ -156,7 +156,7 @@ public class FOIARequestDao extends AcmAbstractDao<FOIARequest>
 
     }
 
-    public List<PortalFOIARequestStatus> getLoggedUserExternalRequests(Long personId)
+    public List<PortalFOIARequestStatus> getLoggedUserExternalRequests(Long personId, String requestId)
     {
         String queryText = "SELECT cf FROM FOIARequest cf JOIN PersonAssociation pa JOIN pa.person p"
                 + " WHERE cf.id = pa.parentId"
@@ -164,9 +164,19 @@ public class FOIARequestDao extends AcmAbstractDao<FOIARequest>
                 + " AND pa.personType = 'Requester'"
                 + " AND p.id = :personId";
 
+        if (requestId != null && !requestId.equals("undefined"))
+        {
+            queryText += " AND cf.caseNumber = :caseNumber";
+        }
+
         Query foiaRequests = getEm().createQuery(queryText);
 
         foiaRequests.setParameter("personId", personId);
+
+        if (requestId != null && !requestId.equals("undefined"))
+        {
+            foiaRequests.setParameter("caseNumber", requestId);
+        }
 
         List<FOIARequest> resultList = foiaRequests.getResultList();
 
@@ -200,6 +210,7 @@ public class FOIARequestDao extends AcmAbstractDao<FOIARequest>
         requestStatus.setRequesterLastName(request.getOriginator().getPerson().getFamilyName());
         requestStatus.setRequesterEmail(request.getOriginator().getPerson().getContactMethods()
                 .stream().filter(cm -> cm.getType().equalsIgnoreCase("email")).findFirst().get().getValue());
+        requestStatus.setDispositionValue(request.getDisposition());
         return requestStatus;
     }
 
@@ -281,7 +292,7 @@ public class FOIARequestDao extends AcmAbstractDao<FOIARequest>
     public List<FOIARequest> findAllHeldAndAppealedRequests()
     {
         String queryText = "SELECT request FROM FOIARequest request"
-                + " WHERE request.queue.name = 'Hold' OR request.requestType = 'Appeal'";
+                + " WHERE request.queue.name = 'Hold' AND request.requestType = 'Appeal'";
         TypedQuery<FOIARequest> allRecords = getEm().createQuery(queryText, FOIARequest.class);
         List<FOIARequest> requests = allRecords.getResultList();
         return requests;

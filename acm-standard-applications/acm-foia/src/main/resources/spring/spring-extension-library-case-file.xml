@@ -258,6 +258,7 @@
             <beans:property name="queuesTimeToCompleteService" ref="queuesTimeToCompleteService"/>
             <beans:property name="foiaConfigurationService" ref="foiaConfigurationService"/>
             <beans:property name="executeSolrQuery" ref="executeSolrQuery"/>
+            <beans:property name="foiaConfig" ref="foiaConfig"/>
         </beans:bean>
 
         <bean id="foiaRequestEventUtility" class="gov.foia.service.FOIARequestEventUtility"/>

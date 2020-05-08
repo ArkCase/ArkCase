@@ -85,7 +85,7 @@ angular.module('cases').controller('Cases.ActionsFooterController',
                     }
                 } else if (name === 'Complete' && displayLimitedReleaseModal()) {
                     openLimitedPageReleaseModal(deferred);
-                } else if (name === 'Complete' && $scope.objectInfo.queue.name === 'Fulfill' && $scope.objectInfo.requestType === 'New Request') {
+                } else if (name === 'Complete' && $scope.objectInfo.queue.name === 'Fulfill' && $scope.objectInfo.requestType === 'New Request' && $scope.objectInfo.disposition == null) {
                     openDispositionCategoryModal(deferred);
                 } else if (name === 'Complete' && ($scope.objectInfo.queue.name === 'Fulfill' || $scope.defaultNextQueue === 'Release') && $scope.objectInfo.requestType === 'Appeal') {
                     if ($scope.objectInfo.disposition == null) {
@@ -108,6 +108,14 @@ angular.module('cases').controller('Cases.ActionsFooterController',
                     });
                 });
             };
+
+            $scope.$bus.subscribe('OPEN_REQUEST_DISPOSITION_MODAL', function (deferred) {
+                openDispositionCategoryModal(deferred);
+            });
+
+            $scope.$bus.subscribe('OPEN_APPEAL_DISPOSITION_MODAL', function (deferred) {
+                openAppealDispositionCategoryModal(deferred);
+            });
 
             $scope.showErrorDialog = function (error) {
                 $modal.open({
@@ -326,12 +334,17 @@ angular.module('cases').controller('Cases.ActionsFooterController',
 
                 modalInstance.result.then(function (data) {
                     $scope.requestDispositionCategory = data.requestDispositionCategory;
+                    $scope.objectInfo.disposition = data.requestDispositionCategory;
                     $scope.dispositionValue = data.dispositionValue;
                     deferred.resolve();
                 }, function () {
                     deferred.reject();
                     $scope.loading = false;
                     $scope.loadingIcon = "fa fa-check";
+                    if($scope.objectInfo.dispositionClosedDate != null){
+                        $scope.objectInfo.dispositionClosedDate = null;
+                        $scope.$emit("report-object-updated", {});
+                    }
                 });
             }
 
@@ -360,6 +373,9 @@ angular.module('cases').controller('Cases.ActionsFooterController',
 
                 modalInstance.result.then(function (data) {
                     $scope.requestDispositionCategory = data.disposition;
+                    $scope.objectInfo.disposition = data.disposition;
+                    $scope.objectInfo.otherReason = data.otherReason;
+                    $scope.objectInfo.dispositionReasons = data.dispositionReasons;
                     $scope.dispositionValue = data.dispositionValue;
                     $scope.requestOtherReason = data.otherReason;
                     $scope.dispositionReasons = data.dispositionReasons;
@@ -369,6 +385,10 @@ angular.module('cases').controller('Cases.ActionsFooterController',
                     deferred.reject();
                     $scope.loading = false;
                     $scope.loadingIcon = "fa fa-check";
+                    if($scope.objectInfo.dispositionClosedDate != null){
+                        $scope.objectInfo.dispositionClosedDate = null;
+                        $scope.$emit("report-object-updated", {});
+                    }
                 });
             }
 

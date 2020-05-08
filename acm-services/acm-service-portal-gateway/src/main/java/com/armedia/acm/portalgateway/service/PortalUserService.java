@@ -52,6 +52,9 @@ public interface PortalUserService
     UserRegistrationResponse requestRegistration(String portalId, UserRegistrationRequest registrationRequest)
             throws PortalUserServiceException;
 
+    UserRegistrationResponse regenerateRegistrationRequest(String portalId, UserRegistrationRequest registrationRequest)
+            throws PortalUserServiceException;
+
     /**
      * @param portalId
      * @param registrationId

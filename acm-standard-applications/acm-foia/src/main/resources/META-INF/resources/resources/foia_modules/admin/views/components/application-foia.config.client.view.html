@@ -6,7 +6,7 @@
                     <button class="btn btn-xs btn-link" ng-click="saveChanges()" ng-disabled="foiaConfigurationForm.$invalid">
                         <i class="fa fa-save"></i>
                         <span translate>
-			            	admin.application.foia.config.save.btn
+                            admin.application.foia.config.save.btn
                         </span>
                     </button>
                 </div>
@@ -171,18 +171,6 @@
                     <div class="col-lg-12">
                         <div class="checkbox">
                             <label>
-                                <input type="checkbox" ng-model="configDataModel.receivedDateEnabled">
-                                <span translate>
-                                    admin.application.foia.config.labels.receivedDateEnabled
-                                </span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="checkbox">
-                            <label>
                                 <input type="checkbox" ng-model="configDataModel.notificationGroupsEnabled">
                                 <span translate>
                                     admin.application.foia.config.labels.notificationGroupsEnable
@@ -228,6 +216,50 @@
                     </div>
                 </div>
                 <div class="row">
+                    <div class="col-lg-3">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" ng-model="configDataModel.feeWaivedRequestsEnabled">
+                                <span translate>
+                                    admin.application.foia.config.labels.feeWaivedDefaultValueForRequests
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" ng-model="configDataModel.feeWaivedAppealsEnabled">
+                                <span translate>
+                                    admin.application.foia.config.labels.feeWaivedDefaultValueForAppeals
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-3">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" ng-model="configDataModel.litigationRequestsEnabled">
+                                <span translate>
+                                    admin.application.foia.config.labels.litigationFlagDefaultValueForRequests
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" ng-model="configDataModel.litigationAppealsEnabled">
+                                <span translate>
+                                    admin.application.foia.config.labels.litigationFlagDefaultValueForAppeals
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
                     <div class="col-lg-12">
                         <div class="checkbox">
                             <label>
@@ -243,5 +275,4 @@
         </div>
     </ng-form>
 </div>
-
 <div ng-include="'modules/admin/views/components/time-to-complete.client.view.html'"></div>

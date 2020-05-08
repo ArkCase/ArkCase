@@ -131,16 +131,6 @@ angular.module('cases').controller(
                     }
                 });
 
-                AdminFoiaConfigService.getFoiaConfig().then(function (response) {
-                    $scope.foiaConfig = response.data;
-                    $scope.foiaConfig.receivedDateEnabled = response.data.receivedDateEnabled;
-                    if ($scope.foiaConfig.receivedDateEnabled || $scope.objectInfo.status !== 'Perfected') {
-                        $scope.receivedDateDisabledLink = true;
-                    } else {
-                        $scope.receivedDateDisabledLink = false;
-                    }
-                });
-
                 $scope.isAmendmentAdded = data.amendmentFlag;
 
                 SuggestedCasesService.getSuggestedCases($scope.objectInfo.title, $scope.objectInfo.id).then(function (value) {
@@ -151,7 +141,7 @@ angular.module('cases').controller(
                 CaseExemptionService.hasExemptionOnAnyDocumentsOnRequest($scope.objectInfo.id, ObjectService.ObjectTypes.CASE_FILE).then(function (value) {
                     $scope.hasExemptionsOnAnyDocuments = value.data && $scope.objectInfo.disposition == 'grantedInFull' ? true : false;
                     CaseExemptionService.getExemptionCode($scope.objectInfo.id, ObjectService.ObjectTypes.CASE_FILE).then(function (value1) { 
-                        $scope.fullGrantAndExemptionWarning = ($scope.hasExemptionsOnAnyDocuments || value1.data) && $scope.objectInfo.disposition == 'Full Grant' ? true : false;
+                        $scope.fullGrantAndExemptionWarning = ($scope.hasExemptionsOnAnyDocuments || value1.data.length > 0) && $scope.objectInfo.disposition == 'Full Grant' ? true : false;
                     });
                 });
 
@@ -259,28 +249,6 @@ angular.module('cases').controller(
                 });
             };
 
-
-            $scope.setRequestDate = function (objectInfo) {
-                if (objectInfo && objectInfo.requestType) {
-                    if (objectInfo.requestType === "New Request") {
-                        if (objectInfo.perfectedDate) {
-                            return $filter('date')(objectInfo.perfectedDate, $translate.instant("common.defaultDateTimeUIFormat"));
-                        } else {
-                            return $translate.instant("common.value.unknown");
-                        }
-                    } else {
-                        if (objectInfo.receivedDate) {
-                            return $filter('date')(objectInfo.receivedDate, $translate.instant("common.defaultDateTimeUIFormat"));
-                        } else {
-                            return $translate.instant("common.value.unknown");
-                        }
-                    }
-                } else {
-                    return $translate.instant("common.value.unknown");
-                }
-
-            };
-
             /**
              * Persists the updated casefile metadata to the ArkCase database
              */
@@ -345,17 +313,6 @@ angular.module('cases').controller(
                     $scope.componentAgency = notification.value;
                 }
                 saveCase();
-            };
-
-            $scope.setDate = function (data) {
-                if (!Util.isEmpty(data)) {
-                    if ($scope.objectInfo.requestType === "New Request") {
-                        $scope.objectInfo.perfectedDate = data;
-                    } else {
-                        $scope.objectInfo.receivedDate = data;
-                    }
-                    $scope.saveCase();
-                }
             };
 
             $scope.suggestedCases = function () {
