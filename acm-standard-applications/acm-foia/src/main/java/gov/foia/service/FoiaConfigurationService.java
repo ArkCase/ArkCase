@@ -45,7 +45,6 @@ public class FoiaConfigurationService extends SystemConfigurationService
         foiaConfig.setHoldedAndAppealedRequestsDueDateUpdateEnabled(foiaConfiguration.getHoldedAndAppealedRequestsDueDateUpdateEnabled());
         foiaConfig.setRequestExtensionWorkingDays(foiaConfiguration.getRequestExtensionWorkingDays());
         foiaConfig.setDashboardBannerEnabled(foiaConfiguration.getDashboardBannerEnabled());
-        foiaConfig.setReceivedDateEnabled(foiaConfiguration.getReceivedDateEnabled());
         foiaConfig.setNotificationGroupsEnabled(foiaConfiguration.getNotificationGroupsEnabled());
         foiaConfig.setRequestExtensionWorkingDaysEnabled(foiaConfiguration.getRequestExtensionWorkingDaysEnabled());
         foiaConfig.setExpediteWorkingDaysEnabled(foiaConfiguration.getExpediteWorkingDaysEnabled());
@@ -74,7 +73,6 @@ public class FoiaConfigurationService extends SystemConfigurationService
         foiaConfiguration.setHoldedAndAppealedRequestsDueDateUpdateEnabled(foiaConfig.getHoldedAndAppealedRequestsDueDateUpdateEnabled());
         foiaConfiguration.setRequestExtensionWorkingDays(foiaConfig.getRequestExtensionWorkingDays());
         foiaConfiguration.setDashboardBannerEnabled(foiaConfig.getDashboardBannerEnabled());
-        foiaConfiguration.setReceivedDateEnabled(foiaConfig.getReceivedDateEnabled());
         foiaConfiguration.setNotificationGroupsEnabled(foiaConfig.getNotificationGroupsEnabled());
         foiaConfiguration.setRequestExtensionWorkingDaysEnabled(foiaConfig.getRequestExtensionWorkingDaysEnabled());
         foiaConfiguration.setExpediteWorkingDaysEnabled(foiaConfig.getExpediteWorkingDaysEnabled());
