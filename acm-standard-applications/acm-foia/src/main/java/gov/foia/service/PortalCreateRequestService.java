@@ -35,7 +35,6 @@ import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.OrganizationAssociation;
-import com.armedia.acm.plugins.person.model.PersonOrganizationAssociation;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.users.service.tracker.UserTrackerService;
 import com.armedia.acm.web.api.MDCConstants;
@@ -167,7 +166,7 @@ public class PortalCreateRequestService
 
         if (requester.getOrganizations() != null && !requester.getOrganizations().isEmpty())
         {
-            Organization organization = requester.getOrganizations().get(0);
+            Organization organization = requester.getDefaultOrganization().getOrganization();
 
             organizationAssociation.setOrganization(organization);
             organizationAssociation.setAssociationType("Other");
@@ -228,15 +227,7 @@ public class PortalCreateRequestService
 
         if (in.getOrganization() != null && in.getOrganization().length() > 0)
         {
-            Organization organization = getPortalUserServiceProvider().checkOrganizationByNameOrCreateNew(in.getFirstName(),
-                    in.getFirstName(), in.getOrganization());
-            requester.getOrganizations().add(organization);
-
-            PersonOrganizationAssociation personOrganizationAssociation = getPortalUserServiceProvider()
-                    .addPersonOrganizationAssociation(requester, requester.getOrganizations().get(0));
-            List<PersonOrganizationAssociation> poa = new ArrayList<>();
-            poa.add(personOrganizationAssociation);
-            requester.setOrganizationAssociations(poa);
+            getPortalUserServiceProvider().findOrCreateOrganizationAndPersonOrganizationAssociation(requester, in.getOrganization());
         }
         return requester;
     }
