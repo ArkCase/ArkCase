@@ -206,8 +206,8 @@ angular
                         }
                     });
 
-                    modalInstance.result.then(function (limitedDeliveryFlag) {
-                        DocTree.limitedDeliveryFlag = limitedDeliveryFlag;
+                    modalInstance.result.then(function (data) {
+                        DocTree.limitedDeliveryFlag = data.limitedDeliveryFlag;
                         deferred.resolve();
                     }, function () {
                         deferred.reject();
@@ -3808,9 +3808,8 @@ angular
                     replaceFile: function () {
                         DocTree.jqFileInput.removeAttr("multiple");
                         DocTree.makeUploadDocForm(DocTree.jqTree);
-                        setTimeout(function () {
-                            DocTree.jqFileInput.click();
-                        });
+                        var fileInput = DocTree.jqFileInput.click();
+                        var timeOut = setTimeout(fileInput, 0);
                     }
 
                     ,

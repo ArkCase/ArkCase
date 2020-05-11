@@ -421,7 +421,7 @@ angular.module('cases').controller(
             };
 
             $scope.$bus.subscribe('ACTION_SAVE_CASE', function (data) {
-                if (data != null && typeof data.deleteDenialLetter !== 'undefined') {
+                if (data != null && typeof data.deleteDenialLetter !== 'undefined' && data.deleteDenialLetter) {
                     removeDenialLetter();
                 }
                 saveCase(data);
