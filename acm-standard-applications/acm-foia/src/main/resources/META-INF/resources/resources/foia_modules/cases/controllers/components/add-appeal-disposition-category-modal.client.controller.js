@@ -136,6 +136,8 @@ angular.module('cases').controller('Cases.AddAppealDispositionCategoriesModalCon
                         if (reason === 'other') {
                             $scope.isOtherRequired = false;
                             $scope.objectInfo.otherReason = null;
+                            $scope.isCustomDisabled = true;
+                            $scope.customOtherReason = null;
                         }
                     }
 

@@ -72,17 +72,21 @@ angular.module('cases').controller(
                     $scope.showDispositionReasonsFlag = true;
                 }
                 $scope.previousDueDate = objectInfo.dueDate;
-                if(objectInfo.requestTrack === 'expedite') {
+                if (objectInfo.requestTrack === 'expedite') {
                     if ($scope.includeWeekends) {
                         $scope.previousDueDate = DueDateService.dueDateWithWeekends($scope.objectInfo.dueDate, $scope.expediteWorkingDays, $scope.holidays);
                     } else {
                         $scope.previousDueDate = DueDateService.dueDateWorkingDays($scope.objectInfo.dueDate, $scope.expediteWorkingDays, $scope.holidays);
                     }
                 }
-                $scope.originalDueDate =  $scope.previousDueDate;
+                $scope.originalDueDate = $scope.previousDueDate;
                 $scope.enableDispositionClosedDate = objectInfo.dispositionClosedDate == null;
 
-                if (objectInfo.dispositionClosedDate == null) {
+                var otherExistsInAppealReasons = _.some($scope.objectInfo.dispositionReasons, function (value) {
+                    return value.reason === 'other';
+                });
+
+                if (otherExistsInAppealReasons) {
                     $scope.isAppealOtherReasonDisabled = false;
                 } else {
                     $scope.isAppealOtherReasonDisabled = true;
@@ -226,13 +230,15 @@ angular.module('cases').controller(
                         $scope.objectInfo.dispositionReasons.push(dispositionReason);
 
                         if (reason === 'other') {
+                            $scope.isAppealOtherReasonDisabled = false;
+                        } else {
+                            $scope.isAppealOtherReasonDisabled = true;
+                        }
+
+                        if (reason === 'other') {
                             if (Util.isEmpty($scope.objectInfo.otherReason)) {
                                 $scope.openAddOtherReasonInAppeal();
-                            } else {
-                                saveCase();
                             }
-                        } else {
-                            saveCase();
                         }
                     } else {
                         _.forEach($scope.objectInfo.dispositionReasons, function (disReason, i) {
@@ -241,7 +247,12 @@ angular.module('cases').controller(
                                 return false;
                             }
                         });
-                        saveCase();
+
+                        //if other was unchecked in reasons
+                        if (reason === 'other') {
+                            $scope.isAppealOtherReasonDisabled = true;
+                            $scope.objectInfo.otherReason = null;
+                        }
                     }
                 }
 
@@ -251,12 +262,6 @@ angular.module('cases').controller(
                 return _.some($scope.objectInfo.dispositionReasons, function (value) {
                     return value.reason === reason;
                 });
-            };
-
-            $scope.dispositionClosedDateSelected = function () {
-                if ($scope.objectInfo.requestType === 'Appeal' && $scope.objectInfo.disposition == null) {
-                    addAppealDispositionCategory(true);
-                }
             };
 
             AdminFoiaConfigService.getFoiaConfig().then(function (response) {
@@ -406,9 +411,11 @@ angular.module('cases').controller(
 
                 modalInstance.result.then(function (selected) {
                     if (!Util.isEmpty(selected)) {
-                        $scope.objectInfo.otherReason = selected.otherReason;
-
-                        saveCase();
+                        if (selected.isAppealOtherReasonDisabled) {
+                            $scope.isAppealOtherReasonDisabled = selected.isAppealOtherReasonDisabled;
+                        } else {
+                            $scope.objectInfo.otherReason = selected.otherReason;
+                        }
                     }
                 });
             };
