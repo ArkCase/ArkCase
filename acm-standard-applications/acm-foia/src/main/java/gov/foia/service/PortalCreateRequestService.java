@@ -164,7 +164,7 @@ public class PortalCreateRequestService
         requesterAssociation.setPerson(requester);
         request.getPersonAssociations().add(requesterAssociation);
 
-        if (requester.getOrganizations() != null && !requester.getOrganizations().isEmpty())
+        if (requester.getDefaultOrganization() != null)
         {
             Organization organization = requester.getDefaultOrganization().getOrganization();
 

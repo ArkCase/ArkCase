@@ -762,6 +762,12 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         person.getAddresses().get(0).setZip(user.getZipCode());
         person.getContactMethods().stream().filter(cm -> cm.getType().equalsIgnoreCase("Phone")).findFirst().get()
                 .setValue(user.getPhoneNumber());
+
+        for (PersonOrganizationAssociation poa : person.getOrganizationAssociations())
+        {
+            poa.setDefaultOrganization(false);
+        }
+
         if (user.getOrganization() != null && !user.getOrganization().isEmpty())
         {
             findOrCreateOrganizationAndPersonOrganizationAssociation(person, user.getOrganization());
@@ -784,11 +790,6 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     {
         Organization organization = checkOrganizationByNameOrCreateNew(person.getGivenName(), person.getFamilyName(), organizationName);
         boolean organizationExists = false;
-
-        for (PersonOrganizationAssociation poa : person.getOrganizationAssociations())
-        {
-            poa.setDefaultOrganization(false);
-        }
 
         for (Organization org : person.getOrganizations())
         {
@@ -944,7 +945,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
             user.setZipCode(address.getZip());
         }
 
-        if (person.getOrganizations() != null && !person.getOrganizations().isEmpty())
+        if (person.getDefaultOrganization() != null)
         {
             user.setOrganization(person.getDefaultOrganization().getOrganization().getOrganizationValue());
         }
