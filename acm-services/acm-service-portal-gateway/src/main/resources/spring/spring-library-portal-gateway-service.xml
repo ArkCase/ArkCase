@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:aop="http://www.springframework.org/schema/aop"
-    xmlns:cache="http://www.springframework.org/schema/cache"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
-    http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
-    http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+    http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <aop:aspectj-autoproxy/>
-    
+
     <!-- <cache:annotation-driven/> -->
 
     <bean id="portalInfoDAO" class="com.armedia.acm.portalgateway.service.PortalInfoDAO"/>
@@ -17,6 +15,8 @@
         <property name="portalInfoDao" ref="portalInfoDAO"/>
         <property name="userDao" ref="userJpaDao"/>
         <property name="groupDao" ref="groupDao"/>
+        <property name="ldapUserService" ref="ldapUserService"/>
+        <property name="genericMessagesChannel" ref="genericMessagesChannel"/>
     </bean>
 
     <bean id="portalGatewayRequestService" class="com.armedia.acm.portalgateway.service.DefaultPluggablePortalRequestService">
