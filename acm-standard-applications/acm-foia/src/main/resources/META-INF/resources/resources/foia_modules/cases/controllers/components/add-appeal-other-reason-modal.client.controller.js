@@ -67,7 +67,7 @@ angular.module('cases').controller('Cases.AddAppealOtherReasonModalController',
             $scope.onClickOk = function () {
                 var data = {
                     otherReason: $scope.objectInfo.otherReason,
-                    dispositionReasons: $scope.objectInfo.dispositionReasons,
+                    dispositionReasons: $scope.objectInfo.dispositionReasons
                 };
 
                 if ($scope.objectInfo.otherReason === 'custom') {
@@ -83,6 +83,6 @@ angular.module('cases').controller('Cases.AddAppealOtherReasonModalController',
                         $scope.objectInfo.dispositionReasons.splice(i, 1);
                     }
                 });
-                $modalInstance.dismiss('Cancel');
+                $modalInstance.close({isAppealOtherReasonDisabled: true});
             };
         }]);
