@@ -3808,9 +3808,8 @@ angular
                     replaceFile: function () {
                         DocTree.jqFileInput.removeAttr("multiple");
                         DocTree.makeUploadDocForm(DocTree.jqTree);
-                        setTimeout(function () {
-                            DocTree.jqFileInput.click();
-                        });
+                        var fileInput = DocTree.jqFileInput.click();
+                        var timeOut = setTimeout(fileInput, 0);
                     }
 
                     ,
