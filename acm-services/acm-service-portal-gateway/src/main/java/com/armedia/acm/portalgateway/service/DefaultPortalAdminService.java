@@ -30,20 +30,30 @@ package com.armedia.acm.portalgateway.service;
  * #L%
  */
 
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.portalgateway.model.PortalInfo;
 import com.armedia.acm.portalgateway.web.api.PortalInfoDTO;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
+import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
+import com.armedia.acm.services.users.service.ldap.LdapUserService;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.support.MessageBuilder;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.NoResultException;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -61,6 +71,10 @@ public class DefaultPortalAdminService implements PortalAdminService
     private UserDao userDao;
 
     private AcmGroupDao groupDao;
+
+    private LdapUserService ldapUserService;
+
+    private MessageChannel genericMessagesChannel;
 
     /*
      * (non-Javadoc)
@@ -201,6 +215,36 @@ public class DefaultPortalAdminService implements PortalAdminService
         portalInfo.setPortalAuthenticationFlag(portalInfoDTO.getPortalAuthenticationFlag());
     }
 
+    @Override
+    @Async
+    public void moveExistingLdapUsersToGroup(String newAcmGroup, PortalInfo previousPortalInfo, Authentication auth)
+    {
+        try
+        {
+            ldapUserService.moveExistingLdapUsersToGroup(newAcmGroup, previousPortalInfo.getGroup().getName());
+            send(true, auth, previousPortalInfo);
+        }
+        catch (AcmLdapActionFailedException | AcmObjectNotFoundException e)
+        {
+            log.warn("Failed to move portal users to another configured group");
+            send(false, auth, previousPortalInfo);
+        }
+    }
+
+    private void send(Boolean action, Authentication auth, PortalInfo portalInfo)
+    {
+        log.debug("Send progress for moving portal users to another group");
+
+        Map<String, Object> message = new HashMap<>();
+        message.put("action", action);
+        message.put("user", auth.getName());
+        message.put("previousPortalInfo", portalInfo);
+        message.put("eventType", "portalUserProgress");
+        Message<Map<String, Object>> progressMessage = MessageBuilder.withPayload(message).build();
+
+        genericMessagesChannel.send(progressMessage);
+    }
+
     /**
      * @param portalInfoDao
      *            the portalInfoDao to set
@@ -228,4 +272,23 @@ public class DefaultPortalAdminService implements PortalAdminService
         this.groupDao = groupDao;
     }
 
+    public LdapUserService getLdapUserService()
+    {
+        return ldapUserService;
+    }
+
+    public void setLdapUserService(LdapUserService ldapUserService)
+    {
+        this.ldapUserService = ldapUserService;
+    }
+
+    public MessageChannel getGenericMessagesChannel()
+    {
+        return genericMessagesChannel;
+    }
+
+    public void setGenericMessagesChannel(MessageChannel genericMessagesChannel)
+    {
+        this.genericMessagesChannel = genericMessagesChannel;
+    }
 }
