@@ -439,7 +439,7 @@ angular.module('cases').controller(
                 var basicData = {};
 
 
-                if (!$scope.config.data.originator.person.defaultPhone.value) {
+                if (typeof $scope.config.data.originator.person.defaultPhone.value === "") {
                     $scope.config.data.originator.person.defaultPhone = null;
                 } else if (!$scope.config.data.originator.person.defaultPhone.type) {
                     $scope.config.data.originator.person.defaultPhone.type = "phone";
