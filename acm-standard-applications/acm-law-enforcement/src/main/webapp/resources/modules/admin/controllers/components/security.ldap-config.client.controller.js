@@ -19,6 +19,7 @@ angular.module('admin').controller('Admin.LdapConfigController',
             var columnLdapGroupTemplate = groupTemplate();
             var columnPartialSyncBtn = partialSyncBtn();
             var columnEditPassword = addEditPasswordColumn();
+            $scope.loadingDirectories = true;
 
             columnDefs.push(columnPartialSyncBtn);
             columnDefs.push(columnLdapGroupTemplate);
@@ -45,7 +46,11 @@ angular.module('admin').controller('Admin.LdapConfigController',
         $scope.editRow = function(rowEntity) {
             rowEntity.enableEditingLdapUsers = rowEntity.enableEditingLdapUsers === true;
             rowEntity.syncEnabled = rowEntity.syncEnabled === true;
-            showModal(angular.copy(rowEntity), true);
+            if (localStorage.getItem("ldapConfig." + rowEntity.id) !== null) {
+                showModal(angular.copy(JSON.parse(localStorage.getItem("ldapConfig." + rowEntity.id))), true);
+            } else {
+                showModal(angular.copy(rowEntity), true);
+            }
         };
 
         $scope.editPassword = function(rowEntity) {
@@ -146,10 +151,12 @@ angular.module('admin').controller('Admin.LdapConfigController',
             });
 
             modalInstance.result.then(function(data) {
+                var currentLdapDir = angular.copy(data.dir);
                 addPrefixInKey(data.dir, "ldapConfig");
                 if (data.isEdit) {
                     ldapConfigService.updateDirectory(data.dir).then(function() {
-                        reloadGrid();
+                        localStorage.setItem("ldapConfig."+ currentLdapDir.id, JSON.stringify(currentLdapDir));
+                        $scope.loadingDirectories = false;
                         messageService.info($translate.instant('admin.security.ldapConfig.messages.update.success'));
                     }, function() {
                         messageService.error($translate.instant('admin.security.ldapConfig.messages.update.error'));
@@ -330,8 +337,12 @@ angular.module('admin').controller('Admin.LdapConfigController',
             tempLdapPromise.then(function(directories) {
                 removePrefixInKey(directories.data);
                 $scope.gridOptions.data = _.values(directories.data);
+                if($scope.loadingDirectories && $scope.gridOptions.data.length > 0){
+                    for(var i = 0; i < $scope.gridOptions.data.length; i++){
+                        localStorage.removeItem("ldapConfig." + $scope.gridOptions.data[i].id);
+                    }
+                }
             });
         }
-
 
     } ]);
