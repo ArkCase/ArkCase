@@ -166,15 +166,12 @@
                     <div class="row form-group">
                         <div class="col-sm-2 form-group">
                             <label for="phone" translate>cases.newRequest.phone.label </label>
-                            <span class="required-asterisk">*</span>
                         </div>
                         <div class="col-sm-4 form-group">
                             <input type="text" class="form-control" id="phone" pattern="^\d{3}[\-]\d{3}[\-]\d{4}"
                                     ng-model="config.data.originator.person.defaultPhone.value"
-                                    placeholder="{{'cases.newRequest.phone.placeholder' | translate}}" name="phone" required="required"
+                                    placeholder="{{'cases.newRequest.phone.placeholder' | translate}}" name="phone"
                                     ng-disabled="isExistingPerson && existingPerson.defaultPhone.value">
-                            <span class="text-danger" ng-if="!config.data.originator.person.defaultPhone.value && formInvalid" translate>
-                                cases.newRequest.phone.validation.error</span>
                             <span class="text-danger"
                                     ng-if="!config.data.originator.person.defaultPhone.value && formInvalid && !phoneEmpty" translate>
                                 cases.newRequest.phone.validation.errorInvalid</span>
