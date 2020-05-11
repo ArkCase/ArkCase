@@ -105,7 +105,7 @@
                         <div ng-repeat="reason in appealDispositionReasons" style="margin-left: 20px">
                             <label class="checkbox">
                                 <input type="checkbox" value="{{reason.key}}" ng-checked="isAppealReasonChecked(reason.key)"
-                                        ng-click="onAppealReasonSelected(reason.key)" ng-disabled="isAppealOtherReasonDisabled" />
+                                        ng-click="onAppealReasonSelected(reason.key)" />
                                 <span translate>{{reason.value}}</span>
                             </label>
                         </div>
@@ -134,8 +134,8 @@
                     <div>
                         <fieldset ng-disabled="!enableDispositionClosedDate">
                             <div class="form-group">
-                                <date-time-picker data="objectInfo.dispositionClosedDate" property="startDate" date-picker-id="comboDate1"
-                                        ng-click="dispositionClosedDateSelected()"></date-time-picker>
+                                <date-time-picker data="objectInfo.dispositionClosedDate" property="startDate"
+                                        date-picker-id="comboDate1"></date-time-picker>
                             </div>
                         </fieldset>
                     </div>
