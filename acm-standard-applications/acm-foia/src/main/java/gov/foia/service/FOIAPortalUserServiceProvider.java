@@ -79,7 +79,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Base64Utils;
 
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -765,26 +764,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
                 .setValue(user.getPhoneNumber());
         if (user.getOrganization() != null && !user.getOrganization().isEmpty())
         {
-            person.setCompany(user.getOrganization());
-            Organization organization = checkOrganizationByNameOrCreateNew(user.getFirstName(), user.getLastName(),
-                    user.getOrganization());
-            boolean organizationExists = false;
-            for (Organization org : person.getOrganizations())
-            {
-                if (org.getOrganizationValue().equalsIgnoreCase(organization.getOrganizationValue()))
-                {
-                    organizationExists = true;
-                    break;
-                }
-            }
-
-            if (!organizationExists)
-            {
-                PersonOrganizationAssociation personOrganizationAssociation = addPersonOrganizationAssociation((PortalFOIAPerson) person,
-                        organization);
-                person.getOrganizations().add(organization);
-                person.getOrganizationAssociations().add(personOrganizationAssociation);
-            }
+            findOrCreateOrganizationAndPersonOrganizationAssociation(person, user.getOrganization());
         }
 
         personDao.save(person);
@@ -800,7 +780,48 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         return portaluserFromPortalPerson(portalUserId, (PortalFOIAPerson) person);
     }
 
-    public Organization checkOrganizationByNameOrCreateNew(String firstName, String familyName, String organizationName)
+    public Person findOrCreateOrganizationAndPersonOrganizationAssociation(Person person, String organizationName)
+    {
+        Organization organization = checkOrganizationByNameOrCreateNew(person.getGivenName(), person.getFamilyName(), organizationName);
+        boolean organizationExists = false;
+
+        for (PersonOrganizationAssociation poa : person.getOrganizationAssociations())
+        {
+            poa.setDefaultOrganization(false);
+        }
+
+        for (Organization org : person.getOrganizations())
+        {
+            if (org.getId().equals(organization.getId()))
+            {
+                organizationExists = true;
+                break;
+            }
+        }
+        if (person.getOrganizationAssociations().isEmpty() || !organizationExists)
+        {
+            PersonOrganizationAssociation personOrganizationAssociation = addPersonOrganizationAssociation((PortalFOIAPerson) person,
+                    organization);
+            personOrganizationAssociation.setDefaultOrganization(true);
+            person.getOrganizations().add(organization);
+            person.getOrganizationAssociations().add(personOrganizationAssociation);
+        }
+        else
+        {
+            List<PersonOrganizationAssociation> poas = person.getOrganizationAssociations();
+            for (PersonOrganizationAssociation poa : poas)
+            {
+                if (poa.getOrganization().getOrganizationValue().equalsIgnoreCase(organization.getOrganizationValue()))
+                {
+                    poa.setDefaultOrganization(true);
+                    break;
+                }
+            }
+        }
+        return person;
+    }
+
+    private Organization checkOrganizationByNameOrCreateNew(String firstName, String familyName, String organizationName)
     {
         List<Organization> organizationList = getOrganizationDao().findOrganizationsByName(organizationName);
 
@@ -836,14 +857,18 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         }
     }
 
-    public PersonOrganizationAssociation addPersonOrganizationAssociation(PortalFOIAPerson person, Organization organization)
+    private PersonOrganizationAssociation addPersonOrganizationAssociation(PortalFOIAPerson person, Organization organization)
     {
         PersonOrganizationAssociation personOrganizationAssociation = new PersonOrganizationAssociation();
         personOrganizationAssociation.setOrganization(organization);
-        personOrganizationAssociation.setDefaultOrganization(true);
+        personOrganizationAssociation.setDefaultOrganization(false);
         personOrganizationAssociation.setPerson(person);
         personOrganizationAssociation.setPersonToOrganizationAssociationType("owner");
         personOrganizationAssociation.setOrganizationToPersonAssociationType("owned");
+        if (person.getOrganizationAssociations().isEmpty())
+        {
+            personOrganizationAssociation.setDefaultOrganization(true);
+        }
 
         return personOrganizationAssociation;
     }
@@ -919,9 +944,9 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
             user.setZipCode(address.getZip());
         }
 
-        if (person.getCompany() != null)
+        if (person.getOrganizations() != null && !person.getOrganizations().isEmpty())
         {
-            user.setOrganization(person.getCompany());
+            user.setOrganization(person.getDefaultOrganization().getOrganization().getOrganizationValue());
         }
         user.setEmail(person.getDefaultEmail().getValue());
 
@@ -973,16 +998,8 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         orgAddress.setType("Business");
         if (user.getOrganization() != null)
         {
-            person.setCompany(user.getOrganization());
-            Organization organization = checkOrganizationByNameOrCreateNew(user.getFirstName(), user.getLastName(),
-                    user.getOrganization());
-            organization.getAddresses().add(orgAddress);
-            person.getOrganizations().add(organization);
-            PersonOrganizationAssociation personOrganizationAssociation = addPersonOrganizationAssociation(person,
-                    organization);
-            List<PersonOrganizationAssociation> poa = new ArrayList<>();
-            poa.add(personOrganizationAssociation);
-            person.setOrganizationAssociations(poa);
+            findOrCreateOrganizationAndPersonOrganizationAssociation(person, user.getOrganization());
+            person.getOrganizations().get(0).getAddresses().add(orgAddress);
         }
 
         // the UI expects the contact methods in this order: Phone, Fax, Email
