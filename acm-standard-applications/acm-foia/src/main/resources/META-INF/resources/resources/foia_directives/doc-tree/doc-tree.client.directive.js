@@ -206,8 +206,8 @@ angular
                         }
                     });
 
-                    modalInstance.result.then(function (limitedDeliveryFlag) {
-                        DocTree.limitedDeliveryFlag = limitedDeliveryFlag;
+                    modalInstance.result.then(function (data) {
+                        DocTree.limitedDeliveryFlag = data.limitedDeliveryFlag;
                         deferred.resolve();
                     }, function () {
                         deferred.reject();
