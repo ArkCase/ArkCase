@@ -233,7 +233,7 @@ public class DefaultPortalAdminService implements PortalAdminService
 
     private void send(Boolean action, Authentication auth, PortalInfo portalInfo)
     {
-        log.warn("genericMessagesChannel send method called");
+        log.debug("Send progress for moving portal users to another group");
 
         Map<String, Object> message = new HashMap<>();
         message.put("action", action);
