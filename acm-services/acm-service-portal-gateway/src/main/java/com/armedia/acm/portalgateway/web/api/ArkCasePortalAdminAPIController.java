@@ -37,9 +37,12 @@ import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
+import com.armedia.acm.services.users.web.api.SecureLdapController;
+import com.armedia.acm.spring.SpringContextHolder;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -61,13 +64,16 @@ import java.util.stream.Collectors;
  */
 @Controller
 @RequestMapping(value = { "/api/v1/service/portalgateway/admin", "/api/latest/service/portalgateway/admin" })
-public class ArkCasePortalAdminAPIController
+public class ArkCasePortalAdminAPIController extends SecureLdapController
 {
     private transient final Logger log = LogManager.getLogger(getClass());
 
     private PortalAdminService portalAdminService;
 
     private ExecuteSolrQuery executeSolrQuery;
+
+    @Value("${foia.portalserviceprovider.directory.name}")
+    private String directoryName;
 
     @RequestMapping(value = "/portals", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE,
             MediaType.TEXT_PLAIN_VALUE})
@@ -109,9 +115,29 @@ public class ArkCasePortalAdminAPIController
         log.debug("User [{}] is updating portal for [{}] URL with [{}] user.", auth.getName(), portalInfoDTO.getPortalUrl(),
                 portalInfoDTO.getFullName());
         PortalInfo portalInfo = portalAdminService.getPortalInfo(portalInfoDTO.getPortalId());
-        portalAdminService.addExistingPortalUsersToGroup(portalInfoDTO.getGroupName(), portalInfo.getGroup().getName());
+        PortalInfo oldPortalInfo = new PortalInfo();
+        oldPortalInfo.setId(portalInfo.getId());
+        oldPortalInfo.setPortalId(portalInfo.getPortalId());
+        oldPortalInfo.setPortalDescription(portalInfo.getPortalDescription());
+        oldPortalInfo.setPortalUrl(portalInfo.getPortalUrl());
+        oldPortalInfo.setUser(portalInfo.getUser());
+        oldPortalInfo.setGroup(portalInfo.getGroup());
+        oldPortalInfo.setPortalAuthenticationFlag(portalInfo.getPortalAuthenticationFlag());
+
+        checkIfLdapManagementIsAllowed(directoryName);
+        portalAdminService.moveExistingLdapUsersToGroup(portalInfoDTO.getGroupName(), oldPortalInfo, auth);
         portalAdminService.updatePortalInfo(portalInfo, portalInfoDTO);
         return new PortalInfoDTO(portalAdminService.updatePortal(portalInfo, portalInfoDTO.getUserId()));
+    }
+
+    @RequestMapping(value = "/portals/revert", method = RequestMethod.PUT, produces = { MediaType.APPLICATION_JSON_VALUE,
+            MediaType.TEXT_PLAIN_VALUE })
+    @ResponseBody
+    public PortalInfoDTO revertPortalConfiguration(Authentication auth, @RequestBody PortalInfo portalInfo)
+            throws PortalAdminServiceException
+    {
+        log.debug("User [{}] is reverting old portal info [{}] configuration.", auth.getName(), portalInfo);
+        return new PortalInfoDTO(portalAdminService.updatePortal(portalInfo, portalInfo.getUser().getUserId()));
     }
 
     @RequestMapping(value = "/portals/{portalId}", method = RequestMethod.DELETE, produces = { MediaType.APPLICATION_JSON_VALUE,
@@ -177,4 +203,17 @@ public class ArkCasePortalAdminAPIController
     {
         this.executeSolrQuery = executeSolrQuery;
     }
+
+    @Override
+    public SpringContextHolder getAcmContextHolder()
+    {
+        return acmContextHolder;
+    }
+
+    @Override
+    public void setAcmContextHolder(SpringContextHolder acmContextHolder)
+    {
+        this.acmContextHolder = acmContextHolder;
+    }
+
 }

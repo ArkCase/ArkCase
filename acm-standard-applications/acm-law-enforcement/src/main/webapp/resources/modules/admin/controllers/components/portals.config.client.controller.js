@@ -188,7 +188,7 @@ angular.module('admin').controller(
                             MessageService.errorAction(response);
                         });
                     };
-                    $scope.copyRow = function(rowEntity) {
+                    $scope.copyRow = function (rowEntity) {
 
                         var range = document.createRange();
                         range.selectNode(document.getElementById(rowEntity.portalId));
@@ -197,7 +197,21 @@ angular.module('admin').controller(
                         alert("The portal ID is copied");
                         window.getSelection().removeAllRanges();
 
-                    }
+                    };
+
+                    $scope.$bus.subscribe("move-portal-users-finished", function (message) {
+                        if (message.action === true) {
+                            MessageService.info($translate.instant('admin.portals.movePortalUsers.success'));
+                        } else {
+                            MessageService.error($translate.instant('admin.portals.movePortalUsers.error'));
+                            AdminPortalConfigurationService.revertPortal(message.previousPortalInfo).then(function () {
+                                getAndRefresh();
+                            }, function () {
+                                MessageService.errorAction();
+
+                            });
+                        }
+                    });
 
 
                 } ]);

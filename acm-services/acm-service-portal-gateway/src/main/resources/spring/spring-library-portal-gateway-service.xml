@@ -15,8 +15,8 @@
         <property name="portalInfoDao" ref="portalInfoDAO"/>
         <property name="userDao" ref="userJpaDao"/>
         <property name="groupDao" ref="groupDao"/>
-        <property name="acmContextHolder" ref="acmContextHolder"/>
         <property name="ldapUserService" ref="ldapUserService"/>
+        <property name="genericMessagesChannel" ref="genericMessagesChannel"/>
     </bean>
 
     <bean id="portalGatewayRequestService" class="com.armedia.acm.portalgateway.service.DefaultPluggablePortalRequestService">
