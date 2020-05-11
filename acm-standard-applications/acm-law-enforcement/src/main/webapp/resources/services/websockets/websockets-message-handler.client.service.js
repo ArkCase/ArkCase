@@ -33,6 +33,10 @@ angular.module('services').factory('Websockets.MessageHandler', ['$q', '$rootSco
                 $rootScope.$bus.publish('progressbar-current-progress-updated', message);
             }
         }
+        if (message.eventType === "portalUserProgress") {
+            $rootScope.$bus.publish('move-portal-users-finished', message);
+            return;
+        }
         var eventName = message.eventType;
         $rootScope.$bus.publish(eventName, message);
     }
