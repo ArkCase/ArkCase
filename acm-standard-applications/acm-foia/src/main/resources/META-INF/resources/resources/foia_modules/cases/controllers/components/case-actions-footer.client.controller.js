@@ -145,6 +145,7 @@ angular.module('cases').controller('Cases.ActionsFooterController',
                     //after case is saved we are going to get new buttons
                     QueuesService.queryNextPossibleQueues(objectInfo.id).then(function (data) {
                         setQueueButtons(data);
+                        $scope.deleteDenialLetter = false;
                         saveCasePromise.resolve();
                     });
                 });
