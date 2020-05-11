@@ -32,8 +32,8 @@ import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.service.ldap.LdapEntryTransformer;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
 
@@ -133,7 +133,7 @@ public class SpringLdapGroupDao
     public void removeMemberFromGroup(String memberDn, String groupDn, AcmLdapSyncConfig ldapSyncConfig)
             throws AcmLdapActionFailedException
     {
-        log.debug("Remove member [{}] from Group in LDAP", memberDn, groupDn);
+        log.debug("Remove member [{}] from Group in LDAP [{}]", memberDn, groupDn);
         DirContextOperations groupContext = ldapCrudDao.lookup(groupDn, ldapSyncConfig);
 
         String[] members = groupContext.getStringAttributes("member");
