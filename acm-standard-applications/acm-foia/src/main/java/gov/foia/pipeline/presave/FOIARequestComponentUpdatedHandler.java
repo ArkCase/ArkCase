@@ -124,6 +124,12 @@ public class FOIARequestComponentUpdatedHandler
                 redirectComponent);
         applicationEventPublisher.publishEvent(event);
 
+        String redirectedDate = entity.getRedirectedDate()
+                .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.MEDIUM));
+        String updatedRedirectDate = String.format("on %s", redirectedDate);
+        event = new RequestComponentAgencyChangedEvent(entity, originalRequest, updatedRedirectDate);
+        applicationEventPublisher.publishEvent(event);
+
         if (calculatedTTC != elapsedTTC)
         {
             String updatedTTC = String.format("which updates the Time to Complete from %s days to %s days",
@@ -139,17 +145,6 @@ public class FOIARequestComponentUpdatedHandler
                     dateFormatter.format(originalRequest.getDueDate()),
                     dateFormatter.format(entity.getDueDate()));
             event = new RequestComponentAgencyChangedEvent(entity, originalRequest, updatedDueDate);
-            applicationEventPublisher.publishEvent(event);
-        }
-
-        if (!originalRequest.getRedirectedDate().equals(entity.getRedirectedDate()))
-        {
-            String originalDate = originalRequest.getRedirectedDate()
-                    .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.MEDIUM));
-            String redirectedDate = entity.getRedirectedDate()
-                    .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.MEDIUM));
-            String updatedRedirectDate = String.format("which updates the Redirected Date from %s to %s", originalDate, redirectedDate);
-            event = new RequestComponentAgencyChangedEvent(entity, originalRequest, updatedRedirectDate);
             applicationEventPublisher.publishEvent(event);
         }
     }
