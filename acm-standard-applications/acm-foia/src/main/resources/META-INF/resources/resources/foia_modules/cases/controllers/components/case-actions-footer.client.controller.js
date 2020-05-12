@@ -93,7 +93,7 @@ angular.module('cases').controller('Cases.ActionsFooterController',
                     } else {
                         deferred.resolve();
                     }
-                } else if (name === 'Deny' && ($scope.objectInfo.queue.name === 'Intake' || $scope.objectInfo.queue.name === 'Fulfill')) {
+                } else if (name === 'Deny' && ($scope.objectInfo.queue.name === 'Intake' || $scope.objectInfo.queue.name === 'Fulfill' || $scope.objectInfo.queue.name === 'Billing')) {
                     openDenyDispositionCategoryModal(deferred);
                 } else {
                     deferred.resolve();
