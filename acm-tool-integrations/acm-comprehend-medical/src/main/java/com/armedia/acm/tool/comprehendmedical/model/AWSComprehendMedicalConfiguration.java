@@ -37,8 +37,8 @@ import org.springframework.beans.factory.annotation.Value;
 @JsonSerialize(as = AWSComprehendMedicalConfiguration.class)
 public class AWSComprehendMedicalConfiguration
 {
-    @JsonProperty("aws.config.bucket")
-    @Value("${aws.config.bucket}")
+    @JsonProperty("aws.comprehendmedical.config.bucket")
+    @Value("${aws.comprehendmedical.config.bucket}")
     private String bucket;
 
     @JsonProperty("aws.config.region")
