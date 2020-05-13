@@ -48,7 +48,6 @@ public interface NotificationConstants
      */
     String SYSTEM_USER = "NOTIFICATION-BATCH-INSERT";
 
-
     /**
      * Date format that is needed for converting string to date
      */
@@ -121,7 +120,7 @@ public interface NotificationConstants
     String NOTIFICATION_TASK_COMPLETED = "notifications.task.completed";
     String NOTIFICATION_FOIA_EXTENSION = "notifications.foia.extension.notification";
     String PASSWORD_RESET = "notifications.password.reset";
-    String USERNAME_FORGOT = "notifications.username.forgot";
+    String FORGOT_USERNAME = "notifications.username.forgot";
     String STATUS_TRANSCRIPTION = "notifications.status.transcription";
     String COMPLAINT_INVOICE = "notifications.complaint.invoice";
     String TASK_UPCOMING = "notifications.task.upcoming";
