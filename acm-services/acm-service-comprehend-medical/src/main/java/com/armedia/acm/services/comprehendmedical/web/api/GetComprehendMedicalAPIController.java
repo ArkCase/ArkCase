@@ -43,7 +43,7 @@ import java.util.Map;
  * Created by Riste Tutureski <riste.tutureski@armedia.com> on 03/06/2018
  */
 @Controller
-@RequestMapping({ "/api/v1/service/transcribe", "/api/latest/service/transcribe" })
+@RequestMapping({ "/api/v1/service/comprehendmedical", "/api/latest/service/comprehendmedical" })
 public class GetComprehendMedicalAPIController
 {
     private ArkCaseComprehendMedicalService arkCaseComprehendMedicalService;
