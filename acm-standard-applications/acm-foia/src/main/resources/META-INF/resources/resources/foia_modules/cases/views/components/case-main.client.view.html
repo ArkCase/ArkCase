@@ -191,22 +191,6 @@
                             placeholder="{{ 'cases.comp.main.requestExpediteReason.placeholder'  | translate }}"></textarea>
                 </div>
                 <div class="col-sm-3">
-                    <label for="requestExpediteReason" translate> cases.comp.main.requestAmendmentDetails.label </label>
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" ng-model="objectInfo.amendmentFlag"
-                                    ng-change="objectInfo.requestAmendmentDetails= !objectInfo.amendmentFlag ? '' : objectInfo.requestAmendmentDetails"
-                                    permission="editRequestData" permission-object-type="CASE_FILE" permission-properties="objectInfo"
-                                    permission-action="disable" id="amendmentFlag">
-                            <span translate>cases.comp.main.amendmentFlag.label </span>
-                        </label>
-                    </div>
-                    <textarea rows=5 id="requestAmendmentDetails" ng-model="objectInfo.requestAmendmentDetails"
-                            name="requestAmendmentDetails" class="input-md form-control" ng-disabled="!objectInfo.amendmentFlag"
-                            placeholder="{{ 'cases.comp.main.requestAmendmentDetails.placeholder'  | translate }}"
-                            ng-required="objectInfo.amendmentFlag"></textarea>
-                </div>
-                <div class="col-sm-3">
                     <div class="checkbox">
                         <label>
                             <input type="checkbox" ng-model="objectInfo.extensionFlag" ng-click='extensionClicked($event)'
