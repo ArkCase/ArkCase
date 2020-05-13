@@ -19,7 +19,8 @@
                 </div>
                 <div class="col-sm-4 form-group">
                     <div class="input-group">
-                        <date-time-picker data="receivedDate" property="receivedDate"
+                        <date-time-picker data="config.data.receivedDate" property="receivedDate"
+                                          on-after-save="receivedDateChanged()"
                                           date-picker-id="receivedDate"></date-time-picker>
                     </div>
                 </div>
