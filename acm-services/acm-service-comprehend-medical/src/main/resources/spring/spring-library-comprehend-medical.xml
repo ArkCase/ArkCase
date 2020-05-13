@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <bean id="comprehendMedicalDao" class="com.armedia.acm.services.comprehendmedical.dao.ComprehendMedicalDao"/>
+
+    <bean id="arkCaseComprehendMedicalService" class="com.armedia.acm.services.comprehendmedical.sevice.ArkCaseComprehendMedicalServiceImpl">
+        <property name="comprehendMedicalDao" ref="comprehendMedicalDao"/>
+        <property name="ecmFileVersionDao" ref="ecmFileVersionDao"/>
+        <property name="pipelineManager" ref="mediaEnginePipelineManager"/>
+        <property name="mediaEngineEventPublisher" ref="mediaEngineEventPublisher"/>
+        <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
+        <property name="arkCaseBeanUtils" ref="mediaEngineArkCaseBeanUtils"/>
+        <property name="ecmFileService" ref="ecmFileService"/>
+        <property name="springContextHolder" ref="acmContextHolder"/>
+        <property name="processHandlerMap" ref="mediaEngineDrollsProcessRules"/>
+        <property name="objectLockingManager" ref="acmObjectLockingManager"/>
+        <property name="userDao" ref="userJpaDao"/>
+        <property name="notificationDao" ref="notificationDao"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="objectLockService" ref="objectLockService"/>
+        <property name="mediaEngineMapper" ref="mediaEngineMapper"/>
+        <property name="mediaEngineServiceFactory" ref="mediaEngineServiceFactory"/>
+        <property name="comprehendMedicalProviderFactory" ref="comprehendMedicalProviderFactory"/>
+        <property name="ecmFileTransaction" ref="ecmFileTransaction"/>
+        <property name="comprehendMedicalConfigurationService" ref="comprehendMedicalConfigurationService"/>
+        <property name="auditDao" ref="auditDao"/>
+        <property name="translationService" ref="translationService" />
+    </bean>
+
+
+    <bean id="comprehendMedicalToSolrTransformer" class="com.armedia.acm.services.comprehendmedical.transformer.ComprehendMedicalToSolrTransformer">
+        <property name="comprehendMedicalDao" ref="comprehendMedicalDao"/>
+    </bean>
+
+    <bean id="comprehendMedicalQueueJob" class="com.armedia.acm.services.comprehendmedical.job.ComprehendMedicalQueueJob">
+        <property name="arkCaseComprehendMedicalService" ref="arkCaseComprehendMedicalService"/>
+        <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="mediaEngineMapper" ref="mediaEngineMapper"/>
+        <property name="objectLockingManager" ref="acmObjectLockingManager"/>
+        <property name="objectLockService" ref="objectLockService"/>
+        <property name="comprehendMedicalProviderFactory" ref="comprehendMedicalProviderFactory"/>
+        <property name="comprehendMedicalConfigurationService" ref="comprehendMedicalConfigurationService"/>
+    </bean>
+
+
+    <bean id="comprehendMedicalConfiguration" class="com.armedia.acm.services.comprehendmedical.model.ComprehendMedicalConfiguration" scope="refresh">
+        <aop:scoped-proxy/>
+    </bean>
+
+    <bean id="comprehendMedicalConfigurationService" class="com.armedia.acm.services.comprehendmedical.sevice.ComprehendMedicalConfigurationService">
+        <property name="comprehendMedicalConfiguration" ref="comprehendMedicalConfiguration"/>
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
+
+    </bean>
+
+    <bean id="comprehendMedicalQueueJobDescriptor" class="com.armedia.acm.services.comprehendmedical.job.ComprehendMedicalQueueJobDescriptor"
+          parent="acmJobDescriptor">
+        <property name="comprehendMedicalQueueJob" ref="comprehendMedicalQueueJob"/>
+    </bean>
+
+    <bean id="comprehendMedicalBusinessRulesExecutor" class="com.armedia.acm.services.mediaengine.rules.MediaEngineBusinessRulesExecutor"
+          parent="simpleStatelessSingleObjectRuleManager">
+        <property name="ruleSpreadsheetFilename" value="drools-comprehend-medical-rules.xlsx"/>
+    </bean>
+
+    <bean id="comprehendMedicalBusinessProcessRulesExecutor"
+          class="com.armedia.acm.services.mediaengine.rules.MediaEngineBusinessProcessRulesExecutor"
+          parent="simpleStatelessSingleObjectRuleManager">
+        <property name="ruleSpreadsheetFilename" value="drools-comprehend-medical-business-process-rules.xlsx"/>
+    </bean>
+
+    <bean id="comprehendMedicalDroolsRulesRegister" class="com.armedia.acm.services.mediaengine.pipeline.MediaEngineDroolsRulesRegister"
+          depends-on="mediaEngineDroolsRules">
+        <property name="rules" ref="mediaEngineDroolsRules"/>
+        <property name="key" value="COMPREHEND_MEDICAL"/>
+        <property name="value" ref="comprehendMedicalBusinessRulesExecutor"/>
+    </bean>
+
+    <bean id="comprehendMedicalDroolsProcessRulesRegister" class="com.armedia.acm.services.mediaengine.pipeline.MediaEngineDroolsRulesRegister"
+          depends-on="mediaEngineDrollsProcessRules">
+        <property name="rules" ref="mediaEngineDrollsProcessRules"/>
+        <property name="key" value="COMPREHEND_MEDICAL"/>
+        <property name="value" ref="comprehendMedicalBusinessProcessRulesExecutor"/>
+    </bean>
+
+    <bean id="comprehendMedicalProviders" class="java.util.HashMap">
+        <constructor-arg>
+            <map key-type="java.lang.String" value-type="com.armedia.acm.tool.comprehendmedical.service.ComprehendMedicalService">
+                <entry key="AWS" value-ref="awsComprehendMedicalService"/>
+            </map>
+        </constructor-arg>
+    </bean>
+
+    <bean id="comprehendMedicalProviderFactory" class="com.armedia.acm.services.comprehendmedical.factory.ComprehendMedicalProviderFactory">
+        <property name="providers" ref="comprehendMedicalProviders"/>
+    </bean>
+
+</beans>
