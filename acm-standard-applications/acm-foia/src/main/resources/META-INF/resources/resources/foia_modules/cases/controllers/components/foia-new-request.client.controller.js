@@ -14,8 +14,6 @@ angular.module('cases').controller(
             $scope.enableTitle = false;
             $scope.isPickExistingPerson = false;
 
-            $scope.receivedDate = new Date();
-
             var descriptionDocumentType = "Description Document";
             var consentDocumentType = "Consent";
             var proofOfIdentityDocumentType = "Proof of Identity";
@@ -173,7 +171,8 @@ angular.module('cases').controller(
                 $scope.states = "";
                 $scope.config.data.originator.person.addresses[0].country = countries[0].key;
                 $scope.config.data.originator.person.addresses[0].type = addressTypes[0].key;
-
+                $scope.config.data.receivedDate = moment.utc().format("YYYY-MM-DDTHH:mm:ss.sss");
+                
                 $scope.blankPerson = angular.copy($scope.config.data.originator.person);
             });
 
@@ -241,6 +240,13 @@ angular.module('cases').controller(
                         $location.hash('topSection1');
                         $anchorScroll();
                     }
+                }
+            };
+
+            $scope.receivedDateChanged = function () {
+                var todayDate = moment.utc().format("YYYY-MM-DDTHH:mm:ss.sss");
+                if (Util.isEmpty($scope.config.data.receivedDate) || moment($scope.config.data.receivedDate).isAfter(todayDate)) {
+                    $scope.config.data.receivedDate = todayDate;
                 }
             };
 
@@ -458,8 +464,6 @@ angular.module('cases').controller(
                 if ($scope.config.data.originator.person.defaultEmail && !$scope.config.data.originator.person.defaultEmail.id) {
                     $scope.config.data.originator.person.contactMethods.push($scope.config.data.originator.person.defaultEmail);
                 }
-
-                $scope.config.data.receivedDate = $scope.receivedDate;
 
                 for (var property in $scope.config.data) {
                     if ($scope.config.data.hasOwnProperty(property)) {
