@@ -41,6 +41,7 @@
         <module>acm-transcribe-tool</module>
         <module>acm-quartz-scheduler</module>
         <module>acm-camel-context-manager</module>
+        <module>acm-comprehend-medical</module>
     </modules>
 
 </project>
