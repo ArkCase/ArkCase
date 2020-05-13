@@ -172,6 +172,7 @@
                     <beans:ref bean="foiaExemptionCodeMigrationExecutor"/>
                     <beans:ref bean="solrReindexFOIAPortalPersonExecutor"/>
                     <beans:ref bean="foiaPortalRegistrationCleanupExecutor"/>
+                    <beans:ref bean="solrReindexAcmUserExecutor"/>
                 </beans:list>
             </beans:property>
 
@@ -190,6 +191,10 @@
             <beans:property name="userDao" ref="userJpaDao"/>
             <beans:property name="registrationDao" ref="userRegistrationRequestDao"/>
             <beans:property name="portalInfoDAO" ref="portalInfoDAO"/>
+        </beans:bean>
+
+        <beans:bean id="solrReindexAcmUserExecutor" class="gov.foia.service.dataupdate.SolrReindexAcmUserExecutor">
+            <beans:property name="solrReindexService" ref="solrReindexService"/>
         </beans:bean>
 
         <beans:bean id="queuesTimeToCompleteService" class="gov.foia.service.QueuesTimeToCompleteService">
@@ -274,6 +279,15 @@
             <beans:property name="filenameFormat" value="AppealAcknowledgementLetter-%s.docx"/>
             <beans:property name="targetFileExtension" value="docx"/>
             <beans:property name="template" value="Appeal Acknowledgement Letter"/>
+        </beans:bean>
+
+        <beans:bean id="appealExtensionDocumentDescriptor" class="gov.foia.model.FOIADocumentDescriptor">
+            <beans:property name="type" value="Appeal"/>
+            <beans:property name="reqAck" value="REQ_EXTENSION"/>
+            <beans:property name="doctype" value="Request Extension Letter"/>
+            <beans:property name="filenameFormat" value="ExtensionLetter-%s.docx"/>
+            <beans:property name="targetFileExtension" value="docx"/>
+            <beans:property name="template" value="Request Extension Letter"/>
         </beans:bean>
 
         <beans:bean id="requestDenialLetterDocumentDescriptor" class="gov.foia.model.FOIADocumentDescriptor">

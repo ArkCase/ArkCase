@@ -27,6 +27,8 @@ package com.armedia.acm.services.users.service.ldap;
  * #L%
  */
 
+import static com.armedia.acm.services.users.model.ldap.MapperUtils.prefixTrailingDot;
+
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.users.dao.UserDao;
@@ -51,6 +53,7 @@ import com.armedia.acm.spring.SpringContextHolder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.ldap.NameAlreadyBoundException;
@@ -84,6 +87,9 @@ public class LdapUserService implements ApplicationEventPublisherAware
     private SpringContextHolder acmContextHolder;
 
     private ApplicationEventPublisher eventPublisher;
+
+    @Value("${foia.portalserviceprovider.directory.name}")
+    private String directoryName;
 
     public void publishSetPasswordEmailEvent(AcmUser user)
     {
@@ -328,7 +334,7 @@ public class LdapUserService implements ApplicationEventPublisherAware
 
         for (String groupName : groups)
         {
-            AcmGroup group = groupService.removeUserMemberFromGroup(userId, groupName, false);
+            AcmGroup group = groupService.removeUserMemberFromGroup(userId, groupName, true);
             if (group.isLdapGroup())
             {
                 groupsDnToUpdate.add(group.getDistinguishedName());
@@ -340,6 +346,80 @@ public class LdapUserService implements ApplicationEventPublisherAware
         ldapGroupDao.removeMemberFromGroups(user.getDistinguishedName(), groupsDnToUpdate, ldapSyncConfig);
 
         return user;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void moveExistingLdapUsersToGroup(String newAcmGroup, String oldAcmGroup)
+            throws AcmLdapActionFailedException, AcmObjectNotFoundException
+    {
+
+        AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class)
+                .get(String.format("%s_sync", directoryName));
+
+        String controlGroup = ldapSyncConfig.getUserControlGroup();
+
+        if (oldAcmGroup.equals(controlGroup))
+        {
+            throw new AcmLdapActionFailedException(
+                    String.format("'%s' group is a required system group and can't be removed.", controlGroup));
+        }
+
+        String userPrefix = prefixTrailingDot(ldapSyncConfig.getUserPrefix());
+        List<AcmUser> acmUsers = userDao.findByPrefix(userPrefix);
+
+        List<AcmUser> filteredAcmUsers = acmUsers.stream()
+                .filter(
+                        acmUser -> acmUser.getGroups().stream()
+                                .anyMatch(acmGroup -> acmGroup.getName().contains(oldAcmGroup)))
+                .collect(Collectors.toList());
+
+        AcmGroup oldGroup = null;
+        AcmGroup newGroup = groupService.findByName(newAcmGroup);
+        for (AcmUser acmUser : filteredAcmUsers)
+        {
+            AcmGroup group = groupService.removeUserMemberFromGroup(acmUser.getUserId(), oldAcmGroup, true);
+            if (group.isLdapGroup())
+            {
+                oldGroup = group;
+            }
+            log.debug("Adding Group [{}] to User [{}]", newAcmGroup, acmUser);
+            groupService.addUserMemberToGroup(acmUser, newAcmGroup, true);
+        }
+
+        if (oldGroup == null)
+        {
+            return;
+        }
+
+        List<AcmUser> addedLdapUsers = new ArrayList<>();
+        List<AcmUser> removedLdapUsers = new ArrayList<>();
+        for (AcmUser acmUser : filteredAcmUsers)
+        {
+            try
+            {
+                ldapGroupDao.addMemberToGroup(acmUser.getDistinguishedName(), newGroup.getDistinguishedName(), ldapSyncConfig);
+                addedLdapUsers.add(acmUser);
+                ldapGroupDao.removeMemberFromGroup(acmUser.getDistinguishedName(), oldGroup.getDistinguishedName(), ldapSyncConfig);
+                removedLdapUsers.add(acmUser);
+                log.debug("Group [{}] with DN [{}] modified in LDAP", newGroup.getName(), newGroup.getDistinguishedName());
+
+            }
+            catch (AcmLdapActionFailedException e)
+            {
+                for (AcmUser user1 : addedLdapUsers)
+                {
+                    log.debug("Rollback updates on Group [{}] with DN [{}]", newAcmGroup, newGroup.getDistinguishedName());
+                    ldapGroupDao.removeMemberFromGroup(user1.getDistinguishedName(), newGroup.getDistinguishedName(), ldapSyncConfig);
+                }
+                for (AcmUser user1 : removedLdapUsers)
+                {
+                    log.debug("Rollback updates on Group [{}] with DN [{}]", oldGroup, oldGroup.getDistinguishedName());
+                    ldapGroupDao.addMemberToGroup(user1.getDistinguishedName(), oldGroup.getDistinguishedName(), ldapSyncConfig);
+                }
+                throw new AcmLdapActionFailedException("Failed to add users to group", e);
+            }
+        }
+
     }
 
     public AcmUser findByPasswordResetToken(String token)
