@@ -251,6 +251,7 @@ angular.module('cases').controller(
                         //if other was unchecked in reasons
                         if (reason === 'other') {
                             $scope.isAppealOtherReasonDisabled = true;
+                            $scope.isAppealCustomReason = false;
                             $scope.objectInfo.otherReason = null;
                         }
                     }
@@ -390,7 +391,13 @@ angular.module('cases').controller(
                 });
             }
 
-            $scope.openAddOtherReasonInAppeal = function () {
+            $scope.openAddOtherReasonInAppeal = function (otherReasonKey) {
+                if (otherReasonKey === 'custom') {
+                    $scope.openAddAppealOtherReasonModal();
+                }
+            };
+
+            $scope.openAddAppealOtherReasonModal = function () {
                 var params = {
                     dispositionReasons: $scope.objectInfo.dispositionReasons,
                     otherReason: $scope.objectInfo.otherReason
@@ -411,11 +418,21 @@ angular.module('cases').controller(
 
                 modalInstance.result.then(function (selected) {
                     if (!Util.isEmpty(selected)) {
-                        if (selected.isAppealOtherReasonDisabled) {
-                            $scope.isAppealOtherReasonDisabled = selected.isAppealOtherReasonDisabled;
-                        } else {
-                            $scope.objectInfo.otherReason = selected.otherReason;
+
+                        $scope.objectInfo.otherReason = selected.otherReason;
+
+                        if ($scope.objectInfo.otherReason) {
+                            var found = _.find($scope.appealOtherReasons, {
+                                key: $scope.objectInfo.otherReason
+                            });
+                            if (found) {
+                                $scope.isAppealCustomReason = false;
+                            } else {
+                                $scope.isAppealCustomReason = true;
+                            }
                         }
+
+                        saveCase();
                     }
                 });
             };
