@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
        xmlns:aop="http://www.springframework.org/schema/aop"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <bean id="notificationService" class="com.armedia.acm.services.notification.service.NotificationServiceImpl">
         <property name="notificationDao" ref="notificationDao"/>
@@ -44,7 +45,8 @@
         <property name="dataService" ref="acmDataService"/>
     </bean>
 
-    <bean id="acmEntityTemplateNoUserPrefixModelProvider" class="com.armedia.acm.services.notification.service.provider.AcmEntityTemplateNoUserPrefixModelProvider">
+    <bean id="acmEntityTemplateNoUserPrefixModelProvider"
+          class="com.armedia.acm.services.notification.service.provider.AcmEntityTemplateNoUserPrefixModelProvider">
         <property name="dataService" ref="acmDataService"/>
         <property name="userInfoHelper" ref="userInfoHelper"/>
         <property name="objectTitleConfigurationService" ref="objectTitleConfigurationService"/>
@@ -54,8 +56,8 @@
         <property name="userDao" ref="userJpaDao"/>
     </bean>
 
-    <bean id="forgotUserNameTamplateModelProvider"
-        class="com.armedia.acm.services.notification.service.provider.ForgotUsernameTemplateModelProvider">
+    <bean id="forgotUserNameTemplateModelProvider"
+          class="com.armedia.acm.services.notification.service.provider.ForgotUsernameTemplateModelProvider">
         <property name="userDao" ref="userJpaDao"/>
     </bean>
 
@@ -99,7 +101,7 @@
 
     <bean id="forgotUsernameSendExecutor" class="com.armedia.acm.services.notification.service.SendExecutor">
         <property name="springContextHolder" ref="acmContextHolder"/>
-        <property name="templateModelProvider" ref="forgotUserNameTamplateModelProvider"/>
+        <property name="templateModelProvider" ref="forgotUserNameTemplateModelProvider"/>
     </bean>
 
     <bean id="userSendExecutor" class="com.armedia.acm.services.notification.service.SendExecutor">
@@ -117,14 +119,7 @@
         <property name="templateModelProvider" ref="requestDownloadedModelProvider"/>
     </bean>
 
-    <bean id="purgeExecutor" class="com.armedia.acm.services.notification.service.PurgeExecutor">
-        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
-    </bean>
     <bean id="noopExecutor" class="com.armedia.acm.services.notification.service.NoopExecutor"/>
-
-    <bean id="objectNameTitleFormatter" class="com.armedia.acm.services.notification.service.ObjectNameTitleFormatter">
-        <property name="notificationUtils" ref="notificationUtils"/>
-    </bean>
 
     <bean id="acmNotificationPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Save Notification Service Plugin"/>
@@ -132,16 +127,6 @@
     </bean>
 
     <!-- Senders Definition -->
-
-    <!--<bean id="authenticationTokenDao" class="com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao"/>-->
-
-    <!--     <bean id="emailNotificationSender" class="com.armedia.acm.services.notification.service.EmailNotificationSender">
-            <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
-            <property name="propertyFileManager" ref="propertyFileManager" />
-            <property name="notificationPropertyFileLocation" ref="notificationPropertyFileLocation"/>
-            <property name="authenticationTokenService" ref="authenticationTokenService"/>
-            <property name="authenticationTokenDao" ref="authenticationTokenDao"/>
-        </bean> -->
 
     <bean id="baseNotificationSender" class="com.armedia.acm.services.notification.service.NotificationSender" abstract="true">
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
@@ -155,12 +140,12 @@
     </bean>
 
     <bean id="smtpNotificationSender" class="com.armedia.acm.services.notification.service.SmtpNotificationSender"
-        parent="baseNotificationSender">
+          parent="baseNotificationSender">
         <property name="emailSenderService" ref="smtpService"/>
     </bean>
 
     <bean id="microsoftExchangeNotificationSender" class="com.armedia.acm.services.notification.service.MicrosoftExchangeNotificationSender"
-        parent="baseNotificationSender">
+          parent="baseNotificationSender">
         <property name="emailSenderService" ref="outlookService"/>
     </bean>
 
@@ -182,6 +167,7 @@
     </bean>
 
     <bean id="notificationFormatter" class="com.armedia.acm.services.notification.service.NotificationFormatter">
+        <property name="translationService" ref="translationService"/>
         <property name="notificationConfig" ref="notificationConfig"/>
     </bean>
 
@@ -198,17 +184,16 @@
     </bean>
 
     <bean id="resetPassword" class="com.armedia.acm.services.notification.service.ResetPasswordService">
-        <property name="notificationDao" ref="notificationDao"/>
         <property name="userDao" ref="userJpaDao"/>
         <property name="acmSpringActiveProfile" ref="acmSpringActiveProfile"/>
-        <property name="translationService" ref="translationService" />
+        <property name="notificationService" ref="notificationService"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
 
     <bean id="onForgotUsername" class="com.armedia.acm.services.notification.service.OnForgotUsername">
-        <property name="notificationDao" ref="notificationDao"/>
-        <property name="userDao" ref="userJpaDao"/>
         <property name="acmSpringActiveProfile" ref="acmSpringActiveProfile"/>
-        <property name="translationService" ref="translationService" />
+        <property name="notificationService" ref="notificationService"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
 
     <bean id="onLoginCheckPasswordExpiration" class="com.armedia.acm.services.notification.service.OnLoginCheckPasswordExpiration">
@@ -221,7 +206,7 @@
         <property name="templatingEngine" ref="templatingEngine"/>
         <property name="notificationDao" ref="notificationDao"/>
         <property name="applicationConfig" ref="applicationProperties"/>
-        <property name="translationService" ref="translationService" />
+        <property name="translationService" ref="translationService"/>
     </bean>
 
     <bean id="userInfoHelper" class="com.armedia.acm.services.notification.helper.UserInfoHelper">

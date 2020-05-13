@@ -39,8 +39,6 @@ import com.armedia.acm.spring.SpringContextHolder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -49,7 +47,6 @@ import java.util.Map;
 
 public class NotificationServiceImpl implements NotificationService
 {
-
     private final Logger LOG = LogManager.getLogger(getClass());
 
     private NotificationConfig notificationConfig;
@@ -74,15 +71,6 @@ public class NotificationServiceImpl implements NotificationService
 
         try
         {
-            // Riste Tutureski on 28 November 2017: I will comment this method that make correction of the last
-            // notification run date for one minute
-            // For now we will use date without correction, because we have problem if the run is set less than one
-            // minute, multiple emails are sent.
-            // Needed further investigation on DEV environments before removing commented line below. Locally works
-            // fine.
-
-            // Date lastRun = getLastRunDate(lastRun, dateFormat);
-
             Map<String, NotificationRule> rules = getSpringContextHolder().getAllBeansOfType(NotificationRule.class);
 
             if (rules != null)
@@ -119,8 +107,9 @@ public class NotificationServiceImpl implements NotificationService
             {
                 firstResult += maxResult;
 
-                notifications.stream().map(element -> getNotificationFormatter().replaceFormatPlaceholders(element))
-                        .map(element -> rule.getExecutor().execute(element)).map(element -> getNotificationDao().save(element))
+                notifications.stream()
+                        .map(element -> rule.getExecutor().execute(element))
+                        .map(element -> getNotificationDao().save(element))
                         .forEach(element -> {
                             ApplicationNotificationEvent event = new ApplicationNotificationEvent(element,
                                     NotificationConstants.OBJECT_TYPE.toLowerCase(), true, null);
@@ -130,25 +119,43 @@ public class NotificationServiceImpl implements NotificationService
         } while (!notifications.isEmpty());
     }
 
-    /**
-     * Get the last run date corrected for 1 minute before
-     *
-     * @param lastRunDate
-     * @return
-     * @throws ParseException
-     */
-    private Date getLastRunDate(String lastRunDate, SimpleDateFormat dateFormat) throws ParseException
+    @Override
+    public Notification createNotification(String templateModel, String title, String parentType, Long parentId, String parentName,
+                                           String emailAddresses, String user)
     {
-        Date date = dateFormat.parse(lastRunDate);
+        return createNotification(templateModel, title, parentType, parentId, parentName, null, null,
+                null, emailAddresses, user, null);
+    }
 
-        Calendar calendar = Calendar.getInstance();
+    @Override
+    public Notification createNotification(String templateModel, String title, String parentType, Long parentId, String parentName,
+            String emailAddresses, String user, String relatedUser)
+    {
+        return createNotification(templateModel, title, parentType, parentId, parentName, null, null,
+                null, emailAddresses, user, relatedUser);
+    }
 
-        calendar.setTime(date);
-        calendar.set(Calendar.MINUTE, calendar.get(Calendar.MINUTE) - 1);
-
-        date = calendar.getTime();
-
-        return date;
+    @Override
+    public Notification createNotification(String templateModel, String title, String parentType, Long parentId, String parentName,
+            Long relatedObjectId, String relatedObjectType, String relatedObjectName, String emailAddresses,
+            String user, String relatedUser)
+    {
+        Notification notification = new Notification();
+        notification.setTemplateModelName(templateModel);
+        notification.setTitle(notificationFormatter.buildTitle(title, parentName, parentType, relatedUser));
+        notification.setParentType(parentType);
+        notification.setParentId(parentId);
+        notification.setParentName(parentName);
+        notification.setRelatedObjectId(relatedObjectId);
+        notification.setRelatedObjectType(relatedObjectType);
+        notification.setRelatedObjectNumber(relatedObjectName);
+        notification.setEmailAddresses(emailAddresses);
+        notification.setUser(user);
+        notification.setStatus(NotificationConstants.STATUS_NEW);
+        notification.setData(String.format("{\"usr\":\"/plugin/%s/%s\"}", parentType.toLowerCase(), parentId));
+        notification.setActionDate(new Date());
+        notification.setType("user");
+        return notificationDao.save(notification);
     }
 
     /**
