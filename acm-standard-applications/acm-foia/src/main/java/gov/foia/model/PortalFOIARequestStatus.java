@@ -45,6 +45,10 @@ public class PortalFOIARequestStatus implements Serializable
 
     private String requestId;
 
+    private String originalRequestId;
+
+    private String requestTitle;
+
     private String lastName;
 
     private String requestStatus;
@@ -201,16 +205,44 @@ public class PortalFOIARequestStatus implements Serializable
         this.withdrawRequested = withdrawRequested;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
+    public String getRequestTitle()
+    {
+        return requestTitle;
+    }
+
+    public void setRequestTitle(String requestTitle)
+    {
+        this.requestTitle = requestTitle;
+    }
+
+    public String getOriginalRequestId()
+    {
+        return originalRequestId;
+    }
+
+    public void setOriginalRequestId(String originalRequestId)
+    {
+        this.originalRequestId = originalRequestId;
+    }
+
     @Override
     public String toString()
     {
-        return "PortalFOIARequestStatus [requestId=" + requestId + ", lastName=" + lastName + ", requestType=" + requestType
-                + ", requestStatus=" + requestStatus + ", queue=" + queue + ", isDenied=" + isDenied
-                + ", isPublic=" + isPublic + ", updateDate=" + updateDate + ", requesterFirstName=" + requesterFirstName
-                + ", requesterLastName=" + requesterLastName + ", requesterEmail=" + requesterEmail + ", dispositionValue=" + dispositionValue + "]";
+        return "PortalFOIARequestStatus[" +
+                "requestId='" + requestId + '\'' +
+                ", requestTitle='" + requestTitle + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", requestStatus='" + requestStatus + '\'' +
+                ", queue='" + queue + '\'' +
+                ", isDenied=" + isDenied +
+                ", isPublic=" + isPublic +
+                ", withdrawRequested=" + withdrawRequested +
+                ", requestType='" + requestType + '\'' +
+                ", requesterFirstName='" + requesterFirstName + '\'' +
+                ", requesterLastName='" + requesterLastName + '\'' +
+                ", requesterEmail='" + requesterEmail + '\'' +
+                ", dispositionValue='" + dispositionValue + '\'' +
+                ", updateDate=" + updateDate +
+                ']';
     }
 }
