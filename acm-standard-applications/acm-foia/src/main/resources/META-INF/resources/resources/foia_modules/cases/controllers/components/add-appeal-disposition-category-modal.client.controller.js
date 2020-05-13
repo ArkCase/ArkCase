@@ -63,6 +63,16 @@ angular.module('cases').controller('Cases.AddAppealDispositionCategoriesModalCon
                 $scope.objectInfo.dispositionReasons = [];
             }
 
+            var otherExistsInReason = _.some($scope.objectInfo.dispositionReasons, function (value) {
+                return value.reason === 'other';
+            });
+
+            if (otherExistsInReason) {
+                $scope.isOtherRequired = true;
+            } else {
+                $scope.isOtherRequired = false;
+            }
+
             var promiseExemptionCodes = CaseExemptionService.getExemptionCode(params.caseId, 'CASE_FILE');
             $q.all([promiseExemptionCodes]).then(function (data) {
                 $scope.hasExemptionCodes = data[0].data.length > 0 ? true : false;
