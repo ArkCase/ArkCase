@@ -920,7 +920,7 @@ angular.module('request-info').controller(
                         if (typeof value.id !== 'string' && !(value.id instanceof String)) {
                             var updateEvent = "object.changed/" + ObjectService.ObjectTypes.FILE + "/" + value.id;
 
-                            if (!$scope.fileChangeEvents.includes(updateEvent)) {
+                            if (!_.includes($scope.fileChangeEvents, updateEvent)) {
                                 $scope.fileChangeEvents.push(updateEvent);
                                 $scope.$bus.subscribe(updateEvent, function (data) {
                                     // first make sure the event is a file event and have different date than the previous one
