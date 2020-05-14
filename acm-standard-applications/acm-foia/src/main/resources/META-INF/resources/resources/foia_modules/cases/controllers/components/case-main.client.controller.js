@@ -350,11 +350,7 @@ angular.module('cases').controller(
                 }
                 return promiseSaveInfo;
             }
-
-            $scope.openAddAppealDispositionCategory = function () {
-                addAppealDispositionCategory(false);
-            };
-
+            
             function addAppealDispositionCategory(dispositionRequiredFlag) {
                 var params = {
                     disposition: $scope.objectInfo.disposition,
