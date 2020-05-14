@@ -91,7 +91,7 @@ public class ArkCaseComprehendMedicalServiceImpl extends ArkCaseMediaEngineServi
     public EcmFileVersion getExistingMediaVersionId(MediaEngine mediaEngine) throws CreateMediaEngineException
     {
         throw new CreateMediaEngineException(
-                String.format("Creating Transcribe job is aborted. There is already Transcribe object for MEDIA_FILE_VERSION_ID=[%d]",
+                String.format("Creating ComprehendMedical job is aborted. There is already ComprehendMedical object for MEDIA_FILE_VERSION_ID=[%d]",
                         mediaEngine.getMediaEcmFileVersion().getId()));
     }
 
@@ -389,7 +389,7 @@ public class ArkCaseComprehendMedicalServiceImpl extends ArkCaseMediaEngineServi
                             default:
                                 throw new RuntimeException(
                                         String.format(
-                                                "Received Transcribe status type of [%s] for TRANSCRIBE_ID=[%s] and FILE_ID=[%s], but cannot handle it.",
+                                                "Received ComprehendMedical status type of [%s] for COMPREHEND_MEDICAL_ID=[%s] and FILE_ID=[%s], but cannot handle it.",
                                                 status, mediaEngine.getId(), mediaEngine.getMediaEcmFileVersion().getFile().getId()));
                         }
 
@@ -402,7 +402,7 @@ public class ArkCaseComprehendMedicalServiceImpl extends ArkCaseMediaEngineServi
             }
             catch (GetMediaEngineException | GetMediaEngineToolException | MediaEngineProviderNotFound e)
             {
-                LOG.warn("Could not check if Transcribe should be completed. REASON=[{}]", e.getMessage());
+                LOG.warn("Could not check if ComprehendMedical should be completed. REASON=[{}]", e.getMessage());
             }
 
             delegateExecution.setVariable(MediaEngineBusinessProcessVariableKey.ACTION.toString(), action);
@@ -443,7 +443,7 @@ public class ArkCaseComprehendMedicalServiceImpl extends ArkCaseMediaEngineServi
         }
         catch (GetMediaEngineException | SaveMediaEngineException e)
         {
-            LOG.warn("Taking items for Transcribe with ID=[{}] and PROCESS_ID=[{}] failed. REASON=[{}]", id,
+            LOG.warn("Taking items for ComprehendMedical with ID=[{}] and PROCESS_ID=[{}] failed. REASON=[{}]", id,
                     delegateExecution.getProcessInstanceId(), e.getMessage());
         }
     }
@@ -493,7 +493,7 @@ public class ArkCaseComprehendMedicalServiceImpl extends ArkCaseMediaEngineServi
             }
             catch (GetMediaEngineException e)
             {
-                LOG.warn("Could not check if Transcribe should be processed. REASON=[{}]", e.getMessage());
+                LOG.warn("Could not check if ComprehendMedical should be processed. REASON=[{}]", e.getMessage());
             }
         }
     }
