@@ -57,7 +57,7 @@ public class OnForgotUsername implements ApplicationListener<ForgotUsernameEvent
             }
             auditPropertyEntityAdapter.setUserId(user.getUserId());
             notificationService.createNotification("forgotUsername", NotificationConstants.FORGOT_USERNAME, "USER",
-                    user.getIdentifier(), user.getUserId(), user.getMail(), user.getUserId(), null);
+                    user.getIdentifier(), user.getUserId(), null, user.getMail(), user.getUserId());
             log.debug("Notification 'Forgot username' created for user [{}] with email [{}].", user.getUserId(), user.getMail());
         }
     }

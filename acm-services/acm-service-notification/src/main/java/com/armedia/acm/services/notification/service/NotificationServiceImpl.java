@@ -121,31 +121,38 @@ public class NotificationServiceImpl implements NotificationService
 
     @Override
     public Notification createNotification(String templateModel, String title, String parentType, Long parentId, String parentName,
-                                           String emailAddresses, String user)
+            String parentTitle, String emailAddresses, String user)
     {
-        return createNotification(templateModel, title, parentType, parentId, parentName, null, null,
-                null, emailAddresses, user, null);
+        return createNotification(templateModel, title, parentType, parentId, parentName, parentTitle, emailAddresses, user, null);
     }
 
     @Override
     public Notification createNotification(String templateModel, String title, String parentType, Long parentId, String parentName,
-            String emailAddresses, String user, String relatedUser)
+            String parentTitle, String emailAddresses, String user, String relatedUser)
     {
-        return createNotification(templateModel, title, parentType, parentId, parentName, null, null,
-                null, emailAddresses, user, relatedUser);
+        return createNotification(templateModel, title, parentType, parentId, parentName, parentTitle, emailAddresses, user, relatedUser,
+                null);
     }
 
     @Override
     public Notification createNotification(String templateModel, String title, String parentType, Long parentId, String parentName,
-            Long relatedObjectId, String relatedObjectType, String relatedObjectName, String emailAddresses,
-            String user, String relatedUser)
+            String parentTitle, String emailAddresses, String user, String relatedUser, String note)
+    {
+        return createNotification(templateModel, title, parentType, parentId, parentName, parentTitle, null, null,
+                null, emailAddresses, user, relatedUser, note);
+    }
+
+    @Override
+    public Notification createNotification(String templateModel, String title, String parentType, Long parentId, String parentName,
+            String parentTitle, Long relatedObjectId, String relatedObjectType, String relatedObjectName, String emailAddresses,
+            String user, String relatedUser, String note)
     {
         Notification notification = new Notification();
         notification.setTemplateModelName(templateModel);
-        notification.setTitle(notificationFormatter.buildTitle(title, parentName, parentType, relatedUser));
         notification.setParentType(parentType);
         notification.setParentId(parentId);
         notification.setParentName(parentName);
+        notification.setParentTitle(parentTitle);
         notification.setRelatedObjectId(relatedObjectId);
         notification.setRelatedObjectType(relatedObjectType);
         notification.setRelatedObjectNumber(relatedObjectName);
@@ -155,6 +162,15 @@ public class NotificationServiceImpl implements NotificationService
         notification.setData(String.format("{\"usr\":\"/plugin/%s/%s\"}", parentType.toLowerCase(), parentId));
         notification.setActionDate(new Date());
         notification.setType("user");
+        notification.setNote(note);
+        if (relatedObjectName != null && relatedObjectType != null)
+        {
+            notification.setTitle(notificationFormatter.buildTitle(title, relatedObjectName, relatedObjectType, relatedUser));
+        }
+        else
+        {
+            notification.setTitle(notificationFormatter.buildTitle(title, parentName, parentType, relatedUser));
+        }
         return notificationDao.save(notification);
     }
 

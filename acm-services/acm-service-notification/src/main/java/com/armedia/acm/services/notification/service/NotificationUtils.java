@@ -32,17 +32,30 @@ import com.armedia.acm.core.AcmNotifiableEntity;
 import com.armedia.acm.core.AcmObjectType;
 import com.armedia.acm.data.AcmNotificationDao;
 import com.armedia.acm.data.service.AcmDataService;
+import com.armedia.acm.services.labels.service.TranslationService;
+import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConfig;
 
+import com.armedia.acm.services.notification.model.NotificationConstants;
+import com.armedia.acm.services.participants.model.AcmParticipant;
+import com.armedia.acm.services.users.dao.UserDao;
+import com.armedia.acm.services.users.dao.group.AcmGroupDao;
+import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.group.AcmGroup;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class NotificationUtils
 {
     private AcmApplication acmAppConfiguration;
-
     private AcmDataService acmDataService;
+    private UserDao userDao;
+    private AcmGroupDao groupDao;
 
     public String buildNotificationLink(String parentType, Long parentId, String relatedObjectType, Long relatedObjectId)
     {
@@ -69,21 +82,56 @@ public class NotificationUtils
         return null;
     }
 
-    public String getNotificationParentOrRelatedObjectNumber(String objectType, Long objectId)
+    public String getEmailsCommaSeparatedForParticipants(List<AcmParticipant> participants)
     {
-        if (objectType != null && objectId != null)
-        {
-            AcmNotificationDao dao = getAcmDataService().getNotificationDaoByObjectType(objectType);
-            if (dao != null)
-            {
-                AcmNotifiableEntity entity = dao.findEntity(objectId);
-                if (entity != null)
-                {
-                    return entity.getNotifiableEntityTitle();
-                }
-            }
-        }
-        return null;
+        Set<String> emailAddresses = participants.stream()
+                .flatMap(participant -> {
+                    if (participant.getParticipantType().equals(NotificationConstants.PARTICIPANT_TYPE_GROUP))
+                    {
+                        AcmGroup group = getGroupDao().findByName(participant.getParticipantLdapId());
+                        if (group != null)
+                        {
+                            Set<AcmUser> userMembers = group.getUserMembers(true);
+                            return userMembers.stream().map(AcmUser::getMail);
+                        }
+                    }
+                    else if (!participant.getReceiverType().equals(NotificationConstants.SPECIAL_PARTICIPANT_TYPE))
+                    {
+                        AcmUser user = getUserDao().findByUserId(participant.getParticipantLdapId());
+                        if (user != null)
+                        {
+                            return Stream.of(user.getMail());
+                        }
+                    }
+                    return Stream.empty();
+                }).collect(Collectors.toSet());
+        return String.join(",", emailAddresses);
+    }
+
+    public String getEmailForAssignee(String assignee)
+    {
+        AcmUser user = userDao.findByUserId(assignee);
+        return user.getMail();
+    }
+
+    public UserDao getUserDao()
+    {
+        return userDao;
+    }
+
+    public void setUserDao(UserDao userDao)
+    {
+        this.userDao = userDao;
+    }
+
+    public AcmGroupDao getGroupDao()
+    {
+        return groupDao;
+    }
+
+    public void setGroupDao(AcmGroupDao groupDao)
+    {
+        this.groupDao = groupDao;
     }
 
     public AcmApplication getAcmAppConfiguration()
