@@ -90,7 +90,7 @@ angular.module('admin').controller('Admin.AddCMTemplateController', [ '$scope', 
         };
 
         if($scope.isEdit){
-            var currentSelectedObjectType = $scope.correspondenceObjectTypes.find(function(objectType) {
+            var currentSelectedObjectType = _.find($scope.correspondenceObjectTypes, function(objectType) {
                 return objectType.key === $scope.selectedRow.objectType;
             });
             $scope.selectedName = currentSelectedObjectType;
