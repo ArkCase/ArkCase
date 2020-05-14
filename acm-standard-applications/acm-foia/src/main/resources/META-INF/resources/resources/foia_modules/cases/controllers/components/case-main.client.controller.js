@@ -350,42 +350,6 @@ angular.module('cases').controller(
                 }
                 return promiseSaveInfo;
             }
-            
-            function addAppealDispositionCategory(dispositionRequiredFlag) {
-                var params = {
-                    disposition: $scope.objectInfo.disposition,
-                    dispositionReasons: $scope.objectInfo.dispositionReasons,
-                    otherReason: $scope.objectInfo.otherReason,
-                    caseId: $scope.objectInfo.id,
-                    isDispositionRequired: dispositionRequiredFlag
-                };
-
-                var modalInstance = $modal.open({
-                    templateUrl: "modules/cases/views/components/add-appeal-disposition-category-modal.client.view.html",
-                    controller: 'Cases.AddAppealDispositionCategoriesModalController',
-                    animation: true,
-                    size: 'md',
-                    backdrop: 'static',
-                    resolve: {
-                        params: function () {
-                            return params;
-                        }
-                    }
-                });
-
-                modalInstance.result.then(function (selected) {
-                    if (!Util.isEmpty(selected)) {
-                        $scope.showDispositionReasonsFlag = selected.showDispositionReasonsFlag;
-                        $scope.appealDispositionValue = selected.dispositionValue;
-
-                        $scope.objectInfo.disposition = selected.disposition;
-                        $scope.objectInfo.otherReason = selected.otherReason;
-                        $scope.objectInfo.dispositionReasons = selected.dispositionReasons;
-
-                        saveCase();
-                    }
-                });
-            }
 
             $scope.openAddOtherReasonInAppeal = function (otherReasonKey) {
                 if (otherReasonKey === 'custom') {
