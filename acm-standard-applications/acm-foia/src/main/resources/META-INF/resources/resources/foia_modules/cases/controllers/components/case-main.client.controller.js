@@ -108,12 +108,14 @@ angular.module('cases').controller(
             function populateDispositionCategories() {
                 ObjectLookupService.getLookupByLookupName('requestDispositionType').then(function (requestDispositionType) {
                     $scope.dispositionCategories = requestDispositionType;
-                    if ($scope.objectInfo.disposition) {
+                    if (Util.isEmpty($scope.objectInfo.disposition)) {
+                        $scope.dispositionValue = null;
+                    } else {
                         var found = _.find(requestDispositionType, {
                             key: $scope.objectInfo.disposition
                         });
                         if (!Util.isEmpty(found)) {
-                            $scope.objectInfo.disposition = $translate.instant(found.value);
+                            $scope.dispositionValue = $translate.instant(found.value);
                         }
                     }
                 });
@@ -122,12 +124,14 @@ angular.module('cases').controller(
             function populateDeniedDispositionCategories() {
                 ObjectLookupService.getLookupByLookupName('requestDispositionSubType').then(function (requestDispositionSubType) {
                     $scope.dispositionDeniedCategories = requestDispositionSubType;
-                    if ($scope.objectInfo.disposition) {
+                    if (Util.isEmpty($scope.objectInfo.disposition)) {
+                        $scope.dispositionValue = null;
+                    } else {
                         var found = _.find(requestDispositionSubType, {
                             key: $scope.objectInfo.disposition
                         });
                         if (!Util.isEmpty(found)) {
-                            $scope.objectInfo.disposition = $translate.instant(found.value);
+                            $scope.dispositionValue = $translate.instant(found.value);
                         }
                     }
                 });
@@ -136,12 +140,16 @@ angular.module('cases').controller(
             function populateOtherReasons() {
                 ObjectLookupService.getLookupByLookupName('requestOtherReason').then(function (requestOtherReasons) {
                     $scope.otherReasons = requestOtherReasons;
-                    if ($scope.objectInfo.otherReason) {
+                    if (Util.isEmpty($scope.objectInfo.otherReason)) {
+                        $scope.otherReasonValue = null;
+                    } else {
                         var found = _.find(requestOtherReasons, {
                             key: $scope.objectInfo.otherReason
                         });
                         if (!Util.isEmpty(found)) {
-                            $scope.objectInfo.otherReason = $translate.instant(found.value);
+                            $scope.otherReasonValue = $translate.instant(found.value);
+                        } else {
+                            $scope.otherReasonValue = $scope.objectInfo.otherReason; // display custom reason
                         }
                     }
                 });
