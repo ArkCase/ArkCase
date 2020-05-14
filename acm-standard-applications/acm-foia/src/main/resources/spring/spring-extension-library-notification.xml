@@ -17,5 +17,11 @@
             <beans:property name="templatingEngine" ref="templatingEngine"/>
             <beans:property name="templateService" ref="filesystemTemplateConfigurationService"/>
         </beans:bean>
+
+        <beans:bean id="userInfoHelper" class="gov.foia.service.FOIAUserInfoHelper">
+            <beans:property name="userDao" ref="userJpaDao"/>
+            <beans:property name="contextHolder" ref="acmContextHolder"/>
+            <beans:property name="acmGroupDao" ref="groupDao"/>
+        </beans:bean>
     </beans:beans>
 </beans:beans>
