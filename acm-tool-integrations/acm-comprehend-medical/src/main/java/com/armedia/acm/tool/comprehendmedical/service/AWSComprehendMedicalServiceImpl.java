@@ -260,9 +260,6 @@ public class AWSComprehendMedicalServiceImpl implements ComprehendMedicalService
                 request.setLanguageCode(mediaEngineDTO.getLanguage());
                 request.setInputDataConfig(inputDataConfig);
                 request.setOutputDataConfig(outputDataConfig);
-                // TODO: THIS HAVE TO BE FILLED
-                // https://docs.aws.amazon.com/comprehend/latest/dg/access-control-managing-permissions-med.html#auth-role-permissions-med
-                request.setKMSKey("");
 
                 return getAwsComprehendMedicalClient().startEntitiesDetectionV2Job(request);
             }
