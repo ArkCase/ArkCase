@@ -519,8 +519,7 @@ public class ArkCaseComprehendMedicalServiceImpl extends ArkCaseMediaEngineServi
             delegateExecution.setVariable(MediaEngineBusinessProcessVariableKey.ACTION.toString(),
                     MediaEngineActionType.PROCESSING.toString());
         }
-        catch (CreateMediaEngineToolException | AcmObjectLockException | MediaEngineProviderNotFound | IOException
-                | ArkCaseFileRepositoryException e)
+        catch (Exception e)
         {
             LOG.error("Error while calling PROVIDER=[{}] to comprehend medicine. REASON=[{}]",
                     configuration.getProvider(), e.getMessage(), e);
