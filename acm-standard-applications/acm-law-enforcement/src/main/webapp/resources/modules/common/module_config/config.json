@@ -271,6 +271,11 @@
             }
           },
           {
+            "title": "common.directive.docTree.menu.nlpProcess",
+            "cmd": "startNLPProcess",
+            "uiIcon": "ui-icon-arrowstop-1-n"
+          },
+          {
             "title": "----"
           },
           {

@@ -86,72 +86,73 @@
 angular.module('directives').directive(
         'docTree',
         [
-                '$q',
-                '$translate',
-                '$modal',
-                '$filter',
-                '$log',
-                '$injector',
-                'Acm.StoreService',
-                'UtilService',
-                'Util.DateService',
-                'ConfigService',
-                'PluginService',
-                'Profile.UserInfoService',
-                'EcmService',
-                'Admin.EmailSenderConfigurationService',
-                'Helper.LocaleService',
-                'LookupService',
-                'MessageService',
-                'ObjectService',
-                'Admin.FileUploaderConfigurationService',
-                '$timeout',
-                'Websockets.MessageHandler',
-            function($q, $translate, $modal, $filter, $log, $injector, Store, Util, UtilDateService, ConfigService, PluginService, UserInfoService, Ecm, EmailSenderConfigurationService, LocaleHelper, LookupService, MessageService, ObjectService, FileUploaderConfigurationService, $timeout, MessageHandler) {
-                    var cacheTree = new Store.CacheFifo();
-                    var cacheFolderList = new Store.CacheFifo();
+            '$q',
+            '$translate',
+            '$modal',
+            '$filter',
+            '$log',
+            '$injector',
+            'Acm.StoreService',
+            'UtilService',
+            'Util.DateService',
+            'ConfigService',
+            'PluginService',
+            'Profile.UserInfoService',
+            'EcmService',
+            'Admin.EmailSenderConfigurationService',
+            'Helper.LocaleService',
+            'LookupService',
+            'MessageService',
+            'ObjectService',
+            'Admin.FileUploaderConfigurationService',
+            '$timeout',
+            'Websockets.MessageHandler',
+            'DocumentDetails.MedicalComprehendService',
+            function ($q, $translate, $modal, $filter, $log, $injector, Store, Util, UtilDateService, ConfigService, PluginService, UserInfoService, Ecm, EmailSenderConfigurationService, LocaleHelper, LookupService, MessageService, ObjectService, FileUploaderConfigurationService, $timeout, MessageHandler, MedicalComprehendService) {
+                var cacheTree = new Store.CacheFifo();
+                var cacheFolderList = new Store.CacheFifo();
 
-                    function replaceChangedFileLinkVersion(folderList, replaceInfo, replaced, cacheKey) {
-                        if (folderList.containerObjectId === replaceInfo.container.containerObjectId && replaced > -1) {
-                            folderList.children[replaced].ext = Util.goodValue(replaceInfo.fileActiveVersionNameExtension);
-                            folderList.children[replaced].mimeType = Util.goodValue(replaceInfo.fileActiveVersionMimeType);
-                            folderList.children[replaced].modified = Util.goodValue(replaceInfo.modified);
-                            folderList.children[replaced].modifier = Util.goodValue(replaceInfo.modifier);
-                            folderList.children[replaced].version = Util.goodValue(replaceInfo.activeVersionTag);
-                        }
-
-                        if (!replaceInfo.link && replaced > -1) {
-                            folderList.children[replaced].versionList = [];
-                            if (Util.isArray(replaceInfo.versions)) {
-                                for (var i = 0; i < replaceInfo.versions.length; i++) {
-                                    var ver = {};
-                                    ver.ext = replaceInfo.versions[i].versionFileNameExtension;
-                                    ver.mimeType = replaceInfo.versions[i].versionFileMimeType;
-                                    ver.versionTag = replaceInfo.versions[i].versionTag;
-                                    ver.modifier = replaceInfo.versions[i].modifier;
-                                    ver.modified = replaceInfo.versions[i].modified;
-                                    ver.creator = replaceInfo.versions[i].creator;
-                                    folderList.children[replaced].versionList.push(ver);
-                                }
-                            }
-                        }
-                        for (var i = 0; i < folderList.children.length; i++) {
-                            if (folderList.containerObjectId === replaceInfo.container.containerObjectId && i === replaced)
-                                continue;
-                            if (folderList.children[i].cmisObjectId === replaceInfo.versionSeriesId) {
-                                folderList.children[i].ext = Util.goodValue(replaceInfo.fileActiveVersionNameExtension);
-                                folderList.children[i].mimeType = Util.goodValue(replaceInfo.fileActiveVersionMimeType);
-                                folderList.children[i].modified = Util.goodValue(replaceInfo.modified);
-                                folderList.children[i].modifier = Util.goodValue(replaceInfo.modifier);
-                                folderList.children[i].version = Util.goodValue(replaceInfo.activeVersionTag);
-                                folderList.children[i].versionList[0] = replaceInfo.versions[replaceInfo.versions.length - 1];
-                            }
-                        }
-                        DocTree.cacheFolderList.put(cacheKey, folderList);
-                        if (!replaceInfo.link && replaced > -1)
-                            return folderList.children[replaced];
-
+                function replaceChangedFileLinkVersion(folderList, replaceInfo, replaced, cacheKey) {
+                    if (folderList.containerObjectId === replaceInfo.container.containerObjectId && replaced > -1) {
+                        folderList.children[replaced].ext = Util.goodValue(replaceInfo.fileActiveVersionNameExtension);
+                        folderList.children[replaced].mimeType = Util.goodValue(replaceInfo.fileActiveVersionMimeType);
+                        folderList.children[replaced].modified = Util.goodValue(replaceInfo.modified);
+                        folderList.children[replaced].modifier = Util.goodValue(replaceInfo.modifier);
+                        folderList.children[replaced].version = Util.goodValue(replaceInfo.activeVersionTag);
                     }
+
+                    if (!replaceInfo.link && replaced > -1) {
+                        folderList.children[replaced].versionList = [];
+                        if (Util.isArray(replaceInfo.versions)) {
+                            for (var i = 0; i < replaceInfo.versions.length; i++) {
+                                var ver = {};
+                                ver.ext = replaceInfo.versions[i].versionFileNameExtension;
+                                ver.mimeType = replaceInfo.versions[i].versionFileMimeType;
+                                ver.versionTag = replaceInfo.versions[i].versionTag;
+                                ver.modifier = replaceInfo.versions[i].modifier;
+                                ver.modified = replaceInfo.versions[i].modified;
+                                ver.creator = replaceInfo.versions[i].creator;
+                                folderList.children[replaced].versionList.push(ver);
+                            }
+                        }
+                    }
+                    for (var i = 0; i < folderList.children.length; i++) {
+                        if (folderList.containerObjectId === replaceInfo.container.containerObjectId && i === replaced)
+                            continue;
+                        if (folderList.children[i].cmisObjectId === replaceInfo.versionSeriesId) {
+                            folderList.children[i].ext = Util.goodValue(replaceInfo.fileActiveVersionNameExtension);
+                            folderList.children[i].mimeType = Util.goodValue(replaceInfo.fileActiveVersionMimeType);
+                            folderList.children[i].modified = Util.goodValue(replaceInfo.modified);
+                            folderList.children[i].modifier = Util.goodValue(replaceInfo.modifier);
+                            folderList.children[i].version = Util.goodValue(replaceInfo.activeVersionTag);
+                            folderList.children[i].versionList[0] = replaceInfo.versions[replaceInfo.versions.length - 1];
+                        }
+                    }
+                    DocTree.cacheFolderList.put(cacheKey, folderList);
+                    if (!replaceInfo.link && replaced > -1)
+                        return folderList.children[replaced];
+
+                }
 
                     function updateLinkNodes(childrenNodes, replacedFile) {
                         if (childrenNodes && childrenNodes.length > 0) {
@@ -1597,11 +1598,11 @@ angular.module('directives').directive(
                                     }
                                 }, {
                                     name: "replace",
-                                    execute: function(nodes, args) {
+                                    execute: function (nodes, args) {
                                         var selectFiles = DocTree.Command.findHandler("selectReplacement/");
                                         selectFiles.execute(nodes, args);
 
-                                        $q.when(DocTree.uploadSetting.deferSelectFile.promise).then(function(files) {
+                                        $q.when(DocTree.uploadSetting.deferSelectFile.promise).then(function (files) {
                                             args = args || {};
                                             args.files = files;
                                             var replaceFiles = DocTree.Command.findHandler("replaceFiles/");
@@ -1609,14 +1610,38 @@ angular.module('directives').directive(
                                         });
                                     }
                                 }, {
+                                    name: "startNLPProcess",
+                                    execute: function (nodes, args) {
+                                        
+                                        var ecmFile = nodes[0].data;
+
+                                        if (!Util.isEmpty(ecmFile) && !Util.isEmpty(ecmFile.version) && !Util.isArrayEmpty(ecmFile.versionList)) {
+                                            var activeVersion = _.find(ecmFile.versionList, function (version) {
+                                                return ecmFile.version === version.versionTag;
+                                            });
+
+                                            MedicalComprehendService.getComprehendMedicalByMediaId(activeVersion.id).then(function (result) {
+                                                var comprehendMedicalResult = Util.omitNg(result);
+                                                if (_.isEmpty(comprehendMedicalResult)) {
+                                                    MedicalComprehendService.createAutomaticComprehendMedical(activeVersion.id);
+                                                } else {
+                                                    MessageService.info($translate.instant('common.directive.docTree.nlpProcess.messages.'
+                                                        + comprehendMedicalResult.status.toLowerCase()));
+                                                }
+                                            }, function (error) {
+                                                MessageService.error(error.data);
+                                            });
+                                        }
+                                    }
+                                }, {
                                     name: "open",
-                                    execute: function(nodes, args) {
+                                    execute: function (nodes, args) {
                                         var node = nodes[0];
 
                                         // Any documents which are checked in doctree will be opened in the viewer simultaneously
                                         // in addition to the document which is directly opened (double-clicked)
                                         var selectedIdsList = "";
-                                        _.forEach(nodes, function(value) {
+                                        _.forEach(nodes, function (value) {
                                             if (value.data && value.data.objectId && value.data.objectType) {
                                                 if (value.data.objectType.toLowerCase() != "folder") {
                                                     selectedIdsList += value.data.objectId + ",";
@@ -3694,6 +3719,7 @@ angular.module('directives').directive(
                                     nodeData.data.versionList = [];
                                     for (var i = 0; i < fileData.versionList.length; i++) {
                                         var version = {};
+                                        version.id = Util.goodValue(fileData.versionList[i].id);
                                         version.versionTag = Util.goodValue(fileData.versionList[i].versionTag);
                                         version.created = Util.goodValue(fileData.versionList[i].created);
                                         version.creator = Util.goodValue(fileData.versionList[i].creator);
