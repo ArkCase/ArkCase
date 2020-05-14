@@ -90,15 +90,6 @@ public interface NotificationConstants
      */
     String ACTION_DEFAULT = "";
 
-    String TYPE_POPUP = "popup";
-
-    /*
-     * When those strings appear in a notification title or note to be e-mailed, it will be replaced with the
-     * appropriate label from notification.properties.
-     */
-    String OBJECT_TYPE_LABEL_PLACEHOLDER = "${objectTypeLabel}";
-    String PARENT_TYPE_LABEL_PLACEHOLDER = "${parentTypeLabel}";
-
     /**
      * When this string appears in a notification note to be e-mailed, it will be replaced with a URL to the object in
      * the notification.
@@ -110,6 +101,18 @@ public interface NotificationConstants
      * or TASK appropriate
      */
     String NAME_LABEL = "${nameLabel}";
+
+    /**
+     * When this string appears in notification's title it will be replaced with the objectType: COMPLAINT, CASE_FILE
+     * or TASK appropriate
+     */
+    String TYPE_LABEL = "${typeLabel}";
+
+    /**
+     * When this string appears in notification's title it will be replaced with the userId of referred user
+     * in the notification
+     */
+    String USER_LABEL = "${userLabel}";
 
     String PARTICIPANT_TYPE_GROUP = "owning group";
     String SPECIAL_PARTICIPANT_TYPE = "*";
@@ -125,6 +128,19 @@ public interface NotificationConstants
     String COMPLAINT_INVOICE = "notifications.complaint.invoice";
     String TASK_UPCOMING = "notifications.task.upcoming";
     String TASK_OVERDUE = "notifications.task.overdue";
+    String TASK_STATUS_CHANGED = "notifications.task.status.changed";
+    String TASK_PRIORITY_CHANGED = "notifications.task.priority.changed";
+    String TASK_CONCUR_NONCONCUR = "notifications.task.concur.nonconcur";
+    String TASK_CONCUR_NOTE = "notifications.task.concur.note";
+    String TASK_NON_CONCUR_NOTE = "notifications.task.nonconcur.note";
+    String COMPLAINT_STATUS_CHANGED = "notifications.complaint.status.changed";
+    String COMPLAINT_PRIORITY_CHANGED = "notifications.complaint.priority.changed";
+    String CASE_STATUS_CHANGED = "notifications.case.status.changed";
+    String CASE_PRIORITY_CHANGED = "notifications.case.priority.changed";
+    String PARTICIPANTS_ADDED = "notifications.participants.added";
+    String PARTICIPANTS_DELETED = "notifications.participants.deleted";
+    String OBJECT_UNASSIGNED = "notifications.object.unassigned";
+    String OBJECT_ASSIGNED = "notifications.object.assigned";
     String ARREST_WARRANT = "notifications.arrest.warrant";
     String EMAIL_MENTIONS = "notifications.email.mentions";
     String REQUEST_ASSIGNED = "notifications.request.assigned";

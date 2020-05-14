@@ -44,17 +44,17 @@ public class NotificationFormatter
 
     public String replaceFormatPlaceholders(String notificationTitle, String parentName, String parentType, String userId)
     {
-        if (notificationTitle != null && notificationTitle.contains(NotificationConstants.NAME_LABEL))
+        if (notificationTitle != null && notificationTitle.contains(NotificationConstants.NAME_LABEL) && parentName != null)
         {
             notificationTitle = replacePlaceholderLabel(notificationTitle, NotificationConstants.NAME_LABEL, parentName);
         }
 
-        if (notificationTitle != null && notificationTitle.contains(NotificationConstants.TYPE_LABEL))
+        if (notificationTitle != null && notificationTitle.contains(NotificationConstants.TYPE_LABEL) && parentType != null)
         {
             notificationTitle = replaceObjectTypeLabel(notificationTitle, NotificationConstants.TYPE_LABEL, parentType);
         }
 
-        if (notificationTitle != null && notificationTitle.contains(NotificationConstants.USER_LABEL))
+        if (notificationTitle != null && notificationTitle.contains(NotificationConstants.USER_LABEL) && userId != null)
         {
             notificationTitle = replacePlaceholderLabel(notificationTitle, NotificationConstants.USER_LABEL, userId);
         }

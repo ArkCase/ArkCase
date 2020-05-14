@@ -60,7 +60,7 @@ public class ResetPasswordService {
         auditPropertyEntityAdapter.setUserId(user.getUserId());
 
         notificationService.createNotification("changePassword", NotificationConstants.PASSWORD_RESET, "USER",
-                user.getIdentifier(), user.getUserId(), user.getMail(), user.getUserId());
+                user.getIdentifier(), user.getUserId(), null, user.getMail(), user.getUserId());
         log.debug("Notification 'Reset password' created for user [{}] with email [{}]", user.getUserId(), user.getMail());
     }
 

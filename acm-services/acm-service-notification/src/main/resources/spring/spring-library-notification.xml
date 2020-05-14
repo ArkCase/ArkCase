@@ -22,16 +22,6 @@
         <property name="notificationService" ref="notificationService"/>
     </bean>
 
-    <bean id="participantsNotified" class="com.armedia.acm.services.notification.service.ParticipantsNotified">
-        <property name="userDao" ref="userJpaDao"/>
-        <property name="groupDao" ref="groupDao"/>
-        <property name="acmDataService" ref="acmDataService"/>
-    </bean>
-
-    <bean id="assigneeNotified" class="com.armedia.acm.services.notification.service.AssigneeNotified">
-        <property name="userDao" ref="userJpaDao"/>
-    </bean>
-
     <bean id="notificationEventPublisher" class="com.armedia.acm.services.notification.service.NotificationEventPublisher"/>
 
     <bean id="notificationToSolrTransformer" class="com.armedia.acm.services.notification.service.NotificationToSolrTransformer">
@@ -164,6 +154,8 @@
     <bean id="notificationUtils" class="com.armedia.acm.services.notification.service.NotificationUtils">
         <property name="acmAppConfiguration" ref="acmApplication"/>
         <property name="acmDataService" ref="acmDataService"/>
+        <property name="userDao" ref="userJpaDao"/>
+        <property name="groupDao" ref="groupDao"/>
     </bean>
 
     <bean id="notificationFormatter" class="com.armedia.acm.services.notification.service.NotificationFormatter">
@@ -213,5 +205,10 @@
         <property name="userDao" ref="userJpaDao"/>
         <property name="contextHolder" ref="acmContextHolder"/>
         <property name="acmGroupDao" ref="groupDao"/>
+    </bean>
+
+    <bean id="assignmentNotifier" class="com.armedia.acm.services.notification.service.AssignmentNotifier">
+        <property name="notificationService" ref="notificationService"/>
+        <property name="notificationUtils" ref="notificationUtils"/>
     </bean>
 </beans>
