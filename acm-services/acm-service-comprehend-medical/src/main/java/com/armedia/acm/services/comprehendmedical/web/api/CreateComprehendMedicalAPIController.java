@@ -37,7 +37,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * Created by Riste Tutureski <riste.tutureski@armedia.com> on 03/06/2018
+ * Created by Riste Tutureski <riste.tutureski@armedia.com> on 05/12/2020
  */
 @Controller
 @RequestMapping({ "/api/v1/service/comprehendmedical", "/api/latest/service/comprehendmedical" })

@@ -114,7 +114,14 @@ public class TranslationService
      */
     public String translate(String labelKey)
     {
-        AcmUser acmUser = userDao.findByUserId(MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY));
+        String user = MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY);
+        if (user == null)
+        {
+            return translate(labelKey, labelManagementService.getDefaultLocale());
+        }
+
+        AcmUser acmUser = userDao.findByUserId(user);
+
         if (acmUser == null)
         {
             return labelKey;

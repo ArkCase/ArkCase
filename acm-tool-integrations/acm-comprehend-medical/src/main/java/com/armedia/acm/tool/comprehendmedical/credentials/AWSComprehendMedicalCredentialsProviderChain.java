@@ -33,6 +33,9 @@ import com.amazonaws.auth.EnvironmentVariableCredentialsProvider;
 import com.amazonaws.auth.SystemPropertiesCredentialsProvider;
 import com.armedia.acm.tool.comprehendmedical.service.AWSComprehendMedicalCredentialsConfigurationService;
 
+/**
+ * Created by Riste Tutureski <riste.tutureski@armedia.com> on 05/12/2020
+ */
 public class AWSComprehendMedicalCredentialsProviderChain extends AWSCredentialsProviderChain
 {
     public AWSComprehendMedicalCredentialsProviderChain(AWSComprehendMedicalCredentialsConfigurationService awsComprehendMedicalCredentialsConfigurationService)

@@ -27,6 +27,9 @@ package com.armedia.acm.tool.comprehendmedical.model;
  * #L%
  */
 
+/**
+ * Created by Riste Tutureski <riste.tutureski@armedia.com> on 05/12/2020
+ */
 public interface ComprehendMedicalConstants
 {
     String OBJECT_TYPE = "COMPREHEND_MEDICAL";
@@ -34,4 +37,8 @@ public interface ComprehendMedicalConstants
     String SERVICE = "COMPREHEND_MEDICAL";
 
     String COMPREHEND_MEDICAL_SYSTEM_USER = "COMPREHEND_MEDICAL_SERVICE";
+
+    String ENTITY_OBJECT_TYPE = "COMPREHEND_MEDICAL_ENTITY";
+
+    String ENTITY_ATTRIBUTE_OBJECT_TYPE = "COMPREHEND_MEDICAL_ENTITY_ATTRIBUTE";
 }

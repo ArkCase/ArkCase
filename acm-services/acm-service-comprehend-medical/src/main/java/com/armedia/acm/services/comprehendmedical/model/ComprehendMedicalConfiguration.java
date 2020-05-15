@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Created by Riste Tutureski <riste.tutureski@armedia.com> on 02/28/2018
+ * Created by Riste Tutureski <riste.tutureski@armedia.com> on 05/12/2020
  */
 
 @JsonSerialize(as = ComprehendMedicalConfiguration.class)

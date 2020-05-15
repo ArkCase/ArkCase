@@ -30,6 +30,9 @@ package com.armedia.acm.services.comprehendmedical.sevice;
 import com.armedia.acm.services.comprehendmedical.model.ComprehendMedical;
 import com.armedia.acm.services.mediaengine.service.MediaEngineService;
 
+/**
+ * Created by Riste Tutureski <riste.tutureski@armedia.com> on 05/12/2020
+ */
 public interface ArkCaseComprehendMedicalService extends MediaEngineService<ComprehendMedical>
 {
 }

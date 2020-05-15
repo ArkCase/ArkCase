@@ -33,6 +33,10 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.PersistJobDataAfterExecution;
 
+/**
+ * Created by Riste Tutureski <riste.tutureski@armedia.com> on 05/12/2020
+ */
+
 @DisallowConcurrentExecution
 @PersistJobDataAfterExecution
 public class ComprehendMedicalQueueJobDescriptor extends AcmJobDescriptor

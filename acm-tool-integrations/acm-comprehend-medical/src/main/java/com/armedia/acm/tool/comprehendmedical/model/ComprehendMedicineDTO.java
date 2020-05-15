@@ -29,10 +29,14 @@ package com.armedia.acm.tool.comprehendmedical.model;
 
 import com.armedia.acm.tool.mediaengine.model.MediaEngineDTO;
 
+/**
+ * Created by Riste Tutureski <riste.tutureski@armedia.com> on 05/12/2020
+ */
 public class ComprehendMedicineDTO extends MediaEngineDTO
 {
     private String output;
     private String message;
+    private String jobId;
 
     public String getOutput()
     {
@@ -52,5 +56,15 @@ public class ComprehendMedicineDTO extends MediaEngineDTO
     public void setMessage(String message)
     {
         this.message = message;
+    }
+
+    public String getJobId()
+    {
+        return jobId;
+    }
+
+    public void setJobId(String jobId)
+    {
+        this.jobId = jobId;
     }
 }

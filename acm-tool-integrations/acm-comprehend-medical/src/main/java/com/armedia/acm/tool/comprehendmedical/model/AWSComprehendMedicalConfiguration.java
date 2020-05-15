@@ -32,7 +32,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.springframework.beans.factory.annotation.Value;
 
 /**
- * Created by Vladimir Cherepnalkovski
+ * Created by Riste Tutureski <riste.tutureski@armedia.com> on 05/12/2020
  */
 @JsonSerialize(as = AWSComprehendMedicalConfiguration.class)
 public class AWSComprehendMedicalConfiguration
@@ -52,6 +52,10 @@ public class AWSComprehendMedicalConfiguration
     @JsonProperty("aws.config.profile")
     @Value("${aws.config.profile}")
     private String profile;
+
+    @JsonProperty("aws.comprehendmedical.config.arn")
+    @Value("${aws.comprehendmedical.config.arn}")
+    private String arn;
 
     public String getBucket()
     {
@@ -91,5 +95,15 @@ public class AWSComprehendMedicalConfiguration
     public void setProfile(String profile)
     {
         this.profile = profile;
+    }
+
+    public String getArn()
+    {
+        return arn;
+    }
+
+    public void setArn(String arn)
+    {
+        this.arn = arn;
     }
 }

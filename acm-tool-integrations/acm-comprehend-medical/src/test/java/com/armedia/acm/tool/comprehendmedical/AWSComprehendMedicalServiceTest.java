@@ -29,10 +29,7 @@ package com.armedia.acm.tool.comprehendmedical;
 
 import com.amazonaws.services.comprehendmedical.AWSComprehendMedical;
 import com.amazonaws.services.comprehendmedical.AWSComprehendMedicalClient;
-import com.amazonaws.services.comprehendmedical.model.ComprehendMedicalAsyncJobProperties;
-import com.amazonaws.services.comprehendmedical.model.DescribeEntitiesDetectionV2JobResult;
-import com.amazonaws.services.comprehendmedical.model.JobStatus;
-import com.amazonaws.services.comprehendmedical.model.StartEntitiesDetectionV2JobResult;
+import com.amazonaws.services.comprehendmedical.model.*;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3Object;
@@ -67,7 +64,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 /**
- * Created by Riste Tutureski <riste.tutureski@armedia.com> on 03/13/2018
+ * Created by Riste Tutureski <riste.tutureski@armedia.com> on 05/12/2020
  */
 @RunWith(PowerMockRunner.class)
 @PowerMockIgnore({ "javax.management.*", "javax.net.ssl.*" })
@@ -130,9 +127,9 @@ public class AWSComprehendMedicalServiceTest
         when(awsComprehendMedicalConfigurationService.getAwsComprehendMedicalConfiguration()).thenReturn(configuration);
         PowerMockito.whenNew(FileInputStream.class).withArguments(file).thenReturn(fileStream);
         when(s3Client.doesObjectExist((String) configuration.getBucket(),
-                comprehendMedicineDTO.getRemoteId())).thenReturn(false);
+                comprehendMedicineDTO.getRemoteId() + "/" + comprehendMedicineDTO.getRemoteId())).thenReturn(false);
         when(s3Client.putObject(eq((String) configuration.getBucket()),
-                eq(comprehendMedicineDTO.getRemoteId()), any(), any()))
+                eq(comprehendMedicineDTO.getRemoteId() + "/" + comprehendMedicineDTO.getRemoteId()), any(), any()))
                         .thenReturn(new PutObjectResult());
         when(comprehendMedicalClient.startEntitiesDetectionV2Job(any())).thenReturn(new StartEntitiesDetectionV2JobResult());
 
@@ -140,9 +137,9 @@ public class AWSComprehendMedicalServiceTest
 
         verify(awsComprehendMedicalConfigurationService, times(3)).getAwsComprehendMedicalConfiguration();
         verify(s3Client).doesObjectExist((String) configuration.getBucket(),
-                comprehendMedicineDTO.getRemoteId());
+                comprehendMedicineDTO.getRemoteId() + "/" + comprehendMedicineDTO.getRemoteId());
         verify(s3Client).putObject(eq((String) configuration.getBucket()),
-                eq(comprehendMedicineDTO.getRemoteId()), any(), any());
+                eq(comprehendMedicineDTO.getRemoteId() + "/" + comprehendMedicineDTO.getRemoteId()), any(), any());
         verify(comprehendMedicalClient).startEntitiesDetectionV2Job(any());
     }
 
@@ -160,9 +157,13 @@ public class AWSComprehendMedicalServiceTest
         configuration.setHost("host");
         configuration.setProfile("profile");
 
+        OutputDataConfig outputDataConfig = new OutputDataConfig();
+        outputDataConfig.setS3Key("key");
+
         ComprehendMedicalAsyncJobProperties props = new ComprehendMedicalAsyncJobProperties();
         props.setJobStatus(JobStatus.COMPLETED.toString());
         props.setMessage(message);
+        props.setOutputDataConfig(outputDataConfig);
 
         DescribeEntitiesDetectionV2JobResult result = new DescribeEntitiesDetectionV2JobResult();
         result.setComprehendMedicalAsyncJobProperties(props);
@@ -172,13 +173,16 @@ public class AWSComprehendMedicalServiceTest
 
         when(comprehendMedicalClient.describeEntitiesDetectionV2Job(any())).thenReturn(result);
         when(awsComprehendMedicalConfigurationService.getAwsComprehendMedicalConfiguration()).thenReturn(configuration);
-        when(s3Client.getObject(eq((String) configuration.getBucket()), eq(remoteId + ".output"))).thenReturn(obj);
+        when(s3Client.getObject(eq((String) configuration.getBucket()), eq(outputDataConfig.getS3Key() + remoteId + ".out"))).thenReturn(obj);
 
-        ComprehendMedicineDTO dto = (ComprehendMedicineDTO) awsComprehendMedicalService.get(remoteId, null);
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("jobId", "jobId");
+
+        ComprehendMedicineDTO dto = (ComprehendMedicineDTO) awsComprehendMedicalService.get(remoteId, properties);
 
         verify(comprehendMedicalClient).describeEntitiesDetectionV2Job(any());
         verify(awsComprehendMedicalConfigurationService).getAwsComprehendMedicalConfiguration();
-        verify(s3Client).getObject(eq((String) configuration.getBucket()), eq(remoteId + ".output"));
+        verify(s3Client).getObject(eq((String) configuration.getBucket()), eq(outputDataConfig.getS3Key() + remoteId + ".out"));
 
         Assert.assertNotNull(dto);
         Assert.assertEquals(remoteId, dto.getRemoteId());
@@ -201,9 +205,13 @@ public class AWSComprehendMedicalServiceTest
         configuration.setHost("host");
         configuration.setProfile("profile");
 
+        OutputDataConfig outputDataConfig = new OutputDataConfig();
+        outputDataConfig.setS3Key("key");
+
         ComprehendMedicalAsyncJobProperties props = new ComprehendMedicalAsyncJobProperties();
         props.setJobStatus(JobStatus.PARTIAL_SUCCESS.toString());
         props.setMessage(message);
+        props.setOutputDataConfig(outputDataConfig);
 
         DescribeEntitiesDetectionV2JobResult result = new DescribeEntitiesDetectionV2JobResult();
         result.setComprehendMedicalAsyncJobProperties(props);
@@ -213,13 +221,16 @@ public class AWSComprehendMedicalServiceTest
 
         when(comprehendMedicalClient.describeEntitiesDetectionV2Job(any())).thenReturn(result);
         when(awsComprehendMedicalConfigurationService.getAwsComprehendMedicalConfiguration()).thenReturn(configuration);
-        when(s3Client.getObject(eq((String) configuration.getBucket()), eq(remoteId + ".output"))).thenReturn(obj);
+        when(s3Client.getObject(eq((String) configuration.getBucket()), eq(outputDataConfig.getS3Key() + remoteId + ".out"))).thenReturn(obj);
 
-        ComprehendMedicineDTO dto = (ComprehendMedicineDTO) awsComprehendMedicalService.get(remoteId, null);
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("jobId", "jobId");
+
+        ComprehendMedicineDTO dto = (ComprehendMedicineDTO) awsComprehendMedicalService.get(remoteId, properties);
 
         verify(comprehendMedicalClient).describeEntitiesDetectionV2Job(any());
         verify(awsComprehendMedicalConfigurationService).getAwsComprehendMedicalConfiguration();
-        verify(s3Client).getObject(eq((String) configuration.getBucket()), eq(remoteId + ".output"));
+        verify(s3Client).getObject(eq((String) configuration.getBucket()), eq(outputDataConfig.getS3Key() + remoteId + ".out"));
 
         Assert.assertNotNull(dto);
         Assert.assertEquals(remoteId, dto.getRemoteId());
@@ -249,7 +260,10 @@ public class AWSComprehendMedicalServiceTest
 
         when(comprehendMedicalClient.describeEntitiesDetectionV2Job(any())).thenReturn(result);
 
-        ComprehendMedicineDTO dto = (ComprehendMedicineDTO) awsComprehendMedicalService.get(remoteId, null);
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("jobId", "jobId");
+
+        ComprehendMedicineDTO dto = (ComprehendMedicineDTO) awsComprehendMedicalService.get(remoteId, properties);
 
         verify(comprehendMedicalClient).describeEntitiesDetectionV2Job(any());
 
@@ -280,7 +294,10 @@ public class AWSComprehendMedicalServiceTest
 
         when(comprehendMedicalClient.describeEntitiesDetectionV2Job(any())).thenReturn(result);
 
-        ComprehendMedicineDTO dto = (ComprehendMedicineDTO) awsComprehendMedicalService.get(remoteId, null);
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("jobId", "jobId");
+
+        ComprehendMedicineDTO dto = (ComprehendMedicineDTO) awsComprehendMedicalService.get(remoteId, properties);
 
         verify(comprehendMedicalClient).describeEntitiesDetectionV2Job(any());
 
@@ -311,7 +328,10 @@ public class AWSComprehendMedicalServiceTest
 
         when(comprehendMedicalClient.describeEntitiesDetectionV2Job(any())).thenReturn(result);
 
-        ComprehendMedicineDTO dto = (ComprehendMedicineDTO) awsComprehendMedicalService.get(remoteId, null);
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("jobId", "jobId");
+
+        ComprehendMedicineDTO dto = (ComprehendMedicineDTO) awsComprehendMedicalService.get(remoteId, properties);
 
         verify(comprehendMedicalClient).describeEntitiesDetectionV2Job(any());
 
@@ -342,7 +362,10 @@ public class AWSComprehendMedicalServiceTest
 
         when(comprehendMedicalClient.describeEntitiesDetectionV2Job(any())).thenReturn(result);
 
-        ComprehendMedicineDTO dto = (ComprehendMedicineDTO) awsComprehendMedicalService.get(remoteId, null);
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("jobId", "jobId");
+
+        ComprehendMedicineDTO dto = (ComprehendMedicineDTO) awsComprehendMedicalService.get(remoteId, properties);
 
         verify(comprehendMedicalClient).describeEntitiesDetectionV2Job(any());
 
@@ -373,7 +396,10 @@ public class AWSComprehendMedicalServiceTest
 
         when(comprehendMedicalClient.describeEntitiesDetectionV2Job(any())).thenReturn(result);
 
-        ComprehendMedicineDTO dto = (ComprehendMedicineDTO) awsComprehendMedicalService.get(remoteId, null);
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("jobId", "jobId");
+
+        ComprehendMedicineDTO dto = (ComprehendMedicineDTO) awsComprehendMedicalService.get(remoteId, properties);
 
         verify(comprehendMedicalClient).describeEntitiesDetectionV2Job(any());
 

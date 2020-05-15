@@ -29,6 +29,9 @@ package com.armedia.acm.tool.comprehendmedical.service;
 
 import com.armedia.acm.tool.mediaengine.service.MediaEngineIntegrationService;
 
+/**
+ * Created by Riste Tutureski <riste.tutureski@armedia.com> on 05/12/2020
+ */
 public interface ComprehendMedicalService extends MediaEngineIntegrationService
 {
 }

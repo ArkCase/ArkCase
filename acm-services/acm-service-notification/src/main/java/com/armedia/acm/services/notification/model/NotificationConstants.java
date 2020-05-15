@@ -133,5 +133,6 @@ public interface NotificationConstants
     String PORTAL_REGISTRATION = "notifications.portal.registration";
     String PASSWORD_RESET_REQUEST = "notifications.password.request";
     String NEW_PORTAL_USER_PASSWORD_RESET_REQUEST = "notifications.password.newPortalUser";
+    String STATUS_COMPREHEND_MEDICAL = "notifications.status.comprehendMedical";
 
 }

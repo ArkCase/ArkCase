@@ -41,7 +41,9 @@ import javax.persistence.NonUniqueResultException;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
-
+/**
+ * Created by Riste Tutureski <riste.tutureski@armedia.com> on 05/12/2020
+ */
 public class ComprehendMedicalDao extends MediaEngineDao<ComprehendMedical>
 {
     private final Logger LOG = LogManager.getLogger(getClass());

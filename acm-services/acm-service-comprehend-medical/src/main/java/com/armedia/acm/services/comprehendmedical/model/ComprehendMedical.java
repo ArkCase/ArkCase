@@ -30,6 +30,8 @@ package com.armedia.acm.services.comprehendmedical.model;
 import com.armedia.acm.core.AcmStatefulEntity;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.services.mediaengine.exception.CreateMediaEngineException;
+import com.armedia.acm.services.mediaengine.exception.SaveMediaEngineException;
 import com.armedia.acm.services.mediaengine.model.MediaEngine;
 import com.armedia.acm.tool.comprehendmedical.model.ComprehendMedicalConstants;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -38,6 +40,11 @@ import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
+
+/**
+ * Created by Riste Tutureski <riste.tutureski@armedia.com> on 05/12/2020
+ */
 
 @Entity
 @Table(name = "acm_comprehend_medical")
@@ -68,12 +75,38 @@ public class ComprehendMedical extends MediaEngine implements AcmEntity, AcmStat
     @Column(name = "cm_comprehend_medical_id")
     private Long id;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "comprehendMedical", orphanRemoval = true)
+    private List<ComprehendMedicalEntity> entities;
+
     @OneToOne
     @JoinColumn(name = "cm_comprehend_medical_file_id")
     private EcmFile comprehendMedicalEcmFile;
 
     @Column(name = "cm_comprehend_medical_class_name")
     private String className = this.getClass().getName();
+
+    @Column(name = "cm_comprehend_medical_job_id")
+    private String jobId;
+
+    @PrePersist
+    protected void beforeInsert() throws CreateMediaEngineException
+    {
+        setUpEntities();
+    }
+
+    @PreUpdate
+    protected void beforeUpdate() throws SaveMediaEngineException
+    {
+        setUpEntities();
+    }
+
+    private void setUpEntities()
+    {
+        if (getEntities() != null && !getEntities().isEmpty())
+        {
+            getEntities().forEach(item -> item.setComprehendMedical(this));
+        }
+    }
 
     @Override
     public Long getId()
@@ -85,6 +118,26 @@ public class ComprehendMedical extends MediaEngine implements AcmEntity, AcmStat
     public void setId(Long id)
     {
         this.id = id;
+    }
+
+    public List<ComprehendMedicalEntity> getEntities()
+    {
+        return entities;
+    }
+
+    public void setEntities(List<ComprehendMedicalEntity> entities)
+    {
+        this.entities = entities;
+    }
+
+    public EcmFile getComprehendMedicalEcmFile()
+    {
+        return comprehendMedicalEcmFile;
+    }
+
+    public void setComprehendMedicalEcmFile(EcmFile comprehendMedicalEcmFile)
+    {
+        this.comprehendMedicalEcmFile = comprehendMedicalEcmFile;
     }
 
     @Override
@@ -103,5 +156,15 @@ public class ComprehendMedical extends MediaEngine implements AcmEntity, AcmStat
     public void setClassName(String className)
     {
         this.className = className;
+    }
+
+    public String getJobId()
+    {
+        return jobId;
+    }
+
+    public void setJobId(String jobId)
+    {
+        this.jobId = jobId;
     }
 }

@@ -32,7 +32,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.springframework.beans.factory.annotation.Value;
 
 /**
- * Created by Vladimir Cherepnalkovski
+ * Created by Riste Tutureski <riste.tutureski@armedia.com> on 05/12/2020
  */
 @JsonSerialize(as = AWSCredentialsConfiguration.class)
 public class AWSCredentialsConfiguration

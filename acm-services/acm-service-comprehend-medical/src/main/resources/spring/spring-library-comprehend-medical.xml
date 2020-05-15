@@ -27,6 +27,8 @@
         <property name="comprehendMedicalConfigurationService" ref="comprehendMedicalConfigurationService"/>
         <property name="auditDao" ref="auditDao"/>
         <property name="translationService" ref="translationService" />
+        <property name="tagService" ref="tagService"/>
+        <property name="associatedTagService" ref="associatedTagService"/>
     </bean>
 
 

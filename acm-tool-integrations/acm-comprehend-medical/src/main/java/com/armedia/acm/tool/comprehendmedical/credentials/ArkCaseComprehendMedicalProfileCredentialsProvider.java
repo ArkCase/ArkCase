@@ -34,6 +34,9 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.armedia.acm.tool.comprehendmedical.model.AWSCredentialsConfiguration;
 import com.armedia.acm.tool.comprehendmedical.service.AWSComprehendMedicalCredentialsConfigurationService;
 
+/**
+ * Created by Riste Tutureski <riste.tutureski@armedia.com> on 05/12/2020
+ */
 public class ArkCaseComprehendMedicalProfileCredentialsProvider implements AWSCredentialsProvider
 {
     private AWSComprehendMedicalCredentialsConfigurationService awsComprehendMedicalCredentialsConfigurationService;
