@@ -32,6 +32,10 @@ import com.armedia.acm.tool.comprehendmedical.service.ComprehendMedicalService;
 
 import java.util.Map;
 
+/**
+ * Created by Riste Tutureski <riste.tutureski@armedia.com> on 05/12/2020
+ */
+
 public class ComprehendMedicalProviderFactory
 {
 

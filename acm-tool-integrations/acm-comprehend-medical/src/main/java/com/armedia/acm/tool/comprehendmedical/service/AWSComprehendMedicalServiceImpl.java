@@ -56,6 +56,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
+/**
+ * Created by Riste Tutureski <riste.tutureski@armedia.com> on 05/12/2020
+ */
 public class AWSComprehendMedicalServiceImpl implements ComprehendMedicalService
 {
     private final Logger LOG = LogManager.getLogger(getClass());
@@ -78,24 +81,29 @@ public class AWSComprehendMedicalServiceImpl implements ComprehendMedicalService
     }
 
     @Override
-    public void create(MediaEngineDTO mediaEngineDTO) throws CreateMediaEngineToolException
+    public MediaEngineDTO create(MediaEngineDTO mediaEngineDTO) throws CreateMediaEngineToolException
     {
         AWSComprehendMedicalConfiguration configuration = getAwsComprehendMedicalConfigurationService().getAwsComprehendMedicalConfiguration();
 
         checkIfMediaExist(mediaEngineDTO, configuration.getBucket());
         uploadMedia(mediaEngineDTO);
-        startComprehendMedicalJob(mediaEngineDTO);
+        StartEntitiesDetectionV2JobResult result = startComprehendMedicalJob(mediaEngineDTO);
+
+        mediaEngineDTO.setJobId(result.getJobId());
+
+        return mediaEngineDTO;
     }
 
     @Override
     public MediaEngineDTO get(String remoteId, Map<String, Object> props) throws GetMediaEngineToolException
     {
-        if (StringUtils.isNotEmpty(remoteId))
+        if (StringUtils.isNotEmpty(remoteId) && props != null && props.containsKey("jobId") && StringUtils.isNotEmpty((String) props.get("jobId")))
         {
             try
             {
                 DescribeEntitiesDetectionV2JobRequest request = new DescribeEntitiesDetectionV2JobRequest();
-                request.setJobId(remoteId);
+                request.setJobId((String) props.get("jobId"));
+
                 DescribeEntitiesDetectionV2JobResult result = getAwsComprehendMedicalClient().describeEntitiesDetectionV2Job(request);
 
                 String resultStatus = result.getComprehendMedicalAsyncJobProperties().getJobStatus();
@@ -104,7 +112,7 @@ public class AWSComprehendMedicalServiceImpl implements ComprehendMedicalService
                 ComprehendMedicineDTO comprehendMedicineDTO = new ComprehendMedicineDTO();
                 if (JobStatus.COMPLETED.toString().equals(resultStatus) || JobStatus.PARTIAL_SUCCESS.toString().equals(resultStatus))
                 {
-                    comprehendMedicineDTO.setOutput(getOutput(remoteId));
+                    comprehendMedicineDTO.setOutput(getOutput(remoteId, result.getComprehendMedicalAsyncJobProperties().getOutputDataConfig().getS3Key()));
                     comprehendMedicineDTO.setStatus(MediaEngineStatusType.COMPLETED.toString());
                     comprehendMedicineDTO.setRemoteId(remoteId);
                     comprehendMedicineDTO.setMessage(message);
@@ -146,8 +154,32 @@ public class AWSComprehendMedicalServiceImpl implements ComprehendMedicalService
         try
         {
             AWSComprehendMedicalConfiguration configuration = getAwsComprehendMedicalConfigurationService().getAwsComprehendMedicalConfiguration();
-            String key = mediaEngineDTO.getRemoteId() + mediaEngineDTO.getProperties().get("extension");
-            getS3Client().deleteObject(configuration.getBucket(), key);
+            String key = mediaEngineDTO.getRemoteId();
+
+            ListObjectsRequest listObjectsRequest = new ListObjectsRequest()
+                    .withBucketName(configuration.getBucket())
+                    .withPrefix(key);
+
+            ObjectListing objectListing = getS3Client().listObjects(listObjectsRequest);
+
+            while (true)
+            {
+                if (objectListing == null) break;
+
+                for (S3ObjectSummary objectSummary : objectListing.getObjectSummaries())
+                {
+                    getS3Client().deleteObject(configuration.getBucket(), objectSummary.getKey());
+                }
+
+                if (objectListing.isTruncated())
+                {
+                    objectListing = getS3Client().listNextBatchOfObjects(objectListing);
+                }
+                else
+                {
+                    break;
+                }
+            }
 
             File tmpFile = mediaEngineDTO.getMediaEcmFileVersion();
             FileUtils.deleteQuietly(tmpFile);
@@ -162,11 +194,11 @@ public class AWSComprehendMedicalServiceImpl implements ComprehendMedicalService
         }
     }
 
-    private String getOutput(String remoteId)
+    private String getOutput(String remoteId, String destination)
     {
         AWSComprehendMedicalConfiguration configuration = getAwsComprehendMedicalConfigurationService().getAwsComprehendMedicalConfiguration();
 
-        S3Object outputObject = getS3Client().getObject(configuration.getBucket(), remoteId + ".output");
+        S3Object outputObject = getS3Client().getObject(configuration.getBucket(), destination + remoteId + ".out");
         S3ObjectInputStream inputStream = outputObject.getObjectContent();
 
         String output = "";
@@ -188,7 +220,7 @@ public class AWSComprehendMedicalServiceImpl implements ComprehendMedicalService
 
         try
         {
-            exist = getS3Client().doesObjectExist(bucket, mediaEngineDTO.getRemoteId());
+            exist = getS3Client().doesObjectExist(bucket, mediaEngineDTO.getRemoteId() + "/" + mediaEngineDTO.getRemoteId());
         }
         catch (Exception e)
         {
@@ -222,7 +254,7 @@ public class AWSComprehendMedicalServiceImpl implements ComprehendMedicalService
                 metadata.setContentLength(Long.valueOf(contentLength));
                 metadata.setContentType(mimeType);
 
-                return getS3Client().putObject(configuration.getBucket(), mediaEngineDTO.getRemoteId(), inputStream, metadata);
+                return getS3Client().putObject(configuration.getBucket(), mediaEngineDTO.getRemoteId() + "/" + mediaEngineDTO.getRemoteId(), inputStream, metadata);
             }
             catch (Exception e)
             {
@@ -252,7 +284,7 @@ public class AWSComprehendMedicalServiceImpl implements ComprehendMedicalService
 
                 OutputDataConfig outputDataConfig = new OutputDataConfig();
                 outputDataConfig.setS3Bucket(configuration.getBucket());
-                outputDataConfig.setS3Key(mediaEngineDTO.getRemoteId() + ".output");
+                outputDataConfig.setS3Key(mediaEngineDTO.getRemoteId());
 
                 StartEntitiesDetectionV2JobRequest request = new StartEntitiesDetectionV2JobRequest();
                 request.setClientRequestToken(mediaEngineDTO.getRemoteId());
@@ -260,6 +292,7 @@ public class AWSComprehendMedicalServiceImpl implements ComprehendMedicalService
                 request.setLanguageCode(mediaEngineDTO.getLanguage());
                 request.setInputDataConfig(inputDataConfig);
                 request.setOutputDataConfig(outputDataConfig);
+                request.setDataAccessRoleArn(configuration.getArn());
 
                 return getAwsComprehendMedicalClient().startEntitiesDetectionV2Job(request);
             }

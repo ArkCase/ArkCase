@@ -35,14 +35,17 @@ import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockingManager;
 import com.armedia.acm.services.comprehendmedical.factory.ComprehendMedicalProviderFactory;
+import com.armedia.acm.services.comprehendmedical.model.ComprehendMedical;
 import com.armedia.acm.services.comprehendmedical.sevice.ArkCaseComprehendMedicalService;
 import com.armedia.acm.services.comprehendmedical.sevice.ComprehendMedicalConfigurationService;
 import com.armedia.acm.services.comprehendmedical.utils.ComprehendMedicalUtils;
 import com.armedia.acm.services.mediaengine.exception.GetMediaEngineException;
 import com.armedia.acm.services.mediaengine.exception.MediaEngineProviderNotFound;
+import com.armedia.acm.services.mediaengine.exception.SaveMediaEngineException;
 import com.armedia.acm.services.mediaengine.mapper.MediaEngineMapper;
 import com.armedia.acm.services.mediaengine.model.*;
 import com.armedia.acm.tool.comprehendmedical.model.ComprehendMedicalConstants;
+import com.armedia.acm.tool.comprehendmedical.model.ComprehendMedicineDTO;
 import com.armedia.acm.tool.mediaengine.exception.CreateMediaEngineToolException;
 import com.armedia.acm.tool.mediaengine.model.MediaEngineDTO;
 import org.activiti.engine.RuntimeService;
@@ -55,7 +58,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Created by Riste Tutureski <riste.tutureski@armedia.com> on 03/15/2018
+ * Created by Riste Tutureski <riste.tutureski@armedia.com> on 05/12/2020
  */
 public class ComprehendMedicalQueueJob
 {
@@ -147,9 +150,25 @@ public class ComprehendMedicalQueueJob
                 MediaEngineDTO mediaEngineDTO = getMediaEngineMapper().mediaEngineToDTO(mediaEngine, tempPath);
                 mediaEngineDTO
                         .setMediaEcmFileVersion(getArkCaseComprehendMedicalService().createTempFile(mediaEngine, tempPath));
-                getComprehendMedicalProviderFactory().getProvider(providerName).create(mediaEngineDTO);
+                mediaEngineDTO.getProperties().put("fileSize", mediaEngineDTO.getMediaEcmFileVersion().length() + "");
+                mediaEngineDTO.getProperties().put("mimeType", "text/plain");
+                mediaEngineDTO = getComprehendMedicalProviderFactory().getProvider(providerName).create(mediaEngineDTO);
                 getArkCaseComprehendMedicalService().signal(processInstance, MediaEngineStatusType.PROCESSING.toString(),
                         MediaEngineActionType.PROCESSING.toString());
+
+                if (mediaEngine instanceof ComprehendMedical)
+                {
+                    ((ComprehendMedical) mediaEngine).setJobId(mediaEngineDTO.getJobId());
+
+                    try
+                    {
+                        getArkCaseComprehendMedicalService().save(mediaEngine);
+                    }
+                    catch (SaveMediaEngineException e)
+                    {
+                        LOG.error("Failed to save Comprehend Media Object.", e);
+                    }
+                }
             }
         }
     }

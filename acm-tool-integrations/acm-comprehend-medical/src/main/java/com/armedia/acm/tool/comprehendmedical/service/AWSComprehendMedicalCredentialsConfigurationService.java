@@ -33,6 +33,9 @@ import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
 import com.armedia.acm.crypto.properties.AcmEncryptablePropertyUtilsImpl;
 import com.armedia.acm.tool.comprehendmedical.model.AWSCredentialsConfiguration;
 
+/**
+ * Created by Riste Tutureski <riste.tutureski@armedia.com> on 05/12/2020
+ */
 public class AWSComprehendMedicalCredentialsConfigurationService
 {
     private AWSCredentialsConfiguration awsCredentialsConfig;

@@ -49,26 +49,39 @@ import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
+import com.armedia.acm.services.tag.model.AcmAssociatedTag;
+import com.armedia.acm.services.tag.model.AcmTag;
+import com.armedia.acm.services.tag.service.AssociatedTagService;
+import com.armedia.acm.services.tag.service.TagService;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.tool.comprehendmedical.model.ComprehendMedicalConstants;
 import com.armedia.acm.tool.comprehendmedical.model.ComprehendMedicineDTO;
-import com.armedia.acm.tool.mediaengine.exception.CreateMediaEngineToolException;
 import com.armedia.acm.tool.mediaengine.exception.GetMediaEngineToolException;
 import com.armedia.acm.tool.mediaengine.model.MediaEngineDTO;
+import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.parser.PdfTextExtractor;
 import org.activiti.engine.delegate.DelegateExecution;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Created by Riste Tutureski <riste.tutureski@armedia.com> on 05/12/2020
+ */
 public class ArkCaseComprehendMedicalServiceImpl extends ArkCaseMediaEngineServiceImpl<ComprehendMedical>
         implements ArkCaseComprehendMedicalService
 {
@@ -80,6 +93,8 @@ public class ArkCaseComprehendMedicalServiceImpl extends ArkCaseMediaEngineServi
     private UserDao userDao;
     private TranslationService translationService;
     private NotificationDao notificationDao;
+    private TagService tagService;
+    private AssociatedTagService associatedTagService;
 
     @Override
     public MediaEngine getExisting(MediaEngine mediaEngine) throws GetMediaEngineException
@@ -143,7 +158,7 @@ public class ArkCaseComprehendMedicalServiceImpl extends ArkCaseMediaEngineServi
                 getUsersToNotify(users, comprehendMedical);
 
                 Notification notification = new Notification();
-                notification.setTitle(getTranslationService().translate(NotificationConstants.STATUS_TRANSCRIPTION));
+                notification.setTitle(getTranslationService().translate(NotificationConstants.STATUS_COMPREHEND_MEDICAL));
                 if(!action.equals("QUEUED"))
                 {
                     notification.setTemplateModelName("transcribeStatus");
@@ -415,7 +430,9 @@ public class ArkCaseComprehendMedicalServiceImpl extends ArkCaseMediaEngineServi
         ComprehendMedicalConfiguration configuration = getComprehendMedicalConfigurationService().loadProperties();
         String providerName = configuration.getProvider();
 
-        return (ComprehendMedicineDTO) getComprehendMedicalProviderFactory().getProvider(providerName).get(mediaEngine.getRemoteId(), null);
+        Map<String, Object> props = new HashMap<>();
+        props.put("jobId", ((ComprehendMedical)mediaEngine).getJobId());
+        return (ComprehendMedicineDTO) getComprehendMedicalProviderFactory().getProvider(providerName).get(mediaEngine.getRemoteId(), props);
     }
 
     private String doComplete(List<Long> ids, ComprehendMedicineDTO comprehendMedicineDTO, DelegateExecution delegateExecution)
@@ -433,9 +450,10 @@ public class ArkCaseComprehendMedicalServiceImpl extends ArkCaseMediaEngineServi
         try
         {
             ComprehendMedical comprehendMedical = (ComprehendMedical) get(id);
-            // TODO: SET OUTPUT
-            //comprehendMedical.setOutput(comprehendMedicineDTO.getOutput());
+            comprehendMedical.setEntities(ComprehendMedicalUtils.getEntitiesFromOutput(comprehendMedicineDTO.getOutput()));
             save(comprehendMedical);
+
+            addTagsToFile(comprehendMedical);
 
             getObjectLockingManager().releaseObjectLock(comprehendMedical.getMediaEcmFileVersion().getFile().getId(),
                     EcmFileConstants.OBJECT_FILE_TYPE, MediaEngineConstants.LOCK_TYPE_WRITE, true,
@@ -445,6 +463,60 @@ public class ArkCaseComprehendMedicalServiceImpl extends ArkCaseMediaEngineServi
         {
             LOG.warn("Taking items for ComprehendMedical with ID=[{}] and PROCESS_ID=[{}] failed. REASON=[{}]", id,
                     delegateExecution.getProcessInstanceId(), e.getMessage());
+        }
+    }
+
+    private void addTagsToFile(ComprehendMedical comprehendMedical)
+    {
+        if (comprehendMedical != null && comprehendMedical.getEntities() != null)
+        {
+            for (int i = 0; i < comprehendMedical.getEntities().size(); i++)
+            {
+                String text = comprehendMedical.getEntities().get(i).getText();
+                String objectType = comprehendMedical.getMediaEcmFileVersion().getFile().getObjectType();
+                Long objectId = comprehendMedical.getMediaEcmFileVersion().getFile().getId();
+                String objectTitle = comprehendMedical.getMediaEcmFileVersion().getFile().getFileName();
+                addTagToFile(text, objectType, objectId, objectTitle);
+
+                // So far attributes we don't need in tags, just entities. But once we need them, uncomment the code below
+                /*if (comprehendMedical.getEntities().get(i).getAttributes() != null)
+                {
+                    for (int j = 0; j < comprehendMedical.getEntities().get(i).getAttributes().size(); j++)
+                    {
+                        text = comprehendMedical.getEntities().get(i).getAttributes().get(j).getText();
+                        objectType = comprehendMedical.getMediaEcmFileVersion().getFile().getObjectType();
+                        objectId = comprehendMedical.getMediaEcmFileVersion().getFile().getId();
+                        objectTitle = comprehendMedical.getMediaEcmFileVersion().getFile().getFileName();
+                        addTagToFile(text, objectType, objectId, objectTitle);
+                    }
+                }*/
+            }
+        }
+    }
+
+    private void addTagToFile(String text, String objectType, Long objectId, String objectTitle)
+    {
+        String entityText = text;
+        AcmTag entityTag = getTagService().getTagByTextOrDescOrName(entityText, entityText, entityText);
+        if (entityTag == null)
+        {
+            entityTag = getTagService().saveTag(entityText, entityText, entityText);
+        }
+
+        AcmAssociatedTag associatedTag = null;
+
+        try
+        {
+            associatedTag = getAssociatedTagService().getAssociatedTagByTagIdAndObjectIdAndType(entityTag.getId(), objectId, objectType);
+        }
+        catch (Exception e)
+        {
+            LOG.debug("There is no associated tag for this file for objectId=[{}], objectType=[{}] and tag=[{}]", objectId, objectType, entityTag.getId());
+        }
+
+        if (associatedTag == null)
+        {
+            getAssociatedTagService().saveAssociateTag(objectType, objectId, objectTitle, entityTag);
         }
     }
 
@@ -511,19 +583,121 @@ public class ArkCaseComprehendMedicalServiceImpl extends ArkCaseMediaEngineServi
             // Create Job on provider side and set the Status and Action to PROCESSING
             MediaEngineDTO mediaEngineDTO = getMediaEngineMapper().mediaEngineToDTO(mediaEngine, configuration.getTempPath());
             mediaEngineDTO.setMediaEcmFileVersion(createTempFile(mediaEngine, configuration.getTempPath()));
+            mediaEngineDTO.getProperties().put("fileSize", mediaEngineDTO.getMediaEcmFileVersion().length() + "");
+            mediaEngineDTO.getProperties().put("mimeType", "text/plain");
             getActivitiRuntimeService().setVariable(mediaEngineDTO.getProcessId(), "UPLOADED_TMP",
                     mediaEngineDTO.getMediaEcmFileVersion().getAbsolutePath());
-            getComprehendMedicalProviderFactory().getProvider(providerName).create(mediaEngineDTO);
+            mediaEngineDTO = getComprehendMedicalProviderFactory().getProvider(providerName).create(mediaEngineDTO);
             delegateExecution.setVariable(MediaEngineBusinessProcessVariableKey.STATUS.toString(),
                     MediaEngineStatusType.PROCESSING.toString());
             delegateExecution.setVariable(MediaEngineBusinessProcessVariableKey.ACTION.toString(),
                     MediaEngineActionType.PROCESSING.toString());
+
+            if (mediaEngine instanceof ComprehendMedical)
+            {
+                ((ComprehendMedical) mediaEngine).setJobId(mediaEngineDTO.getJobId());
+
+                save(mediaEngine);
+            }
         }
         catch (Exception e)
         {
             LOG.error("Error while calling PROVIDER=[{}] to comprehend medicine. REASON=[{}]",
                     configuration.getProvider(), e.getMessage(), e);
         }
+    }
+
+    @Override
+    public File createTempFile(MediaEngine mediaEngine, String tempPath) throws IOException, ArkCaseFileRepositoryException
+    {
+        InputStream mediaVersionInputStream = getEcmFileTransaction()
+                .downloadFileTransactionAsInputStream(mediaEngine.getMediaEcmFileVersion().getFile());
+
+        String text = "";
+
+        if (mediaEngine.getMediaEcmFileVersion().getVersionMimeType().startsWith("application/pdf") &&
+        mediaEngine.getMediaEcmFileVersion().isSearchablePDF())
+        {
+            text = getTextFromPDF(mediaVersionInputStream);
+        }
+        else if(mediaEngine.getMediaEcmFileVersion().getVersionMimeType().startsWith("text/plain"))
+        {
+            text = getTextFromPlainText(mediaVersionInputStream);
+        }
+        else if(mediaEngine.getMediaEcmFileVersion().getVersionMimeType().startsWith("application/msword") ||
+                mediaEngine.getMediaEcmFileVersion().getVersionMimeType().startsWith("application/vnd.openxmlformats-officedocument.wordprocessingml.document"))
+        {
+            text = getTextFromWord(mediaVersionInputStream);
+        }
+        else
+        {
+            throw new ArkCaseFileRepositoryException("File is not PlainText, searchable PDF or Word document");
+        }
+
+        File tmpFile = new File(tempPath + mediaEngine.getRemoteId() + "."
+                + mediaEngine.getMediaEcmFileVersion().getFile().getFileExtension());
+
+        FileUtils.writeStringToFile(tmpFile, text, "UTF-8");
+
+        mediaVersionInputStream.close();
+
+        return tmpFile;
+    }
+
+    private String getTextFromPDF(InputStream inputStream) throws IOException
+    {
+        String text = "";
+        try {
+
+            PdfReader reader = new PdfReader(inputStream);
+
+            for (int i = 1; i <= reader.getNumberOfPages(); i++)
+            {
+                text += PdfTextExtractor.getTextFromPage(reader, i);
+            }
+        }
+        catch (IOException e)
+        {
+            LOG.error("Could not take the text from the PDF file", e);
+            throw e;
+        }
+
+        return text;
+    }
+
+    private String getTextFromPlainText(InputStream inputStream) throws IOException
+    {
+        String text = "";
+
+        try
+        {
+            text = IOUtils.toString(inputStream);
+        }
+        catch (IOException e)
+        {
+            LOG.error("Could not take the text from the PlainText file", e);
+            throw e;
+        }
+
+        return text;
+    }
+
+    private String getTextFromWord(InputStream inputStream) throws IOException
+    {
+        String text = "";
+
+        try
+        {
+            XWPFDocument doc = new XWPFDocument(inputStream);
+            text = new XWPFWordExtractor(doc).getText();
+        }
+        catch (IOException e)
+        {
+            LOG.error("Could not take the text from the Word file", e);
+            throw e;
+        }
+
+        return text;
     }
 
     private void acquireLock(MediaEngine mediaEngine)
@@ -727,11 +901,31 @@ public class ArkCaseComprehendMedicalServiceImpl extends ArkCaseMediaEngineServi
         this.translationService = translationService;
     }
 
-    public NotificationDao getNotificationDao() {
+    public NotificationDao getNotificationDao()
+    {
         return notificationDao;
     }
 
-    public void setNotificationDao(NotificationDao notificationDao) {
+    public void setNotificationDao(NotificationDao notificationDao)
+    {
         this.notificationDao = notificationDao;
+    }
+
+    public TagService getTagService()
+    {
+        return tagService;
+    }
+
+    public void setTagService(TagService tagService)
+    {
+        this.tagService = tagService;
+    }
+
+    public AssociatedTagService getAssociatedTagService() {
+        return associatedTagService;
+    }
+
+    public void setAssociatedTagService(AssociatedTagService associatedTagService) {
+        this.associatedTagService = associatedTagService;
     }
 }

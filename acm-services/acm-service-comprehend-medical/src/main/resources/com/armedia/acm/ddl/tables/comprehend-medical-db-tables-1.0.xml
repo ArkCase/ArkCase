@@ -57,4 +57,101 @@
         </insert>
     </changeSet>
 
+    <changeSet id="3-create-comprehend-medical-job-id" author="riste.tutureski">
+        <addColumn tableName="acm_comprehend_medical">
+            <column name="cm_comprehend_medical_job_id" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="4-create-comprehend-medical-entity-table" author="riste.tutureski">
+        <createTable tableName="acm_comprehend_medical_entity">
+            <column name="cm_comprehend_medical_entity_id" type="${idType}">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_comprehend_medical_entity"/>
+            </column>
+            <column name="cm_comprehend_medical_id" type="${idType}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cm_comprehend_medical_entity_text" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_comprehend_medical_entity_category" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_comprehend_medical_entity_type" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_comprehend_medical_entity_creator" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_comprehend_medical_entity_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_comprehend_medical_entity_modifier" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_comprehend_medical_entity_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_comprehend_medical_entity_class_name" type="VARCHAR(400)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="5-create-comprehend-medical-entity-id-table" author="riste.tutureski">
+        <createTable tableName="acm_comprehend_medical_entity_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_comprehend_medical_entity_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_comprehend_medical_entity"></column>
+        </insert>
+    </changeSet>
+
+    <changeSet id="6-create-comprehend-medical-entity-attribute-table" author="riste.tutureski">
+        <createTable tableName="acm_comprehend_medical_entity_attribute">
+            <column name="cm_comprehend_medical_entity_attribute_id" type="${idType}">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_comprehend_medical_entity_attribute"/>
+            </column>
+            <column name="cm_comprehend_medical_entity_id" type="${idType}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cm_comprehend_medical_entity_attribute_text" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_comprehend_medical_entity_attribute_type" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_comprehend_medical_entity_attribute_creator" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_comprehend_medical_entity_attribute_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_comprehend_medical_entity_attribute_modifier" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_comprehend_medical_entity_attribute_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_comprehend_medical_entity_attribute_class_name" type="VARCHAR(400)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="7-create-comprehend-medical-entity-attribute-id-table" author="riste.tutureski">
+        <createTable tableName="acm_comprehend_medical_entity_attribute_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_comprehend_medical_entity_attribute_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_comprehend_medical_entity_attribute"></column>
+        </insert>
+    </changeSet>
+
 </databaseChangeLog>

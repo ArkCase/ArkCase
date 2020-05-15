@@ -30,6 +30,9 @@ package com.armedia.acm.tool.comprehendmedical.service;
 import com.armedia.acm.configuration.service.ConfigurationPropertyService;
 import com.armedia.acm.tool.comprehendmedical.model.AWSComprehendMedicalConfiguration;
 
+/**
+ * Created by Riste Tutureski <riste.tutureski@armedia.com> on 05/12/2020
+ */
 public class AWSComprehendMedicalConfigurationService
 {
     private AWSComprehendMedicalConfiguration awsComprehendMedicalConfiguration;

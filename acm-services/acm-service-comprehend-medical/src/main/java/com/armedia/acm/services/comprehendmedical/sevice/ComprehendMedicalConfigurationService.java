@@ -31,6 +31,9 @@ import com.armedia.acm.configuration.service.ConfigurationPropertyService;
 import com.armedia.acm.services.comprehendmedical.model.ComprehendMedicalConfiguration;
 import com.armedia.acm.services.mediaengine.model.MediaEngineConfiguration;
 
+/**
+ * Created by Riste Tutureski <riste.tutureski@armedia.com> on 05/12/2020
+ */
 public class ComprehendMedicalConfigurationService
 {
     private ComprehendMedicalConfiguration comprehendMedicalConfiguration;
