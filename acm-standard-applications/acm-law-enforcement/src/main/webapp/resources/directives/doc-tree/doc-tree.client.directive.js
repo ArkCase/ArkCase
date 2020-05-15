@@ -1612,7 +1612,7 @@ angular.module('directives').directive(
                                 }, {
                                     name: "startNLPProcess",
                                     execute: function (nodes, args) {
-                                        
+
                                         var ecmFile = nodes[0].data;
 
                                         if (!Util.isEmpty(ecmFile) && !Util.isEmpty(ecmFile.version) && !Util.isArrayEmpty(ecmFile.versionList)) {
@@ -4125,6 +4125,7 @@ angular.module('directives').directive(
                                 solrData.versionList = [];
                                 for (var i = 0; i < fileData.versions.length; i++) {
                                     var version = {};
+                                    version.id = Util.goodValue(fileData.versions[i].id);
                                     version.versionTag = Util.goodValue(fileData.versions[i].versionTag);
                                     version.created = Util.goodValue(fileData.versions[i].created);
                                     version.creator = Util.goodValue(fileData.versions[i].creator);
@@ -4137,6 +4138,7 @@ angular.module('directives').directive(
                                 solrData.versionList = [];
                                 for (var i = 0; i < fileData.versionList.length; i++) {
                                     var version = {};
+                                    version.id = Util.goodValue(fileData.versionList[i].id);
                                     version.versionTag = Util.goodValue(fileData.versionList[i].versionTag);
                                     version.created = Util.goodValue(fileData.versionList[i].created);
                                     version.creator = Util.goodValue(fileData.versionList[i].creator);
