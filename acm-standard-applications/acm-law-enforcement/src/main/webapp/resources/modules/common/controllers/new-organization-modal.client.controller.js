@@ -23,6 +23,7 @@ angular.module('common').controller(
                     //new organization with predefined values
                     $scope.organization = {
                         className: 'com.armedia.acm.plugins.person.model.Organization',
+                        isNew: true,
                         contactMethods: [],
                         identifications: [],
                         addresses: [],
