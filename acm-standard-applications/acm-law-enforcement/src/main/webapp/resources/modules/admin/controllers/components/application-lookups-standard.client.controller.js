@@ -59,7 +59,8 @@ angular.module('admin').controller('Admin.StandardLookupController', ['$scope', 
         $scope.entry = entry;
         var item = {
             key: '',
-            value: ''
+            value: '',
+            primary: false
         };
         showModal(item, false);
     };
@@ -68,7 +69,8 @@ angular.module('admin').controller('Admin.StandardLookupController', ['$scope', 
         $scope.entry = rowEntity;
         var item = {
             key: rowEntity.key,
-            value: rowEntity.value
+            value: rowEntity.value,
+            primary: Util.goodValue(rowEntity.primary, false)
         };
         showModal(item, true);
     };
@@ -105,6 +107,7 @@ angular.module('admin').controller('Admin.StandardLookupController', ['$scope', 
         params.entry = entry || {};
         params.isEdit = isEdit || false;
         params.config = $scope.config;
+        params.isDefaultEnabled = true;
 
         var modalInstance = $modal.open({
             animation: true,
@@ -121,10 +124,13 @@ angular.module('admin').controller('Admin.StandardLookupController', ['$scope', 
         modalInstance.result.then(function (data) {
             $scope.entry.key = data.entry.key;
             $scope.entry.value = data.entry.value;
+            $scope.entry.primary = data.entry.primary;
             if (!data.isEdit) {
                 $scope.lookup.push($scope.entry);
             }
-
+            if ($scope.entry.primary) {
+                changePrimaryEntry($scope.gridOptions.data, $scope.entry);
+            }
             saveLookup();
         });
     }
@@ -135,6 +141,16 @@ angular.module('admin').controller('Admin.StandardLookupController', ['$scope', 
         if (selectedLookupDef.lookupType === 'standardLookup') {
             $scope.selectedLookupDef = selectedLookupDef;
             fetchLookup();
+        }
+    }
+
+    function changePrimaryEntry(data, entry) {
+        if ($scope.entry.primary) {
+            data.forEach(function (value) {
+                if (value.key !== entry.key) {
+                    value.primary = false;
+                }
+            });
         }
     }
 
