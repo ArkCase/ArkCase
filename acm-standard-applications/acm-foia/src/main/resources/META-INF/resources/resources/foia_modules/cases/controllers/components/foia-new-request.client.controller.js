@@ -160,7 +160,16 @@ angular.module('cases').controller(
                 $scope.config.data.organizationAssociations = [];
                 $scope.config.data.requestType = $scope.requestTypes[0].key;
                 $scope.config.data.requestCategory = $scope.categories[0].key;
-                $scope.config.data.componentAgency = $scope.componentsAgencies[0].key;
+
+                var defaultComponentAgencyFound = _.find($scope.componentsAgencies, function (value) {
+                    return value.primary === true;
+                });
+
+                if (!Util.isEmpty(defaultComponentAgencyFound)) {
+                    $scope.config.data.componentAgency = defaultComponentAgencyFound.key;
+                } else {
+                    $scope.config.data.componentAgency = $scope.componentsAgencies[0].key;
+                }
                 $scope.config.data.originator.person.title = $scope.prefixes[0].key;
                 $scope.config.data.deliveryMethodOfResponse = $scope.deliveryMethodOfResponses[0].key;
                 $scope.config.data.payFee = $scope.payFees[0].key;
