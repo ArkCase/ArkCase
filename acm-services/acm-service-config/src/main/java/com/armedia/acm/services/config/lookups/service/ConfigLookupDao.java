@@ -352,11 +352,26 @@ public class ConfigLookupDao implements LookupDao, InitializingBean
 
     }
 
+    private void checkStandardLookupPrimaryEntries(LookupDefinition lookupDefinition) throws AcmResourceNotModifiableException
+    {
+        List<StandardLookupEntry> entries = getObjectConverter().getJsonUnmarshaller()
+                .unmarshallCollection(lookupDefinition.getLookupEntriesAsJson(), List.class, StandardLookupEntry.class);
+
+        List<StandardLookupEntry> primaryEntry = entries.stream().filter(AcmLookupEntry::isPrimary).collect(Collectors.toList());
+
+        if(primaryEntry.size() > 1)
+        {
+            throw new AcmResourceNotModifiableException("There is already primary entry in " + lookupDefinition.getName() + " lookup");
+        }
+
+    }
+
     private void checkReadOnlyEntries(LookupDefinition lookupDefinition) throws AcmResourceNotModifiableException
     {
         if (LookupType.STANDARD_LOOKUP.equals(lookupDefinition.getLookupType()))
         {
             checkStandardLookupReadOnlyEntries(lookupDefinition);
+            checkStandardLookupPrimaryEntries(lookupDefinition);
         }
         else if (LookupType.INVERSE_VALUES_LOOKUP.equals(lookupDefinition.getLookupType()))
         {
