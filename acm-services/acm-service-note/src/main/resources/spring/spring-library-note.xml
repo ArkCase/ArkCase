@@ -25,4 +25,8 @@
         <property name="userDao" ref="userJpaDao"/>
     </bean>
 
+    <bean id="noteAddedNotifier" class="com.armedia.acm.services.note.service.NoteAddedNotifier">
+        <property name="notificationService" ref="notificationService"/>
+        <property name="notificationUtils" ref="notificationUtils"/>
+    </bean>
 </beans>
