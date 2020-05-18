@@ -1,0 +1,82 @@
+{
+   "Entities":[
+      {
+         "Id":0,
+         "BeginOffset":0,
+         "EndOffset":7,
+         "Score":0.9982374,
+         "Text":"Aspirin",
+         "Category":"MEDICATION",
+         "Type":"GENERIC_NAME",
+         "Traits":[
+
+         ],
+         "Attributes":[
+            {
+               "Type":"DOSAGE",
+               "Score":0.9572523,
+               "RelationshipScore":0.9948944,
+               "Id":1,
+               "BeginOffset":20,
+               "EndOffset":25,
+               "Text":"20 mg",
+               "Traits":[
+
+               ]
+            },
+            {
+               "Type":"ROUTE_OR_MODE",
+               "Score":0.99953103,
+               "RelationshipScore":0.9798977,
+               "Id":2,
+               "BeginOffset":26,
+               "EndOffset":28,
+               "Text":"po",
+               "Traits":[
+
+               ]
+            },
+            {
+               "Type":"FREQUENCY",
+               "Score":0.980356,
+               "RelationshipScore":0.99849856,
+               "Id":3,
+               "BeginOffset":29,
+               "EndOffset":34,
+               "Text":"daily",
+               "Traits":[
+
+               ]
+            },
+            {
+               "Type":"DURATION",
+               "Score":0.85987467,
+               "RelationshipScore":0.9995167,
+               "Id":4,
+               "BeginOffset":39,
+               "EndOffset":46,
+               "Text":"2 times",
+               "Traits":[
+
+               ]
+            },
+            {
+               "Type":"FORM",
+               "Score":0.78637195,
+               "RelationshipScore":0.99295926,
+               "Id":5,
+               "BeginOffset":50,
+               "EndOffset":53,
+               "Text":"tab",
+               "Traits":[
+
+               ]
+            }
+         ]
+      }
+   ],
+   "UnmappedAttributes":[
+
+   ],
+   "ModelVersion":"0.0.0"
+}
