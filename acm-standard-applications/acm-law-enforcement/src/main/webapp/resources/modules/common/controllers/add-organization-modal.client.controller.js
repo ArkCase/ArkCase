@@ -184,7 +184,7 @@ angular.module('common').controller(
                         });
 
                         modalInstance.result.then(function(data) {
-                            $scope.isNew = data.isNew;
+                            $scope.isNew = data.isNew? data.isNew : data.organization.isNew;
                             $scope.organizationId = data.organization.object_id_s ? data.organization.object_id_s : '';
                             $scope.organizationValue = data.organization.organizationValue ? data.organization.organizationValue : data.organization.name;
                             if (data.organization.object_id_s) {
