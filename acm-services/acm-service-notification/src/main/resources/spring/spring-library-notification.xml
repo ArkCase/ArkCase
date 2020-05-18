@@ -211,4 +211,9 @@
         <property name="notificationService" ref="notificationService"/>
         <property name="notificationUtils" ref="notificationUtils"/>
     </bean>
+
+    <bean id="calendarEventAddedNotifier" class="com.armedia.acm.services.notification.service.CalendarEventAddedNotifier">
+        <property name="notificationService" ref="notificationService"/>
+        <property name="notificationUtils" ref="notificationUtils"/>
+    </bean>
 </beans>

@@ -29,26 +29,25 @@ package com.armedia.acm.services.notification.service;
 
 import com.armedia.acm.core.AcmApplication;
 import com.armedia.acm.core.AcmNotifiableEntity;
+import com.armedia.acm.core.AcmNotificationReceiver;
 import com.armedia.acm.core.AcmObjectType;
 import com.armedia.acm.data.AcmNotificationDao;
 import com.armedia.acm.data.service.AcmDataService;
-import com.armedia.acm.services.labels.service.TranslationService;
-import com.armedia.acm.services.notification.model.Notification;
-import com.armedia.acm.services.notification.model.NotificationConfig;
-
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
+
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class NotificationUtils
 {
@@ -84,34 +83,58 @@ public class NotificationUtils
 
     public String getEmailsCommaSeparatedForParticipants(List<AcmParticipant> participants)
     {
-        Set<String> emailAddresses = participants.stream()
-                .flatMap(participant -> {
-                    if (participant.getParticipantType().equals(NotificationConstants.PARTICIPANT_TYPE_GROUP))
-                    {
-                        AcmGroup group = getGroupDao().findByName(participant.getParticipantLdapId());
-                        if (group != null)
-                        {
-                            Set<AcmUser> userMembers = group.getUserMembers(true);
-                            return userMembers.stream().map(AcmUser::getMail);
-                        }
-                    }
-                    else if (!participant.getReceiverType().equals(NotificationConstants.SPECIAL_PARTICIPANT_TYPE))
-                    {
-                        AcmUser user = getUserDao().findByUserId(participant.getParticipantLdapId());
-                        if (user != null)
-                        {
-                            return Stream.of(user.getMail());
-                        }
-                    }
-                    return Stream.empty();
-                }).collect(Collectors.toSet());
-        return String.join(",", emailAddresses);
+        return participants.stream()
+                .flatMap(it -> getEmailAddressForParticipant(it.getParticipantType(), it.getParticipantLdapId()).stream())
+                .distinct()
+                .collect(Collectors.joining(","));
     }
 
     public String getEmailForAssignee(String assignee)
     {
         AcmUser user = userDao.findByUserId(assignee);
         return user.getMail();
+    }
+
+    public String getEmailsCommaSeparatedForParticipantsForObject(Long parentObjectId, String parentObjectType)
+    {
+        AcmNotificationDao notificationDao = acmDataService.getNotificationDaoByObjectType(parentObjectType);
+        if (notificationDao != null)
+        {
+            AcmNotifiableEntity entity = notificationDao.findEntity(parentObjectId);
+            if (entity != null)
+            {
+                Set<AcmNotificationReceiver> participants = entity.getReceivers();
+                return participants.stream()
+                        .flatMap(it -> getEmailAddressForParticipant(it.getReceiverType(), it.getReceiverLdapId()).stream())
+                        .distinct()
+                        .collect(Collectors.joining(","));
+            }
+        }
+        return "";
+    }
+
+    public Set<String> getEmailAddressForParticipant(String participantType, String participantLdapId)
+    {
+        if (participantType.equals(NotificationConstants.PARTICIPANT_TYPE_GROUP))
+        {
+            AcmGroup group = getGroupDao().findByName(participantLdapId);
+            if (group != null)
+            {
+                Set<AcmUser> members = group.getUserMembers(true);
+                return members.stream()
+                        .map(AcmUser::getMail)
+                        .collect(Collectors.toSet());
+            }
+        }
+        else if (!participantType.equals(NotificationConstants.SPECIAL_PARTICIPANT_TYPE))
+        {
+            AcmUser user = getUserDao().findByUserId(participantLdapId);
+            if (user != null)
+            {
+                return new HashSet<>(Collections.singletonList(user.getMail()));
+            }
+        }
+        return new HashSet<>();
     }
 
     public UserDao getUserDao()

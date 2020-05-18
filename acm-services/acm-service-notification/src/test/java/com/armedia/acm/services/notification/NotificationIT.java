@@ -90,7 +90,7 @@ public class NotificationIT
         String userHomePath = System.getProperty("user.home");
         System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
         System.setProperty("configuration.server.url", "http://localhost:9999");
-        System.setProperty("application.name.default", "arkcase");
+        System.setProperty("application.name.default", "arkcase,ldap");
         System.setProperty("application.profile.reversed", "runtime");
     }
 
@@ -122,7 +122,7 @@ public class NotificationIT
 
         notificationDao.deleteNotificationById(saved.getId());
 
-        log.info("Notification ID: " + saved.getId());
+        log.info("Notification ID: {}", saved.getId());
     }
 
 }
