@@ -60,6 +60,7 @@ angular.module('admin').controller('Admin.StandardLookupController', ['$scope', 
         var item = {
             key: '',
             value: '',
+            description: '',
             primary: false
         };
         showModal(item, false);
@@ -70,6 +71,7 @@ angular.module('admin').controller('Admin.StandardLookupController', ['$scope', 
         var item = {
             key: rowEntity.key,
             value: rowEntity.value,
+            description: rowEntity.description,
             primary: Util.goodValue(rowEntity.primary, false)
         };
         showModal(item, true);
@@ -124,6 +126,7 @@ angular.module('admin').controller('Admin.StandardLookupController', ['$scope', 
         modalInstance.result.then(function (data) {
             $scope.entry.key = data.entry.key;
             $scope.entry.value = data.entry.value;
+            $scope.entry.description = data.entry.description;
             $scope.entry.primary = data.entry.primary;
             if (!data.isEdit) {
                 $scope.lookup.push($scope.entry);
