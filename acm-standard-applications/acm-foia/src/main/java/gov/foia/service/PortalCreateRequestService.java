@@ -38,12 +38,7 @@ import com.armedia.acm.plugins.person.model.OrganizationAssociation;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.users.service.tracker.UserTrackerService;
 import com.armedia.acm.web.api.MDCConstants;
-import gov.foia.dao.PortalFOIAPersonDao;
-import gov.foia.model.FOIARequest;
-import gov.foia.model.FOIARequesterAssociation;
-import gov.foia.model.PortalFOIAPerson;
-import gov.foia.model.PortalFOIARequest;
-import gov.foia.model.PortalFOIARequestFile;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.slf4j.MDC;
@@ -58,6 +53,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import gov.foia.dao.PortalFOIAPersonDao;
+import gov.foia.model.FOIARequest;
+import gov.foia.model.FOIARequesterAssociation;
+import gov.foia.model.PortalFOIAPerson;
+import gov.foia.model.PortalFOIARequest;
+import gov.foia.model.PortalFOIARequestFile;
 
 public class PortalCreateRequestService
 {
@@ -193,36 +195,18 @@ public class PortalCreateRequestService
             requester.getAddresses().add(address);
         }
 
-        // the UI expects the contact methods in this order: Phone, Fax, Email
         List<ContactMethod> contactMethod = new ArrayList<>();
         requester.setContactMethods(contactMethod);
-        ContactMethod phone = buildContactMethod("phone", in.getPhone());
-        if (phone.getValue() != null && !phone.getValue().equals(""))
+
+        if (in.getPhone() != null && !in.getPhone().isEmpty())
         {
-            requester.getContactMethods().add(0, phone);
+            ContactMethod phone = buildContactMethod("phone", in.getPhone());
+            requester.getContactMethods().add(phone);
         }
-        else
+        if (in.getEmail() != null && !in.getEmail().isEmpty())
         {
-            requester.getContactMethods().add(0, null);
-        }
-        ContactMethod fax = buildContactMethod("fax", null);
-        if (fax.getValue() != null && !fax.getValue().equals(""))
-        {
-            requester.getContactMethods().add(1, fax);
-        }
-        else
-        {
-            requester.getContactMethods().add(1, null);
-        }
-        ContactMethod email = buildContactMethod("email", in.getEmail());
-        if (email.getValue() != null && !email.getValue().equals(""))
-        {
-            requester.setDefaultEmail(email);
-            requester.getContactMethods().add(2, email);
-        }
-        else
-        {
-            requester.getContactMethods().add(2, null);
+            ContactMethod email = buildContactMethod("email", in.getEmail());
+            requester.getContactMethods().add(email);
         }
 
         if (in.getOrganization() != null && in.getOrganization().length() > 0)
