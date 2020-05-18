@@ -49,9 +49,8 @@ public class EmailWithAttachmentsDTO extends MessageBodyFactory implements Attac
     private String body;
     private List<String> users;
     private List<String> emailAddresses;
+    private Boolean mailSent = false;
     private String emailGroup;
-
-    private Boolean mailSent = true;
 
     /*
      * (non-Javadoc)

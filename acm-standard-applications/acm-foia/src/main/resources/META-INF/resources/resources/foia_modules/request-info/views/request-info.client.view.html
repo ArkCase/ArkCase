@@ -176,27 +176,26 @@
                         <fieldset permission="buttonAction" permission-object-type="CASE_FILE" permission-properties="requestInfo"
                                 permission-action="disable">
                             <div class="pull-left">
-                                <button class="btn btn-sm btn-default" ng-disabled="requestInProgress || requestInfo.queue.name == 'Intake'"
-                                        ng-click="saveAndReferesh()">
+                                <button class="btn btn-sm btn-default" ng-disabled="requestInProgress" ng-click="saveAndReferesh()">
                                     <i class="{{saveLoadingIcon}}"></i>
                                 </button>
 
-                                <button class="btn btn-sm btn-default" ng-disabled="requestInProgress || requestInfo.queue.name == 'Intake'"
-                                        ng-show="printEnabled" ng-click="printDocument()">
+                                <button class="btn btn-sm btn-default" ng-disabled="requestInProgress" ng-show="printEnabled"
+                                        ng-click="printDocument()">
                                     <span class="fa fa-print"></span>
                                 </button>
 
                                 <button class="btn btn-sm btn-default" permission="subscribe" permission-object-type="CASE_FILE"
                                         permission-properties="requestInfo" permission-action="hide"
-                                        ng-disabled="!subscribeEnabled || requestInProgress || requestInfo.queue.name == 'Intake'"
-                                        ng-show="!requestSubscribed" ng-click="subscribe()">
+                                        ng-disabled="!subscribeEnabled || requestInProgress" ng-show="!requestSubscribed"
+                                        ng-click="subscribe()">
                                     <span class="fa fa-bell-o"></span>
                                 </button>
 
                                 <button class="btn btn-sm btn-default" permission="subscribe" permission-object-type="CASE_FILE"
                                         permission-properties="requestInfo" permission-action="hide"
-                                        ng-disabled="!subscribeEnabled || requestInProgress || requestInfo.queue.name == 'Intake'"
-                                        ng-show="requestSubscribed" ng-click="unsubscribe()">
+                                        ng-disabled="!subscribeEnabled || requestInProgress" ng-show="requestSubscribed"
+                                        ng-click="unsubscribe()">
                                     <span class="fa fa-bell-slash"></span>
                                 </button>
                             </div>

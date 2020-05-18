@@ -1,8 +1,7 @@
-package com.armedia.acm.services.config.lookups.model;
+package gov.foia.model.event;
 
 /*-
  * #%L
- * ACM Service: Config
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
@@ -27,30 +26,31 @@ package com.armedia.acm.services.config.lookups.model;
  * #L%
  */
 
-public abstract class AcmLookupEntry
+import com.armedia.acm.core.model.AcmEvent;
+
+import java.util.Date;
+
+import gov.foia.model.DispositionReason;
+
+public class FOIARequestDispositionReasonModifiedEvent extends AcmEvent
 {
 
-    private boolean readonly;
+    private static final long serialVersionUID = 2601901328541042900L;
+    private static final String EVENT_TYPE = "com.armedia.acm.casefile.disposition.reason";
+    private static final String OBJECT_TYPE = "DISPOSITION_REASON";
 
-    private boolean primary;
-
-    public boolean isReadonly()
+    public FOIARequestDispositionReasonModifiedEvent(DispositionReason source)
     {
-        return readonly;
+        super(source);
+        setObjectType(OBJECT_TYPE);
+        setObjectId(source.getId());
+        setEventDate(new Date());
+        setUserId(source.getModifier());
     }
 
-    public void setReadonly(boolean readonly)
+    @Override
+    public String getEventType()
     {
-        this.readonly = readonly;
-    }
-
-    public boolean isPrimary()
-    {
-        return primary;
-    }
-
-    public void setPrimary(boolean primary)
-    {
-        this.primary = primary;
+        return String.format("%s", EVENT_TYPE);
     }
 }

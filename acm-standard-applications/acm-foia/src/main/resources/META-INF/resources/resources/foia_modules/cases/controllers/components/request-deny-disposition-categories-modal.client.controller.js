@@ -15,16 +15,22 @@ angular.module('cases').controller('Cases.RequestDenyDispositionCategoriesModalC
         $scope.requestOtherReason = $scope.requestOtherReasons[0].key;
     });
 
-    var hasExemptionsOnRequest = CaseExemptionService.hasExemptionOnAnyDocumentsOnRequest($scope.objectId, ObjectService.ObjectTypes.CASE_FILE);
+    var hasExemptionsOnRequestOnAnyDocuments = CaseExemptionService.hasExemptionOnAnyDocumentsOnRequest($scope.objectId, ObjectService.ObjectTypes.CASE_FILE);
+    var hasExemptionsOnRequestManuallyAdded = CaseExemptionService.getExemptionCode($scope.objectId, 'CASE_FILE');
 
-    $q.all([hasExemptionsOnRequest]).then(function (value) {
+    $q.all([hasExemptionsOnRequestOnAnyDocuments, hasExemptionsOnRequestManuallyAdded]).then(function (value) {
         $scope.hasExemptionOnAnyDocumentsOnRequest = value[0].data;
+        $scope.hasExemptionsOnRequestManuallyAdded = value[1].data;
     });
 
     $scope.changeDispositionCategory = function(dispositionCategory){
-        if(dispositionCategory == 'full-denial-exemption' && !$scope.hasExemptionOnAnyDocumentsOnRequest) {
+        if(dispositionCategory != 'other') {
+            $scope.customReason = '';
+            $scope.requestOtherReason = null;
+        }
+        if(dispositionCategory == 'full-denial-exemption' && !$scope.hasExemptionOnAnyDocumentsOnRequest && $scope.hasExemptionsOnRequestManuallyAdded.length <= 0) {
             $scope.showErrorMessageNoExemptions = true;
-        } else if((dispositionCategory == 'no-record' || dispositionCategory == 'records-referred' || dispositionCategory == 'no-agency-record') && $scope.hasExemptionOnAnyDocumentsOnRequest) {
+        } else if((dispositionCategory == 'no-record' || dispositionCategory == 'records-referred' || dispositionCategory == 'no-agency-record') && ($scope.hasExemptionOnAnyDocumentsOnRequest || $scope.hasExemptionsOnRequestManuallyAdded.length > 0)) {
             $scope.showErrorMessageHasExemptions = true;
         } else {
             $scope.showErrorMessageNoExemptions = false;

@@ -859,7 +859,8 @@
                 {
                     "name": "key",
                     "displayName": "admin.application.lookups.config.data.key",
-                    "headerCellFilter": "translate"
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.key}}<span ng-if='row.entity.primary' translate>common.labels.primary</span></div>"
                 },
                 {
                     "name": "value",

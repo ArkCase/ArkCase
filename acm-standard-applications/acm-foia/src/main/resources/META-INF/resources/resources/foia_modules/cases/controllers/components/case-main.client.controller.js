@@ -2,8 +2,8 @@
 
 angular.module('cases').controller(
     'Cases.MainController',
-    ['$scope', '$state', '$stateParams', '$translate', '$rootScope', '$modal', 'Case.InfoService', 'Helper.ObjectBrowserService', 'ConfigService', 'UtilService', 'Util.DateService', 'Object.LookupService', 'LookupService', 'DueDate.Service', 'Admin.HolidayService', 'Admin.FoiaConfigService', 'Admin.ObjectTitleConfigurationService',
-        function ($scope, $state, $stateParams, $translate, $rootScope, $modal, CaseInfoService, HelperObjectBrowserService, ConfigService, Util, UtilDateService, ObjectLookupService, LookupService, DueDateService, AdminHolidayService, AdminFoiaConfigService, AdminObjectTitleConfigurationService) {
+    ['$scope', '$state', '$stateParams', '$translate', '$rootScope', '$modal', 'Case.InfoService', 'Helper.ObjectBrowserService', 'ConfigService', 'UtilService', 'Util.DateService', 'Object.LookupService', 'LookupService', 'DueDate.Service', 'Admin.HolidayService', 'Admin.FoiaConfigService', 'Admin.ObjectTitleConfigurationService', 'EcmService',
+        function ($scope, $state, $stateParams, $translate, $rootScope, $modal, CaseInfoService, HelperObjectBrowserService, ConfigService, Util, UtilDateService, ObjectLookupService, LookupService, DueDateService, AdminHolidayService, AdminFoiaConfigService, AdminObjectTitleConfigurationService, EcmService) {
 
             new HelperObjectBrowserService.Component({
                 scope: $scope,
@@ -71,9 +71,26 @@ angular.module('cases').controller(
                 } else {
                     $scope.showDispositionReasonsFlag = true;
                 }
-                $scope.originalDueDate = objectInfo.dueDate;
+                $scope.previousDueDate = objectInfo.dueDate;
+                if (objectInfo.requestTrack === 'expedite') {
+                    if ($scope.includeWeekends) {
+                        $scope.previousDueDate = DueDateService.dueDateWithWeekends($scope.objectInfo.dueDate, $scope.expediteWorkingDays, $scope.holidays);
+                    } else {
+                        $scope.previousDueDate = DueDateService.dueDateWorkingDays($scope.objectInfo.dueDate, $scope.expediteWorkingDays, $scope.holidays);
+                    }
+                }
+                $scope.originalDueDate = $scope.previousDueDate;
                 $scope.enableDispositionClosedDate = objectInfo.dispositionClosedDate == null;
 
+                var otherExistsInAppealReasons = _.some($scope.objectInfo.dispositionReasons, function (value) {
+                    return value.reason === 'other';
+                });
+
+                if (otherExistsInAppealReasons) {
+                    $scope.isAppealOtherReasonDisabled = false;
+                } else {
+                    $scope.isAppealOtherReasonDisabled = true;
+                }
             };
 
             ConfigService.getModuleConfig("cases").then(function (moduleConfig) {
@@ -91,26 +108,48 @@ angular.module('cases').controller(
             function populateDispositionCategories() {
                 ObjectLookupService.getLookupByLookupName('requestDispositionType').then(function (requestDispositionType) {
                     $scope.dispositionCategories = requestDispositionType;
+                    if (Util.isEmpty($scope.objectInfo.disposition)) {
+                        $scope.dispositionValue = null;
+                    } else {
+                        var found = _.find(requestDispositionType, {
+                            key: $scope.objectInfo.disposition
+                        });
+                        if (!Util.isEmpty(found)) {
+                            $scope.dispositionValue = $translate.instant(found.value);
+                        }
+                    }
                 });
             }
 
             function populateDeniedDispositionCategories() {
                 ObjectLookupService.getLookupByLookupName('requestDispositionSubType').then(function (requestDispositionSubType) {
                     $scope.dispositionDeniedCategories = requestDispositionSubType;
+                    if (Util.isEmpty($scope.objectInfo.disposition)) {
+                        $scope.dispositionValue = null;
+                    } else {
+                        var found = _.find(requestDispositionSubType, {
+                            key: $scope.objectInfo.disposition
+                        });
+                        if (!Util.isEmpty(found)) {
+                            $scope.dispositionValue = $translate.instant(found.value);
+                        }
+                    }
                 });
             }
 
             function populateOtherReasons() {
                 ObjectLookupService.getLookupByLookupName('requestOtherReason').then(function (requestOtherReasons) {
                     $scope.otherReasons = requestOtherReasons;
-                    if ($scope.objectInfo.otherReason) {
+                    if (Util.isEmpty($scope.objectInfo.otherReason)) {
+                        $scope.otherReasonValue = null;
+                    } else {
                         var found = _.find(requestOtherReasons, {
                             key: $scope.objectInfo.otherReason
                         });
-                        if (found) {
-                            $scope.isCustomReason = false;
+                        if (!Util.isEmpty(found)) {
+                            $scope.otherReasonValue = $translate.instant(found.value);
                         } else {
-                            $scope.isCustomReason = true;
+                            $scope.otherReasonValue = $scope.objectInfo.otherReason; // display custom reason
                         }
                     }
                 });
@@ -139,8 +178,6 @@ angular.module('cases').controller(
                     resetDueDate();
                 }
             };
-
-            $scope.isDisabled = true;
 
             function populateAppealDispositionCategories() {
                 if ($scope.objectInfo.requestType == "Appeal") {
@@ -201,13 +238,15 @@ angular.module('cases').controller(
                         $scope.objectInfo.dispositionReasons.push(dispositionReason);
 
                         if (reason === 'other') {
+                            $scope.isAppealOtherReasonDisabled = false;
+                        } else {
+                            $scope.isAppealOtherReasonDisabled = true;
+                        }
+
+                        if (reason === 'other') {
                             if (Util.isEmpty($scope.objectInfo.otherReason)) {
                                 $scope.openAddOtherReasonInAppeal();
-                            } else {
-                                saveCase();
                             }
-                        } else {
-                            saveCase();
                         }
                     } else {
                         _.forEach($scope.objectInfo.dispositionReasons, function (disReason, i) {
@@ -216,7 +255,13 @@ angular.module('cases').controller(
                                 return false;
                             }
                         });
-                        saveCase();
+
+                        //if other was unchecked in reasons
+                        if (reason === 'other') {
+                            $scope.isAppealOtherReasonDisabled = true;
+                            $scope.isAppealCustomReason = false;
+                            $scope.objectInfo.otherReason = null;
+                        }
                     }
                 }
 
@@ -299,6 +344,11 @@ angular.module('cases').controller(
                         if (conf != null && conf.returnAction) {
                             $scope.$bus.publish(conf.returnAction, caseInfo);
                         }
+
+                        if (caseInfo.dispositionClosedDate != null) {
+                            $scope.isAppealOtherReasonDisabled = true;
+                        }
+
                         $scope.$emit("report-object-updated", caseInfo);
                         return caseInfo;
                     }, function (error) {
@@ -309,43 +359,13 @@ angular.module('cases').controller(
                 return promiseSaveInfo;
             }
 
-            $scope.openAddAppealDispositionCategory = function () {
-                var params = {
-                    disposition: $scope.objectInfo.disposition,
-                    dispositionReasons: $scope.objectInfo.dispositionReasons,
-                    otherReason: $scope.objectInfo.otherReason,
-                    caseId: $scope.objectInfo.id,
-                    isDispositionRequired: false
-                };
-
-                var modalInstance = $modal.open({
-                    templateUrl: "modules/cases/views/components/add-appeal-disposition-category-modal.client.view.html",
-                    controller: 'Cases.AddAppealDispositionCategoriesModalController',
-                    animation: true,
-                    size: 'md',
-                    backdrop: 'static',
-                    resolve: {
-                        params: function () {
-                            return params;
-                        }
-                    }
-                });
-
-                modalInstance.result.then(function (selected) {
-                    if (!Util.isEmpty(selected)) {
-                        $scope.showDispositionReasonsFlag = selected.showDispositionReasonsFlag;
-                        $scope.appealDispositionValue = selected.dispositionValue;
-
-                        $scope.objectInfo.disposition = selected.disposition;
-                        $scope.objectInfo.otherReason = selected.otherReason;
-                        $scope.objectInfo.dispositionReasons = selected.dispositionReasons;
-
-                        saveCase();
-                    }
-                });
+            $scope.openAddOtherReasonInAppeal = function (otherReasonKey) {
+                if (otherReasonKey === 'custom') {
+                    $scope.openAddAppealOtherReasonModal();
+                }
             };
 
-            $scope.openAddOtherReasonInAppeal = function () {
+            $scope.openAddAppealOtherReasonModal = function () {
                 var params = {
                     dispositionReasons: $scope.objectInfo.dispositionReasons,
                     otherReason: $scope.objectInfo.otherReason
@@ -366,7 +386,19 @@ angular.module('cases').controller(
 
                 modalInstance.result.then(function (selected) {
                     if (!Util.isEmpty(selected)) {
+
                         $scope.objectInfo.otherReason = selected.otherReason;
+
+                        if ($scope.objectInfo.otherReason) {
+                            var found = _.find($scope.appealOtherReasons, {
+                                key: $scope.objectInfo.otherReason
+                            });
+                            if (found) {
+                                $scope.isAppealCustomReason = false;
+                            } else {
+                                $scope.isAppealCustomReason = true;
+                            }
+                        }
 
                         saveCase();
                     }
@@ -374,8 +406,22 @@ angular.module('cases').controller(
             };
 
             $scope.$bus.subscribe('ACTION_SAVE_CASE', function (data) {
+                if (data != null && typeof data.deleteDenialLetter !== 'undefined' && data.deleteDenialLetter) {
+                    removeDenialLetter();
+                }
                 saveCase(data);
             });
+
+            function removeDenialLetter() {
+                EcmService.findFileByContainerAndFileType({
+                    containerId: $scope.objectInfo.container.id,
+                    fileType: 'Denial Letter'
+                }).$promise.then(function (fileInfo) {
+                    EcmService.deleteFile({
+                        fileId: fileInfo.fileId
+                    })
+                });
+            }
 
             // Updates the ArkCase database when the user changes a case attribute
             // in a case top bar menu item and clicks the save check button
