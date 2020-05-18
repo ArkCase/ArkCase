@@ -415,6 +415,7 @@ public class ConfigLookupDao implements LookupDao, InitializingBean
                 entryNode.put("inverseKey", entry.getInverseKey());
                 entryNode.put("inverseValue", entry.getInverseValue());
                 entryNode.put("readonly", entry.isReadonly());
+                entryNode.put("description", entry.getDescription());
                 entriesNode.add(entryNode);
             });
         }
@@ -428,6 +429,7 @@ public class ConfigLookupDao implements LookupDao, InitializingBean
                 entryNode.put("key", entry.getKey());
                 entryNode.put("value", entry.getValue());
                 entryNode.put("readonly", entry.isReadonly());
+                entryNode.put("description", entry.getDescription());
                 ArrayNode sublookupNode = entryNode.putArray("subLookup");
 
                 entry.getSubLookup().forEach(sublookupEntry -> {
@@ -435,6 +437,7 @@ public class ConfigLookupDao implements LookupDao, InitializingBean
                     subEntryNode.put("key", sublookupEntry.getKey());
                     subEntryNode.put("value", sublookupEntry.getValue());
                     subEntryNode.put("readonly", sublookupEntry.isReadonly());
+                    subEntryNode.put("description", sublookupEntry.getDescription());
 
                     sublookupNode.add(subEntryNode);
                 });
@@ -455,6 +458,7 @@ public class ConfigLookupDao implements LookupDao, InitializingBean
                 entryNode.put("value", entry.getValue());
                 entryNode.put("readonly", entry.isReadonly());
                 entryNode.put("primary", entry.isPrimary());
+                entryNode.put("description", entry.getDescription());
                 entriesNode.add(entryNode);
             });
         }

@@ -54,7 +54,8 @@ angular.module('admin').controller('Admin.NestedLookupSubLookupController', [ '$
         $scope.entry = entry;
         var item = {
             key: '',
-            value: ''
+            value: '',
+            description: ''
         };
         showModal(item, false);
     };
@@ -63,7 +64,8 @@ angular.module('admin').controller('Admin.NestedLookupSubLookupController', [ '$
         $scope.entry = rowEntity;
         var item = {
             key: rowEntity.key,
-            value: rowEntity.value
+            value: rowEntity.value,
+            description: rowEntity.description
         };
         showModal(item, true);
     };
@@ -118,6 +120,7 @@ angular.module('admin').controller('Admin.NestedLookupSubLookupController', [ '$
         modalInstance.result.then(function(data) {
             $scope.entry.key = data.entry.key;
             $scope.entry.value = data.entry.value;
+            $scope.entry.description = data.entry.description;
             if (!data.isEdit) {
                 $scope.lookup.push($scope.entry);
             }
