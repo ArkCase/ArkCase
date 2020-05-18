@@ -69,6 +69,7 @@
         <module>acm-service-portal-gateway</module>
         <module>acm-service-object-title</module>
         <module>acm-service-exemption</module>
+        <module>acm-service-comprehend-medical</module>
     </modules>
 
 </project>
