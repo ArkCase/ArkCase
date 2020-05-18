@@ -285,7 +285,7 @@ public class AWSTranscribeServiceTest
         transcribe.setMediaEcmFileVersion(file);
         transcribe.setProperties(transcribeProps);
 
-        String expectedErrorMessage = "Unable to start transcribe job on Amazon. REASON=[error (Service: null; Status Code: 0; Error Code: null; Request ID: null)]";
+        String expectedErrorMessage = "Unable to start transcribe job on Amazon. REASON=[error (Service: null; Status Code: 0; Error Code: null; Request ID: null; Proxy: null)]";
 
         when(awsTranscribeConfigurationService.getAWSTranscribeConfig()).thenReturn(configuration);
         PowerMockito.whenNew(FileInputStream.class).withArguments(file).thenReturn(fileStream);
