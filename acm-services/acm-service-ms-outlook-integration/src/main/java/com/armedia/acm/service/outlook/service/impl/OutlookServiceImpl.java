@@ -416,6 +416,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         List<EcmFile> attachedFiles = new ArrayList<>();
 
         addAttachmentsAndSend(emailWithAttachmentsDTO.getAttachmentIds(), emailMessage, attachedFiles);
+        emailWithAttachmentsDTO.setMailSent(true);
 
         // use the first method if you don't require a copy
         // use the second if a copy of the sent email is needed
@@ -888,7 +889,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
             }
             catch (Exception e)
             {
-                log.error("Can't add permission for user email: {}, reason: ", outlookFolderPermission.getEmail(), e.getMessage());
+                log.error("Can't add permission for user email: {}, reason: {}", outlookFolderPermission.getEmail(), e.getMessage());
             }
         }
 
@@ -903,7 +904,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
             }
             catch (Exception e)
             {
-                log.error("Can't remove permission for user email: {}, reason: ", outlookFolderPermission.getEmail(), e.getMessage());
+                log.error("Can't remove permission for user email: {}, reason: {}", outlookFolderPermission.getEmail(), e.getMessage());
             }
         }
     }
@@ -921,7 +922,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         of.setParentId(folder.getParentFolderId().getUniqueId());
 
         List<OutlookFolderPermission> permissions = folder.getPermissions().getItems().stream().map(this::mapFolderPermission)
-                .collect(Collectors.toCollection(() -> new LinkedList<>()));
+                .collect(Collectors.toCollection(LinkedList::new));
         of.setPermissions(permissions);
 
         return of;

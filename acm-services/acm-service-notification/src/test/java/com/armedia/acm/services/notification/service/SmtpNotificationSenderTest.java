@@ -47,6 +47,7 @@ import com.armedia.acm.services.email.model.EmailWithAttachmentsAndLinksDTO;
 import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksDTO;
 import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksResultDTO;
+import com.armedia.acm.services.email.service.AcmEmailConfigurationIOException;
 import com.armedia.acm.services.email.service.AcmMailTemplateConfigurationService;
 import com.armedia.acm.services.email.service.TemplatingEngine;
 import com.armedia.acm.services.email.smtp.SmtpService;
@@ -125,14 +126,14 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
     }
 
     @Test
-    public void testSendWhenException() throws Exception
+    public void testSendWhenNoTemplateAndException() throws Exception
     {
         Notification notification = new Notification();
         notification.setEmailAddresses("user_email");
         notification.setTitle("title");
         notification.setNote("the_note");
 
-        expect(templateService.getTemplate(anyString())).andReturn(null);
+        expect(templateService.getTemplate(anyString())).andThrow(new AcmEmailConfigurationIOException("No such template"));
         expect(mockNotificationUtils.buildNotificationLink(notification.getParentType(), notification.getParentId(),
                 notification.getRelatedObjectType(), notification.getRelatedObjectId())).andReturn(null);
 
@@ -142,11 +143,10 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         Capture<AcmUser> user = EasyMock.newCapture();
         Authentication authentication = SecurityContextHolder.getContext() != null ? SecurityContextHolder.getContext().getAuthentication()
                 : null;
-       
+
         mockSmtpService.sendEmail(capture(emailWithAttachmentsDTOCapture), eq(authentication), capture(user));
         EasyMock.expectLastCall().andThrow(new Exception("Message not sent"));
 
-        
         Object object = new Object();
         // when
         replayAll();
@@ -176,7 +176,6 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
 
         String templateName = String.format("%s.html", notification.getTemplateModelName());
         String template = "template";
-
         expect(templateService.getTemplate(templateName)).andReturn(template);
 
         String body = "body";
@@ -187,12 +186,15 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         Authentication authentication = SecurityContextHolder.getContext() != null ? SecurityContextHolder.getContext().getAuthentication()
                 : null;
         mockSmtpService.sendEmail(capture(dtoCapture), eq(authentication), capture(userCapture));
+        expectLastCall().andStubAnswer(() -> {
+            dtoCapture.getValue().setMailSent(true);
+            return null;
+        });
 
         // when
         replayAll();
         Notification returnedNotification = smtpNotificationSender.send(notification, object);
 
-        // then
         verifyAll();
         assertEquals(NotificationConstants.STATE_SENT, returnedNotification.getState());
 

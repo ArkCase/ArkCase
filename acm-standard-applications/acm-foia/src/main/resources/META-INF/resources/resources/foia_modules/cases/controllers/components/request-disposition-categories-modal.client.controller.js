@@ -9,10 +9,12 @@ angular.module('cases').controller('Cases.RequestDispositionCategoriesModalContr
         $scope.requestDispositionCategory = $scope.requestDispositionCategories[0].key;
     });
 
-    var hasExemptionsOnRequest = CaseExemptionService.hasExemptionOnAnyDocumentsOnRequest($scope.objectId, ObjectService.ObjectTypes.CASE_FILE);
+    var hasExemptionsOnRequestOnAnyDocument = CaseExemptionService.hasExemptionOnAnyDocumentsOnRequest($scope.objectId, ObjectService.ObjectTypes.CASE_FILE);
+    var hasExemptionsOnRequestManuallyAdded = CaseExemptionService.getExemptionCode($scope.objectId, ObjectService.ObjectTypes.CASE_FILE);
     
-    $q.all([hasExemptionsOnRequest]).then(function (value) {
+    $q.all([hasExemptionsOnRequestOnAnyDocument, hasExemptionsOnRequestManuallyAdded]).then(function (value) {
         $scope.hasExemptionOnAnyDocumentsOnRequest = value[0].data;
+        $scope.hasExemptionsOnRequestManuallyAdded = value[1].data;
     });
     
     $scope.onClickSave = function () {
@@ -20,7 +22,7 @@ angular.module('cases').controller('Cases.RequestDispositionCategoriesModalContr
         var disposition = _.find($scope.requestDispositionCategories, {
            key: $scope.requestDispositionCategory 
         });
-        if($scope.requestDispositionCategory == 'grantedInFull' && $scope.hasExemptionOnAnyDocumentsOnRequest) {
+        if($scope.requestDispositionCategory == 'grantedInFull' && ($scope.hasExemptionOnAnyDocumentsOnRequest || $scope.hasExemptionsOnRequestManuallyAdded.length > 0)) {
             openConfirmationModal(deferred);
         } else {
             deferred.resolve();

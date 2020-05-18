@@ -11,13 +11,26 @@
         <div class="col-sm-4 form-group">
             <label for="Key" translate>admin.application.lookups.config.data.key</label><span class="required-asterisk">*</span>
             <input id="key" type="text" ng-model="entry.key" class="input-md form-control"
-                    placeholder="{{ 'admin.application.lookups.config.modal.key.placeholder' | translate }}" ng-readonly="isEdit">
+                   placeholder="{{ 'admin.application.lookups.config.modal.key.placeholder' | translate }}" ng-readonly="isEdit">
         </div>
         <div class="col-sm-8 form-group">
             <label for="Value" translate>admin.application.lookups.config.data.value</label><span class="required-asterisk">*</span>
             <!-- TODO: select from existing labels modal form -->
             <input id="value" type="text" ng-model="entry.value" class="input-md form-control" required="required"
-                    placeholder="{{ 'admin.application.lookups.config.modal.value.placeholder' | translate }}" ng-click="pickLabel()">
+                   placeholder="{{ 'admin.application.lookups.config.modal.value.placeholder' | translate }}" ng-click="pickLabel()">
+        </div>
+    </div>
+    <div class="row" ng-if="isDefaultEnabled">
+        <div class="col-sm-12">
+            <label><span translate>admin.application.lookups.config.modal.setPrimary</span></label><br/>
+            <label>
+                <input type="radio" ng-model="entry.primary" ng-value="true">
+                <translate>admin.application.lookups.config.modal.yes</translate>
+            </label>
+            <label ng-hide="hideNoField">
+                <input type="radio" ng-model="entry.primary" ng-value="false">
+                <translate>admin.application.lookups.config.modal.no</translate>
+            </label>
         </div>
     </div>
 </div>

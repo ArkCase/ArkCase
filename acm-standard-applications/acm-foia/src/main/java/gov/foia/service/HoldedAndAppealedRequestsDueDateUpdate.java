@@ -32,12 +32,15 @@ package gov.foia.service;
 
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.services.holiday.service.HolidayConfigurationService;
-import gov.foia.dao.FOIARequestDao;
-import gov.foia.model.FOIARequest;
-import gov.foia.model.FoiaConfig;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+
+import gov.foia.dao.FOIARequestDao;
+import gov.foia.model.FOIAConstants;
+import gov.foia.model.FOIARequest;
+import gov.foia.model.FoiaConfig;
 
 /**
  * @author riste.tutureski
@@ -62,10 +65,29 @@ public class HoldedAndAppealedRequestsDueDateUpdate
         for (FOIARequest request : result)
         {
             Date dueDate = request.getDueDate();
-            if (dueDate != null) {
+            if (dueDate != null)
+            {
                 request.setDueDate(getHolidayConfigurationService().addWorkingDaysToDate(dueDate, 1));
-                requestDao.save(request);
             }
+
+            LocalDateTime perfectedDate = request.getPerfectedDate();
+            if (perfectedDate != null)
+            {
+                request.setPerfectedDate(getHolidayConfigurationService().addWorkingDaysToDate(perfectedDate.toLocalDate(), 1)
+                        .atTime(perfectedDate.toLocalTime()));
+            }
+
+            if (request.getRequestType().equals(FOIAConstants.NEW_REQUEST_TYPE))
+            {
+                LocalDateTime redirectedDate = request.getRedirectedDate();
+                if (redirectedDate != null)
+                {
+                    request.setRedirectedDate(getHolidayConfigurationService().addWorkingDaysToDate(redirectedDate.toLocalDate(), 1)
+                            .atTime(perfectedDate.toLocalTime()));
+                }
+            }
+
+            requestDao.save(request);
         }
     }
 

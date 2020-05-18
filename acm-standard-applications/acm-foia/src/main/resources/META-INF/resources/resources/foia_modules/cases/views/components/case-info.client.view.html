@@ -31,9 +31,10 @@
         </div>
         <div class="row">
             <div class="col-xs-12 col-md-2">
-                <div class="h4 font-bold">{{objectInfo.created | date: ('common.defaultDateTimeUIFormat' | translate)}}
+                <div class="h4 font-bold">{{objectInfo.receivedDate | date: ('common.defaultDateTimeUIFormat' |
+                    translate)}}
                 </div>
-                <small class="text-muted"><span translate>cases.comp.info.created.label</span></small>
+                <small class="text-muted"><span translate>cases.comp.info.receivedDate.label</span></small>
             </div>
 
             <div class="col-xs-12 col-md-2">
@@ -77,19 +78,11 @@
         </div>
         <div class="row">
             <div class="col-xs-12 col-md-2">
-                <div class="h4 font-bold no-margin">
-                    <a editable-combodate="today" e-date="today"
-                       e-min-year="{{receivedDateMinYear}}" e-max-year="{{receivedDateMaxYear}}" e-minute-step="1"
-                       e-template="MMM/DD/YYYY HH:mm"
-                       onaftersave="setDate($data)"
-                       edit-disabled="receivedDateDisabledLink" ng-class="{'disabledLink': receivedDateDisabledLink}">
-                        {{ setRequestDate(objectInfo) }}
-                    </a>
+                <div class="h4 font-bold">{{objectInfo.perfectedDate | date: ('common.defaultDateTimeUIFormat' |
+                    translate)}}
                 </div>
                 <small class="text-muted">
-                    <span translate ng-if="objectInfo.requestType === 'New Request'"> cases.comp.info.perfectedDate.label </span>
-                    <span translate
-                          ng-if="objectInfo.requestType === 'Appeal'"> cases.comp.info.receivedDate.label </span>
+                    <span translate>cases.comp.info.perfectedDate.label </span>
                 </small>
             </div>
             <div class="col-xs-12 col-md-2">
@@ -139,11 +132,6 @@
                     'common.value.unknown' | translate }}
                 </div>
                 <small class="text-muted"><span translate>cases.comp.info.modified</span></small>
-            </div>
-            <div ng-if="isAmendmentAdded" class="h4 font-bold">
-                <i class="fa fa-exclamation-circle icon-overdue"></i>
-                <small><b><span class="icon-overdue" translate>cases.comp.info.amendmentAdded.label</span></b>
-                </small>
             </div>
         </div>
         <div class="row">
