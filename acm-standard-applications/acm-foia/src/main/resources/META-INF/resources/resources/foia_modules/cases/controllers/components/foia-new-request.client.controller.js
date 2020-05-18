@@ -454,7 +454,7 @@ angular.module('cases').controller(
                 var basicData = {};
 
 
-                if (typeof $scope.config.data.originator.person.defaultPhone.value === "") {
+                if (Util.isEmpty($scope.config.data.originator.person.defaultPhone) || !$scope.config.data.originator.person.defaultPhone.value) {
                     $scope.config.data.originator.person.defaultPhone = null;
                 } else if (!$scope.config.data.originator.person.defaultPhone.type) {
                     $scope.config.data.originator.person.defaultPhone.type = "phone";
@@ -466,7 +466,7 @@ angular.module('cases').controller(
                     $scope.config.data.originator.person.defaultEmail.type = "email";
                 }
 
-                if (!$scope.config.data.originator.person.defaultPhone.id) {
+                if ($scope.config.data.originator.person.defaultPhone && !$scope.config.data.originator.person.defaultPhone.id) {
                     $scope.config.data.originator.person.contactMethods.push($scope.config.data.originator.person.defaultPhone);
                 }
 
