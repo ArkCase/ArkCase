@@ -1,11 +1,8 @@
-/**
- *
- */
-package com.armedia.acm.frevvo.config;
+package com.armedia.acm.plugins.consultation.service;
 
 /*-
  * #%L
- * ACM Service: Form Configuration
+ * ACM Default Plugin: Case File
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
@@ -30,23 +27,12 @@ package com.armedia.acm.frevvo.config;
  * #L%
  */
 
-/**
- * @author riste.tutureski
- */
-public class FrevvoFormName
-{
+import com.armedia.acm.drools.SimpleStatelessSingleObjectRuleManager;
+import com.armedia.acm.plugins.businessprocess.model.EnterQueueModel;
+import com.armedia.acm.plugins.consultation.model.Consultation;
+import com.armedia.acm.plugins.consultation.pipeline.ConsultationPipelineContext;
 
-    public static final String COMPLAINT = "complaint";
-    public static final String ROI = "roi";
-    public static final String CASE_FILE = "case_file";
-    public static final String CHANGE_CASE_STATUS = "change_case_status";
-    public static final String CLOSE_COMPLAINT = "close_complaint";
-    public static final String ELECTRONIC_COMMUNICATION = "electronic_communication";
-    public static final String TIMESHEET = "timesheet";
-    public static final String COSTSHEET = "costsheet";
-    public static final String PROJECT = "project";
-    public static final String PLAIN_CONFIGURATION = "plain_configuration";
-    public static final String CONSULTATION = "consultation";
-    public static final String CHANGE_CONSULTATION_STATUS = "change_consultation_status";
+public class EnterQueueBusinessRule extends SimpleStatelessSingleObjectRuleManager<EnterQueueModel<Consultation, ConsultationPipelineContext>>
+{
 
 }

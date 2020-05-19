@@ -28,7 +28,8 @@ public class PDFChangeConsultationStateDocumentGenerator<D extends AcmAbstractDa
             Consultation consultation = (Consultation) getDao().find(consultationId);
             generatePdf(objectType, consultationId, ctx, ctx.getAuthentication(), consultation, consultation.getContainer(),
                     ChangeConsultationStateContants.CHANGE_CONSULTATION_STATUS_STYLESHEET,
-                    ChangeConsultationStateContants.CHANGE_CONSULTATION_STATUS, ChangeConsultationStateContants.CHANGE_CONSULTATION_STATUS_FILENAMEFORMAT);
+                    ChangeConsultationStateContants.CHANGE_CONSULTATION_STATUS,
+                    ChangeConsultationStateContants.CHANGE_CONSULTATION_STATUS_FILENAMEFORMAT);
         }
         catch (ParserConfigurationException e)
         {
@@ -63,8 +64,13 @@ public class PDFChangeConsultationStateDocumentGenerator<D extends AcmAbstractDa
                     true);
         }
 
-        if(!changeConsultationStatus.getParticipants().isEmpty()){
-            addElement(document, rootElem, "participant", changeConsultationStatus.getParticipants().size() > 0 ?  changeConsultationStatus.getParticipants().get(0).getParticipantLdapId() : "N/A", false);
+        if (!changeConsultationStatus.getParticipants().isEmpty())
+        {
+            addElement(document, rootElem, "participant",
+                    changeConsultationStatus.getParticipants().size() > 0
+                            ? changeConsultationStatus.getParticipants().get(0).getParticipantLdapId()
+                            : "N/A",
+                    false);
         }
 
         return document;
