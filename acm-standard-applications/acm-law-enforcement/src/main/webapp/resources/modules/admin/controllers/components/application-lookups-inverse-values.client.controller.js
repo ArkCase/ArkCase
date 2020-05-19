@@ -54,6 +54,7 @@ angular.module('admin').controller('Admin.InverseValuesLookupController', [ '$sc
             value: '',
             inverseKey: '',
             inverseValue: '',
+            description: ''
         };
         showModal(item, false);
     };
@@ -64,7 +65,8 @@ angular.module('admin').controller('Admin.InverseValuesLookupController', [ '$sc
             key: rowEntity.key,
             value: rowEntity.value,
             inverseKey: rowEntity.inverseKey,
-            inverseValue: rowEntity.inverseValue
+            inverseValue: rowEntity.inverseValue,
+            description: rowEntity.description
         };
         showModal(item, true);
 
@@ -121,6 +123,7 @@ angular.module('admin').controller('Admin.InverseValuesLookupController', [ '$sc
             $scope.entry.value = data.entry.value;
             $scope.entry.inverseKey = data.entry.inverseKey;
             $scope.entry.inverseValue = data.entry.inverseValue;
+            $scope.entry.description = data.entry.description;
             if (!data.isEdit) {
                 $scope.lookup.push($scope.entry);
             }

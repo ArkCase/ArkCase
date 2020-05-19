@@ -35,6 +35,7 @@ angular.module('admin').controller('Admin.StandardLookupModalController', [ '$sc
         modalInstance.result.then(function(data) {
             $scope.entry.key = data.entry.key;
             $scope.entry.value = data.entry.value;
+            $scope.entry.description = data.entry.description;
 
         });
     } //end pickupLabel() function
