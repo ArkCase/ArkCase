@@ -27,18 +27,17 @@ package com.armedia.acm.calendar.service.integration.exchange;
  * #L%
  */
 
+import com.armedia.acm.calendar.service.AcmCalendarEvent;
 import com.armedia.acm.core.model.AcmEvent;
 
 import java.util.Date;
-
-import microsoft.exchange.webservices.data.core.service.item.Appointment;
 
 public class CalendarEventAddedEvent extends AcmEvent
 {
     private static final long serialVersionUID = 1L;
     private static final String EVENT_TYPE = "com.armedia.acm.exchange.calendar.event.added";
 
-    public CalendarEventAddedEvent(Appointment source, String userId, Long objectId, String objectType, String ipAddress)
+    public CalendarEventAddedEvent(AcmCalendarEvent source, String userId, Long objectId, String objectType, String ipAddress)
     {
         super(source);
         setEventDate(new Date());

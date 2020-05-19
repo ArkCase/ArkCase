@@ -27,12 +27,16 @@ package com.armedia.acm.services.notification.service;
  * #L%
  */
 
+import com.armedia.acm.calendar.service.AcmCalendarEvent;
+import com.armedia.acm.calendar.service.Attendee;
 import com.armedia.acm.core.model.AcmEvent;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationListener;
+
+import java.util.stream.Collectors;
 
 public class CalendarEventAddedNotifier implements ApplicationListener<AcmEvent>
 {
@@ -45,10 +49,24 @@ public class CalendarEventAddedNotifier implements ApplicationListener<AcmEvent>
     public void onApplicationEvent(AcmEvent event)
     {
         String eventType = event.getEventType();
+
         if (eventType != null && (eventType.equals("com.armedia.acm.outlook.calendar.event.added") ||
                 eventType.equals("com.armedia.acm.exchange.calendar.event.added")))
         {
-            String emailAddresses = notificationUtils.getEmailForUser(event.getUserId());
+            String emailAddresses;
+            if (event instanceof com.armedia.acm.calendar.service.integration.exchange.CalendarEventAddedEvent)
+            {
+                AcmCalendarEvent calendarEvent = (AcmCalendarEvent) event.getSource();
+                emailAddresses = calendarEvent.getAttendees().stream()
+                        .filter(attendee -> attendee.getType() == Attendee.AttendeeType.REQUIRED
+                                || attendee.getType() == Attendee.AttendeeType.OPTIONAL)
+                        .map(Attendee::getEmail)
+                        .collect(Collectors.joining(","));
+            }
+            else
+            {
+                emailAddresses = notificationUtils.getEmailForUser(event.getUserId());
+            }
             logger.debug("On 'Calendar event added' event create notification for participants.");
 
             notificationService.createNotification("calendarEventAdded", NotificationConstants.CALENDAR_EVENT_ADDED,
