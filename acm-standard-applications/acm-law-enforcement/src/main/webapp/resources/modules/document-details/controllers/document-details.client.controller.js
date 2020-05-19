@@ -110,21 +110,22 @@ angular.module('document-details').controller(
                         name: $stateParams['name'],
                         selectedIds: $stateParams['selectedIds']
                     };
-                    $scope.showVideoPlayer = false;
-                    $scope.showPdfJs = false;
-                    $scope.transcriptionTabActive = false;
-                    $scope.ocrInfoActive = false;
-                    $scope.loaderOpened = false;
+                $scope.showVideoPlayer = false;
+                $scope.showPdfJs = false;
+                $scope.transcriptionTabActive = false;
+                $scope.ocrInfoActive = false;
+                $scope.comprehendMedicalEnabled = false;
+                $scope.loaderOpened = false;
 
-                    var scopeToColor =
-                        {
-                            "QUEUED": "#dcce22" ,
-                            "PROCESSING": "orange" ,
-                            "COMPLETED": "#05a205" ,
-                            "FAILED": "red"
-                        };
+                var scopeToColor =
+                    {
+                        "QUEUED": "#dcce22",
+                        "PROCESSING": "orange",
+                        "COMPLETED": "#05a205",
+                        "FAILED": "red"
+                    };
 
-                    var transcriptionConfigurationPromise = TranscriptionManagementService.getTranscribeConfiguration();
+                var transcriptionConfigurationPromise = TranscriptionManagementService.getTranscribeConfiguration();
 
                     $scope.getEcmFileActiveVersion = function(ecmFile) {
                         if (Util.isEmpty(ecmFile) || Util.isEmpty(ecmFile.activeVersionTag) || Util.isArrayEmpty(ecmFile.versions)) {
@@ -170,30 +171,36 @@ angular.module('document-details').controller(
                         }
                     });
 
-                $scope.$on('ocr-data-model', function(event, ocrObj) {
+                $scope.$on('ocr-data-model', function (event, ocrObj) {
                     $scope.ocrObjectModel = ocrObj;
                     $scope.ocrInfoActive = $scope.ocrObjectModel.status != null;
                     $scope.colorOcrStatus = scopeToColor[$scope.ocrObjectModel.status];
                 });
 
-                var addCue = function(track, value) {
-                        var cueAdded = false;
+                $scope.$on('comprehend-medical-model', function (event, comprehendMedicalObj) {
+                    $scope.comprehendMedicalObj = comprehendMedicalObj;
+                    $scope.comprehendMedicalEnabled = $scope.comprehendMedicalObj.status != null;
+                    $scope.colorComprehendMedicalStatus = scopeToColor[$scope.comprehendMedicalObj.status];
+                });
+
+                var addCue = function (track, value) {
+                    var cueAdded = false;
+                    try {
+                        track.addCue(new VTTCue(value.startTime, value.endTime, value.text));
+                        cueAdded = true;
+                    } catch (e) {
+                        $log.warn("Browser does not support VTTCue");
+                    }
+
+                    if (!cueAdded) {
                         try {
-                            track.addCue(new VTTCue(value.startTime, value.endTime, value.text));
+                            track.addCue(new TextTrackCue(value.startTime, value.endTime, value.text));
                             cueAdded = true;
                         } catch (e) {
-                            $log.warn("Browser does not support VTTCue");
+                            $log.warn("Browser does not support TextTrackCue");
                         }
-
-                        if (!cueAdded) {
-                            try {
-                                track.addCue(new TextTrackCue(value.startTime, value.endTime, value.text));
-                                cueAdded = true;
-                            } catch (e) {
-                                $log.warn("Browser does not support TextTrackCue");
-                            }
-                        }
-                    };
+                    }
+                };
 
                     $scope.playAt = function(seconds) {
                         var videoElement = angular.element(document.getElementsByTagName("video")[0])[0];
@@ -403,6 +410,7 @@ angular.module('document-details').controller(
                         DialogService.alert($translate.instant("documentDetails.fileChangedAlert")).then(function() {
                             $scope.openSnowboundViewer();
                             $scope.$broadcast('refresh-ocr');
+                            $scope.$broadcast('refresh-medical-comprehend');
                         });
                         onHideLoader();
                     });

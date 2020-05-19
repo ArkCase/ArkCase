@@ -95,7 +95,7 @@ angular.module('admin').controller(
                         group.title = group.name;
                         var hasAscendantControlGroup = false;
                         if(controlGroups.length > 0 && group.ascendants_id_ss && group.ascendants_id_ss.length === 1){
-                                if(controlGroups.includes(group.ascendants_id_ss[0])){
+                                if(_.includes(controlGroups, group.ascendants_id_ss[0])){
                                     hasAscendantControlGroup = true;
                                 }
                         }

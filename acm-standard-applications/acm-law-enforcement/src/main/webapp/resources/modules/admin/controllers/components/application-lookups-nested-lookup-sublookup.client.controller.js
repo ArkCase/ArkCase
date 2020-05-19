@@ -101,6 +101,7 @@ angular.module('admin').controller('Admin.NestedLookupSubLookupController', [ '$
         params.entry = entry || {};
         params.isEdit = isEdit || false;
         params.config = $scope.config;
+        params.isDefaultEnabled = false;
 
         var modalInstance = $modal.open({
             animation: true,
