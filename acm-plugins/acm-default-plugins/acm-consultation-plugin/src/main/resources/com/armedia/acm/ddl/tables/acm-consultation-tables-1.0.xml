@@ -1,0 +1,86 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <property name="consultationNumberLength" value="1024" dbms="postgresql,oracle"/>
+    <property name="consultationNumberLength" value="255" dbms="mysql,mssql"/>
+
+    <changeSet id="01-acm_consultation-id" author="vladimir.cherepnalkovski">
+        <createTable tableName="acm_consultation_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_consultation_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_consultation"></column>
+        </insert>
+    </changeSet>
+
+    <changeSet id="consultation-01-acm-consultation-table" author="dmiller" dbms="vladimir.cherepnalkovski">
+        <createTable tableName="acm_consultation_file">
+            <column name="cm_consultation_id" type="${idType}">
+                <constraints primaryKeyName="pk_acm_consultation_file" primaryKey="true"/>
+            </column>
+            <column name="cm_consultation_number" type="VARCHAR(${consultationNumberLength})">
+                <constraints unique="true" uniqueConstraintName="uk_consultation_number" nullable="false"/>
+            </column>
+            <column name="cm_consultation_title" type="VARCHAR(4000)"/>
+            <column name="cm_consultation_status" type="VARCHAR(4000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_consultation_details" type="CLOB">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cm_consultation_details_summary" type="CLOB">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cm_consultation_incident_date" type="${timestampType}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cm_consultation_created" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_consultation_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_consultation_modified" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_consultation_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_consultation_closed" type="DATE"/>
+            <column name="cm_consultation_disposition" type="VARCHAR(4000)"/>
+            <column name="cm_consultation_priority" type="VARCHAR(1024)"/>
+            <column name="cm_consultation_external_flag" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_object_type" type="VARCHAR(100)" defaultValue="CONSULTATION">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_class_name" type="VARCHAR(400)"/>
+            <column name="cm_due_date" type="${timestampType}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cm_consultation_restricted_flag" type="VARCHAR(32)" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_container_id" type="${fkIdType}"/>
+            <column name="cm_responsible_organization" type="VARCHAR(100)"/>
+            <column name="cm_queue_id" type="${fkIdType}">
+                <constraints foreignKeyName="fk_queue_id" referencedColumnNames="cm_queue_id" referencedTableName="acm_queue"/>
+            </column>
+            <column name="cm_queue_enter_date" type="${timestampType}"/>
+            <column name="cm_response_due_date" type="${timestampType}"/>
+            <column name="cm_previous_queue_id" type="${idType}"/>
+            <column name="cm_security_field" type="VARCHAR(255)" defaultValue="Open"/>
+            <column name="cm_legacy_system_id" type="VARCHAR(255)"/>
+            <column name="cm_consultation_denied_flag" type="VARCHAR(10)" defaultValue="false"/>
+        </createTable>
+
+        <createIndex tableName="acm_consultation" indexName="idx_consultation_title">
+            <column name="cm_consultation_title"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>
