@@ -24,7 +24,7 @@ public class FoiaAssignmentNotifier extends AssignmentNotifier
         if (StringUtils.isNotBlank(newAssignee) && !newAssignee.equals("None"))
         {
             logger.debug("On 'Assignment changed' event create notification for new assignee [{}].", newAssignee);
-            String emailAddress = getNotificationUtils().getEmailForAssignee(newAssignee);
+            String emailAddress = getNotificationUtils().getEmailForUser(newAssignee);
             if (assignment.getObjectType().equals("CASE_FILE"))
             {
                 getNotificationService().createNotification("requestAssignedAssignee", NotificationConstants.OBJECT_ASSIGNED,
@@ -52,7 +52,7 @@ public class FoiaAssignmentNotifier extends AssignmentNotifier
         {
             logger.debug("On 'Assignment changed' event create notification for old assignee [{}].", oldAssignee);
 
-            String emailAddress = getNotificationUtils().getEmailForAssignee(oldAssignee);
+            String emailAddress = getNotificationUtils().getEmailForUser(oldAssignee);
             if (assignment.getObjectType().equals("CASE_FILE"))
             {
                 getNotificationService().createNotification("requestUnassignedAssignee", NotificationConstants.OBJECT_UNASSIGNED,
