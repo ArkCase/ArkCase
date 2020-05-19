@@ -115,7 +115,7 @@ public class TaskUpdatedNotifier implements ApplicationListener<AcmApplicationTa
 
             if (parentAssignment.isPresent())
             {
-                String emailAddress = notificationUtils.getEmailForAssignee(parentAssignment.get().getNewAssignee());
+                String emailAddress = notificationUtils.getEmailForUser(parentAssignment.get().getNewAssignee());
                 notificationService.createNotification("concurNonConcur", NotificationConstants.TASK_CONCUR_NONCONCUR,
                         event.getObjectType(), event.getObjectId(), String.format("%s-%s", event.getObjectType(), event.getObjectId()),
                         null, emailAddress, event.getUserId(), assignment.map(AcmAssignment::getNewAssignee).orElse(""), note);

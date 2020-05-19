@@ -89,9 +89,9 @@ public class NotificationUtils
                 .collect(Collectors.joining(","));
     }
 
-    public String getEmailForAssignee(String assignee)
+    public String getEmailForUser(String userId)
     {
-        AcmUser user = userDao.findByUserId(assignee);
+        AcmUser user = userDao.findByUserId(userId);
         return user.getMail();
     }
 

@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
-
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="calendarServiceProvider" class="com.armedia.acm.calendar.service.integration.exchange.ExchangeCalendarService">
         <property name="springContextHolder" ref="acmContextHolder"/>
@@ -10,6 +9,9 @@
         <property name="calendarAdminService" ref="propertyFileCalendarAdminService"/>
         <property name="folderCreatorDao" ref="outlookFolderCreatorDao"/>
         <property name="folderRecreator" ref="outlookFolderRecreator"/>
+        <property name="exchangeEventPublisher" ref="exchangeEventPublisher"/>
     </bean>
+
+    <bean id="exchangeEventPublisher" class="com.armedia.acm.calendar.service.integration.exchange.ExchangeEventPublisher"/>
 
 </beans>
