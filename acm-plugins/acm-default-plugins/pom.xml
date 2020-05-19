@@ -33,6 +33,7 @@
         <module>acm-state-of-arkcase-plugin</module>
         <module>acm-phone-home-plugin</module>
         <module>acm-billing-plugin</module>
+        <module>acm-consultation-plugin</module>
     </modules>
 
 </project>
