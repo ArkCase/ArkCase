@@ -273,7 +273,7 @@ public class ExchangeCalendarService
 
             appointment.setSubject(calendarEvent.getSubject());
             appointment.update(ConflictResolutionMode.AlwaysOverwrite);
-            exchangeEventPublisher.publishCalendarEventAdded(appointment, auth.getName(), Long.valueOf(calendarEvent.getObjectId()),
+            exchangeEventPublisher.publishCalendarEventAdded(calendarEvent, auth.getName(), Long.valueOf(calendarEvent.getObjectId()),
                     calendarEvent.getObjectType());
         }
         catch (Exception e)

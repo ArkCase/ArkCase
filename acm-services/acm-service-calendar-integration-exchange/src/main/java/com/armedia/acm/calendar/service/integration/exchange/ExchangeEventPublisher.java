@@ -28,11 +28,10 @@ package com.armedia.acm.calendar.service.integration.exchange;
  */
 
 import com.armedia.acm.auth.AuthenticationUtils;
+import com.armedia.acm.calendar.service.AcmCalendarEvent;
 
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
-
-import microsoft.exchange.webservices.data.core.service.item.Appointment;
 
 public class ExchangeEventPublisher implements ApplicationEventPublisherAware
 {
@@ -45,7 +44,7 @@ public class ExchangeEventPublisher implements ApplicationEventPublisherAware
 
     }
 
-    public void publishCalendarEventAdded(Appointment source, String userId, Long objectId, String objectType)
+    public void publishCalendarEventAdded(AcmCalendarEvent source, String userId, Long objectId, String objectType)
     {
         CalendarEventAddedEvent event = new CalendarEventAddedEvent(source, userId, objectId, objectType,
                 AuthenticationUtils.getUserIpAddress());
