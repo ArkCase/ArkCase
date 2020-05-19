@@ -150,4 +150,5 @@ public interface NotificationConstants
     String NEW_PORTAL_USER_PASSWORD_RESET_REQUEST = "notifications.password.newPortalUser";
     String CALENDAR_EVENT_ADDED = "notifications.calendar.event.added";
     String NOTE_ADDED = "notifications.note.added";
+    String STATUS_COMPREHEND_MEDICAL = "notifications.status.comprehendMedical";
 }

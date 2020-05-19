@@ -800,4 +800,26 @@ public class ConfigLookupDaoTest extends EasyMockSupport
 
     }
 
+    @Test(expected = AcmResourceNotModifiableException.class)
+    public void testPrimaryEntriesOnUpdate() throws Exception
+    {
+        // given
+        LookupDefinition lookupDefinition = new LookupDefinition();
+        lookupDefinition.setLookupType(LookupType.STANDARD_LOOKUP);
+        lookupDefinition.setName("componentsAgencies");
+        lookupDefinition.setReadonly(true);
+        String entriesAsJson = "[{\"key\":\"FOIA\",\"value\":\"FOIA\",\"readonly\":false,\"primary\":true}, {\"key\":\"sales\",\"value\":\"Sales\",\"readonly\":false,\"primary\":true}]";
+        lookupDefinition.setLookupEntriesAsJson(entriesAsJson);
+        configLookupDao.setLookups(
+                "{\"inverseValuesLookup\": [], \"nestedLookup\": [],\"standardLookup\":[]}");
+        configLookupDao.setLookupsExt(
+                "{\"inverseValuesLookup\": [], \"nestedLookup\": [], \"standardLookup\": [{\"name\":\"componentsAgencies\", \"entries\":[{\"key\":\"FOIA\",\"value\":\"FOIA\",\"readonly\":false,\"primary\":true}, {\"key\":\"sales\",\"value\":\"Sales\",\"readonly\":false,\"primary\":false}], \"readonly\":true}]}");
+
+        // when
+        configLookupDao.saveLookup(lookupDefinition);
+
+        // then
+        fail("AcmResourceNotModifiableException should have been thrown");
+    }
+
 }

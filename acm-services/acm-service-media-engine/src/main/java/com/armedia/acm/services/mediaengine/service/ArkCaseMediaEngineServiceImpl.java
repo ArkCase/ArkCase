@@ -379,17 +379,19 @@ public abstract class ArkCaseMediaEngineServiceImpl<T extends MediaEngine>
         {
             ProcessInstance processInstance = getActivitiRuntimeService().createProcessInstanceQuery().includeProcessVariables()
                     .processInstanceId(mediaEngine.getProcessId()).singleResult();
-            if (processInstance != null)
-            {
+
                 String statusKey = MediaEngineBusinessProcessVariableKey.STATUS.toString();
                 String actionKey = MediaEngineBusinessProcessVariableKey.ACTION.toString();
                 String messageKey = MediaEngineBusinessProcessVariableKey.MESSAGE.toString();
                 String status = MediaEngineStatusType.FAILED.toString();
                 String action = MediaEngineActionType.FAILED.toString();
 
-                getActivitiRuntimeService().setVariable(processInstance.getId(), statusKey, status);
-                getActivitiRuntimeService().setVariable(processInstance.getId(), actionKey, action);
-                getActivitiRuntimeService().setVariable(processInstance.getId(), messageKey, message);
+                if (processInstance != null)
+                {
+                    getActivitiRuntimeService().setVariable(processInstance.getId(), statusKey, status);
+                    getActivitiRuntimeService().setVariable(processInstance.getId(), actionKey, action);
+                    getActivitiRuntimeService().setVariable(processInstance.getId(), messageKey, message);
+                }
 
                 mediaEngine.setStatus(MediaEngineStatusType.FAILED.toString());
 
@@ -399,7 +401,6 @@ public abstract class ArkCaseMediaEngineServiceImpl<T extends MediaEngine>
                         getSystemUser(), null);
 
                 return mediaEngine;
-            }
         }
 
         throw new SaveMediaEngineException(String.format("Could not set as failed [%s] object with ID=[%d]", getServiceName(), id));

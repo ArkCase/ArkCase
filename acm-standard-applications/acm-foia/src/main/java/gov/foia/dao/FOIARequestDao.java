@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import gov.foia.model.FOIAConstants;
 import gov.foia.model.FOIARequest;
 import gov.foia.model.PortalFOIARequestStatus;
 
@@ -203,6 +204,7 @@ public class FOIARequestDao extends AcmAbstractDao<FOIARequest>
         requestStatus.setQueue(request.getQueue().getName());
         requestStatus.setUpdateDate(request.getModified());
         requestStatus.setIsDenied(request.getDeniedFlag());
+        requestStatus.setRequestTitle(request.getTitle());
         requestStatus.setWithdrawRequested(request.getWithdrawRequestedFlag());
         requestStatus.setIsPublic(request.getPublicFlag());
         requestStatus.setRequestType(request.getRequestType());
@@ -211,6 +213,13 @@ public class FOIARequestDao extends AcmAbstractDao<FOIARequest>
         requestStatus.setRequesterEmail(request.getOriginator().getPerson().getContactMethods()
                 .stream().filter(cm -> cm.getType().equalsIgnoreCase("email")).findFirst().get().getValue());
         requestStatus.setDispositionValue(request.getDisposition());
+
+        if (!request.getChildObjects().isEmpty() && request.getRequestType().equals(FOIAConstants.APPEAL_REQUEST_TYPE))
+        {
+            String originalRequestId = request.getChildObjects().iterator().next().getTargetName();
+            requestStatus.setOriginalRequestId(originalRequestId);
+        }
+
         return requestStatus;
     }
 

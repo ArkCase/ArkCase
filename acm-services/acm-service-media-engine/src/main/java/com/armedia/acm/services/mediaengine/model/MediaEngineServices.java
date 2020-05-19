@@ -37,5 +37,7 @@ public enum MediaEngineServices
     @JsonProperty("TRANSCRIBE")
     TRANSCRIBE,
     @JsonProperty("OCR")
-    OCR
+    OCR,
+    @JsonProperty("COMPREHEND_MEDICAL")
+    COMPREHEND_MEDICAL
 }
