@@ -206,8 +206,8 @@ angular
                         }
                     });
 
-                    modalInstance.result.then(function (limitedDeliveryFlag) {
-                        DocTree.limitedDeliveryFlag = limitedDeliveryFlag;
+                    modalInstance.result.then(function (data) {
+                        DocTree.limitedDeliveryFlag = data.limitedDeliveryFlag;
                         deferred.resolve();
                     }, function () {
                         deferred.reject();
@@ -371,7 +371,7 @@ angular
                                             //User renames folder right after create one, data.isNew should be false, but is still true
                                             //When folder is created first time, key starts with "_"
                                             var key = data.node.key + "";
-                                            isNew = key.startsWith("_");
+                                            isNew = _.startsWith(key, "_");
                                         }
 
                                         if (isNew) {
@@ -3808,9 +3808,8 @@ angular
                     replaceFile: function () {
                         DocTree.jqFileInput.removeAttr("multiple");
                         DocTree.makeUploadDocForm(DocTree.jqTree);
-                        setTimeout(function () {
-                            DocTree.jqFileInput.click();
-                        });
+                        var fileInput = DocTree.jqFileInput.click();
+                        var timeOut = setTimeout(fileInput, 0);
                     }
 
                     ,
@@ -4161,9 +4160,6 @@ angular
                         $(node.tr).find("select.reviewstatus").prop('disabled', true);
                         $(node.tr).find("select.redactionstatus").prop('disabled', true);
 
-                        var nodeParentFolder = node.parent;
-                        var cacheKey = DocTree.getCacheKeyByNode(nodeParentFolder);
-
                         if (statusType === "review") {
                             Util.serviceCall({
                                 service: Ecm.setFileReviewStatus,
@@ -4179,7 +4175,6 @@ angular
                                 $(node.tr).find("select.reviewstatus").prop('disabled', false);
                                 $(node.tr).find("select.redactionstatus").prop('disabled', false);
                                 node.data.reviewStatus = statusValue;
-                                DocTree.cacheFolderList.remove(cacheKey);
 
                                 return data;
                             }, function (error) {
@@ -4205,7 +4200,6 @@ angular
                                 $(node.tr).find("select.reviewstatus").prop('disabled', false);
                                 $(node.tr).find("select.redactionstatus").prop('disabled', false);
                                 node.data.redactionStatus = statusValue;
-                                DocTree.cacheFolderList.remove(cacheKey);
 
                                 return data;
                             }, function (error) {

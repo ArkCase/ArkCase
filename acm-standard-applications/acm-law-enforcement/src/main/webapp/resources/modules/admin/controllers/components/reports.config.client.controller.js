@@ -265,4 +265,7 @@ function($scope, ReportsConfigService, LookupService, $q, $sce, MessageService) 
             deferred.reject();
         });
     }
+    
+    // sync reports once the view is open
+    $scope.syncReports();
 } ]);

@@ -1,5 +1,12 @@
 package com.armedia.acm.webdav;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
 /*-
  * #%L
  * ACM Service: WebDAV Integration Library
@@ -28,11 +35,9 @@ package com.armedia.acm.webdav;
  */
 
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISActions;
-import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
 import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
-import com.armedia.acm.plugins.ecm.utils.EcmFileCamelUtils;
 import com.armedia.acm.web.api.MDCConstants;
 
 import org.apache.camel.component.cmis.CamelCMISConstants;
@@ -40,13 +45,9 @@ import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import org.slf4j.MDC;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import io.milton.common.ContentTypeUtils;
 import io.milton.common.RangeUtils;
@@ -144,10 +145,14 @@ public class AcmFileResource extends AcmFileSystemResource implements PropFindab
         try
         {
             Map<String, Object> messageProps = new HashMap<>();
-            messageProps.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+            messageProps.put(EcmFileConstants.CMIS_REPOSITORY_ID, acmFile.getCmisRepositoryId() == null ? EcmFileConstants.DEFAULT_CMIS_REPOSITORY_ID : acmFile.getCmisRepositoryId());
             messageProps.put(CamelCMISConstants.CMIS_OBJECT_ID, getResourceFactory().getCmisFileId(acmFile));
-            messageProps.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
-
+            messageProps.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, MDC.get(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY));
+            
+            LOGGER.info("User {} is sending object id {} in repository {}", 
+                messageProps.get(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY),
+                messageProps.get(CamelCMISConstants.CMIS_OBJECT_ID),
+                messageProps.get(EcmFileConstants.CMIS_REPOSITORY_ID));
             Object result = getResourceFactory().getCamelContextManager().send(ArkCaseCMISActions.DOWNLOAD_DOCUMENT, messageProps);
 
             if (result instanceof ContentStream)
@@ -192,8 +197,11 @@ public class AcmFileResource extends AcmFileSystemResource implements PropFindab
     {
         try
         {
-            getResourceFactory().getEcmFileTransaction().updateFileTransactionEventAware(
-                    getResourceFactory().getSecurityManager().getAuthenticationForTicket(acmTicket), acmFile, in);
+            Authentication auth = getResourceFactory().getSecurityManager().getAuthenticationForTicket(acmTicket);
+            LOGGER.info("Authenticated user {} replacing file content for file {}", 
+                auth.getName(), acmFile.getFileId());
+            SecurityContextHolder.getContext().setAuthentication(auth);
+            getResourceFactory().getEcmFileTransaction().updateFileTransactionEventAware(auth, acmFile, in);
         }
         catch (ArkCaseFileRepositoryException | IOException e)
         {

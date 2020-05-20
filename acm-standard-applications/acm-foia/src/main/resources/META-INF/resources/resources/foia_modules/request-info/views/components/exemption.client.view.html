@@ -10,9 +10,7 @@
                         <i class="fa fa-lg fa-refresh"></i>
                     </button>
                     <button type="button" class="btn btn-default btn-xs" ng-click="addNew()"
-                            permission="addExemptionCode"
-                            permission-object-type="CASE_FILE" permission-properties="objectInfo"
-                            permission-action="enable">
+                            ng-disabled="isDisabled">
                         <i class="fa fa-lg fa-plus"></i>
                     </button>
                 </div>

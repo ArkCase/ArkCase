@@ -4,6 +4,7 @@ angular.module('request-info').controller(
         'RequestInfo.DocumentsController',
         [
                 '$scope',
+                '$state',
                 '$stateParams',
                 '$modal',
                 '$q',
@@ -26,8 +27,9 @@ angular.module('request-info').controller(
                 'Request.InfoService',
                 'Admin.EmailSenderConfigurationService',
                 'DocTreeExt.Email',
-                function($scope, $stateParams, $modal, $q, $timeout, Util, LocaleService, ConfigService, ObjectService, ObjectLookupService, CaseInfoService, DocTreeService, HelperObjectBrowserService, Authentication, PermissionsService, ObjectModelService, DocTreeExtWebDAV, DocTreeExtCheckin,
-                        CorrespondenceService, $translate, RequestInfoService, EmailSenderConfigurationService, DocTreeExtEmail) {
+                'EcmService',
+                 function ($scope, $state, $stateParams, $modal, $q, $timeout, Util, LocaleService, ConfigService, ObjectService, ObjectLookupService, CaseInfoService, DocTreeService, HelperObjectBrowserService, Authentication, PermissionsService, ObjectModelService, DocTreeExtWebDAV, DocTreeExtCheckin,
+                             CorrespondenceService, $translate, RequestInfoService, EmailSenderConfigurationService, DocTreeExtEmail, EcmService) {
 
                     Authentication.queryUserInfo().then(function(userInfo) {
                         $scope.user = userInfo.userId;
@@ -118,18 +120,51 @@ angular.module('request-info').controller(
                                 var node = nodes[0];
                                 var files = [];
                                 if (Util.isArray(nodes)) {
-                                    angular.forEach(nodes, function(item, index){
-                                        files.push({
-                                            id: $stateParams.id,
-                                            fileId: item.data.objectId,
-                                            removeOlderFileVersionFromSnowboundTabs: false
-                                        });
+                                    angular.forEach(nodes, function (item, index) {
+                                        if(item.data.link) {
+                                            var params = {};
+                                            params.fileId = node.data.objectId;
+                                            EcmService.getLinkTargetEcmFile(params).then(function (ecmFileInfo) {
+                                                files.push({
+                                                    id: ecmFileInfo.parentObjectId,
+                                                    fileId: ecmFileInfo.originalFileId,
+                                                    removeOlderFileVersionFromSnowboundTabs: false
+                                                });
+                                                // open linked document in another tab if it comes from different CASE_FILE in order to reload the
+                                                // the right doc-tree folder structure
+                                                if ($scope.objectId != ecmFileInfo.parentObjectId) {
+                                                    var parentObjectId = ecmFileInfo.parentObjectId;
+                                                    var originalFileId = ecmFileInfo.originalFileId;
+
+                                                    $state.go('request-info', {
+                                                        id: parentObjectId,
+                                                        fileId: originalFileId
+                                                    }, true);
+                                                } else {
+                                                    $scope.$bus.publish('update-viewer-open-documents', files);
+
+                                                    $scope.$bus.publish('reload-exemption-code-grid', {
+                                                        id: files[0].id,
+                                                        fileId: files[0].fileId
+                                                    });
+                                                }
+                                            });
+                                        }
+                                        else {
+                                            files.push({
+                                                id: $stateParams.id,
+                                                fileId: item.data.objectId,
+                                                removeOlderFileVersionFromSnowboundTabs: false
+                                            });
+                                            $scope.$bus.publish('update-viewer-open-documents', files);
+
+                                            $scope.$bus.publish('reload-exemption-code-grid', {
+                                                id: files[0].id,
+                                                fileId: files[0].fileId
+                                            });
+                                        }
                                     });
                                 }
-
-                                $scope.$bus.publish('reload-exemption-code-grid', {id: files[0].id, fileId: files[0].fileId});
-
-                                $scope.$bus.publish('update-viewer-open-documents', files);
                             }
                         });
                     }

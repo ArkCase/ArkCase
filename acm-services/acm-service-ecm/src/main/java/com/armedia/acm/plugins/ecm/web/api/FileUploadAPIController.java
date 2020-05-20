@@ -112,7 +112,7 @@ public class FileUploadAPIController implements ApplicationEventPublisherAware
         }
 
         String folderCmisId = folder.getCmisFolderId();
-        List<EcmFile> uploaded = uploadFiles(authentication, parentObjectType, parentObjectId, fileType, fileLang, folderCmisId, request,
+        List<EcmFile> uploaded = getEcmFileService().uploadFiles(authentication, parentObjectType, parentObjectId, fileType, fileLang, folderCmisId, request,
                 session);
         return uploaded;
     }
@@ -139,61 +139,11 @@ public class FileUploadAPIController implements ApplicationEventPublisherAware
         response.setContentType(responseMimeType);
 
         String folderCmisId = folder.getCmisFolderId();
-        List<EcmFile> uploaded = uploadFiles(authentication, parentObjectType, parentObjectId, fileType, folderCmisId, request, session);
+        List<EcmFile> uploaded = getEcmFileService().uploadFiles(authentication, parentObjectType, parentObjectId, fileType, folderCmisId, request, session);
 
         String jsonUploadedFiles = getObjectConverter().getJsonMarshaller().marshal(uploaded);
 
         return jsonUploadedFiles;
-    }
-
-    protected List<EcmFile> uploadFiles(Authentication authentication, String parentObjectType, Long parentObjectId, String fileType,
-            String folderCmisId, MultipartHttpServletRequest request, HttpSession session)
-            throws AcmUserActionFailedException, AcmCreateObjectFailedException, IOException
-    {
-
-        return uploadFiles(authentication, parentObjectType, parentObjectId, fileType, null, folderCmisId, request, session);
-    }
-
-    protected List<EcmFile> uploadFiles(Authentication authentication, String parentObjectType, Long parentObjectId, String fileType,
-            String fileLang, String folderCmisId, MultipartHttpServletRequest request, HttpSession session)
-            throws AcmUserActionFailedException, AcmCreateObjectFailedException, IOException
-    {
-
-        // for multiple files
-        MultiValueMap<String, MultipartFile> attachments = request.getMultiFileMap();
-
-        List<EcmFile> uploadedFiles = new ArrayList<>();
-
-        if (attachments != null)
-        {
-            for (Map.Entry<String, List<MultipartFile>> entry : attachments.entrySet())
-            {
-                final List<MultipartFile> attachmentsList = entry.getValue();
-
-                if (attachmentsList != null && !attachmentsList.isEmpty())
-                {
-                    for (final MultipartFile attachment : attachmentsList)
-                    {
-                        AcmMultipartFile acmMultipartFile = new AcmMultipartFile(attachment, true);
-
-                        EcmFile metadata = new EcmFile();
-                        metadata.setFileType(fileType);
-                        metadata.setFileLang(fileLang);
-                        metadata.setFileName(attachment.getOriginalFilename());
-                        metadata.setFileActiveVersionMimeType(acmMultipartFile.getContentType());
-                        metadata.setUuid(request.getParameter("uuid"));
-                        EcmFile temp = getEcmFileService().upload(authentication, acmMultipartFile, folderCmisId, parentObjectType,
-                                parentObjectId,
-                                metadata);
-                        uploadedFiles.add(temp);
-
-                        applicationEventPublisher.publishEvent(new EcmFilePostUploadEvent(temp, authentication.getName()));
-                    }
-                }
-            }
-        }
-
-        return uploadedFiles;
     }
 
     @PreAuthorize("hasPermission(#ecmFileId, 'FILE', 'write|group-write')")
@@ -274,7 +224,7 @@ public class FileUploadAPIController implements ApplicationEventPublisherAware
                         "The user {" + authentication.getName() + "} is not allowed to write to folder with id=" + folder.getId());
             }
 
-            List<EcmFile> files = uploadFiles(authentication, parentObjectType, parentObjectId, fileType, fileLang,
+            List<EcmFile> files = getEcmFileService().uploadFiles(authentication, parentObjectType, parentObjectId, fileType, fileLang,
                     folder.getCmisFolderId(), (MultipartHttpServletRequest) request, session);
             if (files != null && files.size() == 1)
             {

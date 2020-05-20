@@ -9,10 +9,11 @@ angular.module('directives').directive('userFullName', [ 'UtilService', 'Profile
         },
         link: function(scope, element, attrs) {
             scope.$watch('userid', function() {
-                UserInfoService.getUserInfoById(scope.userid).then(function(userInfo) {
-                    scope.userFullName = userInfo.fullName;
-                }, function(err) {
-                    scope.userFullName = scope.userid;
+                scope.userFullName = scope.userid;
+                UserInfoService.queryUserById(scope.userid).then(function (user) {
+                    if (user.response.numFound > 0) {
+                        scope.userFullName = user.response.docs[0].name;
+                    }
                 })
             });
         },

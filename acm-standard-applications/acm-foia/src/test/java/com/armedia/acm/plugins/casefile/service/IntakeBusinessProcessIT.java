@@ -96,7 +96,7 @@ public class IntakeBusinessProcessIT
 
         // deploy
         repo.createDeployment()
-                .addClasspathResource("activiti/foia-extension-intake-process_v4.bpmn20.xml")
+                .addClasspathResource("activiti/foia-extension-intake-process_v5.bpmn20.xml")
                 .deploy();
     }
 
@@ -122,7 +122,6 @@ public class IntakeBusinessProcessIT
         foiaRequest.setId(foiaId);
         expect(mockRequestDao.find(foiaId)).andReturn(foiaRequest);
         acknowledgementDocumentService.generateAndUpload(objectType, foiaId);
-        acknowledgementDocumentService.emailAcknowledgement(foiaId);
 
         replay(changeObjectStatusService, queueCaseService, acknowledgementDocumentService);
 

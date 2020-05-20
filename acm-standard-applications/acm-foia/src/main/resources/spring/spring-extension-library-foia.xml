@@ -62,14 +62,16 @@
             <beans:property name="userDao" ref="userJpaDao"/>
             <beans:property name="translationService" ref="translationService" />
             <beans:property name="acmUserEventPublisher" ref="acmUserEventPublisher"/>
+            <beans:property name="organizationDao" ref="acmOrganizationDao"/>
         </beans:bean>
 
         <beans:bean id="portalCreateRequestService" class="gov.foia.service.PortalCreateRequestService">
             <beans:property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
             <beans:property name="userTrackerService" ref="userTrackerService"/>
             <beans:property name="saveFOIARequestService" ref="saveFOIARequestService"/>
-            <beans:property name="organizationDao" ref="acmOrganizationDao"/>
+            <beans:property name="portalFOIAPersonDao" ref="portalFOIAPersonDao"/>
             <beans:property name="portalRequestService" ref="portalRequestService"/>
+            <beans:property name="portalUserServiceProvider" ref="foiaPortalUserServiceProvider"/>
         </beans:bean>
         <beans:bean id="portalCreateInquiryService" class="gov.foia.service.PortalCreateInquiryService">
             <property name="taskDao" ref="acmTaskDao"/>
@@ -87,11 +89,13 @@
             <beans:property name="executeSolrQuery" ref="executeSolrQuery"/>
             <beans:property name="getCaseByNumberService" ref="getCaseByNumberService"/>
             <beans:property name="userDao" ref="userJpaDao"/>
+            <beans:property name="portalFOIAPersonDao" ref="portalFOIAPersonDao"/>
+            <beans:property name="personAssociationDao" ref="acmPersonAssociationDao"/>
             <beans:property name="lookupDao" ref="lookupDao"/>
             <beans:property name="notificationDao" ref="notificationDao"/>
             <beans:property name="groupService" ref="groupService"/>
             <beans:property name="searchResults" ref="searchResults"/>
-            <beans:property name="translationService" ref="translationService" />
+            <beans:property name="translationService" ref="translationService"/>
             <beans:property name="createAdHocTaskService" ref="createAdHocTaskService"/>
         </beans:bean>
 
@@ -99,6 +103,7 @@
             <beans:property name="requestDao" ref="foiaRequestDao"/>
             <beans:property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
             <beans:property name="foiaConfig" ref="foiaConfig"/>
+            <beans:property name="holidayConfigurationService" ref="holidayConfigurationService"/>
         </beans:bean>
 
         <beans:bean id="dueDateUpdateJobDescriptor" class="gov.foia.service.DueDateUpdateJobDescriptor" parent="acmJobDescriptor">
@@ -165,6 +170,9 @@
                     <beans:ref bean="solrReindexFOIAFileExecutor"/>
                     <beans:ref bean="foiaRequestStatusChangeExecutor"/>
                     <beans:ref bean="foiaExemptionCodeMigrationExecutor"/>
+                    <beans:ref bean="solrReindexFOIAPortalPersonExecutor"/>
+                    <beans:ref bean="foiaPortalRegistrationCleanupExecutor"/>
+                    <beans:ref bean="solrReindexAcmUserExecutor"/>
                 </beans:list>
             </beans:property>
 
@@ -172,6 +180,21 @@
 
         <beans:bean id="foiaExemptionCodeMigrationExecutor" class="gov.foia.service.dataupdate.FOIAExemptionCodeMigrationExecutor">
             <beans:property name="foiaExemptionService" ref="foiaExemptionService"/>
+        </beans:bean>
+
+        <beans:bean id="solrReindexFOIAPortalPersonExecutor" class="gov.foia.service.dataupdate.SolrReindexFOIAPortalPersonExecutor">
+            <beans:property name="solrReindexService" ref="solrReindexService"/>
+        </beans:bean>
+
+        <beans:bean id="foiaPortalRegistrationCleanupExecutor" class="gov.foia.service.dataupdate.FoiaPortalRegistrationCleanupExecutor">
+            <beans:property name="acmContextHolder" ref="acmContextHolder"/>
+            <beans:property name="userDao" ref="userJpaDao"/>
+            <beans:property name="registrationDao" ref="userRegistrationRequestDao"/>
+            <beans:property name="portalInfoDAO" ref="portalInfoDAO"/>
+        </beans:bean>
+
+        <beans:bean id="solrReindexAcmUserExecutor" class="gov.foia.service.dataupdate.SolrReindexAcmUserExecutor">
+            <beans:property name="solrReindexService" ref="solrReindexService"/>
         </beans:bean>
 
         <beans:bean id="queuesTimeToCompleteService" class="gov.foia.service.QueuesTimeToCompleteService">
@@ -316,6 +339,7 @@
             <beans:property name="emailBodyTemplate" value="file:${user.home}/.arkcase/acm/templates/requestAssigned.html"/>
             <beans:property name="notificationDao" ref="notificationDao"/>
             <beans:property name="translationService" ref="translationService" />
+            <beans:property name="userInfoHelper" ref="userInfoHelper"/>
         </beans:bean>
 
         <beans:bean id="foiaExecutiveGroupNotificationService" class="gov.foia.service.FOIAExecutiveGroupNotificationService">
@@ -378,5 +402,27 @@
         <beans:bean id="foiaRequestBrokerConfig" class="gov.foia.model.FoiaRequestBrokerConfig" scope="refresh">
             <aop:scoped-proxy/>
         </beans:bean>
+
+        <beans:bean id="ecmFileCopiedExemptionCodeListener" class="gov.foia.listener.EcmFileCopiedExemptionCodeListener">
+            <beans:property name="foiaExemptionService" ref="foiaExemptionService"/>
+        </beans:bean>
+
+        <beans:bean id="acmUserService" class="gov.foia.service.FOIAAcmUserServiceImpl">
+            <beans:property name="userDao" ref="userJpaDao"/>
+            <beans:property name="executeSolrQuery" ref="executeSolrQuery"/>
+            <beans:property name="userRoleService" ref="userRoleService"/>
+            <beans:property name="rolesToPrivilegesConfig" ref="rolesToPrivileges"/>
+            <beans:property name="acmContextHolder" ref="acmContextHolder"/>
+        </beans:bean>
+
+        <beans:bean id="groupService" class="gov.foia.service.FOIAGroupServiceImpl">
+            <beans:property name="userDao" ref="userJpaDao"/>
+            <beans:property name="groupDao" ref="groupDao"/>
+            <beans:property name="executeSolrQuery" ref="executeSolrQuery"/>
+            <beans:property name="acmGroupEventPublisher" ref="acmGroupEventPublisher"/>
+            <beans:property name="springContextHolder" ref="acmContextHolder"/>
+        </beans:bean>
+
+
     </beans:beans>
 </beans:beans>

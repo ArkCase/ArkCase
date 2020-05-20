@@ -65,6 +65,15 @@ public class DefaultPluggablePortalUserService implements PortalUserService
         return getServiceProvider().requestRegistration(portalId, registrationRequest);
     }
 
+    @Override
+    public UserRegistrationResponse regenerateRegistrationRequest(String portalId, UserRegistrationRequest registrationRequest)
+            throws PortalUserServiceException
+    {
+        log.debug("Regenerating registration for user with [{}] email address for portal with [{}] ID.",
+                registrationRequest.getEmailAddress(), portalId);
+        return getServiceProvider().regenerateRegistrationRequest(portalId, registrationRequest);
+    }
+
     /*
      * (non-Javadoc)
      * @see com.armedia.acm.portalgateway.service.PortalUserService#checkRegistrationStatus(java.lang.String,
@@ -91,11 +100,12 @@ public class DefaultPluggablePortalUserService implements PortalUserService
     }
 
     @Override
-    public UserRegistrationResponse registerUserFromRequester(String portalId, PortalUser user)
+    public UserRegistrationResponse registerUserFromPerson(String portalId, Long personId)
             throws PortalUserServiceException
     {
-        log.debug("Registering user [{}] at portal with ID [{}] from Arkcase.", PortalUser.composeUserName(user), portalId);
-        return getServiceProvider().registerUserFromRequester(portalId, user);
+        log.debug("Registering user for person with ID [{}] at portal with ID [{}] from Arkcase.",
+                personId, portalId);
+        return getServiceProvider().registerUserFromPerson(portalId, personId);
     }
 
     /*

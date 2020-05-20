@@ -27,10 +27,12 @@ package com.armedia.acm.services.holiday.service;
  * #L%
  */
 
+import static org.junit.Assert.assertEquals;
+
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.objectonverter.json.JSONUnmarshaller;
-import com.armedia.acm.services.holiday.service.HolidayConfigurationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,8 +40,6 @@ import org.springframework.core.io.FileSystemResource;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  * @author ana.serafimoska
@@ -121,6 +121,80 @@ public class HolidayConfigurationServiceTest extends EasyMockSupport {
         LocalDate expectedResult = LocalDate.parse("20181231", DateTimeFormatter.BASIC_ISO_DATE);
         assertEquals(actualResult, expectedResult);
 
+    }
+
+    @Test
+    public void testFindNextWorkingDayWhenCurrentDayIsHoliday()
+    {
+        String holidayConfigurationFilePath = getClass().getClassLoader().getResource("test/holidayFile.json").getPath();
+        holidayConfigurationService.setHolidayFile(new FileSystemResource(holidayConfigurationFilePath));
+        // memorials day 2018-05-28
+        LocalDate testDate = LocalDate.parse("20180528", DateTimeFormatter.BASIC_ISO_DATE);
+        LocalDate actualResult = holidayConfigurationService.getFirstWorkingDay(testDate);
+
+        LocalDate expectedResult = LocalDate.parse("20180529", DateTimeFormatter.BASIC_ISO_DATE);
+        assertEquals(actualResult, expectedResult);
+    }
+
+    @Test
+    public void testFindNextWorkingDayWhenCurrentDayIsNonWorkingWeekend()
+    {
+        String holidayConfigurationFilePath = getClass().getClassLoader().getResource("test/holidayFile.json").getPath();
+        holidayConfigurationService.setHolidayFile(new FileSystemResource(holidayConfigurationFilePath));
+
+        LocalDate currentDate = LocalDate.parse("20181222", DateTimeFormatter.BASIC_ISO_DATE);
+        LocalDate actualResult = holidayConfigurationService.getFirstWorkingDay(currentDate);
+
+        LocalDate expectedResult = LocalDate.parse("20181224", DateTimeFormatter.BASIC_ISO_DATE);
+
+        assertEquals(actualResult, expectedResult);
+    }
+
+    @Test
+    public void testFindNextWorkingDayWhenCurrentDayIsWorkingWeekend()
+    {
+        String holidayConfigurationFilePath = getClass().getClassLoader().getResource("test/holidayFileIncludeWeekends.json").getPath();
+        holidayConfigurationService.setHolidayFile(new FileSystemResource(holidayConfigurationFilePath));
+
+        LocalDate currentDate = LocalDate.parse("20181222", DateTimeFormatter.BASIC_ISO_DATE);
+        LocalDate actualResult = holidayConfigurationService.getFirstWorkingDay(currentDate);
+
+        LocalDate expectedResult = LocalDate.parse("20181222", DateTimeFormatter.BASIC_ISO_DATE);
+
+        assertEquals(actualResult, expectedResult);
+    }
+
+    @Test
+    public void testCalculateDueDateNoWorkingWeekend()
+    {
+        String holidayConfigurationFilePath = getClass().getClassLoader().getResource("test/holidayFile.json").getPath();
+        holidayConfigurationService.setHolidayFile(new FileSystemResource(holidayConfigurationFilePath));
+
+        LocalDate currentDate = LocalDate.parse("20200425", DateTimeFormatter.BASIC_ISO_DATE);
+        LocalDate actualResult = holidayConfigurationService.getFirstWorkingDay(currentDate);
+
+        LocalDate dueDate = holidayConfigurationService.addWorkingDaysToDate(actualResult, 20);
+
+        LocalDate expectedResult = LocalDate.parse("20200427", DateTimeFormatter.BASIC_ISO_DATE);
+        LocalDate expectedDueDate = LocalDate.parse("20200525", DateTimeFormatter.BASIC_ISO_DATE);
+
+        assertEquals(actualResult, expectedResult);
+        assertEquals(dueDate, expectedDueDate);
+    }
+
+    @Test
+    public void calculateDateSubtractBy()
+    {
+        String holidayConfigurationFilePath = getClass().getClassLoader().getResource("test/holidayFile.json").getPath();
+        holidayConfigurationService.setHolidayFile(new FileSystemResource(holidayConfigurationFilePath));
+
+        LocalDate currentDate = LocalDate.parse("20200525", DateTimeFormatter.BASIC_ISO_DATE);
+
+        LocalDate result = holidayConfigurationService.subtractWorkingDaysFromDate(currentDate, 20);
+
+        LocalDate expectedDueDate = LocalDate.parse("20200427", DateTimeFormatter.BASIC_ISO_DATE);
+
+        assertEquals(expectedDueDate, result);
     }
 
 }

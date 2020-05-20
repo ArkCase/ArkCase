@@ -1,8 +1,7 @@
-package com.armedia.acm.audit.dao;
+package gov.foia.model.event;
 
 /*-
  * #%L
- * ACM Service: Audit Library
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
@@ -27,39 +26,31 @@ package com.armedia.acm.audit.dao;
  * #L%
  */
 
-import com.armedia.acm.audit.model.AcmAuditLookup;
-import com.armedia.acm.data.AcmAbstractDao;
+import com.armedia.acm.core.model.AcmEvent;
 
-import org.springframework.transaction.annotation.Transactional;
+import java.util.Date;
 
-import javax.persistence.TypedQuery;
+import gov.foia.model.DispositionReason;
 
-import java.sql.SQLException;
-import java.util.List;
-
-public class AuditLookupDao extends AcmAbstractDao<AcmAuditLookup>
+public class FOIARequestDispositionReasonModifiedEvent extends AcmEvent
 {
 
-    @Override
-    protected Class<AcmAuditLookup> getPersistenceClass()
+    private static final long serialVersionUID = 2601901328541042900L;
+    private static final String EVENT_TYPE = "com.armedia.acm.casefile.disposition.reason";
+    private static final String OBJECT_TYPE = "DISPOSITION_REASON";
+
+    public FOIARequestDispositionReasonModifiedEvent(DispositionReason source)
     {
-        return AcmAuditLookup.class;
+        super(source);
+        setObjectType(OBJECT_TYPE);
+        setObjectId(source.getId());
+        setEventDate(new Date());
+        setUserId(source.getModifier());
     }
 
-    @Transactional
-    public void deleteAllAuditsFormLookupTabel() throws SQLException
+    @Override
+    public String getEventType()
     {
-
-        TypedQuery<AcmAuditLookup> selectQuery = getEm().createQuery("SELECT a FROM AcmAuditLookup a ", AcmAuditLookup.class);
-        List<AcmAuditLookup> results;
-
-        results = selectQuery.getResultList();
-        if (!results.isEmpty())
-        {
-            for (AcmAuditLookup aul : results)
-            {
-                getEm().remove(aul);
-            }
-        }
+        return String.format("%s", EVENT_TYPE);
     }
 }

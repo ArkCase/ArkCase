@@ -31,8 +31,8 @@ import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.services.holiday.model.HolidayConfiguration;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
@@ -90,7 +90,21 @@ public class HolidayConfigurationService
         for (int i = 0; i < workingDays;)
         {
             returnDate = returnDate.plusDays(1);
-            if (!isHoliday(returnDate) && !isWeekendNonWorkingDay(returnDate))
+            if (isWorkingDay(returnDate))
+            {
+                i++;
+            }
+        }
+        return returnDate;
+    }
+
+    public LocalDate subtractWorkingDaysFromDate(LocalDate dueDate, Integer workingDays)
+    {
+        LocalDate returnDate = dueDate;
+        for (int i = 0; i < workingDays;)
+        {
+            returnDate = returnDate.minusDays(1);
+            if (isWorkingDay(returnDate))
             {
                 i++;
             }
@@ -114,6 +128,36 @@ public class HolidayConfigurationService
     public boolean isHoliday(LocalDate date)
     {
         return getHolidayConfiguration().getHolidays().stream().filter(item -> item.getHolidayDate().equals(date)).count() > 0;
+    }
+
+    public boolean isWorkingDay(LocalDate date)
+    {
+        return !isHoliday(date) && !isWeekendNonWorkingDay(date);
+    }
+
+    public LocalDate getFirstWorkingDay(LocalDate date)
+    {
+        LocalDate resultDate = date;
+        while (!isWorkingDay(resultDate))
+        {
+            resultDate = resultDate.plusDays(1);
+        }
+
+        return resultDate;
+    }
+
+    public int countWorkingDates(LocalDate from, LocalDate to)
+    {
+        int count = 0;
+        while (from.isBefore(to))
+        {
+            if (isWorkingDay(from))
+            {
+                count++;
+            }
+            from = from.plusDays(1);
+        }
+        return count;
     }
 
     private void setHolidayConfigurationFromFile()
@@ -157,5 +201,4 @@ public class HolidayConfigurationService
     {
         this.objectConverter = objectConverter;
     }
-
 }

@@ -31,8 +31,8 @@ package com.armedia.acm.plugins.person.dao;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.person.model.Person;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -45,6 +45,7 @@ import javax.persistence.criteria.Root;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class PersonDao extends AcmAbstractDao<Person>
 {
@@ -77,6 +78,18 @@ public class PersonDao extends AcmAbstractDao<Person>
         Person personToBeDeleted = (Person) queryToDelete.getSingleResult();
         entityManager.remove(personToBeDeleted);
 
+    }
+
+    @Transactional
+    public void updatePersonClass(Long id, String className)
+    {
+        Query queryToUpdate = getEntityManager().createQuery(
+                "UPDATE Person " +
+                        "SET className = :newClassName WHERE id = :personId");
+        queryToUpdate.setParameter("personId", id);
+        queryToUpdate.setParameter("newClassName", className);
+
+        queryToUpdate.executeUpdate();
     }
 
     public List<Person> findByNameOrContactValue(String name, String contactValue)
@@ -113,6 +126,20 @@ public class PersonDao extends AcmAbstractDao<Person>
         }
 
         return result;
+    }
+
+    public Optional<Person> findByEmail(String emailAddress)
+    {
+        List<Person> resultList = getEntityManager().createQuery("SELECT p FROM Person p WHERE p.defaultEmail.value = :emailAddress")
+                .setParameter("emailAddress", emailAddress).getResultList();
+        if (resultList.isEmpty())
+        {
+            return Optional.empty();
+        }
+        else
+        {
+            return Optional.of(resultList.get(0));
+        }
     }
 
     public EntityManager getEntityManager()

@@ -350,6 +350,15 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         return null;
     }
 
+    public List<AcmUser> findByPrefix(String prefix)
+    {
+        TypedQuery<AcmUser> users = getEm()
+                .createQuery("SELECT acmUser FROM AcmUser acmUser "
+                        + "WHERE acmUser.userId LIKE :prefix", AcmUser.class);
+        users.setParameter("prefix", prefix + "%");
+        return users.getResultList();
+    }
+
     public List<AcmUser> findByDirectory(String directoryName)
     {
         TypedQuery<AcmUser> allUsersInDirectory = getEm()

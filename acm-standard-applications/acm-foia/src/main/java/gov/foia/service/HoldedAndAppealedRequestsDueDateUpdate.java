@@ -31,13 +31,14 @@ package gov.foia.service;
  */
 
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
+import com.armedia.acm.services.holiday.service.HolidayConfigurationService;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
 import gov.foia.dao.FOIARequestDao;
+import gov.foia.model.FOIAConstants;
 import gov.foia.model.FOIARequest;
 import gov.foia.model.FoiaConfig;
 
@@ -50,6 +51,7 @@ public class HoldedAndAppealedRequestsDueDateUpdate
     private FOIARequestDao requestDao;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private FoiaConfig foiaConfig;
+    private HolidayConfigurationService holidayConfigurationService;
 
     public void updateDueDate()
     {
@@ -57,13 +59,34 @@ public class HoldedAndAppealedRequestsDueDateUpdate
         {
             return;
         }
+
         auditPropertyEntityAdapter.setUserId("DUE_DATE_UPDATER");
         List<FOIARequest> result = requestDao.findAllHeldAndAppealedRequests();
         for (FOIARequest request : result)
         {
             Date dueDate = request.getDueDate();
-            LocalDateTime dueDateUpdated = dueDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime().plusDays(1);
-            request.setDueDate(Date.from(dueDateUpdated.atZone(ZoneId.systemDefault()).toInstant()));
+            if (dueDate != null)
+            {
+                request.setDueDate(getHolidayConfigurationService().addWorkingDaysToDate(dueDate, 1));
+            }
+
+            LocalDateTime perfectedDate = request.getPerfectedDate();
+            if (perfectedDate != null)
+            {
+                request.setPerfectedDate(getHolidayConfigurationService().addWorkingDaysToDate(perfectedDate.toLocalDate(), 1)
+                        .atTime(perfectedDate.toLocalTime()));
+            }
+
+            if (request.getRequestType().equals(FOIAConstants.NEW_REQUEST_TYPE))
+            {
+                LocalDateTime redirectedDate = request.getRedirectedDate();
+                if (redirectedDate != null)
+                {
+                    request.setRedirectedDate(getHolidayConfigurationService().addWorkingDaysToDate(redirectedDate.toLocalDate(), 1)
+                            .atTime(perfectedDate.toLocalTime()));
+                }
+            }
+
             requestDao.save(request);
         }
     }
@@ -96,4 +119,11 @@ public class HoldedAndAppealedRequestsDueDateUpdate
         this.foiaConfig = foiaConfig;
     }
 
+    public HolidayConfigurationService getHolidayConfigurationService() {
+        return holidayConfigurationService;
+    }
+
+    public void setHolidayConfigurationService(HolidayConfigurationService holidayConfigurationService) {
+        this.holidayConfigurationService = holidayConfigurationService;
+    }
 }

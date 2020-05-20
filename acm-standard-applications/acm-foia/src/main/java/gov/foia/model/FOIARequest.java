@@ -41,17 +41,21 @@ import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -206,11 +210,35 @@ public class FOIARequest extends CaseFile implements FOIAObject
     @Column(name = "fo_generated_zip_flag")
     private Boolean generatedZipFlag;
 
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "cm_case_id")
+    private List<DispositionReason> dispositionReasons = new ArrayList<>();
+
+    @Column(name = "fo_perfected_date")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @Convert(converter = LocalDateTimeConverter.class)
+    private LocalDateTime perfectedDate;
+
+    @Column(name = "fo_ttc_on_last_redirection")
+    private Integer ttcOnLastRedirection;
+
+    @Column(name = "fo_withdraw_requested_flag")
+    @Convert(converter = BooleanToStringConverter.class)
+    private boolean withdrawRequestedFlag = false;
+
+    @Column(name = "fo_redirected_date")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @Convert(converter = LocalDateTimeConverter.class)
+    private LocalDateTime redirectedDate;
+
     @Transient
     private String originalRequestNumber;
 
     @Transient
     private FoiaConfiguration foiaConfiguration;
+
+    @Transient
+    private String dispositionValue;
 
     /**
      * @return the receivedDate
@@ -670,30 +698,32 @@ public class FOIARequest extends CaseFile implements FOIAObject
         this.notificationGroup = notificationGroup;
     }
 
-    public FoiaConfiguration getFoiaConfiguration() {
+    public FoiaConfiguration getFoiaConfiguration()
+    {
         return foiaConfiguration;
     }
 
-    public void setFoiaConfiguration(FoiaConfiguration foiaConfiguration) {
+    public void setFoiaConfiguration(FoiaConfiguration foiaConfiguration)
+    {
         this.foiaConfiguration = foiaConfiguration;
     }
 
-    public Boolean getAmendmentFlag() 
+    public Boolean getAmendmentFlag()
     {
         return amendmentFlag;
     }
 
-    public void setAmendmentFlag(Boolean amendmentFlag) 
+    public void setAmendmentFlag(Boolean amendmentFlag)
     {
         this.amendmentFlag = amendmentFlag;
     }
 
-    public String getRequestAmendmentDetails() 
+    public String getRequestAmendmentDetails()
     {
         return requestAmendmentDetails;
     }
 
-    public void setRequestAmendmentDetails(String requestAmendmentDetails) 
+    public void setRequestAmendmentDetails(String requestAmendmentDetails)
     {
         this.requestAmendmentDetails = requestAmendmentDetails;
     }
@@ -706,6 +736,16 @@ public class FOIARequest extends CaseFile implements FOIAObject
     public void setExternalIdentifier(String externalIdentifier)
     {
         this.externalIdentifier = externalIdentifier;
+    }
+
+    public List<DispositionReason> getDispositionReasons()
+    {
+        return dispositionReasons;
+    }
+
+    public void setDispositionReasons(List<DispositionReason> dispositionReasons)
+    {
+        this.dispositionReasons = dispositionReasons;
     }
 
     @Override
@@ -803,6 +843,63 @@ public class FOIARequest extends CaseFile implements FOIAObject
         this.generatedZipFlag = generatedZipFlag;
     }
 
+    public String getDispositionValue()
+    {
+        return dispositionValue;
+    }
+
+    public void setDispositionValue(String dispositionValue)
+    {
+        this.dispositionValue = dispositionValue;
+    }
+
+    public LocalDateTime getPerfectedDate()
+    {
+        return perfectedDate;
+    }
+
+    public void setPerfectedDate(LocalDateTime perfectedDate)
+    {
+        this.perfectedDate = perfectedDate;
+    }
+
+    /**
+     * This property is used only for misdirected request calculations.
+     * We need it in DB that so we can track the previous ttc state and calculate the current ttc state.
+     * (originalTTCstate - elapsed days from the original perfected day to current perfected day)
+     *
+     * @return ttc of last redirection.
+     */
+    public Integer getTtcOnLastRedirection()
+    {
+        return ttcOnLastRedirection;
+    }
+
+    public void setTtcOnLastRedirection(Integer ttcOnLastRedirection)
+    {
+        this.ttcOnLastRedirection = ttcOnLastRedirection;
+    }
+
+    public boolean getWithdrawRequestedFlag()
+    {
+        return withdrawRequestedFlag;
+    }
+
+    public void setWithdrawRequestedFlag(boolean withdrawRequestedFlag)
+    {
+        this.withdrawRequestedFlag = withdrawRequestedFlag;
+    }
+
+    public LocalDateTime getRedirectedDate()
+    {
+        return redirectedDate;
+    }
+
+    public void setRedirectedDate(LocalDateTime redirectedDate)
+    {
+        this.redirectedDate = redirectedDate;
+    }
+
     /*
      * (non-Javadoc)
      * @see java.lang.Object#toString()
@@ -822,6 +919,7 @@ public class FOIARequest extends CaseFile implements FOIAObject
                 + amendmentFlag
                 + ", requestAmendmentDetails=" + requestAmendmentDetails + ", dispositionClosedDate=" + dispositionClosedDate
                 + ", tollingFlag=" + tollingFlag + ", limitedDeliveryFlag=" + limitedDeliveryFlag + ", generatedZipFlag=" + generatedZipFlag
+                + ", perfectedDate=" + perfectedDate + ", timeToComplete=" + ttcOnLastRedirection + ", redirectedDate=" + redirectedDate
                 + "} "
                 + super.toString();
     }

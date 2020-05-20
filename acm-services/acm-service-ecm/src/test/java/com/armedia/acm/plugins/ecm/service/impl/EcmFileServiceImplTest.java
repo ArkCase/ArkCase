@@ -34,7 +34,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import com.armedia.acm.auth.AcmAuthenticationDetails;
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISActions;
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
 import com.armedia.acm.camelcontext.configuration.ArkCaseCMISConfig;
@@ -63,6 +62,7 @@ import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.MDC;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -125,6 +125,7 @@ public class EcmFileServiceImplTest extends EasyMockSupport
         unit.setFileParticipantService(mockFileParticipantService);
         unit.setAuthenticationTokenDao(mockAuthenticationTokenDao);
         SecurityContextHolder.getContext().setAuthentication(mockAuthentication);
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
 
         authenticationTokens = new ArrayList<>();
 
@@ -159,11 +160,10 @@ public class EcmFileServiceImplTest extends EasyMockSupport
         props.put(EcmFileConstants.CMIS_DOCUMENT_ID, second.getVersionTag());
         props.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
         props.put(EcmFileConstants.ALL_VERSIONS, false);
-        props.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "");
+        props.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
 
         expect(mockEcmFileDao.find(toBeDeleted.getFileId())).andReturn(toBeDeleted);
         expect(camelContextManager.send(ArkCaseCMISActions.DELETE_DOCUMENT, props)).andReturn(new Object());
-        expect(mockAuthentication.getDetails()).andReturn(AcmAuthenticationDetails.class);
         Capture<EcmFile> updated = Capture.newInstance();
         expect(mockEcmFileDao.save(capture(updated))).andReturn(new EcmFile());
 
@@ -210,11 +210,10 @@ public class EcmFileServiceImplTest extends EasyMockSupport
         props.put(EcmFileConstants.CMIS_DOCUMENT_ID, toBeDeleted.getVersionSeriesId());
         props.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
         props.put(EcmFileConstants.ALL_VERSIONS, true);
-        props.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "");
+        props.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
 
         expect(mockEcmFileDao.find(toBeDeleted.getFileId())).andReturn(toBeDeleted);
         expect(camelContextManager.send(ArkCaseCMISActions.DELETE_DOCUMENT, props)).andReturn(new Object());
-        expect(mockAuthentication.getDetails()).andReturn(AcmAuthenticationDetails.class);
         expect(mockAuthenticationTokenDao.findAuthenticationTokenByTokenFileId(toBeDeleted.getFileId())).andReturn(authenticationTokens);
         expect(mockAuthenticationTokenDao.save(authenticationTokens.get(0))).andReturn(authenticationTokens.get(0));
         expect(mockAuthenticationTokenDao.getEntityManager()).andReturn(mockEntityManager);
@@ -248,11 +247,10 @@ public class EcmFileServiceImplTest extends EasyMockSupport
         props.put(EcmFileConstants.CMIS_DOCUMENT_ID, toBeDeleted.getVersionSeriesId());
         props.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
         props.put(EcmFileConstants.ALL_VERSIONS, true);
-        props.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "");
+        props.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
 
         expect(mockEcmFileDao.find(toBeDeleted.getFileId())).andReturn(toBeDeleted);
         expect(camelContextManager.send(ArkCaseCMISActions.DELETE_DOCUMENT, props)).andReturn(new Object());
-        expect(mockAuthentication.getDetails()).andReturn(AcmAuthenticationDetails.class);
         expect(mockAuthenticationTokenDao.findAuthenticationTokenByTokenFileId(toBeDeleted.getFileId())).andReturn(authenticationTokens);
         expect(mockAuthenticationTokenDao.save(authenticationTokens.get(0))).andReturn(authenticationTokens.get(0));
         expect(mockAuthenticationTokenDao.getEntityManager()).andReturn(mockEntityManager);
@@ -292,8 +290,7 @@ public class EcmFileServiceImplTest extends EasyMockSupport
         props.put(EcmFileConstants.SRC_FOLDER_ID, toMove.getFolder().getCmisFolderId());
         props.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
         props.put(EcmFileConstants.VERSIONING_STATE, "versioningState");
-        props.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "");
-
+        props.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
 
         Document cmisDocument = createMock(Document.class);
 
@@ -308,7 +305,6 @@ public class EcmFileServiceImplTest extends EasyMockSupport
         expect(mockContainerDao.findFolderByObjectTypeIdAndRepositoryId(targetObjectType, targetObjectId,
                 targetFolder.getCmisRepositoryId())).andReturn(targetContainer);
         expect(camelContextManager.send(ArkCaseCMISActions.MOVE_DOCUMENT, props)).andReturn(cmisDocument);
-        expect(mockAuthentication.getDetails()).andReturn(AcmAuthenticationDetails.class);
         expect(cmisDocument.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID)).andReturn("newVersionSeriesId");
 
         Capture<EcmFile> saved = Capture.newInstance();
@@ -336,7 +332,6 @@ public class EcmFileServiceImplTest extends EasyMockSupport
 
         Folder result = createMock(Folder.class);
 
-        expect(mockAuthentication.getDetails()).andReturn(AcmAuthenticationDetails.class).times(4);
         String yearPath = "/some/" + getCalendarValue(Calendar.YEAR);
         String monthPath = yearPath + "/" + getCalendarValue(Calendar.MONTH);
         String dayPath = monthPath + "/" + getCalendarValue(Calendar.DAY_OF_MONTH);
@@ -378,7 +373,7 @@ public class EcmFileServiceImplTest extends EasyMockSupport
     {
         if (value < 10)
         {
-            return  "0" + String.valueOf(value);
+            return "0" + String.valueOf(value);
         }
         else
         {
@@ -386,11 +381,12 @@ public class EcmFileServiceImplTest extends EasyMockSupport
         }
     }
 
-    private Map<String, Object> createMessageProps(String path) {
+    private Map<String, Object> createMessageProps(String path)
+    {
         Map<String, Object> messageProps = new HashMap<>();
         messageProps.put(PropertyIds.PATH, path);
         messageProps.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
-        messageProps.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "");
+        messageProps.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
         return messageProps;
     }
 

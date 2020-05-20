@@ -120,7 +120,6 @@ public class AcmUserServiceImpl implements AcmUserService
     {
 
         String query = "object_type_s:USER AND status_lcs:VALID";
-
         String filterSystemUsers = String.format("fq=-name:%s&fq=-name:%s", AcmUsersConstants.OCR_SYSTEM_USER,
                 AcmUsersConstants.TRANSCRIBE_SYSTEM_USER);
 
