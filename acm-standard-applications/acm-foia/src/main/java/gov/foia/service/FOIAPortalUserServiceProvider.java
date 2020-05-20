@@ -536,13 +536,16 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         address.setType("Business");
         person.getAddresses().add(address);
         person.setDefaultAddress(address);
-        PostalAddress orgAddress = new PostalAddress();
-        orgAddress.setType("Business");
-        Organization organization = new Organization();
-        organization.setOrganizationValue(acmUser.getCompany() != null ? acmUser.getCompany() : " ");
-        organization.setOrganizationType("Corporation");
-        organization.getAddresses().add(orgAddress);
-        person.getOrganizations().add(organization);
+        if (acmUser.getCompany() != null && !acmUser.getCompany().isEmpty())
+        {
+            PostalAddress orgAddress = new PostalAddress();
+            orgAddress.setType("Business");
+            Organization organization = new Organization();
+            organization.setOrganizationValue(acmUser.getCompany());
+            organization.setOrganizationType("Corporation");
+            organization.getAddresses().add(orgAddress);
+            person.getOrganizations().add(organization);
+        }
 
         List<ContactMethod> contactMethods = new ArrayList<>();
         person.setContactMethods(contactMethods);
