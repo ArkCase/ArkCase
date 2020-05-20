@@ -49,7 +49,6 @@ import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConfig;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.notification.model.NotificationRule;
-import com.armedia.acm.services.notification.model.QueryType;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.spring.SpringContextHolder;
 
@@ -73,8 +72,6 @@ public class NotificationServiceTest extends EasyMockSupport
     private AuditPropertyEntityAdapter mockAuditPropertyEntityAdapter;
     private SpringContextHolder mockSpringContextHolder;
     private SendExecutor sendExecutor;
-    private PurgeExecutor purgeExecutor;
-    private NotificationFormatter mockNotificationFormatter;
     private EmailSenderConfig emailSenderConfig;
     private TemplateModelProvider<Notification> mockTemplateModelProvider;
     private AcmMailTemplateConfigurationService mockTemplateService;
@@ -101,15 +98,10 @@ public class NotificationServiceTest extends EasyMockSupport
         sendExecutor.setSpringContextHolder(mockSpringContextHolder);
         sendExecutor.setTemplateModelProvider(mockTemplateModelProvider);
 
-        purgeExecutor = new PurgeExecutor();
-        purgeExecutor.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
-
-        mockNotificationFormatter = createMock(NotificationFormatter.class);
 
         notificationService.setNotificationDao(mockNotificationDao);
         notificationService.setNotificationEventPublisher(mockNotificationEventPublisher);
         notificationService.setSpringContextHolder(mockSpringContextHolder);
-        notificationService.setNotificationFormatter(mockNotificationFormatter);
         notificationService.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
 
         NotificationConfig notificationConfig = new NotificationConfig();
@@ -171,13 +163,11 @@ public class NotificationServiceTest extends EasyMockSupport
         BasicNotificationRule assignRule = new BasicNotificationRule();
         assignRule.setGlobalRule(true);
         assignRule.setJpaQuery("query");
-        assignRule.setQueryType(QueryType.CREATE);
         assignRule.setExecutor(sendExecutor);
 
         BasicNotificationRule unassignRule = new BasicNotificationRule();
         unassignRule.setGlobalRule(true);
         unassignRule.setJpaQuery("query");
-        unassignRule.setQueryType(QueryType.CREATE);
         unassignRule.setExecutor(sendExecutor);
 
         Map<String, NotificationRule> rules = new HashMap<>();
@@ -241,7 +231,6 @@ public class NotificationServiceTest extends EasyMockSupport
                 emailWithAttachmentsDTOCapture.getValue().setMailSent(true);
                 return null;
             });
-            expect(mockNotificationFormatter.replaceFormatPlaceholders(notification)).andReturn(notification).atLeastOnce();
         }
 
         expect(mockNotificationUtils.buildNotificationLink(anyString(), anyLong(), anyString(), anyLong())).andReturn(null).anyTimes();
@@ -299,13 +288,11 @@ public class NotificationServiceTest extends EasyMockSupport
         BasicNotificationRule assignRule = new BasicNotificationRule();
         assignRule.setGlobalRule(true);
         assignRule.setJpaQuery("query");
-        assignRule.setQueryType(QueryType.CREATE);
         assignRule.setExecutor(sendExecutor);
 
         BasicNotificationRule unassignRule = new BasicNotificationRule();
         unassignRule.setGlobalRule(true);
         unassignRule.setJpaQuery("query");
-        unassignRule.setQueryType(QueryType.CREATE);
         unassignRule.setExecutor(sendExecutor);
 
         Map<String, NotificationRule> rules = new HashMap<>();
@@ -370,10 +357,7 @@ public class NotificationServiceTest extends EasyMockSupport
                 emailWithAttachmentsDTOCapture.getValue().setMailSent(false);
                 return null;
             });
-
-            expect(mockNotificationFormatter.replaceFormatPlaceholders(notification)).andReturn(notification).atLeastOnce();
         }
-
         mockAuditPropertyEntityAdapter.setUserId(eq("NOTIFICATION-BATCH-INSERT"));
         expectLastCall().anyTimes();
 
@@ -383,81 +367,4 @@ public class NotificationServiceTest extends EasyMockSupport
 
         verifyAll();
     }
-
-    @Test
-    public void testRunPurge()
-    {
-        List<Notification> notifications = new ArrayList<>();
-
-        Notification notification1 = new Notification();
-        notification1.setUser("user");
-        notification1.setTitle("title");
-        notification1.setNote("note");
-        notification1.setType("type");
-        notification1.setParentId(2L);
-        notification1.setParentType("parent type");
-        notification1.setParentName("parent name");
-        notification1.setParentTitle("parent title");
-        notification1.setUserEmail("user email");
-        notification1.setStatus("status");
-        notification1.setAction("action");
-        notification1.setData("data");
-        notification1.setState("state");
-
-        Notification notification2 = new Notification();
-        notification2.setUser("user");
-        notification2.setTitle("title");
-        notification2.setNote("note");
-        notification2.setType("type");
-        notification2.setParentId(2L);
-        notification2.setParentType("parent type");
-        notification2.setParentName("parent name");
-        notification2.setParentTitle("parent title");
-        notification2.setUserEmail("user email");
-        notification2.setStatus("status");
-        notification2.setAction("action");
-        notification2.setData("data");
-        notification2.setState("state");
-
-        // Return only notification 1 - imagine that notification 2 should not be deleted
-        notifications.add(notification1);
-
-        BasicNotificationRule singleQueryRule = new BasicNotificationRule();
-        singleQueryRule.setGlobalRule(true);
-        singleQueryRule.setJpaQuery("query");
-        singleQueryRule.setQueryType(QueryType.SELECT);
-        singleQueryRule.setExecutor(purgeExecutor);
-
-        Map<String, NotificationRule> rules = new HashMap<>();
-        rules.put("purgeRule", singleQueryRule);
-
-        // I am using the same captures below multiple times because we don't need to check these captures
-        Capture<Map<String, Object>> propertiesCapture = EasyMock.newCapture();
-
-        expect(mockSpringContextHolder.getAllBeansOfType(NotificationRule.class)).andReturn(rules).anyTimes();
-        expect(mockNotificationDao.executeQuery(capture(propertiesCapture), eq(0), eq(10), eq(singleQueryRule))).andReturn(notifications)
-                .anyTimes();
-        mockAuditPropertyEntityAdapter.setUserId(eq("NOTIFICATION-BATCH-INSERT"));
-        expectLastCall().anyTimes();
-
-        Capture<Notification> capturedNotification = EasyMock.newCapture();
-        expect(mockNotificationDao.save(capture(capturedNotification))).andReturn(notification1).anyTimes();
-
-        Capture<ApplicationNotificationEvent> capturedEvent = EasyMock.newCapture();
-        mockNotificationEventPublisher.publishNotificationEvent(capture(capturedEvent));
-        expectLastCall().anyTimes();
-        expect(mockNotificationDao.executeQuery(capture(propertiesCapture), eq(10), eq(10), eq(singleQueryRule)))
-                .andReturn(new ArrayList<>()).anyTimes();
-
-        expect(mockNotificationFormatter.replaceFormatPlaceholders(notification1)).andReturn(notification1).atLeastOnce();
-
-        replayAll();
-
-        notificationService.run(new Date(0));
-
-        verifyAll();
-
-        assertEquals("DELETE", capturedNotification.getValue().getStatus());
-    }
-
 }

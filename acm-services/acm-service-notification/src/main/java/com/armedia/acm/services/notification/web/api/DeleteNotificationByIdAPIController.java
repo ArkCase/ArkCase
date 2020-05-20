@@ -32,8 +32,8 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 
 import org.activiti.engine.impl.util.json.JSONObject;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,50 +41,38 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 
 @Controller
 @RequestMapping({ "/api/v1/plugin/notification", "/api/latest/plugin/notification" })
 public class DeleteNotificationByIdAPIController
 {
-
     private NotificationDao notificationDao;
-    // MediaType.APPLICATION_JSON_VALUE
-    private Logger log = LogManager.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     @RequestMapping(value = "/{notificationId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String deleteNotificationById(
-            @PathVariable("notificationId") Long id
-
-    ) throws AcmObjectNotFoundException, AcmUserActionFailedException
+    public String deleteNotificationById(@PathVariable("notificationId") Long id)
+            throws AcmObjectNotFoundException, AcmUserActionFailedException
     {
-        if (log.isInfoEnabled())
+        try
         {
-            log.info("Finding notification with ID: " + id);
+            getNotificationDao().deleteNotificationById(id);
+            log.info("Deleted notification with id [{}]", id);
+
+            JSONObject objectToReturnJSON = new JSONObject();
+            objectToReturnJSON.put("deletedNotificationId", id);
+            return objectToReturnJSON.toString();
         }
-        if (id != null)
+        catch (NoResultException e)
         {
-            try
-            {
-                JSONObject objectToReturnJSON = new JSONObject();
-                getNotificationDao().deleteNotificationById(id);
-                log.info("Deleting notification by id '" + id + "'");
-                log.debug("Notification ID : " + id);
-
-                objectToReturnJSON.put("deletedNotificationId", id);
-
-                String objectToReturn;
-                objectToReturn = objectToReturnJSON.toString();
-
-                return objectToReturn;
-            }
-            catch (PersistenceException e)
-            {
-                throw new AcmUserActionFailedException("Delete", "notification", id, e.getMessage(), e);
-            }
+            throw new AcmObjectNotFoundException("NOTIFICATION", id, "Could not find notification", e);
         }
-        throw new AcmObjectNotFoundException("Could not find notification", id, "", null);
+        catch (PersistenceException e)
+        {
+            throw new AcmUserActionFailedException("Delete", "notification", id, e.getMessage(), e);
+        }
     }
 
     public NotificationDao getNotificationDao()

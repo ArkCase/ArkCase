@@ -56,15 +56,11 @@ public class SendExecutor implements Executor
         Map<String, NotificationSenderFactory> senderFactoryList = getSpringContextHolder()
                 .getAllBeansOfType(NotificationSenderFactory.class);
 
-        if (senderFactoryList != null)
+        for (NotificationSenderFactory senderFactory : senderFactoryList.values())
         {
-            for (NotificationSenderFactory senderFactory : senderFactoryList.values())
+            if (notification.getState() == null || !notification.getState().equals(NotificationConstants.STATE_SENT))
             {
-                // Send notification
-                if (notification.getState() == null || !notification.getState().equals(NotificationConstants.STATE_SENT))
-                {
-                    notification = senderFactory.getNotificationSender().send(notification, templateModelProvider.getModel(notification));
-                }
+                notification = senderFactory.getNotificationSender().send(notification, templateModelProvider.getModel(notification));
             }
         }
 
@@ -81,12 +77,12 @@ public class SendExecutor implements Executor
         this.springContextHolder = springContextHolder;
     }
 
-    public TemplateModelProvider getTemplateModelProvider()
+    public TemplateModelProvider<Notification> getTemplateModelProvider()
     {
         return templateModelProvider;
     }
 
-    public void setTemplateModelProvider(TemplateModelProvider templateModelProvider)
+    public void setTemplateModelProvider(TemplateModelProvider<Notification> templateModelProvider)
     {
         this.templateModelProvider = templateModelProvider;
     }
