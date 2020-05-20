@@ -79,12 +79,17 @@ public class TrackOutgoingEmailService implements ApplicationEventPublisherAware
     public void trackEmail(MimeMessage message, String emailAddress, String group, String subject, String objectType, String objectId,
             List<InputStreamDataSource> attachments)
     {
+        if (objectType.equals("USER"))
+        {
+            log.warn("Outgoing emails for objectType:USER are not tracked.");
+        }
+
         String tempDir = System.getProperty("java.io.tmpdir");
         ZonedDateTime date = ZonedDateTime.now(ZoneOffset.UTC);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         String currentDate = formatter.format(date);
         String messageFileName = "-" + currentDate + "-" + subject.replaceAll(":", "_") + ".eml";
-        // email address might bemultiple emails concatenated with a comma. Se we cut the email adress not to exceed
+        // email address might be multiple emails concatenated with a comma. Se we cut the email address not to exceed
         // filename limit of 255 characters
         String email = group != null ? group : emailAddress;
         messageFileName = email.substring(0, Math.min(email.length(), 255 - messageFileName.length())) + messageFileName;
@@ -125,7 +130,7 @@ public class TrackOutgoingEmailService implements ApplicationEventPublisherAware
                     // File upload falling should not break the flow
                     catch (IOException | AcmUserActionFailedException | AcmCreateObjectFailedException e)
                     {
-                        log.error("Failed to upload attachments to Outgoing Email folder for object with ID '{}' ", objectId,
+                        log.error("Failed to upload attachments to Outgoing Email folder for object with ID '{}'. Cause: {}", objectId,
                                 e.getMessage());
                     }
                 });

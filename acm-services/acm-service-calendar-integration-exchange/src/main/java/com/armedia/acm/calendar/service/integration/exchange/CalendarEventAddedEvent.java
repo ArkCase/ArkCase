@@ -1,8 +1,8 @@
-package com.armedia.acm.services.notification.model;
+package com.armedia.acm.calendar.service.integration.exchange;
 
 /*-
  * #%L
- * ACM Service: Notification
+ * ACM Service: MS Outlook integration
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
@@ -27,7 +27,30 @@ package com.armedia.acm.services.notification.model;
  * #L%
  */
 
-public enum QueryType
+import com.armedia.acm.calendar.service.AcmCalendarEvent;
+import com.armedia.acm.core.model.AcmEvent;
+
+import java.util.Date;
+
+public class CalendarEventAddedEvent extends AcmEvent
 {
-    CREATE, SELECT
+    private static final long serialVersionUID = 1L;
+    private static final String EVENT_TYPE = "com.armedia.acm.exchange.calendar.event.added";
+
+    public CalendarEventAddedEvent(AcmCalendarEvent source, String userId, Long objectId, String objectType, String ipAddress)
+    {
+        super(source);
+        setEventDate(new Date());
+        setObjectId(objectId);
+        setObjectType(objectType);
+        setUserId(userId);
+        setIpAddress(ipAddress);
+        setEventType(getEventType());
+    }
+
+    @Override
+    public String getEventType()
+    {
+        return EVENT_TYPE;
+    }
 }

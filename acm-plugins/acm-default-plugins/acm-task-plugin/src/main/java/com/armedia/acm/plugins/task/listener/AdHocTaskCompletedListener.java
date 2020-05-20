@@ -30,54 +30,55 @@ package com.armedia.acm.plugins.task.listener;
 import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.model.TaskConfig;
-import com.armedia.acm.services.labels.service.TranslationService;
-import com.armedia.acm.services.notification.dao.NotificationDao;
-import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
+import com.armedia.acm.services.notification.service.NotificationService;
 import com.armedia.acm.services.users.dao.UserDao;
+import com.armedia.acm.services.users.model.AcmUser;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationListener;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 public class AdHocTaskCompletedListener implements ApplicationListener<AcmApplicationTaskEvent>
 {
-    private NotificationDao notificationDao;
+    private NotificationService notificationService;
     private TaskConfig taskConfig;
     private UserDao userDao;
-    private TranslationService translationService;
+
+    private static final Logger logger = LogManager.getLogger(TaskUpdatedNotifier.class);
 
     @Override
     public void onApplicationEvent(AcmApplicationTaskEvent event)
     {
         if (event.getTaskEvent().equals("complete"))
         {
+            AcmTask acmTask = event.getAcmTask();
+            String taskOwner = acmTask.getOwner();
             if (getTaskConfig().getSendCompleteEmail() && event.getAcmTask().getStatus().equals("CLOSED")
-                    && (event.getAcmTask().getOwner() != null && !event.getAcmTask().getOwner().isEmpty()))
+                    && (taskOwner != null && !taskOwner.isEmpty()))
             {
-                sendCompleteTaskEmail(event.getAcmTask());
+                logger.debug("On 'Task completed event' create notification for creator [{}].", taskOwner);
+
+                AcmUser user = userDao.findByUserId(acmTask.getOwner());
+                String emailAddress = user.getMail();
+
+                notificationService.createNotification("taskCompletedNotifyCreator", NotificationConstants.NOTIFICATION_TASK_COMPLETED,
+                        acmTask.getObjectType(), acmTask.getId(), String.format("%s-%s", acmTask.getObjectType(), acmTask.getId()),
+                        acmTask.getTitle(), emailAddress, event.getUserId());
+
+                logger.debug("Notification 'Task completed' created for task [{}] and creator [{}].", acmTask.getId(), taskOwner);
             }
         }
     }
 
-    public void sendCompleteTaskEmail(AcmTask acmTask)
+    public NotificationService getNotificationService()
     {
-        Notification notification = new Notification();
-        notification.setTemplateModelName("taskCompletedNotifyCreator");
-        notification.setTitle(translationService.translate(NotificationConstants.NOTIFICATION_TASK_COMPLETED));
-        notification.setUser(SecurityContextHolder.getContext().getAuthentication().getName());
-        notification.setParentType(acmTask.getObjectType());
-        notification.setParentId(acmTask.getTaskId());
-        notification.setEmailAddresses(getUserDao().findByUserId(acmTask.getOwner()).getMail());
-        notificationDao.save(notification);
+        return notificationService;
     }
 
-    public NotificationDao getNotificationDao()
+    public void setNotificationService(NotificationService notificationService)
     {
-        return notificationDao;
-    }
-
-    public void setNotificationDao(NotificationDao notificationDao)
-    {
-        this.notificationDao = notificationDao;
+        this.notificationService = notificationService;
     }
 
     public TaskConfig getTaskConfig()
@@ -98,15 +99,5 @@ public class AdHocTaskCompletedListener implements ApplicationListener<AcmApplic
     public void setUserDao(UserDao userDao)
     {
         this.userDao = userDao;
-    }
-
-    public TranslationService getTranslationService()
-    {
-        return translationService;
-    }
-
-    public void setTranslationService(TranslationService translationService)
-    {
-        this.translationService = translationService;
     }
 }

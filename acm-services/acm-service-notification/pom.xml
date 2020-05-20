@@ -133,7 +133,6 @@
             <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-calendar-integration-exchange</artifactId>
             <version>${acm.version}</version>
-            <scope>runtime</scope>
         </dependency>
 
         <dependency>
