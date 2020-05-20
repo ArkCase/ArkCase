@@ -3,8 +3,8 @@
 angular.module('cases').controller(
     'Cases.InfoController',
     [ '$scope', '$stateParams', '$state', '$translate', '$timeout', 'UtilService', 'Util.DateService', 'ConfigService', 'Object.LookupService', 'Case.LookupService', 'Case.InfoService', 'Object.ModelService', 'Helper.ObjectBrowserService', 'DueDate.Service', 'Admin.HolidayService',
-        'MessageService', '$modal', 'LookupService', 'Admin.FoiaConfigService', 'Admin.ObjectTitleConfigurationService', 'Cases.SuggestedCases',
-        function($scope, $stateParams, $state, $translate, $timeout, Util, UtilDateService, ConfigService, ObjectLookupService, CaseLookupService, CaseInfoService, ObjectModelService, HelperObjectBrowserService, DueDateService, AdminHolidayService, MessageService, $modal, LookupService, AdminFoiaConfigService, AdminObjectTitleConfigurationService, SuggestedCasesService) {
+        'MessageService', '$modal', 'LookupService', 'Admin.FoiaConfigService', 'Admin.ObjectTitleConfigurationService', 'Cases.SuggestedCases', 'Case.ExemptionService', 'ObjectService', '$filter',
+        function($scope, $stateParams, $state, $translate, $timeout, Util, UtilDateService, ConfigService, ObjectLookupService, CaseLookupService, CaseInfoService, ObjectModelService, HelperObjectBrowserService, DueDateService, AdminHolidayService, MessageService, $modal, LookupService, AdminFoiaConfigService, AdminObjectTitleConfigurationService, SuggestedCasesService, CaseExemptionService, ObjectService, $filter) {
 
             new HelperObjectBrowserService.Component({
                 scope: $scope,
@@ -117,13 +117,17 @@ angular.module('cases').controller(
                         }
                     }
                 });
-                AdminFoiaConfigService.getFoiaConfig().then(function (response) {
-                    $scope.foiaConfig = response.data;
-                    $scope.foiaConfig.receivedDateEnabled = response.data.receivedDateEnabled;
-                    if ($scope.foiaConfig.receivedDateEnabled || $scope.objectInfo.status !== 'Perfected') {
-                        $scope.receivedDateDisabledLink = true;
-                    } else {
-                        $scope.receivedDateDisabledLink = false;
+
+                $scope.componentAgency = null;
+                ObjectLookupService.getLookupByLookupName("componentsAgencies").then(function (componentsAgencies) {
+                    $scope.componentsAgencies = componentsAgencies;
+                    if ($scope.objectInfo.hasOwnProperty('componentAgency')) {
+                        var notification = _.find($scope.componentsAgencies, {
+                            key: $scope.objectInfo.componentAgency
+                        });
+                        if (typeof notification !== "undefined") {
+                            $scope.componentAgency = notification.value;
+                        }
                     }
                 });
 
@@ -132,6 +136,13 @@ angular.module('cases').controller(
                 SuggestedCasesService.getSuggestedCases($scope.objectInfo.title, $scope.objectInfo.id).then(function (value) {
                     $scope.hasSuggestedCases = value.data.length > 0 ? true : false;
                     $scope.numberOfSuggestedCases = value.data.length;
+                });
+                
+                CaseExemptionService.hasExemptionOnAnyDocumentsOnRequest($scope.objectInfo.id, ObjectService.ObjectTypes.CASE_FILE).then(function (value) {
+                    $scope.hasExemptionsOnAnyDocuments = value.data && $scope.objectInfo.disposition == 'grantedInFull' ? true : false;
+                    CaseExemptionService.getExemptionCode($scope.objectInfo.id, ObjectService.ObjectTypes.CASE_FILE).then(function (value1) { 
+                        $scope.fullGrantAndExemptionWarning = ($scope.hasExemptionsOnAnyDocuments || value1.data.length > 0) && $scope.objectInfo.disposition == 'Full Grant' ? true : false;
+                    });
                 });
 
             };
@@ -177,7 +188,7 @@ angular.module('cases').controller(
 
                             $scope.assignee = selectedUser.object_id_s;
                             $scope.updateAssignee();
-                            
+
                             //set for AFDP-6831 to inheritance in the Folder/file participants
                             var len = $scope.objectInfo.participants.length;
                             for (var i = 0; i < len; i++) {
@@ -199,7 +210,7 @@ angular.module('cases').controller(
                             var selectedGroup = selection.masterSelectedItem;
                             $scope.owningGroup = selectedGroup.object_id_s;
                             $scope.updateOwningGroup();
-                            
+
                             //set for AFDP-6831 to inheritance in the Folder/file participants
                             var len = $scope.objectInfo.participants.length;
                             for (var i = 0; i < len; i++) {
@@ -293,13 +304,16 @@ angular.module('cases').controller(
                 }
                 saveCase();
             };
-            $scope.setReceivedDate = function(data){
-                if (!Util.isEmpty(data)) {
-                    $scope.objectInfo.receivedDate = data;
-                    $scope.saveCase();
-                } else {
+
+            $scope.updateComponentAgency = function () {
+                var notification = _.find($scope.componentsAgencies, {
+                    key: $scope.objectInfo.componentAgency
+                });
+                if (typeof notification !== "undefined") {
+                    $scope.componentAgency = notification.value;
                 }
-            }
+                saveCase();
+            };
 
             $scope.suggestedCases = function () {
                 $state.go('cases.suggestedCases',{
@@ -313,6 +327,6 @@ angular.module('cases').controller(
                     $scope.saveCase();
                 }
             }
-            
+
 
         } ]);

@@ -3,7 +3,7 @@
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="getAuditAPIController" class="com.armedia.acm.plugins.audit.web.api.GetAuditAPIController">
-        <property name="auditDao" ref="auditDao"/>
+        <property name="auditDao" ref="auditDao" />
     </bean>
 
     <bean id="getAuditByObjectTypeAndObjectIdAPIController"

@@ -41,8 +41,8 @@ import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -116,11 +116,28 @@ public class PersonToSolrTransformer implements AcmObjectToSolrDocTransformer<Pe
                 person.getDefaultOrganization() != null ? person.getDefaultOrganization().getOrganization().getOrganizationValue() : null);
         solrDoc.setAdditionalProperty("default_phone_s", getDefaultPhone(person));
         solrDoc.setAdditionalProperty("default_location_s", getDefaultAddress(person));
+        solrDoc.setAdditionalProperty("default_email_lcs", getDefaultEmail(person));
 
         String participantsListJson = ParticipantUtils.createParticipantsListJson(person.getParticipants());
         solrDoc.setAdditionalProperty("acm_participants_lcs", participantsListJson);
 
         return solrDoc;
+    }
+
+    private String getDefaultEmail(Person person)
+    {
+        if (person.getDefaultEmail() != null)
+        {
+            return person.getDefaultEmail().getValue();
+        }
+        else
+        {
+            return person.getContactMethods().stream()
+                    .filter(cm -> cm.getType().equalsIgnoreCase("email"))
+                    .findFirst()
+                    .map(ContactMethod::getValue)
+                    .orElse(null);
+        }
     }
 
     private String getDefaultPhone(Person person)

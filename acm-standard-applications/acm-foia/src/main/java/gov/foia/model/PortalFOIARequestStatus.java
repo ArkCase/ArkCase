@@ -55,6 +55,8 @@ public class PortalFOIARequestStatus implements Serializable
 
     private Boolean isPublic;
 
+    private Boolean withdrawRequested;
+
     private String requestType;
 
     private String requesterFirstName;
@@ -62,6 +64,8 @@ public class PortalFOIARequestStatus implements Serializable
     private String requesterLastName;
 
     private String requesterEmail;
+
+    private String dispositionValue;
 
     @JsonSerialize(using = JsonDateSerializer.class)
     private Date updateDate;
@@ -183,6 +187,20 @@ public class PortalFOIARequestStatus implements Serializable
         this.requesterEmail = requesterEmail;
     }
 
+    public String getDispositionValue() { return dispositionValue; }
+
+    public void setDispositionValue(String dispositionValue) { this.dispositionValue = dispositionValue; }
+
+    public Boolean getWithdrawRequested()
+    {
+        return withdrawRequested;
+    }
+
+    public void setWithdrawRequested(Boolean withdrawRequested)
+    {
+        this.withdrawRequested = withdrawRequested;
+    }
+
     /*
      * (non-Javadoc)
      * @see java.lang.Object#toString()
@@ -193,6 +211,6 @@ public class PortalFOIARequestStatus implements Serializable
         return "PortalFOIARequestStatus [requestId=" + requestId + ", lastName=" + lastName + ", requestType=" + requestType
                 + ", requestStatus=" + requestStatus + ", queue=" + queue + ", isDenied=" + isDenied
                 + ", isPublic=" + isPublic + ", updateDate=" + updateDate + ", requesterFirstName=" + requesterFirstName
-                + ", requesterLastName=" + requesterLastName + ", requesterEmail+" + requesterEmail + "]";
+                + ", requesterLastName=" + requesterLastName + ", requesterEmail=" + requesterEmail + ", dispositionValue=" + dispositionValue + "]";
     }
 }

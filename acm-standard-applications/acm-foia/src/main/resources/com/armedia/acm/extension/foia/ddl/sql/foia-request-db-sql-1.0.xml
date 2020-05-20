@@ -11,5 +11,25 @@
         </update>
     </changeSet>
 
+    <changeSet id="39-update-request-legacy-data" author="vladimir.cherepnalkovski"
+               logicalFilePath="/ddl/sql/foia-request-db-sql-1.0.xml">
+        <sql>UPDATE acm_case_file SET fo_ttc_on_last_redirection = 20, fo_perfected_date = fo_received_date,
+            cm_case_modified = NOW() WHERE fo_ttc_on_last_redirection IS NULL
+        </sql>
+    </changeSet>
+
+    <changeSet id="40-update-redirected-legacy-data" author="vladimir.cherepnalkovski"
+               logicalFilePath="/ddl/sql/foia-request-db-sql-1.0.xml">
+        <sql>UPDATE acm_case_file SET fo_redirected_date = fo_perfected_date,
+            cm_case_modified = NOW() WHERE fo_request_type= 'New Request'
+        </sql>
+    </changeSet>
+
+    <changeSet id="41-update-appeals-perfected-date" author="vladimir.cherepnalkovski"
+               logicalFilePath="/ddl/sql/foia-request-db-sql-1.0.xml">
+        <sql>UPDATE acm_case_file SET fo_perfected_date = fo_received_date,
+            cm_case_modified = NOW() WHERE fo_request_type= 'Appeal'
+        </sql>
+    </changeSet>
 </databaseChangeLog>
 

@@ -36,7 +36,6 @@ import com.armedia.acm.services.notification.model.NotificationConstants;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author ncuculova
@@ -44,7 +43,7 @@ import java.util.List;
  */
 public interface UsersNotified
 {
-    List<Notification> getNotifications(Object[] notification, Long parentObjectId, String parentObjectType);
+    Notification getNotification(Object[] notification, Long parentObjectId, String parentObjectType);
 
     default Notification setNewNotification(Object obj[])
     {

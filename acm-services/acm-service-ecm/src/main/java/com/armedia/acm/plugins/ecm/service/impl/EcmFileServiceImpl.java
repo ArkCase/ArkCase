@@ -40,20 +40,24 @@ import com.armedia.acm.objectonverter.ArkCaseBeanUtils;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
+import com.armedia.acm.plugins.ecm.exception.EcmFileLinkException;
 import com.armedia.acm.plugins.ecm.exception.LinkAlreadyExistException;
 import com.armedia.acm.plugins.ecm.model.AcmCmisObject;
 import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.AcmFolderConstants;
+import com.armedia.acm.plugins.ecm.model.AcmMultipartFile;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileAddedEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFileConfig;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileDeclareRequestEvent;
+import com.armedia.acm.plugins.ecm.model.EcmFilePostUploadEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFileUpdatedEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.model.EcmFolderDeclareRequestEvent;
+import com.armedia.acm.plugins.ecm.model.LinkTargetFileDTO;
 import com.armedia.acm.plugins.ecm.model.ProgressbarDetails;
 import com.armedia.acm.plugins.ecm.model.RecycleBinItem;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileConvertEvent;
@@ -503,6 +507,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
     }
 
+    @Override
     public String addDateInPath(String folderPath, Boolean flag) throws AcmCreateObjectFailedException
     {
         String path = folderPath;
@@ -2040,7 +2045,15 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     @Override
     public EcmFile findOldestFileByContainerAndFileType(Long containerId, String fileType)
     {
-        return findFileByContainerAndFileType(containerId, fileType).get(0);
+        List<EcmFile> files = findFileByContainerAndFileType(containerId, fileType);
+        if (files.isEmpty())
+        {
+            return null;
+        }
+        else
+        {
+            return files.get(0);
+        }
     }
 
     @Override
@@ -2187,6 +2200,60 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @Transactional
+    public List<EcmFile> uploadFiles(Authentication authentication, String parentObjectType, Long parentObjectId, String fileType,
+                                     String folderCmisId, MultipartHttpServletRequest request, HttpSession session)
+            throws AcmUserActionFailedException, AcmCreateObjectFailedException, IOException
+    {
+
+        return uploadFiles(authentication, parentObjectType, parentObjectId, fileType, null, folderCmisId, request, session);
+    }
+
+    @Override
+    @Transactional
+    public List<EcmFile> uploadFiles(Authentication authentication, String parentObjectType, Long parentObjectId, String fileType,
+                                     String fileLang, String folderCmisId, MultipartHttpServletRequest request, HttpSession session)
+            throws AcmUserActionFailedException, AcmCreateObjectFailedException, IOException
+    {
+
+        // for multiple files
+        MultiValueMap<String, MultipartFile> attachments = request.getMultiFileMap();
+
+        List<EcmFile> uploadedFiles = new ArrayList<>();
+
+        if (attachments != null)
+        {
+            for (Map.Entry<String, List<MultipartFile>> entry : attachments.entrySet())
+            {
+                final List<MultipartFile> attachmentsList = entry.getValue();
+
+                if (attachmentsList != null && !attachmentsList.isEmpty())
+                {
+                    for (final MultipartFile attachment : attachmentsList)
+                    {
+                        AcmMultipartFile acmMultipartFile = new AcmMultipartFile(attachment, true);
+
+                        EcmFile metadata = new EcmFile();
+                        metadata.setFileType(fileType);
+                        metadata.setFileLang(fileLang);
+                        metadata.setFileName(attachment.getOriginalFilename());
+                        metadata.setFileActiveVersionMimeType(acmMultipartFile.getContentType());
+                        metadata.setUuid(request.getParameter("uuid"));
+                        EcmFile temp = upload(authentication, acmMultipartFile, folderCmisId, parentObjectType,
+                                parentObjectId,
+                                metadata);
+                        uploadedFiles.add(temp);
+
+                        applicationEventPublisher.publishEvent(new EcmFilePostUploadEvent(temp, authentication.getName()));
+                    }
+                }
+            }
+        }
+
+        return uploadedFiles;
+    }
+
+    @Override
     public List<EcmFile> getFileLinks(Long fileId) throws AcmObjectNotFoundException
     {
         EcmFile file = getEcmFileDao().find(fileId);
@@ -2228,6 +2295,26 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
             getEcmFileDao().save(f);
         });
+    }
+
+    @Override
+    public LinkTargetFileDTO getLinkTargetFileInfo(EcmFile ecmFile) throws EcmFileLinkException
+    {
+        log.info("Get target file info for the linked file: {}", ecmFile.getId());
+        if (!ecmFile.isLink())
+        {
+            throw new EcmFileLinkException("Ecm file: " + ecmFile.getId() + " is not a link");
+        }
+        return getEcmFileDao().getLinkTargetFileInfo(ecmFile);
+
+    }
+
+    @Override
+    public List<EcmFile> findFilesByFolder(Long folderId) {
+
+        List<EcmFile> files = getEcmFileDao().findByFolderId(folderId);
+
+        return files;
     }
 
     private void deleteAuthenticationTokens(Long fileId)

@@ -64,7 +64,19 @@ public class UserInfoHelper
 
         if (StringUtils.isNotBlank(directoryName))
         {
-            if (StringUtils.isNotBlank(portalDirectoryName) && portalDirectoryName.equals(directoryName))
+            String portalUserPrefix = "";
+            try
+            {
+                AcmLdapSyncConfig ldapSyncConfig = getContextHolder().getBeanByNameIncludingChildContexts(
+                        portalDirectoryName.concat("_sync"),
+                        AcmLdapSyncConfig.class);
+                portalUserPrefix = ldapSyncConfig.getUserPrefix();
+            }
+            catch (Exception e)
+            {
+                log.debug("Error processing portal user prefix", e);
+            }
+            if (StringUtils.isNotBlank(portalDirectoryName) && StringUtils.isNotBlank(portalUserPrefix) && baseUserId.startsWith(portalUserPrefix))
             {
                 baseUserId = user.getMail();
             }

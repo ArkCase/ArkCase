@@ -31,11 +31,13 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.plugins.ecm.exception.EcmFileLinkException;
 import com.armedia.acm.plugins.ecm.exception.LinkAlreadyExistException;
 import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.LinkTargetFileDTO;
 import com.armedia.acm.plugins.ecm.model.RecycleBinItem;
 
 import org.apache.chemistry.opencmis.client.api.CmisObject;
@@ -410,10 +412,22 @@ public interface EcmFileService
     EcmFile copyFileAsLink(Long fileId, AcmFolder targetFolder, AcmContainer targetContainer)
             throws AcmUserActionFailedException, AcmObjectNotFoundException, LinkAlreadyExistException;
 
+    List<EcmFile> uploadFiles(Authentication authentication, String parentObjectType, Long parentObjectId, String fileType,
+            String folderCmisId, MultipartHttpServletRequest request, HttpSession session)
+            throws AcmUserActionFailedException, AcmCreateObjectFailedException, IOException;
+
+    List<EcmFile> uploadFiles(Authentication authentication, String parentObjectType, Long parentObjectId, String fileType,
+            String fileLang, String folderCmisId, MultipartHttpServletRequest request, HttpSession session)
+            throws AcmUserActionFailedException, AcmCreateObjectFailedException, IOException;
+
     List<EcmFile> getFileLinks(Long fileId) throws AcmObjectNotFoundException;
 
     @Transactional
     void updateFileLinks(EcmFile file) throws AcmObjectNotFoundException;
 
     String addDateInPath(String folderPath, Boolean flag) throws AcmCreateObjectFailedException;
+
+    LinkTargetFileDTO getLinkTargetFileInfo(EcmFile ecmFile) throws EcmFileLinkException;
+
+    List<EcmFile> findFilesByFolder(Long folderId);
 }

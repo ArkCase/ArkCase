@@ -935,8 +935,8 @@
         "headerCellFilter": "translate"
       },
       {
-        "name": "default_phone_s",
-        "displayName": "common.dialogPersonPicker.table.columns.phone",
+        "name": "default_email_lcs",
+        "displayName": "common.dialogPersonPicker.table.columns.email",
         "headerCellFilter": "translate"
       },
       {

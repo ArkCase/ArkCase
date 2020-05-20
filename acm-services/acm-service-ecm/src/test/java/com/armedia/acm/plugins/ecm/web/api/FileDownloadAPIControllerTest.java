@@ -59,6 +59,7 @@ import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.io.ClassPathResource;
@@ -123,6 +124,8 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         unit.setObjectConverter(ObjectConverter.createObjectConverterForTests());
         SecurityContextHolder.getContext().setAuthentication(mockAuthentication);
 
+        MDC.clear();
+
         mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
     }
 
@@ -137,7 +140,8 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         String fileType = "fileType";
         String fileNameExtension = ".extension";
         String repositoryId = ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID;
-        String alfrescoUser = "";
+
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, user);
 
         Resource log4j = new ClassPathResource("/spring/spring-library-add-file-camel.xml");
         long log4jsize = log4j.getFile().length();
@@ -159,7 +163,6 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         Capture<EcmFileDownloadedEvent> capturedEvent = EasyMock.newCapture();
 
         expect(mockAuthentication.getName()).andReturn(user).atLeastOnce();
-        expect(mockAuthentication.getDetails()).andReturn(AcmAuthenticationDetails.class);
         expect(mockFileDao.find(ecmFileId)).andReturn(fromDb);
         expect(mockFolderAndFilesUtils.getVersionCmisId(fromDb, "")).andReturn(cmisId);
         expect(mockFolderAndFilesUtils.getVersion(fromDb, "")).andReturn(null);
@@ -172,7 +175,7 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         Map<String, Object> messageProps = new HashMap<>();
         messageProps.put(EcmFileConstants.CMIS_REPOSITORY_ID, repositoryId);
         messageProps.put(CamelCMISConstants.CMIS_OBJECT_ID, cmisId);
-        messageProps.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, alfrescoUser);
+        messageProps.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, user);
         expect(camelContextManager.send(ArkCaseCMISActions.DOWNLOAD_DOCUMENT, messageProps)).andReturn(mockContentStream);
 
         replayAll();

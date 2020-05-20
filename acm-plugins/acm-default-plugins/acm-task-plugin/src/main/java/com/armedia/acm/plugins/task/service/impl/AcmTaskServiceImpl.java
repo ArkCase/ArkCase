@@ -45,7 +45,12 @@ import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.plugins.ecm.exception.LinkAlreadyExistException;
-import com.armedia.acm.plugins.ecm.model.*;
+import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.impl.EcmFileParticipantService;
@@ -75,7 +80,6 @@ import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.web.api.MDCConstants;
 import com.google.common.collect.ImmutableMap;
-
 import org.activiti.engine.ActivitiException;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -93,7 +97,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -863,6 +866,22 @@ public class AcmTaskServiceImpl implements AcmTaskService
         }
 
         return businessProcessId;
+    }
+
+    @Override
+    public String getTaskFolderNameInParentObject(AcmTask acmTask) {
+        String taskFolderName = "Task-" + acmTask.getTitle() + "-" + acmTask.getId();
+        return taskFolderName;
+    }
+
+    @Override
+    public boolean existFilesInTaskAttachFolder(AcmTask acmTask) {
+
+        AcmFolder folder = acmTask.getContainer().getAttachmentFolder();
+
+        List<EcmFile> files = getEcmFileService().findFilesByFolder(folder.getId());
+
+        return files.isEmpty() ? false : true;
     }
 
     public void setTaskEventPublisher(TaskEventPublisher taskEventPublisher)

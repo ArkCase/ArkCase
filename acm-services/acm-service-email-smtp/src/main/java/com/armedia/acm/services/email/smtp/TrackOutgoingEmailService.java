@@ -29,11 +29,9 @@ package com.armedia.acm.services.email.smtp;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.core.model.AcmEvent;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.email.model.EmailReceiverConfig;
 import com.armedia.acm.email.model.EmailSenderConfig;
-import com.armedia.acm.files.capture.CaptureConfig;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
@@ -78,14 +76,18 @@ public class TrackOutgoingEmailService implements ApplicationEventPublisherAware
         eventPublisher = applicationEventPublisher;
     }
 
-    public void trackEmail(MimeMessage message, String emailAddress, String subject, String objectType, String objectId,
+    public void trackEmail(MimeMessage message, String emailAddress, String group, String subject, String objectType, String objectId,
             List<InputStreamDataSource> attachments)
     {
         String tempDir = System.getProperty("java.io.tmpdir");
         ZonedDateTime date = ZonedDateTime.now(ZoneOffset.UTC);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         String currentDate = formatter.format(date);
-        String messageFileName = emailAddress + "-" + currentDate + "-" + subject.replaceAll(":", "_") + ".eml";
+        String messageFileName = "-" + currentDate + "-" + subject.replaceAll(":", "_") + ".eml";
+        // email address might bemultiple emails concatenated with a comma. Se we cut the email adress not to exceed
+        // filename limit of 255 characters
+        String email = group != null ? group : emailAddress;
+        messageFileName = email.substring(0, Math.min(email.length(), 255 - messageFileName.length())) + messageFileName;
         File messageFile = new File(tempDir + File.separator + messageFileName);
 
         String userId = emailReceiverConfig.getEmailUserId();
@@ -101,7 +103,8 @@ public class TrackOutgoingEmailService implements ApplicationEventPublisherAware
                 message.writeTo(os);
             }
 
-            AcmFolder folder = getAcmFolderService().addNewFolderByPath(objectType, Long.parseLong(objectId), emailSenderConfig.getOutgoingEmailFolderName());
+            AcmFolder folder = getAcmFolderService().addNewFolderByPath(objectType, Long.parseLong(objectId),
+                    emailSenderConfig.getOutgoingEmailFolderName());
             try (InputStream is = new FileInputStream(messageFile))
             {
                 messageFileName = checkDuplicateFileName(messageFileName, folder.getId());
@@ -119,7 +122,7 @@ public class TrackOutgoingEmailService implements ApplicationEventPublisherAware
                                 attachmentFileName, auth,
                                 folder.getCmisFolderId(), objectType, Long.parseLong(objectId));
                     }
-                    //File upload falling should not break the flow 
+                    // File upload falling should not break the flow
                     catch (IOException | AcmUserActionFailedException | AcmCreateObjectFailedException e)
                     {
                         log.error("Failed to upload attachments to Outgoing Email folder for object with ID '{}' ", objectId,
@@ -128,13 +131,14 @@ public class TrackOutgoingEmailService implements ApplicationEventPublisherAware
                 });
             }
 
-            SmtpEventMailSent event = new SmtpEventMailSent(emailAddress, userId, mailFile.getId(), mailFile.getObjectType(), Long.parseLong(objectId),
+            SmtpEventMailSent event = new SmtpEventMailSent(email, userId, mailFile.getId(), mailFile.getObjectType(),
+                    Long.parseLong(objectId),
                     objectType, null);
             event.setSucceeded(true);
             eventPublisher.publishEvent(event);
-            
+
         }
-        //File upload falling should not break the flow 
+        // File upload falling should not break the flow
         catch (Exception e)
         {
             log.error("Failed to upload mail into object with ID '{}'. Exception msg: '{}' ", objectId, e.getMessage());
@@ -209,12 +213,12 @@ public class TrackOutgoingEmailService implements ApplicationEventPublisherAware
         this.ecmFileDao = ecmFileDao;
     }
 
-    public EmailSenderConfig getEmailSenderConfig() 
+    public EmailSenderConfig getEmailSenderConfig()
     {
         return emailSenderConfig;
     }
 
-    public void setEmailSenderConfig(EmailSenderConfig emailSenderConfig) 
+    public void setEmailSenderConfig(EmailSenderConfig emailSenderConfig)
     {
         this.emailSenderConfig = emailSenderConfig;
     }

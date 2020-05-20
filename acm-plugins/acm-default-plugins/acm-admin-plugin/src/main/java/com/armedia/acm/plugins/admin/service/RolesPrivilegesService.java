@@ -405,34 +405,7 @@ public class RolesPrivilegesService
     {
         try
         {
-            Map<String, List<Object>> rolesPrivileges = rolesToPrivilegesConfig.getRolesToPrivileges();
-            for (String role : roles)
-            {
-                Map<String, Object> rolesPrivilegesConfig = collectionPropertiesConfigurationService.updateMapProperty(
-                        ApplicationRolesToPrivilegesConfig.ROLES_TO_PRIVILEGES_PROP_KEY,
-                        role,
-                        newPrivileges,
-                        MergeFlags.MERGE);
-
-                configurationPropertyService.updateProperties(rolesPrivilegesConfig);
-
-                // Search role name in role-privileges maps
-                List<Object> propPrivileges = rolesPrivileges.get(role);
-                List<Object> privileges = new LinkedList<>();
-                if (propPrivileges != null && !propPrivileges.isEmpty())
-                {
-                    privileges.addAll(propPrivileges);
-                }
-
-                for (Object newPrivilege : newPrivileges)
-                {
-                    if (!privileges.contains(newPrivilege))
-                    {
-                        privileges.add(newPrivilege);
-                    }
-                }
-                rolesPrivileges.put(role, privileges);
-            }
+            updateRolesPrivilege(roles, newPrivileges, MergeFlags.MERGE);
         }
         catch (Exception e)
         {
@@ -451,23 +424,53 @@ public class RolesPrivilegesService
     {
         try
         {
-            for (String role : roles)
-            {
-
-                Map<String, Object> rolesPrivilegesConfig = collectionPropertiesConfigurationService.updateMapProperty(
-                        ApplicationRolesToPrivilegesConfig.ROLES_TO_PRIVILEGES_PROP_KEY,
-                        role,
-                        removedPrivileges,
-                        MergeFlags.REMOVE);
-
-                configurationPropertyService.updateProperties(rolesPrivilegesConfig);
-            }
+            updateRolesPrivilege(roles, removedPrivileges, MergeFlags.REMOVE);
         }
         catch (Exception e)
         {
             log.error("Can't remove privileges from roles", e);
             throw new AcmRolesPrivilegesException("Can't remove privileges from roles", e);
         }
+    }
+
+    private void updateRolesPrivilege(List<String> roles, List<Object> modifiedPrivileges, MergeFlags operation)
+    {
+        Map<String, Object> rolesPrivilegesForUpdate = new HashMap<>();
+        Map<String, Object> rolesPrivilegesConfig = new HashMap<>();
+
+        for (String role : roles)
+        {
+
+            Map<String, Object> rolesPrivilegesConfigTmp = collectionPropertiesConfigurationService.updateMapProperty(
+                    ApplicationRolesToPrivilegesConfig.ROLES_TO_PRIVILEGES_PROP_KEY,
+                    role,
+                    modifiedPrivileges,
+                    operation);
+
+            Map<String, Object> rolePrivileges = (Map<String, Object>) rolesPrivilegesConfigTmp
+                    .get(ApplicationRolesToPrivilegesConfig.ROLES_TO_PRIVILEGES_PROP_KEY);
+
+            if (rolePrivileges.get(MergeFlags.MERGE.getSymbol() + role) != null && roles.size() > 1)
+            {
+                rolesPrivilegesForUpdate.put(MergeFlags.MERGE.getSymbol() + role, rolePrivileges.get(MergeFlags.MERGE.getSymbol() + role));
+
+                rolePrivileges.forEach((k, v) -> {
+                    if (k != MergeFlags.MERGE.getSymbol() + role && rolesPrivilegesForUpdate.get(k) == null)
+                    {
+                        rolesPrivilegesForUpdate.put(k, v);
+                    }
+                });
+
+            }
+            else
+            {
+                rolesPrivilegesForUpdate.putAll(rolePrivileges);
+            }
+
+        }
+
+        rolesPrivilegesConfig.put(ApplicationRolesToPrivilegesConfig.ROLES_TO_PRIVILEGES_PROP_KEY, rolesPrivilegesForUpdate);
+        configurationPropertyService.updateProperties(rolesPrivilegesConfig);
     }
 
     /**

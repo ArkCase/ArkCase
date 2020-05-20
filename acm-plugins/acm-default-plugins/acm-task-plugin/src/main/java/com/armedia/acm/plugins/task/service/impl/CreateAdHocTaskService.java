@@ -57,7 +57,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-public class CreateAdHocTaskService {
+public class CreateAdHocTaskService
+{
     private TaskDao taskDao;
     private TaskEventPublisher taskEventPublisher;
     private ExecuteSolrQuery executeSolrQuery;
@@ -67,7 +68,10 @@ public class CreateAdHocTaskService {
     private SearchResults searchResults = new SearchResults();
     private Logger log = LogManager.getLogger(getClass());
 
-    public AcmTask createAdHocTask(AcmTask in, List<MultipartFile> filesToUpload, Authentication authentication,  String ipAddress) throws AcmCreateObjectFailedException, AcmAppErrorJsonMsg, AcmUserActionFailedException, LinkAlreadyExistException, AcmObjectNotFoundException {
+    public AcmTask createAdHocTask(AcmTask in, List<MultipartFile> filesToUpload, Authentication authentication, String ipAddress)
+            throws AcmCreateObjectFailedException, AcmAppErrorJsonMsg, AcmUserActionFailedException, LinkAlreadyExistException,
+            AcmObjectNotFoundException
+    {
         log.info("Creating ad-hoc task.");
         String user = authentication.getName();
         String attachedToObjectType = in.getAttachedToObjectType();
@@ -78,9 +82,9 @@ public class CreateAdHocTaskService {
             // On creation task is always ACTIVE
             in.setStatus(TaskConstants.STATE_ACTIVE);
 
-            String parentObjectType = null;
-            Long objectId = null;
-            if (StringUtils.isNotBlank(attachedToObjectName) && StringUtils.isNotBlank(attachedToObjectType))
+            String parentObjectType = in.getParentObjectType();
+            Long objectId = in.getAttachedToObjectId();
+            if (StringUtils.isNotBlank(attachedToObjectName) && StringUtils.isNotBlank(attachedToObjectType) && objectId == null)
             {
                 // find the associated object (CASE/COMPLAINT) id by it's name
                 String obj = getObjectsFromSolr(attachedToObjectType, attachedToObjectName, authentication, 0, 10, "", null);
@@ -126,11 +130,14 @@ public class CreateAdHocTaskService {
                         adHocTask.getTaskId());
             }
 
-            if (adHocTask.getParentObjectId() != null) {
-
-                getAcmTaskService().createTaskFolderStructureInParentObject(adHocTask);
+            if (adHocTask.getParentObjectId() != null)
+            {
+                if ((adHocTask.getDocumentsToReview() != null && !adHocTask.getDocumentsToReview().isEmpty())
+                        || !filesToUpload.isEmpty())
+                {
+                    getAcmTaskService().createTaskFolderStructureInParentObject(adHocTask);
+                }
             }
-
 
             publishAdHocTaskCreatedEvent(authentication, ipAddress, adHocTask, true);
             return adHocTask;

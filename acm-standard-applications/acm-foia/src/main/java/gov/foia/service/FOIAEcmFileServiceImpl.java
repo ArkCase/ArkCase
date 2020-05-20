@@ -123,7 +123,6 @@ public class FOIAEcmFileServiceImpl extends EcmFileServiceImpl implements FOIAEc
             fileCopy.setSecurityField(file.getSecurityField());
 
             fileCopy.setPublicFlag(file.getPublicFlag());
-            fileCopy.setExemptionCodes(file.getExemptionCodes());
 
             FOIAEcmFileVersion fileCopyVersion = new FOIAEcmFileVersion();
             fileCopyVersion.setCmisObjectId(
@@ -230,7 +229,6 @@ public class FOIAEcmFileServiceImpl extends EcmFileServiceImpl implements FOIAEc
         fileCopy.setSecurityField(originalFile.getSecurityField());
 
         fileCopy.setPublicFlag(originalFile.getPublicFlag());
-        fileCopy.setExemptionCodes(originalFile.getExemptionCodes());
 
         ObjectAssociation personCopy = copyObjectAssociation(originalFile.getPersonAssociation());
         fileCopy.setPersonAssociation(personCopy);

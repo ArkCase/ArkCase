@@ -2,8 +2,8 @@
 
 angular.module('cases').controller(
     'Cases.MainController',
-    ['$scope', '$state', '$stateParams', '$translate', '$rootScope', 'Case.InfoService', 'Helper.ObjectBrowserService', 'ConfigService', 'UtilService', 'Util.DateService', 'Object.LookupService', 'LookupService', 'DueDate.Service', 'Admin.HolidayService', 'Admin.FoiaConfigService', 'Admin.ObjectTitleConfigurationService',
-        function ($scope, $state, $stateParams, $translate, $rootScope, CaseInfoService, HelperObjectBrowserService, ConfigService, Util, UtilDateService, ObjectLookupService, LookupService, DueDateService, AdminHolidayService, AdminFoiaConfigService, AdminObjectTitleConfigurationService) {
+    ['$scope', '$state', '$stateParams', '$translate', '$rootScope', '$modal', 'Case.InfoService', 'Helper.ObjectBrowserService', 'ConfigService', 'UtilService', 'Util.DateService', 'Object.LookupService', 'LookupService', 'DueDate.Service', 'Admin.HolidayService', 'Admin.FoiaConfigService', 'Admin.ObjectTitleConfigurationService', 'EcmService',
+        function ($scope, $state, $stateParams, $translate, $rootScope, $modal, CaseInfoService, HelperObjectBrowserService, ConfigService, Util, UtilDateService, ObjectLookupService, LookupService, DueDateService, AdminHolidayService, AdminFoiaConfigService, AdminObjectTitleConfigurationService, EcmService) {
 
             new HelperObjectBrowserService.Component({
                 scope: $scope,
@@ -38,8 +38,8 @@ angular.module('cases').controller(
                     }
 
                 });
-                AdminObjectTitleConfigurationService.getObjectTitleConfiguration().then(function (configTitle){
-                    if(!Util.isEmpty(configTitle)) {
+                AdminObjectTitleConfigurationService.getObjectTitleConfiguration().then(function (configTitle) {
+                    if (!Util.isEmpty(configTitle)) {
                         $scope.enableTitle = configTitle.data.CASE_FILE.enableTitleField;
                     }
                 });
@@ -57,12 +57,40 @@ angular.module('cases').controller(
                         $scope.objectInfo.deliveryMethodOfResponse = $scope.deliveryMethodOfResponses[0].key;
                     }
                 });
-                populateDispositionTypes($scope.objectInfo);
+
+                populateDispositionCategories();
+                populateDeniedDispositionCategories();
+                populateOtherReasons();
                 populateRequestTrack($scope.objectInfo);
-                $scope.populateDispositionSubTypes($scope.objectInfo.requestType);
-                $scope.originalDueDate = objectInfo.dueDate;
+                populateAppealDispositionCategories();
+                populateAppealDispositionReasons();
+                populateAppealOtherReasons();
+
+                if ($scope.objectInfo.disposition === 'completely-reversed') {
+                    $scope.showDispositionReasonsFlag = false;
+                } else {
+                    $scope.showDispositionReasonsFlag = true;
+                }
+                $scope.previousDueDate = objectInfo.dueDate;
+                if (objectInfo.requestTrack === 'expedite') {
+                    if ($scope.includeWeekends) {
+                        $scope.previousDueDate = DueDateService.dueDateWithWeekends($scope.objectInfo.dueDate, $scope.expediteWorkingDays, $scope.holidays);
+                    } else {
+                        $scope.previousDueDate = DueDateService.dueDateWorkingDays($scope.objectInfo.dueDate, $scope.expediteWorkingDays, $scope.holidays);
+                    }
+                }
+                $scope.originalDueDate = $scope.previousDueDate;
                 $scope.enableDispositionClosedDate = objectInfo.dispositionClosedDate == null;
 
+                var otherExistsInAppealReasons = _.some($scope.objectInfo.dispositionReasons, function (value) {
+                    return value.reason === 'other';
+                });
+
+                if (otherExistsInAppealReasons) {
+                    $scope.isAppealOtherReasonDisabled = false;
+                } else {
+                    $scope.isAppealOtherReasonDisabled = true;
+                }
             };
 
             ConfigService.getModuleConfig("cases").then(function (moduleConfig) {
@@ -77,20 +105,45 @@ angular.module('cases').controller(
                 $scope.includeWeekends = response.data.includeWeekends;
             });
 
-            function populateDispositionTypes(objectInfo) {
-                ObjectLookupService.getDispositionTypes(objectInfo.requestType).then(function (requestDispositionType) {
-                    $scope.dispositionTypes = requestDispositionType;
-                    if (objectInfo.disposition != null && objectInfo.disposition != '') {
-                        $scope.dispositionValue = _.find($scope.dispositionTypes, function (disposition) {
-                            if (disposition.key == objectInfo.disposition) {
-                                return disposition.key;
-                            }
+            function populateDispositionCategories() {
+                ObjectLookupService.getLookupByLookupName('requestDispositionType').then(function (requestDispositionType) {
+                    $scope.dispositionCategories = requestDispositionType;
+                    if ($scope.objectInfo.disposition) {
+                        var found = _.find(requestDispositionType, {
+                            key: $scope.objectInfo.disposition
                         });
-                        $scope.objectInfo.disposition = $scope.dispositionValue.key;
-                    } else {
-                        $scope.objectInfo.disposition = $scope.dispositionTypes[0].key;
+                        if (!Util.isEmpty(found)) {
+                            $scope.objectInfo.disposition = $translate.instant(found.value);
+                        }
                     }
+                });
+            }
 
+            function populateDeniedDispositionCategories() {
+                ObjectLookupService.getLookupByLookupName('requestDispositionSubType').then(function (requestDispositionSubType) {
+                    $scope.dispositionDeniedCategories = requestDispositionSubType;
+                    if ($scope.objectInfo.disposition) {
+                        var found = _.find(requestDispositionSubType, {
+                            key: $scope.objectInfo.disposition
+                        });
+                        if (!Util.isEmpty(found)) {
+                            $scope.objectInfo.disposition = $translate.instant(found.value);
+                        }
+                    }
+                });
+            }
+
+            function populateOtherReasons() {
+                ObjectLookupService.getLookupByLookupName('requestOtherReason').then(function (requestOtherReasons) {
+                    $scope.otherReasons = requestOtherReasons;
+                    if ($scope.objectInfo.otherReason) {
+                        var found = _.find(requestOtherReasons, {
+                            key: $scope.objectInfo.otherReason
+                        });
+                        if (!Util.isEmpty(found)) {
+                            $scope.objectInfo.otherReason = $translate.instant(found.value);
+                        }
+                    }
                 });
             }
 
@@ -118,30 +171,97 @@ angular.module('cases').controller(
                 }
             };
 
-            $scope.isDisabled = true;
-            $scope.isChanged = function (dispositionSubtype) {
+            function populateAppealDispositionCategories() {
+                if ($scope.objectInfo.requestType == "Appeal") {
+                    ObjectLookupService.getLookupByLookupName('appealDispositionType').then(function (appealDispositionType) {
+                        $scope.appealDispositionCategories = appealDispositionType;
 
-                if (dispositionSubtype === 'other') {
-                    $scope.isDisabled = false;
-                } else {
-                    $scope.isDisabled = true;
-                    $scope.objectInfo.otherReason = "";
+                        if (Util.isEmpty($scope.objectInfo.disposition)) {
+                            $scope.appealDispositionValue = null;
+                        } else {
+                            var disposition = _.find($scope.appealDispositionCategories, {
+                                key: $scope.objectInfo.disposition
+                            });
+                            if (!Util.isEmpty(disposition)) {
+                                $scope.appealDispositionValue = $translate.instant(disposition.value);
+                            }
+                        }
+                    });
+                }
+            }
+
+            function populateAppealDispositionReasons() {
+                if ($scope.objectInfo.requestType == "Appeal") {
+                    ObjectLookupService.getAppealDispositionReasons().then(function (appealDispositionReasons) {
+                        $scope.appealDispositionReasons = appealDispositionReasons;
+                    });
+                }
+            }
+
+            function populateAppealOtherReasons() {
+                ObjectLookupService.getAppealOtherReasons().then(function (appealOtherReasons) {
+                    $scope.appealOtherReasons = appealOtherReasons;
+                    if ($scope.objectInfo.otherReason) {
+                        var found = _.find(appealOtherReasons, {
+                            key: $scope.objectInfo.otherReason
+                        });
+                        if (found) {
+                            $scope.isAppealCustomReason = false;
+                        } else {
+                            $scope.isAppealCustomReason = true;
+                        }
+                    }
+                });
+            }
+
+            $scope.onAppealReasonSelected = function (reason) {
+                if (reason) {
+                    var reasonExists = _.some($scope.objectInfo.dispositionReasons, function (value) {
+                        return value.reason === reason;
+                    });
+                    if (!reasonExists) {
+
+                        var dispositionReason = {
+                            reason: reason,
+                            caseId: $scope.objectInfo.id,
+                            requestType: $scope.objectInfo.requestType
+                        };
+
+                        $scope.objectInfo.dispositionReasons.push(dispositionReason);
+
+                        if (reason === 'other') {
+                            $scope.isAppealOtherReasonDisabled = false;
+                        } else {
+                            $scope.isAppealOtherReasonDisabled = true;
+                        }
+
+                        if (reason === 'other') {
+                            if (Util.isEmpty($scope.objectInfo.otherReason)) {
+                                $scope.openAddOtherReasonInAppeal();
+                            }
+                        }
+                    } else {
+                        _.forEach($scope.objectInfo.dispositionReasons, function (disReason, i) {
+                            if (Util.compare(disReason.reason, reason)) {
+                                $scope.objectInfo.dispositionReasons.splice(i, 1);
+                                return false;
+                            }
+                        });
+
+                        //if other was unchecked in reasons
+                        if (reason === 'other') {
+                            $scope.isAppealOtherReasonDisabled = true;
+                            $scope.objectInfo.otherReason = null;
+                        }
+                    }
                 }
 
             };
 
-            $scope.populateDispositionSubTypes = function (requestType) {
-                if (requestType == "Appeal") {
-                    ObjectLookupService.getAppealDispositionSubTypes().then(function (appealDispositionSubType) {
-                        $scope.dispositionSubTypes = appealDispositionSubType;
-                    });
-                } else if (requestType == "New Request") {
-                    ObjectLookupService.getRequestDispositionSubTypes().then(function (requestDispositionSubType) {
-                        $scope.dispositionSubTypes = requestDispositionSubType;
-                    });
-                } else {
-                    $scope.dispositionSubTypes = "";
-                }
+            $scope.isAppealReasonChecked = function (reason) {
+                return _.some($scope.objectInfo.dispositionReasons, function (value) {
+                    return value.reason === reason;
+                });
             };
 
             AdminFoiaConfigService.getFoiaConfig().then(function (response) {
@@ -157,11 +277,11 @@ angular.module('cases').controller(
                 if (!$event.target.checked) {
                     resetDueDate();
                 } else {
-                        if ($scope.includeWeekends) {
-                            $scope.extendedDueDate = DueDateService.dueDateWithWeekends($scope.originalDueDate, $scope.extensionWorkingDays, $scope.holidays);
-                        } else {
-                            $scope.extendedDueDate = DueDateService.dueDateWorkingDays($scope.originalDueDate, $scope.extensionWorkingDays, $scope.holidays);
-                        }
+                    if ($scope.includeWeekends) {
+                        $scope.extendedDueDate = DueDateService.dueDateWithWeekends($scope.originalDueDate, $scope.extensionWorkingDays, $scope.holidays);
+                    } else {
+                        $scope.extendedDueDate = DueDateService.dueDateWorkingDays($scope.originalDueDate, $scope.extensionWorkingDays, $scope.holidays);
+                    }
                     $scope.objectInfo.dueDate = $scope.extendedDueDate;
                     $rootScope.$broadcast('dueDate-changed', $scope.extendedDueDate);
                 }
@@ -198,12 +318,28 @@ angular.module('cases').controller(
                     if (conf != null && typeof conf.limitedDeliveryFlag !== 'undefined') {
                         objectInfo.limitedDeliveryFlag = conf.limitedDeliveryFlag;
                     }
-
+                    if (conf != null && typeof conf.requestDisposition !== 'undefined') {
+                        objectInfo.disposition = conf.requestDisposition;
+                    }
+                    if (conf != null && typeof conf.requestOtherReason !== 'undefined') {
+                        objectInfo.otherReason = conf.requestOtherReason;
+                    }
+                    if (conf != null && typeof conf.dispositionValue !== 'undefined') {
+                        objectInfo.dispositionValue = conf.dispositionValue;
+                    }
+                    if (conf != null && typeof conf.dispositionReasons !== 'undefined') {
+                        objectInfo.dispositionReasons = conf.dispositionReasons;
+                    }
                     promiseSaveInfo = CaseInfoService.saveFoiaRequestInfo(objectInfo);
                     promiseSaveInfo.then(function (caseInfo) {
                         if (conf != null && conf.returnAction) {
                             $scope.$bus.publish(conf.returnAction, caseInfo);
                         }
+
+                        if (caseInfo.dispositionClosedDate != null) {
+                            $scope.isAppealOtherReasonDisabled = true;
+                        }
+
                         $scope.$emit("report-object-updated", caseInfo);
                         return caseInfo;
                     }, function (error) {
@@ -214,9 +350,93 @@ angular.module('cases').controller(
                 return promiseSaveInfo;
             }
 
+            $scope.openAddAppealDispositionCategory = function () {
+                addAppealDispositionCategory(false);
+            };
+
+            function addAppealDispositionCategory(dispositionRequiredFlag) {
+                var params = {
+                    disposition: $scope.objectInfo.disposition,
+                    dispositionReasons: $scope.objectInfo.dispositionReasons,
+                    otherReason: $scope.objectInfo.otherReason,
+                    caseId: $scope.objectInfo.id,
+                    isDispositionRequired: dispositionRequiredFlag
+                };
+
+                var modalInstance = $modal.open({
+                    templateUrl: "modules/cases/views/components/add-appeal-disposition-category-modal.client.view.html",
+                    controller: 'Cases.AddAppealDispositionCategoriesModalController',
+                    animation: true,
+                    size: 'md',
+                    backdrop: 'static',
+                    resolve: {
+                        params: function () {
+                            return params;
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function (selected) {
+                    if (!Util.isEmpty(selected)) {
+                        $scope.showDispositionReasonsFlag = selected.showDispositionReasonsFlag;
+                        $scope.appealDispositionValue = selected.dispositionValue;
+
+                        $scope.objectInfo.disposition = selected.disposition;
+                        $scope.objectInfo.otherReason = selected.otherReason;
+                        $scope.objectInfo.dispositionReasons = selected.dispositionReasons;
+
+                        saveCase();
+                    }
+                });
+            }
+
+            $scope.openAddOtherReasonInAppeal = function () {
+                var params = {
+                    dispositionReasons: $scope.objectInfo.dispositionReasons,
+                    otherReason: $scope.objectInfo.otherReason
+                };
+
+                var modalInstance = $modal.open({
+                    templateUrl: "modules/cases/views/components/add-appeal-other-reason-modal.client.view.html",
+                    controller: 'Cases.AddAppealOtherReasonModalController',
+                    animation: true,
+                    size: 'md',
+                    backdrop: 'static',
+                    resolve: {
+                        params: function () {
+                            return params;
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function (selected) {
+                    if (!Util.isEmpty(selected)) {
+                        if (selected.isAppealOtherReasonDisabled) {
+                            $scope.isAppealOtherReasonDisabled = selected.isAppealOtherReasonDisabled;
+                        } else {
+                            $scope.objectInfo.otherReason = selected.otherReason;
+                        }
+                    }
+                });
+            };
+
             $scope.$bus.subscribe('ACTION_SAVE_CASE', function (data) {
+                if (data != null && typeof data.deleteDenialLetter !== 'undefined' && data.deleteDenialLetter) {
+                    removeDenialLetter();
+                }
                 saveCase(data);
             });
+
+            function removeDenialLetter() {
+                EcmService.findFileByContainerAndFileType({
+                    containerId: $scope.objectInfo.container.id,
+                    fileType: 'Denial Letter'
+                }).$promise.then(function (fileInfo) {
+                    EcmService.deleteFile({
+                        fileId: fileInfo.fileId
+                    })
+                });
+            }
 
             // Updates the ArkCase database when the user changes a case attribute
             // in a case top bar menu item and clicks the save check button
@@ -235,7 +455,7 @@ angular.module('cases').controller(
             $scope.openedRecordSearchDateTo = {};
             $scope.openedRecordSearchDateTo.openedStart = false;
             $scope.openedRecordSearchDateTo.openedEnd = false;
-            
+
         }
 
     ]);

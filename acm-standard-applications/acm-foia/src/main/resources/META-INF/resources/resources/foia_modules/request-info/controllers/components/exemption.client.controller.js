@@ -4,6 +4,8 @@ angular.module('request-info').controller('RequestInfo.ExemptionController',
     ['$scope', '$stateParams', '$q', 'Case.InfoService', 'Profile.UserInfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'ExemptionService', '$modal', 'Object.LookupService', '$state', 'Case.ExemptionService', 'UtilService', 'MessageService',
         function ($scope, $stateParams, $q, CaseInfoService, UserInfoService, HelperUiGridService, HelperObjectBrowserService, ExemptionService, $modal, ObjectLookupService, $state, CaseExemptionService, Util, MessageService) {
 
+            $scope.isDisabled = false;
+
             var componentHelper = new HelperObjectBrowserService.Component({
                 scope: $scope,
                 stateParams: $stateParams,
@@ -11,8 +13,11 @@ angular.module('request-info').controller('RequestInfo.ExemptionController',
                 componentId: "exemption",
                 retrieveObjectInfo: CaseInfoService.getCaseInfo,
                 validateObjectInfo: CaseInfoService.validateCaseInfo,
-                onConfigRetrieved: function(componentConfig) {
+                onConfigRetrieved: function (componentConfig) {
                     return onConfigRetrieved(componentConfig);
+                },
+                onObjectInfoRetrieved: function (objectInfo) {
+                    onObjectInfoRetrieved(objectInfo);
                 }
             });
 
@@ -21,7 +26,7 @@ angular.module('request-info').controller('RequestInfo.ExemptionController',
             });
             var promiseUsers = gridHelper.getUsers();
 
-            var onConfigRetrieved = function(config) {
+            var onConfigRetrieved = function (config) {
                 gridHelper.setColumnDefs(config);
                 gridHelper.setBasicOptions(config);
                 gridHelper.disableGridScrolling(config);
@@ -31,15 +36,30 @@ angular.module('request-info').controller('RequestInfo.ExemptionController',
                 retrieveGridData($stateParams.id, $stateParams.fileId);
             };
 
-            $scope.isEditDisabled = function(rowEntity) {
-                if (rowEntity.exemptionCode != 'Ex.3') {
+            var onObjectInfoRetrieved = function (objectInfo) {
+                $scope.objectInfo = objectInfo;
+                if (!Util.isEmpty($scope.objectInfo.dispositionClosedDate)) {
+                    $scope.isDisabled = true;
+                }
+            };
+
+            $scope.isEditDisabled = function (rowEntity) {
+                if ($scope.isDisabled) {
                     return true;
+                } else {
+                    if (rowEntity.exemptionCode != 'Ex.3') {
+                        return true;
+                    }
                 }
             };
 
             $scope.isDeleteDisabled = function (rowEntity) {
-                if (rowEntity.exemptionStatus != "MANUAL") {
+                if ($scope.isDisabled) {
                     return true;
+                } else {
+                    if (rowEntity.exemptionStatus != "MANUAL") {
+                        return true;
+                    }
                 }
             };
 
@@ -126,9 +146,9 @@ angular.module('request-info').controller('RequestInfo.ExemptionController',
                     }
                 });
 
-                modalInstance.result.then(function() {
-                    // Do nothing
-                }, function(error) {
+                modalInstance.result.then(function () {
+                    retrieveGridData($stateParams.id, $stateParams.fileId);
+                }, function (error) {
                     // Do nothing
                 });
             };

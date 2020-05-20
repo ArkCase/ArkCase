@@ -41,6 +41,14 @@ import com.armedia.acm.portalgateway.model.UserResetResponse;
 public interface PortalUserServiceProvider
 {
 
+    /*
+     * (non-Javadoc)
+     * @see com.armedia.acm.portalgateway.service.PortalUserServiceProvider#requestRegistration(java.lang.String,
+     * com.armedia.acm.portalgateway.model.UserRegistrationRequest)
+     */
+    UserRegistrationResponse regenerateRegistrationRequest(String portalId, UserRegistrationRequest registrationRequest)
+            throws PortalUserServiceException;
+
     /**
      * @param portalId
      * @param registrationRequest
@@ -73,7 +81,7 @@ public interface PortalUserServiceProvider
      */
     PortalUser updateUser(String portalId, PortalUser user) throws PortalUserServiceException;
 
-    UserRegistrationResponse registerUserFromRequester(String portalId, PortalUser user)
+    UserRegistrationResponse registerUserFromPerson(String portalId, Long personId)
             throws PortalUserServiceException;
 
     UserResetResponse requestPasswordResetForRequester(String portalId, UserResetRequest resetRequest) throws PortalUserServiceException;

@@ -404,7 +404,7 @@ public class ReportServiceImpl implements ReportService
 
         Map<String, Object> runtimeMapWithRootKey = new HashMap<>();
         runtimeMapWithRootKey.put(ReportsToRolesConfig.REPORTS_TO_ROLES_PROP_KEY, reportsRolesConfig);
-        runtimeMapWithRootKey.put(PentahoReportsConfig.REPORT_CONFIG_PROP_KEY, reportsConfig);
+        runtimeMapWithRootKey.put(MergeFlags.MERGE.getSymbol() + PentahoReportsConfig.REPORT_CONFIG_PROP_KEY, reportsConfig);
 
         configurationPropertyService.updateProperties(runtimeMapWithRootKey);
 
@@ -451,10 +451,10 @@ public class ReportServiceImpl implements ReportService
     }
 
     @Override
-    public List<String> getReportToRolesByName(String sortDirection, Integer startRow, Integer maxRows, String filterQuery)
+    public List<String> getReportToRolesByName(String sortDirection, Integer startRow, Integer maxRows, String filterName)
             throws IOException
     {
-        return getReportToRoles(sortDirection, startRow, maxRows, filterQuery);
+        return getReportToRoles(sortDirection, startRow, maxRows, filterName);
     }
 
     @Override
@@ -531,7 +531,7 @@ public class ReportServiceImpl implements ReportService
 
     @Override
     public List<String> getRolesForReport(Boolean authorized, String reportId, int startRow, int maxRows, String sortBy,
-            String sortDirection)
+            String sortDirection, String filterName)
     {
         List<String> rolesForReport = reportsToRolesConfig.getReportsToRolesMap().get(reportId);
 
@@ -565,6 +565,10 @@ public class ReportServiceImpl implements ReportService
             return result;
         }
         maxRows = maxRows > result.size() ? result.size() : maxRows;
+        if (!filterName.isEmpty())
+        {
+            result.removeIf(role -> !(role.toLowerCase().contains(filterName.toLowerCase())));
+        }
 
         return result.stream().skip(startRow).limit(maxRows).collect(Collectors.toList());
     }

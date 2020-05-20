@@ -27,7 +27,12 @@ package com.armedia.acm.portalgateway.service;
  * #L%
  */
 
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.portalgateway.model.PortalInfo;
+import com.armedia.acm.portalgateway.web.api.PortalInfoDTO;
+import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
+
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
@@ -92,4 +97,8 @@ public interface PortalAdminService
      */
     PortalServiceExceptionMapper getExceptionMapper(PortalAdminServiceException se);
 
+    void updatePortalInfo(PortalInfo portalInfo, PortalInfoDTO portalInfoDTO);
+
+    void moveExistingLdapUsersToGroup(String groupName, PortalInfo previousPortalInfo, Authentication auth)
+            throws AcmLdapActionFailedException, AcmObjectNotFoundException;
 }
