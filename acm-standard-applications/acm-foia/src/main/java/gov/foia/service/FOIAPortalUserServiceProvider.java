@@ -61,7 +61,13 @@ import com.armedia.acm.services.users.service.AcmUserEventPublisher;
 import com.armedia.acm.services.users.service.ldap.LdapAuthenticateService;
 import com.armedia.acm.services.users.service.ldap.LdapUserService;
 import com.armedia.acm.spring.SpringContextHolder;
-
+import gov.foia.dao.PortalFOIAPersonDao;
+import gov.foia.dao.UserRegistrationRequestDao;
+import gov.foia.dao.UserResetRequestDao;
+import gov.foia.model.FOIAPerson;
+import gov.foia.model.PortalFOIAPerson;
+import gov.foia.model.UserRegistrationRequestRecord;
+import gov.foia.model.UserResetRequestRecord;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -79,14 +85,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
-
-import gov.foia.dao.PortalFOIAPersonDao;
-import gov.foia.dao.UserRegistrationRequestDao;
-import gov.foia.dao.UserResetRequestDao;
-import gov.foia.model.FOIAPerson;
-import gov.foia.model.PortalFOIAPerson;
-import gov.foia.model.UserRegistrationRequestRecord;
-import gov.foia.model.UserResetRequestRecord;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jul 12, 2018
@@ -195,6 +193,29 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
             createRegistrationRecordAndSendEmail(portalId, registrationRequest);
             return UserRegistrationResponse.requestAccepted();
         }
+        else
+        {
+            createRegistrationRecordAndSendEmail(portalId, registrationRequest);
+            return UserRegistrationResponse.requestAccepted();
+        }
+    }
+
+    private void createRegistrationRecordAndSendEmail(String portalId, UserRegistrationRequest registrationRequest)
+    {
+        String registrationKey = UUID.randomUUID().toString();
+        createRegistrationRecord(registrationKey, registrationRequest.getEmailAddress(), System.currentTimeMillis(), portalId);
+        String registrationLink = new String(Base64Utils.decodeFromString(registrationRequest.getRegistrationUrl()),
+                Charset.forName("UTF-8")) + "/" + registrationKey + "/" + registrationRequest.getEmailAddress();
+
+        Notification notification = new Notification();
+        notification.setTemplateModelName("portalRequestRegistrationLink");
+        notification.setTitle(translationService.translate(NotificationConstants.PORTAL_REGISTRATION));
+        notification.setCreator(registrationRequest.getEmailAddress());
+        notification.setNote(registrationLink);
+        notification.setEmailAddresses(registrationRequest.getEmailAddress());
+        notification.setUser(SecurityContextHolder.getContext().getAuthentication().getName());
+
+        getNotificationDao().save(notification);
     }
 
     private void createRegistrationRecordAndSendEmail(String portalId, UserRegistrationRequest registrationRequest)
