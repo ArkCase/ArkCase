@@ -3,7 +3,6 @@
 angular.module('cases').controller('Cases.AddAppealOtherReasonModalController',
     ['$scope', '$modal', '$modalInstance', 'params', '$q', 'UtilService', 'Object.LookupService',
         function ($scope, $modal, $modalInstance, params, $q, Util, ObjectLookupService) {
-    
             $scope.objectInfo = {};
             $scope.objectInfo.dispositionReasons = params.dispositionReasons;
 

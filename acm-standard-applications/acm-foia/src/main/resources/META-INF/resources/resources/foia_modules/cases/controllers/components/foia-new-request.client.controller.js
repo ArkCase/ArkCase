@@ -14,6 +14,8 @@ angular.module('cases').controller(
             $scope.enableTitle = false;
             $scope.isPickExistingPerson = false;
 
+            $scope.receivedDate = new Date();
+
             var descriptionDocumentType = "Description Document";
             var consentDocumentType = "Consent";
             var proofOfIdentityDocumentType = "Proof of Identity";
