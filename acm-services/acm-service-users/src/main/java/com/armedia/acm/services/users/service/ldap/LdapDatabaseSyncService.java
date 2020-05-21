@@ -60,6 +60,7 @@ public class LdapDatabaseSyncService
         log.info("Saving new users [{}]", newUsers.size());
         newUsers.forEach(acmUser -> {
             log.info("Saving AcmUser [{}]", acmUser.getUserId());
+            acmUser.getGroups().clear();
             userDao.persistUser(acmUser);
         });
 
