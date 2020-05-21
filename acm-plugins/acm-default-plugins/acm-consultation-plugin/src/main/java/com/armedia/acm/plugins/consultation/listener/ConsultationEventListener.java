@@ -375,11 +375,6 @@ public class ConsultationEventListener implements ApplicationListener<AcmObjectH
         return consultationEventUtility;
     }
 
-    public List<String> getConsultationStatusClosed()
-    {
-        return consultationStatusClosed;
-    }
-
     /**
      * @param calendarAdminService
      *            the calendarAdminService to set
@@ -406,5 +401,20 @@ public class ConsultationEventListener implements ApplicationListener<AcmObjectH
     public void setFolderCreatorDao(AcmOutlookFolderCreatorDao folderCreatorDao)
     {
         this.folderCreatorDao = folderCreatorDao;
+    }
+
+    public void setConsultationEventUtility(ConsultationEventUtility consultationEventUtility)
+    {
+        this.consultationEventUtility = consultationEventUtility;
+    }
+
+    public List<String> getConsultationStatusClosed()
+    {
+        return consultationStatusClosed;
+    }
+
+    public void setConsultationStatusClosed(List<String> consultationStatusClosed)
+    {
+        this.consultationStatusClosed = consultationStatusClosed;
     }
 }

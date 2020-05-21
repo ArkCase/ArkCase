@@ -32,6 +32,8 @@ package com.armedia.acm.plugins.consultation.exceptions;
  */
 public class AcmConsultationNotFound extends RuntimeException
 {
+    private static final long serialVersionUID = -2467453034602231188L;
+
     // TODO : In case file, this method is used only in merge case functionality.
     // TODO: If we don't need this exception, delete this class.
     public AcmConsultationNotFound(String s)

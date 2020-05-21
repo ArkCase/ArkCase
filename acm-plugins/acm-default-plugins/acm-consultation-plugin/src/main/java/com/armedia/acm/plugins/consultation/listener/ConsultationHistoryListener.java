@@ -41,7 +41,7 @@ import java.util.List;
 /**
  * Created by Vladimir Cherepnalkovski <vladimir.cherepnalkovski@armedia.com> on May, 2020
  */
-public class ComplaintHistoryListener implements ApplicationListener<ConsultationEvent>
+public class ConsultationHistoryListener implements ApplicationListener<ConsultationEvent>
 {
     private final Logger LOG = LogManager.getLogger(getClass());
     private AcmObjectHistoryService acmObjectHistoryService;

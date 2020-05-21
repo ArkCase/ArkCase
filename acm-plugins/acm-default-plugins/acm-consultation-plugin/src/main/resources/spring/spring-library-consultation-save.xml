@@ -2,7 +2,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
-    <bean id="saveCaseService" class="com.armedia.acm.plugins.consultation.service.ConsultationServiceImpl">
+    <bean id="saveConsultationService" class="com.armedia.acm.plugins.consultation.service.ConsultationServiceImpl">
         <property name="consultationDao" ref="consultationDao"/>
         <property name="pipelineManager" ref="consultationPipelineManager"/>
         <property name="ecmFileService" ref="ecmFileService"/>
@@ -23,7 +23,7 @@
                 <ref bean="consultationFolderStructureHandler"/>
                 <ref bean="consultationUploadAttachmentsHandler"/>
                 <ref bean="consultationStartBusinessProcessIfNeededHandler"/>
-                <ref bean="casefileDocumentHandler"/>
+                <ref bean="consultationDocumentHandler"/>
             </list>
         </property>
     </bean>
@@ -38,12 +38,12 @@
         <property name="ecmFileService" ref="ecmFileService"/>
     </bean>
     <bean id="consultationOutlookHandler" class="com.armedia.acm.plugins.consultation.pipeline.postsave.ConsultationOutlookHandler">
-        <property name="autoCreateFolderForConsultation" value="#{caseConfig.autoCreateCalendarFolder}"/>
+        <property name="autoCreateFolderForConsultation" value="#{consultationConfig.autoCreateCalendarFolder}"/>
         <property name="outlookContainerCalendarService" ref="outlookContainerService"/>
         <property name="calendarAdminService" ref="outlookCalendarAdminServiceExtension"/>
     </bean>
     <bean id="consultationFolderStructureHandler" class="com.armedia.acm.plugins.consultation.pipeline.postsave.ConsultationFolderStructureHandler">
-        <property name="folderStructureAsString" value="#{caseConfig.folderStructure}"/>
+        <property name="folderStructureAsString" value="#{consultationConfig.folderStructure}"/>
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="acmFolderService" ref="acmFolderService"/>
     </bean>
@@ -53,13 +53,14 @@
         <property name="startBusinessProcessService" ref="startBusinessProcessService"/>
     </bean>
 
-    <bean id="pdfCasefileDocumentGenerator"
-        class="com.armedia.acm.plugins.consultation.service.PDFCasefileDocumentGenerator"
-        parent="pdfDocumentGenerator">
+    <bean id="pdfConsultationDocumentGenerator"
+          class="com.armedia.acm.plugins.consultation.service.PDFConsultationDocumentGenerator"
+          parent="pdfDocumentGenerator">
     </bean>
 
-    <bean id="casefileDocumentHandler" class="com.armedia.acm.plugins.consultation.pipeline.postsave.CasefileDocumentHandler"
-        parent="pdfCasefileDocumentGenerator">
+    <bean id="consultationDocumentHandler"
+          class="com.armedia.acm.plugins.consultation.pipeline.postsave.ConsultationDocumentHandler"
+          parent="pdfConsultationDocumentGenerator">
         <property name="formsTypeCheckService" ref="formsTypeCheckService"/>
         <property name="dao" ref="consultationDao"/>
     </bean>

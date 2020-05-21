@@ -39,6 +39,7 @@ import java.util.Date;
 public class ConsultationParticipantsModifiedEvent extends AcmEvent
 {
     private static final String EVENT_TYPE = "com.armedia.acm.consultation.participant";
+    private static final long serialVersionUID = -2815816763631737485L;
     private String eventStatus;
 
     public ConsultationParticipantsModifiedEvent(AcmParticipant source)

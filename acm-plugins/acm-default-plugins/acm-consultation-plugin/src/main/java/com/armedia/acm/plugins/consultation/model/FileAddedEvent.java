@@ -37,6 +37,7 @@ import java.util.Date;
 public class FileAddedEvent extends AcmEvent
 {
     private static final String EVENT_TYPE = "com.armedia.acm.consultation.file.added";
+    private static final long serialVersionUID = -1285658214194313822L;
 
     public FileAddedEvent(Consultation source, String ipAddress)
     {
