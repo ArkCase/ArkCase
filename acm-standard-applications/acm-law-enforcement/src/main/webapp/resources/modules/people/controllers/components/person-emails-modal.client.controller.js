@@ -13,6 +13,7 @@ angular.module('people')
             $scope.isEdit = params.isEdit;
             $scope.isDefault = params.isDefault;
             $scope.hideNoField = params.isDefault;
+            $scope.isPortalPerson = params.isPortalPerson;
 
             // --------------  mention --------------
             $scope.params = {
