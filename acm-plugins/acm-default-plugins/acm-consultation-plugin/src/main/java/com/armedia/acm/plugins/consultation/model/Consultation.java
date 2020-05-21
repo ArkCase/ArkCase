@@ -1,5 +1,35 @@
 package com.armedia.acm.plugins.consultation.model;
 
+/*-
+ * #%L
+ * ACM Default Plugin: Consultation
+ * %%
+ * Copyright (C) 2014 - 2020 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
+ * provided under the following open source license terms:
+ *
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
+/**
+ * Created by Vladimir Cherepnalkovski <vladimir.cherepnalkovski@armedia.com> on May, 2020
+ */
 import com.armedia.acm.core.AcmNotifiableEntity;
 import com.armedia.acm.core.AcmNotificationReceiver;
 import com.armedia.acm.core.AcmObjectNumber;
@@ -77,6 +107,9 @@ public class Consultation implements Serializable, AcmAssignedObject, AcmEntity,
     @AcmSequence(sequenceName = "consultationNumberSequence")
     private String consultationNumber;
 
+    @Column(name = "cm_consultation_type")
+    private String consultationType;
+
     @Column(name = "cm_consultation_title")
     @Size(min = 1)
     private String title;
@@ -114,9 +147,6 @@ public class Consultation implements Serializable, AcmAssignedObject, AcmEntity,
     @Column(name = "cm_consultation_closed")
     @Temporal(TemporalType.TIMESTAMP)
     private Date closed;
-
-    @Column(name = "cm_consultation_disposition")
-    private String disposition;
 
     @Column(name = "cm_consultation_priority")
     private String priority;
@@ -452,16 +482,6 @@ public class Consultation implements Serializable, AcmAssignedObject, AcmEntity,
         this.closed = closed;
     }
 
-    public String getDisposition()
-    {
-        return disposition;
-    }
-
-    public void setDisposition(String disposition)
-    {
-        this.disposition = disposition;
-    }
-
     public String getPriority()
     {
         return priority;
@@ -662,6 +682,7 @@ public class Consultation implements Serializable, AcmAssignedObject, AcmEntity,
         return "Consultation{" +
                 "id=" + id +
                 ", consultationNumber='" + consultationNumber + '\'' +
+                ", consultationType='" + consultationType + '\'' +
                 ", title='" + title + '\'' +
                 ", status='" + status + '\'' +
                 ", details='" + details + '\'' +
@@ -672,7 +693,6 @@ public class Consultation implements Serializable, AcmAssignedObject, AcmEntity,
                 ", modified=" + modified +
                 ", modifier='" + modifier + '\'' +
                 ", closed=" + closed +
-                ", disposition='" + disposition + '\'' +
                 ", priority='" + priority + '\'' +
                 ", objectType='" + objectType + '\'' +
                 ", className='" + className + '\'' +
@@ -857,5 +877,15 @@ public class Consultation implements Serializable, AcmAssignedObject, AcmEntity,
 
     public void setConsultationDetailsSummary(String consultationDetailsSummary) {
         this.consultationDetailsSummary = consultationDetailsSummary;
+    }
+
+    public String getConsultationType()
+    {
+        return consultationType;
+    }
+
+    public void setConsultationType(String consultationType)
+    {
+        this.consultationType = consultationType;
     }
 }

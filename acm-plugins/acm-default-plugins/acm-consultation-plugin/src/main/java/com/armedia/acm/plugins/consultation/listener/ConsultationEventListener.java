@@ -1,12 +1,39 @@
-package com.armedia.acm.plugins.consultation.service;
+package com.armedia.acm.plugins.consultation.listener;
+
+/*-
+ * #%L
+ * ACM Default Plugin: Consultation
+ * %%
+ * Copyright (C) 2014 - 2020 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
+ * provided under the following open source license terms:
+ *
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
 
 import com.armedia.acm.calendar.config.model.PurgeOptions;
 import com.armedia.acm.calendar.config.service.CalendarConfigurationException;
 import com.armedia.acm.objectonverter.AcmUnmarshaller;
 import com.armedia.acm.objectonverter.ObjectConverter;
-import com.armedia.acm.plugins.casefile.model.CaseFile;
-import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
-import com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility;
+import com.armedia.acm.plugins.consultation.model.Consultation;
+import com.armedia.acm.plugins.consultation.model.ConsultationConstants;
+import com.armedia.acm.plugins.consultation.utility.ConsultationEventUtility;
 import com.armedia.acm.plugins.outlook.service.OutlookContainerCalendarService;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.service.objecthistory.dao.AcmAssignmentDao;
@@ -25,13 +52,15 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationListener;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
 
+/**
+ * Created by Vladimir Cherepnalkovski <vladimir.cherepnalkovski@armedia.com> on May, 2020
+ */
 public class ConsultationEventListener implements ApplicationListener<AcmObjectHistoryEvent>
 {
     /**
@@ -41,11 +70,11 @@ public class ConsultationEventListener implements ApplicationListener<AcmObjectH
 
     private AcmObjectHistoryService acmObjectHistoryService;
     private AcmObjectHistoryEventPublisher acmObjectHistoryEventPublisher;
-    private CaseFileEventUtility caseFileEventUtility;
+    private ConsultationEventUtility consultationEventUtility;
     private AcmAssignmentDao acmAssignmentDao;
     private OutlookContainerCalendarService calendarService;
     private boolean shouldDeleteCalendarFolder;
-    private List<String> caseFileStatusClosed;
+    private List<String> consultationStatusClosed;
     private ObjectConverter objectConverter;
 
     private OutlookCalendarAdminServiceExtension calendarAdminService;
@@ -59,83 +88,90 @@ public class ConsultationEventListener implements ApplicationListener<AcmObjectH
         {
             AcmObjectHistory acmObjectHistory = (AcmObjectHistory) event.getSource();
 
-            boolean isCaseFile = checkExecution(acmObjectHistory.getObjectType());
+            boolean isConsultation = checkExecution(acmObjectHistory.getObjectType());
 
-            if (isCaseFile)
+            if (isConsultation)
             {
                 // Converter for JSON string to Object
                 AcmUnmarshaller converter = getObjectConverter().getJsonUnmarshaller();
 
-                String jsonUpdatedCaseFile = acmObjectHistory.getObjectString();
-                CaseFile updatedCaseFile = converter.unmarshall(jsonUpdatedCaseFile, CaseFile.class);
+                String jsonUpdatedConsultation = acmObjectHistory.getObjectString();
+                Consultation updatedConsultation = converter.unmarshall(jsonUpdatedConsultation, Consultation.class);
 
-                AcmAssignment acmAssignment = createAcmAssignment(updatedCaseFile);
+                AcmAssignment acmAssignment = createAcmAssignment(updatedConsultation);
 
-                AcmObjectHistory acmObjectHistoryExisting = getAcmObjectHistoryService().getAcmObjectHistory(updatedCaseFile.getId(),
-                        CaseFileConstants.OBJECT_TYPE);
+                AcmObjectHistory acmObjectHistoryExisting = getAcmObjectHistoryService().getAcmObjectHistory(updatedConsultation.getId(),
+                        ConsultationConstants.OBJECT_TYPE);
 
                 if (acmObjectHistoryExisting != null)
                 {
 
                     String json = acmObjectHistoryExisting.getObjectString();
-                    CaseFile existing = converter.unmarshall(json, CaseFile.class);
+                    Consultation existing = converter.unmarshall(json, Consultation.class);
 
                     if (existing != null)
                     {
                         acmAssignment.setOldAssignee(ParticipantUtils.getAssigneeIdFromParticipants(existing.getParticipants()));
 
-                        if (isPriorityChanged(existing, updatedCaseFile))
+                        if (isPriorityChanged(existing, updatedConsultation))
                         {
-                            getCaseFileEventUtility().raiseCaseFileModifiedEvent(updatedCaseFile, event.getIpAddress(), "priority.changed");
+                            getConsultationEventUtility().raiseConsultationModifiedEvent(updatedConsultation, event.getIpAddress(),
+                                    "priority.changed");
                         }
 
-                        if (isDetailsChanged(existing, updatedCaseFile))
+                        if (isDetailsChanged(existing, updatedConsultation))
                         {
-                            getCaseFileEventUtility().raiseCaseFileModifiedEvent(updatedCaseFile, event.getIpAddress(), "details.changed");
+                            getConsultationEventUtility().raiseConsultationModifiedEvent(updatedConsultation, event.getIpAddress(),
+                                    "details.changed");
                         }
 
                         String title = existing.getTitle();
-                        String updatedTitle = updatedCaseFile.getTitle();
+                        String updatedTitle = updatedConsultation.getTitle();
                         if (!Objects.equals(title, updatedTitle))
                         {
-                            getCaseFileEventUtility().raiseCaseFileModifiedEvent(updatedCaseFile, event.getIpAddress(), "title.changed",
-                                    "Case File Title changed from " + title + " to " + updatedTitle);
+                            getConsultationEventUtility().raiseConsultationModifiedEvent(updatedConsultation, event.getIpAddress(),
+                                    "title.changed",
+                                    "Consultation Title changed from " + title + " to " + updatedTitle);
                         }
 
                         String owningGroup = ParticipantUtils.getOwningGroupIdFromParticipants(existing.getParticipants());
-                        String updatedOwningGroup = ParticipantUtils.getOwningGroupIdFromParticipants(updatedCaseFile.getParticipants());
+                        String updatedOwningGroup = ParticipantUtils
+                                .getOwningGroupIdFromParticipants(updatedConsultation.getParticipants());
                         if (!Objects.equals(owningGroup, updatedOwningGroup))
                         {
-                            AcmParticipant updatedParticipant = updatedCaseFile.getParticipants().stream()
+                            AcmParticipant updatedParticipant = updatedConsultation.getParticipants().stream()
                                     .filter(p -> "owning group".equals(p.getParticipantType())).findFirst().orElse(null);
-                            getCaseFileEventUtility().raiseParticipantsModifiedInCaseFile(updatedParticipant, updatedCaseFile,
+                            getConsultationEventUtility().raiseParticipantsModifiedInConsultation(updatedParticipant, updatedConsultation,
                                     event.getIpAddress(), "changed",
                                     "Owning Group Changed from " + owningGroup + " to " + updatedOwningGroup);
                         }
 
-                        checkPersonAssociation(existing, updatedCaseFile, event.getIpAddress());
+                        checkPersonAssociation(existing, updatedConsultation, event.getIpAddress());
 
-                        checkParticipants(existing, updatedCaseFile, event.getIpAddress());
+                        checkParticipants(existing, updatedConsultation, event.getIpAddress());
 
-                        if (isStatusChanged(existing, updatedCaseFile))
+                        if (isStatusChanged(existing, updatedConsultation))
                         {
-                            String calId = updatedCaseFile.getContainer().getCalendarFolderId();
-                            if (shouldDeleteOnClose() && calId != null && caseFileStatusClosed.contains(updatedCaseFile.getStatus()))
+                            String calId = updatedConsultation.getContainer().getCalendarFolderId();
+                            if (shouldDeleteOnClose() && calId != null
+                                    && consultationStatusClosed.contains(updatedConsultation.getStatus()))
                             {
 
-                                // delete shared calendar if case closed
+                                // delete shared calendar if consultation closed
                                 Optional<AcmOutlookUser> user = calendarAdminService
-                                        .getEventListenerOutlookUser(CaseFileConstants.OBJECT_TYPE);
+                                        .getEventListenerOutlookUser(ConsultationConstants.OBJECT_TYPE);
                                 // if integration is not enabled the user will be null.
                                 if (user.isPresent())
                                 {
-                                    getCalendarService().deleteFolder(user.get(), updatedCaseFile.getContainer(),
+                                    getCalendarService().deleteFolder(user.get(), updatedConsultation.getContainer(),
                                             DeleteMode.MoveToDeletedItems);
-                                    folderCreatorDao.deleteObjectReference(updatedCaseFile.getId(), updatedCaseFile.getObjectType());
+                                    folderCreatorDao.deleteObjectReference(updatedConsultation.getId(),
+                                            updatedConsultation.getObjectType());
                                 }
                             }
-                            getCaseFileEventUtility().raiseCaseFileModifiedEvent(updatedCaseFile, event.getIpAddress(), "status.changed",
-                                        "from " + existing.getStatus() + " to " + updatedCaseFile.getStatus());
+                            getConsultationEventUtility().raiseConsultationModifiedEvent(updatedConsultation, event.getIpAddress(),
+                                    "status.changed",
+                                    "from " + existing.getStatus() + " to " + updatedConsultation.getStatus());
 
                         }
                     }
@@ -160,7 +196,7 @@ public class ConsultationEventListener implements ApplicationListener<AcmObjectH
         try
         {
             purgeOption = PurgeOptions.CLOSED.equals(calendarAdminService.readConfiguration(false)
-                    .getConfiguration(CaseFileConstants.OBJECT_TYPE).getPurgeOptions());
+                    .getConfiguration(ConsultationConstants.OBJECT_TYPE).getPurgeOptions());
         }
         catch (CalendarConfigurationException e)
         {
@@ -176,42 +212,42 @@ public class ConsultationEventListener implements ApplicationListener<AcmObjectH
         return !Objects.equals(newAssignee, oldAssignee);
     }
 
-    private AcmAssignment createAcmAssignment(CaseFile updatedCaseFile)
+    private AcmAssignment createAcmAssignment(Consultation updatedConsultation)
     {
         AcmAssignment assignment = new AcmAssignment();
-        assignment.setObjectId(updatedCaseFile.getId());
-        assignment.setObjectTitle(updatedCaseFile.getTitle());
-        assignment.setObjectName(updatedCaseFile.getCaseNumber());
-        assignment.setNewAssignee(ParticipantUtils.getAssigneeIdFromParticipants(updatedCaseFile.getParticipants()));
-        assignment.setObjectType(CaseFileConstants.OBJECT_TYPE);
+        assignment.setObjectId(updatedConsultation.getId());
+        assignment.setObjectTitle(updatedConsultation.getTitle());
+        assignment.setObjectName(updatedConsultation.getConsultationNumber());
+        assignment.setNewAssignee(ParticipantUtils.getAssigneeIdFromParticipants(updatedConsultation.getParticipants()));
+        assignment.setObjectType(ConsultationConstants.OBJECT_TYPE);
 
         return assignment;
     }
 
-    private boolean isPriorityChanged(CaseFile caseFile, CaseFile updatedCaseFile)
+    private boolean isPriorityChanged(Consultation consultation, Consultation updatedConsultation)
     {
-        String updatedPriority = updatedCaseFile.getPriority();
-        String priority = caseFile.getPriority();
+        String updatedPriority = updatedConsultation.getPriority();
+        String priority = consultation.getPriority();
         return !Objects.equals(updatedPriority, priority);
     }
 
-    private boolean isDetailsChanged(CaseFile caseFile, CaseFile updatedCaseFile)
+    private boolean isDetailsChanged(Consultation consultation, Consultation updatedConsultation)
     {
-        String updatedDetails = updatedCaseFile.getDetails();
-        String details = caseFile.getDetails();
+        String updatedDetails = updatedConsultation.getDetails();
+        String details = consultation.getDetails();
         return !Objects.equals(details, updatedDetails);
     }
 
-    public void checkPersonAssociation(CaseFile existingCaseFile, CaseFile updatedCaseFile, String ipAddress)
+    public void checkPersonAssociation(Consultation existingConsultation, Consultation updatedConsultation, String ipAddress)
     {
-        List<PersonAssociation> existingPersons = existingCaseFile.getPersonAssociations();
-        List<PersonAssociation> updatedPersons = updatedCaseFile.getPersonAssociations();
+        List<PersonAssociation> existingPersons = existingConsultation.getPersonAssociations();
+        List<PersonAssociation> updatedPersons = updatedConsultation.getPersonAssociations();
 
         for (PersonAssociation person : existingPersons)
         {
             if (!updatedPersons.contains(person))
             {
-                getCaseFileEventUtility().raisePersonAssociationsDeletedEvent(person,updatedCaseFile, ipAddress);
+                getConsultationEventUtility().raisePersonAssociationsDeletedEvent(person, updatedConsultation, ipAddress);
             }
         }
 
@@ -219,22 +255,23 @@ public class ConsultationEventListener implements ApplicationListener<AcmObjectH
         {
             if (!existingPersons.contains(person))
             {
-                getCaseFileEventUtility().raisePersonAssociationsAddEvent(person, updatedCaseFile, ipAddress);
+                getConsultationEventUtility().raisePersonAssociationsAddEvent(person, updatedConsultation, ipAddress);
             }
         }
     }
 
-    public void checkParticipants(CaseFile caseFile, CaseFile updatedCaseFile, String ipAddress)
+    public void checkParticipants(Consultation consultation, Consultation updatedConsultation, String ipAddress)
     {
-        List<AcmParticipant> existing = caseFile.getParticipants();
-        List<AcmParticipant> updated = updatedCaseFile.getParticipants();
+        List<AcmParticipant> existing = consultation.getParticipants();
+        List<AcmParticipant> updated = updatedConsultation.getParticipants();
 
         for (AcmParticipant participant : existing)
         {
             if (!updated.contains(participant))
             {
                 // participant deleted
-                getCaseFileEventUtility().raiseParticipantsModifiedInCaseFile(participant, updatedCaseFile, ipAddress, "deleted");
+                getConsultationEventUtility().raiseParticipantsModifiedInConsultation(participant, updatedConsultation, ipAddress,
+                        "deleted");
             }
         }
 
@@ -243,7 +280,7 @@ public class ConsultationEventListener implements ApplicationListener<AcmObjectH
             if (!existing.contains(participant))
             {
                 // participant added
-                getCaseFileEventUtility().raiseParticipantsModifiedInCaseFile(participant, updatedCaseFile, ipAddress, "added");
+                getConsultationEventUtility().raiseParticipantsModifiedInConsultation(participant, updatedConsultation, ipAddress, "added");
             }
         }
 
@@ -258,7 +295,8 @@ public class ConsultationEventListener implements ApplicationListener<AcmObjectH
                         if (!existingParticipant.getParticipantType().equals(updatedParticipant.getParticipantType()))
                         {
                             // participant changed
-                            getCaseFileEventUtility().raiseParticipantsModifiedInCaseFile(updatedParticipant, updatedCaseFile, ipAddress,
+                            getConsultationEventUtility().raiseParticipantsModifiedInConsultation(updatedParticipant, updatedConsultation,
+                                    ipAddress,
                                     "changed");
                         }
                     }
@@ -267,17 +305,17 @@ public class ConsultationEventListener implements ApplicationListener<AcmObjectH
         }
     }
 
-    private boolean isStatusChanged(CaseFile caseFile, CaseFile updatedCaseFile)
+    private boolean isStatusChanged(Consultation consultation, Consultation updatedConsultation)
     {
-        String updatedStatus = updatedCaseFile.getStatus();
-        String status = caseFile.getStatus();
+        String updatedStatus = updatedConsultation.getStatus();
+        String status = consultation.getStatus();
         return !Objects.equals(updatedStatus, status);
     }
 
     private boolean checkExecution(String objectType)
     {
 
-        return objectType.equals(CaseFileConstants.OBJECT_TYPE);
+        return objectType.equals(ConsultationConstants.OBJECT_TYPE);
     }
 
     public AcmObjectHistoryService getAcmObjectHistoryService()
@@ -290,18 +328,6 @@ public class ConsultationEventListener implements ApplicationListener<AcmObjectH
     {
 
         this.acmObjectHistoryService = acmObjectHistoryService;
-    }
-
-    public CaseFileEventUtility getCaseFileEventUtility()
-    {
-
-        return caseFileEventUtility;
-    }
-
-    public void setCaseFileEventUtility(CaseFileEventUtility caseFileEventUtility)
-    {
-
-        this.caseFileEventUtility = caseFileEventUtility;
     }
 
     public AcmObjectHistoryEventPublisher getAcmObjectHistoryEventPublisher()
@@ -344,9 +370,14 @@ public class ConsultationEventListener implements ApplicationListener<AcmObjectH
         this.shouldDeleteCalendarFolder = shouldDeleteCalendarFolder;
     }
 
-    public void setCaseFileStatusClosed(String caseFileStatusClosed)
+    public ConsultationEventUtility getConsultationEventUtility()
     {
-        this.caseFileStatusClosed = Arrays.asList(caseFileStatusClosed.split(","));
+        return consultationEventUtility;
+    }
+
+    public List<String> getConsultationStatusClosed()
+    {
+        return consultationStatusClosed;
     }
 
     /**
