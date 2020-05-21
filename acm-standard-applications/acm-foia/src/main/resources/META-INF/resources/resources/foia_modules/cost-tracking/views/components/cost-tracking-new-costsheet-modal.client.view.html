@@ -61,10 +61,8 @@
                             <div class="col-sm-2 form-group">
                                 <label for="costTitle" translate>costTracking.comp.newCostsheet.cost.costTitle</label>
                                 <span class="required-asterisk">*</span>
-                                <select id="costTitle" ng-model="cost.title" class="form-control input-md" required>
-                                    <option ng-repeat="option in costsheetTitles" value="{{option.key}}">
-                                        {{option.value | translate}}
-                                    </option>
+                                <select id="costTitle" ng-model="cost.title" class="form-control input-md"
+                                        ng-options="costsheetTitle.key as costsheetTitle.value | translate for costsheetTitle in costsheetTitles" required>
                                 </select>
                             </div>
                             <div class="col-sm-3 form-group">
