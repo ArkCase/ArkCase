@@ -69,7 +69,7 @@
                 <div class="form-group col-sm-6">
                     <label class="control-label" translate> requests.comp.details.deliveryMethodOfResponse.label</label> <select
                         ng-model="requestInfo.deliveryMethodOfResponse"
-                        ng-options="deliveryMethodOfResponse.key as deliveryMethodOfResponse.value for deliveryMethodOfResponse in deliveryMethodOfResponses"
+                        ng-options="deliveryMethodOfResponse.key as deliveryMethodOfResponse.value | translate for deliveryMethodOfResponse in deliveryMethodOfResponses"
                         class="form-control input-md" ng-disabled="true">
                 </select>
                 </div>
