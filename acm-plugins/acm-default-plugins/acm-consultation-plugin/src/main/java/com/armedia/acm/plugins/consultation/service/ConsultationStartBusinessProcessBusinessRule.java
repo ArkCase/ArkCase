@@ -33,7 +33,8 @@ import com.armedia.acm.plugins.consultation.model.ConsultationStartBusinessProce
 /**
  * Created by Vladimir Cherepnalkovski <vladimir.cherepnalkovski@armedia.com> on May, 2020
  */
-public class ConsultationStartBusinessProcessBusinessRule extends SimpleStatelessSingleObjectRuleManager<ConsultationStartBusinessProcessModel>
+public class ConsultationStartBusinessProcessBusinessRule
+        extends SimpleStatelessSingleObjectRuleManager<ConsultationStartBusinessProcessModel>
 {
 
 }

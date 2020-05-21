@@ -192,11 +192,13 @@ public class ConsultationToSolrTransformer implements AcmObjectToSolrDocTransfor
         this.userDao = userDao;
     }
 
-    public ConsultationDao getConsultationDao() {
+    public ConsultationDao getConsultationDao()
+    {
         return consultationDao;
     }
 
-    public void setConsultationDao(ConsultationDao consultationDao) {
+    public void setConsultationDao(ConsultationDao consultationDao)
+    {
         this.consultationDao = consultationDao;
     }
 
@@ -226,12 +228,12 @@ public class ConsultationToSolrTransformer implements AcmObjectToSolrDocTransfor
         this.fileAclSolrUpdateHelper = fileAclSolrUpdateHelper;
     }
 
-    public BusinessProcessDao getBusinessProcessDao() 
+    public BusinessProcessDao getBusinessProcessDao()
     {
         return businessProcessDao;
     }
 
-    public void setBusinessProcessDao(BusinessProcessDao businessProcessDao) 
+    public void setBusinessProcessDao(BusinessProcessDao businessProcessDao)
     {
         this.businessProcessDao = businessProcessDao;
     }

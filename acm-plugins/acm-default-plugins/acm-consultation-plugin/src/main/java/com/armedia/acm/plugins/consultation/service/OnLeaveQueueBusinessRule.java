@@ -35,7 +35,8 @@ import com.armedia.acm.plugins.consultation.pipeline.ConsultationPipelineContext
 /**
  * Created by Vladimir Cherepnalkovski <vladimir.cherepnalkovski@armedia.com> on May, 2020
  */
-public class OnLeaveQueueBusinessRule extends SimpleStatelessSingleObjectRuleManager<OnLeaveQueueModel<Consultation, ConsultationPipelineContext>>
+public class OnLeaveQueueBusinessRule
+        extends SimpleStatelessSingleObjectRuleManager<OnLeaveQueueModel<Consultation, ConsultationPipelineContext>>
 {
 
 }

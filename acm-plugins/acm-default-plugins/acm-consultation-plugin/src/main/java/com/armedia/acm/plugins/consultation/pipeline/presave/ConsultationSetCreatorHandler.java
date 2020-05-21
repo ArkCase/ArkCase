@@ -32,7 +32,6 @@ import com.armedia.acm.plugins.consultation.pipeline.ConsultationPipelineContext
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 
-
 /**
  * Created by Vladimir Cherepnalkovski <vladimir.cherepnalkovski@armedia.com> on May, 2020
  * Set creator so assignment rules can use it to set participants

@@ -103,7 +103,8 @@ public class EnqueueConsultationFileServiceImpl implements EnqueueConsultationFi
 
     @Override
     @Transactional
-    public ConsultationEnqueueResponse enqueueConsultation(Long consultationId, String nextQueue, String nextQueueAction, ConsultationPipelineContext context)
+    public ConsultationEnqueueResponse enqueueConsultation(Long consultationId, String nextQueue, String nextQueueAction,
+            ConsultationPipelineContext context)
     {
         // since we will make changes to this Consultation, we should not detach it; the consultationDao detaches
         // the object, so we won't use the dao.find() method here.
@@ -173,7 +174,8 @@ public class EnqueueConsultationFileServiceImpl implements EnqueueConsultationFi
 
         // the unlock of the consultation should be released from the UI,
         // but extensions already rely on the service releasing the lock, so we'll leave this here
-        getAcmObjectLockService().removeLock(consultationId, ConsultationConstants.OBJECT_TYPE, "OBJECT_LOCK", context.getAuthentication().getName());
+        getAcmObjectLockService().removeLock(consultationId, ConsultationConstants.OBJECT_TYPE, "OBJECT_LOCK",
+                context.getAuthentication().getName());
 
         // we don't need to explicitly save the consultation. Since the consultation is a managed entity (because we did
         // not detach it) any changes we made are automatically applied at the end of the transaction.
@@ -196,7 +198,8 @@ public class EnqueueConsultationFileServiceImpl implements EnqueueConsultationFi
 
     private List<String> verifyNextPossibleQueues(ConsultationPipelineContext context, Consultation consultation)
     {
-        NextPossibleQueuesModel<Consultation, ConsultationPipelineContext> nextPossibleQueuesModel = getQueueService().nextPossibleQueues(consultation,
+        NextPossibleQueuesModel<Consultation, ConsultationPipelineContext> nextPossibleQueuesModel = getQueueService().nextPossibleQueues(
+                consultation,
                 context, getConsultationNextPossibleQueuesBusinessRule());
         return nextPossibleQueuesModel.getNextPossibleQueues();
     }
@@ -289,7 +292,8 @@ public class EnqueueConsultationFileServiceImpl implements EnqueueConsultationFi
         return consultationNextPossibleQueuesBusinessRule;
     }
 
-    public void setConsultationNextPossibleQueuesBusinessRule(ConsultationNextPossibleQueuesBusinessRule consultationNextPossibleQueuesBusinessRule)
+    public void setConsultationNextPossibleQueuesBusinessRule(
+            ConsultationNextPossibleQueuesBusinessRule consultationNextPossibleQueuesBusinessRule)
     {
         this.consultationNextPossibleQueuesBusinessRule = consultationNextPossibleQueuesBusinessRule;
     }

@@ -40,7 +40,6 @@ import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.springframework.security.core.Authentication;
 
-
 /**
  * Created by Vladimir Cherepnalkovski <vladimir.cherepnalkovski@armedia.com> on May, 2020
  * Create folder structure for a Consultation.

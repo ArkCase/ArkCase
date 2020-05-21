@@ -54,7 +54,8 @@ public class PDFConsultationDocumentGenerator<D extends AcmAbstractDao, T extend
 
     private D dao;
 
-    public void generatePdf(Long consultationId, ConsultationPipelineContext ctx) throws ParserConfigurationException, PipelineProcessException
+    public void generatePdf(Long consultationId, ConsultationPipelineContext ctx)
+            throws ParserConfigurationException, PipelineProcessException
     {
         String objectType = ConsultationConstants.OBJECT_TYPE;
         if (getDao().getSupportedObjectType().equals(objectType))
@@ -80,10 +81,12 @@ public class PDFConsultationDocumentGenerator<D extends AcmAbstractDao, T extend
         Consultation consultation = (Consultation) businessObject;
 
         addElement(document, rootElem, "consultationTitle", consultation.getTitle(), true);
-        addElement(document, rootElem, "consultationDetails", consultation.getDetails() != null ? Jsoup.parse(consultation.getDetails()).text() : "N/A", false);
+        addElement(document, rootElem, "consultationDetails",
+                consultation.getDetails() != null ? Jsoup.parse(consultation.getDetails()).text() : "N/A", false);
 
         String initiator = "Unknown";
-        if ( consultation.getOriginator() != null && consultation.getOriginator().getPerson() != null && consultation.getOriginator().getPerson().getFullName() != null )
+        if (consultation.getOriginator() != null && consultation.getOriginator().getPerson() != null
+                && consultation.getOriginator().getPerson().getFullName() != null)
         {
             initiator = consultation.getOriginator().getPerson().getFullName();
         }

@@ -41,8 +41,9 @@ public class ConsultationEvent extends AcmEvent
     private Authentication eventUser;
     private Consultation consultation;
 
-    public ConsultationEvent(Consultation source, String ipAddress, String user, String eventType, Date eventDate, boolean userActionSucceeded,
-                     Authentication eventUser)
+    public ConsultationEvent(Consultation source, String ipAddress, String user, String eventType, Date eventDate,
+            boolean userActionSucceeded,
+            Authentication eventUser)
     {
         super(source);
 
@@ -58,7 +59,7 @@ public class ConsultationEvent extends AcmEvent
     }
 
     public ConsultationEvent(Consultation source, String ipAddress, String user, String eventType, String eventDescription, Date eventDate,
-                     boolean userActionSucceeded, Authentication eventUser)
+            boolean userActionSucceeded, Authentication eventUser)
     {
         this(source, ipAddress, user, eventType, eventDate, userActionSucceeded, eventUser);
         setEventDescription(eventDescription);
@@ -74,11 +75,13 @@ public class ConsultationEvent extends AcmEvent
         this.eventUser = eventUser;
     }
 
-    public Consultation getConsultation() {
+    public Consultation getConsultation()
+    {
         return consultation;
     }
 
-    public void setConsultation(Consultation consultation) {
+    public void setConsultation(Consultation consultation)
+    {
         this.consultation = consultation;
     }
 }

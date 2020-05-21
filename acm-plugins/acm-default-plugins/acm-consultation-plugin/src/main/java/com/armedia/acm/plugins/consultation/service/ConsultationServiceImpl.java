@@ -32,7 +32,9 @@ import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.casefile.model.TimePeriod;
+import com.armedia.acm.plugins.consultation.dao.ChangeConsultationStatusDao;
 import com.armedia.acm.plugins.consultation.dao.ConsultationDao;
+import com.armedia.acm.plugins.consultation.model.ChangeConsultationStatus;
 import com.armedia.acm.plugins.consultation.model.Consultation;
 import com.armedia.acm.plugins.consultation.model.ConsultationsByStatusDto;
 import com.armedia.acm.plugins.consultation.pipeline.ConsultationPipelineContext;
@@ -47,6 +49,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.PersistenceException;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,12 +64,42 @@ public class ConsultationServiceImpl implements ConsultationService
 {
     private final Logger log = LogManager.getLogger(getClass());
     private ConsultationDao consultationDao;
+    private ChangeConsultationStatusDao changeConsultationStatusDao;
     private PipelineManager<Consultation, ConsultationPipelineContext> pipelineManager;
     private EcmFileService ecmFileService;
 
     @Override
-    public Consultation getConsultationById(long id) {
+    public Consultation getConsultationById(long id)
+    {
         return getConsultationDao().find(id);
+    }
+
+    @Override
+    public List<Consultation> getConsultationsByTitle(String title) throws AcmObjectNotFoundException
+    {
+        return getConsultationDao().findByTitle(title);
+    }
+
+    @Override
+    public Consultation getConsultationByIdWithChangeStatusIncluded(long id) throws AcmObjectNotFoundException
+    {
+        try
+        {
+            Consultation retval = getConsultationDao().find(id);
+            if (retval == null)
+            {
+                throw new PersistenceException("No such consultation with id '" + id + "'");
+            }
+
+            ChangeConsultationStatus changeConsultationStatus = getChangeConsultationStatusDao().findByConsultationId(retval.getId());
+            retval.setChangeConsultationStatus(changeConsultationStatus);
+
+            return retval;
+        }
+        catch (PersistenceException e)
+        {
+            throw new AcmObjectNotFoundException("Consultation", id, e.getMessage(), e);
+        }
     }
 
     @Override
@@ -105,7 +139,8 @@ public class ConsultationServiceImpl implements ConsultationService
 
     @Override
     @Transactional
-    public Consultation saveConsultation(Consultation consultation, List<MultipartFile> files, Authentication authentication, String ipAddress)
+    public Consultation saveConsultation(Consultation consultation, List<MultipartFile> files, Authentication authentication,
+            String ipAddress)
             throws AcmUserActionFailedException,
             AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmObjectNotFoundException, PipelineProcessException,
             IOException
@@ -141,7 +176,8 @@ public class ConsultationServiceImpl implements ConsultationService
 
     @Override
     @Transactional
-    public Consultation saveConsultation(Consultation consultation, Map<String, List<MultipartFile>> filesMap, Authentication authentication, String ipAddress)
+    public Consultation saveConsultation(Consultation consultation, Map<String, List<MultipartFile>> filesMap,
+            Authentication authentication, String ipAddress)
             throws PipelineProcessException
     {
         ConsultationPipelineContext pipelineContext = new ConsultationPipelineContext();
@@ -185,27 +221,43 @@ public class ConsultationServiceImpl implements ConsultationService
         });
     }
 
-    public ConsultationDao getConsultationDao() {
+    public ConsultationDao getConsultationDao()
+    {
         return consultationDao;
     }
 
-    public void setConsultationDao(ConsultationDao consultationDao) {
+    public void setConsultationDao(ConsultationDao consultationDao)
+    {
         this.consultationDao = consultationDao;
     }
 
-    public PipelineManager<Consultation, ConsultationPipelineContext> getPipelineManager() {
+    public PipelineManager<Consultation, ConsultationPipelineContext> getPipelineManager()
+    {
         return pipelineManager;
     }
 
-    public void setPipelineManager(PipelineManager<Consultation, ConsultationPipelineContext> pipelineManager) {
+    public void setPipelineManager(PipelineManager<Consultation, ConsultationPipelineContext> pipelineManager)
+    {
         this.pipelineManager = pipelineManager;
     }
 
-    public EcmFileService getEcmFileService() {
+    public EcmFileService getEcmFileService()
+    {
         return ecmFileService;
     }
 
-    public void setEcmFileService(EcmFileService ecmFileService) {
+    public void setEcmFileService(EcmFileService ecmFileService)
+    {
         this.ecmFileService = ecmFileService;
+    }
+
+    public ChangeConsultationStatusDao getChangeConsultationStatusDao()
+    {
+        return changeConsultationStatusDao;
+    }
+
+    public void setChangeConsultationStatusDao(ChangeConsultationStatusDao changeConsultationStatusDao)
+    {
+        this.changeConsultationStatusDao = changeConsultationStatusDao;
     }
 }

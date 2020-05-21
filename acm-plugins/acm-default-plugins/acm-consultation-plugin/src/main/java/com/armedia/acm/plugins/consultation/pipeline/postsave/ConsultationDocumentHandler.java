@@ -60,7 +60,8 @@ public class ConsultationDocumentHandler extends PDFConsultationDocumentGenerato
 
         if (!formsTypeCheckService.getTypeOfForm().equals("frevvo"))
         {
-            log.debug("Entering pipeline handler for consultation with id [{}] and title [{}]", consultation.getId(), consultation.getTitle());
+            log.debug("Entering pipeline handler for consultation with id [{}] and title [{}]", consultation.getId(),
+                    consultation.getTitle());
 
             // ensure the SQL of all prior handlers is visible to this handler
             getDao().getEm().flush();

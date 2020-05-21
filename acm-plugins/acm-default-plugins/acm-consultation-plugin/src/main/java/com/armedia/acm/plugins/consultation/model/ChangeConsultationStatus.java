@@ -243,31 +243,38 @@ public class ChangeConsultationStatus implements Serializable, AcmObject, AcmEnt
         this.changeDate = changeDate;
     }
 
-    public Long getConsultationId() {
+    public Long getConsultationId()
+    {
         return consultationId;
     }
 
-    public void setConsultationId(Long consultationId) {
+    public void setConsultationId(Long consultationId)
+    {
         this.consultationId = consultationId;
     }
 
-    public String getConsultationResolution() {
+    public String getConsultationResolution()
+    {
         return consultationResolution;
     }
 
-    public void setConsultationResolution(String consultationResolution) {
+    public void setConsultationResolution(String consultationResolution)
+    {
         this.consultationResolution = consultationResolution;
     }
 
-    public void setObjectType(String objectType) {
+    public void setObjectType(String objectType)
+    {
         this.objectType = objectType;
     }
 
-    public boolean isChangeConsultationStatusFlow() {
+    public boolean isChangeConsultationStatusFlow()
+    {
         return changeConsultationStatusFlow;
     }
 
-    public void setChangeConsultationStatusFlow(boolean changeConsultationStatusFlow) {
+    public void setChangeConsultationStatusFlow(boolean changeConsultationStatusFlow)
+    {
         this.changeConsultationStatusFlow = changeConsultationStatusFlow;
     }
 }

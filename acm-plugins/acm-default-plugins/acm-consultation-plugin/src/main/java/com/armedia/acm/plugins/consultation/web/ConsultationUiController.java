@@ -45,7 +45,6 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.Map;
 import java.util.Properties;
 
-
 /**
  * Created by Vladimir Cherepnalkovski <vladimir.cherepnalkovski@armedia.com> on May, 2020
  */

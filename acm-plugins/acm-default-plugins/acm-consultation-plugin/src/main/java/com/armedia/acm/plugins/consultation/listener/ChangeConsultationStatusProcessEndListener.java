@@ -42,7 +42,8 @@ import java.util.Map;
 /**
  * Created by Vladimir Cherepnalkovski <vladimir.cherepnalkovski@armedia.com> on May, 2020
  */
-public class ChangeConsultationStatusProcessEndListener implements ApplicationListener<AcmBusinessProcessEvent>, ApplicationEventPublisherAware
+public class ChangeConsultationStatusProcessEndListener
+        implements ApplicationListener<AcmBusinessProcessEvent>, ApplicationEventPublisherAware
 {
 
     private transient final Logger log = LogManager.getLogger(getClass());
@@ -66,7 +67,8 @@ public class ChangeConsultationStatusProcessEndListener implements ApplicationLi
                 log.debug("Consultation file id: [{}]", consultationId);
                 log.debug("User: [{}]", user);
 
-                getChangeConsultationStateService().handleChangeConsultationStatusApproved(consultationId, requestId, user, event.getEventDate(),
+                getChangeConsultationStateService().handleChangeConsultationStatusApproved(consultationId, requestId, user,
+                        event.getEventDate(),
                         event.getIpAddress());
             }
             catch (Exception e)
@@ -153,11 +155,13 @@ public class ChangeConsultationStatusProcessEndListener implements ApplicationLi
         return true;
     }
 
-    public ChangeConsultationStateService getChangeConsultationStateService() {
+    public ChangeConsultationStateService getChangeConsultationStateService()
+    {
         return changeConsultationStateService;
     }
 
-    public void setChangeConsultationStateService(ChangeConsultationStateService changeConsultationStateService) {
+    public void setChangeConsultationStateService(ChangeConsultationStateService changeConsultationStateService)
+    {
         this.changeConsultationStateService = changeConsultationStateService;
     }
 

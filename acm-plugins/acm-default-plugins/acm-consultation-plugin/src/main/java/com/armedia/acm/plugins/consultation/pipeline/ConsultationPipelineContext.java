@@ -33,7 +33,6 @@ import com.armedia.acm.services.pipeline.AbstractPipelineContext;
 
 import org.springframework.security.core.Authentication;
 
-
 /**
  * Created by Vladimir Cherepnalkovski <vladimir.cherepnalkovski@armedia.com> on May, 2020
  * Store all the consultation saving-related references in this context.
@@ -125,19 +124,23 @@ public class ConsultationPipelineContext extends AbstractPipelineContext
         this.queueName = queueName;
     }
 
-    public Consultation getConsultation() {
+    public Consultation getConsultation()
+    {
         return consultation;
     }
 
-    public void setConsultation(Consultation consultation) {
+    public void setConsultation(Consultation consultation)
+    {
         this.consultation = consultation;
     }
 
-    public ChangeConsultationStatus getChangeConsultationStatus() {
+    public ChangeConsultationStatus getChangeConsultationStatus()
+    {
         return changeConsultationStatus;
     }
 
-    public void setChangeConsultationStatus(ChangeConsultationStatus changeConsultationStatus) {
+    public void setChangeConsultationStatus(ChangeConsultationStatus changeConsultationStatus)
+    {
         this.changeConsultationStatus = changeConsultationStatus;
     }
 }

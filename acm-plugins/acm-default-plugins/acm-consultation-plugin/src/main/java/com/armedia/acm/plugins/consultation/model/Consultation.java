@@ -148,6 +148,9 @@ public class Consultation implements Serializable, AcmAssignedObject, AcmEntity,
     @Temporal(TemporalType.TIMESTAMP)
     private Date closed;
 
+    @Column(name = "cm_case_disposition")
+    private String disposition;
+
     @Column(name = "cm_consultation_priority")
     private String priority;
 
@@ -182,7 +185,8 @@ public class Consultation implements Serializable, AcmAssignedObject, AcmEntity,
     private List<String> approvers;
 
     /**
-     * This field is only used when the consultation is created. Usually it will be null. Use the container to get the CMIS
+     * This field is only used when the consultation is created. Usually it will be null. Use the container to get the
+     * CMIS
      * object ID of the consultation folder.
      */
     @Transient
@@ -560,11 +564,13 @@ public class Consultation implements Serializable, AcmAssignedObject, AcmEntity,
         return retval;
     }
 
-    public ChangeConsultationStatus getChangeConsultationStatus() {
+    public ChangeConsultationStatus getChangeConsultationStatus()
+    {
         return changeConsultationStatus;
     }
 
-    public void setChangeConsultationStatus(ChangeConsultationStatus changeConsultationStatus) {
+    public void setChangeConsultationStatus(ChangeConsultationStatus changeConsultationStatus)
+    {
         this.changeConsultationStatus = changeConsultationStatus;
     }
 
@@ -693,6 +699,7 @@ public class Consultation implements Serializable, AcmAssignedObject, AcmEntity,
                 ", modified=" + modified +
                 ", modifier='" + modifier + '\'' +
                 ", closed=" + closed +
+                ", disposition=" + disposition +
                 ", priority='" + priority + '\'' +
                 ", objectType='" + objectType + '\'' +
                 ", className='" + className + '\'' +
@@ -863,19 +870,23 @@ public class Consultation implements Serializable, AcmAssignedObject, AcmEntity,
         this.hasAnyAssociatedTimesheets = hasAnyAssociatedTimesheets;
     }
 
-    public String getConsultationNumber() {
+    public String getConsultationNumber()
+    {
         return consultationNumber;
     }
 
-    public void setConsultationNumber(String consultationNumber) {
+    public void setConsultationNumber(String consultationNumber)
+    {
         this.consultationNumber = consultationNumber;
     }
 
-    public String getConsultationDetailsSummary() {
+    public String getConsultationDetailsSummary()
+    {
         return consultationDetailsSummary;
     }
 
-    public void setConsultationDetailsSummary(String consultationDetailsSummary) {
+    public void setConsultationDetailsSummary(String consultationDetailsSummary)
+    {
         this.consultationDetailsSummary = consultationDetailsSummary;
     }
 
@@ -887,5 +898,15 @@ public class Consultation implements Serializable, AcmAssignedObject, AcmEntity,
     public void setConsultationType(String consultationType)
     {
         this.consultationType = consultationType;
+    }
+
+    public String getDisposition()
+    {
+        return disposition;
+    }
+
+    public void setDisposition(String disposition)
+    {
+        this.disposition = disposition;
     }
 }

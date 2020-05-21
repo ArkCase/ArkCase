@@ -58,7 +58,8 @@ public class ConsultationBillingInvoiceEmailSenderAPIController
 
     @RequestMapping(value = "/document/email", method = RequestMethod.PUT)
     @ResponseBody
-    public void sendBillingInvoiceByEmail(@RequestBody BillingInvoiceRequest billingInvoiceRequest, HttpSession session, Authentication authentication) throws Exception
+    public void sendBillingInvoiceByEmail(@RequestBody BillingInvoiceRequest billingInvoiceRequest, HttpSession session,
+            Authentication authentication) throws Exception
     {
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
         try
@@ -69,24 +70,30 @@ public class ConsultationBillingInvoiceEmailSenderAPIController
         }
         catch (Exception e)
         {
-            log.error(String.format("Could not send the Billing Invoice for [%s] [%d]", billingInvoiceRequest.getParentObjectType(), billingInvoiceRequest.getParentObjectId()), e);
+            log.error(String.format("Could not send the Billing Invoice for [%s] [%d]", billingInvoiceRequest.getParentObjectType(),
+                    billingInvoiceRequest.getParentObjectId()), e);
             throw e;
         }
     }
 
-    public BillingInvoiceEmailSenderService getConsultationBillingInvoiceEmailSenderService() {
+    public BillingInvoiceEmailSenderService getConsultationBillingInvoiceEmailSenderService()
+    {
         return consultationBillingInvoiceEmailSenderService;
     }
 
-    public void setConsultationBillingInvoiceEmailSenderService(BillingInvoiceEmailSenderService consultationBillingInvoiceEmailSenderService) {
+    public void setConsultationBillingInvoiceEmailSenderService(
+            BillingInvoiceEmailSenderService consultationBillingInvoiceEmailSenderService)
+    {
         this.consultationBillingInvoiceEmailSenderService = consultationBillingInvoiceEmailSenderService;
     }
 
-    public ConsultationService getConsultationService() {
+    public ConsultationService getConsultationService()
+    {
         return consultationService;
     }
 
-    public void setConsultationService(ConsultationService consultationService) {
+    public void setConsultationService(ConsultationService consultationService)
+    {
         this.consultationService = consultationService;
     }
 }

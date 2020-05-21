@@ -43,7 +43,7 @@ public class ConsultationNextPossibleQueuesResponse
     private final List<String> nextPossibleQueues;
 
     public ConsultationNextPossibleQueuesResponse(String defaultNextQueue, String defaultReturnQueue, String defaultDenyQueue,
-                                                  List<String> nextPossibleQueues)
+            List<String> nextPossibleQueues)
     {
         this.defaultNextQueue = defaultNextQueue;
         this.defaultReturnQueue = defaultReturnQueue;

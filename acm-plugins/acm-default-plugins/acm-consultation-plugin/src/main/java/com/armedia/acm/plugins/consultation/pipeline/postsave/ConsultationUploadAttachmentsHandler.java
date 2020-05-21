@@ -55,9 +55,9 @@ public class ConsultationUploadAttachmentsHandler implements PipelineHandler<Con
     {
         List<AcmMultipartFile> files = null;
 
-        if(pipelineContext.hasProperty("attachmentFiles"))
+        if (pipelineContext.hasProperty("attachmentFiles"))
         {
-            files = (List<AcmMultipartFile>)pipelineContext.getPropertyValue("attachmentFiles");
+            files = (List<AcmMultipartFile>) pipelineContext.getPropertyValue("attachmentFiles");
         }
 
         if (files != null)
@@ -75,7 +75,8 @@ public class ConsultationUploadAttachmentsHandler implements PipelineHandler<Con
 
                     try
                     {
-                        getEcmFileService().upload(file.getOriginalFilename(), file.getType(), "Document", file.getInputStream(), file.getContentType(),
+                        getEcmFileService().upload(file.getOriginalFilename(), file.getType(), "Document", file.getInputStream(),
+                                file.getContentType(),
                                 file.getOriginalFilename(), pipelineContext.getAuthentication(),
                                 folderId, entity.getObjectType(), entity.getId());
                     }

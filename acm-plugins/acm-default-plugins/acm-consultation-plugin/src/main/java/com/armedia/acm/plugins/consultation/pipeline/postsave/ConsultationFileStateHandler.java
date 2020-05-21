@@ -54,7 +54,8 @@ public class ConsultationFileStateHandler
 
         // Update Status to "IN APPROVAL"
 
-        if(ctx.getPropertyValue("changeConsultationStatusFlow").equals(false)){
+        if (ctx.getPropertyValue("changeConsultationStatusFlow").equals(false))
+        {
             consultation.setStatus(form.getStatus());
         }
         else if (!consultation.getStatus().equals("IN APPROVAL") && !"edit".equals(mode))
@@ -84,11 +85,13 @@ public class ConsultationFileStateHandler
         this.userActionExecutor = userActionExecutor;
     }
 
-    public ConsultationDao getConsultationDao() {
+    public ConsultationDao getConsultationDao()
+    {
         return consultationDao;
     }
 
-    public void setConsultationDao(ConsultationDao consultationDao) {
+    public void setConsultationDao(ConsultationDao consultationDao)
+    {
         this.consultationDao = consultationDao;
     }
 }

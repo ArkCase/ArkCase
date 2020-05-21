@@ -51,6 +51,10 @@ public interface ConsultationService
 {
     Consultation getConsultationById(long id);
 
+    List<Consultation> getConsultationsByTitle(String title) throws AcmObjectNotFoundException;
+
+    Consultation getConsultationByIdWithChangeStatusIncluded(long id) throws AcmObjectNotFoundException;
+
     Consultation getConsultationByNumber(String consultationNumber);
 
     List<ConsultationsByStatusDto> getConsultationsByStatusAndByTimePeriod(TimePeriod numberOfDaysFromToday);
@@ -67,7 +71,8 @@ public interface ConsultationService
             IOException;
 
     @Transactional
-    Consultation saveConsultation(Consultation consultation, Map<String, List<MultipartFile>> filesMap, Authentication authentication, String ipAddress)
+    Consultation saveConsultation(Consultation consultation, Map<String, List<MultipartFile>> filesMap, Authentication authentication,
+            String ipAddress)
             throws AcmUserActionFailedException,
             AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmObjectNotFoundException, PipelineProcessException,
             IOException;
