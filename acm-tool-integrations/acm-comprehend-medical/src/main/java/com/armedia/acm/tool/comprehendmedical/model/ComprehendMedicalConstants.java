@@ -1,10 +1,10 @@
-package com.armedia.acm.services.notification.model;
+package com.armedia.acm.tool.comprehendmedical.model;
 
 /*-
  * #%L
- * ACM Service: Notification
+ * acm-comprehend-medical
  * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
+ * Copyright (C) 2014 - 2020 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 
@@ -27,7 +27,18 @@ package com.armedia.acm.services.notification.model;
  * #L%
  */
 
-public enum QueryType
+/**
+ * Created by Riste Tutureski <riste.tutureski@armedia.com> on 05/12/2020
+ */
+public interface ComprehendMedicalConstants
 {
-    CREATE, SELECT
+    String OBJECT_TYPE = "COMPREHEND_MEDICAL";
+
+    String SERVICE = "COMPREHEND_MEDICAL";
+
+    String COMPREHEND_MEDICAL_SYSTEM_USER = "COMPREHEND_MEDICAL_SERVICE";
+
+    String ENTITY_OBJECT_TYPE = "COMPREHEND_MEDICAL_ENTITY";
+
+    String ENTITY_ATTRIBUTE_OBJECT_TYPE = "COMPREHEND_MEDICAL_ENTITY_ATTRIBUTE";
 }

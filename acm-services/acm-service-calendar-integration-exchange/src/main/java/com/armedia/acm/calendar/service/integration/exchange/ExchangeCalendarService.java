@@ -31,15 +31,6 @@ import static com.armedia.acm.calendar.service.integration.exchange.CalendarEnti
 import static com.armedia.acm.calendar.service.integration.exchange.CalendarEntityHandler.PermissionType.READ;
 import static com.armedia.acm.calendar.service.integration.exchange.CalendarEntityHandler.PermissionType.WRITE;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import javax.persistence.PersistenceException;
-
 import com.armedia.acm.calendar.config.service.CalendarAdminService;
 import com.armedia.acm.calendar.config.service.CalendarConfiguration;
 import com.armedia.acm.calendar.config.service.CalendarConfigurationEvent;
@@ -74,6 +65,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.PersistenceException;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.PropertySet;
 import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
@@ -102,6 +102,7 @@ public class ExchangeCalendarService
     private Map<String, CalendarConfiguration> configurationsByType;
     private OutlookFolderRecreator folderRecreator;
     private SpringContextHolder springContextHolder;
+    private ExchangeEventPublisher exchangeEventPublisher;
 
     /*
      * (non-Javadoc)
@@ -166,7 +167,6 @@ public class ExchangeCalendarService
                         String.format("No CalendarEntityHandler registered for [%s] object type.", objectType)));
 
         AcmOutlookUser outlookUser = getOutlookUserForObject(auth, Long.valueOf(objectId), objectType, handler);
-        
 
         if (!handler.checkPermission(auth, objectType, objectId, READ))
         {
@@ -204,7 +204,7 @@ public class ExchangeCalendarService
         }
         else
         {
-            for (CalendarEntityHandler handler : getSpringContextHolder().getAllBeansOfType(CalendarEntityHandler.class).values() )
+            for (CalendarEntityHandler handler : getSpringContextHolder().getAllBeansOfType(CalendarEntityHandler.class).values())
             {
                 if (!configurationsByType.containsKey(handler.getEntityType())
                         && !configurationsByType.get(handler.getEntityType()).isIntegrationEnabled())
@@ -258,7 +258,7 @@ public class ExchangeCalendarService
 
         Appointment appointment;
         FolderId folderId;
-        try ( ExchangeService exchangeService = outlookDao.connect(outlookUser) )
+        try (ExchangeService exchangeService = outlookDao.connect(outlookUser))
         {
             appointment = new Appointment(exchangeService);
             ExchangeTypesConverter.setAppointmentProperties(appointment, calendarEvent, attachments, true);
@@ -270,9 +270,11 @@ public class ExchangeCalendarService
             // issue with ews-java-api library. Workaround solution for creating calendar event with attachment.
             // adding attachment successfully requires an update, by changing the subject, it will force an update
             appointment.save(folderId);
-            
+
             appointment.setSubject(calendarEvent.getSubject());
             appointment.update(ConflictResolutionMode.AlwaysOverwrite);
+            exchangeEventPublisher.publishCalendarEventAdded(calendarEvent, auth.getName(), Long.valueOf(calendarEvent.getObjectId()),
+                    calendarEvent.getObjectType());
         }
         catch (Exception e)
         {
@@ -312,7 +314,7 @@ public class ExchangeCalendarService
 
             AcmOutlookUser outlookUser = getOutlookUserForObject(auth, Long.valueOf(calendarEvent.getObjectId()),
                     calendarEvent.getObjectType(), handler);
-            
+
             if (!handler.checkPermission(auth, calendarEvent.getObjectType(), calendarEvent.getObjectId(), WRITE))
             {
                 log.warn("User [{}] does not have WRITE permission to access object with [{}] id of [{}] type.", user.getFullName(),
@@ -331,7 +333,7 @@ public class ExchangeCalendarService
                     appointment = Appointment.bindToRecurringMaster(exchangeService, new ItemId(calendarEvent.getEventId()));
                     updateRecurrence = true;
                 }
-            
+
                 PropertySet allProperties = new PropertySet();
                 allProperties.addRange(PropertyDefinitionHolder.standardProperties);
                 appointment.load(allProperties);
@@ -461,7 +463,7 @@ public class ExchangeCalendarService
                             String.format("No CalendarEntityHandler registered for [%s] object type.", objectType)));
 
             AcmOutlookUser outlookUser = getOutlookUserForObject(auth, Long.valueOf(objectId), objectType, handler);
-            
+
 
             if (!handler.checkPermission(auth, objectType, objectId, DELETE))
             {
@@ -471,7 +473,7 @@ public class ExchangeCalendarService
                         String.format("User [%s] does not have DELETE permission to access object with [%s] id of [%s] type.",
                                 user.getFullName(), objectId, objectType));
             }
-            try (ExchangeService exchangeService = outlookDao.connect(outlookUser)) 
+            try (ExchangeService exchangeService = outlookDao.connect(outlookUser))
             {
                 Appointment appointment = bindToAppointment(calendarEventId, exchangeService);
                 if (deleteRecurring && appointment.getIsRecurring())
@@ -615,7 +617,7 @@ public class ExchangeCalendarService
         }
 
         try (ExchangeService service = outlookDao.connect(user))
-        {            
+        {
             String calendarId = handler.getCalendarId(objectId.toString()).orElseThrow(() -> new Exception(
                     String.format("No outlook folder associated with object of type [%s] with id [%s].", objectType, objectId)));
 
@@ -640,7 +642,7 @@ public class ExchangeCalendarService
         try
         {
             CalendarEntityHandler handler = findEntityHandlerByObjectType(objectType);
-            if ( handler != null ) 
+            if ( handler != null )
             {
                 if (handler.isObjectClosed(objectId))
                 {
@@ -659,7 +661,7 @@ public class ExchangeCalendarService
 
     }
 
-    /* 
+    /*
      * (non-Javadoc)
      * @see
      * com.armedia.acm.calendar.config.service.CalendarAdminService#verifyEmailCredentials(com.armedia.acm.calendar.
@@ -671,7 +673,7 @@ public class ExchangeCalendarService
         AcmOutlookUser user = new AcmOutlookUser(userId, emailCredentials.getEmail(), emailCredentials.getPassword());
         log.debug("Verifying connection to Exchange as [{}]", user.getEmailAddress());
         try (ExchangeService service = outlookDao.connect(user))
-        {            
+        {
             log.debug("Binding to inbox as [{}]", user.getEmailAddress());
             Folder.bind(service, WellKnownFolderName.Inbox);
             return true;
@@ -777,14 +779,18 @@ public class ExchangeCalendarService
 
     }
 
-    public SpringContextHolder getSpringContextHolder() 
+    public SpringContextHolder getSpringContextHolder()
     {
         return springContextHolder;
     }
 
-    public void setSpringContextHolder(SpringContextHolder springContextHolder) 
+    public void setSpringContextHolder(SpringContextHolder springContextHolder)
     {
         this.springContextHolder = springContextHolder;
     }
 
+    public void setExchangeEventPublisher(ExchangeEventPublisher exchangeEventPublisher)
+    {
+        this.exchangeEventPublisher = exchangeEventPublisher;
+    }
 }

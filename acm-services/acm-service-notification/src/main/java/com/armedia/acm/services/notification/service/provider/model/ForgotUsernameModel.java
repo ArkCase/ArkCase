@@ -1,10 +1,10 @@
-package com.armedia.acm.services.notification.service;
+package com.armedia.acm.services.notification.service.provider.model;
 
 /*-
  * #%L
  * ACM Service: Notification
  * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
+ * Copyright (C) 2014 - 2020 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 
@@ -27,9 +27,26 @@ package com.armedia.acm.services.notification.service;
  * #L%
  */
 
-import com.armedia.acm.services.notification.model.Notification;
-
-public interface CustomTitleFormatter
+public class ForgotUsernameModel
 {
-    String format(Notification notification);
+    private final int systemAccountsNum;
+
+    private final String systemAccountsCommaSeparated;
+
+    public ForgotUsernameModel(int systemAccountsNum, String systemAccountsCommaSeparated)
+    {
+        this.systemAccountsNum = systemAccountsNum;
+        this.systemAccountsCommaSeparated = systemAccountsCommaSeparated;
+    }
+
+    public int getSystemAccountsNum()
+    {
+        return systemAccountsNum;
+    }
+
+    public String getSystemAccountsCommaSeparated()
+    {
+        return systemAccountsCommaSeparated;
+    }
+
 }

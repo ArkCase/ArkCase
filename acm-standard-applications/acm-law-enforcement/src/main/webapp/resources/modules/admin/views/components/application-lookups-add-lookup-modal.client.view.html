@@ -4,18 +4,20 @@
     </h3>
 </div>
 <div class="modal-body">
+    <form name="lookupEntryForm">
     <div class="row">
         <div class="col-sm-6 form-group">
             <label>{{'admin.application.lookups.config.lookupName' | translate}}</label><span class="required-asterisk">*</span>
             <input id="lookupName" ng-model="entry.name" class="input-md form-control"
-                    placeholder="{{ 'admin.application.lookups.config.placeholder' | translate }}">
+                    placeholder="{{ 'admin.application.lookups.config.placeholder' | translate }}" required>
         </div>
         <div class="col-sm-6 form-group">
             <label translate>{{'admin.application.lookups.config.label' | translate}}</label><span class="required-asterisk">*</span>
-            <select id="lookupTypes" class="input-md form-control" ng-model="entry.lookupType" ng-options="item for item in lookupTypes">
+            <select id="lookupTypes" class="input-md form-control" ng-model="entry.lookupType" ng-options="item for item in lookupTypes" required>
             </select>
         </div>
     </div>
+    </form>
 </div>
 <div class="modal-footer">
     <button class="btn btn-secondary" ng-click="onClickCancel()">
