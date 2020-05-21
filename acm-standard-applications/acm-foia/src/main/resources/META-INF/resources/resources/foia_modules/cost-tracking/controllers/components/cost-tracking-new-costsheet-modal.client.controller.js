@@ -36,7 +36,8 @@ angular.module('cost-tracking').controller(
                                     parentNumber: '',
                                     details: '',
                                     costs: [ {
-                                        date: new Date()
+                                        date: new Date(),
+                                        title: $scope.primaryTitle ? $scope.primaryTitle.key : ''
                                     } ],
                                     participants: []
                                 };
@@ -138,6 +139,12 @@ angular.module('cost-tracking').controller(
 
                     ObjectLookupService.getCostsheetTitles().then(function(costsheetTitles) {
                         $scope.costsheetTitles = costsheetTitles;
+                        $scope.primaryTitle = null;
+                        $scope.costsheetTitles.forEach(function(title) {
+                            if (title.primary === true) {
+                                $scope.primaryTitle = title;
+                            }
+                        });
                     });
                     ObjectLookupService.getCostsheetStatuses().then(function(costsheetStatuses) {
                         $scope.costsheetStatuses = costsheetStatuses;
@@ -204,7 +211,8 @@ angular.module('cost-tracking').controller(
                         $timeout(function() {
                             if (!_.isEmpty($scope.costsheet.costs[0])) {
                                 $scope.costsheet.costs.push({
-                                    date: new Date()
+                                    date: new Date(),
+                                    title: $scope.primaryTitle ? $scope.primaryTitle.key : ''
                                 });
                             }
                         }, 0);
