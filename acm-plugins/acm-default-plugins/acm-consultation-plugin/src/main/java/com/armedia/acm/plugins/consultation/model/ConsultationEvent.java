@@ -38,6 +38,7 @@ import java.util.Date;
  */
 public class ConsultationEvent extends AcmEvent
 {
+    private static final long serialVersionUID = -3473372912966220208L;
     private Authentication eventUser;
     private Consultation consultation;
 

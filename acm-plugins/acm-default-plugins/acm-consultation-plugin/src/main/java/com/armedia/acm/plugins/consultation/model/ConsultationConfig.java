@@ -68,8 +68,8 @@ public class ConsultationConfig implements SupportsFileTypes, AcmPluginConfigBea
     @Value("${consultation.plugin.auto_create_calendar_folder}")
     private Boolean autoCreateCalendarFolder;
 
-    @JsonProperty("consultation.plugin.delete_calendar_folder_after_Consultation_closed")
-    @Value("${consultation.plugin.delete_calendar_folder_after_Consultation_closed}")
+    @JsonProperty("consultation.plugin.delete_calendar_folder_after_consultation_closed")
+    @Value("${consultation.plugin.delete_calendar_folder_after_consultation_closed}")
     private Boolean deleteCalendarFolderAfterConsultationClosed;
 
     @JsonProperty("consultation.plugin.folder.structure")

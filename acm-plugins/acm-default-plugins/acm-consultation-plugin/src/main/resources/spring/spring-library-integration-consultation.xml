@@ -7,7 +7,7 @@
     <int:channel id="consultationFilteredMailChannel"/>
 
     <bean id="consultationMailFilter" class="com.armedia.acm.services.email.filter.AcmObjectPatternMailFilter" scope="refresh">
-        <constructor-arg index="0" value="#{consultationConfig.emailRegexCaseNumber}"/>
+        <constructor-arg index="0" value="#{consultationConfig.emailRegexConsultationNumber}"/>
         <constructor-arg index="1" value="#{consultationConfig.emailRegexObjectType}"/>
         <aop:scoped-proxy/>
     </bean>
@@ -16,7 +16,7 @@
         <constructor-arg index="0" ref="consultationDao"/>
         <property name="mailDirectory" value="#{consultationConfig.emailFolderRelativePath}"/>
         <property name="enabled" value="#{consultationConfig.emailHandlerEnabled}"/>
-        <property name="objectIdRegexPattern" value="#{consultationConfig.emailRegexCaseNumber}"/>
+        <property name="objectIdRegexPattern" value="#{consultationConfig.emailRegexConsultationNumber}"/>
         <property name="acmFolderService" ref="acmFolderService"/>
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>

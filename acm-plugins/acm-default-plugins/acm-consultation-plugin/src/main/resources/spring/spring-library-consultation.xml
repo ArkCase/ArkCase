@@ -11,7 +11,8 @@
         <property name="consultationEventUtility" ref="consultationEventUtility"/>
         <property name="acmAssignmentDao" ref="acmAssignmentDao"/>
         <property name="calendarService" ref="outlookContainerService"/>
-        <property name="shouldDeleteCalendarFolder" value="#{consultationConfig.deleteCalendarFolderAfterCaseClosed}"/>
+        <property name="shouldDeleteCalendarFolder"
+                  value="#{consultationConfig.deleteCalendarFolderAfterConsultationClosed}"/>
         <property name="consultationStatusClosed" value="#{consultationConfig.statusClosed}"/>
         <property name="calendarAdminService" ref="outlookCalendarAdminServiceExtension"/>
         <property name="objectConverter" ref="objectConverter"/>
@@ -31,7 +32,7 @@
     </bean>
 
     <bean id="changeConsultationConfigStatusWorkflowListener123"
-        class="com.armedia.acm.plugins.consultation.service.ChangeConsultationStatusWorkflowListener">
+          class="com.armedia.acm.plugins.consultation.listener.ChangeConsultationStatusWorkflowListener">
         <property name="fileWorkflowBusinessRule" ref="fileWorkflowBusinessRule"/>
         <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
         <property name="changeConsultationStatusTaskName" ref="changeConsultationStatusTaskName"/>
@@ -84,7 +85,8 @@
         <property name="formsTypeCheckService" ref="formsTypeCheckService"/>
     </bean>
 
-    <bean id="consultationToSolrTransformer" class="com.armedia.acm.plugins.consultation.service.ConsultationToSolrTransformer">
+    <bean id="consultationToSolrTransformer"
+          class="com.armedia.acm.plugins.consultation.transformer.ConsultationToSolrTransformer">
         <property name="userDao" ref="userJpaDao"/>
         <property name="consultationDao" ref="consultationDao"/>
         <property name="businessProcessDao" ref="businessProcessDao"/>
@@ -103,17 +105,13 @@
         <property name="configurationPropertyService" ref="configurationPropertyService"/>
     </bean>
 
-    <!-- post-save handlers -->
-    <bean id="consultationEventHandler" class="com.armedia.acm.plugins.consultation.pipeline.postsave.ConsultationEventHandler">
-        <property name="consultationEventUtility" ref="consultationEventUtility"/>
-    </bean>
-
     <bean id="changeConsultationStatusProcessEndListener"
         class="com.armedia.acm.plugins.consultation.listener.ChangeConsultationStatusProcessEndListener">
         <property name="changeConsultationStateService" ref="changeConsultationStateService"/>
     </bean>
 
-    <bean id="consultationHistoryListener" class="com.armedia.acm.plugins.consultation.service.ConsultationHistoryListener">
+    <bean id="consultationHistoryListener"
+          class="com.armedia.acm.plugins.consultation.listener.ConsultationHistoryListener">
         <property name="acmObjectHistoryService" ref="acmObjectHistoryService"/>
         <property name="nonHistoryGeneratingEvents">
             <list>
@@ -160,47 +158,51 @@
     </bean>
 
     <bean id="consultationNextPossibleQueuesBusinessRule"
-        class="com.armedia.acm.plugins.consultation.service.ConsultationNextPossibleQueuesBusinessRule"
-        parent="simpleStatelessSingleObjectRuleManager">
+          class="com.armedia.acm.plugins.consultation.service.ConsultationNextPossibleQueuesBusinessRule"
+          parent="simpleStatelessSingleObjectRuleManager">
         <property name="ruleSpreadsheetFilename" value="drools-next-possible-queues-rules.xlsx"/>
     </bean>
 
-    <bean id="leaveCurrentQueueBusinessRule"
-        class="com.armedia.acm.plugins.consultation.service.LeaveCurrentQueueBusinessRule"
-        parent="simpleStatelessSingleObjectRuleManager">
+    <bean id="consultationLeaveCurrentQueueBusinessRule"
+          class="com.armedia.acm.plugins.consultation.service.LeaveCurrentQueueBusinessRule"
+          parent="simpleStatelessSingleObjectRuleManager">
         <property name="ruleSpreadsheetFilename" value="drools-leave-current-queue-rules.xlsx"/>
     </bean>
 
-    <bean id="enterQueueBusinessRule" class="com.armedia.acm.plugins.consultation.service.EnterQueueBusinessRule"
-        parent="simpleStatelessSingleObjectRuleManager">
+    <bean id="consultationEnterQueueBusinessRule"
+          class="com.armedia.acm.plugins.consultation.service.EnterQueueBusinessRule"
+          parent="simpleStatelessSingleObjectRuleManager">
         <property name="ruleSpreadsheetFilename" value="drools-enter-queue-rules.xlsx"/>
     </bean>
-    <bean id="systemConfigurationService" class="com.armedia.acm.plugins.consultation.service.SystemConfigurationService">
 
+    <bean id="consultationSystemConfigurationService"
+          class="com.armedia.acm.plugins.consultation.service.SystemConfigurationService">
     </bean>
 
-    <bean id="onLeaveQueueBusinessRule" class="com.armedia.acm.plugins.consultation.service.OnLeaveQueueBusinessRule"
-        parent="simpleStatelessSingleObjectRuleManager">
+    <bean id="consultationOnLeaveQueueBusinessRule"
+          class="com.armedia.acm.plugins.consultation.service.OnLeaveQueueBusinessRule"
+          parent="simpleStatelessSingleObjectRuleManager">
         <property name="ruleSpreadsheetFilename" value="drools-on-leave-queue-rules.xlsx"/>
     </bean>
 
-    <bean id="onEnterQueueBusinessRule" class="com.armedia.acm.plugins.consultation.service.OnEnterQueueBusinessRule"
-        parent="simpleStatelessSingleObjectRuleManager">
+    <bean id="consultationOnEnterQueueBusinessRule"
+          class="com.armedia.acm.plugins.consultation.service.OnEnterQueueBusinessRule"
+          parent="simpleStatelessSingleObjectRuleManager">
         <property name="ruleSpreadsheetFilename" value="drools-on-enter-queue-rules.xlsx"/>
     </bean>
 
     <bean id="enqueueConsultationService" class="com.armedia.acm.plugins.consultation.service.EnqueueConsultationServiceImpl">
         <property name="consultationDao" ref="consultationDao"/>
-        <property name="leaveCurrentQueueBusinessRule" ref="leaveCurrentQueueBusinessRule"/>
+        <property name="leaveCurrentQueueBusinessRule" ref="consultationLeaveCurrentQueueBusinessRule"/>
         <property name="consultationNextPossibleQueuesBusinessRule" ref="consultationNextPossibleQueuesBusinessRule"/>
-        <property name="enterQueueBusinessRule" ref="enterQueueBusinessRule"/>
-        <property name="onLeaveQueueBusinessRule" ref="onLeaveQueueBusinessRule"/>
-        <property name="onEnterQueueBusinessRule" ref="onEnterQueueBusinessRule"/>
+        <property name="enterQueueBusinessRule" ref="consultationEnterQueueBusinessRule"/>
+        <property name="onLeaveQueueBusinessRule" ref="consultationOnLeaveQueueBusinessRule"/>
+        <property name="onEnterQueueBusinessRule" ref="consultationOnEnterQueueBusinessRule"/>
         <property name="queueService" ref="queueService"/>
         <property name="startBusinessProcessService" ref="startBusinessProcessService"/>
         <property name="saveConsultationBusinessRule" ref="saveConsultationBusinessRule"/>
         <property name="acmObjectLockService" ref="objectLockService"/>
-        <property name="systemConfigurationService" ref="systemConfigurationService"/>
+        <property name="systemConfigurationService" ref="consultationSystemConfigurationService"/>
         <property name="timesheetService" ref="timesheetService"/>
     </bean>
 

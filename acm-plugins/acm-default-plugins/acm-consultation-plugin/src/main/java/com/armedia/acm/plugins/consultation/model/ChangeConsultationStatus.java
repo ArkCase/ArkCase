@@ -67,6 +67,7 @@ import java.util.List;
 @JsonIdentityInfo(generator = JSOGGenerator.class)
 public class ChangeConsultationStatus implements Serializable, AcmObject, AcmEntity, AcmParentObjectInfo
 {
+    private static final long serialVersionUID = -6666524323867280505L;
     @Id
     @TableGenerator(name = "change_consultation_status_gen", table = "acm_change_consultation_status_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_change_consultation_status", initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "change_consultation_status_gen")

@@ -106,4 +106,14 @@ public class ConsultationStartBusinessProcessIfNeededHandler implements Pipeline
     {
         this.startBusinessProcessService = startBusinessProcessService;
     }
+
+    public ConsultationStartBusinessProcessBusinessRule getStartBusinessProcessBusinessRule()
+    {
+        return startBusinessProcessBusinessRule;
+    }
+
+    public void setStartBusinessProcessBusinessRule(ConsultationStartBusinessProcessBusinessRule startBusinessProcessBusinessRule)
+    {
+        this.startBusinessProcessBusinessRule = startBusinessProcessBusinessRule;
+    }
 }

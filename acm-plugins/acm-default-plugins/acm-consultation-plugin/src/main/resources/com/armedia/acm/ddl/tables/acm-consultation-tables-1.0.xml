@@ -6,18 +6,7 @@
     <property name="consultationNumberLength" value="1024" dbms="postgresql,oracle"/>
     <property name="consultationNumberLength" value="255" dbms="mysql,mssql"/>
 
-    <changeSet id="01-consultation-add-acm_consultation-id" author="vladimir.cherepnalkovski">
-        <createTable tableName="acm_consultation_id">
-            <column name="cm_seq_num" type="${idType}"/>
-            <column name="cm_seq_name" type="VARCHAR(255)"/>
-        </createTable>
-        <insert tableName="acm_consultation_id">
-            <column name="cm_seq_num" value="100"></column>
-            <column name="cm_seq_name" value="acm_consultation"></column>
-        </insert>
-    </changeSet>
-
-    <changeSet id="02-consultation-add-acm-consultation-table" author="vladimir.cherepnalkovski"
+    <changeSet id="01-consultation-add-acm-consultation-table" author="vladimir.cherepnalkovski"
                dbms="oracle,postgresql,mssql">
         <createTable tableName="acm_consultation">
             <column name="cm_consultation_id" type="${idType}">
@@ -69,11 +58,11 @@
                 <constraints nullable="false"/>
             </column>
             <column name="cm_container_id" type="${fkIdType}"/>
-            <column name="cm_responsible_organization" type="VARCHAR(100)"/>
+            <column name="cm_responsible_organization" type="VARCHAR(100)"/><!--
             <column name="cm_queue_id" type="${fkIdType}">
                 <constraints foreignKeyName="fk_queue_id" referencedColumnNames="cm_queue_id"
                              referencedTableName="acm_queue"/>
-            </column>
+            </column>-->
             <column name="cm_queue_enter_date" type="${timestampType}"/>
             <column name="cm_response_due_date" type="${timestampType}"/>
             <column name="cm_previous_queue_id" type="${idType}"/>
@@ -83,8 +72,7 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="03-consultation-add-acm-consultation-table" author="vladimir.cherepnalkovski"
-               dbms="mysql">
+    <changeSet id="02-consultation-add-acm-consultation-table" author="vladimir.cherepnalkovski" dbms="mysql">
         <createTable tableName="acm_consultation">
             <column name="cm_consultation_id" type="${idType}">
                 <constraints primaryKeyName="pk_acm_consultation" primaryKey="true"/>
@@ -136,11 +124,11 @@
                 <constraints nullable="false"/>
             </column>
             <column name="cm_container_id" type="${fkIdType}"/>
-            <column name="cm_responsible_organization" type="VARCHAR(100)"/>
+            <column name="cm_responsible_organization" type="VARCHAR(100)"/><!--
             <column name="cm_queue_id" type="${fkIdType}">
                 <constraints foreignKeyName="fk_queue_id" referencedColumnNames="cm_queue_id"
                              referencedTableName="acm_queue"/>
-            </column>
+            </column>-->
             <column name="cm_queue_enter_date" type="${timestampType}" defaultValueComputed="${timestampFunction}"/>
             <column name="cm_response_due_date" type="${timestampType}" defaultValueComputed="${timestampFunction}"/>
             <column name="cm_previous_queue_id" type="${idType}"/>
@@ -148,10 +136,17 @@
             <column name="cm_legacy_system_id" type="VARCHAR(255)"/>
             <column name="cm_consultation_denied_flag" type="VARCHAR(10)" defaultValue="false"/>
         </createTable>
+    </changeSet>
 
-        <createIndex tableName="acm_consultation" indexName="idx_consultation_title">
-            <column name="cm_consultation_title"/>
-        </createIndex>
+    <changeSet id="03-consultation-add-acm_consultation-id" author="vladimir.cherepnalkovski">
+        <createTable tableName="acm_consultation_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_consultation_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_consultation"></column>
+        </insert>
     </changeSet>
 
     <changeSet id="04-create-index-column-title" author="vladimir.cherepnalkovski" dbms="oracle,postgresql,mssql">

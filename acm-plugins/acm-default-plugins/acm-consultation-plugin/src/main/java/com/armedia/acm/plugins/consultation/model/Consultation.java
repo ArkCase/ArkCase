@@ -97,6 +97,7 @@ public class Consultation implements Serializable, AcmAssignedObject, AcmEntity,
         AcmContainerEntity, AcmChildObjectEntity, AcmLegacySystemEntity, AcmNotifiableEntity, AcmStatefulEntity, AcmTitleEntity,
         AcmObjectNumber, AcmObjectOriginator, AcmAssignee
 {
+    private static final long serialVersionUID = -5928088812627902803L;
     @Id
     @TableGenerator(name = "consultation_gen", table = "acm_consultation_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_consultation", initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "consultation_gen")
