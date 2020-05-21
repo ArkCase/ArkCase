@@ -53,7 +53,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="cm_consultation_closed" type="DATE"/>
-            <column name="cm_case_disposition" type="VARCHAR(4000)"/>
+            <column name="cm_consultation_disposition" type="VARCHAR(4000)"/>
             <column name="cm_consultation_priority" type="VARCHAR(1024)"/>
             <column name="cm_consultation_external_flag" type="BOOLEAN" defaultValueBoolean="false">
                 <constraints nullable="false"/>
@@ -120,7 +120,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="cm_consultation_closed" type="DATE"/>
-            <column name="cm_case_disposition" type="VARCHAR(4000)"/>
+            <column name="cm_consultation_disposition" type="VARCHAR(4000)"/>
             <column name="cm_consultation_priority" type="VARCHAR(1024)"/>
             <column name="cm_consultation_external_flag" type="BOOLEAN" defaultValueBoolean="false">
                 <constraints nullable="false"/>

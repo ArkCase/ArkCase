@@ -117,7 +117,7 @@ public class ConsultationDao extends AcmAbstractDao<Consultation> implements Acm
         }
         catch (Exception e)
         {
-            LOG.warn("No consultation file has consultation number {}", consultationNumber);
+            LOG.warn("No consultation has consultation number {}", consultationNumber);
         }
         return result;
     }

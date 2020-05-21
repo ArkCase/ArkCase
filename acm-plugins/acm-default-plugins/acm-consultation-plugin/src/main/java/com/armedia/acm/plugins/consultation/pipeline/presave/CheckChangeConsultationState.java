@@ -63,7 +63,7 @@ public class CheckChangeConsultationState implements PipelineHandler<ChangeConsu
         if (consultation == null)
         {
             throw new PipelineProcessException(
-                    String.format("Cannot find consultation file by given consultationId=%d", form.getConsultationId()));
+                    String.format("Cannot find consultation by given consultationId=%d", form.getConsultationId()));
         }
 
         // Skip if the consultation is already closed or in "in approval" and if it's not edit mode

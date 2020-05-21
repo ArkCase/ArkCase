@@ -64,7 +64,7 @@ public class ChangeConsultationStatusProcessEndListener
                 String user = event.getUserId();
 
                 log.debug("Request: [{}]", requestId);
-                log.debug("Consultation file id: [{}]", consultationId);
+                log.debug("Consultation id: [{}]", consultationId);
                 log.debug("User: [{}]", user);
 
                 getChangeConsultationStateService().handleChangeConsultationStatusApproved(consultationId, requestId, user,

@@ -36,7 +36,6 @@ import com.armedia.acm.plugins.businessprocess.model.OnLeaveQueueModel;
 import com.armedia.acm.plugins.businessprocess.model.SystemConfiguration;
 import com.armedia.acm.plugins.businessprocess.service.QueueService;
 import com.armedia.acm.plugins.businessprocess.service.StartBusinessProcessService;
-import com.armedia.acm.plugins.casefile.service.SystemConfigurationService;
 import com.armedia.acm.plugins.consultation.dao.ConsultationDao;
 import com.armedia.acm.plugins.consultation.model.Consultation;
 import com.armedia.acm.plugins.consultation.model.ConsultationConstants;
@@ -62,7 +61,7 @@ import java.util.Map;
 /**
  * Created by Vladimir Cherepnalkovski <vladimir.cherepnalkovski@armedia.com> on May, 2020
  */
-public class EnqueueConsultationFileServiceImpl implements EnqueueConsultationFileService
+public class EnqueueConsultationServiceImpl implements EnqueueConsultationService
 {
     private final Logger log = LogManager.getLogger(getClass());
 
