@@ -13,11 +13,16 @@
             <input id="key" type="text" ng-model="entry.key" class="input-md form-control"
                    placeholder="{{ 'admin.application.lookups.config.modal.key.placeholder' | translate }}" ng-readonly="isEdit">
         </div>
-        <div class="col-sm-8 form-group">
+        <div class="col-sm-4 form-group">
             <label for="Value" translate>admin.application.lookups.config.data.value</label><span class="required-asterisk">*</span>
             <!-- TODO: select from existing labels modal form -->
             <input id="value" type="text" ng-model="entry.value" class="input-md form-control" required="required"
                    placeholder="{{ 'admin.application.lookups.config.modal.value.placeholder' | translate }}" ng-click="pickLabel()">
+        </div>
+        <div class="col-sm-4 form-group">
+            <label for="Description" translate>admin.application.lookups.config.data.description</label>
+            <input id="description" type="text" ng-model="entry.description" class="input-md form-control"
+                   placeholder="{{ 'admin.application.lookups.config.modal.description.placeholder' | translate }}">
         </div>
     </div>
     <div class="row" ng-if="isDefaultEnabled">

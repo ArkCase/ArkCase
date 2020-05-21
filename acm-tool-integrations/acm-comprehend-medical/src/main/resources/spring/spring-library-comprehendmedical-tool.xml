@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <bean id="awsComprehendMedicalService" class="com.armedia.acm.tool.comprehendmedical.service.AWSComprehendMedicalServiceImpl" init-method="init">
+        <property name="awsComprehendMedicalConfigurationService" ref="awsComprehendMedicalConfigurationService"/>
+        <property name="awsComprehendMedicalCredentialsConfigurationService" ref="awsComprehendMedicalCredentialsConfigurationService"/>
+        <property name="mediaEngineIntegrationEventPublisher" ref="mediaEngineIntegrationEventPublisher"/>
+    </bean>
+
+    <bean id="awsComprehendMedicalConfiguration" class="com.armedia.acm.tool.comprehendmedical.model.AWSComprehendMedicalConfiguration" scope="refresh">
+        <aop:scoped-proxy/>
+    </bean>
+
+    <bean id="awsComprehendMedicalCredentialsConfiguration" class="com.armedia.acm.tool.comprehendmedical.model.AWSCredentialsConfiguration" scope="refresh">
+        <aop:scoped-proxy/>
+    </bean>
+
+    <bean id="awsComprehendMedicalConfigurationService" class="com.armedia.acm.tool.comprehendmedical.service.AWSComprehendMedicalConfigurationService">
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
+        <property name="awsComprehendMedicalConfiguration" ref="awsComprehendMedicalConfiguration"/>
+    </bean>
+
+    <bean id="awsComprehendMedicalCredentialsConfigurationService"
+        class="com.armedia.acm.tool.comprehendmedical.service.AWSComprehendMedicalCredentialsConfigurationService">
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
+        <property name="awsCredentialsConfig" ref="awsComprehendMedicalCredentialsConfiguration"/>
+        <property name="acmCryptoUtils" ref="acmCryptoUtils"/>
+        <property name="encryptionProperties" ref="acmEncryptablePropertyUtils"/>
+    </bean>
+</beans>

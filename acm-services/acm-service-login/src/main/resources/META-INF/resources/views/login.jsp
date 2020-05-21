@@ -188,6 +188,10 @@ Time: 12:44
         Valid user with this username and email address does not exist in the system.
     </div>
 
+    <div id="forgot-generic-error" style="display:none" class="alert alert-danger">
+      Server error.
+    </div>
+
 
     <form id="login-form" action="<%= request.getContextPath()%>/j_spring_security_check" method="post">
         <div class="list-group">
@@ -276,6 +280,7 @@ Time: 12:44
             $('#forgot-username-error').hide();
             $('#forgot-password-success').hide();
             $('#forgot-password-error').hide();
+            $('#forgot-generic-error').hide();
         });
 
         $('#forgot-username').on('submit', function (e) {
@@ -288,8 +293,10 @@ Time: 12:44
                 .always(function (data) {
                     if (data.status === 200) {
                         $('#forgot-username-success').show();
-                    } else {
+                    } else if (data.status === 404) {
                         $('#forgot-username-error').show();
+                    } else {
+                        $('#forgot-generic-error').show();
                     }
                 });
         });
@@ -299,6 +306,7 @@ Time: 12:44
             $('#forgot-password-error').hide();
             $('#forgot-username-success').hide();
             $('#forgot-username-error').hide();
+            $('#forgot-generic-error').hide();
         });
 
         $('#forgot-password').on('submit', function (e) {
@@ -310,8 +318,10 @@ Time: 12:44
                 .always(function (data) {
                     if (data.status === 200) {
                         $('#forgot-password-success').show();
-                    } else {
+                    } else if (data.status === 404) {
                         $('#forgot-password-error').show();
+                    } else {
+                        $('#forgot-generic-error').show();
                     }
                 });
         });

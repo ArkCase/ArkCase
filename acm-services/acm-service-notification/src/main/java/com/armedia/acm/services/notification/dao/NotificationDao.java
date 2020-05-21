@@ -31,9 +31,7 @@ import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.notification.model.NotificationRule;
-import com.armedia.acm.services.notification.service.CustomTitleFormatter;
 import com.armedia.acm.services.notification.service.NotificationUtils;
-import com.armedia.acm.services.notification.service.UsersNotified;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -43,7 +41,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.Parameter;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.persistence.TypedQuery;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -140,79 +137,7 @@ public class NotificationDao extends AcmAbstractDao<Notification>
      */
     public List<Notification> executeQuery(Map<String, Object> parameters, int firstResult, int maxResult, NotificationRule rule)
     {
-        List<Notification> notifications = new ArrayList<>();
-
-        switch (rule.getQueryType())
-        {
-        case CREATE:
-            notifications = createNotifications(parameters, firstResult, maxResult, rule);
-            break;
-
-        case SELECT:
-            notifications = getNotifications(parameters, firstResult, maxResult, rule.getJpaQuery());
-            break;
-        }
-
-        return notifications;
-    }
-
-    /**
-     * This method is called when we have mixed query and depends on that query, new notification should be created.
-     *
-     * @param parameters
-     * @param firstResult
-     * @param maxResult
-     * @param rule
-     * @return
-     */
-    private List<Notification> createNotifications(Map<String, Object> parameters, int firstResult, int maxResult,
-            NotificationRule rule)
-    {
-        TypedQuery<Object[]> select = getEm().createQuery(rule.getJpaQuery(), Object[].class);
-
-        select = (TypedQuery<Object[]>) populateQueryParameters(select, parameters);
-        select.setFirstResult(firstResult);
-        select.setMaxResults(maxResult);
-
-        List<Notification> notifications = new ArrayList<>();
-
-        for (Object[] obj : select.getResultList())
-        {
-            Long parentId = (Long) obj[3];
-            String parentType = (String) obj[4];
-            Long relatedObjectId = (Long) obj[7];
-            String relatedObjectType = (String) obj[8];
-            String objectType = relatedObjectType != null ? relatedObjectType : parentType;
-            Long objectId = relatedObjectType != null ? relatedObjectId : parentId;
-            UsersNotified usersNotified = rule.getUsersNotified();
-            Notification notificationForAssociatedUsers = usersNotified.getNotification(obj, objectId, objectType);
-
-            setNotificationTitle(notificationForAssociatedUsers, rule);
-            setNotificationRelatedObjectNumber(notificationForAssociatedUsers);
-
-            notifications.add(notificationForAssociatedUsers);
-        }
-
-        return notifications;
-    }
-
-    private void setNotificationTitle(Notification notification, NotificationRule rule)
-    {
-        CustomTitleFormatter customTitleFormatter = rule.getCustomTitleFormatter();
-        if (customTitleFormatter != null)
-        {
-            String title = customTitleFormatter.format(notification);
-            notification.setTitle(title);
-            notification.setNote(title);
-        }
-    }
-
-    private void setNotificationRelatedObjectNumber(Notification notification)
-    {
-        String relatedObjectNumber = getNotificationUtils()
-                .getNotificationParentOrRelatedObjectNumber(notification.getRelatedObjectType(),
-                        notification.getRelatedObjectId());
-        notification.setRelatedObjectNumber(relatedObjectNumber);
+        return getNotifications(parameters, firstResult, maxResult, rule.getJpaQuery());
     }
 
     /**

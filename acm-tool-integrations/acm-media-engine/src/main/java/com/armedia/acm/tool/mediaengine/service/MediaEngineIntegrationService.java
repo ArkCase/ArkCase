@@ -38,7 +38,7 @@ import java.util.Map;
  */
 public interface MediaEngineIntegrationService
 {
-    void create(MediaEngineDTO mediaEngineDTO) throws CreateMediaEngineToolException;
+    MediaEngineDTO create(MediaEngineDTO mediaEngineDTO) throws CreateMediaEngineToolException;
 
     MediaEngineDTO get(String remoteId, Map<String, Object> props) throws GetMediaEngineToolException;
 

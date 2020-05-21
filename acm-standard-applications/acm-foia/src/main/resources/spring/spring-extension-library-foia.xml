@@ -432,6 +432,10 @@
             <beans:property name="springContextHolder" ref="acmContextHolder"/>
         </beans:bean>
 
+        <beans:bean id="assignmentNotifier" class="gov.foia.listener.FoiaAssignmentNotifier">
+            <beans:property name="notificationUtils" ref="notificationUtils"/>
+            <beans:property name="notificationService" ref="notificationService"/>
+        </beans:bean>
 
     </beans:beans>
 </beans:beans>

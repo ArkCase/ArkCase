@@ -53,6 +53,7 @@ angular.module('admin').controller('Admin.InverseValuesLookupModalController', [
         modalInstance.result.then(function(data) {
             $scope.entry.inverseKey = data.entry.key;
             $scope.entry.inverseValue = data.entry.value;
+            $scope.entry.description = data.entry.description;
 
         });
     } //end pickInverseLabel function

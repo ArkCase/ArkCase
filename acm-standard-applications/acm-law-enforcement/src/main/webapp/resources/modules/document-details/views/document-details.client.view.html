@@ -28,10 +28,6 @@
                         <div class="h4 font-bold">{{::ecmFile.created | date : locale.DATETIME_FORMATS.shortDate}}</div>
                         <small class="text-muted" translate>documentDetails.created</small>
                     </div>
-                    <!--<div class="col-sm-3">
-                        <div class="h4 font-bold">{{::assignee | mapKeyValue: userList:'object_id_s':'name' || 'common.value.unknown' | translate}}</div>
-                        <small class="text-muted" translate>documentDetails.assignee</small>
-                    </div>-->
                     <div class="col-sm-6 col-md-2">
                         <div class="h4 font-bold">{{fileType || 'common.value.unknown' | translate}}</div>
                         <small class="text-muted" translate>documentDetails.name</small>
@@ -39,6 +35,14 @@
                     <div class="col-sm-6 col-md-2">
                         <div class="h4 font-bold">{{ecmFile.status || 'common.value.unknown' | translate}}</div>
                         <small class="text-muted" translate>documentDetails.status</small>
+                    </div>
+                    <div class="col-sm-6 col-md-2" ng-show="comprehendMedicalEnabled">
+                        <div ng-controller="Document.MedicalComprehendController">
+                            <div class="h4 font-bold" ng-style="{'color': colorComprehendMedicalStatus}">
+                                {{comprehendMedicalObj.status || 'documentDetails.comp.comprehendMedical.readyStatus' | translate}}
+                            </div>
+                            <small class="text-muted" translate>documentDetails.comp.comprehendMedical.status</small>
+                        </div>
                     </div>
                 </div>
 

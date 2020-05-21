@@ -34,6 +34,8 @@ public abstract class AcmLookupEntry
 
     private boolean primary;
 
+    private String description;
+
     public boolean isReadonly()
     {
         return readonly;
@@ -52,5 +54,15 @@ public abstract class AcmLookupEntry
     public void setPrimary(boolean primary)
     {
         this.primary = primary;
+    }
+
+    public String getDescription()
+    {
+        return description;
+    }
+
+    public void setDescription(String description)
+    {
+        this.description = description;
     }
 }

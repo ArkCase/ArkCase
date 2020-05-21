@@ -36,6 +36,13 @@
                     ng-click="pickInverseLabel()">
         </div>
     </div>
+    <div class="row">
+        <div class="col-sm-12 form-group">
+            <label for="Description" translate>admin.application.lookups.config.data.description</label>
+            <input id="description" type="text" ng-model="entry.description" class="input-md form-control"
+                   placeholder="{{ 'admin.application.lookups.config.modal.description.placeholder' | translate }}">
+        </div>
+    </div>
 </div>
 <div class="modal-footer">
     <button class="btn btn-secondary" ng-click="onClickCancel()">
