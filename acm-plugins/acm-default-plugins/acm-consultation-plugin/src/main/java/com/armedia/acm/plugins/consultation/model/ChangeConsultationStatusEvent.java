@@ -46,8 +46,8 @@ public class ChangeConsultationStatusEvent extends AcmEvent
     private String mode;
 
     public ChangeConsultationStatusEvent(String consultationNumber, Long consultationId, ChangeConsultationStatus source,
-                                         UploadedFiles files, String mode, String userId, String ipAddress,
-                                         boolean succeeded)
+            UploadedFiles files, String mode, String userId, String ipAddress,
+            boolean succeeded)
     {
         super(source);
 
@@ -91,19 +91,23 @@ public class ChangeConsultationStatusEvent extends AcmEvent
         this.uploadedFiles = uploadedFiles;
     }
 
-    public String getConsultationNumber() {
+    public String getConsultationNumber()
+    {
         return consultationNumber;
     }
 
-    public void setConsultationNumber(String consultationNumber) {
+    public void setConsultationNumber(String consultationNumber)
+    {
         this.consultationNumber = consultationNumber;
     }
 
-    public Long getConsultationId() {
+    public Long getConsultationId()
+    {
         return consultationId;
     }
 
-    public void setConsultationId(Long consultationId) {
+    public void setConsultationId(Long consultationId)
+    {
         this.consultationId = consultationId;
     }
 

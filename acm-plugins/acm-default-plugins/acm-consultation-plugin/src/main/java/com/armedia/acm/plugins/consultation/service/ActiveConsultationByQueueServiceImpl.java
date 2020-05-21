@@ -221,7 +221,8 @@ public class ActiveConsultationByQueueServiceImpl implements ActiveConsultationB
             {
                 try
                 {
-                    // Try to find the next element in the list. It should represent number of consultations in the queue
+                    // Try to find the next element in the list. It should represent number of consultations in the
+                    // queue
                     Integer count = (Integer) facetFieldValue.get(index + 1);
                     return new Long(count);
                 }

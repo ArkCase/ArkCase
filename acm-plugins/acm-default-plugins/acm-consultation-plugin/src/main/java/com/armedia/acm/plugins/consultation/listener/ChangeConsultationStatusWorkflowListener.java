@@ -94,7 +94,7 @@ public class ChangeConsultationStatusWorkflowListener implements ApplicationList
 
         String author = event.getUserId();
         List<String> reviewers = findReviewers(event);
-        List<String> candidateGroups =  findCandidateGroups(event);
+        List<String> candidateGroups = findCandidateGroups(event);
 
         // Default one if "changeConsultationStatusTaskName" is null or empty
         String taskName = "Task " + event.getConsultationNumber();
@@ -186,11 +186,13 @@ public class ChangeConsultationStatusWorkflowListener implements ApplicationList
         this.activitiRuntimeService = activitiRuntimeService;
     }
 
-    public String getChangeConsultationStatusTaskName() {
+    public String getChangeConsultationStatusTaskName()
+    {
         return changeConsultationStatusTaskName;
     }
 
-    public void setChangeConsultationStatusTaskName(String changeConsultationStatusTaskName) {
+    public void setChangeConsultationStatusTaskName(String changeConsultationStatusTaskName)
+    {
         this.changeConsultationStatusTaskName = changeConsultationStatusTaskName;
     }
 }

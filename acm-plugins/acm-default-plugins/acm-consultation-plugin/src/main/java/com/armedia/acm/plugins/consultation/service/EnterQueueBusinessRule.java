@@ -35,7 +35,8 @@ import com.armedia.acm.plugins.consultation.pipeline.ConsultationPipelineContext
 /**
  * Created by Vladimir Cherepnalkovski <vladimir.cherepnalkovski@armedia.com> on May, 2020
  */
-public class EnterQueueBusinessRule extends SimpleStatelessSingleObjectRuleManager<EnterQueueModel<Consultation, ConsultationPipelineContext>>
+public class EnterQueueBusinessRule
+        extends SimpleStatelessSingleObjectRuleManager<EnterQueueModel<Consultation, ConsultationPipelineContext>>
 {
 
 }

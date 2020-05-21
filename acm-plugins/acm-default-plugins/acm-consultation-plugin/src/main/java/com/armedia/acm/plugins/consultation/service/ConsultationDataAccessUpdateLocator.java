@@ -54,11 +54,13 @@ public class ConsultationDataAccessUpdateLocator implements AcmObjectDataAccessB
         getConsultationDao().save(assignedObject);
     }
 
-    public ConsultationDao getConsultationDao() {
+    public ConsultationDao getConsultationDao()
+    {
         return consultationDao;
     }
 
-    public void setConsultationDao(ConsultationDao consultationDao) {
+    public void setConsultationDao(ConsultationDao consultationDao)
+    {
         this.consultationDao = consultationDao;
     }
 }

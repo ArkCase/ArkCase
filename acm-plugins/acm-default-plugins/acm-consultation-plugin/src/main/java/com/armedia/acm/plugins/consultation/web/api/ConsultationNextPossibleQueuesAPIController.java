@@ -63,8 +63,9 @@ public class ConsultationNextPossibleQueuesAPIController
 
     @RequestMapping(value = "/nextPossibleQueues/{consultationId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ConsultationNextPossibleQueuesResponse nextPossibleQueues(@PathVariable("consultationId") Long consultationId, HttpSession session,
-                                                                     Authentication auth)
+    public ConsultationNextPossibleQueuesResponse nextPossibleQueues(@PathVariable("consultationId") Long consultationId,
+            HttpSession session,
+            Authentication auth)
     {
 
         Consultation consultation = consultationDao.find(consultationId);
@@ -81,9 +82,11 @@ public class ConsultationNextPossibleQueuesAPIController
         context.setIpAddress(ipAddress);
         context.setQueueName(consultation.getQueue().getName());
 
-        NextPossibleQueuesModel<Consultation, ConsultationPipelineContext> nextPossibleQueues = queueService.nextPossibleQueues(consultation, context,
+        NextPossibleQueuesModel<Consultation, ConsultationPipelineContext> nextPossibleQueues = queueService.nextPossibleQueues(
+                consultation, context,
                 businessRule);
-        return new ConsultationNextPossibleQueuesResponse(nextPossibleQueues.getDefaultNextQueue(), nextPossibleQueues.getDefaultReturnQueue(),
+        return new ConsultationNextPossibleQueuesResponse(nextPossibleQueues.getDefaultNextQueue(),
+                nextPossibleQueues.getDefaultReturnQueue(),
                 nextPossibleQueues.getDefaultDenyQueue(), nextPossibleQueues.getNextPossibleQueues());
 
     }
@@ -98,19 +101,23 @@ public class ConsultationNextPossibleQueuesAPIController
         this.queueService = queueService;
     }
 
-    public ConsultationNextPossibleQueuesBusinessRule getBusinessRule() {
+    public ConsultationNextPossibleQueuesBusinessRule getBusinessRule()
+    {
         return businessRule;
     }
 
-    public void setBusinessRule(ConsultationNextPossibleQueuesBusinessRule businessRule) {
+    public void setBusinessRule(ConsultationNextPossibleQueuesBusinessRule businessRule)
+    {
         this.businessRule = businessRule;
     }
 
-    public ConsultationDao getConsultationDao() {
+    public ConsultationDao getConsultationDao()
+    {
         return consultationDao;
     }
 
-    public void setConsultationDao(ConsultationDao consultationDao) {
+    public void setConsultationDao(ConsultationDao consultationDao)
+    {
         this.consultationDao = consultationDao;
     }
 }

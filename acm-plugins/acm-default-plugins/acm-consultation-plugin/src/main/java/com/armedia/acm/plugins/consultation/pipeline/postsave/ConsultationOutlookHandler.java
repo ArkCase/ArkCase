@@ -47,7 +47,6 @@ import java.util.Optional;
 
 import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
 
-
 /**
  * Created by Vladimir Cherepnalkovski <vladimir.cherepnalkovski@armedia.com> on May, 2020
  * Create Outlook folder and update participants for a Consultation.
@@ -124,7 +123,8 @@ public class ConsultationOutlookHandler implements PipelineHandler<Consultation,
         try
         {
             outlookContainerCalendarService.createFolder(outlookUser, consultation.getId(), ConsultationConstants.OBJECT_TYPE,
-                    consultation.getTitle() + "(" + consultation.getConsultationNumber() + ")", consultation.getContainer(), consultation.getParticipants());
+                    consultation.getTitle() + "(" + consultation.getConsultationNumber() + ")", consultation.getContainer(),
+                    consultation.getParticipants());
         }
         catch (AcmOutlookItemNotFoundException | AcmOutlookCreateItemFailedException e)
         {
@@ -146,11 +146,13 @@ public class ConsultationOutlookHandler implements PipelineHandler<Consultation,
         }
     }
 
-    public boolean isAutoCreateFolderForConsultation() {
+    public boolean isAutoCreateFolderForConsultation()
+    {
         return autoCreateFolderForConsultation;
     }
 
-    public void setAutoCreateFolderForConsultation(boolean autoCreateFolderForConsultation) {
+    public void setAutoCreateFolderForConsultation(boolean autoCreateFolderForConsultation)
+    {
         this.autoCreateFolderForConsultation = autoCreateFolderForConsultation;
     }
 

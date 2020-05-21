@@ -46,7 +46,8 @@ import org.apache.logging.log4j.Logger;
 /**
  * Created by Vladimir Cherepnalkovski <vladimir.cherepnalkovski@armedia.com> on May, 2020
  */
-public class PDFChangeConsultationStateDocumentGeneratorHandler extends PDFChangeConsultationStateDocumentGenerator<ConsultationDao, Consultation>
+public class PDFChangeConsultationStateDocumentGeneratorHandler
+        extends PDFChangeConsultationStateDocumentGenerator<ConsultationDao, Consultation>
         implements PipelineHandler<ChangeConsultationStatus, ConsultationPipelineContext>
 {
     private FormsTypeCheckService formsTypeCheckService;
@@ -105,11 +106,14 @@ public class PDFChangeConsultationStateDocumentGeneratorHandler extends PDFChang
         }
     }
 
-    public PDFChangeConsultationStateDocumentGenerator getPdfChangeConsultationStateDocumentGenerator() {
+    public PDFChangeConsultationStateDocumentGenerator getPdfChangeConsultationStateDocumentGenerator()
+    {
         return pdfChangeConsultationStateDocumentGenerator;
     }
 
-    public void setPdfChangeConsultationStateDocumentGenerator(PDFChangeConsultationStateDocumentGenerator pdfChangeConsultationStateDocumentGenerator) {
+    public void setPdfChangeConsultationStateDocumentGenerator(
+            PDFChangeConsultationStateDocumentGenerator pdfChangeConsultationStateDocumentGenerator)
+    {
         this.pdfChangeConsultationStateDocumentGenerator = pdfChangeConsultationStateDocumentGenerator;
     }
 

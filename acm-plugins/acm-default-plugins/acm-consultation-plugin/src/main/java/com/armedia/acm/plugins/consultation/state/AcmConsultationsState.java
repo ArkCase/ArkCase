@@ -36,11 +36,13 @@ public class AcmConsultationsState extends StateOfModule
 {
     private Long numberOfConsultations;
 
-    public Long getNumberOfConsultations() {
+    public Long getNumberOfConsultations()
+    {
         return numberOfConsultations;
     }
 
-    public void setNumberOfConsultations(Long numberOfConsultations) {
+    public void setNumberOfConsultations(Long numberOfConsultations)
+    {
         this.numberOfConsultations = numberOfConsultations;
     }
 }

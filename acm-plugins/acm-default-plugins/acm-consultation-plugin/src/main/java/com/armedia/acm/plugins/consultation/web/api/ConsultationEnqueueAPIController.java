@@ -65,9 +65,9 @@ public class ConsultationEnqueueAPIController
     @RequestMapping(value = "/enqueue/{consultationId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ConsultationEnqueueResponse enqueue(@PathVariable("consultationId") Long consultationId,
-                                               @RequestParam(value = "nextQueue", required = true) String nextQueue,
-                                               @RequestParam(value = "nextQueueAction") String nextQueueAction,
-                                               HttpSession session, Authentication auth)
+            @RequestParam(value = "nextQueue", required = true) String nextQueue,
+            @RequestParam(value = "nextQueueAction") String nextQueueAction,
+            HttpSession session, Authentication auth)
     {
 
         ConsultationPipelineContext context = new ConsultationPipelineContext();
@@ -78,7 +78,8 @@ public class ConsultationEnqueueAPIController
 
         getUserTrackerService().trackUser(ipAddress);
 
-        ConsultationEnqueueResponse response = getEnqueueConsultationService().enqueueConsultation(consultationId, nextQueue, nextQueueAction, context);
+        ConsultationEnqueueResponse response = getEnqueueConsultationService().enqueueConsultation(consultationId, nextQueue,
+                nextQueueAction, context);
 
         if (response.isSuccess())
         {
@@ -102,27 +103,33 @@ public class ConsultationEnqueueAPIController
         this.userTrackerService = userTrackerService;
     }
 
-    public EnqueueConsultationFileService getEnqueueConsultationService() {
+    public EnqueueConsultationFileService getEnqueueConsultationService()
+    {
         return enqueueConsultationService;
     }
 
-    public void setEnqueueConsultationService(EnqueueConsultationFileService enqueueConsultationService) {
+    public void setEnqueueConsultationService(EnqueueConsultationFileService enqueueConsultationService)
+    {
         this.enqueueConsultationService = enqueueConsultationService;
     }
 
-    public ConsultationDao getConsultationDao() {
+    public ConsultationDao getConsultationDao()
+    {
         return consultationDao;
     }
 
-    public void setConsultationDao(ConsultationDao consultationDao) {
+    public void setConsultationDao(ConsultationDao consultationDao)
+    {
         this.consultationDao = consultationDao;
     }
 
-    public ConsultationEventUtility getConsultationEventUtility() {
+    public ConsultationEventUtility getConsultationEventUtility()
+    {
         return consultationEventUtility;
     }
 
-    public void setConsultationEventUtility(ConsultationEventUtility consultationEventUtility) {
+    public void setConsultationEventUtility(ConsultationEventUtility consultationEventUtility)
+    {
         this.consultationEventUtility = consultationEventUtility;
     }
 }

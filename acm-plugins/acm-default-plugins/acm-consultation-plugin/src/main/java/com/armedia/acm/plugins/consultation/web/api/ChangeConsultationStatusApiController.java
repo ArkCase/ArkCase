@@ -115,27 +115,33 @@ public class ChangeConsultationStatusApiController
         return message;
     }
 
-    public ChangeConsultationStateService getChangeConsultationStateService() {
+    public ChangeConsultationStateService getChangeConsultationStateService()
+    {
         return changeConsultationStateService;
     }
 
-    public void setChangeConsultationStateService(ChangeConsultationStateService changeConsultationStateService) {
+    public void setChangeConsultationStateService(ChangeConsultationStateService changeConsultationStateService)
+    {
         this.changeConsultationStateService = changeConsultationStateService;
     }
 
-    public ConsultationEventUtility getConsultationEventUtility() {
+    public ConsultationEventUtility getConsultationEventUtility()
+    {
         return consultationEventUtility;
     }
 
-    public void setConsultationEventUtility(ConsultationEventUtility consultationEventUtility) {
+    public void setConsultationEventUtility(ConsultationEventUtility consultationEventUtility)
+    {
         this.consultationEventUtility = consultationEventUtility;
     }
 
-    public ConsultationDao getConsultationDao() {
+    public ConsultationDao getConsultationDao()
+    {
         return consultationDao;
     }
 
-    public void setConsultationDao(ConsultationDao consultationDao) {
+    public void setConsultationDao(ConsultationDao consultationDao)
+    {
         this.consultationDao = consultationDao;
     }
 }

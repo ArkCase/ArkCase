@@ -1,5 +1,6 @@
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <property name="consultationNumberLength" value="1024" dbms="postgresql,oracle"/>
@@ -52,6 +53,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="cm_consultation_closed" type="DATE"/>
+            <column name="cm_case_disposition" type="VARCHAR(4000)"/>
             <column name="cm_consultation_priority" type="VARCHAR(1024)"/>
             <column name="cm_consultation_external_flag" type="BOOLEAN" defaultValueBoolean="false">
                 <constraints nullable="false"/>
@@ -69,7 +71,8 @@
             <column name="cm_container_id" type="${fkIdType}"/>
             <column name="cm_responsible_organization" type="VARCHAR(100)"/>
             <column name="cm_queue_id" type="${fkIdType}">
-                <constraints foreignKeyName="fk_queue_id" referencedColumnNames="cm_queue_id" referencedTableName="acm_queue"/>
+                <constraints foreignKeyName="fk_queue_id" referencedColumnNames="cm_queue_id"
+                             referencedTableName="acm_queue"/>
             </column>
             <column name="cm_queue_enter_date" type="${timestampType}"/>
             <column name="cm_response_due_date" type="${timestampType}"/>
@@ -80,25 +83,7 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="03-create-index-column-title" author="vladimir.cherepnalkovski" dbms="oracle,postgresql,mssql">
-        <createIndex tableName="acm_consultation" indexName="idx_consultation_title">
-            <column name="cm_consultation_title"/>
-        </createIndex>
-    </changeSet>
-
-    <changeSet id="04-create-index-column-title" author="vladimir.cherepnalkovski" dbms="mysql">
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <indexExists tableName="acm_consultation" columnNames="cm_consultation_title"/>
-            </not>
-        </preConditions>
-        <createIndex tableName="acm_consultation" indexName="idx_consultation_title">
-            <column name="cm_consultation_title (128)"/>
-        </createIndex>
-    </changeSet>
-
-
-    <changeSet id="05-consultation-add-acm-consultation-table" author="vladimir.cherepnalkovski"
+    <changeSet id="03-consultation-add-acm-consultation-table" author="vladimir.cherepnalkovski"
                dbms="mysql">
         <createTable tableName="acm_consultation">
             <column name="cm_consultation_id" type="${idType}">
@@ -135,6 +120,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="cm_consultation_closed" type="DATE"/>
+            <column name="cm_case_disposition" type="VARCHAR(4000)"/>
             <column name="cm_consultation_priority" type="VARCHAR(1024)"/>
             <column name="cm_consultation_external_flag" type="BOOLEAN" defaultValueBoolean="false">
                 <constraints nullable="false"/>
@@ -165,6 +151,23 @@
 
         <createIndex tableName="acm_consultation" indexName="idx_consultation_title">
             <column name="cm_consultation_title"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="04-create-index-column-title" author="vladimir.cherepnalkovski" dbms="oracle,postgresql,mssql">
+        <createIndex tableName="acm_consultation" indexName="idx_consultation_title">
+            <column name="cm_consultation_title"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="05-create-index-column-title" author="vladimir.cherepnalkovski" dbms="mysql">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="acm_consultation" columnNames="cm_consultation_title"/>
+            </not>
+        </preConditions>
+        <createIndex tableName="acm_consultation" indexName="idx_consultation_title">
+            <column name="cm_consultation_title (128)"/>
         </createIndex>
     </changeSet>
 

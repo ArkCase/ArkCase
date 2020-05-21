@@ -63,7 +63,8 @@ public class CreateTaskChangeConsultationHandler
 
         uploadedFile.setPdfRendition(existing);
 
-        ChangeConsultationStatusEvent event = new ChangeConsultationStatusEvent(consultation.getConsultationNumber(), consultation.getId(), form,
+        ChangeConsultationStatusEvent event = new ChangeConsultationStatusEvent(consultation.getConsultationNumber(), consultation.getId(),
+                form,
                 uploadedFile, mode, ctx.getAuthentication().getName(), getUserIpAddress(), true);
         getApplicationEventPublisher().publishEvent(event);
     }

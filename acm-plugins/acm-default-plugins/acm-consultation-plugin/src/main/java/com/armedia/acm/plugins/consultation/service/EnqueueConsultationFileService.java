@@ -37,6 +37,6 @@ public interface EnqueueConsultationFileService
 {
     ConsultationEnqueueResponse enqueueConsultation(Long consultationId, String nextQueue, ConsultationPipelineContext context);
 
-    ConsultationEnqueueResponse enqueueConsultation(Long consultationId, String nextQueue, String nextQueueAction, ConsultationPipelineContext context);
-
+    ConsultationEnqueueResponse enqueueConsultation(Long consultationId, String nextQueue, String nextQueueAction,
+            ConsultationPipelineContext context);
 }

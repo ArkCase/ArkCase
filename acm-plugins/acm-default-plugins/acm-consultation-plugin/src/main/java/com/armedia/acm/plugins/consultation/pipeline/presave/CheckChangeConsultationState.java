@@ -62,7 +62,8 @@ public class CheckChangeConsultationState implements PipelineHandler<ChangeConsu
 
         if (consultation == null)
         {
-            throw new PipelineProcessException(String.format("Cannot find consultation file by given consultationId=%d", form.getConsultationId()));
+            throw new PipelineProcessException(
+                    String.format("Cannot find consultation file by given consultationId=%d", form.getConsultationId()));
         }
 
         // Skip if the consultation is already closed or in "in approval" and if it's not edit mode
@@ -84,11 +85,13 @@ public class CheckChangeConsultationState implements PipelineHandler<ChangeConsu
         // nothing to do here, there is no rollback action to be executed
     }
 
-    public ConsultationDao getConsultationDao() {
+    public ConsultationDao getConsultationDao()
+    {
         return consultationDao;
     }
 
-    public void setConsultationDao(ConsultationDao consultationDao) {
+    public void setConsultationDao(ConsultationDao consultationDao)
+    {
         this.consultationDao = consultationDao;
     }
 }

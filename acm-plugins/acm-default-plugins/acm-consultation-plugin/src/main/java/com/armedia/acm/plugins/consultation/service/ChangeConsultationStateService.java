@@ -113,13 +113,15 @@ public class ChangeConsultationStateService
         }
     }
 
-    public void handleChangeConsultationStatusApproved(Long consultationId, Long requestId, String userId, Date approvalDate, String ipAddress)
+    public void handleChangeConsultationStatusApproved(Long consultationId, Long requestId, String userId, Date approvalDate,
+            String ipAddress)
     {
         Consultation updatedConsultation = updateConsultationStatus(consultationId, requestId);
 
         updateConsultationStatusRequestToApproved(requestId);
 
-        getConsultationEventUtility().raiseEvent(updatedConsultation, updatedConsultation.getStatus(), approvalDate, ipAddress, userId, null);
+        getConsultationEventUtility().raiseEvent(updatedConsultation, updatedConsultation.getStatus(), approvalDate, ipAddress, userId,
+                null);
     }
 
     private Consultation updateConsultationStatus(Long consultationId, Long requestId)
@@ -144,35 +146,43 @@ public class ChangeConsultationStateService
         return updated;
     }
 
-    public ConsultationDao getConsultationDao() {
+    public ConsultationDao getConsultationDao()
+    {
         return consultationDao;
     }
 
-    public void setConsultationDao(ConsultationDao consultationDao) {
+    public void setConsultationDao(ConsultationDao consultationDao)
+    {
         this.consultationDao = consultationDao;
     }
 
-    public ChangeConsultationStatusDao getChangeConsultationStatusDao() {
+    public ChangeConsultationStatusDao getChangeConsultationStatusDao()
+    {
         return changeConsultationStatusDao;
     }
 
-    public void setChangeConsultationStatusDao(ChangeConsultationStatusDao changeConsultationStatusDao) {
+    public void setChangeConsultationStatusDao(ChangeConsultationStatusDao changeConsultationStatusDao)
+    {
         this.changeConsultationStatusDao = changeConsultationStatusDao;
     }
 
-    public ConsultationEventUtility getConsultationEventUtility() {
+    public ConsultationEventUtility getConsultationEventUtility()
+    {
         return consultationEventUtility;
     }
 
-    public void setConsultationEventUtility(ConsultationEventUtility consultationEventUtility) {
+    public void setConsultationEventUtility(ConsultationEventUtility consultationEventUtility)
+    {
         this.consultationEventUtility = consultationEventUtility;
     }
 
-    public PipelineManager<ChangeConsultationStatus, ConsultationPipelineContext> getPipelineManager() {
+    public PipelineManager<ChangeConsultationStatus, ConsultationPipelineContext> getPipelineManager()
+    {
         return pipelineManager;
     }
 
-    public void setPipelineManager(PipelineManager<ChangeConsultationStatus, ConsultationPipelineContext> pipelineManager) {
+    public void setPipelineManager(PipelineManager<ChangeConsultationStatus, ConsultationPipelineContext> pipelineManager)
+    {
         this.pipelineManager = pipelineManager;
     }
 }

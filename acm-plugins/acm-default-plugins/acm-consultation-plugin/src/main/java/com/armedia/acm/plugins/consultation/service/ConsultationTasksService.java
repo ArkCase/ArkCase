@@ -27,16 +27,17 @@ package com.armedia.acm.plugins.consultation.service;
  * #L%
  */
 
-import com.armedia.acm.drools.SimpleStatelessSingleObjectRuleManager;
-import com.armedia.acm.plugins.businessprocess.model.OnEnterQueueModel;
-import com.armedia.acm.plugins.consultation.model.Consultation;
-import com.armedia.acm.plugins.consultation.pipeline.ConsultationPipelineContext;
+import com.armedia.acm.services.search.exception.SolrException;
+
+import org.springframework.security.core.Authentication;
+
+import java.util.List;
 
 /**
  * Created by Vladimir Cherepnalkovski <vladimir.cherepnalkovski@armedia.com> on May, 2020
  */
-public class OnEnterQueueBusinessRule
-        extends SimpleStatelessSingleObjectRuleManager<OnEnterQueueModel<Consultation, ConsultationPipelineContext>>
+public interface ConsultationTasksService
 {
-
+    String getConsultationTasks(Long consultation, String parentType, Long parentId, List<String> childTypes,
+                                String sort, Integer startRow, Integer maxRows, Authentication authentication) throws SolrException;
 }

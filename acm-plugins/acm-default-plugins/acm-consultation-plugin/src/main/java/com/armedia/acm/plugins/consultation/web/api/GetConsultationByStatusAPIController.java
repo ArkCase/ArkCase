@@ -99,7 +99,8 @@ public class GetConsultationByStatusAPIController
      *            - authentication object
      * @return - list of facet results
      */
-    private List<Object> retrieveFacetValues(Authentication authentication, ConsultationsByStatusAndTimePeriod consultationsByStatusAndTimePeriod)
+    private List<Object> retrieveFacetValues(Authentication authentication,
+            ConsultationsByStatusAndTimePeriod consultationsByStatusAndTimePeriod)
     {
         final List<Object> facetValues = new ArrayList<>();
 
@@ -127,7 +128,8 @@ public class GetConsultationByStatusAPIController
      *            - authentication object
      * @return - Solr response in string representation
      */
-    private String getSolrFacetResponse(Authentication authentication, ConsultationsByStatusAndTimePeriod consultationsByStatusAndTimePeriod)
+    private String getSolrFacetResponse(Authentication authentication,
+            ConsultationsByStatusAndTimePeriod consultationsByStatusAndTimePeriod)
     {
         String solrResponse = null;
         String facetQuery = "object_type_s:CONSULTATION";

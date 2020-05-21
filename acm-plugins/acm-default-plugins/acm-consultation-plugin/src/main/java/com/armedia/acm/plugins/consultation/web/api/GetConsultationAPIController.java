@@ -36,10 +36,14 @@ import com.armedia.acm.plugins.consultation.model.ConsultationSummaryByStatusAnd
 import com.armedia.acm.plugins.consultation.service.ConsultationService;
 import com.armedia.acm.plugins.consultation.utility.ConsultationEventUtility;
 import com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator;
+import com.armedia.acm.services.participants.model.DecoratedAssignedObjectParticipants;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,6 +52,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpSession;
 
 import java.util.ArrayList;
@@ -83,10 +88,11 @@ public class GetConsultationAPIController
 
     @RequestMapping(value = "/bynumber", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Consultation getConsultationByNumber(@RequestParam(value = "consultationNumber", required = true) String consultationNumber, Authentication auth)
+    public Consultation getConsultationByNumber(@RequestParam(value = "consultationNumber", required = true) String consultationNumber,
+            Authentication auth)
             throws AcmAccessControlException
     {
-        Consultation consultation = consultationService.getConsultationByNumber(consultationNumber);
+        Consultation consultation = getConsultationService().getConsultationByNumber(consultationNumber);
         if (consultation != null && !getArkPermissionEvaluator().hasPermission(auth, consultation.getId(), "CONSULTATION", "read"))
         {
             throw new AcmAccessControlException(Arrays.asList(""),
@@ -97,7 +103,8 @@ public class GetConsultationAPIController
 
     @RequestMapping(value = "/forUser/{user:.+}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<Consultation> listConsultationsForUser(@PathVariable("user") String user, Authentication authentication, HttpSession session)
+    public List<Consultation> listConsultationsForUser(@PathVariable("user") String user, Authentication authentication,
+            HttpSession session)
             throws AcmListObjectsFailedException, AcmObjectNotFoundException
     {
         if (log.isInfoEnabled())
@@ -121,6 +128,44 @@ public class GetConsultationAPIController
         }
     }
 
+    @PreAuthorize("hasPermission(#id, 'CONSULTATION', 'viewConsultationDetailsPage')")
+    @RequestMapping(method = RequestMethod.GET, value = "/byId/{id}", produces = { MediaType.APPLICATION_JSON_VALUE })
+    @DecoratedAssignedObjectParticipants
+    @ResponseBody
+    public Consultation findConsultationById(
+            @PathVariable(value = "id") Long id,
+            Authentication auth) throws AcmObjectNotFoundException
+    {
+        try
+        {
+            Consultation retval = getConsultationService().getConsultationByIdWithChangeStatusIncluded(id);
+
+            consultationEventUtility.raiseConsultationViewed(retval, auth);
+            return retval;
+        }
+        catch (PersistenceException e)
+        {
+            throw new AcmObjectNotFoundException("Consultation", id, e.getMessage(), e);
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/byTitle/{title}", produces = { MediaType.APPLICATION_JSON_VALUE })
+    @ResponseBody
+    public ResponseEntity<List<Consultation>> findConsultationsByTitle(
+            @PathVariable(value = "title") String title,
+            Authentication auth) throws AcmObjectNotFoundException
+    {
+        log.info("Trying to fetch Consultations by Title {}", title);
+        try
+        {
+            return new ResponseEntity<>(getConsultationService().getConsultationsByTitle(title), HttpStatus.OK);
+        }
+        catch (AcmObjectNotFoundException e)
+        {
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+        }
+    }
+
     private List<ConsultationSummaryByStatusAndTimePeriodDto> getConsultationSummary()
     {
         List<ConsultationSummaryByStatusAndTimePeriodDto> consultationSummaryByStatusAndTimePeriodDtos = new ArrayList<>();
@@ -128,7 +173,8 @@ public class GetConsultationAPIController
         for (TimePeriod tp : TimePeriod.values())
         {
             consultationSummaryByStatusAndTimePeriodDto.setTimePeriod(tp.getnDays());
-            consultationSummaryByStatusAndTimePeriodDto.setConsultationsByStatusDtos(getConsultationService().getConsultationsByStatusAndByTimePeriod(tp));
+            consultationSummaryByStatusAndTimePeriodDto
+                    .setConsultationsByStatusDtos(getConsultationService().getConsultationsByStatusAndByTimePeriod(tp));
 
             consultationSummaryByStatusAndTimePeriodDtos.add(consultationSummaryByStatusAndTimePeriodDto);
             consultationSummaryByStatusAndTimePeriodDto = new ConsultationSummaryByStatusAndTimePeriodDto();
@@ -137,27 +183,33 @@ public class GetConsultationAPIController
         return consultationSummaryByStatusAndTimePeriodDtos;
     }
 
-    public ConsultationService getConsultationService() {
+    public ConsultationService getConsultationService()
+    {
         return consultationService;
     }
 
-    public void setConsultationService(ConsultationService consultationService) {
+    public void setConsultationService(ConsultationService consultationService)
+    {
         this.consultationService = consultationService;
     }
 
-    public ConsultationEventUtility getConsultationEventUtility() {
+    public ConsultationEventUtility getConsultationEventUtility()
+    {
         return consultationEventUtility;
     }
 
-    public void setConsultationEventUtility(ConsultationEventUtility consultationEventUtility) {
+    public void setConsultationEventUtility(ConsultationEventUtility consultationEventUtility)
+    {
         this.consultationEventUtility = consultationEventUtility;
     }
 
-    public ArkPermissionEvaluator getArkPermissionEvaluator() {
+    public ArkPermissionEvaluator getArkPermissionEvaluator()
+    {
         return arkPermissionEvaluator;
     }
 
-    public void setArkPermissionEvaluator(ArkPermissionEvaluator arkPermissionEvaluator) {
+    public void setArkPermissionEvaluator(ArkPermissionEvaluator arkPermissionEvaluator)
+    {
         this.arkPermissionEvaluator = arkPermissionEvaluator;
     }
 }

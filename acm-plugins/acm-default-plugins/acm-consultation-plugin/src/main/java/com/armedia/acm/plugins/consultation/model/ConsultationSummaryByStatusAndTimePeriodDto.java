@@ -47,11 +47,13 @@ public class ConsultationSummaryByStatusAndTimePeriodDto
         this.timePeriod = timePeriod;
     }
 
-    public List<ConsultationsByStatusDto> getConsultationsByStatusDtos() {
+    public List<ConsultationsByStatusDto> getConsultationsByStatusDtos()
+    {
         return consultationsByStatusDtos;
     }
 
-    public void setConsultationsByStatusDtos(List<ConsultationsByStatusDto> consultationsByStatusDtos) {
+    public void setConsultationsByStatusDtos(List<ConsultationsByStatusDto> consultationsByStatusDtos)
+    {
         this.consultationsByStatusDtos = consultationsByStatusDtos;
     }
 }

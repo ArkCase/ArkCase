@@ -81,11 +81,13 @@ public class ConsultationEnqueueResponse
         return requestedQueue;
     }
 
-    public Consultation getConsultation() {
+    public Consultation getConsultation()
+    {
         return consultation;
     }
 
-    public void setConsultation(Consultation consultation) {
+    public void setConsultation(Consultation consultation)
+    {
         this.consultation = consultation;
     }
 

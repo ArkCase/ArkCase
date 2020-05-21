@@ -66,7 +66,8 @@ public class GetConsultationTypesAPIController
             log.debug("Finding consultation types");
         }
 
-        List<StandardLookupEntry> lookupEntries = (List<StandardLookupEntry>) getLookupDao().getLookupByName("consultationTypes").getEntries();
+        List<StandardLookupEntry> lookupEntries = (List<StandardLookupEntry>) getLookupDao().getLookupByName("consultationTypes")
+                .getEntries();
         return lookupEntries.stream().map(StandardLookupEntry::getKey).toArray(String[]::new);
     }
 

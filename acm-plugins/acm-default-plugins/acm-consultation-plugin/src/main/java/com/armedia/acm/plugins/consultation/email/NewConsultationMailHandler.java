@@ -116,7 +116,8 @@ public class NewConsultationMailHandler extends AcmObjectMailHandler
 
     private String setConsultationType()
     {
-        List<StandardLookupEntry> consultationTypeLookup = (List<StandardLookupEntry>) getLookupDao().getLookupByName("consultationTypes").getEntries();
+        List<StandardLookupEntry> consultationTypeLookup = (List<StandardLookupEntry>) getLookupDao().getLookupByName("consultationTypes")
+                .getEntries();
         return consultationTypeLookup
                 .stream()
                 .filter(standardLookupEntry -> standardLookupEntry.getKey().equals("Generated from Email"))
@@ -175,14 +176,13 @@ public class NewConsultationMailHandler extends AcmObjectMailHandler
         if (consultation != null)
         {
 
-            
             String emailSender = extractEmailAddressFromMessage(message);
             String fileAndFolderName = makeFileOrFolderName(message, emailSender);
-            
+
             String tempDir = System.getProperty("java.io.tmpdir");
             String messageFileName = fileAndFolderName + ".eml";
             File messageFile = new File(tempDir + File.separator + messageFileName);
-            
+
             AcmFolder emailReceivedFolder = null;
             Exception exception = null;
             EcmFile mailFile = null;
@@ -194,7 +194,8 @@ public class NewConsultationMailHandler extends AcmObjectMailHandler
                     message.writeTo(os);
                 }
 
-                AcmFolder folder = getAcmFolderService().addNewFolderByPath(consultation.getObjectType(), consultation.getId(), getMailDirectory());
+                AcmFolder folder = getAcmFolderService().addNewFolderByPath(consultation.getObjectType(), consultation.getId(),
+                        getMailDirectory());
                 emailReceivedFolder = getAcmFolderService().addNewFolder(folder.getId(), fileAndFolderName);
                 try (InputStream is = new FileInputStream(messageFile))
                 {
@@ -207,7 +208,8 @@ public class NewConsultationMailHandler extends AcmObjectMailHandler
             }
             catch (Exception e)
             {
-                log.error("Failed to upload mail into consultation with number '{}'. Exception msg: '{}' ", consultation.getId(), e.getMessage());
+                log.error("Failed to upload mail into consultation with number '{}'. Exception msg: '{}' ", consultation.getId(),
+                        e.getMessage());
                 exception = e;
             }
 
@@ -216,7 +218,8 @@ public class NewConsultationMailHandler extends AcmObjectMailHandler
                 uploadAttachments(message, consultation, userId, emailReceivedFolder);
             }
 
-            SmtpEmailReceivedEvent event = new SmtpEmailReceivedEvent(emailSender, userId, mailFile.getId(), mailFile.getObjectType(), consultation.getId(), consultation.getObjectType(),
+            SmtpEmailReceivedEvent event = new SmtpEmailReceivedEvent(emailSender, userId, mailFile.getId(), mailFile.getObjectType(),
+                    consultation.getId(), consultation.getObjectType(),
                     AuthenticationUtils.getUserIpAddress());
             boolean success = (exception == null);
             event.setSucceeded(success);
@@ -225,11 +228,13 @@ public class NewConsultationMailHandler extends AcmObjectMailHandler
 
     }
 
-    public ConsultationService getConsultationService() {
+    public ConsultationService getConsultationService()
+    {
         return consultationService;
     }
 
-    public void setConsultationService(ConsultationService consultationService) {
+    public void setConsultationService(ConsultationService consultationService)
+    {
         this.consultationService = consultationService;
     }
 

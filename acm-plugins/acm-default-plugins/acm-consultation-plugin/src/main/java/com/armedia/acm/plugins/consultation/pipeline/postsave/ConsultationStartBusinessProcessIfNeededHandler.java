@@ -97,7 +97,6 @@ public class ConsultationStartBusinessProcessIfNeededHandler implements Pipeline
 
     }
 
-
     public StartBusinessProcessService getStartBusinessProcessService()
     {
         return startBusinessProcessService;

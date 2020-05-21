@@ -55,7 +55,8 @@ public class ConsultationEventUtility implements ApplicationEventPublisherAware
 
     private ApplicationEventPublisher applicationEventPublisher;
 
-    public void raiseEvent(Consultation consultation, String consultationState, Date eventDate, String ipAddress, String userId, Authentication auth)
+    public void raiseEvent(Consultation consultation, String consultationState, Date eventDate, String ipAddress, String userId,
+            Authentication auth)
     {
         String eventType = "com.armedia.acm.consultation." + consultationState;
         eventDate = eventDate == null ? new Date() : eventDate;
@@ -64,12 +65,14 @@ public class ConsultationEventUtility implements ApplicationEventPublisherAware
         applicationEventPublisher.publishEvent(event);
     }
 
-    public void raiseCustomEvent(Consultation consultation, String consultationState, String eventDescription, Date eventDate, String ipAddress,
+    public void raiseCustomEvent(Consultation consultation, String consultationState, String eventDescription, Date eventDate,
+            String ipAddress,
             String userId, Authentication auth)
     {
         String eventType = "com.armedia.acm.consultation." + consultationState;
         eventDate = eventDate == null ? new Date() : eventDate;
-        ConsultationEvent event = new ConsultationEvent(consultation, ipAddress, userId, eventType, eventDescription, eventDate, true, auth);
+        ConsultationEvent event = new ConsultationEvent(consultation, ipAddress, userId, eventType, eventDescription, eventDate, true,
+                auth);
 
         applicationEventPublisher.publishEvent(event);
     }
@@ -121,7 +124,8 @@ public class ConsultationEventUtility implements ApplicationEventPublisherAware
         applicationEventPublisher.publishEvent(event);
     }
 
-    public void raiseParticipantsModifiedInConsultation(AcmParticipant participant, Consultation source, String ipAddress, String eventStatus)
+    public void raiseParticipantsModifiedInConsultation(AcmParticipant participant, Consultation source, String ipAddress,
+            String eventStatus)
     {
         ConsultationParticipantsModifiedEvent event = new ConsultationParticipantsModifiedEvent(participant);
         event.setEventStatus(eventStatus);
@@ -133,7 +137,8 @@ public class ConsultationEventUtility implements ApplicationEventPublisherAware
         applicationEventPublisher.publishEvent(event);
     }
 
-    public void raiseParticipantsModifiedInConsultation(AcmParticipant participant, Consultation source, String ipAddress, String eventStatus,
+    public void raiseParticipantsModifiedInConsultation(AcmParticipant participant, Consultation source, String ipAddress,
+            String eventStatus,
             String description)
     {
         ConsultationParticipantsModifiedEvent event = new ConsultationParticipantsModifiedEvent(participant);
@@ -156,7 +161,8 @@ public class ConsultationEventUtility implements ApplicationEventPublisherAware
             ipAddress = ((AcmAuthenticationDetails) authentication.getDetails()).getRemoteAddress();
         }
 
-        ConsultationEvent event = new ConsultationEvent(source, ipAddress, authentication.getName(), ConsultationConstants.EVENT_TYPE_CREATED, new Date(), true,
+        ConsultationEvent event = new ConsultationEvent(source, ipAddress, authentication.getName(),
+                ConsultationConstants.EVENT_TYPE_CREATED, new Date(), true,
                 authentication);
         applicationEventPublisher.publishEvent(event);
     }
@@ -169,7 +175,8 @@ public class ConsultationEventUtility implements ApplicationEventPublisherAware
             ipAddress = ((AcmAuthenticationDetails) authentication.getDetails()).getRemoteAddress();
         }
 
-        ConsultationEvent event = new ConsultationEvent(source, ipAddress, authentication.getName(), ConsultationConstants.EVENT_TYPE_VIEWED, new Date(), true,
+        ConsultationEvent event = new ConsultationEvent(source, ipAddress, authentication.getName(),
+                ConsultationConstants.EVENT_TYPE_VIEWED, new Date(), true,
                 authentication);
         applicationEventPublisher.publishEvent(event);
     }

@@ -60,7 +60,8 @@ public class ComplaintHistoryListener implements ApplicationListener<Consultatio
 
                 Consultation consultation = (Consultation) event.getSource();
 
-                getAcmObjectHistoryService().save(event.getUserId(), event.getEventType(), consultation, consultation.getId(), ConsultationConstants.OBJECT_TYPE,
+                getAcmObjectHistoryService().save(event.getUserId(), event.getEventType(), consultation, consultation.getId(),
+                        ConsultationConstants.OBJECT_TYPE,
                         event.getEventDate(), event.getIpAddress());
 
                 LOG.debug("Consultation History added to database.");

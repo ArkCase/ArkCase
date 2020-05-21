@@ -96,11 +96,13 @@ public class ConsultationConfig implements SupportsFileTypes, AcmPluginConfigBea
     @Value("${consultation.plugin.fileTypes}")
     private String supportedFileTypes;
 
-    public String getEmailRegexConsultationNumber() {
+    public String getEmailRegexConsultationNumber()
+    {
         return emailRegexConsultationNumber;
     }
 
-    public void setEmailRegexConsultationNumber(String emailRegexConsultationNumber) {
+    public void setEmailRegexConsultationNumber(String emailRegexConsultationNumber)
+    {
         this.emailRegexConsultationNumber = emailRegexConsultationNumber;
     }
 
@@ -164,11 +166,13 @@ public class ConsultationConfig implements SupportsFileTypes, AcmPluginConfigBea
         this.autoCreateCalendarFolder = autoCreateCalendarFolder;
     }
 
-    public Boolean getDeleteCalendarFolderAfterConsultationClosed() {
+    public Boolean getDeleteCalendarFolderAfterConsultationClosed()
+    {
         return deleteCalendarFolderAfterConsultationClosed;
     }
 
-    public void setDeleteCalendarFolderAfterConsultationClosed(Boolean deleteCalendarFolderAfterConsultationClosed) {
+    public void setDeleteCalendarFolderAfterConsultationClosed(Boolean deleteCalendarFolderAfterConsultationClosed)
+    {
         this.deleteCalendarFolderAfterConsultationClosed = deleteCalendarFolderAfterConsultationClosed;
     }
 

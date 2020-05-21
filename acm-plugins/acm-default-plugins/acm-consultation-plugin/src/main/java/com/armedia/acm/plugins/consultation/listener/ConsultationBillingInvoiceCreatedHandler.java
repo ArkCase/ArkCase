@@ -47,7 +47,7 @@ public class ConsultationBillingInvoiceCreatedHandler implements ApplicationList
     @Override
     public void onApplicationEvent(BillingInvoiceCreatedEvent event)
     {
-        if(event.getParentObjectType().equals(ConsultationConstants.OBJECT_TYPE))
+        if (event.getParentObjectType().equals(ConsultationConstants.OBJECT_TYPE))
         {
             Consultation consultation = getConsultationDao().find(event.getParentObjectId());
             getConsultationBillingInvoiceDocumentGenerator().setParentObject(consultation);
@@ -55,19 +55,23 @@ public class ConsultationBillingInvoiceCreatedHandler implements ApplicationList
         }
     }
 
-    public BillingInvoiceDocumentGenerator getConsultationBillingInvoiceDocumentGenerator() {
+    public BillingInvoiceDocumentGenerator getConsultationBillingInvoiceDocumentGenerator()
+    {
         return consultationBillingInvoiceDocumentGenerator;
     }
 
-    public void setConsultationBillingInvoiceDocumentGenerator(BillingInvoiceDocumentGenerator consultationBillingInvoiceDocumentGenerator) {
+    public void setConsultationBillingInvoiceDocumentGenerator(BillingInvoiceDocumentGenerator consultationBillingInvoiceDocumentGenerator)
+    {
         this.consultationBillingInvoiceDocumentGenerator = consultationBillingInvoiceDocumentGenerator;
     }
 
-    public ConsultationDao getConsultationDao() {
+    public ConsultationDao getConsultationDao()
+    {
         return consultationDao;
     }
 
-    public void setConsultationDao(ConsultationDao consultationDao) {
+    public void setConsultationDao(ConsultationDao consultationDao)
+    {
         this.consultationDao = consultationDao;
     }
 }

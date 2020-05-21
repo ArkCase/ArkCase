@@ -90,14 +90,15 @@ public class SaveConsultationAPIController
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseBody
     public Consultation createConsultationMutipart(@RequestPart(name = "consultation") Consultation in,
-            @RequestPart(name = "files")Map<String, List<MultipartFile>> filesMap, HttpSession session, Authentication auth)
+            @RequestPart(name = "files") Map<String, List<MultipartFile>> filesMap, HttpSession session, Authentication auth)
             throws AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException,
             IOException
     {
         return saveConsultation(in, filesMap, session, auth);
     }
 
-    private Consultation saveConsultation(Consultation in, Map<String, List<MultipartFile>> filesMap, HttpSession session, Authentication auth)
+    private Consultation saveConsultation(Consultation in, Map<String, List<MultipartFile>> filesMap, HttpSession session,
+            Authentication auth)
             throws AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException,
             IOException
     {
@@ -140,19 +141,23 @@ public class SaveConsultationAPIController
         }
     }
 
-    public ConsultationService getConsultationService() {
+    public ConsultationService getConsultationService()
+    {
         return consultationService;
     }
 
-    public void setConsultationService(ConsultationService consultationService) {
+    public void setConsultationService(ConsultationService consultationService)
+    {
         this.consultationService = consultationService;
     }
 
-    public ConsultationEventUtility getConsultationEventUtility() {
+    public ConsultationEventUtility getConsultationEventUtility()
+    {
         return consultationEventUtility;
     }
 
-    public void setConsultationEventUtility(ConsultationEventUtility consultationEventUtility) {
+    public void setConsultationEventUtility(ConsultationEventUtility consultationEventUtility)
+    {
         this.consultationEventUtility = consultationEventUtility;
     }
 

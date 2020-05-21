@@ -36,7 +36,6 @@ import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-
 /**
  * Created by Vladimir Cherepnalkovski <vladimir.cherepnalkovski@armedia.com> on May, 2020
  * Apply business rules to a Consultation.
@@ -70,11 +69,13 @@ public class ConsultationRulesHandler implements PipelineHandler<Consultation, C
         // nothing to do here, there is no rollback action to be executed
     }
 
-    public SaveConsultationBusinessRule getSaveRule() {
+    public SaveConsultationBusinessRule getSaveRule()
+    {
         return saveRule;
     }
 
-    public void setSaveRule(SaveConsultationBusinessRule saveRule) {
+    public void setSaveRule(SaveConsultationBusinessRule saveRule)
+    {
         this.saveRule = saveRule;
     }
 }

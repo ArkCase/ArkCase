@@ -73,11 +73,13 @@ public class GetNumberOfActiveConsultationsByQueueAPIController
         return getActiveConsultationByQueueService().getNumberOfActiveConsultationsByQueue(queues, facet);
     }
 
-    public ActiveConsultationByQueueService getActiveConsultationByQueueService() {
+    public ActiveConsultationByQueueService getActiveConsultationByQueueService()
+    {
         return activeConsultationByQueueService;
     }
 
-    public void setActiveConsultationByQueueService(ActiveConsultationByQueueService activeConsultationByQueueService) {
+    public void setActiveConsultationByQueueService(ActiveConsultationByQueueService activeConsultationByQueueService)
+    {
         this.activeConsultationByQueueService = activeConsultationByQueueService;
     }
 }
