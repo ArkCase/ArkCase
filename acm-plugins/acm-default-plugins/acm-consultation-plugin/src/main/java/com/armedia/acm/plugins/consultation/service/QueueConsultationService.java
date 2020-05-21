@@ -27,16 +27,17 @@ package com.armedia.acm.plugins.consultation.service;
  * #L%
  */
 
-import com.armedia.acm.plugins.consultation.model.ConsultationEnqueueResponse;
-import com.armedia.acm.plugins.consultation.pipeline.ConsultationPipelineContext;
+import com.armedia.acm.plugins.consultation.model.Consultation;
+import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
+
+import org.springframework.security.core.Authentication;
 
 /**
  * Created by Vladimir Cherepnalkovski <vladimir.cherepnalkovski@armedia.com> on May, 2020
  */
-public interface EnqueueConsultationService
+public interface QueueConsultationService
 {
-    ConsultationEnqueueResponse enqueueConsultation(Long consultationId, String nextQueue, ConsultationPipelineContext context);
+    Consultation enqueue(Long consultationId, String queueName, Authentication auth, String ipAddress) throws PipelineProcessException;
 
-    ConsultationEnqueueResponse enqueueConsultation(Long consultationId, String nextQueue, String nextQueueAction,
-            ConsultationPipelineContext context);
+    Consultation enqueue(Long consultationId, String queueName) throws PipelineProcessException;
 }

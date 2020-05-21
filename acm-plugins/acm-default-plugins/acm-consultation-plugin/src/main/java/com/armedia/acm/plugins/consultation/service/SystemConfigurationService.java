@@ -27,16 +27,12 @@ package com.armedia.acm.plugins.consultation.service;
  * #L%
  */
 
-import com.armedia.acm.plugins.consultation.model.ConsultationEnqueueResponse;
-import com.armedia.acm.plugins.consultation.pipeline.ConsultationPipelineContext;
+import com.armedia.acm.plugins.businessprocess.model.SystemConfiguration;
 
-/**
- * Created by Vladimir Cherepnalkovski <vladimir.cherepnalkovski@armedia.com> on May, 2020
- */
-public interface EnqueueConsultationService
+public class SystemConfigurationService
 {
-    ConsultationEnqueueResponse enqueueConsultation(Long consultationId, String nextQueue, ConsultationPipelineContext context);
-
-    ConsultationEnqueueResponse enqueueConsultation(Long consultationId, String nextQueue, String nextQueueAction,
-            ConsultationPipelineContext context);
+    public SystemConfiguration readConfiguration()
+    {
+        return null;
+    }
 }

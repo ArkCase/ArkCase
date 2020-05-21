@@ -31,7 +31,7 @@ import com.armedia.acm.plugins.consultation.dao.ConsultationDao;
 import com.armedia.acm.plugins.consultation.model.Consultation;
 import com.armedia.acm.plugins.consultation.model.ConsultationEnqueueResponse;
 import com.armedia.acm.plugins.consultation.pipeline.ConsultationPipelineContext;
-import com.armedia.acm.plugins.consultation.service.EnqueueConsultationFileService;
+import com.armedia.acm.plugins.consultation.service.EnqueueConsultationService;
 import com.armedia.acm.plugins.consultation.utility.ConsultationEventUtility;
 import com.armedia.acm.services.users.service.tracker.UserTrackerService;
 
@@ -56,10 +56,9 @@ import java.util.Date;
 public class ConsultationEnqueueAPIController
 {
 
-    private EnqueueConsultationFileService enqueueConsultationService;
+    private EnqueueConsultationService enqueueConsultationService;
     private UserTrackerService userTrackerService;
     private ConsultationDao consultationDao;
-
     private ConsultationEventUtility consultationEventUtility;
 
     @RequestMapping(value = "/enqueue/{consultationId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -103,12 +102,12 @@ public class ConsultationEnqueueAPIController
         this.userTrackerService = userTrackerService;
     }
 
-    public EnqueueConsultationFileService getEnqueueConsultationService()
+    public EnqueueConsultationService getEnqueueConsultationService()
     {
         return enqueueConsultationService;
     }
 
-    public void setEnqueueConsultationService(EnqueueConsultationFileService enqueueConsultationService)
+    public void setEnqueueConsultationService(EnqueueConsultationService enqueueConsultationService)
     {
         this.enqueueConsultationService = enqueueConsultationService;
     }

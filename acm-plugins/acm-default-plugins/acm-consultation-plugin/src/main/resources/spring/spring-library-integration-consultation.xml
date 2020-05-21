@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
+       xmlns:int="http://www.springframework.org/schema/integration">
+
+    <int:channel id="consultationFilteredMailChannel"/>
+
+    <bean id="consultationMailFilter" class="com.armedia.acm.services.email.filter.AcmObjectPatternMailFilter" scope="refresh">
+        <constructor-arg index="0" value="#{consultationConfig.emailRegexCaseNumber}"/>
+        <constructor-arg index="1" value="#{consultationConfig.emailRegexObjectType}"/>
+        <aop:scoped-proxy/>
+    </bean>
+
+    <bean id="consultationMailHandler" class="com.armedia.acm.services.email.handler.AcmObjectMailHandler">
+        <constructor-arg index="0" ref="consultationDao"/>
+        <property name="mailDirectory" value="#{consultationConfig.emailFolderRelativePath}"/>
+        <property name="enabled" value="#{consultationConfig.emailHandlerEnabled}"/>
+        <property name="objectIdRegexPattern" value="#{consultationConfig.emailRegexCaseNumber}"/>
+        <property name="acmFolderService" ref="acmFolderService"/>
+        <property name="ecmFileService" ref="ecmFileService"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="ecmFileDao" ref="ecmFileDao"/>
+        <property name="emailReceiverConfig" ref="emailReceiverConfig"/>
+    </bean>
+
+    <int:service-activator input-channel="consultationFilteredMailChannel" ref="consultationMailHandler" method="handle"/>
+
+    <int:chain input-channel="mailChannelConsultation" output-channel="consultationFilteredMailChannel">
+        <int:filter ref="consultationMailFilter" throw-exception-on-rejection="false" method="accept"/>
+    </int:chain>
+
+
+    <!-- Create new consultation from incoming mail -->
+    <bean id="newConsultationMailFilter" class="com.armedia.acm.services.email.filter.ConsultationPatternMailFilter" scope="refresh">
+        <constructor-arg index="0" value=""/>
+        <constructor-arg index="1" value="#{consultationConfig.emailRegexObjectType}"/>
+        <property name="emailReceiverConfig" ref="emailReceiverConfig"/>
+        <aop:scoped-proxy/>
+    </bean>
+
+
+    <bean id="newConsultationMailHandler" class="com.armedia.acm.plugins.consultation.email.NewConsultationMailHandler" parent="consultationMailHandler">
+        <property name="consultationService" ref="consultationService"/>
+        <property name="lookupDao" ref="lookupDao"/>
+        <property name="emailReceiverConfig" ref="emailReceiverConfig"/>
+    </bean>
+
+    <int:service-activator input-channel="newConsultationFilteredMailChannel" ref="newConsultationMailHandler" method="handle"/>
+
+    <int:chain input-channel="mailChannelConsultation" output-channel="newConsultationFilteredMailChannel">
+        <int:filter ref="newConsultationMailFilter" throw-exception-on-rejection="false" method="accept"/>
+    </int:chain>
+
+
+</beans>

@@ -56,9 +56,7 @@ public class ConsultationNextPossibleQueuesAPIController
 {
 
     private QueueService queueService;
-
     private ConsultationNextPossibleQueuesBusinessRule businessRule;
-
     private ConsultationDao consultationDao;
 
     @RequestMapping(value = "/nextPossibleQueues/{consultationId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

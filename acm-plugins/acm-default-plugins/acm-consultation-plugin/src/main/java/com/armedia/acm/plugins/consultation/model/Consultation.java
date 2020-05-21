@@ -148,7 +148,7 @@ public class Consultation implements Serializable, AcmAssignedObject, AcmEntity,
     @Temporal(TemporalType.TIMESTAMP)
     private Date closed;
 
-    @Column(name = "cm_case_disposition")
+    @Column(name = "cm_consultation_disposition")
     private String disposition;
 
     @Column(name = "cm_consultation_priority")
