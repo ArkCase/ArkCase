@@ -323,7 +323,7 @@ public class PortalRequestService
                     request.getId(),
                     request.getCaseNumber(),
                     StringUtils.left(request.getDetails(), 1000),
-                    officersGroupMemberEmailAddresses.stream().collect(Collectors.joining(",")),
+                    officersGroupMemberEmailAddresses.stream().filter(Objects::nonNull).collect(Collectors.joining(",")),
                     SecurityContextHolder.getContext().getAuthentication().getName(),
                     null,
                     downloadedDateTimeFormatted);
