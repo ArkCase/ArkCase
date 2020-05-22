@@ -49,6 +49,7 @@ import com.armedia.acm.services.users.model.AcmUser;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.validator.routines.EmailValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationEventPublisher;
@@ -89,6 +90,8 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
     private DefaultFolderAndFileConverter defaultFolderAndFileConverter;
 
     private AcmMailSender acmMailSender;
+
+    private EmailValidator emailValidator = EmailValidator.getInstance();
 
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
@@ -139,7 +142,9 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
         Map<String, InputStreamDataSource> attachments = processAttachments(in, user, sentEvents);
         String objectId = extractIdFromEmailWithAttachmentsDTO(in);
         String objectType = extractObjectTypeFromEmailWithAttachmentsDTO(in);
-        String emailAddresses = in.getEmailAddresses().stream().collect(Collectors.joining(","));
+        String emailAddresses = in.getEmailAddresses().stream()
+                .filter(this::isEmailValid)
+                .collect(Collectors.joining(","));
 
         try
         {
@@ -191,7 +196,9 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
 
         List<AcmEvent> sentEvents = new ArrayList<>();
         Map<String, InputStreamDataSource> attachments = processAttachments(in, user, sentEvents);
-        String emailAddresses = in.getEmailAddresses().stream().collect(Collectors.joining(","));
+        String emailAddresses = in.getEmailAddresses().stream()
+                .filter(this::isEmailValid)
+                .collect(Collectors.joining(","));
 
         try
         {
@@ -364,7 +371,9 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
 
         Long parentId = setFilenames(in);
         String objectId = extractIdFromEmailWithEmbeddedLinkDTO(in);
-        String emailAddresses = in.getEmailAddresses().stream().collect(Collectors.joining(","));
+        String emailAddresses = in.getEmailAddresses().stream()
+                .filter(this::isEmailValid)
+                .collect(Collectors.joining(","));
 
         try
         {
@@ -423,6 +432,11 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
             objectType = in.getParentType().contains("Case") ? "CASE_FILE" : in.getParentType().toUpperCase();
         }
         return objectType;
+    }
+
+    public boolean isEmailValid(String emailAddress)
+    {
+        return emailValidator.isValid(emailAddress);
     }
 
     /**
