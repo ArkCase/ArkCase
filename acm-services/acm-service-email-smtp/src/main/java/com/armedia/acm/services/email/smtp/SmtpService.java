@@ -139,7 +139,9 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
         Map<String, InputStreamDataSource> attachments = processAttachments(in, user, sentEvents);
         String objectId = extractIdFromEmailWithAttachmentsDTO(in);
         String objectType = extractObjectTypeFromEmailWithAttachmentsDTO(in);
-        String emailAddresses = in.getEmailAddresses().stream().collect(Collectors.joining(","));
+        String emailAddresses = in.getEmailAddresses().stream()
+                .filter(Objects::nonNull)
+                .collect(Collectors.joining(","));
 
         try
         {
@@ -191,7 +193,9 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
 
         List<AcmEvent> sentEvents = new ArrayList<>();
         Map<String, InputStreamDataSource> attachments = processAttachments(in, user, sentEvents);
-        String emailAddresses = in.getEmailAddresses().stream().collect(Collectors.joining(","));
+        String emailAddresses = in.getEmailAddresses().stream()
+                .filter(Objects::nonNull)
+                .collect(Collectors.joining(","));
 
         try
         {
@@ -364,7 +368,9 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
 
         Long parentId = setFilenames(in);
         String objectId = extractIdFromEmailWithEmbeddedLinkDTO(in);
-        String emailAddresses = in.getEmailAddresses().stream().collect(Collectors.joining(","));
+        String emailAddresses = in.getEmailAddresses().stream()
+                .filter(Objects::nonNull)
+                .collect(Collectors.joining(","));
 
         try
         {
