@@ -36,6 +36,7 @@ import com.armedia.acm.plugins.task.service.impl.CreateAdHocTaskService;
 import com.armedia.acm.services.config.lookups.model.StandardLookupEntry;
 import com.armedia.acm.services.config.lookups.service.LookupDao;
 import com.armedia.acm.services.labels.service.TranslationService;
+import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.notification.service.NotificationService;
 import com.armedia.acm.services.search.exception.SolrException;
@@ -312,11 +313,13 @@ public class PortalRequestService
 
         if (!officersGroupMemberEmailAddresses.isEmpty())
         {
+            log.debug("Preparing requestDownload notification to [{}]",
+                    officersGroupMemberEmailAddresses.stream().collect(Collectors.joining(",")));
 
             OffsetDateTime downloadedDateTime = OffsetDateTime.now(ZoneOffset.UTC);
             String downloadedDateTimeFormatted = DateTimeFormatter.ofPattern("yyyy-MM-dd / HH:mm:ss").format(downloadedDateTime);
 
-            getNotificationService().createNotification(
+            Notification requestDownloadNotification = getNotificationService().createNotification(
                     "requestDownloaded",
                     String.format(translationService.translate(NotificationConstants.REQUEST_DOWNLOADED), request.getCaseNumber()),
                     request.getObjectType(),
@@ -327,6 +330,8 @@ public class PortalRequestService
                     SecurityContextHolder.getContext().getAuthentication().getName(),
                     null,
                     downloadedDateTimeFormatted);
+
+            log.debug("Succesfully created requestDownload notification to [{}]", requestDownloadNotification.getEmailAddresses());
         }
     }
 
