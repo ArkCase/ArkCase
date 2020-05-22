@@ -79,9 +79,10 @@ public class TrackOutgoingEmailService implements ApplicationEventPublisherAware
     public void trackEmail(MimeMessage message, String emailAddress, String group, String subject, String objectType, String objectId,
             List<InputStreamDataSource> attachments)
     {
-        if (objectType.equals("USER"))
+        if (objectType != null && objectType.equals("USER"))
         {
             log.warn("Outgoing emails for objectType:USER are not tracked.");
+            return;
         }
 
         String tempDir = System.getProperty("java.io.tmpdir");
