@@ -34,6 +34,7 @@
         <apache-commons-net.version>3.3</apache-commons-net.version>
         <apache-commons-vfs2.version>2.0</apache-commons-vfs2.version>
         <apache-commons-text.version>1.6</apache-commons-text.version>
+        <apache-commons-validator.version>1.6</apache-commons-validator.version>
         <apache-httpcomponents-httpclient.version>4.5</apache-httpcomponents-httpclient.version>
         <apache-tika-parsers.version>1.24</apache-tika-parsers.version>
         <asm.version>5.0.3</asm.version>
@@ -961,6 +962,11 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-text</artifactId>
                 <version>${apache-commons-text.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-validator</groupId>
+                <artifactId>commons-validator</artifactId>
+                <version>${apache-commons-validator.version}</version>
             </dependency>
             <!-- json -->
             <dependency>
