@@ -12,6 +12,11 @@
     <name>ACM Service: Email SMTP</name>
 
     <dependencies>
+        <dependency>
+            <groupId>commons-validator</groupId>
+            <artifactId>commons-validator</artifactId>
+        </dependency>
+
         <!-- arkcase -->
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
