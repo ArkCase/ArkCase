@@ -92,7 +92,7 @@
             <beans:property name="portalFOIAPersonDao" ref="portalFOIAPersonDao"/>
             <beans:property name="personAssociationDao" ref="acmPersonAssociationDao"/>
             <beans:property name="lookupDao" ref="lookupDao"/>
-            <beans:property name="notificationDao" ref="notificationDao"/>
+            <beans:property name="notificationService" ref="notificationService"/>
             <beans:property name="groupService" ref="groupService"/>
             <beans:property name="searchResults" ref="searchResults"/>
             <beans:property name="translationService" ref="translationService"/>
