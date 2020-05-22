@@ -206,7 +206,7 @@
                     "displayName": "cases.comp.exemption.table.columns.statute",
                     "headerCellFilter": "translate",
                     "enableCellEdit": false,
-                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.exemptionStatutes, row.entity.exemptionStatute) | translate }}</div>"
+                    "cellTemplate": "<div class='ui-grid-cell-contents' title='{{grid.appScope.utils.getLookupValue(grid.appScope.exemptionStatutes, row.entity.exemptionStatute) | translate }}'>{{ grid.appScope.utils.getLookupValue(grid.appScope.exemptionStatutes, row.entity.exemptionStatute) | translate }}</div>"
                 }
             ]
         }
