@@ -163,7 +163,7 @@ public class NotificationServiceImpl implements NotificationService
         notification.setActionDate(new Date());
         notification.setType("user");
         notification.setNote(note);
-        if (relatedObjectName != null && relatedObjectType != null)
+        if (relatedObjectId != null && relatedObjectType != null)
         {
             notification.setTitle(notificationFormatter.buildTitle(title, relatedObjectName, relatedObjectType, relatedUser));
         }

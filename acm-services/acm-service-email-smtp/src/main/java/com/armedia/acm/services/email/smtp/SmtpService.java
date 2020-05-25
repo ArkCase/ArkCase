@@ -91,7 +91,7 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
 
     private AcmMailSender acmMailSender;
 
-    private EmailValidator emailValidator = EmailValidator.getInstance();
+    private final EmailValidator emailValidator = EmailValidator.getInstance();
 
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
@@ -436,7 +436,12 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
 
     public boolean isEmailValid(String emailAddress)
     {
-        return emailValidator.isValid(emailAddress);
+        boolean isValid = emailValidator.isValid(emailAddress);
+        if (!isValid)
+        {
+            log.warn("Email address: [{}] is not valid.", emailAddress);
+        }
+        return isValid;
     }
 
     /**
