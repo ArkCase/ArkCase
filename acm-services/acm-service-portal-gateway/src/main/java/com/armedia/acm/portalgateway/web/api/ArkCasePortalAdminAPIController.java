@@ -125,7 +125,7 @@ public class ArkCasePortalAdminAPIController extends SecureLdapController
         oldPortalInfo.setPortalAuthenticationFlag(portalInfo.getPortalAuthenticationFlag());
 
         checkIfLdapManagementIsAllowed(directoryName);
-        portalAdminService.moveExistingLdapUsersToGroup(portalInfoDTO.getGroupName(), oldPortalInfo, auth);
+        portalAdminService.moveExistingLdapUsersToGroup(portalInfoDTO.getGroupName(), oldPortalInfo, directoryName, auth);
         portalAdminService.updatePortalInfo(portalInfo, portalInfoDTO);
         return new PortalInfoDTO(portalAdminService.updatePortal(portalInfo, portalInfoDTO.getUserId()));
     }
