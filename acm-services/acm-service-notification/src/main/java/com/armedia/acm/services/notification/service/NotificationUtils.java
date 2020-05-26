@@ -46,6 +46,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -85,6 +86,7 @@ public class NotificationUtils
     {
         return participants.stream()
                 .flatMap(it -> getEmailAddressForParticipant(it.getParticipantType(), it.getParticipantLdapId()).stream())
+                .filter(Objects::nonNull)
                 .distinct()
                 .collect(Collectors.joining(","));
     }
@@ -92,7 +94,7 @@ public class NotificationUtils
     public String getEmailForUser(String userId)
     {
         AcmUser user = userDao.findByUserId(userId);
-        return user.getMail();
+        return user.getMail() != null ? user.getMail() : "";
     }
 
     public String getEmailsCommaSeparatedForParticipantsForObject(Long parentObjectId, String parentObjectType)
@@ -106,6 +108,7 @@ public class NotificationUtils
                 Set<AcmNotificationReceiver> participants = entity.getReceivers();
                 return participants.stream()
                         .flatMap(it -> getEmailAddressForParticipant(it.getReceiverType(), it.getReceiverLdapId()).stream())
+                        .filter(Objects::nonNull)
                         .distinct()
                         .collect(Collectors.joining(","));
             }
@@ -123,13 +126,14 @@ public class NotificationUtils
                 Set<AcmUser> members = group.getUserMembers(true);
                 return members.stream()
                         .map(AcmUser::getMail)
+                        .filter(Objects::nonNull)
                         .collect(Collectors.toSet());
             }
         }
         else if (!participantType.equals(NotificationConstants.SPECIAL_PARTICIPANT_TYPE))
         {
             AcmUser user = getUserDao().findByUserId(participantLdapId);
-            if (user != null)
+            if (user != null && user.getMail() != null)
             {
                 return new HashSet<>(Collections.singletonList(user.getMail()));
             }
