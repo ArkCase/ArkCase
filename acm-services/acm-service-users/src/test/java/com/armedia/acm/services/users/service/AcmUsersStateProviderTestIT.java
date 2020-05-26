@@ -41,7 +41,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "/spring/spring-library-data-source.xml",
+@ContextConfiguration(locations = {
+        "/spring/spring-library-data-source.xml",
         "/spring/spring-library-user-service.xml",
         "/spring/spring-library-context-holder.xml",
         "/spring/spring-library-property-file-manager.xml",
