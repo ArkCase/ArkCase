@@ -80,7 +80,7 @@ angular.module('cases').controller(
                     }
                 }
                 $scope.originalDueDate = $scope.previousDueDate;
-                $scope.enableDispositionClosedDate = objectInfo.dispositionClosedDate == null;
+                $scope.enableDispositionClosedDate = objectInfo.dispositionClosedDate == null && !objectInfo.deniedFlag;
 
                 var otherExistsInAppealReasons = _.some($scope.objectInfo.dispositionReasons, function (value) {
                     return value.reason === 'other';
