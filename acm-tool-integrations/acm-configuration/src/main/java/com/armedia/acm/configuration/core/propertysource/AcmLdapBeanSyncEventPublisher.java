@@ -1,8 +1,8 @@
-package gov.foia.service.dataupdate;
+package com.armedia.acm.configuration.core.propertysource;
 
 /*-
  * #%L
- * ACM Standard Application: Freedom of Information Act
+ * ACM Tool Integrations: Configuration Library
  * %%
  * Copyright (C) 2014 - 2020 ArkCase LLC
  * %%
@@ -27,38 +27,27 @@ package gov.foia.service.dataupdate;
  * #L%
  */
 
-import com.armedia.acm.services.dataupdate.service.AcmDataUpdateExecutor;
-import com.armedia.acm.services.dataupdate.service.SolrReindexService;
-import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.configuration.model.AcmLdapBeanSyncEvent;
 
-import java.util.Arrays;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 
 /**
- * Created by ana.serafimoska
+ * @author Mario Gjurcheski 5/21/2020
  */
-public class SolrReindexAcmUserExecutor implements AcmDataUpdateExecutor
+public class AcmLdapBeanSyncEventPublisher implements ApplicationEventPublisherAware
 {
-    private SolrReindexService solrReindexService;
 
-    @Override
-    public String getUpdateId()
+    private ApplicationEventPublisher eventPublisher;
+
+    public void publishAcmLdapBeanSyncEventAdded(AcmLdapBeanSyncEvent event)
     {
-        return "solr-user-reindex";
+        eventPublisher.publishEvent(event);
     }
 
     @Override
-    public void execute()
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
     {
-        solrReindexService.reindex(Arrays.asList(AcmUser.class));
-    }
-
-    public SolrReindexService getSolrReindexService()
-    {
-        return solrReindexService;
-    }
-
-    public void setSolrReindexService(SolrReindexService solrReindexService)
-    {
-        this.solrReindexService = solrReindexService;
+        eventPublisher = applicationEventPublisher;
     }
 }
