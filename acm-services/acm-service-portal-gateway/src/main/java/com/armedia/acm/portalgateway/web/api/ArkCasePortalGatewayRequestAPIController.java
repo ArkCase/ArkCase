@@ -27,15 +27,23 @@ package com.armedia.acm.portalgateway.web.api;
  * #L%
  */
 
+import com.armedia.acm.auth.AcmAuthentication;
 import com.armedia.acm.portalgateway.service.CheckPortalUserAssignement;
 import com.armedia.acm.portalgateway.service.PortalId;
 import com.armedia.acm.portalgateway.service.PortalRequestService;
 import com.armedia.acm.portalgateway.service.PortalRequestServiceException;
 import com.armedia.acm.portalgateway.service.PortalServiceExceptionMapper;
-
+import com.armedia.acm.services.search.exception.SolrException;
+import com.armedia.acm.services.search.model.solr.SolrCore;
+import com.armedia.acm.services.search.service.ExecuteSolrQuery;
+import com.armedia.acm.services.search.service.FacetedSearchService;
+import com.armedia.acm.services.search.service.SearchResults;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -45,10 +53,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity May 28, 2018
@@ -61,6 +73,10 @@ public class ArkCasePortalGatewayRequestAPIController
     private transient final Logger log = LogManager.getLogger(getClass());
 
     private PortalRequestService portalRequestService;
+
+    private ExecuteSolrQuery executeSolrQuery;
+
+    private FacetedSearchService facetedSearchService;
 
     @CheckPortalUserAssignement
     @RequestMapping(value = "/{portalId}/requests", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE })
@@ -112,9 +128,43 @@ public class ArkCasePortalGatewayRequestAPIController
             portalRequestService.submitInquiry(portalRequest);
             return "{\"success\":true}";
         }
-        catch (PortalRequestServiceException | IOException e){
+        catch (PortalRequestServiceException | IOException e)
+        {
             return "{\"success\":false}";
         }
+    }
+
+    @RequestMapping(value = "/{portalId}/requests/suggestRequests", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<String> suggestRequests(Authentication auth,
+            @PortalId @PathVariable(value = "portalId") String portalId,
+            @RequestParam(value = "q") String query,
+            Authentication authentication) throws SolrException
+    {
+        String filterQueries = "";
+        Long userId = ((AcmAuthentication) authentication).getUserIdentity();
+        String[] filter = new String[] { "object_type_s:CASE_FILE", "allow_user_ls:" + userId };
+        filterQueries = Arrays.asList(filter).stream().map(f -> getFacetedSearchService().buildSolrQuery(f))
+                .collect(Collectors.joining(""));
+        filterQueries += filterQueries.trim().length() > 0 ? "&fq=hidden_b:false" : "fq=hidden_b:false";
+
+        query = String.format("name:%s*", query);
+        String results = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, 0,
+                10, "",
+                filterQueries);
+
+        List<String> caseNames = new ArrayList<>();
+
+        SearchResults searchResults = new SearchResults();
+        JSONArray docFiles = searchResults.getDocuments(results);
+
+        for (int i = 0; i < docFiles.length(); i++)
+        {
+            JSONObject docFile = docFiles.getJSONObject(i);
+            caseNames.add(docFile.getString("name"));
+        }
+
+        return caseNames;
     }
 
     @ExceptionHandler(PortalRequestServiceException.class)
@@ -136,4 +186,23 @@ public class ArkCasePortalGatewayRequestAPIController
         this.portalRequestService = portalRequestService;
     }
 
+    public ExecuteSolrQuery getExecuteSolrQuery()
+    {
+        return executeSolrQuery;
+    }
+
+    public void setExecuteSolrQuery(ExecuteSolrQuery executeSolrQuery)
+    {
+        this.executeSolrQuery = executeSolrQuery;
+    }
+
+    public FacetedSearchService getFacetedSearchService()
+    {
+        return facetedSearchService;
+    }
+
+    public void setFacetedSearchService(FacetedSearchService facetedSearchService)
+    {
+        this.facetedSearchService = facetedSearchService;
+    }
 }
