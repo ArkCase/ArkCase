@@ -69,6 +69,7 @@ angular.module('request-info').factory('RequestInfo.RequestsService', [ '$resour
             method: 'DELETE',
             url: 'api/v1/plugin/CASE_FILE/:requestId/lock',
             responseType: 'text',
+            cache: false,
             transformResponse: function(data, headers) {
                 return null;
             }

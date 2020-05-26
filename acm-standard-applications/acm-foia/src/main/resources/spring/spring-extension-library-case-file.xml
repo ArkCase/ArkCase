@@ -75,6 +75,7 @@
                 <beans:list value-type="com.armedia.acm.services.pipeline.handler.PipelineHandler">
                     <beans:ref bean="foiaConfigurationHandler"/>
                     <beans:ref bean="caseFileRulesHandler"/>
+                    <beans:ref bean="requestPerfectedDateHandler"/>
                     <beans:ref bean="caseFileContainerHandler"/>
                     <beans:ref bean="caseFileEcmFolderHandler"/>
                     <beans:ref bean="caseFileFolderStructureHandler"/>
@@ -83,6 +84,7 @@
                     <beans:ref bean="requestDocumentHandler"/>
                     <beans:ref bean="caseFileStartBusinessProcessIfNeededHandler"/>
                     <beans:ref bean="foiaExtensionEmailHandler"/>
+                    <!--<ref beans:bean="caseFileAssignmentHandler"/>-->
                     <beans:ref bean="requestPerfectedDateHandler"/>
                     <beans:ref bean="requestPortalUserParticipantsHandler"/>
                 </beans:list>
