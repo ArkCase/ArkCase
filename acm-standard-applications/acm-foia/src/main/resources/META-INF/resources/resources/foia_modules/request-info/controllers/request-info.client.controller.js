@@ -1517,18 +1517,15 @@ angular.module('request-info').controller(
             function releaseRequestLock(requestId) {
                 var releaseLockDeferred = $q.defer();
 
-                if ($scope.requestLockInfo) {
-                    RequestsService.releaseRequestLock({
-                        requestId: requestId
-                    }).$promise.then(function () {
-                        $scope.requestLockInfo = null;
-                        releaseLockDeferred.resolve();
+
+                RequestsService.releaseRequestLock({
+                    requestId: requestId
+                }).$promise.then(function () {
+                    releaseLockDeferred.resolve();
                     }, function () {
                         releaseLockDeferred.reject();
                     });
-                } else {
-                    releaseLockDeferred.resolve();
-                }
+
 
                 return releaseLockDeferred.promise;
             }
@@ -1752,6 +1749,12 @@ angular.module('request-info').controller(
                     });
                 });
             }
+            window.addEventListener("beforeunload", function (e) {
+                releaseRequestLock(requestId);
+
+                (e || window.event).returnValue = null;
+                return null;
+            });
         }]);
 /**
  * 2018-06-01 David Miller. This block is needed to tell the PDF.js angular module, where the PDF.js library is. Without this, on minified
