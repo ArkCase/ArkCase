@@ -1,8 +1,8 @@
-package gov.foia.service.dataupdate;
+package com.armedia.acm.services.users.service.ldap;
 
 /*-
  * #%L
- * ACM Standard Application: Freedom of Information Act
+ * ACM Service: Users
  * %%
  * Copyright (C) 2014 - 2020 ArkCase LLC
  * %%
@@ -27,38 +27,31 @@ package gov.foia.service.dataupdate;
  * #L%
  */
 
-import com.armedia.acm.services.dataupdate.service.AcmDataUpdateExecutor;
-import com.armedia.acm.services.dataupdate.service.SolrReindexService;
-import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.configuration.model.AcmLdapBeanSyncEvent;
 
-import java.util.Arrays;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.context.ApplicationListener;
 
 /**
- * Created by ana.serafimoska
+ * @author Mario Gjurcheski 5/21/2020
  */
-public class SolrReindexAcmUserExecutor implements AcmDataUpdateExecutor
+public class LdapBeanReloadEventListener implements ApplicationListener<AcmLdapBeanSyncEvent>
 {
-    private SolrReindexService solrReindexService;
+    private final Logger log = LogManager.getLogger(getClass());
+
+    private AcmLdapRegistryService acmLdapRegistryService;
 
     @Override
-    public String getUpdateId()
+    public void onApplicationEvent(AcmLdapBeanSyncEvent event)
     {
-        return "solr-user-reindex";
+        log.info("Starting to reload ldap beans");
+        acmLdapRegistryService.sync();
+
     }
 
-    @Override
-    public void execute()
+    public void setAcmLdapRegistryService(AcmLdapRegistryService acmLdapRegistryService)
     {
-        solrReindexService.reindex(Arrays.asList(AcmUser.class));
-    }
-
-    public SolrReindexService getSolrReindexService()
-    {
-        return solrReindexService;
-    }
-
-    public void setSolrReindexService(SolrReindexService solrReindexService)
-    {
-        this.solrReindexService = solrReindexService;
+        this.acmLdapRegistryService = acmLdapRegistryService;
     }
 }
