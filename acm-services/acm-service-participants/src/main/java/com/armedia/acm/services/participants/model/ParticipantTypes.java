@@ -37,6 +37,7 @@ public interface ParticipantTypes
 {
 
     String APPROVER = "approver";
+    String READER = "reader";
     String ASSIGNEE = "assignee";
     String FOLLOWER = "follower";
     String OWNING_GROUP = "owning group";
