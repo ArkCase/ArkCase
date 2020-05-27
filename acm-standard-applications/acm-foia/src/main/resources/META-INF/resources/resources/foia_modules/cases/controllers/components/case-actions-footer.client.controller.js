@@ -146,7 +146,10 @@ angular.module('cases').controller('Cases.ActionsFooterController',
                     QueuesService.queryNextPossibleQueues(objectInfo.id).then(function (data) {
                         setQueueButtons(data);
                         $scope.deleteDenialLetter = false;
-                        $scope.requestDispositionCategory = "";
+                        $scope.requestDispositionCategory = undefined;
+                        $scope.dispositionValue = undefined;
+                        $scope.requestOtherReason = undefined;
+                        $scope.dispositionReasons = undefined;
                         saveCasePromise.resolve();
                     });
                 });
