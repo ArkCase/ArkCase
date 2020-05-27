@@ -24,7 +24,8 @@ angular.module('services').factory('ApplicationConfigService', [ '$resource', 'A
     };
 
     Service.PROPERTIES = {
-        DISPLAY_USERNAME: 'application.properties.displayUserName'
+        DISPLAY_USERNAME: 'application.properties.displayUserName',
+        LOGOUTURL: 'application.properties.logoutUrl'
     };
 
     /**
