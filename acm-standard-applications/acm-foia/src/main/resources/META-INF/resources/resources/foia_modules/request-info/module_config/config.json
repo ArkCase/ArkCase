@@ -1268,7 +1268,7 @@
                 10,
                 20
             ],
-            "paginationPageSize": 5,
+            "paginationPageSize": 20,
             "columnDefs": [
                 {
                     "name": "key",

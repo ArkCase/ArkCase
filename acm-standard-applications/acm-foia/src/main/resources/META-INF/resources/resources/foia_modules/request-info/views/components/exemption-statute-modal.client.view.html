@@ -12,7 +12,10 @@
     <div class="row">
         <div class="col-sm-6 form-group">
             <select id="statute" ng-model="statute" class="input-sm form-control">
-                <option ng-repeat="option in exemptionStatutesList" value="{{option.key}}" title="{{option.key}}" translate>
+                <option value="" disabled selected hidden translate>
+                    requests.comp.exemption.statute.placeholder
+                </option>
+                <option ng-repeat="option in exemptionStatutes" value="{{option.key}}" title="{{option.key}}" translate>
                     {{option.key | limitTo: 120}}
                 </option>
             </select>

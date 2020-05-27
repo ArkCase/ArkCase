@@ -53,7 +53,6 @@ import com.armedia.acm.spring.SpringContextHolder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.ldap.NameAlreadyBoundException;
@@ -87,9 +86,6 @@ public class LdapUserService implements ApplicationEventPublisherAware
     private SpringContextHolder acmContextHolder;
 
     private ApplicationEventPublisher eventPublisher;
-
-    @Value("${foia.portalserviceprovider.directory.name}")
-    private String directoryName;
 
     public void publishSetPasswordEmailEvent(AcmUser user)
     {
@@ -349,7 +345,7 @@ public class LdapUserService implements ApplicationEventPublisherAware
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void moveExistingLdapUsersToGroup(String newAcmGroup, String oldAcmGroup)
+    public void moveExistingLdapUsersToGroup(String newAcmGroup, String oldAcmGroup, String directoryName)
             throws AcmLdapActionFailedException, AcmObjectNotFoundException
     {
 
