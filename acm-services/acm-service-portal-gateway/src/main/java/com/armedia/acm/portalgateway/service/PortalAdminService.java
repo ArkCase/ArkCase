@@ -99,6 +99,6 @@ public interface PortalAdminService
 
     void updatePortalInfo(PortalInfo portalInfo, PortalInfoDTO portalInfoDTO);
 
-    void moveExistingLdapUsersToGroup(String groupName, PortalInfo previousPortalInfo, Authentication auth)
+    void moveExistingLdapUsersToGroup(String groupName, PortalInfo previousPortalInfo, String directoryName, Authentication auth)
             throws AcmLdapActionFailedException, AcmObjectNotFoundException;
 }
