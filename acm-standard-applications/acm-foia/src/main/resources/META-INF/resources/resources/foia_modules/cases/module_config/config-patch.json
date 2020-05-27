@@ -338,7 +338,13 @@
                     "cellFilter": "translate",
                     "cellTemplate": "<div class='ui-grid-cell-wrap' translate>{{row.entity.value}}</div>"
                 }
-            ]
+            ],
+            "paginationPageSizes": [
+                5,
+                10,
+                20
+            ],
+            "paginationPageSize": 20
         }
     },
     {
