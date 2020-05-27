@@ -217,11 +217,11 @@ public class DefaultPortalAdminService implements PortalAdminService
 
     @Override
     @Async
-    public void moveExistingLdapUsersToGroup(String newAcmGroup, PortalInfo previousPortalInfo, Authentication auth)
+    public void moveExistingLdapUsersToGroup(String newAcmGroup, PortalInfo previousPortalInfo, String directoryName, Authentication auth)
     {
         try
         {
-            ldapUserService.moveExistingLdapUsersToGroup(newAcmGroup, previousPortalInfo.getGroup().getName());
+            ldapUserService.moveExistingLdapUsersToGroup(newAcmGroup, previousPortalInfo.getGroup().getName(), directoryName);
             send(true, auth, previousPortalInfo);
         }
         catch (AcmLdapActionFailedException | AcmObjectNotFoundException e)
