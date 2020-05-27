@@ -1,9 +1,9 @@
 'use strict';
 
-angular.module('goodbye').controller('GoodbyeController', [ '$window', 'Acm.StoreService', 'UtilService', 'Acm.LoginService', 'LookupService', 'Acm.AppService', 'WebSocketsListener', function($window, Store, Util, AcmLoginService, LookupService, AcmAppService, WebSocketService) {
-    // Retrieves the app properties from app-config.xml file
-    var appConfig = LookupService.getConfig('app').then(function(data) {
-        var logoutUrl = AcmAppService.getAppUrl(Util.goodMapValue(data, "logoutUrl", "/logout"));
+angular.module('goodbye').controller('GoodbyeController', [ '$window', 'Acm.StoreService', 'UtilService', 'Acm.LoginService', 'ApplicationConfigService', 'Acm.AppService', 'WebSocketsListener', function($window, Store, Util, AcmLoginService, ApplicationConfigService, AcmAppService, WebSocketService) {
+    // Retrieves the property from arkcase.yaml file
+        ApplicationConfigService.getProperty(ApplicationConfigService.PROPERTIES.LOGOUTURL).then(function (result) {
+                var logoutUrl = AcmAppService.getAppUrl(result);
 
         AcmLoginService.setLogin(false);
         sessionStorage.clear();
