@@ -2,13 +2,11 @@
 
 angular.module('request-info').controller('RequestInfo.ExemptionStatuteModalController', ['$scope', '$modal', '$modalInstance', 'Object.LookupService', 'params', 'ConfigService', function ($scope, $modal, $modalInstance, ObjectLookupService, params, ConfigService) {
 
-    ObjectLookupService.getExemptionStatutes().then(function(exemptionStatute) {
-        $scope.exemptionStatutes = exemptionStatute;
-    });
+    if (params.item.exemptionStatute) {
+        $scope.statute = params.item.exemptionStatute
+    }
 
-    $scope.statute = { value: params.item.exemptionStatute };
-
-    $scope.exemptionStatutesList = params.exemptionStatutesList;
+    $scope.exemptionStatutes = params.exemptionStatutes;
 
     ConfigService.getModuleConfig('request-info').then(function (moduleConfig) {
         var codesDescriptionConfig = _.find(moduleConfig.components, {
@@ -29,12 +27,9 @@ angular.module('request-info').controller('RequestInfo.ExemptionStatuteModalCont
         };
 
         $scope.gridOptions.columnDefs = $scope.config.columnDefs;
+        $scope.gridOptions = $scope.gridOptions || {};
+        $scope.gridOptions.data = $scope.exemptionStatutes;
 
-        ObjectLookupService.getExemptionStatutes().then(function (exemptionStatutes) {
-            $scope.exemptionStatutes = exemptionStatutes;
-            $scope.gridOptions = $scope.gridOptions || {};
-            $scope.gridOptions.data = $scope.exemptionStatutes;
-        });
     });
 
 
