@@ -110,7 +110,7 @@ angular.module('cases').controller('Cases.ExemptionController',
                          }
                      });
                 modalInstance.result.then(function(data) {
-                    $scope.entry.exemptionStatute = data.mexemptionStatute;
+                    $scope.entry.exemptionStatute = data.exemptionStatute;
                     saveExemptionRule();
                 });
             }
