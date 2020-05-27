@@ -38,20 +38,18 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import com.armedia.acm.audit.dao.AuditDao;
 import com.armedia.acm.audit.model.AuditConfig;
 import com.armedia.acm.audit.model.AuditEvent;
-import com.armedia.acm.audit.model.AuditEventConfig;
 import com.armedia.acm.core.query.QueryResultPageWithTotalCount;
 import com.armedia.acm.plugins.audit.model.AuditConstants;
-import com.armedia.acm.plugins.audit.service.ReplaceEventTypeNames;
 import com.armedia.acm.plugins.audit.web.api.GetAuditByObjectTypeAndObjectIdAPIController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -65,7 +63,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -89,10 +86,8 @@ public class GetAuditByObjectTypeAndObjectIdAPIControllerTest
     private GetAuditByObjectTypeAndObjectIdAPIController unit;
     private AuditDao mockAuditDao;
     private Authentication mockAuthentication;
-    private ReplaceEventTypeNames mockReplaceEventTypeNames;
     @Autowired
     private ExceptionHandlerExceptionResolver exceptionResolver;
-    private AuditEventConfig auditEventConfigMock;
     private AuditConfig auditConfig;
     private Logger log = LogManager.getLogger(getClass());
 
@@ -102,13 +97,9 @@ public class GetAuditByObjectTypeAndObjectIdAPIControllerTest
         mockAuditDao = createMock(AuditDao.class);
         mockHttpSession = new MockHttpSession();
         mockAuthentication = createMock(Authentication.class);
-        mockReplaceEventTypeNames = createMock(ReplaceEventTypeNames.class);
-        auditEventConfigMock = createMock(AuditEventConfig.class);
         auditConfig = createMock(AuditConfig.class);
         unit = new GetAuditByObjectTypeAndObjectIdAPIController();
         unit.setAuditDao(mockAuditDao);
-        unit.setReplaceEventTypeNames(mockReplaceEventTypeNames);
-        unit.setAuditEventConfig(auditEventConfigMock);
         unit.setAuditConfig(auditConfig);
 
         mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
@@ -170,7 +161,6 @@ public class GetAuditByObjectTypeAndObjectIdAPIControllerTest
         expect(mockAuditDao.findPagedResults(eq(objectId), eq(objectType), eq(0), eq(10), capture(eventTypes), eq(sortBy), eq(sort)))
                 .andReturn(Arrays.asList(mockAuditEvent));
         expect(mockAuditDao.countAll(eq(objectId), eq(objectType), capture(eventTypes))).andReturn(Arrays.asList(mockAuditEvent).size());
-        expect(mockReplaceEventTypeNames.replaceNameInAcmEvent(mockAuditEvent)).andReturn(mockAuditEvent).anyTimes();
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user");
 
