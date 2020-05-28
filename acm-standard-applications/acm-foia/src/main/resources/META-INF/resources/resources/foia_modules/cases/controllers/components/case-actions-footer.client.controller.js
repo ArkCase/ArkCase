@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('cases').controller('Cases.ActionsFooterController',
-    ['$q', '$scope', '$state', '$stateParams', 'Case.InfoService', 'Helper.ObjectBrowserService', 'QueuesService', '$modal', 'Object.NoteService', 'Admin.FoiaConfigService',
-        function ($q, $scope, $state, $stateParams, CaseInfoService, HelperObjectBrowserService, QueuesService, $modal, NotesService, AdminFoiaConfigService) {
+    ['$q', '$scope', '$translate', '$state', '$stateParams', 'Case.InfoService', 'Helper.ObjectBrowserService', 'QueuesService', '$modal', 'Object.NoteService', 'Admin.FoiaConfigService',
+        function ($q, $scope, $translate, $state, $stateParams, CaseInfoService, HelperObjectBrowserService, QueuesService, $modal, NotesService, AdminFoiaConfigService) {
 
             new HelperObjectBrowserService.Component({
                 scope: $scope,
@@ -43,18 +43,21 @@ angular.module('cases').controller('Cases.ActionsFooterController',
                 } else if (name === 'Deny') {
                     nextQueue = $scope.defaultDenyQueue;
                 }
-                QueuesService.nextQueue($scope.objectInfo.id, nextQueue, name).then(function (data) {
-                    $scope.loading = false;
-                    $scope.loadingIcon = "fa fa-check";
 
-                    if (data.success) {
-                        $scope.$emit("report-object-updated", data.caseFile);
-                    } else {
+                if (nextQueue) {
+                    QueuesService.nextQueue($scope.objectInfo.id, nextQueue, name).then(function (data) {
                         $scope.loading = false;
                         $scope.loadingIcon = "fa fa-check";
-                        $scope.showErrorDialog(data.errors[0]);
-                    }
-                });
+
+                        if (data.success) {
+                            $scope.$emit("report-object-updated", data.caseFile);
+                        } else {
+                            $scope.loading = false;
+                            $scope.loadingIcon = "fa fa-check";
+                            $scope.showErrorDialog(data.errors[0]);
+                        }
+                    });
+                }
             }
 
             function displayLimitedReleaseModal() {
@@ -74,7 +77,13 @@ angular.module('cases').controller('Cases.ActionsFooterController',
                 disableWorkflowControls(deferred.promise);
 
                 if (name === 'Return') {
-                    openReturnReasonModal(deferred);
+                    if ($scope.objectInfo.deniedFlag && $scope.objectInfo.dispositionClosedDate != null) {
+                        $scope.showErrorDialog($translate.instant("cases.cannotReturnError"));
+                        name = null;
+                        deferred.resolve();
+                    } else {
+                        openReturnReasonModal(deferred);
+                    }
                 } else if (name === 'Delete') {
                     openDeleteCommentModal(deferred);
                 } else if (name === 'Hold') {
