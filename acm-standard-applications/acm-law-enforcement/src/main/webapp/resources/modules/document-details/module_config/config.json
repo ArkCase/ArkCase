@@ -24,9 +24,10 @@
             "paginationPageSize": 20,
             "columnDefs": [
                 {
-                    "name": "eventType",
+                    "name": "fullEventType",
                     "displayName": "documentDetails.comp.eventHistory.table.columns.eventType",
                     "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{'eventType.'+row.entity.fullEventType | translate}}</div>",
                     "width": 130
                 },
                 {
