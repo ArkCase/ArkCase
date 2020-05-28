@@ -143,7 +143,8 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
             else if (!nextPossibleQueues.contains(nextQueue))
             {
                 errorList = Arrays.asList(
-                        String.format("From the %s queue, it is not possible to move to the %s queue.", nextQueue, nextPossibleQueues));
+                        String.format("From the %s queue, it is not possible to move to the %s queue.", caseFile.getQueue().getName(),
+                                nextQueue));
             }
             caseFile.setDeniedFlag(oldDeniedFlag);
             return new CaseFileEnqueueResponse(ErrorReason.NEXT_POSSIBLE, errorList, nextQueue, caseFile);
