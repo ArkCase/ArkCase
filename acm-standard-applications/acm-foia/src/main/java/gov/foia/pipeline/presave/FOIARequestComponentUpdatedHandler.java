@@ -97,8 +97,9 @@ public class FOIARequestComponentUpdatedHandler
                     Integer calculatedTTC = elapsedTTC + TTC / 2;
                     calculatedTTC = calculatedTTC > TTC ? TTC : calculatedTTC;
                     entity.setDueDate(holidayConfigurationService.addWorkingDaysToDate(
-                            Date.from(entity.getPerfectedDate().toLocalDate().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()),
-                            calculatedTTC));
+                            Date.from(
+                                    entity.getPerfectedDate().toLocalDate().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()),
+                            calculatedTTC - 1));
 
                     entity.setTimeToComplete(elapsedTTC);
 
