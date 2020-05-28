@@ -389,9 +389,10 @@
             "paginationPageSize": 10,
             "columnDefs": [
                 {
-                    "name": "eventType",
+                    "name": "fullEventType",
                     "displayName": "requests.comp.history.table.columns.event",
                     "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{'eventType.'+row.entity.fullEventType | translate}}</div>",
                     "width": 200
                 },
                 {
