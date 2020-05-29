@@ -195,7 +195,7 @@ angular.module('request-info').controller('RequestInfo.ExemptionController',
                 $modal.open({
                     size: 'lg',
                     templateUrl: 'modules/cases/views/components/case-exemption-codes-description-modal.client.view.html',
-                    controller: 'Cases.ExemptionCodesDescriptionModalController',
+                    controller: 'RequestInfo.ExemptionCodesDescriptionModalController',
                     backdrop: 'static'
                 })
             }
