@@ -1259,6 +1259,41 @@
             ]
         },
         {
+            "id": "exemptionStatutesLookup",
+            "title": "requests.comp.exemption.statutes.title",
+            "enabled": true,
+            "type": "grid",
+            "enableFiltering": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                20
+            ],
+            "paginationPageSize": 20,
+            "columnDefs": [
+                {
+                    "name": "key",
+                    "displayName": "requests.comp.exemption.table.columns.codes.statute",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div class='ui-grid-cell-contents' title='{{row.entity.key}}'>{{row.entity.key}}</div>"
+                },
+                {
+                    "name": "value",
+                    "displayName": "requests.comp.exemption.table.columns.codes.typeOfInformation",
+                    "headerCellFilter": "translate",
+                    "cellFilter": "translate",
+                    "cellTemplate": "<div class='ui-grid-cell-contents' title='{{row.entity.value | translate}}'>{{row.entity.value | translate}}</div>"
+                },
+                {
+                    "name": "description",
+                    "displayName": "requests.comp.exemption.table.columns.codes.caseCitation",
+                    "headerCellFilter": "translate",
+                    "cellFilter": "translate",
+                    "cellTemplate": "<div class='ui-grid-cell-contents' title='{{row.entity.description}}'>{{row.entity.description}}</div>"
+                }
+            ]
+        },
+        {
             "id": "referenceSearchGrid",
             "title": "Reference Search",
             "enabled": "true",
@@ -1597,23 +1632,16 @@
             "columnDefs": [
                 {
                     "name": "key",
-                    "displayName": "requests.comp.exemption.table.columns.codes.statute",
+                    "displayName": "requests.comp.exemption.table.columns.exemptionCode",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div class='ui-grid-cell-contents' title='{{row.entity.key}}'>{{row.entity.key}}</div>"
+                    "width": 150
                 },
                 {
                     "name": "value",
-                    "displayName": "requests.comp.exemption.table.columns.codes.typeOfInformation",
+                    "displayName": "requests.comp.exemption.description",
                     "headerCellFilter": "translate",
                     "cellFilter": "translate",
                     "cellTemplate": "<div class='ui-grid-cell-contents' title='{{row.entity.value | translate}}'>{{row.entity.value | translate}}</div>"
-                },
-                {
-                    "name": "description",
-                    "displayName": "requests.comp.exemption.table.columns.codes.caseCitation",
-                    "headerCellFilter": "translate",
-                    "cellFilter": "translate",
-                    "cellTemplate": "<div class='ui-grid-cell-contents' title='{{row.entity.description}}'>{{row.entity.description}}</div>"
                 }
             ]
         }
