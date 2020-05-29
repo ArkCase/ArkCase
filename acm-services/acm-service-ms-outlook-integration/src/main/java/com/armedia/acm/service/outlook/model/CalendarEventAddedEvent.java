@@ -44,6 +44,7 @@ public class CalendarEventAddedEvent extends AcmEvent
         setObjectType(objectType);
         setUserId(userId);
         setIpAddress(ipAddress);
+        setEventType(EVENT_TYPE);
     }
 
     @Override

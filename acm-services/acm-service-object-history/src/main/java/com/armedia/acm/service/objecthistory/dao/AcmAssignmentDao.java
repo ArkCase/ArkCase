@@ -33,6 +33,10 @@ package com.armedia.acm.service.objecthistory.dao;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.service.objecthistory.model.AcmAssignment;
 
+import javax.persistence.TypedQuery;
+
+import java.util.List;
+
 /**
  * @author riste.tutureski
  *
@@ -44,6 +48,15 @@ public class AcmAssignmentDao extends AcmAbstractDao<AcmAssignment>
     protected Class<AcmAssignment> getPersistenceClass()
     {
         return AcmAssignment.class;
+    }
+
+    public List<AcmAssignment> findByObjectTypeAndObjectId(String objectType, Long objectId)
+    {
+        TypedQuery<AcmAssignment> findByObjectTypeAndObjectIdQuery = getEm().createQuery("SELECT ass FROM AcmAssignment ass "
+                + "WHERE ass.objectType = :objectType AND ass.objectId = :objectId", AcmAssignment.class);
+        findByObjectTypeAndObjectIdQuery.setParameter("objectType", objectType);
+        findByObjectTypeAndObjectIdQuery.setParameter("objectId", objectId);
+        return findByObjectTypeAndObjectIdQuery.getResultList();
     }
 
 }

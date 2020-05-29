@@ -859,11 +859,18 @@
                 {
                     "name": "key",
                     "displayName": "admin.application.lookups.config.data.key",
-                    "headerCellFilter": "translate"
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.key}}<span ng-if='row.entity.primary' translate>common.labels.primary</span></div>"
                 },
                 {
                     "name": "value",
                     "displayName": "admin.application.lookups.config.data.value",
+                    "headerCellFilter": "translate",
+                    "cellFilter": "translate"
+                },
+                {
+                    "name": "description",
+                    "displayName": "admin.application.lookups.config.data.description",
                     "headerCellFilter": "translate",
                     "cellFilter": "translate"
                 }
@@ -896,6 +903,12 @@
                 {
                     "name": "inverseValue",
                     "displayName": "admin.application.lookups.config.data.inverseValue",
+                    "headerCellFilter": "translate",
+                    "cellFilter": "translate"
+                },
+                {
+                    "name": "description",
+                    "displayName": "admin.application.lookups.config.data.description",
                     "headerCellFilter": "translate",
                     "cellFilter": "translate"
                 }

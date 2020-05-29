@@ -3,9 +3,6 @@
 angular.module('cases').controller('Cases.AddAppealOtherReasonModalController',
     ['$scope', '$modal', '$modalInstance', 'params', '$q', 'UtilService', 'Object.LookupService',
         function ($scope, $modal, $modalInstance, params, $q, Util, ObjectLookupService) {
-
-            $scope.isCustomDisabled = true;
-
             $scope.objectInfo = {};
             $scope.objectInfo.dispositionReasons = params.dispositionReasons;
 
@@ -18,13 +15,15 @@ angular.module('cases').controller('Cases.AddAppealOtherReasonModalController',
                     });
                     if (found) {
                         $scope.objectInfo.otherReason = params.otherReason;
-
-                        if ($scope.objectInfo.otherReason === 'custom') {
-                            $scope.isCustomDisabled = false;
-                        }
                     } else {
                         $scope.objectInfo.otherReason = 'custom';
                         $scope.customOtherReason = params.otherReason;
+                    }
+
+                    if ($scope.objectInfo.otherReason === 'custom') {
+                        $scope.isCustomDisabled = false;
+                    } else {
+                        $scope.isCustomDisabled = true;
                     }
                 } else {
                     $scope.objectInfo.otherReason = $scope.otherReasonsLookup[0].key;
@@ -83,6 +82,7 @@ angular.module('cases').controller('Cases.AddAppealOtherReasonModalController',
                         $scope.objectInfo.dispositionReasons.splice(i, 1);
                     }
                 });
-                $modalInstance.close({isAppealOtherReasonDisabled: true});
+
+                $modalInstance.dismiss('Cancel');
             };
         }]);

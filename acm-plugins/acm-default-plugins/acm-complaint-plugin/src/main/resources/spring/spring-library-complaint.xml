@@ -270,7 +270,12 @@
         <property name="complaintDao" ref="acmComplaintDao"/>
     </bean>
 
-    <bean id="complaintTemplateModelProvider" class="com.armedia.acm.plugins.complaint.model.provider.ComplaintTemplateModelProvider">
+    <bean id="complaintTemplateModelProvider" class="com.armedia.acm.plugins.complaint.model.provider.ComplaintTemplateModelProvider"/>
+
+    <bean id="complaintUpdatedNotifier" class="com.armedia.acm.plugins.complaint.service.ComplaintUpdatedNotifier">
+        <property name="notificationService" ref="notificationService"/>
+        <property name="notificationUtils" ref="notificationUtils"/>
+        <property name="complaintDao" ref="acmComplaintDao"/>
     </bean>
 
 </beans>

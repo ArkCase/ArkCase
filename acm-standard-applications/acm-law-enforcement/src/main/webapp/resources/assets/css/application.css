@@ -1907,3 +1907,9 @@ textarea {
 .editable-margin-left form {
     margin-left: -36px;
 }
+
+.exemption-description {
+    color: white;
+    cursor: pointer;
+    text-decoration: underline;
+}

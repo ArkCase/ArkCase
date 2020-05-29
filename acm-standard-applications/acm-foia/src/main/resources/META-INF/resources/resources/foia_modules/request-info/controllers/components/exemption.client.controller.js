@@ -98,7 +98,7 @@ angular.module('request-info').controller('RequestInfo.ExemptionController',
                 var params = {};
                 params.item = item || {};
                 params.config = $scope.config;
-                params.exemptionStatutesList = $scope.exemptionStatutes;
+                params.exemptionStatutes = $scope.exemptionStatutes;
                 var modalInstance = $modal.open({
                 animation: true,
                 size: 'md',
@@ -112,7 +112,7 @@ angular.module('request-info').controller('RequestInfo.ExemptionController',
                  }
                 });
                 modalInstance.result.then(function(data) {
-                     $scope.entry.exemptionStatute = data.exemptionStatute.key;
+                     $scope.entry.exemptionStatute = data.exemptionStatute;
                      saveExemptionRule();
                 });
             }

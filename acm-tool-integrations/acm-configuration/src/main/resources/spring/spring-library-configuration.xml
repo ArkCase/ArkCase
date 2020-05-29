@@ -36,6 +36,8 @@
         </property>
     </bean>
 
+    <bean id="acmLdapBeanSyncEventPublisher" class="com.armedia.acm.configuration.core.propertysource.AcmLdapBeanSyncEventPublisher"/>
+
     <bean id="configurationClientConfig" class="com.armedia.acm.configuration.model.ConfigurationClientConfig">
     </bean>
 

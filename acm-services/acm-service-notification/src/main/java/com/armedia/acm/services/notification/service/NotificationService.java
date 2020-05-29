@@ -27,15 +27,27 @@ package com.armedia.acm.services.notification.service;
  * #L%
  */
 
+import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationRule;
 
 import java.util.Date;
 
 public interface NotificationService
 {
-
     void run(Date lastRun);
 
     void runRule(Date lastRun, NotificationRule rule);
 
+    Notification createNotification(String templateModel, String title, String parentType, Long parentId, String parentName,
+                                    String parentTitle, String emailAddresses, String user);
+
+    Notification createNotification(String templateModel, String title, String parentType, Long parentId, String parentName,
+            String parentTitle, String emailAddresses, String user, String relatedUser);
+
+    Notification createNotification(String templateModel, String title, String parentType, Long parentId, String parentName,
+                                    String parentTitle, String emailAddresses, String user, String relatedUser, String note);
+
+    Notification createNotification(String templateModel, String title, String parentType, Long parentId, String parentName,
+            String parentTitle, Long relatedObjectId, String relatedObjectType, String relatedObjectName, String emailAddresses,
+            String user, String relatedUser, String note);
 }

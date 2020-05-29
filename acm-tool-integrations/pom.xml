@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm</artifactId>
         <groupId>com.armedia</groupId>
-        <version>3.3.8</version>
+        <version>3.3.9</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -41,6 +41,7 @@
         <module>acm-transcribe-tool</module>
         <module>acm-quartz-scheduler</module>
         <module>acm-camel-context-manager</module>
+        <module>acm-comprehend-medical</module>
     </modules>
 
 </project>

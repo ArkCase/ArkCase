@@ -28,13 +28,11 @@ package com.armedia.acm.services.notification.web.api;
  */
 
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
-import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
-import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -50,34 +48,26 @@ import java.util.List;
 @RequestMapping({ "/api/v1/plugin/notification", "/api/latest/plugin/notification" })
 public class ListAllNotificationsAPIController
 {
-
     private NotificationDao notificationDao;
 
-    private Logger log = LogManager.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     @RequestMapping(value = "/{user:.+}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<Notification> findAllNotificationsInParentObject(@PathVariable("user") String user)
-            throws AcmObjectNotFoundException, AcmUserActionFailedException, AcmListObjectsFailedException
+            throws AcmListObjectsFailedException
     {
-        if (log.isInfoEnabled())
+        log.info("Find notifications for user [{}].", user);
+        try
         {
-            log.info("Finding all notifications");
+            List<Notification> notificationList = getNotificationDao().listNotifications(user);
+            log.debug("Found [{}] notifications for user [{}].", notificationList.size(), user);
+            return notificationList;
         }
-        if (user != null)
+        catch (PersistenceException e)
         {
-            try
-            {
-                List<Notification> notificationList = getNotificationDao().listNotifications(user);
-                log.debug("notificationList size " + notificationList.size());
-                return notificationList;
-            }
-            catch (PersistenceException e)
-            {
-                throw new AcmListObjectsFailedException("p", e.getMessage(), e);
-            }
+            throw new AcmListObjectsFailedException("p", e.getMessage(), e);
         }
-        throw new AcmListObjectsFailedException("wrong input", "user: ", null);
     }
 
     public NotificationDao getNotificationDao()
