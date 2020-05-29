@@ -59,7 +59,8 @@ angular.module('admin').controller('Admin.NestedLookupParentController', [ '$sco
         $scope.entry = entry;
         var item = {
             key: '',
-            value: ''
+            value: '',
+            description: ''
         };
         $scope.parentLookupValueSelected(null);
         showModal(item, false);
@@ -69,7 +70,8 @@ angular.module('admin').controller('Admin.NestedLookupParentController', [ '$sco
         $scope.entry = rowEntity;
         var item = {
             key: rowEntity.key,
-            value: rowEntity.value
+            value: rowEntity.value,
+            description: rowEntity.description
         };
         showModal(item, true);
     };
@@ -108,6 +110,7 @@ angular.module('admin').controller('Admin.NestedLookupParentController', [ '$sco
         params.entry = entry || {};
         params.isEdit = isEdit || false;
         params.config = $scope.config;
+        params.isDefaultEnabled = false;
 
         var modalInstance = $modal.open({
             animation: true,
@@ -124,6 +127,7 @@ angular.module('admin').controller('Admin.NestedLookupParentController', [ '$sco
         modalInstance.result.then(function(data) {
             $scope.entry.key = data.entry.key;
             $scope.entry.value = data.entry.value;
+            $scope.entry.description = data.entry.description;
             if (!data.isEdit) {
                 $scope.lookup.push($scope.entry);
             }

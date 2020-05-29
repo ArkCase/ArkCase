@@ -36,7 +36,7 @@ angular.module('people').controller(
                         PermissionsService.getActionPermission('editPerson', $scope.objectInfo, {
                             objectType: ObjectService.ObjectTypes.PERSON
                         }).then(function(result) {
-                            if (result) {
+                            if (result && !$scope.isPortalPerson()) {
                                 gridHelper.addButton(config, "edit");
                                 gridHelper.addButton(config, "delete", null, null, "isDefault");
                             }
@@ -107,6 +107,7 @@ angular.module('people').controller(
                         params.email = email || {};
                         params.isEdit = isEdit || false;
                         params.isDefault = $scope.isDefault(email);
+                        params.isPortalPerson = $scope.isPortalPerson();
 
                         var modalInstance = $modal.open({
                             animation: true,
@@ -170,6 +171,11 @@ angular.module('people').controller(
                         }
                         return promiseSaveInfo;
                     }
+
+                    $scope.isPortalPerson = function() {
+                        var portalPerson = "gov.foia.model.PortalFOIAPerson";
+                        return portalPerson === $scope.objectInfo.className;
+                    };
 
                     $scope.isDefault = function(email) {
                         var defaultEmail = $scope.objectInfo.defaultEmail;

@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.armedia.acm</groupId>
         <artifactId>acm-standard-applications</artifactId>
-        <version>3.3.8</version>
+        <version>3.3.9</version>
     </parent>
 
     <groupId>com.armedia.acm.acm-standard-applications</groupId>
@@ -534,6 +534,18 @@
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-exemption</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-comprehend-medical</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-comprehend-medical</artifactId>
             <version>${acm.version}</version>
         </dependency>
 

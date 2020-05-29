@@ -13,6 +13,7 @@ import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksDTO;
 import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksResultDTO;
 import com.armedia.acm.services.email.model.MessageBodyFactory;
+import com.armedia.acm.services.email.service.AcmEmailConfigurationIOException;
 import com.armedia.acm.services.email.service.AcmEmailSenderService;
 import com.armedia.acm.services.email.service.AcmMailTemplateConfigurationService;
 import com.armedia.acm.services.email.service.TemplatingEngine;
@@ -96,8 +97,6 @@ public abstract class NotificationSender
      */
     public Notification send(Notification notification, Object object)
     {
-        Exception exception = null;
-
         if (notification == null)
         {
             return null;
@@ -113,29 +112,25 @@ public abstract class NotificationSender
             in.setFooter("");
 
             String templateName = String.format("%s.html", notification.getTemplateModelName());
-
-            String template = templateService.getTemplate(templateName);
-            if (template == null)
+            try
+            {
+                String template = templateService.getTemplate(templateName);
+                String body = getTemplatingEngine().process(template, notification.getTemplateModelName(), object);
+                in.setBody(body);
+                in.setTemplate(body);
+            }
+            catch (AcmEmailConfigurationIOException e)
             {
                 LOG.warn("Sending notifications without a template is deprecated!");
                 setupDefaultTemplateAndBody(notification, in);
             }
-            else
+            catch (TemplateException | IOException e)
             {
-                try
-                {
-                    String body = getTemplatingEngine().process(template, notification.getTemplateModelName(), object);
-                    in.setBody(body);
-                    in.setTemplate(body);
-                }
-                catch (TemplateException | IOException e)
-                {
-                    // failing to send an email should not break the flow
-                    LOG.error("Unable to generate email for {} ", Arrays.asList(notification.getUserEmail()), e);
-                    setupDefaultTemplateAndBody(notification, in);
-                }
-
+                // failing to generate the email should not break the flow
+                LOG.error("Unable to generate email for [{}].", notification.getUserEmail(), e);
+                setupDefaultTemplateAndBody(notification, in);
             }
+
             if (notification.getAttachFiles())
             {
                 List<Long> notificationFileIds = new ArrayList<>();
@@ -149,8 +144,17 @@ public abstract class NotificationSender
             in.setSubject(notification.getTitle());
             in.setEmailAddresses(Arrays.asList(notification.getEmailAddresses().split(",")));
             in.setEmailGroup(notification.getEmailGroup());
-            in.setObjectId(notification.getParentId());
-            in.setObjectType(notification.getParentType());
+            if (notification.getRelatedObjectId() != null && notification.getRelatedObjectType() != null)
+            {
+                in.setObjectType(notification.getRelatedObjectType());
+                in.setObjectId(notification.getRelatedObjectId());
+            }
+            else
+            {
+                in.setObjectId(notification.getParentId());
+                in.setObjectType(notification.getParentType());
+            }
+
             Authentication authentication = SecurityContextHolder.getContext() != null
                     ? SecurityContextHolder.getContext().getAuthentication()
                     : null;
@@ -158,19 +162,19 @@ public abstract class NotificationSender
             AcmUser acmUser = notification.getUser() != null ? userDao.findByUserId(notification.getUser()) : null;
 
             getEmailSenderService().sendEmail(in, authentication, acmUser);
+            if (in.getMailSent())
+            {
+                notification.setState(NotificationConstants.STATE_SENT);
+            }
+            else
+            {
+                notification.setState(NotificationConstants.STATE_NOT_SENT);
+            }
         }
         catch (Exception e)
         {
-            exception = e;
-        }
-        if (exception == null)
-        {
-            notification.setState(NotificationConstants.STATE_SENT);
-        }
-        else
-        {
-            LOG.error("Notification message not sent ...", exception);
-            if (exception instanceof TemplateException)
+            LOG.error("Notification message not sent.", e);
+            if (e instanceof TemplateException)
             {
                 notification.setState(NotificationConstants.STATE_TEMPLATE_ERROR);
             }
@@ -179,7 +183,6 @@ public abstract class NotificationSender
                 notification.setState(NotificationConstants.STATE_NOT_SENT);
             }
         }
-
         return notification;
     }
 

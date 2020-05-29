@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm</artifactId>
         <groupId>com.armedia</groupId>
-        <version>3.3.8</version>
+        <version>3.3.9</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -69,6 +69,7 @@
         <module>acm-service-portal-gateway</module>
         <module>acm-service-object-title</module>
         <module>acm-service-exemption</module>
+        <module>acm-service-comprehend-medical</module>
     </modules>
 
 </project>

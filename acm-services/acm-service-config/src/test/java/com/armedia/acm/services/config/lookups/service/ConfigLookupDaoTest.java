@@ -800,4 +800,103 @@ public class ConfigLookupDaoTest extends EasyMockSupport
 
     }
 
+    @Test(expected = AcmResourceNotModifiableException.class)
+    public void testPrimaryEntriesOnUpdate() throws Exception
+    {
+        // given
+        LookupDefinition lookupDefinition = new LookupDefinition();
+        lookupDefinition.setLookupType(LookupType.STANDARD_LOOKUP);
+        lookupDefinition.setName("componentsAgencies");
+        lookupDefinition.setReadonly(true);
+        String entriesAsJson = "[{\"key\":\"FOIA\",\"value\":\"FOIA\",\"readonly\":false,\"primary\":true}, {\"key\":\"sales\",\"value\":\"Sales\",\"readonly\":false,\"primary\":true}]";
+        lookupDefinition.setLookupEntriesAsJson(entriesAsJson);
+        configLookupDao.setLookups(
+                "{\"inverseValuesLookup\": [], \"nestedLookup\": [],\"standardLookup\":[]}");
+        configLookupDao.setLookupsExt(
+                "{\"inverseValuesLookup\": [], \"nestedLookup\": [], \"standardLookup\": [{\"name\":\"componentsAgencies\", \"entries\":[{\"key\":\"FOIA\",\"value\":\"FOIA\",\"readonly\":false,\"primary\":true}, {\"key\":\"sales\",\"value\":\"Sales\",\"readonly\":false,\"primary\":false}], \"readonly\":true}]}");
+
+        // when
+        configLookupDao.saveLookup(lookupDefinition);
+
+        // then
+        fail("AcmResourceNotModifiableException should have been thrown");
+    }
+
+    @Test
+    public void testAddLookupWithDescriptionEntry() throws Exception
+    {
+        // given
+        LookupDefinition lookupDefinition = new LookupDefinition();
+        lookupDefinition.setLookupType(LookupType.STANDARD_LOOKUP);
+        lookupDefinition.setName("colors");
+        lookupDefinition.setReadonly(true);
+        String entriesAsJson = "[{\"key\":\"someKey\",\"value\":\"someValue\",\"readonly\":false,\"description\":\"someDescription\"}]";
+        lookupDefinition.setLookupEntriesAsJson(entriesAsJson);
+        configLookupDao.setLookups(
+                "{\"inverseValuesLookup\": [], \"nestedLookup\": [],\"standardLookup\":[{\"name\":\"colors\", \"entries\":[], \"readonly\":true}]}");
+        configLookupDao.setLookupsExt("{\"inverseValuesLookup\": [], \"nestedLookup\": [], \"standardLookup\": []}");
+
+        // when
+        String ret = configLookupDao.saveLookup(lookupDefinition);
+
+        // then
+        ArrayNode updatedValue = JsonPath.using(configuration).parse(ret)
+                .read("$." + lookupDefinition.getLookupType().getTypeName() + "..[?(@.name=='" + lookupDefinition.getName()
+                        + "')].entries");
+
+        JSONAssert.assertEquals(entriesAsJson, updatedValue.get(0).toString(), false);
+    }
+
+    @Test
+    public void testUpdateLookupWithDescriptionEntry() throws Exception
+    {
+        // given
+        LookupDefinition lookupDefinition = new LookupDefinition();
+        lookupDefinition.setLookupType(LookupType.STANDARD_LOOKUP);
+        lookupDefinition.setName("colors");
+        lookupDefinition.setReadonly(false);
+        String entriesAsJson = "[{\"key\":\"someKey\",\"value\":\"someValue\",\"readonly\":false,\"description\":\"someDescription2\"}]";
+        lookupDefinition.setLookupEntriesAsJson(entriesAsJson);
+        configLookupDao.setLookups(
+                "{\"inverseValuesLookup\": [], \"nestedLookup\": [],\"standardLookup\":[]}");
+        configLookupDao.setLookupsExt(
+                "{\"inverseValuesLookup\": [], \"nestedLookup\": [], \"standardLookup\": [{\"name\":\"colors\", \"entries\":[{\"key\":\"someKey\",\"value\":\"someValue\",\"readonly\":false,\"description\":\"someDescription\"}], \"readonly\":true}]}");
+
+        // when
+        String ret = configLookupDao.saveLookup(lookupDefinition);
+
+        // then
+        ArrayNode updatedValue = JsonPath.using(configuration).parse(ret)
+                .read("$." + lookupDefinition.getLookupType().getTypeName() + "..[?(@.name=='" + lookupDefinition.getName()
+                        + "')].entries");
+
+        JSONAssert.assertEquals(entriesAsJson, updatedValue.get(0).toString(), false);
+    }
+
+    @Test
+    public void testUpdateInverseLookupEntriesWithDescription() throws Exception
+    {
+        // given
+        LookupDefinition lookupDefinition = new LookupDefinition();
+        lookupDefinition.setLookupType(LookupType.INVERSE_VALUES_LOOKUP);
+        lookupDefinition.setName("colors");
+        lookupDefinition.setReadonly(true);
+        String entriesAsJson = "[{\"key\":\"someKey\",\"value\":\"someValue\",\"inverseKey\":\"someKey\",\"inverseValue\":\"someValue\",\"description\":\"someDescription\"}]";
+        lookupDefinition.setLookupEntriesAsJson(entriesAsJson);
+        configLookupDao.setLookups(
+                "{\"inverseValuesLookup\": [], \"nestedLookup\": [],\"standardLookup\":[]}");
+        configLookupDao.setLookupsExt(
+                "{\"inverseValuesLookup\": [{\"name\":\"colors\", \"entries\":[], \"readonly\":true}], \"nestedLookup\": [], \"standardLookup\": []}");
+
+        // when
+        String ret = configLookupDao.saveLookup(lookupDefinition);
+
+        // then
+        ArrayNode updatedValue = JsonPath.using(configuration).parse(ret)
+                .read("$." + lookupDefinition.getLookupType().getTypeName() + "..[?(@.name=='" + lookupDefinition.getName()
+                        + "')].entries");
+
+        JSONAssert.assertEquals(entriesAsJson, updatedValue.get(0).toString(), false);
+    }
+
 }

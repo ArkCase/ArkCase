@@ -162,7 +162,16 @@ angular.module('cases').controller(
                 $scope.config.data.organizationAssociations = [];
                 $scope.config.data.requestType = $scope.requestTypes[0].key;
                 $scope.config.data.requestCategory = $scope.categories[0].key;
-                $scope.config.data.componentAgency = $scope.componentsAgencies[0].key;
+
+                var defaultComponentAgencyFound = _.find($scope.componentsAgencies, function (value) {
+                    return value.primary === true;
+                });
+
+                if (!Util.isEmpty(defaultComponentAgencyFound)) {
+                    $scope.config.data.componentAgency = defaultComponentAgencyFound.key;
+                } else {
+                    $scope.config.data.componentAgency = $scope.componentsAgencies[0].key;
+                }
                 $scope.config.data.originator.person.title = $scope.prefixes[0].key;
                 $scope.config.data.deliveryMethodOfResponse = $scope.deliveryMethodOfResponses[0].key;
                 $scope.config.data.payFee = $scope.payFees[0].key;
@@ -173,7 +182,8 @@ angular.module('cases').controller(
                 $scope.states = "";
                 $scope.config.data.originator.person.addresses[0].country = countries[0].key;
                 $scope.config.data.originator.person.addresses[0].type = addressTypes[0].key;
-
+                $scope.config.data.receivedDate = moment.utc().format("YYYY-MM-DDTHH:mm:ss.sss");
+                
                 $scope.blankPerson = angular.copy($scope.config.data.originator.person);
             });
 
@@ -245,6 +255,13 @@ angular.module('cases').controller(
                         $location.hash('topSection1');
                         $anchorScroll();
                     }
+                }
+            };
+
+            $scope.receivedDateChanged = function () {
+                var todayDate = moment.utc().format("YYYY-MM-DDTHH:mm:ss.sss");
+                if (Util.isEmpty($scope.config.data.receivedDate) || moment($scope.config.data.receivedDate).isAfter(todayDate)) {
+                    $scope.config.data.receivedDate = todayDate;
                 }
             };
 
@@ -443,7 +460,7 @@ angular.module('cases').controller(
                 var basicData = {};
 
 
-                if (typeof $scope.config.data.originator.person.defaultPhone.value === "") {
+                if (Util.isEmpty($scope.config.data.originator.person.defaultPhone) || !$scope.config.data.originator.person.defaultPhone.value) {
                     $scope.config.data.originator.person.defaultPhone = null;
                 } else if (!$scope.config.data.originator.person.defaultPhone.type) {
                     $scope.config.data.originator.person.defaultPhone.type = "phone";
@@ -455,15 +472,13 @@ angular.module('cases').controller(
                     $scope.config.data.originator.person.defaultEmail.type = "email";
                 }
 
-                if (!$scope.config.data.originator.person.defaultPhone.id) {
+                if ($scope.config.data.originator.person.defaultPhone && !$scope.config.data.originator.person.defaultPhone.id) {
                     $scope.config.data.originator.person.contactMethods.push($scope.config.data.originator.person.defaultPhone);
                 }
 
                 if ($scope.config.data.originator.person.defaultEmail && !$scope.config.data.originator.person.defaultEmail.id) {
                     $scope.config.data.originator.person.contactMethods.push($scope.config.data.originator.person.defaultEmail);
                 }
-
-                $scope.config.data.receivedDate = $scope.receivedDate;
 
                 for (var property in $scope.config.data) {
                     if ($scope.config.data.hasOwnProperty(property)) {

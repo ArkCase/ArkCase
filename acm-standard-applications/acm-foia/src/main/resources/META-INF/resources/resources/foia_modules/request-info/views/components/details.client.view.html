@@ -69,7 +69,7 @@
                 <div class="form-group col-sm-6">
                     <label class="control-label" translate> requests.comp.details.deliveryMethodOfResponse.label</label> <select
                         ng-model="requestInfo.deliveryMethodOfResponse"
-                        ng-options="deliveryMethodOfResponse.key as deliveryMethodOfResponse.value for deliveryMethodOfResponse in deliveryMethodOfResponses"
+                        ng-options="deliveryMethodOfResponse.key as deliveryMethodOfResponse.value | translate for deliveryMethodOfResponse in deliveryMethodOfResponses"
                         class="form-control input-md" ng-disabled="true">
                 </select>
                 </div>
@@ -143,23 +143,6 @@
                     <textarea rows=5 id="requestExpediteReason" ng-model="requestInfo.requestExpediteReason" name="requestExpediteReason"
                             class="input-md form-control" ng-disabled="!requestInfo.expediteFlag"
                             placeholder="{{ 'requests.comp.details.requestExpediteReason.placeholder'  | translate }}"></textarea>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-6">
-                    <div class="checkbox">
-                        <label> <input type="checkbox" ng-model="requestInfo.amendmentFlag" ng-change="requestInfo.requestAmendmentDetails= !requestInfo.amendmentFlag ? '' : requestInfo.requestAmendmentDetails"> <span translate>requests.comp.details.amendmentFlag.label
-                        </span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-6">
-                    <label for="requestAmendmentDetails" translate> requests.comp.details.requestAmendmentDetails.label </label>
-                    <textarea rows=5 id="requestAmendmentDetails" ng-model="requestInfo.requestAmendmentDetails" name="requestAmendmentDetails"
-                            class="input-md form-control" ng-disabled="!requestInfo.amendmentFlag"
-                            placeholder="{{ 'requests.comp.details.requestAmendmentDetails.placeholder'  | translate }}"></textarea>
                 </div>
             </div>
             <div class="row">

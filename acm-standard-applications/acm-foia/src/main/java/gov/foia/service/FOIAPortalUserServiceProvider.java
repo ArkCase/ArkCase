@@ -61,13 +61,7 @@ import com.armedia.acm.services.users.service.AcmUserEventPublisher;
 import com.armedia.acm.services.users.service.ldap.LdapAuthenticateService;
 import com.armedia.acm.services.users.service.ldap.LdapUserService;
 import com.armedia.acm.spring.SpringContextHolder;
-import gov.foia.dao.PortalFOIAPersonDao;
-import gov.foia.dao.UserRegistrationRequestDao;
-import gov.foia.dao.UserResetRequestDao;
-import gov.foia.model.FOIAPerson;
-import gov.foia.model.PortalFOIAPerson;
-import gov.foia.model.UserRegistrationRequestRecord;
-import gov.foia.model.UserResetRequestRecord;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -79,13 +73,20 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Base64Utils;
 
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
+
+import gov.foia.dao.PortalFOIAPersonDao;
+import gov.foia.dao.UserRegistrationRequestDao;
+import gov.foia.dao.UserResetRequestDao;
+import gov.foia.model.FOIAPerson;
+import gov.foia.model.PortalFOIAPerson;
+import gov.foia.model.UserRegistrationRequestRecord;
+import gov.foia.model.UserResetRequestRecord;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jul 12, 2018
@@ -118,6 +119,8 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     private PortalInfoDAO portalInfoDAO;
 
     private PersonDao personDao;
+
+    private RequestAssignmentService requestAssignmentService;
 
     @Value("${foia.portalserviceprovider.directory.name}")
     private String directoryName;
@@ -429,6 +432,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
                     portalInfo.getGroup().getName());
             portalPersonDao.save(person);
             AcmUser acmUser = ldapUserService.createLdapUser(userDto, directoryName);
+            getRequestAssignmentService().addPortalUserAsParticipantToExistingRequests(acmUser, person);
             acmUserEventPublisher.getApplicationEventPublisher().publishEvent(new AcmLdapSyncEvent(acmUser.getUserId()));
         }
         catch (Exception e)
@@ -514,9 +518,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         try
         {
             PortalFOIAPerson portalFOIAPerson = portalFOIAPersonFromAcmUser(acmUser);
-            Map<String, String> roles = new HashMap<>();
-            roles.put(portalId, PortalUser.PENDING_USER);
-            portalFOIAPerson.setPortalRoles(roles);
+            portalFOIAPerson.getPortalRoles().put(portalId, PortalUser.PENDING_USER);
             return portalPersonDao.save(portalFOIAPerson);
         }
         catch (Exception e)
@@ -537,22 +539,26 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         address.setType("Business");
         person.getAddresses().add(address);
         person.setDefaultAddress(address);
-        PostalAddress orgAddress = new PostalAddress();
-        orgAddress.setType("Business");
-        Organization organization = new Organization();
-        organization.setOrganizationValue(acmUser.getCompany() != null ? acmUser.getCompany() : " ");
-        organization.setOrganizationType("Corporation");
-        organization.getAddresses().add(orgAddress);
-        person.getOrganizations().add(organization);
+        if (acmUser.getCompany() != null && !acmUser.getCompany().isEmpty())
+        {
+            PostalAddress orgAddress = new PostalAddress();
+            orgAddress.setType("Business");
+            Organization organization = new Organization();
+            organization.setOrganizationValue(acmUser.getCompany());
+            organization.setOrganizationType("Corporation");
+            organization.getAddresses().add(orgAddress);
+            person.getOrganizations().add(organization);
+        }
 
-        // the UI expects the contact methods in this order: Phone, Fax, Email
-        ContactMethod phone = buildContactMethod("phone", null);
-        person.getContactMethods().add(phone);
-        ContactMethod fax = buildContactMethod("fax", null);
-        person.getContactMethods().add(fax);
-        ContactMethod email = buildContactMethod("email", acmUser.getMail());
-        person.getContactMethods().add(email);
-        person.setDefaultEmail(email);
+        List<ContactMethod> contactMethods = new ArrayList<>();
+        person.setContactMethods(contactMethods);
+        if (acmUser.getMail() != null && !acmUser.getMail().isEmpty())
+        {
+            ContactMethod email = buildContactMethod("email", acmUser.getMail());
+            person.getContactMethods().add(email);
+            person.setDefaultEmail(email);
+        }
+
         return person;
     }
 
@@ -760,8 +766,44 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         person.getAddresses().get(0).setStreetAddress(user.getAddress1());
         person.getAddresses().get(0).setStreetAddress2(user.getAddress2());
         person.getAddresses().get(0).setZip(user.getZipCode());
-        person.getContactMethods().stream().filter(cm -> cm.getType().equalsIgnoreCase("Phone")).findFirst().get()
-                .setValue(user.getPhoneNumber());
+        if (user.getPhoneNumber() != null && !user.getPhoneNumber().isEmpty())
+        {
+            if (person.getContactMethods() != null && !person.getContactMethods().isEmpty())
+            {
+                ContactMethod phoneContact = person.getDefaultPhone();
+                if (phoneContact != null)
+                {
+                    phoneContact.setValue(user.getPhoneNumber());
+                }
+                else
+                {
+                    ContactMethod newPhoneContact = buildContactMethod("phone", user.getPhoneNumber());
+                    person.getContactMethods().add(newPhoneContact);
+                    person.setDefaultPhone(newPhoneContact);
+                }
+            }
+            else
+            {
+                List<ContactMethod> contactMethods = new ArrayList<>();
+                contactMethods.add(buildContactMethod("phone", user.getPhoneNumber()));
+                person.setContactMethods(contactMethods);
+            }
+        }
+        else
+        {
+            person.getContactMethods().remove(person.getDefaultPhone());
+            Optional<ContactMethod> otherPhoneContact = person.getContactMethods().stream()
+                    .filter(cm -> cm.getType().equalsIgnoreCase("Phone"))
+                    .findFirst();
+            if (otherPhoneContact.isPresent())
+            {
+                person.setDefaultPhone(otherPhoneContact.get());
+            }
+            else
+            {
+                person.setDefaultPhone(null);
+            }
+        }
 
         for (PersonOrganizationAssociation poa : person.getOrganizationAssociations())
         {
@@ -773,9 +815,9 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
             findOrCreateOrganizationAndPersonOrganizationAssociation(person, user.getOrganization());
         }
 
-        personDao.save(person);
+        Person saved = personDao.save(person);
 
-        return portaluserFromPortalPerson(portalId, (PortalFOIAPerson) person);
+        return portaluserFromPortalPerson(portalId, (PortalFOIAPerson) saved);
 
     }
 
@@ -920,11 +962,10 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         user.setLastName(person.getFamilyName());
         user.setPrefix(person.getTitle());
         user.setPosition(person.getPosition());
-        Optional<ContactMethod> phoneContact = person.getContactMethods().stream().filter(cm -> cm.getType().equalsIgnoreCase("Phone"))
-                .findFirst();
-        if (phoneContact.isPresent())
+        ContactMethod phoneContact = person.getDefaultPhone();
+        if (phoneContact != null && phoneContact.getValue() != null && !phoneContact.getValue().isEmpty())
         {
-            user.setPhoneNumber(phoneContact.get().getValue());
+            user.setPhoneNumber(phoneContact.getValue());
         }
         PostalAddress address = person.getDefaultAddress();
         if (address == null)
@@ -1003,14 +1044,21 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
             person.getOrganizations().get(0).getAddresses().add(orgAddress);
         }
 
-        // the UI expects the contact methods in this order: Phone, Fax, Email
-        ContactMethod phone = buildContactMethod("phone", user.getPhoneNumber());
-        person.getContactMethods().add(phone);
-        ContactMethod fax = buildContactMethod("fax", null);
-        person.getContactMethods().add(fax);
-        ContactMethod email = buildContactMethod("email", user.getEmail());
-        person.getContactMethods().add(email);
-        person.setDefaultEmail(email);
+        List<ContactMethod> contactMethods = new ArrayList<>();
+        person.setContactMethods(contactMethods);
+
+        if (user.getPhoneNumber() != null && !user.getPhoneNumber().isEmpty())
+        {
+            ContactMethod phone = buildContactMethod("phone", user.getPhoneNumber());
+            person.getContactMethods().add(phone);
+        }
+
+        if (user.getEmail() != null && !user.getEmail().isEmpty())
+        {
+            ContactMethod email = buildContactMethod("email", user.getEmail());
+            person.getContactMethods().add(email);
+            person.setDefaultEmail(email);
+        }
 
         person.getPortalRoles().put(portalId, user.getRole());
 
@@ -1233,5 +1281,15 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     public void setOrganizationDao(OrganizationDao organizationDao)
     {
         this.organizationDao = organizationDao;
+    }
+
+    public RequestAssignmentService getRequestAssignmentService()
+    {
+        return requestAssignmentService;
+    }
+
+    public void setRequestAssignmentService(RequestAssignmentService requestAssignmentService)
+    {
+        this.requestAssignmentService = requestAssignmentService;
     }
 }

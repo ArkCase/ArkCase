@@ -101,6 +101,10 @@ public class NotificationConfig
     @Value("${notification.PERSON-ASSOCIATION.label}")
     private String personAssociationLabel;
 
+    @JsonProperty("notification.DOC_REPO.label")
+    @Value("${notification.DOC_REPO.label}")
+    private String docRepoLabel;
+
     public String getLabelForObjectType(String objectType)
     {
         switch (objectType)
@@ -119,8 +123,10 @@ public class NotificationConfig
             return noteLabel;
         case "PERSON-ASSOCIATION":
             return personAssociationLabel;
+        case "DOC_REPO":
+            return docRepoLabel;
         default:
-            return "";
+            return objectType;
         }
     }
 
@@ -292,5 +298,15 @@ public class NotificationConfig
     public void setPersonAssociationLabel(String personAssociationLabel)
     {
         this.personAssociationLabel = personAssociationLabel;
+    }
+
+    public String getDocRepoLabel()
+    {
+        return docRepoLabel;
+    }
+
+    public void setDocRepoLabel(String docRepoLabel)
+    {
+        this.docRepoLabel = docRepoLabel;
     }
 }

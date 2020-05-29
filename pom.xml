@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.armedia</groupId>
     <artifactId>acm</artifactId>
-    <version>3.3.8</version>
+    <version>3.3.9</version>
     <packaging>pom</packaging>
     <name>ArkCase Case Management System</name>
     <description>Cloud-based case management system with a very nice UI</description>
@@ -23,6 +23,7 @@
         <activiti.version>5.15.1</activiti.version>
         <alfresco-opencmis-extension.version>1.1</alfresco-opencmis-extension.version>
         <amazon.sdk.version>1.11.543</amazon.sdk.version>
+        <amazon.comprehend.medical.sdk.version>1.11.775</amazon.comprehend.medical.sdk.version>
         <apache-commons-beanutils.version>1.9.2</apache-commons-beanutils.version>
         <apache-commons-codec>1.9</apache-commons-codec>
         <apache-commons-exec.version>1.3</apache-commons-exec.version>
@@ -33,6 +34,7 @@
         <apache-commons-net.version>3.3</apache-commons-net.version>
         <apache-commons-vfs2.version>2.0</apache-commons-vfs2.version>
         <apache-commons-text.version>1.6</apache-commons-text.version>
+        <apache-commons-validator.version>1.6</apache-commons-validator.version>
         <apache-httpcomponents-httpclient.version>4.5</apache-httpcomponents-httpclient.version>
         <apache-tika-parsers.version>1.24</apache-tika-parsers.version>
         <asm.version>5.0.3</asm.version>
@@ -961,6 +963,11 @@
                 <artifactId>commons-text</artifactId>
                 <version>${apache-commons-text.version}</version>
             </dependency>
+            <dependency>
+                <groupId>commons-validator</groupId>
+                <artifactId>commons-validator</artifactId>
+                <version>${apache-commons-validator.version}</version>
+            </dependency>
             <!-- json -->
             <dependency>
                 <groupId>org.json</groupId>
@@ -1444,6 +1451,19 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
+            <dependency>
+                <groupId>com.amazonaws</groupId>
+                <artifactId>aws-java-sdk-comprehendmedical</artifactId>
+                <version>${amazon.comprehend.medical.sdk.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.amazonaws</groupId>
+                <artifactId>aws-java-sdk-core</artifactId>
+                <version>${amazon.comprehend.medical.sdk.version}</version>
+            </dependency>
+
             <!-- Freemarker -->
             <dependency>
                 <groupId>org.freemarker</groupId>

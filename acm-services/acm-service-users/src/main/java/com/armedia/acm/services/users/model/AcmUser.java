@@ -141,7 +141,7 @@ public class AcmUser implements Serializable
     @Embedded
     private PasswordResetToken passwordResetToken;
 
-    @ManyToMany(mappedBy = "userMembers", cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @ManyToMany(mappedBy = "userMembers", cascade = { CascadeType.MERGE })
     @JsonIgnore
     private Set<AcmGroup> groups = new HashSet<>();
 
