@@ -10,7 +10,7 @@ angular.module('request-info').controller('RequestInfo.ExemptionStatuteModalCont
 
     ConfigService.getModuleConfig('request-info').then(function (moduleConfig) {
         var codesDescriptionConfig = _.find(moduleConfig.components, {
-            id: 'exemptionCodesDescription'
+            id: 'exemptionStatutesLookup'
         });
 
         $scope.config = codesDescriptionConfig;
@@ -34,11 +34,20 @@ angular.module('request-info').controller('RequestInfo.ExemptionStatuteModalCont
 
 
     $scope.showExemptionStatutes = function () {
+        var params = {};
+        params.config = $scope.config;
+        params.gridOptions = $scope.gridOptions;
+        $scope.gridOptions.data = $scope.exemptionStatutes;
         $modal.open({
             size: 'lg',
-            templateUrl: 'modules/cases/views/components/case-exemption-codes-description-modal.client.view.html',
-            controller: 'RequestInfo.ExemptionCodesDescriptionModalController',
-            backdrop: 'static'
+            templateUrl: 'modules/request-info/views/components/exemption-statutes-lookup-modal.client.view.html',
+            controller: 'RequestInfo.ExemptionStatutesLookupModalController',
+            backdrop: 'static',
+            resolve: {
+                params: function () {
+                    return params;
+                }
+            }
         })
     };
 
