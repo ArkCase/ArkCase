@@ -6,6 +6,8 @@ body {
     background-color: transparent;
     color: #788288;
     font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    height: 100vh;
+    position: relative;
 }
 
 .logo {
@@ -43,8 +45,14 @@ body {
     color: #ffffff;
 }
 
-#footer .text-center.padder p {
-    padding: 20px;
+.text-center.padder p small a span {
+    margin: 100px;
+}
+
+#footer {
+    position: absolute;
+    width: 100vw;
+    bottom: 0;
 }
 
 .modal-body {
