@@ -84,6 +84,7 @@
         <magic.matcher.version>0.1.2</magic.matcher.version>
         <mariadb.jdbc.version>2.2.6</mariadb.jdbc.version>
         <maven.checkstyle.plugin.version>2.15</maven.checkstyle.plugin.version>
+        <maven.build.timestamp.format>MMMM dd, yyyy</maven.build.timestamp.format>
         <xalan.version>2.7.2</xalan.version>
 	<gitflow-maven-plugin.version>1.14.0</gitflow-maven-plugin.version>
 	<milton.version>2.7.3.5</milton.version>
@@ -283,6 +284,9 @@
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                             <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                         </manifest>
+                        <manifestEntries>
+                            <Build-Time>${maven.build.timestamp}</Build-Time>
+                        </manifestEntries>
                     </archive>
                 </configuration>
             </plugin>
