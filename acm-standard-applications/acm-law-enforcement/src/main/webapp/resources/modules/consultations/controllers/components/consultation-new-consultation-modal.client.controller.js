@@ -63,7 +63,7 @@ angular.module('consultations').controller(
                             contactMethods: []
                         }
                     },
-                    personAssociations: [ {} ],
+                    personAssociations: [],
                     participants: []
                 };
                 $scope.config.data.organizationAssociations = [];
