@@ -30,9 +30,7 @@ package com.armedia.acm.plugins.consultation.web.api;
 import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
-import com.armedia.acm.plugins.casefile.model.TimePeriod;
 import com.armedia.acm.plugins.consultation.model.Consultation;
-import com.armedia.acm.plugins.consultation.model.ConsultationSummaryByStatusAndTimePeriodDto;
 import com.armedia.acm.plugins.consultation.service.ConsultationService;
 import com.armedia.acm.plugins.consultation.utility.ConsultationEventUtility;
 import com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator;
@@ -64,7 +62,7 @@ import java.util.List;
  * Created by Vladimir Cherepnalkovski <vladimir.cherepnalkovski@armedia.com> on May, 2020
  */
 @Controller
-@RequestMapping({ "/api/v1/plugin/consultationbystatus", "/api/latest/plugin/consultationbystatus" })
+@RequestMapping({ "/api/v1/plugin/consultation", "/api/latest/plugin/consultation" })
 public class GetConsultationAPIController
 {
 
@@ -72,19 +70,6 @@ public class GetConsultationAPIController
     private ConsultationService consultationService;
     private ConsultationEventUtility consultationEventUtility;
     private ArkPermissionEvaluator arkPermissionEvaluator;
-
-    @RequestMapping(value = "/summary", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
-    @ResponseBody
-    public List<ConsultationSummaryByStatusAndTimePeriodDto> getConsultationsSummaryByStatusAndTimePeriod(
-            Authentication authentication) throws AcmListObjectsFailedException
-    {
-        if (log.isInfoEnabled())
-        {
-            log.info("Getting consultations grouped by status in a different time periods");
-        }
-        List<ConsultationSummaryByStatusAndTimePeriodDto> retval = getConsultationSummary();
-        return retval;
-    }
 
     @RequestMapping(value = "/bynumber", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -164,23 +149,6 @@ public class GetConsultationAPIController
         {
             return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
         }
-    }
-
-    private List<ConsultationSummaryByStatusAndTimePeriodDto> getConsultationSummary()
-    {
-        List<ConsultationSummaryByStatusAndTimePeriodDto> consultationSummaryByStatusAndTimePeriodDtos = new ArrayList<>();
-        ConsultationSummaryByStatusAndTimePeriodDto consultationSummaryByStatusAndTimePeriodDto = new ConsultationSummaryByStatusAndTimePeriodDto();
-        for (TimePeriod tp : TimePeriod.values())
-        {
-            consultationSummaryByStatusAndTimePeriodDto.setTimePeriod(tp.getnDays());
-            consultationSummaryByStatusAndTimePeriodDto
-                    .setConsultationsByStatusDtos(getConsultationService().getConsultationsByStatusAndByTimePeriod(tp));
-
-            consultationSummaryByStatusAndTimePeriodDtos.add(consultationSummaryByStatusAndTimePeriodDto);
-            consultationSummaryByStatusAndTimePeriodDto = new ConsultationSummaryByStatusAndTimePeriodDto();
-        }
-
-        return consultationSummaryByStatusAndTimePeriodDtos;
     }
 
     public ConsultationService getConsultationService()

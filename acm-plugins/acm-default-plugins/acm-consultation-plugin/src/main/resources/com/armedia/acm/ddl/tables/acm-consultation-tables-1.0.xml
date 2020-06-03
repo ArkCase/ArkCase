@@ -1,5 +1,5 @@
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
@@ -58,14 +58,8 @@
                 <constraints nullable="false"/>
             </column>
             <column name="cm_container_id" type="${fkIdType}"/>
-            <column name="cm_responsible_organization" type="VARCHAR(100)"/><!--
-            <column name="cm_queue_id" type="${fkIdType}">
-                <constraints foreignKeyName="fk_queue_id" referencedColumnNames="cm_queue_id"
-                             referencedTableName="acm_queue"/>
-            </column>-->
-            <column name="cm_queue_enter_date" type="${timestampType}"/>
+            <column name="cm_responsible_organization" type="VARCHAR(100)"/>
             <column name="cm_response_due_date" type="${timestampType}"/>
-            <column name="cm_previous_queue_id" type="${idType}"/>
             <column name="cm_security_field" type="VARCHAR(255)" defaultValue="Open"/>
             <column name="cm_legacy_system_id" type="VARCHAR(255)"/>
             <column name="cm_consultation_denied_flag" type="VARCHAR(10)" defaultValue="false"/>
@@ -124,14 +118,8 @@
                 <constraints nullable="false"/>
             </column>
             <column name="cm_container_id" type="${fkIdType}"/>
-            <column name="cm_responsible_organization" type="VARCHAR(100)"/><!--
-            <column name="cm_queue_id" type="${fkIdType}">
-                <constraints foreignKeyName="fk_queue_id" referencedColumnNames="cm_queue_id"
-                             referencedTableName="acm_queue"/>
-            </column>-->
-            <column name="cm_queue_enter_date" type="${timestampType}" defaultValueComputed="${timestampFunction}"/>
+            <column name="cm_responsible_organization" type="VARCHAR(100)"/>
             <column name="cm_response_due_date" type="${timestampType}" defaultValueComputed="${timestampFunction}"/>
-            <column name="cm_previous_queue_id" type="${idType}"/>
             <column name="cm_security_field" type="VARCHAR(255)" defaultValue="Open"/>
             <column name="cm_legacy_system_id" type="VARCHAR(255)"/>
             <column name="cm_consultation_denied_flag" type="VARCHAR(10)" defaultValue="false"/>

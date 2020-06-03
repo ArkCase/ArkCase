@@ -33,10 +33,10 @@ import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.data.AcmNameDao;
 import com.armedia.acm.data.AcmNotificationDao;
-import com.armedia.acm.plugins.casefile.model.TimePeriod;
 import com.armedia.acm.plugins.consultation.model.Consultation;
 import com.armedia.acm.plugins.consultation.model.ConsultationConstants;
 import com.armedia.acm.plugins.consultation.model.ConsultationsByStatusDto;
+import com.armedia.acm.plugins.consultation.model.TimePeriod;
 import com.armedia.acm.services.participants.model.ParticipantTypes;
 
 import org.apache.logging.log4j.LogManager;

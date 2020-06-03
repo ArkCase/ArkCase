@@ -32,7 +32,6 @@ import static com.armedia.acm.plugins.consultation.model.ConsultationConstants.N
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.form.config.FormsTypeCheckService;
 import com.armedia.acm.plugins.consultation.dao.ConsultationDao;
 import com.armedia.acm.plugins.consultation.model.Consultation;
 import com.armedia.acm.plugins.consultation.pipeline.ConsultationPipelineContext;
@@ -52,33 +51,28 @@ public class ConsultationDocumentHandler extends PDFConsultationDocumentGenerato
         implements PipelineHandler<Consultation, ConsultationPipelineContext>
 {
     private transient final Logger log = LogManager.getLogger(getClass());
-    private FormsTypeCheckService formsTypeCheckService;
 
     @Override
     public void execute(Consultation consultation, ConsultationPipelineContext ctx) throws PipelineProcessException
     {
+        log.debug("Entering pipeline handler for consultation with id [{}] and title [{}]", consultation.getId(),
+                consultation.getTitle());
 
-        if (!formsTypeCheckService.getTypeOfForm().equals("frevvo"))
+        // ensure the SQL of all prior handlers is visible to this handler
+        getDao().getEm().flush();
+
+        try
         {
-            log.debug("Entering pipeline handler for consultation with id [{}] and title [{}]", consultation.getId(),
-                    consultation.getTitle());
-
-            // ensure the SQL of all prior handlers is visible to this handler
-            getDao().getEm().flush();
-
-            try
-            {
-                generatePdf(consultation.getId(), ctx);
-            }
-            catch (ParserConfigurationException e)
-            {
-                log.warn("Unable to generate pdf document for the consultation with id [{}] and title [{}]", consultation.getId(),
-                        consultation.getTitle());
-                throw new PipelineProcessException(e);
-            }
-
-            log.debug("Exiting pipeline handler for object: [{}]", consultation);
+            generatePdf(consultation.getId(), ctx);
         }
+        catch (ParserConfigurationException e)
+        {
+            log.warn("Unable to generate pdf document for the consultation with id [{}] and title [{}]", consultation.getId(),
+                    consultation.getTitle());
+            throw new PipelineProcessException(e);
+        }
+
+        log.debug("Exiting pipeline handler for object: [{}]", consultation);
     }
 
     @Override
@@ -106,10 +100,5 @@ public class ConsultationDocumentHandler extends PDFConsultationDocumentGenerato
                 }
             }
         }
-    }
-
-    public void setFormsTypeCheckService(FormsTypeCheckService formsTypeCheckService)
-    {
-        this.formsTypeCheckService = formsTypeCheckService;
     }
 }

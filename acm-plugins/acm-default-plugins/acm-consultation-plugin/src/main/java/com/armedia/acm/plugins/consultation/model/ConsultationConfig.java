@@ -196,16 +196,6 @@ public class ConsultationConfig implements SupportsFileTypes, AcmPluginConfigBea
         this.statusClosed = statusClosed;
     }
 
-    public void setSearchTreeFilter(String searchTreeFilter)
-    {
-        this.searchTreeFilter = searchTreeFilter;
-    }
-
-    public void setSearchTreeSort(String searchTreeSort)
-    {
-        this.searchTreeSort = searchTreeSort;
-    }
-
     public String getSearchTreeSearchQuery()
     {
         return searchTreeSearchQuery;
@@ -238,6 +228,11 @@ public class ConsultationConfig implements SupportsFileTypes, AcmPluginConfigBea
         return searchTreeFilter;
     }
 
+    public void setSearchTreeFilter(String searchTreeFilter)
+    {
+        this.searchTreeFilter = searchTreeFilter;
+    }
+
     @Override
     public String getSearchTreeQuery()
     {
@@ -248,5 +243,10 @@ public class ConsultationConfig implements SupportsFileTypes, AcmPluginConfigBea
     public String getSearchTreeSort()
     {
         return searchTreeSort;
+    }
+
+    public void setSearchTreeSort(String searchTreeSort)
+    {
+        this.searchTreeSort = searchTreeSort;
     }
 }

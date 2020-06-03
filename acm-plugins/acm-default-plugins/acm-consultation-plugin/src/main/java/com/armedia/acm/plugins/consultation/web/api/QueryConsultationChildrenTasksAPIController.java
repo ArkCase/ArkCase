@@ -75,11 +75,13 @@ public class QueryConsultationChildrenTasksAPIController
         this.childDocumentsSearchService = childDocumentsSearchService;
     }
 
-    public ConsultationTasksService getConsultationTasksService() {
+    public ConsultationTasksService getConsultationTasksService()
+    {
         return consultationTasksService;
     }
 
-    public void setConsultationTasksService(ConsultationTasksService consultationTasksService) {
+    public void setConsultationTasksService(ConsultationTasksService consultationTasksService)
+    {
         this.consultationTasksService = consultationTasksService;
     }
 }

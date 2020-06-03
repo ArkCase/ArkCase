@@ -41,9 +41,6 @@ import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.AcmLegacySystemEntity;
 import com.armedia.acm.data.converter.BooleanToStringConverter;
 import com.armedia.acm.data.converter.LocalDateConverter;
-import com.armedia.acm.data.converter.LocalDateTimeConverter;
-import com.armedia.acm.plugins.casefile.model.AcmQueue;
-import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
 import com.armedia.acm.plugins.objectassociation.model.AcmChildObjectEntity;
@@ -82,7 +79,6 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
 import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
@@ -98,7 +94,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -111,7 +106,7 @@ import java.util.Set;
 @Entity
 @Table(name = "acm_consultation")
 @XmlRootElement(name = "consultation")
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "className", defaultImpl = CaseFile.class)
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "className", defaultImpl = Consultation.class)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("com.armedia.acm.plugins.consultation.model.Consultation")
@@ -260,23 +255,10 @@ public class Consultation implements Serializable, AcmAssignedObject, AcmEntity,
             @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type", updatable = false, insertable = false) })
     private AcmObjectLock lock;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "cm_queue_id")
-    private AcmQueue queue;
-
-    @Column(name = "cm_queue_enter_date")
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    @Convert(converter = LocalDateTimeConverter.class)
-    private LocalDateTime queueEnterDate;
-
     @Column(name = "cm_response_due_date")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @Convert(converter = LocalDateConverter.class)
     private LocalDate responseDueDate;
-
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "cm_previous_queue_id")
-    private AcmQueue previousQueue;
 
     @Column(name = "cm_security_field")
     private String securityField;
@@ -681,16 +663,6 @@ public class Consultation implements Serializable, AcmAssignedObject, AcmEntity,
         this.lock = lock;
     }
 
-    public AcmQueue getQueue()
-    {
-        return queue;
-    }
-
-    public void setQueue(AcmQueue queue)
-    {
-        this.queue = queue;
-    }
-
     public String getSecurityField()
     {
         return securityField;
@@ -742,10 +714,7 @@ public class Consultation implements Serializable, AcmAssignedObject, AcmEntity,
                 ", container=" + container +
                 ", responsibleOrganization='" + responsibleOrganization + '\'' +
                 ", lock=" + lock +
-                ", queue=" + queue +
-                ", queueEnterDate=" + queueEnterDate +
                 ", responseDueDate=" + responseDueDate +
-                ", previousQueue=" + previousQueue +
                 ", securityField='" + securityField + '\'' +
                 ", legacySystemId='" + legacySystemId + '\'' +
                 '}';
@@ -834,16 +803,6 @@ public class Consultation implements Serializable, AcmAssignedObject, AcmEntity,
         return consultationNumber;
     }
 
-    public LocalDateTime getQueueEnterDate()
-    {
-        return queueEnterDate;
-    }
-
-    public void setQueueEnterDate(LocalDateTime queueEnterDate)
-    {
-        this.queueEnterDate = queueEnterDate;
-    }
-
     public LocalDate getResponseDueDate()
     {
         return responseDueDate;
@@ -852,16 +811,6 @@ public class Consultation implements Serializable, AcmAssignedObject, AcmEntity,
     public void setResponseDueDate(LocalDate responseDueDate)
     {
         this.responseDueDate = responseDueDate;
-    }
-
-    public AcmQueue getPreviousQueue()
-    {
-        return previousQueue;
-    }
-
-    public void setPreviousQueue(AcmQueue previousQueue)
-    {
-        this.previousQueue = previousQueue;
     }
 
     public List<OrganizationAssociation> getOrganizationAssociations()
