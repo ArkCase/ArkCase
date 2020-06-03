@@ -323,6 +323,11 @@ angular.module('services').factory('Object.LookupService', [ '$q', '$resource', 
             } else {
                 return Service.getLookupByLookupName("caseFilePersonTypes");
             }
+            if (initiator) {
+                return Service.getLookupByLookupName("consultationPersonInitiatorTypes");
+            } else {
+                return Service.getLookupByLookupName("consultationPersonTypes")
+            }
         case "DOC_REPO":
             return Service.getLookupByLookupName("documentPersonTypes");
         }
@@ -564,6 +569,20 @@ angular.module('services').factory('Object.LookupService', [ '$q', '$resource', 
      */
     Service.getCaseFileSubTypes = function() {
         return Service.getLookupByLookupName("caseFileSubTypes");
+    };
+
+    /**
+     * @ngdoc method
+     * @name getConsultationTypes
+     * @methodOf services:Object.LookupService
+     *
+     * @description
+     * Query list of consultation types
+     *
+     * @returns {Object} An array returned by $resource
+     */
+    Service.getConsultationTypes = function() {
+        return Service.getLookupByLookupName("consultationTypes");
     };
 
     /**
@@ -891,6 +910,21 @@ angular.module('services').factory('Object.LookupService', [ '$q', '$resource', 
      */
     Service.getObjectTitleTypes = function() {
         return Service.getLookupByLookupName('objectTitleTypes');
+    };
+
+    /**
+     * @ngdoc method
+     * @name getPrefixNewObject
+     * @methodOf services:Object.LookupService
+     *
+     * @description
+     * Query list of Object Prefixes
+     *
+     * @returns {Object} An array returned by $resource
+     */
+    Service.getPrefixes = function () {
+        return Service.getLookupByLookupName('prefixNewObject');
+
     };
 
     /**

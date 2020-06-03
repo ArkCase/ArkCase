@@ -1,0 +1,1648 @@
+{
+    "id": "consultations",
+    "title": "Consultations",
+    "className": "com.armedia.acm.plugins.consultation.model.Consultation",
+    "configurable": true,
+    "initialLinksShown": true,
+    "consultationInfoFilter": "\"Object Type\": CONSULTATION",
+    "menus": [
+        {
+            "menuId": "leftnav",
+            "menuItemURL": "consultations.main",
+            "menuItemTitle": "consultations.menus.leftnav.item",
+            "moduleId": "consultation",
+            "iconClass": "fa fa-folder",
+            "position": 20
+        },
+        {
+            "menuId": "topbar",
+            "menuItemURL": "newConsultation",
+            "menuItemTitle": "consultations.menus.topbar.item",
+            "moduleId": "consultation",
+            "modalDialog": {
+                "moduleName": "consultations",
+                "templateUrl": "modules/consultations/views/components/consultation-new-consultation-modal.client.view.html",
+                "controllerName": "Consultations.NewConsultationController"
+            },
+            "iconClass": "fa fa-folder",
+            "position": 20,
+            "formsType": "angular"
+        }
+    ],
+    "tree": {
+        "pageSize": 32,
+        "filters": [
+            {
+                "desc": "consultations.tree.filters.opened",
+                "name": "all-open-consultations",
+                "value": "fq=-status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED",
+                "default": true
+            },
+            {
+                "desc": "consultations.tree.filters.iHaveCreated",
+                "name": "my-created-consultations",
+                "value": "fq={!field f=author}${user}"
+            },
+            {
+                "desc": "consultations.tree.filters.iAmAssigned",
+                "name": "my-assigned-consultations",
+                "value": "fq=assignee_s:${user}"
+            },
+            {
+                "desc": "consultations.tree.filters.iAmFollowing",
+                "name": "my-following-consultations",
+                "value": "fq={!join from=parent_object_id_s to=object_id_s}(owner_s:${user} AND object_type_s:SUBSCRIPTION)"
+            },
+            {
+                "desc": "consultations.tree.filters.closed",
+                "name": "all-closed-consultations",
+                "value": "fq=status_s:CLOSED"
+            },
+            {
+                "desc": "consultations.tree.filters.noFilter",
+                "name": "",
+                "value": ""
+            }
+        ],
+        "sorters": [
+            {
+                "desc": "consultations.tree.sorters.dateAsc",
+                "name": "sort-date-asc",
+                "value": "create_tdt ASC"
+            },
+            {
+                "desc": "consultations.tree.sorters.dateDesc",
+                "name": "sort-date-desc",
+                "value": "create_tdt DESC",
+                "default": true
+            },
+            {
+                "desc": "consultations.tree.sorters.idAsc",
+                "name": "sort-consultation-id-asc",
+                "value": "object_id_s ASC"
+            },
+            {
+                "desc": "consultations.tree.sorters.idDesc",
+                "name": "sort-consultation-id-desc",
+                "value": "object_id_s DESC"
+            },
+            {
+                "desc": "consultations.tree.sorters.nameAsc",
+                "name": "sort-by-name-asc",
+                "value": "name ASC"
+            },
+            {
+                "desc": "consultations.tree.sorters.dueDateAsc",
+                "name": "sort-by-due-date-asc",
+                "value": "dueDate_tdt ASC"
+            },
+            {
+                "desc": "consultations.tree.sorters.dueDateDesc",
+                "name": "sort-by-due-date-desc",
+                "value": "dueDate_tdt DESC"
+            },
+            {
+                "desc": "consultations.tree.sorters.noSort",
+                "name": "",
+                "value": ""
+            }
+        ],
+        "nodeTypes": [
+            {
+                "type": "prev",
+                "icon": "fa fa-arrow-up"
+            },
+            {
+                "type": "next",
+                "icon": "fa fa-arrow-down"
+            },
+            {
+                "type": "p/CONSULTATION",
+                "icon": "fa fa-folder",
+                "components": [
+                    "details",
+                    "people",
+                    "organizations",
+                    "documents",
+                    "participants",
+                    "notes",
+                    "tasks",
+                    "references",
+                    "history",
+                    "time",
+                    "cost",
+                    "tags",
+                    "calendar",
+                    "suggestedConsultations",
+                    "approvalRouting",
+                    "billing"
+                ]
+            },
+            {
+                "type": "p/CONSULTATION/det",
+                "label": "consultations.tree.nodeTypes.details.label",
+                "icon": "fa fa-info-circle",
+                "components": [
+                    "details"
+                ]
+            },
+            {
+                "type": "p/CONSULTATION/ppl",
+                "label": "consultations.tree.nodeTypes.people.label",
+                "icon": "fa fa-user",
+                "components": [
+                    "people"
+                ]
+            },
+            {
+                "type": "p/CONSULTATION/org",
+                "label": "consultations.tree.nodeTypes.organizations.label",
+                "icon": "fa fa-building",
+                "components": [
+                    "organizations"
+                ]
+            },
+            {
+                "type": "p/CONSULTATION/doc",
+                "label": "consultations.tree.nodeTypes.documents.label",
+                "icon": "fa fa-file",
+                "components": [
+                    "documents"
+                ]
+            },
+            {
+                "type": "p/CONSULTATION/par",
+                "label": "consultations.tree.nodeTypes.participants.label",
+                "icon": "fa fa-users",
+                "components": [
+                    "participants"
+                ]
+            },
+            {
+                "type": "p/CONSULTATION/note",
+                "label": "consultations.tree.nodeTypes.notes.label",
+                "icon": "fa fa-comments",
+                "components": [
+                    "notes"
+                ]
+            },
+            {
+                "type": "p/CONSULTATION/task",
+                "label": "consultations.tree.nodeTypes.tasks.label",
+                "icon": "fa fa-check-circle",
+                "components": [
+                    "tasks"
+                ]
+            },
+            {
+                "type": "p/CONSULTATION/ref",
+                "label": "consultations.tree.nodeTypes.references.label",
+                "icon": "fa fa-exchange",
+                "components": [
+                    "references"
+                ]
+            },
+            {
+                "type": "p/CONSULTATION/his",
+                "label": "consultations.tree.nodeTypes.history.label",
+                "icon": "fa fa-bell-o",
+                "components": [
+                    "history"
+                ]
+            },
+            {
+                "type": "p/CONSULTATION/time",
+                "label": "consultations.tree.nodeTypes.time.label",
+                "icon": "fa fa-clock-o",
+                "components": [
+                    "time"
+                ]
+            },
+            {
+                "type": "p/CONSULTATION/cost",
+                "label": "consultations.tree.nodeTypes.cost.label",
+                "icon": "fa fa-money",
+                "components": [
+                    "cost"
+                ]
+            },
+            {
+                "type": "p/CONSULTATION/tags",
+                "label": "consultations.tree.nodeTypes.tags.label",
+                "icon": "fa fa-tags",
+                "components": [
+                    "tags"
+                ]
+            },
+            {
+                "type": "p/CONSULTATION/calendar",
+                "label": "consultations.tree.nodeTypes.calendar.label",
+                "icon": "fa fa-calendar",
+                "components": [
+                    "calendar"
+                ]
+            },
+            {
+                "type": "p/CONSULTATION/suggestedConsultations",
+                "label": "consultations.tree.nodeTypes.suggestedConsultations.label",
+                "icon": "fa fa-files-o",
+                "components": [
+                    "suggestedConsultations"
+                ]
+            },
+            {
+                "type": "p/CONSULTATION/apr",
+                "label": "consultations.tree.nodeTypes.approvalRouting.label",
+                "icon": "fa fa-sort-amount-desc",
+                "components": [
+                    "approvalRouting"
+                ]
+            },
+            {
+                "type": "p/CONSULTATION/billing",
+                "label": "consultations.tree.nodeTypes.billing.label",
+                "icon": "fa fa-pencil-square-o",
+                "components": [
+                    "billing"
+                ],
+                "requiredPrivileges": [
+                    "acmListBillingItemsPrivilege"
+                ]
+            },
+            {
+                "type": "p/ERROR",
+                "icon": "fa fa-question"
+            }
+        ]
+    },
+    "components": [
+        {
+            "id": "main",
+            "title": "consultations.comp.main.title",
+            "icon": "fa fa-tachometer",
+            "enabled": false,
+            "configurable": true,
+            "type": "empty",
+            "editable": false,
+            "widgets": [
+                {
+                    "id": "details",
+                    "type": "component",
+                    "columnDefs": [
+                        {
+                            "name": "details",
+                            "displayName": "consultations.comp.details.table.columns.title",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<div ng-bind-html='row.entity.details' title='{{row.entity.details}}' class='ui-grid-cell-contents'></div>"
+                        },
+                        {
+                            "width": 150,
+                            "name": "modified",
+                            "displayName": "consultations.comp.details.table.columns.modified",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<div>{{ row.entity.modified | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+                        },
+                        {
+                            "width": 150,
+                            "name": "modifier",
+                            "displayName": "consultations.comp.details.table.columns.modifier",
+                            "headerCellFilter": "translate",
+                            "lookup": "userFullNames"
+                        }
+                    ]
+                },
+                {
+                    "id": "people",
+                    "type": "component",
+                    "columnDefs": [
+                        {
+                            "name": "personType",
+                            "displayName": "consultations.comp.people.table.columns.type",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.personTypes, row.entity.personType) | translate }}</div>",
+                            "lookup": "personTypes"
+                        },
+                        {
+                            "name": "firstName",
+                            "field": "person.givenName",
+                            "displayName": "consultations.comp.people.table.columns.firstName",
+                            "headerCellFilter": "translate"
+                        },
+                        {
+                            "name": "lastName",
+                            "field": "person.familyName",
+                            "displayName": "consultations.comp.people.table.columns.lastName",
+                            "headerCellFilter": "translate"
+                        }
+                    ]
+                },
+                {
+                    "id": "organizations",
+                    "type": "component",
+                    "columnDefs": [
+                        {
+                            "name": "associationType",
+                            "displayName": "consultations.comp.organizations.table.columns.associationType",
+                            "headerCellFilter": "translate"
+                        },
+                        {
+                            "name": "organization.organizationValue",
+                            "displayName": "consultations.comp.organizations.table.columns.name",
+                            "headerCellFilter": "translate"
+                        },
+                        {
+                            "name": "organization.organizationType",
+                            "displayName": "consultations.comp.organizations.table.columns.type",
+                            "headerCellFilter": "translate"
+                        }
+                    ]
+                },
+                {
+                    "id": "documents",
+                    "type": "component"
+                },
+                {
+                    "id": "participants",
+                    "type": "component",
+                    "columnDefs": [
+                        {
+                            "name": "participantType",
+                            "displayName": "consultations.comp.participants.table.columns.type",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.participantTypes, row.entity.participantType) | translate }}</div>",
+                            "lookup": "participantTypes"
+                        },
+                        {
+                            "name": "participantLdapId",
+                            "displayName": "consultations.comp.participants.table.columns.name",
+                            "headerCellFilter": "translate",
+                            "lookup": "participantNames"
+                        }
+                    ]
+                },
+                {
+                    "id": "notes",
+                    "type": "component",
+                    "model": "noteCount",
+                    "columnDefs": [
+                        {
+                            "name": "note",
+                            "displayName": "consultations.comp.notes.table.columns.note",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<div ng-bind-html='row.entity.note' title='{{row.entity.note}}' class='ui-grid-cell-contents'></div>",
+                            "enableCellEdit": false
+                        },
+                        {
+                            "name": "created",
+                            "displayName": "consultations.comp.notes.table.columns.created",
+                            "cellTemplate": "<div>{{ row.entity.created | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
+                            "headerCellFilter": "translate",
+                            "enableCellEdit": false,
+                            "width": 150
+                        },
+                        {
+                            "name": "author",
+                            "displayName": "consultations.comp.notes.table.columns.creator",
+                            "headerCellFilter": "translate",
+                            "enableCellEdit": false,
+                            "lookup": "userFullNames",
+                            "width": 150
+                        }
+                    ]
+                },
+                {
+                    "id": "tasks",
+                    "type": "component",
+                    "columnDefs": [
+                        {
+                            "name": "title",
+                            "field": "title",
+                            "sortField": "title",
+                            "displayName": "consultations.comp.tasks.table.columns.title",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<div ng-bind-html='row.entity.title' title='{{row.entity.title}}' class='ui-grid-cell-contents'></div>"
+                        },
+                        {
+                            "width": 150,
+                            "name": "assignee",
+                            "field": "assignee",
+                            "displayName": "consultations.comp.tasks.table.columns.assignee",
+                            "headerCellFilter": "translate",
+                            "lookup": "userFullNames"
+                        },
+                        {
+                            "width": 150,
+                            "name": "due",
+                            "field": "dueDate",
+                            "displayName": "consultations.comp.tasks.table.columns.due",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<div>{{ row.entity.dueDate | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+                        }
+                    ]
+                },
+                {
+                    "id": "references",
+                    "type": "component",
+                    "columnDefs": [
+                        {
+                            "name": "targetName",
+                            "displayName": "consultations.comp.references.table.columns.targetName",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.targetName}}</a>"
+                        },
+                        {
+                            "name": "targetTitle",
+                            "displayName": "consultations.comp.references.table.columns.targetTitle",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.targetTitle}}</a>"
+                        },
+                        {
+                            "name": "targetType",
+                            "displayName": "consultations.comp.references.table.columns.targetType",
+                            "headerCellFilter": "translate"
+                        },
+                        {
+                            "name": "status",
+                            "displayName": "consultations.comp.references.table.columns.status",
+                            "headerCellFilter": "translate"
+                        }
+                    ]
+                },
+                {
+                    "id": "history",
+                    "type": "component"
+                },
+                {
+                    "id": "time",
+                    "type": "component"
+                },
+                {
+                    "id": "cost",
+                    "type": "component"
+                },
+                {
+                    "id": "tags",
+                    "type": "component",
+                    "columnDefs": [
+                        {
+                            "name": "tagName",
+                            "displayName": "consultations.comp.tags.table.columns.tag",
+                            "headerCellFilter": "translate"
+                        },
+                        {
+                            "name": "created",
+                            "displayName": "consultations.comp.tags.table.columns.created",
+                            "cellTemplate": "<div>{{ row.entity.created | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
+                            "headerCellFilter": "translate"
+                        },
+                        {
+                            "name": "creator",
+                            "displayName": "consultations.comp.tags.table.columns.createdBy",
+                            "headerCellFilter": "translate",
+                            "lookup": "userFullNames"
+                        }
+                    ]
+                },
+                {
+                    "id": "calendar",
+                    "type": "component"
+                },
+                {
+                    "id": "approvalRouting",
+                    "type": "component",
+                    "columnDefs": [
+                        {
+                            "name": "title",
+                            "field": "title_parseable",
+                            "sortField": "title_parseable_lcs",
+                            "displayName": "consultations.comp.approvalRouting.title",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<div ng-bind-html='row.entity.title_parseable' title='{{row.entity.title_parseable}}' class='ui-grid-cell-contents'></div>"
+                        },
+                        {
+                            "width": 150,
+                            "name": "assignee",
+                            "field": "assignee_s",
+                            "displayName": "consultations.comp.approvalRouting.assignee.label",
+                            "headerCellFilter": "translate",
+                            "lookup": "userFullNames"
+                        },
+                        {
+                            "width": 150,
+                            "name": "due",
+                            "field": "due_tdt",
+                            "displayName": "consultations.comp.approvalRouting.dueDate.label",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<div>{{ row.entity.due_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "info",
+            "title": "consultations.comp.info.title",
+            "enabled": false,
+            "configurable": true,
+            "type": "empty",
+            "editable": false
+        },
+        {
+            "id": "actions",
+            "title": "consultations.comp.actions.title",
+            "enabled": false,
+            "configurable": true,
+            "type": "empty",
+            "editable": false
+        },
+        {
+            "id": "details",
+            "title": "consultations.comp.details.title",
+            "icon": "fa fa-info-circle",
+            "enabled": true,
+            "configurable": true,
+            "type": "empty"
+        },
+        {
+            "id": "documents",
+            "title": "consultations.comp.documents.title",
+            "icon": "fa fa-file",
+            "enabled": true,
+            "configurable": true,
+            "type": "empty",
+            "docTree": {
+                "email": {
+                    "emailSubject": "Consultation $consultationNumber",
+                    "subjectRegex": "(.*)\\$([^\\s]+)",
+                    "objectTypeRegexGroup": 1,
+                    "objectNumberRegexGroup": 2
+                },
+                "noteRequiredOnCheckin": false,
+                "allowParentOwnerToCancel": true,
+                "menu": {
+                    "subMenuForms": "consultations.comp.documents.menu.forms",
+                    "subMenuCorrespondences": "consultations.comp.documents.menu.correspondences"
+                }
+            },
+            "dialogObjectPicker": {
+                "enableFiltering": false,
+                "multiSelect": false,
+                "showFacets": false,
+                "columnDefs": [
+                    {
+                        "name": "name",
+                        "displayName": "consultations.dialogObjectPicker.table.columns.name",
+                        "headerCellFilter": "translate"
+                    },
+                    {
+                        "name": "object_type_s",
+                        "displayName": "consultations.dialogObjectPicker.table.columns.type",
+                        "cellFilter": "mapKeyValue: grid.appScope.customization.labels",
+                        "headerCellFilter": "translate"
+                    },
+                    {
+                        "name": "title_parseable",
+                        "displayName": "consultations.dialogObjectPicker.table.columns.title",
+                        "headerCellFilter": "translate"
+                    },
+                    {
+                        "name": "object_id_s",
+                        "displayName": "consultations.dialogObjectPicker.table.columns.id",
+                        "headerCellFilter": "translate"
+                    }
+                ],
+                "paginationPageSizes": [
+                    5,
+                    10,
+                    20,
+                    50
+                ],
+                "paginationPageSize": 10,
+                "start": 0
+            }
+        },
+        {
+            "id": "people",
+            "title": "consultations.comp.people.title",
+            "icon": "fa fa-user",
+            "className": "com.armedia.acm.plugins.person.model.Person",
+            "personAssociationClassName": "com.armedia.acm.plugins.person.model.PersonAssociation",
+            "enabled": true,
+            "configurable": true,
+            "type": "grid",
+            "enableFiltering": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 5,
+            "columnDefs": [
+                {
+                    "name": "personType",
+                    "displayName": "consultations.comp.people.table.columns.type",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.personTypes, row.entity.personType) | translate }}</div>",
+                    "lookup": "personTypes"
+                },
+                {
+                    "name": "firstName",
+                    "field": "person.givenName",
+                    "displayName": "consultations.comp.people.table.columns.firstName",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<a data-ui-sref=\"people.main({id: row.entity.person.id})\">{{COL_FIELD}}<\/a>"
+                },
+                {
+                    "name": "lastName",
+                    "field": "person.familyName",
+                    "displayName": "consultations.comp.people.table.columns.lastName",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<a data-ui-sref=\"people.main({id: row.entity.person.id})\">{{COL_FIELD}}<\/a>"
+                },
+                {
+                    "name": "organization",
+                    "field": "person.defaultOrganization.organization.organizationValue",
+                    "displayName": "consultations.comp.people.table.columns.organization",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "phone",
+                    "field": "person.defaultPhone.value",
+                    "displayName": "consultations.comp.people.table.columns.phone",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.person.defaultPhone ? row.entity.person.defaultPhone.value + '[' + row.entity.person.defaultPhone.subType + ']' : ''}}</div>"
+                },
+                {
+                    "name": "location",
+                    "displayName": "consultations.comp.people.table.columns.location",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.person.defaultAddress ? row.entity.person.defaultAddress.city + ',' + row.entity.person.defaultAddress.state : ''}}</div>"
+                }
+            ]
+        },
+        {
+            "id": "organizations",
+            "title": "consultations.comp.organizations.title",
+            "icon": "fa fa-building",
+            "enabled": true,
+            "configurable": true,
+            "type": "grid",
+            "enableFiltering": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 10,
+            "columnDefs": [
+                {
+                    "name": "associationType",
+                    "displayName": "consultations.comp.organizations.table.columns.associationType",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{grid.appScope.utils.getLookupValue(grid.appScope.organizationTypes, row.entity.associationType) | translate }}</div>"
+                },
+                {
+                    "name": "organization.organizationValue",
+                    "displayName": "consultations.comp.organizations.table.columns.value",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<a data-ui-sref=\"organizations.main({id: row.entity.organization.organizationId})\">{{COL_FIELD}}<\/a>"
+                },
+                {
+                    "name": "organization.organizationType",
+                    "displayName": "consultations.comp.organizations.table.columns.type",
+                    "width": 150,
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "organization.defaultIdentification.identificationNumber",
+                    "displayName": "consultations.comp.organizations.table.columns.identification",
+                    "headerCellFilter": "translate",
+                    "width": 100,
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultIdentification ? row.entity.organization.defaultIdentification.identificationNumber + '[' + row.entity.organization.defaultIdentification.identificationType + ']' : ''}}</div>"
+                },
+                {
+                    "name": "organization.defaultPerson.givenName",
+                    "displayName": "consultations.comp.organizations.table.columns.contact",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{grid.appScope.getPrimaryContact(row.entity)}}</div>"
+                },
+                {
+                    "name": "organization.defaultPhone.value",
+                    "displayName": "consultations.comp.organizations.table.columns.phone",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultPhone ? row.entity.organization.defaultPhone.value + '[' + row.entity.organization.defaultPhone.subType + ']' : ''}}</div>"
+                },
+                {
+                    "name": "organization.defaultAddress.city",
+                    "displayName": "consultations.comp.organizations.table.columns.location",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<span class='ui-grid-cell-contents'>{{row.entity.organization.defaultAddress ? (row.entity.organization.defaultAddress.state ? (row.entity.organization.defaultAddress.city + ', ' + row.entity.organization.defaultAddress.state) : row.entity.organization.defaultAddress.city) : ''}}</span>"
+                }
+            ]
+        },
+        {
+            "id": "participants",
+            "title": "consultations.comp.participants.title",
+            "icon": "fa fa-users",
+            "className": "com.armedia.acm.services.participants.model.AcmParticipant",
+            "enabled": true,
+            "configurable": true,
+            "type": "grid",
+            "enableFiltering": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 5,
+            "typeNoAccess": "No Access",
+            "columnDefs": [
+                {
+                    "name": "participantType",
+                    "displayName": "consultations.comp.participants.table.columns.type",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.participantTypes, row.entity.participantType) | translate }}</div>",
+                    "lookup": "participantTypes"
+                },
+                {
+                    "name": "participantLdapId",
+                    "displayName": "consultations.comp.participants.table.columns.name",
+                    "headerCellFilter": "translate",
+                    "lookup": "participantNames"
+                }
+            ],
+            "dialogUserPicker": {
+                "enableFiltering": false,
+                "multiSelect": false,
+                "showFacets": false,
+                "columnDefs": [
+                    {
+                        "name": "name",
+                        "displayName": "consultations.comp.participants.dialogUserPicker.table.columns.name",
+                        "headerCellFilter": "translate"
+                    },
+                    {
+                        "name": "object_type_s",
+                        "displayName": "consultations.comp.participants.dialogUserPicker.table.columns.type",
+                        "headerCellFilter": "translate"
+                    },
+                    {
+                        "name": "title",
+                        "displayName": "consultations.comp.participants.dialogUserPicker.table.columns.title",
+                        "headerCellFilter": "translate"
+                    },
+                    {
+                        "name": "object_id_s",
+                        "displayName": "consultations.comp.participants.dialogUserPicker.table.columns.id",
+                        "headerCellFilter": "translate"
+                    }
+                ],
+                "paginationPageSizes": [
+                    5,
+                    10,
+                    20,
+                    50
+                ],
+                "paginationPageSize": 10,
+                "start": 0
+            },
+            "dialogGroupPicker": {
+                "enableFiltering": false,
+                "multiSelect": false,
+                "showFacets": false,
+                "columnDefs": [
+                    {
+                        "name": "name",
+                        "displayName": "consultations.comp.participants.dialogGroupPicker.table.columns.name",
+                        "headerCellFilter": "translate"
+                    }
+                ],
+                "paginationPageSizes": [
+                    5,
+                    10,
+                    20,
+                    50
+                ],
+                "paginationPageSize": 10,
+                "start": 0
+            }
+        },
+        {
+            "id": "notes",
+            "title": "consultations.comp.notes.title",
+            "icon": "fa fa-comments",
+            "enabled": true,
+            "configurable": true,
+            "type": "grid",
+            "enableFiltering": true,
+            "enableSorting": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 5,
+            "columnDefs": [
+                {
+                    "name": "note",
+                    "displayName": "consultations.comp.notes.table.columns.note",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div ng-bind-html='row.entity.note' title='{{row.entity.note}}' class='ui-grid-cell-contents'></div>",
+                    "enableCellEdit": false
+                },
+                {
+                    "name": "created",
+                    "displayName": "consultations.comp.notes.table.columns.created",
+                    "cellTemplate": "<div>{{ row.entity.created | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
+                    "headerCellFilter": "translate",
+                    "enableCellEdit": false,
+                    "width": 150
+                },
+                {
+                    "name": "creator",
+                    "displayName": "consultations.comp.notes.table.columns.creator",
+                    "headerCellFilter": "translate",
+                    "enableCellEdit": false,
+                    "lookup": "userFullNames",
+                    "width": 150
+                }
+            ]
+        },
+        {
+            "id": "tasks",
+            "title": "consultations.comp.tasks.title",
+            "icon": "fa fa-check-circle",
+            "enabled": true,
+            "configurable": true,
+            "type": "grid",
+            "enableFiltering": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 5,
+            "columnDefs": [
+                {
+                    "field": "alerts",
+                    "displayName": "",
+                    "cellTemplate": "<div><a ng-if=\"row.entity.isOverdue\" tooltip=\"{{'consultations.comp.tasks.table.overdue.tooltip' | translate}}\" tooltip-append-to-body=\"true\" tooltip-class=\"tooltip-overdue\"><i class=\"fa fa-exclamation-circle icon-overdue\"></i></a><a ng-if=\"row.entity.isDeadline\" tooltip=\"{{'consultations.comp.tasks.table.deadline.tooltip' | translate}}\" tooltip-append-to-body=\"true\" tooltip-class=\"tooltip-due-soon\"><i class=\"fa fa-exclamation-triangle icon-due-soon\"></i></a></div>",
+                    "width": 40,
+                    "enableSorting": false,
+                    "enableColumnMenu": false
+                },
+                {
+                    "name": "title",
+                    "field": "title",
+                    "sortField": "title",
+                    "displayName": "consultations.comp.tasks.table.columns.title",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<a href='#' title='{{row.entity.title_parseable}}' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.title_parseable}}</a>"
+                },
+                {
+                    "name": "assignee",
+                    "field": "assignee_s",
+                    "displayName": "consultations.comp.tasks.table.columns.assignee",
+                    "headerCellFilter": "translate",
+                    "lookup": "userFullNames"
+                },
+                {
+                    "name": "created",
+                    "field": "createDate",
+                    "displayName": "consultations.comp.tasks.table.columns.created",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.create_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+                },
+                {
+                    "name": "priority",
+                    "field": "priority_s",
+                    "displayName": "consultations.comp.tasks.table.columns.priority",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "due",
+                    "field": "dueDate",
+                    "displayName": "consultations.comp.tasks.table.columns.due",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.due_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+                },
+                {
+                    "name": "status",
+                    "field": "status_s",
+                    "displayName": "consultations.comp.tasks.table.columns.status",
+                    "headerCellFilter": "translate"
+                }
+            ]
+        },
+        {
+            "id": "references",
+            "title": "consultations.comp.references.title",
+            "icon": "fa fa-exchange",
+            "enabled": true,
+            "configurable": true,
+            "type": "grid",
+            "enableFiltering": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 5,
+            "columnDefs": [
+                {
+                    "name": "targetName",
+                    "field": "target_object.name",
+                    "displayName": "consultations.comp.references.table.columns.targetName",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity, true)'>{{row.entity.target_object.name}}</a>"
+                },
+                {
+                    "name": "targetTitle",
+                    "field": "target_object.title_parseable",
+                    "displayName": "consultations.comp.references.table.columns.targetTitle",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.target_object.title_parseable}}</a>"
+                },
+                {
+                    "name": "targetType",
+                    "field": "target_object.object_type_s",
+                    "displayName": "consultations.comp.references.table.columns.targetType",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "assignee",
+                    "field": "target_object.assignee_full_name_lcs",
+                    "displayName": "consultations.comp.references.table.columns.assignee",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "modified",
+                    "field": "target_object.modified_date_tdt",
+                    "displayName": "consultations.comp.references.table.columns.modified",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+                },
+                {
+                    "name": "status",
+                    "field": "target_object.status_lcs",
+                    "displayName": "consultations.comp.references.table.columns.status",
+                    "headerCellFilter": "translate"
+                }
+            ]
+        },
+        {
+            "id": "history",
+            "title": "consultations.comp.history.title",
+            "icon": "fa fa-bell-o",
+            "enabled": true,
+            "configurable": true,
+            "type": "grid",
+            "enableFiltering": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 10,
+            "columnDefs": [
+                {
+                    "name": "eventType",
+                    "displayName": "consultations.comp.history.table.columns.eventType",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "eventDate",
+                    "displayName": "consultations.comp.history.table.columns.eventDate",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.eventDate | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+                },
+                {
+                    "name": "userId",
+                    "displayName": "consultations.comp.history.table.columns.userId",
+                    "headerCellFilter": "translate",
+                    "lookup": "userFullNames"
+                }
+            ]
+        },
+        {
+            "id": "time",
+            "title": "consultations.comp.time.title",
+            "icon": "fa fa-clock-o",
+            "enabled": true,
+            "configurable": true,
+            "type": "grid",
+            "enableFiltering": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 5,
+            "columnDefs": [
+                {
+                    "name": "name",
+                    "displayName": "consultations.comp.time.table.columns.name",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "user",
+                    "field": "user.fullName",
+                    "displayName": "consultations.comp.time.table.columns.user",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "tally",
+                    "displayName": "consultations.comp.time.table.columns.tally",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "totalCost",
+                    "displayName": "consultations.comp.time.table.columns.cost",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>${{ row.entity.totalCost | number : 2 }}</div>"
+                },
+                {
+                    "name": "modified",
+                    "field": "modified",
+                    "displayName": "consultations.comp.time.table.columns.modified",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.modified | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+                },
+                {
+                    "name": "status",
+                    "field": "status",
+                    "displayName": "consultations.comp.time.table.columns.status",
+                    "headerCellFilter": "translate"
+                }
+            ]
+        },
+        {
+            "id": "cost",
+            "title": "consultations.comp.cost.title",
+            "icon": "fa fa-money",
+            "enabled": true,
+            "configurable": true,
+            "type": "grid",
+            "enableFiltering": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 5,
+            "columnDefs": [
+                {
+                    "name": "name",
+                    "displayName": "consultations.comp.cost.table.columns.name",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "user",
+                    "field": "user.fullName",
+                    "displayName": "consultations.comp.cost.table.columns.user",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "tally",
+                    "displayName": "consultations.comp.cost.table.columns.tally",
+                    "headerCellFilter": "translate",
+                    "cellFilter": "currency",
+                    "cellClass": "text-right"
+                },
+                {
+                    "name": "modified",
+                    "field": "modified",
+                    "displayName": "consultations.comp.cost.table.columns.modified",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.modified | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+                },
+                {
+                    "name": "status",
+                    "field": "status",
+                    "displayName": "consultations.comp.cost.table.columns.status",
+                    "headerCellFilter": "translate"
+                }
+            ]
+        },
+        {
+            "id": "tags",
+            "title": "consultations.comp.tags.title",
+            "icon": "fa fa-tags",
+            "enabled": true,
+            "configurable": true,
+            "type": "grid",
+            "autoSuggestObjectType": "TAG",
+            "typeAheadColumn": "title_parseable",
+            "enableFiltering": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 5,
+            "columnDefs": [
+                {
+                    "name": "tagName",
+                    "displayName": "consultations.comp.tags.table.columns.tag",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "created",
+                    "displayName": "consultations.comp.tags.table.columns.created",
+                    "cellTemplate": "<div>{{ row.entity.created | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "creator",
+                    "displayName": "consultations.comp.tags.table.columns.createdBy",
+                    "headerCellFilter": "translate",
+                    "lookup": "userFullNames"
+                }
+            ],
+            "filters": "\"Object Type\": TAG",
+            "filterName": "Object Type"
+        },
+        {
+            "id": "calendar",
+            "title": "consultations.comp.calendar.title",
+            "icon": "fa fa-calendar",
+            "enabled": true,
+            "configurable": true,
+            "type": "empty"
+        },
+        {
+            "id": "merge",
+            "title": "consultations.comp.merge.title",
+            "enabled": "true",
+            "configurable": true,
+            "type": "grid",
+            "enableFiltering": false,
+            "columnDefs": [
+                {
+                    "name": "name",
+                    "displayName": "consultations.comp.merge.table.columns.name",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "object_type_s",
+                    "displayName": "consultations.comp.merge.table.columns.incident",
+                    "headerCellFilter": "translate",
+                    "width": 75
+                },
+                {
+                    "name": "title_parseable",
+                    "sortField": "title_parseable_lcs",
+                    "displayName": "consultations.comp.merge.table.columns.title",
+                    "headerCellFilter": "translate",
+                    "width": 75
+                },
+                {
+                    "name": "parent_type_s",
+                    "displayName": "consultations.comp.merge.table.columns.parent",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "assignee_full_name_lcs",
+                    "displayName": "consultations.comp.merge.table.columns.assignee",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "modified_date_tdt",
+                    "displayName": "consultations.comp.merge.table.columns.modified",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+                }
+            ],
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 5,
+            "start": 0,
+            "__xxx__consultationInfoFilter": "\"Object Type\": CONSULTATION"
+        },
+        {
+            "id": "referenceSearchGrid",
+            "title": "consultations.comp.referenceSearchGrid.title",
+            "enabled": "true",
+            "configurable": true,
+            "type": "grid",
+            "enableFiltering": false,
+            "emptySearch": false,
+            "hideTypeahead": true,
+            "showFacets": false,
+            "searchFilter": "\"Object Type\": COMPLAINT|CASE_FILE|TASK|FILE|CONSULTATION",
+            "columnDefs": [
+                {
+                    "name": "object_id_s",
+                    "displayName": "consultations.comp.addreference.grid.columns.id",
+                    "headerCellFilter": "translate",
+                    "visible": false
+                },
+                {
+                    "name": "name",
+                    "displayName": "consultations.comp.addreference.grid.columns.name",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "object_type_s",
+                    "displayName": "consultations.comp.addreference.grid.columns.type",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "title_parseable",
+                    "sortField": "title_parseable_lcs",
+                    "displayName": "consultations.comp.addreference.grid.columns.title",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "parent_number_lcs",
+                    "displayName": "consultations.comp.addreference.grid.columns.parent",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "assignee_full_name_lcs",
+                    "displayName": "consultations.comp.addreference.grid.columns.assignee",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "modified_date_tdt",
+                    "displayName": "consultations.comp.addreference.grid.columns.modified",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+                }
+            ],
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 20,
+            "start": 0,
+            "filter": "",
+            "filterName": "",
+            "reportFileName": "search"
+        },
+        {
+            "id": "newFutureTask",
+            "userOrGroupSearch": {
+                "userOrGroupFacetFilter": "fq=\"object_type_s\":(GROUP OR USER)&fq=\"status_lcs\":(ACTIVE OR VALID)",
+                "userOrGroupFacetExtraFilter": "&fq=\"name\": "
+            },
+            "userSearch": {
+                "userFacetFilter": "fq=\"object_type_s\":USER",
+                "userFacetExtraFilter": "&fq=\"name\":"
+            },
+            "groupSearch": {
+                "groupFacetFilter": "fq=\"object_type_s\":GROUP&fq=\"member_id_ss\":",
+                "groupFacetExtraFilter": "&fq=\"status_lcs\":ACTIVE"
+            },
+            "objectSearch": {
+                "objectFacetFilter": "\"Object Type\": "
+            }
+        },
+        {
+            "id": "approvalRouting",
+            "title": "consultations.comp.approvalRouting.title",
+            "icon": "fa fa-sort-amount-desc",
+            "addNewTooltip": "consultations.comp.approvalRouting.addNewTooltip",
+            "enabled": true,
+            "configurable": true,
+            "type": "grid",
+            "enableFiltering": false,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 10,
+            "columnDefs": [
+                {
+                    "name": "order",
+                    "displayName": "",
+                    "headerCellFilter": "translate",
+                    "enableSorting": false,
+                    "enableColumnMenu": false,
+                    "cellEditableCondition": false,
+                    "width": "50",
+                    "cellTemplate": ""
+                },
+                {
+                    "name": "approverFullName",
+                    "displayName": "consultations.comp.approvalRouting.table.columns.assignee",
+                    "cellEditableCondition": false,
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "groupName",
+                    "displayName": "consultations.comp.approvalRouting.table.columns.owningGroup",
+                    "cellEditableCondition": false,
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "taskName",
+                    "displayName": "consultations.comp.approvalRouting.table.columns.subject",
+                    "cellEditableCondition": false,
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "details",
+                    "displayName": "consultations.comp.approvalRouting.table.columns.details",
+                    "cellEditableCondition": false,
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div ng-bind-html='row.entity.details' title='{{row.entity.details}}' class='ui-grid-cell-contents'></div>"
+                },
+                {
+                    "name": "dueDate",
+                    "displayName": "consultations.comp.approvalRouting.table.columns.dueDate",
+                    "cellEditableCondition": false,
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "addedByFullName",
+                    "displayName": "consultations.comp.approvalRouting.table.columns.addedBy",
+                    "cellEditableCondition": false,
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "act",
+                    "cellEditableCondition": false,
+                    "width": "70",
+                    "headerCellTemplate": "<span></span>",
+                    "cellTemplate": ""
+                }
+            ],
+            "userSearch": {
+                "userFacetFilter": "\"Object Type\": USER&fq=\"status_lcs\":VALID",
+                "userFacetExtraFilter": "&fq=\"name\": "
+            }
+        },
+        {
+            "id": "pastapprovals",
+            "title": "consultations.comp.pastApprovals.title",
+            "icon": "fa fa-sort-amount-desc",
+            "enabled": true,
+            "configurable": true,
+            "type": "grid",
+            "enableFiltering": false,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 10,
+            "columnDefs": [
+                {
+                    "name": "approvalDate",
+                    "displayName": "consultations.comp.pastApprovals.table.columns.approvalDate",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.approvalDate | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
+                    "cellEditableCondition": false
+                },
+                {
+                    "name": "approverFullName",
+                    "displayName": "consultations.comp.pastApprovals.table.columns.approverFullName",
+                    "headerCellFilter": "translate",
+                    "cellEditableCondition": false
+                },
+                {
+                    "name": "approverDecision",
+                    "displayName": "consultations.comp.pastApprovals.table.columns.approverDecision",
+                    "headerCellFilter": "translate",
+                    "cellEditableCondition": false
+                }
+            ]
+        },
+        {
+            "id": "newObjectPicker",
+            "title": "consultations.comp.merge.objectPicker.title",
+            "enabled": "true",
+            "configurable": true,
+            "type": "grid",
+            "enableFiltering": false,
+            "emptySearch": false,
+            "hideTypeahead": true,
+            "showFacets": false,
+            "multiSelect": false,
+            "searchFilter":  "\"Object Type\": CONSULTATION",
+            "columnDefs": [
+                {
+                    "name": "name",
+                    "displayName": "consultations.comp.merge.objectPicker.table.columns.name",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "object_type_s",
+                    "displayName": "consultations.comp.merge.objectPicker.table.columns.type",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "title_parseable",
+                    "displayName": "consultations.comp.merge.objectPicker.table.columns.title",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "object_id_s",
+                    "displayName": "consultations.comp.merge.objectPicker.table.columns.id",
+                    "headerCellFilter": "translate"
+                }
+            ],
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 10,
+            "start": 0
+        },
+        {
+            "id": "userSearch",
+            "title": "consultations.userOrGroupSearch.title",
+            "enableFiltering": false,
+            "configurable": true,
+            "multiSelect": false,
+            "showFacets": false,
+            "columnDefs": [
+                {
+                    "name": "name",
+                    "displayName": "consultations.userOrGroupSearch.assigneeGridColumns.name",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "object_type_s",
+                    "displayName": "consultations.userOrGroupSearch.assigneeGridColumns.type",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "title",
+                    "displayName": "consultations.userOrGroupSearch.assigneeGridColumns.title",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "object_id_s",
+                    "displayName": "consultations.userOrGroupSearch.assigneeGridColumns.username",
+                    "headerCellFilter": "translate"
+                }
+            ],
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 10,
+            "start": 0
+        },
+        {
+            "id": "billing",
+            "title": "consultations.comp.billing.title",
+            "icon": "fa fa-pencil-square-o",
+            "enabled": true,
+            "showColumnFooter": true,
+            "type": "grid",
+            "columnDefs": [
+                {
+                    "name": "itemNumber",
+                    "field": "itemNumber",
+                    "displayName": "consultations.comp.billing.table.columns.item",
+                    "headerCellFilter": "translate",
+                    "width": "15%"
+                },
+                {
+                    "name": "itemDescription",
+                    "field": "itemDescription",
+                    "displayName": "consultations.comp.billing.table.columns.description",
+                    "headerCellFilter": "translate",
+                    "footerCellTemplate": "<div class='ui-grid-cell-contents pull-right'>Total: </div>",
+                    "width": "*"
+                },
+                {
+                    "name": "itemType",
+                    "field": "itemType",
+                    "displayName": "consultations.comp.billing.table.columns.type",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.itemType || 'Adhoc' }}</div>",
+                    "width": "20%"
+                },
+                {
+                    "name": "itemAmount",
+                    "field": "itemAmount",
+                    "displayName": "consultations.comp.billing.table.columns.amount",
+                    "headerCellFilter": "translate",
+                    "aggregationType": 2,
+                    "footerCellFilter": "currency",
+                    "aggregationHideLabel": true,
+                    "cellTemplate": "<div>{{ row.entity.itemAmount | currency }}</div>",
+                    "width": "20%"
+                }
+            ]
+        },
+        {
+            "id": "listInvoices",
+            "title": "consultations.comp.billing.title",
+            "icon": "fa fa-pencil-square-o",
+            "enabled": true,
+            "showColumnFooter": true,
+            "type": "grid",
+            "columnDefs": [
+                {
+                    "name": "invoiceNumber",
+                    "field": "invoiceNumber",
+                    "displayName": "consultations.comp.billing.invoice.table.columns.invoiceNumber",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "creator",
+                    "field": "creator",
+                    "displayName": "consultations.comp.billing.invoice.table.columns.creator",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "created",
+                    "field": "created",
+                    "displayName": "consultations.comp.billing.invoice.table.columns.created",
+                    "cellTemplate": "<div>{{ row.entity.created | date:'yyyy-MM-dd HH:mm:ss' }}</div>",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "view",
+                    "field": "view",
+                    "displayName": "",
+                    "cellTemplate": "<button class='btn btn-info btn-xs' style='margin-left:6px;margin-top:3px' ng-dblclick='grid.appScope.toggle()' ng-click='grid.appScope.viewInvoice(row.entity)' translate>consultations.comp.billing.invoice.table.columns.view</button>",
+                    "width": 50,
+                    "enableSorting": false,
+                    "enableColumnMenu": false
+                }
+            ]
+        },
+        {
+            "id": "suggestedConsultations",
+            "title": "consultations.comp.suggestedConsultations.title",
+            "icon": "fa fa-files-o",
+            "enabled": true,
+            "configurable": true,
+            "type": "grid",
+            "enableFiltering": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 10,
+            "columnDefs": [
+                {
+                    "name": "consultationNumber",
+                    "displayName": "consultations.comp.suggestedConsultations.table.columns.number",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity, true)'>{{row.entity.consultationNumber}}</a>"
+                },
+                {
+                    "name": "consultationTitle",
+                    "displayName": "consultations.comp.suggestedConsultationss.table.columns.title",
+                    "headerCellFilter": "translate"
+
+                },
+                {
+                    "name": "objectType",
+                    "displayName": "consultations.comp.suggestedConsultations.table.columns.referenceType",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.getObjectTypeValue(row.entity.objectType) | translate }}</div>"
+                },
+                {
+                    "name": "modifiedDate",
+                    "displayName": "consultations.comp.suggestedConsultations.table.columns.modified",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "consultationStatus",
+                    "displayName": "consultations.comp.suggestedConsultations.table.columns.status",
+                    "headerCellFilter": "translate"
+                }
+
+            ],
+            "objectTypeValue":{
+                "CONSULTATION": "admin.application.objectTitleConfiguration.consultation",
+                "CASE_FILE": "admin.application.objectTitleConfiguration.caseFile",
+                "COMPLAINT": "admin.application.objectTitleConfiguration.complaint"
+            }
+        }
+
+    ]
+}

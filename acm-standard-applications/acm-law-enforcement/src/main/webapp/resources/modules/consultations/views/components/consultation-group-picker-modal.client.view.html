@@ -1,0 +1,21 @@
+<div class="modal-header">
+    <span translate>consultations.comp.groupPickerModal.title</span>
+</div>
+<div class="modal-body">
+    <form name="groupPickerForm">
+        <div>
+            <label for="groupName"><span translate>consultations.comp.groupPickerModal.groupNamelabel</span>
+                <span class="required-asterisk">*</span></label>
+            <input id="groupName" class="form-control" type="text" ng-model="participant.selectedAssigneeName" ng-click="pickGroup()"
+                    required>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-secondary" ng-click="onClickCancel()">
+        <span translate>consultations.comp.groupPickerModal.btnCancelText</span>
+    </button>
+    <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="groupPickerForm.$invalid">
+        <span translate>consultations.comp.groupPickerModal.btnSaveText</span>
+    </button>
+</div>

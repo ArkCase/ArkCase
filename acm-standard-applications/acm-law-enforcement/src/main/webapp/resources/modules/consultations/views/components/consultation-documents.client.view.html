@@ -1,0 +1,53 @@
+<div ng-controller="Consultations.DocumentsController">
+    <div class="panel panel-success panel-grid">
+        <div class="panel-heading">
+            <div class="panel-title">
+                <span translate>consultations.comp.documents.title</span>
+                <div class="row">
+                    <div class="col-md-3">
+                        <input type="text" class="input-xs form-control" ng-model="filter" ng-keyup="onFilter()"
+                                placeholder="{{ 'consultations.comp.documents.filterInputPlaceholder' | translate }}">
+                    </div>
+                    <div class="col-md-3">
+                        <form name="filesSearch" ng-submit="onSearch()">
+                            <div class="input-group">
+                                <input type="text" class="input-xs form-control" ng-model="searchFilter"
+                                        placeholder="{{ 'consultations.comp.documents.searchInputPlaceholder' | translate }}">
+                                <div class="input-group-btn">
+                                    <button class="btn btn-primary btn-xs" type="submit">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="pull-right">
+                            <button ng-if="selectedDocuments.length > 0" class="btn btn-default btn-xs" ng-click="createNewTask()">
+                                    <span translate>
+                                        consultations.comp.documents.newTask
+                                    </span>
+                            </button>
+                            <button class="btn btn-default btn-xs" ng-click="sendEmail()" ng-show="sendEmailEnabled">
+                                    <span translate>
+                                        consultations.comp.documents.sendEmail
+                                    </span>
+                            </button>
+                            <folder-actions></folder-actions>
+                            <download-all-as-zip></download-all-as-zip>
+                            <button type="button" class="btn btn-default btn-xs" ng-click="onClickRefresh()">
+                                <i class="fa fa-lg fa-refresh"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body ui-grid-viewport ui-grid-render-container-body">
+            <doc-tree object-type="objectType" object-id="objectId" tree-control="treeControl" upload-form="uploadForm"
+                    tree-config="treeConfig" object-info="objectInfo" on-init-tree="onInitTree" read-only="{{isReadOnly(objectInfo)}}"
+                    ng-if="objectInfo && treeConfig"></doc-tree>
+        </div>
+    </div>
+</div>
+
