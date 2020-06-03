@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>acm-default-plugins</artifactId>
@@ -151,12 +151,6 @@
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
             <artifactId>acm-pdf-utilities</artifactId>
             <version>${acm.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
-            <artifactId>acm-case-file-plugin</artifactId>
-            <version>${acm.version}</version>
-            <scope>provided</scope>
         </dependency>
 
         <dependency>

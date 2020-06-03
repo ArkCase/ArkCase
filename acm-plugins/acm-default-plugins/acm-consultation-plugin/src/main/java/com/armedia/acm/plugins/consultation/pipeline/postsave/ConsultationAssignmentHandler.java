@@ -47,13 +47,12 @@ import org.apache.logging.log4j.Logger;
 public class ConsultationAssignmentHandler implements PipelineHandler<Consultation, ConsultationPipelineContext>
 {
 
-    private AcmAssignmentDao acmAssignmentDao;
-    private AcmObjectHistoryEventPublisher acmObjectHistoryEventPublisher;
-
     /**
      * Logger instance.
      */
     private transient final Logger log = LogManager.getLogger(getClass());
+    private AcmAssignmentDao acmAssignmentDao;
+    private AcmObjectHistoryEventPublisher acmObjectHistoryEventPublisher;
 
     /*
      * (non-Javadoc)

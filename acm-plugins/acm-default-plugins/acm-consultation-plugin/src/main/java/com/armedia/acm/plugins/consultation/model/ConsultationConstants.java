@@ -55,11 +55,7 @@ public interface ConsultationConstants
     String FILE_ID = "FILE_ID";
     String FILE_VERSION = "FILE_VERSION";
 
-    // TODO : Change with consultation doc
-    String CONSULTATION_STYLESHEET = System.getProperty("user.home") + "/.arkcase/acm/pdf-stylesheets/casefile-document.xsl";
+    String CONSULTATION_STYLESHEET = System.getProperty("user.home") + "/.arkcase/acm/pdf-stylesheets/consultation-document.xsl";
     String CONSULTATION_DOCUMENT = "CONSULTATION";
     String CONSULTATION_NAME_FORMAT = "Consultation.pdf";
-
-    String NEXT_QUEUE_ACTION_COMPLETE = "Complete";
-    String NEXT_QUEUE_ACTION_NEXT = "Next";
 }

@@ -39,5 +39,5 @@ import java.util.List;
 public interface ConsultationTasksService
 {
     String getConsultationTasks(Long consultation, String parentType, Long parentId, List<String> childTypes,
-                                String sort, Integer startRow, Integer maxRows, Authentication authentication) throws SolrException;
+            String sort, Integer startRow, Integer maxRows, Authentication authentication) throws SolrException;
 }

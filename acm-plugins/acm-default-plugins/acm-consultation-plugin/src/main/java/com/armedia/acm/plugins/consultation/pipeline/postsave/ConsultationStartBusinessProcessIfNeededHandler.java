@@ -81,7 +81,6 @@ public class ConsultationStartBusinessProcessIfNeededHandler implements Pipeline
             Map<String, Object> processVariables = new HashMap<>();
             processVariables.put("OBJECT_TYPE", ConsultationConstants.OBJECT_TYPE);
             processVariables.put("OBJECT_ID", entity.getId());
-            processVariables.put("NEW_QUEUE_NAME", model.getBusinessObjectNewQueueName());
             processVariables.put("NEW_OBJECT_STATUS", model.getBusinessObjectNewStatus());
 
             String processName = result.getProcessName();

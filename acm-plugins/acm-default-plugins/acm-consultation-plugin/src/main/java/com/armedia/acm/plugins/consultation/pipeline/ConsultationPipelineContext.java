@@ -50,16 +50,6 @@ public class ConsultationPipelineContext extends AbstractPipelineContext
     private Authentication authentication;
 
     /**
-     * The queue that consultation is already in.
-     */
-    private String queueName;
-
-    /**
-     * The queue the consultation will be moved to; used in the queue pipeline.
-     */
-    private String enqueueName;
-
-    /**
      * IP Address.
      */
     private String ipAddress;
@@ -102,26 +92,6 @@ public class ConsultationPipelineContext extends AbstractPipelineContext
     public void setIpAddress(String ipAddress)
     {
         this.ipAddress = ipAddress;
-    }
-
-    public String getEnqueueName()
-    {
-        return enqueueName;
-    }
-
-    public void setEnqueueName(String enqueueName)
-    {
-        this.enqueueName = enqueueName;
-    }
-
-    public String getQueueName()
-    {
-        return queueName;
-    }
-
-    public void setQueueName(String queueName)
-    {
-        this.queueName = queueName;
     }
 
     public Consultation getConsultation()

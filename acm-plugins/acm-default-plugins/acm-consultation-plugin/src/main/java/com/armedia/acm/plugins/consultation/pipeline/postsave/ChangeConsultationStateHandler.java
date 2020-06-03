@@ -52,7 +52,8 @@ public class ChangeConsultationStateHandler
         Consultation consultation = getConsultationDao().find(form.getConsultationId());
 
         // Update Status to "IN APPROVAL"
-        if(ctx.getPropertyValue("ChangeConsultationStatusFlow").equals(false)){
+        if (ctx.getPropertyValue("ChangeConsultationStatusFlow").equals(false))
+        {
             consultation.setStatus(form.getStatus());
         }
         else if (!consultation.getStatus().equals("IN APPROVAL") && !"edit".equals(mode))
@@ -82,11 +83,13 @@ public class ChangeConsultationStateHandler
         this.userActionExecutor = userActionExecutor;
     }
 
-    public ConsultationDao getConsultationDao() {
+    public ConsultationDao getConsultationDao()
+    {
         return consultationDao;
     }
 
-    public void setConsultationDao(ConsultationDao consultationDao) {
+    public void setConsultationDao(ConsultationDao consultationDao)
+    {
         this.consultationDao = consultationDao;
     }
 }

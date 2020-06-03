@@ -29,7 +29,6 @@ package com.armedia.acm.plugins.consultation.pipeline.postsave;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.form.config.FormsTypeCheckService;
 import com.armedia.acm.plugins.consultation.dao.ConsultationDao;
 import com.armedia.acm.plugins.consultation.model.ChangeConsultationStateContants;
 import com.armedia.acm.plugins.consultation.model.ChangeConsultationStatus;
@@ -50,34 +49,29 @@ public class PDFChangeConsultationStateDocumentGeneratorHandler
         extends PDFChangeConsultationStateDocumentGenerator<ConsultationDao, Consultation>
         implements PipelineHandler<ChangeConsultationStatus, ConsultationPipelineContext>
 {
-    private FormsTypeCheckService formsTypeCheckService;
     private transient final Logger log = LogManager.getLogger(getClass());
     private PDFChangeConsultationStateDocumentGenerator pdfChangeConsultationStateDocumentGenerator;
 
     @Override
     public void execute(ChangeConsultationStatus form, ConsultationPipelineContext ctx) throws PipelineProcessException
     {
-        if (!formsTypeCheckService.getTypeOfForm().equals("frevvo"))
+        log.debug("Entering pipeline handler forEntering pipeline handler for consultation with id [{}]",
+                form.getId());
+
+        // ensure the SQL of all prior handlers is visible to this handler
+        getDao().getEm().flush();
+
+        try
         {
-            log.debug("Entering pipeline handler forEntering pipeline handler for consultation with id [{}]",
-                    form.getId());
-
-            // ensure the SQL of all prior handlers is visible to this handler
-            getDao().getEm().flush();
-
-            try
-            {
-                generatePdf(ConsultationConstants.OBJECT_TYPE, form.getConsultationId(), ctx);
-            }
-            catch (Exception e)
-            {
-                log.warn("Unable to generate pdf document for the consultation with id [{}]", form.getId());
-                throw new PipelineProcessException(e);
-            }
-
-            log.debug("Exiting pipeline handler for object: [{}]", form.getId());
+            generatePdf(ConsultationConstants.OBJECT_TYPE, form.getConsultationId(), ctx);
+        }
+        catch (Exception e)
+        {
+            log.warn("Unable to generate pdf document for the consultation with id [{}]", form.getId());
+            throw new PipelineProcessException(e);
         }
 
+        log.debug("Exiting pipeline handler for object: [{}]", form.getId());
     }
 
     @Override
@@ -115,15 +109,5 @@ public class PDFChangeConsultationStateDocumentGeneratorHandler
             PDFChangeConsultationStateDocumentGenerator pdfChangeConsultationStateDocumentGenerator)
     {
         this.pdfChangeConsultationStateDocumentGenerator = pdfChangeConsultationStateDocumentGenerator;
-    }
-
-    public FormsTypeCheckService getFormsTypeCheckService()
-    {
-        return formsTypeCheckService;
-    }
-
-    public void setFormsTypeCheckService(FormsTypeCheckService formsTypeCheckService)
-    {
-        this.formsTypeCheckService = formsTypeCheckService;
     }
 }

@@ -28,8 +28,11 @@ package com.armedia.acm.plugins.consultation.web.api;
  */
 
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
+import com.armedia.acm.plugins.consultation.model.ConsultationSummaryByStatusAndTimePeriodDto;
 import com.armedia.acm.plugins.consultation.model.ConsultationsByStatusAndTimePeriod;
 import com.armedia.acm.plugins.consultation.model.ConsultationsByStatusDto;
+import com.armedia.acm.plugins.consultation.model.TimePeriod;
+import com.armedia.acm.plugins.consultation.service.ConsultationService;
 import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.model.solr.SolrCore;
@@ -55,12 +58,26 @@ import java.util.List;
  * Created by Vladimir Cherepnalkovski <vladimir.cherepnalkovski@armedia.com> on May, 2020
  */
 @Controller
-@RequestMapping({ "/api/v1/plugin/consultationbystatus", "/api/latest/plugin/consultationbystatus" })
+@RequestMapping({ "/api/v1/plugin/consultation/bystatus", "/api/latest/plugin/consultation/bystatus" })
 public class GetConsultationByStatusAPIController
 {
     private final Logger log = LogManager.getLogger(getClass());
 
+    private ConsultationService consultationService;
     private ExecuteSolrQuery executeSolrQuery;
+
+    @RequestMapping(value = "/summary", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+    @ResponseBody
+    public List<ConsultationSummaryByStatusAndTimePeriodDto> getConsultationsSummaryByStatusAndTimePeriod(
+            Authentication authentication) throws AcmListObjectsFailedException
+    {
+        if (log.isInfoEnabled())
+        {
+            log.info("Getting consultations grouped by status in a different time periods");
+        }
+        List<ConsultationSummaryByStatusAndTimePeriodDto> retval = getConsultationSummary();
+        return retval;
+    }
 
     /**
      * REST api for retrieving consultations by status.
@@ -90,6 +107,23 @@ public class GetConsultationByStatusAPIController
         }
 
         return consultationsByStatusDtos;
+    }
+
+    private List<ConsultationSummaryByStatusAndTimePeriodDto> getConsultationSummary()
+    {
+        List<ConsultationSummaryByStatusAndTimePeriodDto> consultationSummaryByStatusAndTimePeriodDtos = new ArrayList<>();
+        ConsultationSummaryByStatusAndTimePeriodDto consultationSummaryByStatusAndTimePeriodDto = new ConsultationSummaryByStatusAndTimePeriodDto();
+        for (TimePeriod tp : TimePeriod.values())
+        {
+            consultationSummaryByStatusAndTimePeriodDto.setTimePeriod(tp.getnDays());
+            consultationSummaryByStatusAndTimePeriodDto
+                    .setConsultationsByStatusDtos(getConsultationService().getConsultationsByStatusAndByTimePeriod(tp));
+
+            consultationSummaryByStatusAndTimePeriodDtos.add(consultationSummaryByStatusAndTimePeriodDto);
+            consultationSummaryByStatusAndTimePeriodDto = new ConsultationSummaryByStatusAndTimePeriodDto();
+        }
+
+        return consultationSummaryByStatusAndTimePeriodDtos;
     }
 
     /**
@@ -163,6 +197,16 @@ public class GetConsultationByStatusAPIController
         }
 
         return solrResponse;
+    }
+
+    public ConsultationService getConsultationService()
+    {
+        return consultationService;
+    }
+
+    public void setConsultationService(ConsultationService consultationService)
+    {
+        this.consultationService = consultationService;
     }
 
     public ExecuteSolrQuery getExecuteSolrQuery()

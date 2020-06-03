@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
-    xmlns:aop="http://www.springframework.org/schema/aop"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <bean id="changeConsultationStatusDao" class="com.armedia.acm.plugins.consultation.dao.ChangeConsultationStatusDao"/>
 
@@ -26,8 +26,8 @@
     </bean>
 
     <bean id="pdfChangeConsultationStateDocumentGenerator"
-        class="com.armedia.acm.plugins.consultation.service.PDFChangeConsultationStateDocumentGenerator"
-        parent="pdfDocumentGenerator">
+          class="com.armedia.acm.plugins.consultation.service.PDFChangeConsultationStateDocumentGenerator"
+          parent="pdfDocumentGenerator">
         <property name="dao" ref="consultationDao"/>
     </bean>
 
@@ -39,18 +39,18 @@
     </bean>
 
     <bean id="checkChangeConsultationState"
-        class="com.armedia.acm.plugins.consultation.pipeline.presave.CheckChangeConsultationState">
+          class="com.armedia.acm.plugins.consultation.pipeline.presave.CheckChangeConsultationState">
         <property name="consultationDao" ref="consultationDao"/>
     </bean>
 
     <bean id="changeConsultationStateHandler"
-        class="com.armedia.acm.plugins.consultation.pipeline.postsave.ChangeConsultationStateHandler">
+          class="com.armedia.acm.plugins.consultation.pipeline.postsave.ChangeConsultationStateHandler">
         <property name="userActionExecutor" ref="userActionExecutor"/>
         <property name="consultationDao" ref="consultationDao"/>
     </bean>
 
     <bean id="createTaskChangeConsultationHandler"
-        class="com.armedia.acm.plugins.consultation.pipeline.postsave.CreateTaskChangeConsultationHandler">
+          class="com.armedia.acm.plugins.consultation.pipeline.postsave.CreateTaskChangeConsultationHandler">
         <property name="ecmFileDao" ref="ecmFileDao"/>
     </bean>
 
@@ -70,7 +70,7 @@
     </bean>
 
     <bean id="changeConsultationStateService"
-        class="com.armedia.acm.plugins.consultation.service.ChangeConsultationStateService">
+          class="com.armedia.acm.plugins.consultation.service.ChangeConsultationStateService">
         <property name="consultationEventUtility" ref="consultationEventUtility"/>
         <property name="consultationDao" ref="consultationDao"/>
         <property name="changeConsultationStatusDao" ref="changeConsultationStatusDao"/>
@@ -78,11 +78,10 @@
     </bean>
 
     <bean id="pdfChangeConsultationStateDocumentGeneratorHandler"
-        class="com.armedia.acm.plugins.consultation.pipeline.postsave.PDFChangeConsultationStateDocumentGeneratorHandler"
-        parent="pdfChangeConsultationStateDocumentGenerator">
+          class="com.armedia.acm.plugins.consultation.pipeline.postsave.PDFChangeConsultationStateDocumentGeneratorHandler"
+          parent="pdfChangeConsultationStateDocumentGenerator">
         <property name="pdfChangeConsultationStateDocumentGenerator" ref="pdfChangeConsultationStateDocumentGenerator"/>
         <property name="dao" ref="consultationDao"/>
-        <property name="formsTypeCheckService" ref="formsTypeCheckService"/>
     </bean>
 
     <bean id="consultationToSolrTransformer"
@@ -106,7 +105,7 @@
     </bean>
 
     <bean id="changeConsultationStatusProcessEndListener"
-        class="com.armedia.acm.plugins.consultation.listener.ChangeConsultationStatusProcessEndListener">
+          class="com.armedia.acm.plugins.consultation.listener.ChangeConsultationStatusProcessEndListener">
         <property name="changeConsultationStateService" ref="changeConsultationStateService"/>
     </bean>
 
@@ -122,95 +121,27 @@
     </bean>
 
     <bean id="changeConsultationStatusOnBuckslipEventListener"
-        class="com.armedia.acm.plugins.consultation.listener.ChangeConsultationStatusOnBuckslipEventListener">
+          class="com.armedia.acm.plugins.consultation.listener.ChangeConsultationStatusOnBuckslipEventListener">
         <property name="consultationDao" ref="consultationDao"/>
     </bean>
 
     <bean id="consultationBillingInvoiceCreatedHandler"
-        class="com.armedia.acm.plugins.consultation.listener.ConsultationBillingInvoiceCreatedHandler">
+          class="com.armedia.acm.plugins.consultation.listener.ConsultationBillingInvoiceCreatedHandler">
         <property name="consultationBillingInvoiceDocumentGenerator" ref="billingInvoiceDocumentGenerator"/>
         <property name="consultationDao" ref="consultationDao"/>
     </bean>
 
     <bean id="consultationDataAccessUpdateLocator"
-        class="com.armedia.acm.plugins.consultation.service.ConsultationDataAccessUpdateLocator">
+          class="com.armedia.acm.plugins.consultation.service.ConsultationDataAccessUpdateLocator">
         <property name="consultationDao" ref="consultationDao"/>
-    </bean>
-
-    <bean id="acmQueueNamesProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-        <!-- note: must leave "file:" at the start of the file name for spring 
-            to be able to read the file; otherwise it will try to read from the classpath -->
-        <property name="location" value="file:${user.home}/.arkcase/acm/queueNames.properties"/>
-        <property name="ignoreResourceNotFound" value="true"/>
-        <property name="localOverride" value="false"/>
-        <property name="properties">
-            <props/>
-        </property>
-    </bean>
-
-    <bean id="acmQueueService" class="com.armedia.acm.plugins.casefile.service.AcmQueueServiceImpl">
-        <property name="acmQueueDao" ref="acmQueueDao"/>
-    </bean>
-
-    <bean id="queueToSolrTranformer" class="com.armedia.acm.plugins.consultation.transformer.QueueToSolrTransformer">
-        <property name="acmQueueDao" ref="acmQueueDao"/>
-        <property name="userDao" ref="userJpaDao"/>
-    </bean>
-
-    <bean id="consultationNextPossibleQueuesBusinessRule"
-          class="com.armedia.acm.plugins.consultation.service.ConsultationNextPossibleQueuesBusinessRule"
-          parent="simpleStatelessSingleObjectRuleManager">
-        <property name="ruleSpreadsheetFilename" value="drools-next-possible-queues-rules.xlsx"/>
-    </bean>
-
-    <bean id="consultationLeaveCurrentQueueBusinessRule"
-          class="com.armedia.acm.plugins.consultation.service.LeaveCurrentQueueBusinessRule"
-          parent="simpleStatelessSingleObjectRuleManager">
-        <property name="ruleSpreadsheetFilename" value="drools-leave-current-queue-rules.xlsx"/>
-    </bean>
-
-    <bean id="consultationEnterQueueBusinessRule"
-          class="com.armedia.acm.plugins.consultation.service.EnterQueueBusinessRule"
-          parent="simpleStatelessSingleObjectRuleManager">
-        <property name="ruleSpreadsheetFilename" value="drools-enter-queue-rules.xlsx"/>
-    </bean>
-
-    <bean id="consultationSystemConfigurationService"
-          class="com.armedia.acm.plugins.consultation.service.SystemConfigurationService">
-    </bean>
-
-    <bean id="consultationOnLeaveQueueBusinessRule"
-          class="com.armedia.acm.plugins.consultation.service.OnLeaveQueueBusinessRule"
-          parent="simpleStatelessSingleObjectRuleManager">
-        <property name="ruleSpreadsheetFilename" value="drools-on-leave-queue-rules.xlsx"/>
-    </bean>
-
-    <bean id="consultationOnEnterQueueBusinessRule"
-          class="com.armedia.acm.plugins.consultation.service.OnEnterQueueBusinessRule"
-          parent="simpleStatelessSingleObjectRuleManager">
-        <property name="ruleSpreadsheetFilename" value="drools-on-enter-queue-rules.xlsx"/>
-    </bean>
-
-    <bean id="enqueueConsultationService" class="com.armedia.acm.plugins.consultation.service.EnqueueConsultationServiceImpl">
-        <property name="consultationDao" ref="consultationDao"/>
-        <property name="leaveCurrentQueueBusinessRule" ref="consultationLeaveCurrentQueueBusinessRule"/>
-        <property name="consultationNextPossibleQueuesBusinessRule" ref="consultationNextPossibleQueuesBusinessRule"/>
-        <property name="enterQueueBusinessRule" ref="consultationEnterQueueBusinessRule"/>
-        <property name="onLeaveQueueBusinessRule" ref="consultationOnLeaveQueueBusinessRule"/>
-        <property name="onEnterQueueBusinessRule" ref="consultationOnEnterQueueBusinessRule"/>
-        <property name="queueService" ref="queueService"/>
-        <property name="startBusinessProcessService" ref="startBusinessProcessService"/>
-        <property name="saveConsultationBusinessRule" ref="saveConsultationBusinessRule"/>
-        <property name="acmObjectLockService" ref="objectLockService"/>
-        <property name="systemConfigurationService" ref="consultationSystemConfigurationService"/>
-        <property name="timesheetService" ref="timesheetService"/>
     </bean>
 
     <bean id="acmConsultationsStateProvider" class="com.armedia.acm.plugins.consultation.state.AcmConsultationsStateProvider">
         <property name="consultationDao" ref="consultationDao"/>
     </bean>
 
-    <bean id="consultationTemplateModelProvider" class="com.armedia.acm.plugins.consultation.model.provider.ConsultationTemplateModelProvider">
+    <bean id="consultationTemplateModelProvider"
+          class="com.armedia.acm.plugins.consultation.model.provider.ConsultationTemplateModelProvider">
     </bean>
 
     <bean id="consultationConfig" class="com.armedia.acm.plugins.consultation.model.ConsultationConfig" scope="refresh">
@@ -228,7 +159,4 @@
         <property name="childDocumentsSearchService" ref="childDocumentsSearchService"/>
     </bean>
 
-    <bean id="activeConsultationByQueueService" class="com.armedia.acm.plugins.consultation.service.ActiveConsultationByQueueServiceImpl">
-        <property name="executeSolrQuery" ref="executeSolrQuery"/>
-    </bean>
 </beans>

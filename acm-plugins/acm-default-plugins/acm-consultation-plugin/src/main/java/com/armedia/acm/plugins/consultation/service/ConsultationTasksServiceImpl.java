@@ -43,7 +43,7 @@ public class ConsultationTasksServiceImpl implements ConsultationTasksService
 
     @Override
     public String getConsultationTasks(Long consultation, String parentType, Long parentId, List<String> childTypes,
-                                       String sort, Integer startRow, Integer maxRows, Authentication authentication) throws SolrException
+            String sort, Integer startRow, Integer maxRows, Authentication authentication) throws SolrException
     {
         return getChildDocumentsSearchService().searchForChildrenAndGrandchildrenTasks(parentType, consultation, childTypes, sort, startRow,
                 maxRows,

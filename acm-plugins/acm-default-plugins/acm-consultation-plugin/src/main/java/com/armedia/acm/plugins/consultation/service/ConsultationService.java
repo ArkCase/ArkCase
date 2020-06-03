@@ -31,9 +31,9 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.plugins.casefile.model.TimePeriod;
 import com.armedia.acm.plugins.consultation.model.Consultation;
 import com.armedia.acm.plugins.consultation.model.ConsultationsByStatusDto;
+import com.armedia.acm.plugins.consultation.model.TimePeriod;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
 import org.springframework.security.core.Authentication;
