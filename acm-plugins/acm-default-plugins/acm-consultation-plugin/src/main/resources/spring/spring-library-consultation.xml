@@ -221,7 +221,7 @@
         <property name="consultationDao" ref="consultationDao"/>
         <property name="changeConsultationStatusDao" ref="changeConsultationStatusDao"/>
         <property name="ecmFileService" ref="ecmFileService"/>
-        <property name="pipelineManager" ref="changeConsultationStatusPipelineManager"/>
+        <property name="pipelineManager" ref="consultationPipelineManager"/>
     </bean>
 
     <bean id="consultationTasksService" class="com.armedia.acm.plugins.consultation.service.ConsultationTasksServiceImpl">
