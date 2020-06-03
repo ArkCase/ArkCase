@@ -98,7 +98,7 @@
         <property name="pluginConfig" ref="consultationConfig"/>
         <property name="suportedObjectTypesNames">
             <list>
-                <value>CONSULTATIONS</value>
+                <value>CONSULTATION</value>
             </list>
         </property>
         <property name="configurationPropertyService" ref="configurationPropertyService"/>
