@@ -1,0 +1,18 @@
+<div class="modal-header">
+    <h3>
+        <span translate>consultations.comp.billing.invoice.title</span>
+    </h3>
+</div>
+<div class="modal-body">
+    <div ui-grid="gridOptions" ui-grid-resize-columns ui-grid-auto-resize
+            adjust-table-height="gridOptions.data.length" class="grid"></div>
+    <br>
+    <h4 ng-if="isGridShown"> <span translate>consultations.comp.billing.modal.billingItems.title</span> <b>{{invoiceNumber }}</b> </h4>
+    <div ui-grid="gridDetailOptions" ui-grid-resize-columns ui-grid-auto-resize ng-if="isGridShown"
+            adjust-table-height="gridDetailOptions.data.length" class="grid"></div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary"  ng-click="cancel()">
+        <span translate>consultations.comp.billing.modal.cancel.btn</span>
+    </button>
+</div>

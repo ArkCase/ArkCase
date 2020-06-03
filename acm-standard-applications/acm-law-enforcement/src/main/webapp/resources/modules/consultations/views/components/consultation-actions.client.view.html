@@ -1,0 +1,50 @@
+<div ng-controller="Consultations.ActionsController">
+    <div class="col-xs-4">
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" ng-model="restricted" ng-click="onClickRestrict($event)" permission="restrictCase"
+                        permission-object-type="CONSULTATION" permission-properties="objectInfo" permission-action="disabled">
+                <span translate>consultations.comp.actions.restrict</span>
+            </label>
+        </div>
+    </div>
+
+    <div class="pull-right">
+        <div class="btn-group">
+            <a class="btn btn-sm btn-default" ng-click="newConsultation()">
+                <i class="fa fa-edit"></i>
+                <span translate>consultations.comp.actions.new.button</span>
+            </a>
+            <a class="btn btn-sm btn-default" ng-click="changeConsultationStatus(changeConsultationStatusParams)"
+                    ng-show="showChangeConsultationStatus">
+                <i class="fa fa-edit"></i>
+                <span translate>consultations.comp.actions.status.button</span>
+            </a>
+            <button class="btn btn-sm btn-default" ng-click="onClickChildOutcome(outcome.name)"
+                    ng-repeat="outcome in availableChildOutcomes" ng-show="showBtnChildOutcomes">
+                {{outcome.description}}
+            </button>
+            <button class="btn btn-sm btn-default" ng-show="showBtnUnsubscribe" ng-click="unsubscribe(objectInfo)">
+                <i class="fa fa-bullhorn"></i>
+                <span translate>consultations.comp.actions.unsubscribe.button</span>
+            </button>
+            <button class="btn btn-sm btn-default" ng-show="showBtnSubscribe" ng-click="subscribe(objectInfo)">
+                <i class="fa fa-bullhorn"></i>
+                <span translate>consultations.comp.actions.subscribe.button</span>
+            </button>
+            <button class="btn btn-sm btn-default" ng-if="assignee.length == 0 && currentUserProfile.groups.indexOf(owningGroup) > -1"
+                    ng-click="claim(objectInfo)">
+                <i class="fa fa-edit"></i>
+                <span translate>consultations.comp.actions.claim.button</span>
+            </button>
+            <button class="btn btn-sm btn-default" ng-if="assignee.length > 0 && currentUserProfile.userId == assignee"
+                    ng-click="unclaim(objectInfo)">
+                <i class="fa fa-edit"></i>
+                <span translate>consultations.comp.actions.unclaim.button</span>
+            </button>
+            <button class="btn btn-sm btn-default" ng-click="refresh()">
+                <i class="fa fa-refresh"></i>
+            </button>
+        </div>
+    </div>
+</div>

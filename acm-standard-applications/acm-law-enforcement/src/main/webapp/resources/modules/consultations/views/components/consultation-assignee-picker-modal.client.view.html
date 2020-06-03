@@ -1,0 +1,22 @@
+<div class="modal-header">
+    <span translate>consultations.comp.assigneePickerModal.title</span>
+</div>
+<div class="modal-body">
+    <form name="assigneePickerForm">
+        <div>
+            <label for="assigneeName"><span translate>consultations.comp.assigneePickerModal.assigneeNamelabel</span>
+                <span class="required-asterisk">*</span></label>
+            <input id="assigneeName" class="form-control" type="text" ng-model="participant.selectedAssigneeName" ng-click="pickAssignee()"
+                    required>
+
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-secondary" ng-click="onClickCancel()">
+        <span translate>consultations.comp.assigneePickerModal.btnCancelText</span>
+    </button>
+    <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="assigneePickerForm.$invalid">
+        <span translate>consultations.comp.assigneePickerModal.btnSaveText</span>
+    </button>
+</div>
