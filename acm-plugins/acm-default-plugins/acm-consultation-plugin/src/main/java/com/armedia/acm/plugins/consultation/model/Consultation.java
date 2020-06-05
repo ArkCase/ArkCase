@@ -41,6 +41,7 @@ import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.AcmLegacySystemEntity;
 import com.armedia.acm.data.converter.BooleanToStringConverter;
 import com.armedia.acm.data.converter.LocalDateConverter;
+import com.armedia.acm.data.converter.LocalDateTimeConverter;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
 import com.armedia.acm.plugins.objectassociation.model.AcmChildObjectEntity;
@@ -94,6 +95,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -269,6 +271,11 @@ public class Consultation implements Serializable, AcmAssignedObject, AcmEntity,
     @Column(name = "cm_consultation_denied_flag")
     @Convert(converter = BooleanToStringConverter.class)
     private Boolean deniedFlag = Boolean.FALSE;
+
+    @Column(name = "cm_received_date")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @Convert(converter = LocalDateTimeConverter.class)
+    private LocalDateTime receivedDate;
 
     @PrePersist
     protected void beforeInsert()
@@ -717,6 +724,7 @@ public class Consultation implements Serializable, AcmAssignedObject, AcmEntity,
                 ", responseDueDate=" + responseDueDate +
                 ", securityField='" + securityField + '\'' +
                 ", legacySystemId='" + legacySystemId + '\'' +
+                ", receivedDate='" + receivedDate + '\'' +
                 '}';
     }
 
@@ -883,5 +891,15 @@ public class Consultation implements Serializable, AcmAssignedObject, AcmEntity,
     public void setDisposition(String disposition)
     {
         this.disposition = disposition;
+    }
+
+    public LocalDateTime getReceivedDate()
+    {
+        return receivedDate;
+    }
+
+    public void setReceivedDate(LocalDateTime receivedDate)
+    {
+        this.receivedDate = receivedDate;
     }
 }

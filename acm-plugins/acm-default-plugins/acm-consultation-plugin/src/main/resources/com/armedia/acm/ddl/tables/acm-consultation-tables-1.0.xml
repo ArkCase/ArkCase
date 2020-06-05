@@ -63,6 +63,7 @@
             <column name="cm_security_field" type="VARCHAR(255)" defaultValue="Open"/>
             <column name="cm_legacy_system_id" type="VARCHAR(255)"/>
             <column name="cm_consultation_denied_flag" type="VARCHAR(10)" defaultValue="false"/>
+            <column name="fo_received_date" type="${timestampType}"/>
         </createTable>
     </changeSet>
 
@@ -123,6 +124,7 @@
             <column name="cm_security_field" type="VARCHAR(255)" defaultValue="Open"/>
             <column name="cm_legacy_system_id" type="VARCHAR(255)"/>
             <column name="cm_consultation_denied_flag" type="VARCHAR(10)" defaultValue="false"/>
+            <column name="fo_received_date" type="${timestampType}" defaultValueComputed="${timestampFunction}"/>
         </createTable>
     </changeSet>
 
