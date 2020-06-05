@@ -231,7 +231,7 @@ angular.module('services').factory('Consultation.InfoService', [ '$resource', '$
      *
      * @returns {Object} Promise
      */
-    Service.changeCaseFileState = function(mode, data) {
+    Service.changeConsultationState = function (mode, data) {
         return Util.serviceCall({
             service: Service.changeState,
             param: {
@@ -288,6 +288,74 @@ angular.module('services').factory('Consultation.InfoService', [ '$resource', '$
                 }
             }
         });
+    };
+
+    /**
+     * @ngdoc method
+     * @name validateConsultationInfo
+     * @methodOf services:Consultation.InfoService
+     *
+     * @description
+     * Validate consultation data
+     *
+     * @param {Object} data  Data to be validated
+     *
+     * @returns {Boolean} Return true if data is valid
+     */
+    Service.validateConsultationInfo = function (data) {
+        if (Util.isEmpty(data)) {
+            return false;
+        }
+        if (0 >= Util.goodValue(data.id, 0)) {
+            return false;
+        }
+        if (Util.isEmpty(data.consultationNumber)) {
+            return false;
+        }
+        if (!Util.isArray(data.childObjects)) {
+            return false;
+        }
+        if (!Util.isArray(data.milestones)) {
+            return false;
+        }
+        if (!Util.isArray(data.participants)) {
+            return false;
+        }
+        if (!Util.isArray(data.personAssociations)) {
+            return false;
+        }
+        if (!Util.isArray(data.references)) {
+            return false;
+        }
+        return true;
+    };
+
+    /**
+     * @ngdoc method
+     * @name validateConsultationInfoNewConsultation
+     * @methodOf services:Consultation.InfoService
+     *
+     * @description
+     * Validate consultation data when creating new Consultation
+     *
+     * @param {Object} data  Data to be validated
+     *
+     * @returns {Boolean} Return true if data is valid
+     */
+    Service.validateConsultationInfoNewConsultation = function (data) {
+        if (Util.isEmpty(data)) {
+            return false;
+        }
+        if (data.id) {
+            return false;
+        }
+        if (data.participants && !Util.isArray(data.participants)) {
+            return false;
+        }
+        if (data.personAssociations && !Util.isArray(data.personAssociations)) {
+            return false;
+        }
+        return true;
     };
 
     return Service;

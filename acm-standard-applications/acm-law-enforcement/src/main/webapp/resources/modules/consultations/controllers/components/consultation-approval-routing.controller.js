@@ -31,8 +31,8 @@ angular.module('consultations').controller(
                 stateParams: $stateParams,
                 moduleId: "consultations",
                 componentId: "approvalRouting",
-                retrieveObjectInfo: ConsultationInfoService.getCaseInfo,
-                validateObjectInfo: ConsultationInfoService.validateCaseInfo,
+                retrieveObjectInfo: ConsultationInfoService.getConsultationInfo,
+                validateObjectInfo: ConsultationInfoService.validateConsultationInfo,
                 onObjectInfoRetrieved: function(objectInfo) {
                     onObjectInfoRetrieved(objectInfo);
                 }

@@ -43,8 +43,8 @@ angular.module('consultations').controller(
                 stateParams: $stateParams,
                 moduleId: "consultations",
                 componentId: "documents",
-                retrieveObjectInfo: ConsultationInfoService.getCaseInfo,
-                validateObjectInfo: ConsultationInfoService.validateCaseInfo,
+                retrieveObjectInfo: ConsultationInfoService.getConsultationInfo,
+                validateObjectInfo: ConsultationInfoService.validateConsultationInfo,
                 onConfigRetrieved: function(componentConfig) {
                     return onConfigRetrieved(componentConfig);
                 },

@@ -24,17 +24,17 @@ angular.module('consultations').controller(
         'Helper.UiGridService',
         'Dialog.BootboxService',
         '$filter',
-        'Cases.SuggestedCases',
+        'Consultation.SuggestedConsultations',
         function($scope, $state, $stateParams, $translate, $modal, Util, UtilDateService, ConfigService, ObjectLookupService, ConsultationLookupService, ConsultationInfoService, ObjectModelService, MessageService, ObjectService, ObjectParticipantService, SearchService, SearchQueryBuilder,
-                 HelperObjectBrowserService, HelperUiGridService, DialogService, $filter, SuggestedCasesService) {
+                 HelperObjectBrowserService, HelperUiGridService, DialogService, $filter, SuggestedConsultationsService) {
 
             new HelperObjectBrowserService.Component({
                 scope: $scope,
                 stateParams: $stateParams,
                 moduleId: "consultations",
                 componentId: "info",
-                retrieveObjectInfo: ConsultationInfoService.getCaseInfo,
-                validateObjectInfo: ConsultationInfoService.validateCaseInfo,
+                retrieveObjectInfo: ConsultationInfoService.getConsultationInfo,
+                validateObjectInfo: ConsultationInfoService.validateConsultationInfo,
                 onObjectInfoRetrieved: function(objectInfo) {
                     onObjectInfoRetrieved(objectInfo);
                 }
@@ -72,7 +72,7 @@ angular.module('consultations').controller(
                 return priorities;
             });
 
-            ObjectLookupService.getLookupByLookupName("consultationFileTypes").then(function(consultationTypes) {
+            ObjectLookupService.getLookupByLookupName("consultationTypes").then(function (consultationTypes) {
                 $scope.consultationTypes = consultationTypes;
                 return consultationTypes;
             });
@@ -133,10 +133,10 @@ angular.module('consultations').controller(
                             if (selectedGroup) {
                                 $scope.owningGroup = selectedGroup.object_id_s;
                                 $scope.updateOwningGroup();
-                                $scope.saveCase();
+                                $scope.saveConsultation();
 
                             } else {
-                                $scope.saveCase();
+                                $scope.saveConsultation();
                             }
 
                             return;
@@ -156,9 +156,9 @@ angular.module('consultations').controller(
                             if (selectedUser) {
                                 $scope.assignee = selectedUser.object_id_s;
                                 $scope.updateAssignee();
-                                $scope.saveCase();
+                                $scope.saveConsultation();
                             } else {
-                                $scope.saveCase();
+                                $scope.saveConsultation();
                             }
 
                             return;
@@ -203,7 +203,7 @@ angular.module('consultations').controller(
                     return approvers;
                 });
 
-                SuggestedCasesService.getSuggestedCases($scope.objectInfo.title, $scope.objectInfo.id).then(function (value) {
+                SuggestedConsultationsService.getSuggestedConsultations($scope.objectInfo.title, $scope.objectInfo.id).then(function (value) {
                     $scope.hasSuggestedConsultations = value.data.length > 0 ? true : false;
                     $scope.numberOfSuggestedConsultations = value.data.length;
                 });
@@ -213,7 +213,7 @@ angular.module('consultations').controller(
             // in a consultation top bar menu item and clicks the save check button
             $scope.saveConsultation = function() {
                 var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
-                if (ConsultationInfoService.validateCaseInfo($scope.objectInfo)) {
+                if (ConsultationInfoService.validateConsultationInfo($scope.objectInfo)) {
                     var objectInfo = Util.omitNg($scope.objectInfo);
                     promiseSaveInfo = ConsultationInfoService.saveConsultationInfo(objectInfo);
                     promiseSaveInfo.then(function(consultationInfo) {

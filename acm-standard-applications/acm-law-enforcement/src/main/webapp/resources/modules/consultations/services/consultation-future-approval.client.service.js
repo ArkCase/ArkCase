@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc service
- * @name services:Case.FutureApprovalService
+ * @name services:Consultation.FutureApprovalService
  *
  * @description
  *
  *
- * Case.FutureApprovalService provides functions for Case File Approval Routing
+ * Consultation.FutureApprovalService provides functions for Consultation Approval Routing
  */
 angular.module('services').factory('Consultation.FutureApprovalService', [ '$http', function($http) {
 

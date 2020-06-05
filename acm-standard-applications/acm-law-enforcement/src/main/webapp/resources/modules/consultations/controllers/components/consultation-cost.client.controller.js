@@ -10,8 +10,8 @@ angular.module('consultations').controller(
                 stateParams: $stateParams,
                 moduleId: "consultations",
                 componentId: "cost",
-                retrieveObjectInfo: ConsultationInfoService.getCaseInfo,
-                validateObjectInfo: ConsultationInfoService.validateCaseInfo,
+                retrieveObjectInfo: ConsultationInfoService.getConsultationInfo,
+                validateObjectInfo: ConsultationInfoService.validateConsultationInfo,
                 onConfigRetrieved: function(componentConfig) {
                     return onConfigRetrieved(componentConfig);
                 },
@@ -118,11 +118,11 @@ angular.module('consultations').controller(
             }
 
             $scope.editRow = function(rowEntity) {
-                $scope.editCaseParams = {
+                $scope.editConsultationParams = {
                     isEdit: true,
                     costsheet: rowEntity
                 };
-                showModal($scope.editCaseParams);
+                showModal($scope.editConsultationParams);
             };
 
             $scope.currencySymbol = LocaleService.getCurrencySymbol();

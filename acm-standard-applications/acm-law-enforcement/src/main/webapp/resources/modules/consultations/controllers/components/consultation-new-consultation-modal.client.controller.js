@@ -53,7 +53,7 @@ angular.module('consultations').controller(
 
                 $scope.config.data = {
                     className: $scope.config.className,
-                    caseType: '',
+                    consultationType: '',
                     title: '',
                     details: '',
                     initiator: {

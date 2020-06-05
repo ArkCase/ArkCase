@@ -52,7 +52,7 @@ angular.module('consultations').controller(
             $scope.splitting = false;
 
             ConfigService.getModuleConfig("consultations").then(function(moduleConfig) {
-                $scope.consultationFileSearchConfig = _.find(moduleConfig.components, {
+                $scope.consultationSearchConfig = _.find(moduleConfig.components, {
                     id: "merge"
                 });
                 $scope.newObjectPicker = _.find(moduleConfig.components, {
@@ -232,7 +232,7 @@ angular.module('consultations').controller(
                 modalInstance.result.then(function(consultationSummary) {
                     if (consultationSummary) {
                         $scope.merging = true;
-                        MergeSplitService.mergeConsultationFile(consultationInfo.id, consultationSummary.object_id_s).then(function(data) {
+                        MergeSplitService.mergeConsultation(consultationInfo.id, consultationSummary.object_id_s).then(function (data) {
                             $timeout(function() {
                                 ObjectService.showObject(ObjectService.ObjectTypes.CONSULTATION, data.id);
                                 $scope.merging = false;
@@ -257,7 +257,7 @@ angular.module('consultations').controller(
                     if (consultationSummary) {
                         $scope.splitting = true;
                         if (consultationSummary != null) {
-                            MergeSplitService.splitConsultationFile(consultationSummary).then(function(data) {
+                            MergeSplitService.splitConsultation(consultationSummary).then(function (data) {
                                 $timeout(function() {
                                     ObjectService.showObject(ObjectService.ObjectTypes.CONSULTATION, data.id);
                                     $scope.splitting = false;
