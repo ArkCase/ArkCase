@@ -1,6 +1,8 @@
 'use strict';
 
-angular.module('consultations').controller('Consultations.SuggestedConsultationsController', ['$scope','$translate', '$stateParams', 'Helper.UiGridService', 'UtilService', 'Helper.ObjectBrowserService', 'Consultation.InfoService', 'Consultations.SuggestedConsultations',
+angular.module('consultations').controller(
+    'Consultations.SuggestedConsultationsController',
+    ['$scope', '$translate', '$stateParams', 'Helper.UiGridService', 'UtilService', 'Helper.ObjectBrowserService', 'Consultation.InfoService', 'Consultation.SuggestedConsultations',
     function ($scope, $translate, $stateParams, HelperUiGridService,  Util, HelperObjectBrowserService, ConsultationInfoService, SuggestedConsultationsService) {
 
 
@@ -47,7 +49,7 @@ angular.module('consultations').controller('Consultations.SuggestedConsultations
 
         function retrieveGridData(){
             SuggestedConsultationsService.getSuggestedConsultations($scope.objectInfo.title, $scope.objectInfo.id).then(function(data){
-                $scope.suggestedCases = data.data;
+                $scope.suggestedConsultations = data.data;
                 $scope.gridOptions = $scope.gridOptions || {};
                 $scope.gridOptions.data = $scope.suggestedConsultations;
                 $scope.gridOptions.totalItems = $scope.suggestedConsultations.length;

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('services').factory('Consultations.SuggestedConsultations', ['$http', function ($http) {
+angular.module('services').factory('Consultation.SuggestedConsultations', ['$http', function ($http) {
 
     return ({
         getSuggestedConsultations: getSuggestedConsultations

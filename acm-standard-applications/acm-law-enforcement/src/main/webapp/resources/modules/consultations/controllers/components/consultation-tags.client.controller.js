@@ -119,7 +119,7 @@ angular.module('consultations').controller(
 
                 var id = Util.goodMapValue(rowEntity, "id", 0);
                 if (0 < id) { //do not need to call service when deleting a new row with id==0
-                    ObjectTagsService.removeAssociateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.CASE_FILE, rowEntity.id).then(function() {
+                    ObjectTagsService.removeAssociateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.CONSULTATION, rowEntity.id).then(function () {
                         messageService.info($translate.instant('consultations.comp.tags.message.delete.success'));
                     }, function() {
                         messageService.error($translate.instant('consultations.comp.tags.message.delete.error'));

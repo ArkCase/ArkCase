@@ -8,8 +8,8 @@ angular.module('consultations').controller('Consultations.NotesController',
             stateParams: $stateParams,
             moduleId: "consultations",
             componentId: "notes",
-            retrieveObjectInfo: ConsultationInfoService.getCaseInfo,
-            validateObjectInfo: ConsultationInfoService.validateCaseInfo,
+            retrieveObjectInfo: ConsultationInfoService.getConsultationInfo,
+            validateObjectInfo: ConsultationInfoService.validateConsultationInfo,
             onConfigRetrieved: function(componentConfig) {
                 return onConfigRetrieved(componentConfig);
             },

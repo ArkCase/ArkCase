@@ -114,7 +114,7 @@ angular.module('consultations').controller(
 
             $scope.deleteRow = function(rowEntity) {
                 var consultationInfo = Util.omitNg($scope.objectInfo);
-                if (ConsultationInfoService.validateCaseInfo(consultationInfo)) {
+                if (ConsultationInfoService.validateConsultationInfo(consultationInfo)) {
                     TaskWorkflowService.deleteTask(rowEntity.object_id_s).then(function(consultationInfo) {
                         gridHelper.deleteRow(rowEntity);
                         $scope.$emit("report-object-updated", consultationInfo);
@@ -142,6 +142,6 @@ angular.module('consultations').controller(
             };
 
             //$scope.$on("object-refreshed", function (e, objectId) {
-            //    ObjectTaskService.resetChildTasks(ObjectService.ObjectTypes.CASE_FILE, $scope.objectInfo.id);
+            //    ObjectTaskService.resetChildTasks(ObjectService.ObjectTypes.CONSULTATION, $scope.objectInfo.id);
             //});
         } ]);

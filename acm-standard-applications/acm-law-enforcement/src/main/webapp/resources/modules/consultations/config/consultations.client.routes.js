@@ -14,7 +14,7 @@ angular.module('consultations').config([ '$stateProvider', function($stateProvid
                 $translatePartialLoader.addPart('document-details');
                 $translatePartialLoader.addPart('preference');
                 $translatePartialLoader.addPart('admin');
-                $translate.resetDataDict().addDataDictFromLabels(LocaleService.getLabelResources([ "cases", "common" ], "en")).addDataDictFromLookup(ObjectLookupService.getLookupByLookupName("caseFileTypes")).addDataDictFromLookup(ObjectLookupService.getLookupByLookupName("priorities"));
+                $translate.resetDataDict().addDataDictFromLabels(LocaleService.getLabelResources(["consultations", "common"], "en")).addDataDictFromLookup(ObjectLookupService.getLookupByLookupName("consultationTypes")).addDataDictFromLookup(ObjectLookupService.getLookupByLookupName("priorities"));
                 return $translate.refresh();
             } ]
         }
@@ -125,9 +125,9 @@ angular.module('consultations').config([ '$stateProvider', function($stateProvid
             templateUrl: 'modules/consultations/views/components/consultation-billing.client.view.html'
         })
 
-        .state('consultations.suggestedCases', {
+        .state('consultations.suggestedConsultations', {
             url: '/:id/suggested',
-            templateUrl: 'modules/consultations/views/components/consultation-suggested-cases.client.view.html'
+            templateUrl: 'modules/consultations/views/components/consultation-suggested-consultations.client.view.html'
         })
 
 } ]).run([ 'Helper.DashboardService', function(DashboardHelper) {

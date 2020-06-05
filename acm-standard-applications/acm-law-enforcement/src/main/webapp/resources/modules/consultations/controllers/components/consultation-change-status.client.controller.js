@@ -49,7 +49,7 @@ angular.module('consultations').controller(
             });
 
             function statusChanged() {
-                $scope.showCaseCloseStatus = $scope.changeCaseStatus.status === "CLOSED";
+                $scope.showConsultationCloseStatus = $scope.changeConsultationStatus.status === "CLOSED";
             }
 
             // ---------------------------            approver         --------------------------------------
@@ -89,11 +89,11 @@ angular.module('consultations').controller(
                             var selectedGroup = selection.detailSelectedItems;
 
                             $scope.approverName = selectedUser.name;
-                            addParticipantInChangeCase(participantTypeApprover, selectedUser.object_id_s);
+                            addParticipantInChangeConsultation(participantTypeApprover, selectedUser.object_id_s);
 
                             if (selectedGroup) {
                                 $scope.groupName = selectedGroup.name;
-                                addParticipantInChangeCase(participantTypeOwningGroup, selectedGroup.object_id_s);
+                                addParticipantInChangeConsultation(participantTypeOwningGroup, selectedGroup.object_id_s);
                             }
 
                             return;
@@ -102,11 +102,11 @@ angular.module('consultations').controller(
                             var selectedGroup = selection.masterSelectedItem;
 
                             $scope.groupName = selectedGroup.name;
-                            addParticipantInChangeCase(participantTypeOwningGroup, selectedGroup.object_id_s);
+                            addParticipantInChangeConsultation(participantTypeOwningGroup, selectedGroup.object_id_s);
 
                             if (selectedUser) {
                                 $scope.approverName = selectedUser.name;
-                                addParticipantInChangeCase(participantTypeApprover, selectedUser.object_id_s);
+                                addParticipantInChangeConsultation(participantTypeApprover, selectedUser.object_id_s);
                             }
 
                             return;
@@ -145,7 +145,7 @@ angular.module('consultations').controller(
             function save() {
                 $scope.loading = true;
                 $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
-                ConsultationInfoService.changeCaseFileState('change_consultation_status', $scope.changeConsultationStatus).then(function(data) {
+                ConsultationInfoService.changeConsultationState('change_consultation_status', $scope.changeConsultationStatus).then(function (data) {
                     MessageService.info(data.info);
                     if($scope.changeConsultationStatus.changeConsultationStatusFlow){
                         $scope.changeConsultationStatus.status = 'IN APPROVAL';

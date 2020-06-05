@@ -6,7 +6,7 @@
     <property name="consultationNumberLength" value="1024" dbms="postgresql,oracle"/>
     <property name="consultationNumberLength" value="255" dbms="mysql,mssql"/>
 
-    <changeSet id="01-consultation-add-acm-consultation-table" author="vladimir.cherepnalkovski"
+    <changeSet id="1-consultation-add-acm-consultation-table" author="vladimir.cherepnalkovski"
                dbms="oracle,postgresql,mssql">
         <createTable tableName="acm_consultation">
             <column name="cm_consultation_id" type="${idType}">
@@ -63,11 +63,11 @@
             <column name="cm_security_field" type="VARCHAR(255)" defaultValue="Open"/>
             <column name="cm_legacy_system_id" type="VARCHAR(255)"/>
             <column name="cm_consultation_denied_flag" type="VARCHAR(10)" defaultValue="false"/>
-            <column name="fo_received_date" type="${timestampType}"/>
+            <column name="cm_received_date" type="${timestampType}"/>
         </createTable>
     </changeSet>
 
-    <changeSet id="02-consultation-add-acm-consultation-table" author="vladimir.cherepnalkovski" dbms="mysql">
+    <changeSet id="2-consultation-add-acm-consultation-table" author="vladimir.cherepnalkovski" dbms="mysql">
         <createTable tableName="acm_consultation">
             <column name="cm_consultation_id" type="${idType}">
                 <constraints primaryKeyName="pk_acm_consultation" primaryKey="true"/>
@@ -124,11 +124,11 @@
             <column name="cm_security_field" type="VARCHAR(255)" defaultValue="Open"/>
             <column name="cm_legacy_system_id" type="VARCHAR(255)"/>
             <column name="cm_consultation_denied_flag" type="VARCHAR(10)" defaultValue="false"/>
-            <column name="fo_received_date" type="${timestampType}" defaultValueComputed="${timestampFunction}"/>
+            <column name="cm_received_date" type="${timestampType}" defaultValueComputed="${timestampFunction}"/>
         </createTable>
     </changeSet>
 
-    <changeSet id="03-consultation-add-acm_consultation-id" author="vladimir.cherepnalkovski">
+    <changeSet id="3-consultation-add-acm_consultation-id" author="vladimir.cherepnalkovski">
         <createTable tableName="acm_consultation_id">
             <column name="cm_seq_num" type="${idType}"/>
             <column name="cm_seq_name" type="VARCHAR(255)"/>
@@ -139,13 +139,13 @@
         </insert>
     </changeSet>
 
-    <changeSet id="04-create-index-column-title" author="vladimir.cherepnalkovski" dbms="oracle,postgresql,mssql">
+    <changeSet id="4-create-index-column-title" author="vladimir.cherepnalkovski" dbms="oracle,postgresql,mssql">
         <createIndex tableName="acm_consultation" indexName="idx_consultation_title">
             <column name="cm_consultation_title"/>
         </createIndex>
     </changeSet>
 
-    <changeSet id="05-create-index-column-title" author="vladimir.cherepnalkovski" dbms="mysql">
+    <changeSet id="5-create-index-column-title" author="vladimir.cherepnalkovski" dbms="mysql">
         <preConditions onFail="MARK_RAN">
             <not>
                 <indexExists tableName="acm_consultation" columnNames="cm_consultation_title"/>
@@ -156,7 +156,7 @@
         </createIndex>
     </changeSet>
 
-    <changeSet id="06-consultation-add-acm_change_consultation_status-id" author="vladimir.cherepnalkovski">
+    <changeSet id="6-consultation-add-acm_change_consultation_status-id" author="vladimir.cherepnalkovski">
         <createTable tableName="acm_change_consultation_status_id">
             <column name="cm_seq_num" type="${idType}"/>
             <column name="cm_seq_name" type="VARCHAR(255)"/>
@@ -167,7 +167,7 @@
         </insert>
     </changeSet>
 
-    <changeSet id="07-consultation-add-change-consultation-status-table" author="vladimir.cherepnalkovski"
+    <changeSet id="7-consultation-add-change-consultation-status-table" author="vladimir.cherepnalkovski"
                dbms="oracle,postgresql,mssql">
         <createTable tableName="acm_change_consultation_status">
             <column name="cm_change_consultation_status_id" type="${idType}">
@@ -202,7 +202,7 @@
                                  deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
-    <changeSet id="08-consultation-add-change-consultation-status-table" author="vladimir.cherepnalkovski" dbms="mysql">
+    <changeSet id="8-consultation-add-change-consultation-status-table" author="vladimir.cherepnalkovski" dbms="mysql">
         <createTable tableName="acm_change_consultation_status">
             <column name="cm_change_consultation_status_id" type="${idType}">
                 <constraints primaryKeyName="pk_change_consultation_status" primaryKey="true"/>

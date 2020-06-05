@@ -21,8 +21,8 @@ angular.module('consultations').controller(
                 stateParams: $stateParams,
                 moduleId: "consultations",
                 componentId: "organizations",
-                retrieveObjectInfo: ConsultationInfoService.getCaseInfo,
-                validateObjectInfo: ConsultationInfoService.validateCaseInfo,
+                retrieveObjectInfo: ConsultationInfoService.getConsultationInfo,
+                validateObjectInfo: ConsultationInfoService.validateConsultationInfo,
                 onConfigRetrieved: function(componentConfig) {
                     return onConfigRetrieved(componentConfig);
                 },
@@ -148,9 +148,9 @@ angular.module('consultations').controller(
 
             function saveObjectInfoAndRefresh() {
                 var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
-                if (ConsultationInfoService.validateCaseInfo($scope.objectInfo)) {
+                if (ConsultationInfoService.validateConsultationInfo($scope.objectInfo)) {
                     var objectInfo = Util.omitNg($scope.objectInfo);
-                    promiseSaveInfo = CaseInfoService.saveCaseInfo(objectInfo);
+                    promiseSaveInfo = ConsultationInfoService.saveConsultationInfo(objectInfo);
                     promiseSaveInfo.then(function(objectInfo) {
                         $scope.$emit("report-object-updated", objectInfo);
                         return objectInfo;

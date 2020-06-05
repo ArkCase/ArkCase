@@ -7,8 +7,8 @@ angular.module('consultations').controller('Consultations.BillingController', ['
             stateParams: $stateParams,
             moduleId: "consultations",
             componentId: "billing",
-            retrieveObjectInfo: ConsultationInfoService.getCaseInfo,
-            validateObjectInfo: ConsultationInfoService.validateCaseInfo,
+            retrieveObjectInfo: ConsultationInfoService.getConsultationInfo,
+            validateObjectInfo: ConsultationInfoService.validateConsultationInfo,
             onConfigRetrieved: function(componentConfig) {
                 return onConfigRetrieved(componentConfig);
             },
@@ -46,7 +46,7 @@ angular.module('consultations').controller('Consultations.BillingController', ['
             var params = {};
             params.objectId = $stateParams.id;
             params.objectType = 'CONSULTATION';
-            CaseBillingService.getBillingItems(params.objectId,  params.objectType).then(function(data){
+            ConsultationBillingService.getBillingItems(params.objectId, params.objectType).then(function (data) {
                 $scope.items = data.data;
                 $scope.gridOptions = $scope.gridOptions || {};
                 $scope.gridOptions.data = $scope.items;

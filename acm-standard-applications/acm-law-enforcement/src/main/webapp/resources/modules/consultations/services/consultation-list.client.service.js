@@ -8,7 +8,7 @@
  *
  * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/consultations/services/consultation-list.client.service.js modules/consultations/services/consultation-list.client.service.js}
  *
- * Case.ListService provides functions for Consultation database data
+ * Consultation.ListService provides functions for Consultation database data
  */
 angular.module('services').factory('Consultation.ListService', [ '$resource', '$translate', 'Acm.StoreService', 'UtilService', 'ObjectService', 'Object.ListService', function($resource, $translate, Store, Util, ObjectService, ObjectListService) {
     var Service = $resource('api/latest/plugin', {}, {});
@@ -68,6 +68,41 @@ angular.module('services').factory('Consultation.ListService', [ '$resource', '$
                 }
             }
         });
+    };
+
+    /**
+     * @ngdoc method
+     * @name updateConsultationsTreeData
+     * @methodOf services:Consultation.ListService
+     *
+     * @description
+     * Update a node data in tree.
+     *
+     * @param {Number} start  Zero based index of result starts from
+     * @param {Number} n max Number of list to return
+     * @param {String} sort  Sort value. Allowed choice is based on backend specification
+     * @param {String} filters  Filter value. Allowed choice is based on backend specification
+     * @param {String} query  Search term for tree entry to match
+     * @param {Object} nodeData  Node data
+     *
+     * @returns {Object} Promise
+     */
+    Service.updateConsultationsTreeData = function (start, n, sort, filters, query, nodeData) {
+
+    };
+
+    /**
+     * @ngdoc method
+     * @name resetConsultationsTreeData
+     * @methodOf services:Consultation.ListService
+     *
+     * @description
+     * Reset tree to initial state, including empty tree data
+     *
+     * @returns None
+     */
+    Service.resetConsultationsTreeData = function () {
+
     };
 
     /**

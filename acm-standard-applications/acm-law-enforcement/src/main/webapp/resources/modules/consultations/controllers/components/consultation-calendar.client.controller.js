@@ -12,15 +12,15 @@ angular.module('consultations').controller(
                 stateParams: $stateParams,
                 moduleId: "consultations",
                 componentId: "calendar",
-                retrieveObjectInfo: ConsultationInfoService.getCaseInfo,
-                validateObjectInfo: ConsultationInfoService.validateCaseInfo,
+                retrieveObjectInfo: ConsultationInfoService.getConsultationInfo,
+                validateObjectInfo: ConsultationInfoService.validateConsultationInfo,
                 onObjectInfoRetrieved: function(objectInfo) {
                     onObjectInfoRetrieved(objectInfo);
                 }
             });
 
             var onObjectInfoRetrieved = function(objectInfo) {
-                $scope.objectType = ObjectService.ObjectTypes.CASE_FILE;
+                $scope.objectType = ObjectService.ObjectTypes.CONSULTATION;
                 $scope.objectId = objectInfo.id;
                 $scope.eventSources = [];
                 CalendarService.isCalendarConfigurationEnabled('CONSULTATION').then(function(data) {

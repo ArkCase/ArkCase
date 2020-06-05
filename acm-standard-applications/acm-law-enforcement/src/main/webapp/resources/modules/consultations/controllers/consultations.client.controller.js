@@ -14,7 +14,7 @@ angular.module('consultations').controller(
             });
 
             AdminObjectTitleConfigurationService.getObjectTitleConfiguration().then(function (configTitleData) {
-                var disableSuggestedConsultations = !configTitleData.data.CASE_FILE.enableTitleField;
+                var disableSuggestedConsultations = !configTitleData.data.CONSULTATION.enableTitleField;
                 HelperObjectBrowserService.toggleNodeDisabled('consultations', 'Suggested Consultations', disableSuggestedConsultations);
             });
 

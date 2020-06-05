@@ -8,7 +8,7 @@
  *
  * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/consultations/services/consultation-lookup.client.service.js modules/consultations/services/consultation-lookup.client.service.js}
  *
- * Case.LookupService provides functions for Consultation lookup data
+ * Consultation.LookupService provides functions for Consultation lookup data
  */
 angular.module('services').factory('Consultation.LookupService', [ '$resource', '$translate', 'Acm.StoreService', 'UtilService', 'Object.ModelService', 'Object.LookupService', function($resource, $translate, Store, Util, ObjectModelService, ObjectLookupService) {
     var Service = $resource('api/latest/plugin', {}, {

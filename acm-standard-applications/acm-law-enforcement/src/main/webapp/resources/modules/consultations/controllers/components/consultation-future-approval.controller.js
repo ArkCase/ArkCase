@@ -47,8 +47,8 @@ angular.module('consultations').controller(
                 stateParams: $stateParams,
                 moduleId: "consultations",
                 componentId: "approvalRouting",
-                retrieveObjectInfo: ConsultationInfoService.getCaseInfo,
-                validateObjectInfo: ConsultationInfoService.validateCaseInfo,
+                retrieveObjectInfo: ConsultationInfoService.getConsultationInfo,
+                validateObjectInfo: ConsultationInfoService.validateConsultationInfo,
                 onConfigRetrieved: function(componentConfig) {
                     return onConfigRetrieved(componentConfig);
                 }
@@ -156,7 +156,7 @@ angular.module('consultations').controller(
                 });
             };
 
-            var cleanCachedConsultationFile = function(consultationId) {
+            var cleanCachedConsultation = function (consultationId) {
                 var cacheChildTaskData = new Store.CacheFifo(ObjectTaskService.CacheNames.CHILD_TASK_DATA);
                 var cacheKey = ObjectService.ObjectTypes.CONSULTATION + "." + consultationId + "." + 0 + "." + 100 + "." + '' + "." + '';
                 cacheChildTaskData.remove(cacheKey);
@@ -169,7 +169,7 @@ angular.module('consultations').controller(
 
                     ConsultationFutureApprovalService.updateBuckslipProcess($scope.buckslipProcess).then(function(result) {
                         ConsultationFutureApprovalService.initiateRoutingWorkflow($scope.buckslipProcess.businessProcessId).then(function(result) {
-                            cleanCachedConsultationFile($stateParams.id);
+                            cleanCachedConsultation($stateParams.id);
                             $timeout(function() {
                                 $scope.$emit('report-object-refreshed', $stateParams.id);
                                 MessageService.info($translate.instant('consultations.comp.approvalRouting.processInitialize.successfull'));
@@ -189,7 +189,7 @@ angular.module('consultations').controller(
                 if (!Util.isEmpty($scope.taskInfo.taskId)) {
                     $scope.withdrawInProgress = true;
                     ConsultationFutureApprovalService.withdrawRoutingWorkflow($scope.taskInfo.taskId).then(function(result) {
-                        cleanCachedConsultationFile($stateParams.id);
+                        cleanCachedConsultation($stateParams.id);
                         $timeout(function() {
                             $scope.$emit('report-object-refreshed', $stateParams.id);
                             $scope.$bus.publish('buckslip-task-object-updated', {
