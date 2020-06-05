@@ -328,6 +328,12 @@ angular.module('services').factory('Object.LookupService', [ '$q', '$resource', 
             } else {
                 return Service.getLookupByLookupName("consultationPersonTypes")
             }
+            case "CONSULTATION":
+                if (initiator) {
+                    return Service.getLookupByLookupName("consultationPersonInitiatorTypes");
+                } else {
+                    return Service.getLookupByLookupName("consultationPersonTypes");
+                }
         case "DOC_REPO":
             return Service.getLookupByLookupName("documentPersonTypes");
         }
