@@ -166,7 +166,7 @@ public class FoiaRequestBrokerConfig
 
     public String getFileUploadUrl()
     {
-        return fileUploadUrl;
+        return fileUploadUrl.replace("\\", "/");
     }
 
     public void setFileUploadUrl(String fileUploadUrl)
