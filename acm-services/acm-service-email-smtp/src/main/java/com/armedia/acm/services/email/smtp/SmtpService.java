@@ -149,8 +149,7 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
         try
         {
             acmMailSender.sendMultipartEmail(emailAddresses, in.getEmailGroup(), in.getSubject(), in.getMessageBody(),
-                    new ArrayList<>(attachments.values()), in.getObjectType() != null ? in.getObjectType() : objectType,
-                    in.getObjectId() != null ? in.getObjectId().toString() : objectId);
+                    new ArrayList<>(attachments.values()), objectType, objectId);
         }
         catch (Exception e)
         {
@@ -416,18 +415,22 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
 
     private String extractIdFromEmailWithAttachmentsDTO(EmailWithAttachmentsDTO in)
     {
-        String objectId = null;
+        String objectId;
         if (in.getObjectId() == null && in.getParentNumber() != null)
         {
             objectId = in.getParentNumber().contains("_") ? StringUtils.substringAfter(in.getParentNumber(), "_") : in.getParentNumber();
+        }
+        else
+        {
+            objectId = in.getObjectId().toString();
         }
         return objectId;
     }
 
     private String extractObjectTypeFromEmailWithAttachmentsDTO(EmailWithAttachmentsDTO in)
     {
-        String objectType = null;
-        if (in.getObjectType() == null && in.getParentType() != null)
+        String objectType = in.getObjectType();
+        if (objectType == null && in.getParentType() != null)
         {
             objectType = in.getParentType().contains("Case") ? "CASE_FILE" : in.getParentType().toUpperCase();
         }
