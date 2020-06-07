@@ -78,6 +78,8 @@ public class AcmMailServiceAPIController
             throw new AcmEmailServiceException("Could not create email message, invalid input : " + in);
         }
 
+        in.setObjectType(objectType);
+
         // the user is stored in the session during login.
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
 
@@ -114,6 +116,8 @@ public class AcmMailServiceAPIController
         {
             throw new AcmEmailServiceException("Could not create email message, invalid input : " + in);
         }
+
+        in.setParentType(objectType);
         // the user is stored in the session during login.
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
 
@@ -150,6 +154,9 @@ public class AcmMailServiceAPIController
         {
             throw new AcmEmailServiceException("Could not create email message, invalid input : " + in);
         }
+
+        in.setParentType(objectType);
+
         // the user is stored in the session during login.
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
 
