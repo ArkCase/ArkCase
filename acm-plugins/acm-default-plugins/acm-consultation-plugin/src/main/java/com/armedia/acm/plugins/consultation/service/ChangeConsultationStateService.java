@@ -66,7 +66,7 @@ public class ChangeConsultationStateService
         ctx.addProperty("mode", mode);
         ctx.addProperty("consultationResolution", form.getConsultationResolution());
         ctx.addProperty("changeDate", form.getChangeDate().toString());
-        ctx.addProperty("changeConsultationFlow", form.isChangeConsultationStatusFlow());
+        ctx.addProperty("changeConsultationStatusFlow", form.isChangeConsultationStatusFlow());
 
         pipelineManager.executeOperation(form, ctx, () -> {
 
