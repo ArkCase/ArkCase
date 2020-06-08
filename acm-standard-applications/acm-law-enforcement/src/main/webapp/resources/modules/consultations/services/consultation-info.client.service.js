@@ -315,9 +315,6 @@ angular.module('services').factory('Consultation.InfoService', [ '$resource', '$
         if (!Util.isArray(data.childObjects)) {
             return false;
         }
-        if (!Util.isArray(data.milestones)) {
-            return false;
-        }
         if (!Util.isArray(data.participants)) {
             return false;
         }

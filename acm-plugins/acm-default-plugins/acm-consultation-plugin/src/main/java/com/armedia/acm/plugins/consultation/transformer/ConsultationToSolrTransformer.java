@@ -85,8 +85,6 @@ public class ConsultationToSolrTransformer implements AcmObjectToSolrDocTransfor
         solr.setModifier_lcs(in.getModifier());
 
         solr.setDueDate_tdt(in.getDueDate());
-
-        solr.setIncident_date_tdt(in.getIncidentDate());
         solr.setPriority_lcs(in.getPriority());
         solr.setStatus_lcs(in.getStatus());
 
@@ -113,8 +111,6 @@ public class ConsultationToSolrTransformer implements AcmObjectToSolrDocTransfor
         {
             solr.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
         }
-
-        solr.setAdditionalProperty("security_field_lcs", in.getSecurityField());
 
         solr.setTitle_parseable_lcs(in.getTitle());
 

@@ -50,7 +50,6 @@ import com.armedia.acm.plugins.objectassociation.model.ObjectAssociationConstant
 import com.armedia.acm.plugins.person.model.AcmObjectOriginator;
 import com.armedia.acm.plugins.person.model.OrganizationAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
-import com.armedia.acm.service.milestone.model.AcmMilestone;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
@@ -148,11 +147,6 @@ public class Consultation implements Serializable, AcmAssignedObject, AcmEntity,
     @Column(name = "cm_consultation_details_summary")
     private String consultationDetailsSummary;
 
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    @Column(name = "cm_consultation_incident_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date incidentDate;
-
     @Column(name = "cm_consultation_created", nullable = false, insertable = true, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
@@ -170,9 +164,6 @@ public class Consultation implements Serializable, AcmAssignedObject, AcmEntity,
     @Column(name = "cm_consultation_closed")
     @Temporal(TemporalType.TIMESTAMP)
     private Date closed;
-
-    @Column(name = "cm_consultation_disposition")
-    private String disposition;
 
     @Column(name = "cm_consultation_priority")
     private String priority;
@@ -196,9 +187,6 @@ public class Consultation implements Serializable, AcmAssignedObject, AcmEntity,
 
     @Transient
     private ChangeConsultationStatus changeConsultationStatus;
-
-    @Transient
-    private boolean hasAnyAssociatedTimesheets;
 
     /**
      * These approvers are added by the web application and they become the assignees of the Activiti business process.
@@ -227,13 +215,6 @@ public class Consultation implements Serializable, AcmAssignedObject, AcmEntity,
     @OrderBy("created ASC")
     private List<OrganizationAssociation> organizationAssociations = new ArrayList<>();
 
-    /**
-     * Milestones are read-only in the parent object; use the milestone service to add them.
-     */
-    @OneToMany
-    @JoinColumn(name = "cm_milestone_object_id", updatable = false, insertable = false)
-    private List<AcmMilestone> milestones = new ArrayList<>();
-
     @Column(name = "cm_consultation_restricted_flag", nullable = false)
     @Convert(converter = BooleanToStringConverter.class)
     private Boolean restricted = Boolean.FALSE;
@@ -249,9 +230,6 @@ public class Consultation implements Serializable, AcmAssignedObject, AcmEntity,
     @JoinColumn(name = "cm_container_id")
     private AcmContainer container = new AcmContainer();
 
-    @Column(name = "cm_responsible_organization")
-    private String responsibleOrganization;
-
     @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumns({ @JoinColumn(name = "cm_consultation_id", referencedColumnName = "cm_object_id", updatable = false, insertable = false),
             @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type", updatable = false, insertable = false) })
@@ -262,15 +240,8 @@ public class Consultation implements Serializable, AcmAssignedObject, AcmEntity,
     @Convert(converter = LocalDateConverter.class)
     private LocalDate responseDueDate;
 
-    @Column(name = "cm_security_field")
-    private String securityField;
-
     @Column(name = "cm_legacy_system_id")
     private String legacySystemId;
-
-    @Column(name = "cm_consultation_denied_flag")
-    @Convert(converter = BooleanToStringConverter.class)
-    private Boolean deniedFlag = Boolean.FALSE;
 
     @Column(name = "cm_received_date")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
@@ -369,12 +340,8 @@ public class Consultation implements Serializable, AcmAssignedObject, AcmEntity,
         Optional<PersonAssociation> found = getPersonAssociations().stream()
                 .filter(personAssociation -> "Initiator".equalsIgnoreCase(personAssociation.getPersonType())).findFirst();
 
-        if (found.isPresent())
-        {
-            return found.get();
-        }
+        return found.orElse(null);
 
-        return null;
     }
 
     public void setOriginator(PersonAssociation originator)
@@ -538,16 +505,6 @@ public class Consultation implements Serializable, AcmAssignedObject, AcmEntity,
         this.details = details;
     }
 
-    public Date getIncidentDate()
-    {
-        return incidentDate;
-    }
-
-    public void setIncidentDate(Date incidentDate)
-    {
-        this.incidentDate = incidentDate;
-    }
-
     @Override
     public List<AcmParticipant> getParticipants()
     {
@@ -619,16 +576,6 @@ public class Consultation implements Serializable, AcmAssignedObject, AcmEntity,
         this.personAssociations = personAssociations;
     }
 
-    public List<AcmMilestone> getMilestones()
-    {
-        return milestones;
-    }
-
-    public void setMilestones(List<AcmMilestone> milestones)
-    {
-        this.milestones = milestones;
-    }
-
     @Override
     public Boolean getRestricted()
     {
@@ -638,16 +585,6 @@ public class Consultation implements Serializable, AcmAssignedObject, AcmEntity,
     public void setRestricted(Boolean restricted)
     {
         this.restricted = restricted;
-    }
-
-    public String getResponsibleOrganization()
-    {
-        return responsibleOrganization;
-    }
-
-    public void setResponsibleOrganization(String responsibleOrganization)
-    {
-        this.responsibleOrganization = responsibleOrganization;
     }
 
     public String getClassName()
@@ -670,16 +607,6 @@ public class Consultation implements Serializable, AcmAssignedObject, AcmEntity,
         this.lock = lock;
     }
 
-    public String getSecurityField()
-    {
-        return securityField;
-    }
-
-    public void setSecurityField(String securityField)
-    {
-        this.securityField = securityField;
-    }
-
     @Override
     @JsonIgnore
     public String getObjectType()
@@ -698,13 +625,11 @@ public class Consultation implements Serializable, AcmAssignedObject, AcmEntity,
                 ", status='" + status + '\'' +
                 ", details='" + details + '\'' +
                 ", consultationDetailsSummary='" + consultationDetailsSummary + '\'' +
-                ", incidentDate=" + incidentDate +
                 ", created=" + created +
                 ", creator='" + creator + '\'' +
                 ", modified=" + modified +
                 ", modifier='" + modifier + '\'' +
                 ", closed=" + closed +
-                ", disposition=" + disposition +
                 ", priority='" + priority + '\'' +
                 ", objectType='" + objectType + '\'' +
                 ", className='" + className + '\'' +
@@ -715,14 +640,11 @@ public class Consultation implements Serializable, AcmAssignedObject, AcmEntity,
                 ", ecmFolderPath='" + ecmFolderPath + '\'' +
                 ", personAssociations=" + personAssociations +
                 ", organizationAssociations=" + organizationAssociations +
-                ", milestones=" + milestones +
                 ", restricted=" + restricted +
                 ", childObjects=" + childObjects +
                 ", container=" + container +
-                ", responsibleOrganization='" + responsibleOrganization + '\'' +
                 ", lock=" + lock +
                 ", responseDueDate=" + responseDueDate +
-                ", securityField='" + securityField + '\'' +
                 ", legacySystemId='" + legacySystemId + '\'' +
                 ", receivedDate='" + receivedDate + '\'' +
                 '}';
@@ -738,23 +660,6 @@ public class Consultation implements Serializable, AcmAssignedObject, AcmEntity,
     public void setLegacySystemId(String legacySystemId)
     {
         this.legacySystemId = legacySystemId;
-    }
-
-    /**
-     * @return the deniedFlag
-     */
-    public Boolean getDeniedFlag()
-    {
-        return deniedFlag;
-    }
-
-    /**
-     * @param deniedFlag
-     *            the deniedFlag to set
-     */
-    public void setDeniedFlag(Boolean deniedFlag)
-    {
-        this.deniedFlag = deniedFlag;
     }
 
     @Override
@@ -793,7 +698,7 @@ public class Consultation implements Serializable, AcmAssignedObject, AcmEntity,
     public String getAssigneeLdapId()
     {
         return getParticipants().stream().filter(p -> ConsultationConstants.ASSIGNEE.equals(p.getParticipantType()))
-                .findFirst().map(p -> p.getParticipantLdapId()).orElse(null);
+                .findFirst().map(AcmParticipant::getParticipantLdapId).orElse(null);
     }
 
     @Override
@@ -801,7 +706,7 @@ public class Consultation implements Serializable, AcmAssignedObject, AcmEntity,
     public String getAssigneeGroupId()
     {
         return getParticipants().stream().filter(p -> ConsultationConstants.OWNING_GROUP.equals(p.getParticipantType()))
-                .findFirst().map(p -> p.getParticipantLdapId()).orElse(null);
+                .findFirst().map(AcmParticipant::getParticipantLdapId).orElse(null);
     }
 
     @Override
@@ -843,16 +748,6 @@ public class Consultation implements Serializable, AcmAssignedObject, AcmEntity,
         return getOriginator();
     }
 
-    public boolean getHasAnyAssociatedTimesheets()
-    {
-        return hasAnyAssociatedTimesheets;
-    }
-
-    public void setHasAnyAssociatedTimesheets(boolean hasAnyAssociatedTimesheets)
-    {
-        this.hasAnyAssociatedTimesheets = hasAnyAssociatedTimesheets;
-    }
-
     public String getConsultationNumber()
     {
         return consultationNumber;
@@ -881,16 +776,6 @@ public class Consultation implements Serializable, AcmAssignedObject, AcmEntity,
     public void setConsultationType(String consultationType)
     {
         this.consultationType = consultationType;
-    }
-
-    public String getDisposition()
-    {
-        return disposition;
-    }
-
-    public void setDisposition(String disposition)
-    {
-        this.disposition = disposition;
     }
 
     public LocalDateTime getReceivedDate()
