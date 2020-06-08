@@ -398,17 +398,18 @@ angular.module('services').factory('Object.LookupService', [ '$q', '$resource', 
      */
     Service.getParticipantTypes = function(objectType) {
         switch (objectType) {
-        case "DOC_REPO":
-            return Service.getLookupByLookupName("documentParticipantTypes");
-        case "PERSON":
-        case "ORGANIZATION":
-            return Service.getLookupByLookupName("organizationalParticipantTypes");
-        case "COMPLAINT":
-        case "CASE_FILE":
-            return Service.getLookupByLookupName("entitiesParticipantTypes");
-        case "FILE":
-        case "FOLDER":
-            return Service.getLookupByLookupName("documentsParticipantTypes");
+            case "DOC_REPO":
+                return Service.getLookupByLookupName("documentParticipantTypes");
+            case "PERSON":
+            case "ORGANIZATION":
+                return Service.getLookupByLookupName("organizationalParticipantTypes");
+            case "COMPLAINT":
+            case "CONSULTATION":
+            case "CASE_FILE":
+                return Service.getLookupByLookupName("entitiesParticipantTypes");
+            case "FILE":
+            case "FOLDER":
+                return Service.getLookupByLookupName("documentsParticipantTypes");
         }
     };
 
