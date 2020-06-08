@@ -26,9 +26,6 @@
             <column name="cm_consultation_details_summary" type="CLOB">
                 <constraints nullable="true"/>
             </column>
-            <column name="cm_consultation_incident_date" type="${timestampType}">
-                <constraints nullable="true"/>
-            </column>
             <column name="cm_consultation_created" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
@@ -42,7 +39,6 @@
                 <constraints nullable="false"/>
             </column>
             <column name="cm_consultation_closed" type="DATE"/>
-            <column name="cm_consultation_disposition" type="VARCHAR(4000)"/>
             <column name="cm_consultation_priority" type="VARCHAR(1024)"/>
             <column name="cm_consultation_external_flag" type="BOOLEAN" defaultValueBoolean="false">
                 <constraints nullable="false"/>
@@ -58,11 +54,8 @@
                 <constraints nullable="false"/>
             </column>
             <column name="cm_container_id" type="${fkIdType}"/>
-            <column name="cm_responsible_organization" type="VARCHAR(100)"/>
             <column name="cm_response_due_date" type="${timestampType}"/>
-            <column name="cm_security_field" type="VARCHAR(255)" defaultValue="Open"/>
             <column name="cm_legacy_system_id" type="VARCHAR(255)"/>
-            <column name="cm_consultation_denied_flag" type="VARCHAR(10)" defaultValue="false"/>
             <column name="cm_received_date" type="${timestampType}"/>
         </createTable>
     </changeSet>
@@ -86,10 +79,6 @@
             <column name="cm_consultation_details_summary" type="CLOB">
                 <constraints nullable="true"/>
             </column>
-            <column name="cm_consultation_incident_date" type="${timestampType}"
-                    defaultValueComputed="${timestampFunction}">
-                <constraints nullable="true"/>
-            </column>
             <column name="cm_consultation_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
                 <constraints nullable="false"/>
             </column>
@@ -103,7 +92,6 @@
                 <constraints nullable="false"/>
             </column>
             <column name="cm_consultation_closed" type="DATE"/>
-            <column name="cm_consultation_disposition" type="VARCHAR(4000)"/>
             <column name="cm_consultation_priority" type="VARCHAR(1024)"/>
             <column name="cm_consultation_external_flag" type="BOOLEAN" defaultValueBoolean="false">
                 <constraints nullable="false"/>
@@ -119,11 +107,8 @@
                 <constraints nullable="false"/>
             </column>
             <column name="cm_container_id" type="${fkIdType}"/>
-            <column name="cm_responsible_organization" type="VARCHAR(100)"/>
             <column name="cm_response_due_date" type="${timestampType}" defaultValueComputed="${timestampFunction}"/>
-            <column name="cm_security_field" type="VARCHAR(255)" defaultValue="Open"/>
             <column name="cm_legacy_system_id" type="VARCHAR(255)"/>
-            <column name="cm_consultation_denied_flag" type="VARCHAR(10)" defaultValue="false"/>
             <column name="cm_received_date" type="${timestampType}" defaultValueComputed="${timestampFunction}"/>
         </createTable>
     </changeSet>
@@ -134,8 +119,8 @@
             <column name="cm_seq_name" type="VARCHAR(255)"/>
         </createTable>
         <insert tableName="acm_consultation_id">
-            <column name="cm_seq_num" value="100"></column>
-            <column name="cm_seq_name" value="acm_consultation"></column>
+            <column name="cm_seq_num" value="100"/>
+            <column name="cm_seq_name" value="acm_consultation"/>
         </insert>
     </changeSet>
 
@@ -162,8 +147,8 @@
             <column name="cm_seq_name" type="VARCHAR(255)"/>
         </createTable>
         <insert tableName="acm_change_consultation_status_id">
-            <column name="cm_seq_num" value="100"></column>
-            <column name="cm_seq_name" value="acm_change_consultation_status"></column>
+            <column name="cm_seq_num" value="100"/>
+            <column name="cm_seq_name" value="acm_change_consultation_status"/>
         </insert>
     </changeSet>
 
