@@ -134,7 +134,6 @@
                     "tags",
                     "calendar",
                     "suggestedConsultations",
-                    "approvalRouting",
                     "billing"
                 ]
             },
@@ -248,14 +247,6 @@
                 "icon": "fa fa-files-o",
                 "components": [
                     "suggestedConsultations"
-                ]
-            },
-            {
-                "type": "p/CONSULTATION/apr",
-                "label": "consultations.tree.nodeTypes.approvalRouting.label",
-                "icon": "fa fa-sort-amount-desc",
-                "components": [
-                    "approvalRouting"
                 ]
             },
             {
@@ -506,36 +497,6 @@
                 {
                     "id": "calendar",
                     "type": "component"
-                },
-                {
-                    "id": "approvalRouting",
-                    "type": "component",
-                    "columnDefs": [
-                        {
-                            "name": "title",
-                            "field": "title_parseable",
-                            "sortField": "title_parseable_lcs",
-                            "displayName": "consultations.comp.approvalRouting.title",
-                            "headerCellFilter": "translate",
-                            "cellTemplate": "<div ng-bind-html='row.entity.title_parseable' title='{{row.entity.title_parseable}}' class='ui-grid-cell-contents'></div>"
-                        },
-                        {
-                            "width": 150,
-                            "name": "assignee",
-                            "field": "assignee_s",
-                            "displayName": "consultations.comp.approvalRouting.assignee.label",
-                            "headerCellFilter": "translate",
-                            "lookup": "userFullNames"
-                        },
-                        {
-                            "width": 150,
-                            "name": "due",
-                            "field": "due_tdt",
-                            "displayName": "consultations.comp.approvalRouting.dueDate.label",
-                            "headerCellFilter": "translate",
-                            "cellTemplate": "<div>{{ row.entity.due_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
-                        }
-                    ]
                 }
             ]
         },
@@ -1313,120 +1274,6 @@
             "objectSearch": {
                 "objectFacetFilter": "\"Object Type\": "
             }
-        },
-        {
-            "id": "approvalRouting",
-            "title": "consultations.comp.approvalRouting.title",
-            "icon": "fa fa-sort-amount-desc",
-            "addNewTooltip": "consultations.comp.approvalRouting.addNewTooltip",
-            "enabled": true,
-            "configurable": true,
-            "type": "grid",
-            "enableFiltering": false,
-            "paginationPageSizes": [
-                5,
-                10,
-                20,
-                50
-            ],
-            "paginationPageSize": 10,
-            "columnDefs": [
-                {
-                    "name": "order",
-                    "displayName": "",
-                    "headerCellFilter": "translate",
-                    "enableSorting": false,
-                    "enableColumnMenu": false,
-                    "cellEditableCondition": false,
-                    "width": "50",
-                    "cellTemplate": ""
-                },
-                {
-                    "name": "approverFullName",
-                    "displayName": "consultations.comp.approvalRouting.table.columns.assignee",
-                    "cellEditableCondition": false,
-                    "headerCellFilter": "translate"
-                },
-                {
-                    "name": "groupName",
-                    "displayName": "consultations.comp.approvalRouting.table.columns.owningGroup",
-                    "cellEditableCondition": false,
-                    "headerCellFilter": "translate"
-                },
-                {
-                    "name": "taskName",
-                    "displayName": "consultations.comp.approvalRouting.table.columns.subject",
-                    "cellEditableCondition": false,
-                    "headerCellFilter": "translate"
-                },
-                {
-                    "name": "details",
-                    "displayName": "consultations.comp.approvalRouting.table.columns.details",
-                    "cellEditableCondition": false,
-                    "headerCellFilter": "translate",
-                    "cellTemplate": "<div ng-bind-html='row.entity.details' title='{{row.entity.details}}' class='ui-grid-cell-contents'></div>"
-                },
-                {
-                    "name": "dueDate",
-                    "displayName": "consultations.comp.approvalRouting.table.columns.dueDate",
-                    "cellEditableCondition": false,
-                    "headerCellFilter": "translate"
-                },
-                {
-                    "name": "addedByFullName",
-                    "displayName": "consultations.comp.approvalRouting.table.columns.addedBy",
-                    "cellEditableCondition": false,
-                    "headerCellFilter": "translate"
-                },
-                {
-                    "name": "act",
-                    "cellEditableCondition": false,
-                    "width": "70",
-                    "headerCellTemplate": "<span></span>",
-                    "cellTemplate": ""
-                }
-            ],
-            "userSearch": {
-                "userFacetFilter": "\"Object Type\": USER&fq=\"status_lcs\":VALID",
-                "userFacetExtraFilter": "&fq=\"name\": "
-            }
-        },
-        {
-            "id": "pastapprovals",
-            "title": "consultations.comp.pastApprovals.title",
-            "icon": "fa fa-sort-amount-desc",
-            "enabled": true,
-            "configurable": true,
-            "type": "grid",
-            "enableFiltering": false,
-            "paginationPageSizes": [
-                5,
-                10,
-                20,
-                50
-            ],
-            "paginationPageSize": 10,
-            "columnDefs": [
-                {
-                    "name": "approvalDate",
-                    "displayName": "consultations.comp.pastApprovals.table.columns.approvalDate",
-                    "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.approvalDate | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
-                    "cellEditableCondition": false
-                },
-                {
-                    "name": "approverFullName",
-                    "displayName": "consultations.comp.pastApprovals.table.columns.approverFullName",
-                    "headerCellFilter": "translate",
-                    "cellEditableCondition": false
-                },
-                {
-                    "name": "approverDecision",
-                    "displayName": "consultations.comp.pastApprovals.table.columns.approverDecision",
-                    "headerCellFilter": "translate",
-                    "cellEditableCondition": false
-                }
-            ]
         },
         {
             "id": "newObjectPicker",
