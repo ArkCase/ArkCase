@@ -37,7 +37,6 @@ public interface ChangeConsultationStateContants
     String FILE_ID = "FILE_ID";
     String FILE_VERSION = "FILE_VERSION";
 
-    // TODO : Change with consultation document
     String CHANGE_CONSULTATION_STATUS_STYLESHEET = System.getProperty("user.home")
             + "/.arkcase/acm/pdf-stylesheets/change-consultation-state-document.xsl";
     String CHANGE_CONSULTATION_STATUS_DOCUMENT = "CHANGE_CONSULTATION";

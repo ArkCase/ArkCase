@@ -52,7 +52,7 @@ public class ChangeConsultationStateHandler
         Consultation consultation = getConsultationDao().find(form.getConsultationId());
 
         // Update Status to "IN APPROVAL"
-        if (ctx.getPropertyValue("ChangeConsultationStatusFlow").equals(false))
+        if (ctx.getPropertyValue("changeConsultationStatusFlow").equals(false))
         {
             consultation.setStatus(form.getStatus());
         }
