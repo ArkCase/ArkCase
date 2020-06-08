@@ -115,11 +115,6 @@ angular.module('consultations').config([ '$stateProvider', function($stateProvid
             templateUrl: 'modules/consultations/views/components/consultation-tags.client.view.html'
         })
 
-        .state('consultations.approvalRouting', {
-            url: '/:type/:id/approvals',
-            templateUrl: 'modules/consultations/views/components/consultation-approval-routing.client.view.html'
-        })
-
         .state('consultations.billing', {
             url: '/:id/billing',
             templateUrl: 'modules/consultations/views/components/consultation-billing.client.view.html'
