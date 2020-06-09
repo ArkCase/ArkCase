@@ -56,21 +56,40 @@ angular.module('consultations').controller(
                     consultationType: '',
                     title: '',
                     details: '',
-                    initiator: {
+                    originator: {
                         person: {
                             title: '',
                             organizationAssociations: [],
-                            contactMethods: []
+                            contactMethods: [],
+                            addresses: []
                         }
                     },
                     personAssociations: [],
                     participants: []
                 };
                 $scope.config.data.organizationAssociations = [];
-                $scope.config.data.initiator.person.title = $scope.prefixes[0].key;
+                $scope.config.data.originator.person.title = $scope.prefixes[0].key;
                 $scope.config.data.receivedDate = moment.utc().format("YYYY-MM-DDTHH:mm:ss.sss");
+
+                $scope.consultationPeopleConfig = _.find(moduleConfig.components, {
+                    id: "people"
+                });
                 
             });
+
+            var newPersonAssociation = function() {
+                return {
+                    id: null,
+                    personType: "",
+                    parentId: $scope.config.data.id,
+                    parentType: ObjectService.ObjectTypes.CONSULTATION,
+                    parentTitle: $scope.config.data.consultationNumber,
+                    personDescription: "",
+                    notes: "",
+                    person: null,
+                    className: $scope.consultationPeopleConfig.personAssociationClassName
+                };
+            };
 
             // --------------  mention --------------
             $scope.params = {
@@ -96,91 +115,47 @@ angular.module('consultations').controller(
             $scope.pickExistingUserChange = function () {
 
                 if ($scope.isPickExistingPerson) {
-                    $scope.newPerson = angular.copy($scope.config.data.initiator.person);
+                    $scope.newPerson = angular.copy($scope.config.data.originator.person);
                     $scope.setPerson($scope.existingPerson);
 
                 } else {
-                    $scope.existingPerson = angular.copy($scope.config.data.initiator.person);
+                    $scope.existingPerson = angular.copy($scope.config.data.originator.person);
                     $scope.setPerson($scope.newPerson);
                 }
             };
 
             $scope.setPerson = function (person) {
                 if (person) {
-                    $scope.config.data.initiator.person = angular.copy(person);
+                    $scope.config.data.originator.person = angular.copy(person);
 
-                    if (!$scope.config.data.initiator.person.defaultPhone) {
-                        var phone = _.find($scope.config.data.initiator.person.contactMethods, {
+                    if (!$scope.config.data.originator.person.defaultPhone) {
+                        var phone = _.find($scope.config.data.originator.person.contactMethods, {
                             type: 'phone'
                         });
-                        $scope.config.data.initiator.person.defaultPhone = phone;
+                        $scope.config.data.originator.person.defaultPhone = phone;
                     }
 
-                    if (!$scope.config.data.initiator.person.defaultEmail) {
-                        var email = _.find($scope.config.data.initiator.person.contactMethods, {
+                    if (!$scope.config.data.originator.person.defaultEmail) {
+                        var email = _.find($scope.config.data.originator.person.contactMethods, {
                             type: 'email'
                         });
-                        $scope.config.data.initiator.person.defaultEmail = email;
+                        $scope.config.data.originator.person.defaultEmail = email;
                     }
 
                     if (person.addresses[0] && !Util.isEmpty(person.addresses[0].country) && !Util.isEmpty(person.addresses[0].state)) {
                         $scope.changeStates(person.addresses[0].country);
                     }
 
-                    $scope.isExistingPerson = typeof $scope.config.data.initiator.person.id !== 'undefined';
+                    $scope.isExistingPerson = typeof $scope.config.data.originator.person.id !== 'undefined';
 
-                    if ($scope.config.data.initiator.person.defaultEmail) {
-                        $scope.confirmationEmail = angular.copy($scope.config.data.initiator.person.defaultEmail.value);
+                    if ($scope.config.data.originator.person.defaultEmail) {
+                        $scope.confirmationEmail = angular.copy($scope.config.data.originator.person.defaultEmail.value);
                     } else {
                         $scope.confirmationEmail = '';
                     }
                 }
             };
-
-            function openDuplicatePersonPicker(result) {
-                $scope.config.data.initiator.person.defaultEmail.value = '';
-                $scope.confirmationEmail = '';
-
-                var params = {};
-
-                params.people = result.data.response.docs;
-                params.config = Util.goodMapValue($scope.commonModuleConfig, "dialogPersonPicker");
-                params.isRedirect = false;
-
-                var modalInstance = $modal.open({
-                    templateUrl: "modules/common/views/duplicate-person-picker-modal.client.view.html",
-                    controller: "Common.DuplicatePersonPickerController",
-                    animation: true,
-                    size: 'lg',
-                    backdrop: 'static',
-                    resolve: {
-                        params: function () {
-                            return params;
-                        }
-                    }
-                });
-
-                modalInstance.result.then(function (selected) {
-                    if (!Util.isEmpty(selected)) {
-                        PersonInfoService.getPersonInfo(selected.object_id_s).then(function (person) {
-                            $scope.setPerson(person);
-                            $scope.existingPerson = angular.copy($scope.config.data.initiator.person);
-                            $scope.newPerson = angular.copy($scope.blankPerson);
-                        });
-                    }
-                });
-            }
-
-            $scope.checkExistingEmail = function () {
-                if ($scope.config.data.initiator.person.defaultEmail.value === $scope.confirmationEmail) {
-                    PersonInfoService.queryByEmail($scope.config.data.initiator.person.defaultEmail.value).then(function (result) {
-                        if (result.data.response.numFound > 0) {
-                            openDuplicatePersonPicker(result);
-                        }
-                    });
-                }
-            };
-
+            
             // -------------------  people --------------------------------------------------------------------
             $scope.searchPerson = function () {
                 var params = {
@@ -209,7 +184,7 @@ angular.module('consultations').controller(
                 modalInstance.result.then(function (data) {
                     PersonInfoService.getPersonInfo(data.personId).then(function (person) {
                         $scope.setPerson(person);
-                        $scope.existingPerson = angular.copy($scope.config.data.initiator.person);
+                        $scope.existingPerson = angular.copy($scope.config.data.originator.person);
                     });
                 });
 
@@ -218,7 +193,7 @@ angular.module('consultations').controller(
             
 
             function setOrganizationAssociation(association, data) {
-                association.person = $scope.config.data.initiator.person;
+                association.person = $scope.config.data.originator.person;
                 association.organization = data.organization;
                 association.personToOrganizationAssociationType = data.type;
                 association.organizationToPersonAssociationType = data.inverseType;
@@ -229,7 +204,7 @@ angular.module('consultations').controller(
 
                 if (data.isDefault) {
                     //find and change previously default organization
-                    var defaultAssociation = _.find($scope.config.data.initiator.person.organizationAssociations, function (object) {
+                    var defaultAssociation = _.find($scope.config.data.originator.person.organizationAssociations, function (object) {
                         return object.defaultOrganization;
                     });
                     if (defaultAssociation) {
@@ -239,21 +214,21 @@ angular.module('consultations').controller(
                 association.defaultOrganization = data.isDefault;
 
                 //if is new created, add it to the organization associations list
-                if (!$scope.config.data.initiator.person.organizationAssociations) {
-                    $scope.config.data.initiator.person.organizationAssociations = [];
+                if (!$scope.config.data.originator.person.organizationAssociations) {
+                    $scope.config.data.originator.person.organizationAssociations = [];
                 }
 
-                if (!_.includes($scope.config.data.initiator.person.organizationAssociations, association)) {
-                    $scope.config.data.initiator.person.organizationAssociations.push(association);
+                if (!_.includes($scope.config.data.originator.person.organizationAssociations, association)) {
+                    $scope.config.data.originator.person.organizationAssociations.push(association);
                     $scope.config.data.organizationAssociations.push(organizationAssociation);
                 }
             }
 
             $scope.searchOrganization = function () {
-                var associationFound = _.find($scope.config.data.initiator.person.organizationAssociations, function (item) {
+                var associationFound = _.find($scope.config.data.originator.person.organizationAssociations, function (item) {
                     return !Util.isEmpty(item) && !Util.isEmpty(item.organization);
                 });
-                var association = !!$scope.config.data.initiator.person.organizationAssociations[0] ? $scope.config.data.initiator.person.organizationAssociations[0] : {};
+                var association = !!$scope.config.data.originator.person.organizationAssociations[0] ? $scope.config.data.originator.person.organizationAssociations[0] : {};
                 var params = {
                     showSetPrimary: true,
                     isDefault: false,
@@ -277,16 +252,16 @@ angular.module('consultations').controller(
                 });
 
                 modalInstance.result.then(function (data) {
-                    $scope.config.data.initiator.person.organizations = [];
+                    $scope.config.data.originator.person.organizations = [];
                     if (data.organization) {
-                        $scope.config.data.initiator.person.organizations.push(data.organization);
+                        $scope.config.data.originator.person.organizations.push(data.organization);
                         setOrganizationAssociation(association, data);
                         $scope.organizationValue = data.organization.organizationValue;
                     } else {
                         OrganizationInfoService.getOrganizationInfo(data.organizationId).then(function (organization) {
                             data.organization = organization;
                             $scope.organizationValue = data.organization.organizationValue;
-                            $scope.config.data.initiator.person.organizations.push(data.organization);
+                            $scope.config.data.originator.person.organizations.push(data.organization);
                             setOrganizationAssociation(association, data);
                         });
                     }
@@ -349,29 +324,45 @@ angular.module('consultations').controller(
                 $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
 
 
-                if (Util.isEmpty($scope.config.data.initiator.person.defaultPhone) || !$scope.config.data.initiator.person.defaultPhone.value) {
-                    $scope.config.data.initiator.person.defaultPhone = null;
-                } else if (!$scope.config.data.initiator.person.defaultPhone.type) {
-                    $scope.config.data.initiator.person.defaultPhone.type = "phone";
+                if (Util.isEmpty($scope.config.data.originator.person.defaultPhone) || !$scope.config.data.originator.person.defaultPhone.value) {
+                    $scope.config.data.originator.person.defaultPhone = null;
+                } else if (!$scope.config.data.originator.person.defaultPhone.type) {
+                    $scope.config.data.originator.person.defaultPhone.type = "phone";
                 }
 
-                if (Util.isEmpty($scope.config.data.initiator.person.defaultEmail) || !$scope.config.data.initiator.person.defaultEmail.value) {
-                    $scope.config.data.initiator.person.defaultEmail = null;
-                } else if (!$scope.config.data.initiator.person.defaultEmail.type) {
-                    $scope.config.data.initiator.person.defaultEmail.type = "email";
+                if (Util.isEmpty($scope.config.data.originator.person.defaultEmail) || !$scope.config.data.originator.person.defaultEmail.value) {
+                    $scope.config.data.originator.person.defaultEmail = null;
+                } else if (!$scope.config.data.originator.person.defaultEmail.type) {
+                    $scope.config.data.originator.person.defaultEmail.type = "email";
                 }
 
-                if ($scope.config.data.initiator.person.defaultPhone && !$scope.config.data.initiator.person.defaultPhone.id) {
-                    $scope.config.data.initiator.person.contactMethods.push($scope.config.data.initiator.person.defaultPhone);
+                if ($scope.config.data.originator.person.defaultPhone && !$scope.config.data.originator.person.defaultPhone.id) {
+                    $scope.config.data.originator.person.contactMethods.push($scope.config.data.originator.person.defaultPhone);
                 }
 
-                if ($scope.config.data.initiator.person.defaultEmail && !$scope.config.data.initiator.person.defaultEmail.id) {
-                    $scope.config.data.initiator.person.contactMethods.push($scope.config.data.initiator.person.defaultEmail);
+                if ($scope.config.data.originator.person.defaultEmail && !$scope.config.data.originator.person.defaultEmail.id) {
+                    $scope.config.data.originator.person.contactMethods.push($scope.config.data.originator.person.defaultEmail);
                 }
-
+                var association = newPersonAssociation();
+                if (!$scope.isPickExistingPerson) {
+                    PersonInfoService.savePersonInfo($scope.config.data.originator.person).then(function(response) {
+                        $scope.setPerson(response);
+                    });
+                }
+                setInitiatorPersonAssociation(association, $scope.config.data.originator.person);
                 saveConsultation($scope.config.data);
                 
             };
+
+            function setInitiatorPersonAssociation(association, person) {
+                association.person = person;
+                association.personType = 'Initiator';
+                association.personDescription = '';
+                association.parentTitle = $scope.config.data.consultationNumber;
+                $scope.config.data.originator = association;
+                $scope.config.data.personAssociations.push(association)
+                
+            }
 
             var saveConsultation = function (consultation) {
                 ConsultationInfoService.saveConsultationInfo(consultation).then(function (response) {
