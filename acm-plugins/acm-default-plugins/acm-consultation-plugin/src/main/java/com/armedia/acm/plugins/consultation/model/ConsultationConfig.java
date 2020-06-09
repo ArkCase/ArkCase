@@ -40,30 +40,6 @@ import java.util.Set;
  */
 public class ConsultationConfig implements SupportsFileTypes, AcmPluginConfigBean
 {
-    @JsonProperty("consultation.plugin.email.regex.consultation_number")
-    @Value("${consultation.plugin.email.regex.consultation_number}")
-    private String emailRegexConsultationNumber;
-
-    @JsonProperty("consultation.plugin.email.regex.object_type")
-    @Value("${consultation.plugin.email.regex.object_type}")
-    private String emailRegexObjectType;
-
-    @JsonProperty("consultation.plugin.email.folder.relative.path")
-    @Value("${consultation.plugin.email.folder.relative.path}")
-    private String emailFolderRelativePath;
-
-    @JsonProperty("consultation.plugin.email.handler.enabled")
-    @Value("${consultation.plugin.email.handler.enabled}")
-    private Boolean emailHandlerEnabled;
-
-    @JsonProperty("consultation.plugin.split.typesToCopy")
-    @Value("${consultation.plugin.split.typesToCopy}")
-    private String splitTypesToCopy;
-
-    @JsonProperty("consultation.plugin.merge.exclude_document_types")
-    @Value("${consultation.plugin.merge.exclude_document_types}")
-    private String mergeExcludeDocumentTypes;
-
     @JsonProperty("consultation.plugin.auto_create_calendar_folder")
     @Value("${consultation.plugin.auto_create_calendar_folder}")
     private Boolean autoCreateCalendarFolder;
@@ -95,66 +71,6 @@ public class ConsultationConfig implements SupportsFileTypes, AcmPluginConfigBea
     @JsonProperty("consultation.plugin.fileTypes")
     @Value("${consultation.plugin.fileTypes}")
     private String supportedFileTypes;
-
-    public String getEmailRegexConsultationNumber()
-    {
-        return emailRegexConsultationNumber;
-    }
-
-    public void setEmailRegexConsultationNumber(String emailRegexConsultationNumber)
-    {
-        this.emailRegexConsultationNumber = emailRegexConsultationNumber;
-    }
-
-    public String getEmailRegexObjectType()
-    {
-        return emailRegexObjectType;
-    }
-
-    public void setEmailRegexObjectType(String emailRegexObjectType)
-    {
-        this.emailRegexObjectType = emailRegexObjectType;
-    }
-
-    public String getEmailFolderRelativePath()
-    {
-        return emailFolderRelativePath;
-    }
-
-    public void setEmailFolderRelativePath(String emailFolderRelativePath)
-    {
-        this.emailFolderRelativePath = emailFolderRelativePath;
-    }
-
-    public Boolean getEmailHandlerEnabled()
-    {
-        return emailHandlerEnabled;
-    }
-
-    public void setEmailHandlerEnabled(Boolean emailHandlerEnabled)
-    {
-        this.emailHandlerEnabled = emailHandlerEnabled;
-    }
-
-    public String getSplitTypesToCopy()
-    {
-        return splitTypesToCopy;
-    }
-
-    public void setSplitTypesToCopy(String splitTypesToCopy)
-    {
-        this.splitTypesToCopy = splitTypesToCopy;
-    }
-
-    public String getMergeExcludeDocumentTypes()
-    {
-        return mergeExcludeDocumentTypes;
-    }
-
-    public void setMergeExcludeDocumentTypes(String mergeExcludeDocumentTypes)
-    {
-        this.mergeExcludeDocumentTypes = mergeExcludeDocumentTypes;
-    }
 
     public Boolean getAutoCreateCalendarFolder()
     {

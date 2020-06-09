@@ -31,7 +31,7 @@
         <property name="dao" ref="consultationDao"/>
     </bean>
 
-    <bean id="changeConsultationConfigStatusWorkflowListener123"
+    <bean id="changeConsultationConfigStatusWorkflowListener"
           class="com.armedia.acm.plugins.consultation.listener.ChangeConsultationStatusWorkflowListener">
         <property name="fileWorkflowBusinessRule" ref="fileWorkflowBusinessRule"/>
         <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
