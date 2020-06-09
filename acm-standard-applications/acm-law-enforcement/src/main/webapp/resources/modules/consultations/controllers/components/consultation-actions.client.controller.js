@@ -52,9 +52,6 @@ angular.module('consultations').controller(
             $scope.splitting = false;
 
             ConfigService.getModuleConfig("consultations").then(function(moduleConfig) {
-                $scope.consultationSearchConfig = _.find(moduleConfig.components, {
-                    id: "merge"
-                });
                 $scope.newObjectPicker = _.find(moduleConfig.components, {
                     id: "newObjectPicker"
                 });
@@ -91,13 +88,6 @@ angular.module('consultations').controller(
                 });
 
                 $scope.editParams = {
-                    consultationId: objectInfo.id,
-                    consultationNumber: objectInfo.consultationNumber,
-                    containerId: objectInfo.container.id,
-                    folderId: objectInfo.container.folder.id
-                };
-
-                $scope.reinvestigateParams = {
                     consultationId: objectInfo.id,
                     consultationNumber: objectInfo.consultationNumber,
                     containerId: objectInfo.container.id,
@@ -205,71 +195,6 @@ angular.module('consultations').controller(
                 });
             };
 
-            $scope.merge = function(consultationInfo) {
-
-                var params = {};
-                params.header = $translate.instant("consultations.comp.merge.objectPicker.title");
-                params.config = $scope.newObjectPicker;
-                params.filter = 'fq="object_type_s": CONSULTATION';
-
-                var modalInstance = $modal.open({
-                    templateUrl: 'directives/core-participants/core-participants-picker-modal.client.view.html',
-                    controller: [ '$scope', '$modalInstance', 'params', function($scope, $modalInstance, params) {
-                        $scope.modalInstance = $modalInstance;
-                        $scope.header = params.header;
-                        $scope.filter = params.filter;
-                        $scope.extraFilter = params.extraFilter;
-                        $scope.config = params.config;
-                    } ],
-                    size: 'lg',
-                    backdrop: 'static',
-                    resolve: {
-                        params: function() {
-                            return params;
-                        }
-                    }
-                });
-                modalInstance.result.then(function(consultationSummary) {
-                    if (consultationSummary) {
-                        $scope.merging = true;
-                        MergeSplitService.mergeConsultation(consultationInfo.id, consultationSummary.object_id_s).then(function (data) {
-                            $timeout(function() {
-                                ObjectService.showObject(ObjectService.ObjectTypes.CONSULTATION, data.id);
-                                $scope.merging = false;
-                                //4 seconds delay so solr can index the new consultation file
-                            }, 4000);
-                        }, function() {
-                            $scope.merging = false;
-                        });
-                    }
-                });
-            };
-
-            $scope.split = function() {
-                var modalInstance = $modal.open({
-                    animation: $scope.animationsEnabled,
-                    templateUrl: 'modules/consultations/views/components/consultation-split.client.view.html',
-                    controller: 'Consultations.SplitController',
-                    size: 'lg',
-                    backdrop: 'static'
-                });
-                modalInstance.result.then(function(consultationSummary) {
-                    if (consultationSummary) {
-                        $scope.splitting = true;
-                        if (consultationSummary != null) {
-                            MergeSplitService.splitConsultation(consultationSummary).then(function (data) {
-                                $timeout(function() {
-                                    ObjectService.showObject(ObjectService.ObjectTypes.CONSULTATION, data.id);
-                                    $scope.splitting = false;
-                                    //4 seconds delay so solr can index the new consultation file
-                                }, 4000);
-                            }, function() {
-                                $scope.merging = false;
-                            });
-                        }
-                    }
-                });
-            };
             UserInfoService.getUserInfo().then(function(infoData) {
                 $scope.currentUserProfile = infoData;
             });

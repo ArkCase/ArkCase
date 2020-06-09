@@ -133,8 +133,7 @@
                     "cost",
                     "tags",
                     "calendar",
-                    "suggestedConsultations",
-                    "billing"
+                    "suggestedConsultations"
                 ]
             },
             {
@@ -247,17 +246,6 @@
                 "icon": "fa fa-files-o",
                 "components": [
                     "suggestedConsultations"
-                ]
-            },
-            {
-                "type": "p/CONSULTATION/billing",
-                "label": "consultations.tree.nodeTypes.billing.label",
-                "icon": "fa fa-pencil-square-o",
-                "components": [
-                    "billing"
-                ],
-                "requiredPrivileges": [
-                    "acmListBillingItemsPrivilege"
                 ]
             },
             {
@@ -1142,59 +1130,6 @@
             "type": "empty"
         },
         {
-            "id": "merge",
-            "title": "consultations.comp.merge.title",
-            "enabled": "true",
-            "configurable": true,
-            "type": "grid",
-            "enableFiltering": false,
-            "columnDefs": [
-                {
-                    "name": "name",
-                    "displayName": "consultations.comp.merge.table.columns.name",
-                    "headerCellFilter": "translate"
-                },
-                {
-                    "name": "object_type_s",
-                    "displayName": "consultations.comp.merge.table.columns.incident",
-                    "headerCellFilter": "translate",
-                    "width": 75
-                },
-                {
-                    "name": "title_parseable",
-                    "sortField": "title_parseable_lcs",
-                    "displayName": "consultations.comp.merge.table.columns.title",
-                    "headerCellFilter": "translate",
-                    "width": 75
-                },
-                {
-                    "name": "parent_type_s",
-                    "displayName": "consultations.comp.merge.table.columns.parent",
-                    "headerCellFilter": "translate"
-                },
-                {
-                    "name": "assignee_full_name_lcs",
-                    "displayName": "consultations.comp.merge.table.columns.assignee",
-                    "headerCellFilter": "translate"
-                },
-                {
-                    "name": "modified_date_tdt",
-                    "displayName": "consultations.comp.merge.table.columns.modified",
-                    "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
-                }
-            ],
-            "paginationPageSizes": [
-                5,
-                10,
-                20,
-                50
-            ],
-            "paginationPageSize": 5,
-            "start": 0,
-            "__xxx__consultationInfoFilter": "\"Object Type\": CONSULTATION"
-        },
-        {
             "id": "referenceSearchGrid",
             "title": "consultations.comp.referenceSearchGrid.title",
             "enabled": "true",
@@ -1355,88 +1290,6 @@
             ],
             "paginationPageSize": 10,
             "start": 0
-        },
-        {
-            "id": "billing",
-            "title": "consultations.comp.billing.title",
-            "icon": "fa fa-pencil-square-o",
-            "enabled": true,
-            "showColumnFooter": true,
-            "type": "grid",
-            "columnDefs": [
-                {
-                    "name": "itemNumber",
-                    "field": "itemNumber",
-                    "displayName": "consultations.comp.billing.table.columns.item",
-                    "headerCellFilter": "translate",
-                    "width": "15%"
-                },
-                {
-                    "name": "itemDescription",
-                    "field": "itemDescription",
-                    "displayName": "consultations.comp.billing.table.columns.description",
-                    "headerCellFilter": "translate",
-                    "footerCellTemplate": "<div class='ui-grid-cell-contents pull-right'>Total: </div>",
-                    "width": "*"
-                },
-                {
-                    "name": "itemType",
-                    "field": "itemType",
-                    "displayName": "consultations.comp.billing.table.columns.type",
-                    "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.itemType || 'Adhoc' }}</div>",
-                    "width": "20%"
-                },
-                {
-                    "name": "itemAmount",
-                    "field": "itemAmount",
-                    "displayName": "consultations.comp.billing.table.columns.amount",
-                    "headerCellFilter": "translate",
-                    "aggregationType": 2,
-                    "footerCellFilter": "currency",
-                    "aggregationHideLabel": true,
-                    "cellTemplate": "<div>{{ row.entity.itemAmount | currency }}</div>",
-                    "width": "20%"
-                }
-            ]
-        },
-        {
-            "id": "listInvoices",
-            "title": "consultations.comp.billing.title",
-            "icon": "fa fa-pencil-square-o",
-            "enabled": true,
-            "showColumnFooter": true,
-            "type": "grid",
-            "columnDefs": [
-                {
-                    "name": "invoiceNumber",
-                    "field": "invoiceNumber",
-                    "displayName": "consultations.comp.billing.invoice.table.columns.invoiceNumber",
-                    "headerCellFilter": "translate"
-                },
-                {
-                    "name": "creator",
-                    "field": "creator",
-                    "displayName": "consultations.comp.billing.invoice.table.columns.creator",
-                    "headerCellFilter": "translate"
-                },
-                {
-                    "name": "created",
-                    "field": "created",
-                    "displayName": "consultations.comp.billing.invoice.table.columns.created",
-                    "cellTemplate": "<div>{{ row.entity.created | date:'yyyy-MM-dd HH:mm:ss' }}</div>",
-                    "headerCellFilter": "translate"
-                },
-                {
-                    "name": "view",
-                    "field": "view",
-                    "displayName": "",
-                    "cellTemplate": "<button class='btn btn-info btn-xs' style='margin-left:6px;margin-top:3px' ng-dblclick='grid.appScope.toggle()' ng-click='grid.appScope.viewInvoice(row.entity)' translate>consultations.comp.billing.invoice.table.columns.view</button>",
-                    "width": 50,
-                    "enableSorting": false,
-                    "enableColumnMenu": false
-                }
-            ]
         },
         {
             "id": "suggestedConsultations",

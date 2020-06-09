@@ -417,7 +417,7 @@ angular.module('consultations').controller(
             };
 
             $scope.cancelModal = function () {
-                $scope.onModalDismiss();
+                $modalInstance.dismiss();
             };
 
         } ]);

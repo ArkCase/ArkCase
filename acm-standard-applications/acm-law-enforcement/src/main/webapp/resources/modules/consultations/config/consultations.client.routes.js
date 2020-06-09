@@ -29,7 +29,7 @@ angular.module('consultations').config([ '$stateProvider', function($stateProvid
             url: '/:id/main',
             templateUrl: 'modules/consultations/views/components/consultation-main.client.view.html',
             params: {
-                "type": "CONSULTATIONS"
+                "type": "CONSULTATION"
             }
         })
 
@@ -113,11 +113,6 @@ angular.module('consultations').config([ '$stateProvider', function($stateProvid
         .state('consultations.tags', {
             url: '/:id/tags',
             templateUrl: 'modules/consultations/views/components/consultation-tags.client.view.html'
-        })
-
-        .state('consultations.billing', {
-            url: '/:id/billing',
-            templateUrl: 'modules/consultations/views/components/consultation-billing.client.view.html'
         })
 
         .state('consultations.suggestedConsultations', {

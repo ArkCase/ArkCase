@@ -212,7 +212,7 @@ angular.module('services').factory('Consultation.InfoService', [ '$resource', '$
             service: Service.save,
             data: JSOG.encode(consultationInfo),
             onSuccess: function(data) {
-                return consultationInfo;
+                return data;
             }
         })
     };
