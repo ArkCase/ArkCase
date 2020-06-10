@@ -27,10 +27,6 @@ package com.armedia.acm.plugins.casefile.service;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 import com.armedia.acm.auth.AcmGrantedAuthority;
 import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
@@ -79,11 +75,14 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(name = "spring", locations = {
         "/spring/spring-library-acm-encryption.xml",
         "/spring/spring-library-activiti-configuration.xml",
-        "/spring/spring-library-admin.xml",
         "/spring/spring-library-audit-service.xml",
         "/spring/spring-library-authentication-token.xml",
         "/spring/spring-library-business-process.xml",
@@ -130,7 +129,6 @@ import java.util.stream.Collectors;
         "/spring/spring-library-service-data.xml",
         "/spring/spring-library-task.xml",
         "/spring/spring-test-quartz-scheduler.xml",
-        "/spring/spring-library-user-service.xml",
         "/spring/spring-library-core-api.xml",
         "/spring/spring-library-user-login.xml",
         "/spring/spring-library-plugin-manager.xml",
@@ -147,6 +145,7 @@ import java.util.stream.Collectors;
         "/spring/spring-library-timesheet-save.xml",
         "/spring/spring-library-timesheet-rules.xml",
         "/spring/spring-library-labels-service.xml",
+        "/spring/spring-library-user-service-test.xml",
         "/spring/spring-library-user-tracker.xml"
 })
 @TransactionConfiguration(defaultRollback = true)
