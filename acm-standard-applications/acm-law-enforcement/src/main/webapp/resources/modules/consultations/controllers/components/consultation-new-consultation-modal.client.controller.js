@@ -18,7 +18,7 @@ angular.module('consultations').controller(
             $scope.config = null;
             
             var moduleConfig = ConfigService.getModuleConfig("consultations");
-            var prefixNewConsultation = ObjectLookupService.getPrefixes();
+            var prefixNewConsultation = ObjectLookupService.getPersonTitles();
             var personTypesLookup = ObjectLookupService.getPersonTypes(ObjectService.ObjectTypes.CONSULTATION, true);
             var organizationTypeLookup = ObjectLookupService.getPersonOrganizationRelationTypes();
             var getCountries = ObjectLookupService.getCountries();
