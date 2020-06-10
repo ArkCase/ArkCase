@@ -918,22 +918,6 @@ angular.module('services').factory('Object.LookupService', [ '$q', '$resource', 
     Service.getObjectTitleTypes = function() {
         return Service.getLookupByLookupName('objectTitleTypes');
     };
-
-    /**
-     * @ngdoc method
-     * @name getPrefixNewObject
-     * @methodOf services:Object.LookupService
-     *
-     * @description
-     * Query list of Object Prefixes
-     *
-     * @returns {Object} An array returned by $resource
-     */
-    Service.getPrefixes = function () {
-        return Service.getLookupByLookupName('prefixNewObject');
-
-    };
-
     /**
      * @ngdoc method
      * @name getLookupsDefs
