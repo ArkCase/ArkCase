@@ -354,7 +354,7 @@ angular.module('admin').controller(
                         return deferred.promise;
                     };
 
-                    function openCreateUserModal(user, group, error) {
+                    function openCreateUserModal(user, group, error, field) {
                         return $modal.open({
                             animation: $scope.animationsEnabled,
                             templateUrl: 'modules/admin/views/components/security.organizational-hierarchy.create-user.dialog.html',
@@ -363,7 +363,12 @@ angular.module('admin').controller(
                                 $scope.header = "admin.security.organizationalHierarchy.createUserDialog.addLdapMember.title";
                                 $scope.okBtn = "admin.security.organizationalHierarchy.createUserDialog.addLdapMember.btn.ok";
                                 $scope.cancelBtn = "admin.security.organizationalHierarchy.createUserDialog.addLdapMember.btn.cancel";
-                                $scope.error = error;
+                                if (field === "username") {
+                                    $scope.usernameError = error;
+                                }
+                                if (field === "email") {
+                                    $scope.emailError = error;
+                                }
                                 $scope.user = user;
                                 $scope.user.groupNames = [group.object_id_s];
 
@@ -395,7 +400,7 @@ angular.module('admin').controller(
                                 var onAdd = function(data) {
                                     return onLdapUserAdd(data, deferred, group);
                                 };
-                                openCreateUserModal(error.data.extra.user, group, error.data.message).result.then(onAdd, function() {
+                                openCreateUserModal(error.data.extra.user, group, error.data.message, error.data.field).result.then(onAdd, function() {
                                     deferred.reject("cancel");
                                     return [];
                                 });
