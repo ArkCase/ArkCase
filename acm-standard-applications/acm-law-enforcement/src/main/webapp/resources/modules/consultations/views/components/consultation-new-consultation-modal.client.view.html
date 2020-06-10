@@ -153,9 +153,9 @@
                             </div>
                             <div class="col-sm-4">
                                 <input type="text" class="form-control" id="confirmationEmail" ng-model="confirmationEmail"
-                                        placeholder="{{'consultations.newConsultation.confirmationEmail.placeholder' | translate}}" name="confirmationEmail"
-                                        required="required"
-                                        ng-disabled="isExistingPerson && existingPerson.defaultEmail.value">
+                                       placeholder="{{'consultations.newConsultation.confirmationEmail.placeholder' | translate}}" name="confirmationEmail"
+                                       ng-blur="checkExistingEmail()" required="required"
+                                       ng-disabled="isExistingPerson && existingPerson.defaultEmail.value">
                                 <span class="text-danger"
                                         ng-if="confirmationEmail !== config.data.originator.person.defaultEmail.value && formInvalid && !confirmEmailEmpty"
                                         translate>
