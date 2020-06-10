@@ -10,8 +10,27 @@
         </constructor-arg>
     </bean>
 
-    <bean id="objectConverter" class="com.armedia.acm.objectonverter.ObjectConverter" factory-method="createObjectConverterForTests"/>
+    <bean id="notificationUtils" class="com.armedia.acm.services.notification.service.NotificationUtils">
+        <property name="acmAppConfiguration" ref="acmApplication"/>
+        <property name="acmDataService" ref="acmDataService"/>
+        <property name="userDao" ref="userJpaDao"/>
+        <property name="groupDao" ref="groupDao"/>
+    </bean>
 
+    <bean id="acmApplication" class="com.armedia.acm.core.AcmApplication"/>
+    <bean id="groupDao" class="com.armedia.acm.services.users.dao.group.AcmGroupDao"/>
+    <bean id="userJpaDao" class="com.armedia.acm.services.users.dao.UserDao" init-method="init">
+        <property name="languageSettingsConfig" ref="languageSettingsConfig"/>
+    </bean>
+    <bean id="acmDataService" class="com.armedia.acm.data.service.AcmDataServiceImpl">
+        <property name="springContextHolder" ref="acmContextHolder"/>
+    </bean>
+
+    <bean id="acmContextHolder" class="com.armedia.acm.spring.SpringContextHolder"/>
+
+    <bean id="objectConverter" class="com.armedia.acm.objectonverter.ObjectConverter" factory-method="createObjectConverterForTests"/>
+    <bean id="notificationService" class="com.armedia.acm.services.notification.service.NotificationServiceImpl"/>
+    <bean id="noteDao" class="com.armedia.acm.services.note.dao.NoteDao"/>
     <bean id="auditEventConfig" class="com.armedia.acm.audit.model.AuditEventConfig">
         <property name="jsonUnmarshaller" ref="jsonUnmarshaller"/>
     </bean>
