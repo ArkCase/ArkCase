@@ -26,8 +26,9 @@ angular.module('consultations').controller(
             var canadaProvinces = ObjectLookupService.getLookupByLookupName('canadaProvinces');
             var japanStates = ObjectLookupService.getLookupByLookupName('japanStates');
             var states = ObjectLookupService.getStates();
+            var commonModuleConfig = ConfigService.getModuleConfig("common");
 
-            $q.all([moduleConfig, prefixNewConsultation, getCountries, getAddressTypes, canadaProvinces, japanStates, states, personTypesLookup, organizationTypeLookup]).then(function (data) {
+            $q.all([moduleConfig, prefixNewConsultation, getCountries, getAddressTypes, canadaProvinces, japanStates, states, personTypesLookup, organizationTypeLookup, commonModuleConfig]).then(function (data) {
 
                 var moduleConfig = data[0];
                 var prefixes = data[1];
@@ -38,6 +39,7 @@ angular.module('consultations').controller(
                 var usaStates = data[6];
                 var personTypes = data[7];
                 var organizationTypes = data[8];
+                $scope.commonModuleConfig = data[9];
 
                 $scope.config = moduleConfig;
                 $scope.prefixes = prefixes;
@@ -344,11 +346,6 @@ angular.module('consultations').controller(
                     $scope.config.data.originator.person.contactMethods.push($scope.config.data.originator.person.defaultEmail);
                 }
                 var association = newPersonAssociation();
-                if (!$scope.isPickExistingPerson) {
-                    PersonInfoService.savePersonInfo($scope.config.data.originator.person).then(function(response) {
-                        $scope.setPerson(response);
-                    });
-                }
                 setInitiatorPersonAssociation(association, $scope.config.data.originator.person);
                 saveConsultation($scope.config.data);
                 
@@ -410,5 +407,49 @@ angular.module('consultations').controller(
             $scope.cancelModal = function () {
                 $modalInstance.dismiss();
             };
+
+            $scope.checkExistingEmail = function () {
+                if ($scope.config.data.originator.person.defaultEmail.value === $scope.confirmationEmail) {
+                    PersonInfoService.queryByEmail($scope.config.data.originator.person.defaultEmail.value).then(function (result) {
+                        if (result.data.response.numFound > 0) {
+                            openDuplicatePersonPicker(result);
+                        }
+                    });
+                }
+            };
+
+            function openDuplicatePersonPicker(result) {
+                $scope.config.data.originator.person.defaultEmail.value = '';
+                $scope.confirmationEmail = '';
+
+                var params = {};
+
+                params.people = result.data.response.docs;
+                params.config = Util.goodMapValue($scope.commonModuleConfig, "dialogPersonPicker");
+                params.isRedirect = false;
+
+                var modalInstance = $modal.open({
+                    templateUrl: "modules/common/views/duplicate-person-picker-modal.client.view.html",
+                    controller: "Common.DuplicatePersonPickerController",
+                    animation: true,
+                    size: 'lg',
+                    backdrop: 'static',
+                    resolve: {
+                        params: function () {
+                            return params;
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function (selected) {
+                    if (!Util.isEmpty(selected)) {
+                        PersonInfoService.getPersonInfo(selected.object_id_s).then(function (person) {
+                            $scope.setPerson(person);
+                            $scope.existingPerson = angular.copy($scope.config.data.originator.person);
+                            $scope.newPerson = angular.copy($scope.blankPerson);
+                        });
+                    }
+                });
+            }
 
         } ]);
