@@ -62,7 +62,7 @@ public class GetSimilarCasesAPIController
              id = Long.valueOf(objectId);
         }
 
-        // we need to decode base64 encoded group id because can contain characters which can interfere with url
+        // we need to decode base64 encoded title because can contain characters which can interfere with url
         title = new String(Base64.getUrlDecoder().decode(title.getBytes()));
 
         return new ResponseEntity(getSimilarCasesService().findSimilarCases(title, isPortal, id, authentication),

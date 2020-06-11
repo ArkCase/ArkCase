@@ -89,7 +89,7 @@ public class SimilarCasesServiceImpl implements SimilarCasesService
         }
         catch (UnsupportedEncodingException e)
         {
-            log.debug("Error encoding word [{}]", word);
+            log.warn("Error encoding word [{}]", word);
         }
         return word;
     }
