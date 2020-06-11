@@ -41,7 +41,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.util.Base64;
 
@@ -56,7 +55,7 @@ public class GetSimilarCasesAPIController
     public ResponseEntity<SuggestedCase> findSimilarCases(@PathVariable("title") String title,
                                                           @RequestParam(value = "objectId", required = false) String objectId,
                                                           @RequestParam(value = "portal", required = false, defaultValue = "false") Boolean isPortal,
-            Authentication authentication) throws ParseException, SolrException, UnsupportedEncodingException
+            Authentication authentication) throws ParseException, SolrException
     {
         Long id = null;
         if(objectId != null){
