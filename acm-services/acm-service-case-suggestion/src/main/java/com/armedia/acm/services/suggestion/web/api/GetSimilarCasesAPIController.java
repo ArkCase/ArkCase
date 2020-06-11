@@ -42,6 +42,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.text.ParseException;
+import java.util.Base64;
 
 @Controller
 @RequestMapping({"/api/v1/service/suggestion","/api/latest/service/suggestion"})
@@ -61,7 +62,11 @@ public class GetSimilarCasesAPIController
              id = Long.valueOf(objectId);
         }
 
-        return new ResponseEntity(getSimilarCasesService().findSimilarCases(title, isPortal, id, authentication), HttpStatus.OK);
+        // we need to decode base64 encoded title because can contain characters which can interfere with url
+        title = new String(Base64.getUrlDecoder().decode(title.getBytes()));
+
+        return new ResponseEntity(getSimilarCasesService().findSimilarCases(title, isPortal, id, authentication),
+                HttpStatus.OK);
     }
 
 
