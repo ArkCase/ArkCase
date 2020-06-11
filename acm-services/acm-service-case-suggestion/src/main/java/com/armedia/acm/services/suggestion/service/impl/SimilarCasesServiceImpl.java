@@ -41,6 +41,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -79,8 +81,22 @@ public class SimilarCasesServiceImpl implements SimilarCasesService
 
     }
 
+    private String encodeWord(String word)
+    {
+        try
+        {
+            return URLEncoder.encode(word, "UTF-8");
+        }
+        catch (UnsupportedEncodingException e)
+        {
+            log.debug("Can not encode word [{}]", word);
+        }
+        return word;
+    }
+
     private List<SuggestedCase> findSolrCasesByTitle(String title, Boolean isPortal, Long objectId, Authentication auth)
             throws ParseException, SolrException
+
     {
         List<SuggestedCase> records = new ArrayList<>();
 
@@ -91,6 +107,7 @@ public class SimilarCasesServiceImpl implements SimilarCasesService
             StringBuilder words = new StringBuilder(String.join(" OR ",
                     Stream.of(title.trim().split(" "))
                             .filter(word -> word.length() > 2)
+                            .map(this::encodeWord)
                             .map(word -> {
                                 return "\"" + word + "\"";
                             })
@@ -164,6 +181,7 @@ public class SimilarCasesServiceImpl implements SimilarCasesService
             StringBuilder words = new StringBuilder(String.join(" OR ",
                     Stream.of(title.trim().split(" "))
                             .filter(word -> word.length() > 2)
+                            .map(this::encodeWord)
                             .map(word -> {
                                 return "\"" + word + "\"";
                             })
