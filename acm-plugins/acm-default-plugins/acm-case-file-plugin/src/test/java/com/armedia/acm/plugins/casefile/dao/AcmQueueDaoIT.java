@@ -27,17 +27,16 @@ package com.armedia.acm.plugins.casefile.dao;
  * #L%
  */
 
-import static org.junit.Assert.assertNotNull;
-
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.TransactionConfiguration;
+
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -67,7 +66,7 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
         "/spring/spring-integration-case-file-test.xml",
         "/spring/spring-library-service-data.xml"
 })
-@TransactionConfiguration(defaultRollback = true)
+@Rollback(true)
 public class AcmQueueDaoIT
 {
 

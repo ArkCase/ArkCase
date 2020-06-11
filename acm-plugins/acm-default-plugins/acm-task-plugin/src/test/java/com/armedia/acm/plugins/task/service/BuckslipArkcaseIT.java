@@ -49,6 +49,7 @@ import org.junit.runner.RunWith;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -112,7 +113,7 @@ import static org.junit.Assert.assertTrue;
         "/spring/spring-library-labels-service.xml",
         "/spring/spring-library-business-process.xml"
 })
-@TransactionConfiguration(defaultRollback = true)
+@Rollback(true)
 public class BuckslipArkcaseIT
 {
     static
