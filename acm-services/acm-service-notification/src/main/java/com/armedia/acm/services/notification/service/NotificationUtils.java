@@ -94,7 +94,11 @@ public class NotificationUtils
     public String getEmailForUser(String userId)
     {
         AcmUser user = userDao.findByUserId(userId);
-        return user.getMail() != null ? user.getMail() : "";
+        if (user != null)
+        {
+            return user.getMail() != null ? user.getMail() : "";
+        }
+        return "";
     }
 
     public String getEmailsCommaSeparatedForParticipantsForObject(Long parentObjectId, String parentObjectType)
