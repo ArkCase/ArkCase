@@ -30,6 +30,7 @@ package com.armedia.acm.services.notification.service;
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
 
+import com.armedia.acm.core.ObjectLabelConfig;
 import com.armedia.acm.services.notification.model.NotificationConfig;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 
@@ -40,14 +41,14 @@ import org.junit.Test;
 public class NotificationFormatterTest extends EasyMockSupport
 {
     private NotificationFormatter notificationFormatter;
-    private NotificationConfig mockConfig;
+    private ObjectLabelConfig mockConfig;
 
     @Before
     public void setUp()
     {
         notificationFormatter = new NotificationFormatter();
-        mockConfig = createMock(NotificationConfig.class);
-        notificationFormatter.setNotificationConfig(mockConfig);
+        mockConfig = createMock(ObjectLabelConfig.class);
+        notificationFormatter.setObjectLabelConfig(mockConfig);
     }
 
     /**

@@ -32,6 +32,7 @@ import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksDTO;
 import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksResultDTO;
 import com.armedia.acm.services.email.service.AcmEmailConfigurationException;
+import com.armedia.acm.services.email.service.AcmEmailContentGeneratorService;
 import com.armedia.acm.services.email.service.AcmEmailSenderService;
 import com.armedia.acm.services.email.service.AcmEmailServiceException;
 import com.armedia.acm.services.email.service.AcmMailTemplateConfigurationService;
@@ -53,7 +54,6 @@ import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jun 20, 2017
@@ -64,7 +64,7 @@ import java.util.stream.Collectors;
 public class AcmMailServiceAPIController
 {
     private AcmMailTemplateConfigurationService templateService;
-
+    private AcmEmailContentGeneratorService contentService;
     private AcmEmailSenderService emailSenderService;
 
     @RequestMapping(value = "/withattachments/{objectType}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -78,19 +78,18 @@ public class AcmMailServiceAPIController
             throw new AcmEmailServiceException("Could not create email message, invalid input : " + in);
         }
 
-        in.setObjectType(objectType);
-
         // the user is stored in the session during login.
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
 
         try
         {
             List<String> emailAddresses = in.getEmailAddresses();
-            String emailAddress = in.getEmailAddresses().stream().collect(Collectors.joining(","));
+            String emailAddress = String.join(",", in.getEmailAddresses());
             List<String> templates = loadTemplates(objectType, emailAddress, Arrays.asList("sendAsAttachments"));
             for (String template : templates)
             {
-                in.setTemplate(template);
+                String body = contentService.generateEmailBody(in, template);
+                in.setBody(body);
                 in.setEmailAddresses(emailAddresses);
                 emailSenderService.sendEmailWithAttachments(in, authentication, user);
             }
@@ -117,7 +116,6 @@ public class AcmMailServiceAPIController
             throw new AcmEmailServiceException("Could not create email message, invalid input : " + in);
         }
 
-        in.setParentType(objectType);
         // the user is stored in the session during login.
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
 
@@ -125,7 +123,7 @@ public class AcmMailServiceAPIController
         {
             List<EmailWithEmbeddedLinksResultDTO> result = new ArrayList<>();
             List<String> emailAddresses = in.getEmailAddresses();
-            String emailAddress = in.getEmailAddresses().stream().collect(Collectors.joining(","));
+            String emailAddress = String.join(",", in.getEmailAddresses());
             List<String> templates = loadTemplates(objectType, emailAddress, Arrays.asList("sendAsLinks"));
             for (String template : templates)
             {
@@ -155,15 +153,13 @@ public class AcmMailServiceAPIController
             throw new AcmEmailServiceException("Could not create email message, invalid input : " + in);
         }
 
-        in.setParentType(objectType);
-
         // the user is stored in the session during login.
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
 
         try
         {
             List<String> emailAddresses = in.getEmailAddresses();
-            String emailAddress = in.getEmailAddresses().stream().collect(Collectors.joining(","));
+            String emailAddress = String.join(",", in.getEmailAddresses());
             List<String> templates = loadTemplates(objectType, emailAddress, Arrays.asList("sendAsAttachmentsAndLinks"));
             for (String template : templates)
             {
@@ -253,4 +249,13 @@ public class AcmMailServiceAPIController
         this.emailSenderService = emailSenderService;
     }
 
+    public AcmEmailContentGeneratorService getContentService()
+    {
+        return contentService;
+    }
+
+    public void setContentService(AcmEmailContentGeneratorService contentService)
+    {
+        this.contentService = contentService;
+    }
 }

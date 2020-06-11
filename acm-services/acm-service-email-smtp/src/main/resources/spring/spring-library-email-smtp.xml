@@ -6,7 +6,6 @@
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="acmEmailContentGeneratorService" ref="acmEmailContentGeneratorService"/>
         <property name="emailSenderConfig" ref="emailSenderConfig"/>
-        <property name="templatingEngine" ref="templatingEngine"/>
         <property name="defaultFolderAndFileConverter" ref="folderConverter"/>
         <property name="acmMailSender" ref="acmMailSender"/>
     </bean>

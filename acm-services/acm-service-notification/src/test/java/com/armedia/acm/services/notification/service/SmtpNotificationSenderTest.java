@@ -132,6 +132,8 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         notification.setEmailAddresses("user_email");
         notification.setTitle("title");
         notification.setNote("the_note");
+        notification.setParentType("PARENT");
+        notification.setParentId(0L);
 
         expect(templateService.getTemplate(anyString())).andThrow(new AcmEmailConfigurationIOException("No such template"));
         expect(mockNotificationUtils.buildNotificationLink(notification.getParentType(), notification.getParentId(),
@@ -223,12 +225,8 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
     }
 
     @Test
-    public void testSendEmailWithAttachments_withAcmUser() throws AcmEncryptionException, Exception
+    public void testSendEmailWithAttachments_withAcmUser() throws Exception
     {
-        Capture<String> templateCapture = EasyMock.newCapture();
-        mockEmailWithAttachmentsDTO.setTemplate(capture(templateCapture));
-        expect(mockEmailWithAttachmentsDTO.getTemplate()).andReturn(null);
-
         mockSmtpService.sendEmailWithAttachments(mockEmailWithAttachmentsDTO, mockAuthentication, mockAcmUser);
         expectLastCall();
 
@@ -241,13 +239,9 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
     }
 
     @Test
-    public void testSendEmailWithAttachments_withUserId() throws AcmEncryptionException, Exception
+    public void testSendEmailWithAttachments_withUserId() throws Exception
     {
         expect(mockUserDao.findByUserId("email_user_value")).andReturn(mockAcmUser);
-
-        Capture<String> templateCapture = EasyMock.newCapture();
-        mockEmailWithAttachmentsDTO.setTemplate(capture(templateCapture));
-        expect(mockEmailWithAttachmentsDTO.getTemplate()).andReturn(null);
 
         mockSmtpService.sendEmailWithAttachments(mockEmailWithAttachmentsDTO, mockAuthentication, mockAcmUser);
         expectLastCall();
@@ -261,7 +255,7 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
     }
 
     @Test
-    public void testSendEmailWithAttachmentsAndLinks() throws AcmEncryptionException, Exception
+    public void testSendEmailWithAttachmentsAndLinks() throws Exception
     {
         Capture<String> templateCapture = EasyMock.newCapture();
         mockEmailWithAttachmentsAndLinksDTO.setTemplate(capture(templateCapture));

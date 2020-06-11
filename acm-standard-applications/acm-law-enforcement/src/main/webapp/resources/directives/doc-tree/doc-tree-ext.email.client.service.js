@@ -11,7 +11,10 @@
  * DocTree extensions for email functions.
  */
 angular.module('services').factory('DocTreeExt.Email',
-        [ '$q', '$modal', '$translate', '$browser', 'UtilService', 'LookupService', 'Ecm.EmailService', 'ObjectService', 'Object.InfoService', 'Person.InfoService','DocumentRepository.InfoService', function($q, $modal, $translate, $browser, Util, LookupService, EcmEmailService, ObjectService, ObjectInfoService, PersonInfoService,DocumentRepositoryInfoService) {
+        [ '$q', '$modal', '$translate', '$browser', 'UtilService', 'LookupService', 'Ecm.EmailService', 'ObjectService',
+            'Object.InfoService', 'Person.InfoService','DocumentRepository.InfoService',
+            function($q, $modal, $translate, $browser, Util, LookupService, EcmEmailService, ObjectService, ObjectInfoService,
+                     PersonInfoService,DocumentRepositoryInfoService) {
 
             LookupService.getConfig("notification").then(function(data) {
                 Email.arkcaseUrl = Util.goodValue(data["arkcase.url"]);
@@ -60,7 +63,7 @@ angular.module('services').factory('DocTreeExt.Email',
                         } else {
                             deferred.resolve(emailOfOriginator);
                         }
-                    };
+                    }
 
                 return deferred.promise;
             }
@@ -136,7 +139,7 @@ angular.module('services').factory('DocTreeExt.Email',
                         });
 
                         modalInstance.result.then(function(res) {
-                            var emailData = {};
+                            var emailData;
                             if (res.action === 'SEND_ATTACHMENTS') {
                                 emailData = Email._makeEmailDataForEmailWithAttachments(DocTree, res);
                                 EcmEmailService.sendEmailWithAttachments(emailData, DocTree.getObjType());
@@ -181,9 +184,10 @@ angular.module('services').factory('DocTreeExt.Email',
                     emailData.emailAddresses = emailModel.recipients;
                     emailData.fileIds = emailModel.selectedFilesToEmail;
                     emailData.baseUrl = Email._makeBaseUrl();
-                    emailData.parentType = DocTree.getObjType();
+                    emailData.objectId = DocTree._objId;
+                    emailData.objectType = DocTree._objType;
                     var objectNumber = match[Util.goodMapValue(DocTree, "treeConfig.email.objectNumberRegexGroup")];
-                    emailData.parentNumber = DocTree.objectInfo[objectNumber];
+                    emailData.objectNumber = DocTree.objectInfo[objectNumber];
                     emailData.modelReferenceName = 'documentLinked';
                     return emailData;
                 },
@@ -200,9 +204,10 @@ angular.module('services').factory('DocTreeExt.Email',
                     emailData.fileIds = emailModel.selectedFilesToEmail;
                     emailData.attachmentIds = emailModel.selectedFilesToEmail;
                     emailData.baseUrl = Email._makeBaseUrl();
-                    emailData.parentType = match[Util.goodMapValue(DocTree, "treeConfig.email.objectTypeRegexGroup")];
+                    emailData.objectId = DocTree._objId;
+                    emailData.objectType = DocTree._objType;
                     var objectNumber = match[Util.goodMapValue(DocTree, "treeConfig.email.objectNumberRegexGroup")];
-                    emailData.parentNumber = DocTree.objectInfo[objectNumber];
+                    emailData.objectNumber = DocTree.objectInfo[objectNumber];
                     emailData.modelReferenceName = 'documentAttachedLinked';
                     return emailData;
                 },
@@ -217,9 +222,10 @@ angular.module('services').factory('DocTreeExt.Email',
                     emailData.footer = '\n\n' + emailModel.footer;
                     emailData.emailAddresses = emailModel.recipients;
                     emailData.attachmentIds = emailModel.selectedFilesToEmail;
-                    emailData.parentType = match[Util.goodMapValue(DocTree, "treeConfig.email.objectTypeRegexGroup")];
+                    emailData.objectId = DocTree._objId;
+                    emailData.objectType = DocTree._objType;
                     var objectNumber = match[Util.goodMapValue(DocTree, "treeConfig.email.objectNumberRegexGroup")];
-                    emailData.parentNumber = DocTree.objectInfo[objectNumber];
+                    emailData.objectNumber = DocTree.objectInfo[objectNumber];
                     emailData.modelReferenceName = 'documentAttached';
                     return emailData;
                 },
@@ -233,10 +239,11 @@ angular.module('services').factory('DocTreeExt.Email',
                     emailData.body = emailModel.body;
                     emailData.footer = '\n\n' + emailModel.footer;
                     emailData.emailAddresses = emailModel.recipients;
-                    emailData.parentType = DocTree._objType;
+                    emailData.objectId = DocTree._objId;
+                    emailData.objectType = DocTree._objType;
                     var objectNumber = match[Util.goodMapValue(DocTree, "treeConfig.email.objectNumberRegexGroup")];
-                    emailData.parentNumber = DocTree._objId;
-                    emailData.modelReferenceName = 'plainEmail';
+                    emailData.objectNumber = DocTree.objectInfo[objectNumber];
+                    emailData.modelReferenceName = 'plainEmail'
                     return emailData;
                 },
                 _extractFileIds: function(nodes) {
@@ -443,24 +450,3 @@ angular.module('directives').controller('directives.DocTreeEmailRecipientsDialog
             };
 
         } ]);
-
-//, validateSentEmails: function (data) {
-//    if (!Util.isArray(data)) {
-//        return false;
-//    }
-//    for (var i = 0; i < data.length; i++) {
-//        if (!Validator.validateSentEmail(data[i])) {
-//            return false;
-//        }
-//    }
-//    return true;
-//}
-//, validateSentEmail: function (data) {
-//    if (Util.isEmpty(data.state)) {
-//        return false;
-//    }
-//    if (Util.isEmpty(data.userEmail)) {
-//        return false;
-//    }
-//    return true;
-//}
