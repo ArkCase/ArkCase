@@ -52,19 +52,38 @@ public class MessageBodyFactory
     private static final String DEFAULT_TEMPLATE = "${model.header} \n\n ${model.body} \n\n\n ${model.footer}";
 
     private String template;
+
+    /**
+     * Object's type for which this message is intended for.
+     * This parameter may be included in the message's template.
+     */
     private String parentType;
+
+    /**
+     * Object's number for which this message is intended for.
+     * This parameter may be included in the message's template.
+     */
     private String parentNumber;
+
     private String modelReferenceName;
 
     private TemplatingEngine templatingEngine;
 
+    private Map<String, Object> modelProperties;
+
     public MessageBodyFactory()
     {
+        modelProperties = new HashMap<>();
+        modelProperties.put("parentNumber", parentNumber);
+        modelProperties.put("parentType", parentType);
     }
 
     public MessageBodyFactory(String template)
     {
         this.template = template;
+        modelProperties = new HashMap<>();
+        modelProperties.put("parentNumber", parentNumber);
+        modelProperties.put("parentType", parentType);
     }
 
     public String getTemplate()
@@ -98,7 +117,7 @@ public class MessageBodyFactory
             // New FreeMarker template
             try
             {
-                return templatingEngine.process(this.template, this.modelReferenceName, this);
+                return templatingEngine.process(this.template, this.modelReferenceName, this.modelProperties);
             }
             catch (TemplateException | IOException e)
             {
@@ -106,6 +125,11 @@ public class MessageBodyFactory
                 return buildMessageBodyFromTemplate(model);
             }
         }
+    }
+
+    public void addPropertyToModel(String propertyName, Object propertyValue)
+    {
+        modelProperties.put(propertyName, propertyValue);
     }
 
     /**

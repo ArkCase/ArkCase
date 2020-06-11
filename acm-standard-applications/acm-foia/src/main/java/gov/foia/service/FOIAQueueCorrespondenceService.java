@@ -230,7 +230,6 @@ public class FOIAQueueCorrespondenceService
                 {
                     String body = getTemplatingEngine().process(emailBodyTemplate, "request", request);
                     emailData.setBody(body);
-                    emailData.setTemplate(body);
                 }
                 catch (TemplateException | IOException e)
                 {

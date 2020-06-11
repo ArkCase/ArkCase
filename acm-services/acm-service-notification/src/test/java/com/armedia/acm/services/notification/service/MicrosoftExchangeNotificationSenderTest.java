@@ -221,8 +221,6 @@ public class MicrosoftExchangeNotificationSenderTest extends EasyMockSupport
     @Test
     public void testSendEmailWithAttachments() throws Exception
     {
-        expect(mockEmailWithAttachmentsDTO.getTemplate()).andReturn("Some template");
-
         Capture<AcmUser> userCapture = EasyMock.newCapture();
         mockOutlookService.sendEmailWithAttachments(eq(mockEmailWithAttachmentsDTO), eq(mockAuthentication), capture(userCapture));
 

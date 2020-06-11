@@ -16,7 +16,6 @@
         <property name="outlookPasswordDao" ref="outlookPasswordDao"/>
         <property name="acmEmailContentGeneratorService" ref="acmEmailContentGeneratorService"/>
         <property name="folderCreatorDao" ref="outlookFolderCreatorDao"/>
-        <property name="templatingEngine" ref="templatingEngine"/>
         <property name="emailSenderConfigurationService" ref="emailSenderConfigurationService"/>
         <property name="defaultFolderAndFileConverter" ref="folderConverter"/>
         <property name="outlookConfig" ref="outlookConfig"/>

@@ -44,11 +44,9 @@ import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksDTO;
 import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksResultDTO;
 import com.armedia.acm.services.email.service.AcmEmailContentGeneratorService;
 import com.armedia.acm.services.email.service.AcmEmailSenderService;
-import com.armedia.acm.services.email.service.TemplatingEngine;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -84,8 +82,6 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
     private AcmEmailContentGeneratorService acmEmailContentGeneratorService;
 
     private EmailSenderConfig emailSenderConfig;
-
-    private TemplatingEngine templatingEngine;
 
     private DefaultFolderAndFileConverter defaultFolderAndFileConverter;
 
@@ -134,22 +130,18 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
     public void sendEmailWithAttachments(EmailWithAttachmentsDTO in, Authentication authentication, AcmUser user)
             throws Exception
     {
-        in.setTemplatingEngine(getTemplatingEngine());
-
         Exception exception = null;
 
         List<AcmEvent> sentEvents = new ArrayList<>();
         Map<String, InputStreamDataSource> attachments = processAttachments(in, user, sentEvents);
-        String objectId = extractIdFromEmailWithAttachmentsDTO(in);
-        String objectType = extractObjectTypeFromEmailWithAttachmentsDTO(in);
         String emailAddresses = in.getEmailAddresses().stream()
                 .filter(this::isEmailValid)
                 .collect(Collectors.joining(","));
 
         try
         {
-            acmMailSender.sendMultipartEmail(emailAddresses, in.getEmailGroup(), in.getSubject(), in.getMessageBody(),
-                    new ArrayList<>(attachments.values()), objectType, objectId);
+            acmMailSender.sendMultipartEmail(emailAddresses, in.getEmailGroup(), in.getSubject(), in.getBody(),
+                    new ArrayList<>(attachments.values()), in.getObjectType(), in.getObjectId());
         }
         catch (Exception e)
         {
@@ -201,10 +193,8 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
 
         try
         {
-            acmMailSender.sendMultipartEmail(emailAddresses, in.getSubject(),
-                    makeNote(emailAddresses, in, authentication), new ArrayList<>(attachments.values()),
-                    in.getParentType().contains("Case") ? "CASE_FILE" : in.getParentType().toUpperCase(),
-                    in.getParentNumber().contains("_") ? StringUtils.substringAfter(in.getParentNumber(), "_") : in.getParentNumber());
+            acmMailSender.sendMultipartEmail(emailAddresses, in.getSubject(), makeNote(emailAddresses, in, authentication),
+                    new ArrayList<>(attachments.values()), in.getObjectType(), in.getObjectId());
         }
         catch (Exception e)
         {
@@ -368,8 +358,6 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
         List<EmailWithEmbeddedLinksResultDTO> emailResultList = new ArrayList<>();
         Exception exception = null;
 
-        Long parentId = setFilenames(in);
-        String objectId = extractIdFromEmailWithEmbeddedLinkDTO(in);
         String emailAddresses = in.getEmailAddresses().stream()
                 .filter(this::isEmailValid)
                 .collect(Collectors.joining(","));
@@ -378,7 +366,7 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
         {
             // makeNote generates access token so any email address will do
             acmMailSender.sendEmail(emailAddresses, in.getSubject(), makeNote(in.getEmailAddresses().get(0), in, authentication),
-                    in.getParentType(), objectId);
+                    in.getObjectType(), in.getObjectId());
         }
         catch (Exception e)
         {
@@ -401,40 +389,6 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
     private String makeNote(String emailAddress, EmailWithEmbeddedLinksDTO emailWithEmbeddedLinksDTO, Authentication authentication)
     {
         return getAcmEmailContentGeneratorService().generateEmailBody(emailWithEmbeddedLinksDTO, emailAddress, authentication);
-    }
-
-    private String extractIdFromEmailWithEmbeddedLinkDTO(EmailWithEmbeddedLinksDTO in)
-    {
-        String objectId = null;
-        if (in.getParentNumber() != null)
-        {
-            objectId = in.getParentNumber().contains("_") ? StringUtils.substringAfter(in.getParentNumber(), "_") : in.getParentNumber();
-        }
-        return objectId;
-    }
-
-    private String extractIdFromEmailWithAttachmentsDTO(EmailWithAttachmentsDTO in)
-    {
-        String objectId;
-        if (in.getObjectId() == null && in.getParentNumber() != null)
-        {
-            objectId = in.getParentNumber().contains("_") ? StringUtils.substringAfter(in.getParentNumber(), "_") : in.getParentNumber();
-        }
-        else
-        {
-            objectId = in.getObjectId().toString();
-        }
-        return objectId;
-    }
-
-    private String extractObjectTypeFromEmailWithAttachmentsDTO(EmailWithAttachmentsDTO in)
-    {
-        String objectType = in.getObjectType();
-        if (objectType == null && in.getParentType() != null)
-        {
-            objectType = in.getParentType().contains("Case") ? "CASE_FILE" : in.getParentType().toUpperCase();
-        }
-        return objectType;
     }
 
     public boolean isEmailValid(String emailAddress)
@@ -474,16 +428,6 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
     public void setEmailSenderConfig(EmailSenderConfig emailSenderConfig)
     {
         this.emailSenderConfig = emailSenderConfig;
-    }
-
-    public TemplatingEngine getTemplatingEngine()
-    {
-        return templatingEngine;
-    }
-
-    public void setTemplatingEngine(TemplatingEngine templatingEngine)
-    {
-        this.templatingEngine = templatingEngine;
     }
 
     public DefaultFolderAndFileConverter getDefaultFolderAndFileConverter()
