@@ -31,8 +31,8 @@ import com.armedia.acm.plugins.admin.exception.AcmWorkflowConfigurationException
 import com.armedia.acm.plugins.admin.service.WorkflowConfigurationService;
 
 import org.activiti.engine.impl.util.json.JSONObject;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -65,6 +65,31 @@ public class WorkflowConfigurationMakeActive
         try
         {
             workflowConfigurationService.makeActive(key, version);
+
+            JSONObject result = new JSONObject();
+            result.put("key", key);
+            result.put("version", version);
+            return result.toString();
+        }
+        catch (Exception e)
+        {
+            log.error("Can't make workflow active", e);
+            throw new AcmWorkflowConfigurationException("Can't make workflow active", e);
+        }
+    }
+
+    @RequestMapping(value = "/workflowconfiguration/workflows/{key}/versions/{version}/inactive", method = RequestMethod.PUT, produces = {
+            MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
+    })
+    @ResponseBody
+    public String makeInactive(
+            @PathVariable("key") String key,
+            @PathVariable("version") int version) throws IOException, AcmWorkflowConfigurationException
+    {
+
+        try
+        {
+            workflowConfigurationService.makeInactive(key, version);
 
             JSONObject result = new JSONObject();
             result.put("key", key);

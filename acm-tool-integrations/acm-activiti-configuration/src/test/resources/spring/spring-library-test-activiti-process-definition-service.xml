@@ -3,7 +3,6 @@
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="acmBpmnService" class="com.armedia.acm.activiti.services.AcmBpmnServiceImpl">
-        <property name="processDefinitionsFolder" value="${user.home}/.arkcase/acm/activiti/versions"/>
     </bean>
 
     <bean id="acmActivitiListener_processStart" class="com.armedia.acm.activiti.AcmActivitiListener">

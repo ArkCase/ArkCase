@@ -50,8 +50,38 @@ angular.module('admin').controller(
                     var createNewUrl = null;
                     ConfigService.getComponentConfig("admin", "workflowsConfig").then(function(componentConfig) {
                         createNewUrl = componentConfig.createNewUrl;
+                        var columnDefs = componentConfig.columnDefs;
+                        columnDefs.push(getActionsColumn());
+                        $scope.gridOptions.columnDefs = columnDefs;
+                        onConfigRetrieved(componentConfig);
+                        reloadGrid();
                         return componentConfig;
                     });
+
+                    $scope.deactivateWorkflow = function (rowEntity) {
+                        var template = angular.copy(rowEntity);
+                        gridHelper.deleteRow(rowEntity);
+                        workflowsConfigService.deactivate(template.key, template.version).then(function () {
+                            messageService.info($translate.instant('admin.workflows.config.deactivate.success'));
+                        }, function () {
+                            messageService.error($translate.instant('admin.workflows.config.deactivate.error'));
+                        });
+                    };
+
+                    $scope.showDeactivatedWorkflows = function () {
+                        var modalInstance = $modal.open({
+                            animation: true,
+                            templateUrl: 'modules/admin/views/components/workflows.config.deactivated-modal.client.view.html',
+                            controller: 'Admin.WorkflowsConfigDeactivatedModalController',
+                            size: 'lg',
+                            backdrop: 'static'
+                        });
+
+                        modalInstance.result.then(function () {
+                            reloadGrid();
+                        })
+                    };
+
                     $scope.openProcessModeler = function() {
                         $window.open(createNewUrl);
                     };
@@ -96,7 +126,7 @@ angular.module('admin').controller(
                     function getActionsColumn() {
                         return {
                             "name": "active",
-                            "displayName": "admin.workflows.config.grid.active",
+                            "displayName": "admin.workflows.config.grid.actions",
                             "width": 100,
                             "enableSorting": false,
                             "visible": true,

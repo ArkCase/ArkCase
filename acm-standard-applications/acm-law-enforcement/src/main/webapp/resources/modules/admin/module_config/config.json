@@ -491,8 +491,9 @@
                 },
                 {
                     "name": "version",
-                    "displayName": "version",
-                    "visible": false
+                    "displayName": "admin.workflows.config.grid.version",
+                    "visible": true,
+                    "headerCellFilter": "translate"
                 },
                 {
                     "name": "fileName",
@@ -523,6 +524,13 @@
                     "name": "modifier",
                     "displayName": "modifier",
                     "visible": false
+                },
+                {
+                    "name": "status",
+                    "displayName": "admin.workflows.config.grid.status",
+                    "visible": true,
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div align='center'><span ng-if='!row.entity.active' class='label label-warning' translate>admin.workflows.config.grid.deactivated</span><span ng-if='row.entity.active' ng-click='grid.appScope.deactivateWorkflow(row.entity)' class='label label-success' translate>admin.workflows.config.grid.activated</span></div>'"
                 }
             ],
             "createNewUrl": "https://activiti.alfresco.com"
@@ -560,8 +568,9 @@
                 },
                 {
                     "name": "version",
-                    "displayName": "version",
-                    "visible": false
+                    "displayName": "admin.workflows.config.grid.version",
+                    "visible": true,
+                    "headerCellFilter": "translate"
                 },
                 {
                     "name": "fileName",
@@ -583,6 +592,63 @@
                     "lookup": "userFullNames"
                 }
             ]
+        },
+        {
+            "id": "workflowsDeactivatedHistoryDialogConfig",
+            "title": "admin.comp.workflowsDeactivatedHistoryDialogConfig.title",
+            "enabled": true,
+            "configurable": true,
+            "type": "grid",
+            "columnDefs": [
+                {
+                    "name": "name",
+                    "displayName": "admin.workflows.config.grid.businessProcess",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "description",
+                    "displayName": "admin.workflows.config.grid.description",
+                    "visible": true,
+                    "cellTemplate": "<div class='ui-grid-cell-contents' title='{{row.entity.description}}'>{{row.entity.description}}</div>",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "version",
+                    "displayName": "admin.workflows.config.grid.version",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "modified",
+                    "displayName": "admin.workflows.config.grid.modified",
+                    "visible": true,
+                    "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "creator",
+                    "displayName": "admin.workflows.config.grid.creator",
+                    "visible": true,
+                    "headerCellFilter": "translate",
+                    "lookup": "userFullNames"
+                },
+                {
+                    "name": "status",
+                    "field": "active",
+                    "displayName": "admin.workflows.config.grid.status",
+                    "visible": true,
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div align='center'><span ng-if='!row.entity.active'  ng-click='grid.appScope.activateWorkflow(row.entity)' class='label label-warning' translate>admin.workflows.config.grid.deactivated</span><span ng-if='row.entity.active' class='label label-success' translate>admin.workflows.config.grid.activated</span></div>'"
+                }
+            ],
+            "paginationPageSizes": [
+                5,
+                10,
+                20
+            ],
+            "paginationPageSize": 10,
+            "start": 0
         },
         {
             "id": "usersPicker",
