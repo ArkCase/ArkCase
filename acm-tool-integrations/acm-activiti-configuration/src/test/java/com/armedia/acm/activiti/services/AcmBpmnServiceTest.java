@@ -44,7 +44,6 @@ import org.easymock.EasyMockSupport;
 import org.easymock.IAnswer;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,7 +71,6 @@ public class AcmBpmnServiceTest extends EasyMockSupport
     AcmBpmnServiceImpl processDefinitionManagementService;
 
     private AcmBpmnDao acmBpmnDao;
-    private String processDefinitionsFolder;
     private Capture<AcmProcessDefinition> capture;
     private ProcessEngine processEngine;
     private Resource resourceFile;
@@ -82,21 +80,6 @@ public class AcmBpmnServiceTest extends EasyMockSupport
     private String resourceFileMD5Sum;
     private String resourceFileNotChangedMD5Sum;
     private String resourceFileChangedMD5Sum;
-
-    @BeforeClass
-    public static void initialCleanUp()
-    {
-        String userHome = System.getProperty("user.home");
-        File versionsFolder = new File(userHome + "/.arkcase/acm/activiti/versions");
-        if (versionsFolder.exists())
-        {
-            for (File f : versionsFolder.listFiles())
-            {
-                if (f.isFile() && f.getName().startsWith("Test"))
-                    f.delete();
-            }
-        }
-    }
 
     @Before
     public void setUp() throws Exception
@@ -112,9 +95,6 @@ public class AcmBpmnServiceTest extends EasyMockSupport
         processDefinitionManagementService.setActivitiRepositoryService(processEngine.getRepositoryService());
         acmBpmnDao = createMock(AcmBpmnDao.class);
         processDefinitionManagementService.setAcmBpmnDao(acmBpmnDao);
-        String userHome = System.getProperty("user.home");
-        processDefinitionsFolder = userHome + "/.arkcase/acm/activiti/versions";
-        processDefinitionManagementService.setProcessDefinitionsFolder(processDefinitionsFolder);
     }
 
     @After
@@ -157,11 +137,7 @@ public class AcmBpmnServiceTest extends EasyMockSupport
 
         // check if file is deleted from temp folder
         assertTrue(f.exists());
-        // check if file is copied to new location
-        assertTrue(new File(processDefinitionsFolder + "/" + pd.getFileName()).exists());
 
-        // cleanup
-        processDefinitionManagementService.remove(pd, true);
     }
 
     @Test
@@ -222,11 +198,7 @@ public class AcmBpmnServiceTest extends EasyMockSupport
 
         // check if file is deleted from temp folder
         assertTrue(f.exists());
-        // check if file is copied to new location
-        assertTrue(new File(processDefinitionsFolder + "/" + pd.getFileName()).exists());
 
-        // cleanup
-        processDefinitionManagementService.remove(pd, true);
     }
 
     @Test
@@ -286,12 +258,7 @@ public class AcmBpmnServiceTest extends EasyMockSupport
 
         // check if file is deleted from temp folder
         assertTrue(f.exists());
-        // check if file is copied to new location
-        assertTrue(new File(processDefinitionsFolder + "/" + pd.getFileName()).exists());
 
-        // cleanup
-        processDefinitionManagementService.remove(pd, true);
-        processDefinitionManagementService.remove(pd1, true);
     }
 
     @Test
@@ -310,20 +277,6 @@ public class AcmBpmnServiceTest extends EasyMockSupport
         assertEquals(1, processDefinitionManagementService.count());
     }
 
-    @After
-    public void cleanUp()
-    {
-        // in case of failed test or exception, database will rollback, and files and deployments are cleaned manually
-        String userHome = System.getProperty("user.home");
-        String processDefinitionsFolder = userHome + "/.arkcase/acm/activiti/versions";
-        // delete created files
-        for (String file : filesToDelete)
-        {
-            File toBeDeleted = new File(processDefinitionsFolder + "/" + file);
-            if (toBeDeleted.exists())
-                toBeDeleted.delete();
-        }
-    }
 
     public String getDigest(File processDefinitionFile)
     {

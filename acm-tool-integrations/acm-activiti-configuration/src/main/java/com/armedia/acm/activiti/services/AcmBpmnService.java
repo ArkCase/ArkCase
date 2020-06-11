@@ -42,13 +42,13 @@ public interface AcmBpmnService
 
     public List<AcmProcessDefinition> list(String orderBy, boolean isAsc);
 
-    public List<AcmProcessDefinition> listPage(int start, int length, String orderBy, boolean isAsc);
+    public List<AcmProcessDefinition> listPage(String orderBy, boolean isAsc);
 
     public InputStream getBpmnFileStream(AcmProcessDefinition wfFile);
 
-    public void remove(AcmProcessDefinition processDefinition, boolean cascade);
-
     public void makeActive(AcmProcessDefinition processDefinition);
+
+    public void makeInactive(AcmProcessDefinition processDefinition);
 
     public List<AcmProcessDefinition> getVersionHistory(AcmProcessDefinition processDefinition);
 
@@ -62,5 +62,7 @@ public interface AcmBpmnService
     public AcmProcessDefinition getByKeyAndVersion(String processDefinitionKey, int version);
 
     public byte[] getDiagram(String deploymentId, String key, Integer version) throws AcmBpmnException;
+
+    public List<AcmProcessDefinition> listAllDeactivatedVersions();
 
 }
