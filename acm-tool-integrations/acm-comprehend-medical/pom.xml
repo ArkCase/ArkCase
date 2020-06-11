@@ -47,10 +47,6 @@
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-comprehendmedical</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.amazonaws</groupId>
-            <artifactId>aws-java-sdk-core</artifactId>
-        </dependency>
 
         <!-- testing -->
         <dependency>
