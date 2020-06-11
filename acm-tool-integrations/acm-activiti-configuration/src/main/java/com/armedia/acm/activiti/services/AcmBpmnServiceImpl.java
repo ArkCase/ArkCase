@@ -88,9 +88,14 @@ public class AcmBpmnServiceImpl implements AcmBpmnService
     }
 
     @Override
-    public InputStream getBpmnFileStream(AcmProcessDefinition processDefinition)
+    public InputStream getBpmnFileStream(AcmProcessDefinition acmProcessDefinition)
     {
-        return createBpmnFile(processDefinition);
+        ProcessDefinition processDefinition = getProcessDefinition(acmProcessDefinition.getDeploymentId(), acmProcessDefinition.getKey(),
+                acmProcessDefinition.getVersion());
+
+        InputStream inputStream;
+        inputStream = activitiRepositoryService.getProcessModel(processDefinition.getId());
+        return inputStream;
     }
 
     @Override
@@ -316,16 +321,6 @@ public class AcmBpmnServiceImpl implements AcmBpmnService
     public List<AcmProcessDefinition> listAllDeactivatedVersions()
     {
         return acmBpmnDao.listAllDeactivatedVersions();
-    }
-
-    private InputStream createBpmnFile(AcmProcessDefinition acmProcessDefinition)
-    {
-        ProcessDefinition processDefinition = getProcessDefinition(acmProcessDefinition.getDeploymentId(), acmProcessDefinition.getKey(),
-                acmProcessDefinition.getVersion());
-
-        InputStream inputStream;
-        inputStream = activitiRepositoryService.getProcessModel(processDefinition.getId());
-        return inputStream;
     }
 
     private ProcessDefinition getProcessDefinition(String deploymentId, String key, int version)
