@@ -40,9 +40,9 @@ import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -118,9 +118,10 @@ import static org.junit.Assert.assertNotNull;
         "/spring/spring-library-websockets.xml",
         "/spring/spring-library-object-title.xml",
         "/spring/spring-library-labels-service.xml",
-        "/spring/spring-library-convert-folder-service.xml"
+        "/spring/spring-library-convert-folder-service.xml",
+        "/spring/spring-library-convert-file-service.xml"
 })
-@TransactionConfiguration(defaultRollback = false, transactionManager = "transactionManager")
+@Rollback(true)
 public class ComplaintPipelineIT
 {
     static

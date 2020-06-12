@@ -45,9 +45,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -90,7 +90,7 @@ import java.util.UUID;
         "/spring/spring-integration-case-file-test.xml",
         "/spring/spring-library-folder-watcher.xml"
 })
-@TransactionConfiguration(defaultRollback = true)
+@Rollback(true)
 public class CaseFileDaoIT
 {
 

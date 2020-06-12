@@ -37,6 +37,7 @@ import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -55,7 +56,7 @@ import java.util.List;
         "/spring/spring-library-websockets.xml",
         "/spring/spring-library-object-converter.xml"
 })
-@TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
+@Rollback(true)
 public class SignatureDaoIT extends BaseTestCase
 {
     static
