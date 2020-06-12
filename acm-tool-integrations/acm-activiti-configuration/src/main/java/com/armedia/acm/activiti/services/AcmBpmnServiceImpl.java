@@ -32,7 +32,6 @@ import com.armedia.acm.activiti.exceptions.NotValidBpmnFileException;
 import com.armedia.acm.activiti.model.AcmProcessDefinition;
 import com.armedia.acm.activiti.services.dao.AcmBpmnDao;
 
-import javax.xml.XMLConstants;
 import org.activiti.engine.ActivitiException;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.repository.Deployment;
@@ -41,8 +40,8 @@ import org.activiti.engine.repository.ProcessDefinition;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
@@ -59,7 +58,6 @@ import javax.xml.xpath.XPathFactory;
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -74,7 +72,6 @@ public class AcmBpmnServiceImpl implements AcmBpmnService
 {
     private transient Logger log = LogManager.getLogger(getClass());
 
-    private String processDefinitionsFolder;
     private RepositoryService activitiRepositoryService;
     private AcmBpmnDao acmBpmnDao;
 
@@ -85,44 +82,24 @@ public class AcmBpmnServiceImpl implements AcmBpmnService
     }
 
     @Override
-    public List<AcmProcessDefinition> listPage(int start, int length, String orderBy, boolean isAsc)
+    public List<AcmProcessDefinition> listPage(String orderBy, boolean isAsc)
     {
-        return acmBpmnDao.listPage(start, length, orderBy, isAsc);
+        return acmBpmnDao.listPage(orderBy, isAsc);
     }
 
     @Override
-    public InputStream getBpmnFileStream(AcmProcessDefinition processDefinition)
+    public InputStream getBpmnFileStream(AcmProcessDefinition acmProcessDefinition)
     {
-        String filePath = processDefinitionsFolder + "/" + processDefinition.getFileName();
-        try
-        {
-            FileInputStream fis = new FileInputStream(new File(filePath));
-            return fis;
-        }
-        catch (FileNotFoundException e)
-        {
-            // this should not happen
-            log.error("File for Process definition id = ({}) not found. Should be on path = ({})", processDefinition.getId(), filePath);
-            throw new AcmBpmnException(
-                    "Internal application error, file for AcmProcessDefinition id = " + processDefinition.getId() + " should exists!");
-        }
+        ProcessDefinition processDefinition = getProcessDefinition(acmProcessDefinition.getDeploymentId(), acmProcessDefinition.getKey(),
+                acmProcessDefinition.getVersion());
+
+        return activitiRepositoryService.getProcessModel(processDefinition.getId());
     }
 
     @Override
     @Transactional
     public void remove(AcmProcessDefinition processDefinition, boolean cascade)
     {
-        String filePath = processDefinitionsFolder + "/" + processDefinition.getFileName();
-        File file = new File(filePath);
-        if (file.exists())
-            file.delete();
-        else
-        {
-            // this should not happen
-            log.error("File for Process definition id = ({}) not found. Should be on path = ({})", processDefinition.getId(), filePath);
-            throw new AcmBpmnException(
-                    "Internal application error, file for AcmProcessDefinition id = " + processDefinition.getId() + " should exists!");
-        }
         activitiRepositoryService.deleteDeployment(processDefinition.getDeploymentId(), cascade);
         acmBpmnDao.remove(processDefinition);
     }
@@ -138,6 +115,20 @@ public class AcmBpmnServiceImpl implements AcmBpmnService
             acmBpmnDao.save(activeVersion);
         }
         processDefinition.setActive(true);
+        acmBpmnDao.save(processDefinition);
+    }
+
+    @Override
+    @Transactional
+    public void makeInactive(AcmProcessDefinition processDefinition)
+    {
+        AcmProcessDefinition activeVersion = acmBpmnDao.getActive(processDefinition.getKey());
+        if (activeVersion != null)
+        {
+            activeVersion.setActive(false);
+            acmBpmnDao.save(activeVersion);
+        }
+        processDefinition.setActive(false);
         acmBpmnDao.save(processDefinition);
     }
 
@@ -158,8 +149,7 @@ public class AcmBpmnServiceImpl implements AcmBpmnService
     public AcmProcessDefinition deploy(File processDefinitionFile, String fileDescription, boolean makeActive,
             boolean deleteFileAfterDeploy)
     {
-        // verify that folder for keeping process definition files exists before deployment
-        verifyFolderExists();
+
         String digest = getDigest(processDefinitionFile);
         log.info("Digest [{}] from Bpmn file", digest);
         String bpmnId = getProcessDefinitionKey(processDefinitionFile);
@@ -187,25 +177,9 @@ public class AcmBpmnServiceImpl implements AcmBpmnService
             // move file to process definitions with versions folder
             String fileName = pd.getKey() + "_v" + pd.getVersion() + ".bpmn20.xml";
 
-            dest = new File(processDefinitionsFolder + "/" + fileName);
-
-            if (dest.exists())
-            {
-                // this version is already saved and is not new
-                acmProcessDefinitionExisting = acmBpmnDao.getByKeyAndVersion(pd.getKey(), pd.getVersion());
-                if (acmProcessDefinitionExisting == null)
-                {
-                    throw new AcmBpmnException("Internal error, this record should exists in database");
-                }
-                return acmProcessDefinitionExisting;
-            }
             if (deleteFileAfterDeploy)
             {
-                processDefinitionFile.renameTo(dest);
-            }
-            else
-            {
-                FileUtils.copyFile(processDefinitionFile, dest, false);
+                FileUtils.deleteQuietly(processDefinitionFile);
             }
 
             // create entry to our database
@@ -349,6 +323,12 @@ public class AcmBpmnServiceImpl implements AcmBpmnService
         return diagram;
     }
 
+    @Override
+    public List<AcmProcessDefinition> listAllDeactivatedVersions()
+    {
+        return acmBpmnDao.listAllDeactivatedVersions();
+    }
+
     private ProcessDefinition getProcessDefinition(String deploymentId, String key, int version)
     {
         ProcessDefinition processDefinition = null;
@@ -371,11 +351,6 @@ public class AcmBpmnServiceImpl implements AcmBpmnService
         this.activitiRepositoryService = activitiRepositoryService;
     }
 
-    public void setProcessDefinitionsFolder(String processDefinitionsFolder)
-    {
-        this.processDefinitionsFolder = processDefinitionsFolder;
-    }
-
     public void setAcmBpmnDao(AcmBpmnDao acmBpmnDao)
     {
         this.acmBpmnDao = acmBpmnDao;
@@ -396,17 +371,4 @@ public class AcmBpmnServiceImpl implements AcmBpmnService
         }
     }
 
-    private void verifyFolderExists()
-    {
-        if (processDefinitionsFolder != null && processDefinitionsFolder.length() > 0)
-        {
-            File pdFolder = new File(processDefinitionsFolder);
-            if (!pdFolder.exists())
-                pdFolder.mkdirs();
-        }
-        else
-        {
-            throw new AcmBpmnException("Process definition folder must not be empty");
-        }
-    }
 }
