@@ -231,8 +231,12 @@ public class LdapUserService implements ApplicationEventPublisherAware
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public AcmUser editLdapUser(AcmUser acmUser, String userId, String directory) throws AcmLdapActionFailedException
+    public AcmUser editLdapUser(AcmUser acmUser, String userId, String directory) throws AcmLdapActionFailedException, ValidatorException
     {
+        if (!emailValidator.isValid(acmUser.getMail()))
+        {
+            throw new ValidatorException("Invalid email submitted!");
+        }
         log.debug("Saving updated User [{}] in database", acmUser.getUserId());
         AcmUser existingUser = userDao.findByUserId(userId);
         existingUser.setFirstName(acmUser.getFirstName());

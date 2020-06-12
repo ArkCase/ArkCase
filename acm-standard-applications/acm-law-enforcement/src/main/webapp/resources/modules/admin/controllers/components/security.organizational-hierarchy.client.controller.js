@@ -488,29 +488,14 @@ angular.module('admin').controller(
 
                     $scope.onEditLdapMember = function(member) {
                         var deferred = $q.defer();
-                        var modalInstance = $modal.open({
-                            animation: $scope.animationsEnabled,
-                            templateUrl: 'modules/admin/views/components/security.organizational-hierarchy.create-user.dialog.html',
-                            controller: [ '$scope', '$modalInstance', function($scope, $modalInstance) {
-                                $scope.enableUsernameEdit = false;
-                                $scope.cloneUser = false;
-                                $scope.header = "admin.security.organizationalHierarchy.createUserDialog.editLdapMember.title";
-                                $scope.okBtn = "admin.security.organizationalHierarchy.createUserDialog.editLdapMember.btn.ok";
-                                $scope.cancelBtn = "admin.security.organizationalHierarchy.createUserDialog.editLdapMember.btn.cancel";
-                                $scope.user = mapMember(member);
-                                $scope.ok = function() {
-                                    $modalInstance.close($scope.user);
-                                };
-                            } ],
-                            size: 'md',
-                            backdrop: 'static'
-                        });
+                        var modalInstance = openEditUserModal(member, {});
 
                         modalInstance.result.then(function(user) {
                             organizationalHierarchyService.editGroupMember(user).then(function(member) {
                                 var unmappedMember = unMapMember(member);
                                 deferred.resolve(unmappedMember);
-                            }, function() {
+                            }, function(error) {
+                                openEditUserModal(member, error.data);
                                 //saving error
                                 deferred.reject();
                             });
@@ -521,6 +506,29 @@ angular.module('admin').controller(
                         });
                         return deferred.promise;
                     };
+
+                    function openEditUserModal(member, error) {
+                        return $modal.open({
+                            animation: $scope.animationsEnabled,
+                            templateUrl: 'modules/admin/views/components/security.organizational-hierarchy.create-user.dialog.html',
+                            controller: [ '$scope', '$modalInstance', function($scope, $modalInstance) {
+                                $scope.enableUsernameEdit = false;
+                                $scope.cloneUser = false;
+                                $scope.header = "admin.security.organizationalHierarchy.createUserDialog.editLdapMember.title";
+                                $scope.okBtn = "admin.security.organizationalHierarchy.createUserDialog.editLdapMember.btn.ok";
+                                $scope.cancelBtn = "admin.security.organizationalHierarchy.createUserDialog.editLdapMember.btn.cancel";
+                                $scope.user = mapMember(member);
+                                if (error.field === "email") {
+                                    $scope.emailError = error.message;
+                                }
+                                $scope.ok = function() {
+                                    $modalInstance.close($scope.user);
+                                };
+                            } ],
+                            size: 'md',
+                            backdrop: 'static'
+                        });
+                    }
 
                     $scope.onDeleteLdapMember = function(data) {
                         var deferred = $q.defer();
