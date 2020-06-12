@@ -38,6 +38,7 @@ import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -82,7 +83,7 @@ import org.springframework.transaction.annotation.Transactional;
         "/spring/spring-library-labels-service.xml",
         "/spring/spring-test-quartz-scheduler.xml"
 })
-@TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
+@Rollback(true)
 public class NotificationIT
 {
     static

@@ -27,10 +27,6 @@ package gov.foia.service;
  * #L%
  */
 
-import static org.easymock.EasyMock.capture;
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-
 import com.armedia.acm.compressfolder.FolderCompressor;
 import com.armedia.acm.core.AcmApplication;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
@@ -42,7 +38,8 @@ import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.service.NotificationSender;
 import com.armedia.acm.services.users.dao.UserDao;
-
+import gov.foia.model.FOIAConstants;
+import gov.foia.model.FOIARequest;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -51,8 +48,9 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
 
-import gov.foia.model.FOIAConstants;
-import gov.foia.model.FOIARequest;
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by teng.wang on 3/31/2017.

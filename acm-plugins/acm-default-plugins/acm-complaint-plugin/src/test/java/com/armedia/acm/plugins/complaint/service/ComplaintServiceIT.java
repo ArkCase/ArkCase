@@ -40,6 +40,7 @@ import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -124,7 +125,7 @@ import static org.junit.Assert.assertNotNull;
         "/spring/spring-library-labels-service.xml",
         "/spring/spring-library-convert-folder-service.xml"
 })
-@TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
+@Rollback(true)
 public class ComplaintServiceIT
 {
 

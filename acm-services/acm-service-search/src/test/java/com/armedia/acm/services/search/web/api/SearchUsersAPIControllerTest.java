@@ -27,16 +27,8 @@ package com.armedia.acm.services.search.web.api;
  * #L%
  */
 
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.easymock.EasyMockSupport;
@@ -45,7 +37,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -53,6 +44,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
+
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -108,7 +106,7 @@ public class SearchUsersAPIControllerTest extends EasyMockSupport
                 get("/api/v1/plugin/search/usersSearch?start=0&n=10&sortDirection=ASC&searchKeyword=&exclude=")
                         .principal(mockAuthentication))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType("application/json;charset=ISO-8859-1"))
                 .andReturn();
 
         verifyAll();
@@ -145,7 +143,7 @@ public class SearchUsersAPIControllerTest extends EasyMockSupport
                 get("/api/v1/plugin/search/usersSearch?start=0&n=10&sortDirection=ASC&searchKeyword=keyword&exclude=")
                         .principal(mockAuthentication))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType("application/json;charset=ISO-8859-1"))
                 .andReturn();
 
         verifyAll();
@@ -188,7 +186,7 @@ public class SearchUsersAPIControllerTest extends EasyMockSupport
                 get("/api/v1/plugin/search/usersSearch?start=0&n=10&sortDirection=DESC&searchKeyword=&exclude=task-owner")
                         .principal(mockAuthentication))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType("application/json;charset=ISO-8859-1"))
                 .andReturn();
 
         verifyAll();
@@ -231,7 +229,7 @@ public class SearchUsersAPIControllerTest extends EasyMockSupport
                 get("/api/v1/plugin/search/usersSearch?start=0&n=10&sortDirection=DESC&searchKeyword=keyword&exclude=task-owner")
                         .principal(mockAuthentication))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType("application/json;charset=ISO-8859-1"))
                 .andReturn();
 
         verifyAll();
@@ -274,7 +272,7 @@ public class SearchUsersAPIControllerTest extends EasyMockSupport
                 get("/api/v1/plugin/search/usersSearch?start=0&n=10&sortDirection=DESC&searchKeyword=keyword&exclude=task-owner&userId=test-user")
                         .principal(mockAuthentication))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType("application/json;charset=ISO-8859-1"))
                 .andReturn();
 
         verifyAll();
