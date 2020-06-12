@@ -93,9 +93,15 @@ public class AcmBpmnServiceImpl implements AcmBpmnService
         ProcessDefinition processDefinition = getProcessDefinition(acmProcessDefinition.getDeploymentId(), acmProcessDefinition.getKey(),
                 acmProcessDefinition.getVersion());
 
-        InputStream inputStream;
-        inputStream = activitiRepositoryService.getProcessModel(processDefinition.getId());
-        return inputStream;
+        return activitiRepositoryService.getProcessModel(processDefinition.getId());
+    }
+
+    @Override
+    @Transactional
+    public void remove(AcmProcessDefinition processDefinition, boolean cascade)
+    {
+        activitiRepositoryService.deleteDeployment(processDefinition.getDeploymentId(), cascade);
+        acmBpmnDao.remove(processDefinition);
     }
 
     @Override

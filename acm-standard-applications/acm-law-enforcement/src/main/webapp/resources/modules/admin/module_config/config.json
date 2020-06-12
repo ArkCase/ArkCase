@@ -490,12 +490,6 @@
                     "visible": false
                 },
                 {
-                    "name": "version",
-                    "displayName": "admin.workflows.config.grid.version",
-                    "visible": true,
-                    "headerCellFilter": "translate"
-                },
-                {
                     "name": "fileName",
                     "displayName": "fileName",
                     "visible": false

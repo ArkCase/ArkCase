@@ -138,6 +138,8 @@ public class AcmBpmnServiceTest extends EasyMockSupport
         // check if file is deleted from temp folder
         assertTrue(f.exists());
 
+        // cleanup
+        processDefinitionManagementService.remove(pd, true);
     }
 
     @Test
@@ -199,6 +201,8 @@ public class AcmBpmnServiceTest extends EasyMockSupport
         // check if file is deleted from temp folder
         assertTrue(f.exists());
 
+        // cleanup
+        processDefinitionManagementService.remove(pd, true);
     }
 
     @Test
@@ -259,6 +263,9 @@ public class AcmBpmnServiceTest extends EasyMockSupport
         // check if file is deleted from temp folder
         assertTrue(f.exists());
 
+        // cleanup
+        processDefinitionManagementService.remove(pd, true);
+        processDefinitionManagementService.remove(pd1, true);
     }
 
     @Test

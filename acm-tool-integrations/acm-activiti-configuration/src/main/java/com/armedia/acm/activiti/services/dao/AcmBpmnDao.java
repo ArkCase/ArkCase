@@ -96,13 +96,25 @@ public class AcmBpmnDao
     @Transactional
     public List<AcmProcessDefinition> listPage(String orderBy, boolean isAsc)
     {
+        CriteriaBuilder builder = em.getCriteriaBuilder();
 
-        String queryText = "SELECT DISTINCT apd FROM AcmProcessDefinition apd WHERE apd.active = 1 ORDER BY apd."
-                + orderBy + (isAsc ? " ASC" : " DESC");
-        TypedQuery<AcmProcessDefinition> query = getEm().createQuery(queryText, AcmProcessDefinition.class);
-        List<AcmProcessDefinition> acmActiveProcessDefinitions = query.getResultList();
+        CriteriaQuery<AcmProcessDefinition> criteriaQuery = builder.createQuery(AcmProcessDefinition.class);
+        Root<AcmProcessDefinition> processDefinition = criteriaQuery.from(AcmProcessDefinition.class);
 
-        return acmActiveProcessDefinitions;
+        criteriaQuery.select(processDefinition);
+        criteriaQuery.where(builder.equal(processDefinition.get("active"), true));
+
+        if (isAsc)
+        {
+            criteriaQuery.orderBy(builder.asc(processDefinition.get(orderBy)));
+        }
+        else
+        {
+            criteriaQuery.orderBy(builder.desc(processDefinition.get(orderBy)));
+        }
+        TypedQuery<AcmProcessDefinition> query = getEm().createQuery(criteriaQuery);
+        return query.getResultList();
+
     }
 
     public List<AcmProcessDefinition> listAllVersions(AcmProcessDefinition processDefinition)
