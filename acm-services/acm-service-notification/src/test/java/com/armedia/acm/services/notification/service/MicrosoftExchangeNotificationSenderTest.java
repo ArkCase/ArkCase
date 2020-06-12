@@ -125,6 +125,7 @@ public class MicrosoftExchangeNotificationSenderTest extends EasyMockSupport
         notification.setEmailAddresses("user_email");
         notification.setTitle("title");
         notification.setNote("the_note");
+        notification.setParentId(0L);
 
         expect(templateService.getTemplate(anyString())).andThrow(new AcmEmailConfigurationIOException("No such template"));
         expect(mockNotificationUtils.buildNotificationLink(notification.getParentType(), notification.getParentId(),
