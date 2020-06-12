@@ -28,14 +28,12 @@ package com.armedia.acm.plugins.admin.web.api;
  */
 
 import com.armedia.acm.web.api.service.ApplicationMetaInfoService;
-
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.Collections;
 import java.util.Map;
 
 @Controller
@@ -48,7 +46,7 @@ public class GetApplicationVersionAPIController
     @ResponseBody
     public Map<String, String> getApplicationVersion()
     {
-        return Collections.singletonMap("applicationVersion", applicationMetaInfoService.getVersion());
+        return applicationMetaInfoService.getVersion();
     }
 
     public ApplicationMetaInfoService getApplicationMetaInfoService() {

@@ -31,8 +31,8 @@ import com.armedia.acm.plugins.admin.exception.AcmWorkflowConfigurationException
 import com.armedia.acm.plugins.admin.service.WorkflowConfigurationService;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,6 +42,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Created by sergey.kolomiets on 6/9/15.
@@ -66,7 +67,7 @@ public class WorkflowConfigurationRetrieveBpmnFile
         try
         {
             InputStream bpmnStream = workflowConfigurationService.retrieveBpmnFile(key, version);
-            String bpmnFileContent = IOUtils.toString(bpmnStream);
+            String bpmnFileContent = IOUtils.toString(bpmnStream, StandardCharsets.UTF_8.name());
             return bpmnFileContent;
         }
         catch (Exception e)

@@ -125,7 +125,7 @@ public class AcmGroup implements Serializable, AcmEntity
     private AcmUser supervisor;
 
     @JsonProperty("members")
-    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @ManyToMany(cascade = { CascadeType.MERGE })
     @JoinTable(name = "acm_user_membership", joinColumns = {
             @JoinColumn(name = "cm_group_name", referencedColumnName = "cm_group_name") }, inverseJoinColumns = {
                     @JoinColumn(name = "cm_user_id", referencedColumnName = "cm_user_id") })

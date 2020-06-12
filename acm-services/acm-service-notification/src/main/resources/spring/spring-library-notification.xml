@@ -160,7 +160,7 @@
 
     <bean id="notificationFormatter" class="com.armedia.acm.services.notification.service.NotificationFormatter">
         <property name="translationService" ref="translationService"/>
-        <property name="notificationConfig" ref="notificationConfig"/>
+        <property name="objectLabelConfig" ref="objectLabelConfig"/>
     </bean>
 
     <bean id="notificationConfig" class="com.armedia.acm.services.notification.model.NotificationConfig" scope="refresh">
@@ -195,7 +195,6 @@
 
     <bean id="acmEmailMentionsService" class="com.armedia.acm.services.notification.service.AcmEmailMentionsService">
         <property name="acmAppConfiguration" ref="acmApplication"/>
-        <property name="templatingEngine" ref="templatingEngine"/>
         <property name="notificationDao" ref="notificationDao"/>
         <property name="applicationConfig" ref="applicationProperties"/>
         <property name="translationService" ref="translationService"/>

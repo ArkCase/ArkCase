@@ -120,6 +120,8 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
 
     private PersonDao personDao;
 
+    private RequestAssignmentService requestAssignmentService;
+
     @Value("${foia.portalserviceprovider.directory.name}")
     private String directoryName;
 
@@ -430,6 +432,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
                     portalInfo.getGroup().getName());
             portalPersonDao.save(person);
             AcmUser acmUser = ldapUserService.createLdapUser(userDto, directoryName);
+            getRequestAssignmentService().addPortalUserAsParticipantToExistingRequests(acmUser, person);
             acmUserEventPublisher.getApplicationEventPublisher().publishEvent(new AcmLdapSyncEvent(acmUser.getUserId()));
         }
         catch (Exception e)
@@ -1278,5 +1281,15 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     public void setOrganizationDao(OrganizationDao organizationDao)
     {
         this.organizationDao = organizationDao;
+    }
+
+    public RequestAssignmentService getRequestAssignmentService()
+    {
+        return requestAssignmentService;
+    }
+
+    public void setRequestAssignmentService(RequestAssignmentService requestAssignmentService)
+    {
+        this.requestAssignmentService = requestAssignmentService;
     }
 }

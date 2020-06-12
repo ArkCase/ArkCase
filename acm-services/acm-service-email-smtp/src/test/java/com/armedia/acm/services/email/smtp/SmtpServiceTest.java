@@ -30,7 +30,9 @@ package com.armedia.acm.services.email.smtp;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
@@ -67,6 +69,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -135,7 +138,7 @@ public class SmtpServiceTest
     public void testSendEmailWithEmbeddedLinks() throws Exception
     {
         // given
-        final String email = "user_email";
+        final String email = "user_email@test.com";
         final String header = "header";
         final String baseUrl = "base_url";
         final String title = "title";
@@ -182,18 +185,18 @@ public class SmtpServiceTest
     public void testSendEmailWithAttachments() throws Exception
     {
         // given
-        final String email = "user_email";
+        final String email = "user_email@test.com";
         final String header = "header";
         final String body = "body";
         final String footer = "footer";
-        final String note = header + "\\s*" + body + "\\s*" + footer;
+        final String note = header + body + footer;
 
         List<String> addresses = new ArrayList<>();
         addresses.add(email);
         EmailWithAttachmentsDTO inputDTO = new EmailWithAttachmentsDTO();
         inputDTO.setEmailAddresses(addresses);
         inputDTO.setHeader(header);
-        inputDTO.setBody(body);
+        inputDTO.setBody(note);
         inputDTO.setFooter(footer);
 
         senderConfig.setEncryption("off");
@@ -241,7 +244,7 @@ public class SmtpServiceTest
         // then
         verify(mockMailSender).sendMultipartEmail(eq(email), anyString(), anyString(), capturedNote.capture(),
                 capturedAttachments.capture(), anyString(), anyString());
-        assertThat(Pattern.compile(note).matcher(capturedNote.getValue()).matches(), is(true));
+        assertThat(note.equals(capturedNote.getValue()), is(true));
         assertThat(capturedAttachments.getValue(), notNullValue());
         assertThat(capturedAttachments.getValue().size(), is(2));
         assertThat(capturedAttachments.getValue().get(0).getName(), notNullValue());
@@ -255,7 +258,7 @@ public class SmtpServiceTest
     public void testSendEmailWithEmbeddedLinksAndAttachments() throws Exception
     {
         // given
-        final String email = "user_email";
+        final String email = "user_email@test.com";
         final String header = "header";
         final String baseUrl = "base_url";
         final String title = "title";
@@ -316,8 +319,6 @@ public class SmtpServiceTest
         whenNew(FileInputStream.class).withArguments(mockFile).thenReturn(mockFileInputStream);
         when(mockFile.getName()).thenReturn("temp.zip");
 
-        inputDTO.setParentType("ParentType");
-        inputDTO.setParentNumber("ParentNumber");
         // when
         service.sendEmailWithAttachmentsAndLinks(inputDTO, mockAuthentication, mockAcmUser);
 
@@ -333,4 +334,21 @@ public class SmtpServiceTest
         assertThat(capturedAttachments.getValue().get(1).getContentType(), notNullValue());
         mockApplicationEventPublisher.publishEvent(any(SmtpEventSentEvent.class));
     }
+
+    @Test
+    public void testValidEmail()
+    {
+        List<String> validEmails = Arrays.asList("***REMOVED***", "ann-acm@appdev.armedia.com", "ann-acm@yahoo.com",
+                "ann-acm@gmail.com", "ann-acm@1.com", "ann-acm@test.com", "ann-acm@test.net", "me@me.mk");
+        validEmails.forEach(it -> assertTrue(service.isEmailValid(it)));
+    }
+
+    @Test
+    public void testInvalidEmail()
+    {
+        List<String> validEmails = Arrays.asList("ann-acm@.armedia.com", "ann-acm@.com", "ann-acm@armedia", "ann-acm@.com.com",
+                "ann-acm@%*.com", "ann-acm@com@com");
+        validEmails.forEach(it -> assertFalse(service.isEmailValid(it)));
+    }
+
 }

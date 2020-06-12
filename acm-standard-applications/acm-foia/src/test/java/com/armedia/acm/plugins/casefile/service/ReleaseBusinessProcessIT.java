@@ -126,6 +126,7 @@ public class ReleaseBusinessProcessIT extends EasyMockSupport
         processVariables.put("OBJECT_TYPE", objectType);
         processVariables.put("OBJECT_ID", foiaId);
         processVariables.put("USERNAME", "jgarcia");
+        processVariables.put("OBJECT_DENIED_FLAG", false);
 
         changeObjectStatusService.change(foiaId, objectType, "Released");
         expect(queueCaseService.enqueue(foiaId, "Release")).andReturn(new FOIARequest());

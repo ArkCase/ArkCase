@@ -354,7 +354,7 @@ angular.module('admin').controller(
                         return deferred.promise;
                     };
 
-                    function openCreateUserModal(user, group, error) {
+                    function openCreateUserModal(user, group, error, field) {
                         return $modal.open({
                             animation: $scope.animationsEnabled,
                             templateUrl: 'modules/admin/views/components/security.organizational-hierarchy.create-user.dialog.html',
@@ -363,7 +363,12 @@ angular.module('admin').controller(
                                 $scope.header = "admin.security.organizationalHierarchy.createUserDialog.addLdapMember.title";
                                 $scope.okBtn = "admin.security.organizationalHierarchy.createUserDialog.addLdapMember.btn.ok";
                                 $scope.cancelBtn = "admin.security.organizationalHierarchy.createUserDialog.addLdapMember.btn.cancel";
-                                $scope.error = error;
+                                if (field === "username") {
+                                    $scope.usernameError = error;
+                                }
+                                if (field === "email") {
+                                    $scope.emailError = error;
+                                }
                                 $scope.user = user;
                                 $scope.user.groupNames = [group.object_id_s];
 
@@ -395,7 +400,7 @@ angular.module('admin').controller(
                                 var onAdd = function(data) {
                                     return onLdapUserAdd(data, deferred, group);
                                 };
-                                openCreateUserModal(error.data.extra.user, group, error.data.message).result.then(onAdd, function() {
+                                openCreateUserModal(error.data.extra.user, group, error.data.message, error.data.field).result.then(onAdd, function() {
                                     deferred.reject("cancel");
                                     return [];
                                 });
@@ -483,29 +488,14 @@ angular.module('admin').controller(
 
                     $scope.onEditLdapMember = function(member) {
                         var deferred = $q.defer();
-                        var modalInstance = $modal.open({
-                            animation: $scope.animationsEnabled,
-                            templateUrl: 'modules/admin/views/components/security.organizational-hierarchy.create-user.dialog.html',
-                            controller: [ '$scope', '$modalInstance', function($scope, $modalInstance) {
-                                $scope.enableUsernameEdit = false;
-                                $scope.cloneUser = false;
-                                $scope.header = "admin.security.organizationalHierarchy.createUserDialog.editLdapMember.title";
-                                $scope.okBtn = "admin.security.organizationalHierarchy.createUserDialog.editLdapMember.btn.ok";
-                                $scope.cancelBtn = "admin.security.organizationalHierarchy.createUserDialog.editLdapMember.btn.cancel";
-                                $scope.user = mapMember(member);
-                                $scope.ok = function() {
-                                    $modalInstance.close($scope.user);
-                                };
-                            } ],
-                            size: 'md',
-                            backdrop: 'static'
-                        });
+                        var modalInstance = openEditUserModal(member, {});
 
                         modalInstance.result.then(function(user) {
                             organizationalHierarchyService.editGroupMember(user).then(function(member) {
                                 var unmappedMember = unMapMember(member);
                                 deferred.resolve(unmappedMember);
-                            }, function() {
+                            }, function(error) {
+                                openEditUserModal(member, error.data);
                                 //saving error
                                 deferred.reject();
                             });
@@ -516,6 +506,29 @@ angular.module('admin').controller(
                         });
                         return deferred.promise;
                     };
+
+                    function openEditUserModal(member, error) {
+                        return $modal.open({
+                            animation: $scope.animationsEnabled,
+                            templateUrl: 'modules/admin/views/components/security.organizational-hierarchy.create-user.dialog.html',
+                            controller: [ '$scope', '$modalInstance', function($scope, $modalInstance) {
+                                $scope.enableUsernameEdit = false;
+                                $scope.cloneUser = false;
+                                $scope.header = "admin.security.organizationalHierarchy.createUserDialog.editLdapMember.title";
+                                $scope.okBtn = "admin.security.organizationalHierarchy.createUserDialog.editLdapMember.btn.ok";
+                                $scope.cancelBtn = "admin.security.organizationalHierarchy.createUserDialog.editLdapMember.btn.cancel";
+                                $scope.user = mapMember(member);
+                                if (error.field === "email") {
+                                    $scope.emailError = error.message;
+                                }
+                                $scope.ok = function() {
+                                    $modalInstance.close($scope.user);
+                                };
+                            } ],
+                            size: 'md',
+                            backdrop: 'static'
+                        });
+                    }
 
                     $scope.onDeleteLdapMember = function(data) {
                         var deferred = $q.defer();

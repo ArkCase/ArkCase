@@ -63,6 +63,7 @@
             <beans:property name="translationService" ref="translationService" />
             <beans:property name="acmUserEventPublisher" ref="acmUserEventPublisher"/>
             <beans:property name="organizationDao" ref="acmOrganizationDao"/>
+            <beans:property name="requestAssignmentService" ref="requestAssignmentService"/>
         </beans:bean>
 
         <beans:bean id="portalCreateRequestService" class="gov.foia.service.PortalCreateRequestService">
@@ -92,7 +93,7 @@
             <beans:property name="portalFOIAPersonDao" ref="portalFOIAPersonDao"/>
             <beans:property name="personAssociationDao" ref="acmPersonAssociationDao"/>
             <beans:property name="lookupDao" ref="lookupDao"/>
-            <beans:property name="notificationDao" ref="notificationDao"/>
+            <beans:property name="notificationService" ref="notificationService"/>
             <beans:property name="groupService" ref="groupService"/>
             <beans:property name="searchResults" ref="searchResults"/>
             <beans:property name="translationService" ref="translationService"/>
@@ -263,6 +264,15 @@
             <beans:property name="template" value="Request Received Acknowledgement Letter"/>
         </beans:bean>
 
+        <beans:bean id="appealReceivedAcknowledgementDocumentDescriptor" class="gov.foia.model.FOIADocumentDescriptor">
+            <beans:property name="type" value="Appeal"/>
+            <beans:property name="reqAck" value="RECEIVE_ACK"/>
+            <beans:property name="doctype" value="Appeal Received Acknowledgement Letter"/>
+            <beans:property name="filenameFormat" value="AppealReceivedAcknowledgementLetter-%s.docx"/>
+            <beans:property name="targetFileExtension" value="docx"/>
+            <beans:property name="template" value="Appeal Received Acknowledgement Letter"/>
+        </beans:bean>
+
         <beans:bean id="appealDocumentDescriptor" class="gov.foia.model.FOIADocumentDescriptor">
             <beans:property name="type" value="Appeal"/>
             <beans:property name="reqAck" value="REQ"/>
@@ -297,24 +307,6 @@
             <beans:property name="filenameFormat" value="DenialLetter.docx-%s.docx"/>
             <beans:property name="targetFileExtension" value="docx"/>
             <beans:property name="template" value="Denial Letter"/>
-        </beans:bean>
-
-        <beans:bean id="appealDenialLetterDocumentDescriptor" class="gov.foia.model.FOIADocumentDescriptor">
-            <beans:property name="type" value="Appeal"/>
-            <beans:property name="reqAck" value="DENIAL"/>
-            <beans:property name="doctype" value="Denial Letter"/>
-            <beans:property name="filenameFormat" value="DenialLetter.docx-%s.docx"/>
-            <beans:property name="targetFileExtension" value="docx"/>
-            <beans:property name="template" value="Denial Letter"/>
-        </beans:bean>
-
-        <beans:bean id="requestDeleteDocumentDescriptor" class="gov.foia.model.FOIADocumentDescriptor">
-            <beans:property name="type" value="New Request"/>
-            <beans:property name="reqAck" value="REQ_DELETE"/>
-            <beans:property name="doctype" value="Request Delete Letter"/>
-            <beans:property name="filenameFormat" value="RequestDeleteCorrespondenceLetter-%s.docx"/>
-            <beans:property name="targetFileExtension" value="docx"/>
-            <beans:property name="template" value="Request Delete Letter"/>
         </beans:bean>
 
         <beans:bean id="requestExtensionDocumentDescriptor" class="gov.foia.model.FOIADocumentDescriptor">

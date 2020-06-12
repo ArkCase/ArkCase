@@ -75,6 +75,7 @@
                 <beans:list value-type="com.armedia.acm.services.pipeline.handler.PipelineHandler">
                     <beans:ref bean="foiaConfigurationHandler"/>
                     <beans:ref bean="caseFileRulesHandler"/>
+                    <beans:ref bean="requestPerfectedDateHandler"/>
                     <beans:ref bean="caseFileContainerHandler"/>
                     <beans:ref bean="caseFileEcmFolderHandler"/>
                     <beans:ref bean="caseFileFolderStructureHandler"/>
@@ -83,8 +84,9 @@
                     <beans:ref bean="requestDocumentHandler"/>
                     <beans:ref bean="caseFileStartBusinessProcessIfNeededHandler"/>
                     <beans:ref bean="foiaExtensionEmailHandler"/>
-                    <beans:ref bean="requestPerfectedDateHandler"/>
                     <!--<ref beans:bean="caseFileAssignmentHandler"/>-->
+                    <beans:ref bean="requestPerfectedDateHandler"/>
+                    <beans:ref bean="requestPortalUserParticipantsHandler"/>
                 </beans:list>
             </beans:property>
         </beans:bean>
@@ -171,6 +173,11 @@
             <beans:property name="queuesTimeToCompleteService" ref="queuesTimeToCompleteService"/>
         </beans:bean>
 
+        <beans:bean id="requestPortalUserParticipantsHandler" class="gov.foia.pipeline.postsave.FOIARequestPortalUserParticipantsHandler">
+            <property name="userDao" ref="userJpaDao"/>
+            <property name="acmParticipantService" ref="acmParticipantService"/>
+        </beans:bean>
+
         <beans:bean id="scheduledBillingQueuePurger" class="gov.foia.service.ScheduledBillingQueuePurger">
             <beans:property name="requestDao" ref="foiaRequestDao"/>
             <beans:property name="startBusinessProcessService" ref="startBusinessProcessService"/>
@@ -246,6 +253,8 @@
             <beans:property name="saveCaseService" ref="saveCaseService"/>
             <beans:property name="requestDao" ref="foiaRequestDao"/>
             <beans:property name="groupService" ref="groupService"/>
+            <beans:property name="acmParticipantService" ref="acmParticipantService"/>
+            <beans:property name="userDao" ref="userJpaDao"/>
         </beans:bean>
 
         <beans:bean id="foiaRequestService" class="gov.foia.service.FOIARequestService">
