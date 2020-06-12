@@ -27,13 +27,13 @@ package com.armedia.acm.services.notification.service;
  * #L%
  */
 
+import com.armedia.acm.core.ObjectLabelConfig;
 import com.armedia.acm.services.labels.service.TranslationService;
-import com.armedia.acm.services.notification.model.NotificationConfig;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 
 public class NotificationFormatter
 {
-    private NotificationConfig notificationConfig;
+    private ObjectLabelConfig objectLabelConfig;
     private TranslationService translationService;
 
     public String buildTitle(String title, String parentName, String parentType, String userId)
@@ -67,7 +67,7 @@ public class NotificationFormatter
     }
     private String replaceObjectTypeLabel(String withPlaceholder, String placeholder, String parentType)
     {
-        String objectTypeLabel = notificationConfig.getLabelForObjectType(parentType);
+        String objectTypeLabel = objectLabelConfig.getLabelForObjectType(parentType);
         return withPlaceholder.replace(placeholder, objectTypeLabel);
     }
 
@@ -76,14 +76,14 @@ public class NotificationFormatter
         return withPlaceholder.replace(placeholder, value);
     }
 
-    public NotificationConfig getNotificationConfig()
+    public ObjectLabelConfig getObjectLabelConfig()
     {
-        return notificationConfig;
+        return objectLabelConfig;
     }
 
-    public void setNotificationConfig(NotificationConfig notificationConfig)
+    public void setObjectLabelConfig(ObjectLabelConfig objectLabelConfig)
     {
-        this.notificationConfig = notificationConfig;
+        this.objectLabelConfig = objectLabelConfig;
     }
 
     public TranslationService getTranslationService()

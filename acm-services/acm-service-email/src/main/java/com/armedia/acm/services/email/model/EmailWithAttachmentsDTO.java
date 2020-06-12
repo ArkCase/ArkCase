@@ -36,13 +36,13 @@ import java.util.List;
  * Created by manoj.dhungana on 7/28/2015.
  */
 @JsonIdentityInfo(generator = JSOGGenerator.class)
-public class EmailWithAttachmentsDTO extends MessageBodyFactory implements AttachmentsProcessableDTO
+public class EmailWithAttachmentsDTO implements AttachmentsProcessableDTO
 {
-
     private List<Long> attachmentIds;
     private List<String> filePaths;
     private String objectType;
-    private Long objectId;
+    private String objectId;
+    private String objectNumber;
     private String subject;
     private String header;
     private String footer;
@@ -118,14 +118,24 @@ public class EmailWithAttachmentsDTO extends MessageBodyFactory implements Attac
         this.objectType = objectType;
     }
 
-    public Long getObjectId()
+    public String getObjectId()
     {
         return objectId;
     }
 
-    public void setObjectId(Long objectId)
+    public void setObjectId(String objectId)
     {
         this.objectId = objectId;
+    }
+
+    public String getObjectNumber()
+    {
+        return objectNumber;
+    }
+
+    public void setObjectNumber(String objectNumber)
+    {
+        this.objectNumber = objectNumber;
     }
 
     public String getHeader()
@@ -146,11 +156,6 @@ public class EmailWithAttachmentsDTO extends MessageBodyFactory implements Attac
     public void setFooter(String footer)
     {
         this.footer = footer;
-    }
-
-    public String getMessageBody()
-    {
-        return buildMessageBodyFromTemplate(getBody(), getHeader(), getFooter());
     }
 
     /*

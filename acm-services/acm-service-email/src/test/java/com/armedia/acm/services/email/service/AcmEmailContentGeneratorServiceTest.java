@@ -31,6 +31,7 @@ import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
+import com.armedia.acm.core.ObjectLabelConfig;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
@@ -72,12 +73,16 @@ public class AcmEmailContentGeneratorServiceTest
     @Mock
     private EcmFileDao mockEcmFileDao;
 
+    @Mock
+    private ObjectLabelConfig objectLabelConfig;
+
     @Before
     public void setUp() throws Exception
     {
         acmEmailContentGeneratorService.setAuthenticationTokenDao(mockAuthenticationTokenDao);
         acmEmailContentGeneratorService.setAuthenticationTokenService(mockAuthenticationTokenService);
         acmEmailContentGeneratorService.setEcmFileDao(mockEcmFileDao);
+        acmEmailContentGeneratorService.setObjectLabelConfig(objectLabelConfig);
     }
 
     @Test
