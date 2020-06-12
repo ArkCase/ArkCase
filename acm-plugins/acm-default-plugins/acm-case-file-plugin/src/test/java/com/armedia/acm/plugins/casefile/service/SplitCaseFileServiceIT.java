@@ -59,9 +59,9 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
@@ -139,7 +139,7 @@ import static org.junit.Assert.assertTrue;
         "/spring/spring-library-labels-service.xml",
         "/spring/spring-library-camel-context.xml"
 })
-@TransactionConfiguration(defaultRollback = true)
+@Rollback(true)
 public class SplitCaseFileServiceIT
 {
     static
