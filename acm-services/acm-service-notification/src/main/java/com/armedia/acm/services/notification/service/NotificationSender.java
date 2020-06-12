@@ -71,7 +71,6 @@ import freemarker.template.TemplateException;
  */
 public abstract class NotificationSender
 {
-
     private final Logger LOG = LogManager.getLogger(getClass());
 
     protected AuditPropertyEntityAdapter auditPropertyEntityAdapter;
@@ -117,7 +116,6 @@ public abstract class NotificationSender
                 String template = templateService.getTemplate(templateName);
                 String body = getTemplatingEngine().process(template, notification.getTemplateModelName(), object);
                 in.setBody(body);
-                in.setTemplate(body);
             }
             catch (AcmEmailConfigurationIOException e)
             {
@@ -144,8 +142,17 @@ public abstract class NotificationSender
             in.setSubject(notification.getTitle());
             in.setEmailAddresses(Arrays.asList(notification.getEmailAddresses().split(",")));
             in.setEmailGroup(notification.getEmailGroup());
-            in.setObjectId(notification.getParentId());
-            in.setObjectType(notification.getParentType());
+            if (notification.getRelatedObjectId() != null && notification.getRelatedObjectType() != null)
+            {
+                in.setObjectType(notification.getRelatedObjectType());
+                in.setObjectId(notification.getRelatedObjectId().toString());
+            }
+            else
+            {
+                in.setObjectId(notification.getParentId().toString());
+                in.setObjectType(notification.getParentType());
+            }
+
             Authentication authentication = SecurityContextHolder.getContext() != null
                     ? SecurityContextHolder.getContext().getAuthentication()
                     : null;
@@ -179,7 +186,6 @@ public abstract class NotificationSender
 
     private void setupDefaultTemplateAndBody(Notification notification, EmailWithAttachmentsDTO in)
     {
-        in.setTemplate(notificationTemplate);
         String relativeNotificationLink = notificationUtils.buildNotificationLink(notification.getParentType(), notification.getParentId(),
                 notification.getRelatedObjectType(), notification.getRelatedObjectId());
         String baseUrl = notificationConfig.getBaseUrl();
@@ -188,7 +194,7 @@ public abstract class NotificationSender
         String messageBody = notificationLink != null ? String.format("%s Link: %s", notification.getNote(), notificationLink)
                 : notification.getNote();
 
-        in.setBody(new MessageBodyFactory().buildMessageBodyFromTemplate(messageBody, "", ""));
+        in.setBody(new MessageBodyFactory(notificationTemplate).buildMessageBodyFromTemplate(messageBody, "", ""));
     }
 
     public abstract <T> void sendPlainEmail(Stream<T> emailsDataStream, EmailBuilder<T> emailBuilder, EmailBodyBuilder<T> emailBodyBuilder)

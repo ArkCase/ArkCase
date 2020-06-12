@@ -36,9 +36,9 @@ import com.armedia.acm.plugins.task.service.impl.CreateAdHocTaskService;
 import com.armedia.acm.services.config.lookups.model.StandardLookupEntry;
 import com.armedia.acm.services.config.lookups.service.LookupDao;
 import com.armedia.acm.services.labels.service.TranslationService;
-import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
+import com.armedia.acm.services.notification.service.NotificationService;
 import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
@@ -118,7 +118,7 @@ public class PortalRequestService
 
     private LookupDao lookupDao;
 
-    private NotificationDao notificationDao;
+    private NotificationService notificationService;
 
     private GroupService groupService;
 
@@ -313,23 +313,25 @@ public class PortalRequestService
 
         if (!officersGroupMemberEmailAddresses.isEmpty())
         {
-            Notification notification = new Notification();
+            log.debug("Preparing requestDownload notification to [{}]",
+                    officersGroupMemberEmailAddresses.stream().collect(Collectors.joining(",")));
 
             OffsetDateTime downloadedDateTime = OffsetDateTime.now(ZoneOffset.UTC);
             String downloadedDateTimeFormatted = DateTimeFormatter.ofPattern("yyyy-MM-dd / HH:mm:ss").format(downloadedDateTime);
 
-            notification.setTitle(
-                    String.format(translationService.translate(NotificationConstants.REQUEST_DOWNLOADED), request.getCaseNumber()));
-            notification.setTemplateModelName("requestDownloaded");
-            notification.setParentId(request.getId());
-            notification.setParentType(request.getRequestType());
-            notification.setParentName(request.getCaseNumber());
-            notification.setParentTitle(StringUtils.left(request.getDetails(), 1000));
-            notification.setNote(downloadedDateTimeFormatted);
-            notification.setEmailAddresses(officersGroupMemberEmailAddresses.stream().collect(Collectors.joining(",")));
-            notification.setUser(SecurityContextHolder.getContext().getAuthentication().getName());
+            Notification requestDownloadNotification = getNotificationService().createNotification(
+                    "requestDownloaded",
+                    String.format(translationService.translate(NotificationConstants.REQUEST_DOWNLOADED), request.getCaseNumber()),
+                    request.getObjectType(),
+                    request.getId(),
+                    request.getCaseNumber(),
+                    StringUtils.left(request.getDetails(), 1000),
+                    officersGroupMemberEmailAddresses.stream().filter(Objects::nonNull).collect(Collectors.joining(",")),
+                    SecurityContextHolder.getContext().getAuthentication().getName(),
+                    null,
+                    downloadedDateTimeFormatted);
 
-            getNotificationDao().save(notification);
+            log.debug("Succesfully created requestDownload notification to [{}]", requestDownloadNotification.getEmailAddresses());
         }
     }
 
@@ -530,14 +532,14 @@ public class PortalRequestService
         this.lookupDao = lookupDao;
     }
 
-    public NotificationDao getNotificationDao()
+    public NotificationService getNotificationService()
     {
-        return notificationDao;
+        return notificationService;
     }
 
-    public void setNotificationDao(NotificationDao notificationDao)
+    public void setNotificationService(NotificationService notificationService)
     {
-        this.notificationDao = notificationDao;
+        this.notificationService = notificationService;
     }
 
     public GroupService getGroupService()

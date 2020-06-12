@@ -79,9 +79,10 @@ public class TrackOutgoingEmailService implements ApplicationEventPublisherAware
     public void trackEmail(MimeMessage message, String emailAddress, String group, String subject, String objectType, String objectId,
             List<InputStreamDataSource> attachments)
     {
-        if (objectType.equals("USER"))
+        if (objectType != null && objectType.equals("USER"))
         {
             log.warn("Outgoing emails for objectType:USER are not tracked.");
+            return;
         }
 
         String tempDir = System.getProperty("java.io.tmpdir");
@@ -146,7 +147,7 @@ public class TrackOutgoingEmailService implements ApplicationEventPublisherAware
         // File upload falling should not break the flow
         catch (Exception e)
         {
-            log.error("Failed to upload mail into object with ID '{}'. Exception msg: '{}' ", objectId, e.getMessage());
+            log.error("Failed to upload mail into object [{}] with ID [{}]. Exception msg: '{}' ", objectType, objectId, e.getMessage());
         }
 
     }

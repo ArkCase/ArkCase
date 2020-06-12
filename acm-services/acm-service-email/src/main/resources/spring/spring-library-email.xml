@@ -40,6 +40,7 @@
         <property name="authenticationTokenDao" ref="authenticationTokenDao"/>
         <property name="templatingEngine" ref="templatingEngine"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
+        <property name="objectLabelConfig" ref="objectLabelConfig"/>
     </bean>
 
     <bean id="templatingEngine" class="com.armedia.acm.services.email.service.TemplatingEngine">

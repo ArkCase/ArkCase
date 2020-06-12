@@ -27,11 +27,6 @@ package gov.foia.service;
  * #L%
  */
 
-import static gov.foia.model.FOIAConstants.EMAIL_BODY_ATTACHMENT;
-import static gov.foia.model.FOIAConstants.EMAIL_FOOTER_ATTACHMENT;
-import static gov.foia.model.FOIAConstants.EMAIL_HEADER_ATTACHMENT;
-import static gov.foia.model.FOIARequestUtils.extractRequestorEmailAddress;
-
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
@@ -45,7 +40,12 @@ import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.service.NotificationSender;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-
+import freemarker.template.TemplateException;
+import gov.foia.dao.FOIARequestDao;
+import gov.foia.model.FOIAConstants;
+import gov.foia.model.FOIADocumentDescriptor;
+import gov.foia.model.FOIAFile;
+import gov.foia.model.FOIARequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.BeanUtils;
@@ -58,12 +58,10 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 
-import freemarker.template.TemplateException;
-import gov.foia.dao.FOIARequestDao;
-import gov.foia.model.FOIAConstants;
-import gov.foia.model.FOIADocumentDescriptor;
-import gov.foia.model.FOIAFile;
-import gov.foia.model.FOIARequest;
+import static gov.foia.model.FOIAConstants.EMAIL_BODY_ATTACHMENT;
+import static gov.foia.model.FOIAConstants.EMAIL_FOOTER_ATTACHMENT;
+import static gov.foia.model.FOIAConstants.EMAIL_HEADER_ATTACHMENT;
+import static gov.foia.model.FOIARequestUtils.extractRequestorEmailAddress;
 
 /**
  * @author sasko.tanaskoski
@@ -169,14 +167,8 @@ public class FOIAQueueCorrespondenceService
         try
         {
             FOIADocumentDescriptor documentDescriptor;
-            if (request.getRequestType().equals(FOIAConstants.APPEAL_REQUEST_TYPE))
-            {
-                documentDescriptor = documentGeneratorService.getDocumentDescriptor(request, FOIAConstants.ACK);
-            }
-            else
-            {
-                documentDescriptor = documentGeneratorService.getDocumentDescriptor(request, FOIAConstants.RECEIVE_ACK);
-            }
+            documentDescriptor = documentGeneratorService.getDocumentDescriptor(request, FOIAConstants.RECEIVE_ACK);
+
 
             String arkcaseFilename = String.format(documentDescriptor.getFilenameFormat(), request.getId());
             String targetFolderId = request.getContainer().getAttachmentFolder() == null
@@ -238,7 +230,6 @@ public class FOIAQueueCorrespondenceService
                 {
                     String body = getTemplatingEngine().process(emailBodyTemplate, "request", request);
                     emailData.setBody(body);
-                    emailData.setTemplate(body);
                 }
                 catch (TemplateException | IOException e)
                 {

@@ -14,6 +14,8 @@
 
     <bean id="portalGatewayRequestAPIController" class="com.armedia.acm.portalgateway.web.api.ArkCasePortalGatewayRequestAPIController">
         <property name="portalRequestService" ref="portalGatewayRequestService"/>
+        <property name="executeSolrQuery" ref="executeSolrQuery"/>
+        <property name="facetedSearchService" ref="facetedSearchService"/>
     </bean>
 
 </beans>

@@ -244,7 +244,7 @@ angular.module('admin').controller(
             function cloneUser() {
                 LdapConfigService.retrieveDirectories().then(function (directories) {
                     getEnableEditingLdapUsers(directories, selectedUser.directory);
-                    if ($scope.enableLdapUser === 'true') {
+                    if ($scope.enableLdapUser) {
                         var modalInstance = openCloneUserModal({}, "");
                         var deferred = $q.defer();
                         modalInstance.result.then(function (data) {

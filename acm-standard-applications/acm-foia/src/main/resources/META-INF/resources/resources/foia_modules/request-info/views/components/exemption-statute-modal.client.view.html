@@ -1,13 +1,24 @@
 <div class="modal-header">
     <h3>
         <span translate>requests.comp.exemption.statute.title</span>
+        <div class="pull-right">
+            <h5 class="exemption-description" ng-click="showExemptionStatutes()">
+                <span translate>requests.comp.exemption.description</span>
+            </h5>
+        </div>
     </h3>
 </div>
 <div class="modal-body">
     <div class="row">
         <div class="col-sm-6 form-group">
-            <select ng-model="statute" ng-options='item as item.value for item in exemptionStatutesList track by item.value'
-                    class="input-sm form-control"></select>
+            <select id="statute" ng-model="statute" class="input-sm form-control">
+                <option value="" disabled selected hidden translate>
+                    requests.comp.exemption.statute.placeholder
+                </option>
+                <option ng-repeat="option in exemptionStatutes" value="{{option.key}}" title="{{option.key}}" translate>
+                    {{option.key | limitTo: 120}}
+                </option>
+            </select>
         </div>
     </div>
 </div>

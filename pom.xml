@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.armedia</groupId>
     <artifactId>acm</artifactId>
-    <version>3.3.9-SNAPSHOT</version>
+    <version>3.3.10-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>ArkCase Case Management System</name>
     <description>Cloud-based case management system with a very nice UI</description>
@@ -34,6 +34,7 @@
         <apache-commons-net.version>3.3</apache-commons-net.version>
         <apache-commons-vfs2.version>2.0</apache-commons-vfs2.version>
         <apache-commons-text.version>1.6</apache-commons-text.version>
+        <apache-commons-validator.version>1.6</apache-commons-validator.version>
         <apache-httpcomponents-httpclient.version>4.5</apache-httpcomponents-httpclient.version>
         <apache-tika-parsers.version>1.24</apache-tika-parsers.version>
         <asm.version>5.0.3</asm.version>
@@ -83,6 +84,7 @@
         <magic.matcher.version>0.1.2</magic.matcher.version>
         <mariadb.jdbc.version>2.2.6</mariadb.jdbc.version>
         <maven.checkstyle.plugin.version>2.15</maven.checkstyle.plugin.version>
+        <maven.build.timestamp.format>MMMM dd, yyyy</maven.build.timestamp.format>
         <xalan.version>2.7.2</xalan.version>
 	<gitflow-maven-plugin.version>1.14.0</gitflow-maven-plugin.version>
 	<milton.version>2.7.3.5</milton.version>
@@ -117,7 +119,7 @@
         <springfox-version>2.5.0</springfox-version>
         <springframework-addons.version>0.1</springframework-addons.version>
         <sqlserver.version>4.0</sqlserver.version>
-        <tomcat-jdbc.version>8.0.14</tomcat-jdbc.version>
+        <tomcat-jdbc.version>9.0.35</tomcat-jdbc.version>
         <voodoodyne-jackson-jsog.version>1.1.1</voodoodyne-jackson-jsog.version>
         <xmlgraphics.version>2.0.1</xmlgraphics.version>
         <xmlunit.version>2.5.1</xmlunit.version>
@@ -282,6 +284,9 @@
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                             <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                         </manifest>
+                        <manifestEntries>
+                            <Build-Time>${maven.build.timestamp}</Build-Time>
+                        </manifestEntries>
                     </archive>
                 </configuration>
             </plugin>
@@ -961,6 +966,11 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-text</artifactId>
                 <version>${apache-commons-text.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-validator</groupId>
+                <artifactId>commons-validator</artifactId>
+                <version>${apache-commons-validator.version}</version>
             </dependency>
             <!-- json -->
             <dependency>

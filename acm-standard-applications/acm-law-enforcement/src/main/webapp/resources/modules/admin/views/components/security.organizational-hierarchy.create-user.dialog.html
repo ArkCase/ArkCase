@@ -5,13 +5,13 @@
         </h4>
     </div>
     <div class="modal-body">
-        <div class="form-group required" ng-class="{ 'has-error' : error}">
+        <div class="form-group required" ng-class="{ 'has-error' : usernameError}">
             <label for="username">{{"admin.security.organizationalHierarchy.createUserDialog.username" |translate}}</label>
             <input class="form-control" id="username" name="username" ng-change="clearUsernameError()"
                     placeholder="{{ 'admin.security.organizationalHierarchy.createUserDialog.addLdapMember.username' | translate}}"
                     ng-model="user.userId" ng-disabled="!enableUsernameEdit" required>
-            <p class="help-block" ng-show="error">
-                {{ error }} </p>
+            <p class="help-block" ng-show="usernameError">
+                {{ usernameError }} </p>
         </div>
         <div class="form-group required">
             <label for="firstName">{{"admin.security.organizationalHierarchy.createUserDialog.firstName" | translate}}</label>
@@ -25,11 +25,14 @@
                     placeholder="{{ 'admin.security.organizationalHierarchy.createUserDialog.addLdapMember.lastName' | translate}}"
                     ng-model="user.lastName" required>
         </div>
-        <div class="form-group required">
+        <div class="form-group required" ng-class="{ 'has-error' : emailError}">
             <label for="email">{{"admin.security.organizationalHierarchy.createUserDialog.email" | translate}}</label>
-            <input type="email" class="form-control" id="email"
+            <input type="email" class="form-control" id="email" pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
                     placeholder="{{ 'admin.security.organizationalHierarchy.createUserDialog.addLdapMember.email' | translate}}"
                     ng-model="user.mail" required>
+            <p class="help-block" ng-show="emailError">
+                {{ emailError }}
+            </p>
         </div>
     </div>
     <div class=" modal-footer">
