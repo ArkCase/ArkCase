@@ -189,14 +189,14 @@ public class SmtpServiceTest
         final String header = "header";
         final String body = "body";
         final String footer = "footer";
-        final String note = header + "\\s*" + body + "\\s*" + footer;
+        final String note = header + body + footer;
 
         List<String> addresses = new ArrayList<>();
         addresses.add(email);
         EmailWithAttachmentsDTO inputDTO = new EmailWithAttachmentsDTO();
         inputDTO.setEmailAddresses(addresses);
         inputDTO.setHeader(header);
-        inputDTO.setBody(body);
+        inputDTO.setBody(note);
         inputDTO.setFooter(footer);
 
         senderConfig.setEncryption("off");
@@ -244,7 +244,7 @@ public class SmtpServiceTest
         // then
         verify(mockMailSender).sendMultipartEmail(eq(email), anyString(), anyString(), capturedNote.capture(),
                 capturedAttachments.capture(), anyString(), anyString());
-        assertThat(Pattern.compile(note).matcher(capturedNote.getValue()).matches(), is(true));
+        assertThat(note.equals(capturedNote.getValue()), is(true));
         assertThat(capturedAttachments.getValue(), notNullValue());
         assertThat(capturedAttachments.getValue().size(), is(2));
         assertThat(capturedAttachments.getValue().get(0).getName(), notNullValue());
@@ -319,8 +319,6 @@ public class SmtpServiceTest
         whenNew(FileInputStream.class).withArguments(mockFile).thenReturn(mockFileInputStream);
         when(mockFile.getName()).thenReturn("temp.zip");
 
-        inputDTO.setParentType("ParentType");
-        inputDTO.setParentNumber("ParentNumber");
         // when
         service.sendEmailWithAttachmentsAndLinks(inputDTO, mockAuthentication, mockAcmUser);
 

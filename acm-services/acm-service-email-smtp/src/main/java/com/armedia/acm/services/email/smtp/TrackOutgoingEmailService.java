@@ -147,7 +147,7 @@ public class TrackOutgoingEmailService implements ApplicationEventPublisherAware
         // File upload falling should not break the flow
         catch (Exception e)
         {
-            log.error("Failed to upload mail into object with ID '{}'. Exception msg: '{}' ", objectId, e.getMessage());
+            log.error("Failed to upload mail into object [{}] with ID [{}]. Exception msg: '{}' ", objectType, objectId, e.getMessage());
         }
 
     }
