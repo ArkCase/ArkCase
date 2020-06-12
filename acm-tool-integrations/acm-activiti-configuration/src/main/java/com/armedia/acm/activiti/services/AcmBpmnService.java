@@ -46,6 +46,8 @@ public interface AcmBpmnService
 
     public InputStream getBpmnFileStream(AcmProcessDefinition wfFile);
 
+    public void remove(AcmProcessDefinition processDefinition, boolean cascade);
+
     public void makeActive(AcmProcessDefinition processDefinition);
 
     public void makeInactive(AcmProcessDefinition processDefinition);

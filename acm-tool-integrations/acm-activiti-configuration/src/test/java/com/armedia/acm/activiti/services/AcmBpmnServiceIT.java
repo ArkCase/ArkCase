@@ -207,6 +207,7 @@ public class AcmBpmnServiceIT
         acmBpmnService.makeActive(apd);
         assertNotNull(acmBpmnService.getActive(apd.getKey()));
 
+        acmBpmnService.remove(apd, true);
     }
 
     @Test
@@ -224,6 +225,7 @@ public class AcmBpmnServiceIT
         deploymentsIdToDelete.add(apd1.getDeploymentId());
         assertEquals(apd.getId(), apd1.getId());
 
+        acmBpmnService.remove(apd, true);
     }
 
     @Test
@@ -242,6 +244,8 @@ public class AcmBpmnServiceIT
         log.info("AcmProcessDefinition deployed: " + apd1);
         assertNotEquals(apd.getId(), apd1.getId());
 
+        acmBpmnService.remove(apd, true);
+        acmBpmnService.remove(apd1, true);
     }
 
     @Test
@@ -269,6 +273,8 @@ public class AcmBpmnServiceIT
         assertEquals(1, countAfter - countBefore);
         assertNotEquals(apd1.getVersion(), acmProcessDefinitionList.get(0).getVersion());
 
+        acmBpmnService.remove(apd, true);
+        acmBpmnService.remove(apd1, true);
     }
 
     @Test
@@ -297,6 +303,7 @@ public class AcmBpmnServiceIT
 
         assertTrue(FileUtils.contentEquals(f, downloadedFile));
 
+        acmBpmnService.remove(apd, true);
     }
 
     @After
