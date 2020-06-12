@@ -38,12 +38,12 @@ import com.armedia.acm.plugins.complaint.model.ComplaintListView;
 import com.armedia.acm.plugins.complaint.service.ComplaintEventPublisher;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
@@ -120,10 +120,11 @@ public class FindComplaintsByUserAPIControllerTest extends EasyMockSupport
 
         MvcResult result = mockMvc.perform(
                 get("/api/latest/plugin/complaint/forUser/{user}", userId)
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .principal(mockAuthentication)
                         .session(mockHttpSession))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andReturn();
 
         verifyAll();
