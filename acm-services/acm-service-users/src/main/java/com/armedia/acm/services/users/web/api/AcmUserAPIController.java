@@ -151,6 +151,13 @@ public class AcmUserAPIController extends SecureLdapController
             ldapUserService.publishUserUpdatedEvent(httpSession, authentication, editedUser, true);
             return editedUser;
         }
+        catch (ValidatorException e)
+        {
+            log.error("Invalid email [{}]", acmUser.getMail(), e);
+            AcmAppErrorJsonMsg error = new AcmAppErrorJsonMsg("Invalid email!", "USER", "email", e);
+            error.putExtra("user", acmUser);
+            throw error;
+        }
         catch (Exception e)
         {
             log.error("Editing LDAP user [{}] failed!", userId, e);
