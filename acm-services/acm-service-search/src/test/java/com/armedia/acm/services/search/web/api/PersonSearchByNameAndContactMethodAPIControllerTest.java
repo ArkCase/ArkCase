@@ -1,5 +1,11 @@
 package com.armedia.acm.services.search.web.api;
 
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 /*-
  * #%L
  * ACM Service: Search
@@ -26,12 +32,6 @@ package com.armedia.acm.services.search.web.api;
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.search.model.solr.SolrCore;
@@ -111,7 +111,7 @@ public class PersonSearchByNameAndContactMethodAPIControllerTest extends EasyMoc
 
         MvcResult result = mockMvc
                 .perform(get("/api/v1/plugin/search/personSearch?name=" + name + "&cm=" + contactMethod).principal(mockAuthentication))
-                .andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON)).andReturn();
+                .andExpect(status().isOk()).andExpect(content().contentType("application/json;charset=ISO-8859-1")).andReturn();
 
         verifyAll();
 

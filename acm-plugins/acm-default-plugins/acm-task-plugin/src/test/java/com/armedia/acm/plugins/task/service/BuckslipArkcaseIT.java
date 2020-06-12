@@ -27,12 +27,6 @@ package com.armedia.acm.plugins.task.service;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.data.BuckslipFutureTask;
 import com.armedia.acm.objectonverter.ObjectConverter;
@@ -40,7 +34,6 @@ import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.model.BuckslipProcess;
 import com.armedia.acm.plugins.task.model.TaskConstants;
 import com.armedia.acm.web.api.MDCConstants;
-
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
@@ -56,6 +49,7 @@ import org.junit.runner.RunWith;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -66,6 +60,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -80,7 +80,6 @@ import java.util.UUID;
         "/spring/spring-library-folder-watcher.xml",
         "/spring/spring-library-ms-outlook-integration.xml",
         "/spring/spring-library-note.xml",
-        "/spring/spring-library-notification.xml",
         "/spring/spring-library-object-association-plugin.xml",
         "/spring/spring-library-object-history.xml",
         "/spring/spring-library-particpants.xml",
@@ -114,7 +113,7 @@ import java.util.UUID;
         "/spring/spring-library-labels-service.xml",
         "/spring/spring-library-business-process.xml"
 })
-@TransactionConfiguration(defaultRollback = true)
+@Rollback(true)
 public class BuckslipArkcaseIT
 {
     static
@@ -167,7 +166,7 @@ public class BuckslipArkcaseIT
         List<BuckslipFutureTask> futureTasks = new ArrayList<>(3);
 
         BuckslipFutureTask task1 = new BuckslipFutureTask();
-        task1.setApproverId("ann-acm@armedia.com");
+        task1.setApproverId("ann-acm@armedia.org");
         task1.setApproverFullName("Ann Administrator");
         task1.setTaskName("ann-acm task");
         task1.setGroupName("ann group");
@@ -250,7 +249,7 @@ public class BuckslipArkcaseIT
         // should have a task for ann-acm... complete with 'CONCUR' outcome
         AcmTask acmTask = findAcmTaskForProcess();
         assertNotNull(acmTask);
-        assertEquals("ann-acm@armedia.com", acmTask.getAssignee());
+        assertEquals("ann-acm@armedia.org", acmTask.getAssignee());
         assertEquals(2, acmTask.getBuckslipFutureTasks().size());
         assertEquals("samuel-acm@armedia.com", acmTask.getBuckslipFutureTasks().get(0).getApproverId());
         assertEquals("ian-acm@armedia.com", acmTask.getBuckslipFutureTasks().get(1).getApproverId());
@@ -260,7 +259,7 @@ public class BuckslipArkcaseIT
         // String owningGroup = ParticipantUtils.getOwningGroupIdFromParticipants(acmTask.getParticipants());
         // assertNotNull(owningGroup);
         // assertEquals("ann group", owningGroup);
-        Principal assignee = new UsernamePasswordAuthenticationToken("ann-acm@armedia.com", "ann-acm");
+        Principal assignee = new UsernamePasswordAuthenticationToken("ann-acm@armedia.org", "ann-acm");
         taskDao.completeTask(assignee, acmTask.getTaskId(), "buckslipOutcome", "CONCUR");
 
         // should have a task for samuel-acm... complete with 'CONCUR' outcome
@@ -269,7 +268,7 @@ public class BuckslipArkcaseIT
         assertEquals("samuel-acm@armedia.com", acmTask.getAssignee());
         assertEquals(1, acmTask.getBuckslipFutureTasks().size());
         assertEquals("ian-acm@armedia.com", acmTask.getBuckslipFutureTasks().get(0).getApproverId());
-        assertTrue(acmTask.getBuckslipPastApprovers().contains("ann-acm@armedia.com"));
+        assertTrue(acmTask.getBuckslipPastApprovers().contains("ann-acm@armedia.org"));
 
         JSONArray pastTasks = new JSONArray(acmTask.getBuckslipPastApprovers());
         assertEquals(1, pastTasks.length());
@@ -284,7 +283,7 @@ public class BuckslipArkcaseIT
         assertNotNull(acmTask);
         assertEquals("ian-acm@armedia.com", acmTask.getAssignee());
         assertEquals(0, acmTask.getBuckslipFutureTasks().size());
-        assertTrue(acmTask.getBuckslipPastApprovers().contains("ann-acm@armedia.com"));
+        assertTrue(acmTask.getBuckslipPastApprovers().contains("ann-acm@armedia.org"));
         assertTrue(acmTask.getBuckslipPastApprovers().contains("samuel-acm@armedia.com"));
         assignee = new UsernamePasswordAuthenticationToken("ian-acm@armedia.com", "ian-acm");
 
@@ -315,12 +314,12 @@ public class BuckslipArkcaseIT
 
         AcmTask acmTask = findAcmTaskForProcess();
         assertNotNull(acmTask);
-        assertEquals("ann-acm@armedia.com", acmTask.getAssignee());
+        assertEquals("ann-acm@armedia.org", acmTask.getAssignee());
         assertEquals(2, acmTask.getBuckslipFutureTasks().size());
         assertEquals("samuel-acm@armedia.com", acmTask.getBuckslipFutureTasks().get(0).getApproverId());
         assertEquals("ian-acm@armedia.com", acmTask.getBuckslipFutureTasks().get(1).getApproverId());
         assertEquals("[]", acmTask.getBuckslipPastApprovers());
-        Principal assignee = new UsernamePasswordAuthenticationToken("ann-acm@armedia.com", "ann-acm");
+        Principal assignee = new UsernamePasswordAuthenticationToken("ann-acm@armedia.org", "ann-acm");
         taskDao.completeTask(assignee, acmTask.getTaskId(), "buckslipOutcome", "CONCUR");
 
         // should have a task for samuel-acm... complete with 'CONCUR' outcome
@@ -347,7 +346,7 @@ public class BuckslipArkcaseIT
         assertEquals("ian-acm@armedia.com", acmTask.getAssignee());
         assertEquals(1, acmTask.getBuckslipFutureTasks().size());
         assertEquals("albert-acm@armedia.com", acmTask.getBuckslipFutureTasks().get(0).getApproverId());
-        assertTrue(acmTask.getBuckslipPastApprovers().contains("ann-acm@armedia.com"));
+        assertTrue(acmTask.getBuckslipPastApprovers().contains("ann-acm@armedia.org"));
         assertTrue(acmTask.getBuckslipPastApprovers().contains("samuel-acm@armedia.com"));
         assignee = new UsernamePasswordAuthenticationToken("ian-acm@armedia.com", "ian-acm");
         taskDao.completeTask(assignee, acmTask.getTaskId(), "buckslipOutcome", "NON_CONCUR");
@@ -357,7 +356,7 @@ public class BuckslipArkcaseIT
         assertNotNull(acmTask);
         assertEquals("albert-acm@armedia.com", acmTask.getAssignee());
         assertEquals(0, acmTask.getBuckslipFutureTasks().size());
-        assertTrue(acmTask.getBuckslipPastApprovers().contains("ann-acm@armedia.com"));
+        assertTrue(acmTask.getBuckslipPastApprovers().contains("ann-acm@armedia.org"));
         assertTrue(acmTask.getBuckslipPastApprovers().contains("samuel-acm@armedia.com"));
         assertTrue(acmTask.getBuckslipPastApprovers().contains("ian-acm@armedia.com"));
         assignee = new UsernamePasswordAuthenticationToken("albert-acm@armedia.com", "albert-acm");
@@ -385,7 +384,7 @@ public class BuckslipArkcaseIT
         // should have a task for ann-acm... complete with 'CONCUR' outcome
         AcmTask acmTask = findAcmTaskForProcess();
         assertNotNull(acmTask);
-        assertEquals("ann-acm@armedia.com", acmTask.getAssignee());
+        assertEquals("ann-acm@armedia.org", acmTask.getAssignee());
         assertEquals(2, acmTask.getBuckslipFutureTasks().size());
         assertEquals("samuel-acm@armedia.com", acmTask.getBuckslipFutureTasks().get(0).getApproverId());
         assertEquals("ian-acm@armedia.com", acmTask.getBuckslipFutureTasks().get(1).getApproverId());
@@ -395,7 +394,7 @@ public class BuckslipArkcaseIT
         acmTask.getBuckslipFutureTasks().remove(1);
         taskDao.save(acmTask);
 
-        Principal assignee = new UsernamePasswordAuthenticationToken("ann-acm@armedia.com", "ann-acm");
+        Principal assignee = new UsernamePasswordAuthenticationToken("ann-acm@armedia.org", "ann-acm");
         taskDao.completeTask(assignee, acmTask.getTaskId(), "buckslipOutcome", "CONCUR");
 
         // should have a task for samuel-acm... complete with 'CONCUR' outcome
@@ -403,7 +402,7 @@ public class BuckslipArkcaseIT
         assertNotNull(acmTask);
         assertEquals("samuel-acm@armedia.com", acmTask.getAssignee());
         assertEquals(0, acmTask.getBuckslipFutureTasks().size());
-        assertTrue(acmTask.getBuckslipPastApprovers().contains("ann-acm@armedia.com"));
+        assertTrue(acmTask.getBuckslipPastApprovers().contains("ann-acm@armedia.org"));
         assignee = new UsernamePasswordAuthenticationToken("samuel-acm@armedia.com", "samuel-acm");
         taskDao.completeTask(assignee, acmTask.getTaskId(), "buckslipOutcome", "CONCUR");
 
@@ -424,13 +423,13 @@ public class BuckslipArkcaseIT
         // should have a task for ann-acm... complete with 'CONCUR' outcome
         AcmTask acmTask = findAcmTaskForProcess();
         assertNotNull(acmTask);
-        assertEquals("ann-acm@armedia.com", acmTask.getAssignee());
+        assertEquals("ann-acm@armedia.org", acmTask.getAssignee());
         assertEquals(2, acmTask.getBuckslipFutureTasks().size());
         assertEquals("samuel-acm@armedia.com", acmTask.getBuckslipFutureTasks().get(0).getApproverId());
         assertEquals("ian-acm@armedia.com", acmTask.getBuckslipFutureTasks().get(1).getApproverId());
         assertEquals("[]", acmTask.getBuckslipPastApprovers());
 
-        Principal assignee = new UsernamePasswordAuthenticationToken("ann-acm@armedia.com", "ann-acm");
+        Principal assignee = new UsernamePasswordAuthenticationToken("ann-acm@armedia.org", "ann-acm");
         taskDao.completeTask(assignee, acmTask.getTaskId(), "buckslipOutcome", "CONCUR");
 
         // find the next task before we can withdraw
