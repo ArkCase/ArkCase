@@ -323,6 +323,17 @@ angular.module('services').factory('Object.LookupService', [ '$q', '$resource', 
             } else {
                 return Service.getLookupByLookupName("caseFilePersonTypes");
             }
+            if (initiator) {
+                return Service.getLookupByLookupName("consultationPersonInitiatorTypes");
+            } else {
+                return Service.getLookupByLookupName("consultationPersonTypes")
+            }
+            case "CONSULTATION":
+                if (initiator) {
+                    return Service.getLookupByLookupName("consultationPersonInitiatorTypes");
+                } else {
+                    return Service.getLookupByLookupName("consultationPersonTypes");
+                }
         case "DOC_REPO":
             return Service.getLookupByLookupName("documentPersonTypes");
         }
@@ -387,17 +398,18 @@ angular.module('services').factory('Object.LookupService', [ '$q', '$resource', 
      */
     Service.getParticipantTypes = function(objectType) {
         switch (objectType) {
-        case "DOC_REPO":
-            return Service.getLookupByLookupName("documentParticipantTypes");
-        case "PERSON":
-        case "ORGANIZATION":
-            return Service.getLookupByLookupName("organizationalParticipantTypes");
-        case "COMPLAINT":
-        case "CASE_FILE":
-            return Service.getLookupByLookupName("entitiesParticipantTypes");
-        case "FILE":
-        case "FOLDER":
-            return Service.getLookupByLookupName("documentsParticipantTypes");
+            case "DOC_REPO":
+                return Service.getLookupByLookupName("documentParticipantTypes");
+            case "PERSON":
+            case "ORGANIZATION":
+                return Service.getLookupByLookupName("organizationalParticipantTypes");
+            case "COMPLAINT":
+            case "CONSULTATION":
+            case "CASE_FILE":
+                return Service.getLookupByLookupName("entitiesParticipantTypes");
+            case "FILE":
+            case "FOLDER":
+                return Service.getLookupByLookupName("documentsParticipantTypes");
         }
     };
 
@@ -564,6 +576,20 @@ angular.module('services').factory('Object.LookupService', [ '$q', '$resource', 
      */
     Service.getCaseFileSubTypes = function() {
         return Service.getLookupByLookupName("caseFileSubTypes");
+    };
+
+    /**
+     * @ngdoc method
+     * @name getConsultationTypes
+     * @methodOf services:Object.LookupService
+     *
+     * @description
+     * Query list of consultation types
+     *
+     * @returns {Object} An array returned by $resource
+     */
+    Service.getConsultationTypes = function() {
+        return Service.getLookupByLookupName("consultationTypes");
     };
 
     /**
@@ -892,7 +918,6 @@ angular.module('services').factory('Object.LookupService', [ '$q', '$resource', 
     Service.getObjectTitleTypes = function() {
         return Service.getLookupByLookupName('objectTitleTypes');
     };
-
     /**
      * @ngdoc method
      * @name getLookupsDefs
