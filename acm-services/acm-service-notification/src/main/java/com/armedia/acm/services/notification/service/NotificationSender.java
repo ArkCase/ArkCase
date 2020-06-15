@@ -145,11 +145,17 @@ public abstract class NotificationSender
             if (notification.getRelatedObjectId() != null && notification.getRelatedObjectType() != null)
             {
                 in.setObjectType(notification.getRelatedObjectType());
-                in.setObjectId(notification.getRelatedObjectId().toString());
+                if (notification.getParentId() != null)
+                {
+                    in.setObjectId(notification.getRelatedObjectId().toString());
+                }
             }
             else
             {
-                in.setObjectId(notification.getParentId().toString());
+                if (notification.getParentId() != null)
+                {
+                    in.setObjectId(notification.getParentId().toString());
+                }
                 in.setObjectType(notification.getParentType());
             }
 
