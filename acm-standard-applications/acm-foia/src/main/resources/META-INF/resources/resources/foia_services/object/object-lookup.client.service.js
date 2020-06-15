@@ -339,6 +339,12 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
                 }
             case "DOC_REPO":
                 return Service.getLookupByLookupName("documentPersonTypes");
+            case "CONSULTATION":
+                if (initiator) {
+                    return Service.getLookupByLookupName("consultationPersonInitiatorTypes");
+                } else {
+                    return Service.getLookupByLookupName("consultationPersonTypes");
+                }
         }
     };
 
@@ -392,6 +398,7 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
                 return Service.getLookupByLookupName("organizationalParticipantTypes");
             case "COMPLAINT":
             case "CASE_FILE":
+            case "CONSULTATION":
             case "DOC_REPO":
                 return Service.getLookupByLookupName("entitiesParticipantTypes");
             case "FILE":
