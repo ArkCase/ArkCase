@@ -32,6 +32,7 @@ import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.model.TaskConfig;
 import com.armedia.acm.service.objecthistory.dao.AcmAssignmentDao;
 import com.armedia.acm.service.objecthistory.model.AcmAssignment;
+import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.notification.service.NotificationService;
 import com.armedia.acm.services.notification.service.NotificationUtils;
@@ -65,25 +66,29 @@ public class TaskUpdatedNotifier implements ApplicationListener<AcmApplicationTa
         {
             logger.debug("On 'Task status changed' event create notification for participants.");
 
-            String emailAddresses = notificationUtils.getEmailsCommaSeparatedForParticipants(acmTask.getParticipants());
-            notificationService.createNotification("taskStatusChanged", NotificationConstants.TASK_STATUS_CHANGED,
-                    acmTask.getObjectType(), acmTask.getId(), String.format("%s-%s", acmTask.getObjectType(), acmTask.getId()),
-                    acmTask.getTitle(), emailAddresses, event.getUserId(), null);
+            Notification notification = notificationService.getNotificationBuilder()
+                    .newNotification("taskStatusChanged", NotificationConstants.TASK_STATUS_CHANGED, acmTask.getObjectType(),
+                            acmTask.getId(), event.getUserId())
+                    .withEmailAddressesForParticipants(acmTask.getParticipants())
+                    .forObjectWithNumber(String.format("%s-%s", acmTask.getObjectType(), acmTask.getId()))
+                    .forObjectWithTitle(acmTask.getTitle())
+                    .build();
 
-            logger.debug("Notification 'Task status changed' created for task [{}] for participants with addresses [{}].",
-                    acmTask.getId(), emailAddresses);
+            notificationService.saveNotification(notification);
         }
         else if (eventType.equals("com.armedia.acm.app.task.priority.changed"))
         {
             logger.debug("On 'Task priority changed' event create notification for participants.");
 
-            String emailAddresses = notificationUtils.getEmailsCommaSeparatedForParticipants(acmTask.getParticipants());
-            notificationService.createNotification("taskPriorityChanged", NotificationConstants.TASK_PRIORITY_CHANGED,
-                    acmTask.getObjectType(), acmTask.getId(), String.format("%s-%s", acmTask.getObjectType(), acmTask.getId()),
-                    acmTask.getTitle(), emailAddresses, event.getUserId(), null);
+            Notification notification = notificationService.getNotificationBuilder()
+                    .newNotification("taskPriorityChanged", NotificationConstants.TASK_PRIORITY_CHANGED, acmTask.getObjectType(),
+                            acmTask.getId(), event.getUserId())
+                    .withEmailAddressesForParticipants(acmTask.getParticipants())
+                    .forObjectWithNumber(String.format("%s-%s", acmTask.getObjectType(), acmTask.getId()))
+                    .forObjectWithTitle(acmTask.getTitle())
+                    .build();
 
-            logger.debug("Notification 'Task priority changed' created for task [{}] for participants with addresses [{}].",
-                    acmTask.getId(), emailAddresses);
+            notificationService.saveNotification(notification);
         }
         else if ((eventDescription != null && eventDescription.equals("CONCUR")) ||
                 (eventDescription != null && eventDescription.equals("NON_CONCUR")))
@@ -115,10 +120,15 @@ public class TaskUpdatedNotifier implements ApplicationListener<AcmApplicationTa
 
             if (parentAssignment.isPresent())
             {
-                String emailAddress = notificationUtils.getEmailForUser(parentAssignment.get().getNewAssignee());
-                notificationService.createNotification("concurNonConcur", NotificationConstants.TASK_CONCUR_NONCONCUR,
-                        event.getObjectType(), event.getObjectId(), String.format("%s-%s", event.getObjectType(), event.getObjectId()),
-                        null, emailAddress, event.getUserId(), assignment.map(AcmAssignment::getNewAssignee).orElse(""), note);
+                Notification notification = notificationService.getNotificationBuilder()
+                        .newNotification("concurNonConcur", NotificationConstants.TASK_CONCUR_NONCONCUR, event.getObjectType(),
+                                event.getObjectId(), event.getUserId())
+                        .forObjectWithTitle(String.format("%s-%s", event.getObjectType(), event.getObjectId()))
+                        .withNote(note)
+                        .withEmailAddressForUser(parentAssignment.get().getNewAssignee())
+                        .build(assignment.map(AcmAssignment::getNewAssignee).orElse(""));
+
+                notificationService.saveNotification(notification);
             }
         }
     }

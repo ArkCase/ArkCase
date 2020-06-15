@@ -30,12 +30,13 @@ package com.armedia.acm.plugins.task.service;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.model.TaskNotificationConfig;
+import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.notification.service.NotificationService;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-
 import com.armedia.acm.web.api.MDCConstants;
+
 import org.activiti.engine.TaskService;
 import org.activiti.engine.task.Task;
 import org.activiti.engine.task.TaskQuery;
@@ -101,21 +102,32 @@ public abstract class AbstractTaskNotifier
                 AcmUser user = userDao.findByUserId(task.getAssignee());
                 String parentType = task.getObjectType();
                 Long parentId = task.getId();
-                String emailAddress = user.getMail();
 
                 MDC.put(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY, user.getUserId());
 
                 if (task.getDueDate().compareTo(now) > 0)
                 {
-                    notificationService.createNotification("taskUpcoming", NotificationConstants.TASK_UPCOMING, parentType, parentId,
-                            String.format("%s-%s", parentType, parentId), task.getTitle(), emailAddress, user.getUserId());
-                    log.debug("Notification for upcoming task [{}] created for assignee [{}].", task.getId(), user.getUserId());
+                    Notification notification = notificationService.getNotificationBuilder()
+                            .newNotification("taskUpcoming", NotificationConstants.TASK_UPCOMING, parentType, parentId,
+                                    user.getUserId())
+                            .forObjectWithNumber(String.format("%s-%s", parentType, parentId))
+                            .forObjectWithTitle(task.getTitle())
+                            .withEmailAddresses(user.getMail())
+                            .build();
+
+                    notificationService.saveNotification(notification);
                 }
                 else
                 {
-                    notificationService.createNotification("taskOverdue", NotificationConstants.TASK_OVERDUE, parentType,
-                            parentId, String.format("%s-%s", parentType, parentId), task.getTitle(), emailAddress, user.getUserId());
-                    log.debug("Notification for overdue task [{}] created for assignee [{}].", task.getId(), user.getUserId());
+                    Notification notification = notificationService.getNotificationBuilder()
+                            .newNotification("taskOverdue", NotificationConstants.TASK_OVERDUE, parentType, parentId,
+                                    user.getUserId())
+                            .forObjectWithNumber(String.format("%s-%s", parentType, parentId))
+                            .forObjectWithTitle(task.getTitle())
+                            .withEmailAddresses(user.getMail())
+                            .build();
+
+                    notificationService.saveNotification(notification);
                 }
             }
         }
