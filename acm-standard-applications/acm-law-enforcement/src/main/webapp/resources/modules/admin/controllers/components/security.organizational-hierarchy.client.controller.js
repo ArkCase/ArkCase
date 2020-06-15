@@ -489,23 +489,35 @@ angular.module('admin').controller(
                     $scope.onEditLdapMember = function(member) {
                         var deferred = $q.defer();
                         var modalInstance = openEditUserModal(member, {});
+                        var onEdit = function(data) {
+                            return onLdapUserEdit(data, deferred, member);
+                        }
 
-                        modalInstance.result.then(function(user) {
-                            organizationalHierarchyService.editGroupMember(user).then(function(member) {
-                                var unmappedMember = unMapMember(member);
-                                deferred.resolve(unmappedMember);
-                            }, function(error) {
-                                openEditUserModal(member, error.data);
-                                //saving error
-                                deferred.reject();
-                            });
-                        }, function() {
-                            // Cancel button was clicked
+                        modalInstance.result.then(onEdit, function(user) {
                             deferred.reject("cancel");
                             return [];
                         });
                         return deferred.promise;
                     };
+
+                    function onLdapUserEdit(user, deferred, member) {
+                        organizationalHierarchyService.editGroupMember(user).then(function(member) {
+                            var unmappedMember = unMapMember(member);
+                            deferred.resolve(unmappedMember);
+                        }, function(error) {
+                            if (error.data.extra) {
+                                var onEdit = function(user) {
+                                    return onLdapUserEdit(user, deferred, member);
+                                }
+                                openEditUserModal(member, error.data).result.then(onEdit, function() {
+                                    deferred.reject("cancel");
+                                    return [];
+                                });
+                            } else {
+                                deferred.reject();
+                            }
+                        });
+                    }
 
                     function openEditUserModal(member, error) {
                         return $modal.open({
