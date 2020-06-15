@@ -213,6 +213,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         notification.setNote(registrationLink);
         notification.setEmailAddresses(registrationRequest.getEmailAddress());
         notification.setUser(SecurityContextHolder.getContext().getAuthentication().getName());
+        notification.setParentType("USER");
 
         getNotificationDao().save(notification);
     }

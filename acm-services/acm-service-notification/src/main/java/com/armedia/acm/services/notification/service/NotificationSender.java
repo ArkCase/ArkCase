@@ -149,7 +149,10 @@ public abstract class NotificationSender
             }
             else
             {
-                in.setObjectId(notification.getParentId().toString());
+                if (notification.getParentId() != null)
+                {
+                    in.setObjectId(notification.getParentId().toString());
+                }
                 in.setObjectType(notification.getParentType());
             }
 
