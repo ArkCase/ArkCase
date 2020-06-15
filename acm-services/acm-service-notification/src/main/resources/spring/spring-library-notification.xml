@@ -11,6 +11,12 @@
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="notificationFormatter" ref="notificationFormatter"/>
         <property name="notificationConfig" ref="notificationConfig"/>
+        <property name="notificationBuilder" ref="notificationBuilder"/>
+    </bean>
+
+    <bean id ="notificationBuilder" class="com.armedia.acm.services.notification.service.NotificationBuilder">
+        <property name="notificationUtils" ref="notificationUtils"/>
+        <property name="notificationFormatter" ref="notificationFormatter"/>
     </bean>
 
     <bean id="notificationDao" class="com.armedia.acm.services.notification.dao.NotificationDao">
@@ -195,9 +201,8 @@
 
     <bean id="acmEmailMentionsService" class="com.armedia.acm.services.notification.service.AcmEmailMentionsService">
         <property name="acmAppConfiguration" ref="acmApplication"/>
-        <property name="notificationDao" ref="notificationDao"/>
         <property name="applicationConfig" ref="applicationProperties"/>
-        <property name="translationService" ref="translationService"/>
+        <property name="notificationService" ref="notificationService"/>
     </bean>
 
     <bean id="userInfoHelper" class="com.armedia.acm.services.notification.helper.UserInfoHelper">
@@ -208,7 +213,6 @@
 
     <bean id="assignmentNotifier" class="com.armedia.acm.services.notification.service.AssignmentNotifier">
         <property name="notificationService" ref="notificationService"/>
-        <property name="notificationUtils" ref="notificationUtils"/>
     </bean>
 
     <bean id="calendarEventAddedNotifier" class="com.armedia.acm.services.notification.service.CalendarEventAddedNotifier">

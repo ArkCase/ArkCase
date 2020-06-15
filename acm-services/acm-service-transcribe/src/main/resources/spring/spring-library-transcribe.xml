@@ -19,7 +19,6 @@
         <property name="objectLockingManager" ref="acmObjectLockingManager"/>
         <property name="userDao" ref="userJpaDao"/>
         <property name="labelManagementService" ref="labelManagementService"/>
-        <property name="notificationDao" ref="notificationDao"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="objectLockService" ref="objectLockService"/>
@@ -30,7 +29,7 @@
         <property name="ecmFileTransaction" ref="ecmFileTransaction"/>
         <property name="transcribeConfigurationService" ref="transcribeConfigurationService"/>
         <property name="auditDao" ref="auditDao"/>
-        <property name="translationService" ref="translationService" />
+        <property name="notificationService" ref="notificationService"/>
     </bean>
 
     <bean id="transcribeToSolrTransformer" class="com.armedia.acm.services.transcribe.transformer.TranscribeToSolrTransformer">
