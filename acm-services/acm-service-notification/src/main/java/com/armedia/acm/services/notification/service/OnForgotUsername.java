@@ -64,6 +64,7 @@ public class OnForgotUsername implements ApplicationListener<ForgotUsernameEvent
             Notification notification = notificationService.getNotificationBuilder()
                     .newNotification("forgotUsername", NotificationConstants.FORGOT_USERNAME, "USER", user.getIdentifier(),
                             user.getUserId())
+                    .forObjectWithNumber(user.getUserId())
                     .withEmailAddresses(user.getMail())
                     .build();
 

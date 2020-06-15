@@ -84,7 +84,7 @@ public class FirstAssigneeOwningGroupNotify implements ApplicationListener<CaseE
                         .forObjectWithTitle(caseFile.getTitle())
                         .withEmailAddresses(String.join(",", emailAddresses))
                         .withEmailGroup(userInfoHelper.removeGroupPrefix(owningGroupId))
-                        .build();
+                        .build(assigneeId);
 
                 notificationService.saveNotification(notification);
             }
