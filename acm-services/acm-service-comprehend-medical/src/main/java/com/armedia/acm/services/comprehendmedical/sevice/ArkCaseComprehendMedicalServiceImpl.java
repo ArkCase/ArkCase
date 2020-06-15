@@ -40,13 +40,26 @@ import com.armedia.acm.services.comprehendmedical.factory.ComprehendMedicalProvi
 import com.armedia.acm.services.comprehendmedical.model.ComprehendMedical;
 import com.armedia.acm.services.comprehendmedical.model.ComprehendMedicalConfiguration;
 import com.armedia.acm.services.comprehendmedical.utils.ComprehendMedicalUtils;
-import com.armedia.acm.services.labels.service.TranslationService;
-import com.armedia.acm.services.mediaengine.exception.*;
-import com.armedia.acm.services.mediaengine.model.*;
+import com.armedia.acm.services.mediaengine.exception.CreateMediaEngineException;
+import com.armedia.acm.services.mediaengine.exception.GetConfigurationException;
+import com.armedia.acm.services.mediaengine.exception.GetMediaEngineException;
+import com.armedia.acm.services.mediaengine.exception.MediaEngineProviderNotFound;
+import com.armedia.acm.services.mediaengine.exception.MediaEngineServiceNotFoundException;
+import com.armedia.acm.services.mediaengine.exception.SaveConfigurationException;
+import com.armedia.acm.services.mediaengine.exception.SaveMediaEngineException;
+import com.armedia.acm.services.mediaengine.model.MediaEngine;
+import com.armedia.acm.services.mediaengine.model.MediaEngineActionType;
+import com.armedia.acm.services.mediaengine.model.MediaEngineBusinessProcessModel;
+import com.armedia.acm.services.mediaengine.model.MediaEngineBusinessProcessVariableKey;
+import com.armedia.acm.services.mediaengine.model.MediaEngineConfiguration;
+import com.armedia.acm.services.mediaengine.model.MediaEngineConstants;
+import com.armedia.acm.services.mediaengine.model.MediaEngineStatusType;
+import com.armedia.acm.services.mediaengine.model.MediaEngineType;
+import com.armedia.acm.services.mediaengine.model.MediaEngineUserType;
 import com.armedia.acm.services.mediaengine.service.ArkCaseMediaEngineServiceImpl;
-import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
+import com.armedia.acm.services.notification.service.NotificationService;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
 import com.armedia.acm.services.tag.model.AcmAssociatedTag;
@@ -61,6 +74,7 @@ import com.armedia.acm.tool.mediaengine.exception.GetMediaEngineToolException;
 import com.armedia.acm.tool.mediaengine.model.MediaEngineDTO;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.parser.PdfTextExtractor;
+
 import org.activiti.engine.delegate.DelegateExecution;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -91,10 +105,9 @@ public class ArkCaseComprehendMedicalServiceImpl extends ArkCaseMediaEngineServi
     private ComprehendMedicalConfigurationService comprehendMedicalConfigurationService;
     private ComprehendMedicalDao comprehendMedicalDao;
     private UserDao userDao;
-    private TranslationService translationService;
-    private NotificationDao notificationDao;
     private TagService tagService;
     private AssociatedTagService associatedTagService;
+    private NotificationService notificationService;
 
     @Override
     public MediaEngine getExisting(MediaEngine mediaEngine) throws GetMediaEngineException
@@ -157,23 +170,25 @@ public class ArkCaseComprehendMedicalServiceImpl extends ArkCaseMediaEngineServi
 
                 getUsersToNotify(users, comprehendMedical);
 
-                Notification notification = new Notification();
-                notification.setTitle(getTranslationService().translate(NotificationConstants.STATUS_COMPREHEND_MEDICAL));
-                if(!action.equals("QUEUED"))
+                String template;
+                if (!action.equals("QUEUED"))
                 {
-                    notification.setTemplateModelName("transcribeStatus");
+                    template = "transcribeStatus";
                 }
                 else
                 {
-                    notification.setTemplateModelName("transcribeQueued");
+                    template = "transcribeQueued";
                 }
-                notification.setNote(action);
-                notification.setAttachFiles(false);
-                notification.setParentId(comprehendMedical.getMediaEcmFileVersion().getId());
-                notification.setParentType(comprehendMedical.getObjectType());
-                notification.setEmailAddresses(users.stream().map(AcmUser::getMail).collect(Collectors.joining(",")));
-                notification.setData(comprehendMedical.getMediaEcmFileVersion().getFile().getFileName());
-                getNotificationDao().save(notification);
+
+                Notification notification = notificationService.getNotificationBuilder()
+                        .newNotification(template, NotificationConstants.STATUS_COMPREHEND_MEDICAL, comprehendMedical.getObjectType(),
+                                comprehendMedical.getMediaEcmFileVersion().getId(), null)
+                        .withNote(action)
+                        .withData(comprehendMedical.getMediaEcmFileVersion().getFile().getFileName())
+                        .withEmailAddressesForUsers(users)
+                        .build();
+
+                notificationService.saveNotification(notification);
             }
         }
     }
@@ -195,13 +210,13 @@ public class ArkCaseComprehendMedicalServiceImpl extends ArkCaseMediaEngineServi
         MediaEngineUserType type = MediaEngineUserType.valueOf(userType);
         switch (type)
         {
-            case OWNER_OF_MEDIA:
-                // First try to find assignee
-                userId = getOwnerOfMedia(comprehendMedical);
-                break;
-            case OWNER_OF_PARENT_OBJECT:
-                userId = getOwnerOfParentObject(comprehendMedical, userId);
-                break;
+        case OWNER_OF_MEDIA:
+            // First try to find assignee
+            userId = getOwnerOfMedia(comprehendMedical);
+            break;
+        case OWNER_OF_PARENT_OBJECT:
+            userId = getOwnerOfParentObject(comprehendMedical, userId);
+            break;
         }
 
         return userId;
@@ -342,7 +357,8 @@ public class ArkCaseComprehendMedicalServiceImpl extends ArkCaseMediaEngineServi
     }
 
     @Override
-    public void saveConfiguration(MediaEngineConfiguration configuration) throws SaveConfigurationException, MediaEngineServiceNotFoundException
+    public void saveConfiguration(MediaEngineConfiguration configuration)
+            throws SaveConfigurationException, MediaEngineServiceNotFoundException
     {
         try
         {
@@ -391,21 +407,21 @@ public class ArkCaseComprehendMedicalServiceImpl extends ArkCaseMediaEngineServi
 
                         switch (MediaEngineStatusType.valueOf(providerDTO.getStatus()))
                         {
-                            case PROCESSING:
-                                action = MediaEngineActionType.PROCESSING.toString();
-                                break;
-                            case COMPLETED:
-                                action = doComplete(ids, providerDTO, delegateExecution);
-                                break;
-                            case FAILED:
-                                action = doFailed(mediaEngine);
-                                break;
+                        case PROCESSING:
+                            action = MediaEngineActionType.PROCESSING.toString();
+                            break;
+                        case COMPLETED:
+                            action = doComplete(ids, providerDTO, delegateExecution);
+                            break;
+                        case FAILED:
+                            action = doFailed(mediaEngine);
+                            break;
 
-                            default:
-                                throw new RuntimeException(
-                                        String.format(
-                                                "Received ComprehendMedical status type of [%s] for COMPREHEND_MEDICAL_ID=[%s] and FILE_ID=[%s], but cannot handle it.",
-                                                status, mediaEngine.getId(), mediaEngine.getMediaEcmFileVersion().getFile().getId()));
+                        default:
+                            throw new RuntimeException(
+                                    String.format(
+                                            "Received ComprehendMedical status type of [%s] for COMPREHEND_MEDICAL_ID=[%s] and FILE_ID=[%s], but cannot handle it.",
+                                            status, mediaEngine.getId(), mediaEngine.getMediaEcmFileVersion().getFile().getId()));
                         }
 
                         delegateExecution.setVariable(MediaEngineBusinessProcessVariableKey.STATUS.toString(), status);
@@ -431,8 +447,9 @@ public class ArkCaseComprehendMedicalServiceImpl extends ArkCaseMediaEngineServi
         String providerName = configuration.getProvider();
 
         Map<String, Object> props = new HashMap<>();
-        props.put("jobId", ((ComprehendMedical)mediaEngine).getJobId());
-        return (ComprehendMedicineDTO) getComprehendMedicalProviderFactory().getProvider(providerName).get(mediaEngine.getRemoteId(), props);
+        props.put("jobId", ((ComprehendMedical) mediaEngine).getJobId());
+        return (ComprehendMedicineDTO) getComprehendMedicalProviderFactory().getProvider(providerName).get(mediaEngine.getRemoteId(),
+                props);
     }
 
     private String doComplete(List<Long> ids, ComprehendMedicineDTO comprehendMedicineDTO, DelegateExecution delegateExecution)
@@ -511,7 +528,8 @@ public class ArkCaseComprehendMedicalServiceImpl extends ArkCaseMediaEngineServi
         }
         catch (Exception e)
         {
-            LOG.debug("There is no associated tag for this file for objectId=[{}], objectType=[{}] and tag=[{}]", objectId, objectType, entityTag.getId());
+            LOG.debug("There is no associated tag for this file for objectId=[{}], objectType=[{}] and tag=[{}]", objectId, objectType,
+                    entityTag.getId());
         }
 
         if (associatedTag == null)
@@ -539,7 +557,7 @@ public class ArkCaseComprehendMedicalServiceImpl extends ArkCaseMediaEngineServi
 
         if (ids != null && !ids.isEmpty())
         {
-            // Because all IDs are follow the same business process  objects for these IDS have the same
+            // Because all IDs are follow the same business process objects for these IDS have the same
             // information, just different ids),
             // we need just to take one of them (if there are many), check if we need to proceed, and proceed if yes.
             // After that, the business process will update all IDs
@@ -616,16 +634,17 @@ public class ArkCaseComprehendMedicalServiceImpl extends ArkCaseMediaEngineServi
         String text = "";
 
         if (mediaEngine.getMediaEcmFileVersion().getVersionMimeType().startsWith("application/pdf") &&
-        mediaEngine.getMediaEcmFileVersion().isSearchablePDF())
+                mediaEngine.getMediaEcmFileVersion().isSearchablePDF())
         {
             text = getTextFromPDF(mediaVersionInputStream);
         }
-        else if(mediaEngine.getMediaEcmFileVersion().getVersionMimeType().startsWith("text/plain"))
+        else if (mediaEngine.getMediaEcmFileVersion().getVersionMimeType().startsWith("text/plain"))
         {
             text = getTextFromPlainText(mediaVersionInputStream);
         }
-        else if(mediaEngine.getMediaEcmFileVersion().getVersionMimeType().startsWith("application/msword") ||
-                mediaEngine.getMediaEcmFileVersion().getVersionMimeType().startsWith("application/vnd.openxmlformats-officedocument.wordprocessingml.document"))
+        else if (mediaEngine.getMediaEcmFileVersion().getVersionMimeType().startsWith("application/msword") ||
+                mediaEngine.getMediaEcmFileVersion().getVersionMimeType()
+                        .startsWith("application/vnd.openxmlformats-officedocument.wordprocessingml.document"))
         {
             text = getTextFromWord(mediaVersionInputStream);
         }
@@ -647,7 +666,8 @@ public class ArkCaseComprehendMedicalServiceImpl extends ArkCaseMediaEngineServi
     private String getTextFromPDF(InputStream inputStream) throws IOException
     {
         String text = "";
-        try {
+        try
+        {
 
             PdfReader reader = new PdfReader(inputStream);
 
@@ -751,14 +771,16 @@ public class ArkCaseComprehendMedicalServiceImpl extends ArkCaseMediaEngineServi
 
                     if (purged)
                     {
-                        LOG.debug("Comprehend Medicine information for ComprehendMedicine object with REMOTE_ID=[{}] on provider side are purged.",
+                        LOG.debug(
+                                "Comprehend Medicine information for ComprehendMedicine object with REMOTE_ID=[{}] on provider side are purged.",
                                 mediaEngine.getRemoteId());
                         delegateExecution.setVariable(MediaEngineBusinessProcessVariableKey.ACTION.toString(),
                                 MediaEngineActionType.PURGE_SUCCESS.toString());
                     }
                     else
                     {
-                        LOG.warn("Comprehend Medicine information for ComprehendMedicine object with REMOTE_ID=[{}] on provider side are not purged.",
+                        LOG.warn(
+                                "Comprehend Medicine information for ComprehendMedicine object with REMOTE_ID=[{}] on provider side are not purged.",
                                 mediaEngine.getRemoteId());
                         delegateExecution.setVariable(MediaEngineBusinessProcessVariableKey.ACTION.toString(),
                                 MediaEngineActionType.PURGE_FAILED.toString());
@@ -821,9 +843,10 @@ public class ArkCaseComprehendMedicalServiceImpl extends ArkCaseMediaEngineServi
         // TODO: Check for correct files that can be processed
         boolean allow = ecmFileVersion != null &&
                 ecmFileVersion.getVersionMimeType() != null && (ecmFileVersion.isSearchablePDF() ||
-                ecmFileVersion.getVersionMimeType().startsWith("text/plain") ||
-                ecmFileVersion.getVersionMimeType().startsWith("application/msword") ||
-                ecmFileVersion.getVersionMimeType().startsWith("application/vnd.openxmlformats-officedocument.wordprocessingml.document"));
+                        ecmFileVersion.getVersionMimeType().startsWith("text/plain") ||
+                        ecmFileVersion.getVersionMimeType().startsWith("application/msword") ||
+                        ecmFileVersion.getVersionMimeType()
+                                .startsWith("application/vnd.openxmlformats-officedocument.wordprocessingml.document"));
 
         if (!allow)
         {
@@ -891,26 +914,6 @@ public class ArkCaseComprehendMedicalServiceImpl extends ArkCaseMediaEngineServi
         this.userDao = userDao;
     }
 
-    public TranslationService getTranslationService()
-    {
-        return translationService;
-    }
-
-    public void setTranslationService(TranslationService translationService)
-    {
-        this.translationService = translationService;
-    }
-
-    public NotificationDao getNotificationDao()
-    {
-        return notificationDao;
-    }
-
-    public void setNotificationDao(NotificationDao notificationDao)
-    {
-        this.notificationDao = notificationDao;
-    }
-
     public TagService getTagService()
     {
         return tagService;
@@ -921,11 +924,23 @@ public class ArkCaseComprehendMedicalServiceImpl extends ArkCaseMediaEngineServi
         this.tagService = tagService;
     }
 
-    public AssociatedTagService getAssociatedTagService() {
+    public AssociatedTagService getAssociatedTagService()
+    {
         return associatedTagService;
     }
 
-    public void setAssociatedTagService(AssociatedTagService associatedTagService) {
+    public void setAssociatedTagService(AssociatedTagService associatedTagService)
+    {
         this.associatedTagService = associatedTagService;
+    }
+
+    public NotificationService getNotificationService()
+    {
+        return notificationService;
+    }
+
+    public void setNotificationService(NotificationService notificationService)
+    {
+        this.notificationService = notificationService;
     }
 }

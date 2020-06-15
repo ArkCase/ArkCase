@@ -30,6 +30,7 @@ package com.armedia.acm.services.notification.service;
 import com.armedia.acm.auth.web.ForgotUsernameEvent;
 import com.armedia.acm.core.AcmSpringActiveProfile;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
+import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.users.model.AcmUser;
 
@@ -55,10 +56,18 @@ public class OnForgotUsername implements ApplicationListener<ForgotUsernameEvent
             {
                 throw new UnsupportedOperationException("Won't send forgot username email when SSO environment");
             }
+
+            log.debug("Create 'Forgot username' notification for user [{}] with email [{}].", user.getUserId(), user.getMail());
+
             auditPropertyEntityAdapter.setUserId(user.getUserId());
-            notificationService.createNotification("forgotUsername", NotificationConstants.FORGOT_USERNAME, "USER",
-                    user.getIdentifier(), user.getUserId(), null, user.getMail(), user.getUserId());
-            log.debug("Notification 'Forgot username' created for user [{}] with email [{}].", user.getUserId(), user.getMail());
+
+            Notification notification = notificationService.getNotificationBuilder()
+                    .newNotification("forgotUsername", NotificationConstants.FORGOT_USERNAME, "USER", user.getIdentifier(),
+                            user.getUserId())
+                    .withEmailAddresses(user.getMail())
+                    .build();
+
+            notificationService.saveNotification(notification);
         }
     }
 

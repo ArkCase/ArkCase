@@ -29,6 +29,7 @@ package com.armedia.acm.services.notification.service;
 
 import com.armedia.acm.core.AcmSpringActiveProfile;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
+import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -39,29 +40,34 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.slf4j.MDC;
 
-public class ResetPasswordService {
-
+public class ResetPasswordService
+{
     private UserDao userDao;
     private AcmSpringActiveProfile acmSpringActiveProfile;
     private final Logger log = LogManager.getLogger(getClass());
     private NotificationService notificationService;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
-    
+
     public void sendPasswordResetNotification(AcmUser user)
     {
         if (acmSpringActiveProfile.isSAMLEnabledEnvironment())
         {
             throw new UnsupportedOperationException("Won't send password reset email when SSO environment");
         }
+        log.debug("Create password reset notification for user [{}]", user.getUserId());
         user.setPasswordResetToken(new PasswordResetToken());
         userDao.save(user);
 
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY, user.getUserId());
         auditPropertyEntityAdapter.setUserId(user.getUserId());
 
-        notificationService.createNotification("changePassword", NotificationConstants.PASSWORD_RESET, "USER",
-                user.getIdentifier(), user.getUserId(), null, user.getMail(), user.getUserId());
-        log.debug("Notification 'Reset password' created for user [{}] with email [{}]", user.getUserId(), user.getMail());
+        Notification notification = notificationService.getNotificationBuilder()
+                .newNotification("changePassword", NotificationConstants.PASSWORD_RESET, "USER", user.getIdentifier(),
+                        user.getUserId())
+                .withEmailAddresses(user.getMail())
+                .build();
+
+        notificationService.saveNotification(notification);
     }
 
     public boolean isUserPasswordExpired(String userId)
@@ -79,7 +85,7 @@ public class ResetPasswordService {
         this.userDao = userDao;
     }
 
-    public void setAcmSpringActiveProfile(AcmSpringActiveProfile acmSpringActiveProfile) 
+    public void setAcmSpringActiveProfile(AcmSpringActiveProfile acmSpringActiveProfile)
     {
         this.acmSpringActiveProfile = acmSpringActiveProfile;
     }

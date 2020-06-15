@@ -17,7 +17,6 @@
         <property name="processHandlerMap" ref="mediaEngineDrollsProcessRules"/>
         <property name="objectLockingManager" ref="acmObjectLockingManager"/>
         <property name="userDao" ref="userJpaDao"/>
-        <property name="notificationDao" ref="notificationDao"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="objectLockService" ref="objectLockService"/>
         <property name="mediaEngineMapper" ref="mediaEngineMapper"/>
@@ -26,9 +25,9 @@
         <property name="ecmFileTransaction" ref="ecmFileTransaction"/>
         <property name="comprehendMedicalConfigurationService" ref="comprehendMedicalConfigurationService"/>
         <property name="auditDao" ref="auditDao"/>
-        <property name="translationService" ref="translationService" />
         <property name="tagService" ref="tagService"/>
         <property name="associatedTagService" ref="associatedTagService"/>
+        <property name="notificationService" ref="notificationService"/>
     </bean>
 
 
