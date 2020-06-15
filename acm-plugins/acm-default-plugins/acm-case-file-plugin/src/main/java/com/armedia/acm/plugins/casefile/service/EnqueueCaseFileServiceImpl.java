@@ -27,7 +27,6 @@ package com.armedia.acm.plugins.casefile.service;
  * #L%
  */
 
-import com.armedia.acm.auth.AcmAuthenticationDetails;
 import com.armedia.acm.plugins.businessprocess.model.EnterQueueModel;
 import com.armedia.acm.plugins.businessprocess.model.LeaveCurrentQueueModel;
 import com.armedia.acm.plugins.businessprocess.model.NextPossibleQueuesModel;
@@ -57,6 +56,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
 {
@@ -108,8 +108,7 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
         Boolean oldDeniedFlag = caseFile.getDeniedFlag();
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        AcmAuthenticationDetails details = (AcmAuthenticationDetails) auth.getDetails();
-        String ipAddress = details.getRemoteAddress();
+        String ipAddress = context.getIpAddress();
 
         boolean hasAnyAssociatedTimesheets = getTimesheetService().getByObjectIdAndType(
                 caseId, CaseFileConstants.OBJECT_TYPE, 0, 1, "") != null;
@@ -160,7 +159,7 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
         startLeaveProcess(context, caseFile);
         startEnterProcess(context, caseFile);
 
-        if (nextQueueAction.equals(CaseFileConstants.NEXT_QUEUE_ACTION_NEXT))
+        if (Objects.equals(nextQueueAction, CaseFileConstants.NEXT_QUEUE_ACTION_NEXT))
         {
             caseFile.getParticipants().stream()
                     .filter(p -> "assignee".equals(p.getParticipantType()) || "owning group".equals(p.getParticipantType())).forEach(p -> {

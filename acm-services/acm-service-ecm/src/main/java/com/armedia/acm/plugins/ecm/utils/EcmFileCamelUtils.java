@@ -74,7 +74,7 @@ public class EcmFileCamelUtils
             }
 
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (authentication != null)
+            if (authentication != null && authentication.getDetails() != null)
             {
                 return ((AcmAuthenticationDetails) authentication.getDetails()).getCmisUserId();
             }
