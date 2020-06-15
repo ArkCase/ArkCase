@@ -38,6 +38,7 @@ import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 
 import org.apache.commons.lang3.StringUtils;
@@ -94,11 +95,21 @@ public class NotificationUtils
     public String getEmailForUser(String userId)
     {
         AcmUser user = userDao.findByUserId(userId);
-        if (user != null)
+        if (user != null && user.getUserState() == AcmUserState.VALID)
         {
             return user.getMail() != null ? user.getMail() : "";
         }
         return "";
+    }
+
+    public String getEmailsCommaSeparatedForUsers(List<AcmUser> users)
+    {
+        return users.stream()
+                .filter(it -> it.getUserState() == AcmUserState.VALID)
+                .map(AcmUser::getMail)
+                .filter(Objects::nonNull)
+                .distinct()
+                .collect(Collectors.joining(","));
     }
 
     public String getEmailsCommaSeparatedForParticipantsForObject(Long parentObjectId, String parentObjectType)
@@ -137,7 +148,7 @@ public class NotificationUtils
         else if (!participantType.equals(NotificationConstants.SPECIAL_PARTICIPANT_TYPE))
         {
             AcmUser user = getUserDao().findByUserId(participantLdapId);
-            if (user != null && user.getMail() != null)
+            if (user != null && user.getUserState() == AcmUserState.VALID && user.getMail() != null)
             {
                 return new HashSet<>(Collections.singletonList(user.getMail()));
             }
