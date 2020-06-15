@@ -64,6 +64,7 @@ public class ResetPasswordService
         Notification notification = notificationService.getNotificationBuilder()
                 .newNotification("changePassword", NotificationConstants.PASSWORD_RESET, "USER", user.getIdentifier(),
                         user.getUserId())
+                .forObjectWithNumber(user.getUserId())
                 .withEmailAddresses(user.getMail())
                 .build();
 
