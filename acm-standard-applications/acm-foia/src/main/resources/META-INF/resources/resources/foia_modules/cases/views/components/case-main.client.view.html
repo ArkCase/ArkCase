@@ -207,7 +207,7 @@
                     <br>
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" ng-model="objectInfo.paidFlag" permission="editRequestData"
+                            <input type="checkbox" ng-model="objectInfo.paidFlag" ng-change="feeWaivedFlagChange(objectInfo.paidFlag)" permission="editRequestData"
                                     permission-object-type="CASE_FILE" permission-properties="objectInfo" permission-action="disable">
                             <span translate>cases.comp.main.paidFlag.label </span>
                         </label>
