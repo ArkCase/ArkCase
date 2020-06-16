@@ -216,6 +216,28 @@ angular.module('services').factory('Consultation.InfoService', [ '$resource', '$
             }
         })
     };
+    /**
+     * @ngdoc method
+     * @name saveConsultationWithFiles
+     * @methodOf services:Consultation.InfoService
+     *
+     * @description
+     * Save consultation data with files
+     *
+     * @param {Object} consultationInfo  Consultation data
+     *
+     * @returns {Object} Promise
+     */
+    Service.saveConsultationWithFiles = function(formData) {
+        return $http({
+            method: 'POST',
+            url: 'api/latest/plugin/consultation',
+            data: formData,
+            headers: {
+                'Content-Type': undefined
+            }
+        })
+    };
 
     /**
      * @ngdoc method
