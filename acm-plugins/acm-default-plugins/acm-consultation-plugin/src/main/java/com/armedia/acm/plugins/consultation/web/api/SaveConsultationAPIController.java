@@ -99,9 +99,11 @@ public class SaveConsultationAPIController
         Map<String, List<MultipartFile>> attachments = request.getMultiFileMap();
         Map<String, List<MultipartFile>> files = new HashMap<>();
 
-        for (Map.Entry<String, List<MultipartFile>> entry : attachments.entrySet()) {
+        for (Map.Entry<String, List<MultipartFile>> entry : attachments.entrySet())
+        {
             String type = entry.getKey();
-            if (!"consultation".equalsIgnoreCase(type)){
+            if (!"consultation".equalsIgnoreCase(type))
+            {
                 final List<MultipartFile> attachmentsList = entry.getValue();
 
                 files.put(type, attachmentsList);
