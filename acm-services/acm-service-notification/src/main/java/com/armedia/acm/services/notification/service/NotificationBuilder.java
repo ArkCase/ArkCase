@@ -1,5 +1,6 @@
 package com.armedia.acm.services.notification.service;
 
+import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.participants.model.AcmParticipant;
@@ -130,6 +131,13 @@ public class NotificationBuilder
         public Builder withData(String data)
         {
             this.notification.setData(data);
+            return this;
+        }
+
+        public Builder withFiles(List<EcmFileVersion> files)
+        {
+            this.notification.setAttachFiles(true);
+            this.notification.setFiles(files);
             return this;
         }
 

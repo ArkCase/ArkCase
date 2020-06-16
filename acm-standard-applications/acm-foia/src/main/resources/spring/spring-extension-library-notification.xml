@@ -5,23 +5,11 @@
 
     <beans:beans profile="extension-foia">
 
-        
-
-        <beans:bean id="baseNotificationSender" class="com.armedia.acm.services.notification.service.NotificationSender"
-            abstract="true">
-            <beans:property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
-            <beans:property name="notificationUtils" ref="notificationUtils"/>
-            <beans:property name="notificationTemplate" value="file:#{notificationConfig.emailTemplatePath}"/>
-            <beans:property name="userDao" ref="userJpaDao"/>
-            <beans:property name="dataService" ref="acmDataService"/>
-            <beans:property name="templatingEngine" ref="templatingEngine"/>
-            <beans:property name="templateService" ref="filesystemTemplateConfigurationService"/>
-        </beans:bean>
-
         <beans:bean id="userInfoHelper" class="gov.foia.service.FOIAUserInfoHelper">
             <beans:property name="userDao" ref="userJpaDao"/>
             <beans:property name="contextHolder" ref="acmContextHolder"/>
             <beans:property name="acmGroupDao" ref="groupDao"/>
         </beans:bean>
     </beans:beans>
+
 </beans:beans>
