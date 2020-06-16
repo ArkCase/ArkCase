@@ -2,28 +2,28 @@
 
 angular.module('consultations').controller(
     'Consultations.SuggestedConsultationsController',
-    ['$scope', '$translate', '$stateParams', 'Helper.UiGridService', 'UtilService', 'Helper.ObjectBrowserService', 'Consultation.InfoService', 'Consultation.SuggestedConsultations',
-    function ($scope, $translate, $stateParams, HelperUiGridService,  Util, HelperObjectBrowserService, ConsultationInfoService, SuggestedConsultationsService) {
+    ['$scope', '$translate', '$stateParams', 'Helper.UiGridService', 'UtilService', 'Helper.ObjectBrowserService', 'Consultation.InfoService', 'SuggestedObjectsService',
+        function ($scope, $translate, $stateParams, HelperUiGridService, Util, HelperObjectBrowserService, ConsultationInfoService, SuggestedObjectsService) {
 
 
-        new HelperObjectBrowserService.Component({
-            scope: $scope,
-            stateParams: $stateParams,
-            moduleId: "consultations",
-            componentId: "suggestedConsultations",
-            retrieveObjectInfo: ConsultationInfoService.getConsultationInfo,
-            validateObjectInfo: ConsultationInfoService.validateConsultationInfo,
-            onConfigRetrieved: function(componentConfig) {
-                return onConfigRetrieved(componentConfig);
-            },
-            onObjectInfoRetrieved: function(objectInfo) {
-                onObjectInfoRetrieved(objectInfo);
-            }
-        });
+            new HelperObjectBrowserService.Component({
+                scope: $scope,
+                stateParams: $stateParams,
+                moduleId: "consultations",
+                componentId: "suggestedConsultations",
+                retrieveObjectInfo: ConsultationInfoService.getConsultationInfo,
+                validateObjectInfo: ConsultationInfoService.validateConsultationInfo,
+                onConfigRetrieved: function (componentConfig) {
+                    return onConfigRetrieved(componentConfig);
+                },
+                onObjectInfoRetrieved: function (objectInfo) {
+                    onObjectInfoRetrieved(objectInfo);
+                }
+            });
 
-        var gridHelper = new HelperUiGridService.Grid({
-            scope: $scope
-        });
+            var gridHelper = new HelperUiGridService.Grid({
+                scope: $scope
+            });
         var onConfigRetrieved = function(config) {
 
             $scope.config = config;
@@ -48,7 +48,7 @@ angular.module('consultations').controller(
         };
 
         function retrieveGridData(){
-            SuggestedConsultationsService.getSuggestedConsultations($scope.objectInfo.title, $scope.objectInfo.id).then(function(data){
+            SuggestedObjectsService.getSuggestedObjects($scope.objectInfo.title, "CONSULTATION", $scope.objectInfo.id).then(function (data) {
                 $scope.suggestedConsultations = data.data;
                 $scope.gridOptions = $scope.gridOptions || {};
                 $scope.gridOptions.data = $scope.suggestedConsultations;
@@ -68,8 +68,8 @@ angular.module('consultations').controller(
         $scope.onClickObjLink = function(event, rowEntity) {
             event.preventDefault();
 
-            var targetType = Util.goodMapValue(rowEntity, "objectType");
-            var targetId = Util.goodMapValue(rowEntity, "consultationId");
+            var targetType = Util.goodMapValue(rowEntity, "type");
+            var targetId = Util.goodMapValue(rowEntity, "id");
             gridHelper.showObject(targetType, targetId);
         };
 
