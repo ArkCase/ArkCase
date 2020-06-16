@@ -75,7 +75,7 @@ public class ConsultationUploadAttachmentsHandler implements PipelineHandler<Con
 
                     try
                     {
-                        getEcmFileService().upload(file.getOriginalFilename(), file.getType(), "Document", file.getInputStream(),
+                        getEcmFileService().upload(file.getOriginalFilename(), "attachment", "Document", file.getInputStream(),
                                 file.getContentType(),
                                 file.getOriginalFilename(), pipelineContext.getAuthentication(),
                                 folderId, entity.getObjectType(), entity.getId());
