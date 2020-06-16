@@ -99,6 +99,8 @@ public class CaseFileDaoIT
         String userHomePath = System.getProperty("user.home");
         System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
         System.setProperty("configuration.server.url", "http://localhost:9999");
+        System.setProperty("javax.net.ssl.trustStore", userHomePath + "/.arkcase/acm/private/arkcase.ts");
+        System.setProperty("javax.net.ssl.trustStorePassword", "password");
     }
 
     @Autowired
@@ -121,6 +123,7 @@ public class CaseFileDaoIT
         authentication = new AcmAuthentication(null, null, null, true,
                 "user", 0L);
         auditAdapter.setUserId("auditUser");
+        entityManager.clear();
     }
 
     @Test
@@ -135,7 +138,6 @@ public class CaseFileDaoIT
         caseFile.setCaseType("caseType");
         caseFile.setStatus("status");
         caseFile.setTitle("title");
-        caseFile.setRestricted(true);
 
         caseFile.setCreator("creator");
 
@@ -152,8 +154,6 @@ public class CaseFileDaoIT
 
         CaseFile saved = caseFileDao.save(caseFile);
 
-        entityManager.flush();
-
         assertNotNull(saved.getId());
     }
 
@@ -169,7 +169,6 @@ public class CaseFileDaoIT
         caseFile.setCaseType("caseType");
         caseFile.setStatus("status");
         caseFile.setTitle("title");
-        caseFile.setRestricted(true);
 
         caseFile.setCreator("creator");
 
@@ -181,6 +180,7 @@ public class CaseFileDaoIT
         caseFile.setContainer(container);
 
         CaseFile saved = caseFileDao.save(caseFile);
+
         assertNotNull(saved.getId());
 
         AcmObjectLock lock = acmObjectLockingManager.acquireObjectLock(saved.getId(), saved.getObjectType(), "OBJECT_LOCK", null, false,
@@ -206,7 +206,6 @@ public class CaseFileDaoIT
         caseFile.setCaseType("caseType");
         caseFile.setStatus("status");
         caseFile.setTitle("title");
-        caseFile.setRestricted(true);
 
         caseFile.setCreator("creator");
 
@@ -222,8 +221,6 @@ public class CaseFileDaoIT
         caseFile.setQueue(queue);
 
         CaseFile saved = caseFileDao.save(caseFile);
-
-        entityManager.flush();
 
         saved = caseFileDao.find(saved.getId());
 
