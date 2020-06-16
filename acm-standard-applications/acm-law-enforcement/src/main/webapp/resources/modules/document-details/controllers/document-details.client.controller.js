@@ -113,6 +113,7 @@ angular.module('document-details').controller(
                 $scope.showVideoPlayer = false;
                 $scope.showPdfJs = false;
                 $scope.transcriptionTabActive = false;
+                $scope.transcriptionTabViewEnabled = false;
                 $scope.ocrInfoActive = false;
                 $scope.comprehendMedicalEnabled = false;
                 $scope.loaderOpened = false;
@@ -334,6 +335,7 @@ angular.module('document-details').controller(
                         }
 
                         $scope.transcriptionTabActive = $scope.showVideoPlayer && $scope.transcribeEnabled;
+                        $scope.transcriptionTabViewEnabled = $scope.transcriptionTabActive;
                     });
 
                     $scope.onPlayerReady = function(API) {
