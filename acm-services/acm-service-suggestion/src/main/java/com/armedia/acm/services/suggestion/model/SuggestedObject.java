@@ -2,7 +2,7 @@ package com.armedia.acm.services.suggestion.model;
 
 /*-
  * #%L
- * acm-service-case-suggestion
+ * acm-service-suggestion
  * %%
  * Copyright (C) 2014 - 2019 ArkCase LLC
  * %%
@@ -32,9 +32,10 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.util.Date;
 
-public class SuggestedCase
+public class SuggestedObject
 {
-    public static class File {
+    public static class File
+    {
 
         private String fileId;
 
@@ -61,81 +62,81 @@ public class SuggestedCase
         }
     }
 
-    public Long caseId;
+    public Long id;
 
-    public String caseNumber;
+    public String name;
 
-    public String caseTitle;
+    public String title;
 
-    public String caseDescription;
+    public String description;
 
-    public String caseStatus;
+    public String status;
 
-    public String objectType;
+    public String type;
 
     @JsonSerialize(using = JsonDateSerializer.class)
     private Date modifiedDate;
 
     private File file;
 
-    public Long getCaseId()
+    public Long getId()
     {
-        return caseId;
+        return id;
     }
 
-    public void setCaseId(Long caseId)
+    public void setId(Long id)
     {
-        this.caseId = caseId;
+        this.id = id;
     }
 
-    public String getCaseNumber()
+    public String getName()
     {
-        return caseNumber;
+        return name;
     }
 
-    public void setCaseNumber(String caseNumber)
+    public void setName(String name)
     {
-        this.caseNumber = caseNumber;
+        this.name = name;
     }
 
-    public String getCaseTitle()
+    public String getTitle()
     {
-        return caseTitle;
+        return title;
     }
 
-    public void setCaseTitle(String caseTitle)
+    public void setTitle(String title)
     {
-        this.caseTitle = caseTitle;
+        this.title = title;
     }
 
-    public String getCaseDescription()
+    public String getDescription()
     {
-        return caseDescription;
+        return description;
     }
 
-    public void setCaseDescription(String caseDescription)
+    public void setDescription(String description)
     {
-        this.caseDescription = caseDescription;
+        this.description = description;
     }
 
-    public String getCaseStatus()
+    public String getStatus()
     {
-        return caseStatus;
+        return status;
     }
 
-    public void setCaseStatus(String caseStatus)
+    public void setStatus(String status)
     {
-        this.caseStatus = caseStatus;
+        this.status = status;
     }
 
-    public String getObjectType()
+    public String getType()
     {
-        return objectType;
+        return type;
     }
 
-    public void setObjectType(String objectType)
+    public void setType(String type)
     {
-        this.objectType = objectType;
+        this.type = type;
     }
 
     public Date getModifiedDate()

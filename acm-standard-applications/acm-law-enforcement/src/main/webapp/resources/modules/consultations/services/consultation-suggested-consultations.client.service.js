@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('services').factory('Consultation.SuggestedConsultations', ['$http', function ($http) {
+angular.module('services').factory('Consultation.SuggestedConsultations', ['$http', 'base64', function ($http, base64) {
 
     return ({
         getSuggestedConsultations: getSuggestedConsultations
@@ -8,10 +8,11 @@ angular.module('services').factory('Consultation.SuggestedConsultations', ['$htt
 
     function getSuggestedConsultations(title, id) {
         return $http({
-            url: 'api/latest/service/suggestion/' + encodeURIComponent(title.replace(/\//g, "%2F")),
+            url: 'api/latest/service/suggestion/' + base64.urlencode(title),
             method: 'GET',
             params: {
-                objectId: id
+                objectId: id,
+                objectType: "CONSULTATION"
             }
         });
     }

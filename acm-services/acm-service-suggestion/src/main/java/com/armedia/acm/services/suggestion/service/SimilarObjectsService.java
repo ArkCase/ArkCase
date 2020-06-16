@@ -2,7 +2,7 @@ package com.armedia.acm.services.suggestion.service;
 
 /*-
  * #%L
- * acm-service-case-suggestion
+ * acm-service-suggestion
  * %%
  * Copyright (C) 2014 - 2019 ArkCase LLC
  * %%
@@ -28,17 +28,17 @@ package com.armedia.acm.services.suggestion.service;
  */
 
 import com.armedia.acm.services.search.exception.SolrException;
-import com.armedia.acm.services.suggestion.model.SuggestedCase;
+import com.armedia.acm.services.suggestion.model.SuggestedObject;
 
 import org.springframework.security.core.Authentication;
 
 import java.text.ParseException;
 import java.util.List;
 
-public interface SimilarCasesService
+public interface SimilarObjectsService
 {
 
-    List<SuggestedCase> findSimilarCases(String title, Boolean isPortal, Long objectId, Authentication auth)
+    List<SuggestedObject> findSimilarObjects(String title, String objectType, Boolean isPortal, Long objectId, Authentication auth)
             throws ParseException, SolrException;
 
 }
