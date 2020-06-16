@@ -33,6 +33,7 @@ angular.module('request-info').config([ '$stateProvider', function($stateProvide
                 $translatePartialLoader.addPart('request-info');
                 $translatePartialLoader.addPart('cases');
                 $translatePartialLoader.addPart('document-details');
+                $translatePartialLoader.addPart('tasks');
                 return $translate.refresh();
             } ]
         },
