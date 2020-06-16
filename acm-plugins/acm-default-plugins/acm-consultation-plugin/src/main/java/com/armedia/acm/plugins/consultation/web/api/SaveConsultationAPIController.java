@@ -92,7 +92,7 @@ public class SaveConsultationAPIController
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseBody
     public Consultation createConsultationMutipart(@RequestPart(name = "consultation") Consultation in,
-            MultipartHttpServletRequest request, HttpSession session, Authentication auth)
+                                                   MultipartHttpServletRequest request, HttpSession session, Authentication auth)
             throws AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException,
             IOException
     {
