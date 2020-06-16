@@ -326,6 +326,16 @@
                         </button>
                     </div>
                 </div>
+                <div class="row">
+                    <ul ng-repeat="file in uploadFiles">
+                        <li>
+                            {{file.name}}
+                            <button type="button" class="btn btn-link" ng-click="removeFile($index)">
+                                <i class="fa fa-minus text-danger"></i><span translate>consultations.newConsultation.remove</span>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
         

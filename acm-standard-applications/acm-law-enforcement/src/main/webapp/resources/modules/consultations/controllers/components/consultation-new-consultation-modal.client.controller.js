@@ -324,7 +324,8 @@ angular.module('consultations').controller(
             $scope.saveNewConsultation = function () {
                 $scope.loading = true;
                 $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
-
+                var formdata = new FormData();
+                var basicData = {};
 
                 if (Util.isEmpty($scope.config.data.originator.person.defaultPhone) || !$scope.config.data.originator.person.defaultPhone.value) {
                     $scope.config.data.originator.person.defaultPhone = null;
@@ -347,7 +348,25 @@ angular.module('consultations').controller(
                 }
                 var association = newPersonAssociation();
                 setInitiatorPersonAssociation(association, $scope.config.data.originator.person);
-                saveConsultation($scope.config.data);
+
+                for (var property in $scope.config.data) {
+                    if ($scope.config.data.hasOwnProperty(property)) {
+                        basicData[property] = $scope.config.data[property];
+                    }
+                }
+                var data = new Blob([angular.toJson(JSOG.encode(Util.omitNg(basicData)))], {
+                    type: 'application/json'
+                });
+                formdata.append('consultation', data);
+
+                if($scope.uploadFiles.length > 0) {
+                    _.forEach($scope.uploadFiles, function (attachment) {
+                        formdata.append('file', attachment);
+                    });
+                    saveConsultation(formdata);
+                } else {
+                    saveConsultationInfo($scope.config.data);
+                }
                 
             };
 
@@ -361,7 +380,7 @@ angular.module('consultations').controller(
                 
             }
 
-            var saveConsultation = function (consultation) {
+            var saveConsultationInfo = function (consultation) {
                 ConsultationInfoService.saveConsultationInfo(consultation).then(function (response) {
                     $scope.onModalClose();
                     $scope.loading = false;
@@ -383,6 +402,29 @@ angular.module('consultations').controller(
                 });
             };
 
+            var saveConsultation = function (consultation) {
+                ConsultationInfoService.saveConsultationWithFiles(consultation).then(function (response) {
+                    $scope.onModalClose();
+                    $scope.loading = false;
+                    $scope.loadingIcon = "fa fa-floppy-o";
+                    ObjectService.showObject(ObjectService.ObjectTypes.CONSULTATION, response.id);
+                }, function (error) {
+                    $scope.loading = false;
+                    $scope.loadingIcon = "fa fa-floppy-o";
+                    $scope.$emit("report-object-update-failed", error);
+                    if (error.data && error.data.message) {
+                        if (error.data.field == "duplicateName") {
+                            MessageService.error($translate.instant("consultations.newConsultations.duplicateFilesName.error"));
+                        } else {
+                            MessageService.error(error.data.message);
+                        }
+                    } else {
+                        MessageService.error(error);
+                    }
+                });
+            };
+            
+
             var fileArrayContainsFile = function (fileArray, file) {
                 var fileFound = false;
                 for (var i = 0; i < fileArray.length; i++) {
@@ -402,6 +444,10 @@ angular.module('consultations').controller(
                         }
                     }
                 }
+            };
+
+            $scope.removeFile = function (index) {
+                $scope.uploadFiles.splice(index, 1);
             };
 
             $scope.cancelModal = function () {
