@@ -432,6 +432,7 @@ angular.module('request-info').controller(
             $scope.showVideoPlayer = false;
             $scope.showPdfJs = false;
             $scope.transcriptionTabActive = false;
+            $scope.transcriptionTabViewEnabled = false;
 
             // Obtains authentication token for ArkCase
             var ticketInfo = TicketService.getArkCaseTicket();
@@ -794,6 +795,7 @@ angular.module('request-info').controller(
                 }
 
                 $scope.transcriptionTabActive = $scope.showVideoPlayer && $scope.transcribeEnabled;
+                $scope.transcriptionTabViewEnabled = $scope.transcriptionTabActive;
 
             });
             $scope.onPlayerReady = function (API) {
