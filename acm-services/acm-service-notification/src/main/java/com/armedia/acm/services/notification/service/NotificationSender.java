@@ -101,6 +101,8 @@ public abstract class NotificationSender
             return null;
         }
 
+        LOG.debug("Sending notification email [{}] to recipients [{}]", notification.getTitle(), notification.getEmailAddresses());
+
         try
         {
             // Notifications are always send as system user
@@ -125,7 +127,7 @@ public abstract class NotificationSender
             catch (TemplateException | IOException e)
             {
                 // failing to generate the email should not break the flow
-                LOG.error("Unable to generate email for [{}].", notification.getUserEmail(), e);
+                LOG.error("Unable to generate email for notification with template [{}].", notification.getTemplateModelName(), e);
                 setupDefaultTemplateAndBody(notification, in);
             }
 
