@@ -155,7 +155,7 @@
                 </div>
                 <div class="col-sm-4">
                     <div class="checkbox">
-                        <label> <input type="checkbox" ng-model="requestInfo.paidFlag"> <span translate>requests.comp.details.paidFlag.label
+                        <label> <input type="checkbox" ng-model="requestInfo.paidFlag" ng-change="feeWaivedFlagChange(requestInfo.paidFlag)> <span translate>requests.comp.details.paidFlag.label
                     </span>
                         </label>
                     </div>
