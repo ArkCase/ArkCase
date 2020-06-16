@@ -138,6 +138,7 @@ public class CaseFileDaoIT
         caseFile.setCaseType("caseType");
         caseFile.setStatus("status");
         caseFile.setTitle("title");
+        caseFile.setRestricted(true);
 
         caseFile.setCreator("creator");
 
@@ -169,6 +170,7 @@ public class CaseFileDaoIT
         caseFile.setCaseType("caseType");
         caseFile.setStatus("status");
         caseFile.setTitle("title");
+        caseFile.setRestricted(true);
 
         caseFile.setCreator("creator");
 
@@ -206,6 +208,7 @@ public class CaseFileDaoIT
         caseFile.setCaseType("caseType");
         caseFile.setStatus("status");
         caseFile.setTitle("title");
+        caseFile.setRestricted(true);
 
         caseFile.setCreator("creator");
 
