@@ -1,5 +1,8 @@
 package com.armedia.acm.plugins.complaint.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 /*-
  * #%L
  * ACM Default Plugin: Complaints
@@ -33,6 +36,7 @@ import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.complaint.ComplaintForm;
 import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.web.api.MDCConstants;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,16 +47,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
 import java.util.Date;
 import java.util.UUID;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(name = "spring", locations = {
@@ -177,6 +178,8 @@ public class ComplaintServiceIT
 
         Authentication auth = new UsernamePasswordAuthenticationToken("anotherUser", "password");
         service.setAuthentication(auth);
+
+        entityManager.clear();
     }
 
     @Test
@@ -215,8 +218,6 @@ public class ComplaintServiceIT
         pa2.setType("type");
 
         ComplaintForm savedFrevvoComplaint = service.saveComplaint(frevvoComplaint);
-
-        entityManager.flush();
 
         assertNotNull(savedFrevvoComplaint.getComplaintId());
         assertNotNull(savedFrevvoComplaint.getComplaintNumber());
