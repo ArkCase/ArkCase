@@ -11,9 +11,10 @@ angular.module('services').factory('Cases.SuggestedCases', ['$http', 'base64', f
             url: 'api/latest/service/suggestion/' + base64.urlencode(title),
             method: 'GET',
             params: {
-                objectId: id
+                objectId: id,
+                objectType: "CASE_FILE"
             }
         });
     }
 
-} ]);
+}]);

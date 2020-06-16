@@ -1308,21 +1308,21 @@
             "paginationPageSize": 10,
             "columnDefs": [
                 {
-                    "name": "consultationNumber",
+                    "name": "name",
                     "displayName": "consultations.comp.suggestedConsultations.table.columns.number",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity, true)'>{{row.entity.consultationNumber}}</a>"
+                    "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity, true)'>{{row.entity.name}}</a>"
                 },
                 {
-                    "name": "consultationTitle",
+                    "name": "title",
                     "displayName": "consultations.comp.suggestedConsultations.table.columns.title",
                     "headerCellFilter": "translate"
                 },
                 {
-                    "name": "objectType",
+                    "name": "type",
                     "displayName": "consultations.comp.suggestedConsultations.table.columns.referenceType",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.getObjectTypeValue(row.entity.objectType) | translate }}</div>"
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.getObjectTypeValue(row.entity.type) | translate }}</div>"
                 },
                 {
                     "name": "modifiedDate",
@@ -1330,7 +1330,7 @@
                     "headerCellFilter": "translate"
                 },
                 {
-                    "name": "consultationStatus",
+                    "name": "status",
                     "displayName": "consultations.comp.suggestedConsultations.table.columns.status",
                     "headerCellFilter": "translate"
                 }
