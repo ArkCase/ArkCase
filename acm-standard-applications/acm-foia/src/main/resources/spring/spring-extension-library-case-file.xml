@@ -246,7 +246,7 @@
             <beans:property name="foiaConfigurationService" ref="foiaConfigurationService"/>
             <beans:property name="templatingEngine" ref="templatingEngine"/>
             <beans:property name="emailBodyTemplate" value="file:${user.home}/.arkcase/acm/templates/requestDocumentAttached.html"/>
-            <beans:property name="notificationDao" ref="notificationDao"/>
+            <beans:property name="notificationService" ref="notificationService"/>
         </beans:bean>
 
         <beans:bean id="requestAssignmentService" class="gov.foia.service.RequestAssignmentService">

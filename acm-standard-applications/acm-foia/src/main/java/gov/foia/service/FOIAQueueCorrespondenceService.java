@@ -27,6 +27,11 @@ package gov.foia.service;
  * #L%
  */
 
+import static gov.foia.model.FOIAConstants.EMAIL_BODY_ATTACHMENT;
+import static gov.foia.model.FOIAConstants.EMAIL_FOOTER_ATTACHMENT;
+import static gov.foia.model.FOIAConstants.EMAIL_HEADER_ATTACHMENT;
+import static gov.foia.model.FOIARequestUtils.extractRequestorEmailAddress;
+
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
@@ -35,17 +40,12 @@ import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.services.email.service.TemplatingEngine;
-import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.service.NotificationSender;
+import com.armedia.acm.services.notification.service.NotificationService;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-import freemarker.template.TemplateException;
-import gov.foia.dao.FOIARequestDao;
-import gov.foia.model.FOIAConstants;
-import gov.foia.model.FOIADocumentDescriptor;
-import gov.foia.model.FOIAFile;
-import gov.foia.model.FOIARequest;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.BeanUtils;
@@ -58,10 +58,12 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 
-import static gov.foia.model.FOIAConstants.EMAIL_BODY_ATTACHMENT;
-import static gov.foia.model.FOIAConstants.EMAIL_FOOTER_ATTACHMENT;
-import static gov.foia.model.FOIAConstants.EMAIL_HEADER_ATTACHMENT;
-import static gov.foia.model.FOIARequestUtils.extractRequestorEmailAddress;
+import freemarker.template.TemplateException;
+import gov.foia.dao.FOIARequestDao;
+import gov.foia.model.FOIAConstants;
+import gov.foia.model.FOIADocumentDescriptor;
+import gov.foia.model.FOIAFile;
+import gov.foia.model.FOIARequest;
 
 /**
  * @author sasko.tanaskoski
@@ -69,7 +71,6 @@ import static gov.foia.model.FOIARequestUtils.extractRequestorEmailAddress;
  */
 public class FOIAQueueCorrespondenceService
 {
-
     private Logger log = LogManager.getLogger(getClass());
 
     private ResponseFolderService responseFolderService;
@@ -82,7 +83,7 @@ public class FOIAQueueCorrespondenceService
     private FoiaConfigurationService foiaConfigurationService;
     private String emailBodyTemplate;
     private TemplatingEngine templatingEngine;
-    private NotificationDao notificationDao;
+    private NotificationService notificationService;
 
     public void handleApproveCorrespondence(Long requestId)
     {
@@ -169,7 +170,6 @@ public class FOIAQueueCorrespondenceService
             FOIADocumentDescriptor documentDescriptor;
             documentDescriptor = documentGeneratorService.getDocumentDescriptor(request, FOIAConstants.RECEIVE_ACK);
 
-
             String arkcaseFilename = String.format(documentDescriptor.getFilenameFormat(), request.getId());
             String targetFolderId = request.getContainer().getAttachmentFolder() == null
                     ? request.getContainer().getFolder().getCmisFolderId()
@@ -184,17 +184,17 @@ public class FOIAQueueCorrespondenceService
 
             String emailAddress = extractRequestorEmailAddress(request.getOriginator().getPerson());
 
-            Notification notification = new Notification();
-            notification.setTemplateModelName("requestDocumentAttached");
-            notification.setEmailAddresses(emailAddress);
-            notification.setAttachFiles(true);
-            notification.setFiles(Arrays.asList(ecmFileVersions));
-            notification.setParentId(requestId);
-            notification.setParentType(request.getObjectType());
-            notification.setTitle(String.format("%s %s", request.getRequestType(), request.getCaseNumber()));
-            notification
-                    .setUser(user != null ? user.getUserId() : null);
-            notificationDao.save(notification);
+
+            Notification notification = notificationService.getNotificationBuilder()
+                    .newNotification("requestDocumentAttached", String.format("%s %s", request.getRequestType(), request.getCaseNumber()),
+                            request.getObjectType(), requestId, user != null ? user.getUserId() : null)
+                    .withFiles(Arrays.asList(ecmFileVersions))
+                    .withEmailAddresses(emailAddress)
+                    .forObjectWithNumber(request.getCaseNumber())
+                    .forObjectWithTitle(request.getTitle())
+                    .build();
+
+            notificationService.saveNotification(notification);
 
         }
         catch (Exception e)
@@ -384,13 +384,13 @@ public class FOIAQueueCorrespondenceService
         this.templatingEngine = templatingEngine;
     }
 
-    public NotificationDao getNotificationDao()
+    public NotificationService getNotificationService()
     {
-        return notificationDao;
+        return notificationService;
     }
 
-    public void setNotificationDao(NotificationDao notificationDao)
+    public void setNotificationService(NotificationService notificationService)
     {
-        this.notificationDao = notificationDao;
+        this.notificationService = notificationService;
     }
 }
