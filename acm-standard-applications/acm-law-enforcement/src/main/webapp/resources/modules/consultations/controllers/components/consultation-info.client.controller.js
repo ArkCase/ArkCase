@@ -173,6 +173,7 @@ angular.module('consultations').controller(
             };
 
             var onObjectInfoRetrieved = function(data) {
+                $scope.objectInfo.objType = 'Consultation';
                 $scope.dateInfo = $scope.dateInfo || {};
                 if(!Util.isEmpty($scope.objectInfo.dueDate)){
                     $scope.dateInfo.dueDate = moment.utc($scope.objectInfo.dueDate).local().format('MM/DD/YYYY HH:mm');
