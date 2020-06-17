@@ -2,7 +2,7 @@ package com.armedia.acm.services.suggestion.web.api;
 
 /*-
  * #%L
- * acm-service-case-suggestion
+ * acm-service-suggestion
  * %%
  * Copyright (C) 2014 - 2019 ArkCase LLC
  * %%
@@ -28,8 +28,8 @@ package com.armedia.acm.services.suggestion.web.api;
  */
 
 import com.armedia.acm.services.search.exception.SolrException;
-import com.armedia.acm.services.suggestion.model.SuggestedCase;
-import com.armedia.acm.services.suggestion.service.SimilarCasesService;
+import com.armedia.acm.services.suggestion.model.SuggestedObject;
+import com.armedia.acm.services.suggestion.service.SimilarObjectsService;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -45,38 +45,40 @@ import java.text.ParseException;
 import java.util.Base64;
 
 @Controller
-@RequestMapping({"/api/v1/service/suggestion","/api/latest/service/suggestion"})
-public class GetSimilarCasesAPIController
+@RequestMapping({ "/api/v1/service/suggestion", "/api/latest/service/suggestion" })
+public class GetSimilarObjectsAPIController
 {
 
-    private SimilarCasesService similarCasesService;
+    private SimilarObjectsService similarObjectsService;
 
     @RequestMapping(value = "/{title}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SuggestedCase> findSimilarCases(@PathVariable("title") String title,
-                                                          @RequestParam(value = "objectId", required = false) String objectId,
-                                                          @RequestParam(value = "portal", required = false, defaultValue = "false") Boolean isPortal,
+    public ResponseEntity<SuggestedObject> findSimilarObjects(
+            @PathVariable("title") String objectTitle,
+            @RequestParam(value = "objectId", required = false) String objectId,
+            @RequestParam(value = "objectType", required = false, defaultValue = "CASE_FILE") String objectType,
+            @RequestParam(value = "portal", required = false, defaultValue = "false") Boolean isPortal,
             Authentication authentication) throws ParseException, SolrException
     {
         Long id = null;
-        if(objectId != null){
-             id = Long.valueOf(objectId);
+        if (objectId != null)
+        {
+            id = Long.valueOf(objectId);
         }
 
         // we need to decode base64 encoded title because can contain characters which can interfere with url
-        title = new String(Base64.getUrlDecoder().decode(title.getBytes()));
+        objectTitle = new String(Base64.getUrlDecoder().decode(objectTitle.getBytes()));
 
-        return new ResponseEntity(getSimilarCasesService().findSimilarCases(title, isPortal, id, authentication),
+        return new ResponseEntity(getSimilarObjectsService().findSimilarObjects(objectTitle, objectType, isPortal, id, authentication),
                 HttpStatus.OK);
     }
 
-
-    public SimilarCasesService getSimilarCasesService()
+    public SimilarObjectsService getSimilarObjectsService()
     {
-        return similarCasesService;
+        return similarObjectsService;
     }
 
-    public void setSimilarCasesService(SimilarCasesService similarCasesService)
+    public void setSimilarObjectsService(SimilarObjectsService similarObjectsService)
     {
-        this.similarCasesService = similarCasesService;
+        this.similarObjectsService = similarObjectsService;
     }
 }
