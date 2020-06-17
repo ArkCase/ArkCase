@@ -1,11 +1,6 @@
 [
     {
         "op": "replace",
-        "path": "/menus/?@.menuId=='topbar'/position",
-        "value": 40
-    },
-    {
-        "op": "replace",
         "path": "/tree/nodeTypes/?@.type=='p/ORGANIZATION'/components",
         "value": [
             "details",

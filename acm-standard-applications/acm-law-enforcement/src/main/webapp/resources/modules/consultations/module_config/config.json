@@ -12,7 +12,7 @@
             "menuItemTitle": "consultations.menus.leftnav.item",
             "moduleId": "consultation",
             "iconClass": "fa fa-folder",
-            "position": 21
+            "position": 25
         },
         {
             "menuId": "topbar",
@@ -25,7 +25,7 @@
                 "controllerName": "Consultations.NewConsultationController"
             },
             "iconClass": "fa fa-folder",
-            "position": 21,
+            "position": 25,
             "formsType": "angular"
         }
     ],
