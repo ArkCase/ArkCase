@@ -222,4 +222,13 @@
                                  deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
+    <changeSet id="09-add-column-component-agency" author="stefan.sanevski" dbms="oracle,postgresql,mssql,mysql">
+        <addColumn tableName="acm_consultation">
+            <column name="cm_component_agency" type="VARCHAR(4000)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+
 </databaseChangeLog>
