@@ -177,7 +177,7 @@ angular.module('admin').controller(
                         $scope.okBtn = "admin.security.organizationalHierarchy.createUserDialog.addLdapMember.btn.ok";
                         $scope.cancelBtn = "admin.security.organizationalHierarchy.createUserDialog.addLdapMember.btn.cancel";
                         $scope.user = userForm;
-                        $scope.error = usernameError;
+                        $scope.usernameError = usernameError;
                         $scope.data = {
                             "user": $scope.user,
                             "selectedUser": selectedUser

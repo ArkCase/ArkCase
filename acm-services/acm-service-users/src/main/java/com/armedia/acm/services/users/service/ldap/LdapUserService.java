@@ -160,7 +160,7 @@ public class LdapUserService implements ApplicationEventPublisherAware
 
         for (String groupName : userDto.getGroupNames())
         {
-            AcmGroup group = groupService.findByName(groupName);
+            AcmGroup group = groupService.findByName(groupName, FlushModeType.COMMIT);
             if (group != null)
             {
                 groups.add(group);
