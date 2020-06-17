@@ -162,6 +162,11 @@ public class SimilarObjectsServiceImpl implements SimilarObjectsService
                 SearchResults objectSearchResults = new SearchResults();
                 JSONArray objectDocFiles = objectSearchResults.getDocuments(objectResults);
 
+                if (objectDocFiles.length() < 1)
+                {
+                    continue;
+                }
+
                 JSONObject objectDocFile = objectDocFiles.getJSONObject(0);
 
                 if (objectId != null && Long.valueOf(objectDocFile.getString("object_id_s")).equals(objectId))
