@@ -24,9 +24,9 @@ angular.module('consultations').controller(
         'Helper.UiGridService',
         'Dialog.BootboxService',
         '$filter',
-        'Consultation.SuggestedConsultations',
-        function($scope, $state, $stateParams, $translate, $modal, Util, UtilDateService, ConfigService, ObjectLookupService, ConsultationLookupService, ConsultationInfoService, ObjectModelService, MessageService, ObjectService, ObjectParticipantService, SearchService, SearchQueryBuilder,
-                 HelperObjectBrowserService, HelperUiGridService, DialogService, $filter, SuggestedConsultationsService) {
+        'SuggestedObjectsService',
+        function ($scope, $state, $stateParams, $translate, $modal, Util, UtilDateService, ConfigService, ObjectLookupService, ConsultationLookupService, ConsultationInfoService, ObjectModelService, MessageService, ObjectService, ObjectParticipantService, SearchService, SearchQueryBuilder,
+                  HelperObjectBrowserService, HelperUiGridService, DialogService, $filter, SuggestedObjectsService) {
 
             new HelperObjectBrowserService.Component({
                 scope: $scope,
@@ -35,7 +35,7 @@ angular.module('consultations').controller(
                 componentId: "info",
                 retrieveObjectInfo: ConsultationInfoService.getConsultationInfo,
                 validateObjectInfo: ConsultationInfoService.validateConsultationInfo,
-                onObjectInfoRetrieved: function(objectInfo) {
+                onObjectInfoRetrieved: function (objectInfo) {
                     onObjectInfoRetrieved(objectInfo);
                 }
             });
@@ -203,7 +203,7 @@ angular.module('consultations').controller(
                     return approvers;
                 });
 
-                SuggestedConsultationsService.getSuggestedConsultations($scope.objectInfo.title, $scope.objectInfo.id).then(function (value) {
+                SuggestedObjectsService.getSuggestedObjects($scope.objectInfo.title, "CONSULTATION", $scope.objectInfo.id).then(function (value) {
                     $scope.hasSuggestedConsultations = value.data.length > 0 ? true : false;
                     $scope.numberOfSuggestedConsultations = value.data.length;
                 });

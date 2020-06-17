@@ -1617,22 +1617,21 @@
             "paginationPageSize": 10,
             "columnDefs": [
                 {
-                    "name": "caseNumber",
+                    "name": "name",
                     "displayName": "cases.comp.suggestedCases.table.columns.number",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity, true)'>{{row.entity.caseNumber}}</a>"
+                    "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity, true)'>{{row.entity.name}}</a>"
                 },
                 {
-                    "name": "caseTitle",
+                    "name": "title",
                     "displayName": "cases.comp.suggestedCases.table.columns.title",
                     "headerCellFilter": "translate"
-
                 },
                 {
-                    "name": "objectType",
+                    "name": "type",
                     "displayName": "cases.comp.suggestedCases.table.columns.referenceType",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.getObjectTypeValue(row.entity.objectType) | translate }}</div>"
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.getObjectTypeValue(row.entity.type) | translate }}</div>"
                 },
                 {
                     "name": "modifiedDate",
@@ -1640,7 +1639,7 @@
                     "headerCellFilter": "translate"
                 },
                 {
-                    "name": "caseStatus",
+                    "name": "status",
                     "displayName": "cases.comp.suggestedCases.table.columns.status",
                     "headerCellFilter": "translate"
                 }
