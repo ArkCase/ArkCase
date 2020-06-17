@@ -27,8 +27,6 @@ package com.armedia.acm.services.users.service.ldap;
  * #L%
  */
 
-import static com.armedia.acm.services.users.model.ldap.MapperUtils.prefixTrailingDot;
-
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.users.dao.UserDao;
@@ -49,7 +47,6 @@ import com.armedia.acm.services.users.model.ldap.MapperUtils;
 import com.armedia.acm.services.users.model.ldap.UserDTO;
 import com.armedia.acm.services.users.service.group.GroupService;
 import com.armedia.acm.spring.SpringContextHolder;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.ValidatorException;
 import org.apache.commons.validator.routines.EmailValidator;
@@ -62,14 +59,16 @@ import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.FlushModeType;
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpSession;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static com.armedia.acm.services.users.model.ldap.MapperUtils.prefixTrailingDot;
 
 public class LdapUserService implements ApplicationEventPublisherAware
 {
