@@ -247,6 +247,9 @@ public class Consultation implements Serializable, AcmAssignedObject, AcmEntity,
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @Convert(converter = LocalDateTimeConverter.class)
     private LocalDateTime receivedDate;
+    
+    @Column(name = "cm_component_agency")
+    private String componentAgency;
 
     @PrePersist
     protected void beforeInsert()
@@ -786,5 +789,15 @@ public class Consultation implements Serializable, AcmAssignedObject, AcmEntity,
     public void setReceivedDate(LocalDateTime receivedDate)
     {
         this.receivedDate = receivedDate;
+    }
+
+    public String getComponentAgency()
+    {
+        return componentAgency;
+    }
+
+    public void setComponentAgency(String componentAgency)
+    {
+        this.componentAgency = componentAgency;
     }
 }
