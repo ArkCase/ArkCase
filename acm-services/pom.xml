@@ -65,7 +65,7 @@
         <module>acm-service-media-engine</module>
         <module>acm-service-holiday</module>
         <module>acm-service-convert-file</module>
-        <module>acm-service-case-suggestion</module>
+        <module>acm-service-suggestion</module>
         <module>acm-service-portal-gateway</module>
         <module>acm-service-object-title</module>
         <module>acm-service-exemption</module>
