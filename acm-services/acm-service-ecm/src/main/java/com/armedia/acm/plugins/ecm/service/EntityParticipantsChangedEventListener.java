@@ -73,7 +73,7 @@ public class EntityParticipantsChangedEventListener implements ApplicationListen
             final String user = event.getUserId();
             CompletableFuture.runAsync(() -> {
                 getAuditPropertyEntityAdapter().setUserId(user);
-                log.debug("Inheriting file participants from " + obj.getObjectType() + "[" + obj.getId() + "]");
+                log.debug("Inheriting file participants from {} [{}]",  obj.getObjectType(), obj.getId());
                 getFileParticipantService().inheritParticipantsFromAssignedObject(
                         newParticipants,
                         originalParticipants,
