@@ -32,7 +32,6 @@ import com.armedia.acm.quartz.scheduler.AcmJobDescriptor;
 
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 import org.quartz.PersistJobDataAfterExecution;
 
 @DisallowConcurrentExecution
@@ -48,16 +47,9 @@ public class PhoneHomeJobDescriptor extends AcmJobDescriptor
     }
 
     @Override
-    public void executeJob(JobExecutionContext context) throws JobExecutionException
+    public void executeJob(JobExecutionContext context) throws AcmStateOfArkcaseGenerateReportException
     {
-        try
-        {
-            phoneHomeService.generateAndUploadReportFile();
-        }
-        catch (AcmStateOfArkcaseGenerateReportException e)
-        {
-            throw new JobExecutionException(e);
-        }
+        phoneHomeService.generateAndUploadReportFile();
     }
 
     public PhoneHomeService getPhoneHomeService()
