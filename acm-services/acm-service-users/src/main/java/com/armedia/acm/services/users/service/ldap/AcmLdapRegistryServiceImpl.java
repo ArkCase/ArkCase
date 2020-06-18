@@ -105,7 +105,7 @@ public class AcmLdapRegistryServiceImpl
 
         ldapDirsConfig.keySet().forEach(directory -> {
 
-            logger.debug("Register bean definition for: [{}]", AcmLdapGroupSyncConfig.class);
+            logger.debug("Register bean definition for: [{}] for directory: [{}]", AcmLdapGroupSyncConfig.class, directory);
 
             Map<String, Object> dirProperties = (Map<String, Object>) ldapDirsConfig.get(directory);
             BeanDefinitionBuilder jobDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(AcmLdapGroupSyncConfig.class);
@@ -121,7 +121,7 @@ public class AcmLdapRegistryServiceImpl
 
         ldapDirConfig.keySet().forEach(directory -> {
 
-            logger.debug("Register bean definition for: [{}]", AcmLdapUserSyncConfig.class);
+            logger.debug("Register bean definition for: [{}] for directory [{}]", AcmLdapUserSyncConfig.class, directory);
 
             Map<String, Object> dirProperties = (Map<String, Object>) ldapDirConfig.get(directory);
             BeanDefinitionBuilder jobDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(AcmLdapUserSyncConfig.class);

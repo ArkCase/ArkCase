@@ -30,7 +30,6 @@ package gov.foia.service;
 import com.armedia.acm.quartz.scheduler.AcmJobDescriptor;
 
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 
 public class DueDateReminderJobDescriptor extends AcmJobDescriptor
 {
@@ -43,7 +42,7 @@ public class DueDateReminderJobDescriptor extends AcmJobDescriptor
     }
 
     @Override
-    public void executeJob(JobExecutionContext context) throws JobExecutionException
+    public void executeJob(JobExecutionContext context)
     {
         dueDateReminder.sendDueDateReminder();
     }

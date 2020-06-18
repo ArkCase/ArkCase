@@ -132,7 +132,7 @@
         <mockito.core.version>2.20.0</mockito.core.version>
         <powermock.version2>2.0.0</powermock.version2>
         <hazelcast.version>3.11.2</hazelcast.version>
-        <quartz.version>2.3.1</quartz.version>
+        <quartz.version>2.3.2</quartz.version>
         <jaudiotagger.version>2.0.3</jaudiotagger.version>
         <reflections.version>0.9.9</reflections.version>
         <camel.spring.version>3.0.0-M3</camel.spring.version>
