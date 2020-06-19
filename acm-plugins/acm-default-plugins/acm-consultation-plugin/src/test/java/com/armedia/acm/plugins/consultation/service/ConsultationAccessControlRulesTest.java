@@ -1,8 +1,8 @@
-package com.armedia.acm.plugins.complaint.service;
+package com.armedia.acm.plugins.consultation.service;
 
 /*-
  * #%L
- * ACM Default Plugin: Complaints
+ * ACM Default Plugin: Consultation
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
@@ -31,7 +31,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import com.armedia.acm.plugins.complaint.model.Complaint;
+import com.armedia.acm.plugins.consultation.model.Consultation;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 
 import org.apache.logging.log4j.LogManager;
@@ -51,10 +51,7 @@ import org.kie.internal.io.ResourceFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
-/**
- * Created by armdev on 4/17/14.
- */
-public class ComplaintAccessControlRulesTest
+public class ConsultationAccessControlRulesTest
 {
 
     private Logger log = LogManager.getLogger(getClass());
@@ -77,7 +74,8 @@ public class ComplaintAccessControlRulesTest
 
         if (kbuilder.hasErrors())
         {
-            log.info("DRL: " + drl);
+            log.info("DRL has errors: " + drl);
+
             for (KnowledgeBuilderError error : kbuilder.getErrors())
             {
                 log.error("Error building rules: " + error);
@@ -94,65 +92,65 @@ public class ComplaintAccessControlRulesTest
     @Test
     public void restricted() throws Exception
     {
-        Complaint complaint = new Complaint();
-        complaint.setComplaintId(12345L);
-        complaint.setRestricted(true);
+        Consultation consultation = createTestConsultationWithRestrictedFlag(true);
 
-        AcmParticipant defUser = new AcmParticipant();
-        defUser.setParticipantLdapId("*");
-        defUser.setParticipantType("*");
-        complaint.getParticipants().add(defUser);
+        workingMemory.execute(consultation);
 
-        workingMemory.execute(complaint);
+        consultation.getParticipants().get(0).getPrivileges().stream().forEach(pr -> log.info(
+                "type: {}, action: {}", pr.getAccessType(), pr.getObjectAction()));
 
-        assertEquals(5, complaint.getParticipants().get(0).getPrivileges().size());
+        assertEquals(4, consultation.getParticipants().get(0).getPrivileges().size());
 
-        assertEquals(1, complaint.getParticipants().get(0).getPrivileges().stream()
+        assertEquals(1, consultation.getParticipants().get(0).getPrivileges().stream()
                 .filter(app -> app.getAccessType().equals("deny") && app.getObjectAction().equals("read")).count());
 
-        assertEquals(1, complaint.getParticipants().get(0).getPrivileges().stream()
+        assertEquals(1, consultation.getParticipants().get(0).getPrivileges().stream()
                 .filter(app -> app.getAccessType().equals("grant") && app.getObjectAction().equals("uploadOrReplaceFile")).count());
 
-        assertEquals(1, complaint.getParticipants().get(0).getPrivileges().stream()
+        assertEquals(1, consultation.getParticipants().get(0).getPrivileges().stream()
                 .filter(app -> app.getAccessType().equals("grant") && app.getObjectAction().equals("subscribe")).count());
 
-        assertEquals(1, complaint.getParticipants().get(0).getPrivileges().stream()
-                .filter(app -> app.getAccessType().equals("grant") && app.getObjectAction().equals("addComment")).count());
-
-        assertEquals(1, complaint.getParticipants().get(0).getPrivileges().stream()
+        assertEquals(1, consultation.getParticipants().get(0).getPrivileges().stream()
                 .filter(app -> app.getAccessType().equals("grant") && app.getObjectAction().equals("addTag")).count());
+
     }
 
     @Test
     public void unrestricted() throws Exception
     {
-        Complaint complaint = new Complaint();
-        complaint.setComplaintId(12345L);
-        complaint.setRestricted(false);
+        Consultation consultation = createTestConsultationWithRestrictedFlag(false);
+
+        workingMemory.execute(consultation);
+
+        consultation.getParticipants().get(0).getPrivileges().stream().forEach(pr -> log.info(
+                "type: {}, action: {}", pr.getAccessType(), pr.getObjectAction()));
+
+        assertEquals(4, consultation.getParticipants().get(0).getPrivileges().size());
+
+        assertEquals(1, consultation.getParticipants().get(0).getPrivileges().stream()
+                .filter(app -> app.getAccessType().equals("grant") && app.getObjectAction().equals("read")).count());
+
+        assertEquals(1, consultation.getParticipants().get(0).getPrivileges().stream()
+                .filter(app -> app.getAccessType().equals("grant") && app.getObjectAction().equals("uploadOrReplaceFile")).count());
+
+        assertEquals(1, consultation.getParticipants().get(0).getPrivileges().stream()
+                .filter(app -> app.getAccessType().equals("grant") && app.getObjectAction().equals("subscribe")).count());
+
+        assertEquals(1, consultation.getParticipants().get(0).getPrivileges().stream()
+                .filter(app -> app.getAccessType().equals("grant") && app.getObjectAction().equals("addTag")).count());
+    }
+
+    private Consultation createTestConsultationWithRestrictedFlag(boolean restrictedFlag)
+    {
+        Consultation consultation = new Consultation();
+        consultation.setId(12345L);
+        consultation.setRestricted(restrictedFlag);
 
         AcmParticipant defUser = new AcmParticipant();
         defUser.setParticipantLdapId("*");
         defUser.setParticipantType("*");
-        complaint.getParticipants().add(defUser);
-
-        workingMemory.execute(complaint);
-
-        assertEquals(5, complaint.getParticipants().get(0).getPrivileges().size());
-
-        assertEquals(1, complaint.getParticipants().get(0).getPrivileges().stream()
-                .filter(app -> app.getAccessType().equals("grant") && app.getObjectAction().equals("read")).count());
-
-        assertEquals(1, complaint.getParticipants().get(0).getPrivileges().stream()
-                .filter(app -> app.getAccessType().equals("grant") && app.getObjectAction().equals("uploadOrReplaceFile")).count());
-
-        assertEquals(1, complaint.getParticipants().get(0).getPrivileges().stream()
-                .filter(app -> app.getAccessType().equals("grant") && app.getObjectAction().equals("subscribe")).count());
-
-        assertEquals(1, complaint.getParticipants().get(0).getPrivileges().stream()
-                .filter(app -> app.getAccessType().equals("grant") && app.getObjectAction().equals("addComment")).count());
-
-        assertEquals(1, complaint.getParticipants().get(0).getPrivileges().stream()
-                .filter(app -> app.getAccessType().equals("grant") && app.getObjectAction().equals("addTag")).count());
+        consultation.getParticipants().add(defUser);
+        return consultation;
     }
 
 }
