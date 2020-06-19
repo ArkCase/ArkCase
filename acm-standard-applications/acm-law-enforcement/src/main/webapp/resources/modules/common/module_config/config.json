@@ -830,13 +830,6 @@
       "showFacets": false,
       "columnDefs": [
         {
-          "name": "checkbox",
-          "displayName": "",
-          "cellTemplate": "<input type='checkbox' ng-click='grid.appScope.onClick($event, row.entity)'/>",
-          "width": "6%",
-          "index": 0
-        },
-        {
           "name": "object_id_s",
           "displayName": "common.dialogObjectPicker.table.columns.id",
           "headerCellFilter": "translate"
@@ -856,7 +849,7 @@
           "visible": true
         },
         {
-          "field":  "parent_ref_s",
+          "name":  "parent_ref_s2",
           "displayName": "common.dialogObjectPicker.table.columns.parentTitle",
           "headerCellFilter": "translate",
           "cellTemplate": "<a ng-if='row.entity.parent_document.title_parseable' ng-href='#' ng-click='grid.appScope.onClickObjLink($event, {parentId:row.entity.parent_ref_s, object_type_s:row.entity.parent_ref_s}, true, true)'>{{row.entity.parent_document.title_parseable}}</a>"
