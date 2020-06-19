@@ -1647,6 +1647,7 @@
             ],
             "objectTypeValue":{
                 "CASE_FILE": "admin.application.objectTitleConfiguration.caseFile",
+                "CONSULTATION": "admin.application.objectTitleConfiguration.consultation",
                 "COMPLAINT": "admin.application.objectTitleConfiguration.complaint"
             }
         }
