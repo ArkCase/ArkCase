@@ -12,10 +12,4 @@
         <property name="ruleSpreadsheetFilename" value="drools-consultation-rules.xlsx"/>
     </bean>
 
-    <bean id="consultationStartBusinessProcessBusinessRule"
-          class="com.armedia.acm.plugins.consultation.service.ConsultationStartBusinessProcessBusinessRule"
-          parent="simpleStatelessSingleObjectRuleManager">
-        <property name="ruleSpreadsheetFilename" value="drools-start-business-process-rules.xlsx"/>
-    </bean>
-
 </beans>

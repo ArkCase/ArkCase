@@ -29,7 +29,6 @@ package com.armedia.acm.plugins.consultation.listener;
 
 import com.armedia.acm.activiti.AcmBusinessProcessEvent;
 import com.armedia.acm.plugins.consultation.service.ChangeConsultationStateService;
-import com.armedia.acm.plugins.task.model.BuckslipProcessStateEvent;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -77,13 +76,6 @@ public class ChangeConsultationStatusProcessEndListener
                 throw new RuntimeException(e);
             }
         }
-
-        if (isBuckslipWorkflow(event))
-        {
-            BuckslipProcessStateEvent buckslipProcessStateEvent = new BuckslipProcessStateEvent(event.getProcessVariables());
-            buckslipProcessStateEvent.setBuckslipProcessState(BuckslipProcessStateEvent.BuckslipProcessState.COMPLETED);
-            applicationEventPublisher.publishEvent(buckslipProcessStateEvent);
-        }
     }
 
     private boolean checkChangeConsultationStatusWorkflow(AcmBusinessProcessEvent event)
@@ -122,36 +114,6 @@ public class ChangeConsultationStatusProcessEndListener
 
         log.debug("This event marks the end of an approved change consultation status.");
 
-        return true;
-    }
-
-    private boolean isBuckslipWorkflow(AcmBusinessProcessEvent event)
-    {
-        if (!"com.armedia.acm.activiti.businessProcess.end".equals(event.getEventType()))
-        {
-            log.debug("Event is not the end of a business process: [{}]", event.getEventType());
-            return false;
-        }
-
-        Map<String, Object> pvars = event.getProcessVariables();
-
-        if (!pvars.containsKey("buckslipOutcome"))
-        {
-            log.debug("Event does not contain a buckslip outcome property");
-            return false;
-        }
-
-        if (!pvars.containsKey("isBuckslipWorkflow"))
-        {
-            log.debug("Event does not contain a is buckslip workflow property");
-            return false;
-        }
-
-        if ((boolean) pvars.get("isBuckslipWorkflow") == false)
-        {
-            log.debug("Process is not buckslip");
-            return false;
-        }
         return true;
     }
 
