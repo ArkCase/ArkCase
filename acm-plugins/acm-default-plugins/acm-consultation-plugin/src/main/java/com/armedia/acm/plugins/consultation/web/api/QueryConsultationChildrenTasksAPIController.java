@@ -30,7 +30,6 @@ package com.armedia.acm.plugins.consultation.web.api;
 import com.armedia.acm.plugins.consultation.service.ConsultationTasksService;
 import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.search.model.ChildDocumentSearch;
-import com.armedia.acm.services.search.service.ChildDocumentsSearchService;
 
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
@@ -49,8 +48,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class QueryConsultationChildrenTasksAPIController
 {
 
-    private ChildDocumentsSearchService childDocumentsSearchService;
-
     private ConsultationTasksService consultationTasksService;
 
     @RequestMapping(value = "/{consultationId}/tasks", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -63,16 +60,6 @@ public class QueryConsultationChildrenTasksAPIController
         return getConsultationTasksService().getConsultationTasks(consultationId, childDocumentSearch.getParentType(),
                 childDocumentSearch.getParentId(), childDocumentSearch.getChildTypes(),
                 childDocumentSearch.getSort(), childDocumentSearch.getStartRow(), childDocumentSearch.getMaxRows(), authentication);
-    }
-
-    public ChildDocumentsSearchService getChildDocumentsSearchService()
-    {
-        return childDocumentsSearchService;
-    }
-
-    public void setChildDocumentsSearchService(ChildDocumentsSearchService childDocumentsSearchService)
-    {
-        this.childDocumentsSearchService = childDocumentsSearchService;
     }
 
     public ConsultationTasksService getConsultationTasksService()
