@@ -835,6 +835,31 @@
                 "ADF_WIDGET_TOOLTIP_FULLSCREEN": "全屏幕小部件",
                 "ADF_WIDGET_TOOLTIP_REMOVE": "刪除小部件"
             }
+        },
+        {
+            "iso": "ar",
+            "translations": {
+                "ADF_COMMON_CLOSE": "قريب",
+                "ADF_COMMON_DELETE": "حذف",
+                "ADF_COMMON_TITLE": "عنوان",
+                "ADF_COMMON_CANCEL": "إلغاء",
+                "ADF_COMMON_APPLY": "تطبيق",
+                "ADF_COMMON_EDIT_DASHBOARD": "تعديل لوحة القيادة",
+                "ADF_EDIT_DASHBOARD_STRUCTURE_LABEL": "بناء",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_ADD": "أضف أداة جديدة",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_SAVE": "احفظ التغييرات",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_EDIT_MODE": "تمكين وضع التحرير",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_UNDO": "التراجع عن التغييرات",
+                "ADF_WIDGET_ADD_HEADER": "أضف أداة جديدة",
+                "ADF_WIDGET_DELETE_CONFIRM_MESSAGE": "هل أنت متأكد أنك تريد حذف هذه القطعة؟",
+                "ADF_WIDGET_TOOLTIP_REFRESH": "إعادة تحميل محتوى القطعة",
+                "ADF_WIDGET_TOOLTIP_MOVE": "تغيير موقع القطعة",
+                "ADF_WIDGET_TOOLTIP_COLLAPSE": "أداة طي",
+                "ADF_WIDGET_TOOLTIP_EXPAND": "قم بتوسيع القطعة",
+                "ADF_WIDGET_TOOLTIP_EDIT": "تحرير تكوين القطعة",
+                "ADF_WIDGET_TOOLTIP_FULLSCREEN": "القطعة ملء الشاشة",
+                "ADF_WIDGET_TOOLTIP_REMOVE": "إزالة القطعة"
+            }
         }
     ]
 }
