@@ -105,7 +105,7 @@ public class NotificationGroupEmailSenderService
             {
                 String subject = "Executive Email";
 
-                log.info("Trying to send a Request Form email to Notification Group [%s]", notificationGroupName);
+                log.info("Trying to send a Request Form email to Notification Group [{}]", notificationGroupName);
 
                 List<EcmFileVersion> fileVersions = new ArrayList<>();
                 fileVersions.add(requestFormFile.getVersions().get(requestFormFile.getVersions().size() - 1));

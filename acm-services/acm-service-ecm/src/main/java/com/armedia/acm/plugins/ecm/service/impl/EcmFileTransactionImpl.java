@@ -35,6 +35,7 @@ import com.armedia.acm.camelcontext.exception.ArkCaseFileNameAlreadyExistsExcept
 import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
+import com.armedia.acm.plugins.ecm.model.AcmAallowedUploadFileTypesConfig;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConfig;
@@ -94,19 +95,19 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     private PipelineManager<EcmFile, EcmFileTransactionPipelineContext> ecmFileUpdatePipelineManager;
     private CmisConfigUtils cmisConfigUtils;
     private Logger log = LogManager.getLogger(getClass());
-    private Map<String, List<String>> mimeTypesByTika;
+    private AcmAallowedUploadFileTypesConfig allowedUploadFileTypes;
     private EcmFileConfig ecmFileConfig;
     private ProgressIndicatorService progressIndicatorService;
     private EcmFileService ecmFileService;
 
-    public static List<String> getAllTikaMimeTypesForFile(Map<String, List<String>> mimeTypesByTika, String value)
+    public static List<String> getAllAllowedUploadFileTypes(Map<String, List<String>> allowedUploadFileTypes, String value)
     {
         if (value.contains(";"))
         {
             value = value.split(";")[0];
         }
         List<String> keys = new ArrayList<>();
-        for (Map.Entry<String, List<String>> entry : mimeTypesByTika.entrySet())
+        for (Map.Entry<String, List<String>> entry : allowedUploadFileTypes.entrySet())
         {
             if (entry.getValue().contains(value))
             {
@@ -155,7 +156,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
 
             if (activeVersionMimeType != null && detectedMetadata != null
                     && ((detectedMetadata.getContentType().equals(activeVersionMimeType)) ||
-                            (getAllTikaMimeTypesForFile(mimeTypesByTika, activeVersionMimeType)
+                            (getAllAllowedUploadFileTypes(allowedUploadFileTypes.getAllowedUploadFileTypes(), activeVersionMimeType)
                                     .contains(detectedMetadata.getContentType()))))
             {
 
@@ -321,7 +322,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             }
             if (activeVersionMimeType != null && detectedMetadata != null
                     && ((detectedMetadata.getContentType().equals(activeVersionMimeType)) ||
-                            (getAllTikaMimeTypesForFile(mimeTypesByTika, activeVersionMimeType)
+                            (getAllAllowedUploadFileTypes(allowedUploadFileTypes.getAllowedUploadFileTypes(), activeVersionMimeType)
                                     .contains(detectedMetadata.getContentType()))))
             {
 
@@ -908,14 +909,14 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         this.cmisConfigUtils = cmisConfigUtils;
     }
 
-    public Map<String, List<String>> getMimeTypesByTika()
+    public AcmAallowedUploadFileTypesConfig getAllowedUploadFileTypes()
     {
-        return mimeTypesByTika;
+        return allowedUploadFileTypes;
     }
 
-    public void setMimeTypesByTika(Map<String, List<String>> mimeTypesByTika)
+    public void setAllowedUploadFileTypes(AcmAallowedUploadFileTypesConfig allowedUploadFileTypes)
     {
-        this.mimeTypesByTika = mimeTypesByTika;
+        this.allowedUploadFileTypes = allowedUploadFileTypes;
     }
 
     public ProgressIndicatorService getProgressIndicatorService()

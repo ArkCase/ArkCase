@@ -1,10 +1,5 @@
 [
     {
-        "op": "replace",
-        "path": "/menus/?@.menuId=='topbar'/position",
-        "value": 30
-    },
-    {
         "op": "remove",
         "path": "/tree/nodeTypes/?@.type=='p/PERSON'/id"
     },

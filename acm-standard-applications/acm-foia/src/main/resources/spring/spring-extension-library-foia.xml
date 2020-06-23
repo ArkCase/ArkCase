@@ -2,7 +2,7 @@
 <beans:beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:beans="http://www.springframework.org/schema/beans"
     xmlns:aop="http://www.springframework.org/schema/aop"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
               http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <beans:beans profile="extension-foia">
@@ -332,15 +332,9 @@
         </beans:bean>
 
         <beans:bean id="firstAssigneeOwningGroupNotify" class="gov.foia.service.FirstAssigneeOwningGroupNotify">
-            <beans:property name="groupService" ref="groupService"/>
-            <beans:property name="searchResults" ref="searchResults"/>
-            <beans:property name="userDao" ref="userJpaDao"/>
             <beans:property name="notificationUtils" ref="notificationUtils"/>
-            <beans:property name="templatingEngine" ref="templatingEngine"/>
-            <beans:property name="emailBodyTemplate" value="file:${user.home}/.arkcase/acm/templates/requestAssigned.html"/>
-            <beans:property name="notificationDao" ref="notificationDao"/>
-            <beans:property name="translationService" ref="translationService" />
             <beans:property name="userInfoHelper" ref="userInfoHelper"/>
+            <beans:property name="notificationService" ref="notificationService"/>
         </beans:bean>
 
         <beans:bean id="foiaExecutiveGroupNotificationService" class="gov.foia.service.FOIAExecutiveGroupNotificationService">
@@ -425,7 +419,6 @@
         </beans:bean>
 
         <beans:bean id="assignmentNotifier" class="gov.foia.listener.FoiaAssignmentNotifier">
-            <beans:property name="notificationUtils" ref="notificationUtils"/>
             <beans:property name="notificationService" ref="notificationService"/>
         </beans:bean>
 

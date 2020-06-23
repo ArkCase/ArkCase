@@ -28,12 +28,13 @@ package com.armedia.acm.pentaho.config;
  */
 
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public enum ReportName
 {
     CASE_SUMMARY_REPORT("Case Summary Report"),
+    CONSULTATION_SUMMARY_REPORT("Consultation Summary Report"),
     CLOSE_CASE_REPORT("Close Case Report"),
     OPEN_CASE_REPORT(
             "Open Case Report"),

@@ -262,7 +262,7 @@ deploy_backend_bcgeu_dev:
 start_security_scan_arkcase_snapshot:
   extends: .start_security_scan
   variables:
-    ARKCASE_VERSION: 3.3.8-SNAPSHOT
+    ARKCASE_VERSION: 3.3.10-SNAPSHOT
     ARKCASE_REPOSITORY: arkcase.snapshot
 
 security_scan_results:

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+    <bean id="consultationPipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
+        <property name="preSaveHandlers">
+            <list value-type="com.armedia.acm.services.pipeline.handler.PipelineHandler">
+                <ref bean="consultationSetCreatorHandler"/>
+            </list>
+        </property>
+        <property name="postSaveHandlers">
+            <list value-type="com.armedia.acm.services.pipeline.handler.PipelineHandler">
+                <ref bean="consultationRulesHandler"/>
+                <ref bean="consultationContainerHandler"/>
+                <ref bean="consultationEcmFolderHandler"/>
+                <ref bean="consultationOutlookHandler"/>
+                <ref bean="consultationFolderStructureHandler"/>
+                <ref bean="consultationUploadAttachmentsHandler"/>
+                <ref bean="consultationStartBusinessProcessIfNeededHandler"/>
+                <ref bean="consultationDocumentHandler"/>
+            </list>
+        </property>
+    </bean>
+
+    <!-- pre-save handlers -->
+    <bean id="consultationSetCreatorHandler" class="com.armedia.acm.plugins.consultation.pipeline.presave.ConsultationSetCreatorHandler"/>
+
+    <bean id="consultationContainerHandler" class="com.armedia.acm.plugins.consultation.pipeline.postsave.ConsultationContainerHandler">
+        <property name="fileParticipantService" ref="fileParticipantService"/>
+    </bean>
+    <bean id="consultationEcmFolderHandler" class="com.armedia.acm.plugins.consultation.pipeline.postsave.ConsultationEcmFolderHandler">
+        <property name="ecmFileService" ref="ecmFileService"/>
+    </bean>
+    <bean id="consultationOutlookHandler" class="com.armedia.acm.plugins.consultation.pipeline.postsave.ConsultationOutlookHandler">
+        <property name="autoCreateFolderForConsultation" value="#{consultationConfig.autoCreateCalendarFolder}"/>
+        <property name="outlookContainerCalendarService" ref="outlookContainerService"/>
+        <property name="calendarAdminService" ref="outlookCalendarAdminServiceExtension"/>
+    </bean>
+    <bean id="consultationFolderStructureHandler"
+          class="com.armedia.acm.plugins.consultation.pipeline.postsave.ConsultationFolderStructureHandler">
+        <property name="folderStructureAsString" value="#{consultationConfig.folderStructure}"/>
+        <property name="ecmFileService" ref="ecmFileService"/>
+        <property name="acmFolderService" ref="acmFolderService"/>
+    </bean>
+    <bean id="consultationStartBusinessProcessIfNeededHandler"
+          class="com.armedia.acm.plugins.consultation.pipeline.postsave.ConsultationStartBusinessProcessIfNeededHandler">
+        <property name="startBusinessProcessBusinessRule" ref="consultationStartBusinessProcessBusinessRule"/>
+        <property name="startBusinessProcessService" ref="startBusinessProcessService"/>
+    </bean>
+
+    <bean id="pdfConsultationDocumentGenerator"
+          class="com.armedia.acm.plugins.consultation.service.PDFConsultationDocumentGenerator"
+          parent="pdfDocumentGenerator">
+    </bean>
+
+    <bean id="consultationDocumentHandler"
+          class="com.armedia.acm.plugins.consultation.pipeline.postsave.ConsultationDocumentHandler"
+          parent="pdfConsultationDocumentGenerator">
+        <property name="dao" ref="consultationDao"/>
+    </bean>
+
+    <bean id="consultationAssignmentHandler" class="com.armedia.acm.plugins.consultation.pipeline.postsave.ConsultationAssignmentHandler">
+        <property name="acmAssignmentDao" ref="acmAssignmentDao"/>
+        <property name="acmObjectHistoryEventPublisher" ref="acmObjectHistoryEventPublisher"/>
+    </bean>
+
+    <bean id="consultationUploadAttachmentsHandler"
+          class="com.armedia.acm.plugins.consultation.pipeline.postsave.ConsultationUploadAttachmentsHandler">
+        <property name="ecmFileService" ref="ecmFileService"/>
+    </bean>
+</beans>

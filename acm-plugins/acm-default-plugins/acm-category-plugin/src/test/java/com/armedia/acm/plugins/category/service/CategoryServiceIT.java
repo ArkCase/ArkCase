@@ -58,9 +58,9 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -83,7 +83,7 @@ import java.util.List;
         "/spring/spring-library-configuration.xml",
         "/spring/spring-library-object-converter.xml"
 })
-@TransactionConfiguration(defaultRollback = true)
+@Rollback(true)
 @Transactional
 @PrepareForTest(LogManager.class)
 @PowerMockIgnore({ "javax.management.*", "javax.net.ssl.*" })

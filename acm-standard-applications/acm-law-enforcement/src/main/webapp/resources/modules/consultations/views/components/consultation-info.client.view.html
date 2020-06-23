@@ -1,0 +1,105 @@
+<div ng-controller="Consultations.InfoController">
+    <div class="clearfix">
+        <div class="row">
+            <div class="col-xs-6">
+                <h4>
+                    <a href="#" editable-text="objectInfo.title" onaftersave="saveConsultation()"
+                       permission="editConsultation"
+                       permission-object-type="CONSULTATION" permission-properties="objectInfo" permission-action="disable" e-required>
+                        {{objectInfo.title || 'common.value.unknown' | translate}}
+                    </a>
+                </h4>
+            </div>
+            <div class="col-xs-6  text-right">
+                <h4>{{objectInfo.consultationNumber}}</h4>
+                <small ng-if="hasSuggestedConsultations" style="margin-right: 3%">
+                    <i class="fa fa-lightbulb-o" aria-hidden="true" style="color:#e6b800"/>
+                    <a href="javascript:;" ng-click="suggestedConsultations()">
+                        {{'consultations.comp.suggestedConsultations.title' | translate}} ({{numberOfSuggestedConsultations}})
+                    </a>
+                </small>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-md-2">
+                <div class="h4 font-bold">{{objectInfo.receivedDate | date: ('common.defaultDateTimeUIFormat' |
+                    translate)}}
+                </div>
+                <small class="text-muted"><span translate>consultations.comp.info.receivedDate.label</span></small>
+            </div>
+            <div class="col-xs-12 col-md-2">
+                <div class="h4 font-bold">
+                    <div class="h4 font-bold">{{objectInfo.objType}}</div>
+                </div>
+                <small class="text-muted"><span translate>consultations.comp.info.type.label</span></small>
+            </div>
+            <div class="col-xs-12 col-md-2">
+                <div class="h4 font-bold">
+                    <a href="javascript:;" class="editable-click no-outline" ng-click="userOrGroupSearch()"
+                            permission="editConsultationOwningGroup" permission-object-type="CONSULTATION" permission-properties="objectInfo"
+                            permission-action="disable">
+                        <user-full-name userId="assignee" fallback="{{'consultations.comp.info.assignee.none' | translate}}" />
+                    </a>
+                </div>
+                <small class="text-muted"><span translate>consultations.comp.info.assignee.label</span></small>
+            </div>
+            <div class="col-xs-12 col-md-2">
+                <div class="h4 font-bold">
+                    <a href="#" editable-select="objectInfo.priority" onaftersave="saveConsultation()" permission="editConsultation"
+                            permission-object-type="CONSULTATION" permission-properties="objectInfo" permission-action="disable"
+                            e-ng-options="p.key as (p.key | translateData: 'core.lookups.priorities' : lang) for p in priorities">
+                        {{ (objectInfo.priority | translateData: 'core.lookups.priorities' : lang) || ('common.value.unknown' | translate)
+                        }}</a>
+                </div>
+                <small class="text-muted"><span translate>consultations.comp.info.priority.label</span></small>
+            </div>
+            <div class="col-xs-12 col-md-2">
+                <div class="h4 font-bold">{{objectInfo.status }}
+                </div>
+                <small class="text-muted"><span translate>consultations.comp.info.status.label</span></small>
+            </div>
+            <div class="col-xs-12 col-md-2">
+                <div class="h4 font-bold">
+                    <user-full-name userId="objectInfo.modifier" fallback="{{'consultations.comp.approvalRouting.assigne.none' | translate}}" />
+                </div>
+                <small class="text-muted"><span translate>consultations.comp.info.modifier</span></small>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-md-2">
+                
+            </div>
+            <div class="col-xs-12 col-md-2">
+                <div class="h4 font-bold">
+                    <a href="javascript:;" class="editable-click no-outline" ng-click="userOrGroupSearch()"
+                            permission="editConsultationOwningGroup" permission-object-type="CONSULTATION" permission-properties="objectInfo"
+                            permission-action="disable">
+                        {{owningGroup || 'common.value.unknown' | translate}}</a>
+                </div>
+                <small class="text-muted"><span translate>consultations.comp.info.owningGroup.label</span></small>
+            </div>
+            <div class="col-xs-12 col-md-2">
+                <div class="h4 font-bold popup-move-on-left">
+                    <a href="#" editable-combodate="dueDateInfo" e-template="MMM/DD/YYYY HH:mm"
+                       e-min-year="{{minYear}}" e-max-year="{{maxYear}}" e-minute-step="1" onaftersave="updateDueDate($data, dateInfo.dueDate)"
+                       permission="editConsultation" permission-object-type="CONSULTATION"
+                       permission-properties="objectInfo" permission-action="disable">
+                        {{dateInfo.dueDate || ('common.value.unknown' | translate) }}</a>
+                </div>
+                <small class="text-muted"><span translate>consultations.comp.info.dueDate.label</span></small>
+            </div>
+            <div class="col-xs-12 col-md-2">
+                <div class="h4 font-bold">{{objectInfo.componentAgency}}
+                </div>
+                <small class="text-muted"><span translate>consultations.comp.info.componentAgency</span></small>
+            </div>
+            <div class="col-xs-12 col-md-2">
+                <div class="h4 font-bold">
+                    {{ (objectInfo.modified | date: ('common.defaultDateTimeUIFormat' | translate)) ||
+                    'common.value.unknown' | translate }}
+                </div>
+                <small class="text-muted"><span translate>consultations.comp.info.modified</span></small>
+            </div>
+        </div>
+    </div>
+</div>

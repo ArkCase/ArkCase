@@ -14,29 +14,29 @@ angular.module('cases').controller(
                 'Object.LookupService',
                 'Case.LookupService',
                 'Case.InfoService',
-                'Object.ModelService',
-                'MessageService',
-                'ObjectService',
-                'Object.ParticipantService',
-                'SearchService',
-                'Search.QueryBuilderService',
-                'Helper.ObjectBrowserService',
-                'Helper.UiGridService',
-                'Dialog.BootboxService',
-                '$filter',
-                'Cases.SuggestedCases',
-                function($scope, $state, $stateParams, $translate, $modal, Util, UtilDateService, ConfigService, ObjectLookupService, CaseLookupService, CaseInfoService, ObjectModelService, MessageService, ObjectService, ObjectParticipantService, SearchService, SearchQueryBuilder,
-                        HelperObjectBrowserService, HelperUiGridService, DialogService, $filter, SuggestedCasesService) {
+            'Object.ModelService',
+            'MessageService',
+            'ObjectService',
+            'Object.ParticipantService',
+            'SearchService',
+            'Search.QueryBuilderService',
+            'Helper.ObjectBrowserService',
+            'Helper.UiGridService',
+            'Dialog.BootboxService',
+            '$filter',
+            'SuggestedObjectsService',
+            function ($scope, $state, $stateParams, $translate, $modal, Util, UtilDateService, ConfigService, ObjectLookupService, CaseLookupService, CaseInfoService, ObjectModelService, MessageService, ObjectService, ObjectParticipantService, SearchService, SearchQueryBuilder,
+                      HelperObjectBrowserService, HelperUiGridService, DialogService, $filter, SuggestedObjectsService) {
 
-                    new HelperObjectBrowserService.Component({
-                        scope: $scope,
-                        stateParams: $stateParams,
-                        moduleId: "cases",
-                        componentId: "info",
-                        retrieveObjectInfo: CaseInfoService.getCaseInfo,
-                        validateObjectInfo: CaseInfoService.validateCaseInfo,
-                        onObjectInfoRetrieved: function(objectInfo) {
-                            onObjectInfoRetrieved(objectInfo);
+                new HelperObjectBrowserService.Component({
+                    scope: $scope,
+                    stateParams: $stateParams,
+                    moduleId: "cases",
+                    componentId: "info",
+                    retrieveObjectInfo: CaseInfoService.getCaseInfo,
+                    validateObjectInfo: CaseInfoService.validateCaseInfo,
+                    onObjectInfoRetrieved: function (objectInfo) {
+                        onObjectInfoRetrieved(objectInfo);
                         }
                     });
 
@@ -193,7 +193,7 @@ angular.module('cases').controller(
 
                         CaseLookupService.getApprovers($scope.owningGroup, $scope.assignee).then(function(approvers) {
                             var options = [];
-                            _.each(approvers, function(approver) {
+                            _.each(approvers, function (approver) {
                                 options.push({
                                     id: approver.userId,
                                     name: approver.fullName
@@ -203,8 +203,8 @@ angular.module('cases').controller(
                             return approvers;
                         });
 
-                        SuggestedCasesService.getSuggestedCases($scope.objectInfo.title, $scope.objectInfo.id).then(function (value) {
-                            $scope.hasSuggestedCases = value.data.length > 0 ? true : false;
+                        SuggestedObjectsService.getSuggestedObjects($scope.objectInfo.title, "CASE_FILE", $scope.objectInfo.id).then(function (value) {
+                            $scope.hasSuggestedCases = value.data.length > 0;
                             $scope.numberOfSuggestedCases = value.data.length;
                         });
                     };

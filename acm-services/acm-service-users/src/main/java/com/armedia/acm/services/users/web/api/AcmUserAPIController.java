@@ -39,6 +39,7 @@ import com.armedia.acm.services.users.service.AcmUserEventPublisher;
 import com.armedia.acm.services.users.service.ldap.LdapAuthenticateService;
 import com.armedia.acm.services.users.service.ldap.LdapUserService;
 
+import org.apache.commons.validator.ValidatorException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
@@ -123,6 +124,13 @@ public class AcmUserAPIController extends SecureLdapController
             error.putExtra("user", ldapUserCreateRequest);
             throw error;
         }
+        catch (ValidatorException e)
+        {
+            log.error("Invalid email [{}]", ldapUserCreateRequest.getMail(), e);
+            AcmAppErrorJsonMsg errorEmail = new AcmAppErrorJsonMsg("Invalid email!", "USER", "email", e);
+            errorEmail.putExtra("user", ldapUserCreateRequest);
+            throw errorEmail;
+        }
         catch (Exception e)
         {
             log.error("Creating LDAP user [{}] failed!", ldapUserCreateRequest.getUserId(), e);
@@ -142,6 +150,13 @@ public class AcmUserAPIController extends SecureLdapController
             AcmUser editedUser = ldapUserService.editLdapUser(acmUser, userId, directory);
             ldapUserService.publishUserUpdatedEvent(httpSession, authentication, editedUser, true);
             return editedUser;
+        }
+        catch (ValidatorException e)
+        {
+            log.error("Invalid email [{}]", acmUser.getMail(), e);
+            AcmAppErrorJsonMsg error = new AcmAppErrorJsonMsg("Invalid email!", "USER", "email", e);
+            error.putExtra("user", acmUser);
+            throw error;
         }
         catch (Exception e)
         {

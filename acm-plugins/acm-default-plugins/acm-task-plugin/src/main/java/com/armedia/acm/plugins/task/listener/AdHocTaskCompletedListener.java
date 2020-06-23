@@ -30,10 +30,9 @@ package com.armedia.acm.plugins.task.listener;
 import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.model.TaskConfig;
+import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.notification.service.NotificationService;
-import com.armedia.acm.services.users.dao.UserDao;
-import com.armedia.acm.services.users.model.AcmUser;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -43,7 +42,6 @@ public class AdHocTaskCompletedListener implements ApplicationListener<AcmApplic
 {
     private NotificationService notificationService;
     private TaskConfig taskConfig;
-    private UserDao userDao;
 
     private static final Logger logger = LogManager.getLogger(TaskUpdatedNotifier.class);
 
@@ -59,14 +57,15 @@ public class AdHocTaskCompletedListener implements ApplicationListener<AcmApplic
             {
                 logger.debug("On 'Task completed event' create notification for creator [{}].", taskOwner);
 
-                AcmUser user = userDao.findByUserId(acmTask.getOwner());
-                String emailAddress = user.getMail();
+                Notification notification = notificationService.getNotificationBuilder()
+                        .newNotification("taskCompletedNotifyCreator", NotificationConstants.NOTIFICATION_TASK_COMPLETED,
+                                acmTask.getObjectType(), acmTask.getId(), taskOwner)
+                        .withEmailAddressForUser(taskOwner)
+                        .forObjectWithNumber(String.format("%s-%s", acmTask.getObjectType(), acmTask.getId()))
+                        .forObjectWithTitle(acmTask.getTitle())
+                        .build(taskOwner);
 
-                notificationService.createNotification("taskCompletedNotifyCreator", NotificationConstants.NOTIFICATION_TASK_COMPLETED,
-                        acmTask.getObjectType(), acmTask.getId(), String.format("%s-%s", acmTask.getObjectType(), acmTask.getId()),
-                        acmTask.getTitle(), emailAddress, event.getUserId());
-
-                logger.debug("Notification 'Task completed' created for task [{}] and creator [{}].", acmTask.getId(), taskOwner);
+                notificationService.saveNotification(notification);
             }
         }
     }
@@ -89,15 +88,5 @@ public class AdHocTaskCompletedListener implements ApplicationListener<AcmApplic
     public void setTaskConfig(TaskConfig taskConfig)
     {
         this.taskConfig = taskConfig;
-    }
-
-    public UserDao getUserDao()
-    {
-        return userDao;
-    }
-
-    public void setUserDao(UserDao userDao)
-    {
-        this.userDao = userDao;
     }
 }

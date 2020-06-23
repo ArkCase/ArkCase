@@ -80,7 +80,7 @@ public class WorkflowConfigurationService
      * @param isAsc
      * @return
      */
-    public List<AcmProcessDefinition> retrieveWorkflows(int start, int length, String orderBy, boolean isAsc)
+    public List<AcmProcessDefinition> retrieveWorkflows(String orderBy, boolean isAsc)
             throws AcmWorkflowConfigurationException
     {
         if (!validateOrderByParam(orderBy))
@@ -88,7 +88,7 @@ public class WorkflowConfigurationService
             throw new AcmWorkflowConfigurationException(String.format("Wrong 'OrderBy' parameter: '%s'", orderBy));
         }
 
-        return acmBpmnService.listPage(start, length, orderBy, isAsc);
+        return acmBpmnService.listPage(orderBy, isAsc);
     }
 
     /**
@@ -102,6 +102,12 @@ public class WorkflowConfigurationService
     {
         AcmProcessDefinition processDefinition = acmBpmnService.getByKeyAndVersion(key, version);
         List<AcmProcessDefinition> history = acmBpmnService.getVersionHistory(processDefinition);
+        return history;
+    }
+
+    public List<AcmProcessDefinition> retrieveDeactivatedWorkflows()
+    {
+        List<AcmProcessDefinition> history = acmBpmnService.listAllDeactivatedVersions();
         return history;
     }
 
@@ -134,7 +140,7 @@ public class WorkflowConfigurationService
         {
             tmpFile = File.createTempFile("bpmn-", ".xml", tempDir);
             FileUtils.copyInputStreamToFile(fileInputStream, tmpFile);
-            acmBpmnService.deploy(tmpFile, fileDescription, false, true);
+            acmBpmnService.deploy(tmpFile, fileDescription, true, true);
         }
         catch (Exception e)
         {
@@ -151,6 +157,12 @@ public class WorkflowConfigurationService
     {
         AcmProcessDefinition processDefinition = acmBpmnService.getByKeyAndVersion(key, version);
         acmBpmnService.makeActive(processDefinition);
+    }
+
+    public void makeInactive(String key, int version)
+    {
+        AcmProcessDefinition processDefinition = acmBpmnService.getByKeyAndVersion(key, version);
+        acmBpmnService.makeInactive(processDefinition);
     }
 
     public boolean validateOrderByParam(String orderByParam)
