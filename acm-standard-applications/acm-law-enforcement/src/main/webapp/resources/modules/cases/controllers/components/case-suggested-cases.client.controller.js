@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('cases').controller('Cases.SuggestedCasesController', ['$scope','$translate', '$stateParams', 'Helper.UiGridService', 'UtilService', 'Helper.ObjectBrowserService', 'Case.InfoService', 'Cases.SuggestedCases',
-    function ($scope, $translate, $stateParams, HelperUiGridService,  Util, HelperObjectBrowserService, CaseInfoService, SuggestedCasesService) {
+angular.module('cases').controller('Cases.SuggestedCasesController', ['$scope', '$translate', '$stateParams', 'Helper.UiGridService', 'UtilService', 'Helper.ObjectBrowserService', 'Case.InfoService', 'SuggestedObjectsService',
+    function ($scope, $translate, $stateParams, HelperUiGridService, Util, HelperObjectBrowserService, CaseInfoService, SuggestedObjectsService) {
 
 
         new HelperObjectBrowserService.Component({
@@ -11,7 +11,7 @@ angular.module('cases').controller('Cases.SuggestedCasesController', ['$scope','
             componentId: "suggestedCases",
             retrieveObjectInfo: CaseInfoService.getCaseInfo,
             validateObjectInfo: CaseInfoService.validateCaseInfo,
-            onConfigRetrieved: function(componentConfig) {
+            onConfigRetrieved: function (componentConfig) {
                 return onConfigRetrieved(componentConfig);
             },
             onObjectInfoRetrieved: function(objectInfo) {
@@ -46,7 +46,7 @@ angular.module('cases').controller('Cases.SuggestedCasesController', ['$scope','
         };
 
         function retrieveGridData(){
-            SuggestedCasesService.getSuggestedCases($scope.objectInfo.title, $scope.objectInfo.id).then(function(data){
+            SuggestedObjectsService.getSuggestedObjects($scope.objectInfo.title, "CASE_FILE", $scope.objectInfo.id).then(function (data) {
                 $scope.suggestedCases = data.data;
                 $scope.gridOptions = $scope.gridOptions || {};
                 $scope.gridOptions.data = $scope.suggestedCases;
@@ -66,8 +66,8 @@ angular.module('cases').controller('Cases.SuggestedCasesController', ['$scope','
         $scope.onClickObjLink = function(event, rowEntity) {
             event.preventDefault();
 
-            var targetType = Util.goodMapValue(rowEntity, "objectType");
-            var targetId = Util.goodMapValue(rowEntity, "caseId");
+            var targetType = Util.goodMapValue(rowEntity, "type");
+            var targetId = Util.goodMapValue(rowEntity, "id");
             gridHelper.showObject(targetType, targetId);
         };
        

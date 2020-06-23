@@ -36,7 +36,7 @@ import java.util.List;
  * @author ivana.shekerova on 11/14/2018.
  */
 @JsonIdentityInfo(generator = JSOGGenerator.class)
-public class EmailMentionsDTO extends MessageBodyFactory
+public class EmailMentionsDTO
 {
     private String objectType;
     private String subType;

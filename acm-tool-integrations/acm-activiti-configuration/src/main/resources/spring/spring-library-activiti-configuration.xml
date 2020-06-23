@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:aop="http://www.springframework.org/schema/aop"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <bean id="eventRaisingActivitiProcessListener" class="com.armedia.acm.activiti.AcmProcessEventHandler">
         <property name="runtimeService" ref="activitiRuntimeService"/>
@@ -87,6 +87,12 @@
         <property name="taskExecutor" ref="activitiTaskScheduler"/>
     </bean>
 
+    <bean id="activityClassPathBpmnDeployer" class="com.armedia.acm.activiti.services.ActivityClassPathBpmnDeployer">
+        <property name="acmBpmnService" ref="processDefinitionManagementService"/>
+        <property name="resourcePattern" ref="activitiResourceExpression"/>
+        <property name="resolver" ref="activitiPathMatchingResolver"/>
+    </bean>
+
     <bean id="activitiProcessEngineConfiguration" class="org.activiti.spring.SpringProcessEngineConfiguration" depends-on="liquibase">
         <property name="dataSource" ref="acmDataSource"/>
         <property name="transactionManager" ref="transactionManager"/>
@@ -120,30 +126,15 @@
     <bean id="activitiHistoryService" factory-bean="activitiProcessEngine" factory-method="getHistoryService"/>
     <bean id="activitiManagementService" factory-bean="activitiProcessEngine" factory-method="getManagementService"/>
 
-    <bean id="bpmnFileAddedMonitor" class="com.armedia.acm.activiti.BpmnFileAddedMonitor">
-        <property name="acmBpmnService" ref="processDefinitionManagementService"/>
-    </bean>
-
-    <bean id="deployFolder" class="java.io.File">
-        <constructor-arg value="${user.home}/.arkcase/acm/activiti"/>
-    </bean>
-
     <bean id="activitiResourceExpression" class="java.lang.String">
         <constructor-arg value="#{activitiConfig.activitiWorkflowFilePattern}"/>
     </bean>
 
     <bean id="activitiPathMatchingResolver" class="org.springframework.core.io.support.PathMatchingResourcePatternResolver"/>
 
-    <bean id="activitiDeployer" class="com.armedia.acm.spring.SpringClasspathCopier" depends-on="bpmnFileAddedMonitor">
-        <property name="resourcePattern" ref="activitiResourceExpression"/>
-        <property name="deployFolder" ref="deployFolder"/>
-        <property name="resolver" ref="activitiPathMatchingResolver"/>
-    </bean>
-
     <bean id="processDefinitionManagementService" class="com.armedia.acm.activiti.services.AcmBpmnServiceImpl">
         <property name="activitiRepositoryService" ref="activitiRepositoryService"/>
         <property name="acmBpmnDao" ref="acmProcessDefinitionDao"/>
-        <property name="processDefinitionsFolder" value="${user.home}/.arkcase/acm/activiti/versions"/>
     </bean>
 
     <bean id="acmProcessDefinitionDao" class="com.armedia.acm.activiti.services.dao.AcmBpmnDao"/>

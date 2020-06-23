@@ -1,0 +1,119 @@
+<form name="changeConsultationStateForm" ng-submit="save()">
+    <div class="modal-header">
+        <h3><span translate>consultations.comp.change.status.title</span></h3>
+    </div>
+    <div class="modal-body">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="accordion46" href="#collapseInfo" translate>consultations.comp.change.status.information.title</a>
+                </h4>
+            </div>
+            <div id="collapseInfo" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    <div class="row form-group">
+                        <div class="col-sm-6">
+                            <span translate>consultations.comp.change.status.information.date</span>
+                            <date-time-picker data="changeConsultationStatus.changeDate" property="changeConsultationStatus.changeDate"
+                                    date-picker-id="changeConsultationStatus.changeDate" time-format-disabled="true"></date-time-picker>
+                        </div>
+                        <div class="col-sm-6">
+                            <span translate>consultations.comp.change.status.information.consultation.number</span>
+                            <input type="text" ng-model="modalParams.info.consultationNumber" class="input-md form-control" disabled>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-sm-6">
+                            <div class="col-sm-4">
+                                <span translate>consultations.comp.change.status.information.status.title</span>
+                                <span class="required-asterisk">*</span>
+                                <p class="input-group">
+                                    <select ng-model="changeConsultationStatus.status" ng-change="statusChanged()" class="form-control input-md"
+                                            required>
+                                        <option ng-repeat="option in statuses" ng-value="option.key">
+                                            {{option.value | translate}}
+                                        </option>
+                                    </select>
+                                </p>
+                            </div>
+                            <div class="col-sm-8" style="text-align: left; padding-top: 25px">
+                                <span class="h4 font-bold" translate="consultations.comp.change.status.information.status.current" />
+                                <span class="h4 font-bold">{{": " + currentStatus}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row form-group" ng-if="showConsultationCloseStatus">
+                        <div class="col-sm-6">
+                            <span translate>consultations.comp.change.status.information.status.resolution.title</span>
+                            <p class="input-group">
+                                <label class="radio-inline"><input ng-model="changeConsultationStatus.consultationResolution" type="radio"
+                                        name="consultationResolution"
+                                        value="{{'consultations.comp.change.status.information.status.resolution.denied' | translate}}"><span
+                                        translate>consultations.comp.change.status.information.status.resolution.denied</span></label>
+                                <label class="radio-inline"><input ng-model="changeConsultationStatus.consultationResolution" type="radio"
+                                        name="consultationResolution"
+                                        value="{{'consultations.comp.change.status.information.status.resolution.full' | translate}}"><span
+                                        translate>consultations.comp.change.status.information.status.resolution.full</span></label>
+                                <label class="radio-inline"><input ng-model="changeConsultationStatus.consultationResolution" type="radio"
+                                        name="consultationResolution"
+                                        value="{{'consultations.comp.change.status.information.status.resolution.partial' | translate}}"><span
+                                        translate>consultations.comp.change.status.information.status.resolution.partial</span></label>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default" ng-if="showApprover == 'true'">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion4" href="#collapseApprovers" translate>consultations.comp.change.status.approver.label</a>
+                </h4>
+            </div>
+            <div id="collapseApprovers" class="panel-collapse">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-6 form-group">
+                            <label ng-if="showApprover == 'true'" class="control-label">&nbsp;</label><span class="required-asterisk">*</span>
+                            <input type="text" ng-model="approverName" class="input-md form-control"
+                                    placeholder="{{'consultations.comp.change.status.approver.placeholder' | translate}}"
+                                    ng-click="userOrGroupSearch()" readonly ng-required="showApprover == 'true'">
+                        </div>
+                        <div class="col-sm-6 form-group">
+                            <label for="owningGroup" translate>consultations.comp.change.status.approver.owningGroup</label>
+                            <input type="text" id="owningGroup" ng-disabled="true" ng-model="groupName" class="input-md form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion45" href="#collapseDesc" translate>consultations.comp.change.status.description.label</a>
+                </h4>
+            </div>
+            <div id="collapseDesc" class="panel-collapse">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-12 form-group">
+                            <summernote config="options" ng-model="changeConsultationStatus.description"></summernote>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" data-toggle="tooltip" data-title="Cancel" ng-click="cancelModal()">
+            <span translate>consultations.comp.change.status.button.cancel</span>
+        </button>
+        <button type="submit" ng-disabled="changeConsultationStateForm.$invalid || loading" class="btn btn-primary btn-sm" data-toggle="tooltip"
+                id="saveButton" data-title="Save">
+            <i class="{{loadingIcon}}"></i>
+            <span translate>consultations.comp.change.status.button.save</span>
+        </button>
+    </div>
+</form>

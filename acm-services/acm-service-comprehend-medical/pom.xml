@@ -5,7 +5,7 @@
     <parent>
         <artifactId>acm-services</artifactId>
         <groupId>com.armedia.acm</groupId>
-        <version>3.3.9</version>
+        <version>3.3.10</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -103,10 +103,6 @@
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-comprehendmedical</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.amazonaws</groupId>
-            <artifactId>aws-java-sdk-core</artifactId>
         </dependency>
 
         <dependency>

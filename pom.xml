@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.armedia</groupId>
     <artifactId>acm</artifactId>
-    <version>3.3.9</version>
+    <version>3.3.10</version>
     <packaging>pom</packaging>
     <name>ArkCase Case Management System</name>
     <description>Cloud-based case management system with a very nice UI</description>
@@ -84,6 +84,7 @@
         <magic.matcher.version>0.1.2</magic.matcher.version>
         <mariadb.jdbc.version>2.2.6</mariadb.jdbc.version>
         <maven.checkstyle.plugin.version>2.15</maven.checkstyle.plugin.version>
+        <maven.build.timestamp.format>MMMM dd, yyyy</maven.build.timestamp.format>
         <xalan.version>2.7.2</xalan.version>
 	<gitflow-maven-plugin.version>1.14.0</gitflow-maven-plugin.version>
 	<milton.version>2.7.3.5</milton.version>
@@ -108,17 +109,17 @@
         <slf4j.version>1.7.30</slf4j.version>
         <solr-solrj.version>7.6.0</solr-solrj.version>
         <sonar.version>3.5.0.1254</sonar.version>
-        <spring.integration.version>4.2.9.RELEASE</spring.integration.version>
+        <spring.integration.version>4.3.22.RELEASE</spring.integration.version>
         <spring.ldap.version>1.3.2.RELEASE</spring.ldap.version>
         <spring.security.kerberos.version>1.0.1.RELEASE</spring.security.kerberos.version>
         <spring.security.saml2.core.version>1.0.2.RELEASE</spring.security.saml2.core.version>
         <spring.security.version>3.2.7.RELEASE</spring.security.version>
-        <spring.version>4.2.9.RELEASE</spring.version>
+        <spring.version>4.3.27.RELEASE</spring.version>
         <spring-retry-version>1.1.2.RELEASE</spring-retry-version>
         <springfox-version>2.5.0</springfox-version>
         <springframework-addons.version>0.1</springframework-addons.version>
         <sqlserver.version>4.0</sqlserver.version>
-        <tomcat-jdbc.version>8.0.14</tomcat-jdbc.version>
+        <tomcat-jdbc.version>9.0.35</tomcat-jdbc.version>
         <voodoodyne-jackson-jsog.version>1.1.1</voodoodyne-jackson-jsog.version>
         <xmlgraphics.version>2.0.1</xmlgraphics.version>
         <xmlunit.version>2.5.1</xmlunit.version>
@@ -283,6 +284,9 @@
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                             <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                         </manifest>
+                        <manifestEntries>
+                            <Build-Time>${maven.build.timestamp}</Build-Time>
+                        </manifestEntries>
                     </archive>
                 </configuration>
             </plugin>

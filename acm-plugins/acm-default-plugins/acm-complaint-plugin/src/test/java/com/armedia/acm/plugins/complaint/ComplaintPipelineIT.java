@@ -27,13 +27,10 @@ package com.armedia.acm.plugins.complaint;
  * #L%
  */
 
-import static org.junit.Assert.assertNotNull;
-
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
 import com.armedia.acm.web.api.MDCConstants;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Before;
@@ -43,15 +40,16 @@ import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
 import java.util.UUID;
+
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(name = "spring", locations = {
@@ -111,6 +109,7 @@ import java.util.UUID;
         "/spring/spring-library-user-service.xml",
         "/spring/spring-library-object-converter.xml",
         "/spring/spring-library-ecm-file-lock.xml",
+        "/spring/spring-library-ldap-directory-config.xml",
         "/spring/spring-library-audit-service.xml",
         "/spring/spring-library-core-api.xml",
         "/spring/spring-library-activemq.xml",
@@ -119,9 +118,10 @@ import java.util.UUID;
         "/spring/spring-library-websockets.xml",
         "/spring/spring-library-object-title.xml",
         "/spring/spring-library-labels-service.xml",
-        "/spring/spring-library-convert-folder-service.xml"
+        "/spring/spring-library-convert-folder-service.xml",
+        "/spring/spring-library-convert-file-service.xml"
 })
-@TransactionConfiguration(defaultRollback = false, transactionManager = "transactionManager")
+@Rollback(true)
 public class ComplaintPipelineIT
 {
     static

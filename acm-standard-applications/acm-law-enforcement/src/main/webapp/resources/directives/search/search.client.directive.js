@@ -96,7 +96,7 @@ angular.module('directives').directive(
 
                             var searchObject = new Object();
                             try {
-                                searchObject = JSON.parse(scope.searchQuery);
+                                searchObject.searchQuery = JSON.parse(scope.searchQuery);
                             } catch (e) {
                                 searchObject.searchQuery = scope.searchQuery;
                                 searchObject.isSelected = false;

@@ -163,12 +163,12 @@
                         </tab-heading>
                         <div ng-include="'modules/request-info/views/components/billing.client.view.html'" ng-if="billingTabActive"></div>
                     </tab>
-                    <tab active="transcriptionTabActive" ng-show="transcriptionTabActive">
+                    <tab active="transcriptionTabActive" ng-show="transcriptionTabViewEnabled">
                         <tab-heading>
                             <span translate>documentDetails.comp.transcription.title</span>
                         </tab-heading>
                         <div ng-include="'modules/document-details/views/components/transcription.client.view.html'"
-                                ng-if="transcriptionTabActive"></div>
+                             ng-if="transcriptionTabViewEnabled"></div>
                     </tab>
                 </tabset>
                 <footer class="panel" ng-if="requestInfo.queue">

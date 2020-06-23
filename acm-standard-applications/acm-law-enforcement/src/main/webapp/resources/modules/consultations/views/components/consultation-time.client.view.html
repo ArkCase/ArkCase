@@ -1,0 +1,18 @@
+<div ng-controller="Consultations.TimeController">
+    <div class="panel panel-success panel-grid">
+        <div class="panel-heading">
+            <div class="panel-title">
+                <span translate>consultations.comp.time.title</span>
+                <div class="pull-right">
+                    <a class="btn btn-default btn-xs" ng-click="newTimesheet()">
+                        <i class="fa fa-lg fa-plus"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div ui-grid="gridOptions" ui-grid-resize-columns ui-grid-selection ui-grid-auto-resize ui-grid-pagination
+                    adjust-table-height="gridOptions.data.length" class="grid"></div>
+        </div>
+    </div>
+</div>

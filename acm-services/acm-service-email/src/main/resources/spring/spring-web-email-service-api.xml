@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
 
     <bean id="mailConfigurationAPIController"
         class="com.armedia.acm.services.email.config.web.api.AcmMailTemplateConfigurationServiceAPIController">
@@ -10,6 +10,7 @@
     <bean id="mailServiceAPIController" class="com.armedia.acm.services.email.web.api.AcmMailServiceAPIController">
         <property name="templateService" ref="filesystemTemplateConfigurationService"/>
         <property name="emailSenderService" ref="configurableEmailSenderService"/>
+        <property name="contentService" ref="acmEmailContentGeneratorService"/>
     </bean>
 
 </beans>

@@ -51,6 +51,8 @@ import com.armedia.acm.services.users.service.group.GroupService;
 import com.armedia.acm.spring.SpringContextHolder;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.validator.ValidatorException;
+import org.apache.commons.validator.routines.EmailValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationEventPublisher;
@@ -87,6 +89,8 @@ public class LdapUserService implements ApplicationEventPublisherAware
 
     private ApplicationEventPublisher eventPublisher;
 
+    private final EmailValidator emailValidator = EmailValidator.getInstance();
+
     public void publishSetPasswordEmailEvent(AcmUser user)
     {
         log.debug("Publish send set password email for user: [{}]", user.getUserId());
@@ -111,9 +115,13 @@ public class LdapUserService implements ApplicationEventPublisherAware
 
     @Transactional(rollbackFor = Exception.class)
     public AcmUser createLdapUser(UserDTO userDto, String directoryName)
-            throws AcmUserActionFailedException, AcmLdapActionFailedException
-    {
+            throws AcmUserActionFailedException, AcmLdapActionFailedException, ValidatorException {
         AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directoryName);
+
+        if (!emailValidator.isValid(userDto.getMail()))
+        {
+            throw new ValidatorException("Invalid email submitted!");
+        }
 
         String userId = MapperUtils.buildUserId(userDto.getUserId(), ldapSyncConfig);
 
@@ -223,8 +231,12 @@ public class LdapUserService implements ApplicationEventPublisherAware
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public AcmUser editLdapUser(AcmUser acmUser, String userId, String directory) throws AcmLdapActionFailedException
+    public AcmUser editLdapUser(AcmUser acmUser, String userId, String directory) throws AcmLdapActionFailedException, ValidatorException
     {
+        if (!emailValidator.isValid(acmUser.getMail()))
+        {
+            throw new ValidatorException("Invalid email submitted!");
+        }
         log.debug("Saving updated User [{}] in database", acmUser.getUserId());
         AcmUser existingUser = userDao.findByUserId(userId);
         existingUser.setFirstName(acmUser.getFirstName());
@@ -243,8 +255,7 @@ public class LdapUserService implements ApplicationEventPublisherAware
 
     @Transactional(rollbackFor = Exception.class)
     public AcmUser cloneLdapUser(String userId, UserDTO user, String directory)
-            throws AcmUserActionFailedException, AcmLdapActionFailedException
-    {
+            throws AcmUserActionFailedException, AcmLdapActionFailedException, ValidatorException {
         log.debug("Creating new user [{}] as a clone of [{}]", user.getUserId(), userId);
         AcmUser existingUser = userDao.findByUserId(userId);
         user.setGroupNames(existingUser.getGroupNames().collect(Collectors.toList()));

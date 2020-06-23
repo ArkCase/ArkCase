@@ -29,6 +29,7 @@ package com.armedia.acm.services.notification.service;
 
 import com.armedia.acm.service.objecthistory.model.AcmAssigneeChangeEvent;
 import com.armedia.acm.service.objecthistory.model.AcmAssignment;
+import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 
 import org.apache.commons.lang3.StringUtils;
@@ -39,7 +40,6 @@ import org.springframework.context.ApplicationListener;
 public class AssignmentNotifier implements ApplicationListener<AcmAssigneeChangeEvent>
 {
     private NotificationService notificationService;
-    private NotificationUtils notificationUtils;
 
     private static final Logger logger = LogManager.getLogger(AssignmentNotifier.class);
 
@@ -55,26 +55,30 @@ public class AssignmentNotifier implements ApplicationListener<AcmAssigneeChange
         {
             logger.debug("On 'Assignment changed' event create notification for new assignee [{}].", newAssignee);
 
-            String emailAddress = notificationUtils.getEmailForUser(newAssignee);
-            notificationService.createNotification("objectAssigned", NotificationConstants.OBJECT_ASSIGNED,
-                    assignment.getObjectType(), assignment.getObjectId(), assignment.getObjectName(), assignment.getObjectTitle(),
-                    emailAddress, event.getUserId(), newAssignee);
+            Notification notification = notificationService.getNotificationBuilder()
+                    .newNotification("objectAssigned", NotificationConstants.OBJECT_ASSIGNED, assignment.getObjectType(),
+                            assignment.getObjectId(), event.getUserId())
+                    .forObjectWithNumber(assignment.getObjectName())
+                    .forObjectWithTitle(assignment.getObjectTitle())
+                    .withEmailAddressForUser(newAssignee)
+                    .build(newAssignee);
 
-            logger.debug("Notification 'Object assigned' created for object [{}] with id [{}] for assignee [{}] with address [{}].",
-                    assignment.getObjectType(), assignment.getObjectId(), newAssignee, emailAddress);
+            notificationService.saveNotification(notification);
         }
 
         if (StringUtils.isNotBlank(oldAssignee))
         {
             logger.debug("On 'Assignment changed' event create notification for old assignee [{}].", oldAssignee);
 
-            String emailAddress = notificationUtils.getEmailForUser(oldAssignee);
-            notificationService.createNotification("objectUnassigned", NotificationConstants.OBJECT_UNASSIGNED,
-                    assignment.getObjectType(), assignment.getObjectId(), assignment.getObjectName(), assignment.getObjectTitle(),
-                    emailAddress, event.getUserId(), oldAssignee);
+            Notification notification = notificationService.getNotificationBuilder()
+                    .newNotification("objectUnassigned", NotificationConstants.OBJECT_UNASSIGNED, assignment.getObjectType(),
+                            assignment.getObjectId(), event.getUserId())
+                    .forObjectWithNumber(assignment.getObjectName())
+                    .forObjectWithTitle(assignment.getObjectTitle())
+                    .withEmailAddressForUser(oldAssignee)
+                    .build(oldAssignee);
 
-            logger.debug("Notification 'Object unassigned' created for object [{}] with id [{}] for assignee [{}] with address [{}].",
-                    assignment.getObjectType(), assignment.getId(), oldAssignee, emailAddress);
+            notificationService.saveNotification(notification);
         }
     }
 
@@ -86,15 +90,5 @@ public class AssignmentNotifier implements ApplicationListener<AcmAssigneeChange
     public void setNotificationService(NotificationService notificationService)
     {
         this.notificationService = notificationService;
-    }
-
-    public NotificationUtils getNotificationUtils()
-    {
-        return notificationUtils;
-    }
-
-    public void setNotificationUtils(NotificationUtils notificationUtils)
-    {
-        this.notificationUtils = notificationUtils;
     }
 }

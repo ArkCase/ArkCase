@@ -41,7 +41,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -95,19 +94,16 @@ public class AcmBpmnDao
     }
 
     @Transactional
-    public List<AcmProcessDefinition> listPage(int start, int length, String orderBy, boolean isAsc)
+    public List<AcmProcessDefinition> listPage(String orderBy, boolean isAsc)
     {
-
         CriteriaBuilder builder = em.getCriteriaBuilder();
+
         CriteriaQuery<AcmProcessDefinition> criteriaQuery = builder.createQuery(AcmProcessDefinition.class);
         Root<AcmProcessDefinition> processDefinition = criteriaQuery.from(AcmProcessDefinition.class);
 
-        Subquery<Long> subquery = criteriaQuery.subquery(Long.class);
-        Root<AcmProcessDefinition> processDefinitionSubquery = subquery.from(AcmProcessDefinition.class);
-        subquery.select(builder.max(processDefinitionSubquery.get("id")))
-                .groupBy(processDefinitionSubquery.<String> get("key"));
+        criteriaQuery.select(processDefinition);
+        criteriaQuery.where(builder.equal(processDefinition.get("active"), true));
 
-        criteriaQuery.where(processDefinition.<Long> get("id").in(subquery));
         if (isAsc)
         {
             criteriaQuery.orderBy(builder.asc(processDefinition.get(orderBy)));
@@ -116,34 +112,9 @@ public class AcmBpmnDao
         {
             criteriaQuery.orderBy(builder.desc(processDefinition.get(orderBy)));
         }
-        TypedQuery<AcmProcessDefinition> queryMax = getEm().createQuery(criteriaQuery);
-        List<AcmProcessDefinition> maxList = queryMax.getResultList();
+        TypedQuery<AcmProcessDefinition> query = getEm().createQuery(criteriaQuery);
+        return query.getResultList();
 
-        CriteriaQuery<AcmProcessDefinition> criteriaQuery_2 = builder.createQuery(AcmProcessDefinition.class);
-        Root<AcmProcessDefinition> processDefinition_2 = criteriaQuery.from(AcmProcessDefinition.class);
-        Root<AcmProcessDefinition> processDefinitionSubquery_2 = subquery.from(AcmProcessDefinition.class);
-        subquery.select(builder.min(processDefinitionSubquery_2.get("id")))
-                .groupBy(processDefinitionSubquery_2.<String> get("key"));
-        if (isAsc)
-        {
-            criteriaQuery_2.orderBy(builder.asc(processDefinition_2.get(orderBy)));
-        }
-        else
-        {
-            criteriaQuery_2.orderBy(builder.desc(processDefinition_2.get(orderBy)));
-        }
-        TypedQuery<AcmProcessDefinition> queryActive = getEm().createQuery(criteriaQuery_2)
-                .setFirstResult(start).setMaxResults(length);
-        List<AcmProcessDefinition> activeList = queryActive.getResultList();
-
-        List<AcmProcessDefinition> acmProcessDefinitions = new ArrayList<>();
-        maxList.forEach(mE -> {
-            acmProcessDefinitions.add(activeList.stream()
-                    .filter(aE -> aE.getKey().equals(mE.getKey()))
-                    .findFirst()
-                    .orElse(mE));
-        });
-        return acmProcessDefinitions;
     }
 
     public List<AcmProcessDefinition> listAllVersions(AcmProcessDefinition processDefinition)
@@ -209,6 +180,14 @@ public class AcmBpmnDao
         {
             return null;
         }
+    }
+
+    public List<AcmProcessDefinition> listAllDeactivatedVersions()
+    {
+        String queryText = "SELECT apd FROM AcmProcessDefinition apd WHERE apd.active = false";
+        TypedQuery<AcmProcessDefinition> query = getEm().createQuery(queryText, AcmProcessDefinition.class);
+
+        return query.getResultList();
     }
 
     public EntityManager getEm()

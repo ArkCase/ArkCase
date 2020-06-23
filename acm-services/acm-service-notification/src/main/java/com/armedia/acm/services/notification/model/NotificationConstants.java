@@ -137,6 +137,8 @@ public interface NotificationConstants
     String COMPLAINT_PRIORITY_CHANGED = "notifications.complaint.priority.changed";
     String CASE_STATUS_CHANGED = "notifications.case.status.changed";
     String CASE_PRIORITY_CHANGED = "notifications.case.priority.changed";
+    String CONSULTATION_STATUS_CHANGED = "notifications.consultation.status.changed";
+    String CONSULTATION_PRIORITY_CHANGED = "notifications.consultation.priority.changed";
     String PARTICIPANTS_ADDED = "notifications.participants.added";
     String PARTICIPANTS_DELETED = "notifications.participants.deleted";
     String OBJECT_UNASSIGNED = "notifications.object.unassigned";

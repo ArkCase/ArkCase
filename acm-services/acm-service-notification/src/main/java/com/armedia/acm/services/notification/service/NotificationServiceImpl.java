@@ -36,6 +36,7 @@ import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.notification.model.NotificationRule;
 import com.armedia.acm.spring.SpringContextHolder;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -55,6 +56,7 @@ public class NotificationServiceImpl implements NotificationService
     private SpringContextHolder springContextHolder;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private NotificationFormatter notificationFormatter;
+    private NotificationBuilder notificationBuilder;
 
     /**
      * This method is called by scheduled task
@@ -120,58 +122,27 @@ public class NotificationServiceImpl implements NotificationService
     }
 
     @Override
-    public Notification createNotification(String templateModel, String title, String parentType, Long parentId, String parentName,
-            String parentTitle, String emailAddresses, String user)
+    public NotificationBuilder getNotificationBuilder()
     {
-        return createNotification(templateModel, title, parentType, parentId, parentName, parentTitle, emailAddresses, user, null);
+        return notificationBuilder;
     }
 
     @Override
-    public Notification createNotification(String templateModel, String title, String parentType, Long parentId, String parentName,
-            String parentTitle, String emailAddresses, String user, String relatedUser)
+    public Notification saveNotification(Notification notification)
     {
-        return createNotification(templateModel, title, parentType, parentId, parentName, parentTitle, emailAddresses, user, relatedUser,
-                null);
-    }
-
-    @Override
-    public Notification createNotification(String templateModel, String title, String parentType, Long parentId, String parentName,
-            String parentTitle, String emailAddresses, String user, String relatedUser, String note)
-    {
-        return createNotification(templateModel, title, parentType, parentId, parentName, parentTitle, null, null,
-                null, emailAddresses, user, relatedUser, note);
-    }
-
-    @Override
-    public Notification createNotification(String templateModel, String title, String parentType, Long parentId, String parentName,
-            String parentTitle, Long relatedObjectId, String relatedObjectType, String relatedObjectName, String emailAddresses,
-            String user, String relatedUser, String note)
-    {
-        Notification notification = new Notification();
-        notification.setTemplateModelName(templateModel);
-        notification.setParentType(parentType);
-        notification.setParentId(parentId);
-        notification.setParentName(parentName);
-        notification.setParentTitle(parentTitle);
-        notification.setRelatedObjectId(relatedObjectId);
-        notification.setRelatedObjectType(relatedObjectType);
-        notification.setRelatedObjectNumber(relatedObjectName);
-        notification.setEmailAddresses(emailAddresses);
-        notification.setUser(user);
-        notification.setStatus(NotificationConstants.STATUS_NEW);
-        notification.setData(String.format("{\"usr\":\"/plugin/%s/%s\"}", parentType.toLowerCase(), parentId));
-        notification.setActionDate(new Date());
-        notification.setType("user");
-        notification.setNote(note);
-        if (relatedObjectId != null && relatedObjectType != null)
+        if (StringUtils.isBlank(notification.getEmailAddresses()))
         {
-            notification.setTitle(notificationFormatter.buildTitle(title, relatedObjectName, relatedObjectType, relatedUser));
+            LOG.warn("Notification with template [{}], for object [{}] with id [{}] won't be created for empty email addresses list.",
+                    notification.getTemplateModelName(), notification.getParentType(), notification.getParentId());
+            return null;
         }
-        else
-        {
-            notification.setTitle(notificationFormatter.buildTitle(title, parentName, parentType, relatedUser));
-        }
-        return notificationDao.save(notification);
+
+        Notification saved = notificationDao.save(notification);
+        LOG.debug("Created notification with template [{}], for object [{}] with id [{}] and email addresses [{}].",
+                notification.getTemplateModelName(), notification.getParentType(), notification.getParentId(),
+                notification.getEmailAddresses());
+
+        return saved;
     }
 
     /**
@@ -267,5 +238,10 @@ public class NotificationServiceImpl implements NotificationService
     public void setNotificationConfig(NotificationConfig notificationConfig)
     {
         this.notificationConfig = notificationConfig;
+    }
+
+    public void setNotificationBuilder(NotificationBuilder notificationBuilder)
+    {
+        this.notificationBuilder = notificationBuilder;
     }
 }

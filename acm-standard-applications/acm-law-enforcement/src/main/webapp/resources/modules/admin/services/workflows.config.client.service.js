@@ -19,7 +19,9 @@ angular.module('admin').service('Admin.WorkflowsConfigService', [ '$http', 'Uplo
         retrieveHistory: retrieveHistory,
         activate: activate,
         uploadDefinition: uploadDefinition,
-        diagram: diagram
+        diagram: diagram,
+        retrieveDeactivatedWorkflows: retrieveDeactivatedWorkflows,
+        deactivate: deactivate
     });
     /**
      * @ngdoc method
@@ -91,6 +93,33 @@ angular.module('admin').service('Admin.WorkflowsConfigService', [ '$http', 'Uplo
 
     /**
      * @ngdoc method
+     * @name deactivate
+     * @methodOf admin.service:Admin.WorkflowsConfigService
+     *
+     * @description
+     * Deactivate workflow
+     *
+     *
+     * @param {string} key workflow key
+     *
+     * @param {string} version workflow version
+     *
+     * @returns {HttpPromise} Future info about workflow deactivation
+     */
+    function deactivate(key, version) {
+        return $http({
+            method: 'PUT',
+            url: 'api/latest/plugin/admin/workflowconfiguration/workflows/' + key + '/versions/' + version + '/inactive',
+            data: {},
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+    }
+    ;
+
+    /**
+     * @ngdoc method
      * @name diagram
      * @methodOf admin.service:Admin.WorkflowsConfigService
      *
@@ -141,6 +170,23 @@ angular.module('admin').service('Admin.WorkflowsConfigService', [ '$http', 'Uplo
             },
             file: file,
         });
-    }
-    ;
+    };
+
+    /**
+     * @ngdoc method
+     * @name retrieveDeactivatedWorkflows
+     * @methodOf admin.service:Admin.WorkflowsConfigService
+     *
+     * @description
+     * Performs retrieving all deactivated workflows
+     *
+     * @returns {HttpPromise} Future info about workflows
+     */
+    function retrieveDeactivatedWorkflows() {
+        return $http({
+            method: "GET",
+            url: "api/latest/plugin/admin/workflowconfiguration/deactivated/workflows"
+        });
+    };
+
 } ]);

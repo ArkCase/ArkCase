@@ -29,6 +29,7 @@ package gov.foia.listener;
 
 import com.armedia.acm.service.objecthistory.model.AcmAssigneeChangeEvent;
 import com.armedia.acm.service.objecthistory.model.AcmAssignment;
+import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.notification.service.AssignmentNotifier;
 
@@ -51,56 +52,84 @@ public class FoiaAssignmentNotifier extends AssignmentNotifier
         if (StringUtils.isNotBlank(newAssignee) && !newAssignee.equals("None"))
         {
             logger.debug("On 'Assignment changed' event create notification for new assignee [{}].", newAssignee);
-            String emailAddress = getNotificationUtils().getEmailForUser(newAssignee);
             if (assignment.getObjectType().equals("CASE_FILE"))
             {
-                getNotificationService().createNotification("requestAssignedAssignee", NotificationConstants.OBJECT_ASSIGNED,
-                        assignment.getObjectType(), assignment.getObjectId(), assignment.getObjectName(), assignment.getObjectTitle(),
-                        emailAddress, event.getUserId(), newAssignee);
+                Notification notification = getNotificationService().getNotificationBuilder()
+                        .newNotification("requestAssignedAssignee", NotificationConstants.OBJECT_ASSIGNED, assignment.getObjectType(),
+                                assignment.getObjectId(), event.getUserId())
+                        .forObjectWithNumber(assignment.getObjectName())
+                        .forObjectWithTitle(assignment.getObjectTitle())
+                        .withEmailAddressForUser(newAssignee)
+                        .build(newAssignee);
+
+                getNotificationService().saveNotification(notification);
             }
             else if (assignment.getObjectType().equals("TASK"))
             {
-                getNotificationService().createNotification("taskAssignedAssignee", NotificationConstants.OBJECT_ASSIGNED,
-                        assignment.getObjectType(), assignment.getObjectId(), assignment.getObjectName(), assignment.getObjectTitle(),
-                        emailAddress, event.getUserId(), newAssignee);
+                Notification notification = getNotificationService().getNotificationBuilder()
+                        .newNotification("taskAssignedAssignee", NotificationConstants.OBJECT_ASSIGNED, assignment.getObjectType(),
+                                assignment.getObjectId(), event.getUserId())
+                        .forObjectWithNumber(assignment.getObjectName())
+                        .forObjectWithTitle(assignment.getObjectTitle())
+                        .withEmailAddressForUser(newAssignee)
+                        .build(newAssignee);
+
+                getNotificationService().saveNotification(notification);
             }
             else
             {
-                getNotificationService().createNotification("objectAssigned", NotificationConstants.OBJECT_ASSIGNED,
-                        assignment.getObjectType(), assignment.getObjectId(), assignment.getObjectName(), assignment.getObjectTitle(),
-                        emailAddress, event.getUserId(), newAssignee);
-            }
+                Notification notification = getNotificationService().getNotificationBuilder()
+                        .newNotification("objectAssigned", NotificationConstants.OBJECT_ASSIGNED, assignment.getObjectType(),
+                                assignment.getObjectId(), event.getUserId())
+                        .forObjectWithNumber(assignment.getObjectName())
+                        .forObjectWithTitle(assignment.getObjectTitle())
+                        .withEmailAddressForUser(newAssignee)
+                        .build(newAssignee);
 
-            logger.debug("Notification 'Object assigned' created for object [{}] with id [{}] for assignee [{}] with address [{}].",
-                    assignment.getObjectType(), assignment.getObjectId(), newAssignee, emailAddress);
+                getNotificationService().saveNotification(notification);
+            }
         }
 
         if (StringUtils.isNotBlank(oldAssignee))
         {
             logger.debug("On 'Assignment changed' event create notification for old assignee [{}].", oldAssignee);
 
-            String emailAddress = getNotificationUtils().getEmailForUser(oldAssignee);
             if (assignment.getObjectType().equals("CASE_FILE"))
             {
-                getNotificationService().createNotification("requestUnassignedAssignee", NotificationConstants.OBJECT_UNASSIGNED,
-                        assignment.getObjectType(), assignment.getObjectId(), assignment.getObjectName(), assignment.getObjectTitle(),
-                        emailAddress, event.getUserId(), oldAssignee);
+                Notification notification = getNotificationService().getNotificationBuilder()
+                        .newNotification("requestUnassignedAssignee", NotificationConstants.OBJECT_UNASSIGNED,
+                                assignment.getObjectType(), assignment.getObjectId(), event.getUserId())
+                        .forObjectWithNumber(assignment.getObjectName())
+                        .forObjectWithTitle(assignment.getObjectTitle())
+                        .withEmailAddressForUser(oldAssignee)
+                        .build(oldAssignee);
+
+                getNotificationService().saveNotification(notification);
             }
             else if (assignment.getObjectType().equals("TASK"))
             {
-                getNotificationService().createNotification("taskUnassignedAssignee", NotificationConstants.OBJECT_UNASSIGNED,
-                        assignment.getObjectType(), assignment.getObjectId(), assignment.getObjectName(), assignment.getObjectTitle(),
-                        emailAddress, event.getUserId(), oldAssignee);
+                Notification notification = getNotificationService().getNotificationBuilder()
+                        .newNotification("taskUnassignedAssignee", NotificationConstants.OBJECT_UNASSIGNED,
+                                assignment.getObjectType(), assignment.getObjectId(), event.getUserId())
+                        .forObjectWithNumber(assignment.getObjectName())
+                        .forObjectWithTitle(assignment.getObjectTitle())
+                        .withEmailAddressForUser(oldAssignee)
+                        .build(oldAssignee);
+
+                getNotificationService().saveNotification(notification);
             }
             else
             {
-                getNotificationService().createNotification("objectUnassigned", NotificationConstants.OBJECT_UNASSIGNED,
-                        assignment.getObjectType(), assignment.getObjectId(), assignment.getObjectName(), assignment.getObjectTitle(),
-                        emailAddress, event.getUserId(), oldAssignee);
-            }
+                Notification notification = getNotificationService().getNotificationBuilder()
+                        .newNotification("objectUnassigned", NotificationConstants.OBJECT_UNASSIGNED,
+                                assignment.getObjectType(), assignment.getObjectId(), event.getUserId())
+                        .forObjectWithNumber(assignment.getObjectName())
+                        .forObjectWithTitle(assignment.getObjectTitle())
+                        .withEmailAddressForUser(oldAssignee)
+                        .build(oldAssignee);
 
-            logger.debug("Notification 'Object unassigned' created for object [{}] with id [{}] for assignee [{}] with address [{}].",
-                    assignment.getObjectType(), assignment.getId(), oldAssignee, emailAddress);
+                getNotificationService().saveNotification(notification);
+            }
         }
     }
 }
