@@ -1,0 +1,31 @@
+[
+    {
+        "op": "replace",
+        "path": "/menus",
+        "value": []
+    },
+    {
+        "op": "remove",
+        "path": "/className"
+    },
+    {
+        "op": "remove",
+        "path": "/closeComplaintClassNames"
+    },
+    {
+        "op": "remove",
+        "path": "/configurable"
+    },
+    {
+        "op": "remove",
+        "path": "/initialLinksShown"
+    },
+    {
+        "op": "remove",
+        "path": "/tree"
+    },
+    {
+        "op": "remove",
+        "path": "/components"
+    }
+]

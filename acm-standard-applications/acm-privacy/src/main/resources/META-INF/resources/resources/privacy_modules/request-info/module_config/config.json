@@ -1,0 +1,1561 @@
+{
+    "id": "request-info",
+    "title": "Subject Access Request",
+    "menus": [
+    ],
+    "userActivityTimeout": 1200000,
+    "queueRedirectionTimeout": 5000,
+    "assigneeFacetFilter": "\"Object Type\": USER",
+    "requiredFields": {
+        "Intake": {
+            "requester.firstName": true,
+            "requester.middleName": false,
+            "requester.lastName": true,
+            "requester.organization": false,
+            "requester.phoneNumber": false,
+            "requester.fax": false,
+            "requester.email": true,
+            "requester.address": true,
+            "requester.city": true,
+            "requester.zip": true,
+            "requester.state": true,
+            "requester.country": true,
+            "requester.orgAddress": false,
+            "requester.orgCity": false,
+            "requester.orgZip": false,
+            "requester.orgState": false,
+            "requester.orgCountry": false,
+            "requester.requsterSource": false,
+            "requestType": true,
+            "requestSubType": true,
+            "dispositionType": false,
+            "dispositionSubType": false,
+            "scannedDate": false,
+            "releasedDate": false,
+            "description": false,
+            "paidFlag": false
+        },
+        "Hold": {
+            "requester.firstName": false,
+            "requester.middleName": false,
+            "requester.lastName": false,
+            "requester.organization": false,
+            "requester.phoneNumber": false,
+            "requester.fax": false,
+            "requester.email": false,
+            "requester.address": false,
+            "requester.city": false,
+            "requester.zip": false,
+            "requester.state": false,
+            "requester.country": false,
+            "requester.orgAddress": false,
+            "requester.orgCity": false,
+            "requester.orgZip": false,
+            "requester.orgState": false,
+            "requester.orgCountry": false,
+            "requester.requsterSource": false,
+            "requestType": false,
+            "requestSubType": false,
+            "dispositionType": false,
+            "dispositionSubType": false,
+            "scannedDate": false,
+            "releasedDate": false,
+            "description": false,
+            "paidFlag": false
+        },
+        "Suspend": {
+            "requester.firstName": false,
+            "requester.middleName": false,
+            "requester.lastName": false,
+            "requester.organization": false,
+            "requester.phoneNumber": false,
+            "requester.fax": false,
+            "requester.email": false,
+            "requester.address": false,
+            "requester.city": false,
+            "requester.zip": false,
+            "requester.state": false,
+            "requester.country": false,
+            "requester.orgAddress": false,
+            "requester.orgCity": false,
+            "requester.orgZip": false,
+            "requester.orgState": false,
+            "requester.orgCountry": false,
+            "requester.requsterSource": false,
+            "requestType": false,
+            "requestSubType": false,
+            "dispositionType": false,
+            "dispositionSubType": false,
+            "scannedDate": false,
+            "releasedDate": false,
+            "description": false,
+            "paidFlag": false
+        },
+        "Fulfill": {
+            "requester.firstName": true,
+            "requester.middleName": false,
+            "requester.lastName": true,
+            "requester.organization": false,
+            "requester.phoneNumber": false,
+            "requester.fax": false,
+            "requester.email": true,
+            "requester.address": true,
+            "requester.city": true,
+            "requester.zip": true,
+            "requester.state": true,
+            "requester.country": true,
+            "requester.orgAddress": false,
+            "requester.orgCity": false,
+            "requester.orgZip": false,
+            "requester.orgState": false,
+            "requester.orgCountry": false,
+            "requester.requsterSource": false,
+            "requestType": true,
+            "requestSubType": true,
+            "dispositionType": false,
+            "dispositionSubType": false,
+            "scannedDate": false,
+            "releasedDate": false,
+            "description": false,
+            "paidFlag": false
+        },
+        "Approve": {
+            "requester.firstName": true,
+            "requester.middleName": false,
+            "requester.lastName": true,
+            "requester.organization": false,
+            "requester.phoneNumber": false,
+            "requester.fax": false,
+            "requester.email": true,
+            "requester.address": true,
+            "requester.city": true,
+            "requester.zip": true,
+            "requester.state": true,
+            "requester.country": true,
+            "requester.orgAddress": false,
+            "requester.orgCity": false,
+            "requester.orgZip": false,
+            "requester.orgState": false,
+            "requester.orgCountry": false,
+            "requester.requsterSource": false,
+            "requestType": true,
+            "requestSubType": true,
+            "dispositionType": false,
+            "dispositionSubType": false,
+            "scannedDate": false,
+            "releasedDate": false,
+            "description": false,
+            "paidFlag": false
+        },
+        "Release": {
+            "requester.firstName": true,
+            "requester.middleName": false,
+            "requester.lastName": true,
+            "requester.organization": false,
+            "requester.phoneNumber": false,
+            "requester.fax": false,
+            "requester.email": true,
+            "requester.address": true,
+            "requester.city": true,
+            "requester.zip": true,
+            "requester.state": true,
+            "requester.country": true,
+            "requester.orgAddress": false,
+            "requester.orgCity": false,
+            "requester.orgZip": false,
+            "requester.orgState": false,
+            "requester.orgCountry": false,
+            "requester.requsterSource": false,
+            "requestType": true,
+            "requestSubType": true,
+            "dispositionType": false,
+            "dispositionSubType": false,
+            "scannedDate": false,
+            "releasedDate": false,
+            "description": false,
+            "paidFlag": false
+        }
+    },
+    "components": [
+        {
+            "id": "addExistingItem",
+            "title": "Add Existing Item",
+            "enabled": "true",
+            "type": "grid",
+            "enableFiltering": false,
+            "columnDefs": [
+                {
+                    "name": "number_s",
+                    "displayName": "requests.comp.addExistingItem.table.columns.id",
+                    "headerCellFilter": "translate",
+                    "width": 80
+                },
+                {
+                    "name": "name",
+                    "displayName": "requests.comp.addExistingItem.table.columns.company",
+                    "headerCellFilter": "translate",
+                    "minWidth": 200
+                },
+                {
+                    "name": "attention_s",
+                    "displayName": "requests.comp.addExistingItem.table.columns.attention",
+                    "headerCellFilter": "translate",
+                    "minWidth": 120
+                },
+                {
+                    "name": "address_lcs",
+                    "displayName": "requests.comp.addExistingItem.table.columns.address",
+                    "headerCellFilter": "translate",
+                    "minWidth": 200
+                },
+                {
+                    "name": "city_lcs",
+                    "displayName": "requests.comp.addExistingItem.table.columns.city",
+                    "headerCellFilter": "translate",
+                    "width": 180
+                },
+                {
+                    "name": "state_lcs",
+                    "displayName": "requests.comp.addExistingItem.table.columns.state",
+                    "headerCellFilter": "translate",
+                    "width": 70
+                },
+                {
+                    "name": "zip_code_s",
+                    "displayName": "requests.comp.addExistingItem.table.columns.zipCode",
+                    "headerCellFilter": "translate",
+                    "width": 100
+                },
+                {
+                    "name": "phone_lcs",
+                    "displayName": "requests.comp.addExistingItem.table.columns.phone",
+                    "headerCellFilter": "translate",
+                    "width": 110
+                },
+                {
+                    "name": "fax_lcs",
+                    "displayName": "requests.comp.addExistingItem.table.columns.fax",
+                    "headerCellFilter": "translate",
+                    "width": 110
+                }
+            ],
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 10,
+            "start": 0
+        },
+        {
+            "id": "notes",
+            "title": "Notes",
+            "icon": "fa fa-comments",
+            "enabled": true,
+            "type": "grid",
+            "enableFiltering": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 5,
+            "columnDefs": [
+                {
+                    "name": "note",
+                    "displayName": "requests.comp.notes.table.columns.note",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "created",
+                    "displayName": "requests.comp.notes.table.columns.created",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.created | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
+                    "enableCellEdit": false
+                },
+                {
+                    "name": "creator",
+                    "displayName": "requests.comp.notes.table.columns.creator",
+                    "headerCellFilter": "translate",
+                    "enableCellEdit": false,
+                    "lookup": "userFullNames"
+                },
+                {
+                    "name": "type",
+                    "displayName": "requests.comp.notes.table.columns.type",
+                    "headerCellFilter": "translate",
+                    "enableCellEdit": false
+                }
+            ]
+        },
+        {
+            "id": "history",
+            "title": "History",
+            "enabled": true,
+            "type": "grid",
+            "enableFiltering": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 10,
+            "columnDefs": [
+                {
+                    "name": "fullEventType",
+                    "displayName": "requests.comp.history.table.columns.event",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{'eventType.'+row.entity.fullEventType | translate}}</div>",
+                    "width": 200
+                },
+                {
+                    "name": "eventDate",
+                    "displayName": "requests.comp.history.table.columns.date",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.eventDate | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
+                    "type": "date",
+                    "width": 100
+                },
+                {
+                    "name": "userId",
+                    "displayName": "requests.comp.history.table.columns.user",
+                    "headerCellFilter": "translate",
+                    "lookup": "userFullNames"
+                }
+            ]
+        },
+        {
+            "id": "requestDetails",
+            "title": "Request Details",
+            "enabled": true,
+            "dateFormat": "YYYY-MM-DDTHH:mm:ss.SSSZZ",
+            "billTo": [
+                {
+                    "id": "bill_to_requester",
+                    "name": "Bill to Requester"
+                },
+                {
+                    "id": "bill_to_client",
+                    "name": "Bill to Client"
+                }
+            ],
+            "billableOptions": [
+                {
+                    "id": "billable",
+                    "name": "Billable"
+                },
+                {
+                    "id": "non_billable",
+                    "name": "Non-Billable"
+                }
+            ],
+            "recordType": [
+                {
+                    "id": "billing",
+                    "name": "Billing"
+                },
+                {
+                    "id": "medical",
+                    "name": "Medical"
+                },
+                {
+                    "id": "imaging",
+                    "name": "Imaging"
+                }
+            ],
+            "requestType": [
+                {
+                    "id": "Authorization",
+                    "name": "Authorization"
+                },
+                {
+                    "id": "Subpoena",
+                    "name": "Subpoena"
+                },
+                {
+                    "id": "WC",
+                    "name": "WC"
+                },
+                {
+                    "id": "WC Subpoena",
+                    "name": "WC Subpoena"
+                },
+                {
+                    "id": "Audit",
+                    "name": "Audit"
+                },
+                {
+                    "id": "Claim",
+                    "name": "Claim"
+                },
+                {
+                    "id": "Disability",
+                    "name": "Disability"
+                },
+                {
+                    "id": "Court Request",
+                    "name": "Court Request"
+                }
+            ],
+            "requestSubType": [
+                {
+                    "id": "statute",
+                    "name": "Statute"
+                },
+                {
+                    "id": "rac_audit",
+                    "name": "RAC Audit"
+                },
+                {
+                    "id": "rac_denial_audit",
+                    "name": "RAC Denial Audit"
+                },
+                {
+                    "id": "mic_audit",
+                    "name": "MIC Audit"
+                },
+                {
+                    "id": "abstract",
+                    "name": "Abstract"
+                },
+                {
+                    "id": "full_record",
+                    "name": "Full Record"
+                },
+                {
+                    "id": "dr_transfer",
+                    "name": "Dr. Transfer"
+                },
+                {
+                    "id": "special_project",
+                    "name": "Special Project"
+                },
+                {
+                    "id": "misc",
+                    "name": "MISC"
+                }
+            ],
+            "priority": [
+                {
+                    "id": "Urgent",
+                    "name": "Urgent"
+                },
+                {
+                    "id": "Normal",
+                    "name": "Normal"
+                }
+            ],
+            "processingOptions": [
+                {
+                    "id": "notary",
+                    "name": "Notary"
+                },
+                {
+                    "id": "certification",
+                    "name": "Certification"
+                },
+                {
+                    "id": "affidavit",
+                    "name": "Affidavit"
+                },
+                {
+                    "id": "questionnaire",
+                    "name": "Questionnaire"
+                },
+                {
+                    "id": "film",
+                    "name": "Film"
+                },
+                {
+                    "id": "cd",
+                    "name": "CD"
+                }
+            ],
+            "requesterCertificationType": [
+                {
+                    "id": "statue",
+                    "name": "Driver's License"
+                },
+                {
+                    "id": "id_card",
+                    "name": "ID Card"
+                },
+                {
+                    "id": "passport",
+                    "name": "Passport"
+                }
+            ],
+            "receivedVia": [
+                {
+                    "id": "fax",
+                    "name": "Fax"
+                },
+                {
+                    "id": "mail",
+                    "name": "Mail"
+                },
+                {
+                    "id": "email",
+                    "name": "Email"
+                },
+                {
+                    "id": "walk_in",
+                    "name": "Walk-in"
+                }
+            ]
+        },
+        {
+            "id": "authorization",
+            "title": "Authorization",
+            "enabled": true,
+            "dateFormat": "YYYY-MM-DD",
+            "authorizationType": [
+                {
+                    "id": "patient",
+                    "name": "Patient"
+                },
+                {
+                    "id": "parent",
+                    "name": "Parent"
+                },
+                {
+                    "id": "legal_guardian",
+                    "name": "Legal Guardian"
+                },
+                {
+                    "id": "spouse",
+                    "name": "Spouse"
+                },
+                {
+                    "id": "next_of_kin",
+                    "name": "Next of Kin"
+                },
+                {
+                    "id": "adult_child",
+                    "name": "Adult Child"
+                },
+                {
+                    "id": "power_of_attorney",
+                    "name": "Power of Attorney"
+                }
+            ]
+        },
+        {
+            "id": "common",
+            "title": "Common",
+            "enabled": true,
+            "datepickerPopupFormat": "MMddyyyy",
+            "datepickerPopupFormatPlaceHolder": "MMDDYYYY",
+            "dateFormat": "YYYY-MM-DDTHH:mm:ss.SSSZZ",
+            "defaultCountry": "USA",
+            "countries": [
+                {
+                    "name": "United States of America",
+                    "id": "USA",
+                    "states": [
+                        {
+                            "name": "Alabama",
+                            "id": "AL"
+                        },
+                        {
+                            "name": "Alaska",
+                            "id": "AK"
+                        },
+                        {
+                            "name": "American Samoa",
+                            "id": "AS"
+                        },
+                        {
+                            "name": "Arizona",
+                            "id": "AZ"
+                        },
+                        {
+                            "name": "Arkansas",
+                            "id": "AR"
+                        },
+                        {
+                            "name": "California",
+                            "id": "CA"
+                        },
+                        {
+                            "name": "Colorado",
+                            "id": "CO"
+                        },
+                        {
+                            "name": "Connecticut",
+                            "id": "CT"
+                        },
+                        {
+                            "name": "Delaware",
+                            "id": "DE"
+                        },
+                        {
+                            "name": "District Of Columbia",
+                            "id": "DC"
+                        },
+                        {
+                            "name": "Federated States Of Micronesia",
+                            "id": "FM"
+                        },
+                        {
+                            "name": "Florida",
+                            "id": "FL"
+                        },
+                        {
+                            "name": "Georgia",
+                            "id": "GA"
+                        },
+                        {
+                            "name": "Guam",
+                            "id": "GU"
+                        },
+                        {
+                            "name": "Hawaii",
+                            "id": "HI"
+                        },
+                        {
+                            "name": "Idaho",
+                            "id": "ID"
+                        },
+                        {
+                            "name": "Illinois",
+                            "id": "IL"
+                        },
+                        {
+                            "name": "Indiana",
+                            "id": "IN"
+                        },
+                        {
+                            "name": "Iowa",
+                            "id": "IA"
+                        },
+                        {
+                            "name": "Kansas",
+                            "id": "KS"
+                        },
+                        {
+                            "name": "Kentucky",
+                            "id": "KY"
+                        },
+                        {
+                            "name": "Louisiana",
+                            "id": "LA"
+                        },
+                        {
+                            "name": "Maine",
+                            "id": "ME"
+                        },
+                        {
+                            "name": "Marshall Islands",
+                            "id": "MH"
+                        },
+                        {
+                            "name": "Maryland",
+                            "id": "MD"
+                        },
+                        {
+                            "name": "Massachusetts",
+                            "id": "MA"
+                        },
+                        {
+                            "name": "Michigan",
+                            "id": "MI"
+                        },
+                        {
+                            "name": "Minnesota",
+                            "id": "MN"
+                        },
+                        {
+                            "name": "Mississippi",
+                            "id": "MS"
+                        },
+                        {
+                            "name": "Missouri",
+                            "id": "MO"
+                        },
+                        {
+                            "name": "Montana",
+                            "id": "MT"
+                        },
+                        {
+                            "name": "Nebraska",
+                            "id": "NE"
+                        },
+                        {
+                            "name": "Nevada",
+                            "id": "NV"
+                        },
+                        {
+                            "name": "New Hampshire",
+                            "id": "NH"
+                        },
+                        {
+                            "name": "New Jersey",
+                            "id": "NJ"
+                        },
+                        {
+                            "name": "New Mexico",
+                            "id": "NM"
+                        },
+                        {
+                            "name": "New York",
+                            "id": "NY"
+                        },
+                        {
+                            "name": "North Carolina",
+                            "id": "NC"
+                        },
+                        {
+                            "name": "North Dakota",
+                            "id": "ND"
+                        },
+                        {
+                            "name": "Northern Mariana Islands",
+                            "id": "MP"
+                        },
+                        {
+                            "name": "Ohio",
+                            "id": "OH"
+                        },
+                        {
+                            "name": "Oklahoma",
+                            "id": "OK"
+                        },
+                        {
+                            "name": "Oregon",
+                            "id": "OR"
+                        },
+                        {
+                            "name": "Palau",
+                            "id": "PW"
+                        },
+                        {
+                            "name": "Pennsylvania",
+                            "id": "PA"
+                        },
+                        {
+                            "name": "Puerto Rico",
+                            "id": "PR"
+                        },
+                        {
+                            "name": "Rhode Island",
+                            "id": "RI"
+                        },
+                        {
+                            "name": "South Carolina",
+                            "id": "SC"
+                        },
+                        {
+                            "name": "South Dakota",
+                            "id": "SD"
+                        },
+                        {
+                            "name": "Tennessee",
+                            "id": "TN"
+                        },
+                        {
+                            "name": "Texas",
+                            "id": "TX"
+                        },
+                        {
+                            "name": "Utah",
+                            "id": "UT"
+                        },
+                        {
+                            "name": "Vermont",
+                            "id": "VT"
+                        },
+                        {
+                            "name": "Virgin Islands",
+                            "id": "VI"
+                        },
+                        {
+                            "name": "Virginia",
+                            "id": "VA"
+                        },
+                        {
+                            "name": "Washington",
+                            "id": "WA"
+                        },
+                        {
+                            "name": "West Virginia",
+                            "id": "WV"
+                        },
+                        {
+                            "name": "Wisconsin",
+                            "id": "WI"
+                        },
+                        {
+                            "name": "Wyoming",
+                            "id": "WY"
+                        }
+                    ]
+                },
+                {
+                    "name": "Canada",
+                    "id": "CAN",
+                    "states": [
+                        {
+                            "name": "Alberta",
+                            "id": "AB"
+                        },
+                        {
+                            "name": "British Columbia",
+                            "id": "BC"
+                        },
+                        {
+                            "name": "Manitoba",
+                            "id": "MB"
+                        },
+                        {
+                            "name": "New Brunswick",
+                            "id": "NB"
+                        },
+                        {
+                            "name": "Newfoundland and Labrador",
+                            "id": "NL"
+                        },
+                        {
+                            "name": "Northwest Territories",
+                            "id": "NT"
+                        },
+                        {
+                            "name": "Nova Scotia",
+                            "id": "NS"
+                        },
+                        {
+                            "name": "Nunavut",
+                            "id": "NU"
+                        },
+                        {
+                            "name": "Ontario",
+                            "id": "ON"
+                        },
+                        {
+                            "name": "Prince Edward Island",
+                            "id": "PE"
+                        },
+                        {
+                            "name": "Quebec",
+                            "id": "QC"
+                        },
+                        {
+                            "name": "Saskatchewan",
+                            "id": "SK"
+                        },
+                        {
+                            "name": "Yukon",
+                            "id": "YT"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "rejectReason",
+            "title": "Reject Reason",
+            "enabled": true,
+            "rejectReasons": [
+                {
+                    "id": "authorization_incomplete_dates_expired",
+                    "name": "Authorization incomplete – Dates expired"
+                },
+                {
+                    "id": "authorization_incomplete_dates_missing",
+                    "name": "Authorization incomplete - Dates missing"
+                },
+                {
+                    "id": "authorization_incomplete_signature_missing",
+                    "name": "Authorization incomplete – Signature missing"
+                },
+                {
+                    "id": "authorization_incomplete_signature_not_patient",
+                    "name": "Authorization incomplete – Signature not patient"
+                },
+                {
+                    "id": "abstract_missing",
+                    "name": "Abstract missing"
+                },
+                {
+                    "id": "certification_missing",
+                    "name": "Certification missing"
+                },
+                {
+                    "id": "address_missing_or_non_readable",
+                    "name": "Addresses missing or non-readable (Requestor, patient, Ship to, bill to)"
+                },
+                {
+                    "id": "create_new_requestor_or_customer",
+                    "name": "Create new requestor/customer"
+                },
+                {
+                    "id": "r_and_a_counts_review",
+                    "name": "R&A counts review"
+                },
+                {
+                    "id": "resend",
+                    "name": "Resend"
+                },
+                {
+                    "id": "return_mail",
+                    "name": "Returned Mail"
+                },
+                {
+                    "id": "sensitive_information_review",
+                    "name": "Sensitive information review"
+                },
+                {
+                    "id": "change_record_or_billing_type",
+                    "name": "Change record/billing type"
+                },
+                {
+                    "id": "wrong_patient",
+                    "name": "Wrong patient"
+                },
+                {
+                    "id": "wrong_abstract",
+                    "name": "Wrong abstract"
+                },
+                {
+                    "id": "unauthorized_disclosure",
+                    "name": "UAD (Unauthorized disclosure)"
+                },
+                {
+                    "id": "misfiles",
+                    "name": "Misfiles"
+                }
+            ]
+        },
+        {
+            "id": "documents",
+            "title": "Documents",
+            "icon": "fa fa-file",
+            "enabled": true,
+            "type": "empty",
+            "docTree": {
+                "email": {
+                    "emailSubject": "Request $caseNumber",
+                    "subjectRegex": "(.*)\\$([^\\s]+)",
+                    "objectTypeRegexGroup": 1,
+                    "objectNumberRegexGroup": 2
+                },
+                "noteRequiredOnCheckin": false,
+                "allowParentOwnerToCancel": false
+            },
+            "dialogObjectPicker": {
+                "enableFiltering": false,
+                "multiSelect": false,
+                "showFacets": false,
+                "columnDefs": [
+                    {
+                        "name": "name",
+                        "displayName": "requests.dialogObjectPicker.table.columns.name",
+                        "headerCellFilter": "translate"
+                    },
+                    {
+                        "name": "object_type_s",
+                        "displayName": "requests.dialogObjectPicker.table.columns.type",
+                        "cellFilter": "mapKeyValue: grid.appScope.customization.labels",
+                        "headerCellFilter": "translate"
+                    },
+                    {
+                        "name": "title_parseable",
+                        "displayName": "requests.dialogObjectPicker.table.columns.title",
+                        "headerCellFilter": "translate"
+                    },
+                    {
+                        "name": "object_id_s",
+                        "displayName": "requests.dialogObjectPicker.table.columns.id",
+                        "headerCellFilter": "translate"
+                    }
+                ],
+                "paginationPageSizes": [
+                    5,
+                    10,
+                    20,
+                    50
+                ],
+                "paginationPageSize": 10,
+                "start": 0
+            }
+        },
+        {
+            "id": "tags",
+            "title": "Tags",
+            "icon": "fa fa-tags",
+            "enabled": true,
+            "type": "grid",
+            "typeAheadColumn": "tags_s",
+            "enableFiltering": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 5,
+            "columnDefs": [
+                {
+                    "name": "tagName",
+                    "displayName": "requests.comp.tags.table.columns.tag",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "created",
+                    "displayName": "requests.comp.tags.table.columns.created",
+                    "cellTemplate": "<div>{{ row.entity.created | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "creator",
+                    "displayName": "requests.comp.tags.table.columns.createdBy",
+                    "headerCellFilter": "translate",
+                    "lookup": "userFullNames"
+                }
+            ],
+            "filters": "\"Object Type\": TAG",
+            "filterName": "Object Type"
+        },
+        {
+            "id": "tasks",
+            "title": "Tasks",
+            "icon": "fa fa-check-circle",
+            "enabled": true,
+            "type": "grid",
+            "enableFiltering": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 5,
+            "columnDefs": [
+                {
+                    "name": "title",
+                    "field": "title_parseable",
+                    "sortField": "title_parseable_lcs",
+                    "displayName": "requests.comp.tasks.table.columns.title",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.title_parseable}}</a>"
+                },
+                {
+                    "name": "assignee",
+                    "field": "assignee_s",
+                    "displayName": "requests.comp.tasks.table.columns.assignee",
+                    "headerCellFilter": "translate",
+                    "lookup": "userFullNames"
+                },
+                {
+                    "name": "created",
+                    "field": "create_tdt",
+                    "displayName": "requests.comp.tasks.table.columns.created",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.create_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+                },
+                {
+                    "name": "priority",
+                    "field": "priority_s",
+                    "displayName": "requests.comp.tasks.table.columns.priority",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "due",
+                    "field": "due_tdt",
+                    "displayName": "requests.comp.tasks.table.columns.due",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.due_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+                },
+                {
+                    "name": "status",
+                    "field": "status_s",
+                    "displayName": "requests.comp.tasks.table.columns.status",
+                    "headerCellFilter": "translate"
+                }
+            ]
+        },
+        {
+            "id": "references",
+            "title": "References",
+            "icon": "fa fa-exchange",
+            "enabled": true,
+            "type": "grid",
+            "enableFiltering": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 5,
+            "columnDefs": [
+                {
+                    "name": "targetName",
+                    "field": "target_object.name",
+                    "displayName": "requests.comp.references.table.columns.targetName",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.target_object.name}}</a>"
+                },
+                {
+                    "name": "targetTitle",
+                    "field": "target_object.title_parseable",
+                    "displayName": "requests.comp.references.table.columns.targetTitle",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.target_object.title_parseable}}</a>"
+                },
+                {
+                    "name": "modified",
+                    "field": "target_object.modified_date_tdt",
+                    "displayName": "requests.comp.references.table.columns.modified",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+                },
+                {
+                    "name": "targetType",
+                    "field": "target_object.object_type_s",
+                    "displayName": "requests.comp.references.table.columns.targetType",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "status",
+                    "field": "target_object.status_lcs",
+                    "displayName": "requests.comp.references.table.columns.status",
+                    "headerCellFilter": "translate"
+                }
+            ]
+        },
+        {
+            "id": "exemption",
+            "title": "Exemption Codes",
+            "icon": "fa fa-code",
+            "enabled": true,
+            "type": "grid",
+            "enableFiltering": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 5,
+            "columnDefs": [
+                {
+                    "name": "exemptionCode",
+                    "displayName": "requests.comp.exemption.table.columns.exemptionCode",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "exemptionStatus",
+                    "displayName": "requests.comp.exemption.table.columns.status",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "exemptionStatute",
+                    "displayName": "requests.comp.exemption.table.columns.statute",
+                    "headerCellFilter": "translate",
+                    "enableCellEdit": false,
+                    "cellTemplate": "<div class='ui-grid-cell-contents' title='{{grid.appScope.utils.getLookupValue(grid.appScope.exemptionStatutes, row.entity.exemptionStatute) | translate }}'>{{ grid.appScope.utils.getLookupValue(grid.appScope.exemptionStatutes, row.entity.exemptionStatute) | translate }}</div>"
+                },
+                {
+                    "name": "created",
+                    "displayName": "requests.comp.exemption.table.columns.dateCreated",
+                    "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "creator",
+                    "displayName": "requests.comp.exemption.table.columns.creator",
+                    "headerCellFilter": "translate",
+                    "enableCellEdit": false,
+                    "lookup": "userFullNames"
+                }
+            ]
+        },
+        {
+            "id": "exemptionStatutesLookup",
+            "title": "requests.comp.exemption.statutes.title",
+            "enabled": true,
+            "type": "grid",
+            "enableFiltering": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                20
+            ],
+            "paginationPageSize": 20,
+            "columnDefs": [
+                {
+                    "name": "key",
+                    "displayName": "requests.comp.exemption.table.columns.codes.statute",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div class='ui-grid-cell-contents' title='{{row.entity.key}}'>{{row.entity.key}}</div>"
+                },
+                {
+                    "name": "value",
+                    "displayName": "requests.comp.exemption.table.columns.codes.typeOfInformation",
+                    "headerCellFilter": "translate",
+                    "cellFilter": "translate",
+                    "cellTemplate": "<div class='ui-grid-cell-contents' title='{{row.entity.value | translate}}'>{{row.entity.value | translate}}</div>"
+                },
+                {
+                    "name": "description",
+                    "displayName": "requests.comp.exemption.table.columns.codes.caseCitation",
+                    "headerCellFilter": "translate",
+                    "cellFilter": "translate",
+                    "cellTemplate": "<div class='ui-grid-cell-contents' title='{{row.entity.description}}'>{{row.entity.description}}</div>"
+                }
+            ]
+        },
+        {
+            "id": "referenceSearchGrid",
+            "title": "Reference Search",
+            "enabled": "true",
+            "type": "grid",
+            "enableFiltering": false,
+            "emptySearch": false,
+            "hideTypeahead": true,
+            "showFacets": false,
+            "searchFilter": "\"Object Type\": COMPLAINT|CASE_FILE",
+            "columnDefs": [
+                {
+                    "name": "object_id_s",
+                    "displayName": "requests.comp.addreference.grid.columns.id",
+                    "headerCellFilter": "translate",
+                    "visible": false
+                },
+                {
+                    "name": "name",
+                    "displayName": "requests.comp.addreference.grid.columns.name",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "object_type_s",
+                    "displayName": "requests.comp.addreference.grid.columns.type",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "title_parseable",
+                    "sortField": "title_parseable_lcs",
+                    "displayName": "requests.comp.addreference.grid.columns.title",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "parent_number_lcs",
+                    "displayName": "requests.comp.addreference.grid.columns.parent",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "assignee_full_name_lcs",
+                    "displayName": "requests.comp.addreference.grid.columns.assignee",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "modified_date_tdt",
+                    "displayName": "requests.comp.addreference.grid.columns.modified",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+                }
+            ],
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 20,
+            "start": 0,
+            "filter": "",
+            "filterName": "",
+            "reportFileName": "search"
+        },
+        {
+            "id": "requests",
+            "requestTypes": [
+                {
+                    "name": "New Request",
+                    "id": "New Request"
+                }
+            ],
+            "requestSubTypes": [
+                {
+                    "name": "FOIA",
+                    "id": "FOIA"
+                }
+            ],
+            "categories": [
+                {
+                    "name": "Choose Category",
+                    "id": ""
+                },
+                {
+                    "name": "Commercial Use",
+                    "id": "Commercial Use"
+                },
+                {
+                    "name": "Educational Institution",
+                    "id": "Educational Institution"
+                },
+                {
+                    "name": "Non-Commercial Scientific Institution",
+                    "id": "Non-Commercial Scientific Institution"
+                },
+                {
+                    "name": "News Media",
+                    "id": "News Media"
+                },
+                {
+                    "name": "All Others",
+                    "id": "All Others"
+                }
+            ],
+            "dispositionTypes": [
+                {
+                    "name": "Partial Denial",
+                    "id": "Partial Denial"
+                },
+                {
+                    "name": "Full Denial",
+                    "id": "Full Denial"
+                }
+            ],
+            "dispositionSubTypes": [
+                {
+                    "name": "No Record",
+                    "id": "No Record"
+                },
+                {
+                    "name": "All Records Referred",
+                    "id": "All Records Referred"
+                },
+                {
+                    "name": "Request Withdrawn",
+                    "id": "Request Withdrawn"
+                },
+                {
+                    "name": "Fee-Related Reason",
+                    "id": "Fee-Related Reason"
+                },
+                {
+                    "name": "Not Reasonably Described",
+                    "id": "Not Reasonably Described"
+                },
+                {
+                    "name": "Improper Subject Access Request",
+                    "id": "Improper Subject Access Request"
+                },
+                {
+                    "name": "No Agency Record",
+                    "id": "No Agency Record"
+                },
+                {
+                    "name": "Duplicate Request",
+                    "id": "Duplicate Request"
+                },
+                {
+                    "name": "Other",
+                    "id": "Other"
+                }
+            ],
+            "prefixes": [
+                {
+                    "name": "Mr.",
+                    "id": "Mr."
+                },
+                {
+                    "name": "Ms.",
+                    "id": "Ms."
+                }
+            ]
+        },
+        {
+            "id": "approvalrouting",
+            "title": "Approval Routing",
+            "icon": "fa fa-sort-amount-desc",
+            "addNewTooltip": "requests.comp.approvalRouting.addNewTooltip",
+            "enabled": true,
+            "type": "grid",
+            "enableFiltering": false,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 10,
+            "columnDefs": [
+                {
+                    "name": "order",
+                    "displayName": "",
+                    "headerCellFilter": "translate",
+                    "enableSorting": false,
+                    "enableColumnMenu": false,
+                    "cellEditableCondition": false,
+                    "width": "50",
+                    "cellTemplate": ""
+                },
+                {
+                    "name": "fullName",
+                    "displayName": "requests.comp.approvalRouting.table.columns.fullName",
+                    "cellEditableCondition": false,
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "act",
+                    "cellEditableCondition": false,
+                    "width": "70",
+                    "headerCellTemplate": "<span></span>",
+                    "cellTemplate": ""
+                }
+            ],
+            "userSearch": {
+                "userFacetFilter": "\"Object Type\": USER",
+                "userFacetExtraFilter": "&fq=\"name\": "
+            }
+        },
+        {
+            "id": "pastapprovals",
+            "title": "Past Approvals",
+            "icon": "fa fa-sort-amount-desc",
+            "enabled": true,
+            "type": "grid",
+            "enableFiltering": false,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 10,
+            "columnDefs": [
+                {
+                    "name": "approvalDate",
+                    "displayName": "requests.comp.pastApprovals.table.columns.approvalDate",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.approvalDate | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
+                    "cellEditableCondition": false
+                },
+                {
+                    "name": "approverId",
+                    "displayName": "requests.comp.pastApprovals.table.columns.approverId",
+                    "headerCellFilter": "translate",
+                    "cellEditableCondition": false
+                },
+                {
+                    "name": "approverDecision",
+                    "displayName": "requests.comp.pastApprovals.table.columns.approverDecision",
+                    "headerCellFilter": "translate",
+                    "cellEditableCondition": false
+                }
+            ]
+        },
+        {
+            "id": "userSearch",
+            "title": "Select users",
+            "enableFiltering": false,
+            "multiSelect": false,
+            "showFacets": false,
+            "columnDefs": [
+                {
+                    "name": "name",
+                    "displayName": "requests.userOrGroupSearch.assigneeGridColumns.name",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "object_type_s",
+                    "displayName": "requests.userOrGroupSearch.assigneeGridColumns.type",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "title",
+                    "displayName": "requests.userOrGroupSearch.assigneeGridColumns.title",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "object_id_s",
+                    "displayName": "requests.userOrGroupSearch.assigneeGridColumns.username",
+                    "headerCellFilter": "translate"
+                }
+            ],
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 10,
+            "start": 0
+        },
+        {
+            "id": "billing",
+            "title": "cases.comp.billing.title",
+            "icon": "fa fa-pencil-square-o",
+            "enabled": true,
+            "type": "grid",
+            "showColumnFooter": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 10,
+            "columnDefs": [
+                {
+                    "name": "itemNumber",
+                    "field": "itemNumber",
+                    "displayName": "cases.comp.billing.table.columns.item",
+                    "headerCellFilter": "translate",
+                    "width": "15%"
+                },
+                {
+                    "name": "itemDescription",
+                    "field": "itemDescription",
+                    "displayName": "cases.comp.billing.table.columns.description",
+                    "headerCellFilter": "translate",
+                    "footerCellTemplate": "<div class='ui-grid-cell-contents pull-right'>Total: </div>",
+                    "width": "*"
+                },
+                {
+                    "name": "itemAmount",
+                    "field": "itemAmount",
+                    "displayName": "cases.comp.billing.table.columns.amount",
+                    "headerCellFilter": "translate",
+                    "aggregationType": 2,
+                    "footerCellFilter": "currency",
+                    "aggregationHideLabel": true,
+                    "width": "20%"
+                }
+            ]
+        },
+        {
+            "id": "exemptionCodesDescription",
+            "enabled": "true",
+            "title": "requests.comp.exemption.exemptionCodesDescription",
+            "type": "grid",
+            "paginationPageSizes": [
+                5,
+                10,
+                20
+            ],
+            "paginationPageSize": 20,
+            "columnDefs": [
+                {
+                    "name": "key",
+                    "displayName": "requests.comp.exemption.table.columns.exemptionCode",
+                    "headerCellFilter": "translate",
+                    "width": 150
+                },
+                {
+                    "name": "value",
+                    "displayName": "requests.comp.exemption.description",
+                    "headerCellFilter": "translate",
+                    "cellFilter": "translate",
+                    "cellTemplate": "<div class='ui-grid-cell-contents' title='{{row.entity.value | translate}}'>{{row.entity.value | translate}}</div>"
+                }
+            ]
+        }
+    ]
+}
