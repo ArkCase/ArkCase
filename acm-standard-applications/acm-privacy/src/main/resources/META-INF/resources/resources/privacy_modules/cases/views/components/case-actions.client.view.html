@@ -1,0 +1,39 @@
+<div ng-controller="Cases.ActionsController">
+    <div class="pull-right">
+        <div class="btn-group">
+                <fieldset permission="editRequestData" permission-object-type="CASE_FILE" permission-properties="objectInfo" permission-action="disabled">
+                <button class="btn btn-sm btn-default" ng-click="save(objectInfo)" ng-disabled="clientInfo.$invalid" permission="buttonAction" permission-object-type="CASE_FILE" permission-properties="objectInfo"
+                        permission-action="hide">
+                    <i class="{{loadingRequestIcon}}"></i>
+                </button>
+                <button class="btn btn-sm btn-default" ng-click="refresh()">
+                    <i class="fa fa-refresh"></i>
+                </button>
+                <button class="btn btn-sm btn-default" ng-click="onClickChildOutcome(outcome.name)"
+                        ng-repeat="outcome in availableChildOutcomes" ng-show="showBtnChildOutcomes">
+                    {{outcome.description}}
+                </button>
+                <button class="btn btn-sm btn-default" ng-show="showBtnUnsubscribe" ng-click="unsubscribe(objectInfo)" permission="buttonAction" permission-object-type="CASE_FILE" permission-properties="objectInfo"
+                        permission-action="hide">
+                    <i class="fa fa-bullhorn"></i> <span translate>cases.comp.actions.unsubscribe.button</span>
+                </button>
+                <button class="btn btn-sm btn-default" ng-show="showBtnSubscribe" ng-click="subscribe(objectInfo)" permission="buttonAction" permission-object-type="CASE_FILE" permission-properties="objectInfo"
+                        permission-action="hide">
+                    <i class="fa fa-bullhorn"></i> <span translate>cases.comp.actions.subscribe.button</span>
+                </button>
+                <button class="btn btn-sm btn-default" ng-if="assignee.length == 0 && currentUserProfile.groups.indexOf(owningGroup) > -1"
+                        ng-click="claim(objectInfo)" permission="buttonAction" permission-object-type="CASE_FILE" permission-properties="objectInfo"
+                        permission-action="hide">
+                    <i class="fa fa-edit"></i>
+                    <span translate>cases.comp.actions.claim.button</span>
+                </button>
+                <button class="btn btn-sm btn-default" ng-if="assignee.length > 0 && currentUserProfile.userId == assignee"
+                        ng-click="unclaim(objectInfo)" permission="buttonAction" permission-object-type="CASE_FILE" permission-properties="objectInfo"
+                        permission-action="hide">
+                    <i class="fa fa-edit"></i>
+                    <span translate>cases.comp.actions.unclaim.button</span>
+                </button>
+            </fieldset>
+        </div>
+    </div>
+</div>

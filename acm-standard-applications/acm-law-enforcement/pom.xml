@@ -494,6 +494,11 @@
             <version>${acm.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.armedia.acm.acm-standard-applications</groupId>
+            <artifactId>acm-privacy</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-ocr</artifactId>
             <version>${acm.version}</version>

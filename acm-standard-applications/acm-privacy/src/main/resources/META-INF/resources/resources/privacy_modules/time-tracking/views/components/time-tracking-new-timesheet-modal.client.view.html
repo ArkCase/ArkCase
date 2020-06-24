@@ -1,0 +1,221 @@
+<form name="timesheetForm" ng-submit="save('Save')">
+    <div class="modal-header">
+        <h3 ng-show="!isEdit"><span translate>timeTracking.comp.newTimesheet.title</span></h3>
+        <h3 ng-show="isEdit"><span translate>timeTracking.comp.newTimesheet.editCase.title</span></h3>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-sm-6 form-group">
+                <label for="user" translate>timeTracking.comp.newTimesheet.user</label>
+                <input id="user" type="text" ng-model="timesheet.user.fullName" class="input-md form-control" ng-disabled="true" required />
+            </div>
+            <div class="col-sm-6 form-group">
+                <label for="status" translate>timeTracking.comp.newTimesheet.status</label>
+                <select id="status" ng-model="timesheet.status" class="form-control input-md"
+                        ng-disabled="timesheetProperties['time.plugin.useApprovalWorkflow']" required>
+                    <option ng-repeat="option in timesheetStatuses" value="{{option.key}}">
+                        {{option.value | translate}}
+                    </option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4 form-group">
+                <label>&nbsp;</label><br />
+                <label class="timesheetModalselectedWeekLabel">{{selectedWeek}}</label>
+            </div>
+            <div class="col-sm-2 form-group">
+                <label>&nbsp;</label><br />
+                <button type="button" class="btn timesheetModalprevNextWeekButton" ng-click="prevWeek()">
+                    <i class="fa fa-arrow-circle-left"></i>
+                    <span translate>timeTracking.comp.newTimesheet.time.prevWeekBtn</span>
+                </button>
+            </div>
+            <div class="col-sm-4 form-group">
+                <label translate>timeTracking.comp.newTimesheet.time.date</label>
+                <date-time-picker data="selectedDate" property="selectedDate" date-picker-id="selectedDate"
+                        time-format-disabled="true"></date-time-picker>
+            </div>
+            <div class="col-sm-2 form-group">
+                <label>&nbsp;</label><br />
+                <button type="button" class="btn timesheetModalprevNextWeekButton" ng-click="nextWeek()" ng-show="isDateBeforeTodaysDate">
+                    <span translate>timeTracking.comp.newTimesheet.time.nextWeekBtn</span>
+                    <i class="fa fa-arrow-circle-right"></i>
+                </button>
+            </div>
+        </div>
+        <div class="row chargeCodeDetailsGrid">
+            <div ng-repeat="time in timesForms">
+                <div class="timeSheetModalCodeDetailsBorder">
+                    <div class="row">
+                        <div class="col-sm-11 timeTrackingPanel">
+                            <div class="row">
+                                <div class="col-sm-4 form-group">
+                                    <label for="type" translate>timeTracking.comp.newTimesheet.time.type</label>
+                                    <span class="required-asterisk">*</span>
+                                    <select id="type" ng-model="time.type" class="form-control input-md"
+                                            ng-change="updateIsTypeSelected(time)" required>
+                                        <option ng-repeat="option in timesheetTypes" value="{{option.key}}">
+                                            {{option.value | translate}}
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-4 form-group">
+                                    <label for="code" translate>timeTracking.comp.newTimesheet.time.chargeCode</label>
+                                    <span class="required-asterisk">*</span>
+                                    <input id="code" type="text" ng-model="time.code" ng-click="chooseChargeCode(time)"
+                                            class="input-md form-control" ng-disabled="!isTypeSelected" readonly required />
+                                </div>
+                                <div class="col-sm-4 form-group">
+                                    <label for="role" translate>timeTracking.comp.newTimesheet.time.chargeRole</label>
+                                    <span class="required-asterisk">*</span>
+                                    <select id="role" ng-model="time.chargeRole" class="form-control input-md"
+                                            ng-change="updateTotalCost(time)" required>
+                                        <option ng-repeat="option in timesheetChargeRoles" value="{{option.key}}">
+                                            {{option.value | translate}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row form-group chargeCodeDetailsGrid">
+                                <div class="col-sm-8 seven-cols timeTrackingExpandableRow">
+                                    <div class="col-sm-1 timeTrackingExpandableRow">
+                                        <div>{{formatedWeekDates[0]}}</div>
+                                        <div>
+                                            <input id="sun" type="number" step=".01" min="0" max="24" ng-model="time.dayHours[0]"
+                                                    class="input-md form-control" ng-blur="updateTotalWeekHours(time)" />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-1 timeTrackingExpandableRow">
+                                        <div>{{formatedWeekDates[1]}}</div>
+                                        <div>
+                                            <input id="mon" type="number" step=".01" min="0" max="24" ng-model="time.dayHours[1]"
+                                                    class="input-md form-control" ng-blur="updateTotalWeekHours(time)" />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-1 timeTrackingExpandableRow">
+                                        <div>{{formatedWeekDates[2]}}</div>
+                                        <div>
+                                            <input id="tue" type="number" step=".01" min="0" max="24" ng-model="time.dayHours[2]"
+                                                    class="input-md form-control" ng-blur="updateTotalWeekHours(time)" />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-1 timeTrackingExpandableRow">
+                                        <div>{{formatedWeekDates[3]}}</div>
+                                        <div>
+                                            <input id="wed" type="number" step=".01" min="0" max="24" ng-model="time.dayHours[3]"
+                                                    class="input-md form-control" ng-blur="updateTotalWeekHours(time)" />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-1 timeTrackingExpandableRow">
+                                        <div>{{formatedWeekDates[4]}}</div>
+                                        <div>
+                                            <input id="thu" type="number" step=".01" min="0" max="24" ng-model="time.dayHours[4]"
+                                                    class="input-md form-control" ng-blur="updateTotalWeekHours(time)" />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-1 timeTrackingExpandableRow">
+                                        <div>{{formatedWeekDates[5]}}</div>
+                                        <div>
+                                            <input id="fri" type="number" step=".01" min="0" max="24" ng-model="time.dayHours[5]"
+                                                    class="input-md form-control" ng-blur="updateTotalWeekHours(time)" />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-1 timeTrackingExpandableRow">
+                                        <div>{{formatedWeekDates[6]}}</div>
+                                        <div>
+                                            <input id="sat" type="number" step=".01" min="0" max="24" ng-model="time.dayHours[6]"
+                                                    class="input-md form-control" ng-blur="updateTotalWeekHours(time)" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2 timeTrackingExpandableRow">
+                                    <div translate>timeTracking.comp.newTimesheet.time.total</div>
+
+                                    <input readonly class="input-md form-control" ng-value="time.totalWeekHours | number:2" />
+                                </div>
+                                <div class="col-sm-2 timeTrackingExpandableRow">
+                                    <div translate>timeTracking.comp.newTimesheet.time.totalCost</div>
+                                    <span class="input-md form-control">${{time.totalCost | number:2}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-1">
+                            <label class="control-label">&nbsp;</label>
+                            <div>
+                                <button type="button" class="btn btn-link" ng-click="addTimeRow();" ng-show="$last"
+                                        title="{{'timeTracking.comp.newTimesheet.time.addBtn' | translate}}">
+                                    <i class="fa fa-plus text-success"></i>
+                                </button>
+                            </div>
+                            <div>
+                                <button type="button" class="btn btn-link" ng-click="removeTimeRow(time)" ng-show="!$first"
+                                        title="{{'timeTracking.comp.newTimesheet.time.removeBtn' | translate}}">
+                                    <i class="fa fa-minus text-danger"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row form-group" ng-if="!isTypeSelected">
+                <div class="alert alert-danger newTimeSheetSelectType">
+                    <span translate>timeTracking.comp.newTimesheet.time.selectTypeMessage</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion45" href="#collapseDesc" translate>timeTracking.comp.newTimesheet.details</a>
+                </h4>
+            </div>
+            <div id="collapseDesc" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <div class="row form-group">
+                        <summernote id="caseDesc" config="options" ng-model="timesheet.details"></summernote>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default" ng-show="timesheetProperties['time.plugin.useApprovalWorkflow']">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion4" href="#collapseApprovers" translate>timeTracking.comp.newTimesheet.approver.title</a>
+                </h4>
+            </div>
+            <div id="collapseApprovers" class="panel-collapse">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-6 form-group">
+                            <label class="control-label">&nbsp;</label>
+                            <input type="text" ng-model="approverName" class="input-md form-control"
+                                    placeholder="{{ 'timeTracking.comp.newTimesheet.approver.placeholder' | translate }}"
+                                    ng-click="userOrGroupSearch()" readonly>
+                        </div>
+                        <div class="col-sm-6 form-group">
+                            <label for="owningGroup" translate> timeTracking.comp.newTimesheet.approver.owningGroup</label>
+                            <input type="text" id="owningGroup" ng-disabled="true" ng-model="groupName" class="input-md form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" data-toggle="tooltip" data-title="Cancel" ng-click="cancelModal()">
+            <span translate>timeTracking.comp.newTimesheet.cancelButton</span>
+        </button>
+        <button type="button" ng-disabled="timesheetForm.$invalid || loading" class="btn btn-primary btn-sm" data-toggle="tooltip"
+                data-title="Send for Approval" ng-click="sendForApproval()" ng-show="isApproverAdded && timesheetProperties['time.plugin.useApprovalWorkflow']">
+            <span translate>timeTracking.comp.newTimesheet.sendForApproval</span>
+        </button>
+        <button type="submit" ng-disabled="timesheetForm.$invalid || loading" class="btn btn-primary btn-sm" data-toggle="tooltip"
+                id="saveButton" data-title="Save">
+            <i class="{{loadingIcon}}"></i>
+            <span ng-show="!isEdit" translate>timeTracking.comp.newTimesheet.saveButton</span>
+            <span ng-show="isEdit" translate>timeTracking.comp.newTimesheet.updateButton</span>
+        </button>
+    </div>
+</form>

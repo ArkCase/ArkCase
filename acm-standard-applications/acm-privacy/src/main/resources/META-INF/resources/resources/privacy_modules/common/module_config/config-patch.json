@@ -1,0 +1,365 @@
+[
+    {
+        "op": "replace",
+        "path": "/docTree/columnDefs/?@.name=='checkbox'/width",
+        "value": "5%"
+    },
+    {
+        "op": "replace",
+        "path": "/docTree/columnDefs/?@.name=='title'/width",
+        "value": "20%"
+    },
+    {
+        "op": "replace",
+        "path": "/docTree/columnDefs/?@.name=='type'/__todo__cellTemplate",
+        "value": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+    },
+    {
+        "op": "replace",
+        "path": "/docTree/columnDefs/?@.name=='type'/width",
+        "value": "10%"
+    },
+    {
+        "op": "replace",
+        "path": "/docTree/columnDefs/?@.name=='created'/__todo__cellTemplate",
+        "value": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+    },
+    {
+        "op": "replace",
+        "path": "/docTree/columnDefs/?@.name=='created'/width",
+        "value": "8%"
+    },
+    {
+        "op": "replace",
+        "path": "/docTree/columnDefs/?@.name=='modified'/__todo__cellTemplate",
+        "value": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+    },
+    {
+        "op": "replace",
+        "path": "/docTree/columnDefs/?@.name=='modified'/width",
+        "value": "8%"
+    },
+    {
+        "op": "replace",
+        "path": "/docTree/columnDefs/?@.name=='modifier'/width",
+        "value": "10%"
+    },
+    {
+        "op": "add",
+        "path": "/docTree/columnDefs/8",
+        "value": {
+            "name": "reviewStatus",
+            "field": "reviewStatus",
+            "displayName": "common.directive.docTree.table.columns.reviewStatus",
+            "headTemplate": "<label id='reviewStatus' class='doc-tree-header' style='cursor: pointer;'></label>",
+            "icon": "<i class='fa fa-fw' data-sort='reviewStatus' data-dir='ASC'></i>",
+            "__todo__cellTemplate": "<div>{{ row.entity.reviewStatus }}</div>",
+            "width": "8%",
+            "index": 8
+        }
+    },
+    {
+        "op": "add",
+        "path": "/docTree/columnDefs/9",
+        "value": {
+            "name": "redactionStatus",
+            "field": "redactionStatus",
+            "displayName": "common.directive.docTree.table.columns.redactionStatus ",
+            "headTemplate": "<label id='redactionStatus' class='doc-tree-header' style='cursor: pointer;'></label>",
+            "icon": "<i class='fa fa-fw' data-sort='redactionStatus' data-dir='ASC'></i>",
+            "__todo__cellTemplate": "<div>{{ row.entity.redactionStatus }}</div>",
+            "width": "8%",
+            "index": 9
+        }
+    },
+    {
+        "op": "replace",
+        "path": "/docTree/columnDefs/?@.name=='version'/__todo__cellTemplate",
+        "value": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+    },
+    {
+        "op": "replace",
+        "path": "/docTree/columnDefs/?@.name=='version'/index",
+        "value": 10
+    },
+    {
+        "op": "replace",
+        "path": "/docTree/columnDefs/?@.name=='status'/index",
+        "value": 11
+    },
+    {
+        "op": "replace",
+        "path": "/docTree/columnDefs/?@.name=='status'/width",
+        "value": "7%"
+    },
+    {
+        "op": "add",
+        "path": "/docTree/columnDefs/-",
+        "value": {
+            "name": "public",
+            "displayName": "common.directive.docTree.table.columns.public",
+            "headTemplate": "<label id='public' class='doc-tree-header' style='cursor: pointer;'></label>",
+            "icon": "<i class='fa fa-fw' data-sort='type' data-dir='ASC'></i>",
+            "__todo__cellTemplate": "<div>{{ row.entity.public }}</div>",
+            "width": "8%",
+            "index": 12
+        }
+    },
+    {
+        "op": "add",
+        "path": "/docTree/menu/basic/folder/-",
+        "value": {
+            "titleKey": "common.directive.docTree.menu.generateZip",
+            "cmd": "generateZipFile",
+            "uiIcon": "ui-icon-suitcase",
+            "disabledExpression": "!DocTree.isNodeInResponseFolder(nodes[0])"
+        }
+    },
+    {
+        "op": "add",
+        "path": "/docTree/menu/basic/folder/-",
+        "value": {
+            "title": "----"
+        }
+    },
+    {
+        "op": "add",
+        "path": "/docTree/menu/basic/folder/-",
+        "value": {
+            "titleKey": "common.directive.docTree.menu.makeAllPublic",
+            "cmd": "makeAllPublic",
+            "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release' || DocTree.objectInfo.queue.name === 'Release' && !DocTree.isNodeInResponseFolder(nodes[0])"
+        }
+    },
+    {
+        "op": "add",
+        "path": "/docTree/menu/basic/folder/-",
+        "value": {
+            "titleKey": "common.directive.docTree.menu.makeAllNonPublic",
+            "cmd": "makeAllNonPublic",
+            "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release' || DocTree.objectInfo.queue.name === 'Release' && !DocTree.isNodeInResponseFolder(nodes[0])"
+        }
+    },
+    {
+        "op": "add",
+        "path": "/docTree/menu/basic/file/-",
+        "value": {
+            "title": "----"
+        }
+    },
+    {
+        "op": "remove",
+        "path": "/docTree/menu/basic/file/?@.titleKey=='common.directive.docTree.menu.coEdit'"
+    },
+    {
+        "op": "add",
+        "path": "/docTree/menu/basic/file/-",
+        "value": {
+            "titleKey": "common.directive.docTree.menu.makePublic",
+            "cmd": "makePublic",
+            "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release' || DocTree.objectInfo.queue.name === 'Release' && !DocTree.isNodeInResponseFolder(nodes[0])"
+        }
+    },
+    {
+        "op": "add",
+        "path": "/docTree/menu/basic/file/-",
+        "value": {
+            "titleKey": "common.directive.docTree.menu.makeNonPublic",
+            "cmd": "makeNonPublic",
+            "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release' || DocTree.objectInfo.queue.name === 'Release' && !DocTree.isNodeInResponseFolder(nodes[0])"
+        }
+    },
+    {
+        "op": "remove",
+        "path": "/docTree/menu/record/folder/?@.titleKey=='common.directive.docTree.menu.rename'"
+    },
+    {
+        "op": "remove",
+        "path": "/docTree/menu/batch/files/?@.cmd=='reviewDocument'"
+    },
+    {
+        "op": "add",
+        "path": "/docTree/menu/record/folder/-",
+        "value": {
+            "titleKey": "common.directive.docTree.menu.generateZip",
+            "cmd": "generateZipFile",
+            "uiIcon": "ui-icon-suitcase",
+            "disabledExpression": "!DocTree.isNodeInResponseFolder(nodes[0])"
+        }
+    },
+    {
+        "op": "add",
+        "path": "/docTree/menu/record/folder/-",
+        "value": {
+            "titleKey": "common.directive.docTree.menu.makeAllPublic",
+            "cmd": "makeAllPublic",
+            "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release' || DocTree.objectInfo.queue.name === 'Release' && !DocTree.isNodeInResponseFolder(nodes[0])"
+        }
+    },
+    {
+        "op": "add",
+        "path": "/docTree/menu/record/folder/-",
+        "value": {
+            "titleKey": "common.directive.docTree.menu.makeAllNonPublic",
+            "cmd": "makeAllNonPublic",
+            "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release' || DocTree.objectInfo.queue.name === 'Release' && !DocTree.isNodeInResponseFolder(nodes[0])"
+        }
+    },
+    {
+        "op": "add",
+        "path": "/docTree/menu/record/file/-",
+        "value": {
+            "titleKey": "common.directive.docTree.menu.makePublic",
+            "cmd": "makePublic",
+            "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release' || DocTree.objectInfo.queue.name === 'Release' && !DocTree.isNodeInResponseFolder(nodes[0])"
+        }
+    },
+    {
+        "op": "add",
+        "path": "/docTree/menu/record/file/-",
+        "value": {
+            "titleKey": "common.directive.docTree.menu.makeNonPublic",
+            "cmd": "makeNonPublic",
+            "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release' || DocTree.objectInfo.queue.name === 'Release' && !DocTree.isNodeInResponseFolder(nodes[0])"
+        }
+    },
+    {
+        "op": "remove",
+        "path": "/docTree/menu/record/file/?@.title=='New Task'"
+    },
+    {
+        "op": "add",
+        "path": "/docTree/menu/batch/files/-",
+        "value": {
+            "title": "----"
+        }
+    },
+    {
+        "op": "add",
+        "path": "/docTree/menu/batch/files/-",
+        "value": {
+            "titleKey": "common.directive.docTree.menu.makeAllPublic",
+            "cmd": "makeAllPublic",
+            "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release' || DocTree.objectInfo.queue.name === 'Release' && !DocTree.isNodeInResponseFolder(nodes[0])"
+        }
+    },
+    {
+        "op": "add",
+        "path": "/docTree/menu/batch/files/-",
+        "value": {
+            "titleKey": "common.directive.docTree.menu.makeAllNonPublic",
+            "cmd": "makeAllNonPublic",
+            "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release' || DocTree.objectInfo.queue.name === 'Release' && !DocTree.isNodeInResponseFolder(nodes[0])"
+        }
+    },
+    {
+        "op": "add",
+        "path": "/docTree/menu/batch/folders/-",
+        "value": {
+            "title": "----"
+        }
+    },
+    {
+        "op": "add",
+        "path": "/docTree/menu/batch/folders/-",
+        "value": {
+            "titleKey": "common.directive.docTree.menu.makeAllPublic",
+            "cmd": "makeAllPublic",
+            "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release' || DocTree.objectInfo.queue.name === 'Release' && !DocTree.isNodeInResponseFolder(nodes[0])"
+        }
+    },
+    {
+        "op": "add",
+        "path": "/docTree/menu/batch/folders/-",
+        "value": {
+            "titleKey": "common.directive.docTree.menu.makeAllNonPublic",
+            "cmd": "makeAllNonPublic",
+            "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release' || DocTree.objectInfo.queue.name === 'Release' && !DocTree.isNodeInResponseFolder(nodes[0])"
+        }
+    },
+    {
+        "op": "add",
+        "path": "/docTree/menu/batch/filesAndFolders/-",
+        "value": {
+            "title": "----"
+        }
+    },
+    {
+        "op": "add",
+        "path": "/docTree/menu/batch/filesAndFolders/-",
+        "value": {
+            "titleKey": "common.directive.docTree.menu.makeAllPublic",
+            "cmd": "makeAllPublic",
+            "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release' || DocTree.objectInfo.queue.name === 'Release' && !DocTree.isNodeInResponseFolder(nodes[0])"
+        }
+    },
+    {
+        "op": "add",
+        "path": "/docTree/menu/batch/filesAndFolders/-",
+        "value": {
+            "titleKey": "common.directive.docTree.menu.makeAllNonPublic",
+            "cmd": "makeAllNonPublic",
+            "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release' || DocTree.objectInfo.queue.name === 'Release' && !DocTree.isNodeInResponseFolder(nodes[0])"
+        }
+    },
+    {
+        "op": "add",
+        "path": "/docTree/menu/batch/filesOrFoldersRecord/-",
+        "value": {
+            "titleKey": "common.directive.docTree.menu.makeAllPublic",
+            "cmd": "makeAllPublic",
+            "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release' || DocTree.objectInfo.queue.name === 'Release' && !DocTree.isNodeInResponseFolder(nodes[0])"
+        }
+    },
+    {
+        "op": "add",
+        "path": "/docTree/menu/batch/filesOrFoldersRecord/-",
+        "value": {
+            "titleKey": "common.directive.docTree.menu.makeAllNonPublic",
+            "cmd": "makeAllNonPublic",
+            "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release' || DocTree.objectInfo.queue.name === 'Release' && !DocTree.isNodeInResponseFolder(nodes[0])"
+        }
+    },
+    {
+        "op": "add",
+        "path": "/docTree/menu/___menu_item_to_be_implemented_print",
+        "value": {
+            "___title": "Print <kbd>Ctrl+P</kbd>",
+            "title": "Print",
+            "cmd": "print",
+            "uiIcon": "ui-icon-print",
+            "data": {
+                "readOnly": true
+            }
+        }
+    },
+    {
+        "op": "add",
+        "path": "/docTree/menu/___menu_item_to_be_implemented_edit",
+        "value": {
+            "title": "Edit",
+            "cmd": "edit",
+            "uiIcon": "ui-icon-pencil"
+        }
+    },
+    {
+        "op": "add",
+        "path": "/customization",
+        "value": {
+            "labels": [
+                {
+                    "key": "Case File",
+                    "value": "Request"
+                },
+                {
+                    "key": "CASE_FILE",
+                    "value": "Request"
+                }
+            ]
+        }
+    },
+    {
+        "op": "remove",
+        "path": "/docTree/dialogObjectPicker/parentDocument"
+    }
+]

@@ -1,0 +1,279 @@
+<div ng-controller="Admin.PrivacyConfigController">
+    <ng-form name="privacyConfigurationForm">
+        <div class="panel panel-success panel-grid">
+            <div class="pull-right well">
+                <div class="btn-group">
+                    <button class="btn btn-xs btn-link" ng-click="saveChanges()"
+                            ng-disabled="privacyConfigurationForm.$invalid">
+                        <i class="fa fa-save"></i>
+                        <span translate>
+                            admin.application.privacy.config.save.btn
+                        </span>
+                    </button>
+                </div>
+            </div>
+
+            <panel-view header="{{'admin.application.privacy.config.title' | translate}}" collapsible="false">
+                <div class="row">
+                    <div class="col-lg-4"></div>
+                    <div class="col-lg-4">
+                        <label translate>admin.application.privacy.config.labels.limitedDeliveryToSpecificPageCount</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" ng-model="configDataModel.limitedDeliveryToSpecificPageCountEnabled">
+                                <span translate>
+                                    admin.application.privacy.config.labels.limitedDeliveryToSpecificPageCountEnabled
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <input type="number" min="1" ng-model="configDataModel.limitedDeliveryToSpecificPageCount"
+                                ng-disabled="!configDataModel.limitedDeliveryToSpecificPageCountEnabled" class="form-control">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4"></div>
+                    <div class="col-lg-4">
+                        <label translate>admin.application.privacy.config.labels.requestExtensionWorkingDays</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" ng-model="configDataModel.requestExtensionWorkingDaysEnabled"
+                                        ng-change="configDataModel.requestExtensionWorkingDays= !configDataModel.requestExtensionWorkingDaysEnabled ? configDataModel.requestExtensionWorkingDays : configDataModel.requestExtensionWorkingDays">
+                                <span translate>
+                                    admin.application.privacy.config.labels.requestExtensionEnabled
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <input type="number" min="1" ng-model="configDataModel.requestExtensionWorkingDays"
+                                ng-disabled="!configDataModel.requestExtensionWorkingDaysEnabled" class="form-control">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4"></div>
+                    <div class="col-lg-4">
+                        <label for="expediteWorkingDaysEnabled" translate>admin.application.privacy.config.labels.expediteWorkingDays</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" ng-model="configDataModel.expediteWorkingDaysEnabled">
+                                <span translate>
+                                    admin.application.privacy.config.labels.expediteWorkingDaysEnabled
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <input id="expediteWorkingDaysEnabled" type="number" min="1" ng-model="configDataModel.expediteWorkingDays"
+                                ng-disabled="!configDataModel.expediteWorkingDaysEnabled" class="form-control">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4"></div>
+                    <div class="col-lg-4">
+                        <label translate>admin.application.privacy.config.labels.maxDaysHoldQueue</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" ng-model="configDataModel.purgeRequestWhenInHoldEnabled"
+                                        ng-change="configDataModel.maxDaysInHoldQueue= !configDataModel.purgeRequestWhenInHoldEnabled ? configDataModel.maxDaysInHoldQueue : configDataModel.maxDaysInHoldQueue">
+                                <span translate>
+                                    admin.application.privacy.config.labels.purgeRequestEnabled
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <input type="number" min="1" ng-model="configDataModel.maxDaysInHoldQueue"
+                                ng-disabled="!configDataModel.purgeRequestWhenInHoldEnabled" class="form-control">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4"></div>
+                    <div class="col-lg-4">
+                        <label>
+                            <span translate>
+                                admin.application.privacy.config.labels.moveToBillingQueueEnabled
+                            </span>
+                        </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" ng-model="configDataModel.moveToBillingQueueEnabled"
+                                        ng-change="configDataModel.maxDaysInBillingQueue= !configDataModel.moveToBillingQueueEnabled ? configDataModel.maxDaysInBillingQueue : configDataModel.maxDaysInBillingQueue">
+                                <span translate>
+                                admin.application.privacy.config.labels.moveRequestToBillingQueue
+                            </span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <input type="number" min="1" ng-model="configDataModel.maxDaysInBillingQueue"
+                                ng-disabled="!configDataModel.moveToBillingQueueEnabled" class="form-control">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" ng-model="configDataModel.holdedAndAppealedRequestsDueDateUpdateEnabled"
+                                       title="{{'admin.application.privacy.config.labels.holdedAndAppealedRequestsDueDateUpdateEnabled.title' | translate}}">
+                                <span translate>
+                                    admin.application.privacy.config.labels.holdedAndAppealedRequestsDueDateUpdateEnabled
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" ng-model="configDataModel.provideReasonToHoldRequestEnabled">
+                                <span translate>
+                                    admin.application.privacy.config.labels.provideReasonToHoldRequestEnabled
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" ng-model="configDataModel.dashboardBannerEnabled">
+                                <span translate>
+                                    admin.application.privacy.config.labels.dashboardBannerEnable
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" ng-model="configDataModel.notificationGroupsEnabled">
+                                <span translate>
+                                    admin.application.privacy.config.labels.notificationGroupsEnable
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" ng-model="configDataModel.requireTimesheetToCompleteStandardRequest">
+                                <span translate>
+                                    admin.application.privacy.config.labels.requireTimesheetToCompleteStandardRequest
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" ng-model="configDataModel.requireTimesheetToCompleteDeniedRequest">
+                                <span translate>
+                                    admin.application.privacy.config.labels.requireTimesheetToCompleteDeniedRequest
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" ng-model="configDataModel.redirectFunctionalityCalculationEnabled">
+                                <span translate>
+                                    admin.application.privacy.config.labels.redirectFunctionalityCalculationEnabled
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-3">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" ng-model="configDataModel.feeWaivedRequestsEnabled">
+                                <span translate>
+                                    admin.application.privacy.config.labels.feeWaivedDefaultValueForRequests
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" ng-model="configDataModel.feeWaivedAppealsEnabled">
+                                <span translate>
+                                    admin.application.privacy.config.labels.feeWaivedDefaultValueForAppeals
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-3">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" ng-model="configDataModel.litigationRequestsEnabled">
+                                <span translate>
+                                    admin.application.privacy.config.labels.litigationFlagDefaultValueForRequests
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" ng-model="configDataModel.litigationAppealsEnabled">
+                                <span translate>
+                                    admin.application.privacy.config.labels.litigationFlagDefaultValueForAppeals
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" ng-model="configDataModel.automaticCreationOfRequestWhenAppealIsRemandedEnabled">
+                                <span translate>
+                                    admin.application.privacy.config.labels.automaticCreationOfRequestWhenAppealIsRemandedEnabled
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </panel-view>
+        </div>
+    </ng-form>
+</div>
+<div ng-include="'modules/admin/views/components/time-to-complete.client.view.html'"></div>

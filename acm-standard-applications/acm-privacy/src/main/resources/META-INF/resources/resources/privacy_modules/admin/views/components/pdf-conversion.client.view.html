@@ -1,0 +1,26 @@
+<div data-ng-controller="Admin.PDFConversionController">
+    <div class="panel panel-success panel-grid">
+        <div class="panel-heading">
+            <div class="panel-title">
+                <span translate>admin.documentManagement.pdfConversion.title</span>
+                <div class="pull-right">
+                    <button class="btn btn-default btn-xs" ng-click="save()">
+                        <i class="fa fa-lg fa-save"></i></button>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox"
+                                   ng-model="pdfConversionProperties.responseFolderConversion">
+                            <span translate>admin.documentManagement.pdfConversion.enableResponseFolderConversion.checkbox</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

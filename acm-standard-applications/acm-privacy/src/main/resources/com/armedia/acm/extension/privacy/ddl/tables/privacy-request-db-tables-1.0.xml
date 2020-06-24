@@ -1,0 +1,206 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="01-alter-acm_case_file-for-subject-access-request" author="vladimir.cherepnalkovski"
+               dbms="oracle,mssql,postgres"
+               logicalFilePath="/ddl/tables/privacy-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_case_file">
+            <column name="sar_received_date" type="${timestampType}"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="sar_hold_enter_date" type="${timestampType}"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="sar_request_type" type="VARCHAR(512)"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="sar_release_date" type="${timestampType}"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="sar_component_agency" type="VARCHAR(512)"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="sar_return_reason" type="VARCHAR(512)"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="sar_request_source" type="VARCHAR(512)"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="sar_record_search_date_from" type="${timestampType}"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="sar_record_search_date_to" type="${timestampType}"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="sar_delivery_method_of_response" type="VARCHAR(512)"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="sar_request_category" type="VARCHAR(512)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="02-alter-acm_case_file-for-subject-access-request" author="vladimir.cherepnalkovski" dbms="mysql"
+               logicalFilePath="/ddl/tables/subject-access-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_case_file">
+            <column name="sar_received_date" type="${timestampType}"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="sar_hold_enter_date" type="${timestampType}"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="sar_request_type" type="TEXT"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="sar_release_date" type="${timestampType}"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="sar_component_agency" type="TEXT"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="sar_return_reason" type="TEXT"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="sar_request_source" type="TEXT"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="sar_record_search_date_from" type="${timestampType}"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="sar_record_search_date_to" type="${timestampType}"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="sar_delivery_method_of_response" type="TEXT"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="sar_request_category" type="TEXT"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="03-alter-acm_person_assoc-for-subject-access-request" author="vladimir.cherepnalkovski"
+               logicalFilePath="/ddl/tables/subject-access-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_person_assoc">
+            <column name="sar_requester_source" type="varchar(128)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="04-acm_person-add-column-sar_position" author="vladimir.cherepnalkovski"
+               dbms="oracle,mssql,postgres"
+               logicalFilePath="/ddl/tables/subject-access-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_person">
+            <column name="sar_position" type="VARCHAR(512)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="05-acm_person-add-column-sar_position" author="vladimir.cherepnalkovski" dbms="mysql"
+               logicalFilePath="/ddl/tables/subject-access-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_person">
+            <column name="sar_position" type="TEXT"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="06-acm_file-add-column-sar_public_flag" author="vladimir.cherepnalkovski"
+               dbms="oracle,mssql,postgres"
+               logicalFilePath="/ddl/tables/subject-access-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_file">
+            <column name="sar_public_flag" type="VARCHAR(10)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="07-acm_file-add-column-sar_public_flag" author="vladimir.cherepnalkovski" dbms="mysql"
+               logicalFilePath="/ddl/tables/subject-access-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_file">
+            <column name="sar_public_flag" type="TEXT"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="08-privacy-file-version-review-status-column" author="vladimir.cherepnalkovski"
+               dbms="oracle,mssql,postgres"
+               logicalFilePath="/ddl/tables/subject-access-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_file_version">
+            <column name="sar_review_status" type="VARCHAR(512)"/>
+        </addColumn>
+        <addColumn tableName="acm_file_version">
+            <column name="sar_redaction_status" type="VARCHAR(512)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="09-privacy-file-version-review-status-column" author="vladimir.cherepnalkovski" dbms="mysql"
+               logicalFilePath="/ddl/tables/subject-access-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_file_version">
+            <column name="sar_review_status" type="TEXT"/>
+        </addColumn>
+        <addColumn tableName="acm_file_version">
+            <column name="sar_redaction_status" type="TEXT"/>
+        </addColumn>
+    </changeSet>
+
+
+    <!--<changeSet id="10-create-table-acm_foia_portal_registration" author="vladimir.cherepnalkovski"
+               dbms="oracle,postgresql,mssql,mysql">
+        <createTable tableName="acm_foia_portal_registration">
+            <column name="cm_registration_id" type="${idType}">
+                <constraints primaryKeyName="pk_cm_registration" primaryKey="true"/>
+            </column>
+            <column name="cm_email_address" type="VARCHAR(1000)">
+                <constraints unique="true" uniqueConstraintName="uk_email_address" nullable="false"/>
+            </column>
+            <column name="cm_registration_key" type="VARCHAR(128)">
+                <constraints unique="true" uniqueConstraintName="uk_registration_key" nullable="false"/>
+            </column>
+            <column name="cm_registration_time" type="LONG"/>
+            <column name="cm_portal_id" type="VARCHAR(128)"/>
+        </createTable>
+        <createIndex tableName="acm_foia_portal_registration"
+                     indexName="foia_portal_registration_unique_registration_id" unique="true">
+            <column name="cm_registration_id"/>
+        </createIndex>
+        <createTable tableName="acm_foia_portal_registration_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_foia_portal_registration_id">
+            <column name="cm_seq_num" value="100"/>
+            <column name="cm_seq_name" value="acm_foia_portal_registration"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="11-create-table-acm_foia_portal_reset" author="vladimir.cherepnalkovski"
+               dbms="oracle,postgresql,mssql,mysql">
+        <createTable tableName="acm_foia_portal_reset">
+            <column name="cm_reset_id" type="${idType}">
+                <constraints primaryKeyName="pk_cm_reset" primaryKey="true"/>
+            </column>
+            <column name="cm_email_address" type="VARCHAR(1000)">
+                <constraints unique="true" uniqueConstraintName="uk_email_address" nullable="false"/>
+            </column>
+            <column name="cm_reset_key" type="VARCHAR(128)">
+                <constraints unique="true" uniqueConstraintName="uk_reset_key" nullable="false"/>
+            </column>
+            <column name="cm_request_time" type="LONG"/>
+        </createTable>
+        <createIndex tableName="acm_foia_portal_reset" indexName="foia_portal_reset_unique_reset_id" unique="true">
+            <column name="cm_reset_id"/>
+        </createIndex>
+        <createTable tableName="acm_foia_portal_reset_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_foia_portal_reset_id">
+            <column name="cm_seq_num" value="100"/>
+            <column name="cm_seq_name" value="acm_foia_portal_reset"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="12-create-table-acm_foia_person_portal_roles" author="vladimir.cherepnalkovski"
+               dbms="oracle,postgresql,mssql,mysql">
+        <createTable tableName="acm_foia_person_portal_roles">
+            <column name="cm_person_id" type="${idType}"/>
+            <column name="cm_portal_id" type="VARCHAR(128)"/>
+            <column name="cm_user_role" type="VARCHAR(64)"/>
+        </createTable>
+    </changeSet>-->
+
+</databaseChangeLog>
+

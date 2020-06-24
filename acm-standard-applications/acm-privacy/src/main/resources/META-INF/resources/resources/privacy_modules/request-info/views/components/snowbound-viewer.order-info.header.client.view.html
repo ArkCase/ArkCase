@@ -1,0 +1,24 @@
+<div class="row">
+    <div class="col-md-6">
+        <span>Patient Info:&nbsp;</span>
+        <span>{{customData.patient.givenName}}</span>
+        <span ng-if="customData.patient.familyName">&#44;&nbsp;{{customData.patient.familyName}}</span>
+        <span ng-if="customData.patient.dateOfBirth">&#44;&nbsp;{{customData.patient.dateOfBirth}}</span>
+    </div>
+    <div class="col-md-6">
+        <span>Client Info:&nbsp;</span>
+        <span>{{customData.client.number}}</span>
+        <span ng-if="customData.client.organizationValue">&#44;&nbsp;{{customData.client.organizationValue}}</span>
+    </div>
+</div>
+<div class="row col-md-12">
+    <div ng-if="customData.shippingInfo.companyName || customData.shippingInfo.personName">
+        <span>Shipping Info:&nbsp;</span>
+        <span>{{customData.shippingInfo.companyName ? customData.shippingInfo.companyName : customData.shippingInfo.personName}}</span>
+        <span ng-if="customData.shippingInfo.addresses[0].streetAddress">&#44;&nbsp;{{customData.shippingInfo.addresses[0].streetAddress}}</span>
+        <span ng-if="customData.shippingInfo.addresses[0].city">&#44;&nbsp;{{customData.shippingInfo.addresses[0].city}}</span>
+        <span ng-if="customData.shippingInfo.addresses[0].state">&#44;&nbsp;{{customData.shippingInfo.addresses[0].state}}</span>
+        <span ng-if="customData.shippingInfo.addresses[0].country">&#44;&nbsp;{{customData.shippingInfo.addresses[0].country}}</span>
+        <span ng-if="customData.shippingInfo.addresses[0].zip">&#44;&nbsp;{{customData.shippingInfo.addresses[0].zip}}</span>
+    </div>
+</div>

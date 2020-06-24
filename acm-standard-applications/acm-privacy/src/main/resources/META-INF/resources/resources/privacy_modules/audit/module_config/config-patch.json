@@ -1,0 +1,38 @@
+[
+    {
+        "op": "replace",
+        "path": "/components",
+        "value": [
+            {
+                "id": "auditselection",
+                "title": "audit.comp.auditselection.title",
+                "enabled": true,
+                "configurable": true,
+                "auditDropdown": [
+                    {
+                        "id": "",
+                        "name": "ALL"
+                    },
+                    {
+                        "id": "CASE_FILE",
+                        "name": "Requests"
+                    },
+                    {
+                        "id": "TASK",
+                        "name": "Tasks"
+                    },
+                    {
+                        "id": "FILE",
+                        "name": "Files"
+                    }
+                ]
+            },
+            {
+                "id": "datepickers",
+                "title": "audit.comp.datepickers.title",
+                "enabled": true,
+                "configurable": true
+            }
+        ]
+    }
+]
