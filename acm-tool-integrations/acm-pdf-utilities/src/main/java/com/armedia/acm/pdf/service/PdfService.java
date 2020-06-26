@@ -37,6 +37,7 @@ import javax.xml.transform.Source;
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
@@ -59,6 +60,22 @@ public interface PdfService
      *             on PDF creation error
      */
     String generatePdf(File xslFile, Source source) throws PdfServiceException;
+
+    /**
+     * Generate PDF file based on XSL-FO stylesheet, XML data source and replacement parameters. NOTE: the caller is
+     * responsible for deleting the file afterwards (not to leave mess behind)
+     *
+     * @param xslStream
+     *            XSL-FO stylesheet
+     * @param baseURI
+     *            base URI where the FOP engine will be resolving URIs against
+     * @param source
+     *            XML data source required for XML transformation
+     * @return path to the newly generated PDF file (random filename stored in temp folder)
+     * @throws PdfServiceException
+     *             on PDF creation error
+     */
+    String generatePdf(InputStream xslStream, URI baseURI, Source source) throws PdfServiceException;
 
     /**
      * Generate PDF file based on XSL-FO stylesheet, XML data source and replacement parameters.

@@ -9,6 +9,7 @@
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="billingInvoiceDao" ref="billingInvoiceDao"/>
         <property name="pdfService" ref="pdfService"/>
+        <property name="fileConfigurationService" ref="fileConfigurationServiceImpl"/>
     </bean>
 
     <bean id="billingInvoiceEmailSenderService"

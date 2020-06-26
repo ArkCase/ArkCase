@@ -53,8 +53,7 @@ public interface TimesheetConstants
     String NEW_FILE = "NEW_FILE";
     String FILE_ID = "FILE_ID";
 
-    // TODO '/acm-config-server-repo' is for temporal compatibility with current configuration.
-    String TIMESHEET_STYLESHEET = System.getProperty("user.home") + "/.arkcase/acm/acm-config-server-repo/pdf-stylesheets/timesheet-document.xsl";
+    String TIMESHEET_STYLESHEET = "timesheet-document.xsl";
     String TIMESHEET_DOCUMENT = "Timesheet";
     String TIMESHEET_FILENAMEFORMAT = "Timesheet.pdf";
 }
