@@ -323,7 +323,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             if (activeVersionMimeType != null && detectedMetadata != null
                     && ((detectedMetadata.getContentType().equals(activeVersionMimeType)) ||
                             (getAllAllowedUploadFileTypes(allowedUploadFileTypes.getAllowedUploadFileTypes(), activeVersionMimeType)
-                                    .contains(detectedMetadata.getContentType()))))
+                                    .contains(detectedMetadata.getContentType().replaceAll("\\.", "-dot-")))))
             {
 
                 Pair<String, String> mimeTypeAndExtension = buildMimeTypeAndExtension(detectedMetadata, ecmUniqueFilename,
