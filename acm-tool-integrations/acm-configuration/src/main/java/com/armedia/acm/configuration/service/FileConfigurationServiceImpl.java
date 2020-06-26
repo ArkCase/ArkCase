@@ -47,6 +47,9 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Collections;
 
 public class FileConfigurationServiceImpl implements FileConfigurationService
@@ -105,6 +108,29 @@ public class FileConfigurationServiceImpl implements FileConfigurationService
     public void downloadFileFromConfiguration(Message message) throws IOException
     {
         getFileFromConfiguration(message.getPayload().toString(), customFilesLocation);
+    }
+
+    @Override
+    public InputStream getInputStreamFromConfiguration(String filePath) throws IOException
+    {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_OCTET_STREAM));
+
+        HttpEntity<Object> entity = new HttpEntity<>("body", headers);
+
+        ResponseEntity<Resource> exchange = configRestTemplate.exchange(
+                configurationClientConfig.getConfigurationUrl() + "/" + configurationClientConfig.getDefaultApplicationName() + "/"
+                        + configurationClientConfig.getActiveProfile() + "/*/" + filePath,
+                HttpMethod.GET, entity,
+                Resource.class);
+
+        return exchange.getBody().getInputStream();
+    }
+
+    public URI getLocationUriFromConfiguration(String locationPath) throws URISyntaxException
+    {
+        return new URI(configurationClientConfig.getConfigurationUrl() + "/" + configurationClientConfig.getDefaultApplicationName() + "/"
+                + configurationClientConfig.getActiveProfile() + "/*/" + locationPath);
     }
 
     private HttpEntity<LinkedMultiValueMap<String, Object>> prepareFileProperties(InputStreamResource file, String fileName)

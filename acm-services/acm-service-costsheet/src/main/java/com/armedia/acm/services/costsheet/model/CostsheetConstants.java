@@ -60,8 +60,7 @@ public interface CostsheetConstants
     String NEW_FILE = "NEW_FILE";
     String FILE_ID = "FILE_ID";
 
-    // TODO '/acm-config-server-repo' is for temporal compatibility with current configuration.
-    String COSTSHEET_STYLESHEET = System.getProperty("user.home") + "/.arkcase/acm/acm-config-server-repo/pdf-stylesheets/costsheet-document.xsl";
+    String COSTSHEET_STYLESHEET = "costsheet-document.xsl";
     String COSTSHEET_DOCUMENT = "Costsheet";
     String COSTSHEET_FILENAMEFORMAT = "Costsheet.pdf";
 }

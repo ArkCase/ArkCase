@@ -69,8 +69,7 @@ public interface ComplaintConstants
     String FILE_VERSION = "FILE_VERSION";
 
     String NEW_COMPLAINT_TYPE = "New Complaint";
-    // TODO '/acm-config-server-repo' is for temporal compatibility with current configuration.
-    String COMPLAINT_STYLESHEET = System.getProperty("user.home") + "/.arkcase/acm/acm-config-server-repo/pdf-stylesheets/complaint-document.xsl";
+    String COMPLAINT_STYLESHEET = "complaint-document.xsl";
     String COMPLAINT_DOCUMENT = "Complaint";
     String COMPLAINT_FILENAMEFORMAT = "Complaint.pdf";
 }

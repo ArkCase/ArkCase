@@ -38,9 +38,7 @@ public interface BillingConstants
     String BILLING_ITEM_CREATED_EVENT = "com.armedia.acm.billing.item.created";
     String BILLING_INVOICE_CREATED_EVENT = "com.armedia.acm.billing.invoice.created";
 
-    // TODO '/acm-config-server-repo' is for temporal compatibility with current configuration.
-    String INVOICE_DOCUMENT_STYLESHEET = System.getProperty("user.home")
-            + "/.arkcase/acm/acm-config-server-repo/pdf-stylesheets/billing-invoice-document.xsl";
+    String INVOICE_DOCUMENT_STYLESHEET = "billing-invoice-document.xsl";
     String INVOICE_DOCUMENT_TYPE = "billing_invoice_document";
     String INVOICE_DOCUMENT_MIME_TYPE_PDF = "application/pdf";
 

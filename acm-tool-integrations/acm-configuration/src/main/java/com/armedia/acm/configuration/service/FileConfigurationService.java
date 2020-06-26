@@ -30,6 +30,9 @@ package com.armedia.acm.configuration.service;
 import org.springframework.core.io.InputStreamResource;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 public interface FileConfigurationService
 {
@@ -37,5 +40,9 @@ public interface FileConfigurationService
     void moveFileToConfiguration(InputStreamResource file, String fileName) throws IOException;
 
     void getFileFromConfiguration(String fileName, String customFilesLocation) throws IOException;
+
+    InputStream getInputStreamFromConfiguration(String filePath) throws IOException;
+
+    URI getLocationUriFromConfiguration(String locationPath) throws URISyntaxException;
 
 }

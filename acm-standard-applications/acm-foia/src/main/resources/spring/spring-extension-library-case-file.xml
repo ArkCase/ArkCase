@@ -130,6 +130,7 @@
         <beans:bean id="pdfDocumentGenerator" class="gov.foia.service.PDFDocumentGenerator">
             <beans:property name="ecmFileService" ref="ecmFileService"/>
             <beans:property name="pdfService" ref="pdfService"/>
+            <beans:property name="fileConfigurationService" ref="fileConfigurationServiceImpl"/>
             <beans:property name="ecmFileDao" ref="ecmFileDao"/>
             <beans:property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
         </beans:bean>
