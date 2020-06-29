@@ -70,7 +70,6 @@ import java.util.Map;
 import gov.privacy.broker.SARFileBrokerClient;
 import gov.privacy.dao.SARDao;
 import gov.privacy.model.SARConfig;
-import gov.privacy.model.SARConstants;
 import gov.privacy.model.SubjectAccessRequest;
 
 /**
@@ -114,18 +113,6 @@ public class SARService
             {
                 SubjectAccessRequest subjectAccessRequest = (SubjectAccessRequest) in;
 
-                if (in.getTitle() == null || in.getTitle().length() == 0)
-                {
-                    if (subjectAccessRequest.getRequestType().equals(SARConstants.DATA_ACCESS_REQUEST))
-                    {
-                        in.setTitle(SARConstants.NEW_REQUEST_TITLE);
-                    }
-                    else
-                    {
-                        in.setTitle("Appeal of " + subjectAccessRequest.getOriginalRequestNumber());
-                    }
-                }
-
                 if (subjectAccessRequest.getReceivedDate() == null)
                 {
                     subjectAccessRequest.setReceivedDate(LocalDateTime.now());
@@ -155,9 +142,7 @@ public class SARService
             nextRequestAndRequestNumInfo.put("availableRequests", 0L);
             return nextRequestAndRequestNumInfo;
         }
-        Long fileId = getEcmFileService()
-                .findOldestFileByContainerAndFileType(nextRequests.get(0).getContainer().getId(),
-                        nextRequests.get(0).getRequestType().equals(SARConstants.DATA_ACCESS_REQUEST) ? "Request Form" : "Appeal Form")
+        Long fileId = getEcmFileService().findOldestFileByContainerAndFileType(nextRequests.get(0).getContainer().getId(), "Request Form")
                 .getId();
         nextRequestAndRequestNumInfo.put("requestId", nextRequests.get(0).getId());
         nextRequestAndRequestNumInfo.put("requestFormId", fileId);

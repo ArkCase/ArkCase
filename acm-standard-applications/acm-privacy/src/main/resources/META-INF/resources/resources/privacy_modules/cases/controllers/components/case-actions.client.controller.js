@@ -66,7 +66,12 @@ angular.module('cases').controller(
                     $scope.save = function() {
                         $scope.loadingRequestIcon = "fa fa-circle-o-notch fa-spin";
                         var deferred = $q.defer();
-                        if (($scope.objectInfo.queue.name === 'Fulfill' || $scope.objectInfo.queue.name === 'Intake' || $scope.objectInfo.queue.name === 'Hold') && $scope.objectInfo.requestType === 'New Request' && $scope.objectInfo.disposition == null && $scope.objectInfo.dispositionClosedDate != null) {
+                        if (($scope.objectInfo.queue.name === 'Fulfill' || $scope.objectInfo.queue.name === 'Intake' || $scope.objectInfo.queue.name === 'Hold')
+                            && ($scope.objectInfo.requestType === 'Data Access Request' ||
+                                $scope.objectInfo.requestType === 'Right to be Forgotten Request' ||
+                                $scope.objectInfo.requestType === 'Data Modification Request' ||
+                                $scope.objectInfo.requestType === 'Other')
+                            && $scope.objectInfo.disposition == null && $scope.objectInfo.dispositionClosedDate != null) {
                             $scope.$bus.publish('OPEN_REQUEST_DISPOSITION_MODAL', deferred);
                         } else if ($scope.objectInfo.requestType === 'Appeal' && ($scope.objectInfo.queue.name === 'Fulfill' || $scope.objectInfo.queue.name === 'Appeal' || $scope.objectInfo.queue.name === 'Hold') && $scope.objectInfo.disposition == null && $scope.objectInfo.dispositionClosedDate != null) {
                             $scope.$bus.publish('OPEN_APPEAL_DISPOSITION_MODAL', deferred);

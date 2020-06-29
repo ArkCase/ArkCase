@@ -1275,8 +1275,20 @@
             "id": "requests",
             "requestTypes": [
                 {
-                    "name": "New Request",
-                    "id": "New Request"
+                    "name": "Data Access Request",
+                    "id": "Data Access Request"
+                },
+                {
+                    "name": "Right to be Forgotten Request",
+                    "id": "Right to be Forgotten Request"
+                },
+                {
+                    "name": "Data Modification Request",
+                    "id": "Data Modification Request"
+                },
+                {
+                    "name": "Other",
+                    "id": "Other"
                 }
             ],
             "requestSubTypes": [

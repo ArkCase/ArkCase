@@ -116,6 +116,15 @@ public class QueuesTimeToCompleteService
         case SARConstants.DATA_ACCESS_REQUEST:
             return getHolidayConfigurationService().addWorkingDaysToDate(date,
                     getTimeToComplete().getRequest().getTotalTimeToComplete());
+        case SARConstants.DATA_MODIFICATION_REQUEST:
+            return getHolidayConfigurationService().addWorkingDaysToDate(date,
+                    getTimeToComplete().getRequest().getTotalTimeToComplete());
+        case SARConstants.RIGHT_TO_BE_FORGOTTEN_REQUEST:
+            return getHolidayConfigurationService().addWorkingDaysToDate(date,
+                    getTimeToComplete().getRequest().getTotalTimeToComplete());
+        case SARConstants.OTHER_REQUEST:
+            return getHolidayConfigurationService().addWorkingDaysToDate(date,
+                    getTimeToComplete().getRequest().getTotalTimeToComplete());
         default:
             throw new RuntimeException("Unknown SAR type: " + requestType);
         }

@@ -7,7 +7,7 @@ angular.module('services').factory('SAR.Data', [function () {
         requestCategory: '',
         details: '',
         requestSubType: '',
-        requestType: 'New Request',
+        requestType: 'Data Access Request',
         originalRequestNumber: '',
         originator: {
             className: 'gov.privacy.model.SARRequesterAssociation',
