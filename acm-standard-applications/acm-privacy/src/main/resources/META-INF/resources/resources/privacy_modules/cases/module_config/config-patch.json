@@ -215,10 +215,6 @@
             "id": "requests",
             "requestTypes": [
                 {
-                    "name": "New Request",
-                    "id": "New Request"
-                },
-                {
                     "name": "Data Access Request",
                     "id": "Data Access Request"
                 },

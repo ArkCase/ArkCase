@@ -94,7 +94,11 @@ angular.module('cases').controller('Cases.ActionsFooterController',
                     }
                 } else if (name === 'Complete' && displayLimitedReleaseModal()) {
                     openLimitedPageReleaseModal(deferred);
-                } else if (name === 'Complete' && $scope.objectInfo.queue.name === 'Fulfill' && $scope.objectInfo.requestType === 'New Request' && $scope.objectInfo.disposition == null) {
+                } else if (name === 'Complete' && $scope.objectInfo.queue.name === 'Fulfill' &&
+                    ($scope.objectInfo.requestType === 'Data Access Request' ||
+                        $scope.objectInfo.requestType === 'Right to be Forgotten Request' ||
+                        $scope.objectInfo.requestType === 'Data Modification Request' ||
+                        $scope.objectInfo.requestType === 'Other') && $scope.objectInfo.disposition == null) {
                     openDispositionCategoryModal(deferred);
                 } else if (name === 'Complete' && ($scope.objectInfo.queue.name === 'Fulfill' || $scope.defaultNextQueue === 'Release') && $scope.objectInfo.requestType === 'Appeal') {
                     if ($scope.objectInfo.disposition == null) {

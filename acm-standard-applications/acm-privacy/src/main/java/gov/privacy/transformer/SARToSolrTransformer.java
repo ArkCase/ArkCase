@@ -117,7 +117,6 @@ public class SARToSolrTransformer extends CaseFileToSolrTransformer
 
         additionalProperties.put("received_date_tdt", requestIn.getReceivedDate());
         additionalProperties.put("request_type_lcs", requestIn.getRequestType());
-        additionalProperties.put("request_detailed_description_lcs", requestIn.getRequestDetailedDescription());
         additionalProperties.put("return_reason_lcs", requestIn.getReturnReason());
         additionalProperties.put("request_source_lcs", requestIn.getRequestSource());
         additionalProperties.put("request_due_date_tdt", requestIn.getDueDate());

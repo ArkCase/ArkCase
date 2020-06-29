@@ -354,7 +354,10 @@ angular.module('cases').controller(
 
 
             $scope.isNewRequestType = function () {
-                return $scope.config && $scope.config.data.requestType === 'New Request';
+                return $scope.config && ($scope.config.data.requestType === 'Data Access Request' ||
+                    $scope.config.data.requestType === 'Right to be Forgotten Request' ||
+                    $scope.config.data.requestType === 'Data Modification Request' ||
+                    $scope.config.data.requestType === 'Other');
             };
 
             $scope.changeStates = function (country) {
@@ -575,7 +578,7 @@ angular.module('cases').controller(
                 }
 
                 $scope.config.data.subject = $scope.config.data.originator;
-                $scope.config.data.title = $scope.config.data.subject.person.familyName + ',' + $scope.config.data.subject.person.givenName;
+                $scope.config.data.title = $scope.config.data.subject.person.familyName + ' ' + $scope.config.data.subject.person.givenName;
 
                 var data = new Blob([angular.toJson(JSOG.encode(Util.omitNg(basicData)))], {
                     type: 'application/json'

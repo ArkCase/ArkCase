@@ -62,7 +62,6 @@ public interface SARConstants
     String EMAIL_FOOTER_ATTACHMENT = "Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com";
 
     String EMAIL_RELEASE_SUBJECT = "Request Complete";
-    String NEW_REQUEST_TITLE = "NEW REQUEST";
 
     String EMAIL_RESPONSE_FOLDER_ZIP = "New installment of documents is now available for your Subject Acces Request";
 
