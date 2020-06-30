@@ -45,7 +45,7 @@ body {
     background-color: #fff;
     color: #ffffff;
     min-height: 60px;
-    width: 200px;
+    width: 228px;
 }
 
 .navbar-arkcase .navbar-header a {
@@ -138,7 +138,7 @@ body {
     background-color: #2e353e;
     color: #3c4144;
     height: 100%;
-    width: 200px;
+    width: 228px;
     /*border-right: 1px solid #e1e6ef;*/
     position: absolute;
     overflow-y: auto;
@@ -343,8 +343,8 @@ body {
     position: fixed;
     top: 0;
     padding-top: 60px;
-    left: 200px;
-    padding-right: 200px;
+    left: 228px;
+    padding-right: 228px;
 }
 
 /* Left Sidebar (Left Column) */

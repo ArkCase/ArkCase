@@ -22,7 +22,7 @@
                         <span translate>cases.newRequest.section1</span></h4>
                 </div>
                 <div class="panel-body">
-                    <div class="row" ng-hide="!isNewRequestType()">
+                    <div class="row">
                         <div class="col-sm-12 form-group">
                             <div class="col-sm-4">
                                 <label>
@@ -180,13 +180,10 @@
                         <div class="row form-group">
                             <div class="col-sm-2">
                                 <label for="subjectCountry" translate>cases.newRequest.country.label</label>
-                                <span ng-if="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
-                                      class="required-asterisk">*</span>
                             </div>
                             <div class="col-sm-4">
                                 <select id="subjectCountry" class="form-control"
                                         ng-model="config.data.subject.person.addresses[0].country"
-                                        ng-required="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
                                         ng-disabled="isExistingSubject && (existingSubject.addresses[0].country ||
                                     (config.data.deliveryMethodOfResponse != 'Mail'  && !config.data.createNewPortalUser))"
                                         ng-change="changeStates(config.data.subject.person.addresses[0].country)">
@@ -201,13 +198,10 @@
                             </div>
                             <div class="col-sm-2">
                                 <label for="addressType" translate>cases.newRequest.address.type.label</label>
-                                <span ng-if="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
-                                      class="required-asterisk-confirm-email">*</span>
                             </div>
                             <div class="col-sm-4">
                                 <select id="addressType" class="form-control"
                                         ng-model="config.data.subject.person.addresses[0].type"
-                                        ng-required="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
                                         ng-disabled="isExistingSubject &&
                                     ((existingSubject.addresses[0].type && existingSubject.addresses[0].streetAddress) ||
                                     (config.data.deliveryMethodOfResponse != 'Mail'  && !config.data.createNewPortalUser))">
@@ -225,15 +219,12 @@
                         <div class="row form-group">
                             <div class="col-sm-2">
                                 <label for="subjectAddress1" translate>cases.newRequest.address.label </label>
-                                <span ng-if="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
-                                      class="required-asterisk">*</span>
                             </div>
                             <div class="col-sm-4">
                                 <input type="text" class="form-control" id="subjectAddress1"
                                        ng-model="config.data.subject.person.addresses[0].streetAddress"
                                        placeholder="{{'cases.newRequest.address.placeholder' | translate}}"
                                        name="subjectAddress1"
-                                       ng-required="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
                                        ng-disabled="isExistingSubject && (existingSubject.addresses[0].streetAddress ||
                                     (config.data.deliveryMethodOfResponse != 'Mail'  && !config.data.createNewPortalUser))">
                                 <span class="text-danger"
@@ -258,15 +249,12 @@
                         <div class="row form-group">
                             <div class="col-sm-2">
                                 <label for="subjectCity" translate>cases.newRequest.city.label</label>
-                                <span ng-if="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
-                                      class="required-asterisk">*</span>
                             </div>
                             <div class="col-sm-4">
                                 <input type="text" class="form-control" id="subjectCity"
                                        ng-model="config.data.subject.person.addresses[0].city"
                                        placeholder="{{'cases.newRequest.city.placeholder' | translate}}"
                                        name="subjectCity"
-                                       ng-required="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
                                        ng-disabled="isExistingSubject && (existingSubject.addresses[0].city ||
                                     (config.data.deliveryMethodOfResponse != 'Mail'  && !config.data.createNewPortalUser))">
                                 <span class="text-danger" ng-if="(config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser)
@@ -275,8 +263,6 @@
                             </div>
                             <div class="col-sm-2">
                                 <label for="state" translate>cases.newRequest.state.label</label>
-                                <span ng-if="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
-                                      class="required-asterisk-state-label-modals">*</span>
                             </div>
                             <div class="col-sm-4">
                                 <div ng-if="config.data.subject.person.addresses[0].country == 'US'
@@ -286,7 +272,6 @@
                                             ng-model="config.data.subject.person.addresses[0].state"
                                             ng-options="state.key as state.value | translate for state in states"
                                             class="form-control input-md"
-                                            ng-required="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
                                             ng-disabled="isExistingSubject && (existingSubject.addresses[0].state ||
                                     (config.data.deliveryMethodOfResponse != 'Mail'  && !config.data.createNewPortalUser))">
                                     </select>
@@ -296,7 +281,6 @@
                                            ng-model="config.data.subject.person.addresses[0].state"
                                            class="input-md form-control"
                                            placeholder="{{ 'cases.newRequest.state.placeholder' | translate }}"
-                                           ng-required="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
                                            ng-disabled="isExistingSubject && (existingSubject.addresses[0].state ||
                                     (config.data.deliveryMethodOfResponse != 'Mail'  && !config.data.createNewPortalUser))">
                                 </div>
@@ -310,15 +294,12 @@
                         <div class="row form-group">
                             <div class="col-sm-2">
                                 <label for="subjectZip" translate>cases.newRequest.zip.label</label>
-                                <span ng-if="config.data.deliveryMethodOfResponse == 'Mail'  || config.data.createNewPortalUser"
-                                      class="required-asterisk">*</span>
                             </div>
                             <div class="col-sm-4">
                                 <input type="text" class="form-control" id="subjectZip" name="subjectZip"
                                        pattern="[0-9]{5}"
                                        ng-model="config.data.subject.person.addresses[0].zip"
                                        placeholder="{{'cases.newRequest.zip.placeholder' | translate}}"
-                                       ng-required="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
                                        ng-disabled="isExistingSubject && (existingSubject.addresses[0].zip ||
                                     (config.data.deliveryMethodOfResponse != 'Mail'  && !config.data.createNewPortalUser))">
                                 <span class="text-danger" ng-if="(config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser)
@@ -344,20 +325,22 @@
 
                         <div class="row form-group">
                             <div class="col-sm-2 form-group">
-                                <label translate>cases.newRequest.addFile.descriptionDocument</label>
-                                <span class="required-asterisk">*</span>
+                                <label translate>cases.newRequest.addFile.proofOfIdentity</label>
+                                <span class="required-asterisk-proof-identity-label">*</span>
                             </div>
                             <div class="col-sm-2 form-group">
-                                <button class="btn btn-default" ngf-select="addFileDescription($files)" multiple>
+                                <button class="btn btn-default" ngf-select="addSubjectFileProofOfIdentity($files)" multiple>
                                     <span translate>cases.newRequest.chooseFiles</span>
                                 </button>
                             </div>
-                            <ul ng-repeat="file in uploadFilesDescription['Description Document']">
+                        </div>
+
+                        <div class="row">
+                            <ul ng-repeat="file in uploadFilesDescription['Subject Proof of Identity']">
                                 <li>
                                     {{file.name}}
-                                    <button type="button" class="btn btn-link" ng-click="removeFileDescription($index)">
-                                        <i class="fa fa-minus text-danger"></i><span
-                                            translate>cases.newRequest.remove</span>
+                                    <button type="button" class="btn btn-link" ng-click="removeFileProofOfIdentity($index)">
+                                        <i class="fa fa-minus text-danger"></i><span translate>cases.newRequest.remove</span>
                                     </button>
                                 </li>
                             </ul>
@@ -376,7 +359,7 @@
                 </h4>
             </div>
             <div class="panel-body">
-                <div class="row" ng-hide="!isNewRequestType()">
+                <div class="row">
                     <div class="col-sm-12 form-group">
                         <div class="col-sm-4">
                             <label>
@@ -520,12 +503,9 @@
                     <div class="row form-group">
                         <div class="col-sm-2">
                             <label for="country" translate>cases.newRequest.country.label</label>
-                            <span ng-if="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
-                                  class="required-asterisk">*</span>
                         </div>
                         <div class="col-sm-4">
                             <select id="country" class="form-control" ng-model="config.data.originator.person.addresses[0].country"
-                                    ng-required="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
                                     ng-disabled="isExistingOriginator && (existingOriginator.addresses[0].country ||
                                     (config.data.deliveryMethodOfResponse != 'Mail'  && !config.data.createNewPortalUser))"
                                     ng-change="changeStates(config.data.originator.person.addresses[0].country)">
@@ -539,25 +519,27 @@
                             cases.newRequest.country.validation.error</span>
                         </div>
                         <div class="col-sm-2 form-group">
-                            <label translate>cases.newRequest.addFile.descriptionDocument</label>
-                            <span class="required-asterisk">*</span>
+                            <label translate>cases.newRequest.addFile.proofOfIdentity</label>
+                            <span class="required-asterisk-proof-identity-label">*</span>
                         </div>
                         <div class="col-sm-2 form-group">
-                            <button class="btn btn-default" ngf-select="addFileDescription($files)" multiple>
+                            <button class="btn btn-default" ngf-select="addOriginatorFileProofOfIdentity($files)" multiple>
                                 <span translate>cases.newRequest.chooseFiles</span>
-                                <span class="required-asterisk">*</span>
                             </button>
                         </div>
-                        <ul ng-repeat="file in uploadFilesDescription['Description Document']">
+                    </div>
+
+                    <div class="row">
+                        <ul ng-repeat="file in uploadFilesDescription['Originator Proof of Identity']">
                             <li>
                                 {{file.name}}
-                                <button type="button" class="btn btn-link" ng-click="removeFileDescription($index)">
-                                    <i class="fa fa-minus text-danger"></i><span
-                                        translate>cases.newRequest.remove</span>
+                                <button type="button" class="btn btn-link" ng-click="removeFileProofOfIdentity($index)">
+                                    <i class="fa fa-minus text-danger"></i><span translate>cases.newRequest.remove</span>
                                 </button>
                             </li>
                         </ul>
                     </div>
+
                 </div>
 
             </div>
@@ -571,8 +553,7 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="col-sm-12 form-group">
-                        <label for="requestType" translate>cases.newRequest.requestType.label</label>
-                        <span class="required-asterisk">*</span>
+                        <label for="requestType"><span translate>cases.newRequest.requestType.label</span> <span class="required-asterisk">*</span></label>
                     </div>
                 </div>
                 <div class="row">
@@ -586,8 +567,7 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-12 form-group">
-                        <label for="subject" translate>cases.newRequest.subject.label</label>
-                        <span class="required-asterisk">*</span>
+                        <label for="subject"> <span translate>cases.newRequest.subject.label</span> <span class="required-asterisk">*</span></label>
                     </div>
                 </div>
                 <div class="row">
