@@ -69,7 +69,7 @@
                        permission="editCaseOwningGroup"
                        permission-object-type="CASE_FILE" permission-properties="objectInfo"
                        permission-action="disable">
-                        {{requestType || 'common.value.unknown' | translate}}
+                        {{ objectInfo.requestType || 'common.value.unknown' | translate}}
                     </a>
                 </div>
                 <small class="text-muted"><span translate>cases.comp.info.type</span></small>

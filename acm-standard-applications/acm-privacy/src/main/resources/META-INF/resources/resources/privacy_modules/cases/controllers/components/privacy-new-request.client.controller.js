@@ -18,14 +18,12 @@ angular.module('cases').controller(
             $scope.receivedDate = new Date();
             $scope.dateOfBirth = new Date();
 
-            var descriptionDocumentType = "Description Document";
-            var consentDocumentType = "Consent";
-            var proofOfIdentityDocumentType = "Proof of Identity";
+            var subjectProofOfIdentityDocumentType = "Subject Proof of Identity";
+            var originatorProofOfIdentityDocumentType = "Originator Proof of Identity";
 
             $scope.uploadFilesDescription = {};
-            $scope.uploadFilesDescription[descriptionDocumentType] = [];
-            $scope.uploadFilesDescription[consentDocumentType] = [];
-            $scope.uploadFilesDescription[proofOfIdentityDocumentType] = [];
+            $scope.uploadFilesDescription[subjectProofOfIdentityDocumentType] = [];
+            $scope.uploadFilesDescription[originatorProofOfIdentityDocumentType] = [];
 
             $scope.requestExpedite = false;
             $scope.config = null;
@@ -43,47 +41,34 @@ angular.module('cases').controller(
                 return fileFound;
             };
 
-            $scope.addFileDescription = function (file) {
+            $scope.addOriginatorFileProofOfIdentity = function (file) {
                 if (file && file.length > 0) {
                     for (var i = 0; i < file.length; i++) {
-                        if (fileArrayContainsFile($scope.uploadFilesDescription[descriptionDocumentType], file[i]) == false) {
-                            $scope.uploadFilesDescription[descriptionDocumentType].push(file[i]);
+                        if (fileArrayContainsFile($scope.uploadFilesDescription[originatorProofOfIdentityDocumentType], file[i]) == false) {
+                            $scope.uploadFilesDescription[originatorProofOfIdentityDocumentType].push(file[i]);
                         }
                     }
                 }
             };
 
-            $scope.removeFileDescription = function (index) {
-                $scope.uploadFilesDescription['Description Document'].splice(index, 1);
+            $scope.removeOriginatorFileProofOfIdentity = function (index) {
+                $scope.uploadFilesDescription[originatorProofOfIdentityDocumentType].splice(index, 1);
             };
 
-            $scope.addFileConsent = function (file) {
+            $scope.addSubjectFileProofOfIdentity = function (file) {
                 if (file && file.length > 0) {
                     for (var i = 0; i < file.length; i++) {
-                        if (fileArrayContainsFile($scope.uploadFilesDescription[consentDocumentType], file[i]) == false) {
-                            $scope.uploadFilesDescription[consentDocumentType].push(file[i]);
+                        if (fileArrayContainsFile($scope.uploadFilesDescription[subjectProofOfIdentityDocumentType], file[i]) == false) {
+                            $scope.uploadFilesDescription[subjectProofOfIdentityDocumentType].push(file[i]);
                         }
                     }
                 }
             };
 
-            $scope.removeFileConsent = function (index) {
-                $scope.uploadFilesDescription['Consent'].splice(index, 1);
+            $scope.removeSubjectFileProofOfIdentityForSubject = function (index) {
+                $scope.uploadFilesDescription[subjectProofOfIdentityDocumentType].splice(index, 1);
             };
 
-            $scope.addFileProofOfIdentity = function (file) {
-                if (file && file.length > 0) {
-                    for (var i = 0; i < file.length; i++) {
-                        if (fileArrayContainsFile($scope.uploadFilesDescription[proofOfIdentityDocumentType], file[i]) == false) {
-                            $scope.uploadFilesDescription[proofOfIdentityDocumentType].push(file[i]);
-                        }
-                    }
-                }
-            };
-
-            $scope.removeFileProofOfIdentity = function (index) {
-                $scope.uploadFilesDescription['Proof of Identity'].splice(index, 1);
-            };
             var stateRequest = ObjectLookupService.getStates();
             var requestCategories = ObjectLookupService.getRequestCategories();
             var payFeesRequest = ObjectLookupService.getPayFees();
@@ -209,7 +194,7 @@ angular.module('cases').controller(
                 $scope.subjectEmpty = false;
                 $scope.dateRangeInvalid = false;
 
-                if ($scope.isNewRequestType()) {
+                if ($scope.config.data.requestType) {
 
                     if (requestForm.phone.$viewValue === undefined || requestForm.phone.$viewValue === '') {
                         $scope.phoneEmpty = true;
@@ -238,17 +223,6 @@ angular.module('cases').controller(
                     if ($scope.config.data.recordSearchDateFrom > $scope.config.data.recordSearchDateTo) {
                         $scope.formInvalid = true;
                         $scope.dateRangeInvalid = true;
-                    }
-                    if (requestForm.$valid && !$scope.formInvalid) {
-                        $scope.saveNewRequest();
-                    } else {
-                        $scope.formInvalid = true;
-                        $location.hash('topSection1');
-                        $anchorScroll();
-                    }
-                } else {
-                    if (requestForm.subject.$invalid) {
-                        $scope.subjectEmpty = true;
                     }
                     if (requestForm.$valid && !$scope.formInvalid) {
                         $scope.saveNewRequest();
@@ -308,7 +282,7 @@ angular.module('cases').controller(
                 });
             }
 
-            function openDuplicateSubjectPicker(result) {
+            function openDuplicatePersonPicker(result) {
                 $scope.config.data.subject.person.defaultEmail.value = '';
                 $scope.subjectConfirmationEmail = '';
 
@@ -350,14 +324,6 @@ angular.module('cases').controller(
                         }
                     });
                 }
-            };
-
-
-            $scope.isNewRequestType = function () {
-                return $scope.config && ($scope.config.data.requestType === 'Data Access Request' ||
-                    $scope.config.data.requestType === 'Right to be Forgotten Request' ||
-                    $scope.config.data.requestType === 'Data Modification Request' ||
-                    $scope.config.data.requestType === 'Other');
             };
 
             $scope.changeStates = function (country) {
@@ -593,17 +559,8 @@ angular.module('cases').controller(
                     }
                 }
 
-                if ($scope.isNewRequestType()) {
+                if ($scope.config.data.requestType) {
                     saveRequestInfoWithFiles(formdata);
-                } else {
-                    var param = {};
-                    param.caseNumber = $scope.config.data.originalRequestNumber;
-                    RequestsService.getRequestByNumber(param).$promise.then(function (originalRequest) {
-                        if (originalRequest.queue.name === 'Release') {
-                            saveRequestInfoWithFiles(formdata);
-
-                        }
-                    });
                 }
 
             };

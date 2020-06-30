@@ -33,6 +33,11 @@ angular.module('cases').controller(
                 return priorities;
             });
 
+            ObjectLookupService.getLookupByLookupName("requestTypes").then(function (requestTypes) {
+                $scope.requestTypes = requestTypes;
+                return requestTypes;
+            });
+
             ObjectLookupService.getGroups().then(function (groups) {
                 var options = [];
                 _.each(groups, function (group) {

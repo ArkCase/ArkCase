@@ -165,8 +165,8 @@
             <beans:property name="requestDao" ref="sarDao"/>
         </beans:bean>
 
-        <beans:bean id="newRequestDocumentDescriptor" class="gov.privacy.model.SARDocumentDescriptor">
-            <beans:property name="type" value="New Request"/>
+        <beans:bean id="dataAccessRequestDocumentDescriptor" class="gov.privacy.model.SARDocumentDescriptor">
+            <beans:property name="type" value="Data Access Request"/>
             <beans:property name="reqAck" value="REQ"/>
             <beans:property name="doctype" value="Request Form"/>
             <beans:property name="filenameFormat" value="RequestForm-%s.docx"/>
@@ -174,8 +174,8 @@
             <beans:property name="template" value="Request Form"/>
         </beans:bean>
 
-        <beans:bean id="newRequestAcknowledgementDocumentDescriptor" class="gov.privacy.model.SARDocumentDescriptor">
-            <beans:property name="type" value="New Request"/>
+        <beans:bean id="dataAccessRequestAcknowledgementDocumentDescriptor" class="gov.privacy.model.SARDocumentDescriptor">
+            <beans:property name="type" value="Data Access Request"/>
             <beans:property name="reqAck" value="ACK"/>
             <beans:property name="doctype" value="Request Acknowledgement Letter"/>
             <beans:property name="filenameFormat" value="RequestAcknowledgementLetter-%s.docx"/>
@@ -183,9 +183,89 @@
             <beans:property name="template" value="Request Acknowledgement Letter"/>
         </beans:bean>
 
-        <beans:bean id="requestReceivedAcknowledgementDocumentDescriptor"
-                    class="gov.privacy.model.SARDocumentDescriptor">
-            <beans:property name="type" value="New Request"/>
+        <beans:bean id="dataAccessRequestReceivedAcknowledgementDocumentDescriptor" class="gov.privacy.model.SARDocumentDescriptor">
+            <beans:property name="type" value="Data Access Request"/>
+            <beans:property name="reqAck" value="RECEIVE_ACK"/>
+            <beans:property name="doctype" value="Request Received Acknowledgement Letter"/>
+            <beans:property name="filenameFormat" value="RequestReceivedAcknowledgementLetter-%s.docx"/>
+            <beans:property name="targetFileExtension" value="docx"/>
+            <beans:property name="template" value="Request Received Acknowledgement Letter"/>
+        </beans:bean>
+
+        <beans:bean id="forgottenRequestDocumentDescriptor" class="gov.privacy.model.SARDocumentDescriptor">
+            <beans:property name="type" value="Right to be Forgotten Request"/>
+            <beans:property name="reqAck" value="REQ"/>
+            <beans:property name="doctype" value="Request Form"/>
+            <beans:property name="filenameFormat" value="RequestForm-%s.docx"/>
+            <beans:property name="targetFileExtension" value="docx"/>
+            <beans:property name="template" value="Request Form"/>
+        </beans:bean>
+
+        <beans:bean id="forgottenRequestAcknowledgementDocumentDescriptor" class="gov.privacy.model.SARDocumentDescriptor">
+            <beans:property name="type" value="Right to be Forgotten Request"/>
+            <beans:property name="reqAck" value="ACK"/>
+            <beans:property name="doctype" value="Request Acknowledgement Letter"/>
+            <beans:property name="filenameFormat" value="RequestAcknowledgementLetter-%s.docx"/>
+            <beans:property name="targetFileExtension" value="docx"/>
+            <beans:property name="template" value="Request Acknowledgement Letter"/>
+        </beans:bean>
+
+        <beans:bean id="forgottenRequestReceivedAcknowledgementDocumentDescriptor" class="gov.privacy.model.SARDocumentDescriptor">
+            <beans:property name="type" value="Right to be Forgotten Request"/>
+            <beans:property name="reqAck" value="RECEIVE_ACK"/>
+            <beans:property name="doctype" value="Request Received Acknowledgement Letter"/>
+            <beans:property name="filenameFormat" value="RequestReceivedAcknowledgementLetter-%s.docx"/>
+            <beans:property name="targetFileExtension" value="docx"/>
+            <beans:property name="template" value="Request Received Acknowledgement Letter"/>
+        </beans:bean>
+
+        <beans:bean id="dataModificationRequestDocumentDescriptor" class="gov.privacy.model.SARDocumentDescriptor">
+            <beans:property name="type" value="Data Modification Request"/>
+            <beans:property name="reqAck" value="REQ"/>
+            <beans:property name="doctype" value="Request Form"/>
+            <beans:property name="filenameFormat" value="RequestForm-%s.docx"/>
+            <beans:property name="targetFileExtension" value="docx"/>
+            <beans:property name="template" value="Request Form"/>
+        </beans:bean>
+
+        <beans:bean id="dataModificationRequestAcknowledgementDocumentDescriptor" class="gov.privacy.model.SARDocumentDescriptor">
+            <beans:property name="type" value="Data Modification Request"/>
+            <beans:property name="reqAck" value="ACK"/>
+            <beans:property name="doctype" value="Request Acknowledgement Letter"/>
+            <beans:property name="filenameFormat" value="RequestAcknowledgementLetter-%s.docx"/>
+            <beans:property name="targetFileExtension" value="docx"/>
+            <beans:property name="template" value="Request Acknowledgement Letter"/>
+        </beans:bean>
+
+        <beans:bean id="dataModificationRequestReceivedAcknowledgementDocumentDescriptor" class="gov.privacy.model.SARDocumentDescriptor">
+            <beans:property name="type" value="Data Modification Request"/>
+            <beans:property name="reqAck" value="RECEIVE_ACK"/>
+            <beans:property name="doctype" value="Request Received Acknowledgement Letter"/>
+            <beans:property name="filenameFormat" value="RequestReceivedAcknowledgementLetter-%s.docx"/>
+            <beans:property name="targetFileExtension" value="docx"/>
+            <beans:property name="template" value="Request Received Acknowledgement Letter"/>
+        </beans:bean>
+
+        <beans:bean id="otherRequestDocumentDescriptor" class="gov.privacy.model.SARDocumentDescriptor">
+            <beans:property name="type" value="Other"/>
+            <beans:property name="reqAck" value="REQ"/>
+            <beans:property name="doctype" value="Request Form"/>
+            <beans:property name="filenameFormat" value="RequestForm-%s.docx"/>
+            <beans:property name="targetFileExtension" value="docx"/>
+            <beans:property name="template" value="Request Form"/>
+        </beans:bean>
+
+        <beans:bean id="otherRequestAcknowledgementDocumentDescriptor" class="gov.privacy.model.SARDocumentDescriptor">
+            <beans:property name="type" value="Other"/>
+            <beans:property name="reqAck" value="ACK"/>
+            <beans:property name="doctype" value="Request Acknowledgement Letter"/>
+            <beans:property name="filenameFormat" value="RequestAcknowledgementLetter-%s.docx"/>
+            <beans:property name="targetFileExtension" value="docx"/>
+            <beans:property name="template" value="Request Acknowledgement Letter"/>
+        </beans:bean>
+
+        <beans:bean id="otherRequestReceivedAcknowledgementDocumentDescriptor" class="gov.privacy.model.SARDocumentDescriptor">
+            <beans:property name="type" value="Other"/>
             <beans:property name="reqAck" value="RECEIVE_ACK"/>
             <beans:property name="doctype" value="Request Received Acknowledgement Letter"/>
             <beans:property name="filenameFormat" value="RequestReceivedAcknowledgementLetter-%s.docx"/>
