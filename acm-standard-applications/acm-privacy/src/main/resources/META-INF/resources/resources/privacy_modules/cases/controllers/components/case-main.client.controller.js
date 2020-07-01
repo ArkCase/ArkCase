@@ -26,7 +26,7 @@ angular.module('cases').controller(
 
                 ObjectLookupService.getPayFees().then(function (payFees) {
                     $scope.payFees = payFees;
-                    if ($scope.objectInfo.payFee !== '' && $scope.objectInfo.payFee !== "0" && $scope.objectInfo.payFee !== null) {
+                    if (!Util.isEmpty($scope.objectInfo.payFee) && $scope.objectInfo.payFee !== "0") {
                         $scope.payFeeValue = _.find($scope.payFees, function (payFee) {
                             if (payFee.key == $scope.objectInfo.payFee) {
                                 return payFee.key;

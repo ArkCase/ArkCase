@@ -333,13 +333,16 @@
                                     <span translate>cases.newRequest.chooseFiles</span>
                                 </button>
                             </div>
+                            <div class="col-sm-2 form-group">
+                                <span class="text-danger ng-scope" ng-if="subjectProofOfIdentity && formInvalid" translate>cases.newRequest.addFile.proofOfIdentity.validation.error</span>
+                            </div>
                         </div>
 
                         <div class="row">
                             <ul ng-repeat="file in uploadFilesDescription['Subject Proof of Identity']">
                                 <li>
                                     {{file.name}}
-                                    <button type="button" class="btn btn-link" ng-click="removeFileProofOfIdentity($index)">
+                                    <button type="button" class="btn btn-link" ng-click="removeSubjectFileProofOfIdentity($index)">
                                         <i class="fa fa-minus text-danger"></i><span translate>cases.newRequest.remove</span>
                                     </button>
                                 </li>
@@ -526,6 +529,9 @@
                             <button class="btn btn-default" ngf-select="addOriginatorFileProofOfIdentity($files)" multiple>
                                 <span translate>cases.newRequest.chooseFiles</span>
                             </button>
+                            <div class="col-sm-2 form-group">
+                                <span class="text-danger ng-scope" ng-if="originatorProofOfIdentity && formInvalid" translate>cases.newRequest.addFile.proofOfIdentity.validation.error</span>
+                            </div>
                         </div>
                     </div>
 
@@ -533,7 +539,7 @@
                         <ul ng-repeat="file in uploadFilesDescription['Originator Proof of Identity']">
                             <li>
                                 {{file.name}}
-                                <button type="button" class="btn btn-link" ng-click="removeFileProofOfIdentity($index)">
+                                <button type="button" class="btn btn-link" ng-click="removeOriginatorFileProofOfIdentity($index)">
                                     <i class="fa fa-minus text-danger"></i><span translate>cases.newRequest.remove</span>
                                 </button>
                             </li>
@@ -560,8 +566,7 @@
                     <div class="col-sm-12 form-group">
                         <select id="requestType" ng-model="config.data.requestType"
                                 ng-options="requestType.key as requestType.value for requestType in requestTypes"
-                                class="form-control input-md"
-                                ng-change="setOriginator(blankPerson); config.data.originalRequestNumber = null">
+                                class="form-control input-md">
                         </select>
                     </div>
                 </div>
