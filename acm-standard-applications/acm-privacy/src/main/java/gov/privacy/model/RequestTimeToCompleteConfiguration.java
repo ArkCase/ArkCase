@@ -31,9 +31,13 @@ package gov.privacy.model;
  * @author Vladimir Cherepnalkovski <vladimir.cherepnalkovski@armedia.com> on Jun, 2020
  *
  */
-public class RequestTimeToCompleteConfiguration extends BasicTimeToCompleteConfiguration
+public class RequestTimeToCompleteConfiguration
 {
     private Integer intake;
+    private Integer fulfill;
+    private Integer approve;
+    private Integer release;
+    private Integer totalTimeToComplete;
 
     public Integer getIntake()
     {
@@ -43,5 +47,45 @@ public class RequestTimeToCompleteConfiguration extends BasicTimeToCompleteConfi
     public void setIntake(Integer intake)
     {
         this.intake = intake;
+    }
+
+    public Integer getFulfill()
+    {
+        return fulfill;
+    }
+
+    public void setFulfill(Integer fulfill)
+    {
+        this.fulfill = fulfill;
+    }
+
+    public Integer getApprove()
+    {
+        return approve;
+    }
+
+    public void setApprove(Integer approve)
+    {
+        this.approve = approve;
+    }
+
+    public Integer getRelease()
+    {
+        return release;
+    }
+
+    public void setRelease(Integer release)
+    {
+        this.release = release;
+    }
+
+    public Integer getTotalTimeToComplete()
+    {
+        return totalTimeToComplete;
+    }
+
+    public void setTotalTimeToComplete(Integer totalTimeToComplete)
+    {
+        this.totalTimeToComplete = totalTimeToComplete;
     }
 }

@@ -30,12 +30,12 @@ package gov.privacy.model;
 /**
  * @author Vladimir Cherepnalkovski <vladimir.cherepnalkovski@armedia.com> on Jun, 2020
  *
+ * 
  */
 public class QueueTimeToComplete
 {
 
     private RequestTimeToCompleteConfiguration request;
-    private AppealTimeToCompleteConfiguration appeal;
 
     public RequestTimeToCompleteConfiguration getRequest()
     {
@@ -45,15 +45,5 @@ public class QueueTimeToComplete
     public void setRequest(RequestTimeToCompleteConfiguration request)
     {
         this.request = request;
-    }
-
-    public AppealTimeToCompleteConfiguration getAppeal()
-    {
-        return appeal;
-    }
-
-    public void setAppeal(AppealTimeToCompleteConfiguration appeal)
-    {
-        this.appeal = appeal;
     }
 }

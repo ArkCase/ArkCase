@@ -300,15 +300,6 @@ public class SARDao extends AcmAbstractDao<SubjectAccessRequest>
         return requests;
     }
 
-    public List<SubjectAccessRequest> findAllHeldAndAppealedRequests()
-    {
-        String queryText = "SELECT request FROM SubjectAccessRequest request"
-                + " WHERE request.queue.name = 'Hold'";
-        TypedQuery<SubjectAccessRequest> allRecords = getEm().createQuery(queryText, SubjectAccessRequest.class);
-        List<SubjectAccessRequest> requests = allRecords.getResultList();
-        return requests;
-    }
-
     public List<SubjectAccessRequest> getNextAvailableRequestInQueue(Long queueId, Date createdDate)
     {
         String queryText = "SELECT request FROM CaseFile request "

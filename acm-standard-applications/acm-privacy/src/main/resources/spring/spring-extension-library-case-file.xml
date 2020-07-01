@@ -217,7 +217,6 @@
             <beans:property name="ecmFileDao" ref="ecmFileDao"/>
             <beans:property name="ecmFileService" ref="ecmFileService"/>
             <beans:property name="originalRequestFolderNameFormat" ref="originalRequestFolderNameFormat"/>
-            <beans:property name="appealTitleFormat" ref="appealTitleFormat"/>
             <beans:property name="queuesTimeToCompleteService" ref="queuesTimeToCompleteService"/>
             <beans:property name="SARConfigurationService" ref="sarConfigurationService"/>
             <beans:property name="executeSolrQuery" ref="executeSolrQuery"/>
@@ -234,10 +233,6 @@
 
         <beans:bean id="originalRequestFolderNameFormat" class="java.lang.String">
             <beans:constructor-arg value="Subject Access Request (%s)"/>
-        </beans:bean>
-
-        <beans:bean id="appealTitleFormat" class="java.lang.String">
-            <beans:constructor-arg value=" (Appeal of %s)"/>
         </beans:bean>
 
         <beans:bean id="enqueueCaseFileService" class="com.armedia.acm.plugins.casefile.service.EnqueueCaseFileServiceImpl">
