@@ -162,7 +162,7 @@
                                        ng-model="subjectConfirmationEmail"
                                        placeholder="{{'cases.newRequest.confirmationEmail.placeholder' | translate}}"
                                        name="subjectConfirmationEmail"
-                                       ng-blur="checkExistingEmail(subject)"
+                                       ng-blur="checkExistingEmail(config.data.subject, subjectConfirmationEmail)"
                                        required="required"
                                        ng-disabled="isExistingSubject && (existingSubject.defaultEmail.value ||
                                     (config.data.deliveryMethodOfResponse != 'Web Portal'  && !config.data.createNewPortalUser))">
@@ -323,7 +323,7 @@
                             </div>
                         </div>
 
-                        <div class="row form-group">
+                        <div class="row">
                             <div class="col-sm-2 form-group">
                                 <label translate>cases.newRequest.addFile.proofOfIdentity</label>
                                 <span class="required-asterisk-proof-identity-label">*</span>
@@ -333,8 +333,11 @@
                                     <span translate>cases.newRequest.chooseFiles</span>
                                 </button>
                             </div>
-                            <div class="col-sm-2 form-group">
-                                <span class="text-danger ng-scope" ng-if="subjectProofOfIdentity && formInvalid" translate>cases.newRequest.addFile.proofOfIdentity.validation.error</span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-4 form-group">
+                                <span class="text-danger ng-scope" ng-if="uploadFilesDescription['Subject Proof of Identity'].length == 0 && formInvalid" translate>cases.newRequest.addFile.validation.error</span>
                             </div>
                         </div>
 
@@ -488,7 +491,7 @@
                             <input type="text" class="form-control" id="confirmationEmail" ng-model="confirmationEmail"
                                    placeholder="{{'cases.newRequest.confirmationEmail.placeholder' | translate}}"
                                    name="confirmationEmail"
-                                   ng-blur="checkExistingEmail(originator)"
+                                   ng-blur="checkExistingEmail(config.data.originator, confirmationEmail)"
                                    required="required"
                                    ng-disabled="isExistingOriginator && (existingOriginator.defaultEmail.value ||
                                     (config.data.deliveryMethodOfResponse != 'Web Portal'  && !config.data.createNewPortalUser))">
@@ -503,7 +506,7 @@
                         </div>
                     </div>
 
-                    <div class="row form-group">
+                    <div class="row">
                         <div class="col-sm-2">
                             <label for="country" translate>cases.newRequest.country.label</label>
                         </div>
@@ -529,13 +532,11 @@
                             <button class="btn btn-default" ngf-select="addOriginatorFileProofOfIdentity($files)" multiple>
                                 <span translate>cases.newRequest.chooseFiles</span>
                             </button>
-                            <div class="col-sm-2 form-group">
-                                <span class="text-danger ng-scope" ng-if="originatorProofOfIdentity && formInvalid" translate>cases.newRequest.addFile.proofOfIdentity.validation.error</span>
-                            </div>
                         </div>
                     </div>
 
                     <div class="row">
+                        <div class="col-sm-offset-6 col-sm-4">
                         <ul ng-repeat="file in uploadFilesDescription['Originator Proof of Identity']">
                             <li>
                                 {{file.name}}
@@ -544,6 +545,12 @@
                                 </button>
                             </li>
                         </ul>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-offset-6 col-sm-4 form-group">
+                            <span class="text-danger ng-scope" ng-if="uploadFilesDescription['Originator Proof of Identity'].length == 0 && formInvalid" translate>cases.newRequest.addFile.validation.error</span>
+                        </div>
                     </div>
 
                 </div>
