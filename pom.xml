@@ -86,7 +86,7 @@
         <mockito.version>1.10.19</mockito.version>
         <mule-cmis-connector.version>1.14.1</mule-cmis-connector.version>
         <mule.version>3.9.0</mule.version>
-        <mysql.version>5.1.35</mysql.version>
+        <mysql.version>8.0.16</mysql.version>
         <netty.version>4.1.7.Final</netty.version>
         <!-- by default spring.security.saml2.core uses opensaml version 2.6.1, which uses bouncycastle version 1.46, but we require version
             1.54 -->
