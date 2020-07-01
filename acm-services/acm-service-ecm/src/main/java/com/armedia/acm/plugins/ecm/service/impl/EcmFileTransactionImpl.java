@@ -57,6 +57,7 @@ import com.armedia.acm.web.api.MDCConstants;
 import org.apache.camel.component.cmis.CamelCMISConstants;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.CountingInputStream;
@@ -170,6 +171,9 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
                 EcmFileTransactionPipelineContext pipelineContext = buildEcmFileTransactionPipelineContext(authentication,
                         tempFileContents, targetCmisFolderId, container, metadata.getFileName(), existingCmisDocument,
                         detectedMetadata, ecmUniqueFilename);
+
+                String fileHash = DigestUtils.md5Hex(FileUtils.openInputStream(tempFileContents));
+                pipelineContext.setFileHash(fileHash);
 
                 boolean searchablePDF = false;
                 if (ecmFileConfig.getSnowboundEnableOcr())
@@ -336,6 +340,9 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
                 EcmFileTransactionPipelineContext pipelineContext = buildEcmFileTransactionPipelineContext(authentication,
                         tempFileContents, targetCmisFolderId, container, metadata.getFileName(), existingCmisDocument,
                         detectedMetadata, ecmUniqueFilename);
+
+                String fileHash = DigestUtils.md5Hex(FileUtils.openInputStream(tempFileContents));
+                pipelineContext.setFileHash(fileHash);
 
                 boolean searchablePDF = false;
                 log.debug("SNOWBOUND ENABLED OCR = [{}]", ecmFileConfig.getSnowboundEnableOcr());
@@ -566,6 +573,9 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             FileUtils.copyInputStreamToFile(fileInputStream, file);
             pipelineContext.setFileContents(file);
 
+            String fileHash = DigestUtils.md5Hex(FileUtils.openInputStream(file));
+            pipelineContext.setFileHash(fileHash);
+
             EcmTikaFile ecmTikaFile = new EcmTikaFile();
 
             try
@@ -636,6 +646,9 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             file = File.createTempFile("arkcase-update-file-transaction-", null);
             FileUtils.copyInputStreamToFile(fileInputStream, file);
             pipelineContext.setFileContents(file);
+
+            String fileHash = DigestUtils.md5Hex(FileUtils.openInputStream(file));
+            pipelineContext.setFileHash(fileHash);
 
             EcmTikaFile ecmTikaFile = new EcmTikaFile();
 

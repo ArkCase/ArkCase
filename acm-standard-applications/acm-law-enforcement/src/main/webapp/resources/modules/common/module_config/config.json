@@ -24,14 +24,21 @@
         "name": "checkbox",
         "displayName": "",
         "headTemplate": "<input type='checkbox'/>",
-        "width": "6%",
+        "width": "2%",
         "index": 0
+      },
+      {
+        "name": "duplicate",
+        "displayName": "Dup",
+        "width": "2%",
+        "headTemplate": "",
+        "index": 1
       },
       {
         "name": "lock",
         "displayName": "",
         "width": "1%",
-        "index": 1
+        "index": 2
       },
       {
         "name": "title",
@@ -39,13 +46,13 @@
         "headTemplate": "<label id='title' class='doc-tree-header' style='cursor: pointer;'></label>",
         "icon": "<i class='fa fa-fw fa-sort-asc' data-sort='title' data-dir='DESC'></i>",
         "width": "30%",
-        "index": 2
+        "index": 3
       },
       {
         "name": "ext",
         "displayName": "",
         "width": "5%",
-        "index": 3
+        "index": 4
       },
       {
         "name": "type",
@@ -54,7 +61,7 @@
         "icon": "<i class='fa fa-fw' data-sort='type' data-dir='ASC'></i>",
         "__todo__cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
         "width": "12%",
-        "index": 4
+        "index": 5
       },
       {
         "name": "created",
@@ -63,7 +70,7 @@
         "icon": "<i class='fa fa-fw' data-sort='created' data-dir='ASC'></i>",
         "__todo__cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
         "width": "10%",
-        "index": 5
+        "index": 6
       },
       {
         "name": "modified",
@@ -72,7 +79,7 @@
         "icon": "<i class='fa fa-fw' data-sort='modified' data-dir='ASC'></i>",
         "__todo__cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>",
         "width": "10%",
-        "index": 6
+        "index": 7
       },
       {
         "name": "modifier",
@@ -83,7 +90,7 @@
         "__todo__cellTemplate": "<div>{{ row.entity.modifier }}</div>",
         "__todo__lookup": "userFullNames",
         "width": "16%",
-        "index": 7
+        "index": 8
       },
       {
         "name": "version",
@@ -93,7 +100,7 @@
         "icon": "<i class='fa fa-fw' data-sort='version' data-dir='ASC'></i>",
         "__todo__cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
         "width": "6%",
-        "index": 8
+        "index": 9
       },
       {
         "name": "status",
@@ -103,7 +110,7 @@
         "icon": "<i class='fa fa-fw' data-sort='status' data-dir='ASC'></i>",
         "__todo__cellTemplate": "{{node.data.status}}",
         "width": "8%",
-        "index": 9
+        "index": 10
       }
     ],
     "menu": {

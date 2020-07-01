@@ -40,6 +40,7 @@ import com.armedia.acm.objectonverter.ArkCaseBeanUtils;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
+import com.armedia.acm.plugins.ecm.dao.EcmFileVersionDao;
 import com.armedia.acm.plugins.ecm.exception.EcmFileLinkException;
 import com.armedia.acm.plugins.ecm.exception.LinkAlreadyExistException;
 import com.armedia.acm.plugins.ecm.model.AcmCmisObject;
@@ -176,6 +177,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     private EmailSenderConfig emailSenderConfig;
 
     private CamelContextManager camelContextManager;
+
+    private EcmFileVersionDao ecmFileVersionDao;
 
     private AuthenticationTokenDao authenticationTokenDao;
 
@@ -1071,6 +1074,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                 object.setVersionList(file.getVersions());
                 object.setPageCount(file.getPageCount());
                 object.setLock(file.getLock());
+                object.setDuplicate(file.isDuplicate());
             }
         }
 
@@ -1327,6 +1331,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             fileCopyVersion.setDeviceModel(activeVersion.getDeviceModel());
             fileCopyVersion.setDurationSeconds(activeVersion.getDurationSeconds());
             fileCopyVersion.setSearchablePDF(activeVersion.isSearchablePDF());
+            fileCopyVersion.setFileHash(activeVersion.getFileHash());
         }
     }
 
@@ -2202,7 +2207,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     @Override
     @Transactional
     public List<EcmFile> uploadFiles(Authentication authentication, String parentObjectType, Long parentObjectId, String fileType,
-                                     String folderCmisId, MultipartHttpServletRequest request, HttpSession session)
+            String folderCmisId, MultipartHttpServletRequest request, HttpSession session)
             throws AcmUserActionFailedException, AcmCreateObjectFailedException, IOException
     {
 
@@ -2212,7 +2217,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     @Override
     @Transactional
     public List<EcmFile> uploadFiles(Authentication authentication, String parentObjectType, Long parentObjectId, String fileType,
-                                     String fileLang, String folderCmisId, MultipartHttpServletRequest request, HttpSession session)
+            String fileLang, String folderCmisId, MultipartHttpServletRequest request, HttpSession session)
             throws AcmUserActionFailedException, AcmCreateObjectFailedException, IOException
     {
 
@@ -2265,6 +2270,31 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    public List<EcmFile> getFileDuplicates(Long fileId) throws AcmObjectNotFoundException
+    {
+        EcmFile file = getEcmFileDao().find(fileId);
+        if (file == null)
+        {
+            throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, fileId, "File or Destination folder not found", null);
+        }
+        else
+        {
+            EcmFileVersion ecmFileVersion = getFolderAndFilesUtils().getVersion(file, file.getActiveVersionTag());
+
+            List<EcmFileVersion> efvList = getEcmFileVersionDao().getEcmFileVersionWithSameHash(ecmFileVersion.getFileHash());
+            List<EcmFile> efList = new ArrayList<>();
+
+            for (EcmFileVersion efv : efvList)
+            {
+                if (!efv.getFile().isLink()) {
+                    efList.add(efv.getFile());
+                }
+            }
+            return efList;
+        }
+    }
+
+    @Override
     public void updateFileLinks(EcmFile file) throws AcmObjectNotFoundException
     {
         List<EcmFile> links = getFileLinks(file.getFileId());
@@ -2310,7 +2340,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
-    public List<EcmFile> findFilesByFolder(Long folderId) {
+    public List<EcmFile> findFilesByFolder(Long folderId)
+    {
 
         List<EcmFile> files = getEcmFileDao().findByFolderId(folderId);
 
@@ -2563,5 +2594,15 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     public void setCamelContextManager(CamelContextManager camelContextManager)
     {
         this.camelContextManager = camelContextManager;
+    }
+
+    public EcmFileVersionDao getEcmFileVersionDao()
+    {
+        return ecmFileVersionDao;
+    }
+
+    public void setEcmFileVersionDao(EcmFileVersionDao ecmFileVersionDao)
+    {
+        this.ecmFileVersionDao = ecmFileVersionDao;
     }
 }

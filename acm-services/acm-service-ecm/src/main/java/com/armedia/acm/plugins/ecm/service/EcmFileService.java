@@ -430,4 +430,6 @@ public interface EcmFileService
     LinkTargetFileDTO getLinkTargetFileInfo(EcmFile ecmFile) throws EcmFileLinkException;
 
     List<EcmFile> findFilesByFolder(Long folderId);
+
+    List<EcmFile> getFileDuplicates(Long fileId) throws AcmObjectNotFoundException;
 }

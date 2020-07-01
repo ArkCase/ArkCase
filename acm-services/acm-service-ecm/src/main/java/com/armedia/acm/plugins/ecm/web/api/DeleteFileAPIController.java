@@ -156,6 +156,16 @@ public class DeleteFileAPIController
         return getFileService().getFileLinks(objectId);
     }
 
+    @PreAuthorize("hasPermission(#objectId, 'FILE', 'read|group-read|write|group-write')")
+    @RequestMapping(value = "/fileDuplicates/{fileId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<EcmFile> getFileDuplicates(@PathVariable("fileId") Long objectId, Authentication authentication, HttpSession session)
+            throws AcmObjectNotFoundException
+    {
+        return getFileService().getFileDuplicates(objectId);
+    }
+
+
     private String prepareJsonReturnMsg(String msg, Long fileId, String fileName)
     {
         JSONObject objectToReturnJSON = new JSONObject();

@@ -280,7 +280,7 @@ angular
                             ,
                             table: {
                                 indentation: 10, // indent 20px per node level
-                                nodeColumnIdx: 2, // render the node title into the 3rd column
+                                nodeColumnIdx: 3, // render the node title into the 3rd column
                                 checkboxColumnIdx: 0
                                 // render the checkboxes into the 1st column
                             },

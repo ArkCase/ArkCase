@@ -1,0 +1,40 @@
+<div>
+    <div class="modal-header">{{header}}
+    </div>
+    <div class="modal-grid">
+        <div class="modal-colums">
+            <div class="modal-right well-sm">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div ui-grid="gridOptions" ui-grid-resize-columns ui-grid-pagination ui-grid-selection
+                             adjust-table-height="config.data.length" ui-grid-auto-resize class="grid">
+                            <div ng-if="config.data.length < 1" style="text-align: center;">
+                                {{onNoDataMessage}}
+                            </div>
+                            <div ng-if="config.data.length < 1">
+                                &nbsp;
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="well-sm">
+            <div class="row">
+                <div class="well-sm">
+                    <div class="pull-right">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-secondary btn-sm" ng-click="onClickCancel()">
+                                <span translate>common.newOrganization.cancelButton</span>
+                            </button>
+                            <button type="submit" ng-disabled="!selectedItem " class="btn btn-primary btn-sm" ng-click="onClickOk()">
+                             </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
