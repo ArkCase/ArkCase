@@ -3,8 +3,8 @@
 angular.module('cases').controller(
     'Cases.InfoController',
     ['$scope', '$stateParams', '$state', '$translate', '$timeout', 'UtilService', 'Util.DateService', 'ConfigService', 'Object.LookupService', 'Case.LookupService', 'Case.InfoService', 'Object.ModelService', 'Helper.ObjectBrowserService', 'DueDate.Service', 'Admin.HolidayService',
-        'MessageService', '$modal', 'LookupService', 'Admin.FoiaConfigService', 'Admin.ObjectTitleConfigurationService', 'SuggestedObjectsService', 'Case.ExemptionService', 'ObjectService', '$filter',
-        function ($scope, $stateParams, $state, $translate, $timeout, Util, UtilDateService, ConfigService, ObjectLookupService, CaseLookupService, CaseInfoService, ObjectModelService, HelperObjectBrowserService, DueDateService, AdminHolidayService, MessageService, $modal, LookupService, AdminFoiaConfigService, AdminObjectTitleConfigurationService, SuggestedObjectsService, CaseExemptionService, ObjectService, $filter) {
+        'MessageService', '$modal', 'LookupService', 'Admin.PrivacyConfigService', 'Admin.ObjectTitleConfigurationService', 'SuggestedObjectsService', 'Case.ExemptionService', 'ObjectService', '$filter',
+        function ($scope, $stateParams, $state, $translate, $timeout, Util, UtilDateService, ConfigService, ObjectLookupService, CaseLookupService, CaseInfoService, ObjectModelService, HelperObjectBrowserService, DueDateService, AdminHolidayService, MessageService, $modal, LookupService, AdminPrivacyConfigService, AdminObjectTitleConfigurationService, SuggestedObjectsService, CaseExemptionService, ObjectService, $filter) {
 
             new HelperObjectBrowserService.Component({
                 scope: $scope,
@@ -18,7 +18,7 @@ angular.module('cases').controller(
                 }
             });
 
-            AdminFoiaConfigService.getFoiaConfig().then(function(response){
+            AdminPrivacyConfigService.getPrivacyConfig().then(function (response) {
                 $scope.isNotificationGroupEnabled = response.data.notificationGroupsEnabled;
             },function(err){
                 MessageService.errorAction();
@@ -31,6 +31,11 @@ angular.module('cases').controller(
             ObjectLookupService.getLookupByLookupName("priorities").then(function (priorities) {
                 $scope.priorities = priorities;
                 return priorities;
+            });
+
+            ObjectLookupService.getLookupByLookupName("requestTypes").then(function (requestTypes) {
+                $scope.requestTypes = requestTypes;
+                return requestTypes;
             });
 
             ObjectLookupService.getGroups().then(function (groups) {
@@ -68,27 +73,49 @@ angular.module('cases').controller(
                     id: "userOrGroupSearch"
                 });
             });
-            $scope.foiaConfig = {};
+            $scope.privacyConfig = {};
 
-
+            $scope.updateDueDate = function (data) {
+                if (!Util.isEmpty(data)) {
+                    var correctedDueDate = new Date(data);
+                    var startDate = new Date($scope.objectInfo.created);
+                    if (correctedDueDate < startDate) {
+                        $scope.dateInfo.dueDate = $scope.dueDateBeforeChange;
+                        DialogService.alert($translate.instant("cases.comp.info.alertMessage ") + $filter("date")(startDate, $translate.instant('common.defaultDateTimeUIFormat')));
+                    } else {
+                        $scope.objectInfo.dueDate = moment.utc(correctedDueDate).format("YYYY-MM-DDTHH:mm:ss.sss");
+                        $scope.dueDateInfo = moment.utc($scope.objectInfo.dueDate).local().format('MM/DD/YYYY HH:mm');
+                        $scope.dateInfo.dueDate = $scope.dueDateInfo;
+                        $scope.saveCase();
+                    }
+                } else {
+                    $scope.objectInfo.dueDate = moment.utc($scope.dueDateBeforeChange).format("YYYY-MM-DDTHH:mm:ss.sss");
+                    ;
+                    $scope.dueDateInfo = moment.utc($scope.objectInfo.dueDate).local().format('MM/DD/YYYY HH:mm');
+                    $scope.dateInfo.dueDate = $scope.dueDateInfo;
+                    $scope.saveCase();
+                }
+            };
 
             var onObjectInfoRetrieved = function (data) {
                 AdminHolidayService.getHolidays().then(function (response) {
                     $scope.holidays = response.data.holidays;
                     $scope.includeWeekends = response.data.includeWeekends;
+                    $scope.dateInfo = $scope.dateInfo || {};
+                    if (!Util.isEmpty($scope.objectInfo.dueDate)) {
+                        $scope.dateInfo.dueDate = moment.utc($scope.objectInfo.dueDate).local().format('MM/DD/YYYY HH:mm');
+                        $scope.dueDateInfo = $scope.dateInfo.dueDate;
+                    } else {
+                        $scope.dateInfo.dueDate = null;
+                        $scope.dueDateInfo = new Date();
+                        $scope.dueDateInfo = moment($scope.dueDateInfo).format('MM/DD/YYYY HH:mm');
+                    }
+                    $scope.dueDateBeforeChange = $scope.dateInfo.dueDate;
 
                     $scope.calculateDaysObj = {};
                     $scope.owningGroup = ObjectModelService.getGroup(data);
                     $scope.assignee = ObjectModelService.getAssignee(data);
-                    if ($scope.objectInfo.dueDate != null) {
-                        if (!$scope.includeWeekends) {
-                            $scope.calculateDaysObj = DueDateService.daysLeft($scope.holidays, $scope.objectInfo.dueDate);
-                        }
-                        else {
-                            $scope.calculateDaysObj = DueDateService.daysLeftWithWeekends($scope.holidays, $scope.objectInfo.dueDate);
-                        }
-                        $scope.dueDate = $scope.objectInfo.dueDate.replace(/(\d{4})\-(\d{2})\-(\d{2}).*/, '$2/$3/$1');
-                    }
+
                     CaseLookupService.getApprovers($scope.owningGroup, $scope.assignee).then(function (approvers) {
                         var options = [];
                         _.each(approvers, function (approver) {
@@ -100,9 +127,10 @@ angular.module('cases').controller(
                         $scope.assignees = options;
                         return approvers;
                     });
-                    $scope.today = new Date();
-                    $scope.receivedDateMinYear = $scope.today.getFullYear();
-                    $scope.receivedDateMaxYear = $scope.receivedDateMinYear + 1;
+
+                    var utcDate = moment.utc(UtilDateService.dateToIso(new Date(data.created))).format();
+                    $scope.maxYear = moment(utcDate).add(1, 'years').toDate().getFullYear();
+                    $scope.minYear = new Date(data.created).getFullYear();
                 });
 
                 $scope.notificationGroup = null;
@@ -256,7 +284,7 @@ angular.module('cases').controller(
                 var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
                 if (CaseInfoService.validateCaseInfo($scope.objectInfo)) {
                     var objectInfo = Util.omitNg($scope.objectInfo);
-                    promiseSaveInfo = CaseInfoService.saveFoiaRequestInfo(objectInfo);
+                    promiseSaveInfo = CaseInfoService.saveSubjectAccessRequestInfo(objectInfo);
                     promiseSaveInfo.then(function(caseInfo) {
                         $scope.$emit("report-object-updated", caseInfo);
                         return caseInfo;
