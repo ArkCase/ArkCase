@@ -3263,7 +3263,7 @@ angular
                                     DocTree.markNodeOk(frNode);
                                     dfd.resolve(moveFileInfo);
                                 }, function (errorData) {
-                                    MessageService.error(errorData.data);
+                                    MessageService.error($translate.instant('common.directive.docTree.moveFileError'));
                                     DocTree.markNodeError(frNode);
                                     dfd.reject();
                                 });
