@@ -193,8 +193,6 @@ angular.module('cases').controller(
                 $scope.zipCodeInvalid = false;
                 $scope.subjectEmpty = false;
                 $scope.dateRangeInvalid = false;
-                $scope.subjectProofOfIdentity = false;
-                $scope.originatorProofOfIdentity = false;
 
                 if ($scope.config.data.requestType) {
 
@@ -228,11 +226,9 @@ angular.module('cases').controller(
                     }
                     if ($scope.uploadFilesDescription[subjectProofOfIdentityDocumentType].length == 0) {
                         $scope.formInvalid = true;
-                        $scope.subjectProofOfIdentity = true;
                     }
                     if ($scope.uploadFilesDescription[originatorProofOfIdentityDocumentType].length == 0) {
                         $scope.formInvalid = true;
-                        $scope.originatorProofOfIdentity = true;
                     }
                     if (requestForm.$valid && !$scope.formInvalid) {
                         $scope.saveNewRequest();
@@ -326,9 +322,9 @@ angular.module('cases').controller(
                 });
             }
 
-            $scope.checkExistingEmail = function () {
-                if ($scope.config.data.originator.person.defaultEmail.value === $scope.confirmationEmail) {
-                    PersonInfoService.queryByEmail($scope.config.data.originator.person.defaultEmail.value).then(function (result) {
+            $scope.checkExistingEmail = function (person, confirmationEmail) {
+                if (person.person.defaultEmail.value === confirmationEmail) {
+                    PersonInfoService.queryByEmail(person.person.defaultEmail.value).then(function (result) {
                         if (result.data.response.numFound > 0) {
                             openDuplicatePersonPicker(result);
                         }
