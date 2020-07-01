@@ -27,10 +27,7 @@ package com.armedia.acm.plugins.consultation.service;
  * #L%
  */
 
-import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
-import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
-import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.consultation.dao.ChangeConsultationStatusDao;
 import com.armedia.acm.plugins.consultation.dao.ConsultationDao;
 import com.armedia.acm.plugins.consultation.model.ChangeConsultationStatus;
@@ -51,7 +48,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.PersistenceException;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -124,26 +120,25 @@ public class ConsultationServiceImpl implements ConsultationService
     @Transactional
     public Consultation saveConsultation(Consultation in, Authentication auth, String ipAddress) throws PipelineProcessException
     {
-        Consultation saved = null;
-        try
-        {
-            saved = saveConsultation(in, new ArrayList<>(), auth, ipAddress);
-        }
-        catch (AcmUserActionFailedException | AcmCreateObjectFailedException | AcmUpdateObjectFailedException | AcmObjectNotFoundException
-                | IOException e)
-        {
-            log.error("Error in saving Consultation");
-        }
-        return saved;
+        return saveConsultation(in, new ArrayList<>(), auth, ipAddress);
+    }
+
+    @Override
+    @Transactional
+    public Consultation saveConsultation(Consultation consultation, Map<String, List<MultipartFile>> filesMap,
+            Authentication authentication, String ipAddress)
+            throws PipelineProcessException
+    {
+        List<MultipartFile> files = getFileListFromFilesMap(filesMap);
+
+        return saveConsultation(consultation, files, authentication, ipAddress);
     }
 
     @Override
     @Transactional
     public Consultation saveConsultation(Consultation consultation, List<MultipartFile> files, Authentication authentication,
             String ipAddress)
-            throws AcmUserActionFailedException,
-            AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmObjectNotFoundException, PipelineProcessException,
-            IOException
+            throws PipelineProcessException
     {
         ConsultationPipelineContext pipelineContext = new ConsultationPipelineContext();
         // populate the context
@@ -162,53 +157,6 @@ public class ConsultationServiceImpl implements ConsultationService
             try
             {
                 saved = consultationDao.save(consultation);
-                log.info("Consultation '{}'", saved);
-            }
-            catch (Exception e)
-            {
-                log.error("Consultation not saved", e);
-            }
-
-            return saved;
-
-        });
-    }
-
-    @Override
-    @Transactional
-    public Consultation saveConsultation(Consultation consultation, Map<String, List<MultipartFile>> filesMap,
-            Authentication authentication, String ipAddress)
-            throws PipelineProcessException
-    {
-        ConsultationPipelineContext pipelineContext = new ConsultationPipelineContext();
-        // populate the context
-        pipelineContext.setNewConsultation(consultation.getId() == null);
-        pipelineContext.setAuthentication(authentication);
-        pipelineContext.setIpAddress(ipAddress);
-
-        List<AcmMultipartFile> files = new ArrayList<>();
-
-        if (Objects.nonNull(filesMap))
-        {
-            for (Map.Entry<String, List<MultipartFile>> file : filesMap.entrySet())
-            {
-                String fileType = file.getKey();
-                for (MultipartFile item : file.getValue())
-                {
-                    AcmMultipartFile acmMultipartFile = new AcmMultipartFile(item, false, fileType);
-                    files.add(acmMultipartFile);
-                }
-            }
-        }
-
-        pipelineContext.addProperty("attachmentFiles", files);
-
-        return pipelineManager.executeOperation(consultation, pipelineContext, () -> {
-
-            Consultation saved = null;
-            try
-            {
-                saved = consultationDao.save(consultation);
                 log.info("Consultation saved '{}'", saved);
             }
             catch (Exception e)
@@ -217,8 +165,24 @@ public class ConsultationServiceImpl implements ConsultationService
             }
 
             return saved;
-
         });
+    }
+
+    private List<MultipartFile> getFileListFromFilesMap(Map<String, List<MultipartFile>> filesMap)
+    {
+        List<MultipartFile> files = new ArrayList<>();
+
+        if (Objects.nonNull(filesMap))
+        {
+            for (Map.Entry<String, List<MultipartFile>> file : filesMap.entrySet())
+            {
+                String fileType = file.getKey();
+                file.getValue().stream()
+                        .map(item -> new AcmMultipartFile(item, false, fileType))
+                        .forEach(files::add);
+            }
+        }
+        return files;
     }
 
     public ConsultationDao getConsultationDao()
