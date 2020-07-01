@@ -3012,7 +3012,7 @@ angular.module('directives').directive(
                                         DocTree.markNodeOk(frNode);
                                         dfd.resolve(moveFileInfo);
                                     }, function(errorData) {
-                                        MessageService.error(errorData.data);
+                                        MessageService.error($translate.instant('common.directive.docTree.moveFileError'));
                                         DocTree.refreshTree();
                                         DocTree.markNodeError(frNode);
                                         dfd.reject();
