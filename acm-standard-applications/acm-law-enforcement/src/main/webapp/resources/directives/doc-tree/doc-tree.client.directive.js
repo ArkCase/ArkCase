@@ -220,7 +220,7 @@ angular.module('directives').directive(
                                 ,
                                 table: {
                                     indentation: 10, // indent 20px per node level
-                                    nodeColumnIdx: 2, // render the node title into the 3rd column
+                                    nodeColumnIdx: 3, // render the node title into the 3rd column
                                     checkboxColumnIdx: 0
                                 // render the checkboxes into the 1st column
                                 },
@@ -964,6 +964,10 @@ angular.module('directives').directive(
                                 DocTree.scope.$bus.publish('docTreeNodeChecked', data.node);
                             }
 
+                            if (data.node.data.duplicate) {
+                                DocTree.scope.$bus.publish("docTreeShowDuplicates", data.node);
+                            }
+
                             if (data.targetType === 'title') {
                                 if (DocTree.isFileNode(data.node)) {
                                     DocTree.scope.$bus.publish('docTreeFileNodeSelected', data.node);
@@ -1250,6 +1254,16 @@ angular.module('directives').directive(
                             getCoreRenderers: function() {
                                 return [ {
                                     name: "checkbox",
+                                    renderer: function(element, node, columnDef, isReadOnly) {
+                                        ;
+                                    }
+                                }, {
+                                    name: "duplicate",
+                                    renderer: function(element, node, columnDef, isReadOnly) {
+                                        ;
+                                    }
+                                }, {
+                                    name: "lock",
                                     renderer: function(element, node, columnDef, isReadOnly) {
                                         ;
                                     }
@@ -3715,6 +3729,7 @@ angular.module('directives').directive(
                                 nodeData.data.lock = Util.goodValue(fileData.lock);
                                 nodeData.data.modifier = Util.goodValue(fileData.modifier);
                                 nodeData.data.link = Util.goodValue(fileData.link);
+                                nodeData.data.duplicate = Util.goodValue(fileData.duplicate)
                                 if (Util.isArray(fileData.versionList)) {
                                     nodeData.data.versionList = [];
                                     for (var i = 0; i < fileData.versionList.length; i++) {

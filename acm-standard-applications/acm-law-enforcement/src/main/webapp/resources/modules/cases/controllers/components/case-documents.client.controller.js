@@ -83,6 +83,12 @@ angular.module('cases').controller(
                         $scope.assignee = ObjectModelService.getAssignee(objectInfo);
                     };
 
+                    ConfigService.getModuleConfig("common").then(function(moduleConfig) {
+                        $scope.config = moduleConfig;
+                        return moduleConfig;
+                    });
+
+
                     $scope.uploadForm = function(type, folderId, onCloseForm) {
                         var fileTypes = Util.goodArray($scope.treeConfig.fileTypes);
                         fileTypes = fileTypes.concat(Util.goodArray($scope.treeConfig.formTypes));
@@ -193,6 +199,30 @@ angular.module('cases').controller(
 
                     $scope.selectedDocuments = [];
 
+                    $scope.showDuplicates = function(nodes) {
+                       Ecm.getFileDuplicates({fileId: nodes.data.objectId}).$promise.then(function (data) {
+                            var params = {};
+                            params.header = $translate.instant("common.duplicates.header");
+                            params.config = Util.goodMapValue($scope.config, "common.doctree");
+                            params.data = data;
+
+                            var modalInstance = $modal.open({
+                                templateUrl: "modules/cases/views/components/showDuplicates-modal.client.view.html",
+                                controller: "Common.ShowDuplicates-modal.client.controller.js",
+                                animation: true,
+                                size: 'lg',
+                                backdrop: 'static',
+                                resolve: {
+                                    params: function () {
+                                        return params;
+                                    }
+                                }
+                            });
+                            modalInstance.result.then(function (selected) {
+                            });
+                        });
+                    };
+
                     $scope.onCheckNode = function(node) {
                         if (!node.folder) {
                             var idx = _.findIndex($scope.selectedDocuments, function(d) {
@@ -215,6 +245,10 @@ angular.module('cases').controller(
 
                     $scope.$bus.subscribe('docTreeNodeChecked', function(node) {
                         $scope.onCheckNode(node);
+                    });
+
+                    $scope.$bus.subscribe('docTreeShowDuplicates', function(nodes) {
+                        $scope.showDuplicates(nodes);
                     });
 
                     $scope.$bus.subscribe('toggleAllNodesChecked', function(nodes) {

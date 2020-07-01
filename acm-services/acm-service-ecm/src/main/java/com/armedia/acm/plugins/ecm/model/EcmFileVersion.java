@@ -140,6 +140,9 @@ public class EcmFileVersion implements AcmEntity, Serializable, AcmObject
     @Column(name = "cm_class_name")
     private String className = this.getClass().getName();
 
+    @Column(name = "cm_file_hash")
+    private String fileHash;
+
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "cm_file_id")
@@ -382,6 +385,14 @@ public class EcmFileVersion implements AcmEntity, Serializable, AcmObject
     public void setSearchablePDF(boolean searchablePDF)
     {
         this.searchablePDF = searchablePDF;
+    }
+
+    public String getFileHash() {
+        return fileHash;
+    }
+
+    public void setFileHash(String fileHash) {
+        this.fileHash = fileHash;
     }
 
     @JsonIgnore
