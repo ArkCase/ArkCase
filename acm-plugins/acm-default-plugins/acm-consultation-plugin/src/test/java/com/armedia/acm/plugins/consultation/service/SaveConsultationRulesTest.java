@@ -58,7 +58,7 @@ import java.util.Date;
 public class SaveConsultationRulesTest
 {
 
-    private Logger log = LogManager.getLogger(getClass());
+    public transient final Logger log = LogManager.getLogger(getClass());
     private StatelessKieSession workingMemory;
 
     @Before
@@ -93,7 +93,7 @@ public class SaveConsultationRulesTest
     }
 
     @Test
-    public void nullConsultationNumber() throws Exception
+    public void nullConsultationNumber()
     {
         Consultation consultation = new Consultation();
         consultation.setId(12345L);
@@ -106,7 +106,7 @@ public class SaveConsultationRulesTest
     }
 
     @Test
-    public void consultationNumberExists() throws Exception
+    public void consultationNumberExists()
     {
         Consultation consultation = new Consultation();
         consultation.setId(12345L);
@@ -117,7 +117,7 @@ public class SaveConsultationRulesTest
     }
 
     @Test
-    public void nullCmisFolderId() throws Exception
+    public void nullCmisFolderId()
     {
         Consultation consultation = new Consultation();
         consultation.setId(12345L);
@@ -136,7 +136,7 @@ public class SaveConsultationRulesTest
     }
 
     @Test
-    public void consultationCmisFolderIdExists() throws Exception
+    public void consultationCmisFolderIdExists()
     {
         Consultation consultation = new Consultation();
         consultation.setId(12345L);
@@ -155,7 +155,7 @@ public class SaveConsultationRulesTest
     }
 
     @Test
-    public void nullStatus() throws Exception
+    public void nullStatus()
     {
         Consultation consultation = new Consultation();
         consultation.setId(12345L);
@@ -169,7 +169,7 @@ public class SaveConsultationRulesTest
     }
 
     @Test
-    public void consultationStatusExists() throws Exception
+    public void consultationStatusExists()
     {
         Consultation consultation = new Consultation();
         consultation.setId(12345L);
@@ -180,7 +180,7 @@ public class SaveConsultationRulesTest
     }
 
     @Test
-    public void nullConsultationType() throws Exception
+    public void nullConsultationType()
     {
         Consultation consultation = new Consultation();
         consultation.setId(12345L);
@@ -194,7 +194,7 @@ public class SaveConsultationRulesTest
     }
 
     @Test
-    public void consultationTypeExists() throws Exception
+    public void consultationTypeExists()
     {
         Consultation consultation = new Consultation();
         consultation.setId(12345L);
@@ -205,7 +205,7 @@ public class SaveConsultationRulesTest
     }
 
     @Test
-    public void nullConsultationPriority() throws Exception
+    public void nullConsultationPriority()
     {
         Consultation consultation = new Consultation();
         consultation.setId(12345L);
@@ -218,7 +218,7 @@ public class SaveConsultationRulesTest
     }
 
     @Test
-    public void consultationPriorityExists() throws Exception
+    public void consultationPriorityExists()
     {
         Consultation consultation = new Consultation();
         consultation.setId(12345L);
@@ -229,7 +229,7 @@ public class SaveConsultationRulesTest
     }
 
     @Test
-    public void nullDueDate() throws Exception
+    public void nullDueDate()
     {
         Consultation consultation = new Consultation();
         consultation.setId(12345L);
@@ -242,7 +242,7 @@ public class SaveConsultationRulesTest
     }
 
     @Test
-    public void consultationDueDateExists() throws Exception
+    public void consultationDueDateExists()
     {
         Consultation consultation = new Consultation();
         consultation.setId(12345L);

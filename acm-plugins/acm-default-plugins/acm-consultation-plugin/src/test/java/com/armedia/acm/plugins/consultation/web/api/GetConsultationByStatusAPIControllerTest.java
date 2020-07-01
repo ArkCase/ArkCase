@@ -80,10 +80,10 @@ public class GetConsultationByStatusAPIControllerTest extends EasyMockSupport
     @Autowired
     private ExceptionHandlerExceptionResolver exceptionResolver;
 
-    private Logger log = LogManager.getLogger(getClass());
+    public transient final Logger log = LogManager.getLogger(getClass());
 
     @Before
-    public void setUp() throws Exception
+    public void setUp()
     {
         mockExecuteSolrQuery = createMock(ExecuteSolrQuery.class);
         mockHttpSession = new MockHttpSession();
