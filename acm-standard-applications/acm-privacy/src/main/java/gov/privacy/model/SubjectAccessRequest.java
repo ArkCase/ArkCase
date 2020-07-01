@@ -66,7 +66,6 @@ public class SubjectAccessRequest extends CaseFile implements SARObject
 {
     // TODO : Add requestCategory to db
 
-    public static final String PURGE_BILLING_QUEUE = "SubjectAccessRequest.purgeBillingQueue";
     public static final String PURGE_HOLD_QUEUE = "SubjectAccessRequest.purgeHoldQueue";
     public static final String REQUESTS_BY_STATUS = "SubjectAccessRequest.requestsByStatus";
     private static final long serialVersionUID = -8883225846554730667L;

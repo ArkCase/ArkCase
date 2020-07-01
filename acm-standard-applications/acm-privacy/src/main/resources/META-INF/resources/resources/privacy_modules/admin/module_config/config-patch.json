@@ -21,10 +21,6 @@
                 {
                     "name": "admin.queues.select.request",
                     "id": "Request"
-                },
-                {
-                    "name": "admin.queues.select.appeal",
-                    "id": "Appeal"
                 }
             ]
         }

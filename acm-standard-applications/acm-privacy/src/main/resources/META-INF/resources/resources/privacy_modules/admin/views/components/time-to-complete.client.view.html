@@ -41,106 +41,18 @@
                     </div>
                 </div>
                 <div class="row">
-
-                    <div class="col-lg-4 form-group">
-                        <label for="requestGeneralCounsel" translate>admin.queues.timeToComplete.label.generalCounsel
-                        </label>
-                        <input name="requestGeneralCounsel" type="number" id="requestGeneralCounsel"
-                                ng-change="requestCalculation()" ng-model="timeToComplete.request.generalCounsel" class="form-control"
-                                ng-keypress="ignoreNonDigits($event)" required />
-                    </div>
-                    <div class="col-lg-4 form-group">
-                        <label for="requestBilling" translate>admin.queues.timeToComplete.label.billing
-                        </label>
-                        <input name="requestBilling" type="number" id="requestBilling" ng-model="timeToComplete.request.billing"
-                                ng-change="requestCalculation()" class="form-control" ng-keypress="ignoreNonDigits($event)" required />
-                    </div>
-
                     <div class="col-lg-4 form-group">
                         <label for="requestRelease" translate>admin.queues.timeToComplete.label.release
                         </label>
                         <input name="requestRelease" type="number" id="requestRelease" ng-model="timeToComplete.request.release"
                                 ng-change="requestCalculation()" class="form-control" ng-keypress="ignoreNonDigits($event)" required />
                     </div>
-                </div>
-                <div>
-                    <div class="row">
-
-                        <div class="col-lg-4 form-group">
-                            <label for="requestDeadlineIndicator" translate>admin.queues.timeToComplete.label.deadlineIndicator
-                            </label>
-                            <input name="requestDeadlineIndicator" type="number" id="requestDeadlineIndicator"
-                                    ng-model="timeToComplete.request.deadlineIndicator" class="form-control" ng-keypress="ignoreNonDigits($event)" required />
-                        </div>
-                        <div class="col-lg-4 form-group">
-                            <label for="requestTotalTimeToComplete" translate>admin.queues.timeToComplete.label.totalTimeToComplete
-                            </label>
-                            <input name="requestTotalTimeToComplete" id="requestTotalTimeToComplete" ng-disabled="true"
-                                    ng-model="timeToComplete.request.totalTimeToComplete" class="form-control" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div ng-show="timeToCompleteType == 'Appeal'">
-                <div class="row">
-                    <div class="col-lg-4 form-group">
-                        <label for="appeal" translate>admin.queues.timeToComplete.label.appeal
-                        </label>
-                        <input name="appeal" type="number" id="appeal" ng-model="timeToComplete.appeal.appeal" class="form-control"
-                                ng-change="appealCalculation()" ng-keypress="ignoreNonDigits($event)" required />
-                    </div>
 
                     <div class="col-lg-4 form-group">
-                        <label for="appealFulfill" translate>admin.queues.timeToComplete.label.fulfill
+                        <label for="requestTotalTimeToComplete" translate>admin.queues.timeToComplete.label.totalTimeToComplete
                         </label>
-                        <input name="appealFulfill" type="number" id="appealFulfill" ng-model="timeToComplete.appeal.fulfill"
-                                ng-change="appealCalculation()" ng-keypress="ignoreNonDigits($event)" class="form-control" required />
-                    </div>
-                    <div class="col-lg-4 form-group">
-                        <label for="appealApprove" translate>admin.queues.timeToComplete.label.approve
-                        </label>
-                        <input name="appealApprove" type="number" id="appealApprove" ng-model="timeToComplete.appeal.approve"
-                                ng-change="appealCalculation()" ng-keypress="ignoreNonDigits($event)" class="form-control" required />
-                    </div>
-                </div>
-                <div class="row">
-
-                    <div class="col-lg-4 form-group">
-                        <label for="appealGeneralCounsel" translate>admin.queues.timeToComplete.label.generalCounsel
-                        </label>
-                        <input name="appealGeneralCounsel" type="number" id="appealGeneralCounsel" ng-change="appealCalculation()"
-                                ng-model="timeToComplete.appeal.generalCounsel" class="form-control" ng-keypress="ignoreNonDigits($event)" required />
-                    </div>
-                    <div class="col-lg-4 form-group">
-                        <label for="appealBilling" translate>admin.queues.timeToComplete.label.billing
-                        </label>
-                        <input name="appealBilling" type="number" id="appealBilling" ng-model="timeToComplete.appeal.billing"
-                                ng-change="appealCalculation()" class="form-control" ng-keypress="ignoreNonDigits($event)" required />
-                    </div>
-
-                    <div class="col-lg-4 form-group">
-                        <label for="appealRelease" translate>admin.queues.timeToComplete.label.release
-                        </label>
-                        <input name="appealRelease" type="number" id="appealRelease" ng-model="timeToComplete.appeal.release"
-                                ng-change="appealCalculation()" class="form-control" ng-keypress="ignoreNonDigits($event)" required />
-                    </div>
-                </div>
-                <div>
-                    <div class="row">
-
-                        <div class="col-lg-4 form-group">
-                            <label for="appealDeadlineIndicator" translate>admin.queues.timeToComplete.label.deadlineIndicator
-                            </label>
-                            <input name="appealDeadlineIndicator" type="number" id="appealDeadlineIndicator"
-                                    ng-model="timeToComplete.appeal.deadlineIndicator" class="form-control" ng-keypress="ignoreNonDigits($event)" required />
-                        </div>
-                        <div class="col-lg-4 form-group">
-                            <label for="appealTotalTimeToComplete" translate>admin.queues.timeToComplete.label.totalTimeToComplete
-                            </label>
-                            <input name="appealTotalTimeToComplete" id="appealTotalTimeToComplete"
-                                    ng-model="timeToComplete.appeal.totalTimeToComplete" value="appealCalculation()" class="form-control"
-                                    ng-disabled="true" required />
-                        </div>
+                        <input name="requestTotalTimeToComplete" id="requestTotalTimeToComplete" ng-disabled="true"
+                               ng-model="timeToComplete.request.totalTimeToComplete" class="form-control"/>
                     </div>
                 </div>
             </div>

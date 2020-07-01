@@ -12,8 +12,7 @@ angular.module('admin').controller(
                 function($scope, MessageService, AdminQueuesTimeToCompleteService, DialogService, $translate, ConfigService) {
                     timeToCompleteType: null;
                     $scope.timeToComplete = {
-                        request: {},
-                        appeal: {}
+                        request: {}
                     };
 
                     $scope.ignoreNonDigits = function(event){
@@ -36,13 +35,7 @@ angular.module('admin').controller(
 
                     });
                     $scope.requestCalculation = function() {
-                        $scope.timeToComplete.request.totalTimeToComplete = $scope.timeToComplete.request.intake + $scope.timeToComplete.request.fulfill + $scope.timeToComplete.request.approve + $scope.timeToComplete.request.generalCounsel + $scope.timeToComplete.request.billing
-                                + $scope.timeToComplete.request.release;
-                    };
-
-                    $scope.appealCalculation = function() {
-                        $scope.timeToComplete.appeal.totalTimeToComplete = $scope.timeToComplete.appeal.appeal + $scope.timeToComplete.appeal.fulfill + $scope.timeToComplete.appeal.approve + $scope.timeToComplete.appeal.generalCounsel + $scope.timeToComplete.appeal.billing
-                                + $scope.timeToComplete.appeal.release;
+                        $scope.timeToComplete.request.totalTimeToComplete = $scope.timeToComplete.request.intake + $scope.timeToComplete.request.fulfill + $scope.timeToComplete.request.approve + $scope.timeToComplete.request.release;
                     };
 
                     $scope.save = function() {

@@ -38,7 +38,6 @@ public class SARConfiguration extends SystemConfiguration
     private Integer maxDaysInHoldQueue;
     private Boolean dashboardBannerEnabled;
     private Boolean purgeRequestWhenInHoldEnabled;
-    private Boolean notificationGroupsEnabled;
     private Boolean limitedDeliveryToSpecificPageCountEnabled;
     private Integer limitedDeliveryToSpecificPageCount;
     private Boolean provideReasonToHoldRequestEnabled;
@@ -61,16 +60,6 @@ public class SARConfiguration extends SystemConfiguration
     public void setDashboardBannerEnabled(Boolean dashboardBannerEnabled)
     {
         this.dashboardBannerEnabled = dashboardBannerEnabled;
-    }
-
-    public Boolean getNotificationGroupsEnabled()
-    {
-        return notificationGroupsEnabled;
-    }
-
-    public void setNotificationGroupsEnabled(Boolean notificationGroupsEnabled)
-    {
-        this.notificationGroupsEnabled = notificationGroupsEnabled;
     }
 
     public Boolean getPurgeRequestWhenInHoldEnabled()

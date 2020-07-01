@@ -88,7 +88,6 @@ public class SARService
     private EcmFileService ecmFileService;
     private NotificationSender notificationSender;
     private String originalRequestFolderNameFormat;
-    private String appealTitleFormat;
     private QueuesTimeToCompleteService queuesTimeToCompleteService;
     private SARConfigurationService SARConfigurationService;
     private ExecuteSolrQuery executeSolrQuery;
@@ -198,20 +197,6 @@ public class SARService
                 address.setType("Business");
             }
         }
-    }
-
-    private CaseFile populateAppealFromOriginalRequest(CaseFile in, CaseFile originalRequest)
-    {
-
-        in.getOriginator().setPerson(originalRequest.getOriginator().getPerson());
-
-        if (in.getTitle() == null || in.getTitle().isEmpty() || in.getTitle().equals(originalRequest.getTitle()))
-        {
-            in.setTitle(originalRequest.getTitle() + String.format(getAppealTitleFormat(), originalRequest.getCaseNumber()));
-        }
-
-        return in;
-
     }
 
     public CaseFile createReference(CaseFile in, CaseFile originalRequest)
@@ -422,23 +407,6 @@ public class SARService
     public void setNotificationSender(NotificationSender notificationSender)
     {
         this.notificationSender = notificationSender;
-    }
-
-    /**
-     * @return the appealTitleFormat
-     */
-    public String getAppealTitleFormat()
-    {
-        return appealTitleFormat;
-    }
-
-    /**
-     * @param appealTitleFormat
-     *            the appealTitleFormat to set
-     */
-    public void setAppealTitleFormat(String appealTitleFormat)
-    {
-        this.appealTitleFormat = appealTitleFormat;
     }
 
     public void setQueuesTimeToCompleteService(QueuesTimeToCompleteService queuesTimeToCompleteService)

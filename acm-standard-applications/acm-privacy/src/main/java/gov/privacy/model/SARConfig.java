@@ -49,10 +49,6 @@ public class SARConfig
     @Value("${purgeRequestWhenInHoldEnabled}")
     private Boolean purgeRequestWhenInHoldEnabled;
 
-    @JsonProperty("notification.groups.enabled")
-    @Value("${notification.groups.enabled}")
-    private Boolean notificationGroupsEnabled;
-
     @JsonProperty("limitedDeliveryToSpecificPageCountEnabled")
     @Value("${limitedDeliveryToSpecificPageCountEnabled}")
     private Boolean limitedDeliveryToSpecificPageCountEnabled;
@@ -93,16 +89,6 @@ public class SARConfig
     public void setPurgeRequestWhenInHoldEnabled(Boolean purgeRequestWhenInHoldEnabled)
     {
         this.purgeRequestWhenInHoldEnabled = purgeRequestWhenInHoldEnabled;
-    }
-
-    public Boolean getNotificationGroupsEnabled()
-    {
-        return notificationGroupsEnabled;
-    }
-
-    public void setNotificationGroupsEnabled(Boolean notificationGroupsEnabled)
-    {
-        this.notificationGroupsEnabled = notificationGroupsEnabled;
     }
 
     public Boolean getLimitedDeliveryToSpecificPageCountEnabled()
