@@ -54,7 +54,7 @@ import org.springframework.core.io.Resource;
 public class ConsultationAccessControlRulesTest
 {
 
-    private Logger log = LogManager.getLogger(getClass());
+    public transient final Logger log = LogManager.getLogger(getClass());
     private StatelessKieSession workingMemory;
 
     @Before
@@ -90,7 +90,7 @@ public class ConsultationAccessControlRulesTest
     }
 
     @Test
-    public void restricted() throws Exception
+    public void restricted()
     {
         Consultation consultation = createTestConsultationWithRestrictedFlag(true);
 
@@ -116,7 +116,7 @@ public class ConsultationAccessControlRulesTest
     }
 
     @Test
-    public void unrestricted() throws Exception
+    public void unrestricted()
     {
         Consultation consultation = createTestConsultationWithRestrictedFlag(false);
 

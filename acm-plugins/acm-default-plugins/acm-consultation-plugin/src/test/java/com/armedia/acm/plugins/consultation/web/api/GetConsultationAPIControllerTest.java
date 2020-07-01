@@ -90,7 +90,7 @@ public class GetConsultationAPIControllerTest extends EasyMockSupport
     @Autowired
     private ExceptionHandlerExceptionResolver exceptionResolver;
 
-    private Logger log = LogManager.getLogger(getClass());
+    public transient final Logger log = LogManager.getLogger(getClass());
 
     @Before
     public void setUp()
