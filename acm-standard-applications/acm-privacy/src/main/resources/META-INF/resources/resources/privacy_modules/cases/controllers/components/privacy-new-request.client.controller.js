@@ -65,7 +65,7 @@ angular.module('cases').controller(
                 }
             };
 
-            $scope.removeSubjectFileProofOfIdentityForSubject = function (index) {
+            $scope.removeSubjectFileProofOfIdentity = function (index) {
                 $scope.uploadFilesDescription[subjectProofOfIdentityDocumentType].splice(index, 1);
             };
 
@@ -193,6 +193,8 @@ angular.module('cases').controller(
                 $scope.zipCodeInvalid = false;
                 $scope.subjectEmpty = false;
                 $scope.dateRangeInvalid = false;
+                $scope.subjectProofOfIdentity = false;
+                $scope.originatorProofOfIdentity = false;
 
                 if ($scope.config.data.requestType) {
 
@@ -223,6 +225,14 @@ angular.module('cases').controller(
                     if ($scope.config.data.recordSearchDateFrom > $scope.config.data.recordSearchDateTo) {
                         $scope.formInvalid = true;
                         $scope.dateRangeInvalid = true;
+                    }
+                    if ($scope.uploadFilesDescription[subjectProofOfIdentityDocumentType].length == 0) {
+                        $scope.formInvalid = true;
+                        $scope.subjectProofOfIdentity = true;
+                    }
+                    if ($scope.uploadFilesDescription[originatorProofOfIdentityDocumentType].length == 0) {
+                        $scope.formInvalid = true;
+                        $scope.originatorProofOfIdentity = true;
                     }
                     if (requestForm.$valid && !$scope.formInvalid) {
                         $scope.saveNewRequest();
@@ -537,15 +547,14 @@ angular.module('cases').controller(
                     $scope.config.data.originator.person.contactMethods.push($scope.config.data.originator.person.defaultEmail);
                 }
 
+                $scope.config.data.title = $scope.config.data.subject.person.givenName + ' ' + $scope.config.data.subject.person.familyName;
+
                 for (var property in $scope.config.data) {
                     if ($scope.config.data.hasOwnProperty(property)) {
                         basicData[property] = $scope.config.data[property];
                     }
                 }
-
-                $scope.config.data.subject = $scope.config.data.originator;
-                $scope.config.data.title = $scope.config.data.subject.person.familyName + ' ' + $scope.config.data.subject.person.givenName;
-
+                
                 var data = new Blob([angular.toJson(JSOG.encode(Util.omitNg(basicData)))], {
                     type: 'application/json'
                 });

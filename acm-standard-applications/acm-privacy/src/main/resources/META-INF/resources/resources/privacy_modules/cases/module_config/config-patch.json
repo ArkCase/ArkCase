@@ -152,6 +152,18 @@
         "path": "/components/?@.id=='userSearch'"
     },
     {
+        "op": "remove",
+        "path": "/tree/nodeTypes/?@.type=='p/CASE_FILE/suggestedCases'"
+    },
+    {
+        "op": "remove",
+        "path": "/tree/nodeTypes/?@.type=='p/CASE_FILE/exemption'"
+    },
+    {
+        "op": "remove",
+        "path": "/tree/nodeTypes/?@.type=='p/CASE_FILE/billing'"
+    },
+    {
         "op": "add",
         "path": "/components/-",
         "value": {
