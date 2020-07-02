@@ -315,11 +315,17 @@
                                 <span class="required-asterisk">*</span>
                             </div>
                             <div class="col-sm-4 form-group">
-                                <div class="input-group">
-                                    <date-time-picker data="config.data.dateOfBirth" property="dateOfBirth"
-                                                      on-after-save="dateOfBirthChanged()"
-                                                      date-picker-id="dateOfBirth"></date-time-picker>
-                                </div>
+                                <fieldset ng-disabled="isExistingSubject && existingSubject.dateOfBirth">
+                                    <div class="form-group">
+                                        <date-time-picker data="config.data.subject.person.dateOfBirth" property="dateOfBirth"
+                                                          on-after-save="dateOfBirthChanged()"
+                                                          date-picker-id="dateOfBirth"
+                                                          time-format-disabled="true"></date-time-picker>
+                                    </div>
+                                </fieldset>
+                                <span class="text-danger"
+                                      ng-if="!config.data.subject.person.dateOfBirth && formInvalid" translate>
+                            cases.newRequest.dateOfBirth.validation.error</span>
                             </div>
                         </div>
 

@@ -16,7 +16,6 @@ angular.module('cases').controller(
             $scope.isPickExistingSubject = false;
 
             $scope.receivedDate = new Date();
-            $scope.dateOfBirth = new Date();
 
             var subjectProofOfIdentityDocumentType = "Subject Proof of Identity";
             var originatorProofOfIdentityDocumentType = "Originator Proof of Identity";
@@ -173,7 +172,7 @@ angular.module('cases').controller(
                 $scope.config.data.subject.person.addresses[0].country = countries[0].key;
                 $scope.config.data.subject.person.addresses[0].type = addressTypes[0].key;
                 $scope.config.data.receivedDate = moment.utc().format("YYYY-MM-DDTHH:mm:ss.sss");
-                $scope.config.data.dateOfBirth = moment.utc().format("YYYY-MM-DDTHH:mm:ss.sss");
+                $scope.config.data.dateOfBirth = moment.utc().format("YYYY-MM-DD");
 
                 $scope.blankPerson = angular.copy($scope.config.data.originator.person);
             });
@@ -256,9 +255,9 @@ angular.module('cases').controller(
             };
 
             $scope.dateOfBirthChanged = function () {
-                var todayDate = moment.utc().format("YYYY-MM-DDTHH:mm:ss.sss");
-                if (Util.isEmpty($scope.config.data.dateOfBirth) || moment($scope.config.data.dateOfBirth).isAfter(todayDate)) {
-                    $scope.config.data.dateOfBirth = todayDate;
+                var todayDate = moment.utc().format("YYYY-MM-DD");
+                if (Util.isEmpty($scope.config.data.dateOfBirth) || moment($scope.config.data.subject.person.dateOfBirth).isAfter(todayDate)) {
+                    $scope.config.data.subject.person.dateOfBirth = todayDate;
                 }
             };
 

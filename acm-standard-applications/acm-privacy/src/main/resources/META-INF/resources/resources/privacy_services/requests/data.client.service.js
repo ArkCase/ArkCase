@@ -72,7 +72,8 @@ angular.module('services').factory('SAR.Data', [function () {
                 defaultFax: {
                     type: 'fax'
                 },
-                organizations: []
+                organizations: [],
+                dateOfBirth: new Date()
             }
         }
 
