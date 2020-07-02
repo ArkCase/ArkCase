@@ -1275,11 +1275,11 @@
             "id": "requests",
             "requestTypes": [
                 {
-                    "name": "Data Access Request",
+                    "name": "Data Access Request (Requesting a copy of personal data stored in our systems)",
                     "id": "Data Access Request"
                 },
                 {
-                    "name": "Right to be Forgotten Request",
+                    "name": "Right to be Forgotten Request (Requesting personal data be removed from our systems)",
                     "id": "Right to be Forgotten Request"
                 },
                 {
@@ -1287,7 +1287,7 @@
                     "id": "Data Modification Request"
                 },
                 {
-                    "name": "Other",
+                    "name": "Other (Explain in Detail Description Box Below)",
                     "id": "Other"
                 }
             ],
