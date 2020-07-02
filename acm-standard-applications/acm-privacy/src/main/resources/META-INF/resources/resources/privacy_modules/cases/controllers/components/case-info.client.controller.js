@@ -75,25 +75,48 @@ angular.module('cases').controller(
             });
             $scope.privacyConfig = {};
 
-
+            $scope.updateDueDate = function (data) {
+                if (!Util.isEmpty(data)) {
+                    var correctedDueDate = new Date(data);
+                    var startDate = new Date($scope.objectInfo.created);
+                    if (correctedDueDate < startDate) {
+                        $scope.dateInfo.dueDate = $scope.dueDateBeforeChange;
+                        DialogService.alert($translate.instant("cases.comp.info.alertMessage ") + $filter("date")(startDate, $translate.instant('common.defaultDateTimeUIFormat')));
+                    } else {
+                        $scope.objectInfo.dueDate = moment.utc(correctedDueDate).format("YYYY-MM-DDTHH:mm:ss.sss");
+                        $scope.dueDateInfo = moment.utc($scope.objectInfo.dueDate).local().format('MM/DD/YYYY');
+                        $scope.dateInfo.dueDate = $scope.dueDateInfo;
+                        $scope.saveCase();
+                    }
+                } else {
+                    $scope.objectInfo.dueDate = moment.utc($scope.dueDateBeforeChange).format("YYYY-MM-DDTHH:mm:ss.sss");
+                    ;
+                    $scope.dueDateInfo = moment.utc($scope.objectInfo.dueDate).local().format('MM/DD/YYYY');
+                    $scope.dateInfo.dueDate = $scope.dueDateInfo;
+                    $scope.saveCase();
+                }
+            };
 
             var onObjectInfoRetrieved = function (data) {
                 AdminHolidayService.getHolidays().then(function (response) {
                     $scope.holidays = response.data.holidays;
                     $scope.includeWeekends = response.data.includeWeekends;
 
+                    $scope.dateInfo = $scope.dateInfo || {};
+                    if (!Util.isEmpty($scope.objectInfo.dueDate)) {
+                        $scope.dateInfo.dueDate = moment.utc($scope.objectInfo.dueDate).local().format('MM/DD/YYYY');
+                        $scope.dueDateInfo = $scope.dateInfo.dueDate;
+                    } else {
+                        $scope.dateInfo.dueDate = null;
+                        $scope.dueDateInfo = new Date();
+                        $scope.dueDateInfo = moment($scope.dueDateInfo).format('MM/DD/YYYY');
+                    }
+                    $scope.dueDateBeforeChange = $scope.dateInfo.dueDate;
+
                     $scope.calculateDaysObj = {};
                     $scope.owningGroup = ObjectModelService.getGroup(data);
                     $scope.assignee = ObjectModelService.getAssignee(data);
-                    if ($scope.objectInfo.dueDate != null) {
-                        if (!$scope.includeWeekends) {
-                            $scope.calculateDaysObj = DueDateService.daysLeft($scope.holidays, $scope.objectInfo.dueDate);
-                        }
-                        else {
-                            $scope.calculateDaysObj = DueDateService.daysLeftWithWeekends($scope.holidays, $scope.objectInfo.dueDate);
-                        }
-                        $scope.dueDate = $scope.objectInfo.dueDate.replace(/(\d{4})\-(\d{2})\-(\d{2}).*/, '$2/$3/$1');
-                    }
+
                     CaseLookupService.getApprovers($scope.owningGroup, $scope.assignee).then(function (approvers) {
                         var options = [];
                         _.each(approvers, function (approver) {
@@ -105,9 +128,10 @@ angular.module('cases').controller(
                         $scope.assignees = options;
                         return approvers;
                     });
-                    $scope.today = new Date();
-                    $scope.receivedDateMinYear = $scope.today.getFullYear();
-                    $scope.receivedDateMaxYear = $scope.receivedDateMinYear + 1;
+
+                    var utcDate = moment.utc(UtilDateService.dateToIso(new Date(data.created))).format();
+                    $scope.maxYear = moment(utcDate).add(1, 'years').toDate().getFullYear();
+                    $scope.minYear = new Date(data.created).getFullYear();
                 });
 
                 $scope.notificationGroup = null;
@@ -274,19 +298,6 @@ angular.module('cases').controller(
             $scope.updateAssignee = function() {
                 ObjectModelService.setAssignee($scope.objectInfo, $scope.assignee);
             };
-
-            $scope.$on('dueDate-changed', dueDateChanged);
-
-            function dueDateChanged(e, newDueDate) {
-                $scope.objectInfo.dueDate = new Date(newDueDate).toISOString();
-                $scope.dueDate = newDueDate.replace(/(\d{4})\-(\d{2})\-(\d{2}).*/, '$2/$3/$1');
-                if(!$scope.includeWeekends) {
-                    $scope.calculateDaysObj = DueDateService.daysLeft($scope.holidays, $scope.objectInfo.dueDate);
-                }
-                else {
-                    $scope.calculateDaysObj = DueDateService.daysLeftWithWeekends($scope.holidays, $scope.objectInfo.dueDate);
-                }
-            }
 
             $scope.updateNotificationGroup = function() {
                 var notification = _.find($scope.notificationGroups, {
