@@ -167,11 +167,11 @@
                                        ng-disabled="isExistingSubject && (existingSubject.defaultEmail.value ||
                                     (config.data.deliveryMethodOfResponse != 'Web Portal'  && !config.data.createNewPortalUser))">
                                 <span class="text-danger"
-                                      ng-if="(confirmationEmail !== config.data.subject.person.defaultEmail.value) && formInvalid && !confirmEmailEmpty"
+                                      ng-if="(subjectConfirmationEmail !== config.data.subject.person.defaultEmail.value) && formInvalid && !subjectConfirmEmailEmpty"
                                       translate>
                                 cases.newRequest.confirmationEmail.validation.errorInvalid</span>
                                 <span class="text-danger"
-                                      ng-if="(config.data.deliveryMethodOfResponse == 'Web Portal' || config.data.createNewPortalUser) && (confirmationEmail !== config.data.subject.person.defaultEmail.value)"
+                                      ng-if="(config.data.deliveryMethodOfResponse == 'Web Portal' || config.data.createNewPortalUser) && (subjectConfirmationEmail !== config.data.subject.person.defaultEmail.value)"
                                       translate>
                                 cases.newRequest.confirmationEmail.validation.error</span>
                             </div>
