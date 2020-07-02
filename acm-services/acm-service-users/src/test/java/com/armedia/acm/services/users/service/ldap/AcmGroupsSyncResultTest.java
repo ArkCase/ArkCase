@@ -38,13 +38,16 @@ import static org.hamcrest.core.Every.everyItem;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.group.AcmGroupStatus;
+import com.armedia.acm.services.users.model.ldap.AcmLdapConstants;
 import com.armedia.acm.services.users.model.ldap.LdapGroup;
+import com.armedia.acm.services.users.model.ldap.MapperUtils;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -62,8 +65,6 @@ public class AcmGroupsSyncResultTest
         return new HashSet<>(Arrays.asList(elements));
     }
 
-    // @formatter:off
-
     @Before
     public void setup()
     {
@@ -71,7 +72,6 @@ public class AcmGroupsSyncResultTest
     }
 
     // @formatter:off
-
     /**
      * Group A ->
      *       member cn=1,cn=Users
@@ -123,7 +123,6 @@ public class AcmGroupsSyncResultTest
     }
 
     // @formatter:off
-
      /**
       * ldap state                        db state
       * Group A ->                        AcmGroup A ->
@@ -181,7 +180,6 @@ public class AcmGroupsSyncResultTest
     }
 
     // @formatter:off
-
      /**
       * Group A ->                    AcmGroup A ->
       *       member cn=1,cn=Users             member cn=1,cn=Users
@@ -232,7 +230,96 @@ public class AcmGroupsSyncResultTest
     }
 
     // @formatter:off
+    /**
+     * Group A ->                    AcmGroup A ->                          User 1 -> invalidated
+     *       member cn=1,cn=Users             member cn=1,cn=Users                    cn=1,cn=Users,ou=Deleted
+     *       member cn=4,cn=Users             member cn=2,cn=Users          User 01 -> same DN
+     * Group B ->                    AcmGroup B ->                                    cn=1,cn=Users
+     *       member cn=3,cn=Users             member cn=3,cn=Users
+     * Group C ->                    AcmGroup C ->
+     *       member cn=4,cn=Users             member cn=4,cn=Users
+     */
+    // @formatter:on
+    @Test
+    public void changedGroupsWithAddedAndRemovedUsersAndOneNewUserWithExistingDnTest()
+    {
+        LdapGroup a = ldapGroup("A");
+        LdapGroup b = ldapGroup("B");
+        LdapGroup c = ldapGroup("C");
 
+        AcmUser u1 = acmUser("1");
+        u1.setDistinguishedName(MapperUtils.appendToDn(u1.getDistinguishedName(), AcmLdapConstants.DC_DELETED));
+        AcmUser u01 = acmUser("01");
+        u01.setDistinguishedName("cn=1,cn=Users");
+        AcmUser u2 = acmUser("2");
+        AcmUser u3 = acmUser("3");
+        AcmUser u4 = acmUser("4");
+
+        a.setMembers(fromArray("cn=1,cn=Users", "cn=4,cn=Users"));
+        b.setMembers(fromArray("cn=3,cn=Users"));
+        c.setMembers(fromArray("cn=4,cn=Users"));
+
+        Map<String, AcmUser> currentUsers = userStream(u1, u01, u2, u3, u4)
+                .collect(Collectors.toMap(AcmUser::getUserId, Function.identity()));
+
+        AcmGroup acmGroupA = acmGroup("A");
+        AcmGroup acmGroupB = acmGroup("B");
+        AcmGroup acmGroupC = acmGroup("C");
+
+        acmGroupA.setUserMembers(userSet(u1, u2));
+        acmGroupB.setUserMembers(userSet(u3));
+        acmGroupC.setUserMembers(userSet(u4));
+
+        List<AcmGroup> currentGroups = Arrays.asList(acmGroupA, acmGroupB, acmGroupC);
+
+        unit.sync(Arrays.asList(a, b, c), currentGroups, currentUsers);
+
+        AcmGroup actualGroupA = unit.getModifiedGroups().get(0);
+        assertThat(unit.getModifiedGroups().size(), is(1));
+        assertThat("Changed group should be:", actualGroupA.getName(), is("A"));
+        assertThat("Changed group A should have user members", actualGroupA.getUserMembers(false),
+                everyItem(isIn(userSet(u4, u01))));
+        assertThat("Ascendants string for C should be null", actualGroupA.getAscendantsList(), nullValue());
+    }
+
+    // @formatter:off
+    /**
+     * Group A ->                    AcmGroup A ->                          User 1 ->  invalidated
+     *       member cn=1,cn=Users             member cn=1,cn=Users                     cn=1,cn=Users,ou=Deleted
+     *                                                                      User 01 -> same DN
+     *                                                                                 cn=1,cn=Users
+     */
+    // @formatter:on
+    @Test
+    public void changedGroupWithAddedAndRemovedUserSyncedWithExistingDnTest()
+    {
+        LdapGroup a = ldapGroup("A");
+
+        AcmUser u1 = acmUser("1");
+        u1.setDistinguishedName(MapperUtils.appendToDn(u1.getDistinguishedName(), AcmLdapConstants.DC_DELETED));
+        AcmUser u01 = acmUser("01");
+        u01.setDistinguishedName("cn=1,cn=Users");
+
+        a.setMembers(fromArray("cn=1,cn=Users"));
+
+        Map<String, AcmUser> currentUsers = userStream(u1, u01)
+                .collect(Collectors.toMap(AcmUser::getUserId, Function.identity()));
+
+        AcmGroup acmGroupA = acmGroup("A");
+
+        acmGroupA.setUserMembers(userSet(u1));
+
+        unit.sync(Collections.singletonList(a), Collections.singletonList(acmGroupA), currentUsers);
+
+        AcmGroup actualGroupA = unit.getModifiedGroups().get(0);
+        assertThat(unit.getModifiedGroups().size(), is(1));
+        assertThat("Changed group should be:", actualGroupA.getName(), is("A"));
+        assertThat("Changed group A should have user members", actualGroupA.getUserMembers(false),
+                everyItem(isIn(userSet(u01))));
+        assertThat("Ascendants string for C should be null", actualGroupA.getAscendantsList(), nullValue());
+    }
+
+    // @formatter:off
     /**
      * ldap state                        db state
      *
@@ -317,7 +404,6 @@ public class AcmGroupsSyncResultTest
     }
 
     // @formatter:off
-
    /**
     * ldap state                        db state
     * Group A ->                        AcmGroup A ->
