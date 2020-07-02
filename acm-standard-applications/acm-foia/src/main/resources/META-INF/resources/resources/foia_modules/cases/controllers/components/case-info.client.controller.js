@@ -75,22 +75,23 @@ angular.module('cases').controller(
             });
             $scope.privacyConfig = {};
 
-            $scope.updateDueDate = function(data) {
+            $scope.updateDueDate = function (data) {
                 if (!Util.isEmpty(data)) {
                     var correctedDueDate = new Date(data);
                     var startDate = new Date($scope.objectInfo.created);
-                    if(correctedDueDate < startDate){
+                    if (correctedDueDate < startDate) {
                         $scope.dateInfo.dueDate = $scope.dueDateBeforeChange;
                         DialogService.alert($translate.instant("cases.comp.info.alertMessage ") + $filter("date")(startDate, $translate.instant('common.defaultDateTimeUIFormat')));
-                    }else {
+                    } else {
                         $scope.objectInfo.dueDate = moment.utc(correctedDueDate).format("YYYY-MM-DDTHH:mm:ss.sss");
-                        $scope.dueDateInfo = moment.utc($scope.objectInfo.dueDate).local().format('MM/DD/YYYY');
+                        $scope.dueDateInfo = moment.utc($scope.objectInfo.dueDate).local().format('MM/DD/YYYY HH:mm');
                         $scope.dateInfo.dueDate = $scope.dueDateInfo;
                         $scope.saveCase();
                     }
-                }else {
-                    $scope.objectInfo.dueDate = moment.utc($scope.dueDateBeforeChange).format("YYYY-MM-DDTHH:mm:ss.sss");;
-                    $scope.dueDateInfo = moment.utc($scope.objectInfo.dueDate).local().format('MM/DD/YYYY');
+                } else {
+                    $scope.objectInfo.dueDate = moment.utc($scope.dueDateBeforeChange).format("YYYY-MM-DDTHH:mm:ss.sss");
+                    ;
+                    $scope.dueDateInfo = moment.utc($scope.objectInfo.dueDate).local().format('MM/DD/YYYY HH:mm');
                     $scope.dateInfo.dueDate = $scope.dueDateInfo;
                     $scope.saveCase();
                 }
@@ -101,14 +102,13 @@ angular.module('cases').controller(
                     $scope.holidays = response.data.holidays;
                     $scope.includeWeekends = response.data.includeWeekends;
                     $scope.dateInfo = $scope.dateInfo || {};
-                    if(!Util.isEmpty($scope.objectInfo.dueDate)){
-                        $scope.dateInfo.dueDate = moment.utc($scope.objectInfo.dueDate).local().format('MM/DD/YYYY');
+                    if (!Util.isEmpty($scope.objectInfo.dueDate)) {
+                        $scope.dateInfo.dueDate = moment.utc($scope.objectInfo.dueDate).local().format('MM/DD/YYYY HH:mm');
                         $scope.dueDateInfo = $scope.dateInfo.dueDate;
-                    }
-                    else {
+                    } else {
                         $scope.dateInfo.dueDate = null;
                         $scope.dueDateInfo = new Date();
-                        $scope.dueDateInfo = moment($scope.dueDateInfo).format('MM/DD/YYYY');
+                        $scope.dueDateInfo = moment($scope.dueDateInfo).format('MM/DD/YYYY HH:mm');
                     }
                     $scope.dueDateBeforeChange = $scope.dateInfo.dueDate;
 
