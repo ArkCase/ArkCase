@@ -501,20 +501,7 @@ angular.module('request-info').controller(
                 ObjectLookupService.getRequestCategories().then(function (requestCategories) {
                     $scope.requestCategories = requestCategories;
                 });
-                ObjectLookupService.getPayFees().then(function (payFees) {
-                    $scope.payFees = payFees;
-                    if ($scope.requestInfo.payFee != null && $scope.requestInfo.payFee != "0" && $scope.requestInfo.payFee != '') {
-                        $scope.payFeeValue = _.find($scope.payFees, function (payFee) {
-                            if (payFee.key == $scope.requestInfo.payFee) {
-                                return payFee.key;
-                                $scope.requestInfo.payFee = $scope.payFeeValue.key;
-                            }
-                        });
-                        $scope.requestInfo.payFee = $scope.payFeeValue.key;
-                    } else {
-                        $scope.requestInfo.payFee = $scope.payFees[0].key;
-                    }
-                });
+
                 ObjectLookupService.getDeliveryMethodOfResponses().then(function (deliveryMethodOfResponses) {
                     $scope.deliveryMethodOfResponses = deliveryMethodOfResponses;
                     if ($scope.requestInfo.deliveryMethodOfResponse != null && $scope.requestInfo.deliveryMethodOfResponse != '') {
@@ -535,17 +522,13 @@ angular.module('request-info').controller(
                     var availableQueues = data.nextPossibleQueues;
                     var defaultNextQueue = data.defaultNextQueue;
                     var defaultReturnQueue = data.defaultReturnQueue;
-                    var defaultDenyQueue = data.defaultDenyQueue;
 
-                    if (defaultNextQueue || defaultReturnQueue || defaultDenyQueue) {
+                    if (defaultNextQueue || defaultReturnQueue) {
                         //if there is default next or return queue, then remove it from the list
                         //and add Complete, Next and Return queue aliases into list
                         _.remove(availableQueues, function (currentObject) {
-                            return currentObject === defaultNextQueue || currentObject === defaultReturnQueue || currentObject === defaultDenyQueue;
+                            return currentObject === defaultNextQueue || currentObject === defaultReturnQueue;
                         });
-                        if (defaultDenyQueue) {
-                            availableQueues.unshift("Deny");
-                        }
                         if (defaultReturnQueue) {
                             availableQueues.unshift("Return");
                         }
@@ -556,7 +539,7 @@ angular.module('request-info').controller(
                     availableQueues = availableQueues.map(function (item) {
                         var tmpObj = {};
                         tmpObj.name = item;
-                        if (item != 'Complete' && item != 'Next') {
+                        if (item != 'Complete' && item != 'Next' && item != 'Hold') {
                             tmpObj.disabled = true;
                         }
                         return tmpObj;
@@ -565,7 +548,6 @@ angular.module('request-info').controller(
                     $scope.availableQueues = availableQueues;
                     $scope.defaultNextQueue = defaultNextQueue;
                     $scope.defaultReturnQueue = defaultReturnQueue;
-                    $scope.defaultDenyQueue = defaultDenyQueue;
 
                 });
 
@@ -608,11 +590,6 @@ angular.module('request-info').controller(
                 if ($scope.requestInfo.queue) {
                     $scope.$bus.publish('required-fields-retrieved', $scope.requiredFields[$scope.requestInfo.queue.name]);
                 }
-
-                populateDispositionCategories($scope.requestInfo);
-                populateDeniedDispositionCategories($scope.requestInfo);
-                populateOtherReasons($scope.requestInfo);
-                populateRequestTrack($scope.requestInfo);
                 
                 $scope.previousDueDate = objectInfo.dueDate;
                 if(objectInfo.requestTrack === 'expedite'){
@@ -624,77 +601,6 @@ angular.module('request-info').controller(
                 }
                 $scope.originalDueDate = $scope.previousDueDate;
             };
-
-            function populateDispositionCategories(objectInfo) {
-                ObjectLookupService.getLookupByLookupName('requestDispositionType').then(function (requestDispositionType) {
-                    $scope.dispositionCategories = requestDispositionType;
-                    if($scope.requestInfo.disposition) {
-                        var found = _.find(requestDispositionType, {
-                            key: $scope.requestInfo.disposition
-                        });
-                        if(!Util.isEmpty(found)) {
-                            $scope.requestInfo.disposition = $translate.instant(found.value);
-                        }
-                    }
-                });
-            }
-
-            function populateDeniedDispositionCategories(objectInfo) {
-                ObjectLookupService.getLookupByLookupName('requestDispositionSubType').then(function (requestDispositionSubType) {
-                    $scope.dispositionDeniedCategories = requestDispositionSubType;
-                    if($scope.requestInfo.disposition) {
-                        var found = _.find(requestDispositionSubType, {
-                            key: $scope.requestInfo.disposition
-                        });
-                        if(!Util.isEmpty(found)) {
-                            $scope.requestInfo.disposition = $translate.instant(found.value);
-                        }
-                    }
-                });
-            }
-
-            function populateOtherReasons(objectInfo) {
-                ObjectLookupService.getLookupByLookupName('requestOtherReason').then(function (requestOtherReasons) {
-                    $scope.otherReasons = requestOtherReasons;
-                    if($scope.objectInfo.otherReason) {
-                        var found = _.find(requestOtherReasons, {
-                            key: $scope.objectInfo.otherReason
-                        });
-                        if(!Util.isEmpty(found)) {
-                            $scope.objectInfo.otherReason = $translate.instant(found.value);
-                        }
-                    }
-                });
-            }
-
-            function populateRequestTrack(objectInfo) {
-                ObjectLookupService.getRequestTrack().then(function (requestTrack) {
-                    $scope.requestTracks = requestTrack;
-                    if (objectInfo.requestTrack != null && objectInfo.requestTrack != '') {
-                        $scope.requestTrackValue = _.find($scope.requestTracks, function (requestTrack) {
-                            if (requestTrack.key == objectInfo.requestTrack) {
-                                return requestTrack.key;
-                            }
-                        });
-                        $scope.requestInfo.requestTrack = $scope.requestTrackValue.key;
-                    } else {
-                        $scope.requestInfo.requestTrack = $scope.requestTracks[0].key;
-                    }
-                });
-            }
-
-            $scope.isDisabled = true;
-            $scope.isChanged = function (dispositionSubtype) {
-
-                if (dispositionSubtype === 'other') {
-                    $scope.isDisabled = false;
-                } else {
-                    $scope.isDisabled = true;
-                    $scope.objectInfo.otherReason = "";
-                }
-
-            };
-
 
             var getCaseInfo = CaseInfoService.getCaseInfo($stateParams['id']);
 
@@ -1033,16 +939,6 @@ angular.module('request-info').controller(
                         type: 'RETURN_REASON'
                     }).then(function (addedNote) {
                         // Note saved
-                        $scope.requestInfo.disposition = null;
-                        if ($scope.objectInfo.requestType !== 'Appeal') {
-                            if($scope.objectInfo.deniedFlag && $scope.objectInfo.queue.name === 'Approve') {
-                                $scope.objectInfo.status = 'Perfected';
-                                $scope.deleteDenialLetter = true;
-                            }
-                            $scope.objectInfo.otherReason = null;
-                            $scope.objectInfo.deniedFlag = false;
-                        }
-                        $scope.isRequestFormModified = true;
                         deferred.resolve();
                     });
                 }, function () {
@@ -1155,63 +1051,6 @@ angular.module('request-info').controller(
                 });
             }
 
-            function openDispositionCategoryModal(deferred, isRequestFormModified) {
-                var params = {};
-                params.objectId = $scope.objectInfo.id;
-                var modalInstance = $modal.open({
-                    animation: $scope.animationsEnabled,
-                    templateUrl: 'modules/cases/views/components/request-disposition-categories-modal.client.view.html',
-                    controller: 'Cases.RequestDispositionCategoriesModalController',
-                    size: 'md',
-                    backdrop: 'static',
-                    resolve: {
-                        params: function () {
-                            return params;
-                        }
-                    }
-                });
-
-                modalInstance.result.then(function (data) {
-                    $scope.requestInfo.disposition = data.requestDispositionCategory;
-                    $scope.requestInfo.dispositionValue = data.dispositionValue;
-                    $scope.isRequestFormModified = data.requestDispositionCategory ? true : false;
-                    deferred.resolve();
-                }, function () {
-                    deferred.reject();
-                    $scope.loading = false;
-                    $scope.loadingIcon = "fa fa-check";
-                });
-            }
-
-            function openDenyDispositionCategoryModal(deferred, isRequestFormModified) {
-                var params = {};
-                params.objectId = $scope.objectInfo.id;
-                var modalInstance = $modal.open({
-                    animation: $scope.animationsEnabled,
-                    templateUrl: 'modules/cases/views/components/request-deny-disposition-categories-modal.client.view.html',
-                    controller: 'Cases.RequestDenyDispositionCategoriesModalController',
-                    size: 'lg',
-                    backdrop: 'static',
-                    resolve: {
-                        params: function () {
-                            return params;
-                        }
-                    }
-                });
-
-                modalInstance.result.then(function (data) {
-                    $scope.requestInfo.disposition = data.requestDispositionCategory;
-                    $scope.requestInfo.dispositionValue = data.dispositionValue;
-                    $scope.objectInfo.otherReason = data.requestOtherReason;
-                    $scope.isRequestFormModified = data.requestDispositionCategory ? true : false;
-                    deferred.resolve();
-                }, function () {
-                    deferred.reject();
-                    $scope.loading = false;
-                    $scope.loadingIcon = "fa fa-check";
-                });
-            }
-
             function setupNextQueue(name, deferred) {
 
                 var nextQueue = name;
@@ -1219,17 +1058,13 @@ angular.module('request-info').controller(
                     var availableQueues = data.nextPossibleQueues;
                     var defaultNextQueue = data.defaultNextQueue;
                     var defaultReturnQueue = data.defaultReturnQueue;
-                    var defaultDenyQueue = data.defaultDenyQueue;
 
-                    if (defaultNextQueue || defaultReturnQueue || defaultDenyQueue) {
+                    if (defaultNextQueue || defaultReturnQueue) {
                         //if there is default next or return queue, then remove it from the list
                         //and add Complete, Next and Return queue aliases into list
                         _.remove(availableQueues, function (currentObject) {
-                            return currentObject === defaultNextQueue || currentObject === defaultReturnQueue || currentObject === defaultDenyQueue;
+                            return currentObject === defaultNextQueue || currentObject === defaultReturnQueue;
                         });
-                        if (defaultDenyQueue) {
-                            availableQueues.unshift("Deny");
-                        }
                         if (defaultReturnQueue) {
                             availableQueues.unshift("Return");
                         }
@@ -1241,14 +1076,11 @@ angular.module('request-info').controller(
                     $scope.availableQueues = availableQueues;
                     $scope.defaultNextQueue = defaultNextQueue;
                     $scope.defaultReturnQueue = defaultReturnQueue;
-                    $scope.defaultDenyQueue = defaultDenyQueue;
 
                     if (name === 'Complete') {
                         nextQueue = $scope.defaultNextQueue;
                     } else if (name === 'Return') {
                         nextQueue = $scope.defaultReturnQueue;
-                    } else if (name === 'Deny') {
-                        nextQueue = $scope.defaultDenyQueue;
                     }
 
                     QueuesSvc.nextQueue($scope.requestInfo.id, nextQueue, name).then(function (data) {
@@ -1295,12 +1127,6 @@ angular.module('request-info').controller(
                 }
             };
 
-            $scope.feeWaivedFlagChange = function(feeWaiver) {
-                if (feeWaiver) {
-                    $scope.objectInfo.feeWaivedDate = new Date();
-                }
-            };
-
             function resetDueDate() {
                 $scope.objectInfo.dueDate = $scope.originalDueDate;
                 $rootScope.$broadcast('dueDate-changed', $scope.originalDueDate);
@@ -1341,12 +1167,6 @@ angular.module('request-info').controller(
                         $scope.objectInfo.status = 'Hold';
                         deferred.resolve();
                     }
-                } else if (name === 'Complete' && $scope.defaultNextQueue === "Release" && $scope.limitedDeliveryToSpecificPageCountEnabled) {
-                    openLimitedPageReleaseModal(deferred);
-                } else if(name === 'Complete' && $scope.objectInfo.queue.name === 'Fulfill') {
-                    openDispositionCategoryModal(deferred, $scope.isRequestFormModified);
-                } else if(name === 'Deny' && ($scope.objectInfo.queue.name === 'Intake' || $scope.objectInfo.queue.name === 'Fulfill')) {
-                    openDenyDispositionCategoryModal(deferred, $scope.isRequestFormModified);
                 } else {
                     deferred.resolve();
                 }

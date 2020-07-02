@@ -2,177 +2,20 @@
     <panel-view header="Request Information" collapsible="true" collapsed="false">
         <fieldset permission="editRequestData" permission-object-type="CASE_FILE" permission-properties="objectInfo" permission-action="disabled">
             <div class="row">
-                <div class="form-group col-sm-6">
+                <div class="form-group col-sm-12">
                     <label class="control-label"><span translate> requests.comp.details.requestType.label</span> <span
                             ng-if="requiredFields['requestType']" class="required-asterisk">*</span></label> <select
                         ng-model="requestInfo.requestType" ng-required="requiredFields['requestType']"
                         ng-options="requestType.id as requestType.name for requestType in requestTypes" ng-disabled="true"
                         class="form-control input-md">
                 </select>
-
                 </div>
-                <div class="form-group col-sm-6">
-                    <label class="control-label"><span translate> requests.comp.details.requestTrack.label</span> <span
-                            ng-if="requiredFields['requestTrack']" class="required-asterisk">*</span></label> <select
-                        ng-model="requestInfo.requestTrack" ng-change="requestTrackChanged(requestInfo.requestTrack)" ng-required="requiredFields['requestTrack']"
-                        ng-options="requestTrack.key as requestTrack.value | translate for requestTrack in requestTracks"
-                        class="form-control input-md">
-                </select>
-
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-sm-6">
-                    <label for="recordSearchDateFrom" translate> requests.comp.details.recordSearchDateFrom.label </label>
-                    <div>
-                        <div class="input-group">
-                            <input type="text" id="recordSearchDateFrom" class="form-control" name="recordSearchDateFrom"
-                                    ng-model="requestInfo.recordSearchDateFrom" is-open="openedRecordSearchDateFrom.openedEnd"
-                                    close-on-date-selection="true" show-button-bar="true" on-open-focus="false" close-text="Close" readonly/> <span
-                                class="input-group-btn">
-                            <button type="button" class="btn btn-default"
-                                    ng-click="openedRecordSearchDateFrom.openedEnd = !openedRecordSearchDateFrom.openedEnd" ng-disabled="true">
-                                <i class="fa fa-calendar"></i>
-                            </button>
-                        </span>
-                        </div>
+                <div class="row">
+                    <div class="form-group col-sm-12">
+                        <label translate> requests.comp.details.description.label </label>
+                        <textarea rows=5 ng-model="requestInfo.details" class="input-md form-control" ng-disabled="true"></textarea>
                     </div>
                 </div>
-                <div class="form-group col-sm-6">
-                    <label for="recordSearchDateTo" translate> requests.comp.details.recordSearchDateTo.label </label>
-                    <div>
-                        <div class="input-group">
-                            <input type="text" id="recordSearchDateTo" class="form-control" name="recordSearchDateTo"
-                                    ng-model="requestInfo.recordSearchDateTo" is-open="openedRecordSearchDateTo.openedEnd"
-                                    close-on-date-selection="true" show-button-bar="true" on-open-focus="false" close-text="Close" readonly/> <span
-                                class="input-group-btn">
-                            <button type="button" class="btn btn-default"
-                                    ng-click="openedRecordSearchDateTo.openedEnd = !openedRecordSearchDateTo.openedEnd" ng-disabled="true">
-                                <i class="fa fa-calendar"></i>
-                            </button>
-                        </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-sm-6">
-                    <label class="control-label"><span translate> requests.comp.details.dispositionType.label</span></label> 
-                    <input type="text" id="disposition" ng-model="requestInfo.disposition" name="disposition" class="input-md form-control" ng-disabled="isDisabled">
-                </div>
-                <div class="form-group col-sm-6">
-                    <label class="control-label" translate> requests.comp.details.otherReason.label</label> 
-                        <input type="text" id="otherReason" ng-model="objectInfo.otherReason" name="otherReason" class="input-md form-control" ng-disabled="isDisabled">
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-sm-6">
-                    <label class="control-label" translate> requests.comp.details.deliveryMethodOfResponse.label</label> <select
-                        ng-model="requestInfo.deliveryMethodOfResponse"
-                        ng-options="deliveryMethodOfResponse.key as deliveryMethodOfResponse.value | translate for deliveryMethodOfResponse in deliveryMethodOfResponses"
-                        class="form-control input-md" ng-disabled="true">
-                </select>
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-sm-12">
-                    <label class="control-label">
-                        <span translate> requests.comp.details.description.label</span>
-                        <span ng-if="requiredFields['description']" class="required-asterisk">*</span>
-                    </label>
-                    <textarea rows="5" ng-model="requestInfo.details" class="input-md form-control" ng-disabled="true"></textarea>
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-sm-6">
-                    <label class="control-label" for="releasedDate"><span translate> requests.comp.details.releasedDate.label</span> <span
-                            ng-if="requiredFields['releasedDate']" class="required-asterisk">*</span></label>
-                    <div>
-
-                        <div class="input-group">
-                            <input type="text" id="releasedDate" class="form-control" name="releasedDate" ng-disabled="true"
-                                    ng-model="requestInfo.releasedDate" is-open="opened.openedEnd" close-on-date-selection="true"
-                                    show-button-bar="true" on-open-focus="false" close-text="Close" />
-                            <span class="input-group-btn">
-                            <button type="button" class="btn btn-default" ng-click="opened.openedEnd = !opened.openedEnd"
-                                    ng-disabled="true">
-                                <i class="fa fa-calendar"></i>
-                            </button>
-                        </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-sm-6">
-                    <label for="processingFeeWaive" translate> requests.comp.details.processingFeeWaive.label </label> <input type="text"
-                        id="processingFeeWaive" ng-model="requestInfo.processingFeeWaive" name="processingFeeWaive"
-                        class="input-md form-control" placeholder="{{ 'requests.comp.details.processingFeeWaive.placeholder'  | translate }}" >
-                </div>
-                <div class="form-group col-sm-6">
-                    <label class="control-label" translate> requests.comp.details.payFee.label </label> <select ng-model="requestInfo.payFee"
-                        ng-options="payFee.key as payFee.value for payFee in payFees" class="form-control input-md" ng-disabled="true">
-                </select>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-6">
-                    <div class="checkbox">
-                        <label> <input type="checkbox" ng-model="requestInfo.feeWaiverFlag" ng-disabled="true"> <span translate>requests.comp.details.feeWaiverFlag.label
-                    </span>
-                        </label>
-                    </div>
-                </div>
-                <div class="col-sm-6">
-                    <div class="checkbox">
-                        <label> <input type="checkbox" ng-model="requestInfo.expediteFlag" ng-change="requestInfo.requestExpediteReason= !requestInfo.expediteFlag ? '' : requestInfo.requestExpediteReason"> <span translate>requests.comp.details.expediteFlag.label
-                    </span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-6">
-                    <label for="requestFeeWaiveReason" translate> requests.comp.details.requestFeeWaiveReason.label </label>
-                    <textarea rows=5 id="requestFeeWaiveReason" ng-model="requestInfo.requestFeeWaiveReason" name="requestFeeWaiveReason"
-                            class="input-md form-control"
-                            placeholder="{{ 'requests.comp.details.requestFeeWaiveReason.placeholder'  | translate }}" readonly></textarea>
-                </div>
-                <div class="col-sm-6">
-                    <label for="requestExpediteReason" translate> requests.comp.details.requestExpediteReason.label </label>
-                    <textarea rows=5 id="requestExpediteReason" ng-model="requestInfo.requestExpediteReason" name="requestExpediteReason"
-                            class="input-md form-control" ng-disabled="!requestInfo.expediteFlag"
-                            placeholder="{{ 'requests.comp.details.requestExpediteReason.placeholder'  | translate }}"></textarea>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-4">
-                    <div class="checkbox">
-                        <label> <input type="checkbox" ng-model="requestInfo.litigationFlag"> <span translate>requests.comp.details.litigationFlag.label
-                    </span>
-                        </label>
-                    </div>
-                </div>
-                <div class="col-sm-4">
-                    <div class="checkbox">
-                        <label> <input type="checkbox" ng-model="requestInfo.paidFlag" ng-change="feeWaivedFlagChange(requestInfo.paidFlag)"> <span translate>requests.comp.details.paidFlag.label
-                    </span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-4">
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" ng-model="objectInfo.extensionFlag" ng-click='extensionClicked($event)'
-                                    ng-disabled="(objectInfo.extensionFlag && !extendedDueDate) || !requestExtensionWorkingDaysEnabled"
-                                    permission="requestDueDateExtension" permission-object-type="CASE_FILE" permission-properties="objectInfo" permission-action="hide">
-                            <span translate>cases.comp.main.extensionFlag.label </span>
-                        </label>
-                    </div>
-                </div>
-            </div>
         </fieldset>
     </panel-view>
 </div>
