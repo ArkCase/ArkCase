@@ -40,8 +40,6 @@ angular.module('cases').controller('Cases.ActionsFooterController',
                     nextQueue = $scope.defaultNextQueue;
                 } else if (name === 'Return') {
                     nextQueue = $scope.defaultReturnQueue;
-                } else if (name === 'Deny') {
-                    nextQueue = $scope.defaultDenyQueue;
                 }
 
                 if (nextQueue) {
@@ -62,7 +60,6 @@ angular.module('cases').controller('Cases.ActionsFooterController',
 
             function displayLimitedReleaseModal() {
                 return $scope.defaultNextQueue === "Release"
-                    && !$scope.objectInfo.deniedFlag
                     && $scope.limitedDeliveryToSpecificPageCountEnabled;
             }
 
@@ -77,13 +74,7 @@ angular.module('cases').controller('Cases.ActionsFooterController',
                 disableWorkflowControls(deferred.promise);
 
                 if (name === 'Return') {
-                    if ($scope.objectInfo.deniedFlag && $scope.objectInfo.dispositionClosedDate != null) {
-                        $scope.showErrorDialog($translate.instant("cases.cannotReturnError"));
-                        name = null;
-                        deferred.resolve();
-                    } else {
-                        openReturnReasonModal(deferred);
-                    }
+                    openReturnReasonModal(deferred);
                 } else if (name === 'Delete') {
                     openDeleteCommentModal(deferred);
                 } else if (name === 'Hold') {
@@ -92,22 +83,6 @@ angular.module('cases').controller('Cases.ActionsFooterController',
                     } else {
                         deferred.resolve();
                     }
-                } else if (name === 'Complete' && displayLimitedReleaseModal()) {
-                    openLimitedPageReleaseModal(deferred);
-                } else if (name === 'Complete' && $scope.objectInfo.queue.name === 'Fulfill' &&
-                    ($scope.objectInfo.requestType === 'Data Access Request' ||
-                        $scope.objectInfo.requestType === 'Right to be Forgotten Request' ||
-                        $scope.objectInfo.requestType === 'Data Modification Request' ||
-                        $scope.objectInfo.requestType === 'Other') && $scope.objectInfo.disposition == null) {
-                    openDispositionCategoryModal(deferred);
-                } else if (name === 'Complete' && ($scope.objectInfo.queue.name === 'Fulfill' || $scope.defaultNextQueue === 'Release') && $scope.objectInfo.requestType === 'Appeal') {
-                    if ($scope.objectInfo.disposition == null) {
-                        openAppealDispositionCategoryModal(deferred);
-                    } else {
-                        deferred.resolve();
-                    }
-                } else if (name === 'Deny' && ($scope.objectInfo.queue.name === 'Intake' || $scope.objectInfo.queue.name === 'Fulfill' || $scope.objectInfo.queue.name === 'Billing')) {
-                    openDenyDispositionCategoryModal(deferred);
                 } else {
                     deferred.resolve();
                 }
@@ -121,14 +96,6 @@ angular.module('cases').controller('Cases.ActionsFooterController',
                     });
                 });
             };
-
-            $scope.$bus.subscribe('OPEN_REQUEST_DISPOSITION_MODAL', function (deferred) {
-                openDispositionCategoryModal(deferred);
-            });
-
-            $scope.$bus.subscribe('OPEN_APPEAL_DISPOSITION_MODAL', function (deferred) {
-                openAppealDispositionCategoryModal(deferred);
-            });
 
             $scope.showErrorDialog = function (error) {
                 $modal.open({
@@ -147,22 +114,12 @@ angular.module('cases').controller('Cases.ActionsFooterController',
             function saveCase() {
                 var saveCasePromise = $q.defer();
                 $scope.$bus.publish('ACTION_SAVE_CASE', {
-                    returnAction: "CASE_SAVED",
-                    requestDisposition: $scope.requestDispositionCategory,
-                    dispositionValue: $scope.dispositionValue,
-                    requestOtherReason: $scope.requestOtherReason,
-                    dispositionReasons: $scope.dispositionReasons,
-                    deleteDenialLetter: $scope.deleteDenialLetter
+                    returnAction: "CASE_SAVED"
                 });
                 var subscription = $scope.$bus.subscribe('CASE_SAVED', function (objectInfo) {
                     //after case is saved we are going to get new buttons
                     QueuesService.queryNextPossibleQueues(objectInfo.id).then(function (data) {
                         setQueueButtons(data);
-                        $scope.deleteDenialLetter = false;
-                        $scope.requestDispositionCategory = undefined;
-                        $scope.dispositionValue = undefined;
-                        $scope.requestOtherReason = undefined;
-                        $scope.dispositionReasons = undefined;
                         saveCasePromise.resolve();
                     });
                 });
@@ -234,15 +191,6 @@ angular.module('cases').controller('Cases.ActionsFooterController',
                         type: 'RETURN_REASON'
                     }).then(function (addedNote) {
                         // Note saved
-                        $scope.requestDispositionCategory = null;
-                        if ($scope.objectInfo.requestType !== 'Appeal') {
-                            if ($scope.objectInfo.deniedFlag && $scope.objectInfo.queue.name === 'Approve') {
-                                $scope.objectInfo.status = 'Perfected';
-                                $scope.deleteDenialLetter = true;
-                            }
-                            $scope.requestOtherReason = null;
-                            $scope.objectInfo.deniedFlag = false;
-                        }
                         deferred.resolve();
                     });
                 }, function () {
@@ -298,14 +246,11 @@ angular.module('cases').controller('Cases.ActionsFooterController',
 
             function openLimitedPageReleaseModal(deferred) {
                 var params = {
-                    disposition: $scope.objectInfo.disposition,
-                    dispositionReasons: $scope.objectInfo.dispositionReasons,
-                    otherReason: $scope.objectInfo.otherReason,
+                    pageCount: $scope.limitedDeliveryToSpecificPageCount,
                     caseId: $scope.objectInfo.id,
                     queue: $scope.objectInfo.queue.name,
                     requestType: $scope.objectInfo.requestType
                 };
-                params.pageCount = $scope.limitedDeliveryToSpecificPageCount;
 
                 var modalInstance = $modal.open({
                     animation: $scope.animationsEnabled,
@@ -322,117 +267,9 @@ angular.module('cases').controller('Cases.ActionsFooterController',
 
                 modalInstance.result.then(function (data) {
                     $scope.objectInfo.limitedDeliveryFlag = data.limitedDeliveryFlag;
-                    $scope.requestDispositionCategory = data.requestDispositionCategory;
-                    $scope.dispositionValue = data.dispositionValue;
-                    $scope.requestOtherReason = data.requestOtherReason;
-                    $scope.dispositionReasons = data.dispositionReasons;
                     deferred.resolve();
                 }, function () {
                     deferred.reject();
-                    $scope.loading = false;
-                    $scope.loadingIcon = "fa fa-check";
-                });
-            }
-
-            function openDispositionCategoryModal(deferred) {
-                var params = {};
-                params.objectId = $scope.objectInfo.id;
-                var modalInstance = $modal.open({
-                    animation: $scope.animationsEnabled,
-                    templateUrl: 'modules/cases/views/components/request-disposition-categories-modal.client.view.html',
-                    controller: 'Cases.RequestDispositionCategoriesModalController',
-                    size: 'md',
-                    backdrop: 'static',
-                    resolve: {
-                        params: function () {
-                            return params;
-                        }
-                    }
-                });
-
-                modalInstance.result.then(function (data) {
-                    $scope.requestDispositionCategory = data.requestDispositionCategory;
-                    $scope.objectInfo.disposition = data.requestDispositionCategory;
-                    $scope.dispositionValue = data.dispositionValue;
-                    deferred.resolve();
-                }, function () {
-                    deferred.reject();
-                    $scope.loading = false;
-                    $scope.loadingIcon = "fa fa-check";
-                    if($scope.objectInfo.dispositionClosedDate != null){
-                        $scope.objectInfo.dispositionClosedDate = null;
-                        $scope.$emit("report-object-updated", {});
-                    }
-                });
-            }
-
-            function openAppealDispositionCategoryModal(deferred) {
-                var params = {
-                    disposition: $scope.objectInfo.disposition,
-                    dispositionReasons: $scope.objectInfo.dispositionReasons,
-                    otherReason: $scope.objectInfo.otherReason,
-                    caseId: $scope.objectInfo.id,
-                    queue: $scope.objectInfo.queue.name,
-                    isDispositionRequired: true
-                };
-
-                var modalInstance = $modal.open({
-                    animation: true,
-                    templateUrl: "modules/cases/views/components/add-appeal-disposition-category-modal.client.view.html",
-                    controller: 'Cases.AddAppealDispositionCategoriesModalController',
-                    size: 'md',
-                    backdrop: 'static',
-                    resolve: {
-                        params: function () {
-                            return params;
-                        }
-                    }
-                });
-
-                modalInstance.result.then(function (data) {
-                    $scope.requestDispositionCategory = data.disposition;
-                    $scope.objectInfo.disposition = data.disposition;
-                    $scope.objectInfo.otherReason = data.otherReason;
-                    $scope.objectInfo.dispositionReasons = data.dispositionReasons;
-                    $scope.dispositionValue = data.dispositionValue;
-                    $scope.requestOtherReason = data.otherReason;
-                    $scope.dispositionReasons = data.dispositionReasons;
-
-                    deferred.resolve();
-                }, function () {
-                    deferred.reject();
-                    $scope.loading = false;
-                    $scope.loadingIcon = "fa fa-check";
-                    if($scope.objectInfo.dispositionClosedDate != null){
-                        $scope.objectInfo.dispositionClosedDate = null;
-                        $scope.$emit("report-object-updated", {});
-                    }
-                });
-            }
-
-            function openDenyDispositionCategoryModal(deffered) {
-                var params = {};
-                params.objectId = $scope.objectInfo.id;
-                var modalInstance = $modal.open({
-                    animation: $scope.animationsEnabled,
-                    templateUrl: 'modules/cases/views/components/request-deny-disposition-categories-modal.client.view.html',
-                    controller: 'Cases.RequestDenyDispositionCategoriesModalController',
-                    size: 'lg',
-                    backdrop: 'static',
-                    resolve: {
-                        params: function () {
-                            return params;
-                        }
-                    }
-                });
-
-                modalInstance.result.then(function (data) {
-                    $scope.requestDispositionCategory = data.requestDispositionCategory;
-                    $scope.dispositionValue = data.dispositionValue;
-                    $scope.requestOtherReason = data.requestOtherReason;
-                    deffered.resolve();
-                }, function () {
-                    deffered.reject();
                     $scope.loading = false;
                     $scope.loadingIcon = "fa fa-check";
                 });
@@ -442,17 +279,13 @@ angular.module('cases').controller('Cases.ActionsFooterController',
                 var availableQueues = data.nextPossibleQueues;
                 var defaultNextQueue = data.defaultNextQueue;
                 var defaultReturnQueue = data.defaultReturnQueue;
-                var defaultDenyQueue = data.defaultDenyQueue;
 
                 if (defaultNextQueue || defaultReturnQueue) {
                     //if there is default next or return queue, then remove it from the list
                     //and add Complete, and Return queue aliases into list
                     _.remove(availableQueues, function (currentObject) {
-                        return currentObject === defaultNextQueue || currentObject === defaultReturnQueue || currentObject === defaultDenyQueue;
+                        return currentObject === defaultNextQueue || currentObject === defaultReturnQueue;
                     });
-                    if (defaultDenyQueue) {
-                        availableQueues.unshift("Deny");
-                    }
                     if (defaultReturnQueue) {
                         availableQueues.unshift("Return");
                     }
@@ -471,7 +304,6 @@ angular.module('cases').controller('Cases.ActionsFooterController',
                 $scope.availableQueues = availableQueues;
                 $scope.defaultNextQueue = defaultNextQueue;
                 $scope.defaultReturnQueue = defaultReturnQueue;
-                $scope.defaultDenyQueue = defaultDenyQueue;
             }
         }]);
 angular.module('cases').controller('Cases.ActionsErrorDialogController', ['$scope', '$modalInstance', 'errorMessage', function ($scope, $modalInstance, errorMessage) {
