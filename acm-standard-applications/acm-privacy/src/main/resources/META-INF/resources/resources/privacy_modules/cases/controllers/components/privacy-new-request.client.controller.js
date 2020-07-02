@@ -189,6 +189,8 @@ angular.module('cases').controller(
                 $scope.emailInvalid = false;
                 $scope.confirmEmailEmpty = false;
                 $scope.confirmEmailInvalid = false;
+                $scope.subjectConfirmEmailEmpty = false;
+                $scope.subjectConfirmEmailInvalid = false;
                 $scope.zipCodeEmpty = false;
                 $scope.zipCodeInvalid = false;
                 $scope.subjectEmpty = false;
@@ -210,6 +212,12 @@ angular.module('cases').controller(
                         $scope.confirmEmailEmpty = true;
                     } else if (requestForm.confirmationEmail.$viewValue !== requestForm.email.$viewValue) {
                         $scope.confirmEmailInvalid = true;
+                        $scope.formInvalid = true;
+                    }
+                    if (requestForm.subjectConfirmationEmail.$viewValue === undefined || requestForm.subjectConfirmationEmail.$viewValue === '') {
+                        $scope.subjectConfirmEmailEmpty = true;
+                    } else if (requestForm.subjectConfirmationEmail.$viewValue !== requestForm.subjectEmail.$viewValue) {
+                        $scope.subjectConfirmEmailInvalid = true;
                         $scope.formInvalid = true;
                     }
                     if (requestForm.subjectZip.$viewValue === undefined || requestForm.subjectZip.$viewValue === '') {
@@ -254,7 +262,41 @@ angular.module('cases').controller(
                 }
             };
 
-            function openDuplicateOriginatorPicker(result) {
+            function openDuplicateSubjectPersonPicker(result) {
+                $scope.config.data.subject.person.defaultEmail.value = '';
+                $scope.subjectConfirmationEmail = '';
+
+                var params = {};
+
+                params.people = result.data.response.docs;
+                params.config = Util.goodMapValue($scope.commonModuleConfig, "dialogPersonPicker");
+                params.isRedirect = false;
+
+                var modalInstance = $modal.open({
+                    templateUrl: "modules/common/views/duplicate-person-picker-modal.client.view.html",
+                    controller: "Common.DuplicatePersonPickerController",
+                    animation: true,
+                    size: 'lg',
+                    backdrop: 'static',
+                    resolve: {
+                        params: function () {
+                            return params;
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function (selected) {
+                    if (!Util.isEmpty(selected)) {
+                        PersonInfoService.getPersonInfo(selected.object_id_s).then(function (person) {
+                            $scope.setSubject(person);
+                            $scope.existingSubject = angular.copy($scope.config.data.subject.person);
+                            $scope.newSubject = angular.copy($scope.blankPerson);
+                        });
+                    }
+                });
+            }
+
+            function openDuplicatePersonPicker(result) {
                 $scope.config.data.originator.person.defaultEmail.value = '';
                 $scope.confirmationEmail = '';
 
@@ -288,45 +330,15 @@ angular.module('cases').controller(
                 });
             }
 
-            function openDuplicatePersonPicker(result) {
-                $scope.config.data.subject.person.defaultEmail.value = '';
-                $scope.subjectConfirmationEmail = '';
-
-                var params = {};
-
-                params.people = result.data.response.docs;
-                params.config = Util.goodMapValue($scope.commonModuleConfig, "dialogPersonPicker");
-                params.isRedirect = false;
-
-                var modalInstance = $modal.open({
-                    templateUrl: "modules/common/views/duplicate-person-picker-modal.client.view.html",
-                    controller: "Common.DuplicatePersonPickerController",
-                    animation: true,
-                    size: 'lg',
-                    backdrop: 'static',
-                    resolve: {
-                        params: function () {
-                            return params;
-                        }
-                    }
-                });
-
-                modalInstance.result.then(function (selected) {
-                    if (!Util.isEmpty(selected)) {
-                        PersonInfoService.getPersonInfo(selected.object_id_s).then(function (person) {
-                            $scope.setOriginator(person);
-                            $scope.existingOriginator = angular.copy($scope.config.data.subject.person);
-                            $scope.newSubject = angular.copy($scope.blankPerson);
-                        });
-                    }
-                });
-            }
-
             $scope.checkExistingEmail = function (person, confirmationEmail) {
                 if (person.person.defaultEmail.value === confirmationEmail) {
                     PersonInfoService.queryByEmail(person.person.defaultEmail.value).then(function (result) {
                         if (result.data.response.numFound > 0) {
-                            openDuplicatePersonPicker(result);
+                            if (person.personType == 'Requester') {
+                                openDuplicatePersonPicker(result);
+                            } else {
+                                openDuplicateSubjectPersonPicker(result);
+                            }
                         }
                     });
                 }
@@ -386,7 +398,7 @@ angular.module('cases').controller(
                     addNewEnabled: false,
                     isDefault: false,
                     types: $scope.personTypes,
-                    type: $scope.personTypes[0].key,
+                    type: $scope.personTypes[1].key,
                     typeEnabled: false
                 };
 
