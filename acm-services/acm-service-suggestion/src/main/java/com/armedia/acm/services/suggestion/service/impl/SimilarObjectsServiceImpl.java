@@ -199,11 +199,11 @@ public class SimilarObjectsServiceImpl implements SimilarObjectsService
         {
             if (words.toString().isEmpty())
             {
-                words.append("\"" + title + "\"");
+                words.append("\"" + encodeWord(title) + "\"");
             }
             else
             {
-                words.append(" OR \"" + title + "\"");
+                words.append(" OR \"" + encodeWord(title) + "\"");
             }
         }
         words.insert(0, "(").append(")");
