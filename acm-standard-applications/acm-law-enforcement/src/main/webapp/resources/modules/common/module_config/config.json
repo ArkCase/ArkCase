@@ -959,6 +959,101 @@
     "paginationPageSize": 10,
     "start": 0
   },
+  "showDuplicates": {
+    "multiSelect": true,
+    "showFacets": false,
+    "columnDefs": [
+      {
+        "name": "Id",
+        "field": "fileId",
+        "displayName": "common.dialogPersonPicker.table.columns.id",
+        "headerCellFilter": "translate"
+      },
+      {
+        "name": "Name",
+        "field": "fileName",
+        "displayName": "common.directive.docTree.table.columns.title",
+        "headTemplate": "<label id='title' class='doc-tree-header' style='cursor: pointer;'></label>",
+        "icon": "<i class='fa fa-fw fa-sort-asc' data-sort='title' data-dir='DESC'></i>",
+        "width": "30%",
+        "index": 3
+      },
+      {
+        "name": "Ext",
+        "field": "fileActiveVersionNameExtension",
+        "displayName": "common.directive.docTree.table.columns.ext",
+        "width": "5%",
+        "index": 4
+      },
+      {
+        "name": "Type",
+        "field": "fileType",
+        "displayName": "common.directive.docTree.table.columns.type",
+        "headTemplate": "<label id='type' class='doc-tree-header' style='cursor: pointer;'></label>",
+        "icon": "<i class='fa fa-fw' data-sort='type' data-dir='ASC'></i>",
+        "__todo__cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
+        "width": "12%",
+        "index": 5
+      },
+      {
+        "name": "created",
+        "displayName": "common.directive.docTree.table.columns.created",
+        "headTemplate": "<label id='created' class='doc-tree-header' style='cursor: pointer;'></label>",
+        "icon": "<i class='fa fa-fw' data-sort='created' data-dir='ASC'></i>",
+        "__todo__cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
+        "width": "10%",
+        "index": 6
+      },
+      {
+        "name": "modified",
+        "displayName": "common.directive.docTree.table.columns.modified",
+        "headTemplate": "<label id='modified' class='doc-tree-header' style='cursor: pointer;'></label>",
+        "icon": "<i class='fa fa-fw' data-sort='modified' data-dir='ASC'></i>",
+        "__todo__cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>",
+        "width": "10%",
+        "index": 7
+      },
+      {
+        "name": "modifier",
+        "field": "modifier",
+        "displayName": "common.directive.docTree.table.columns.modifier",
+        "headTemplate": "<label id='modifier' class='doc-tree-header' style='cursor: pointer;'></label>",
+        "icon": "<i class='fa fa-fw' data-sort='modifier' data-dir='ASC'></i>",
+        "__todo__cellTemplate": "<div>{{ row.entity.modifier }}</div>",
+        "__todo__lookup": "userFullNames",
+        "width": "16%",
+        "index": 8
+      },
+      {
+        "name": "version",
+        "field": "activeVersionTag",
+        "displayName": "common.directive.docTree.table.columns.version",
+        "headTemplate": "<label id='version' class='doc-tree-header' style='cursor: pointer;'></label>",
+        "icon": "<i class='fa fa-fw' data-sort='version' data-dir='ASC'></i>",
+        "__todo__cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
+        "width": "6%",
+        "index": 9
+      },
+      {
+        "name": "status",
+        "field": "status",
+        "displayName": "common.directive.docTree.table.columns.status",
+        "headTemplate": "<label id='status' class='doc-tree-header' style='cursor: pointer;'></label>",
+        "icon": "<i class='fa fa-fw' data-sort='status' data-dir='ASC'></i>",
+        "__todo__cellTemplate": "{{node.data.status}}",
+        "width": "8%",
+        "index": 10
+      }
+    ],
+    "paginationPageSizes": [
+      5,
+      10,
+      20,
+      50
+    ],
+    "paginationPageSize": 10,
+    "start": 0
+  },
   "dialogOrganizationPicker": {
     "enableFiltering": false,
     "multiSelect": false,

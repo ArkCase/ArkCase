@@ -965,7 +965,19 @@ angular.module('directives').directive(
                             }
 
                             if (data.node.data.duplicate) {
-                                DocTree.scope.$bus.publish("docTreeShowDuplicates", data.node);
+                                var file = node.data.objectId;
+                                Util.serviceCall({
+                                    service: Ecm.getFileDuplicates,
+                                    param: {
+                                        fileId: file
+                                    },
+                                    data: {},
+                                    onSuccess: function(response) {
+                                        DocTree.Op.showDuplicates(response, function() {
+
+                                        })
+                                    }
+                                })
                             }
 
                             if (data.targetType === 'title') {
@@ -3123,6 +3135,21 @@ angular.module('directives').directive(
                                     }
                                 }
                                 return dfd.promise();
+                            },
+                            showDuplicates: function(data, onClickOk) {
+                                var modalInstance = $modal.open({
+                                    templateUrl: "modules/common/views/showDuplicates-modal.client.view.html",
+                                    controller: "Common.ShowDuplicates",
+                                    animation: true,
+                                    size: 'lg',
+                                    resolve: {
+                                        data: data
+                                    }
+                                });
+
+                                modalInstance.result.then(function() {
+                                    onClickOk();
+                                });
                             },
                             openDeleteConfirmationModal: function(data, onClickOk) {
                                 var modalInstance = $modal.open({

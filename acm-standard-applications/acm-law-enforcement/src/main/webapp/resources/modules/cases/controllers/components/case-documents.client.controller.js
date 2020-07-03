@@ -199,30 +199,6 @@ angular.module('cases').controller(
 
                     $scope.selectedDocuments = [];
 
-                    $scope.showDuplicates = function(nodes) {
-                       Ecm.getFileDuplicates({fileId: nodes.data.objectId}).$promise.then(function (data) {
-                            var params = {};
-                            params.header = $translate.instant("common.duplicates.header");
-                            params.config = Util.goodMapValue($scope.config, "common.doctree");
-                            params.data = data;
-
-                            var modalInstance = $modal.open({
-                                templateUrl: "modules/cases/views/components/showDuplicates-modal.client.view.html",
-                                controller: "Common.ShowDuplicates-modal.client.controller.js",
-                                animation: true,
-                                size: 'lg',
-                                backdrop: 'static',
-                                resolve: {
-                                    params: function () {
-                                        return params;
-                                    }
-                                }
-                            });
-                            modalInstance.result.then(function (selected) {
-                            });
-                        });
-                    };
-
                     $scope.onCheckNode = function(node) {
                         if (!node.folder) {
                             var idx = _.findIndex($scope.selectedDocuments, function(d) {
