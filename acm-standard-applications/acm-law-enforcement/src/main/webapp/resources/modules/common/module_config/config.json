@@ -32,6 +32,7 @@
         "displayName": "Dup",
         "width": "2%",
         "headTemplate": "",
+        "__todo__cellTemplate": "<div ng-if=node.data.duplicate><i class='fab fa-dyalog'></i></div>",
         "index": 1
       },
       {
@@ -960,44 +961,55 @@
     "start": 0
   },
   "showDuplicates": {
+    "enableFiltering": false,
     "multiSelect": true,
     "showFacets": false,
     "columnDefs": [
       {
-        "name": "Id",
-        "field": "fileId",
-        "displayName": "common.dialogPersonPicker.table.columns.id",
-        "headerCellFilter": "translate"
+        "name": "Case File",
+        "field": "container.containerObjectTitle",
+        "displayName": "common.duplicates.columnDefs.case_file",
+        "headerCellFilter": "translate",
+        "width": "8%"
       },
       {
         "name": "Name",
         "field": "fileName",
-        "displayName": "common.directive.docTree.table.columns.title",
+        "displayName": "common.duplicates.columnDefs.name",
+        "headerCellFilter": "translate",
         "headTemplate": "<label id='title' class='doc-tree-header' style='cursor: pointer;'></label>",
         "icon": "<i class='fa fa-fw fa-sort-asc' data-sort='title' data-dir='DESC'></i>",
-        "width": "30%",
-        "index": 3
+        "width": "20%"
+      },
+      {
+        "name": "Folder",
+        "field": "folder.name",
+        "displayName": "common.duplicates.columnDefs.folder",
+        "headerCellFilter": "translate",
+        "width": "8%"
       },
       {
         "name": "Ext",
         "field": "fileActiveVersionNameExtension",
-        "displayName": "common.directive.docTree.table.columns.ext",
-        "width": "5%",
-        "index": 4
+        "displayName": "common.duplicates.columnDefs.ext",
+        "headerCellFilter": "translate",
+        "width": "5%"
       },
       {
         "name": "Type",
         "field": "fileType",
-        "displayName": "common.directive.docTree.table.columns.type",
+        "displayName": "common.duplicates.columnDefs.type",
+        "headerCellFilter": "translate",
         "headTemplate": "<label id='type' class='doc-tree-header' style='cursor: pointer;'></label>",
         "icon": "<i class='fa fa-fw' data-sort='type' data-dir='ASC'></i>",
         "__todo__cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
-        "width": "12%",
+        "width": "10%",
         "index": 5
       },
       {
         "name": "created",
-        "displayName": "common.directive.docTree.table.columns.created",
+        "displayName": "common.duplicates.columnDefs.created",
+        "headerCellFilter": "translate",
         "headTemplate": "<label id='created' class='doc-tree-header' style='cursor: pointer;'></label>",
         "icon": "<i class='fa fa-fw' data-sort='created' data-dir='ASC'></i>",
         "__todo__cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
@@ -1006,43 +1018,43 @@
       },
       {
         "name": "modified",
-        "displayName": "common.directive.docTree.table.columns.modified",
+        "displayName": "common.duplicates.columnDefs.modified",
+        "headerCellFilter": "translate",
         "headTemplate": "<label id='modified' class='doc-tree-header' style='cursor: pointer;'></label>",
         "icon": "<i class='fa fa-fw' data-sort='modified' data-dir='ASC'></i>",
         "__todo__cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>",
-        "width": "10%",
-        "index": 7
+        "width": "10%"
       },
       {
         "name": "modifier",
         "field": "modifier",
-        "displayName": "common.directive.docTree.table.columns.modifier",
+        "displayName": "common.duplicates.columnDefs.modifier",
+        "headerCellFilter": "translate",
         "headTemplate": "<label id='modifier' class='doc-tree-header' style='cursor: pointer;'></label>",
         "icon": "<i class='fa fa-fw' data-sort='modifier' data-dir='ASC'></i>",
         "__todo__cellTemplate": "<div>{{ row.entity.modifier }}</div>",
         "__todo__lookup": "userFullNames",
-        "width": "16%",
-        "index": 8
+        "width": "13%"
       },
       {
         "name": "version",
         "field": "activeVersionTag",
-        "displayName": "common.directive.docTree.table.columns.version",
+        "displayName": "common.duplicates.columnDefs.version",
+        "headerCellFilter": "translate",
         "headTemplate": "<label id='version' class='doc-tree-header' style='cursor: pointer;'></label>",
         "icon": "<i class='fa fa-fw' data-sort='version' data-dir='ASC'></i>",
         "__todo__cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
-        "width": "6%",
-        "index": 9
+        "width": "6%"
       },
       {
         "name": "status",
         "field": "status",
-        "displayName": "common.directive.docTree.table.columns.status",
+        "displayName": "common.duplicates.columnDefs.status",
+        "headerCellFilter": "translate",
         "headTemplate": "<label id='status' class='doc-tree-header' style='cursor: pointer;'></label>",
         "icon": "<i class='fa fa-fw' data-sort='status' data-dir='ASC'></i>",
         "__todo__cellTemplate": "{{node.data.status}}",
-        "width": "8%",
-        "index": 10
+        "width": "10%"
       }
     ],
     "paginationPageSizes": [

@@ -965,7 +965,7 @@ angular.module('directives').directive(
                             }
 
                             if (data.node.data.duplicate) {
-                                var file = node.data.objectId;
+                                var file = data.node.data.objectId;
                                 Util.serviceCall({
                                     service: Ecm.getFileDuplicates,
                                     param: {
@@ -974,7 +974,7 @@ angular.module('directives').directive(
                                     data: {},
                                     onSuccess: function(response) {
                                         DocTree.Op.showDuplicates(response, function() {
-
+                                            console.log("TRUE");
                                         })
                                     }
                                 })
@@ -1272,6 +1272,9 @@ angular.module('directives').directive(
                                 }, {
                                     name: "duplicate",
                                     renderer: function(element, node, columnDef, isReadOnly) {
+                                        if(node.data.duplicate) {
+                                           $(element).text("D");
+                                        }
                                         ;
                                     }
                                 }, {
@@ -3137,13 +3140,18 @@ angular.module('directives').directive(
                                 return dfd.promise();
                             },
                             showDuplicates: function(data, onClickOk) {
+                                var params = {
+                                    data: data
+                                };
                                 var modalInstance = $modal.open({
                                     templateUrl: "modules/common/views/showDuplicates-modal.client.view.html",
                                     controller: "Common.ShowDuplicates",
                                     animation: true,
-                                    size: 'lg',
+                                    windowClass: 'modal-window-big',
                                     resolve: {
-                                        data: data
+                                        params: function () {
+                                            return params;
+                                        }
                                     }
                                 });
 
