@@ -818,11 +818,6 @@ thead {
 
 /* Modal Window Columns */
 
-.modal-window-big {
-    width: 1000px;
-    position: center;
-}
-
 .modal-search {
     width: 100%;
 }

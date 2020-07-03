@@ -3147,7 +3147,7 @@ angular.module('directives').directive(
                                     templateUrl: "modules/common/views/showDuplicates-modal.client.view.html",
                                     controller: "Common.ShowDuplicates",
                                     animation: true,
-                                    windowClass: 'modal-window-big',
+                                    size: 'lg',
                                     resolve: {
                                         params: function () {
                                             return params;
