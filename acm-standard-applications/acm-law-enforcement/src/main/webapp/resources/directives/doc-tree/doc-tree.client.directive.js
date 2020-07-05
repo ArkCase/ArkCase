@@ -268,9 +268,6 @@ angular.module('directives').directive(
                                     if (Util.goodValue(node.data.link)) {
                                         acmIcon = "<i class='fa fa-link'></i>";
                                     }
-                                    if (Util.goodValue(node.data.duplicate)) {
-                                        acmIcon = "<i class='fab fa-dyalog'></i>";
-                                    }
                                     if (acmIcon) {
                                         var span = node.span;
                                         var $spanIcon = $(span.children[1]);
