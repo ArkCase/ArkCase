@@ -717,6 +717,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         }
 
         getFileEventPublisher().publishFileActiveVersionSetEvent(ecmFile, authentication, ipAddress, true);
+        getFileEventPublisher().publishFileUpdatedEvent(ecmFile, authentication, true);
 
         return ecmFile;
     }
@@ -737,6 +738,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         }
 
         getFileEventPublisher().publishFileActiveVersionSetEvent(ecmFile, authentication, ipAddress, true);
+        getFileEventPublisher().publishFileUpdatedEvent(ecmFile, authentication, true);
 
         return ecmFile;
 

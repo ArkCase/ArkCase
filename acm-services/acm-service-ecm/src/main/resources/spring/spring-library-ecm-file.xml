@@ -449,7 +449,12 @@
         <property name="ecmFileVersionDao" ref="ecmFileVersionDao"/>
     </bean>
 
-    <bean id="ecmFileUpdatedListener" class="com.armedia.acm.plugins.ecm.service.EcmFileUpdatedDuplicationListener">
+    <bean id="ecmFileUpdatedListenerForCreatingHash" class="com.armedia.acm.plugins.ecm.service.EcmFileUpdatedDuplicationListener">
+        <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
+        <property name="ecmFileVersionDao" ref="ecmFileVersionDao"/>
+    </bean>
+
+    <bean id="ecmFileCopiedListenerForCreatingHash" class="com.armedia.acm.plugins.ecm.service.EcmFileCopiedDuplicationListener">
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
         <property name="ecmFileVersionDao" ref="ecmFileVersionDao"/>
     </bean>

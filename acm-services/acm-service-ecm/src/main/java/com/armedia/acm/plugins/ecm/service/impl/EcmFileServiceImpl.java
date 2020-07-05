@@ -1066,6 +1066,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
         object.setLink(getSearchResults().extractBoolean(doc, SearchConstants.PROPERTY_LINK));
 
+        object.setDuplicate(getSearchResults().extractBoolean(doc, SearchConstants.PROPERTY_DUPLICATE));
+
         if (object.getObjectType().equals(EcmFileConstants.FILE))
         {
             EcmFile file = getEcmFileDao().find(object.getObjectId());
@@ -1074,7 +1076,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                 object.setVersionList(file.getVersions());
                 object.setPageCount(file.getPageCount());
                 object.setLock(file.getLock());
-                object.setDuplicate(file.isDuplicate());
             }
         }
 
