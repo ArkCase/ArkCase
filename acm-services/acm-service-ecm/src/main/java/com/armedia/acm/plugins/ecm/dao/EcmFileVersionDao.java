@@ -60,15 +60,6 @@ public class EcmFileVersionDao extends AcmAbstractDao<EcmFileVersion>
 
     }
 
-    public List<EcmFileVersion> getAllEcmFileVersion()
-    {
-        String queryText = "SELECT fileVersion FROM EcmFileVersion fileVersion WHERE fileVersion.fileHash IS null";
-        Query query = getEm().createQuery(queryText);
-        List<EcmFileVersion> results = query.getResultList();
-
-        return results;
-    }
-
     public List<EcmFileVersion> getEcmFileVersionWithSameHash(String fileHash)
     {
         String queryText = "SELECT fileVersion FROM EcmFileVersion fileVersion WHERE fileVersion.fileHash = :fileHash";

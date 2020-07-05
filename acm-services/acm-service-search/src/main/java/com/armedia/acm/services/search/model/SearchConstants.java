@@ -128,6 +128,4 @@ public interface SearchConstants
     String DEFAULT_FIELD = "catch_all";
 
     String PROPERTY_LINK = "link_b";
-
-    String PROPERTY_DUPLICATE = "duplicate_b";
 }

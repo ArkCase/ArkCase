@@ -268,6 +268,9 @@ angular.module('directives').directive(
                                     if (Util.goodValue(node.data.link)) {
                                         acmIcon = "<i class='fa fa-link'></i>";
                                     }
+                                    if (Util.goodValue(node.data.duplicate)) {
+                                        acmIcon = "<i class='fab fa-dyalog'></i>";
+                                    }
                                     if (acmIcon) {
                                         var span = node.span;
                                         var $spanIcon = $(span.children[1]);
@@ -965,19 +968,7 @@ angular.module('directives').directive(
                             }
 
                             if (data.node.data.duplicate) {
-                                var file = data.node.data.objectId;
-                                Util.serviceCall({
-                                    service: Ecm.getFileDuplicates,
-                                    param: {
-                                        fileId: file
-                                    },
-                                    data: {},
-                                    onSuccess: function(response) {
-                                        DocTree.Op.showDuplicates(response, function() {
-                                            console.log("TRUE");
-                                        })
-                                    }
-                                })
+                                DocTree.Op.showDuplicates(data);
                             }
 
                             if (data.targetType === 'title') {
@@ -3139,25 +3130,34 @@ angular.module('directives').directive(
                                 }
                                 return dfd.promise();
                             },
-                            showDuplicates: function(data, onClickOk) {
-                                var params = {
-                                    data: data
-                                };
-                                var modalInstance = $modal.open({
-                                    templateUrl: "modules/common/views/showDuplicates-modal.client.view.html",
-                                    controller: "Common.ShowDuplicates",
-                                    animation: true,
-                                    size: 'lg',
-                                    resolve: {
-                                        params: function () {
-                                            return params;
-                                        }
+                            showDuplicates: function(data) {
+                                var file = data.node.data.objectId;
+                                Util.serviceCall({
+                                    service: Ecm.getFileDuplicates,
+                                    param: {
+                                        fileId: file
+                                    },
+                                    data: {},
+                                    onSuccess: function (response) {
+                                        var params = {
+                                            data: response
+                                        };
+                                        var modalInstance = $modal.open({
+                                            templateUrl: "modules/common/views/showDuplicates-modal.client.view.html",
+                                            controller: "Common.ShowDuplicates",
+                                            animation: true,
+                                            size: 'lg',
+                                            resolve: {
+                                                params: function () {
+                                                    return params;
+                                                }
+                                            }
+                                        });
+                                        modalInstance.result.then(function() {
+                                            modalInstance.close();
+                                        });
                                     }
-                                });
-
-                                modalInstance.result.then(function() {
-                                    onClickOk();
-                                });
+                                })
                             },
                             openDeleteConfirmationModal: function(data, onClickOk) {
                                 var modalInstance = $modal.open({

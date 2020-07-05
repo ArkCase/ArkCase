@@ -41,7 +41,6 @@
                 <ref bean="acmGroupSolrReindexExecutor"/>
                 <ref bean="cmisRepositoryRecycleBinContainerExecutor"/>
                 <ref bean="createTaskFolderStructureInParentObjectUpdateExecutor"/>
-                <ref bean="checkAndCreateFileHashForAllFilesExecutor"/>
                 <ref bean="solrReindexCaseComplaintDocumentRepositoryExecutor"/>
             </list>
         </property>
@@ -155,12 +154,6 @@
         <property name="acmTaskService" ref="acmTaskService"/>
         <property name="acmFolderDao" ref="acmFolderDao"/>
         <property name="taskDao" ref="acmTaskDao"/>
-    </bean>
-
-    <bean id="checkAndCreateFileHashForAllFilesExecutor"
-          class="com.armedia.acm.services.dataupdate.service.CheckAndCreateFileHashForAllFilesExecutor">
-        <property name="ecmFileVersionDao" ref="ecmFileVersionDao"/>
-        <property name="ecmFileService" ref="ecmFileService"/>
     </bean>
 
     <bean id="solrReindexCaseComplaintDocumentRepositoryExecutor"
