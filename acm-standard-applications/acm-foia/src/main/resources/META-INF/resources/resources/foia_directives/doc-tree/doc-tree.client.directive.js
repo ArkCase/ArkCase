@@ -1083,6 +1083,10 @@ angular
                             DocTree.scope.$bus.publish('docTreeNodeChecked', data.node);
                         }
 
+                        if (data.node.data.duplicate) {
+                            DocTree.Op.showDuplicates(data);
+                        }
+
                         if (data.targetType === 'title') {
                             if (DocTree.isFileNode(data.node)) {
                                 DocTree.scope.$bus.publish('docTreeFileNodeSelected', data.node);
@@ -1376,8 +1380,15 @@ angular
                                     renderer: function (element, node, columnDef, isReadOnly) {
                                         ;
                                     }
-                                },
-                                {
+                                }, {
+                                    name: "duplicate",
+                                    renderer: function(element, node, columnDef, isReadOnly) {
+                                        if(node.data.duplicate) {
+                                            $(element).text("D");
+                                        }
+                                        ;
+                                    }
+                                }, {
                                     name: "title",
                                     renderer: function (element, node, columnDef, isReadOnly) {
                                         ;
@@ -3363,6 +3374,35 @@ angular
                                 }
                             }
                             return dfd.promise();
+                        },
+                        showDuplicates: function(data) {
+                            var file = data.node.data.objectId;
+                            Util.serviceCall({
+                                service: Ecm.getFileDuplicates,
+                                param: {
+                                    fileId: file
+                                },
+                                data: {},
+                                onSuccess: function (response) {
+                                    var params = {
+                                        data: response
+                                    };
+                                    var modalInstance = $modal.open({
+                                        templateUrl: "modules/common/views/showDuplicates-modal.client.view.html",
+                                        controller: "Common.ShowDuplicates",
+                                        animation: true,
+                                        size: 'lg',
+                                        resolve: {
+                                            params: function () {
+                                                return params;
+                                            }
+                                        }
+                                    });
+                                    modalInstance.result.then(function() {
+                                        modalInstance.close();
+                                    });
+                                }
+                            })
                         },
                         openDeleteConfirmationModal: function (data, onClickOk) {
                             var modalInstance = $modal.open({

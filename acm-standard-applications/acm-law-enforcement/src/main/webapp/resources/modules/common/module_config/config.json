@@ -32,7 +32,6 @@
         "displayName": "Dup",
         "width": "2%",
         "headTemplate": "",
-        "__todo__cellTemplate": "<div ng-if=node.data.duplicate><i class='fab fa-dyalog'></i></div>",
         "index": 1
       },
       {
