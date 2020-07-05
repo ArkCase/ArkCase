@@ -378,7 +378,7 @@ angular.module('admin').controller(
             $scope.deleteUserConfirm = function deleteUserConfirm() {
                 LdapConfigService.retrieveDirectories().then(function (directories) {
                     getEnableEditingLdapUsers(directories, selectedUser.directory);
-                    if($scope.enableLdapUser === 'true'){
+                    if($scope.enableLdapUser === true){
                         bootbox.confirm({
                             message: $translate.instant("admin.security.ldap.user.management.deleteUserMsg"),
                             buttons: {
