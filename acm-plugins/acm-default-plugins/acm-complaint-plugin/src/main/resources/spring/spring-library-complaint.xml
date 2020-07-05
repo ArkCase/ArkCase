@@ -68,6 +68,10 @@
         <property name="formsTypeCheckService" ref="formsTypeCheckService"/>
         <property name="dao" ref="acmComplaintDao"/>
     </bean>
+    <bean id="complaintTagHandler" class="com.armedia.acm.plugins.complaint.pipeline.postsave.ComplaintTagHandler">
+        <property name="associatedTagService" ref="associatedTagService" />
+        <property name="tagService" ref="tagService" />
+    </bean>
 
     <bean id="complaintPipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
         <property name="preSaveHandlers">
@@ -82,6 +86,7 @@
                 <ref bean="complaintEcmFolderHandler"/>
                 <ref bean="complaintOutlookHandler"/>
                 <ref bean="complaintDocumentHandler"/>
+                <ref bean="complaintTagHandler" />
             </list>
         </property>
     </bean>

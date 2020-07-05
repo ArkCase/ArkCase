@@ -40,6 +40,7 @@ import com.armedia.acm.services.users.model.event.LdapUserUpdatedEvent;
 import com.armedia.acm.services.users.model.event.SetPasswordEmailEvent;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
+import com.armedia.acm.services.users.model.ldap.AcmLdapConstants;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.Directory;
 import com.armedia.acm.services.users.model.ldap.LdapUser;
@@ -318,8 +319,9 @@ public class LdapUserService implements ApplicationEventPublisherAware
             groupService.saveAndFlush(group);
         }
 
+        String dnToDelete = MapperUtils.stripBaseFromDn(user.getDistinguishedName(), AcmLdapConstants.DC_DELETED);
         AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directory);
-        ldapUserDao.deleteUserEntry(user.getDistinguishedName(), ldapSyncConfig);
+        ldapUserDao.deleteUserEntry(dnToDelete, ldapSyncConfig);
         return user;
     }
 

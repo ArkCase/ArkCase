@@ -89,7 +89,7 @@ public class SimilarObjectsServiceImpl implements SimilarObjectsService
         {
             log.debug(String.format("Finding similar objects by title to [%s], of type [%s]", title, objectType));
 
-            StringBuilder query = titleToWordsQuery(title);
+            StringBuilder query = titleToWordsQuery(title, false);
 
             query.append(" AND object_type_s:").append(objectType);
             if (isPortal && "CASE_FILE".equals(objectType))
@@ -130,7 +130,7 @@ public class SimilarObjectsServiceImpl implements SimilarObjectsService
 
         if (StringUtils.isNotBlank(title))
         {
-            StringBuilder fileQuery = titleToWordsQuery(title);
+            StringBuilder fileQuery = titleToWordsQuery(title, true);
 
             fileQuery.append(" AND object_type_s:FILE");
             fileQuery.append(" AND parent_ref_s:*").append(objectType);
@@ -186,14 +186,26 @@ public class SimilarObjectsServiceImpl implements SimilarObjectsService
                 .collect(Collectors.toList());
     }
 
-    private StringBuilder titleToWordsQuery(String title)
+    private StringBuilder titleToWordsQuery(String title, boolean isContent)
     {
+
         StringBuilder words = new StringBuilder(Stream.of(title.trim().split(" "))
-                .filter(word -> word.length() > 2)
+                .filter(isContent ? word -> word.length() > 2 : word -> word.length() > 0)
                 .map(this::encodeWord)
                 .map(word -> "\"" + word + "\"")
                 .collect(Collectors.joining(" OR ")));
 
+        if (isContent)
+        {
+            if (words.toString().isEmpty())
+            {
+                words.append("\"" + encodeWord(title) + "\"");
+            }
+            else
+            {
+                words.append(" OR \"" + encodeWord(title) + "\"");
+            }
+        }
         words.insert(0, "(").append(")");
         return words;
     }
