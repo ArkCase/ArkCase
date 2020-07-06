@@ -239,6 +239,7 @@
         <property name="emailSenderConfig" ref="emailSenderConfig"/>
         <property name="progressIndicatorService" ref="progressIndicatorService"/>
         <property name="camelContextManager" ref="camelContextManager"/>
+        <property name="ecmFileVersionDao" ref="ecmFileVersionDao"/>
         <property name="authenticationTokenDao" ref="authenticationTokenDao"/>
     </bean>
 
@@ -440,5 +441,18 @@
         <property name="connectionFactory" ref="jmsConnectionFactory"/>
         <property name="destination" ref="messageDestination"/>
         <property name="messageListener" ref="changedParticipantToArkcaseListener"/>
+    </bean>
+
+
+    <bean id="ecmFileAddedDuplicationListener" class="com.armedia.acm.plugins.ecm.service.EcmFileAddedDuplicationListener">
+        <property name="ecmFileService" ref="ecmFileService"/>
+    </bean>
+
+    <bean id="ecmFileUpdatedDuplicationListener" class="com.armedia.acm.plugins.ecm.service.EcmFileUpdatedDuplicationListener">
+        <property name="ecmFileService" ref="ecmFileService"/>
+    </bean>
+
+    <bean id="ecmFileCopiedDuplicationListener" class="com.armedia.acm.plugins.ecm.service.EcmFileCopiedDuplicationListener">
+        <property name="ecmFileService" ref="ecmFileService"/>
     </bean>
 </beans>
