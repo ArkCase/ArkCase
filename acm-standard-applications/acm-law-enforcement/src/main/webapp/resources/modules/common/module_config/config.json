@@ -965,7 +965,7 @@
     "showFacets": false,
     "columnDefs": [
       {
-        "name": "Case File",
+        "name": "Object Title",
         "field": "container.containerObjectTitle",
         "displayName": "common.duplicates.columnDefs.case_file",
         "headerCellFilter": "translate",
