@@ -444,18 +444,15 @@
     </bean>
 
 
-    <bean id="ecmFileAddedListenerForCreatingHash" class="com.armedia.acm.plugins.ecm.service.EcmFileAddedDuplicationListener">
-        <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
-        <property name="ecmFileVersionDao" ref="ecmFileVersionDao"/>
+    <bean id="ecmFileAddedDuplicationListener" class="com.armedia.acm.plugins.ecm.service.EcmFileAddedDuplicationListener">
+        <property name="ecmFileService" ref="ecmFileService"/>
     </bean>
 
-    <bean id="ecmFileUpdatedListenerForCreatingHash" class="com.armedia.acm.plugins.ecm.service.EcmFileUpdatedDuplicationListener">
-        <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
-        <property name="ecmFileVersionDao" ref="ecmFileVersionDao"/>
+    <bean id="ecmFileUpdatedDuplicationListener" class="com.armedia.acm.plugins.ecm.service.EcmFileUpdatedDuplicationListener">
+        <property name="ecmFileService" ref="ecmFileService"/>
     </bean>
 
-    <bean id="ecmFileCopiedListenerForCreatingHash" class="com.armedia.acm.plugins.ecm.service.EcmFileCopiedDuplicationListener">
-        <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
-        <property name="ecmFileVersionDao" ref="ecmFileVersionDao"/>
+    <bean id="ecmFileCopiedDuplicationListener" class="com.armedia.acm.plugins.ecm.service.EcmFileCopiedDuplicationListener">
+        <property name="ecmFileService" ref="ecmFileService"/>
     </bean>
 </beans>

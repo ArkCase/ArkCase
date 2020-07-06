@@ -220,7 +220,7 @@ angular.module('directives').directive(
                                 ,
                                 table: {
                                     indentation: 10, // indent 20px per node level
-                                    nodeColumnIdx: 3, // render the node title into the 3rd column
+                                    nodeColumnIdx: 3, // render the node title into the 4th column
                                     checkboxColumnIdx: 0
                                 // render the checkboxes into the 1st column
                                 },

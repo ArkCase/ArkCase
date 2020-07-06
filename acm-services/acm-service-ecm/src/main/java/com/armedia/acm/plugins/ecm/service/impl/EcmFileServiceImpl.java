@@ -2280,7 +2280,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
         else
         {
-            EcmFileVersion ecmFileVersion = getFolderAndFilesUtils().getVersion(file, file.getActiveVersionTag());
+            EcmFileVersion ecmFileVersion = (EcmFileVersion) getFolderAndFilesUtils().getVersion(file, file.getActiveVersionTag());
 
             List<EcmFileVersion> efvList = getEcmFileVersionDao().getEcmFileVersionWithSameHash(ecmFileVersion.getFileHash());
             List<EcmFile> efList = new ArrayList<>();
@@ -2338,6 +2338,24 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
         return getEcmFileDao().getLinkTargetFileInfo(ecmFile);
 
+    }
+
+    @Override
+    public void checkDuplicatesByHash(EcmFile ecmFile)
+    {
+        EcmFileVersion ecmFileVersion = getFolderAndFilesUtils().getVersion(ecmFile, ecmFile.getActiveVersionTag());
+
+        List<EcmFileVersion> efvList = getEcmFileVersionDao().getEcmFileVersionWithSameHash(ecmFileVersion.getFileHash());
+        if (efvList.size() > 1)
+        {
+            for (EcmFileVersion efv : efvList)
+            {
+                EcmFile ef = efv.getFile();
+                if (!ef.isLink()) {
+                    ef.setDuplicate(true);
+                }
+            }
+        }
     }
 
     @Override
