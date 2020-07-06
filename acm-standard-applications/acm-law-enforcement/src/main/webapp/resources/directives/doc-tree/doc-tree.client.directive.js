@@ -436,6 +436,7 @@ angular.module('directives').directive(
                             //todo: move to column renderer
                             jqTreeBody.on("change", "select.docversion", DocTree.onChangeVersion);
                             jqTreeBody.on("dblclick", "select.docversion", DocTree.onDblClickVersion);
+                            jqTreeBody.on("click", "select.duplicate", DocTree.onClick);
 
                             var jqTreeHead = jqTree.find("thead");
                             jqTreeHead.find("input:checkbox").on("click", function(e) {
@@ -1261,7 +1262,11 @@ angular.module('directives').directive(
                                     name: "duplicate",
                                     renderer: function(element, node, columnDef, isReadOnly) {
                                         if(node.data.duplicate) {
-                                           $(element).text("D");
+                                            var $td = $("<td/>");
+                                            var $span = $("<span/>").appendTo($td);
+                                            var $button = $("<button type='button'/>").appendTo($span);
+                                            var $text = $("<strong>D</strong>").appendTo($button);
+                                            $(element).replaceWith($td);
                                         }
                                         ;
                                     }
@@ -3143,7 +3148,7 @@ angular.module('directives').directive(
                                             templateUrl: "modules/common/views/showDuplicates-modal.client.view.html",
                                             controller: "Common.ShowDuplicates",
                                             animation: true,
-                                            size: 'lg',
+                                            windowClass: 'modal-width-80',
                                             resolve: {
                                                 params: function () {
                                                     return params;

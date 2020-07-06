@@ -499,6 +499,7 @@ angular
                         jqTreeBody.on("dblclick", "select.docversion", DocTree.onDblClickVersion);
                         jqTreeBody.on("change", "select.reviewstatus", DocTree.onChangeReviewStatus);
                         jqTreeBody.on("change", "select.redactionstatus", DocTree.onChangeRedactionStatus);
+                        qTreeBody.on("click", "select.duplicate", DocTree.onClick);
 
                         var jqTreeHead = jqTree.find("thead");
                         jqTreeHead.find("input:checkbox").on("click", function (e) {
@@ -1083,10 +1084,6 @@ angular
                             DocTree.scope.$bus.publish('docTreeNodeChecked', data.node);
                         }
 
-                        if (data.node.data.duplicate) {
-                            DocTree.Op.showDuplicates(data);
-                        }
-
                         if (data.targetType === 'title') {
                             if (DocTree.isFileNode(data.node)) {
                                 DocTree.scope.$bus.publish('docTreeFileNodeSelected', data.node);
@@ -1384,7 +1381,11 @@ angular
                                     name: "duplicate",
                                     renderer: function(element, node, columnDef, isReadOnly) {
                                         if(node.data.duplicate) {
-                                            $(element).text("D");
+                                            var $td = $("<td/>");
+                                            var $span = $("<span/>").appendTo($td);
+                                            var $button = $("<button type='button'/>").appendTo($span);
+                                            var $text = $("<strong>D</strong>").appendTo($button);
+                                            $(element).replaceWith($td);
                                         }
                                         ;
                                     }
@@ -3391,7 +3392,7 @@ angular
                                         templateUrl: "modules/common/views/showDuplicates-modal.client.view.html",
                                         controller: "Common.ShowDuplicates",
                                         animation: true,
-                                        size: 'lg',
+                                        windowClass: 'modal-width-80',
                                         resolve: {
                                             params: function () {
                                                 return params;
