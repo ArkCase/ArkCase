@@ -32,7 +32,6 @@
         "displayName": "Dup",
         "width": "2%",
         "headTemplate": "",
-        "cellTemplate": "<div id='text' onClick='showDuplicates()'>D</div>",
         "index": 1
       },
       {
