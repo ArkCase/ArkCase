@@ -27,62 +27,32 @@ package com.armedia.acm.plugins.ecm.service;
  * #L%
  */
 
-import com.armedia.acm.plugins.ecm.dao.EcmFileVersionDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileCopiedEvent;
-import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationListener;
 
-import java.util.List;
 
 public class EcmFileCopiedDuplicationListener implements ApplicationListener<EcmFileCopiedEvent>
 {
 
     private final Logger LOG = LogManager.getLogger(getClass());
-    private FolderAndFilesUtils folderAndFilesUtils;
-    private EcmFileVersionDao ecmFileVersionDao;
+    private EcmFileService ecmFileService;
 
     @Override
     public void onApplicationEvent(EcmFileCopiedEvent event)
     {
 
         EcmFile ecmFile = (EcmFile) event.getSource();
-        EcmFileVersion ecmFileVersion = getFolderAndFilesUtils().getVersion(ecmFile, ecmFile.getActiveVersionTag());
-
-        List<EcmFileVersion> efvList = getEcmFileVersionDao().getEcmFileVersionWithSameHash(ecmFileVersion.getFileHash());
-        if (efvList.size() > 1)
-        {
-            for (EcmFileVersion efv : efvList)
-            {
-                EcmFile ef = efv.getFile();
-                if (!ef.isLink())
-                {
-                    ef.setDuplicate(true);
-                }
-            }
-        }
+        getEcmFileService().checkDuplicatesByHash(ecmFile);
     }
 
-    public FolderAndFilesUtils getFolderAndFilesUtils()
-    {
-        return folderAndFilesUtils;
+    public EcmFileService getEcmFileService() {
+        return ecmFileService;
     }
 
-    public void setFolderAndFilesUtils(FolderAndFilesUtils folderAndFilesUtils)
-    {
-        this.folderAndFilesUtils = folderAndFilesUtils;
-    }
-
-    public EcmFileVersionDao getEcmFileVersionDao()
-    {
-        return ecmFileVersionDao;
-    }
-
-    public void setEcmFileVersionDao(EcmFileVersionDao ecmFileVersionDao)
-    {
-        this.ecmFileVersionDao = ecmFileVersionDao;
+    public void setEcmFileService(EcmFileService ecmFileService) {
+        this.ecmFileService = ecmFileService;
     }
 }

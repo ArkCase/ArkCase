@@ -280,7 +280,7 @@ angular
                             ,
                             table: {
                                 indentation: 10, // indent 20px per node level
-                                nodeColumnIdx: 3, // render the node title into the 3rd column
+                                nodeColumnIdx: 3, // render the node title into the 4th column
                                 checkboxColumnIdx: 0
                                 // render the checkboxes into the 1st column
                             },
@@ -4031,6 +4031,7 @@ angular
                             nodeData.data.publicFlag = Util.goodValue(fileData.publicFlag);
                             nodeData.data.modifier = Util.goodValue(fileData.modifier);
                             nodeData.data.link = Util.goodValue(fileData.link);
+                            nodeData.data.duplicate = Util.goodValue(fileData.duplicate);
 
                             for (var versionIndex = 0; versionIndex < fileData.versionList.length; versionIndex++) {
                                 if (fileData.versionList[versionIndex].versionTag === fileData.version) {
