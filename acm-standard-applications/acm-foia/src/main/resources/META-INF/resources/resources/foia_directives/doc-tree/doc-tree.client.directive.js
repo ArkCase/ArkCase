@@ -3377,8 +3377,9 @@ angular
                             }
                             return dfd.promise();
                         },
-                        showDuplicates: function(data) {
-                            var file = data.node.data.objectId;
+                        showDuplicates: function() {
+                            var node = DocTree.tree.getActiveNode();
+                            var file = node.data.objectId;
                             Util.serviceCall({
                                 service: Ecm.getFileDuplicates,
                                 param: {
@@ -4261,7 +4262,6 @@ angular
                         DocTree.switchObject(objType, objId);
                     }
                     ,
-
                     onChangeVersion: function (event) {
                         var node = DocTree.tree.getActiveNode();
                         if (node) {
