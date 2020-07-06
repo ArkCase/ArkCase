@@ -362,9 +362,7 @@
                             <div class="col-lg-4">
                                 <label>
                                     <input type="checkbox" ng-model="subjectSameAsRequester"
-                                           ng-click="isSubjectSameAsRequesterChecked(subjectSameAsRequester)"
-                                           ng-disabled="requestForm.subjectPrefix.$invalid || requestForm.subjectFirstName.$invalid || requestForm.subjectLastName.$invalid || requestForm.subjectEmail.$invalid
-|| uploadFilesDescription['Subject Proof of Identity'].length == 0 || config.data.subject.person.dateOfBirth == null">
+                                           ng-click="isSubjectSameAsRequesterChecked(subjectSameAsRequester)">
                                     <span translate> cases.newRequest.setSubjectAsRequester.label</span>
                                 </label>
                             </div>
