@@ -19,7 +19,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping({ "/api/v1/service/ecm", "/api/latest/service/ecm" })
-public class FindDuplicatesAPIController {
+public class FileDuplicatesAPIController {
 
     private transient final Logger log = LogManager.getLogger(getClass());
     private EcmFileService fileService;
