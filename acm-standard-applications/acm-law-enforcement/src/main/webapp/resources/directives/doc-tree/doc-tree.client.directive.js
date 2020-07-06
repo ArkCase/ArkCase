@@ -436,7 +436,7 @@ angular.module('directives').directive(
                             //todo: move to column renderer
                             jqTreeBody.on("change", "select.docversion", DocTree.onChangeVersion);
                             jqTreeBody.on("dblclick", "select.docversion", DocTree.onDblClickVersion);
-                            jqTreeBody.on("click", "button.duplicate", DocTree.showDuplicates);
+                            jqTreeBody.on("click", "button.duplicate", DocTree.Op.showDuplicates);
 
                             var jqTreeHead = jqTree.find("thead");
                             jqTreeHead.find("input:checkbox").on("click", function(e) {
@@ -963,10 +963,6 @@ angular.module('directives').directive(
                             // publish event that a node in the DocTree has been checked
                             if (data.targetType === 'checkbox') {
                                 DocTree.scope.$bus.publish('docTreeNodeChecked', data.node);
-                            }
-
-                            if (data.node.data.duplicate) {
-                                DocTree.Op.showDuplicates(data);
                             }
 
                             if (data.targetType === 'title') {
@@ -3133,8 +3129,9 @@ angular.module('directives').directive(
                                 }
                                 return dfd.promise();
                             },
-                            showDuplicates: function(data) {
-                                var file = data.node.data.objectId;
+                            showDuplicates: function() {
+                                var node = DocTree.tree.getActiveNode();
+                                var file = node.data.objectId;
                                 Util.serviceCall({
                                     service: Ecm.getFileDuplicates,
                                     param: {
