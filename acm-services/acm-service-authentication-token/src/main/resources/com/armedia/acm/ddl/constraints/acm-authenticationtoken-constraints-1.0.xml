@@ -33,4 +33,8 @@
         <addUniqueConstraint tableName="acm_authentication_token" columnNames="cm_authentication_token_key"/>
     </changeSet>
 
+    <changeSet id="04-drop-not-null-email-constraint" author="martin.bozinovski">
+        <dropNotNullConstraint tableName="acm_authentication_token" columnName="cm_authentication_token_email" columnDataType="VARCHAR(512)" />
+    </changeSet>
+
 </databaseChangeLog>
