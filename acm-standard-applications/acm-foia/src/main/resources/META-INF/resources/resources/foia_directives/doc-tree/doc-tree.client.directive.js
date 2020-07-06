@@ -499,7 +499,7 @@ angular
                         jqTreeBody.on("dblclick", "select.docversion", DocTree.onDblClickVersion);
                         jqTreeBody.on("change", "select.reviewstatus", DocTree.onChangeReviewStatus);
                         jqTreeBody.on("change", "select.redactionstatus", DocTree.onChangeRedactionStatus);
-                        qTreeBody.on("click", "select.duplicate", DocTree.onClick);
+                        jqTreeBody.on("click", "button.duplicate", DocTree.Op.showDuplicates);
 
                         var jqTreeHead = jqTree.find("thead");
                         jqTreeHead.find("input:checkbox").on("click", function (e) {
@@ -1383,8 +1383,9 @@ angular
                                         if(node.data.duplicate) {
                                             var $td = $("<td/>");
                                             var $span = $("<span/>").appendTo($td);
-                                            var $button = $("<button type='button'/>").appendTo($span);
+                                            var $button = $("<button type='button'/>").addClass('duplicate').appendTo($span);
                                             var $text = $("<strong>D</strong>").appendTo($button);
+
                                             $(element).replaceWith($td);
                                         }
                                         ;
@@ -4259,8 +4260,8 @@ angular
                     onViewChangedParent: function (objType, objId) {
                         DocTree.switchObject(objType, objId);
                     }
-
                     ,
+
                     onChangeVersion: function (event) {
                         var node = DocTree.tree.getActiveNode();
                         if (node) {

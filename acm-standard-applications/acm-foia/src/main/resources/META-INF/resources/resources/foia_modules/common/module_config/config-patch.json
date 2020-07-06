@@ -69,7 +69,7 @@
             "icon": "<i class='fa fa-fw' data-sort='redactionStatus' data-dir='ASC'></i>",
             "__todo__cellTemplate": "<div>{{ row.entity.redactionStatus }}</div>",
             "width": "8%",
-            "index": 9
+            "index": 10
         }
     },
     {
@@ -80,12 +80,12 @@
     {
         "op": "replace",
         "path": "/docTree/columnDefs/?@.name=='version'/index",
-        "value": 10
+        "value": 11
     },
     {
         "op": "replace",
         "path": "/docTree/columnDefs/?@.name=='status'/index",
-        "value": 11
+        "value": 12
     },
     {
         "op": "replace",
