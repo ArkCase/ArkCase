@@ -170,4 +170,8 @@
     <bean id="getLinkTargetEcmFile" class="com.armedia.acm.plugins.ecm.web.api.GetLinkTargetEcmFileAPIController">
         <property name="fileService" ref="ecmFileService"/>
     </bean>
+
+    <bean id="fileDuplicatesAPIController" class="com.armedia.acm.plugins.ecm.web.api.FileDuplicatesAPIController">
+        <property name="fileService" ref="ecmFileService"/>
+    </bean>
 </beans>
