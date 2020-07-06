@@ -14,6 +14,7 @@ angular.module('cases').controller(
             $scope.enableTitle = false;
             $scope.isPickExistingOriginator = false;
             $scope.isPickExistingSubject = false;
+            $scope.subjectSameAsRequester = false;
 
             $scope.receivedDate = new Date();
 
@@ -172,7 +173,7 @@ angular.module('cases').controller(
                 $scope.config.data.subject.person.addresses[0].country = countries[0].key;
                 $scope.config.data.subject.person.addresses[0].type = addressTypes[0].key;
                 $scope.config.data.receivedDate = moment.utc().format("YYYY-MM-DDTHH:mm:ss.sss");
-                $scope.config.data.dateOfBirth = moment.utc().format("YYYY-MM-DD");
+                $scope.config.data.subject.person.dateOfBirth = moment.utc().format("YYYY-MM-DD");
 
                 $scope.blankPerson = angular.copy($scope.config.data.originator.person);
             });
@@ -234,7 +235,7 @@ angular.module('cases').controller(
                     if ($scope.uploadFilesDescription[subjectProofOfIdentityDocumentType].length == 0) {
                         $scope.formInvalid = true;
                     }
-                    if ($scope.uploadFilesDescription[originatorProofOfIdentityDocumentType].length == 0) {
+                    if (!$scope.subjectSameAsRequester && $scope.uploadFilesDescription[originatorProofOfIdentityDocumentType].length == 0) {
                         $scope.formInvalid = true;
                     }
                     if (requestForm.$valid && !$scope.formInvalid) {
@@ -254,10 +255,12 @@ angular.module('cases').controller(
                 }
             };
 
-            $scope.dateOfBirthChanged = function () {
+            $scope.dateOfBirthChanged = function (dateOfBirthChanged) {
                 var todayDate = moment.utc().format("YYYY-MM-DD");
-                if (Util.isEmpty($scope.config.data.dateOfBirth) || moment($scope.config.data.subject.person.dateOfBirth).isAfter(todayDate)) {
+                if (Util.isEmpty($scope.config.data.subject.person.dateOfBirth) || moment($scope.config.data.subject.person.dateOfBirth).isAfter(todayDate)) {
                     $scope.config.data.subject.person.dateOfBirth = todayDate;
+                } else {
+                    $scope.config.data.subject.person.dateOfBirth = dateOfBirthChanged;
                 }
             };
 
@@ -683,6 +686,20 @@ angular.module('cases').controller(
                     } else {
                         $scope.subjectConfirmationEmail = '';
                     }
+                }
+            };
+
+            $scope.isSubjectSameAsRequesterChecked = function (subjectSameAsRequester) {
+                if (subjectSameAsRequester) {
+                    $scope.config.data.originator = angular.copy($scope.config.data.subject);
+                    $scope.confirmationEmail = $scope.subjectConfirmationEmail;
+                    $scope.config.data.originator.personType = "Requester";
+                    $scope.uploadFilesDescription[originatorProofOfIdentityDocumentType] = [];
+                } else {
+                    $scope.config.data.originator.person = angular.copy($scope.blankPerson);
+                    $scope.confirmationEmail = "";
+                    $scope.uploadFilesDescription[originatorProofOfIdentityDocumentType] = [];
+
                 }
             };
 
