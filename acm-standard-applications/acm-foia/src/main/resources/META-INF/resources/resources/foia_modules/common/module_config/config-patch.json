@@ -69,7 +69,7 @@
             "icon": "<i class='fa fa-fw' data-sort='redactionStatus' data-dir='ASC'></i>",
             "__todo__cellTemplate": "<div>{{ row.entity.redactionStatus }}</div>",
             "width": "8%",
-            "index": 10
+            "index": 9
         }
     },
     {
