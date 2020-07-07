@@ -130,6 +130,10 @@ public class SARService
                     subjectAccessRequest.getPersonAssociations().clear();
                     subjectAccessRequest.getPersonAssociations().add(originatorAssociation);
                     subjectAccessRequest.getPersonAssociations().add(subjectAssociation);
+
+                    List<MultipartFile> files = filesMap.get("Subject Proof of Identity");
+                    filesMap.clear();
+                    filesMap.put("Proof of Identity", files);
                 }
 
                 setDefaultPhoneAndEmailIfAny(in);

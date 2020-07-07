@@ -19,7 +19,7 @@ angular.module('cases').controller(
             $scope.receivedDate = new Date();
 
             var subjectProofOfIdentityDocumentType = "Subject Proof of Identity";
-            var originatorProofOfIdentityDocumentType = "Originator Proof of Identity";
+            var originatorProofOfIdentityDocumentType = "Requester Proof of Identity";
 
             $scope.uploadFilesDescription = {};
             $scope.uploadFilesDescription[subjectProofOfIdentityDocumentType] = [];
