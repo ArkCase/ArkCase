@@ -707,7 +707,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
     }
 
     @Override
-    public void startArrestWarrantWorkflow(AcmTask task)
+    public void startAcmDocumentSingleTaskWorkflow(AcmTask task)
             throws AcmCreateObjectFailedException, AcmUserActionFailedException, LinkAlreadyExistException, AcmObjectNotFoundException
     {
         EcmFile source = task.getDocumentsToReview().get(0);
