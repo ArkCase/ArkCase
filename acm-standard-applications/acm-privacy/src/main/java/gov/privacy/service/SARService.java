@@ -48,6 +48,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.Person;
+import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.services.notification.service.NotificationSender;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
@@ -115,6 +116,20 @@ public class SARService
                 if (subjectAccessRequest.getReceivedDate() == null)
                 {
                     subjectAccessRequest.setReceivedDate(LocalDateTime.now());
+                }
+
+                if (subjectAccessRequest.getId() == null && subjectAccessRequest.getSubject().getPerson().getDefaultEmail()
+                        .equals(subjectAccessRequest.getOriginator().getPerson().getDefaultEmail()))
+                {
+                    PersonAssociation originatorAssociation = subjectAccessRequest.getOriginator();
+                    PersonAssociation subjectAssociation = subjectAccessRequest.getSubject();
+
+                    originatorAssociation.setPerson(subjectAccessRequest.getSubject().getPerson());
+                    subjectAccessRequest.setOriginator(subjectAccessRequest.getSubject());
+
+                    subjectAccessRequest.getPersonAssociations().clear();
+                    subjectAccessRequest.getPersonAssociations().add(originatorAssociation);
+                    subjectAccessRequest.getPersonAssociations().add(subjectAssociation);
                 }
 
                 setDefaultPhoneAndEmailIfAny(in);
