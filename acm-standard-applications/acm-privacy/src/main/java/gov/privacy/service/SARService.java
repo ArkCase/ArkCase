@@ -130,6 +130,11 @@ public class SARService
                     subjectAccessRequest.getPersonAssociations().clear();
                     subjectAccessRequest.getPersonAssociations().add(originatorAssociation);
                     subjectAccessRequest.getPersonAssociations().add(subjectAssociation);
+
+                    if (filesMap != null && filesMap.containsKey("Requester Proof of Identity"))
+                    {
+                        filesMap.remove("Requester Proof of Identity");
+                    }
                 }
 
                 setDefaultPhoneAndEmailIfAny(in);
