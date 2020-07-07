@@ -52,7 +52,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -77,9 +76,9 @@ public class CreateBusinessProcessTasksAPIController
         try
         {
             List<AcmTask> acmTasks = null;
-            if (businessProcessName.equals("arrestWarrant"))
+            if (businessProcessName.equals("acmDocumentSingleTaskWorkflow"))
             {
-                getTaskService().startArrestWarrantWorkflow(in);
+                getTaskService().startAcmDocumentSingleTaskWorkflow(in);
             }
             else
             {
