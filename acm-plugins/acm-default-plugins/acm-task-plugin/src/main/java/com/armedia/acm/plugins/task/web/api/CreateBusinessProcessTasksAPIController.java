@@ -78,6 +78,7 @@ public class CreateBusinessProcessTasksAPIController
             List<AcmTask> acmTasks = null;
             if (businessProcessName.equals("acmDocumentSingleTaskWorkflow"))
             {
+                in.setBusinessProcessName(businessProcessName);
                 getTaskService().startAcmDocumentSingleTaskWorkflow(in);
             }
             else
