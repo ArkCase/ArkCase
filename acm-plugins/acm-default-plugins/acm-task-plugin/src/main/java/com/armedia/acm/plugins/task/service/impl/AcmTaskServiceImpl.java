@@ -638,7 +638,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
     @Override
     @Transactional
     public List<AcmTask> startReviewDocumentsWorkflow(AcmTask task, String businessProcessName, Authentication authentication,
-            List<MultipartFile> filesToUpload)
+                                                      List<MultipartFile> filesToUpload)
             throws AcmTaskException, AcmCreateObjectFailedException, AcmUserActionFailedException, LinkAlreadyExistException,
             AcmObjectNotFoundException
     {
@@ -687,29 +687,40 @@ public class AcmTaskServiceImpl implements AcmTaskService
                     : businessProcess.getObjectType());
             task.setAttachedToObjectId(task.getAttachedToObjectId() != null ? task.getAttachedToObjectId() : businessProcess.getId());
         }
-        return startReviewDocumentsWorkflow(task, businessProcessName, authentication);
+        if (businessProcessName.equals("acmDocumentSingleTaskWorkflow"))
+        {
+            List<AcmTask> acmTasks = null;
+            task.setBusinessProcessName(businessProcessName);
+            return startAcmDocumentSingleTaskWorkflow(task);
+        }
+        else
+        {
+            return startReviewDocumentsWorkflow(task, businessProcessName, authentication);
+        }
     }
 
     @Override
-    public void sendArrestWarrantMail(Long objectId, String objectType, String approvers)
+    public void sendAcmDocumentSingleTaskWorkflowMail(Long objectId, String objectType, String approvers)
     {
         AcmAbstractDao<AcmObject> dao = getAcmDataService().getDaoByObjectType(objectType);
         AcmObject object = dao.find(objectId);
         Notification notification = new Notification();
         notification.setParentId(objectId);
         notification.setParentType(objectType);
-        notification.setTitle(String.format(translationService.translate(NotificationConstants.ARREST_WARRANT),
+        notification.setTitle(String.format(translationService.translate(NotificationConstants.SINGLE_TASK_WORKFLOW),
                 ((AcmNotifiableEntity) object).getNotifiableEntityNumber()));
         notification.setEmailAddresses(approvers);
-        notification.setTemplateModelName("arrestWarrant");
+        notification.setTemplateModelName("acmDocumentSingleTaskWorkflow");
         notificationDao.save(notification);
 
     }
 
     @Override
-    public void startAcmDocumentSingleTaskWorkflow(AcmTask task)
+    public List<AcmTask> startAcmDocumentSingleTaskWorkflow(AcmTask task)
             throws AcmCreateObjectFailedException, AcmUserActionFailedException, LinkAlreadyExistException, AcmObjectNotFoundException
     {
+
+        List<AcmTask> acmTasks = new ArrayList<>();
         EcmFile source = task.getDocumentsToReview().get(0);
 
         EcmFileWorkflowConfiguration configuration = new EcmFileWorkflowConfiguration();
@@ -719,13 +730,13 @@ public class AcmTaskServiceImpl implements AcmTaskService
         configuration = getFileWorkflowBusinessRule().applyRules(configuration);
         if (!configuration.isBuckslipProcess())
         {
-            return;
+            return null;
         }
 
         if (configuration.isStartProcess())
         {
             // Create task container
-            String processName = configuration.getProcessName();
+            String processName = task.getBusinessProcessName();
 
             Map<String, Object> pvars = new HashMap<>();
 
@@ -733,7 +744,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
             List<String> approvers = approversCsv == null ? new ArrayList<>()
                     : Arrays.stream(approversCsv.split(",")).filter(s -> s != null).map(s -> s.trim()).collect(Collectors.toList());
             pvars.put("approvers", approversCsv);
-            pvars.put("taskName", configuration.getTaskName());
+            pvars.put("taskName", task.getTitle());
 
             pvars.put("PARENT_OBJECT_TYPE", task.getParentObjectType());
             pvars.put("PARENT_OBJECT_ID", task.getParentObjectId());
@@ -750,7 +761,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
             pvars.put("approver2", approvers.get(1));
             pvars.put("approver3", approvers.get(2));
 
-            pvars.put("currentTaskName", configuration.getTaskName());
+            pvars.put("currentTaskName", task.getTitle());
             pvars.put("owningGroup", "");
             pvars.put("dueDate", configuration.getTaskDueDateExpression());
 
@@ -762,7 +773,9 @@ public class AcmTaskServiceImpl implements AcmTaskService
 
             createTaskFolderStructureInParentObject(createdAcmTask);
 
+            acmTasks.add(createdAcmTask);
         }
+        return acmTasks;
     }
 
     @Override
@@ -774,7 +787,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
         Long parentObjectId = task.getParentObjectId() == null ? task.getAttachedToObjectId() : task.getParentObjectId();
         String parentObjectType = task.getParentObjectType() == null ? task.getAttachedToObjectType() : task.getParentObjectType();
 
-        if(parentObjectType.equals("BUSINESS_PROCESS"))
+        if (parentObjectType.equals("BUSINESS_PROCESS"))
         {
             return;
         }
@@ -869,13 +882,15 @@ public class AcmTaskServiceImpl implements AcmTaskService
     }
 
     @Override
-    public String getTaskFolderNameInParentObject(AcmTask acmTask) {
+    public String getTaskFolderNameInParentObject(AcmTask acmTask)
+    {
         String taskFolderName = "Task-" + acmTask.getTitle() + "-" + acmTask.getId();
         return taskFolderName;
     }
 
     @Override
-    public boolean existFilesInTaskAttachFolder(AcmTask acmTask) {
+    public boolean existFilesInTaskAttachFolder(AcmTask acmTask)
+    {
 
         AcmFolder folder = acmTask.getContainer().getAttachmentFolder();
 

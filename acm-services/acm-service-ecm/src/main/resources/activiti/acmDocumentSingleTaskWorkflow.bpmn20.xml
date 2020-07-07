@@ -77,7 +77,7 @@
         <modeler:editor-resource-id><![CDATA[sid-F8B04509-CCD5-431D-B361-7A4A8C1854E1]]></modeler:editor-resource-id>
       </extensionElements>
     </sequenceFlow>
-    <serviceTask id="sendEmailNotification" name="Send Email Notification" activiti:expression="#{acmTaskService.sendArrestWarrantMail(PARENT_OBJECT_ID, PARENT_OBJECT_TYPE, approvers)}">
+    <serviceTask id="sendEmailNotification" name="Send Email Notification" activiti:expression="#{acmTaskService.sendAcmDocumentSingleTaskWorkflowMail(PARENT_OBJECT_ID, PARENT_OBJECT_TYPE, approvers)}">
       <extensionElements>
         <modeler:editor-resource-id><![CDATA[sid-4DAEE649-F7EC-4B5C-88BA-321A6299F2AE]]></modeler:editor-resource-id>
       </extensionElements>

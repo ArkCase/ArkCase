@@ -232,9 +232,9 @@ public interface AcmTaskService
     List<AcmTask> startReviewDocumentsWorkflow(AcmTask task, String businessProcessName, Authentication authentication,
             List<MultipartFile> filesToUpload) throws AcmCreateObjectFailedException, AcmUserActionFailedException, LinkAlreadyExistException, AcmObjectNotFoundException;
 
-    void startAcmDocumentSingleTaskWorkflow(AcmTask task) throws AcmCreateObjectFailedException, AcmUserActionFailedException, LinkAlreadyExistException, AcmObjectNotFoundException;
+    List<AcmTask> startAcmDocumentSingleTaskWorkflow(AcmTask task) throws AcmCreateObjectFailedException, AcmUserActionFailedException, LinkAlreadyExistException, AcmObjectNotFoundException;
 
-    void sendArrestWarrantMail(Long objectId, String objectType, String approvers);
+    void sendAcmDocumentSingleTaskWorkflowMail(Long objectId, String objectType, String approvers);
 
     void createTaskFolderStructureInParentObject(AcmTask task) throws AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException, LinkAlreadyExistException;
 
