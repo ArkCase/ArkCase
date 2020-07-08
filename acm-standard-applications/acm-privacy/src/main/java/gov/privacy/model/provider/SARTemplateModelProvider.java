@@ -29,9 +29,6 @@ package gov.privacy.model.provider;
 
 import com.armedia.acm.core.provider.TemplateModelProvider;
 import com.armedia.acm.plugins.objectassociation.dao.ObjectAssociationDao;
-import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
-
-import java.util.List;
 
 import gov.privacy.model.SubjectAccessRequest;
 
@@ -46,13 +43,7 @@ public class SARTemplateModelProvider implements TemplateModelProvider<SubjectAc
     @Override
     public SubjectAccessRequest getModel(Object sar)
     {
-        SubjectAccessRequest request = (SubjectAccessRequest) sar;
-        if(request.getRequestType().equals("Appeal"))
-        {
-            List<ObjectAssociation> objectAssociations = objectAssociationDao.findByParentTypeAndId(request.getObjectType(), request.getId());
-            request.setOriginalRequestNumber(objectAssociations.get(0).getTargetName());
-        }
-        return request;
+        return (SubjectAccessRequest) sar;
     }
 
     @Override
