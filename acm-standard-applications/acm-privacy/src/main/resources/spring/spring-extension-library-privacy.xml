@@ -292,6 +292,7 @@
             <beans:property name="fileParticipantService" ref="fileParticipantService"/>
             <beans:property name="recycleBinItemService" ref="recycleBinItemServiceImpl"/>
             <beans:property name="authenticationTokenDao" ref="authenticationTokenDao"/>
+            <beans:property name="ecmFileVersionDao" ref="ecmFileVersionDao"/>
             <property name="camelContextManager" ref="camelContextManager"/>
         </beans:bean>
 
@@ -322,6 +323,7 @@
         <beans:bean id="assignmentNotifier" class="gov.privacy.listener.SARAssignmentNotifier">
             <beans:property name="notificationService" ref="notificationService"/>
         </beans:bean>
+
 
     </beans:beans>
 </beans:beans>

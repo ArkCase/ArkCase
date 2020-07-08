@@ -36,14 +36,12 @@ import com.armedia.acm.plugins.ecm.service.PageCountService;
 import com.armedia.acm.plugins.ecm.service.impl.EcmTikaFile;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
-
+import gov.privacy.model.SAREcmFileVersion;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-
-import gov.privacy.model.SAREcmFileVersion;
 
 /**
  * @author Vladimir Cherepnalkovski <vladimir.cherepnalkovski@armedia.com> on Jun, 2020
@@ -92,6 +90,7 @@ public class SAREcmFileUpdateMetadataHandler implements PipelineHandler<EcmFile,
             version.setFileSizeBytes(fileSizeBytes);
             version.setReviewStatus("");
             version.setRedactionStatus("");
+            version.setFileHash(pipelineContext.getFileHash());
             version.setSearchablePDF(pipelineContext.isSearchablePDF());
 
             // file metadata
