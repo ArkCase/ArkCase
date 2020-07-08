@@ -2345,14 +2345,18 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     {
         EcmFileVersion ecmFileVersion = getFolderAndFilesUtils().getVersion(ecmFile, ecmFile.getActiveVersionTag());
 
-        List<EcmFileVersion> efvList = getEcmFileVersionDao().getEcmFileVersionWithSameHash(ecmFileVersion.getFileHash());
-        if (efvList.size() > 1)
+        if (ecmFileVersion.getFileHash() != null)
         {
-            for (EcmFileVersion efv : efvList)
+            List<EcmFileVersion> efvList = getEcmFileVersionDao().getEcmFileVersionWithSameHash(ecmFileVersion.getFileHash());
+            if (efvList.size() > 1)
             {
-                EcmFile ef = efv.getFile();
-                if (!ef.isLink()) {
-                    ef.setDuplicate(true);
+                for (EcmFileVersion efv : efvList)
+                {
+                    EcmFile ef = efv.getFile();
+                    if (!ef.isLink())
+                    {
+                        ef.setDuplicate(true);
+                    }
                 }
             }
         }
