@@ -689,7 +689,6 @@ public class AcmTaskServiceImpl implements AcmTaskService
         }
         if (businessProcessName.equals("acmDocumentSingleTaskWorkflow"))
         {
-            List<AcmTask> acmTasks = null;
             task.setBusinessProcessName(businessProcessName);
             return startAcmDocumentSingleTaskWorkflow(task);
         }
