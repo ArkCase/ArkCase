@@ -163,7 +163,13 @@ angular.module('services').factory('EcmService', [ '$resource', 'UtilService', f
         getLinkTargetFile: {
             method: 'GET',
             url: 'api/latest/service/ecm/file/:fileId/targetLink'
-        }
+        },
+        getFileDuplicates: {
+            method: 'GET',
+            url: 'api/latest/service/ecm/fileDuplicates/:fileId',
+            cache: false,
+            isArray: true
+        },
 
     });
 

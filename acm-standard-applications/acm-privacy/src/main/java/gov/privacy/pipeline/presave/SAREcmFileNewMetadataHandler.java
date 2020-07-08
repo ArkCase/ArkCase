@@ -35,16 +35,14 @@ import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
 import com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileNewMetadataHandler;
 import com.armedia.acm.plugins.ecm.service.impl.EcmTikaFile;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
-
+import gov.privacy.model.SAREcmFileVersion;
+import gov.privacy.model.SARFile;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-
-import gov.privacy.model.SAREcmFileVersion;
-import gov.privacy.model.SARFile;
 
 /**
  * @author Vladimir Cherepnalkovski <vladimir.cherepnalkovski@armedia.com> on Jun, 2020
@@ -93,6 +91,7 @@ public class SAREcmFileNewMetadataHandler extends EcmFileNewMetadataHandler
             version.setReviewStatus("");
             version.setRedactionStatus("");
             version.setSearchablePDF(pipelineContext.isSearchablePDF());
+            version.setFileHash(pipelineContext.getFileHash());
             log.debug("SearchablePDF = [{}]", pipelineContext.isSearchablePDF());
 
             // file metadata
