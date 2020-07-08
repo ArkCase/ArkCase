@@ -1,0 +1,756 @@
+[
+    {
+        "path": "/title",
+        "op": "replace",
+        "value": "Subject Access Requests"
+    },
+    {
+        "path": "/className",
+        "op": "replace",
+        "value": "gov.privacy.model.SubjectAccessRequest"
+    },
+    {
+        "path": "/personAssociationClassName",
+        "op": "replace",
+        "value": "gov.privacy.model.SARRequesterAssociation"
+    },
+    {
+        "path": "/configurable",
+        "op": "remove"
+    },
+    {
+        "op": "add",
+        "path": "/hasOverviewWidgets",
+        "value": false
+    },
+    {
+        "path": "/menus/?@.menuItemURL=='frevvo.new-case'",
+        "op": "remove"
+    },
+    {
+        "op": "replace",
+        "path": "/menus/?@.menuId=='topbar'/menuItemURL",
+        "value": "new-subject-access-request"
+    },
+    {
+        "op": "replace",
+        "path": "/menus/?@.menuItemTitle=='cases.menus.topbar.item'/modalDialog/templateUrl",
+        "value": "modules/cases/views/components/privacy-new-request.client.view.html"
+    },
+    {
+        "op": "replace",
+        "path": "/menus/?@.menuId=='topbar'/modalDialog/controllerName",
+        "value": "Cases.NewRequestController"
+    },
+    {
+        "op": "replace",
+        "path": "/menus/?@.menuId=='topbar'/position",
+        "value": 10
+    },
+    {
+        "op": "replace",
+        "path": "/menus/?@.menuId=='topbar'/iconClass",
+        "value": "fa fa-star"
+    },
+    {
+        "op": "remove",
+        "path": "/menus/?@.menuId=='topbar'/formsType"
+    },
+    {
+        "op": "replace",
+        "path": "/tree/filters/?@.name=='all-open-cases'/value",
+        "value": "fq=-status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED AND -queue_name_s:Release"
+    },
+    {
+        "op": "remove",
+        "path": "/tree/filters/?@.name=='all-closed-cases'"
+    },
+    {
+        "op": "remove",
+        "path": "/tree/filters/?@.name=='all-open-cases'/default"
+    },
+    {
+        "op": "add",
+        "path": "/tree/filters/1",
+        "value": {
+            "desc": "cases.tree.filters.openAppeals",
+            "name": "all-open-appeals",
+            "value": "fq=request_type_lcs:Appeal AND -queue_name_s:Release"
+        }
+    },
+    {
+        "op": "add",
+        "path": "/tree/filters/2",
+        "value": {
+            "desc": "cases.tree.filters.released",
+            "name": "all-released-cases",
+            "value": "fq=queue_name_s:Release"
+        }
+    },
+    {
+        "op": "replace",
+        "path": "/tree/filters/?@.name=='my-assigned-cases'/value",
+        "value": "fq=assignee_s:${user} AND -queue_name_s:Release"
+    },
+    {
+        "op": "add",
+        "path": "/tree/filters/?@.name=='my-assigned-cases'/default",
+        "value": true
+    },
+    {
+        "op": "replace",
+        "path": "/tree/nodeTypes/?@.type=='p/CASE_FILE'/components",
+        "value": [
+            "people",
+            "organizations",
+            "documents",
+            "participants",
+            "notes",
+            "tasks",
+            "references",
+            "history",
+            "time",
+            "cost",
+            "tags",
+            "calendar"
+        ]
+    },
+    {
+        "op": "replace",
+        "path": "/tree/nodeTypes/?@.type=='p/CASE_FILE/apr'",
+        "value": {
+            "type": "p/CASE_FILE/exemption",
+            "label": "cases.tree.nodeTypes.exemptionCodes.label",
+            "icon": "fa fa-code",
+            "components": [
+                "exemption"
+            ]
+        }
+    },
+    {
+        "op": "remove",
+        "path": "/tree/nodeTypes/?@.type=='p/CASE_FILE/det'"
+    },
+    {
+        "op": "remove",
+        "path": "/tree/nodeTypes/?@.type=='p/ERROR'"
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='details'"
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='newFutureTask'"
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='newObjectPicker'"
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='userSearch'"
+    },
+    {
+        "op": "remove",
+        "path": "/tree/nodeTypes/?@.type=='p/CASE_FILE/suggestedCases'"
+    },
+    {
+        "op": "remove",
+        "path": "/tree/nodeTypes/?@.type=='p/CASE_FILE/exemption'"
+    },
+    {
+        "op": "remove",
+        "path": "/tree/nodeTypes/?@.type=='p/CASE_FILE/billing'"
+    },
+    {
+        "op": "add",
+        "path": "/components/-",
+        "value": {
+            "id": "exemption",
+            "title": "cases.comp.exemption.title",
+            "icon": "fa fa-code",
+            "enabled": true,
+            "type": "grid",
+            "enableFiltering": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 5,
+            "columnDefs": [
+                {
+                    "name": "exemptionCode",
+                    "displayName": "cases.comp.exemption.table.columns.exemptionCode",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "exemptionDescription",
+                    "displayName": "cases.comp.exemption.table.columns.exemptionDescription",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div class='ui-grid-cell-contents' title='{{grid.appScope.utils.getLookupValue(grid.appScope.annotationTags, row.entity.exemptionCode) | translate }}'>{{grid.appScope.utils.getLookupValue(grid.appScope.annotationTags, row.entity.exemptionCode) | translate }}</div>"
+                },
+                {
+                    "name": "exemptionStatus",
+                    "displayName": "cases.comp.exemption.table.columns.exemptionStatus",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "created",
+                    "displayName": "cases.comp.exemption.table.columns.created",
+                    "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "creator",
+                    "displayName": "cases.comp.exemption.table.columns.creator",
+                    "headerCellFilter": "translate",
+                    "enableCellEdit": false,
+                    "lookup": "userFullNames"
+                },
+                {
+                    "name": "exemptionStatute",
+                    "displayName": "cases.comp.exemption.table.columns.statute",
+                    "headerCellFilter": "translate",
+                    "enableCellEdit": false,
+                    "cellTemplate": "<div class='ui-grid-cell-contents' title='{{grid.appScope.utils.getLookupValue(grid.appScope.exemptionStatutes, row.entity.exemptionStatute) | translate }}'>{{ grid.appScope.utils.getLookupValue(grid.appScope.exemptionStatutes, row.entity.exemptionStatute) | translate }}</div>"
+                }
+            ]
+        }
+    },
+    {
+        "op": "add",
+        "path": "/components/-",
+        "value": {
+            "id": "requests",
+            "requestTypes": [
+                {
+                    "name": "Data Access Request (Requesting a copy of personal data stored in our systems)",
+                    "id": "Data Access Request"
+                },
+                {
+                    "name": "Right to be Forgotten Request (Requesting personal data be removed from our systems)",
+                    "id": "Right to be Forgotten Request"
+                },
+                {
+                    "name": "Data Modification Request",
+                    "id": "Data Modification Request"
+                },
+                {
+                    "name": "Other (Explain in Detail Description Box Below)",
+                    "id": "Other"
+                }
+            ],
+            "categories": [
+                {
+                    "name": "Choose Category",
+                    "id": ""
+                },
+                {
+                    "name": "Commercial Use",
+                    "id": "Commercial Use"
+                },
+                {
+                    "name": "Educational Institution",
+                    "id": "Educational Institution"
+                },
+                {
+                    "name": "Non-Commercial Scientific Institution",
+                    "id": "Non-Commercial Scientific Institution"
+                },
+                {
+                    "name": "News Media",
+                    "id": "News Media"
+                },
+                {
+                    "name": "All Others",
+                    "id": "All Others"
+                }
+            ],
+            "prefixes": [
+                {
+                    "name": "Mr.",
+                    "id": "Mr."
+                },
+                {
+                    "name": "Ms.",
+                    "id": "Ms."
+                }
+            ]
+        }
+    },
+    {
+        "op": "add",
+        "path": "/components/-",
+        "value": {
+            "id": "objectSearch",
+            "title": "cases.objectSearch.title",
+            "enableFiltering": false,
+            "configurable": true,
+            "multiSelect": false,
+            "showFacets": false,
+            "columnDefs": [
+                {
+                    "name": "name",
+                    "displayName": "cases.objectSearch.objectGridColumns.name",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "request_type_lcs",
+                    "displayName": "cases.objectSearch.objectGridColumns.type",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "title_parseable",
+                    "displayName": "cases.objectSearch.objectGridColumns.title",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "creator_full_name_lcs",
+                    "displayName": "cases.objectSearch.objectGridColumns.username",
+                    "headerCellFilter": "translate"
+                }
+            ],
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 10,
+            "start": 0
+        }
+    },
+    {
+        "op": "add",
+        "path": "/components/-",
+        "value": {
+            "id": "new-subject-access-request",
+                "objectSearch": {
+                    "objectFacetFilter": "\"Object Type\": CASE_FILE&fq=\"queue_name_s\":Release&fq=\"request_type_lcs\":NewRequest"
+                }
+        }
+    },
+    {
+        "op": "add",
+        "path": "/components/-",
+        "value": {
+            "id": "exemptionCodesDescription",
+            "enabled": "true",
+            "title": "cases.comp.exemption.exemptionCodesDescription",
+            "type": "grid",
+            "columnDefs": [
+                {
+                    "name": "key",
+                    "displayName": "cases.comp.exemption.table.columns.exemptionCode",
+                    "headerCellFilter": "translate",
+                    "width": 150
+                },
+                {
+                    "name": "value",
+                    "displayName": "cases.comp.exemption.description",
+                    "headerCellFilter": "translate",
+                    "cellFilter": "translate",
+                    "cellTemplate": "<div class='ui-grid-cell-contents' title='{{row.entity.value | translate}}'>{{row.entity.value | translate}}</div>"
+                }
+            ],
+            "paginationPageSizes": [
+                5,
+                10,
+                20
+            ],
+            "paginationPageSize": 20
+        }
+    },
+    {
+        "op": "replace",
+        "path": "/components/?@.id=='main'/title",
+        "value": "cases.comp.main.overview.label"
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='main'/configurable"
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='main'/widgets"
+    },
+    {
+        "op": "replace",
+        "path": "/components/?@.id=='main'/title",
+        "value": "cases.comp.main.overview.label"
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='info'/configurable"
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='actions'/configurable"
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='documents'/configurable"
+    },
+    {
+        "op": "replace",
+        "path": "/components/?@.id=='documents'/docTree/email/emailSubject",
+        "value": "Request $caseNumber"
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='documents'/docTree/allowParentOwnerToCancel",
+        "value": "Request $caseNumber"
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='documents'/docTree/menu"
+    },
+    {
+        "op": "add",
+        "path": "/components/?@.id=='documents'/docTree/allowParentOwnerToCancel",
+        "value": true
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='references'/columnDefs/?@.name=='assignee'"
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='people'/configurable"
+    },
+    {
+        "op": "add",
+        "path": "/components/?@.id=='people'/columnDefs/?@.name=='personType'/field",
+        "value": "personType"
+    },
+    {
+        "op": "add",
+        "path": "/components/?@.id=='people'/columnDefs/?@.name=='personType'/lookup",
+        "value": "personTypes"
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='people'/columnDefs/?@.name=='personType'/cellTemplate"
+    },
+    {
+        "op": "replace",
+        "path": "/components/?@.id=='people'/columnDefs/?@.name=='firstName'/cellTemplate",
+        "value": "<a data-ui-sref=\"people.main({id: row.entity.person.id})\">{{COL_FIELD}}<\/a>"
+    },
+    {
+        "op": "replace",
+        "path": "/components/?@.id=='people'/columnDefs/?@.name=='lastName'/cellTemplate",
+        "value": "<a data-ui-sref=\"people.main({id: row.entity.person.id})\">{{COL_FIELD}}<\/a>"
+    },
+    {
+        "op": "add",
+        "path": "/components/?@.id=='people'/organizations",
+        "value": {
+            "id": "organizations",
+            "title": "cases.comp.people.organizations.title",
+            "className": "com.armedia.acm.plugins.person.model.Organization",
+            "enableFiltering": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 5,
+            "columnDefs": [
+                {
+                    "name": "type",
+                    "field": "organizationType",
+                    "displayName": "cases.comp.people.organizations.table.columns.type",
+                    "headerCellFilter": "translate",
+                    "lookup": "organizationTypes"
+                },
+                {
+                    "name": "value",
+                    "field": "organizationValue",
+                    "displayName": "cases.comp.people.organizations.table.columns.value",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "modified",
+                    "displayName": "cases.comp.people.organizations.table.columns.modified",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+                    "enableCellEdit": false
+                },
+                {
+                    "name": "modifier",
+                    "displayName": "cases.comp.people.organizations.table.columns.modifier",
+                    "headerCellFilter": "translate",
+                    "lookup": "userFullNames"
+                }
+            ]
+        }
+    },
+    {
+        "op": "add",
+        "path": "/components/?@.id=='people'/addresses",
+        "value": {
+            "id": "addresses",
+            "title": "cases.comp.people.addresses.title",
+            "enableFiltering": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 5,
+            "columnDefs": [
+                {
+                    "name": "type",
+                    "displayName": "cases.comp.people.addresses.table.columns.type",
+                    "headerCellFilter": "translate",
+                    "lookup": "addressTypes"
+                },
+                {
+                    "name": "streetAddress",
+                    "displayName": "cases.comp.people.addresses.table.columns.streetAddress",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "city",
+                    "displayName": "cases.comp.people.addresses.table.columns.city",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "state",
+                    "displayName": "cases.comp.people.addresses.table.columns.state",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "zip",
+                    "displayName": "cases.comp.people.addresses.table.columns.zip",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "country",
+                    "displayName": "cases.comp.people.addresses.table.columns.country",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "modified",
+                    "displayName": "cases.comp.people.addresses.table.columns.modified",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+                    "enableCellEdit": false
+                },
+                {
+                    "name": "modifier",
+                    "displayName": "cases.comp.people.addresses.table.columns.modifier",
+                    "headerCellFilter": "translate",
+                    "lookup": "userFullNames"
+                }
+            ]
+        }
+    },
+    {
+        "op": "add",
+        "path": "/components/?@.id=='people'/dialogOrganizationPicker",
+        "value": {
+            "enableFiltering": false,
+            "multiSelect": false,
+            "showFacets": false,
+            "columnDefs": [
+                {
+                    "name": "type_lcs",
+                    "displayName": "common.directive.corePeople.organizations.modal.dialogOrganizationPicker.table.columns.type",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "name",
+                    "displayName": "common.directive.corePeople.organizations.modal.dialogOrganizationPicker.table.columns.name",
+                    "headerCellFilter": "translate"
+                }
+            ],
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 10,
+            "start": 0
+        }
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='people'/columnDefs/?@.name=='organization'"
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='people'/columnDefs/?@.name=='phone'"
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='people'/columnDefs/?@.name=='location'"
+    },
+    {
+        "op": "add",
+        "path": "/components/?@.id=='people'/contactMethods",
+        "value": {
+            "id": "contactMethods",
+            "title": "cases.comp.people.contactMethods.title",
+            "enableFiltering": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 5,
+            "columnDefs": [
+                {
+                    "name": "type",
+                    "displayName": "cases.comp.people.contactMethods.table.columns.type",
+                    "headerCellFilter": "translate",
+                    "lookup": "contactMethodTypes"
+                },
+                {
+                    "name": "value",
+                    "displayName": "cases.comp.people.contactMethods.table.columns.value",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "modified",
+                    "displayName": "cases.comp.people.contactMethods.table.columns.modified",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+                    "enableCellEdit": false
+                },
+                {
+                    "name": "modifier",
+                    "displayName": "cases.comp.people.contactMethods.table.columns.modifier",
+                    "headerCellFilter": "translate",
+                    "lookup": "userFullNames"
+                }
+            ]
+        }
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='participants'/configurable"
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='participants'/columnDefs/?@.name=='participantType'/cellTemplate"
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='notes'/configurable"
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='tasks'/configurable"
+    },
+    {
+        "op": "add",
+        "path": "/components/?@.id=='references'/columnDefs/3",
+        "value": {
+            "name": "parentName",
+            "displayName": "cases.comp.references.table.columns.parentName",
+            "headerCellFilter": "translate",
+            "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity, true)'>{{row.entity.parentName}}</a>"
+        }
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='history'/configurable"
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='time'/configurable"
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='cost'/configurable"
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='tags'/configurable"
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='merge'/configurable"
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='referenceSearchGrid'/configurable"
+    },
+    {
+        "op": "replace",
+        "path": "/components/?@.id=='referenceSearchGrid'/searchFilter",
+        "value": "\"Object Type\": CASE_FILE|TASK|FILE"
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='approvalRouting'/configurable",
+        "value": "\"Object Type\": CASE_FILE|TASK|FILE"
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='approvalRouting'/columnDefs/?@.name=='approverFullName'"
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='approvalRouting'/columnDefs/?@.name=='groupName'"
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='approvalRouting'/columnDefs/?@.name=='taskName'"
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='approvalRouting'/columnDefs/?@.name=='details'"
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='approvalRouting'/columnDefs/?@.name=='dueDate'"
+    },
+    {
+        "op": "replace",
+        "path": "/components/?@.id=='approvalRouting'/columnDefs/?@.name=='addedByFullName'/displayName",
+        "value": "cases.comp.approvalRouting.table.columns.fullName"
+    },
+    {
+        "op": "replace",
+        "path": "/components/?@.id=='approvalRouting'/columnDefs/?@.name=='addedByFullName'/name",
+        "value": "fullName"
+    },
+    {
+        "op": "replace",
+        "path": "/components/?@.id=='approvalRouting'/userSearch/userFacetFilter",
+        "value": "\"Object Type\": USER"
+    },
+    {
+        "op": "replace",
+        "path": "/components/?@.id=='approvalRouting'/id",
+        "value": "approvalrouting"
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='pastapprovals'/configurable"
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='pastapprovals'/columnDefs/?@.name=='approverFullName'"
+    },
+    {
+        "op": "add",
+        "path": "/components/?@.id=='pastapprovals'/columnDefs/1",
+        "value": {
+            "name": "approverId",
+            "displayName": "cases.comp.pastApprovals.table.columns.approverId",
+            "headerCellFilter": "translate",
+            "cellEditableCondition": false
+        }
+    }
+]

@@ -1,0 +1,96 @@
+[
+    {
+        "op": "remove",
+        "path": "/tree/nodeTypes/?@.type=='p/PERSON'/id"
+    },
+    {
+        "op": "replace",
+        "path": "/tree/nodeTypes/?@.type=='p/PERSON'/components",
+        "value": [
+            "details",
+            "pictures",
+            "addresses",
+            "phones",
+            "emails",
+            "urls",
+            "participants",
+            "aliases",
+            "organizations",
+            "ids",
+            "cases",
+            "tasks",
+            "related",
+            "history"
+        ]
+    },
+    {
+        "op": "remove",
+        "path": "/tree/nodeTypes/?@.type=='p/PERSON/com'"
+    },
+    {
+        "op": "add",
+        "path": "/tree/nodeTypes/14",
+        "value": {
+            "type": "p/PERSON/tasks",
+            "label": "people.tree.nodeTypes.tasks.label",
+            "icon": "fa fa-check-circle",
+            "components": [
+                "tasks"
+            ]
+        }
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='main'/widgets/?@.id=='complaints'"
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='complaints'"
+    },
+    {
+        "op": "add",
+        "path": "/components/-",
+        "value": {
+            "id": "tasks",
+            "title": "people.comp.tasks.title",
+            "icon": "fa fa-check-circle",
+            "enabled": true,
+            "configurable": true,
+            "type": "grid",
+            "enableFiltering": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 5,
+            "columnDefs": [
+                {
+                    "name": "title",
+                    "field": "title",
+                    "sortField": "title",
+                    "displayName": "people.comp.tasks.table.columns.title",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<a data-ui-sref=\"tasks.main({id: row.entity.taskId})\">{{COL_FIELD}}</a>"
+                },
+                {
+                    "width": 150,
+                    "name": "assignee",
+                    "field": "assignee",
+                    "displayName": "people.comp.tasks.table.columns.assignee",
+                    "headerCellFilter": "translate",
+                    "lookup": "userFullNames"
+                },
+                {
+                    "width": 150,
+                    "name": "due",
+                    "field": "dueDate",
+                    "displayName": "people.comp.tasks.table.columns.due",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.dueDate | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+                }
+            ]
+        }
+    }
+]

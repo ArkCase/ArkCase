@@ -1,0 +1,54 @@
+<div class="panel panel-success" ng-show="'contactMethods' == row.entity.acm$_currentSubGrid">
+    <div class="panel-heading">
+        <div class="panel-title">
+            <span translate>common.directive.corePeople.contactMethods.title</span>
+
+            <div class="pull-right">
+                <button class="btn btn-default btn-xs" ng-click="grid.appScope.addNewContactMethods(row)"><i class="fa fa-lg fa-plus"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div ui-grid="row.entity.acm$_contactMethods.gridOptions" ui-grid-resize-columns ui-grid-auto-resize ui-grid-pagination class="grid"
+                adjust-table-height="row.entity.acm$_contactMethods.gridOptions.data.length"></div>
+    </div>
+
+</div>
+
+<div class="panel panel-success" ng-show="'organizations' == row.entity.acm$_currentSubGrid">
+    <div class="panel-heading">
+        <div class="panel-title">
+            <span translate>common.directive.corePeople.organizations.title</span>
+
+            <div class="pull-right">
+                <button class="btn btn-default btn-xs" ng-click="grid.appScope.addNewOrganizations(row)"><i class="fa fa-lg fa-plus"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div ui-grid="row.entity.acm$_organizations.gridOptions" ui-grid-resize-columns ui-grid-auto-resize ui-grid-pagination class="grid"
+                adjust-table-height="row.entity.acm$_organizations.gridOptions.data.length"></div>
+    </div>
+</div>
+
+<div class="panel panel-success" ng-show="'addresses' == row.entity.acm$_currentSubGrid">
+    <div class="panel-heading">
+        <div class="panel-title">
+            <span translate>common.directive.corePeople.addresses.title</span>
+
+            <div class="pull-right">
+                <button class="btn btn-default btn-xs" ng-click="grid.appScope.addNewAddresses(row)"><i class="fa fa-lg fa-plus"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div ui-grid="row.entity.acm$_addresses.gridOptions" ui-grid-resize-columns ui-grid-auto-resize ui-grid-pagination class="grid"
+                adjust-table-height="row.entity.acm$_addresses.gridOptions.data.length"></div>
+    </div>
+</div>
+
+
+

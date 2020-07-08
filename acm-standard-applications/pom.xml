@@ -15,6 +15,7 @@
     <modules>
         <module>acm-law-enforcement</module>
         <module>acm-foia</module>
+        <module>acm-privacy</module>
     </modules>
 
 </project>

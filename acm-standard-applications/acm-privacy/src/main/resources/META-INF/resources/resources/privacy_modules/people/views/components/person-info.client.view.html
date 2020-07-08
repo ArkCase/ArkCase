@@ -1,0 +1,81 @@
+<div ng-controller="People.InfoController">
+    <div class="clearfix">
+        <div class="row">
+            <div class="col-xs-12 col-md-12">
+                <div class="row">
+                    <div class="col-xs-6">
+                        <h4>
+                            <a ng-if="objectInfo.title !== null && objectInfo.title != ''"  href="#" editable-text="objectInfo.title" onaftersave="savePerson()" permission="editCase"
+                                    permission-properties="objectInfo" permission-action="disable" e-required>
+                                {{objectInfo.title || 'common.value.unknown' | translate}}</a>
+                            <a href="#" editable-text="objectInfo.givenName" onaftersave="savePerson()" permission="editCase"
+                                    permission-properties="objectInfo" permission-action="disable" e-required>
+                                {{objectInfo.givenName || 'common.value.unknown' | translate}}</a>
+                            <a ng-if="objectInfo.middleName !== null && objectInfo.middleName != ''" href="#" editable-text="objectInfo.middleName"
+                                    onaftersave="savePerson()" permission="editCase" permission-properties="objectInfo"
+                                    permission-action="disable">
+                                {{objectInfo.middleName}}</a>
+                            <a href="#" editable-text="objectInfo.familyName" onaftersave="savePerson()" permission="editCase"
+                                    permission-properties="objectInfo" permission-action="disable" e-required>
+                                {{objectInfo.familyName || 'common.value.unknown' | translate}}</a>
+                            <span ng-if="objectInfo.position != '' && objectInfo.position !== null">-</span>
+                            <a ng-if="objectInfo.position && objectInfo.position !== null"  href="#" editable-text="objectInfo.position" onaftersave="savePerson()" permission="editCase"
+                                    permission-properties="objectInfo" permission-action="disable" e-required>
+                                {{objectInfo.position || 'common.value.unknown' | translate}}</a>
+                        </h4></div>
+                    <div class="col-xs-6  text-right">
+                        <h4>{{objectInfo.id}}</h4>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-md-4">
+                        <span class="h4 font-bold">
+                            {{objectInfo.defaultIdentification.identificationNumber || 'common.value.unknown' | translate}}
+                        </span><br>
+                        <small class="text-muted"><span translate>people.comp.info.identification.label</span></small>
+                    </div>
+                    <div class="col-xs-12 col-md-4">
+                        <div class="h4 font-bold">
+                            {{objectInfo.defaultOrganization.organization.organizationValue || 'common.value.unknown' | translate}}
+                        </div>
+                        <small class="text-muted"><span translate>people.comp.info.organization.label</span></small>
+                    </div>
+                    <div class="col-xs-12 col-md-4">
+                        <span class="h4 font-bold">
+                            {{objectInfo.defaultPhone.value || 'common.value.unknown' | translate}}
+                        </span>
+                        <span class="h4 font-bold" ng-show="objectInfo.defaultPhone">
+                        </span><br />
+                        <small class="text-muted"><span translate>people.comp.info.phone.label</span></small>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-md-4">
+                        <span class="h4 font-bold">
+                            {{objectInfo.defaultIdentification.identificationType || 'common.value.unknown' | translate}}
+                        </span><br>
+                        <small class="text-muted"><span translate>people.comp.info.identification.type</span></small>
+                    </div>
+                    <div class="col-xs-12 col-md-4">
+                        <div class="h4 font-bold">
+                            {{objectInfo.defaultOrganization.organization.organizationType || 'common.value.unknown' | translate}}
+                        </div>
+                        <small class="text-muted"><span translate>people.comp.info.organization.type</span></small>
+                    </div>
+                    <div class="col-xs-12 col-md-4">
+                        <span class="h4 font-bold">
+                            {{objectInfo.defaultEmail.value || 'common.value.unknown' | translate}}
+                        </span>
+                        <span class="h4 font-bold" ng-show="objectInfo.defaultEmail">
+                        </span><br />
+                        <small class="text-muted"><span translate>people.comp.info.email.label</span></small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-2" ng-show="objectInfo.defaultPicture">
+                <img alt="Image" ng-src='{{objectInfo.defaultPicture.fileId | personPictureSrc}}' ng-style="{ height : 100 }">
+            </div>
+        </div>
+    </div>
+</div>
