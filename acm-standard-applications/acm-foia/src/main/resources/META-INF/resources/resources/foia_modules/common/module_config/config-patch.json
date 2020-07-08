@@ -102,7 +102,7 @@
             "icon": "<i class='fa fa-fw' data-sort='type' data-dir='ASC'></i>",
             "__todo__cellTemplate": "<div>{{ row.entity.public }}</div>",
             "width": "8%",
-            "index": 12
+            "index": 13
         }
     },
     {
