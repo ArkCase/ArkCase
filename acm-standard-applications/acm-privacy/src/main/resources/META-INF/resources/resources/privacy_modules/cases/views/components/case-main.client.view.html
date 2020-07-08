@@ -1,0 +1,23 @@
+<div ng-controller="Cases.MainController">
+    <fieldset permission="editRequestData" permission-object-type="CASE_FILE" permission-properties="objectInfo"
+              permission-action="disabled">
+        <panel-view header="Request Information" collapsible="true" collapsed="false">
+            <div class="row">
+                <div class="form-group col-sm-12">
+                    <label class="control-label" translate> cases.comp.main.requestType.label </label>
+                    <select ng-model="objectInfo.requestType"
+                            ng-options="requestType.id as requestType.name for requestType in requestTypes" class="form-control input-md"
+                            ng-disabled="true">
+                    </select>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <label translate> cases.comp.main.description.label </label>
+                    <textarea rows=5 ng-model="objectInfo.details" class="input-md form-control" ng-disabled="true"></textarea>
+                </div>
+            </div>
+        </panel-view>
+    </fieldset>
+</div>

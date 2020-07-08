@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
+    xmlns:beans="http://www.springframework.org/schema/beans"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
+
+    <beans:beans profile="extension-privacy">
+        <beans:bean id="caseFileStartBusinessProcessBusinessRule"
+            class="com.armedia.acm.plugins.casefile.service.CaseFileStartBusinessProcessBusinessRule">
+            <beans:property name="ruleSpreadsheetFilename" value="drools-start-business-process-rules-privacy.xlsx"/>
+        </beans:bean>
+
+        <beans:bean id="caseFileNextPossibleQueuesBusinessRule"
+            class="com.armedia.acm.plugins.casefile.service.CaseFileNextPossibleQueuesBusinessRule">
+            <beans:property name="ruleSpreadsheetFilename" value="drools-next-possible-queues-rules-privacy.xlsx"/>
+        </beans:bean>
+
+        <beans:bean id="saveCaseFileBusinessRule" class="com.armedia.acm.plugins.casefile.service.SaveCaseFileBusinessRule">
+            <beans:property name="ruleSpreadsheetFilename" value="drools-case-file-rules-privacy.xlsx"/>
+        </beans:bean>
+
+        <beans:bean id="leaveCurrentQueueBusinessRule" class="com.armedia.acm.plugins.casefile.service.LeaveCurrentQueueBusinessRule">
+            <beans:property name="ruleSpreadsheetFilename" value="drools-leave-current-queue-rules-privacy.xlsx"/>
+        </beans:bean>
+
+        <beans:bean id="enterQueueBusinessRule" class="com.armedia.acm.plugins.casefile.service.EnterQueueBusinessRule">
+            <beans:property name="ruleSpreadsheetFilename" value="drools-enter-queue-rules-privacy.xlsx"/>
+        </beans:bean>
+
+        <beans:bean id="onLeaveQueueBusinessRule" class="com.armedia.acm.plugins.casefile.service.OnLeaveQueueBusinessRule">
+            <beans:property name="ruleSpreadsheetFilename" value="drools-on-leave-queue-rules-privacy.xlsx"/>
+        </beans:bean>
+
+        <beans:bean id="onEnterQueueBusinessRule" class="com.armedia.acm.plugins.casefile.service.OnEnterQueueBusinessRule">
+            <beans:property name="ruleSpreadsheetFilename" value="drools-on-enter-queue-rules-privacy.xlsx"/>
+        </beans:bean>
+
+        <beans:bean id="sarConfigurationHandler" class="gov.privacy.pipeline.postsave.SARConfigurationHandler">
+            <beans:property name="SARConfigurationService" ref="sarConfigurationService"/>
+        </beans:bean>
+
+        <beans:bean id="caseFilePipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
+            <beans:property name="preSaveHandlers">
+                <beans:list value-type="com.armedia.acm.services.pipeline.handler.PipelineHandler">
+                    <beans:ref bean="caseFileSetCreatorHandler"/>
+                </beans:list>
+            </beans:property>
+            <beans:property name="postSaveHandlers">
+                <beans:list value-type="com.armedia.acm.services.pipeline.handler.PipelineHandler">
+                    <beans:ref bean="sarConfigurationHandler"/>
+                    <beans:ref bean="caseFileRulesHandler"/>
+                    <beans:ref bean="caseFileContainerHandler"/>
+                    <beans:ref bean="caseFileEcmFolderHandler"/>
+                    <beans:ref bean="caseFileFolderStructureHandler"/>
+                    <beans:ref bean="caseFileEventHandler"/>
+                    <beans:ref bean="caseFileUploadAttachmentsHandler"/>
+                    <beans:ref bean="requestDocumentHandler"/>
+                    <beans:ref bean="caseFileStartBusinessProcessIfNeededHandler"/>
+                    <beans:ref bean="requestPortalUserParticipantsHandler"/>
+                </beans:list>
+            </beans:property>
+        </beans:bean>
+
+        <beans:bean id="sarToSolrTransformer" class="gov.privacy.transformer.SARToSolrTransformer"
+                    parent="caseFileToSolrTransformer"/>
+
+        <beans:bean id="sarPersonToSolrTransformer" class="gov.privacy.transformer.SARPersonToSolrTransformer"
+                    parent="personToSolrTransformer"/>
+
+        <beans:bean id="portalSARPersonToSolrTransformer"
+                    class="gov.privacy.transformer.SARPortalPersonToSolrTransformer"
+                    parent="sarPersonToSolrTransformer">
+        </beans:bean>
+
+        <beans:bean id="sarFileToSolrTransformer" class="gov.privacy.transformer.SARFileToSolrTransformer"
+                    parent="ecmFileToSolrTrasnformer"/>
+
+        <beans:bean id="sarUserToSolrTransformer" class="gov.privacy.transformer.SARUserToSolrTransformer"
+                    parent="userToSolrTransformer">
+            <beans:property name="acmContextHolder" ref="acmContextHolder"/>
+        </beans:bean>
+
+        <beans:bean id="sarDao" class="gov.privacy.dao.SARDao"/>
+
+        <beans:bean id="sarFileDao" class="gov.privacy.dao.SARFileDao"/>
+
+        <beans:bean id="sarRequesterAssociationToSolrTransformer"
+                    class="gov.privacy.transformer.SARRequesterAssociationToSolrTransformer"
+            parent="personAssociationToSolrTransformer"/>
+
+        <beans:bean id="pdfDocumentGenerator" class="gov.privacy.service.PDFDocumentGenerator">
+            <beans:property name="ecmFileService" ref="ecmFileService"/>
+            <beans:property name="pdfService" ref="pdfService"/>
+            <beans:property name="ecmFileDao" ref="ecmFileDao"/>
+            <beans:property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
+        </beans:bean>
+
+        <beans:bean id="correspondenceDocumentGenerator" class="gov.privacy.service.CorrespondenceDocumentGenerator">
+            <beans:property name="correspondenceService" ref="correspondenceService"/>
+        </beans:bean>
+
+        <beans:bean id="docxDocumentGenerator" class="gov.privacy.service.DocxDocumentGenerator">
+            <beans:property name="ecmFileDao" ref="ecmFileDao"/>
+            <beans:property name="ecmFileService" ref="ecmFileService"/>
+            <beans:property name="wordGenerator" ref="poiWordGenerator"/>
+        </beans:bean>
+
+        <beans:bean id="acknowledgementDocumentService" class="gov.privacy.service.AcknowledgementDocumentService">
+            <beans:property name="requestDao" ref="sarDao"/>
+            <beans:property name="ecmFileDao" ref="ecmFileDao"/>
+            <beans:property name="documentGeneratorService" ref="documentGeneratorService"/>
+            <beans:property name="documentGenerator" ref="correspondenceDocumentGenerator"/>
+            <beans:property name="notificationSender" ref="notificationSender"/>
+            <beans:property name="userDao" ref="userJpaDao"/>
+            <beans:property name="SARConfigurationService" ref="sarConfigurationService"/>
+            <beans:property name="SARQueueCorrespondenceService" ref="sarQueueCorrespondenceService"/>
+            <beans:property name="notificationDao" ref="notificationDao"/>
+
+        </beans:bean>
+
+        <beans:bean id="documentGeneratorService" class="gov.privacy.service.SARDocumentGeneratorService">
+            <beans:property name="contextHolder" ref="acmContextHolder"/>
+        </beans:bean>
+
+        <beans:bean id="requestDocumentHandler" class="gov.privacy.pipeline.postsave.RequestDocumentHandler">
+            <beans:property name="requestDao" ref="sarDao"/>
+            <beans:property name="ecmFileService" ref="ecmFileService"/>
+            <beans:property name="documentGeneratorService" ref="documentGeneratorService"/>
+            <beans:property name="documentGenerator" ref="correspondenceDocumentGenerator"/>
+        </beans:bean>
+
+        <beans:bean id="requestPortalUserParticipantsHandler"
+                    class="gov.privacy.pipeline.postsave.SARPortalUserParticipantsHandler">
+            <property name="userDao" ref="userJpaDao"/>
+            <property name="acmParticipantService" ref="acmParticipantService"/>
+        </beans:bean>
+
+        <beans:bean id="scheduledHoldQueuePurger" class="gov.privacy.service.ScheduledHoldQueuePurger">
+            <beans:property name="requestDao" ref="sarDao"/>
+            <beans:property name="startBusinessProcessService" ref="startBusinessProcessService"/>
+            <beans:property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+            <beans:property name="SARConfigurationService" ref="sarConfigurationService"/>
+        </beans:bean>
+
+        <beans:bean id="responseFolderConverterService" class="gov.privacy.service.ResponseFolderConverterService">
+            <beans:property name="caseFileDao" ref="caseFileDao"/>
+            <beans:property name="converter" ref="folderConverter"/>
+            <beans:property name="responseFolderService" ref="responseFolderService"/>
+            <beans:property name="pdfConversionConfigurationService" ref="pdfConversionConfigurationService"/>
+        </beans:bean>
+
+        <beans:bean id="responseFolderCompressorService" class="gov.privacy.service.ResponseFolderCompressorService">
+            <beans:property name="caseFileDao" ref="caseFileDao"/>
+            <beans:property name="compressor" ref="folderCompressor"/>
+            <beans:property name="responseFolderService" ref="responseFolderService"/>
+            <beans:property name="acmFolderService" ref="acmFolderService"/>
+            <beans:property name="SARConfig" ref="sarConfig"/>
+        </beans:bean>
+
+        <beans:bean id="responseFolderNotifyService" class="gov.privacy.service.ResponseFolderNotifyService">
+            <beans:property name="caseFileDao" ref="caseFileDao"/>
+            <beans:property name="compressor" ref="folderCompressor"/>
+            <beans:property name="notificationSender" ref="notificationSender"/>
+            <beans:property name="userDao" ref="userJpaDao"/>
+            <beans:property name="responseFolderService" ref="responseFolderService"/>
+            <beans:property name="acmAppConfiguration" ref="acmApplication"/>
+            <beans:property name="notificationDao" ref="notificationDao"/>
+        </beans:bean>
+
+        <beans:bean id="responseFolderService" class="gov.privacy.service.ResponseFolderService">
+            <beans:property name="folderService" ref="acmFolderService"/>
+            <beans:property name="responseFolderName" value="03 Response"/>
+        </beans:bean>
+
+        <beans:bean id="responseFolderFileUpdateService"
+                    class="gov.privacy.service.ConvertAndCompressResponseFolderFileUpdateService">
+            <beans:property name="converter" ref="folderConverter"/>
+            <beans:property name="compressor" ref="folderCompressor"/>
+            <beans:property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        </beans:bean>
+
+        <beans:bean id="responseFolderFileAddedListener" class="gov.privacy.listener.ResponseFolderFileAddedListener">
+            <beans:property name="responseFolderName" value="03 Response"/>
+            <beans:property name="releaseQueueName" value="Release"/>
+            <beans:property name="caseFileDao" ref="caseFileDao"/>
+            <beans:property name="fileUpdateService" ref="responseFolderFileUpdateService"/>
+        </beans:bean>
+
+        <beans:bean id="sarQueueCorrespondenceService" class="gov.privacy.service.SARQueueCorrespondenceService">
+            <beans:property name="notificationSender" ref="notificationSender"/>
+            <beans:property name="userDao" ref="userJpaDao"/>
+            <beans:property name="responseFolderService" ref="responseFolderService"/>
+            <beans:property name="ecmFileService" ref="ecmFileService"/>
+            <beans:property name="requestDao" ref="sarDao"/>
+            <beans:property name="documentGenerator" ref="correspondenceDocumentGenerator"/>
+            <beans:property name="documentGeneratorService" ref="documentGeneratorService"/>
+            <beans:property name="SARConfigurationService" ref="sarConfigurationService"/>
+            <beans:property name="templatingEngine" ref="templatingEngine"/>
+            <beans:property name="emailBodyTemplate" value="file:${user.home}/.arkcase/acm/templates/requestDocumentAttached.html"/>
+            <beans:property name="notificationService" ref="notificationService"/>
+        </beans:bean>
+
+        <beans:bean id="requestAssignmentService" class="gov.privacy.service.RequestAssignmentService">
+            <beans:property name="saveCaseService" ref="saveCaseService"/>
+            <beans:property name="requestDao" ref="sarDao"/>
+            <beans:property name="groupService" ref="groupService"/>
+            <beans:property name="acmParticipantService" ref="acmParticipantService"/>
+            <beans:property name="userDao" ref="userJpaDao"/>
+        </beans:bean>
+
+        <beans:bean id="sarService" class="gov.privacy.service.SARService">
+            <beans:property name="saveCaseService" ref="saveCaseService"/>
+            <beans:property name="responseFolderCompressorService" ref="responseFolderCompressorService"/>
+            <beans:property name="SARFileBrokerClient" ref="sarFileBrokerClient"/>
+            <beans:property name="SARDao" ref="sarDao"/>
+            <beans:property name="caseFileDao" ref="caseFileDao"/>
+            <beans:property name="notificationSender" ref="notificationSender"/>
+            <beans:property name="ecmFileDao" ref="ecmFileDao"/>
+            <beans:property name="ecmFileService" ref="ecmFileService"/>
+            <beans:property name="originalRequestFolderNameFormat" ref="originalRequestFolderNameFormat"/>
+            <beans:property name="queuesTimeToCompleteService" ref="queuesTimeToCompleteService"/>
+            <beans:property name="SARConfigurationService" ref="sarConfigurationService"/>
+            <beans:property name="executeSolrQuery" ref="executeSolrQuery"/>
+            <beans:property name="SARConfig" ref="sarConfig"/>
+        </beans:bean>
+
+        <beans:bean id="saveSARService" class="gov.privacy.service.SaveSARService">
+            <beans:property name="SARService" ref="sarService"/>
+            <beans:property name="caseFileEventUtility" ref="caseFileEventUtility"/>
+            <beans:property name="personDao" ref="acmPersonDao"/>
+            <beans:property name="lookupDao" ref="lookupDao"/>
+            <beans:property name="translationService" ref="translationService"/>
+        </beans:bean>
+
+        <beans:bean id="originalRequestFolderNameFormat" class="java.lang.String">
+            <beans:constructor-arg value="Subject Access Request (%s)"/>
+        </beans:bean>
+
+        <beans:bean id="enqueueCaseFileService" class="com.armedia.acm.plugins.casefile.service.EnqueueCaseFileServiceImpl">
+            <beans:property name="caseFileDao" ref="caseFileDao"/>
+            <beans:property name="leaveCurrentQueueBusinessRule" ref="leaveCurrentQueueBusinessRule"/>
+            <beans:property name="caseFileNextPossibleQueuesBusinessRule" ref="caseFileNextPossibleQueuesBusinessRule"/>
+            <beans:property name="enterQueueBusinessRule" ref="enterQueueBusinessRule"/>
+            <beans:property name="onLeaveQueueBusinessRule" ref="onLeaveQueueBusinessRule"/>
+            <beans:property name="onEnterQueueBusinessRule" ref="onEnterQueueBusinessRule"/>
+            <beans:property name="queueService" ref="queueService"/>
+            <beans:property name="startBusinessProcessService" ref="startBusinessProcessService"/>
+            <beans:property name="saveCaseFileBusinessRule" ref="saveCaseFileBusinessRule"/>
+            <beans:property name="acmObjectLockService" ref="objectLockService"/>
+            <beans:property name="systemConfigurationService" ref="sarConfigurationService"/>
+            <beans:property name="caseFileEventUtility" ref="caseFileEventUtility"/>
+            <beans:property name="timesheetService" ref="timesheetService"/>
+        </beans:bean>
+
+        <beans:bean id="requestResponseFolderService" class="gov.privacy.service.RequestResponseFolderService">
+            <beans:property name="responseFolderConverterService" ref="responseFolderConverterService"/>
+            <beans:property name="responseFolderCompressorService" ref="responseFolderCompressorService"/>
+            <beans:property name="SARFileBrokerClient" ref="sarFileBrokerClient"/>
+            <beans:property name="responseFolderNotifyService" ref="responseFolderNotifyService"/>
+        </beans:bean>
+
+        <beans:bean id="sarRequestTemplateModelProvider"
+                    class="gov.privacy.model.provider.SARTemplateModelProvider">
+            <beans:property name="objectAssociationDao" ref="objectAssociationDao"/>
+        </beans:bean>
+
+        <beans:bean id="holdQueuePurgerJobDescriptor" class="gov.privacy.service.HoldQueuePurgerJobDescriptor"
+                    parent="acmJobDescriptor">
+            <beans:property name="holdQueuePurger" ref="scheduledHoldQueuePurger"/>
+        </beans:bean>
+
+        <beans:bean id="requestFolderStructureService" class="gov.privacy.service.RequestFolderStructureService">
+            <beans:property name="folderStructureAsString" value="#{caseConfig.folderStructure}"/>
+        </beans:bean>
+
+    </beans:beans>
+</beans:beans>

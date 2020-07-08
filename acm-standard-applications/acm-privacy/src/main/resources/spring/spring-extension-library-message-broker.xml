@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
+
+    <beans:beans profile="extension-privacy">
+        <!-- Subject Access Request Broker -->
+        <beans:bean id="connectionFactory" class="org.apache.activemq.ActiveMQSslConnectionFactory">
+            <beans:property name="brokerURL"
+                            value="#{sarBrokerConfig.url}?jms.blobTransferPolicy.uploadUrl=#{sarBrokerConfig.fileUploadUrl}"/>
+            <beans:property name="keyStore" value="#{sarBrokerConfig.keystore}"/>
+            <beans:property name="keyStorePassword" value="#{sarBrokerConfig.keystorePassword}"/>
+            <beans:property name="trustStore" value="#{sarBrokerConfig.truststore}"/>
+            <beans:property name="trustStorePassword" value="#{sarBrokerConfig.truststorePassword}"/>
+        </beans:bean>
+
+        <beans:bean id="portalEntity" class="gov.privacy.model.PortalSubjectAccessRequest"/>
+
+        <beans:bean id="sarRequestBrokerClient" class="gov.privacy.broker.SARBrokerClient">
+            <beans:constructor-arg index="0" ref="connectionFactory"/>
+            <beans:constructor-arg index="1" value="#{sarBrokerConfig.queuesExternalRequestStatusUpdates}"/>
+            <beans:constructor-arg index="2" value="#{sarBrokerConfig.queuesExternalRequests}"/>
+            <beans:property name="createRequestService" ref="portalCreateRequestService"/>
+            <beans:property name="maxConcurrentWorkers" value="#{sarBrokerConfig.maxConcurrentWorkers}"/>
+            <beans:property name="maxConcurrentConsumers" value="#{sarBrokerConfig.maxConcurrentListeners}"/>
+            <beans:lookup-method name="getEntity" bean="portalEntity"/>
+        </beans:bean>
+
+        <beans:bean id="sarFileBrokerClient" class="gov.privacy.broker.SARFileBrokerClient">
+            <beans:constructor-arg index="0" ref="connectionFactory"/>
+            <beans:constructor-arg index="1" value="#{sarBrokerConfig.queuesExternalRequestFiles}"/>
+            <beans:constructor-arg index="2">
+                <null/>
+            </beans:constructor-arg>
+            <beans:property name="fileUploadUrl" value="#{sarBrokerConfig.fileUploadUrl}"/>
+            <beans:property name="caseFileDao" ref="caseFileDao"/>
+            <beans:property name="responseFolderCompressorService" ref="responseFolderCompressorService"/>
+        </beans:bean>
+
+        <!-- Subject Access Request Update Notifier -->
+        <beans:bean id="sarUpdateNotifier" class="gov.privacy.service.SARUpdateNotifier">
+            <beans:property name="brokerClient" ref="sarRequestBrokerClient"/>
+        </beans:bean>
+    </beans:beans>
+
+</beans:beans>

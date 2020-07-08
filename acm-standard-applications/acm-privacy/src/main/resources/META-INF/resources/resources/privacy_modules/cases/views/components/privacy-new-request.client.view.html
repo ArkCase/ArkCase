@@ -1,0 +1,624 @@
+<form name="requestForm" novalidate="novalidate" class="form-overflow-scroll">
+    <div class="modal-header">
+        <h3><span translate>cases.newRequest.requestTitle</span></h3>
+    </div>
+    <div class="modal-body">
+        <div id="accordion" class="panel-group">
+            <div class="row">
+                <div class="col-sm-2 form-group">
+                    <label for="subject" translate>cases.newRequest.receivedDate.label</label>
+                </div>
+                <div class="col-sm-4 form-group">
+                    <div class="input-group">
+                        <date-time-picker data="config.data.receivedDate" property="receivedDate"
+                                          on-after-save="receivedDateChanged()"
+                                          date-picker-id="receivedDate"></date-time-picker>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default" id="topSection1">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <span translate>cases.newRequest.section1</span></h4>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-12 form-group">
+                            <div class="col-sm-4">
+                                <label>
+                                    <input type="radio" ng-model="isPickExistingSubject" ng-value="false"
+                                           ng-change="pickExistingSubjectChange()">
+                                    <translate>cases.newRequest.addNewPerson</translate>
+                                </label>
+                            </div>
+                            <div class="col-sm-4">
+                                <label>
+                                    <input type="radio" ng-model="isPickExistingSubject" ng-value="true"
+                                           ng-change="pickExistingSubjectChange()">
+                                    <translate>cases.newRequest.useExistingPerson</translate>
+                                </label>
+                            </div>
+                            <div class="col-sm-4">
+                                <label>
+                                    <div class="pull-right" ng-if="isPickExistingSubject">
+                                        <button class="btn btn-primary btn-sm" ng-click="searchSubject()" translate>
+                                            cases.newRequest.searchPerson
+                                        </button>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div ng-show="isExistingSubject || !isPickExistingSubject">
+                        <div class="row form-group">
+                            <div class="col-sm-2">
+                                <label for="prefix" translate>cases.newRequest.prefix.label</label>
+                                <span class="required-asterisk">*</span>
+                            </div>
+                            <div class="col-sm-4">
+                                <select ng-model="config.data.subject.person.title" id="subjectPrefix"
+                                        name="subjectPrefix"
+                                        ng-options="prefix.key as prefix.value | translate for prefix in prefixes"
+                                        class="form-control input-md"
+                                        required ng-disabled="isExistingSubject && existingSubject.title">
+                                </select>
+                                <span class="text-danger" ng-if="!config.data.subject.person.title && formInvalid"
+                                      translate>
+                            cases.newRequest.prefix.validation.error</span>
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col-sm-2">
+                                <label for="firstName" translate>cases.newRequest.firstName.label</label>
+                                <span class="required-asterisk">*</span>
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="subjectFirstName" name="subjectFirstName"
+                                       ng-model="config.data.subject.person.givenName"
+                                       placeholder="{{'cases.newRequest.firstName.placeholder' | translate}}"
+                                       required="required"
+                                       ng-disabled="isExistingSubject && existingSubject.givenName">
+                                <span class="text-danger"
+                                      ng-if="!config.data.subject.person.givenName && formInvalid" translate>
+                                cases.newRequest.firstName.validation.error</span>
+                            </div>
+                            <div class="col-sm-2">
+                                <label for="middleName" translate>cases.newRequest.middleName.label</label>
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="subjectMiddleName"
+                                       ng-model="config.data.subject.person.middleName"
+                                       placeholder="{{'cases.newRequest.middleName.placeholder' | translate}}"
+                                       name="subjectMiddleName"
+                                       ng-disabled="isExistingSubject">
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col-sm-2">
+                                <label for="lastName" translate>cases.newRequest.lastName.label</label>
+                                <span class="required-asterisk">*</span>
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="subjectLastName"
+                                       ng-model="config.data.subject.person.familyName"
+                                       placeholder="{{'cases.newRequest.lastName.placeholder' | translate}}"
+                                       name="subjectLastName"
+                                       required="required"
+                                       ng-disabled="isExistingSubject && existingSubject.familyName">
+                                <span class="text-danger"
+                                      ng-if="!config.data.subject.person.familyName && formInvalid" translate>
+                                cases.newRequest.lastName.validation.error</span>
+                            </div>
+                            <div class="col-sm-2 form-group">
+                                <label for="phone" translate>cases.newRequest.phone.label </label>
+                            </div>
+                            <div class="col-sm-4 form-group">
+                                <input type="text" class="form-control" id="subjectPhone"
+                                       pattern="^\d{3}[\-]\d{3}[\-]\d{4}"
+                                       ng-model="config.data.subject.person.defaultPhone.value"
+                                       placeholder="{{'cases.newRequest.phone.placeholder' | translate}}"
+                                       name="subjectPhone"
+                                       ng-disabled="isExistingSubject && existingSubject.defaultPhone.value">
+                                <span class="text-danger"
+                                      ng-if="!config.data.subject.person.defaultPhone.value && formInvalid && !phoneEmpty"
+                                      translate>
+                                cases.newRequest.phone.validation.errorInvalid</span>
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col-sm-2">
+                                <label for="email" translate>cases.newRequest.email.label </label>
+                                <span class="required-asterisk">*</span>
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="subjectEmail"
+                                       ng-model="config.data.subject.person.defaultEmail.value"
+                                       placeholder="{{'cases.newRequest.email.placeholder' | translate}}"
+                                       name="subjectEmail"
+                                       pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+                                       required="required"
+                                       ng-disabled="isExistingSubject && (existingSubject.defaultEmail.value ||
+                                    (config.data.deliveryMethodOfResponse != 'Web Portal'  && !config.data.createNewPortalUser))">
+                                <span class="text-danger"
+                                      ng-if="(config.data.deliveryMethodOfResponse == 'Web Portal'  || config.data.createNewPortalUser) && !config.data.subject.person.defaultEmail.value && formInvalid"
+                                      translate>
+                                cases.newRequest.email.validation.error</span>
+                                <span class="text-danger"
+                                      ng-if="!config.data.subject.person.defaultEmail.value && formInvalid && !emailEmpty"
+                                      translate>
+                                cases.newRequest.email.validation.errorInvalid</span>
+                            </div>
+                            <div class="col-sm-2">
+                                <label for="confirmationEmail"
+                                       translate>cases.newRequest.confirmationEmail.label </label>
+                                <span class="required-asterisk-confirm-email">*</span>
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="subjectConfirmationEmail"
+                                       ng-model="subjectConfirmationEmail"
+                                       placeholder="{{'cases.newRequest.confirmationEmail.placeholder' | translate}}"
+                                       name="subjectConfirmationEmail"
+                                       ng-blur="checkExistingEmail(config.data.subject, subjectConfirmationEmail)"
+                                       required="required"
+                                       ng-disabled="isExistingSubject && (existingSubject.defaultEmail.value ||
+                                    (config.data.deliveryMethodOfResponse != 'Web Portal'  && !config.data.createNewPortalUser))">
+                                <span class="text-danger"
+                                      ng-if="(subjectConfirmationEmail !== config.data.subject.person.defaultEmail.value) && formInvalid && !subjectConfirmEmailEmpty"
+                                      translate>
+                                cases.newRequest.confirmationEmail.validation.errorInvalid</span>
+                                <span class="text-danger"
+                                      ng-if="(config.data.deliveryMethodOfResponse == 'Web Portal' || config.data.createNewPortalUser) && (subjectConfirmationEmail !== config.data.subject.person.defaultEmail.value)"
+                                      translate>
+                                cases.newRequest.confirmationEmail.validation.error</span>
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col-sm-2">
+                                <label for="subjectCountry" translate>cases.newRequest.country.label</label>
+                            </div>
+                            <div class="col-sm-4">
+                                <select id="subjectCountry" class="form-control"
+                                        ng-model="config.data.subject.person.addresses[0].country"
+                                        ng-disabled="isExistingSubject && (existingSubject.addresses[0].country ||
+                                    (config.data.deliveryMethodOfResponse != 'Mail'  && !config.data.createNewPortalUser))"
+                                        ng-change="changeStates(config.data.subject.person.addresses[0].country)">
+                                    <option ng-repeat="option in countries" value="{{option.key}}">
+                                        {{option.value | translate}}
+                                    </option>
+                                </select>
+                                <span class="text-danger" ng-if="!config.data.subject.person.addresses[0].country &&
+                                    (config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser) && formInvalid"
+                                      translate>
+                            cases.newRequest.country.validation.error</span>
+                            </div>
+                            <div class="col-sm-2">
+                                <label for="addressType" translate>cases.newRequest.address.type.label</label>
+                            </div>
+                            <div class="col-sm-4">
+                                <select id="addressType" class="form-control"
+                                        ng-model="config.data.subject.person.addresses[0].type"
+                                        ng-disabled="isExistingSubject &&
+                                    ((existingSubject.addresses[0].type && existingSubject.addresses[0].streetAddress) ||
+                                    (config.data.deliveryMethodOfResponse != 'Mail'  && !config.data.createNewPortalUser))">
+                                    <option ng-repeat="option in addressTypes" value="{{option.key}}">
+                                        {{option.value | translate}}
+                                    </option>
+                                </select>
+                                <span class="text-danger"
+                                      ng-if="!config.data.subject.person.addresses[0].type && (config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser) && formInvalid"
+                                      translate>
+                            cases.newRequest.address.type.validation.error</span>
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col-sm-2">
+                                <label for="subjectAddress1" translate>cases.newRequest.address.label </label>
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="subjectAddress1"
+                                       ng-model="config.data.subject.person.addresses[0].streetAddress"
+                                       placeholder="{{'cases.newRequest.address.placeholder' | translate}}"
+                                       name="subjectAddress1"
+                                       ng-disabled="isExistingSubject && (existingSubject.addresses[0].streetAddress ||
+                                    (config.data.deliveryMethodOfResponse != 'Mail'  && !config.data.createNewPortalUser))">
+                                <span class="text-danger"
+                                      ng-if="(config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser) && !config.data.subject.person.addresses[0].streetAddress && formInvalid"
+                                      translate>
+                                cases.newRequest.address.validation.error</span>
+                            </div>
+                            <div class="col-sm-2">
+                                <label for="subjectAddress2" translate>cases.newRequest.address2.label</label>
+
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="subjectAddress2"
+                                       ng-model="config.data.subject.person.addresses[0].streetAddress2"
+                                       placeholder="{{'cases.newRequest.address2.placeholder' | translate}}"
+                                       name="subjectAddress1=2" ng-disabled="isExistingSubject &&
+                                    (existingSubject.addresses[0].streetAddress || existingSubject.addresses[0].streetAddress2 ||
+                                    (config.data.deliveryMethodOfResponse != 'Mail'  && !config.data.createNewPortalUser))">
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col-sm-2">
+                                <label for="subjectCity" translate>cases.newRequest.city.label</label>
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="subjectCity"
+                                       ng-model="config.data.subject.person.addresses[0].city"
+                                       placeholder="{{'cases.newRequest.city.placeholder' | translate}}"
+                                       name="subjectCity"
+                                       ng-disabled="isExistingSubject && (existingSubject.addresses[0].city ||
+                                    (config.data.deliveryMethodOfResponse != 'Mail'  && !config.data.createNewPortalUser))">
+                                <span class="text-danger" ng-if="(config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser)
+                                    && !config.data.subject.person.addresses[0].city && formInvalid" translate>
+                                cases.newRequest.city.validation.error</span>
+                            </div>
+                            <div class="col-sm-2">
+                                <label for="state" translate>cases.newRequest.state.label</label>
+                            </div>
+                            <div class="col-sm-4">
+                                <div ng-if="config.data.subject.person.addresses[0].country == 'US'
+                            || config.data.subject.person.addresses[0].country == 'CA'
+                            || config.data.subject.person.addresses[0].country == 'JP'">
+                                    <select id="state" name="state"
+                                            ng-model="config.data.subject.person.addresses[0].state"
+                                            ng-options="state.key as state.value | translate for state in states"
+                                            class="form-control input-md"
+                                            ng-disabled="isExistingSubject && (existingSubject.addresses[0].state ||
+                                    (config.data.deliveryMethodOfResponse != 'Mail'  && !config.data.createNewPortalUser))">
+                                    </select>
+                                </div>
+                                <div ng-if="config.data.subject.person.addresses[0].country != 'US' && config.data.subject.person.addresses[0].country != 'CA' && config.data.subject.person.addresses[0].country != 'JP'">
+                                    <input id="txtState" type="text"
+                                           ng-model="config.data.subject.person.addresses[0].state"
+                                           class="input-md form-control"
+                                           placeholder="{{ 'cases.newRequest.state.placeholder' | translate }}"
+                                           ng-disabled="isExistingSubject && (existingSubject.addresses[0].state ||
+                                    (config.data.deliveryMethodOfResponse != 'Mail'  && !config.data.createNewPortalUser))">
+                                </div>
+                                <span class="text-danger"
+                                      ng-if="(config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser) && !config.data.subject.person.addresses[0].state && formInvalid"
+                                      translate>
+                                cases.newRequest.state.validation.error</span>
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col-sm-2">
+                                <label for="subjectZip" translate>cases.newRequest.zip.label</label>
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="subjectZip" name="subjectZip"
+                                       pattern="[0-9]{5}"
+                                       ng-model="config.data.subject.person.addresses[0].zip"
+                                       placeholder="{{'cases.newRequest.zip.placeholder' | translate}}"
+                                       ng-disabled="isExistingSubject && (existingSubject.addresses[0].zip ||
+                                    (config.data.deliveryMethodOfResponse != 'Mail'  && !config.data.createNewPortalUser))">
+                                <span class="text-danger" ng-if="(config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser)
+                                    && !config.data.subject.person.addresses[0].zip && formInvalid" translate>
+                                cases.newRequest.zip.validation.error</span>
+                                <span class="text-danger"
+                                      ng-if="!config.data.subject.person.addresses[0].zip && formInvalid && !zipCodeEmpty"
+                                      translate>
+                                cases.newRequest.zip.validation.errorInvalid</span>
+                            </div>
+                            <div class="col-sm-2 form-group">
+                                <label for="subject" translate>cases.newRequest.dateOfBirth.label</label>
+                                <span class="required-asterisk">*</span>
+                            </div>
+                            <div class="col-sm-4 form-group">
+                                <fieldset ng-disabled="isExistingSubject && existingSubject.dateOfBirth">
+                                    <div class="form-group">
+                                        <date-time-picker data="config.data.subject.person.dateOfBirth" property="dateOfBirth"
+                                                          on-after-save="dateOfBirthChanged(config.data.subject.person.dateOfBirth)"
+                                                          date-picker-id="dateOfBirth"
+                                                          time-format-disabled="true"></date-time-picker>
+                                    </div>
+                                </fieldset>
+                                <span class="text-danger"
+                                      ng-if="!config.data.subject.person.dateOfBirth && formInvalid" translate>
+                            cases.newRequest.dateOfBirth.validation.error</span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-2 form-group">
+                                <label translate>cases.newRequest.addFile.proofOfIdentity</label>
+                                <span class="required-asterisk-proof-identity-label">*</span>
+                            </div>
+                            <div class="col-sm-2 form-group">
+                                <button class="btn btn-default" ngf-select="addSubjectFileProofOfIdentity($files)" multiple>
+                                    <span translate>cases.newRequest.chooseFiles</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-4 form-group">
+                                <span class="text-danger ng-scope" ng-if="uploadFilesDescription['Subject Proof of Identity'].length == 0 && formInvalid" translate>cases.newRequest.addFile.validation.error</span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <ul ng-repeat="file in uploadFilesDescription['Subject Proof of Identity']">
+                                <li>
+                                    {{file.name}}
+                                    <button type="button" class="btn btn-link" ng-click="removeSubjectFileProofOfIdentity($index)">
+                                        <i class="fa fa-minus text-danger"></i><span translate>cases.newRequest.remove</span>
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col-lg-4">
+                                <label>
+                                    <input type="checkbox" ng-model="subjectSameAsRequester"
+                                           ng-click="isSubjectSameAsRequesterChecked(subjectSameAsRequester)">
+                                    <span translate> cases.newRequest.setSubjectAsRequester.label</span>
+                                </label>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <span translate>cases.newRequest.section2</span>
+                </h4>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-12 form-group">
+                        <div class="col-sm-4">
+                            <label>
+                                <input type="radio" ng-model="isPickExistingOriginator" ng-value="false"
+                                       ng-change="pickExistingOriginatorChange()" ng-disabled="subjectSameAsRequester">
+                                <translate>cases.newRequest.addNewPerson</translate>
+                            </label>
+                        </div>
+                        <div class="col-sm-4">
+                            <label>
+                                <input type="radio" ng-model="isPickExistingOriginator" ng-value="true"
+                                       ng-change="pickExistingOriginatorChange()" ng-disabled="subjectSameAsRequester">
+                                <translate>cases.newRequest.useExistingPerson</translate>
+                            </label>
+                        </div>
+                        <div class="col-sm-4">
+                            <label>
+                                <div class="pull-right" ng-if="isPickExistingOriginator">
+                                    <button class="btn btn-primary btn-sm" ng-click="searchOriginator()" translate>
+                                        cases.newRequest.searchPerson
+                                    </button>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div ng-show="isExistingOriginator || !isPickExistingOriginator">
+                    <div class="row form-group">
+                        <div class="col-sm-2">
+                            <label for="prefix" translate>cases.newRequest.prefix.label</label>
+                            <span class="required-asterisk">*</span>
+                        </div>
+                        <div class="col-sm-4">
+                            <select ng-model="config.data.originator.person.title" id="prefix" name="prefix"
+                                    ng-options="prefix.key as prefix.value | translate for prefix in prefixes" class="form-control input-md"
+                                    required ng-disabled="subjectSameAsRequester || (isExistingOriginator && existingOriginator.title)">
+                            </select>
+                            <span class="text-danger" ng-if="!config.data.originator.person.title && formInvalid" translate>
+                            cases.newRequest.prefix.validation.error</span>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <div class="col-sm-2">
+                            <label for="firstName" translate>cases.newRequest.firstName.label</label>
+                            <span class="required-asterisk">*</span>
+                        </div>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="firstName" name="firstName"
+                                   ng-model="config.data.originator.person.givenName"
+                                   placeholder="{{'cases.newRequest.firstName.placeholder' | translate}}"
+                                   required="required"
+                                   ng-disabled="subjectSameAsRequester || (isExistingOriginator && existingOriginator.givenName)">
+                            <span class="text-danger" ng-if="!config.data.originator.person.givenName && formInvalid" translate>
+                                cases.newRequest.firstName.validation.error</span>
+                        </div>
+                        <div class="col-sm-2">
+                            <label for="middleName" translate>cases.newRequest.middleName.label</label>
+                        </div>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="middleName" ng-model="config.data.originator.person.middleName"
+                                   placeholder="{{'cases.newRequest.middleName.placeholder' | translate}}"
+                                   name="middleName"
+                                   ng-disabled="subjectSameAsRequester || isExistingOriginator">
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <div class="col-sm-2">
+                            <label for="lastName" translate>cases.newRequest.lastName.label</label>
+                            <span class="required-asterisk">*</span>
+                        </div>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="lastName" ng-model="config.data.originator.person.familyName"
+                                   placeholder="{{'cases.newRequest.lastName.placeholder' | translate}}" name="lastName"
+                                   required="required"
+                                   ng-disabled="subjectSameAsRequester || (isExistingOriginator && existingOriginator.familyName)">
+                            <span class="text-danger" ng-if="!config.data.originator.person.familyName && formInvalid" translate>
+                                cases.newRequest.lastName.validation.error</span>
+                        </div>
+                        <div class="col-sm-2 form-group">
+                            <label for="phone" translate>cases.newRequest.phone.label </label>
+                        </div>
+                        <div class="col-sm-4 form-group">
+                            <input type="text" class="form-control" id="phone" pattern="^\d{3}[\-]\d{3}[\-]\d{4}"
+                                   ng-model="config.data.originator.person.defaultPhone.value"
+                                   placeholder="{{'cases.newRequest.phone.placeholder' | translate}}" name="phone"
+                                   ng-disabled="subjectSameAsRequester || (isExistingOriginator && existingOriginator.defaultPhone.value)">
+                            <span class="text-danger"
+                                  ng-if="!config.data.originator.person.defaultPhone.value && formInvalid && !phoneEmpty"
+                                  translate>
+                                cases.newRequest.phone.validation.errorInvalid</span>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <div class="col-sm-2">
+                            <label for="email" translate>cases.newRequest.email.label </label>
+                            <span class="required-asterisk">*</span>
+                        </div>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="email" ng-model="config.data.originator.person.defaultEmail.value"
+                                   placeholder="{{'cases.newRequest.email.placeholder' | translate}}" name="email"
+                                   pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+                                   required="required"
+                                   ng-disabled="subjectSameAsRequester || (isExistingOriginator && (existingOriginator.defaultEmail.value ||
+                                    (config.data.deliveryMethodOfResponse != 'Web Portal'  && !config.data.createNewPortalUser)))">
+                            <span class="text-danger"
+                                  ng-if="(config.data.deliveryMethodOfResponse == 'Web Portal'  || config.data.createNewPortalUser) && !config.data.originator.person.defaultEmail.value && formInvalid"
+                                  translate>
+                                cases.newRequest.email.validation.error</span>
+                            <span class="text-danger"
+                                  ng-if="!config.data.originator.person.defaultEmail.value && formInvalid && !emailEmpty"
+                                  translate>
+                                cases.newRequest.email.validation.errorInvalid</span>
+                        </div>
+                        <div class="col-sm-2">
+                            <label for="confirmationEmail" translate>cases.newRequest.confirmationEmail.label </label>
+                            <span class="required-asterisk-confirm-email">*</span>
+                        </div>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="confirmationEmail" ng-model="confirmationEmail"
+                                   placeholder="{{'cases.newRequest.confirmationEmail.placeholder' | translate}}"
+                                   name="confirmationEmail"
+                                   ng-blur="checkExistingEmail(config.data.originator, confirmationEmail)"
+                                   required="required"
+                                   ng-disabled="subjectSameAsRequester || (isExistingOriginator && (existingOriginator.defaultEmail.value ||
+                                    (config.data.deliveryMethodOfResponse != 'Web Portal'  && !config.data.createNewPortalUser)))">
+                            <span class="text-danger"
+                                  ng-if="(confirmationEmail !== config.data.originator.person.defaultEmail.value) && formInvalid && !confirmEmailEmpty"
+                                  translate>
+                                cases.newRequest.confirmationEmail.validation.errorInvalid</span>
+                            <span class="text-danger"
+                                  ng-if="(config.data.deliveryMethodOfResponse == 'Web Portal' || config.data.createNewPortalUser) && (confirmationEmail !== config.data.originator.person.defaultEmail.value)"
+                                  translate>
+                                cases.newRequest.confirmationEmail.validation.error</span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <label for="country" translate>cases.newRequest.country.label</label>
+                        </div>
+                        <div class="col-sm-4">
+                            <select id="country" class="form-control" ng-model="config.data.originator.person.addresses[0].country"
+                                    ng-disabled="subjectSameAsRequester || (isExistingOriginator && (existingOriginator.addresses[0].country ||
+                                    (config.data.deliveryMethodOfResponse != 'Mail'  && !config.data.createNewPortalUser)))"
+                                    ng-change="changeStates(config.data.originator.person.addresses[0].country)">
+                                <option ng-repeat="option in countries" value="{{option.key}}">
+                                    {{option.value | translate}}
+                                </option>
+                            </select>
+                            <span class="text-danger" ng-if="!config.data.originator.person.addresses[0].country &&
+                                    (config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser) && formInvalid"
+                                  translate>
+                            cases.newRequest.country.validation.error</span>
+                        </div>
+                        <div class="col-sm-2 form-group">
+                            <label translate>cases.newRequest.addFile.proofOfIdentity</label>
+                            <span class="required-asterisk-proof-identity-label">*</span>
+                        </div>
+                        <div class="col-sm-2 form-group">
+                            <button class="btn btn-default" ngf-select="addOriginatorFileProofOfIdentity($files)"
+                                    ng-disabled="subjectSameAsRequester" multiple>
+                                <span translate>cases.newRequest.chooseFiles</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-offset-6 col-sm-4">
+                        <ul ng-repeat="file in uploadFilesDescription['Requester Proof of Identity']">
+                            <li>
+                                {{file.name}}
+                                <button type="button" class="btn btn-link" ng-click="removeOriginatorFileProofOfIdentity($index)">
+                                    <i class="fa fa-minus text-danger"></i><span translate>cases.newRequest.remove</span>
+                                </button>
+                            </li>
+                        </ul>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-offset-6 col-sm-4 form-group">
+                            <span class="text-danger ng-scope" ng-if="uploadFilesDescription['Requester Proof of Identity'].length == 0 && formInvalid" translate>cases.newRequest.addFile.validation.error</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <span translate>cases.newRequest.section3</span>
+                </h4>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-12 form-group">
+                        <label for="requestType"><span translate>cases.newRequest.requestType.label</span> <span class="required-asterisk">*</span></label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 form-group">
+                        <select id="requestType" ng-model="config.data.requestType"
+                                ng-options="requestType.key as requestType.value for requestType in requestTypes"
+                                class="form-control input-md">
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 form-group">
+                        <label for="subject"> <span translate>cases.newRequest.subject.label</span> <span class="required-asterisk">*</span></label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 form-group">
+                        <textarea rows=8 id="subject" name="subject" class="form-control" ng-model="config.data.details"
+                                  placeholder="{{'cases.newRequest.subject.placeholder' | translate}}"
+                                  required="required"></textarea>
+                        <span class="text-danger" ng-if="!config.data.details && formInvalid" translate>
+                                cases.newRequest.subject.validation.error</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" data-toggle="tooltip" data-title="Cancel" ng-click="cancelModal()">
+            <span translate>cases.newRequest.cancel</span>
+        </button>
+        <button type="button" class="btn btn-primary btn-sm" data-toggle="tooltip" ng-click="validateForm(requestForm)" title="Submit"
+                id="saveButton">
+            <i class="{{loadingIcon}}"></i>
+            <span translate>cases.newRequest.save.button</span>
+        </button>
+    </div>
+</form>

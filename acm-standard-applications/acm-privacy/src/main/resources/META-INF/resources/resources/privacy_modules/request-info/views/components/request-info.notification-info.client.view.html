@@ -1,0 +1,20 @@
+<div class="modal-header">
+    <h3>
+        <span translate>cases.comp.info.selectNotificationGroup</span>
+    </h3>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-xs-12 col-md-2" ng-if="isNotificationGroupEnabled">
+            <div class="h4 font-bold">
+                <a href="#" editable-select="objectInfo.notificationGroup" onaftersave="updateNotificationGroup()"
+                        e-ng-options="g.key as (g.value | translate) for g in notificationGroups" permission="editCaseOwningGroup"
+                        permission-object-type="CASE_FILE" permission-properties="objectInfo" permission-action="disable">
+                    {{notificationGroup || 'common.value.unknown' | translate}}
+                </a>
+            </div>
+            <small class="text-muted"><span translate>cases.comp.info.notificationGroup</span></small>
+        </div>
+    </div>
+</div>
+<div class="modal-footer"></div>
