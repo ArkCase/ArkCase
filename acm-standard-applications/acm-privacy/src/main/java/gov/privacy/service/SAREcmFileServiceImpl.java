@@ -122,7 +122,8 @@ public class SAREcmFileServiceImpl extends EcmFileServiceImpl implements SAREcmF
             fileCopy.setLegacySystemId(file.getLegacySystemId());
             fileCopy.setPageCount(file.getPageCount());
             fileCopy.setSecurityField(file.getSecurityField());
-            //
+
+            //if someone is refactoring this using copyEcmFile method don't forget this line
             fileCopy.setDuplicate(file.isDuplicate());
 
             fileCopy.setPublicFlag(file.getPublicFlag());
