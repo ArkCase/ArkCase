@@ -796,6 +796,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
                 if (phoneContact != null)
                 {
                     phoneContact.setValue(user.getPhoneNumber());
+                    person.setDefaultPhone(phoneContact);
                 }
                 else
                 {
@@ -807,8 +808,10 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
             else
             {
                 List<ContactMethod> contactMethods = new ArrayList<>();
-                contactMethods.add(buildContactMethod("phone", user.getPhoneNumber()));
+                ContactMethod newPhoneContact = buildContactMethod("phone", user.getPhoneNumber());
+                contactMethods.add(newPhoneContact);
                 person.setContactMethods(contactMethods);
+                person.setDefaultPhone(newPhoneContact);
             }
         }
         else
@@ -1073,6 +1076,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         {
             ContactMethod phone = buildContactMethod("phone", user.getPhoneNumber());
             person.getContactMethods().add(phone);
+            person.setDefaultPhone(phone);
         }
 
         if (user.getEmail() != null && !user.getEmail().isEmpty())
