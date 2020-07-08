@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/processdef" xmlns:modeler="http://activiti.com/modeler" modeler:version="1.0ev" modeler:exportDateTime="20190502133910" modeler:modelId="1059623" modeler:modelVersion="1" modeler:modelLastUpdated="1556800738370">
-  <process id="arrestWarrant" name="arrestWarrant" isExecutable="true">
+  <process id="acmDocumentSingleTaskWorkflow" name="ACM Document Workflow - Single Task" isExecutable="true">
     <startEvent id="startEvent1">
       <extensionElements>
         <modeler:editor-resource-id><![CDATA[startEvent1]]></modeler:editor-resource-id>
@@ -77,7 +77,7 @@
         <modeler:editor-resource-id><![CDATA[sid-F8B04509-CCD5-431D-B361-7A4A8C1854E1]]></modeler:editor-resource-id>
       </extensionElements>
     </sequenceFlow>
-    <serviceTask id="sendEmailNotification" name="Send Email Notification" activiti:expression="#{acmTaskService.sendArrestWarrantMail(PARENT_OBJECT_ID, PARENT_OBJECT_TYPE, approvers)}">
+    <serviceTask id="sendEmailNotification" name="Send Email Notification" activiti:expression="#{acmTaskService.sendAcmDocumentSingleTaskWorkflowMail(PARENT_OBJECT_ID, PARENT_OBJECT_TYPE, approvers)}">
       <extensionElements>
         <modeler:editor-resource-id><![CDATA[sid-4DAEE649-F7EC-4B5C-88BA-321A6299F2AE]]></modeler:editor-resource-id>
       </extensionElements>
@@ -93,8 +93,8 @@
       </extensionElements>
     </sequenceFlow>
   </process>
-  <bpmndi:BPMNDiagram id="BPMNDiagram_arrestWarrant">
-    <bpmndi:BPMNPlane bpmnElement="arrestWarrant" id="BPMNPlane_arrestWarrant">
+  <bpmndi:BPMNDiagram id="BPMNDiagram_acmDocumentSingleTaskWorkflow">
+    <bpmndi:BPMNPlane bpmnElement="acmDocumentSingleTaskWorkflow" id="BPMNPlane_acmDocumentSingleTaskWorkflow">
       <bpmndi:BPMNShape bpmnElement="startEvent1" id="BPMNShape_startEvent1">
         <omgdc:Bounds height="30.0" width="30.0" x="90.0" y="150.0"/>
       </bpmndi:BPMNShape>

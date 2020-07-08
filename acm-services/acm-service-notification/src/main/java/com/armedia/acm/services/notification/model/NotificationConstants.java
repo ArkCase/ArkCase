@@ -144,7 +144,7 @@ public interface NotificationConstants
     String PARTICIPANTS_DELETED = "notifications.participants.deleted";
     String OBJECT_UNASSIGNED = "notifications.object.unassigned";
     String OBJECT_ASSIGNED = "notifications.object.assigned";
-    String ARREST_WARRANT = "notifications.arrest.warrant";
+    String SINGLE_TASK_WORKFLOW = "notifications.acmdocumentsingletask.workflow";
     String EMAIL_MENTIONS = "notifications.email.mentions";
     String REQUEST_ASSIGNED = "notifications.request.assigned";
     String REQUEST_DOWNLOADED = "notifications.request.downloaded";
