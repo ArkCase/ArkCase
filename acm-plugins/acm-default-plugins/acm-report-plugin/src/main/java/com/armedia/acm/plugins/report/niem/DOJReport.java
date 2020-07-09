@@ -1,0 +1,38 @@
+package com.armedia.acm.plugins.report.niem;
+
+public enum DOJReport
+{
+    OLDEST_PENDING_APPEALS("OPA", "foia:OldestPendingAppealSection"),
+    OLDEST_PENDING_REQUESTS("OPR", "foia:OldestPendingAppealSection"),
+    OLDEST_PENDING_CONSULTATIONS("OPC", "foia:OldestPendingAppealSection"),
+    APPEAL_REQUEST_OTHER_REASON("CODR", "foia:RequestDenialOtherReasonSection"),
+    APPEAL_DENIAL_OTHER_REASON("ADOR", "foia:AppealDenialOtherReasonSection"),
+    SIMPLE_RESPONSE_TIME_INCREMENTS("SRT", "foia:SimpleResponseTimeIncrementsSection"),
+    COMPLEX_RESPONSE_TIME_INCREMENTS("CRT", "foia:ComplexResponseTimeIncrementsSection"),
+    EXPEDITED_RESPONSE_TIME_INCREMENTS("ERT", "foia:ExpeditedResponseTimeIncrementsSection"),
+    APPEAL_DISPOSITION("AD", "foia:AppealDispositionSection"),
+    REQUEST_DISPOSITION("RD", "foia:RequestDispositionSection"),
+    APPEAL_DISPOSITION_APPLIED_EXEMPTIONS("ADE", "foia:AppealDispositionAppliedExemptionsSection"),
+    REQUEST_DISPOSITION_APPLIED_EXEMPTIONS("RDE", "foia:RequestDispositionAppliedExemptionsSection"),
+    APPEAL_PROCESSED_COMPARISON("APC", "foia:ProcessedAppealComparisonSection"),
+    REQUEST_PROCESSED_COMPARISON("RPC", "foia:ProcessedRequestComparisonSection");
+
+    private String idPrefix;
+    private String sectionName;
+
+    DOJReport(String idPrefix, String sectionName)
+    {
+        this.idPrefix = idPrefix;
+        this.sectionName = sectionName;
+    }
+
+    public String getIdPrefix()
+    {
+        return idPrefix;
+    }
+
+    public String getSectionName()
+    {
+        return sectionName;
+    }
+}
