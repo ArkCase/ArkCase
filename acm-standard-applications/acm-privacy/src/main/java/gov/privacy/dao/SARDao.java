@@ -120,7 +120,7 @@ public class SARDao extends AcmAbstractDao<SubjectAccessRequest>
         String queryText = "SELECT sar FROM SubjectAccessRequest sar JOIN PersonAssociation pa JOIN pa.person p"
                 + " WHERE sar.id = pa.parentId"
                 + " AND pa.parentType='CASE_FILE'"
-                + " AND pa.personType = 'Requester'";
+                + " AND (pa.personType = 'Requester' OR pa.personType = 'Subject')";
 
         if (portalRequestStatus.getRequestId() != null && !portalRequestStatus.getRequestId().equals("undefined"))
         {
@@ -155,7 +155,7 @@ public class SARDao extends AcmAbstractDao<SubjectAccessRequest>
         String queryText = "SELECT sar FROM SubjectAccessRequest sar JOIN PersonAssociation pa JOIN pa.person p"
                 + " WHERE sar.id = pa.parentId"
                 + " AND pa.parentType='CASE_FILE'"
-                + " AND pa.personType = 'Requester'"
+                + " AND (pa.personType = 'Requester' OR pa.personType = 'Subject')"
                 + " AND p.id = :personId";
 
         Query subjectAccessRequests = getEm().createQuery(queryText);
@@ -213,14 +213,16 @@ public class SARDao extends AcmAbstractDao<SubjectAccessRequest>
         requestStatus.setRequestStatus(request.getStatus());
         requestStatus.setQueue(request.getQueue().getName());
         requestStatus.setUpdateDate(request.getModified());
-        requestStatus.setIsDenied(request.getDeniedFlag());
         requestStatus.setRequestTitle(request.getTitle());
         requestStatus.setRequestType(request.getRequestType());
         requestStatus.setRequesterFirstName(request.getOriginator().getPerson().getGivenName());
         requestStatus.setRequesterLastName(request.getOriginator().getPerson().getFamilyName());
         requestStatus.setRequesterEmail(request.getOriginator().getPerson().getContactMethods()
                 .stream().filter(cm -> cm.getType().equalsIgnoreCase("email")).findFirst().get().getValue());
-        requestStatus.setDispositionValue(request.getDisposition());
+        requestStatus.setSubjectFirstName(request.getSubject().getPerson().getGivenName());
+        requestStatus.setSubjectLastName(request.getSubject().getPerson().getFamilyName());
+        requestStatus.setSubjectEmail(request.getSubject().getPerson().getContactMethods()
+                .stream().filter(cm -> cm.getType().equalsIgnoreCase("email")).findFirst().get().getValue());
 
         return requestStatus;
     }
@@ -234,7 +236,7 @@ public class SARDao extends AcmAbstractDao<SubjectAccessRequest>
         String queryText = "SELECT sar FROM SubjectAccessRequest sar JOIN PersonAssociation pa JOIN pa.person p"
                 + " WHERE sar.id = pa.parentId"
                 + " AND pa.parentType='CASE_FILE'"
-                + " AND pa.personType = 'Requester'";
+                + " AND (pa.personType = 'Requester' OR pa.personType = 'Subject')";
 
         if (portalUserId != null)
         {
@@ -263,7 +265,7 @@ public class SARDao extends AcmAbstractDao<SubjectAccessRequest>
         String queryText = "SELECT sar FROM SubjectAccessRequest sar JOIN PersonAssociation pa JOIN pa.person p"
                 + " WHERE sar.id = pa.parentId"
                 + " AND pa.parentType='CASE_FILE'"
-                + " AND pa.personType = 'Requester'";
+                + " AND (pa.personType = 'Requester' OR pa.personType = 'Subject')";
 
         if (portalUserId != null)
         {

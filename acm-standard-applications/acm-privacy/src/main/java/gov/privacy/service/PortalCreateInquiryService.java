@@ -55,7 +55,7 @@ import java.util.List;
 import gov.privacy.model.PortalSARFile;
 import gov.privacy.model.PortalSARInquiry;
 import gov.privacy.model.SARPerson;
-import gov.privacy.model.SARRequesterAssociation;
+import gov.privacy.model.SARPersonAssociation;
 import gov.privacy.model.SubjectAccessRequest;
 
 /**
@@ -75,7 +75,7 @@ public class PortalCreateInquiryService
 
     public void createSARInquiry(PortalSARInquiry inquiry)
     {
-        SARRequesterAssociation personAssociation = new SARRequesterAssociation();
+        SARPersonAssociation personAssociation = new SARPersonAssociation();
         Authentication auth = new UsernamePasswordAuthenticationToken(inquiry.getUserId(), "");
 
         try
@@ -143,7 +143,7 @@ public class PortalCreateInquiryService
         return task;
     }
 
-    private SARRequesterAssociation populatePersonAssociation(SARRequesterAssociation pa, PortalSARInquiry in, AcmTask task)
+    private SARPersonAssociation populatePersonAssociation(SARPersonAssociation pa, PortalSARInquiry in, AcmTask task)
     {
         pa.setParentId(task.getTaskId());
         pa.setParentType("TASK");

@@ -118,6 +118,9 @@ public class SARService
                     subjectAccessRequest.setReceivedDate(LocalDateTime.now());
                 }
 
+                setDefaultPhoneAndEmailIfAny(in);
+                setDefaultAddressType(in);
+
                 if (subjectAccessRequest.getId() == null && subjectAccessRequest.getSubject().getPerson().getDefaultEmail()
                         .equals(subjectAccessRequest.getOriginator().getPerson().getDefaultEmail()))
                 {
@@ -136,9 +139,6 @@ public class SARService
                         filesMap.remove("Requester Proof of Identity");
                     }
                 }
-
-                setDefaultPhoneAndEmailIfAny(in);
-                setDefaultAddressType(in);
                 saved = getSaveCaseService().saveCase(in, filesMap, auth, ipAddress);
             }
             return saved;
@@ -171,36 +171,41 @@ public class SARService
 
     private void setDefaultPhoneAndEmailIfAny(CaseFile saved)
     {
-        Person person = saved.getOriginator().getPerson();
-        for (int i = 0; i < person.getContactMethods().size(); i++)
+
+        for (int j = 0; j < saved.getPersonAssociations().size(); j++)
         {
-            ContactMethod contact = person.getContactMethods().get(i);
-            if (contact != null)
+            Person person = saved.getPersonAssociations().get(j).getPerson();
+
+            for (int i = 0; i < person.getContactMethods().size(); i++)
             {
-                if (contact.getType() == null)
+                ContactMethod contact = person.getContactMethods().get(i);
+                if (contact != null)
                 {
-                    if (i == 0)
+                    if (contact.getType() == null)
                     {
-                        contact.setType("phone");
+                        if (i == 0)
+                        {
+                            contact.setType("phone");
+                        }
+                        else if (i == 1)
+                        {
+                            contact.setType("fax");
+                        }
+                        else
+                        {
+                            contact.setType("email");
+                        }
                     }
-                    else if (i == 1)
+                    String type = contact.getType();
+                    String value = contact.getValue();
+                    if (type.toLowerCase().equals("phone") && value != null && !value.isEmpty())
                     {
-                        contact.setType("fax");
+                        person.setDefaultPhone(contact);
                     }
-                    else
+                    else if (type.toLowerCase().equals("email") && value != null)
                     {
-                        contact.setType("email");
+                        person.setDefaultEmail(contact);
                     }
-                }
-                String type = contact.getType();
-                String value = contact.getValue();
-                if (type.toLowerCase().equals("phone") && value != null && !value.isEmpty())
-                {
-                    person.setDefaultPhone(contact);
-                }
-                else if (type.toLowerCase().equals("email") && value != null)
-                {
-                    person.setDefaultEmail(contact);
                 }
             }
         }
@@ -208,15 +213,19 @@ public class SARService
 
     private void setDefaultAddressType(CaseFile saved)
     {
-        Person person = saved.getOriginator().getPerson();
-        if (person.getAddresses().size() != 0)
+        for (int j = 0; j < saved.getPersonAssociations().size(); j++)
         {
-            PostalAddress address = person.getAddresses().get(0);
-            if (address.getType() == null)
+            Person person = saved.getPersonAssociations().get(j).getPerson();
+            if (person.getAddresses().size() != 0)
             {
-                address.setType("Business");
+                PostalAddress address = person.getAddresses().get(0);
+                if (address.getType() == null)
+                {
+                    address.setType("Business");
+                }
             }
         }
+
     }
 
     public CaseFile createReference(CaseFile in, CaseFile originalRequest)

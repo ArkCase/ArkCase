@@ -3,7 +3,7 @@ package gov.privacy.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -41,22 +41,9 @@ import java.util.Map;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PortalSubjectAccessRequest implements Serializable
 {
-
     private static final long serialVersionUID = 8626934331237410483L;
 
     private String originalRequestNumber;
-
-    private String prefix;
-
-    private String firstName;
-
-    private String middleName;
-
-    private String lastName;
-
-    private String position;
-
-    private String email;
 
     private String requestType;
 
@@ -64,37 +51,9 @@ public class PortalSubjectAccessRequest implements Serializable
 
     private String deliveryMethodOfResponse;
 
-    private String address1;
-
-    private String address2;
-
-    private String city;
-
-    private String state;
-
-    private String country;
-
-    private String zip;
-
-    private String subject;
+    private String details;
 
     private String title;
-
-    private LocalDateTime recordSearchDateFrom;
-
-    private LocalDateTime recordSearchDateTo;
-
-    private double processingFeeWaive;
-
-    private boolean requestFeeWaive;
-
-    private String requestFeeWaiveReason;
-
-    private String payFee;
-
-    private boolean requestExpedite;
-
-    private String requestExpediteReason;
 
     private Map<String, List<PortalSARFile>> files;
 
@@ -102,418 +61,80 @@ public class PortalSubjectAccessRequest implements Serializable
 
     private String userId;
 
-    private String phone;
+    private PortalPersonDTO subject;
 
-    private String organization;
+    private PortalPersonDTO requester;
 
-    private String addressType;
+    private boolean swornStatement = false;
 
-    /**
-     * @return the prefix
-     */
-    public String getPrefix()
+    private boolean understandProcessingRequirementStatement = false;
+
+    private boolean informationAgreementStatement = false;
+
+    private boolean accurateAndAuthorizedStatement = false;
+
+    private String signature;
+
+    private LocalDate signatureDate;
+
+    public String getOriginalRequestNumber()
     {
-        return prefix;
+        return originalRequestNumber;
     }
 
-    /**
-     * @param prefix
-     *            the prefix to set
-     */
-    public void setPrefix(String prefix)
+    public void setOriginalRequestNumber(String originalRequestNumber)
     {
-        this.prefix = prefix;
+        this.originalRequestNumber = originalRequestNumber;
     }
 
-    /**
-     * @return the firstName
-     */
-    public String getFirstName()
-    {
-        return firstName;
-    }
-
-    /**
-     * @param firstName
-     *            the firstName to set
-     */
-    public void setFirstName(String firstName)
-    {
-        this.firstName = firstName;
-    }
-
-    /**
-     * @return the middleName
-     */
-    public String getMiddleName()
-    {
-        return middleName;
-    }
-
-    /**
-     * @param middleName
-     *            the middleName to set
-     */
-    public void setMiddleName(String middleName)
-    {
-        this.middleName = middleName;
-    }
-
-    /**
-     * @return the lastName
-     */
-    public String getLastName()
-    {
-        return lastName;
-    }
-
-    /**
-     * @param lastName
-     *            the lastName to set
-     */
-    public void setLastName(String lastName)
-    {
-        this.lastName = lastName;
-    }
-
-    /**
-     * @return the title
-     */
-    public String getTitle()
-    {
-        return title;
-    }
-
-    /**
-     * @param title
-     *            the title to set
-     */
-    public void setTitle(String title)
-    {
-        this.title = title;
-    }
-
-    /**
-     * @return the email
-     */
-    public String getEmail()
-    {
-        return email;
-    }
-
-    /**
-     * @param email
-     *            the email to set
-     */
-    public void setEmail(String email)
-    {
-        this.email = email;
-    }
-
-    /**
-     * @return the requestType
-     */
     public String getRequestType()
     {
         return requestType;
     }
 
-    /**
-     * @param requestType
-     *            the requestType to set
-     */
     public void setRequestType(String requestType)
     {
         this.requestType = requestType;
     }
 
-    /**
-     * @return the requestCategory
-     */
     public String getRequestCategory()
     {
         return requestCategory;
     }
 
-    /**
-     * @param requestCategory
-     *            the requestCategory to set
-     */
     public void setRequestCategory(String requestCategory)
     {
         this.requestCategory = requestCategory;
     }
 
-    /**
-     * @return the deliveryMethodOfResponse
-     */
     public String getDeliveryMethodOfResponse()
     {
         return deliveryMethodOfResponse;
     }
 
-    /**
-     * @param deliveryMethodOfResponse
-     *            the deliveryMethodOfResponse to set
-     */
     public void setDeliveryMethodOfResponse(String deliveryMethodOfResponse)
     {
         this.deliveryMethodOfResponse = deliveryMethodOfResponse;
     }
 
-    /**
-     * @return the address1
-     */
-    public String getAddress1()
+    public String getDetails()
     {
-        return address1;
+        return details;
     }
 
-    /**
-     * @param address1
-     *            the address1 to set
-     */
-    public void setAddress1(String address1)
+    public void setDetails(String details)
     {
-        this.address1 = address1;
+        this.details = details;
     }
 
-    /**
-     * @return the address2
-     */
-    public String getAddress2()
+    public String getTitle()
     {
-        return address2;
+        return title;
     }
 
-    /**
-     * @param address2
-     *            the address2 to set
-     */
-    public void setAddress2(String address2)
+    public void setTitle(String title)
     {
-        this.address2 = address2;
-    }
-
-    /**
-     * @return the city
-     */
-    public String getCity()
-    {
-        return city;
-    }
-
-    /**
-     * @param city
-     *            the city to set
-     */
-    public void setCity(String city)
-    {
-        this.city = city;
-    }
-
-    /**
-     * @return the state
-     */
-    public String getState()
-    {
-        return state;
-    }
-
-    /**
-     * @param state
-     *            the state to set
-     */
-    public void setState(String state)
-    {
-        this.state = state;
-    }
-
-    /**
-     * @return the country
-     */
-    public String getCountry()
-    {
-        return country;
-    }
-
-    /**
-     * @param country
-     *            the country to set
-     */
-    public void setCountry(String country)
-    {
-        this.country = country;
-    }
-
-    /**
-     * @return the zip
-     */
-    public String getZip()
-    {
-        return zip;
-    }
-
-    /**
-     * @param zip
-     *            the zip to set
-     */
-    public void setZip(String zip)
-    {
-        this.zip = zip;
-    }
-
-    /**
-     * @return the subject
-     */
-    public String getSubject()
-    {
-        return subject;
-    }
-
-    /**
-     * @param subject
-     *            the subject to set
-     */
-    public void setSubject(String subject)
-    {
-        this.subject = subject;
-    }
-
-    /**
-     * @return the recordSearchDateFrom
-     */
-    public LocalDateTime getRecordSearchDateFrom()
-    {
-        return recordSearchDateFrom;
-    }
-
-    /**
-     * @param recordSearchDateFrom
-     *            the recordSearchDateFrom to set
-     */
-    public void setRecordSearchDateFrom(LocalDateTime recordSearchDateFrom)
-    {
-        this.recordSearchDateFrom = recordSearchDateFrom;
-    }
-
-    /**
-     * @return the recordSearchDateTo
-     */
-    public LocalDateTime getRecordSearchDateTo()
-    {
-        return recordSearchDateTo;
-    }
-
-    /**
-     * @param recordSearchDateTo
-     *            the recordSearchDateTo to set
-     */
-    public void setRecordSearchDateTo(LocalDateTime recordSearchDateTo)
-    {
-        this.recordSearchDateTo = recordSearchDateTo;
-    }
-
-    /**
-     * @return the processingFeeWaive
-     */
-    public double getProcessingFeeWaive()
-    {
-        return processingFeeWaive;
-    }
-
-    /**
-     * @param processingFeeWaive
-     *            the processingFeeWaive to set
-     */
-    public void setProcessingFeeWaive(double processingFeeWaive)
-    {
-        this.processingFeeWaive = processingFeeWaive;
-    }
-
-    /**
-     * @return the requestFeeWaive
-     */
-    public boolean isRequestFeeWaive()
-    {
-        return requestFeeWaive;
-    }
-
-    /**
-     * @param requestFeeWaive
-     *            the requestFeeWaive to set
-     */
-    public void setRequestFeeWaive(boolean requestFeeWaive)
-    {
-        this.requestFeeWaive = requestFeeWaive;
-    }
-
-    /**
-     * @return the requestFeeWaiveReason
-     */
-    public String getRequestFeeWaiveReason()
-    {
-        return requestFeeWaiveReason;
-    }
-
-    /**
-     * @param requestFeeWaiveReason
-     *            the requestFeeWaiveReason to set
-     */
-    public void setRequestFeeWaiveReason(String requestFeeWaiveReason)
-    {
-        this.requestFeeWaiveReason = requestFeeWaiveReason;
-    }
-
-    /**
-     * @return the payFee
-     */
-    public String getPayFee()
-    {
-        return payFee;
-    }
-
-    /**
-     * @param payFee
-     *            the payFee to set
-     */
-    public void setPayFee(String payFee)
-    {
-        this.payFee = payFee;
-    }
-
-    /**
-     * @return the requestExpedite
-     */
-    public boolean isRequestExpedite()
-    {
-        return requestExpedite;
-    }
-
-    /**
-     * @param requestExpedite
-     *            the requestExpedite to set
-     */
-    public void setRequestExpedite(boolean requestExpedite)
-    {
-        this.requestExpedite = requestExpedite;
-    }
-
-    /**
-     * @return the requestExpediteReason
-     */
-    public String getRequestExpediteReason()
-    {
-        return requestExpediteReason;
-    }
-
-    /**
-     * @param requestExpediteReason
-     *            the requestExpediteReason to set
-     */
-    public void setRequestExpediteReason(String requestExpediteReason)
-    {
-        this.requestExpediteReason = requestExpediteReason;
+        this.title = title;
     }
 
     public Map<String, List<PortalSARFile>> getFiles()
@@ -526,124 +147,127 @@ public class PortalSubjectAccessRequest implements Serializable
         this.files = files;
     }
 
-    /**
-     * @return the ipAddress
-     */
     public String getIpAddress()
     {
         return ipAddress;
     }
 
-    /**
-     * @param ipAddress
-     *            the ipAddress to set
-     */
     public void setIpAddress(String ipAddress)
     {
         this.ipAddress = ipAddress;
     }
 
-    /**
-     * @return the userId
-     */
     public String getUserId()
     {
         return userId;
     }
 
-    /**
-     * @param userId
-     *            the userId to set
-     */
     public void setUserId(String userId)
     {
         this.userId = userId;
     }
 
-    /**
-     *
-     * @return person position
-     */
-
-    public String getPosition()
+    public PortalPersonDTO getSubject()
     {
-        return position;
+        return subject;
     }
 
-    /**
-     *
-     * @param position
-     */
-    public void setPosition(String position)
+    public void setSubject(PortalPersonDTO subject)
     {
-        this.position = position;
+        this.subject = subject;
     }
 
-    /**
-     * @return the originalRequestNumber
-     */
-
-    public String getOriginalRequestNumber()
+    public PortalPersonDTO getRequester()
     {
-        return originalRequestNumber;
+        return requester;
     }
 
-    /**
-     * @param originalRequestNumber
-     *            the originalRequestNumber to set
-     */
-
-    public void setOriginalRequestNumber(String originalRequestNumber)
+    public void setRequester(PortalPersonDTO requester)
     {
-        this.originalRequestNumber = originalRequestNumber;
+        this.requester = requester;
     }
 
-    public String getPhone()
+    public boolean isSwornStatement()
     {
-        return phone;
+        return swornStatement;
     }
 
-    public void setPhone(String phone)
+    public void setSwornStatement(boolean swornStatement)
     {
-        this.phone = phone;
+        this.swornStatement = swornStatement;
     }
 
-    public String getOrganization()
+    public boolean isUnderstandProcessingRequirementStatement()
     {
-        return organization;
+        return understandProcessingRequirementStatement;
     }
 
-    public void setOrganization(String organization)
+    public void setUnderstandProcessingRequirementStatement(boolean understandProcessingRequirementStatement)
     {
-        this.organization = organization;
+        this.understandProcessingRequirementStatement = understandProcessingRequirementStatement;
     }
 
-    public String getAddressType() 
+    public boolean isInformationAgreementStatement()
     {
-        return addressType;
+        return informationAgreementStatement;
     }
 
-    public void setAddressType(String addressType) 
+    public void setInformationAgreementStatement(boolean informationAgreementStatement)
     {
-        this.addressType = addressType;
+        this.informationAgreementStatement = informationAgreementStatement;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
+    public boolean isAccurateAndAuthorizedStatement()
+    {
+        return accurateAndAuthorizedStatement;
+    }
+
+    public void setAccurateAndAuthorizedStatement(boolean accurateAndAuthorizedStatement)
+    {
+        this.accurateAndAuthorizedStatement = accurateAndAuthorizedStatement;
+    }
+
+    public String getSignature()
+    {
+        return signature;
+    }
+
+    public void setSignature(String signature)
+    {
+        this.signature = signature;
+    }
+
+    public LocalDate getSignatureDate()
+    {
+        return signatureDate;
+    }
+
+    public void setSignatureDate(LocalDate signatureDate)
+    {
+        this.signatureDate = signatureDate;
+    }
+
     @Override
     public String toString()
     {
-        return "PortalSAR [originalRequestNumber=" + originalRequestNumber + ", prefix=" + prefix + ", firstName=" + firstName
-                + ", middleName=" + middleName + ", lastName=" + lastName + ", position=" + position + ", title=" + title + ", email="
-                + email + ", phone=" + phone + ", organization=" + organization + ", requestType="
-                + requestType + ", requestCategory=" + requestCategory + ", deliveryMethodOfResponse=" + deliveryMethodOfResponse
-                + ", address1=" + address1 + ", address2=" + address2 + ", city=" + city + ", state=" + state + ", country=" + country
-                + ", zip=" + zip + ", addressType=" + addressType + ", subject=" + subject + ", recordSearchDateFrom=" + recordSearchDateFrom + ", recordSearchDateTo="
-                + recordSearchDateTo + ", processingFeeWaive=" + processingFeeWaive + ", requestFeeWaive=" + requestFeeWaive
-                + ", requestFeeWaiveReason=" + requestFeeWaiveReason + ", payFee=" + payFee + ", requestExpedite=" + requestExpedite
-                + ", files=" + files + ", ipAddress=" + ipAddress + ", userId=" + userId + "]";
+        return "PortalSubjectAccessRequest{" +
+                "originalRequestNumber='" + originalRequestNumber + '\'' +
+                ", requestType='" + requestType + '\'' +
+                ", requestCategory='" + requestCategory + '\'' +
+                ", deliveryMethodOfResponse='" + deliveryMethodOfResponse + '\'' +
+                ", details='" + details + '\'' +
+                ", title='" + title + '\'' +
+                ", files=" + files +
+                ", ipAddress='" + ipAddress + '\'' +
+                ", userId='" + userId + '\'' +
+                ", subject=" + subject +
+                ", requester=" + requester +
+                ", swornStatement=" + swornStatement +
+                ", understandProcessingRequirementStatement=" + understandProcessingRequirementStatement +
+                ", informationAgreementStatement=" + informationAgreementStatement +
+                ", accurateAndAuthorizedStatement=" + accurateAndAuthorizedStatement +
+                ", signature='" + signature + '\'' +
+                ", signatureDate=" + signatureDate +
+                '}';
     }
-
 }

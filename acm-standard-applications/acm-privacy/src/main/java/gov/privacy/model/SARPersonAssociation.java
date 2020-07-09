@@ -43,9 +43,9 @@ import javax.persistence.Entity;
  *
  */
 @Entity
-@DiscriminatorValue("gov.privacy.model.SARRequesterAssociation")
+@DiscriminatorValue("gov.privacy.model.SARPersonAssociation")
 @JsonIdentityInfo(generator = JSOGGenerator.class)
-public class SARRequesterAssociation extends PersonAssociation
+public class SARPersonAssociation extends PersonAssociation
 {
 
     private static final long serialVersionUID = -6645831984920786486L;
