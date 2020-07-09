@@ -57,11 +57,7 @@ public class PortalSARStatus implements Serializable
 
     private String queue;
 
-    private Boolean isDenied;
-
     private Boolean isPublic;
-
-    private Boolean withdrawRequested;
 
     private String requestType;
 
@@ -71,7 +67,11 @@ public class PortalSARStatus implements Serializable
 
     private String requesterEmail;
 
-    private String dispositionValue;
+    private String subjectFirstName;
+
+    private String subjectLastName;
+
+    private String subjectEmail;
 
     @JsonSerialize(using = JsonDateSerializer.class)
     private Date updateDate;
@@ -153,16 +153,6 @@ public class PortalSARStatus implements Serializable
         this.queue = queue;
     }
 
-    public Boolean getIsDenied()
-    {
-        return isDenied;
-    }
-
-    public void setIsDenied(Boolean denied)
-    {
-        isDenied = denied;
-    }
-
     public String getRequesterFirstName()
     {
         return requesterFirstName;
@@ -193,20 +183,6 @@ public class PortalSARStatus implements Serializable
         this.requesterEmail = requesterEmail;
     }
 
-    public String getDispositionValue() { return dispositionValue; }
-
-    public void setDispositionValue(String dispositionValue) { this.dispositionValue = dispositionValue; }
-
-    public Boolean getWithdrawRequested()
-    {
-        return withdrawRequested;
-    }
-
-    public void setWithdrawRequested(Boolean withdrawRequested)
-    {
-        this.withdrawRequested = withdrawRequested;
-    }
-
     public String getRequestTitle()
     {
         return requestTitle;
@@ -227,24 +203,55 @@ public class PortalSARStatus implements Serializable
         this.originalRequestId = originalRequestId;
     }
 
+    public String getSubjectFirstName()
+    {
+        return subjectFirstName;
+    }
+
+    public void setSubjectFirstName(String subjectFirstName)
+    {
+        this.subjectFirstName = subjectFirstName;
+    }
+
+    public String getSubjectLastName()
+    {
+        return subjectLastName;
+    }
+
+    public void setSubjectLastName(String subjectLastName)
+    {
+        this.subjectLastName = subjectLastName;
+    }
+
+    public String getSubjectEmail()
+    {
+        return subjectEmail;
+    }
+
+    public void setSubjectEmail(String subjectEmail)
+    {
+        this.subjectEmail = subjectEmail;
+    }
+
     @Override
     public String toString()
     {
-        return "PortalSARStatus[" +
+        return "PortalSARStatus{" +
                 "requestId='" + requestId + '\'' +
+                ", originalRequestId='" + originalRequestId + '\'' +
                 ", requestTitle='" + requestTitle + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", requestStatus='" + requestStatus + '\'' +
                 ", queue='" + queue + '\'' +
-                ", isDenied=" + isDenied +
                 ", isPublic=" + isPublic +
-                ", withdrawRequested=" + withdrawRequested +
                 ", requestType='" + requestType + '\'' +
                 ", requesterFirstName='" + requesterFirstName + '\'' +
                 ", requesterLastName='" + requesterLastName + '\'' +
                 ", requesterEmail='" + requesterEmail + '\'' +
-                ", dispositionValue='" + dispositionValue + '\'' +
+                ", subjectFirstName='" + subjectFirstName + '\'' +
+                ", subjectLastName='" + subjectLastName + '\'' +
+                ", subjectEmail='" + subjectEmail + '\'' +
                 ", updateDate=" + updateDate +
-                ']';
+                '}';
     }
 }

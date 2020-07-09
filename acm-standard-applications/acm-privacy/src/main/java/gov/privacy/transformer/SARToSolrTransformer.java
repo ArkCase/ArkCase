@@ -145,6 +145,15 @@ public class SARToSolrTransformer extends CaseFileToSolrTransformer
             additionalProperties.put("requester_name_s", "");
         }
 
+        if (requestIn.getSubject() != null && requestIn.getSubject().getPerson() != null)
+        {
+            additionalProperties.put("subject_name_s", requestIn.getSubject().getPerson().getFullName());
+        }
+        else
+        {
+            additionalProperties.put("subject_name_s", "");
+        }
+
         additionalProperties.put("queue_enter_date_tdt", requestIn.getQueueEnterDate());
 
         additionalProperties.put("request_agency_s", requestIn.getComponentAgency());

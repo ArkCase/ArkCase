@@ -85,13 +85,15 @@ import java.util.stream.Collectors;
 
 import gov.privacy.dao.PortalSARPersonDao;
 import gov.privacy.dao.SARDao;
+import gov.privacy.model.PortalPersonDTO;
+import gov.privacy.model.PortalPostalAddressDTO;
 import gov.privacy.model.PortalSARFile;
 import gov.privacy.model.PortalSARPerson;
 import gov.privacy.model.PortalSARReadingRoom;
 import gov.privacy.model.PortalSARStatus;
 import gov.privacy.model.PortalSubjectAccessRequest;
 import gov.privacy.model.SARPerson;
-import gov.privacy.model.SARRequesterAssociation;
+import gov.privacy.model.SARPersonAssociation;
 import gov.privacy.model.SubjectAccessRequest;
 import gov.privacy.model.WithdrawRequest;
 
@@ -187,37 +189,43 @@ public class PortalRequestService
     public void populateResponseRequest(SubjectAccessRequest subjectAccessRequest, PortalSubjectAccessRequest portalSubjectAccessRequest)
     {
 
-        SARPerson person = (SARPerson) subjectAccessRequest.getOriginator().getPerson();
         portalSubjectAccessRequest.setOriginalRequestNumber(subjectAccessRequest.getCaseNumber());
         portalSubjectAccessRequest.setTitle(subjectAccessRequest.getTitle());
-        portalSubjectAccessRequest.setSubject(subjectAccessRequest.getDetails());
+        portalSubjectAccessRequest.setDetails(subjectAccessRequest.getDetails());
         portalSubjectAccessRequest.setRequestType(subjectAccessRequest.getRequestType());
-        portalSubjectAccessRequest.setPrefix(person.getTitle());
-        portalSubjectAccessRequest.setFirstName(person.getGivenName());
-        portalSubjectAccessRequest.setMiddleName(person.getMiddleName());
-        portalSubjectAccessRequest.setLastName(person.getFamilyName());
-        portalSubjectAccessRequest.setPosition(person.getPosition());
-        portalSubjectAccessRequest.setOrganization(person.getCompany());
 
-        if (person.getDefaultEmail() != null)
-        {
-            portalSubjectAccessRequest.setEmail(person.getDefaultEmail().getValue());
-        }
 
-        if (person.getDefaultPhone() != null)
-        {
-            portalSubjectAccessRequest.setPhone(person.getDefaultPhone().getValue());
-        }
+        PortalPersonDTO requesterDTO = populatePortalPersonDTO(subjectAccessRequest, "Requester");
+        PortalPersonDTO subjectDTO = populatePortalPersonDTO(subjectAccessRequest, "Subject");
+
+        portalSubjectAccessRequest.setRequester(requesterDTO);
+        portalSubjectAccessRequest.setRequester(subjectDTO);
+    }
+
+    private PortalPersonDTO populatePortalPersonDTO(SubjectAccessRequest subjectAccessRequest, String personType)
+    {
+        SARPerson person = personType.equalsIgnoreCase("Requester") ? (SARPerson) subjectAccessRequest.getOriginator().getPerson()
+                : (SARPerson) subjectAccessRequest.getSubject().getPerson();
+        PortalPersonDTO portalPersonDTO = new PortalPersonDTO();
+        portalPersonDTO.setPrefix(person.getTitle());
+        portalPersonDTO.setFirstName(person.getGivenName());
+        portalPersonDTO.setMiddleName(person.getMiddleName());
+        portalPersonDTO.setLastName(person.getFamilyName());
+        portalPersonDTO.setPosition(person.getPosition());
+        portalPersonDTO.setOrganization(person.getCompany());
 
         if (!person.getAddresses().isEmpty())
         {
-            portalSubjectAccessRequest.setCity(person.getAddresses().get(0).getCity());
-            portalSubjectAccessRequest.setCountry(person.getAddresses().get(0).getCountry());
-            portalSubjectAccessRequest.setState(person.getAddresses().get(0).getState());
-            portalSubjectAccessRequest.setZip(person.getAddresses().get(0).getZip());
-            portalSubjectAccessRequest.setAddress1(person.getAddresses().get(0).getStreetAddress());
-            portalSubjectAccessRequest.setAddress2(person.getAddresses().get(0).getStreetAddress2());
+            PortalPostalAddressDTO portalAddressDTO = new PortalPostalAddressDTO();
+            portalAddressDTO.setCity(person.getAddresses().get(0).getCity());
+            portalAddressDTO.setCountry(person.getAddresses().get(0).getCountry());
+            portalAddressDTO.setState(person.getAddresses().get(0).getState());
+            portalAddressDTO.setZip(person.getAddresses().get(0).getZip());
+            portalAddressDTO.setStreetAddress(person.getAddresses().get(0).getStreetAddress());
+            portalAddressDTO.setStreetAddress(person.getAddresses().get(0).getStreetAddress2());
+            portalPersonDTO.setAddress(portalAddressDTO);
         }
+        return portalPersonDTO;
     }
 
     public List<PortalSARReadingRoom> getReadingRoom(PortalSARReadingRoom readingRoom, Authentication auth)
@@ -431,7 +439,7 @@ public class PortalRequestService
 
     private void createTaskPersonAssociation(Authentication auth, SubjectAccessRequest request, AcmTask task)
     {
-        SARRequesterAssociation personAssociation = new SARRequesterAssociation();
+        SARPersonAssociation personAssociation = new SARPersonAssociation();
 
         SARPerson person = (SARPerson) request.getOriginator().getPerson();
 

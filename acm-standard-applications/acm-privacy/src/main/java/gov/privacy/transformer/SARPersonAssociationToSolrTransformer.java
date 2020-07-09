@@ -37,20 +37,20 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Map;
 
-import gov.privacy.model.SARRequesterAssociation;
+import gov.privacy.model.SARPersonAssociation;
 
 /**
  * @author Vladimir Cherepnalkovski <vladimir.cherepnalkovski@armedia.com> on Jun, 2020
  *
  */
-public class SARRequesterAssociationToSolrTransformer extends PersonAssociationToSolrTransformer
+public class SARPersonAssociationToSolrTransformer extends PersonAssociationToSolrTransformer
 {
     private final Logger log = LogManager.getLogger(getClass());
 
     @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
-        return SARRequesterAssociation.class.equals(acmObjectType);
+        return SARPersonAssociation.class.equals(acmObjectType);
     }
 
     @Override
@@ -58,14 +58,14 @@ public class SARRequesterAssociationToSolrTransformer extends PersonAssociationT
     {
         SolrAdvancedSearchDocument solr = null;
 
-        if (in instanceof SARRequesterAssociation)
+        if (in instanceof SARPersonAssociation)
         {
-            SARRequesterAssociation requesterAssociationIn = (SARRequesterAssociation) in;
-            solr = super.toSolrAdvancedSearch(requesterAssociationIn);
+            SARPersonAssociation sarPersonAssociation = (SARPersonAssociation) in;
+            solr = super.toSolrAdvancedSearch(sarPersonAssociation);
 
             if (solr != null)
             {
-                mapRequestProperties(requesterAssociationIn, solr.getAdditionalProperties());
+                mapRequestProperties(sarPersonAssociation, solr.getAdditionalProperties());
             }
 
             return solr;
@@ -82,14 +82,14 @@ public class SARRequesterAssociationToSolrTransformer extends PersonAssociationT
     {
         SolrDocument solr = null;
 
-        if (in instanceof SARRequesterAssociation)
+        if (in instanceof SARPersonAssociation)
         {
-            SARRequesterAssociation requesterAssociationIn = (SARRequesterAssociation) in;
-            solr = super.toSolrQuickSearch(requesterAssociationIn);
+            SARPersonAssociation sarPersonAssociation = (SARPersonAssociation) in;
+            solr = super.toSolrQuickSearch(sarPersonAssociation);
 
             if (solr != null)
             {
-                mapRequestProperties(requesterAssociationIn, solr.getAdditionalProperties());
+                mapRequestProperties(sarPersonAssociation, solr.getAdditionalProperties());
             }
 
             return solr;
@@ -104,11 +104,11 @@ public class SARRequesterAssociationToSolrTransformer extends PersonAssociationT
     @Override
     public Class<?> getAcmObjectTypeSupported()
     {
-        return SARRequesterAssociation.class;
+        return SARPersonAssociation.class;
     }
 
-    private void mapRequestProperties(SARRequesterAssociation requesterAssociationIn, Map<String, Object> additionalProperties)
+    private void mapRequestProperties(SARPersonAssociation sarPersonAssociation, Map<String, Object> additionalProperties)
     {
-        additionalProperties.put("requester_source_s", requesterAssociationIn.getRequesterSource());
+        additionalProperties.put("requester_source_s", sarPersonAssociation.getRequesterSource());
     }
 }

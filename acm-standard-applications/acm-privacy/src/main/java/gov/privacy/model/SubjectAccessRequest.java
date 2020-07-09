@@ -64,8 +64,6 @@ import java.util.Optional;
         @NamedQuery(name = REQUESTS_BY_STATUS, query = "SELECT sar FROM SubjectAccessRequest sar WHERE UPPER(sar.status) IN :requestStatuses") })
 public class SubjectAccessRequest extends CaseFile implements SARObject
 {
-    // TODO : Add requestCategory to db
-
     public static final String PURGE_HOLD_QUEUE = "SubjectAccessRequest.purgeHoldQueue";
     public static final String REQUESTS_BY_STATUS = "SubjectAccessRequest.requestsByStatus";
     private static final long serialVersionUID = -8883225846554730667L;
@@ -111,6 +109,26 @@ public class SubjectAccessRequest extends CaseFile implements SARObject
 
     @Column(name = "sar_delivery_method_of_response")
     private String deliveryMethodOfResponse;
+
+    @Column(name = "sar_sworn_statement")
+    private boolean swornStatement = false;
+
+    @Column(name = "sar_understand_processing_requirement_statement")
+    private boolean understandProcessingRequirementStatement = false;
+
+    @Column(name = "sar_information_agreement_statement")
+    private boolean informationAgreementStatement = false;
+
+    @Column(name = "sar_accurate_and_authorized_statement")
+    private boolean accurateAndAuthorizedStatement = false;
+
+    @Column(name = "sar_signature")
+    private String signature;
+
+    @Column(name = "sar_signature_date")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @Convert(converter = LocalDateConverter.class)
+    private LocalDate signatureDate;
 
     @Transient
     private String originalRequestNumber;
@@ -290,6 +308,66 @@ public class SubjectAccessRequest extends CaseFile implements SARObject
         this.deliveryMethodOfResponse = deliveryMethodOfResponse;
     }
 
+    public boolean isSwornStatement()
+    {
+        return swornStatement;
+    }
+
+    public void setSwornStatement(boolean swornStatement)
+    {
+        this.swornStatement = swornStatement;
+    }
+
+    public boolean isUnderstandProcessingRequirementStatement()
+    {
+        return understandProcessingRequirementStatement;
+    }
+
+    public void setUnderstandProcessingRequirementStatement(boolean understandProcessingRequirementStatement)
+    {
+        this.understandProcessingRequirementStatement = understandProcessingRequirementStatement;
+    }
+
+    public boolean isInformationAgreementStatement()
+    {
+        return informationAgreementStatement;
+    }
+
+    public void setInformationAgreementStatement(boolean informationAgreementStatement)
+    {
+        this.informationAgreementStatement = informationAgreementStatement;
+    }
+
+    public boolean isAccurateAndAuthorizedStatement()
+    {
+        return accurateAndAuthorizedStatement;
+    }
+
+    public void setAccurateAndAuthorizedStatement(boolean accurateAndAuthorizedStatement)
+    {
+        this.accurateAndAuthorizedStatement = accurateAndAuthorizedStatement;
+    }
+
+    public String getSignature()
+    {
+        return signature;
+    }
+
+    public void setSignature(String signature)
+    {
+        this.signature = signature;
+    }
+
+    public LocalDate getSignatureDate()
+    {
+        return signatureDate;
+    }
+
+    public void setSignatureDate(LocalDate signatureDate)
+    {
+        this.signatureDate = signatureDate;
+    }
+
     public PersonAssociation getSubject()
     {
         if (getPersonAssociations() == null)
@@ -368,13 +446,14 @@ public class SubjectAccessRequest extends CaseFile implements SARObject
                 ", recordSearchDateTo=" + recordSearchDateTo +
                 ", requestCategory='" + requestCategory + '\'' +
                 ", deliveryMethodOfResponse='" + deliveryMethodOfResponse + '\'' +
+                ", swornStatement=" + swornStatement +
+                ", understandProcessingRequirementStatement=" + understandProcessingRequirementStatement +
+                ", informationAgreementStatement=" + informationAgreementStatement +
+                ", accurateAndAuthorizedStatement=" + accurateAndAuthorizedStatement +
+                ", signature='" + signature + '\'' +
+                ", signatureDate=" + signatureDate +
                 ", originalRequestNumber='" + originalRequestNumber + '\'' +
                 ", SARConfiguration=" + SARConfiguration +
                 '}';
-    }
-
-    public static long getSerialVersionUID()
-    {
-        return serialVersionUID;
     }
 }

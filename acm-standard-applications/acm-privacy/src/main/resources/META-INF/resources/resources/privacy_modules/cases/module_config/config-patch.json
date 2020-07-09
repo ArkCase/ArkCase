@@ -12,7 +12,7 @@
     {
         "path": "/personAssociationClassName",
         "op": "replace",
-        "value": "gov.privacy.model.SARRequesterAssociation"
+        "value": "gov.privacy.model.SARPersonAssociation"
     },
     {
         "path": "/configurable",
