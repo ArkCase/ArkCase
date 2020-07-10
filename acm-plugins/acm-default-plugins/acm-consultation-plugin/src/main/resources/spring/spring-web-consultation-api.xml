@@ -32,7 +32,6 @@
 
     <bean id="queryConsultationChildrenTasksAPIController"
           class="com.armedia.acm.plugins.consultation.web.api.QueryConsultationChildrenTasksAPIController">
-        <property name="childDocumentsSearchService" ref="childDocumentsSearchService"/>
         <property name="consultationTasksService" ref="consultationTasksService"/>
     </bean>
 

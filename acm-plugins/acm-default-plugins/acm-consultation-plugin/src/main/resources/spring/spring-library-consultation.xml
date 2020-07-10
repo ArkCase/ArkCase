@@ -120,11 +120,6 @@
         </property>
     </bean>
 
-    <bean id="changeConsultationStatusOnBuckslipEventListener"
-          class="com.armedia.acm.plugins.consultation.listener.ChangeConsultationStatusOnBuckslipEventListener">
-        <property name="consultationDao" ref="consultationDao"/>
-    </bean>
-
     <bean id="consultationBillingInvoiceCreatedHandler"
           class="com.armedia.acm.plugins.consultation.listener.ConsultationBillingInvoiceCreatedHandler">
         <property name="consultationBillingInvoiceDocumentGenerator" ref="billingInvoiceDocumentGenerator"/>

@@ -109,10 +109,13 @@ public class CaseFileAccessControlRulesTest
         caseFile.getParticipants().get(0).getPrivileges().stream().forEach(pr -> log.info(
                 "type: {}, action: {}", pr.getAccessType(), pr.getObjectAction()));
 
-        assertEquals(3, caseFile.getParticipants().get(0).getPrivileges().size());
+        assertEquals(4, caseFile.getParticipants().get(0).getPrivileges().size());
 
         assertEquals(1, caseFile.getParticipants().get(0).getPrivileges().stream()
                 .filter(app -> app.getAccessType().equals("deny") && app.getObjectAction().equals("read")).count());
+
+        assertEquals(1, caseFile.getParticipants().get(0).getPrivileges().stream()
+                .filter(app -> app.getAccessType().equals("grant") && app.getObjectAction().equals("uploadOrReplaceFile")).count());
 
         assertEquals(1, caseFile.getParticipants().get(0).getPrivileges().stream()
                 .filter(app -> app.getAccessType().equals("grant") && app.getObjectAction().equals("subscribe")).count());
@@ -139,10 +142,13 @@ public class CaseFileAccessControlRulesTest
         caseFile.getParticipants().get(0).getPrivileges().stream().forEach(pr -> log.info(
                 "type: {}, action: {}", pr.getAccessType(), pr.getObjectAction()));
 
-        assertEquals(3, caseFile.getParticipants().get(0).getPrivileges().size());
+        assertEquals(4, caseFile.getParticipants().get(0).getPrivileges().size());
 
         assertEquals(1, caseFile.getParticipants().get(0).getPrivileges().stream()
                 .filter(app -> app.getAccessType().equals("grant") && app.getObjectAction().equals("read")).count());
+
+        assertEquals(1, caseFile.getParticipants().get(0).getPrivileges().stream()
+                .filter(app -> app.getAccessType().equals("grant") && app.getObjectAction().equals("uploadOrReplaceFile")).count());
 
         assertEquals(1, caseFile.getParticipants().get(0).getPrivileges().stream()
                 .filter(app -> app.getAccessType().equals("grant") && app.getObjectAction().equals("subscribe")).count());
