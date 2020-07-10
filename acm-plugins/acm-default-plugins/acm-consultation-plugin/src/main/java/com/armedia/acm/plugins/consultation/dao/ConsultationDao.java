@@ -145,16 +145,7 @@ public class ConsultationDao extends AcmAbstractDao<Consultation> implements Acm
 
         List<Object[]> consultationsGroupedByS = consultationsGroupedByStatus.getResultList();
 
-        List<ConsultationsByStatusDto> result = new ArrayList<>();
-
-        for (Object[] consultationStatus : consultationsGroupedByS)
-        {
-            ConsultationsByStatusDto consultationByS = new ConsultationsByStatusDto();
-            consultationByS.setStatus((String) consultationStatus[0]);
-            consultationByS.setCount(((Number) consultationStatus[1]).intValue());
-            result.add(consultationByS);
-        }
-        return result;
+        return populateConsultationByStatusDTOList(consultationsGroupedByS);
     }
 
     public List<Consultation> getConsultationsByUser(String user) throws AcmObjectNotFoundException
@@ -196,6 +187,11 @@ public class ConsultationDao extends AcmAbstractDao<Consultation> implements Acm
 
         List<Object[]> consultatonGroupedByS = consultatonGroupedByStatus.getResultList();
 
+        return populateConsultationByStatusDTOList(consultatonGroupedByS);
+    }
+
+    private List<ConsultationsByStatusDto> populateConsultationByStatusDTOList(List<Object[]> consultatonGroupedByS)
+    {
         List<ConsultationsByStatusDto> result = new ArrayList<>();
 
         for (Object[] consultatonStatus : consultatonGroupedByS)
@@ -216,7 +212,7 @@ public class ConsultationDao extends AcmAbstractDao<Consultation> implements Acm
 
         query.select(cf);
 
-        query.where(builder.and(builder.like(builder.lower(cf.<String> get("consultatonNumber")), "%" + expression.toLowerCase() + "%")));
+        query.where(builder.and(builder.like(builder.lower(cf.get("consultatonNumber")), "%" + expression.toLowerCase() + "%")));
 
         query.orderBy(builder.asc(cf.get("consultatonNumber")));
 

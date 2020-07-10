@@ -75,11 +75,7 @@ public class ChangeConsultationStatusWorkflowListener implements ApplicationList
         LOG.debug("Calling business rules");
 
         configuration = getFileWorkflowBusinessRule().applyRules(configuration);
-        if (configuration.isBuckslipProcess())
-        {
-            // ChangeConsultationStatusWorkflowListener is not handling buckslip process
-            return;
-        }
+
         LOG.debug("Start process? [{}]", configuration.isStartProcess());
 
         if (configuration.isStartProcess())

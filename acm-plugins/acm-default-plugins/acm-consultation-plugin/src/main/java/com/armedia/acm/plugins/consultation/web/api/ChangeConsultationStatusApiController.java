@@ -60,7 +60,7 @@ import java.util.Map;
 @RequestMapping({ "/api/v1/plugin/consultation", "/api/latest/plugin/consultation" })
 public class ChangeConsultationStatusApiController
 {
-    private Logger log = LogManager.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     private ChangeConsultationStateService changeConsultationStateService;
     private ConsultationEventUtility consultationEventUtility;

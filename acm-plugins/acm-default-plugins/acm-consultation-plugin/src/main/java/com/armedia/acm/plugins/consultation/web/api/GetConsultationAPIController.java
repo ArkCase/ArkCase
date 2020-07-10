@@ -30,6 +30,7 @@ package com.armedia.acm.plugins.consultation.web.api;
 import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.consultation.model.Consultation;
 import com.armedia.acm.plugins.consultation.service.ConsultationService;
 import com.armedia.acm.plugins.consultation.utility.ConsultationEventUtility;
@@ -119,7 +120,7 @@ public class GetConsultationAPIController
     @ResponseBody
     public Consultation findConsultationById(
             @PathVariable(value = "id") Long id,
-            Authentication auth) throws AcmObjectNotFoundException
+            Authentication auth) throws AcmObjectNotFoundException, AcmUserActionFailedException
     {
         try
         {
