@@ -18,6 +18,7 @@ variables:
   #   45 - dev.foia
   #   46 - test.core
   #   47 - test.foia
+  #   58 - dev.privacy
 
   GIT_SSL_NO_VERIFY: "true"
   GIT_STRATEGY: clone
@@ -150,6 +151,21 @@ deploy_backend_foia_dev:
   script:
     # Dev Foia repository ID on ***REMOVED*** is 45
     - 'curl -H "Content-Type: application/json" -X POST -s -u gitlabci:$GITLABCI_TOWER_PASSWORD -d ''{ "inventory": 45, "job_tags": "core,foia", "extra_vars": "{\"arkcase_version\": \"\", \"arkcase_configuration_version\":\"\", \"arkcase_config_server_version\":\"\", \"snowbound_arkcase_version\":\"\"}"}'' -k https://***REMOVED***/api/v2/job_templates/129/launch/'
+
+deploy_backend_privacy_dev:
+  stage: deploy
+  only:
+    - develop
+  except:
+    changes:
+      - .gitlab-ci.yaml
+  environment:
+    name: Dev Privacy
+    url: https://***REMOVED***
+  script:
+    # Dev Privacy repository ID on ***REMOVED*** is 58
+    - 'curl -H "Content-Type: application/json" -X POST -s -u gitlabci:$GITLABCI_TOWER_PASSWORD -d ''{ "inventory": 58, "job_tags": "core,privacy", "extra_vars": "{\"arkcase_version\": \"\", \"arkcase_configuration_version\":\"\", \"arkcase_config_server_version\":\"\", \"snowbound_arkcase_version\":\"\"}"}'' -k https://***REMOVED***/api/v2/job_templates/129/launch/'
+
 
 .deploy_backend:
   stage: deploy
