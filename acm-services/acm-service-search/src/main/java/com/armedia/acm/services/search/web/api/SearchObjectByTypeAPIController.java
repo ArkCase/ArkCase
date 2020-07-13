@@ -74,7 +74,7 @@ public class SearchObjectByTypeAPIController
     private SearchEventPublisher searchEventPublisher;
     private AcmPluginManager acmPluginManager;
 
-    @RequestMapping(value = "/{objectType}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{objectType}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public String searchObjectByType(
             @PathVariable("objectType") String objectType,
