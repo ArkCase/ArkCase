@@ -10,7 +10,7 @@ angular.module('services').factory('SAR.Data', [function () {
         requestType: 'Data Access Request',
         originalRequestNumber: '',
         originator: {
-            className: 'gov.privacy.model.SARRequesterAssociation',
+            className: 'gov.privacy.model.SARPersonAssociation',
             personType: 'Requester',
             parentType: 'CASE_FILE',
             person: {
@@ -43,7 +43,7 @@ angular.module('services').factory('SAR.Data', [function () {
             }
         },
         subject: {
-            className: 'gov.privacy.model.SARRequesterAssociation',
+            className: 'gov.privacy.model.SARPersonAssociation',
             personType: 'Subject',
             parentType: 'CASE_FILE',
             person: {

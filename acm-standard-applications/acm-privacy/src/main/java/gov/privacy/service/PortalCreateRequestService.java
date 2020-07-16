@@ -48,17 +48,22 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import gov.privacy.dao.PortalSARPersonDao;
+import gov.privacy.model.PortalPersonDTO;
+import gov.privacy.model.PortalPostalAddressDTO;
 import gov.privacy.model.PortalSARFile;
-import gov.privacy.model.PortalSARPerson;
 import gov.privacy.model.PortalSubjectAccessRequest;
-import gov.privacy.model.SARRequesterAssociation;
+import gov.privacy.model.SARPerson;
+import gov.privacy.model.SARPersonAssociation;
 import gov.privacy.model.SubjectAccessRequest;
 
 /**
@@ -102,7 +107,13 @@ public class PortalCreateRequestService
         Map<String, List<MultipartFile>> filesMap = new HashMap<>();
         if (in.getFiles() != null)
         {
-            for (Map.Entry<String, List<PortalSARFile>> entry : in.getFiles().entrySet())
+            Set<Map.Entry<String, List<PortalSARFile>>> uploadedFiles = in.getFiles().entrySet();
+            if (isSubjectSameAsRequester().test(in))
+            {
+                uploadedFiles = uploadedFiles.stream().filter(k -> k.getKey().equalsIgnoreCase("Subject Proof of Identity"))
+                        .collect(Collectors.toSet());
+            }
+            for (Map.Entry<String, List<PortalSARFile>> entry : uploadedFiles)
             {
                 List<MultipartFile> files = new ArrayList<>();
                 for (PortalSARFile requestFile : entry.getValue())
@@ -116,6 +127,7 @@ public class PortalCreateRequestService
                         log.error("Failed to receive file {}, {}", requestFile.getFileName(), e.getMessage());
                     }
                 }
+
                 filesMap.put(entry.getKey(), files);
             }
         }
@@ -127,83 +139,109 @@ public class PortalCreateRequestService
         return saved;
     }
 
+    public static Predicate<PortalSubjectAccessRequest> isSubjectSameAsRequester()
+    {
+        return p -> p.getRequester().getEmail().equalsIgnoreCase(p.getSubject().getEmail());
+    }
+
     public SubjectAccessRequest populateRequest(PortalSubjectAccessRequest in)
     {
         SubjectAccessRequest request = new SubjectAccessRequest();
 
-        request.setExternal(true);
+        populateRequestOnlyProperties(in, request);
 
-        request.setRequestType(in.getRequestType());
-        request.setComponentAgency("Sales");
-        request.setOriginalRequestNumber(in.getOriginalRequestNumber());
+        SARPersonAssociation requesterAssociation = createPersonAssociation(in, "Requester");
+        SARPersonAssociation subjectAssociation = createPersonAssociation(in, "Subject");
 
-        if (in.getTitle() != null)
-        {
-            request.setTitle(in.getTitle());
-        }
-
-        request.setDetails(in.getSubject());
-
-        OrganizationAssociation organizationAssociation = new OrganizationAssociation();
-        SARRequesterAssociation requesterAssociation = new SARRequesterAssociation();
-        requesterAssociation.setPersonType("Requester");
-
-        PortalSARPerson requester;
-
-        Optional<PortalSARPerson> person = getPortalSARPersonDao().findByEmail(in.getEmail());
-        requester = person.orElseGet(() -> populateRequesterAndOrganizationFromRequest(in));
-
-        requesterAssociation.setPerson(requester);
         request.getPersonAssociations().add(requesterAssociation);
-
-        if (requester.getDefaultOrganization() != null)
-        {
-            Organization organization = requester.getDefaultOrganization().getOrganization();
-
-            organizationAssociation.setOrganization(organization);
-            organizationAssociation.setAssociationType("Other");
-
-            request.getOrganizationAssociations().add(organizationAssociation);
-        }
+        request.getPersonAssociations().add(subjectAssociation);
 
         return request;
     }
 
-    private PortalSARPerson populateRequesterAndOrganizationFromRequest(PortalSubjectAccessRequest in)
+    private void populateRequestOnlyProperties(PortalSubjectAccessRequest in, SubjectAccessRequest request)
     {
-        PortalSARPerson requester = new PortalSARPerson();
+        if (in.getTitle() != null)
+        {
+            request.setTitle(in.getTitle());
+        }
+        else
+        {
+            request.setTitle(in.getSubject().getFirstName() + " " + in.getSubject().getLastName());
+        }
 
-        requester.setGivenName(in.getFirstName());
-        requester.setFamilyName(in.getLastName());
-        requester.setMiddleName(in.getMiddleName());
-        requester.setTitle(in.getPrefix());
-        requester.setPosition(in.getPosition());
+        request.setReceivedDate(LocalDateTime.now());
+        request.setDetails(in.getDetails());
+        request.setExternal(true);
+        request.setRequestType(in.getRequestType());
+        request.setComponentAgency("Sales");
+        request.setOriginalRequestNumber(in.getOriginalRequestNumber());
+        request.setSignature(in.getSignature());
+        request.setSignatureDate(in.getSignatureDate());
 
-        PostalAddress address = getPostalAddressFromPortalSAR(in);
+        request.setSwornStatement(in.isSwornStatement());
+        request.setAccurateAndAuthorizedStatement(in.isAccurateAndAuthorizedStatement());
+        request.setInformationAgreementStatement(in.isInformationAgreementStatement());
+        request.setUnderstandProcessingRequirementStatement(in.isUnderstandProcessingRequirementStatement());
+    }
+
+    private SARPersonAssociation createPersonAssociation(PortalSubjectAccessRequest in, String personType)
+    {
+        SARPersonAssociation personAssociation = new SARPersonAssociation();
+        personAssociation.setPersonType(personType);
+
+        SARPerson portalPerson;
+        PortalPersonDTO portalPersonDTO = personType.equalsIgnoreCase("Subject") ? in.getSubject() : in.getRequester();
+        portalPerson = populateRequesterAndOrganizationFromRequest(portalPersonDTO);
+
+        personAssociation.setPerson(portalPerson);
+        return personAssociation;
+    }
+
+    private OrganizationAssociation createOrganizationAssociation(SARPersonAssociation personAssociation)
+    {
+        OrganizationAssociation organizationAssociation = new OrganizationAssociation();
+
+        Organization organization = personAssociation.getPerson().getDefaultOrganization().getOrganization();
+
+        organizationAssociation.setOrganization(organization);
+        organizationAssociation.setAssociationType("Other");
+
+        return organizationAssociation;
+    }
+
+    private SARPerson populateRequesterAndOrganizationFromRequest(PortalPersonDTO portalPersonDTO)
+    {
+        SARPerson portalPerson = new SARPerson();
+
+        portalPerson.setGivenName(portalPersonDTO.getFirstName());
+        portalPerson.setFamilyName(portalPersonDTO.getLastName());
+        portalPerson.setMiddleName(portalPersonDTO.getMiddleName());
+        portalPerson.setTitle(portalPersonDTO.getPrefix());
+        portalPerson.setPosition(portalPersonDTO.getPosition());
+        portalPerson.setDateOfBirth(portalPersonDTO.getDateOfBirth());
+
+        PostalAddress address = getPostalAddressFromPortalSAR(portalPersonDTO.getAddress());
         if (addressHasData(address))
         {
-            requester.getAddresses().add(address);
+            portalPerson.getAddresses().add(address);
         }
 
         List<ContactMethod> contactMethod = new ArrayList<>();
-        requester.setContactMethods(contactMethod);
+        portalPerson.setContactMethods(contactMethod);
 
-        if (in.getPhone() != null && !in.getPhone().isEmpty())
+        if (portalPersonDTO.getPhone() != null && !portalPersonDTO.getPhone().isEmpty())
         {
-            ContactMethod phone = buildContactMethod("phone", in.getPhone());
-            requester.getContactMethods().add(phone);
+            ContactMethod phone = buildContactMethod("phone", portalPersonDTO.getPhone());
+            portalPerson.getContactMethods().add(phone);
         }
-        if (in.getEmail() != null && !in.getEmail().isEmpty())
+        if (portalPersonDTO.getEmail() != null && !portalPersonDTO.getEmail().isEmpty())
         {
-            ContactMethod email = buildContactMethod("email", in.getEmail());
-            requester.getContactMethods().add(email);
+            ContactMethod email = buildContactMethod("email", portalPersonDTO.getEmail());
+            portalPerson.getContactMethods().add(email);
         }
 
-        if (in.getOrganization() != null && in.getOrganization().length() > 0)
-        {
-            getPortalUserServiceProvider().findOrCreateOrganizationAndPersonOrganizationAssociation(requester, in.getOrganization());
-        }
-        return requester;
+        return portalPerson;
     }
 
     private boolean addressHasData(PostalAddress address)
@@ -215,14 +253,14 @@ public class PortalCreateRequestService
                 || (address.getState() != null && !address.getState().equals(""));
     }
 
-    private PostalAddress getPostalAddressFromPortalSAR(PortalSubjectAccessRequest in)
+    private PostalAddress getPostalAddressFromPortalSAR(PortalPostalAddressDTO in)
     {
         PostalAddress address = new PostalAddress();
         address.setCity(in.getCity());
         address.setCountry(in.getCountry());
         address.setState(in.getState());
-        address.setStreetAddress(in.getAddress1());
-        address.setStreetAddress2(in.getAddress2());
+        address.setStreetAddress(in.getStreetAddress());
+        address.setStreetAddress2(in.getStreetAddress2());
         address.setZip(in.getZip());
         address.setType(in.getAddressType());
         return address;

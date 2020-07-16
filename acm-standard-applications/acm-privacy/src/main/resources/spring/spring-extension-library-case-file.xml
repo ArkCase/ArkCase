@@ -55,7 +55,7 @@
                     <beans:ref bean="caseFileUploadAttachmentsHandler"/>
                     <beans:ref bean="requestDocumentHandler"/>
                     <beans:ref bean="caseFileStartBusinessProcessIfNeededHandler"/>
-                    <beans:ref bean="requestPortalUserParticipantsHandler"/>
+                    <!--<beans:ref bean="requestPortalUserParticipantsHandler"/>-->
                 </beans:list>
             </beans:property>
         </beans:bean>
@@ -83,9 +83,9 @@
 
         <beans:bean id="sarFileDao" class="gov.privacy.dao.SARFileDao"/>
 
-        <beans:bean id="sarRequesterAssociationToSolrTransformer"
-                    class="gov.privacy.transformer.SARRequesterAssociationToSolrTransformer"
-            parent="personAssociationToSolrTransformer"/>
+        <beans:bean id="sarPersonAssociationToSolrTransformer"
+                    class="gov.privacy.transformer.SARPersonAssociationToSolrTransformer"
+                    parent="personAssociationToSolrTransformer"/>
 
         <beans:bean id="pdfDocumentGenerator" class="gov.privacy.service.PDFDocumentGenerator">
             <beans:property name="ecmFileService" ref="ecmFileService"/>

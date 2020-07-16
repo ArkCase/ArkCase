@@ -72,7 +72,7 @@ angular.module('cases').controller(
                             personDescription: "",
                             notes: "",
                             person: null,
-                            className: "gov.privacy.model.SARRequesterAssociation"
+                            className: "gov.privacy.model.SARPersonAssociation"
                         };
                     };
 

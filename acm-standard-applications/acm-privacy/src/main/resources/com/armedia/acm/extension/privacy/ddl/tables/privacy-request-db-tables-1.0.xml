@@ -136,64 +136,45 @@
         </addColumn>
     </changeSet>
 
-
-    <!--<changeSet id="10-create-table-acm_foia_portal_registration" author="vladimir.cherepnalkovski"
-               dbms="oracle,postgresql,mssql,mysql">
-        <createTable tableName="acm_foia_portal_registration">
-            <column name="cm_registration_id" type="${idType}">
-                <constraints primaryKeyName="pk_cm_registration" primaryKey="true"/>
+    <changeSet id="10-alter-acm_case_file-add-sworn-statements" author="vladimir.cherepnalkovski"
+               logicalFilePath="/ddl/tables/privacy-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_case_file">
+            <column name="sar_sworn_statement" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
             </column>
-            <column name="cm_email_address" type="VARCHAR(1000)">
-                <constraints unique="true" uniqueConstraintName="uk_email_address" nullable="false"/>
+            <column name="sar_understand_processing_requirement_statement" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
             </column>
-            <column name="cm_registration_key" type="VARCHAR(128)">
-                <constraints unique="true" uniqueConstraintName="uk_registration_key" nullable="false"/>
+            <column name="sar_information_agreement_statement" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
             </column>
-            <column name="cm_registration_time" type="LONG"/>
-            <column name="cm_portal_id" type="VARCHAR(128)"/>
-        </createTable>
-        <createIndex tableName="acm_foia_portal_registration"
-                     indexName="foia_portal_registration_unique_registration_id" unique="true">
-            <column name="cm_registration_id"/>
-        </createIndex>
-        <createTable tableName="acm_foia_portal_registration_id">
-            <column name="cm_seq_num" type="${idType}"/>
-            <column name="cm_seq_name" type="VARCHAR(255)"/>
-        </createTable>
-        <insert tableName="acm_foia_portal_registration_id">
-            <column name="cm_seq_num" value="100"/>
-            <column name="cm_seq_name" value="acm_foia_portal_registration"/>
-        </insert>
+            <column name="sar_accurate_and_authorized_statement" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
     </changeSet>
 
-    <changeSet id="11-create-table-acm_foia_portal_reset" author="vladimir.cherepnalkovski"
-               dbms="oracle,postgresql,mssql,mysql">
-        <createTable tableName="acm_foia_portal_reset">
-            <column name="cm_reset_id" type="${idType}">
-                <constraints primaryKeyName="pk_cm_reset" primaryKey="true"/>
+    <changeSet id="11-alter-acm_case_file-add-signature" author="vladimir.cherepnalkovski" dbms="oracle,mssql,postgres"
+               logicalFilePath="/ddl/tables/privacy-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_case_file">
+            <column name="sar_signature" type="VARCHAR(512)" defaultValueBoolean="false">
+                <constraints nullable="false"/>
             </column>
-            <column name="cm_email_address" type="VARCHAR(1000)">
-                <constraints unique="true" uniqueConstraintName="uk_email_address" nullable="false"/>
-            </column>
-            <column name="cm_reset_key" type="VARCHAR(128)">
-                <constraints unique="true" uniqueConstraintName="uk_reset_key" nullable="false"/>
-            </column>
-            <column name="cm_request_time" type="LONG"/>
-        </createTable>
-        <createIndex tableName="acm_foia_portal_reset" indexName="foia_portal_reset_unique_reset_id" unique="true">
-            <column name="cm_reset_id"/>
-        </createIndex>
-        <createTable tableName="acm_foia_portal_reset_id">
-            <column name="cm_seq_num" type="${idType}"/>
-            <column name="cm_seq_name" type="VARCHAR(255)"/>
-        </createTable>
-        <insert tableName="acm_foia_portal_reset_id">
-            <column name="cm_seq_num" value="100"/>
-            <column name="cm_seq_name" value="acm_foia_portal_reset"/>
-        </insert>
+            <column name="sar_signature_date" type="${timestampType}"/>
+        </addColumn>
     </changeSet>
 
-    <changeSet id="12-create-table-acm_foia_person_portal_roles" author="vladimir.cherepnalkovski"
+    <changeSet id="12-alter-acm_case_file-add-signature" author="vladimir.cherepnalkovski" dbms="mysql"
+               logicalFilePath="/ddl/tables/privacy-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_case_file">
+            <column name="sar_signature" type="TEXT" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sar_signature_date" type="${timestampType}"/>
+        </addColumn>
+    </changeSet>
+
+    <!--<changeSet id="12-create-table-acm_foia_person_portal_roles" author="vladimir.cherepnalkovski"
                dbms="oracle,postgresql,mssql,mysql">
         <createTable tableName="acm_foia_person_portal_roles">
             <column name="cm_person_id" type="${idType}"/>
