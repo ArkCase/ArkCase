@@ -33,8 +33,8 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
@@ -58,6 +58,7 @@ import javax.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 @Entity
@@ -294,6 +295,12 @@ public class ContactMethod implements Serializable, AcmEntity, AcmObject
         {
             return false;
         }
-        return getId() == ((ContactMethod) obj).getId();
+        return this.hashCode() == obj.hashCode();
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(id, type, value, className, objectType);
     }
 }

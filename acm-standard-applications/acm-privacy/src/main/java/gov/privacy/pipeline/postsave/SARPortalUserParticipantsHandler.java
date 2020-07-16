@@ -120,7 +120,4 @@ public class SARPortalUserParticipantsHandler implements PipelineHandler<Subject
     {
         this.userDao = userDao;
     }
-
-    // getAcmParticipantService().getParticipantByLdapIdParticipantTypeObjectTypeObjectId(portalUser.getAcmUserId(),
-    // ParticipantTypes.READER, entity.getObjectType(), entity.getId()).;
 }
