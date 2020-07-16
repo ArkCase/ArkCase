@@ -175,8 +175,13 @@
     </changeSet>
 
     <changeSet id="13-alter-acm_case_file-remove-signature-not-null-constraint" author="vladimir.cherepnalkovski"
-               logicalFilePath="/ddl/tables/privacy-request-db-tables-1.0.xml">
-        <dropNotNullConstraint tableName="acm_case_file" columnName="sar_signature"/>
+               dbms="oracle,mssql,postgres" logicalFilePath="/ddl/tables/privacy-request-db-tables-1.0.xml">
+        <dropNotNullConstraint tableName="acm_case_file" columnName="sar_signature" columnDataType="VARCHAR"/>
+    </changeSet>
+
+    <changeSet id="13.1-alter-acm_case_file-remove-signature-not-null-constraint" author="vladimir.cherepnalkovski"
+               dbms="mysql" logicalFilePath="/ddl/tables/privacy-request-db-tables-1.0.xml">
+        <dropNotNullConstraint tableName="acm_case_file" columnName="sar_signature" columnDataType="TEXT"/>
     </changeSet>
 
 </databaseChangeLog>
