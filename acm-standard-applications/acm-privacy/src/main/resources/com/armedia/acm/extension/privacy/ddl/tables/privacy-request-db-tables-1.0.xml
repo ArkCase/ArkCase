@@ -174,14 +174,10 @@
         </addColumn>
     </changeSet>
 
-    <!--<changeSet id="12-create-table-acm_foia_person_portal_roles" author="vladimir.cherepnalkovski"
-               dbms="oracle,postgresql,mssql,mysql">
-        <createTable tableName="acm_foia_person_portal_roles">
-            <column name="cm_person_id" type="${idType}"/>
-            <column name="cm_portal_id" type="VARCHAR(128)"/>
-            <column name="cm_user_role" type="VARCHAR(64)"/>
-        </createTable>
-    </changeSet>-->
+    <changeSet id="13-alter-acm_case_file-remove-signature-not-null-constraint" author="vladimir.cherepnalkovski"
+               logicalFilePath="/ddl/tables/privacy-request-db-tables-1.0.xml">
+        <dropNotNullConstraint tableName="acm_case_file" columnName="sar_signature"/>
+    </changeSet>
 
 </databaseChangeLog>
 
