@@ -1,0 +1,1801 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:foia="http://leisp.usdoj.gov/niem/FoiaAnnualReport/extension/1.03" xmlns:i="http://niem.gov/niem/appinfo/2.0" xmlns:j="http://niem.gov/niem/domains/jxdm/4.1" xmlns:nc="http://niem.gov/niem/niem-core/2.0" xmlns:niem-xsd="http://niem.gov/niem/proxy/xsd/2.0" xmlns:s="http://niem.gov/niem/structures/2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://leisp.usdoj.gov/niem/FoiaAnnualReport/extension/1.03" elementFormDefault="qualified" attributeFormDefault="qualified" version="1.0.0">
+   <xsd:import namespace="http://niem.gov/niem/appinfo/2.0" schemaLocation="../Subset/niem/appinfo/2.0/appinfo.xsd"/>
+   <xsd:import namespace="http://niem.gov/niem/domains/jxdm/4.1" schemaLocation="../Subset/niem/domains/jxdm/4.1/jxdm.xsd"/>
+   <xsd:import namespace="http://niem.gov/niem/niem-core/2.0" schemaLocation="../Subset/niem/niem-core/2.0/niem-core.xsd"/>
+   <xsd:import namespace="http://niem.gov/niem/proxy/xsd/2.0" schemaLocation="../Subset/niem/proxy/xsd/2.0/xsd.xsd"/>
+   <xsd:import namespace="http://niem.gov/niem/structures/2.0" schemaLocation="../Subset/niem/structures/2.0/structures.xsd"/>
+   <xsd:annotation>
+      <xsd:documentation>Extension XML Schema for the FOIA Annual Report NIEM IEPD</xsd:documentation>
+      <xsd:appinfo>
+         <i:ConformantIndicator>true</i:ConformantIndicator>
+      </xsd:appinfo>
+   </xsd:annotation>
+   <xsd:complexType name="AppealDispositionAppliedExemptionsSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a report section showing the number of times exemptions were applied in denying appeals. Corresponds to section VI.C.1 of the guidance document.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="foia:ReportSectionType">
+            <xsd:sequence>
+               <xsd:element ref="foia:ComponentAppliedExemptions" minOccurs="0" maxOccurs="unbounded"/>
+               <xsd:element ref="foia:ComponentAppliedExemptionsOrganizationAssociation" minOccurs="0" maxOccurs="unbounded"/>
+               <xsd:element ref="foia:FootnoteText" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:complexType name="AppealDispositionSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a report section describing disposition of administrative appeals. Corresponds to section VI.B of the guidance document.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="foia:ReportSectionType">
+            <xsd:sequence>
+               <xsd:element ref="foia:AppealDisposition" minOccurs="0" maxOccurs="unbounded"/>
+               <xsd:element ref="foia:AppealDispositionOrganizationAssociation" minOccurs="0" maxOccurs="unbounded"/>
+               <xsd:element ref="foia:FootnoteText" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:complexType name="AppealDispositionType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a description of disposition of administrative appeals by an agency or component.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="foia:ComponentDataType">
+            <xsd:sequence>
+               <xsd:element ref="foia:AppealDispositionAffirmedQuantity"/>
+               <xsd:element ref="foia:AppealDispositionPartialQuantity"/>
+               <xsd:element ref="foia:AppealDispositionReversedQuantity"/>
+               <xsd:element ref="foia:AppealDispositionOtherQuantity"/>
+               <xsd:element ref="foia:AppealDispositionTotalQuantity"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:complexType name="AppealNonExemptionDenialSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a report section describing non-exemption reasons for denial on appeal. Corresponds to section VI.C.2 of the guidance document.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="foia:ReportSectionType">
+            <xsd:sequence>
+               <xsd:element ref="foia:AppealNonExemptionDenial" minOccurs="0" maxOccurs="unbounded"/>
+               <xsd:element ref="foia:AppealNonExemptionDenialOrganizationAssociation" minOccurs="0" maxOccurs="unbounded"/>
+               <xsd:element ref="foia:FootnoteText" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:complexType name="AppealNonExemptionDenialType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a set of non-exemption appeal denials associated with a component.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="foia:ComponentDataType">
+            <xsd:sequence>
+               <xsd:element ref="foia:NonExemptionDenial" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:complexType name="AppealResponseTimeSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a report section providing statistics for administrative appeal response time. Corresponds to section VI.C.4 of the guidance document.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="foia:ReportSectionType">
+            <xsd:sequence>
+               <xsd:element ref="foia:ResponseTime" minOccurs="0" maxOccurs="unbounded"/>
+               <xsd:element ref="foia:ResponseTimeOrganizationAssociation" minOccurs="0" maxOccurs="unbounded"/>
+               <xsd:element ref="foia:FootnoteText" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:complexType name="AppliedExemptionType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a FOIA exemption and the number of times the exemption was relied upon.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="s:ComplexObjectType">
+            <xsd:sequence>
+               <xsd:element ref="foia:AppliedExemptionCode"/>
+               <xsd:element ref="foia:AppliedExemptionQuantity"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:complexType name="BacklogComparisonSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a report section comparing current year backlog to previous year. Corresponds to sections XII.D.2 and XII.E.2 of the guidance document.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="foia:ReportSectionType">
+            <xsd:sequence>
+               <xsd:element ref="foia:BacklogComparison" minOccurs="0" maxOccurs="unbounded"/>
+               <xsd:element ref="foia:BacklogComparisonOrganizationAssociation" minOccurs="0" maxOccurs="unbounded"/>
+               <xsd:element ref="foia:FootnoteText" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:complexType name="BacklogComparisonType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a comparison between current and previous year backlog for an agency or component.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="foia:ComponentDataType">
+            <xsd:sequence>
+               <xsd:element ref="foia:BacklogLastYearQuantity"/>
+               <xsd:element ref="foia:BacklogCurrentYearQuantity"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:complexType name="BacklogSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a report section showing the number of items that were pending beyond the statutory time period. Corresponds to section XII.A of the guidance document.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="foia:ReportSectionType">
+            <xsd:sequence>
+               <xsd:element ref="foia:Backlog" minOccurs="0" maxOccurs="unbounded"/>
+               <xsd:element ref="foia:BacklogOrganizationAssociation" minOccurs="0" maxOccurs="unbounded"/>
+               <xsd:element ref="foia:FootnoteText" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:complexType name="BacklogType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a detailing of the number of items pending beyond the statutory time period for an agency or component.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="foia:ComponentDataType">
+            <xsd:sequence>
+               <xsd:element ref="foia:BackloggedRequestQuantity" minOccurs="0"/>
+               <xsd:element ref="foia:BackloggedAppealQuantity" minOccurs="0"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:complexType name="ComponentAppliedExemptionsType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for an enumeration of a component's reliance upon exemptions for denial of requests.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="foia:ComponentDataType">
+            <xsd:sequence>
+               <xsd:element ref="foia:AppliedExemption" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:complexType name="ComponentDataOrganizationAssociationType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a relationship between a set of data and a "component" (agency, sub-organization, office, or division).</xsd:documentation>
+         <xsd:appinfo>
+            <i:Base i:namespace="http://niem.gov/niem/niem-core/2.0" i:name="AssociationType"/>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="nc:AssociationType">
+            <xsd:sequence>
+               <xsd:element ref="foia:ComponentDataReference"/>
+               <xsd:element ref="nc:OrganizationReference"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:complexType name="ComponentDataType" abstract="true">
+      <xsd:annotation>
+         <xsd:documentation>A data concept for a set of data associated with a "component" (agency, sub-organization, office, or division).</xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="s:ComplexObjectType"/>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:complexType name="ComponentOtherDenialReasonType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a description of denial reasons other than pre-defined reasons.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="s:ComplexObjectType">
+            <xsd:sequence>
+               <xsd:element ref="foia:OtherDenialReason" minOccurs="0" maxOccurs="unbounded"/>
+               <xsd:element ref="foia:ComponentOtherDenialReasonQuantity"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:complexType name="ComponentResponseTimeIncrementsType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for an agency or component's breakdown of response times into 13 designated categories.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="foia:ComponentDataType">
+            <xsd:sequence>
+               <xsd:element ref="foia:TimeIncrement" minOccurs="13" maxOccurs="13"/>
+               <xsd:element ref="foia:TimeIncrementTotalQuantity"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:complexType name="Exemption3StatuteSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a report section listing exemption 3 statutes an agency relied upon to withhold information. Corresponds to section IV of the guidance document.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="foia:ReportSectionType">
+            <xsd:sequence>
+               <xsd:element ref="foia:ReliedUponStatute" minOccurs="0" maxOccurs="unbounded"/>
+               <xsd:element ref="foia:ReliedUponStatuteOrganizationAssociation" minOccurs="0" maxOccurs="unbounded"/>
+               <xsd:element ref="foia:FootnoteText" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:simpleType name="ExemptionCodeSimpleType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a FOIA exemption.</xsd:documentation>
+         <xsd:appinfo>
+            <i:Base i:namespace="http://niem.gov/niem/structures/2.0" i:name="Object"/>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:restriction base="xsd:token">
+         <xsd:enumeration value="Ex. 1">
+            <xsd:annotation>
+               <xsd:documentation>Exemption 1</xsd:documentation>
+            </xsd:annotation>
+         </xsd:enumeration>
+         <xsd:enumeration value="Ex. 2">
+            <xsd:annotation>
+               <xsd:documentation>Exemption 2</xsd:documentation>
+            </xsd:annotation>
+         </xsd:enumeration>
+         <xsd:enumeration value="Ex. 3">
+            <xsd:annotation>
+               <xsd:documentation>Exemption 3</xsd:documentation>
+            </xsd:annotation>
+         </xsd:enumeration>
+         <xsd:enumeration value="Ex. 4">
+            <xsd:annotation>
+               <xsd:documentation>Exemption 4</xsd:documentation>
+            </xsd:annotation>
+         </xsd:enumeration>
+         <xsd:enumeration value="Ex. 5">
+            <xsd:annotation>
+               <xsd:documentation>Exemption 5</xsd:documentation>
+            </xsd:annotation>
+         </xsd:enumeration>
+         <xsd:enumeration value="Ex. 6">
+            <xsd:annotation>
+               <xsd:documentation>Exemption 6</xsd:documentation>
+            </xsd:annotation>
+         </xsd:enumeration>
+         <xsd:enumeration value="Ex. 7(A)">
+            <xsd:annotation>
+               <xsd:documentation>Exemption 7(A)</xsd:documentation>
+            </xsd:annotation>
+         </xsd:enumeration>
+         <xsd:enumeration value="Ex. 7(B)">
+            <xsd:annotation>
+               <xsd:documentation>Exemption 7(B)</xsd:documentation>
+            </xsd:annotation>
+         </xsd:enumeration>
+         <xsd:enumeration value="Ex. 7(C)">
+            <xsd:annotation>
+               <xsd:documentation>Exemption 7(C)</xsd:documentation>
+            </xsd:annotation>
+         </xsd:enumeration>
+         <xsd:enumeration value="Ex. 7(D)">
+            <xsd:annotation>
+               <xsd:documentation>Exemption 7(D)</xsd:documentation>
+            </xsd:annotation>
+         </xsd:enumeration>
+         <xsd:enumeration value="Ex. 7(E)">
+            <xsd:annotation>
+               <xsd:documentation>Exemption 7(E)</xsd:documentation>
+            </xsd:annotation>
+         </xsd:enumeration>
+         <xsd:enumeration value="Ex. 7(F)">
+            <xsd:annotation>
+               <xsd:documentation>Exemption 7(F)</xsd:documentation>
+            </xsd:annotation>
+         </xsd:enumeration>
+         <xsd:enumeration value="Ex. 8">
+            <xsd:annotation>
+               <xsd:documentation>Exemption 8</xsd:documentation>
+            </xsd:annotation>
+         </xsd:enumeration>
+         <xsd:enumeration value="Ex. 9">
+            <xsd:annotation>
+               <xsd:documentation>Exemption 9</xsd:documentation>
+            </xsd:annotation>
+         </xsd:enumeration>
+      </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:complexType name="ExemptionCodeType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a FOIA exemption.</xsd:documentation>
+         <xsd:appinfo>
+            <i:Base i:namespace="http://niem.gov/niem/structures/2.0" i:name="Object"/>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:simpleContent>
+         <xsd:extension base="foia:ExemptionCodeSimpleType">
+            <xsd:attributeGroup ref="s:SimpleObjectAttributeGroup"/>
+         </xsd:extension>
+      </xsd:simpleContent>
+   </xsd:complexType>
+   <xsd:complexType name="ExpeditedProcessingSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a report section describing handling of adjudicated requests for expedited processing. Corresponds to section VIII.A of the guidance document.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="foia:ReportSectionType">
+            <xsd:sequence>
+               <xsd:element ref="foia:ExpeditedProcessing" minOccurs="0" maxOccurs="unbounded"/>
+               <xsd:element ref="foia:ExpeditedProcessingOrganizationAssociation" minOccurs="0" maxOccurs="unbounded"/>
+               <xsd:element ref="foia:FootnoteText" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:complexType name="ExpeditedProcessingType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a description of handling of adjudicated requests for expedited processing by an agency or component.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="foia:ComponentDataType">
+            <xsd:sequence>
+               <xsd:element ref="foia:RequestGrantedQuantity"/>
+               <xsd:element ref="foia:RequestDeniedQuantity"/>
+               <xsd:element ref="foia:AdjudicationMedianDaysValue" minOccurs="0"/>
+               <xsd:element ref="foia:AdjudicationAverageDaysValue" minOccurs="0"/>
+               <xsd:element ref="foia:AdjudicationWithinTenDaysQuantity" minOccurs="0"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:complexType name="FeesCollectedSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a report section showing fees collected from FOIA requesters for processing their requests. Corresponds to section X of the guidance document.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="foia:ReportSectionType">
+            <xsd:sequence>
+               <xsd:element ref="foia:FeesCollected" minOccurs="0" maxOccurs="unbounded"/>
+               <xsd:element ref="foia:FeesCollectedOrganizationAssociation" minOccurs="0" maxOccurs="unbounded"/>
+               <xsd:element ref="foia:FootnoteText" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:complexType name="FeesCollectedType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a detailing of fees collected by an agency or component from FOIA requesters for processing their requests.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="foia:ComponentDataType">
+            <xsd:sequence>
+               <xsd:element ref="foia:FeesCollectedAmount"/>
+               <xsd:element ref="foia:FeesCollectedCostPercent"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:complexType name="FeeWaiverSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a report section describing handling of requests for a waiver of fees. Corresponds to section VIII.B of the guidance document.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="foia:ReportSectionType">
+            <xsd:sequence>
+               <xsd:element ref="foia:FeeWaiver" minOccurs="0" maxOccurs="unbounded"/>
+               <xsd:element ref="foia:FeeWaiverOrganizationAssociation" minOccurs="0" maxOccurs="unbounded"/>
+               <xsd:element ref="foia:FootnoteText" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:complexType name="FeeWaiverType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a description of handling requests for a waiver of fees by an agency or component.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="foia:ComponentDataType">
+            <xsd:sequence>
+               <xsd:element ref="foia:RequestGrantedQuantity"/>
+               <xsd:element ref="foia:RequestDeniedQuantity"/>
+               <xsd:element ref="foia:AdjudicationMedianDaysValue" minOccurs="0"/>
+               <xsd:element ref="foia:AdjudicationAverageDaysValue" minOccurs="0"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:simpleType name="NonExemptionDenialReasonCodeSimpleType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a reason for denial of FOIA requests other than exemptions.</xsd:documentation>
+         <xsd:appinfo>
+            <i:Base i:namespace="http://niem.gov/niem/structures/2.0" i:name="Object"/>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:restriction base="xsd:token">
+         <xsd:enumeration value="NoRecords">
+            <xsd:annotation>
+               <xsd:documentation>No Records</xsd:documentation>
+            </xsd:annotation>
+         </xsd:enumeration>
+         <xsd:enumeration value="Referred">
+            <xsd:annotation>
+               <xsd:documentation>All Records Referred to Another Component or Agency</xsd:documentation>
+            </xsd:annotation>
+         </xsd:enumeration>
+         <xsd:enumeration value="Withdrawn">
+            <xsd:annotation>
+               <xsd:documentation>Request Withdrawn</xsd:documentation>
+            </xsd:annotation>
+         </xsd:enumeration>
+         <xsd:enumeration value="FeeRelated">
+            <xsd:annotation>
+               <xsd:documentation>Fee-Related Reason</xsd:documentation>
+            </xsd:annotation>
+         </xsd:enumeration>
+         <xsd:enumeration value="NotDescribed">
+            <xsd:annotation>
+               <xsd:documentation>Records not Reasonably Described</xsd:documentation>
+            </xsd:annotation>
+         </xsd:enumeration>
+         <xsd:enumeration value="ImproperRequest">
+            <xsd:annotation>
+               <xsd:documentation>Improper FOIA Request for Other Reason</xsd:documentation>
+            </xsd:annotation>
+         </xsd:enumeration>
+         <xsd:enumeration value="NotAgency">
+            <xsd:annotation>
+               <xsd:documentation>Not Agency Record</xsd:documentation>
+            </xsd:annotation>
+         </xsd:enumeration>
+         <xsd:enumeration value="Duplicate">
+            <xsd:annotation>
+               <xsd:documentation>Duplicate Request</xsd:documentation>
+            </xsd:annotation>
+         </xsd:enumeration>
+         <xsd:enumeration value="InLitigation">
+            <xsd:annotation>
+               <xsd:documentation>Request in Litigation</xsd:documentation>
+            </xsd:annotation>
+         </xsd:enumeration>
+         <xsd:enumeration value="ExpeditedDenial">
+            <xsd:annotation>
+               <xsd:documentation>Appeal base solely on denial of expedited processing</xsd:documentation>
+            </xsd:annotation>
+         </xsd:enumeration>
+         <xsd:enumeration value="Other">
+            <xsd:annotation>
+               <xsd:documentation>Other Reason (explained in section V.B.2)</xsd:documentation>
+            </xsd:annotation>
+         </xsd:enumeration>
+      </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:complexType name="NonExemptionDenialReasonCodeType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a reason for denial of FOIA requests other than exemptions.</xsd:documentation>
+         <xsd:appinfo>
+            <i:Base i:namespace="http://niem.gov/niem/structures/2.0" i:name="Object"/>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:simpleContent>
+         <xsd:extension base="foia:NonExemptionDenialReasonCodeSimpleType">
+            <xsd:attributeGroup ref="s:SimpleObjectAttributeGroup"/>
+         </xsd:extension>
+      </xsd:simpleContent>
+   </xsd:complexType>
+   <xsd:complexType name="NonExemptionDenialType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a non-exemption reason and count of denials of FOIA requests.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="s:ComplexObjectType">
+            <xsd:sequence>
+               <xsd:element ref="foia:NonExemptionDenialReasonCode"/>
+               <xsd:element ref="foia:NonExemptionDenialQuantity"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:complexType name="OldestPendingItemSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a report section showing the oldest pending items of some type (request, appeal, consultation). Corresponds to sections VI.C.5, VII.E, and XII.C of the guidance document.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="foia:ReportSectionType">
+            <xsd:sequence>
+               <xsd:element ref="foia:OldestPendingItems" minOccurs="0" maxOccurs="unbounded"/>
+               <xsd:element ref="foia:OldestPendingItemsOrganizationAssociation" minOccurs="0" maxOccurs="unbounded"/>
+               <xsd:element ref="foia:FootnoteText" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:complexType name="OldestPendingItemsType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for an enumeration of the oldest pending items of some type (request, appeal, consultation) for an agency or component.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="foia:ComponentDataType">
+            <xsd:sequence>
+               <xsd:element ref="foia:OldItem" minOccurs="0" maxOccurs="10"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:complexType name="OldItemType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a receipt date and age of an old item (request, appeal, consultation).</xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="s:ComplexObjectType">
+            <xsd:sequence>
+               <xsd:element ref="foia:OldItemReceiptDate"/>
+               <xsd:element ref="foia:OldItemPendingDaysQuantity"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:complexType name="OtherDenialReasonSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a report section describing 'other' reasons for denial. Corresponds to sections V.B.2 and VI.C.3 of the guidance document.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="foia:ReportSectionType">
+            <xsd:sequence>
+               <xsd:element ref="foia:ComponentOtherDenialReason" minOccurs="0" maxOccurs="unbounded"/>
+               <xsd:element ref="foia:OtherDenialReasonOrganizationAssociation" minOccurs="0" maxOccurs="unbounded"/>
+               <xsd:element ref="foia:FootnoteText" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:complexType name="OtherDenialReasonType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a reason requests or appeals were denied, and the number of times the reason was relied upon.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="s:ComplexObjectType">
+            <xsd:sequence>
+               <xsd:element ref="foia:OtherDenialReasonDescriptionText"/>
+               <xsd:element ref="foia:OtherDenialReasonQuantity"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:complexType name="PendingPerfectedRequestsSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a report section providing statistics for pending perfected requests at end of fiscal year. Corresponds to section VII.D of the guidance document.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="foia:ReportSectionType">
+            <xsd:sequence>
+               <xsd:element ref="foia:PendingPerfectedRequests" minOccurs="0" maxOccurs="unbounded"/>
+               <xsd:element ref="foia:PendingPerfectedRequestsOrganizationAssociation" minOccurs="0" maxOccurs="unbounded"/>
+               <xsd:element ref="foia:FootnoteText" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:complexType name="PendingPerfectedRequestsType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a set of statistics regarding pending perfected requests at end of fiscal year, separated out by track (simple, complex, expedited).</xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="foia:ComponentDataType">
+            <xsd:sequence>
+               <xsd:element ref="foia:SimplePendingRequestStatistics"/>
+               <xsd:element ref="foia:ComplexPendingRequestStatistics"/>
+               <xsd:element ref="foia:ExpeditedPendingRequestStatistics"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:complexType name="PendingRequestStatisticsType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a set of statistics regarding pending perfected requests at end of fiscal year.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="s:ComplexObjectType">
+            <xsd:sequence>
+               <xsd:element ref="foia:PendingRequestQuantity"/>
+               <xsd:element ref="foia:PendingRequestMedianDaysValue" minOccurs="0"/>
+               <xsd:element ref="foia:PendingRequestAverageDaysValue" minOccurs="0"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:complexType name="PersonnelAndCostSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a report section showing personnel dedicated to, and costs associated with FOIA duties. Corresponds to section IX of the guidance document.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="foia:ReportSectionType">
+            <xsd:sequence>
+               <xsd:element ref="foia:PersonnelAndCost" minOccurs="0" maxOccurs="unbounded"/>
+               <xsd:element ref="foia:PersonnelAndCostOrganizationAssociation" minOccurs="0" maxOccurs="unbounded"/>
+               <xsd:element ref="foia:FootnoteText" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:complexType name="PersonnelAndCostType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a description of personnel dedicated to, and costs associated with FOIA duties for an agency or component.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="foia:ComponentDataType">
+            <xsd:sequence>
+               <xsd:element ref="foia:FullTimeEmployeeQuantity"/>
+               <xsd:element ref="foia:EquivalentFullTimeEmployeeQuantity"/>
+               <xsd:element ref="foia:TotalFullTimeStaffQuantity"/>
+               <xsd:element ref="foia:ProcessingCostAmount"/>
+               <xsd:element ref="foia:LitigationCostAmount"/>
+               <xsd:element ref="foia:TotalCostAmount"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:complexType name="ProcessedResponseTimeSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a report section providing statistics for response times to FOIA requests. Corresponds to sections VII.A and VII.B of the guidance document.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="foia:ReportSectionType">
+            <xsd:sequence>
+               <xsd:element ref="foia:ProcessedResponseTime" minOccurs="0" maxOccurs="unbounded"/>
+               <xsd:element ref="foia:ProcessedResponseTimeOrganizationAssociation" minOccurs="0" maxOccurs="unbounded"/>
+               <xsd:element ref="foia:FootnoteText" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:complexType name="ProcessedResponseTimeType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a set of response time statistics for requests over the course of the fiscal year, separated out by track (simple, complex, expedited).</xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="foia:ComponentDataType">
+            <xsd:sequence>
+               <xsd:element ref="foia:SimpleResponseTime"/>
+               <xsd:element ref="foia:ComplexResponseTime"/>
+               <xsd:element ref="foia:ExpeditedResponseTime"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:complexType name="ProcessedSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a report section describing processing statistics for requests, appeals, or consultations over the course of the fiscal year. Corresponds to sections V.A, VI.A, and VII.B of the guidance document.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="foia:ReportSectionType">
+            <xsd:sequence>
+               <xsd:element ref="foia:ProcessingStatistics" minOccurs="0" maxOccurs="unbounded"/>
+               <xsd:element ref="foia:ProcessingStatisticsOrganizationAssociation" minOccurs="0" maxOccurs="unbounded"/>
+               <xsd:element ref="foia:FootnoteText" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:complexType name="ProcessingComparisonSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a report section comparing current year processing of items (requests, appeals) to previous year. Corresponds to sections XII.D.1 and XII.E.1 of the guidance document.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="foia:ReportSectionType">
+            <xsd:sequence>
+               <xsd:element ref="foia:ProcessingComparison" minOccurs="0" maxOccurs="unbounded"/>
+               <xsd:element ref="foia:ProcessingComparisonOrganizationAssociation" minOccurs="0" maxOccurs="unbounded"/>
+               <xsd:element ref="foia:FootnoteText" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:complexType name="ProcessingComparisonType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a comparison between current and previous year processing of items (requests, appeals) for an agency or component.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="foia:ComponentDataType">
+            <xsd:sequence>
+               <xsd:element ref="foia:ItemsReceivedLastYearQuantity"/>
+               <xsd:element ref="foia:ItemsReceivedCurrentYearQuantity"/>
+               <xsd:element ref="foia:ItemsProcessedLastYearQuantity"/>
+               <xsd:element ref="foia:ItemsProcessedCurrentYearQuantity"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:complexType name="ProcessingStatisticsType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a set of processing statistics regarding different types of items (requests, appeals, consultations) over the course of the fiscal year.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="foia:ComponentDataType">
+            <xsd:sequence>
+               <xsd:element ref="foia:ProcessingStatisticsPendingAtStartQuantity"/>
+               <xsd:element ref="foia:ProcessingStatisticsReceivedQuantity"/>
+               <xsd:element ref="foia:ProcessingStatisticsProcessedQuantity"/>
+               <xsd:element ref="foia:ProcessingStatisticsPendingAtEndQuantity"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:complexType name="ReliedUponStatuteOrganizationAssociationType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a relationship between a statute and a component or agency. Includes a count of the number of times the agency or component relied upon the statute.</xsd:documentation>
+         <xsd:appinfo>
+            <i:Base i:namespace="http://leisp.usdoj.gov/niem/FoiaAnnualReport/extension/1.03" i:name="ComponentDataOrganizationAssociationType"/>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="foia:ComponentDataOrganizationAssociationType">
+            <xsd:sequence>
+               <xsd:element ref="foia:ReliedUponStatuteQuantity"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:complexType name="ReliedUponStatuteType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for an exemption 3 statute an agency relied upon to withhold information.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="foia:ComponentDataType">
+            <xsd:sequence>
+               <xsd:element ref="j:StatuteDescriptionText"/>
+               <xsd:element ref="foia:ReliedUponStatuteInformationWithheldText" minOccurs="0" maxOccurs="unbounded"/>
+               <xsd:element ref="nc:Case" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:complexType name="ReportSectionType" abstract="true">
+      <xsd:annotation>
+         <xsd:documentation>A data concept for a single section of a FOIA Annual Report</xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="s:ComplexObjectType"/>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:complexType name="RequestDispositionAppliedExemptionsSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a report section showing the number of times exemptions were applied in denying requests. Corresponds to section V.B.3 of the guidance document.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="foia:ReportSectionType">
+            <xsd:sequence>
+               <xsd:element ref="foia:ComponentAppliedExemptions" minOccurs="0" maxOccurs="unbounded"/>
+               <xsd:element ref="foia:ComponentAppliedExemptionsOrganizationAssociation" minOccurs="0" maxOccurs="unbounded"/>
+               <xsd:element ref="foia:FootnoteText" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:complexType name="RequestDispositionSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a report section describing disposition of processed FOIA requests. Corresponds to section V.B.1 of the guidance document.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="foia:ReportSectionType">
+            <xsd:sequence>
+               <xsd:element ref="foia:RequestDisposition" minOccurs="0" maxOccurs="unbounded"/>
+               <xsd:element ref="foia:RequestDispositionOrganizationAssociation" minOccurs="0" maxOccurs="unbounded"/>
+               <xsd:element ref="foia:FootnoteText" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:complexType name="RequestDispositionType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a set of statistics describing disposition of processed FOIA requests by an agency or component.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="foia:ComponentDataType">
+            <xsd:sequence>
+               <xsd:element ref="foia:RequestDispositionFullGrantQuantity"/>
+               <xsd:element ref="foia:RequestDispositionPartialGrantQuantity"/>
+               <xsd:element ref="foia:RequestDispositionFullExemptionDenialQuantity"/>
+               <xsd:element ref="foia:NonExemptionDenial" minOccurs="0" maxOccurs="unbounded"/>
+               <xsd:element ref="foia:RequestDispositionTotalQuantity"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:simpleType name="ResponseTimeCodeSimpleType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a special non-numeric response time value.</xsd:documentation>
+         <xsd:appinfo>
+            <i:Base i:namespace="http://niem.gov/niem/structures/2.0" i:name="Object"/>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:restriction base="xsd:token">
+         <xsd:enumeration value="LT1">
+            <xsd:annotation>
+               <xsd:documentation>Between 0 and 1</xsd:documentation>
+            </xsd:annotation>
+         </xsd:enumeration>
+      </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:complexType name="ResponseTimeCodeType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a special non-numeric response time value.</xsd:documentation>
+         <xsd:appinfo>
+            <i:Base i:namespace="http://niem.gov/niem/structures/2.0" i:name="Object"/>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:simpleContent>
+         <xsd:extension base="foia:ResponseTimeCodeSimpleType">
+            <xsd:attributeGroup ref="s:SimpleObjectAttributeGroup"/>
+         </xsd:extension>
+      </xsd:simpleContent>
+   </xsd:complexType>
+   <xsd:complexType name="ResponseTimeIncrementsSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a report section showing breakdown of response times into 13 designated categories. Corresponds to sections VII.C.1, VII.C.2, and VII.C.3 of the guidance document.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="foia:ReportSectionType">
+            <xsd:sequence>
+               <xsd:element ref="foia:ComponentResponseTimeIncrements" minOccurs="0" maxOccurs="unbounded"/>
+               <xsd:element ref="foia:ResponseTimeIncrementsOrganizationAssociation" minOccurs="0" maxOccurs="unbounded"/>
+               <xsd:element ref="foia:FootnoteText" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:complexType name="ResponseTimeType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a set of response time statistics regarding different types of items (requests, appeals) over the course of the fiscal year.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="foia:ComponentDataType">
+            <xsd:sequence>
+               <xsd:element ref="foia:ResponseTimeMedianDays" minOccurs="0"/>
+               <xsd:element ref="foia:ResponseTimeAverageDays" minOccurs="0"/>
+               <xsd:element ref="foia:ResponseTimeLowestDays" minOccurs="0"/>
+               <xsd:element ref="foia:ResponseTimeHighestDays" minOccurs="0"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>   
+   <xsd:complexType name="SubsectionPostSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a report section showing the number of items that were posted by FOIA Office/Program Office. Corresponds to section XI.B of the guidance document.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="foia:ReportSectionType">
+            <xsd:sequence>
+               <xsd:element ref="foia:Subsection" minOccurs="0" maxOccurs="unbounded"/>
+               <xsd:element ref="foia:SubsectionPostOrganizationAssociation" minOccurs="0" maxOccurs="unbounded"/>
+               <xsd:element ref="foia:FootnoteText" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:complexType name="SubsectionType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a detailing of the number of items that were posted by FOIA Office/Program Office for an agency or component.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="foia:ComponentDataType">
+            <xsd:sequence>
+               <xsd:element ref="foia:PostedbyFOIAQuantity" minOccurs="0"/>
+               <xsd:element ref="foia:PostedbyProgramQuantity" minOccurs="0"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:complexType name="SubsectionUsedSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a report section showing the number of times that were used. Corresponds to section XI.A of the guidance document.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="foia:ReportSectionType">
+            <xsd:sequence>
+               <xsd:element ref="foia:SubsectionUsed" minOccurs="0" maxOccurs="unbounded"/>
+               <xsd:element ref="foia:SubsectionUsedOrganizationAssociation" minOccurs="0" maxOccurs="unbounded"/>
+               <xsd:element ref="foia:FootnoteText" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:complexType name="SubsectionUsedType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a detailing of the number of times that were used for an agency or component.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="foia:ComponentDataType">
+            <xsd:sequence>
+               <xsd:element ref="foia:TimesUsedQuantity" minOccurs="0"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:simpleType name="TimeIncrementCodeSimpleType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a specific response time increment.</xsd:documentation>
+         <xsd:appinfo>
+            <i:Base i:namespace="http://niem.gov/niem/structures/2.0" i:name="Object"/>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:restriction base="xsd:token">
+         <xsd:enumeration value="1-20">
+            <xsd:annotation>
+               <xsd:documentation>1-20 Days</xsd:documentation>
+            </xsd:annotation>
+         </xsd:enumeration>
+         <xsd:enumeration value="21-40">
+            <xsd:annotation>
+               <xsd:documentation>21-40 Days</xsd:documentation>
+            </xsd:annotation>
+         </xsd:enumeration>
+         <xsd:enumeration value="41-60">
+            <xsd:annotation>
+               <xsd:documentation>41-60 Days</xsd:documentation>
+            </xsd:annotation>
+         </xsd:enumeration>
+         <xsd:enumeration value="61-80">
+            <xsd:annotation>
+               <xsd:documentation>61-80 Days</xsd:documentation>
+            </xsd:annotation>
+         </xsd:enumeration>
+         <xsd:enumeration value="81-100">
+            <xsd:annotation>
+               <xsd:documentation>81-100 Days</xsd:documentation>
+            </xsd:annotation>
+         </xsd:enumeration>
+         <xsd:enumeration value="101-120">
+            <xsd:annotation>
+               <xsd:documentation>101-120 Days</xsd:documentation>
+            </xsd:annotation>
+         </xsd:enumeration>
+         <xsd:enumeration value="121-140">
+            <xsd:annotation>
+               <xsd:documentation>121-140 Days</xsd:documentation>
+            </xsd:annotation>
+         </xsd:enumeration>
+         <xsd:enumeration value="141-160">
+            <xsd:annotation>
+               <xsd:documentation>141-160 Days</xsd:documentation>
+            </xsd:annotation>
+         </xsd:enumeration>
+         <xsd:enumeration value="161-180">
+            <xsd:annotation>
+               <xsd:documentation>161-180 Days</xsd:documentation>
+            </xsd:annotation>
+         </xsd:enumeration>
+         <xsd:enumeration value="181-200">
+            <xsd:annotation>
+               <xsd:documentation>181-200 Days</xsd:documentation>
+            </xsd:annotation>
+         </xsd:enumeration>
+         <xsd:enumeration value="201-300">
+            <xsd:annotation>
+               <xsd:documentation>201-300 Days</xsd:documentation>
+            </xsd:annotation>
+         </xsd:enumeration>
+         <xsd:enumeration value="301-400">
+            <xsd:annotation>
+               <xsd:documentation>301-400 Days</xsd:documentation>
+            </xsd:annotation>
+         </xsd:enumeration>
+         <xsd:enumeration value="401+">
+            <xsd:annotation>
+               <xsd:documentation>401+ Days</xsd:documentation>
+            </xsd:annotation>
+         </xsd:enumeration>
+      </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:complexType name="TimeIncrementCodeType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a specific response time increment.</xsd:documentation>
+         <xsd:appinfo>
+            <i:Base i:namespace="http://niem.gov/niem/structures/2.0" i:name="Object"/>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:simpleContent>
+         <xsd:extension base="foia:TimeIncrementCodeSimpleType">
+            <xsd:attributeGroup ref="s:SimpleObjectAttributeGroup"/>
+         </xsd:extension>
+      </xsd:simpleContent>
+   </xsd:complexType>
+   <xsd:complexType name="TimeIncrementType">
+      <xsd:annotation>
+         <xsd:documentation>A data type for a count of requests which were processed within a specified time increment.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="s:ComplexObjectType">
+            <xsd:sequence>
+               <xsd:element ref="foia:TimeIncrementCode"/>
+               <xsd:element ref="foia:TimeIncrementProcessedQuantity"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:element name="AdjudicationAverageDaysValue" type="niem-xsd:decimal">
+      <xsd:annotation>
+         <xsd:documentation>A count of the average number of days taken to adjudicate requests.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="AdjudicationMedianDaysValue" type="niem-xsd:decimal">
+      <xsd:annotation>
+         <xsd:documentation>A count of the median number of days taken to adjudicate requests.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="AdjudicationWithinTenDaysQuantity" type="niem-xsd:nonNegativeInteger">
+      <xsd:annotation>
+         <xsd:documentation>A count of the number of requests which were adjudicated within ten calendar days.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="AppealDenialOtherReasonSection" type="foia:OtherDenialReasonSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A report section describing 'other' reasons for appeal denials based on reasons other than exemptions.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="AppealDisposition" type="foia:AppealDispositionType">
+      <xsd:annotation>
+         <xsd:documentation>A set of values describing disposition of administrative appeals by an agency or component.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="AppealDispositionAffirmedQuantity" type="niem-xsd:nonNegativeInteger">
+      <xsd:annotation>
+         <xsd:documentation>A count of the number of appeals which were fully affirmed.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="AppealDispositionAppliedExemptionsSection" type="foia:AppealDispositionAppliedExemptionsSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A report section showing the number of times exemptions were applied in denying appeals.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="AppealDispositionOrganizationAssociation" type="foia:ComponentDataOrganizationAssociationType">
+      <xsd:annotation>
+         <xsd:documentation>A relationship between a set of values describing disposition of administrative appeals and an agency or component.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="AppealDispositionOtherQuantity" type="niem-xsd:nonNegativeInteger">
+      <xsd:annotation>
+         <xsd:documentation>A count of the number of appeals which were closed for other reasons.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="AppealDispositionPartialQuantity" type="niem-xsd:nonNegativeInteger">
+      <xsd:annotation>
+         <xsd:documentation>A count of the number of appeals which partially affirmed and partially reversed/remanded.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="AppealDispositionReversedQuantity" type="niem-xsd:nonNegativeInteger">
+      <xsd:annotation>
+         <xsd:documentation>A count of the number of appeals which were completely reversed/remanded.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="AppealDispositionSection" type="foia:AppealDispositionSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A report section describing disposition of administrative appeals.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="AppealDispositionTotalQuantity" type="niem-xsd:nonNegativeInteger">
+      <xsd:annotation>
+         <xsd:documentation>A count of the total number of administrative appeals.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="AppealNonExemptionDenial" type="foia:AppealNonExemptionDenialType">
+      <xsd:annotation>
+         <xsd:documentation>A set of non-exemption appeal denials associated with a component.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="AppealNonExemptionDenialOrganizationAssociation" type="foia:ComponentDataOrganizationAssociationType">
+      <xsd:annotation>
+         <xsd:documentation>A relationship between a set non-exemption appeal denials and an agency or component.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="AppealNonExemptionDenialSection" type="foia:AppealNonExemptionDenialSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A report section describing non-exemption reasons for denial on appeal.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="AppealResponseTimeSection" type="foia:AppealResponseTimeSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A report section providing statistics for administrative appeal response time.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="AppliedExemption" type="foia:AppliedExemptionType">
+      <xsd:annotation>
+         <xsd:documentation>A FOIA exemption and the number of times the exemption was relied upon.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="AppliedExemptionCode" type="foia:ExemptionCodeType">
+      <xsd:annotation>
+         <xsd:documentation>A code describing a FOIA exemption applied in denial of requests.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="AppliedExemptionQuantity" type="niem-xsd:nonNegativeInteger">
+      <xsd:annotation>
+         <xsd:documentation>A count of applications of a specific FOIA exemption for denial of requests.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="Backlog" type="foia:BacklogType">
+      <xsd:annotation>
+         <xsd:documentation>A set of values detailing the number of items that were pending beyond the statutory time period for an agency or component.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="BacklogComparison" type="foia:BacklogComparisonType">
+      <xsd:annotation>
+         <xsd:documentation>A set of values comparing current year backlog to previous year for an agency or component.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="BacklogComparisonOrganizationAssociation" type="foia:ComponentDataOrganizationAssociationType">
+      <xsd:annotation>
+         <xsd:documentation>A relationship between a set of values comparing current year backlog to previous year, and an agency or component.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="BacklogCurrentYearQuantity" type="niem-xsd:nonNegativeInteger">
+      <xsd:annotation>
+         <xsd:documentation>A count of backlogged as of the end of the current fiscal year.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="BackloggedAppealComparisonSection" type="foia:BacklogComparisonSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A report section comparing current year backlog of administrative appeals to previous year.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="BackloggedAppealQuantity" type="niem-xsd:nonNegativeInteger">
+      <xsd:annotation>
+         <xsd:documentation>A count of the number of administrative appeals backlogged as of end of fiscal year.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="BackloggedRequestComparisonSection" type="foia:BacklogComparisonSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A report section comparing current year backlog of requests to previous year.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="BackloggedRequestQuantity" type="niem-xsd:nonNegativeInteger">
+      <xsd:annotation>
+         <xsd:documentation>A count of the number of requests backlogged as of end of fiscal year.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="BacklogLastYearQuantity" type="niem-xsd:nonNegativeInteger">
+      <xsd:annotation>
+         <xsd:documentation>A count of backlogged as of the end of the previous fiscal year.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="BacklogOrganizationAssociation" type="foia:ComponentDataOrganizationAssociationType">
+      <xsd:annotation>
+         <xsd:documentation>A relationship between a set of values detailing the number of items that were pending beyond the statutory time period, and an agency or component.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="BacklogSection" type="foia:BacklogSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A report section showing the number of items that were pending beyond the statutory time period.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ComplexPendingRequestStatistics" type="foia:PendingRequestStatisticsType">
+      <xsd:annotation>
+         <xsd:documentation>A set of statistics describing complex pending perfected requests at end of fiscal year.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ComplexResponseTime" type="foia:ResponseTimeType">
+      <xsd:annotation>
+         <xsd:documentation>A set of statistics describing response time for complex requests over the course of the fiscal year.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ComplexResponseTimeIncrementsSection" type="foia:ResponseTimeIncrementsSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A report section showing breakdown of response times to complex requests into 13 designated categories.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ComponentAppliedExemptions" type="foia:ComponentAppliedExemptionsType">
+      <xsd:annotation>
+         <xsd:documentation>An enumeration of a component's reliance upon exemptions for denial of requests.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ComponentAppliedExemptionsOrganizationAssociation" type="foia:ComponentDataOrganizationAssociationType">
+      <xsd:annotation>
+         <xsd:documentation>A relationship between a set of applications of exemptions and a component or agency.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ComponentDataReference" type="s:ReferenceType">
+      <xsd:annotation>
+         <xsd:documentation>A set of data associated with a "component" (agency, sub-organization, office, or division).</xsd:documentation>
+         <xsd:appinfo>
+            <i:ReferenceTarget i:name="ComponentDataType"/>
+         </xsd:appinfo>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ComponentOtherDenialReason" type="foia:ComponentOtherDenialReasonType">
+      <xsd:annotation>
+         <xsd:documentation>A set of reasons a component denied requests or appeals other than pre-defined reasons.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ComponentOtherDenialReasonQuantity" type="niem-xsd:nonNegativeInteger">
+      <xsd:annotation>
+         <xsd:documentation>A count of a component's reliance upon reasons for denial other than pre-defined reasons.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ComponentResponseTimeIncrements" type="foia:ComponentResponseTimeIncrementsType">
+      <xsd:annotation>
+         <xsd:documentation>An agency or component's breakdown of response times into 13 designated categories.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="DocumentFiscalYearDate" type="niem-xsd:gYear">
+      <xsd:annotation>
+         <xsd:documentation>A year specifying the fiscal year to which the information in the document pertains.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="EquivalentFullTimeEmployeeQuantity" type="niem-xsd:decimal">
+      <xsd:annotation>
+         <xsd:documentation>A count of the number of "equivalent" full time employees dedicated to FOIA duties.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="Exemption3StatuteSection" type="foia:Exemption3StatuteSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A report section listing exemption 3 statutes an agency relied upon to withhold information. Corresponds to section IV of guidance document.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ExpeditedPendingRequestStatistics" type="foia:PendingRequestStatisticsType">
+      <xsd:annotation>
+         <xsd:documentation>A set of statistics describing pending perfected requests for expedited processing at end of fiscal year.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ExpeditedProcessing" type="foia:ExpeditedProcessingType">
+      <xsd:annotation>
+         <xsd:documentation>A set of statistics describing handling of requests for expedited processing by an agency or component.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ExpeditedProcessingOrganizationAssociation" type="foia:ComponentDataOrganizationAssociationType">
+      <xsd:annotation>
+         <xsd:documentation>A relationship between a set of statistics describing handling of requests for expedited processing and an agency or component.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ExpeditedProcessingSection" type="foia:ExpeditedProcessingSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A report section describing handling of adjudicated requests for expedited processing.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ExpeditedResponseTime" type="foia:ResponseTimeType">
+      <xsd:annotation>
+         <xsd:documentation>A set of statistics describing response time for expedited processing requests over the course of the fiscal year.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ExpeditedResponseTimeIncrementsSection" type="foia:ResponseTimeIncrementsSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A report section showing breakdown of response times to requests for expedited processing into 13 designated categories.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="FeesCollected" type="foia:FeesCollectedType">
+      <xsd:annotation>
+         <xsd:documentation>A set of values detailing fees collected by an agency or component from FOIA requesters for processing their requests.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="FeesCollectedAmount" type="nc:AmountType">
+      <xsd:annotation>
+         <xsd:documentation>A number of dollars collected from FOIA requesters for processing their requests.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="FeesCollectedCostPercent" type="nc:PercentageType">
+      <xsd:annotation>
+         <xsd:documentation>A percentage of total processing costs covered by fees collected.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="FeesCollectedOrganizationAssociation" type="foia:ComponentDataOrganizationAssociationType">
+      <xsd:annotation>
+         <xsd:documentation>A relationship between a set of values detailing fees collected from FOIA requesters, and an agency or component.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="FeesCollectedSection" type="foia:FeesCollectedSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A report section showing fees collected from FOIA requesters for processing their requests.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="FeeWaiver" type="foia:FeeWaiverType">
+      <xsd:annotation>
+         <xsd:documentation>A set of statistics describing handling by an agency or component of requests for a waiver of fees.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="FeeWaiverOrganizationAssociation" type="foia:ComponentDataOrganizationAssociationType">
+      <xsd:annotation>
+         <xsd:documentation>A relationship between a set of statistics describing handling of requests for a waiver of fees, and an agency or component.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="FeeWaiverSection" type="foia:FeeWaiverSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A report section describing handling of requests for a waiver of fees.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="FootnoteText" type="nc:TextType">
+      <xsd:annotation>
+         <xsd:documentation>A free-form text footnote included with a section of a FOIA annual report.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="FullTimeEmployeeQuantity" type="niem-xsd:decimal">
+      <xsd:annotation>
+         <xsd:documentation>A count of the number of employees who perform FOIA duties 100% of the time.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="InformationGrantedResponseTimeSection" type="foia:ProcessedResponseTimeSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A report section providing statistics for response times to perfected requests in which information was granted.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ItemsProcessedCurrentYearQuantity" type="niem-xsd:nonNegativeInteger">
+      <xsd:annotation>
+         <xsd:documentation>A count of items processed in the current year.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ItemsProcessedLastYearQuantity" type="niem-xsd:nonNegativeInteger">
+      <xsd:annotation>
+         <xsd:documentation>A count of items processed in the previous year.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ItemsReceivedCurrentYearQuantity" type="niem-xsd:nonNegativeInteger">
+      <xsd:annotation>
+         <xsd:documentation>A count of items received for processing in the current year.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ItemsReceivedLastYearQuantity" type="niem-xsd:nonNegativeInteger">
+      <xsd:annotation>
+         <xsd:documentation>A count of items received for processing in the previous year.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="LitigationCostAmount" type="nc:AmountType">
+      <xsd:annotation>
+         <xsd:documentation>A number of dollars expended litigating FOIA requests.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="NonExemptionDenial" type="foia:NonExemptionDenialType">
+      <xsd:annotation>
+         <xsd:documentation>A non-exemption reason and count of denials of FOIA requests or appeals.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="NonExemptionDenialQuantity" type="niem-xsd:nonNegativeInteger">
+      <xsd:annotation>
+         <xsd:documentation>A count of the number of FOIA requests fully denied for a specific non-exemption reason.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="NonExemptionDenialReasonCode" type="foia:NonExemptionDenialReasonCodeType">
+      <xsd:annotation>
+         <xsd:documentation>A reason for denial of FOIA requests other than exemptions.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="OldestPendingAppealSection" type="foia:OldestPendingItemSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A report section showing the oldest pending appeals for an agency or component.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="OldestPendingConsultationSection" type="foia:OldestPendingItemSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A report section showing the oldest pending consultations for an agency or component.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="OldestPendingItems" type="foia:OldestPendingItemsType">
+      <xsd:annotation>
+         <xsd:documentation>An enumeration of the oldest pending items of some type (request, appeal, consultation) for an agency or component.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="OldestPendingItemsOrganizationAssociation" type="foia:ComponentDataOrganizationAssociationType">
+      <xsd:annotation>
+         <xsd:documentation>A relationship between an enumeration of the oldest pending items of some type (request, appeal, consultation) and an agency or component.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="OldestPendingRequestSection" type="foia:OldestPendingItemSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A report section showing the oldest pending requests for an agency or component.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="OldItem" type="foia:OldItemType">
+      <xsd:annotation>
+         <xsd:documentation>A receipt date and age of an old item (request, appeal, consultation).</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="OldItemPendingDaysQuantity" type="niem-xsd:nonNegativeInteger">
+      <xsd:annotation>
+         <xsd:documentation>A count of the number of days an old item (request, appeal, consultation) has been pending.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="OldItemReceiptDate" type="niem-xsd:date">
+      <xsd:annotation>
+         <xsd:documentation>A date of receipt of an old item (request, appeal, consultation).</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="OtherDenialReason" type="foia:OtherDenialReasonType">
+      <xsd:annotation>
+         <xsd:documentation>A reason requests or appeals were denied, and the number of times the reason was relied upon.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="OtherDenialReasonDescriptionText" type="nc:TextType">
+      <xsd:annotation>
+         <xsd:documentation>A description of reason for denial other than pre-defined reasons.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="OtherDenialReasonOrganizationAssociation" type="foia:ComponentDataOrganizationAssociationType">
+      <xsd:annotation>
+         <xsd:documentation>A relationship between a set of other denial reasons and a component or agency.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="OtherDenialReasonQuantity" type="niem-xsd:nonNegativeInteger">
+      <xsd:annotation>
+         <xsd:documentation>A count of a component's reliance upon a single reason for denial other than pre-defined reasons.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="PendingPerfectedRequests" type="foia:PendingPerfectedRequestsType">
+      <xsd:annotation>
+         <xsd:documentation>A set of statistics describing pending perfected requests at end of fiscal year, separated out by track (simple, complex, expedited).</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="PendingPerfectedRequestsOrganizationAssociation" type="foia:ComponentDataOrganizationAssociationType">
+      <xsd:annotation>
+         <xsd:documentation>A relationship between a set of statistics describing pending perfected requests and an agency or component.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="PendingPerfectedRequestsSection" type="foia:PendingPerfectedRequestsSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A report section providing statistics for pending perfected requests at end of fiscal year.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="PendingRequestAverageDaysValue" type="niem-xsd:decimal">
+      <xsd:annotation>
+         <xsd:documentation>A count of the average number of days perfected requests have been pending.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="PendingRequestMedianDaysValue" type="niem-xsd:decimal">
+      <xsd:annotation>
+         <xsd:documentation>A count of the median number of days perfected requests have been pending.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="PendingRequestQuantity" type="niem-xsd:nonNegativeInteger">
+      <xsd:annotation>
+         <xsd:documentation>A count of perfected requests pending at end of fiscal year.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="PersonnelAndCost" type="foia:PersonnelAndCostType">
+      <xsd:annotation>
+         <xsd:documentation>A set of statistics describing personnel dedicated to, and costs associated with FOIA duties for an agency or component.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="PersonnelAndCostOrganizationAssociation" type="foia:ComponentDataOrganizationAssociationType">
+      <xsd:annotation>
+         <xsd:documentation>A relationship between a set of statistics describing personnel dedicated to, and costs associated with FOIA duties, and an agency or component.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="PersonnelAndCostSection" type="foia:PersonnelAndCostSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A report section showing personnel dedicated to, and costs associated with FOIA duties. Corresponds to section IX of the guidance document.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="PostedbyFOIAQuantity" type="niem-xsd:nonNegativeInteger">
+      <xsd:annotation>
+         <xsd:documentation>A count of the number of subsection posted by FOIA Office as of end of fiscal year.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="PostedbyProgramQuantity" type="niem-xsd:nonNegativeInteger">
+      <xsd:annotation>
+         <xsd:documentation>A count of the number of subsection posted by Program Office as of end of fiscal year.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ProcessedAppealComparisonSection" type="foia:ProcessingComparisonSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A report section comparing current year processing of administrative appeals to previous year.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ProcessedAppealSection" type="foia:ProcessedSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A report section describing appeal processing statistics over the course of the fiscal year.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ProcessedConsultationSection" type="foia:ProcessedSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A report section describing consultation processing statistics over the course of the fiscal year.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ProcessedRequestComparisonSection" type="foia:ProcessingComparisonSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A report section comparing current year processing of requests to previous year.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ProcessedRequestSection" type="foia:ProcessedSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A report section describing request processing statistics over the course of the fiscal year.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ProcessedResponseTime" type="foia:ProcessedResponseTimeType">
+      <xsd:annotation>
+         <xsd:documentation>A set of response time statistics for requests over the course of the fiscal year, separated out by track (simple, complex, expedited).</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ProcessedResponseTimeOrganizationAssociation" type="foia:ComponentDataOrganizationAssociationType">
+      <xsd:annotation>
+         <xsd:documentation>A relationship between a set of response time statistics, separated out by track (simple, complex, expedited), and an agency or component.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ProcessedResponseTimeSection" type="foia:ProcessedResponseTimeSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A report section providing statistics for response times to all processed perfected requests.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ProcessingComparison" type="foia:ProcessingComparisonType">
+      <xsd:annotation>
+         <xsd:documentation>A set of values comparing current year processing of items (requests, appeals) to previous year for an agency or component.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ProcessingComparisonOrganizationAssociation" type="foia:ComponentDataOrganizationAssociationType">
+      <xsd:annotation>
+         <xsd:documentation>A relationship between a set of values comparing current year processing of items (requests, appeals) to previous year, and an agency or component.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ProcessingCostAmount" type="nc:AmountType">
+      <xsd:annotation>
+         <xsd:documentation>A number of dollars expended for processing FOIA requests at the initial request and administrative appeal levels.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ProcessingStatistics" type="foia:ProcessingStatisticsType">
+      <xsd:annotation>
+         <xsd:documentation>A set of statistics describing processing of different types of items (requests, appeals, consultations) over the course of the fiscal year.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ProcessingStatisticsOrganizationAssociation" type="foia:ComponentDataOrganizationAssociationType">
+      <xsd:annotation>
+         <xsd:documentation>A relationship between a set of processing statistics and a component or agency.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ProcessingStatisticsPendingAtEndQuantity" type="niem-xsd:nonNegativeInteger">
+      <xsd:annotation>
+         <xsd:documentation>A number of items (requests, appeals, consultations) awaiting processing by the component or agency at the end of the fiscal year.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ProcessingStatisticsPendingAtStartQuantity" type="niem-xsd:nonNegativeInteger">
+      <xsd:annotation>
+         <xsd:documentation>A number of items (requests, appeals, consultations) awaiting processing by the component or agency at the start of the fiscal year.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ProcessingStatisticsProcessedQuantity" type="niem-xsd:nonNegativeInteger">
+      <xsd:annotation>
+         <xsd:documentation>A number of items (requests, appeals, consultations) processed by the component or agency during the fiscal year.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ProcessingStatisticsReceivedQuantity" type="niem-xsd:nonNegativeInteger">
+      <xsd:annotation>
+         <xsd:documentation>A number of new items (requests, appeals, consultations) received by the component or agency during the fiscal year.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ReliedUponStatute" type="foia:ReliedUponStatuteType">
+      <xsd:annotation>
+         <xsd:documentation>An exemption 3 statute an agency relied upon to withhold information.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ReliedUponStatuteInformationWithheldText" type="nc:TextType">
+      <xsd:annotation>
+         <xsd:documentation>A brief description of a single type of information withheld under a statute.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ReliedUponStatuteOrganizationAssociation" type="foia:ReliedUponStatuteOrganizationAssociationType">
+      <xsd:annotation>
+         <xsd:documentation>A relationship between a statute and a component or agency.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ReliedUponStatuteQuantity" type="niem-xsd:nonNegativeInteger">
+      <xsd:annotation>
+         <xsd:documentation>A count of the number of times an agency or component relied upon an exemption 3 statute.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="RequestDenialOtherReasonSection" type="foia:OtherDenialReasonSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A report section describing 'other' reasons for full denials based on reasons other than exemptions.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="RequestDeniedQuantity" type="niem-xsd:nonNegativeInteger">
+      <xsd:annotation>
+         <xsd:documentation>A count of the number of requests which were denied.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="RequestDisposition" type="foia:RequestDispositionType">
+      <xsd:annotation>
+         <xsd:documentation>A set of values describing disposition of processed FOIA requests by an agency or component.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="RequestDispositionAppliedExemptionsSection" type="foia:RequestDispositionAppliedExemptionsSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A report section showing the number of times exemptions were applied in denying requests.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="RequestDispositionFullExemptionDenialQuantity" type="niem-xsd:nonNegativeInteger">
+      <xsd:annotation>
+         <xsd:documentation>A count of the number of requests which were fully denied based on exemptions.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="RequestDispositionFullGrantQuantity" type="niem-xsd:nonNegativeInteger">
+      <xsd:annotation>
+         <xsd:documentation>A count of the number of requests which were fully granted.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="RequestDispositionOrganizationAssociation" type="foia:ComponentDataOrganizationAssociationType">
+      <xsd:annotation>
+         <xsd:documentation>A relationship between a set of values describing disposition of processed FOIA requests and an agency or component.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="RequestDispositionPartialGrantQuantity" type="niem-xsd:nonNegativeInteger">
+      <xsd:annotation>
+         <xsd:documentation>A count of the number of requests which were partially granted and partially denied.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="RequestDispositionSection" type="foia:RequestDispositionSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A report section describing disposition of processed FOIA requests.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="RequestDispositionTotalQuantity" type="niem-xsd:nonNegativeInteger">
+      <xsd:annotation>
+         <xsd:documentation>A count of the total number of requests processed.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="RequestGrantedQuantity" type="niem-xsd:nonNegativeInteger">
+      <xsd:annotation>
+         <xsd:documentation>A count of the number of requests which were granted.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ResponseTime" type="foia:ResponseTimeType">
+      <xsd:annotation>
+         <xsd:documentation>A set of statistics describing response time for different types of items (requests, appeals) over the course of the fiscal year.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ResponseTimeAverageDays" abstract="true">
+      <xsd:annotation>
+         <xsd:documentation>A data concept for a count of the average number of days taken to respond to a request or appeal.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ResponseTimeAverageDaysValue" type="niem-xsd:decimal" substitutionGroup="foia:ResponseTimeAverageDays">
+      <xsd:annotation>
+         <xsd:documentation>A count of the average number of days taken to respond to a request or appeal.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ResponseTimeAverageDaysCode" type="foia:ResponseTimeCodeType" substitutionGroup="foia:ResponseTimeAverageDays">
+      <xsd:annotation>
+         <xsd:documentation>A special non-numeric average response time value.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ResponseTimeHighestDays" abstract="true">
+      <xsd:annotation>
+         <xsd:documentation>A data concept for a count of the highest number of days taken to respond to a request or appeal.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ResponseTimeHighestDaysValue" type="niem-xsd:decimal" substitutionGroup="foia:ResponseTimeHighestDays">
+      <xsd:annotation>
+         <xsd:documentation>A count of the highest number of days taken to respond to a request or appeal.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ResponseTimeHighestDaysCode" type="foia:ResponseTimeCodeType" substitutionGroup="foia:ResponseTimeHighestDays">
+      <xsd:annotation>
+         <xsd:documentation>A special non-numeric highest response time value.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ResponseTimeIncrementsOrganizationAssociation" type="foia:ComponentDataOrganizationAssociationType">
+      <xsd:annotation>
+         <xsd:documentation>A relationship between a breakdown of response times into 13 designated categories and an agency or component.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ResponseTimeLowestDays" abstract="true">
+      <xsd:annotation>
+         <xsd:documentation>A data concept for a count of the least number of days taken to respond to a request or appeal.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ResponseTimeLowestDaysValue" type="niem-xsd:decimal" substitutionGroup="foia:ResponseTimeLowestDays">
+      <xsd:annotation>
+         <xsd:documentation>A count of the least number of days taken to respond to a request or appeal.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ResponseTimeLowestDaysCode" type="foia:ResponseTimeCodeType" substitutionGroup="foia:ResponseTimeLowestDays">
+      <xsd:annotation>
+         <xsd:documentation>A special non-numeric lowest response time value.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ResponseTimeMedianDays" abstract="true">
+      <xsd:annotation>
+         <xsd:documentation>A data concept for a count of the median number of days taken to respond to a request or appeal.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ResponseTimeMedianDaysValue" type="niem-xsd:decimal" substitutionGroup="foia:ResponseTimeMedianDays">
+      <xsd:annotation>
+         <xsd:documentation>A count of the median number of days taken to respond to a request or appeal.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ResponseTimeMedianDaysCode" type="foia:ResponseTimeCodeType" substitutionGroup="foia:ResponseTimeMedianDays">
+      <xsd:annotation>
+         <xsd:documentation>A special non-numeric lowest response time value.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="ResponseTimeOrganizationAssociation" type="foia:ComponentDataOrganizationAssociationType">
+      <xsd:annotation>
+         <xsd:documentation>A relationship between a set response time statistics and an agency or component.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="SimplePendingRequestStatistics" type="foia:PendingRequestStatisticsType">
+      <xsd:annotation>
+         <xsd:documentation>A set of statistics describing simple pending perfected requests at end of fiscal year.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="SimpleResponseTime" type="foia:ResponseTimeType">
+      <xsd:annotation>
+         <xsd:documentation>A set of statistics describing response time for simple requests over the course of the fiscal year.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="SimpleResponseTimeIncrementsSection" type="foia:ResponseTimeIncrementsSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A report section showing breakdown of response times to simple requests into 13 designated categories.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="Subsection" type="foia:SubsectionType">
+      <xsd:annotation>
+         <xsd:documentation>A set of values detailing the number of items that were pending beyond the statutory time period for an agency or component.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="SubsectionPostOrganizationAssociation" type="foia:ComponentDataOrganizationAssociationType">
+      <xsd:annotation>
+         <xsd:documentation>A relationship between a set of values detailing the number of items that were pending beyond the statutory time period, and an agency or component.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="SubsectionPostSection" type="foia:SubsectionPostSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A report section showing the number of items that were pending beyond the statutory time period.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="SubsectionUsed" type="foia:SubsectionUsedType">
+      <xsd:annotation>
+         <xsd:documentation>A set of values detailing the number of items that were pending beyond the statutory time period for an agency or component.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="SubsectionUsedOrganizationAssociation" type="foia:ComponentDataOrganizationAssociationType">
+      <xsd:annotation>
+         <xsd:documentation>A relationship between a set of values detailing the number of items that were pending beyond the statutory time period, and an agency or component.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="SubsectionUsedSection" type="foia:SubsectionUsedSectionType">
+      <xsd:annotation>
+         <xsd:documentation>A report section showing the number of items that were pending beyond the statutory time period.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="TimeIncrement" type="foia:TimeIncrementType">
+      <xsd:annotation>
+         <xsd:documentation>A count of requests which were processed within a specified time increment.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="TimeIncrementCode" type="foia:TimeIncrementCodeType">
+      <xsd:annotation>
+         <xsd:documentation>A specific time increment (range of days) taken to process requests.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="TimeIncrementProcessedQuantity" type="niem-xsd:nonNegativeInteger">
+      <xsd:annotation>
+         <xsd:documentation>A count of the number of requests processed during a specific time increment.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="TimeIncrementTotalQuantity" type="niem-xsd:nonNegativeInteger">
+      <xsd:annotation>
+         <xsd:documentation>A count of the total number of requests processed in all 13 time increments.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="TimesUsedQuantity" type="niem-xsd:nonNegativeInteger">
+      <xsd:annotation>
+         <xsd:documentation>A count of the number of subsection used as of end of fiscal year.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="TotalCostAmount" type="nc:AmountType">
+      <xsd:annotation>
+         <xsd:documentation>A total number of dollars expended for processing and litigating FOIA requests.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:element name="TotalFullTimeStaffQuantity" type="niem-xsd:decimal">
+      <xsd:annotation>
+         <xsd:documentation>A count of the total number of personnel dedicated to FOIA duties.</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+</xsd:schema>

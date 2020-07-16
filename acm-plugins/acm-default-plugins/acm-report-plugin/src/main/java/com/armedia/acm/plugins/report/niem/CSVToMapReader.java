@@ -16,22 +16,23 @@ import java.util.Map;
 public class CSVToMapReader
 {
 
-    public List<Map<String, Object>> getDataMapFromCSV(File csvFile) throws IOException
+    public List<Map<String, String>> getDataMapFromCSV(File csvFile) throws IOException
     {
-        CSVParser parser = new CSVParser(new InputStreamReader(new FileInputStream(csvFile)), CSVFormat.DEFAULT
-                .withFirstRecordAsHeader());
+        CSVParser parser = new CSVParser(
+                new InputStreamReader(new FileInputStream(csvFile)),
+                CSVFormat.DEFAULT.withFirstRecordAsHeader());
 
-        List<Map<String, Object>> data = extractDataMapFromCSVRecords(parser.getRecords(), parser.getHeaderNames());
+        List<Map<String, String>> data = extractDataMapFromCSVRecords(parser.getRecords(), parser.getHeaderNames());
 
         return data;
     }
 
-    private List<Map<String, Object>> extractDataMapFromCSVRecords(List<CSVRecord> records, List<String> headers)
+    private List<Map<String, String>> extractDataMapFromCSVRecords(List<CSVRecord> records, List<String> headers)
     {
-        List<Map<String, Object>> data = new ArrayList<>();
+        List<Map<String, String>> data = new ArrayList<>();
         for (CSVRecord record : records)
         {
-            Map<String, Object> map = new LinkedHashMap<>();
+            Map<String, String> map = new LinkedHashMap<>();
 
             for (int j = 0; j < record.size(); j++)
             {
