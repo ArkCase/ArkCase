@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -113,10 +114,12 @@ public class NiemXmlTest
     @Test
     public void oldestPendingAppealSection() throws Exception
     {
-        List<Map<String, String>> data = getDataFromPath("/csv/Ten_Oldest_Pending_Administrative_Appeals.csv");
+        List<Map<String, String>> data = getDataFromPath("/csv/singleComponent/Ten_Oldest_Pending_Administrative_Appeals.csv");
         Document document = createXmlDocument();
+        Element foiaAnnualReport = document.createElement("iepd:FoiaAnnualReport");
+        document.appendChild(foiaAnnualReport);
 
-        niemExportService.generateOldestPendingAppealsSection(data, document);
+        niemExportService.generateOldestPendingAppealsSection(data, foiaAnnualReport, agencyIdentifiers);
 
         printXml(document);
     }
@@ -124,10 +127,13 @@ public class NiemXmlTest
     @Test
     public void oldestPendingRequestSection() throws Exception
     {
-        List<Map<String, String>> data = getDataFromPath("/csv/Pending_Requests_--_Ten_Oldest_Pending_Perfected_Requests.csv");
+        List<Map<String, String>> data = getDataFromPath(
+                "/csv/singleComponent/Pending_Requests_--_Ten_Oldest_Pending_Perfected_Requests.csv");
         Document document = createXmlDocument();
+        Element foiaAnnualReport = document.createElement("iepd:FoiaAnnualReport");
+        document.appendChild(foiaAnnualReport);
 
-        niemExportService.generateOldestPendingRequestsSection(data, document);
+        niemExportService.generateOldestPendingRequestsSection(data, foiaAnnualReport, agencyIdentifiers);
 
         printXml(document);
     }
@@ -135,10 +141,12 @@ public class NiemXmlTest
     @Test
     public void oldestPendingConsultationSection() throws Exception
     {
-        List<Map<String, String>> data = getDataFromPath("/csv/Pending_Requests_--_Ten_Oldest_Consultations.csv");
+        List<Map<String, String>> data = getDataFromPath("/csv/singleComponent/Pending_Requests_--_Ten_Oldest_Consultations.csv");
         Document document = createXmlDocument();
+        Element foiaAnnualReport = document.createElement("iepd:FoiaAnnualReport");
+        document.appendChild(foiaAnnualReport);
 
-        niemExportService.generateOldestPendingConsultationsSection(data, document);
+        niemExportService.generateOldestPendingConsultationsSection(data, foiaAnnualReport, agencyIdentifiers);
 
         printXml(document);
     }
@@ -146,10 +154,12 @@ public class NiemXmlTest
     @Test
     public void appealDenialOtherReasonSection() throws Exception
     {
-        List<Map<String, String>> data = getDataFromPath("/csv/Reasons_for_Denial_on_Appeal__--__Other__Reasons.csv");
+        List<Map<String, String>> data = getDataFromPath("/csv/singleComponent/Reasons_for_Denial_on_Appeal__--__Other__Reasons.csv");
         Document document = createXmlDocument();
+        Element foiaAnnualReport = document.createElement("iepd:FoiaAnnualReport");
+        document.appendChild(foiaAnnualReport);
 
-        niemExportService.generateAppealDenialOtherReasonSection(data, document);
+        niemExportService.generateAppealDenialOtherReasonSection(data, foiaAnnualReport, agencyIdentifiers);
 
         printXml(document);
     }
@@ -157,10 +167,12 @@ public class NiemXmlTest
     @Test
     public void requestDenialOtherReasonSection() throws Exception
     {
-        List<Map<String, String>> data = getDataFromPath("/csv/Reasons_for_Denial_on_Appeal__--__Other__Reasons.csv");
+        List<Map<String, String>> data = getDataFromPath("/csv/singleComponent/Reasons_for_Denial_on_Appeal__--__Other__Reasons.csv");
         Document document = createXmlDocument();
+        Element foiaAnnualReport = document.createElement("iepd:FoiaAnnualReport");
+        document.appendChild(foiaAnnualReport);
 
-        niemExportService.generateRequestDenialOtherReasonSection(data, document);
+        niemExportService.generateRequestDenialOtherReasonSection(data, foiaAnnualReport, agencyIdentifiers);
 
         printXml(document);
     }
@@ -168,10 +180,13 @@ public class NiemXmlTest
     @Test
     public void simpleResponseTimeIncrementsSection() throws Exception
     {
-        List<Map<String, String>> data = getDataFromPath("/csv/Processed_Simple_Requests_--_Response_Time_in_Day_Increments.csv");
+        List<Map<String, String>> data = getDataFromPath(
+                "/csv/singleComponent/Processed_Simple_Requests_--_Response_Time_in_Day_Increments.csv");
         Document document = createXmlDocument();
+        Element foiaAnnualReport = document.createElement("iepd:FoiaAnnualReport");
+        document.appendChild(foiaAnnualReport);
 
-        niemExportService.generateSimpleResponseTimeIncrementsSection(data, document);
+        niemExportService.generateSimpleResponseTimeIncrementsSection(data, foiaAnnualReport, agencyIdentifiers);
 
         printXml(document);
     }
@@ -179,10 +194,13 @@ public class NiemXmlTest
     @Test
     public void complexResponseTimeIncrementsSection() throws Exception
     {
-        List<Map<String, String>> data = getDataFromPath("/csv/Processed_Simple_Requests_--_Response_Time_in_Day_Increments.csv");
+        List<Map<String, String>> data = getDataFromPath(
+                "/csv/singleComponent/Processed_Simple_Requests_--_Response_Time_in_Day_Increments.csv");
         Document document = createXmlDocument();
+        Element foiaAnnualReport = document.createElement("iepd:FoiaAnnualReport");
+        document.appendChild(foiaAnnualReport);
 
-        niemExportService.generateComplexResponseTimeIncrementsSection(data, document);
+        niemExportService.generateComplexResponseTimeIncrementsSection(data, foiaAnnualReport, agencyIdentifiers);
 
         printXml(document);
     }
@@ -190,10 +208,13 @@ public class NiemXmlTest
     @Test
     public void expeditedResponseTimeIncrementsSection() throws Exception
     {
-        List<Map<String, String>> data = getDataFromPath("/csv/Processed_Simple_Requests_--_Response_Time_in_Day_Increments.csv");
+        List<Map<String, String>> data = getDataFromPath(
+                "/csv/singleComponent/Processed_Simple_Requests_--_Response_Time_in_Day_Increments.csv");
         Document document = createXmlDocument();
+        Element foiaAnnualReport = document.createElement("iepd:FoiaAnnualReport");
+        document.appendChild(foiaAnnualReport);
 
-        niemExportService.generateExpeditedResponseTimeIncrementsSection(data, document);
+        niemExportService.generateExpeditedResponseTimeIncrementsSection(data, foiaAnnualReport, agencyIdentifiers);
 
         printXml(document);
     }
@@ -201,10 +222,13 @@ public class NiemXmlTest
     @Test
     public void appealDispositionSection() throws Exception
     {
-        List<Map<String, String>> data = getDataFromPath("/csv/Disposition_of_Administrative_Appeals_--_All_Processed_Appeals.csv");
+        List<Map<String, String>> data = getDataFromPath(
+                "/csv/singleComponent/Disposition_of_Administrative_Appeals_--_All_Processed_Appeals.csv");
         Document document = createXmlDocument();
+        Element foiaAnnualReport = document.createElement("iepd:FoiaAnnualReport");
+        document.appendChild(foiaAnnualReport);
 
-        niemExportService.generateAppealDispositionSection(data, document, agencyIdentifiers);
+        niemExportService.generateAppealDispositionSection(data, foiaAnnualReport, agencyIdentifiers);
 
         printXml(document);
     }
@@ -212,10 +236,13 @@ public class NiemXmlTest
     @Test
     public void requestDispositionSection() throws Exception
     {
-        List<Map<String, String>> data = getDataFromPath("/csv/Dispositions_of_FOIA_Requests_--_All_Processed_Requests.csv");
+        List<Map<String, String>> data = getDataFromPath(
+                "/csv/singleComponent/Dispositions_of_FOIA_Requests_--_All_Processed_Requests.csv");
         Document document = createXmlDocument();
+        Element foiaAnnualReport = document.createElement("iepd:FoiaAnnualReport");
+        document.appendChild(foiaAnnualReport);
 
-        niemExportService.generateRequestDispositionSection(data, document);
+        niemExportService.generateRequestDispositionSection(data, foiaAnnualReport, agencyIdentifiers);
 
         printXml(document);
     }
@@ -223,10 +250,13 @@ public class NiemXmlTest
     @Test
     public void appealDispositionAppliedExemptionsSection() throws Exception
     {
-        List<Map<String, String>> data = getDataFromPath("/csv/Reasons_for_Denial_on_Appeal_--_Number_of_Times_Exemptions_Applied.csv");
+        List<Map<String, String>> data = getDataFromPath(
+                "/csv/singleComponent/Reasons_for_Denial_on_Appeal_--_Number_of_Times_Exemptions_Applied.csv");
         Document document = createXmlDocument();
+        Element foiaAnnualReport = document.createElement("iepd:FoiaAnnualReport");
+        document.appendChild(foiaAnnualReport);
 
-        niemExportService.generateAppealDispositionAppliedExemptionsSection(data, document);
+        niemExportService.generateAppealDispositionAppliedExemptionsSection(data, foiaAnnualReport, agencyIdentifiers);
 
         printXml(document);
     }
@@ -234,10 +264,13 @@ public class NiemXmlTest
     @Test
     public void requestDispositionAppliedExemptionsSection() throws Exception
     {
-        List<Map<String, String>> data = getDataFromPath("/csv/Dispositions_of_FOIA_Requests_--_Number_of_Times_Exemptions_Applied.csv");
+        List<Map<String, String>> data = getDataFromPath(
+                "/csv/singleComponent/Dispositions_of_FOIA_Requests_--_Number_of_Times_Exemptions_Applied.csv");
         Document document = createXmlDocument();
+        Element foiaAnnualReport = document.createElement("iepd:FoiaAnnualReport");
+        document.appendChild(foiaAnnualReport);
 
-        niemExportService.generateRequestDispositionAppliedExemptionsSection(data, document);
+        niemExportService.generateRequestDispositionAppliedExemptionsSection(data, foiaAnnualReport, agencyIdentifiers);
 
         printXml(document);
     }
@@ -246,10 +279,12 @@ public class NiemXmlTest
     public void processedRequestComparisonSection() throws Exception
     {
         List<Map<String, String>> data = getDataFromPath(
-                "/csv/Comparison_of_Numbers_of_Requests_From_Previous_and_Current_Annual_Report_--_Request_Received_and_Processed.csv");
+                "/csv/singleComponent/Comparison_of_Numbers_of_Requests_From_Previous_and_Current_Annual_Report_--_Request_Received_and_Processed.csv");
         Document document = createXmlDocument();
+        Element foiaAnnualReport = document.createElement("iepd:FoiaAnnualReport");
+        document.appendChild(foiaAnnualReport);
 
-        niemExportService.generateProcessedRequestComparisonSection(data, document);
+        niemExportService.generateProcessedRequestComparisonSection(data, foiaAnnualReport, agencyIdentifiers);
 
         printXml(document);
     }
@@ -258,10 +293,12 @@ public class NiemXmlTest
     public void processedAppealsComparisonSection() throws Exception
     {
         List<Map<String, String>> data = getDataFromPath(
-                "/csv/Comparison_of_Numbers_of_Administrative_Appeals_From_Previous_and_Current_Annual_Report_--_Appeals_Received_and_Processed.csv");
+                "/csv/singleComponent/Comparison_of_Numbers_of_Administrative_Appeals_From_Previous_and_Current_Annual_Report_--_Appeals_Received_and_Processed.csv");
         Document document = createXmlDocument();
+        Element foiaAnnualReport = document.createElement("iepd:FoiaAnnualReport");
+        document.appendChild(foiaAnnualReport);
 
-        niemExportService.generateProcessedAppealsComparisonSection(data, document);
+        niemExportService.generateProcessedAppealsComparisonSection(data, foiaAnnualReport, agencyIdentifiers);
 
         printXml(document);
     }
@@ -270,10 +307,12 @@ public class NiemXmlTest
     public void processedRequestSection() throws Exception
     {
         List<Map<String, String>> data = getDataFromPath(
-                "/csv/Comparison_of_Numbers_of_Requests_From_Previous_and_Current_Annual_Report_--_Request_Received_and_Processed.csv");
+                "/csv/singleComponent/Comparison_of_Numbers_of_Requests_From_Previous_and_Current_Annual_Report_--_Request_Received_and_Processed.csv");
         Document document = createXmlDocument();
+        Element foiaAnnualReport = document.createElement("iepd:FoiaAnnualReport");
+        document.appendChild(foiaAnnualReport);
 
-        niemExportService.generateProcessedRequestSection(data, document);
+        niemExportService.generateProcessedRequestSection(data, foiaAnnualReport, agencyIdentifiers);
 
         printXml(document);
     }
@@ -282,10 +321,12 @@ public class NiemXmlTest
     public void processedAppealsSection() throws Exception
     {
         List<Map<String, String>> data = getDataFromPath(
-                "/csv/Comparison_of_Numbers_of_Administrative_Appeals_From_Previous_and_Current_Annual_Report_--_Appeals_Received_and_Processed.csv");
+                "/csv/singleComponent/Comparison_of_Numbers_of_Administrative_Appeals_From_Previous_and_Current_Annual_Report_--_Appeals_Received_and_Processed.csv");
         Document document = createXmlDocument();
+        Element foiaAnnualReport = document.createElement("iepd:FoiaAnnualReport");
+        document.appendChild(foiaAnnualReport);
 
-        niemExportService.generateProcessedAppealsSection(data, document);
+        niemExportService.generateProcessedAppealsSection(data, foiaAnnualReport, agencyIdentifiers);
 
         printXml(document);
     }
@@ -294,10 +335,12 @@ public class NiemXmlTest
     public void processedConsultationsSection() throws Exception
     {
         List<Map<String, String>> data = getDataFromPath(
-                "/csv/Comparison_of_Numbers_of_Administrative_Appeals_From_Previous_and_Current_Annual_Report_--_Appeals_Received_and_Processed.csv");
+                "/csv/singleComponent/Comparison_of_Numbers_of_Administrative_Appeals_From_Previous_and_Current_Annual_Report_--_Appeals_Received_and_Processed.csv");
         Document document = createXmlDocument();
+        Element foiaAnnualReport = document.createElement("iepd:FoiaAnnualReport");
+        document.appendChild(foiaAnnualReport);
 
-        niemExportService.generateProcessedConsultationsSection(data, document);
+        niemExportService.generateProcessedConsultationsSection(data, foiaAnnualReport, agencyIdentifiers);
 
         printXml(document);
     }
@@ -306,10 +349,12 @@ public class NiemXmlTest
     public void appealNonExemptionDenialSection() throws Exception
     {
         List<Map<String, String>> data = getDataFromPath(
-                "/csv/Reasons_for_Denial_on_Appeal_--_Reasons_Other_Than_Exemptions.csv");
+                "/csv/singleComponent/Reasons_for_Denial_on_Appeal_--_Reasons_Other_Than_Exemptions.csv");
         Document document = createXmlDocument();
+        Element foiaAnnualReport = document.createElement("iepd:FoiaAnnualReport");
+        document.appendChild(foiaAnnualReport);
 
-        niemExportService.generateAppealNonExemptionDenialSection(data, document);
+        niemExportService.generateAppealNonExemptionDenialSection(data, foiaAnnualReport, agencyIdentifiers);
 
         printXml(document);
     }
@@ -318,10 +363,12 @@ public class NiemXmlTest
     public void appealResponseTimeSection() throws Exception
     {
         List<Map<String, String>> data = getDataFromPath(
-                "/csv/Response_Time_for_Administrative_Appeals.csv");
+                "/csv/singleComponent/Response_Time_for_Administrative_Appeals.csv");
         Document document = createXmlDocument();
+        Element foiaAnnualReport = document.createElement("iepd:FoiaAnnualReport");
+        document.appendChild(foiaAnnualReport);
 
-        niemExportService.generateAppealResponseTimeSection(data, document);
+        niemExportService.generateAppealResponseTimeSection(data, foiaAnnualReport, agencyIdentifiers);
 
         printXml(document);
     }
@@ -332,10 +379,12 @@ public class NiemXmlTest
     public void expeditedProcessingSection() throws Exception
     {
         List<Map<String, String>> data = getDataFromPath(
-                "/csv/Response_Time_for_Administrative_Appeals.csv");
+                "/csv/singleComponent/Response_Time_for_Administrative_Appeals.csv");
         Document document = createXmlDocument();
+        Element foiaAnnualReport = document.createElement("iepd:FoiaAnnualReport");
+        document.appendChild(foiaAnnualReport);
 
-        niemExportService.generateExpeditedProcessingSection(data, document);
+        niemExportService.generateExpeditedProcessingSection(data, foiaAnnualReport, agencyIdentifiers);
 
         printXml(document);
     }
@@ -344,10 +393,12 @@ public class NiemXmlTest
     public void feeWaiverSection() throws Exception
     {
         List<Map<String, String>> data = getDataFromPath(
-                "/csv/Response_Time_for_Administrative_Appeals.csv");
+                "/csv/singleComponent/Response_Time_for_Administrative_Appeals.csv");
         Document document = createXmlDocument();
+        Element foiaAnnualReport = document.createElement("iepd:FoiaAnnualReport");
+        document.appendChild(foiaAnnualReport);
 
-        niemExportService.generateFeeWaiverSection(data, document);
+        niemExportService.generateFeeWaiverSection(data, foiaAnnualReport, agencyIdentifiers);
 
         printXml(document);
     }
@@ -356,10 +407,12 @@ public class NiemXmlTest
     public void personnelAndCostSection() throws Exception
     {
         List<Map<String, String>> data = getDataFromPath(
-                "/csv/Response_Time_for_Administrative_Appeals.csv");
+                "/csv/singleComponent/Response_Time_for_Administrative_Appeals.csv");
         Document document = createXmlDocument();
+        Element foiaAnnualReport = document.createElement("iepd:FoiaAnnualReport");
+        document.appendChild(foiaAnnualReport);
 
-        niemExportService.generatePersonnelAndCostSection(data, document);
+        niemExportService.generatePersonnelAndCostSection(data, foiaAnnualReport, agencyIdentifiers);
 
         printXml(document);
     }
@@ -368,10 +421,12 @@ public class NiemXmlTest
     public void feesCollectedSection() throws Exception
     {
         List<Map<String, String>> data = getDataFromPath(
-                "/csv/Response_Time_for_Administrative_Appeals.csv");
+                "/csv/singleComponent/Response_Time_for_Administrative_Appeals.csv");
         Document document = createXmlDocument();
+        Element foiaAnnualReport = document.createElement("iepd:FoiaAnnualReport");
+        document.appendChild(foiaAnnualReport);
 
-        niemExportService.generateFeesCollectedSection(data, document);
+        niemExportService.generateFeesCollectedSection(data, foiaAnnualReport, agencyIdentifiers);
 
         printXml(document);
     }
@@ -380,10 +435,12 @@ public class NiemXmlTest
     public void subsectionUsedSection() throws Exception
     {
         List<Map<String, String>> data = getDataFromPath(
-                "/csv/Response_Time_for_Administrative_Appeals.csv");
+                "/csv/singleComponent/Response_Time_for_Administrative_Appeals.csv");
         Document document = createXmlDocument();
+        Element foiaAnnualReport = document.createElement("iepd:FoiaAnnualReport");
+        document.appendChild(foiaAnnualReport);
 
-        niemExportService.generateSubsectionUsedSection(data, document);
+        niemExportService.generateSubsectionUsedSection(data, foiaAnnualReport, agencyIdentifiers);
 
         printXml(document);
     }
@@ -392,10 +449,12 @@ public class NiemXmlTest
     public void subsectionPostSection() throws Exception
     {
         List<Map<String, String>> data = getDataFromPath(
-                "/csv/Response_Time_for_Administrative_Appeals.csv");
+                "/csv/singleComponent/Response_Time_for_Administrative_Appeals.csv");
         Document document = createXmlDocument();
+        Element foiaAnnualReport = document.createElement("iepd:FoiaAnnualReport");
+        document.appendChild(foiaAnnualReport);
 
-        niemExportService.generateSubsectionPostSection(data, document);
+        niemExportService.generateSubsectionPostSection(data, foiaAnnualReport, agencyIdentifiers);
 
         printXml(document);
     }
@@ -404,10 +463,12 @@ public class NiemXmlTest
     public void backlogSection() throws Exception
     {
         List<Map<String, String>> data = getDataFromPath(
-                "/csv/Response_Time_for_Administrative_Appeals.csv");
+                "/csv/singleComponent/Response_Time_for_Administrative_Appeals.csv");
         Document document = createXmlDocument();
+        Element foiaAnnualReport = document.createElement("iepd:FoiaAnnualReport");
+        document.appendChild(foiaAnnualReport);
 
-        niemExportService.generateBacklogSection(data, document);
+        niemExportService.generateBacklogSection(data, foiaAnnualReport, agencyIdentifiers);
 
         printXml(document);
     }
@@ -416,10 +477,12 @@ public class NiemXmlTest
     public void backloggedRequestComparisonSection() throws Exception
     {
         List<Map<String, String>> data = getDataFromPath(
-                "/csv/Response_Time_for_Administrative_Appeals.csv");
+                "/csv/singleComponent/Response_Time_for_Administrative_Appeals.csv");
         Document document = createXmlDocument();
+        Element foiaAnnualReport = document.createElement("iepd:FoiaAnnualReport");
+        document.appendChild(foiaAnnualReport);
 
-        niemExportService.generateBackloggedRequestComparisonSection(data, document);
+        niemExportService.generateBackloggedRequestComparisonSection(data, foiaAnnualReport, agencyIdentifiers);
 
         printXml(document);
     }
@@ -428,10 +491,12 @@ public class NiemXmlTest
     public void backloggedAppealComparisonSection() throws Exception
     {
         List<Map<String, String>> data = getDataFromPath(
-                "/csv/Response_Time_for_Administrative_Appeals.csv");
+                "/csv/singleComponent/Response_Time_for_Administrative_Appeals.csv");
         Document document = createXmlDocument();
+        Element foiaAnnualReport = document.createElement("iepd:FoiaAnnualReport");
+        document.appendChild(foiaAnnualReport);
 
-        niemExportService.generateBackloggedAppealsComparisonSection(data, document);
+        niemExportService.generateBackloggedAppealsComparisonSection(data, foiaAnnualReport, agencyIdentifiers);
 
         printXml(document);
     }
