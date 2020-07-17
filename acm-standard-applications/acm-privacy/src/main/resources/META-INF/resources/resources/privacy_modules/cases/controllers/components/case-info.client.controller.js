@@ -3,8 +3,8 @@
 angular.module('cases').controller(
     'Cases.InfoController',
     ['$scope', '$stateParams', '$state', '$translate', '$timeout', 'UtilService', 'Util.DateService', 'ConfigService', 'Object.LookupService', 'Case.LookupService', 'Case.InfoService', 'Object.ModelService', 'Helper.ObjectBrowserService', 'DueDate.Service', 'Admin.HolidayService',
-        'MessageService', '$modal', 'LookupService', 'Admin.PrivacyConfigService', 'Admin.ObjectTitleConfigurationService', 'ObjectService', '$filter',
-        function ($scope, $stateParams, $state, $translate, $timeout, Util, UtilDateService, ConfigService, ObjectLookupService, CaseLookupService, CaseInfoService, ObjectModelService, HelperObjectBrowserService, DueDateService, AdminHolidayService, MessageService, $modal, LookupService, AdminPrivacyConfigService, AdminObjectTitleConfigurationService, ObjectService, $filter) {
+        'MessageService', '$modal', 'LookupService', 'Admin.PrivacyConfigService', 'Admin.ObjectTitleConfigurationService', 'ObjectService', '$filter', 'Dialog.BootboxService',
+        function ($scope, $stateParams, $state, $translate, $timeout, Util, UtilDateService, ConfigService, ObjectLookupService, CaseLookupService, CaseInfoService, ObjectModelService, HelperObjectBrowserService, DueDateService, AdminHolidayService, MessageService, $modal, LookupService, AdminPrivacyConfigService, AdminObjectTitleConfigurationService, ObjectService, $filter, DialogService) {
 
             new HelperObjectBrowserService.Component({
                 scope: $scope,
