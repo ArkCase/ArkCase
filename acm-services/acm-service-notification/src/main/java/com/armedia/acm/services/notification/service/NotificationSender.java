@@ -136,7 +136,10 @@ public abstract class NotificationSender
                 List<Long> notificationFileIds = new ArrayList<>();
                 for (EcmFileVersion fileVersion : notification.getFiles())
                 {
-                    notificationFileIds.add(fileVersion.getFile().getId());
+                    if (fileVersion.getFile().getActiveVersionTag().equalsIgnoreCase(fileVersion.getVersionTag()))
+                    {
+                        notificationFileIds.add(fileVersion.getFile().getId());
+                    }
                 }
                 in.setAttachmentIds(notificationFileIds);
             }
