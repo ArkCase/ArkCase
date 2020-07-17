@@ -48,6 +48,7 @@ angular.module('cases').controller('Cases.ActionsFooterController',
                         $scope.loadingIcon = "fa fa-check";
 
                         if (data.success) {
+                            CaseInfoService.resetCaseInfo(data.caseFile);
                             $scope.$emit("report-object-updated", data.caseFile);
                         } else {
                             $scope.loading = false;
