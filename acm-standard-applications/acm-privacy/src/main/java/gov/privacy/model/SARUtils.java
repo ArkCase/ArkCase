@@ -122,6 +122,13 @@ public class SARUtils
             }
 
         }
+        else
+        {
+            if (person.getDefaultEmail() != null)
+            {
+                return person.getDefaultEmail().getValue();
+            }
+        }
 
         return "";
     }
