@@ -32,7 +32,6 @@ import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 import org.quartz.PersistJobDataAfterExecution;
 
 @DisallowConcurrentExecution
@@ -49,7 +48,7 @@ public class LdapPartialSyncJobDescriptor extends AcmJobDescriptor
     }
 
     @Override
-    public void executeJob(JobExecutionContext context) throws JobExecutionException
+    public void executeJob(JobExecutionContext context)
     {
         ldapSyncService.ldapPartialSync(context.getPreviousFireTime(), acmLdapSyncConfig);
     }

@@ -53,6 +53,8 @@ import java.util.stream.Stream;
  */
 public class MapperUtils
 {
+    private static final Logger log = LogManager.getLogger(MapperUtils.class);
+
     public static final Function<DirContextAdapter, LocalDate> convertFileTimeTimestampToDate = adapter -> {
         String expirationTimePasswordAttr = MapperUtils.getAttribute(adapter, "msDS-UserPasswordExpiryTimeComputed");
         if (expirationTimePasswordAttr != null)
@@ -74,6 +76,7 @@ public class MapperUtils
         }
         return null;
     };
+
     public static final Function<DirContextAdapter, LocalDate> calculatePasswordExpirationDateByShadowAccount = adapter -> {
         String shadowMaxAttr = MapperUtils.getAttribute(adapter, "shadowMax");
         String shadowLastChangeAttr = MapperUtils.getAttribute(adapter, "shadowLastChange");
@@ -91,11 +94,13 @@ public class MapperUtils
         }
         return null;
     };
+
     public static final Function<String, BasicAttribute> openLdapPasswordToAttribute = password -> new BasicAttribute("userPassword",
             password.getBytes());
+
     public static final Function<String, BasicAttribute> openLdapCurrentPasswordToAttribute = password -> new BasicAttribute(
             "userPassword");
-    private static Logger log = LogManager.getLogger(MapperUtils.class);
+
     public static final Function<String, BasicAttribute> activeDirectoryPasswordToAttribute = password -> {
         final byte[] passwordBytes;
         passwordBytes = MapperUtils.encodeUTF16LE(password);

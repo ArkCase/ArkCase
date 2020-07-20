@@ -749,5 +749,20 @@
                              constraintName="disallow_folder_link"/>
     </changeSet>
 
+    <changeSet id="files-72-add-filehash-column" author="martin.jovanovski">
+        <addColumn tableName="acm_file_version">
+            <column name="cm_file_hash" type="VARCHAR(255)"/>
+        </addColumn>
+        <createIndex tableName="acm_file_version" indexName="idx_file_hash">
+            <column name="cm_file_hash"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="files-73-add-is-duplicate" author="martin.jovanovski">
+        <addColumn tableName="acm_file">
+            <column name="cm_file_is_duplicate" type="VARCHAR(32)" defaultValue="false"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
 

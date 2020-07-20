@@ -57,6 +57,7 @@ import com.armedia.acm.web.api.MDCConstants;
 import org.apache.camel.component.cmis.CamelCMISConstants;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.CountingInputStream;
@@ -170,6 +171,9 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
                 EcmFileTransactionPipelineContext pipelineContext = buildEcmFileTransactionPipelineContext(authentication,
                         tempFileContents, targetCmisFolderId, container, metadata.getFileName(), existingCmisDocument,
                         detectedMetadata, ecmUniqueFilename);
+
+                String fileHash = DigestUtils.md5Hex(FileUtils.openInputStream(tempFileContents));
+                pipelineContext.setFileHash(fileHash);
 
                 boolean searchablePDF = false;
                 if (ecmFileConfig.getSnowboundEnableOcr())
@@ -323,7 +327,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             if (activeVersionMimeType != null && detectedMetadata != null
                     && ((detectedMetadata.getContentType().equals(activeVersionMimeType)) ||
                             (getAllAllowedUploadFileTypes(allowedUploadFileTypes.getAllowedUploadFileTypes(), activeVersionMimeType)
-                                    .contains(detectedMetadata.getContentType()))))
+                                    .contains(detectedMetadata.getContentType().replaceAll("\\.", "-dot-")))))
             {
 
                 Pair<String, String> mimeTypeAndExtension = buildMimeTypeAndExtension(detectedMetadata, ecmUniqueFilename,
@@ -336,6 +340,9 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
                 EcmFileTransactionPipelineContext pipelineContext = buildEcmFileTransactionPipelineContext(authentication,
                         tempFileContents, targetCmisFolderId, container, metadata.getFileName(), existingCmisDocument,
                         detectedMetadata, ecmUniqueFilename);
+
+                String fileHash = DigestUtils.md5Hex(FileUtils.openInputStream(tempFileContents));
+                pipelineContext.setFileHash(fileHash);
 
                 boolean searchablePDF = false;
                 log.debug("SNOWBOUND ENABLED OCR = [{}]", ecmFileConfig.getSnowboundEnableOcr());
@@ -566,6 +573,9 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             FileUtils.copyInputStreamToFile(fileInputStream, file);
             pipelineContext.setFileContents(file);
 
+            String fileHash = DigestUtils.md5Hex(FileUtils.openInputStream(file));
+            pipelineContext.setFileHash(fileHash);
+
             EcmTikaFile ecmTikaFile = new EcmTikaFile();
 
             try
@@ -637,6 +647,9 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             FileUtils.copyInputStreamToFile(fileInputStream, file);
             pipelineContext.setFileContents(file);
 
+            String fileHash = DigestUtils.md5Hex(FileUtils.openInputStream(file));
+            pipelineContext.setFileHash(fileHash);
+
             EcmTikaFile ecmTikaFile = new EcmTikaFile();
 
             try
@@ -704,6 +717,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         }
 
         getFileEventPublisher().publishFileActiveVersionSetEvent(ecmFile, authentication, ipAddress, true);
+        getFileEventPublisher().publishFileUpdatedEvent(ecmFile, authentication, true);
 
         return ecmFile;
     }
@@ -724,6 +738,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         }
 
         getFileEventPublisher().publishFileActiveVersionSetEvent(ecmFile, authentication, ipAddress, true);
+        getFileEventPublisher().publishFileUpdatedEvent(ecmFile, authentication, true);
 
         return ecmFile;
 

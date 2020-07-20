@@ -231,6 +231,9 @@
         <beans:bean id="foiaFileUpdatedEventListener" class="gov.foia.listener.FOIAFileUpdatedEventListener">
             <beans:property name="foiaRequestFileBrokerClient" ref="foiaRequestFileBrokerClient"/>
             <beans:property name="ecmFileService" ref="ecmFileService"/>
+            <beans:property name="acmParticipantService" ref="acmParticipantService"/>
+            <beans:property name="caseFileDao" ref="caseFileDao"/>
+            <beans:property name="portalAdminService" ref="portalAdminService"/>
         </beans:bean>
 
         <beans:bean id="foiaQueuedEventListener" class="gov.foia.listener.FOIAQueuedEventListener">
@@ -387,6 +390,7 @@
             <beans:property name="fileParticipantService" ref="fileParticipantService"/>
             <beans:property name="recycleBinItemService" ref="recycleBinItemServiceImpl"/>
             <beans:property name="authenticationTokenDao" ref="authenticationTokenDao"/>
+            <beans:property name="ecmFileVersionDao" ref="ecmFileVersionDao"/>
             <property name="camelContextManager" ref="camelContextManager"/>
         </beans:bean>
 

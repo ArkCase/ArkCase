@@ -220,7 +220,7 @@ angular.module('directives').directive(
                                 ,
                                 table: {
                                     indentation: 10, // indent 20px per node level
-                                    nodeColumnIdx: 2, // render the node title into the 3rd column
+                                    nodeColumnIdx: 3, // render the node title into the 4th column
                                     checkboxColumnIdx: 0
                                 // render the checkboxes into the 1st column
                                 },
@@ -436,6 +436,7 @@ angular.module('directives').directive(
                             //todo: move to column renderer
                             jqTreeBody.on("change", "select.docversion", DocTree.onChangeVersion);
                             jqTreeBody.on("dblclick", "select.docversion", DocTree.onDblClickVersion);
+                            jqTreeBody.on("click", "button.duplicate", DocTree.Op.showDuplicates);
 
                             var jqTreeHead = jqTree.find("thead");
                             jqTreeHead.find("input:checkbox").on("click", function(e) {
@@ -1250,6 +1251,24 @@ angular.module('directives').directive(
                             getCoreRenderers: function() {
                                 return [ {
                                     name: "checkbox",
+                                    renderer: function(element, node, columnDef, isReadOnly) {
+                                        ;
+                                    }
+                                }, {
+                                    name: "duplicate",
+                                    renderer: function(element, node, columnDef, isReadOnly) {
+                                        if(node.data.duplicate) {
+                                            var $td = $("<td/>");
+                                            var $span = $("<span/>").appendTo($td);
+                                            var $button = $("<button type='button'/>").addClass('duplicate').appendTo($span);
+                                            var $text = $("<strong>D</strong>").appendTo($button);
+
+                                            $(element).replaceWith($td);
+                                        }
+                                        ;
+                                    }
+                                }, {
+                                    name: "lock",
                                     renderer: function(element, node, columnDef, isReadOnly) {
                                         ;
                                     }
@@ -3012,7 +3031,7 @@ angular.module('directives').directive(
                                         DocTree.markNodeOk(frNode);
                                         dfd.resolve(moveFileInfo);
                                     }, function(errorData) {
-                                        MessageService.error(errorData.data);
+                                        MessageService.error($translate.instant('common.directive.docTree.moveFileError'));
                                         DocTree.refreshTree();
                                         DocTree.markNodeError(frNode);
                                         dfd.reject();
@@ -3109,6 +3128,36 @@ angular.module('directives').directive(
                                     }
                                 }
                                 return dfd.promise();
+                            },
+                            showDuplicates: function() {
+                                var node = DocTree.tree.getActiveNode();
+                                var file = node.data.objectId;
+                                Util.serviceCall({
+                                    service: Ecm.getFileDuplicates,
+                                    param: {
+                                        fileId: file
+                                    },
+                                    data: {},
+                                    onSuccess: function (response) {
+                                        var params = {
+                                            data: response
+                                        };
+                                        var modalInstance = $modal.open({
+                                            templateUrl: "modules/common/views/showDuplicates-modal.client.view.html",
+                                            controller: "Common.ShowDuplicates",
+                                            animation: true,
+                                            windowClass: 'modal-width-80',
+                                            resolve: {
+                                                params: function () {
+                                                    return params;
+                                                }
+                                            }
+                                        });
+                                        modalInstance.result.then(function() {
+                                            modalInstance.close();
+                                        });
+                                    }
+                                })
                             },
                             openDeleteConfirmationModal: function(data, onClickOk) {
                                 var modalInstance = $modal.open({
@@ -3715,6 +3764,7 @@ angular.module('directives').directive(
                                 nodeData.data.lock = Util.goodValue(fileData.lock);
                                 nodeData.data.modifier = Util.goodValue(fileData.modifier);
                                 nodeData.data.link = Util.goodValue(fileData.link);
+                                nodeData.data.duplicate = Util.goodValue(fileData.duplicate)
                                 if (Util.isArray(fileData.versionList)) {
                                     nodeData.data.versionList = [];
                                     for (var i = 0; i < fileData.versionList.length; i++) {

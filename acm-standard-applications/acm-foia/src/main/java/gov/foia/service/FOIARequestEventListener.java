@@ -246,6 +246,9 @@ public class FOIARequestEventListener implements ApplicationListener<AcmObjectHi
         request.setFeeWaiverFlag(initialRequest.getFeeWaiverFlag());
         request.setRequestFeeWaiveReason(initialRequest.getRequestFeeWaiveReason());
 
+        request.setExpediteDate(initialRequest.getExpediteDate());
+        request.setFeeWaivedDate(initialRequest.getFeeWaivedDate());
+
         request.setPayFee(initialRequest.getPayFee());
 
         request.setExpediteFlag(initialRequest.getExpediteFlag());
