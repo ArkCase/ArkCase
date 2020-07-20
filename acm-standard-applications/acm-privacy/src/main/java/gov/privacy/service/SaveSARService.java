@@ -45,9 +45,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import gov.privacy.model.SARConstants;
-import gov.privacy.model.SubjectAccessRequest;
-
 /**
  * @author sasko.tanaskoski
  *
@@ -112,18 +109,6 @@ public class SaveSARService
         else
         {
             caseFileEventUtility.raiseEvent(saved, "updated", new Date(), ipAddress, auth.getName(), auth);
-            if (saved instanceof SubjectAccessRequest)
-            {
-                SubjectAccessRequest request = (SubjectAccessRequest) saved;
-                {
-                    if (!saved.getQueue().getName().equals(SARConstants.INTAKE_QUEUE)
-                            && !request.getQueue().getName().equals(SARConstants.FULFILL_QUEUE))
-                    {
-                        caseFileEventUtility.raiseCustomEvent(saved, "disposition", dispositionValue + " Removed", new Date(),
-                                ipAddress, auth.getName(), auth);
-                    }
-                }
-            }
         }
     }
 
