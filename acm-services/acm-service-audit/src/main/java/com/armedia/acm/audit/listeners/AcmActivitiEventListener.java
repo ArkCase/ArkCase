@@ -67,7 +67,7 @@ public class AcmActivitiEventListener implements ApplicationListener<SpringActiv
 
         ActivitiEvent event = (ActivitiEvent) springActivitiEvent.getSource();
 
-        log.debug("Activiti event handling, event type {}", event.getType());
+        log.trace("Activiti event handling, event type {}", event.getType());
 
         switch (event.getType())
         {

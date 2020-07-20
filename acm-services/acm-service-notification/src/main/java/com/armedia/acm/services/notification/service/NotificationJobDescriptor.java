@@ -31,7 +31,6 @@ import com.armedia.acm.quartz.scheduler.AcmJobDescriptor;
 
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 import org.quartz.PersistJobDataAfterExecution;
 
 import java.util.Date;
@@ -49,7 +48,7 @@ public class NotificationJobDescriptor extends AcmJobDescriptor
     }
 
     @Override
-    public void executeJob(JobExecutionContext context) throws JobExecutionException
+    public void executeJob(JobExecutionContext context)
     {
         Date lastRun = context.getPreviousFireTime() == null ? new Date() : context.getPreviousFireTime();
         notificationService.run(lastRun);

@@ -576,6 +576,26 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         return requestPasswordReset(portalId, resetRequest, templateName, emailTitle);
     }
 
+    /*
+     * (non-Javadoc)
+     * @see com.armedia.acm.portalgateway.service.PortalUserServiceProvider#regeneratePasswordReset(java.lang.String,
+     * com.armedia.acm.portalgateway.model.UserResetRequest)
+     */
+    @Override
+    public UserResetResponse regeneratePasswordReset(String portalId, UserResetRequest resetRequest) throws PortalUserServiceException
+    {
+        Optional<UserResetRequestRecord> resetRecord = resetDao.findByEmail(resetRequest.getEmailAddress());
+        if (resetRecord.isPresent())
+        {
+            resetDao.delete(resetRecord.get());
+            return requestPasswordReset(portalId, resetRequest);
+        }
+        else
+        {
+            return UserResetResponse.reqistrationRequired();
+        }
+    }
+
     @Override
     public UserResetResponse requestPasswordReset(String portalId, UserResetRequest resetRequest, String templateName, String emailTitle)
             throws PortalUserServiceException

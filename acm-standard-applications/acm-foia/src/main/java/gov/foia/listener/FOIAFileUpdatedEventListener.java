@@ -27,15 +27,23 @@ package gov.foia.listener;
  * #L%
  */
 
+import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
+import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileUpdatedEvent;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.portalgateway.service.PortalAdminService;
+import com.armedia.acm.services.participants.model.AcmParticipant;
+import com.armedia.acm.services.participants.model.ParticipantTypes;
+import com.armedia.acm.services.participants.service.AcmParticipantService;
+import com.armedia.acm.services.users.model.AcmUser;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationListener;
 
 import javax.jms.JMSException;
@@ -60,6 +68,9 @@ public class FOIAFileUpdatedEventListener implements ApplicationListener<EcmFile
     private transient final Logger log = LogManager.getLogger(getClass());
     private FOIARequestFileBrokerClient foiaRequestFileBrokerClient;
     private EcmFileService ecmFileService;
+    private AcmParticipantService acmParticipantService;
+    private CaseFileDao caseFileDao;
+    private PortalAdminService portalAdminService;
 
     @Override
     public void onApplicationEvent(EcmFileUpdatedEvent ecmFileUpdatedEvent)
@@ -82,6 +93,7 @@ public class FOIAFileUpdatedEventListener implements ApplicationListener<EcmFile
                 if (oldFoiaFile.getPublicFlag() == false && updatedFoiaFile.getPublicFlag() == true)
                 {
                     publishEcmFile(updatedFoiaFile);
+                    addPortalUserAsReader(updatedFoiaFile);
                 }
 
             }
@@ -122,6 +134,41 @@ public class FOIAFileUpdatedEventListener implements ApplicationListener<EcmFile
         }
     }
 
+    private void addPortalUserAsReader(EcmFile ecmFile)
+    {
+
+        if (getPortalAdminService().listRegisteredPortals() != null && !getPortalAdminService().listRegisteredPortals().isEmpty())
+        {
+            AcmUser portalUser = getPortalAdminService().listRegisteredPortals().get(0).getUser();
+            if (portalUser != null)
+            {
+                CaseFile caseFile = getCaseFileDao().find(ecmFile.getParentObjectId());
+                try
+                {
+                    if (caseFile != null)
+                    {
+                        boolean isPortalUserParticipant = caseFile.getParticipants().stream()
+                                .anyMatch(
+                                        p -> ParticipantTypes.READER.equals(p.getParticipantType())
+                                                && p.getParticipantLdapId().equals(portalUser.getUserId()));
+
+                        if (!isPortalUserParticipant)
+                        {
+                            AcmParticipant readerParticipant = getAcmParticipantService().saveParticipant(portalUser.getUserId(),
+                                    ParticipantTypes.READER, caseFile.getId(), caseFile.getObjectType());
+                            caseFile.getParticipants().add(readerParticipant);
+                            log.debug("Successfully set portal user as participant for case file: [{}]", caseFile.getId());
+                        }
+                    }
+                }
+                catch (AcmAccessControlException e)
+                {
+                    log.error("Unable to set portal user as participant for case file: [{}]", caseFile.getId());
+                }
+            }
+        }
+    }
+
     public FOIARequestFileBrokerClient getFoiaRequestFileBrokerClient()
     {
         return foiaRequestFileBrokerClient;
@@ -140,5 +187,35 @@ public class FOIAFileUpdatedEventListener implements ApplicationListener<EcmFile
     public void setEcmFileService(EcmFileService ecmFileService)
     {
         this.ecmFileService = ecmFileService;
+    }
+
+    public AcmParticipantService getAcmParticipantService()
+    {
+        return acmParticipantService;
+    }
+
+    public void setAcmParticipantService(AcmParticipantService acmParticipantService)
+    {
+        this.acmParticipantService = acmParticipantService;
+    }
+
+    public CaseFileDao getCaseFileDao()
+    {
+        return caseFileDao;
+    }
+
+    public void setCaseFileDao(CaseFileDao caseFileDao)
+    {
+        this.caseFileDao = caseFileDao;
+    }
+
+    public PortalAdminService getPortalAdminService()
+    {
+        return portalAdminService;
+    }
+
+    public void setPortalAdminService(PortalAdminService portalAdminService)
+    {
+        this.portalAdminService = portalAdminService;
     }
 }

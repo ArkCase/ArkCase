@@ -231,6 +231,16 @@ public class FOIARequest extends CaseFile implements FOIAObject
     @Convert(converter = LocalDateTimeConverter.class)
     private LocalDateTime redirectedDate;
 
+    @Column(name = "fo_expedite_date")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @Convert(converter = LocalDateTimeConverter.class)
+    private LocalDateTime expediteDate;
+
+    @Column(name = "fo_feeWaived_date")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @Convert(converter = LocalDateTimeConverter.class)
+    private LocalDateTime feeWaivedDate;
+
     @Transient
     private String originalRequestNumber;
 
@@ -900,6 +910,22 @@ public class FOIARequest extends CaseFile implements FOIAObject
         this.redirectedDate = redirectedDate;
     }
 
+    public LocalDateTime getExpediteDate() {
+        return expediteDate;
+    }
+
+    public void setExpediteDate(LocalDateTime expediteDate) {
+        this.expediteDate = expediteDate;
+    }
+
+    public LocalDateTime getFeeWaivedDate() {
+        return feeWaivedDate;
+    }
+
+    public void setFeeWaivedDate(LocalDateTime feeWaivedDate) {
+        this.feeWaivedDate = feeWaivedDate;
+    }
+
     /*
      * (non-Javadoc)
      * @see java.lang.Object#toString()
@@ -920,7 +946,7 @@ public class FOIARequest extends CaseFile implements FOIAObject
                 + ", requestAmendmentDetails=" + requestAmendmentDetails + ", dispositionClosedDate=" + dispositionClosedDate
                 + ", tollingFlag=" + tollingFlag + ", limitedDeliveryFlag=" + limitedDeliveryFlag + ", generatedZipFlag=" + generatedZipFlag
                 + ", perfectedDate=" + perfectedDate + ", timeToComplete=" + ttcOnLastRedirection + ", redirectedDate=" + redirectedDate
-                + "} "
+                + ", expediteDate=" + expediteDate + ", feeWaivedDate=" + feeWaivedDate + "} "
                 + super.toString();
     }
 }
