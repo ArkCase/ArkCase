@@ -46,6 +46,8 @@ angular.module('consultations').controller(
 
             var promiseUsers = gridHelper.getUsers();
 
+            var defaultDateTimeUTCFormat = $translate.instant("common.defaultDateTimeUTCFormat");
+
             ConfigService.getComponentConfig("consultations", "participants").then(function(componentConfig) {
                 $scope.config = componentConfig;
             });
@@ -176,13 +178,13 @@ angular.module('consultations').controller(
                 $scope.objectInfo.objType = 'Consultation';
                 $scope.dateInfo = $scope.dateInfo || {};
                 if(!Util.isEmpty($scope.objectInfo.dueDate)){
-                    $scope.dateInfo.dueDate = moment.utc($scope.objectInfo.dueDate).local().format('MM/DD/YYYY HH:mm');
+                    $scope.dateInfo.dueDate = moment.utc($scope.objectInfo.dueDate).local().format(defaultDateTimeUTCFormat);
                     $scope.dueDateInfo = $scope.dateInfo.dueDate;
                 }
                 else {
                     $scope.dateInfo.dueDate = null;
                     $scope.dueDateInfo = new Date();
-                    $scope.dueDateInfo = moment($scope.dueDateInfo).format('MM/DD/YYYY HH:mm');
+                    $scope.dueDateInfo = moment($scope.dueDateInfo).format(defaultDateTimeUTCFormat);
                 }
                 $scope.dueDateBeforeChange = $scope.dateInfo.dueDate;
                 $scope.owningGroup = ObjectModelService.getGroup(data);
@@ -242,13 +244,13 @@ angular.module('consultations').controller(
                         DialogService.alert($translate.instant("consultations.comp.info.alertMessage ") + $filter("date")(startDate, $translate.instant('common.defaultDateTimeUIFormat')));
                     }else {
                         $scope.objectInfo.dueDate = moment.utc(correctedDueDate).format();
-                        $scope.dueDateInfo = moment.utc($scope.objectInfo.dueDate).local().format('MM/DD/YYYY HH:mm');
+                        $scope.dueDateInfo = moment.utc($scope.objectInfo.dueDate).local().format(defaultDateTimeUTCFormat);
                         $scope.dateInfo.dueDate = $scope.dueDateInfo;
                         $scope.saveConsultation();
                     }
                 }else {
                     $scope.objectInfo.dueDate = $scope.dueDateBeforeChange;
-                    $scope.dueDateInfo = moment.utc($scope.objectInfo.dueDate).local().format('MM/DD/YYYY HH:mm');
+                    $scope.dueDateInfo = moment.utc($scope.objectInfo.dueDate).local().format(defaultDateTimeUTCFormat);
                     $scope.dateInfo.dueDate = $scope.dueDateInfo;
                     $scope.saveConsultation();
                 }
