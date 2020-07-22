@@ -566,7 +566,9 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-offset-6 col-sm-4 form-group">
-                            <span class="text-danger ng-scope" ng-if="uploadFilesDescription['Requester Proof of Identity'].length == 0 && formInvalid" translate>cases.newRequest.addFile.validation.error</span>
+                            <span class="text-danger ng-scope"
+                                  ng-if="!subjectSameAsRequester && uploadFilesDescription['Requester Proof of Identity'].length == 0 && formInvalid"
+                                  translate>cases.newRequest.addFile.validation.error</span>
                         </div>
                     </div>
 
