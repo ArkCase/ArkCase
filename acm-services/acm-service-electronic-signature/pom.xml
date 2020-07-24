@@ -4,7 +4,7 @@
     <parent>
         <artifactId>acm-services</artifactId>
         <groupId>com.armedia.acm</groupId>
-        <version>2020.12</version>
+        <version>2020.13-SNAPSHOT</version>
     </parent>
 
     <groupId>com.armedia.acm.acm-services</groupId>
