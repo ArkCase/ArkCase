@@ -1,5 +1,4 @@
-"Agency / Component","Number of Consultations Received from Other Agencies that were Pending at the Agency as of Start","Number of","Number of Consultations Received from Other Agencies that were Processed by the Agency During the Fiscal Year","Number of Consultations Received from Other Agencies that were Pending at the Agency as of End"
-"","of the Fiscal Year","Consultations Received from Other Agencies During the Fiscal Year","","of the Fiscal Year"
+"Agency / Component","Number of Pending as of Start of Fiscal Year","Number of Received in Fiscal Year","Number of Processed in Fiscal Year","Total"
 "Atlanta","0","0","0","0"
 "Birmingham","0","0","0","0"
 "Charlotte","0","0","0","0"
@@ -17,4 +16,4 @@
 "St. Louis","0","0","0","0"
 "WFO","0","0","0","0"
 "OLC/HDQ","0","0","0","0"
-"AGENCY OVERALL","0","0","0","0"
+"Grand Total","0","0","0","0"

@@ -1,5 +1,4 @@
-"Agency / Component","NUMBER OF REQUESTS RECEIVED","","NUMBER OF REQUESTS PROCESSED",""
-"","Number Received During Fiscal Year from Last Year's Annual Report","Number Received During Fiscal Year from Current Annual Report","Number Processed During Fiscal Year from Last Year's Annual Report","Number Processed During Fiscal Year from Current Annual Report"
+"Agency / Component","Number Received During Fiscal Year from Last Year's Annual Report","Number Received During Fiscal Year from Current Annual Report","Number Processed During Fiscal Year from Last Year's Annual Report","Number Processed During Fiscal Year from Current Annual Report"
 "Atlanta","1457","1249","1477","1233"
 "Birmingham","1314","1400","1346","1402"
 "Charlotte","981","1046","1069","1036"
@@ -17,4 +16,4 @@
 "St. Louis","1465","1231","964","1729"
 "WFO","188","213","192","202"
 "OLC/HDQ","575","631","586","620"
-"AGENCY OVERALL","19002","19065","17560","19134"
+"Grand Total","19002","19065","17560","19134"

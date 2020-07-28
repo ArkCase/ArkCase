@@ -111,6 +111,35 @@ public class NiemExportService
         }
     }
 
+    // TODO rethink organization parent
+    public void appendOrganizationSection(Element parent, Map<String, String> agencyIdentifiers) throws ParseException
+    {
+        Element organizationElement = parent.getOwnerDocument().createElement("nc:Organization");
+        organizationElement.setAttribute("s:id", "ORG0");
+
+        addElement(organizationElement, "nc:OrganizationAbbreviationText", "EEOC");
+        addElement(organizationElement, "nc:OrganizationName", "Equal Employment Opportunity Commission (EEOC)");
+
+        for (Map.Entry<String, String> subUnit : agencyIdentifiers.entrySet())
+        {
+            appendSubUnit(organizationElement, subUnit.getKey(), subUnit.getValue());
+        }
+
+        parent.appendChild(organizationElement);
+    }
+
+    private void appendSubUnit(Element organizationElement, String subUnitName, String subUnitAbbrivation)
+    {
+
+        Element orgSubUnitElement = organizationElement.getOwnerDocument().createElement("nc:OrganizationSubUnit");
+        orgSubUnitElement.setAttribute("s:id", subUnitAbbrivation);
+
+        addElement(orgSubUnitElement, "nc:OrganizationAbbreviationText", subUnitName);
+        addElement(orgSubUnitElement, "nc:OrganizationName", subUnitName);
+
+        organizationElement.appendChild(orgSubUnitElement);
+    }
+
     public void generateOldestPendingAppealsSection(List<Map<String, String>> data, Element parent,
             Map<String, String> agencyIdentifiers) throws ParseException
     {
@@ -138,7 +167,7 @@ public class NiemExportService
 
         parent.appendChild(oldestPendingSectionElement);
 
-        Collection<List<Map<String, String>>> dataByComponents = groupByComponentAndFilter(data);
+        Collection<List<Map<String, String>>> dataByComponents = groupByComponentAndFilter(data).values();
 
         // Look into erasing the id counter
         Map<String, String> associationData = new LinkedHashMap<>();
@@ -253,7 +282,9 @@ public class NiemExportService
     {
         List<Map<String, String>> mainData = new ArrayList<>();
 
-        for (List<Map<String, String>> componentData : groupByComponentAndFilter(data))
+        Map<String, List<Map<String, String>>> stringListMap = groupByComponentAndFilter(data);
+        Collection<List<Map<String, String>>> dataByComponents = stringListMap.values();
+        for (List<Map<String, String>> componentData : dataByComponents)
         {
             Map<String, String> dataPair = new LinkedHashMap<>();
 
@@ -702,6 +733,10 @@ public class NiemExportService
 
         addElement(responseTimeElement, "foia:ResponseTimeMedianDaysValue", medianNumberOfDays);
         addElement(responseTimeElement, "foia:ResponseTimeAverageDaysValue", averageNumberOfDays);
+        if (Double.parseDouble(lowestNumberOfDays) < 1)
+        {
+            lowestNumberOfDays = "LT1";
+        }
         addElement(responseTimeElement, "foia:ResponseTimeLowestDaysValue", lowestNumberOfDays);
         addElement(responseTimeElement, "foia:ResponseTimeHighestDaysValue",
                 highestNumberOfDays);
@@ -989,13 +1024,13 @@ public class NiemExportService
         parent.appendChild(backlogComparisonElement);
     }
 
-    private Collection<List<Map<String, String>>> groupByComponentAndFilter(List<Map<String, String>> data)
+    private Map<String, List<Map<String, String>>> groupByComponentAndFilter(List<Map<String, String>> data)
     {
-        return data.stream()
+        Map<String, List<Map<String, String>>> listMap = data.stream()
                 .filter(it -> !it.get(AGENCY_IDENTIFIER_COLUMN).contains("Total")
                         || it.get(AGENCY_IDENTIFIER_COLUMN).equals("Grand Total"))
-                .collect(groupingBy(it -> it.get(AGENCY_IDENTIFIER_COLUMN)))
-                .values();
+                .collect(groupingBy(it -> it.get(AGENCY_IDENTIFIER_COLUMN)));
+        return listMap;
     }
 
     private void addElement(Element parent, String elemName, String elemValue)
