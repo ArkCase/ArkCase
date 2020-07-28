@@ -34,7 +34,7 @@ public class CSVToMapReader
         {
             Map<String, String> map = new LinkedHashMap<>();
 
-            for (int j = 0; j < record.size(); j++)
+            for (int j = 0; j < headers.size(); j++)
             {
                 map.put(headers.get(j), record.get(j));
             }

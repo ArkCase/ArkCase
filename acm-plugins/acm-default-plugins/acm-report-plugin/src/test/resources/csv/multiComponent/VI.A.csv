@@ -1,6 +1,3 @@
-"Agency / Component","Number of Appeals","Number of","Number of","Number of Appeals"
-"","Pending as of Start","Appeals Received","Appeals Processed","Pending as of End"
-"","of Fiscal Year","in Fiscal Year","in Fiscal Year","of Fiscal Year"
+"Agency / Component","Number of Pending as of Start of Fiscal Year","Number of Received in Fiscal Year","Number of Processed in Fiscal Year","Total"
 "OLC/HDQ","27","318","326","19"
-"","","","","0"
-"AGENCY OVERALL","27","318","326","19"
+"Grand Total","27","318","326","19"
