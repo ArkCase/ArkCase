@@ -1,5 +1,32 @@
 package com.armedia.acm.plugins.report.niem;
 
+/*-
+ * #%L
+ * ACM Default Plugin: report
+ * %%
+ * Copyright (C) 2014 - 2020 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import static org.junit.Assert.assertNotNull;
 
 import com.armedia.acm.services.config.lookups.model.StandardLookup;
@@ -178,6 +205,34 @@ public class NiemXmlTest
     }
 
     @Test
+    public void pendingPerfectedRequestsSection() throws Exception
+    {
+        List<Map<String, String>> data = getDataFromPath(
+                "/csv/singleComponent/Pending_Requests_--_All_Pending_Perfected_Requests.csv");
+        Document document = createXmlDocument();
+        Element foiaAnnualReport = document.createElement("iepd:FoiaAnnualReport");
+        document.appendChild(foiaAnnualReport);
+
+        niemExportService.generateProcessedRequestResponseTimeSection(data, foiaAnnualReport, agencyIdentifiers);
+
+        printXml(document);
+    }
+
+    @Test
+    public void informationGrantedResponseTimeSection() throws Exception
+    {
+        List<Map<String, String>> data = getDataFromPath(
+                "/csv/singleComponent/Pending_Requests_--_All_Pending_Perfected_Requests.csv");
+        Document document = createXmlDocument();
+        Element foiaAnnualReport = document.createElement("iepd:FoiaAnnualReport");
+        document.appendChild(foiaAnnualReport);
+
+        niemExportService.generateInformationGrantedResponseTimeSection(data, foiaAnnualReport, agencyIdentifiers);
+
+        printXml(document);
+    }
+
+    @Test
     public void simpleResponseTimeIncrementsSection() throws Exception
     {
         List<Map<String, String>> data = getDataFromPath(
@@ -293,7 +348,7 @@ public class NiemXmlTest
     public void processedAppealsComparisonSection() throws Exception
     {
         List<Map<String, String>> data = getDataFromPath(
-                "/csv/singleComponent/Comparison_of_Numbers_of_Administrative_Appeals_From_Previous_and_Current_Annual_Report_--_Appeals_Received_and_Processed.csv");
+                "/csv/singleComponent/Comparison_of_Numbers_of_Administrative_Appeals_From_Previous_and_Current_Annual_Report.csv");
         Document document = createXmlDocument();
         Element foiaAnnualReport = document.createElement("iepd:FoiaAnnualReport");
         document.appendChild(foiaAnnualReport);
@@ -321,7 +376,7 @@ public class NiemXmlTest
     public void processedAppealsSection() throws Exception
     {
         List<Map<String, String>> data = getDataFromPath(
-                "/csv/singleComponent/Comparison_of_Numbers_of_Administrative_Appeals_From_Previous_and_Current_Annual_Report_--_Appeals_Received_and_Processed.csv");
+                "/csv/singleComponent/Comparison_of_Numbers_of_Administrative_Appeals_From_Previous_and_Current_Annual_Report.csv");
         Document document = createXmlDocument();
         Element foiaAnnualReport = document.createElement("iepd:FoiaAnnualReport");
         document.appendChild(foiaAnnualReport);
@@ -335,7 +390,7 @@ public class NiemXmlTest
     public void processedConsultationsSection() throws Exception
     {
         List<Map<String, String>> data = getDataFromPath(
-                "/csv/singleComponent/Comparison_of_Numbers_of_Administrative_Appeals_From_Previous_and_Current_Annual_Report_--_Appeals_Received_and_Processed.csv");
+                "/csv/singleComponent/Comparison_of_Numbers_of_Administrative_Appeals_From_Previous_and_Current_Annual_Report.csv");
         Document document = createXmlDocument();
         Element foiaAnnualReport = document.createElement("iepd:FoiaAnnualReport");
         document.appendChild(foiaAnnualReport);

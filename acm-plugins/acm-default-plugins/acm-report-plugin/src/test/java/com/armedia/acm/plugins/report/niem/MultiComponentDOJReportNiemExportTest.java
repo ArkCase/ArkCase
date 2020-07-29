@@ -1,5 +1,32 @@
 package com.armedia.acm.plugins.report.niem;
 
+/*-
+ * #%L
+ * ACM Default Plugin: report
+ * %%
+ * Copyright (C) 2014 - 2020 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import static org.junit.Assert.assertNotNull;
 
 import com.armedia.acm.services.config.lookups.model.StandardLookup;
@@ -23,6 +50,8 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -73,6 +102,8 @@ public class MultiComponentDOJReportNiemExportTest
         reportPath.put("APPEAL_DENIAL_OTHER_REASON", "/csv/multiComponent/VI.C.3.csv");
         reportPath.put("APPEAL_RESPONSE_TIME", "/csv/multiComponent/VI.C.4.csv");
         reportPath.put("OLDEST_PENDING_APPEALS", "/csv/singleComponent/Ten_Oldest_Pending_Administrative_Appeals.csv");
+        reportPath.put("PROCESSED_PERFECTED_REQUESTS_RESPONSE_TIME", "/csv/multiComponent/VII.A.csv");
+        reportPath.put("INFORMATION_GRANTED_REQUESTS_RESPONSE_TIME", "/csv/multiComponent/VII.B.csv");
         reportPath.put("SIMPLE_RESPONSE_TIME_INCREMENTS", "/csv/multiComponent/VII.C.1.csv");
         reportPath.put("COMPLEX_RESPONSE_TIME_INCREMENTS", "/csv/multiComponent/VII.C.2.csv");
         reportPath.put("EXPEDITED_RESPONSE_TIME_INCREMENTS", "/csv/multiComponent/VII.C.3.csv");
@@ -351,7 +382,7 @@ public class MultiComponentDOJReportNiemExportTest
     public void processedAppealsComparisonSection() throws Exception
     {
         List<Map<String, String>> data = getDataFromPath(
-                "/csv/singleComponent/Comparison_of_Numbers_of_Administrative_Appeals_From_Previous_and_Current_Annual_Report_--_Appeals_Received_and_Processed.csv");
+                "/csv/singleComponent/Comparison_of_Numbers_of_Administrative_Appeals_From_Previous_and_Current_Annual_Report.csv");
         Document document = createXmlDocument();
         Element foiaAnnualReport = document.createElement("iepd:FoiaAnnualReport");
         document.appendChild(foiaAnnualReport);
@@ -379,7 +410,7 @@ public class MultiComponentDOJReportNiemExportTest
     public void processedAppealsSection() throws Exception
     {
         List<Map<String, String>> data = getDataFromPath(
-                "/csv/singleComponent/Comparison_of_Numbers_of_Administrative_Appeals_From_Previous_and_Current_Annual_Report_--_Appeals_Received_and_Processed.csv");
+                "/csv/singleComponent/Comparison_of_Numbers_of_Administrative_Appeals_From_Previous_and_Current_Annual_Report.csv");
         Document document = createXmlDocument();
         Element foiaAnnualReport = document.createElement("iepd:FoiaAnnualReport");
         document.appendChild(foiaAnnualReport);
@@ -393,7 +424,7 @@ public class MultiComponentDOJReportNiemExportTest
     public void processedConsultationsSection() throws Exception
     {
         List<Map<String, String>> data = getDataFromPath(
-                "/csv/singleComponent/Comparison_of_Numbers_of_Administrative_Appeals_From_Previous_and_Current_Annual_Report_--_Appeals_Received_and_Processed.csv");
+                "/csv/singleComponent/Comparison_of_Numbers_of_Administrative_Appeals_From_Previous_and_Current_Annual_Report.csv");
         Document document = createXmlDocument();
         Element foiaAnnualReport = document.createElement("iepd:FoiaAnnualReport");
         document.appendChild(foiaAnnualReport);
@@ -575,13 +606,22 @@ public class MultiComponentDOJReportNiemExportTest
         return document;
     }
 
-    private void printXml(Document document) throws TransformerException
+    private void printXml(Document document) throws TransformerException, IOException, FileNotFoundException
     {
         Transformer tf = TransformerFactory.newInstance().newTransformer();
         tf.setOutputProperty(OutputKeys.INDENT, "yes");
         Writer output = new StringWriter();
         tf.transform(new DOMSource(document), new StreamResult(output));
         System.out.println(output.toString());
+
+        String xmlFilePath = "/niem/YearlyFOIAReport.xml";
+        Resource xmlOutput = new ClassPathResource(xmlFilePath);
+        File xmlFile = null;
+        xmlFile = new File(xmlOutput.getURI());
+
+        tf.transform(new DOMSource(document),
+                new StreamResult(new FileOutputStream(xmlFile)));
+
     }
 
 }
