@@ -1,5 +1,32 @@
 package com.armedia.acm.plugins.report.niem;
 
+/*-
+ * #%L
+ * ACM Default Plugin: report
+ * %%
+ * Copyright (C) 2014 - 2020 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
+ * provided under the following open source license terms:
+ *
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import static java.util.stream.Collectors.groupingBy;
 
 import org.apache.commons.lang3.math.NumberUtils;
@@ -18,6 +45,7 @@ public class NiemExportService
 {
 
     public static final String AGENCY_IDENTIFIER_COLUMN = "Agency / Component";
+    public static final String LOWER_THAN_ONE_IDENTIFIER = "LT1";
 
     private NiemExportUtils niemExportUtils;
     private Map<String, String> componentMap = new HashMap<>();
@@ -56,6 +84,12 @@ public class NiemExportService
             break;
         case OLDEST_PENDING_APPEALS:
             generateOldestPendingAppealsSection(data, parent, agencyIdentifiers);
+            break;
+        case PROCESSED_PERFECTED_REQUESTS_RESPONSE_TIME:
+            generateProcessedRequestResponseTimeSection(data, parent, agencyIdentifiers);
+            break;
+        case INFORMATION_GRANTED_REQUESTS_RESPONSE_TIME:
+            generateInformationGrantedResponseTimeSection(data, parent, agencyIdentifiers);
             break;
         case SIMPLE_RESPONSE_TIME_INCREMENTS:
             generateSimpleResponseTimeIncrementsSection(data, parent, agencyIdentifiers);
@@ -314,6 +348,80 @@ public class NiemExportService
         return mainData;
     }
 
+    public void generateProcessedRequestResponseTimeSection(List<Map<String, String>> data, Element parent,
+            Map<String, String> agencyIdentifiers)
+    {
+        DOJReport report = DOJReport.PROCESSED_PERFECTED_REQUESTS_RESPONSE_TIME;
+        appendProcessedRequestResponseTimeSection(data, parent, agencyIdentifiers, report);
+    }
+
+    public void generateInformationGrantedResponseTimeSection(List<Map<String, String>> data, Element parent,
+            Map<String, String> agencyIdentifiers)
+    {
+        DOJReport report = DOJReport.INFORMATION_GRANTED_REQUESTS_RESPONSE_TIME;
+        appendProcessedRequestResponseTimeSection(data, parent, agencyIdentifiers, report);
+    }
+
+    private void appendProcessedRequestResponseTimeSection(List<Map<String, String>> data, Element parent,
+            Map<String, String> agencyIdentifiers, DOJReport report)
+    {
+        Element processedRequestResponseTimeElement = parent.getOwnerDocument().createElement(report.getSectionName());
+
+        List<Map<String, String>> filteredData = getDataWithComponentReferences(data, agencyIdentifiers, report);
+
+        filteredData.forEach(componentData -> appendProcessedResponseTimeItem(processedRequestResponseTimeElement, componentData));
+        filteredData.forEach(componentData -> appendProcessingAssociations2(processedRequestResponseTimeElement,
+                componentData, "foia:ProcessedResponseTimeOrganizationAssociation"));
+
+        parent.appendChild(processedRequestResponseTimeElement);
+    }
+
+    private void appendProcessedResponseTimeItem(Element parent, Map<String, String> record)
+    {
+        Element processedResponseTimeElement = parent.getOwnerDocument().createElement("foia:ProcessedResponseTime");
+        processedResponseTimeElement.setAttribute("s:id", record.get("ComponentDataReference"));
+
+        Element simpleResponseTimeElement = parent.getOwnerDocument().createElement("foia:SimpleResponseTime");
+        appendResponseTimeValuesPerTrack(simpleResponseTimeElement, record, "simple");
+        processedResponseTimeElement.appendChild(simpleResponseTimeElement);
+
+        Element complexResponseTimeElement = parent.getOwnerDocument().createElement("foia:ComplexResponseTime");
+        appendResponseTimeValuesPerTrack(complexResponseTimeElement, record, "complex");
+        processedResponseTimeElement.appendChild(complexResponseTimeElement);
+
+        Element expeditedResponseTimeElement = parent.getOwnerDocument().createElement("foia:ExpeditedResponseTime");
+        appendResponseTimeValuesPerTrack(expeditedResponseTimeElement, record, "expedited");
+        processedResponseTimeElement.appendChild(expeditedResponseTimeElement);
+
+        parent.appendChild(processedResponseTimeElement);
+    }
+
+    private void appendResponseTimeValuesPerTrack(Element parent, Map<String, String> record, String track)
+    {
+        String medianNumberOfDays = record.get(track + "~Median Number of Days");
+        String averageNumberOfDays = record.get(track + "~Average Number of Days");
+        String lowestNumberOfDays = record.get(track + "~Lowest Number of Days");
+        String highestNumberOfDays = record.get(track + "~Highest Number of Days");
+
+        addResponseTimeElementIfValid(parent, medianNumberOfDays, "foia:ResponseTimeMedianDaysCode", "foia:ResponseTimeMedianDaysValue");
+        addResponseTimeElementIfValid(parent, averageNumberOfDays, "foia:ResponseTimeAverageDaysCode", "foia:ResponseTimeAverageDaysValue");
+        addResponseTimeElementIfValid(parent, lowestNumberOfDays, "foia:ResponseTimeLowestDaysCode", "foia:ResponseTimeLowestDaysValue");
+        addResponseTimeElementIfValid(parent, highestNumberOfDays, "foia:ResponseTimeHighestDaysCode", "foia:ResponseTimeHighestDaysValue");
+    }
+
+    private void addResponseTimeElementIfValid(Element parent, String numberOfDays, String codeName, String valueName)
+    {
+        if (NumberUtils.isParsable(numberOfDays) && Double.parseDouble(numberOfDays) > 0
+                && Double.parseDouble(numberOfDays) < 1)
+        {
+            addElement(parent, codeName, LOWER_THAN_ONE_IDENTIFIER);
+        }
+        else if (NumberUtils.isParsable(numberOfDays) && Double.parseDouble(numberOfDays) >= 1)
+        {
+            addElement(parent, valueName, numberOfDays);
+        }
+    }
+
     public void generateSimpleResponseTimeIncrementsSection(List<Map<String, String>> data, Element parent,
             Map<String, String> agencyIdentifiers) throws ParseException
     {
@@ -366,7 +474,7 @@ public class NiemExportService
                 Element timeIncrementElement = parent.getOwnerDocument().createElement("foia:TimeIncrement");
 
                 addElement(timeIncrementElement, "foia:TimeIncrementCode", timeIncrementCode);
-                addElement(timeIncrementElement, "foia:TimeIncrementQuantity", timeIncrementQuantity);
+                addElement(timeIncrementElement, "foia:TimeIncrementProcessedQuantity", timeIncrementQuantity);
 
                 componentResponseTimeIncrements.appendChild(timeIncrementElement);
 
