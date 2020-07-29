@@ -46,7 +46,7 @@
     },
     {
         "op": "add",
-        "path": "/docTree/columnDefs/8",
+        "path": "/docTree/columnDefs/9",
         "value": {
             "name": "reviewStatus",
             "field": "reviewStatus",
@@ -60,7 +60,7 @@
     },
     {
         "op": "add",
-        "path": "/docTree/columnDefs/9",
+        "path": "/docTree/columnDefs/10",
         "value": {
             "name": "redactionStatus",
             "field": "redactionStatus",
@@ -389,5 +389,10 @@
             "width": "8%",
             "index": 9
         }
+    },
+    {
+        "op": "replace",
+        "path": "/showDuplicates/columnDefs/?@.name=='status'/width",
+        "value": "7%"
     }
 ]
