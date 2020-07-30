@@ -231,6 +231,60 @@ public class AcmGroupsSyncResultTest
 
     // @formatter:off
     /**
+     * Group A ->                    AcmGroup A ->
+     *       member cn=1,cn=Users             member cn=1,cn=Users
+     *                                        member cn=4,cn=Users
+     * Group B ->                    AcmGroup B ->
+     *       member cn=3,cn=Users             member cn=3,cn=Users
+     * Group C ->                    AcmGroup C ->
+     *                                        member cn=4,cn=Users
+     */
+    // @formatter:on
+    @Test
+    public void changedGroupsWithRemovedDeletedUserTest()
+    {
+        LdapGroup a = ldapGroup("A");
+        LdapGroup b = ldapGroup("B");
+        LdapGroup c = ldapGroup("C");
+
+        AcmUser u1 = acmUser("1");
+        AcmUser u3 = acmUser("3");
+        AcmUser u4 = acmUser("4");
+
+        a.setMembers(fromArray("cn=1,cn=Users"));
+        b.setMembers(fromArray("cn=3,cn=Users"));
+        c.setMembers(new HashSet<>());
+
+        AcmUser u4Deleted = acmUser("4");
+        u4Deleted.setDistinguishedName(MapperUtils.appendToDn(u4Deleted.getDistinguishedName(), AcmLdapConstants.DC_DELETED));
+        Map<String, AcmUser> currentUsers = userStream(u1, u3, u4Deleted)
+                .collect(Collectors.toMap(AcmUser::getUserId, Function.identity()));
+
+        AcmGroup acmGroupA = acmGroup("A");
+        AcmGroup acmGroupB = acmGroup("B");
+        AcmGroup acmGroupC = acmGroup("C");
+
+        acmGroupA.setUserMembers(userSet(u1, u4));
+        acmGroupB.setUserMembers(userSet(u3));
+        acmGroupC.setUserMembers(userSet(u4));
+
+        List<AcmGroup> currentGroups = Arrays.asList(acmGroupA, acmGroupB, acmGroupC);
+
+        unit.sync(Arrays.asList(a, b, c), currentGroups, currentUsers);
+
+        Map<String, AcmGroup> modifiedGroupsByName = getGroupByName(unit.getModifiedGroups());
+        assertThat(unit.getModifiedGroups().size(), is(2));
+        assertThat("Changed groups should be:", modifiedGroupsByName.keySet(), everyItem(isIn(fromArray("A", "C"))));
+        assertThat("Changed group A should have user members", modifiedGroupsByName.get("A").getUserMembers(false),
+                everyItem(isIn(userSet(u1))));
+        AcmGroup actualGroupC = modifiedGroupsByName.get("C");
+        assertThat("Changed group C should have user members",actualGroupC.getUserMembers(false),
+                everyItem(isIn(new HashSet<>())));
+        assertThat("Ascendants string for C should be null", actualGroupC.getAscendantsList(), nullValue());
+    }
+
+    // @formatter:off
+    /**
      * Group A ->                    AcmGroup A ->                          User 1 -> invalidated
      *       member cn=1,cn=Users             member cn=1,cn=Users                    cn=1,cn=Users,ou=Deleted
      *       member cn=4,cn=Users             member cn=2,cn=Users          User 01 -> same DN
