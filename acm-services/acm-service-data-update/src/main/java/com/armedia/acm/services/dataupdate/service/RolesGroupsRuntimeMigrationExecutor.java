@@ -177,6 +177,7 @@ public class RolesGroupsRuntimeMigrationExecutor implements AcmDataUpdateExecuto
         properties.add("report.plugin.PENTAHO_SERVER_PORT");
         properties.add("report.plugin.PENTAHO_REMOVE_FILE_API");
         properties.add("report.plugin.PENTAHO_SERVER_URL");
+        properties.add("report.plugin.PENTAHO_ADHOC_REPORTS_CONTEXT");
         properties.add("report.plugin.PENTAHO_VIEW_ANALYSIS_REPORT_URL_TEMPLATE");
         properties.add("report.plugin.PENTAHO_SCHEDULE_INPUT_FOLDER");
         properties.add("report.plugin.PENTAHO_REPORT_URL_TEMPLATE");

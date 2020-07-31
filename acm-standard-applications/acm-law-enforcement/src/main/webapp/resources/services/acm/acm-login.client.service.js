@@ -11,10 +11,11 @@
  * This service is used to manage login and logout. It holds login information, for example login status, idle time, current login ID, error statistics, etc.
  */
 
-angular.module('services').factory('Acm.LoginService', [ '$q', '$state', '$injector', '$log', 'Acm.StoreService', 'UtilService', 'ConfigService', 'Analytics', 'WebSocketsListener', function($q, $state, $injector, $log, Store, Util, ConfigService, Analytics, WebSocketService) {
+angular.module('services').factory('Acm.LoginService', [ '$q', '$state', '$injector', '$log', '$http', 'Acm.StoreService', 'UtilService', 'ConfigService', 'Analytics', 'WebSocketsListener', function($q, $state, $injector, $log, $http, Store, Util, ConfigService, Analytics, WebSocketService) {
     var Service = {
         LocalCacheNames: {
-            LOGIN_INFO: "AcmLoginInfo"
+            LOGIN_INFO: "AcmLoginInfo",
+            PENTAHO_LOGIN_INFO: "PentahoLoginInfo"
         }
 
         /**
@@ -45,6 +46,17 @@ angular.module('services').factory('Acm.LoginService', [ '$q', '$state', '$injec
             });
             return cacheLoginInfo;
         }
+
+        ,
+        _getPentahoLoginInfoCacheInstance: function() {
+            var pentahoCacheLoginInfo = new Store.LocalData({
+                name: Service.LocalCacheNames.PENTAHO_LOGIN_INFO,
+                noOwner: true,
+                noRegistry: true
+            });
+            return pentahoCacheLoginInfo;
+        }
+
         /**
          * @ngdoc method
          * @name isLogin
@@ -234,16 +246,32 @@ angular.module('services').factory('Acm.LoginService', [ '$q', '$state', '$injec
         //    cache.set(null);
         //}
 
+        ,
+        setIsLoggedIntoPentaho: function (isLoggedIntoPentaho) {
+            var cacheLoginInfo = this._getPentahoLoginInfoCacheInstance();
+            var loginInfo = Util.goodValue(cacheLoginInfo.get(), {});
+            loginInfo.isLoggedIntoPentaho = isLoggedIntoPentaho;
+            cacheLoginInfo.set(loginInfo);
+        }
+
+        ,
+        getIsLoggedIntoPentaho: function () {
+            var cacheLoginInfo = this._getPentahoLoginInfoCacheInstance();
+            var loginInfo = cacheLoginInfo.get();
+            return Util.goodMapValue(loginInfo, "isLoggedIntoPentaho", false);
+        }
+
         /**
          * @ngdoc method
-         * @name logout
+         * @name logoutAndCleanCaches
          * @methodOf services:Acm.LoginService
          *
          * @description
          * Set off logout. Currently, it route to 'goodbye' page
          */
         ,
-        logout: function() {
+        logoutAndCleanCaches: function () {
+
             // "goodbye" page does the same cleaning, but may not be reliable. If some exception thrown (we saw real
             // practical example:
             // GET https://localhost:8843/arkcase/api/latest/plugin/admin/labelmanagement/resource?ns=goodbye&lang=en
@@ -262,6 +290,35 @@ angular.module('services').factory('Acm.LoginService', [ '$q', '$state', '$injec
             }
 
             $state.go("goodbye");
+        }
+
+        /**
+         * @ngdoc method
+         * @name logout
+         * @methodOf services:Acm.LoginService
+         *
+         * @description
+         * Handles ArkCase and Pentaho logout.  If the user is logged into Pentaho in the Adhoc Reports module
+         * then the user needs to be logged out of Pentaho before starting the ArkCase logout.
+         */
+        ,
+        logout: function() {
+            if (Service.getIsLoggedIntoPentaho()) {
+                // AFDP-9211: Need to logout of Pentaho before ArkCase session ends
+                return $http({
+                    method: 'GET',
+                    url: 'pentaho/Logout'
+                }).then(function (data) {
+                    // AFDP-9211: Need to wait until Pentaho logout completed before logging out of ArkCase to
+                    // prevent the Pentaho logout call from being interrupted when the ArkCase session is closed
+                    Service.setIsLoggedIntoPentaho(false);
+                    Service.logoutAndCleanCaches();
+                }, function (error) {
+                    Service.logoutAndCleanCaches();
+                });
+            } else {
+                Service.logoutAndCleanCaches();
+            }
         }
     };
 
