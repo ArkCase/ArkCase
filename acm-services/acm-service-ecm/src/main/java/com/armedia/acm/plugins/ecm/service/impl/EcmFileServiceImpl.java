@@ -40,7 +40,6 @@ import com.armedia.acm.objectonverter.ArkCaseBeanUtils;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
-import com.armedia.acm.plugins.ecm.dao.EcmFileVersionDao;
 import com.armedia.acm.plugins.ecm.exception.EcmFileLinkException;
 import com.armedia.acm.plugins.ecm.exception.LinkAlreadyExistException;
 import com.armedia.acm.plugins.ecm.model.AcmCmisObject;
@@ -177,8 +176,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     private EmailSenderConfig emailSenderConfig;
 
     private CamelContextManager camelContextManager;
-
-    private EcmFileVersionDao ecmFileVersionDao;
 
     private AuthenticationTokenDao authenticationTokenDao;
 
@@ -2282,15 +2279,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         {
             EcmFileVersion ecmFileVersion = getFolderAndFilesUtils().getVersion(file, file.getActiveVersionTag());
 
-            List<EcmFileVersion> efvList = getEcmFileVersionDao().getEcmFileVersionWithSameHash(ecmFileVersion.getFileHash());
-            List<EcmFile> efList = new ArrayList<>();
+            List<EcmFile> efList = getEcmFileDao().getEcmFilesWithSameHash(ecmFileVersion.getFileHash());
 
-            for (EcmFileVersion efv : efvList)
-            {
-                if (!efv.getFile().isLink()) {
-                    efList.add(efv.getFile());
-                }
-            }
             return efList;
         }
     }
@@ -2347,17 +2337,17 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
         if (ecmFileVersion.getFileHash() != null)
         {
-            List<EcmFileVersion> efvList = getEcmFileVersionDao().getEcmFileVersionWithSameHash(ecmFileVersion.getFileHash());
-            if (efvList.size() > 1)
+            List<EcmFile> efList = getEcmFileDao().getEcmFilesWithSameHash(ecmFileVersion.getFileHash());
+            if (efList.size() > 1)
             {
-                for (EcmFileVersion efv : efvList)
+                for (EcmFile ef : efList)
                 {
-                    EcmFile ef = efv.getFile();
-                    if (!ef.isLink())
-                    {
-                        ef.setDuplicate(true);
-                    }
+                    ef.setDuplicate(true);
                 }
+            }
+            else if (efList.size() == 1)
+            {
+                efList.get(0).setDuplicate(false);
             }
         }
     }
@@ -2619,13 +2609,4 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         this.camelContextManager = camelContextManager;
     }
 
-    public EcmFileVersionDao getEcmFileVersionDao()
-    {
-        return ecmFileVersionDao;
-    }
-
-    public void setEcmFileVersionDao(EcmFileVersionDao ecmFileVersionDao)
-    {
-        this.ecmFileVersionDao = ecmFileVersionDao;
-    }
 }

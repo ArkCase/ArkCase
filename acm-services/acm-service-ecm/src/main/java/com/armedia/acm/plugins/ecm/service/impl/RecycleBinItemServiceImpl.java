@@ -104,6 +104,8 @@ public class RecycleBinItemServiceImpl implements RecycleBinItemService
         getRecycleBinItemDao().save(recycleBinItem);
         moveToCMISFolder(ecmFile, destinationContainer.getContainerObjectId(), destinationContainer.getContainerObjectType(),
                 destinationContainer.getFolder().getId());
+
+        getEcmFileService().checkDuplicatesByHash(ecmFile);
         log.info("File {} successfully moved in Recycle Bin, by user {}", ecmFile.getFileName(), authentication.getName());
         getFileEventPublisher().publishFileMovedInRecycleBinEvent(ecmFile, authentication, ipAddress, true);
         return recycleBinItem;
