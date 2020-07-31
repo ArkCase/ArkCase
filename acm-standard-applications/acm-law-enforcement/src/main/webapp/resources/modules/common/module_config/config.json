@@ -837,13 +837,6 @@
       "showFacets": false,
       "columnDefs": [
         {
-          "name": "checkbox",
-          "displayName": "",
-          "cellTemplate": "<input type='checkbox' ng-click='grid.appScope.onClick($event, row.entity)'/>",
-          "width": "6%",
-          "index": 0
-        },
-        {
           "name": "object_id_s",
           "displayName": "common.dialogObjectPicker.table.columns.id",
           "headerCellFilter": "translate"
@@ -976,6 +969,7 @@
         "field": "container.containerObjectTitle",
         "displayName": "common.duplicates.columnDefs.case_file",
         "headerCellFilter": "translate",
+        "cellTemplate": "<a href='#' ng-click='grid.appScope.openCaseFile($event, row.entity)'>{{row.entity.container.containerObjectTitle}}</a>",
         "width": "8%"
       },
       {
@@ -983,8 +977,8 @@
         "field": "fileName",
         "displayName": "common.duplicates.columnDefs.name",
         "headerCellFilter": "translate",
-        "headTemplate": "<label id='title' class='doc-tree-header' style='cursor: pointer;'></label>",
         "icon": "<i class='fa fa-fw fa-sort-asc' data-sort='title' data-dir='DESC'></i>",
+        "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.fileName}}</a>",
         "width": "20%"
       },
       {
@@ -1006,9 +1000,7 @@
         "field": "fileType",
         "displayName": "common.duplicates.columnDefs.type",
         "headerCellFilter": "translate",
-        "headTemplate": "<label id='type' class='doc-tree-header' style='cursor: pointer;'></label>",
         "icon": "<i class='fa fa-fw' data-sort='type' data-dir='ASC'></i>",
-        "__todo__cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
         "width": "10%",
         "index": 5
       },
@@ -1016,9 +1008,7 @@
         "name": "created",
         "displayName": "common.duplicates.columnDefs.created",
         "headerCellFilter": "translate",
-        "headTemplate": "<label id='created' class='doc-tree-header' style='cursor: pointer;'></label>",
         "icon": "<i class='fa fa-fw' data-sort='created' data-dir='ASC'></i>",
-        "__todo__cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
         "width": "10%",
         "index": 6
       },
@@ -1026,9 +1016,7 @@
         "name": "modified",
         "displayName": "common.duplicates.columnDefs.modified",
         "headerCellFilter": "translate",
-        "headTemplate": "<label id='modified' class='doc-tree-header' style='cursor: pointer;'></label>",
         "icon": "<i class='fa fa-fw' data-sort='modified' data-dir='ASC'></i>",
-        "__todo__cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>",
         "width": "10%"
       },
       {
@@ -1036,10 +1024,7 @@
         "field": "modifier",
         "displayName": "common.duplicates.columnDefs.modifier",
         "headerCellFilter": "translate",
-        "headTemplate": "<label id='modifier' class='doc-tree-header' style='cursor: pointer;'></label>",
         "icon": "<i class='fa fa-fw' data-sort='modifier' data-dir='ASC'></i>",
-        "__todo__cellTemplate": "<div>{{ row.entity.modifier }}</div>",
-        "__todo__lookup": "userFullNames",
         "width": "13%"
       },
       {
@@ -1047,9 +1032,7 @@
         "field": "activeVersionTag",
         "displayName": "common.duplicates.columnDefs.version",
         "headerCellFilter": "translate",
-        "headTemplate": "<label id='version' class='doc-tree-header' style='cursor: pointer;'></label>",
         "icon": "<i class='fa fa-fw' data-sort='version' data-dir='ASC'></i>",
-        "__todo__cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
         "width": "6%"
       },
       {
@@ -1057,9 +1040,7 @@
         "field": "status",
         "displayName": "common.duplicates.columnDefs.status",
         "headerCellFilter": "translate",
-        "headTemplate": "<label id='status' class='doc-tree-header' style='cursor: pointer;'></label>",
         "icon": "<i class='fa fa-fw' data-sort='status' data-dir='ASC'></i>",
-        "__todo__cellTemplate": "{{node.data.status}}",
         "width": "10%"
       }
     ],

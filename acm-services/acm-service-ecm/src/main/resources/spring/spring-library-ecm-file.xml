@@ -239,7 +239,6 @@
         <property name="emailSenderConfig" ref="emailSenderConfig"/>
         <property name="progressIndicatorService" ref="progressIndicatorService"/>
         <property name="camelContextManager" ref="camelContextManager"/>
-        <property name="ecmFileVersionDao" ref="ecmFileVersionDao"/>
         <property name="authenticationTokenDao" ref="authenticationTokenDao"/>
     </bean>
 
