@@ -181,6 +181,10 @@ public class ProxyServlet extends HttpServlet
      * A String parameter name to set additional headers for given url matcher
      */
     public static final String P_SET_ADDITIONAL_HEADERS = "setAdditionalHeaders";
+
+    public static final String JSESSIONID = "JSESSIONID";
+    public static final String PENTAHO_LOGOUT = "/Logout";
+
     /**
      * The parameter name for the target (destination) URI to proxy to.
      */
@@ -556,6 +560,12 @@ public class ProxyServlet extends HttpServlet
         HttpResponse proxyResponse = null;
         try
         {
+            // AFDP-9211: Pentaho gwtrpc calls require that we change /arkcase/pentaho -> /pentaho
+            if (servletRequest.getRequestURI().contains("gwtrpc"))
+            {
+                fixGwtRpcUrl(proxyRequest);
+            }
+
             // Execute the request
             proxyResponse = doExecute(servletRequest, servletResponse, proxyRequest);
 
@@ -642,7 +652,8 @@ public class ProxyServlet extends HttpServlet
         // because of reason that media type is form_url_encoded
         // inputStream of the request is empty i.e. already consumed
         // so we need to send those parameters to the proxyRequest
-        if (servletRequest.getContentType().contains(MediaType.APPLICATION_FORM_URLENCODED_VALUE))
+        if (servletRequest.getContentType() != null &&
+                servletRequest.getContentType().contains(MediaType.APPLICATION_FORM_URLENCODED_VALUE))
         {
             List<NameValuePair> params = new LinkedList<>();
             servletRequest.getParameterMap().entrySet().stream().forEach(entry -> {
@@ -826,6 +837,14 @@ public class ProxyServlet extends HttpServlet
         if (path.isEmpty())
         {
             path = "/";
+        }
+
+        // AFDP-9211: Need to remove the JSESSIONID returned from the Pentaho logout call in order to
+        // prevent the user from staying logged into Pentaho in the ArkCase adhoc reports iframe.
+        String uri = servletRequest.getRequestURI();
+        if (StringUtils.containsIgnoreCase(uri, PENTAHO_LOGOUT))
+        {
+            cookies.removeIf(c -> StringUtils.containsIgnoreCase(c.getName(), JSESSIONID));
         }
 
         for (HttpCookie cookie : cookies)
@@ -1221,5 +1240,21 @@ public class ProxyServlet extends HttpServlet
     {
         Pattern pattern = compiledPatterns.computeIfAbsent(patternStr, k -> Pattern.compile(k));
         return pattern.matcher(value).matches();
+    }
+
+    private void fixGwtRpcUrl(HttpRequest proxyRequest)
+    {
+        try
+        {
+            BasicHttpEntityEnclosingRequest req = (BasicHttpEntityEnclosingRequest)proxyRequest;
+            byte[] content = new byte[(int)req.getEntity().getContentLength()];
+            IOUtils.readFully(req.getEntity().getContent(), content);
+            String updated = new String(content).replaceAll("/arkcase/pentaho", "/pentaho");
+            HttpEntity newEntity = new ByteArrayEntity(updated.getBytes());
+            req.setEntity(newEntity);
+        } catch (Exception e)
+        {
+            logger.error("Failed to fix the gwtrpc url path", e);
+        }
     }
 }

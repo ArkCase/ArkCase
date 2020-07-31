@@ -83,6 +83,10 @@ public class PentahoReportsConfig
     @Value("${report.plugin.PENTAHO_VIEW_ANALYSIS_REPORT_URL_TEMPLATE}")
     private String viewAnalysisReportUrlTemplate;
 
+    @JsonProperty("report.plugin.PENTAHO_ADHOC_REPORTS_CONTEXT")
+    @Value("${report.plugin.PENTAHO_ADHOC_REPORTS_CONTEXT}")
+    private String adhocReportsContext;
+
     @JsonProperty("report.plugin.PENTAHO_SCHEDULE_INPUT_FOLDER")
     @Value("${report.plugin.PENTAHO_SCHEDULE_INPUT_FOLDER}")
     private String scheduleInputFolder;
@@ -245,6 +249,16 @@ public class PentahoReportsConfig
     public void setViewAnalysisReportUrlTemplate(String viewAnalysisReportUrlTemplate)
     {
         this.viewAnalysisReportUrlTemplate = viewAnalysisReportUrlTemplate;
+    }
+
+    public String getAdhocReportsContext()
+    {
+        return adhocReportsContext;
+    }
+
+    public void setAdhocReportsContext(String adhocReportsContext)
+    {
+        this.adhocReportsContext = adhocReportsContext;
     }
 
     public String getScheduleInputFolder()
