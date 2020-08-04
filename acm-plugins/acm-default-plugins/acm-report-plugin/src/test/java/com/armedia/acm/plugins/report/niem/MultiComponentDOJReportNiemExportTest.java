@@ -101,27 +101,27 @@ public class MultiComponentDOJReportNiemExportTest
         reportPath.put("APPEAL_NON_EXEMPTION_DENIAL", "/csv/multiComponent/VI.C.2.csv");
         reportPath.put("APPEAL_DENIAL_OTHER_REASON", "/csv/multiComponent/VI.C.3.csv");
         reportPath.put("APPEAL_RESPONSE_TIME", "/csv/multiComponent/VI.C.4.csv");
-        reportPath.put("OLDEST_PENDING_APPEALS", "/csv/singleComponent/Ten_Oldest_Pending_Administrative_Appeals.csv");
+        reportPath.put("OLDEST_PENDING_APPEALS", "/csv/multiComponent/VI.C.5.csv");
         reportPath.put("PROCESSED_PERFECTED_REQUESTS_RESPONSE_TIME", "/csv/multiComponent/VII.A.csv");
         reportPath.put("INFORMATION_GRANTED_REQUESTS_RESPONSE_TIME", "/csv/multiComponent/VII.B.csv");
         reportPath.put("SIMPLE_RESPONSE_TIME_INCREMENTS", "/csv/multiComponent/VII.C.1.csv");
         reportPath.put("COMPLEX_RESPONSE_TIME_INCREMENTS", "/csv/multiComponent/VII.C.2.csv");
         reportPath.put("EXPEDITED_RESPONSE_TIME_INCREMENTS", "/csv/multiComponent/VII.C.3.csv");
-        reportPath.put("OLDEST_PENDING_REQUESTS", "/csv/singleComponent/Pending_Requests_--_Ten_Oldest_Pending_Perfected_Requests.csv");
-        reportPath.put("EXPEDITED_PROCESSING", "/csv/singleComponent/Response_Time_for_Administrative_Appeals.csv");
-        reportPath.put("FEE_WAIVER", "/csv/singleComponent/Response_Time_for_Administrative_Appeals.csv");
-        reportPath.put("PERSONNEL_AND_COST", "/csv/singleComponent/Response_Time_for_Administrative_Appeals.csv");
-        reportPath.put("FEES_COLLECTED", "/csv/singleComponent/Response_Time_for_Administrative_Appeals.csv");
-        reportPath.put("SUBSECTION_USED", "/csv/singleComponent/Response_Time_for_Administrative_Appeals.csv");
-        reportPath.put("SUBSECTION_POST", "/csv/singleComponent/Response_Time_for_Administrative_Appeals.csv");
-        reportPath.put("BACKLOG", "/csv/singleComponent/Response_Time_for_Administrative_Appeals.csv");
+        reportPath.put("ALL_PENDING_PERFECTED_REQUESTS", "/csv/multiComponent/VII.D.csv");
+        reportPath.put("OLDEST_PENDING_REQUESTS", "/csv/multiComponent/VII.E.csv");
+        reportPath.put("EXPEDITED_PROCESSING", "/csv/multiComponent/VIII.A.csv");
+        reportPath.put("FEE_WAIVER", "/csv/multiComponent/VIII.B.csv");
+        reportPath.put("PERSONNEL_AND_COST", "/csv/multiComponent/IX.csv");
+        reportPath.put("FEES_COLLECTED", "/csv/multiComponent/X.csv");
+        reportPath.put("SUBSECTION_USED", "/csv/multiComponent/XI.A.csv");
+        reportPath.put("SUBSECTION_POST", "/csv/multiComponent/XI.B.csv");
+        reportPath.put("BACKLOG", "/csv/multiComponent/XII.A.csv");
         reportPath.put("PROCESSED_CONSULTATIONS", "/csv/multiComponent/XII.B.csv");
-        reportPath.put("OLDEST_PENDING_CONSULTATIONS",
-                "/csv/singleComponent/Pending_Requests_--_Ten_Oldest_Pending_Perfected_Requests.csv");
+        reportPath.put("OLDEST_PENDING_CONSULTATIONS", "/csv/multiComponent/XII.C.csv");
         reportPath.put("REQUEST_PROCESSED_COMPARISON", "/csv/multiComponent/XII.D.1.csv");
-        reportPath.put("BACKLOG_REQUEST_COMPARISON", "/csv/singleComponent/Response_Time_for_Administrative_Appeals.csv");
+        reportPath.put("BACKLOG_REQUEST_COMPARISON", "/csv/multiComponent/XII.D.2.csv");
         reportPath.put("APPEAL_PROCESSED_COMPARISON", "/csv/multiComponent/XII.E.1.csv");
-        reportPath.put("BACKLOG_APPEAL_COMPARISON", "/csv/singleComponent/Response_Time_for_Administrative_Appeals.csv");
+        reportPath.put("BACKLOG_APPEAL_COMPARISON", "/csv/multiComponent/XII.E.2.csv");
 
     }
 

@@ -79,6 +79,9 @@ public class NiemExportService
         case APPEAL_NON_EXEMPTION_DENIAL:
             generateAppealNonExemptionDenialSection(data, parent, agencyIdentifiers);
             break;
+        case APPEAL_DENIAL_OTHER_REASON:
+            generateAppealDenialOtherReasonSection(data, parent, agencyIdentifiers);
+            break;
         case APPEAL_RESPONSE_TIME:
             generateAppealResponseTimeSection(data, parent, agencyIdentifiers);
             break;
@@ -99,6 +102,9 @@ public class NiemExportService
             break;
         case EXPEDITED_RESPONSE_TIME_INCREMENTS:
             generateExpeditedResponseTimeIncrementsSection(data, parent, agencyIdentifiers);
+            break;
+        case ALL_PENDING_PERFECTED_REQUESTS:
+            generatePendingPerfectedRequestsSection(data, parent, agencyIdentifiers);
             break;
         case OLDEST_PENDING_REQUESTS:
             generateOldestPendingRequestsSection(data, parent, agencyIdentifiers);
@@ -422,6 +428,56 @@ public class NiemExportService
         }
     }
 
+    public void generatePendingPerfectedRequestsSection(List<Map<String, String>> data, Element parent,
+            Map<String, String> agencyIdentifiers)
+    {
+        DOJReport report = DOJReport.ALL_PENDING_PERFECTED_REQUESTS;
+        Element processedRequestResponseTimeElement = parent.getOwnerDocument().createElement(report.getSectionName());
+
+        List<Map<String, String>> filteredData = getDataWithComponentReferences(data, agencyIdentifiers, report);
+
+        filteredData.forEach(componentData -> appendPendingPerfectedRequestsItem(processedRequestResponseTimeElement, componentData));
+        filteredData.forEach(componentData -> appendProcessingAssociations2(processedRequestResponseTimeElement,
+                componentData, "foia:PendingPerfectedRequestsOrganizationAssociation"));
+
+        parent.appendChild(processedRequestResponseTimeElement);
+    }
+
+    private void appendPendingPerfectedRequestsItem(Element parent, Map<String, String> record)
+    {
+        Element pendingPerfectedRequestsElement = parent.getOwnerDocument().createElement("foia:PendingPerfectedRequests");
+        pendingPerfectedRequestsElement.setAttribute("s:id", record.get("ComponentDataReference"));
+
+        Element simplePendingRequestsElement = parent.getOwnerDocument().createElement("foia:SimplePendingRequestStatistics");
+        appendPendingRequestStatisticsPerTrack(simplePendingRequestsElement, record, "simple");
+        pendingPerfectedRequestsElement.appendChild(simplePendingRequestsElement);
+
+        Element complexPendingRequestsElement = parent.getOwnerDocument().createElement("foia:ComplexPendingRequestStatistics");
+        appendPendingRequestStatisticsPerTrack(complexPendingRequestsElement, record, "complex");
+        pendingPerfectedRequestsElement.appendChild(complexPendingRequestsElement);
+
+        Element expeditedPendingRequestsElement = parent.getOwnerDocument().createElement("foia:ExpeditedPendingRequestStatistics");
+        appendPendingRequestStatisticsPerTrack(expeditedPendingRequestsElement, record, "expedited");
+        pendingPerfectedRequestsElement.appendChild(expeditedPendingRequestsElement);
+
+        parent.appendChild(pendingPerfectedRequestsElement);
+    }
+
+    private void appendPendingRequestStatisticsPerTrack(Element parent, Map<String, String> record, String track)
+    {
+        String numberPending = record.get(track + "~Number Pending");
+        String medianNumberOfDays = record.get(track + "~Median Number of Days");
+        String averageNumberOfDays = record.get(track + "~Average Number of Days");
+
+        addElement(parent, "foia:PendingRequestQuantity", numberPending);
+        if (NumberUtils.isParsable(numberPending) && Double.parseDouble(numberPending) > 0)
+        {
+            addElement(parent, "foia:PendingRequestMedianDaysValue", medianNumberOfDays);
+            addElement(parent, "foia:PendingRequestAverageDaysValue", averageNumberOfDays);
+        }
+
+    }
+
     public void generateSimpleResponseTimeIncrementsSection(List<Map<String, String>> data, Element parent,
             Map<String, String> agencyIdentifiers) throws ParseException
     {
@@ -658,14 +714,14 @@ public class NiemExportService
     public void generateAppealDispositionAppliedExemptionsSection(List<Map<String, String>> data, Element parent,
             Map<String, String> agencyIdentifiers) throws ParseException
     {
-        appendDispositionAppliedExemptionsSection(data, parent, agencyIdentifiers, DOJReport.REQUEST_DISPOSITION_APPLIED_EXEMPTIONS);
+        appendDispositionAppliedExemptionsSection(data, parent, agencyIdentifiers, DOJReport.APPEAL_DISPOSITION_APPLIED_EXEMPTIONS);
 
     }
 
     public void generateRequestDispositionAppliedExemptionsSection(List<Map<String, String>> data, Element parent,
             Map<String, String> agencyIdentifiers) throws ParseException
     {
-        appendDispositionAppliedExemptionsSection(data, parent, agencyIdentifiers, DOJReport.APPEAL_DISPOSITION_APPLIED_EXEMPTIONS);
+        appendDispositionAppliedExemptionsSection(data, parent, agencyIdentifiers, DOJReport.REQUEST_DISPOSITION_APPLIED_EXEMPTIONS);
 
     }
 
@@ -882,9 +938,13 @@ public class NiemExportService
 
         addElement(expeditedProcessingElement, "foia:RequestGrantedQuantity", granted);
         addElement(expeditedProcessingElement, "foia:RequestDeniedQuantity", denied);
-        addElement(expeditedProcessingElement, "foia:AdjudicationMedianDaysValue", medianDaysToAdjudicate);
-        addElement(expeditedProcessingElement, "foia:AdjudicationAverageDaysValue",
-                averageDaysToAdjudicate);
+        if (NumberUtils.isParsable(granted) && Double.parseDouble(granted) > 0 && NumberUtils.isParsable(denied)
+                && Double.parseDouble(denied) > 0)
+        {
+            addElement(expeditedProcessingElement, "foia:AdjudicationMedianDaysValue", medianDaysToAdjudicate);
+            addElement(expeditedProcessingElement, "foia:AdjudicationAverageDaysValue",
+                    averageDaysToAdjudicate);
+        }
         addElement(expeditedProcessingElement, "foia:AdjudicationWithinTenDaysQuantity",
                 adjudicatedWithingTenDays);
 
@@ -920,9 +980,13 @@ public class NiemExportService
 
         addElement(feeWaiverElement, "foia:RequestGrantedQuantity", granted);
         addElement(feeWaiverElement, "foia:RequestDeniedQuantity", denied);
-        addElement(feeWaiverElement, "foia:AdjudicationMedianDaysValue", medianDaysToAdjudicate);
-        addElement(feeWaiverElement, "foia:AdjudicationAverageDaysValue",
-                averageDaysToAdjudicate);
+        if (NumberUtils.isParsable(granted) && Double.parseDouble(granted) > 0 && NumberUtils.isParsable(denied)
+                && Double.parseDouble(denied) > 0)
+        {
+            addElement(feeWaiverElement, "foia:AdjudicationMedianDaysValue", medianDaysToAdjudicate);
+            addElement(feeWaiverElement, "foia:AdjudicationAverageDaysValue",
+                    averageDaysToAdjudicate);
+        }
 
         parent.appendChild(feeWaiverElement);
     }
@@ -1045,7 +1109,7 @@ public class NiemExportService
 
     private void appendSubsectionPostItem(Element parent, Map<String, String> record)
     {
-        Element subsectionPostElement = parent.getOwnerDocument().createElement("foia:FeesCollected");
+        Element subsectionPostElement = parent.getOwnerDocument().createElement("foia:Subsection");
         subsectionPostElement.setAttribute("s:id", record.get("ComponentDataReference"));
 
         String postedByFOIAOffice = record.get("Number of Records Posted by the FOIA Office");
@@ -1109,23 +1173,36 @@ public class NiemExportService
         List<Map<String, String>> filteredData = getDataWithComponentReferences(data, agencyIdentifiers, report);
 
         filteredData.forEach(
-                componentData -> appendBacklogComparisonItem(backlogComparisonSection, componentData));
+                componentData -> appendBacklogComparisonItem(backlogComparisonSection, componentData, report));
         filteredData.forEach(componentData -> appendProcessingAssociations2(backlogComparisonSection,
                 componentData, "foia:BacklogComparisonOrganizationAssociation"));
 
         parent.appendChild(backlogComparisonSection);
     }
 
-    private void appendBacklogComparisonItem(Element parent, Map<String, String> record)
+    private void appendBacklogComparisonItem(Element parent, Map<String, String> record, DOJReport report)
     {
         Element backlogComparisonElement = parent.getOwnerDocument().createElement("foia:BacklogComparison");
         backlogComparisonElement.setAttribute("s:id", record.get("ComponentDataReference"));
 
-        String backlogLastYearQuantity = record
-                .get("Number of Backlogged Requests as of End of the Fiscal Year from Previous Annual Report");
-        String backlogCurrentYearQuantity = record
-                .get("Number of Backlogged Requests as of End of the Fiscal Year from Current Annual Report");
+        String backlogLastYearQuantity;
+        String backlogCurrentYearQuantity;
 
+        if (report == DOJReport.BACKLOG_REQUEST_COMPARISON)
+        {
+            backlogLastYearQuantity = record
+                    .get("Number of Backlogged Requests as of End of the Fiscal Year from Previous Annual Report");
+            backlogCurrentYearQuantity = record
+                    .get("Number of Backlogged Requests as of End of the Fiscal Year from Current Annual Report");
+        }
+        else
+        {
+            backlogLastYearQuantity = record
+                    .get("Number of Backlogged Appeals as of End of the Fiscal Year from Previous Annual Report");
+            backlogCurrentYearQuantity = record
+                    .get("Number of Backlogged Appeals as of End of the Fiscal Year from Current Annual Report");
+
+        }
         addElement(backlogComparisonElement, "foia:BacklogLastYearQuantity", backlogLastYearQuantity);
         addElement(backlogComparisonElement, "foia:BacklogCurrentYearQuantity", backlogCurrentYearQuantity);
 
