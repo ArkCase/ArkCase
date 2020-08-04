@@ -77,6 +77,7 @@ angular.module('request-info').controller(
             $scope.saveIcon = false;
             $scope.saveLoadingIcon = "fa fa-floppy-o";
             $scope.viewerOnly = false;
+            $scope.loaderOpened = false;
 
             $scope.documentExpand = function () {
                 $scope.viewerOnly = true;
@@ -101,17 +102,55 @@ angular.module('request-info').controller(
                 DialogService.alert($scope.transcribeObjectModel.failureReason);
             };
 
+            function onShowLoader() {
+                var loaderModal = $modal.open({
+                    animation: true,
+                    templateUrl: 'modules/common/views/object.modal.loading-spinner.html',
+                    size: 'sm',
+                    backdrop: 'static'
+                });
+                $scope.loaderModal = loaderModal;
+                $scope.loaderOpened = true;
+            }
+
+            function onHideLoader() {
+                $scope.loaderModal.close();
+                $scope.loaderOpened = false;
+            }
+
+
             $scope.iframeLoaded = function () {
+                ArkCaseCrossWindowMessagingService.addHandler('show-loader', onShowLoader);
+                ArkCaseCrossWindowMessagingService.addHandler('hide-loader', onHideLoader);
+
                 ArkCaseCrossWindowMessagingService.addHandler('close-document', onCloseDocument);
+                ArkCaseCrossWindowMessagingService.addHandler('document-saved', onDocumentSave);
+                ArkCaseCrossWindowMessagingService.addHandler('annotation-status-changed', onAnnotationStatusChange);
+
                 ObjectLookupService.getLookupByLookupName("annotationTags").then(function (allAnnotationTags) {
                     $scope.allAnnotationTags = allAnnotationTags;
                     ArkCaseCrossWindowMessagingService.addHandler('select-annotation-tags', onSelectAnnotationTags);
                     ArkCaseCrossWindowMessagingService.start('snowbound', $scope.ecmFileProperties['ecm.viewer.snowbound']);
                 });
+                onHideLoader();
             };
 
             function onCloseDocument(data) {
                 $scope.$bus.publish('remove-from-opened-documents-list', {id: data.id, version: data.version});
+            }
+
+            function onDocumentSave(data) {
+                $scope.$bus.publish('reload-exemption-code-grid', {
+                    id: $scope.objectInfo.id,
+                    fileId: data.fileId
+                });
+            }
+
+            function onAnnotationStatusChange(data) {
+                $scope.$bus.publish('reload-exemption-code-grid', {
+                    id: $scope.objectInfo.id,
+                    fileId: data.fileId
+                });
             }
 
             function onSelectAnnotationTags(data) {
@@ -326,6 +365,8 @@ angular.module('request-info').controller(
             AdminFoiaConfigService.getFoiaConfig().then(function (response) {
                 $scope.extensionWorkingDays = response.data.requestExtensionWorkingDays;
                 $scope.requestExtensionWorkingDaysEnabled = response.data.requestExtensionWorkingDaysEnabled;
+                $scope.expediteWorkingDays = response.data.expediteWorkingDays;
+                $scope.expediteWorkingDaysEnabled = response.data.expediteWorkingDaysEnabled;
             }, function (err) {
                 MessageService.errorAction();
             });
@@ -391,6 +432,7 @@ angular.module('request-info').controller(
             $scope.showVideoPlayer = false;
             $scope.showPdfJs = false;
             $scope.transcriptionTabActive = false;
+            $scope.transcriptionTabViewEnabled = false;
 
             // Obtains authentication token for ArkCase
             var ticketInfo = TicketService.getArkCaseTicket();
@@ -571,20 +613,46 @@ angular.module('request-info').controller(
                 populateDeniedDispositionCategories($scope.requestInfo);
                 populateOtherReasons($scope.requestInfo);
                 populateRequestTrack($scope.requestInfo);
+                
+                $scope.previousDueDate = objectInfo.dueDate;
+                if(objectInfo.requestTrack === 'expedite'){
+                    if ($scope.includeWeekends) {
+                        $scope.previousDueDate = DueDateService.dueDateWithWeekends($scope.objectInfo.dueDate, $scope.expediteWorkingDays, $scope.holidays);
+                    } else {
+                        $scope.previousDueDate = DueDateService.dueDateWorkingDays($scope.objectInfo.dueDate, $scope.expediteWorkingDays, $scope.holidays);
+                    }
+                }
+                $scope.originalDueDate = $scope.previousDueDate;
             };
 
             function populateDispositionCategories(objectInfo) {
                 ObjectLookupService.getLookupByLookupName('requestDispositionType').then(function (requestDispositionType) {
                     $scope.dispositionCategories = requestDispositionType;
+                    if($scope.requestInfo.disposition) {
+                        var found = _.find(requestDispositionType, {
+                            key: $scope.requestInfo.disposition
+                        });
+                        if(!Util.isEmpty(found)) {
+                            $scope.requestInfo.disposition = $translate.instant(found.value);
+                        }
+                    }
                 });
             }
 
             function populateDeniedDispositionCategories(objectInfo) {
                 ObjectLookupService.getLookupByLookupName('requestDispositionSubType').then(function (requestDispositionSubType) {
                     $scope.dispositionDeniedCategories = requestDispositionSubType;
+                    if($scope.requestInfo.disposition) {
+                        var found = _.find(requestDispositionSubType, {
+                            key: $scope.requestInfo.disposition
+                        });
+                        if(!Util.isEmpty(found)) {
+                            $scope.requestInfo.disposition = $translate.instant(found.value);
+                        }
+                    }
                 });
             }
-            
+
             function populateOtherReasons(objectInfo) {
                 ObjectLookupService.getLookupByLookupName('requestOtherReason').then(function (requestOtherReasons) {
                     $scope.otherReasons = requestOtherReasons;
@@ -592,10 +660,8 @@ angular.module('request-info').controller(
                         var found = _.find(requestOtherReasons, {
                             key: $scope.objectInfo.otherReason
                         });
-                        if(found) {
-                            $scope.isCustomReason = false;
-                        } else {
-                            $scope.isCustomReason = true;
+                        if(!Util.isEmpty(found)) {
+                            $scope.objectInfo.otherReason = $translate.instant(found.value);
                         }
                     }
                 });
@@ -628,7 +694,7 @@ angular.module('request-info').controller(
                 }
 
             };
-            
+
 
             var getCaseInfo = CaseInfoService.getCaseInfo($stateParams['id']);
 
@@ -729,6 +795,7 @@ angular.module('request-info').controller(
                 }
 
                 $scope.transcriptionTabActive = $scope.showVideoPlayer && $scope.transcribeEnabled;
+                $scope.transcriptionTabViewEnabled = $scope.transcriptionTabActive;
 
             });
             $scope.onPlayerReady = function (API) {
@@ -828,6 +895,13 @@ angular.module('request-info').controller(
              * an iframe which points to snowbound
              */
             $scope.openSnowboundViewer = function () {
+
+                if ($scope.loaderOpened == false) {
+                    onShowLoader();
+                } else {
+                    onHideLoader();
+                }
+
                 var viewerUrl = SnowboundService.buildSnowboundUrl($scope.ecmFileProperties, $scope.acmTicket, $scope.userId, $scope.userFullName, $scope.fileInfo, !$scope.editingMode, $scope.requestInfo.caseNumber);
                 $scope.documentViewerUrl = $sce.trustAsResourceUrl(viewerUrl);
             };
@@ -848,7 +922,7 @@ angular.module('request-info').controller(
                         if (typeof value.id !== 'string' && !(value.id instanceof String)) {
                             var updateEvent = "object.changed/" + ObjectService.ObjectTypes.FILE + "/" + value.id;
 
-                            if (!$scope.fileChangeEvents.includes(updateEvent)) {
+                            if (!_.includes($scope.fileChangeEvents, updateEvent)) {
                                 $scope.fileChangeEvents.push(updateEvent);
                                 $scope.$bus.subscribe(updateEvent, function (data) {
                                     // first make sure the event is a file event and have different date than the previous one
@@ -959,12 +1033,15 @@ angular.module('request-info').controller(
                         type: 'RETURN_REASON'
                     }).then(function (addedNote) {
                         // Note saved
-                        var disposition = _.find($scope.dispositionCategories, {
-                            key: $scope.requestInfo.disposition
-                        });
-                        $scope.requestInfo.dispositionValue = $translate.instant(disposition.value);
                         $scope.requestInfo.disposition = null;
-                        $scope.objectInfo.otherReason = null;
+                        if ($scope.objectInfo.requestType !== 'Appeal') {
+                            if($scope.objectInfo.deniedFlag && $scope.objectInfo.queue.name === 'Approve') {
+                                $scope.objectInfo.status = 'Perfected';
+                                $scope.deleteDenialLetter = true;
+                            }
+                            $scope.objectInfo.otherReason = null;
+                            $scope.objectInfo.deniedFlag = false;
+                        }
                         $scope.isRequestFormModified = true;
                         deferred.resolve();
                     });
@@ -1126,6 +1203,7 @@ angular.module('request-info').controller(
                     $scope.requestInfo.disposition = data.requestDispositionCategory;
                     $scope.requestInfo.dispositionValue = data.dispositionValue;
                     $scope.objectInfo.otherReason = data.requestOtherReason;
+                    $scope.isRequestFormModified = data.requestDispositionCategory ? true : false;
                     deferred.resolve();
                 }, function () {
                     deferred.reject();
@@ -1206,6 +1284,38 @@ angular.module('request-info').controller(
                         }
                     });
                 });
+            }
+
+            $scope.requestTrackChanged = function (requestTrack) {
+                if (requestTrack === 'expedite') {
+                    expediteDueDate();
+                    $scope.objectInfo.expediteDate = new Date();
+                } else {
+                    resetDueDate();
+                }
+            };
+
+            $scope.feeWaivedFlagChange = function(feeWaiver) {
+                if (feeWaiver) {
+                    $scope.objectInfo.feeWaivedDate = new Date();
+                }
+            };
+
+            function resetDueDate() {
+                $scope.objectInfo.dueDate = $scope.originalDueDate;
+                $rootScope.$broadcast('dueDate-changed', $scope.originalDueDate);
+            }
+
+            function expediteDueDate() {
+                if ($scope.expediteWorkingDaysEnabled && !Util.isEmpty($scope.objectInfo.receivedDate)) {
+                    if ($scope.includeWeekends) {
+                        $scope.expeditedDueDate = DueDateService.dueDateWithWeekends($scope.objectInfo.receivedDate, $scope.expediteWorkingDays, $scope.holidays);
+                    } else {
+                        $scope.expeditedDueDate = DueDateService.dueDateWorkingDays($scope.objectInfo.receivedDate, $scope.expediteWorkingDays, $scope.holidays);
+                    }
+                    $scope.objectInfo.dueDate = $scope.expeditedDueDate;
+                    $rootScope.$broadcast('dueDate-changed', $scope.expeditedDueDate);
+                }
             }
 
             $scope.onClickNextQueue = function (name, isRequestFormModified) {
@@ -1416,18 +1526,15 @@ angular.module('request-info').controller(
             function releaseRequestLock(requestId) {
                 var releaseLockDeferred = $q.defer();
 
-                if ($scope.requestLockInfo) {
-                    RequestsService.releaseRequestLock({
-                        requestId: requestId
-                    }).$promise.then(function () {
-                        $scope.requestLockInfo = null;
-                        releaseLockDeferred.resolve();
+
+                RequestsService.releaseRequestLock({
+                    requestId: requestId
+                }).$promise.then(function () {
+                    releaseLockDeferred.resolve();
                     }, function () {
                         releaseLockDeferred.reject();
                     });
-                } else {
-                    releaseLockDeferred.resolve();
-                }
+
 
                 return releaseLockDeferred.promise;
             }
@@ -1636,6 +1743,7 @@ angular.module('request-info').controller(
                     DialogService.alert($translate.instant("documentDetails.fileChangedAlert")).then(function () {
                         $scope.openSnowboundViewer();
                     });
+                    onHideLoader();
                 });
             });
             $scope.nextAvailableRequest = function () {
@@ -1650,6 +1758,12 @@ angular.module('request-info').controller(
                     });
                 });
             }
+            window.addEventListener("beforeunload", function (e) {
+                releaseRequestLock(requestId);
+
+                (e || window.event).returnValue = null;
+                return null;
+            });
         }]);
 /**
  * 2018-06-01 David Miller. This block is needed to tell the PDF.js angular module, where the PDF.js library is. Without this, on minified

@@ -4,11 +4,14 @@ angular.module('admin').controller('Admin.StandardLookupModalController', [ '$sc
 
     $scope.entry = params.entry;
     $scope.isEdit = params.isEdit;
+    $scope.primary = params.entry.primary;
+    $scope.isDefaultEnabled = params.isDefaultEnabled;
+    $scope.hideNoField = params.entry.primary;
 
-    $scope.onClickCancel = function() {
+    $scope.onClickCancel = function () {
         $modalInstance.dismiss('Cancel');
     };
-    $scope.onClickOk = function() {
+    $scope.onClickOk = function () {
         $modalInstance.close({
             entry: $scope.entry,
             isEdit: $scope.isEdit
@@ -32,6 +35,7 @@ angular.module('admin').controller('Admin.StandardLookupModalController', [ '$sc
         modalInstance.result.then(function(data) {
             $scope.entry.key = data.entry.key;
             $scope.entry.value = data.entry.value;
+            $scope.entry.description = data.entry.description;
 
         });
     } //end pickupLabel() function

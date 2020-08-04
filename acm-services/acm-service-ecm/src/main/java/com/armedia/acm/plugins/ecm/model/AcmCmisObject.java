@@ -61,6 +61,7 @@ public class AcmCmisObject implements Serializable
     private String reviewStatus;
     private String redactionStatus;
     private boolean link;
+    private boolean duplicate;
 
     public Long getObjectId()
     {
@@ -270,5 +271,13 @@ public class AcmCmisObject implements Serializable
     public void setRedactionStatus(String redactionStatus)
     {
         this.redactionStatus = redactionStatus;
+    }
+
+    public boolean isDuplicate() {
+        return duplicate;
+    }
+
+    public void setDuplicate(boolean duplicate) {
+        this.duplicate = duplicate;
     }
 }

@@ -40,9 +40,9 @@ import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.services.email.service.TemplatingEngine;
-import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.service.NotificationSender;
+import com.armedia.acm.services.notification.service.NotificationService;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
@@ -56,7 +56,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 
 import freemarker.template.TemplateException;
@@ -72,7 +71,6 @@ import gov.foia.model.FOIARequest;
  */
 public class FOIAQueueCorrespondenceService
 {
-
     private Logger log = LogManager.getLogger(getClass());
 
     private ResponseFolderService responseFolderService;
@@ -85,7 +83,7 @@ public class FOIAQueueCorrespondenceService
     private FoiaConfigurationService foiaConfigurationService;
     private String emailBodyTemplate;
     private TemplatingEngine templatingEngine;
-    private NotificationDao notificationDao;
+    private NotificationService notificationService;
 
     public void handleApproveCorrespondence(Long requestId)
     {
@@ -164,32 +162,13 @@ public class FOIAQueueCorrespondenceService
 
     }
 
-    public void handleFulfillCorrespondenceLetter(String objectType, Long requestId)
-    {
-        FOIARequest request = requestDao.find(requestId);
-        LocalDateTime receivedDate = request.getReceivedDate();
-        if (request.getQueue().getName().equals("Fulfill") && request.getPreviousQueue().getName().equals("Intake")
-                && receivedDate != null && foiaConfigurationService.readConfiguration().getReceivedDateEnabled() == false)
-        {
-            handleRequestReceivedAcknowledgementLetter(requestId);
-        }
-
-    }
-
     public void handleRequestReceivedAcknowledgementLetter(Long requestId)
     {
         FOIARequest request = requestDao.find(requestId);
         try
         {
             FOIADocumentDescriptor documentDescriptor;
-            if (request.getRequestType().equals(FOIAConstants.APPEAL_REQUEST_TYPE))
-            {
-                documentDescriptor = documentGeneratorService.getDocumentDescriptor(request, FOIAConstants.ACK);
-            }
-            else
-            {
-                documentDescriptor = documentGeneratorService.getDocumentDescriptor(request, FOIAConstants.RECEIVE_ACK);
-            }
+            documentDescriptor = documentGeneratorService.getDocumentDescriptor(request, FOIAConstants.RECEIVE_ACK);
 
             String arkcaseFilename = String.format(documentDescriptor.getFilenameFormat(), request.getId());
             String targetFolderId = request.getContainer().getAttachmentFolder() == null
@@ -205,17 +184,17 @@ public class FOIAQueueCorrespondenceService
 
             String emailAddress = extractRequestorEmailAddress(request.getOriginator().getPerson());
 
-            Notification notification = new Notification();
-            notification.setTemplateModelName("requestDocumentAttached");
-            notification.setEmailAddresses(emailAddress);
-            notification.setAttachFiles(true);
-            notification.setFiles(Arrays.asList(ecmFileVersions));
-            notification.setParentId(requestId);
-            notification.setParentType(request.getObjectType());
-            notification.setTitle(String.format("%s %s", request.getRequestType(), request.getCaseNumber()));
-            notification
-                    .setUser(user != null ? user.getUserId() : null);
-            notificationDao.save(notification);
+
+            Notification notification = notificationService.getNotificationBuilder()
+                    .newNotification("requestDocumentAttached", String.format("%s %s", request.getRequestType(), request.getCaseNumber()),
+                            request.getObjectType(), requestId, user != null ? user.getUserId() : null)
+                    .withFiles(Arrays.asList(ecmFileVersions))
+                    .withEmailAddresses(emailAddress)
+                    .forObjectWithNumber(request.getCaseNumber())
+                    .forObjectWithTitle(request.getTitle())
+                    .build();
+
+            notificationService.saveNotification(notification);
 
         }
         catch (Exception e)
@@ -251,7 +230,6 @@ public class FOIAQueueCorrespondenceService
                 {
                     String body = getTemplatingEngine().process(emailBodyTemplate, "request", request);
                     emailData.setBody(body);
-                    emailData.setTemplate(body);
                 }
                 catch (TemplateException | IOException e)
                 {
@@ -406,13 +384,13 @@ public class FOIAQueueCorrespondenceService
         this.templatingEngine = templatingEngine;
     }
 
-    public NotificationDao getNotificationDao()
+    public NotificationService getNotificationService()
     {
-        return notificationDao;
+        return notificationService;
     }
 
-    public void setNotificationDao(NotificationDao notificationDao)
+    public void setNotificationService(NotificationService notificationService)
     {
-        this.notificationDao = notificationDao;
+        this.notificationService = notificationService;
     }
 }

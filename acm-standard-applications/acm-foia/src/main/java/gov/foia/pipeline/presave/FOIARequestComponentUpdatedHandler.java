@@ -39,9 +39,10 @@ import org.springframework.context.ApplicationEventPublisherAware;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.Date;
 
 import gov.foia.dao.FOIARequestDao;
@@ -77,21 +78,17 @@ public class FOIARequestComponentUpdatedHandler
             FOIARequest originalRequest = getFoiaRequestDao().find(entity.getId());
             if (!originalRequest.getComponentAgency().equals(entity.getComponentAgency()))
             {
-                if (holidayConfigurationService.getHolidayConfiguration().getIncludeWeekends())
-                {
-                    entity.setPerfectedDate(LocalDateTime.now());
-                }
-                else
-                {
-                    entity.setPerfectedDate(holidayConfigurationService.getNextWorkingDay(LocalDate.now()).atTime(LocalTime.now()));
-                }
+                entity.setRedirectedDate(holidayConfigurationService.getFirstWorkingDay(LocalDate.now()).atTime(LocalTime.now()));
+
+                entity.setExtensionFlag(false);
+                entity.setRequestTrack(FOIAConstants.SIMPLE_REQUEST_TRACK);
 
                 if (getFoiaConfig().getRedirectFunctionalityCalculationEnabled())
                 {
-                    LocalDate originalPerfectedDate = originalRequest.getPerfectedDate().toLocalDate();
+                    LocalDate originalRedirectedDate = originalRequest.getRedirectedDate().toLocalDate();
 
                     Integer TTC = queuesTimeToCompleteService.getTimeToComplete().getRequest().getTotalTimeToComplete();
-                    Integer elapsedDays = holidayConfigurationService.countWorkingDates(originalPerfectedDate, LocalDate.now());
+                    Integer elapsedDays = holidayConfigurationService.countWorkingDates(originalRedirectedDate, LocalDate.now());
                     Integer elapsedTTC = originalRequest.getTtcOnLastRedirection() - elapsedDays;
 
                     Integer calculatedTTC = elapsedTTC + TTC / 2;
@@ -102,9 +99,13 @@ public class FOIARequestComponentUpdatedHandler
                     {
                         entity.setDueDate(holidayConfigurationService.addWorkingDaysToDate(
                                 Date.from(
-                                        entity.getPerfectedDate().toLocalDate().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()),
+                                        entity.getRedirectedDate().toLocalDate().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()),
                                 calculatedTTC));
                     }
+
+                    entity.setPerfectedDate(holidayConfigurationService
+                            .subtractWorkingDaysFromDate(entity.getDueDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), TTC)
+                            .atTime(LocalTime.now()));
 
                     entity.setTtcOnLastRedirection(elapsedTTC);
 
@@ -121,6 +122,12 @@ public class FOIARequestComponentUpdatedHandler
                 entity.getComponentAgency());
         RequestComponentAgencyChangedEvent event = new RequestComponentAgencyChangedEvent(entity, originalRequest,
                 redirectComponent);
+        applicationEventPublisher.publishEvent(event);
+
+        String redirectedDate = entity.getRedirectedDate()
+                .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.MEDIUM));
+        String updatedRedirectDate = String.format("on %s", redirectedDate);
+        event = new RequestComponentAgencyChangedEvent(entity, originalRequest, updatedRedirectDate);
         applicationEventPublisher.publishEvent(event);
 
         if (calculatedTTC != elapsedTTC)

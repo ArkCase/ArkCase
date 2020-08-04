@@ -1,5 +1,8 @@
 package com.armedia.acm.plugins.complaint.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 /*-
  * #%L
  * ACM Default Plugin: Complaints
@@ -27,9 +30,6 @@ package com.armedia.acm.plugins.complaint.service;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
@@ -44,9 +44,9 @@ import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -60,6 +60,7 @@ import java.util.UUID;
         "/spring/spring-library-configuration.xml",
         "/spring/spring-library-acm-encryption.xml",
         "/spring/spring-library-activiti-configuration.xml",
+        "/spring/spring-library-ldap-directory-config.xml",
         "/spring/spring-library-admin.xml",
         "/spring/spring-library-authentication-token.xml",
         "/spring/spring-library-business-process.xml",
@@ -125,7 +126,7 @@ import java.util.UUID;
         "/spring/spring-library-labels-service.xml",
         "/spring/spring-library-convert-folder-service.xml"
 })
-@TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
+@Rollback(true)
 public class ComplaintServiceIT
 {
 
@@ -177,6 +178,8 @@ public class ComplaintServiceIT
 
         Authentication auth = new UsernamePasswordAuthenticationToken("anotherUser", "password");
         service.setAuthentication(auth);
+
+        entityManager.clear();
     }
 
     @Test
@@ -215,8 +218,6 @@ public class ComplaintServiceIT
         pa2.setType("type");
 
         ComplaintForm savedFrevvoComplaint = service.saveComplaint(frevvoComplaint);
-
-        entityManager.flush();
 
         assertNotNull(savedFrevvoComplaint.getComplaintId());
         assertNotNull(savedFrevvoComplaint.getComplaintNumber());

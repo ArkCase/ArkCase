@@ -105,10 +105,13 @@ public class ComplaintAccessControlRulesTest
 
         workingMemory.execute(complaint);
 
-        assertEquals(4, complaint.getParticipants().get(0).getPrivileges().size());
+        assertEquals(5, complaint.getParticipants().get(0).getPrivileges().size());
 
         assertEquals(1, complaint.getParticipants().get(0).getPrivileges().stream()
                 .filter(app -> app.getAccessType().equals("deny") && app.getObjectAction().equals("read")).count());
+
+        assertEquals(1, complaint.getParticipants().get(0).getPrivileges().stream()
+                .filter(app -> app.getAccessType().equals("grant") && app.getObjectAction().equals("uploadOrReplaceFile")).count());
 
         assertEquals(1, complaint.getParticipants().get(0).getPrivileges().stream()
                 .filter(app -> app.getAccessType().equals("grant") && app.getObjectAction().equals("subscribe")).count());
@@ -134,10 +137,13 @@ public class ComplaintAccessControlRulesTest
 
         workingMemory.execute(complaint);
 
-        assertEquals(4, complaint.getParticipants().get(0).getPrivileges().size());
+        assertEquals(5, complaint.getParticipants().get(0).getPrivileges().size());
 
         assertEquals(1, complaint.getParticipants().get(0).getPrivileges().stream()
                 .filter(app -> app.getAccessType().equals("grant") && app.getObjectAction().equals("read")).count());
+
+        assertEquals(1, complaint.getParticipants().get(0).getPrivileges().stream()
+                .filter(app -> app.getAccessType().equals("grant") && app.getObjectAction().equals("uploadOrReplaceFile")).count());
 
         assertEquals(1, complaint.getParticipants().get(0).getPrivileges().stream()
                 .filter(app -> app.getAccessType().equals("grant") && app.getObjectAction().equals("subscribe")).count());

@@ -14,7 +14,7 @@
                 <div class="form-group col-sm-6">
                     <label class="control-label"><span translate> requests.comp.details.requestTrack.label</span> <span
                             ng-if="requiredFields['requestTrack']" class="required-asterisk">*</span></label> <select
-                        ng-model="requestInfo.requestTrack" ng-required="requiredFields['requestTrack']"
+                        ng-model="requestInfo.requestTrack" ng-change="requestTrackChanged(requestInfo.requestTrack)" ng-required="requiredFields['requestTrack']"
                         ng-options="requestTrack.key as requestTrack.value | translate for requestTrack in requestTracks"
                         class="form-control input-md">
                 </select>
@@ -56,40 +56,20 @@
                 </div>
             </div>
             <div class="row">
-                <div class="form-group col-sm-6" ng-if="!requestInfo.deniedFlag">
+                <div class="form-group col-sm-6">
                     <label class="control-label"><span translate> requests.comp.details.dispositionType.label</span></label> 
-                    <select
-                        ng-model="requestInfo.disposition"
-                        ng-options="dispositionCategory.key as dispositionCategory.value | translate for dispositionCategory in dispositionCategories"
-                        class="form-control input-md" ng-disabled="true">
-                    </select>
+                    <input type="text" id="disposition" ng-model="requestInfo.disposition" name="disposition" class="input-md form-control" ng-disabled="isDisabled">
                 </div>
-                <div class="form-group col-sm-6" ng-if="requestInfo.deniedFlag">
-                    <label class="control-label"><span translate> requests.comp.details.dispositionType.label</span></label>
-                    <select
-                            ng-model="requestInfo.disposition"
-                            ng-options="dispositionCategory.key as dispositionCategory.value | translate for dispositionCategory in dispositionDeniedCategories"
-                            class="form-control input-md" ng-disabled="true">
-                    </select>
-                </div>
-                <div class="form-group col-sm-6" ng-if="isCustomReason">
-                    <label class="control-label" translate> requests.comp.details.otherReason.label</label> <input type="text" id="otherReason"
-                        ng-model="objectInfo.otherReason" name="otherReason" class="input-md form-control" ng-disabled="isDisabled">
-                </div>
-                <div class="form-group col-sm-6" ng-if="!isCustomReason">
-                    <label class="control-label" translate> requests.comp.details.otherReason.label</label>
-                    <select
-                            ng-model="objectInfo.otherReason"
-                            ng-options="otherReason.key as otherReason.value | translate for otherReason in otherReasons"
-                            class="form-control input-md" ng-disabled="true">
-                    </select>
+                <div class="form-group col-sm-6">
+                    <label class="control-label" translate> requests.comp.details.otherReason.label</label> 
+                        <input type="text" id="otherReason" ng-model="objectInfo.otherReason" name="otherReason" class="input-md form-control" ng-disabled="isDisabled">
                 </div>
             </div>
             <div class="row">
                 <div class="form-group col-sm-6">
                     <label class="control-label" translate> requests.comp.details.deliveryMethodOfResponse.label</label> <select
                         ng-model="requestInfo.deliveryMethodOfResponse"
-                        ng-options="deliveryMethodOfResponse.key as deliveryMethodOfResponse.value for deliveryMethodOfResponse in deliveryMethodOfResponses"
+                        ng-options="deliveryMethodOfResponse.key as deliveryMethodOfResponse.value | translate for deliveryMethodOfResponse in deliveryMethodOfResponses"
                         class="form-control input-md" ng-disabled="true">
                 </select>
                 </div>
@@ -166,23 +146,6 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-6">
-                    <div class="checkbox">
-                        <label> <input type="checkbox" ng-model="requestInfo.amendmentFlag" ng-change="requestInfo.requestAmendmentDetails= !requestInfo.amendmentFlag ? '' : requestInfo.requestAmendmentDetails"> <span translate>requests.comp.details.amendmentFlag.label
-                        </span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-6">
-                    <label for="requestAmendmentDetails" translate> requests.comp.details.requestAmendmentDetails.label </label>
-                    <textarea rows=5 id="requestAmendmentDetails" ng-model="requestInfo.requestAmendmentDetails" name="requestAmendmentDetails"
-                            class="input-md form-control" ng-disabled="!requestInfo.amendmentFlag"
-                            placeholder="{{ 'requests.comp.details.requestAmendmentDetails.placeholder'  | translate }}"></textarea>
-                </div>
-            </div>
-            <div class="row">
                 <div class="col-sm-4">
                     <div class="checkbox">
                         <label> <input type="checkbox" ng-model="requestInfo.litigationFlag"> <span translate>requests.comp.details.litigationFlag.label
@@ -192,7 +155,8 @@
                 </div>
                 <div class="col-sm-4">
                     <div class="checkbox">
-                        <label> <input type="checkbox" ng-model="requestInfo.paidFlag"> <span translate>requests.comp.details.paidFlag.label
+                        <label> <input type="checkbox" ng-model="requestInfo.paidFlag"
+                                       ng-change="feeWaivedFlagChange(requestInfo.paidFlag)"> <span translate>requests.comp.details.paidFlag.label
                     </span>
                         </label>
                     </div>

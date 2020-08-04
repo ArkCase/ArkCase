@@ -98,6 +98,20 @@ public class HolidayConfigurationService
         return returnDate;
     }
 
+    public LocalDate subtractWorkingDaysFromDate(LocalDate dueDate, Integer workingDays)
+    {
+        LocalDate returnDate = dueDate;
+        for (int i = 0; i < workingDays;)
+        {
+            returnDate = returnDate.minusDays(1);
+            if (isWorkingDay(returnDate))
+            {
+                i++;
+            }
+        }
+        return returnDate;
+    }
+
     public Date addWorkingDaysToDate(Date date, int workingDays)
     {
         LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -121,7 +135,7 @@ public class HolidayConfigurationService
         return !isHoliday(date) && !isWeekendNonWorkingDay(date);
     }
 
-    public LocalDate getNextWorkingDay(LocalDate date)
+    public LocalDate getFirstWorkingDay(LocalDate date)
     {
         LocalDate resultDate = date;
         while (!isWorkingDay(resultDate))
@@ -187,5 +201,4 @@ public class HolidayConfigurationService
     {
         this.objectConverter = objectConverter;
     }
-
 }

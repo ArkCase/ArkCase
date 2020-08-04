@@ -35,16 +35,14 @@ import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
 import com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileNewMetadataHandler;
 import com.armedia.acm.plugins.ecm.service.impl.EcmTikaFile;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
-
+import gov.foia.model.FOIAEcmFileVersion;
+import gov.foia.model.FOIAFile;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-
-import gov.foia.model.FOIAEcmFileVersion;
-import gov.foia.model.FOIAFile;
 
 public class FOIAEcmFileNewMetadataHandler extends EcmFileNewMetadataHandler
 {
@@ -88,6 +86,7 @@ public class FOIAEcmFileNewMetadataHandler extends EcmFileNewMetadataHandler
             version.setFileSizeBytes(fileSizeBytes);
             version.setReviewStatus("");
             version.setRedactionStatus("");
+            version.setFileHash(pipelineContext.getFileHash());
             version.setSearchablePDF(pipelineContext.isSearchablePDF());
             log.debug("SearchablePDF = [{}]", pipelineContext.isSearchablePDF());
 

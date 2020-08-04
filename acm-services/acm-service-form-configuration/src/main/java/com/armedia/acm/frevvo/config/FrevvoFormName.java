@@ -46,5 +46,7 @@ public class FrevvoFormName
     public static final String COSTSHEET = "costsheet";
     public static final String PROJECT = "project";
     public static final String PLAIN_CONFIGURATION = "plain_configuration";
+    public static final String CONSULTATION = "consultation";
+    public static final String CHANGE_CONSULTATION_STATUS = "change_consultation_status";
 
 }

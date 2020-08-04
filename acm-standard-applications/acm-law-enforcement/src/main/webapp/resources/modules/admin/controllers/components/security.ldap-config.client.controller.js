@@ -17,10 +17,9 @@ angular.module('admin').controller('Admin.LdapConfigController',
             var columnDef = addEditColumn();
             var columnLdapUserTemplate = userTemplate();
             var columnLdapGroupTemplate = groupTemplate();
-            var columnPartialSyncBtn = partialSyncBtn();
             var columnEditPassword = addEditPasswordColumn();
+            $scope.loadingDirectories = true;
 
-            columnDefs.push(columnPartialSyncBtn);
             columnDefs.push(columnLdapGroupTemplate);
             columnDefs.push(columnLdapUserTemplate);
             columnDefs.push(columnDef);
@@ -45,7 +44,11 @@ angular.module('admin').controller('Admin.LdapConfigController',
         $scope.editRow = function(rowEntity) {
             rowEntity.enableEditingLdapUsers = rowEntity.enableEditingLdapUsers === true;
             rowEntity.syncEnabled = rowEntity.syncEnabled === true;
-            showModal(angular.copy(rowEntity), true);
+            if (localStorage.getItem("ldapConfig." + rowEntity.id) !== null) {
+                showModal(angular.copy(JSON.parse(localStorage.getItem("ldapConfig." + rowEntity.id))), true);
+            } else {
+                showModal(angular.copy(rowEntity), true);
+            }
         };
 
         $scope.editPassword = function(rowEntity) {
@@ -146,10 +149,12 @@ angular.module('admin').controller('Admin.LdapConfigController',
             });
 
             modalInstance.result.then(function(data) {
+                var currentLdapDir = angular.copy(data.dir);
                 addPrefixInKey(data.dir, "ldapConfig");
                 if (data.isEdit) {
                     ldapConfigService.updateDirectory(data.dir).then(function() {
-                        reloadGrid();
+                        localStorage.setItem("ldapConfig."+ currentLdapDir.id, JSON.stringify(currentLdapDir));
+                        $scope.loadingDirectories = false;
                         messageService.info($translate.instant('admin.security.ldapConfig.messages.update.success'));
                     }, function() {
                         messageService.error($translate.instant('admin.security.ldapConfig.messages.update.error'));
@@ -202,48 +207,6 @@ angular.module('admin').controller('Admin.LdapConfigController',
             });
         }
 
-        $scope.openSyncModal = function(rowEntity) {
-            var modalScope = $scope.$new();
-            var modalInstance = $modal.open({
-                scope: modalScope,
-                templateUrl: 'modules/admin/views/components/security.ldap-config-sync.popup.html',
-                backdrop: 'static',
-                controller: function($scope, $modalInstance) {
-                    $scope.ok = function() {
-                        $modalInstance.close({
-                            sync: $scope.sync
-                        });
-                    };
-                }
-            });
-            modalInstance.result.then(function(data) {
-                var syncInfo = {
-                    type: data.sync,
-                    dirId: rowEntity.id
-                };
-                startSync(syncInfo);
-            });
-        };
-
-        function startSync(syncInfo) {
-
-            function errorCallback(error) {
-                if (error.data.message) {
-                    messageService.error(error.data.message);
-                } else {
-                    messageService.errorAction();
-                }
-            }
-
-            if (syncInfo.type === "PARTIAL_SYNC") {
-                ldapConfigService.startPartialSync(syncInfo.dirId).then(function() {
-                }, errorCallback);
-            } else if (syncInfo.type === "FULL_SYNC") {
-                ldapConfigService.startFullSync(syncInfo.dirId).then(function() {
-
-                }, errorCallback);
-            }
-        }
 
         function addEditColumn() {
             return {
@@ -290,16 +253,6 @@ angular.module('admin').controller('Admin.LdapConfigController',
             };
         }
 
-        function partialSyncBtn() {
-            return {
-                name: "initiatePartialSync",
-                cellEditableCondition: false,
-                width: 40,
-                cellClass: 'text-center',
-                headerCellTemplate: "<span></span>",
-                cellTemplate: "<span title=\"{{'admin.security.ldapConfig.table.action.partialSync' | translate}}\">" + "<i class='fa fa-refresh fa-lg' style='cursor :pointer' " + "ng-click='grid.appScope.openSyncModal(row.entity)'></i></span>"
-            };
-        }
 
         //we need this because key name contains '.'
         function removePrefixInKey(data) {
@@ -330,8 +283,12 @@ angular.module('admin').controller('Admin.LdapConfigController',
             tempLdapPromise.then(function(directories) {
                 removePrefixInKey(directories.data);
                 $scope.gridOptions.data = _.values(directories.data);
+                if($scope.loadingDirectories && $scope.gridOptions.data.length > 0){
+                    for(var i = 0; i < $scope.gridOptions.data.length; i++){
+                        localStorage.removeItem("ldapConfig." + $scope.gridOptions.data[i].id);
+                    }
+                }
             });
         }
-
 
     } ]);

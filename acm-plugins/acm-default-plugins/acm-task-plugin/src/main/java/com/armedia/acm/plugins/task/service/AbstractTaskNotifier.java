@@ -30,18 +30,19 @@ package com.armedia.acm.plugins.task.service;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.model.TaskNotificationConfig;
-import com.armedia.acm.services.labels.service.TranslationService;
-import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
+import com.armedia.acm.services.notification.service.NotificationService;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.web.api.MDCConstants;
 
 import org.activiti.engine.TaskService;
 import org.activiti.engine.task.Task;
 import org.activiti.engine.task.TaskQuery;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.slf4j.MDC;
 
 import java.util.Date;
 import java.util.List;
@@ -61,15 +62,14 @@ public abstract class AbstractTaskNotifier
 
     private TaskDao activitiTaskDao;
 
-    private NotificationDao notificationDao;
-
     private UserDao userDao;
 
     private TaskNotificationConfig taskNotificationConfig;
 
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
 
-    private TranslationService translationService;
+    private NotificationService notificationService;
+
     /**
      * @param activitiTaskService
      *            the activitiTaskService to set
@@ -91,6 +91,7 @@ public abstract class AbstractTaskNotifier
     public void notifyTaskAssignees()
     {
         getAuditPropertyEntityAdapter().setUserId(NotificationConstants.SYSTEM_USER);
+
         if (getTaskNotificationConfig().getDueTasksNotificationEnabled())
         {
             Date now = new Date();
@@ -99,27 +100,37 @@ public abstract class AbstractTaskNotifier
             for (AcmTask task : tasks)
             {
                 AcmUser user = userDao.findByUserId(task.getAssignee());
-                Notification notification = new Notification();
-                notification.setParentType(task.getObjectType());
-                notification.setParentId(task.getTaskId());
-                notification.setEmailAddresses(user.getMail());
-                notification.setAttachFiles(false);
-                notification.setUser(user.getUserId());
+                String parentType = task.getObjectType();
+                Long parentId = task.getId();
+
+                MDC.put(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY, user.getUserId());
+
                 if (task.getDueDate().compareTo(now) > 0)
                 {
-                    notification.setTemplateModelName("taskUpcoming");
-                    notification.setTitle(translationService.translate(NotificationConstants.TASK_UPCOMING));
+                    Notification notification = notificationService.getNotificationBuilder()
+                            .newNotification("taskUpcoming", NotificationConstants.TASK_UPCOMING, parentType, parentId,
+                                    user.getUserId())
+                            .forObjectWithNumber(String.format("%s-%s", parentType, parentId))
+                            .forObjectWithTitle(task.getTitle())
+                            .withEmailAddresses(user.getMail())
+                            .build();
+
+                    notificationService.saveNotification(notification);
                 }
                 else
                 {
-                    notification.setTemplateModelName("taskOverdue");
-                    notification.setTitle(translationService.translate(NotificationConstants.TASK_OVERDUE));
+                    Notification notification = notificationService.getNotificationBuilder()
+                            .newNotification("taskOverdue", NotificationConstants.TASK_OVERDUE, parentType, parentId,
+                                    user.getUserId())
+                            .forObjectWithNumber(String.format("%s-%s", parentType, parentId))
+                            .forObjectWithTitle(task.getTitle())
+                            .withEmailAddresses(user.getMail())
+                            .build();
+
+                    notificationService.saveNotification(notification);
                 }
-                notificationDao.save(notification);
             }
-
         }
-
     }
 
     /**
@@ -137,16 +148,6 @@ public abstract class AbstractTaskNotifier
     }
 
     protected abstract TaskQuery tasksDueBetween(TaskQuery query);
-
-    public NotificationDao getNotificationDao()
-    {
-        return notificationDao;
-    }
-
-    public void setNotificationDao(NotificationDao notificationDao)
-    {
-        this.notificationDao = notificationDao;
-    }
 
     public UserDao getUserDao()
     {
@@ -168,23 +169,23 @@ public abstract class AbstractTaskNotifier
         this.taskNotificationConfig = taskNotificationConfig;
     }
 
-    public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter() 
+    public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()
     {
         return auditPropertyEntityAdapter;
     }
 
-    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter) 
+    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
     {
         this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
     }
 
-    public TranslationService getTranslationService()
+    public NotificationService getNotificationService()
     {
-        return translationService;
+        return notificationService;
     }
 
-    public void setTranslationService(TranslationService translationService)
+    public void setNotificationService(NotificationService notificationService)
     {
-        this.translationService = translationService;
+        this.notificationService = notificationService;
     }
 }

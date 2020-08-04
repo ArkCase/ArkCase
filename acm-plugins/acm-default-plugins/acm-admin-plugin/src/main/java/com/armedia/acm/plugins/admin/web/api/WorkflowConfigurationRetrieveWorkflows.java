@@ -31,8 +31,8 @@ import com.armedia.acm.activiti.model.AcmProcessDefinition;
 import com.armedia.acm.plugins.admin.exception.AcmWorkflowConfigurationException;
 import com.armedia.acm.plugins.admin.service.WorkflowConfigurationService;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -59,8 +59,6 @@ public class WorkflowConfigurationRetrieveWorkflows
     })
     @ResponseBody
     public List<AcmProcessDefinition> retrieveWorkflows(
-            @RequestParam(value = "start", required = false, defaultValue = "0") int start,
-            @RequestParam(value = "length", required = false, defaultValue = "10") int length,
             @RequestParam(value = "orderBy", required = false, defaultValue = WorkflowConfigurationService.PROP_CREATED) String orderBy,
             @RequestParam(value = "isAsc", required = false, defaultValue = "false") boolean isAsc)
             throws IOException, AcmWorkflowConfigurationException
@@ -68,7 +66,26 @@ public class WorkflowConfigurationRetrieveWorkflows
 
         try
         {
-            List<AcmProcessDefinition> processDefinitions = workflowConfigurationService.retrieveWorkflows(start, length, orderBy, isAsc);
+            List<AcmProcessDefinition> processDefinitions = workflowConfigurationService.retrieveWorkflows(orderBy, isAsc);
+
+            return processDefinitions;
+        }
+        catch (Exception e)
+        {
+            log.error("Can't get workflows list", e);
+            throw new AcmWorkflowConfigurationException("Can't get workflows list", e);
+        }
+    }
+
+    @RequestMapping(value = "/workflowconfiguration/deactivated/workflows", method = RequestMethod.GET, produces = {
+            MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
+    })
+    @ResponseBody
+    public List<AcmProcessDefinition> retrieveDeactivatedWorkflows() throws AcmWorkflowConfigurationException
+    {
+        try
+        {
+            List<AcmProcessDefinition> processDefinitions = workflowConfigurationService.retrieveDeactivatedWorkflows();
 
             return processDefinitions;
         }

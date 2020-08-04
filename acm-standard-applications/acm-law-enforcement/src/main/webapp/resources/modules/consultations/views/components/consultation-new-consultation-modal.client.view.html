@@ -1,0 +1,354 @@
+<form name="consultationForm" novalidate="novalidate" class="form-overflow-scroll">
+    <div class="modal-header">
+        <h3><span translate>consultations.newConsultation.consultationTitle</span></h3>
+    </div>
+    <div class="modal-body">
+        <div id="accordion" class="panel-group">
+            <div class="row">
+                <div class="col-sm-2 form-group">
+                    <label for="subject" translate>consultations.newConsultation.receivedDate.label</label>
+                </div>
+                <div class="col-sm-4 form-group">
+                    <div class="input-group">
+                        <date-time-picker data="config.data.receivedDate" property="receivedDate"
+                                on-after-save="receivedDateChanged()"
+                                date-picker-id="receivedDate"></date-time-picker>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default" id="topSection1">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <span translate>consultations.newConsultation.section1</span></h4>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-12 form-group">
+                            <div class="col-sm-4">
+                                <label>
+                                    <input type="radio" ng-model="isPickExistingPerson" ng-value="false" ng-change="pickExistingUserChange()">
+                                    <translate>consultations.newConsultation.addNewPerson</translate>
+                                </label>
+                            </div>
+                            <div class="col-sm-4">
+                                <label>
+                                    <input type="radio" ng-model="isPickExistingPerson" ng-value="true" ng-change="pickExistingUserChange()">
+                                    <translate>consultations.newConsultation.useExistingPerson</translate>
+                                </label>
+                            </div>
+                            <div class="col-sm-4">
+                                <label>
+                                    <div class="pull-right" ng-if="isPickExistingPerson">
+                                        <button class="btn btn-primary btn-sm" ng-click="searchPerson()" translate>
+                                            consultations.newConsultation.searchPerson
+                                        </button>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="row form-group">
+                            <div class="col-sm-2">
+                                <label for="prefix" translate>consultations.newConsultation.prefix.label</label>
+                                <span class="required-asterisk">*</span>
+                            </div>
+                            <div class="col-sm-4">
+                                <select ng-model="config.data.originator.person.title" id="prefix" name="prefix"
+                                        ng-options="prefix.key as prefix.value | translate for prefix in prefixes" class="form-control input-md"
+                                        required ng-disabled="isExistingPerson && existingPerson.title">
+                                </select>
+                                <span class="text-danger" ng-if="!config.data.originator.person.title && formInvalid" translate>
+                            consultations.newConsultation.prefix.validation.error</span>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-sm-2">
+                                <label for="firstName" translate>consultations.newConsultation.firstName.label</label>
+                                <span class="required-asterisk">*</span>
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="firstName" name="firstName"
+                                        ng-model="config.data.originator.person.givenName"
+                                        placeholder="{{'consultations.newConsultation.firstName.placeholder' | translate}}" required="required"
+                                        ng-disabled="isExistingPerson && existingPerson.givenName">
+                                <span class="text-danger" ng-if="!config.data.originator.person.givenName && formInvalid" translate>
+                                consultations.newConsultation.firstName.validation.error</span>
+                            </div>
+                            <div class="col-sm-2">
+                                <label for="middleName" translate>consultations.newConsultation.middleName.label</label>
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="middleName" ng-model="config.data.originator.person.middleName"
+                                        placeholder="{{'consultations.newConsultation.middleName.placeholder' | translate}}" name="middleName"
+                                        ng-disabled="isExistingPerson">
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-sm-2">
+                                <label for="lastName" translate>consultations.newConsultation.lastName.label</label>
+                                <span class="required-asterisk">*</span>
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="lastName" ng-model="config.data.originator.person.familyName"
+                                        placeholder="{{'consultations.newConsultation.lastName.placeholder' | translate}}" name="lastName"
+                                        required="required" ng-disabled="isExistingPerson && existingPerson.familyName">
+                                <span class="text-danger" ng-if="!config.data.originator.person.familyName && formInvalid" translate>
+                                consultations.newConsultation.lastName.validation.error</span>
+                            </div>
+                            <div class="col-sm-2">
+                                <label for="position" translate>consultations.newConsultation.position.label</label>
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="position" class="form-control" id="position" ng-model="config.data.originator.person.position"
+                                        placeholder="{{'consultations.newConsultation.position.placeholder' | translate}}" name="position"
+                                        ng-disabled="isExistingPerson">
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-sm-2 form-group">
+                                <label for="phone" translate>consultations.newConsultation.phone.label </label>
+                            </div>
+                            <div class="col-sm-4 form-group">
+                                <input type="text" class="form-control" id="phone" pattern="^\d{3}[\-]\d{3}[\-]\d{4}"
+                                        ng-model="config.data.originator.person.defaultPhone.value"
+                                        placeholder="{{'consultations.newConsultation.phone.placeholder' | translate}}" name="phone"
+                                        ng-disabled="isExistingPerson && existingPerson.defaultPhone.value">
+                                <span class="text-danger"
+                                        ng-if="!config.data.originator.person.defaultPhone.value && formInvalid && !phoneEmpty" translate>
+                                consultations.newConsultation.phone.validation.errorInvalid</span>
+                            </div>
+                            <div class="col-sm-2 form-group">
+                                <label for="organization" translate>consultations.newConsultation.organization.label </label>
+                            </div>
+                            <div class="col-sm-4 form-group">
+                                <input type="text" id="organization" ng-model="organizationValue" readonly ng-click="searchOrganization()"
+                                        class="input-md form-control" placeholder="{{'consultations.newConsultation.organization.placeholder' | translate}}"
+                                        name="organization">
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-sm-2">
+                                <label for="email" translate>consultations.newConsultation.email.label </label>
+                                <span class="required-asterisk">*</span>
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="email" ng-model="config.data.originator.person.defaultEmail.value"
+                                        placeholder="{{'consultations.newConsultation.email.placeholder' | translate}}" name="email"
+                                        pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+                                        required="required"
+                                        ng-disabled="isExistingPerson && existingPerson.defaultEmail.value">
+                                <span class="text-danger"
+                                        ng-if="!config.data.originator.person.defaultEmail.value && formInvalid"
+                                        translate>
+                                consultations.newConsultation.email.validation.error</span>
+                                <span class="text-danger"
+                                        ng-if="!config.data.originator.person.defaultEmail.value && formInvalid && !emailEmpty" translate>
+                                consultations.newConsultation.email.validation.errorInvalid</span>
+                            </div>
+                            <div class="col-sm-2">
+                                <label for="confirmationEmail" translate>consultations.newConsultation.confirmationEmail.label </label>
+                                <span class="required-asterisk-confirm-email">*</span>
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="confirmationEmail" ng-model="confirmationEmail"
+                                       placeholder="{{'consultations.newConsultation.confirmationEmail.placeholder' | translate}}" name="confirmationEmail"
+                                       ng-blur="checkExistingEmail()" required="required"
+                                       ng-disabled="isExistingPerson && existingPerson.defaultEmail.value">
+                                <span class="text-danger"
+                                        ng-if="confirmationEmail !== config.data.originator.person.defaultEmail.value && formInvalid && !confirmEmailEmpty"
+                                        translate>
+                                consultations.newConsultation.confirmationEmail.validation.errorInvalid</span>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-sm-2">
+                                <label for="country" translate>consultations.newConsultation.country.label</label>
+                            </div>
+                            <div class="col-sm-4">
+                                <select id="country" class="form-control" ng-model="config.data.originator.person.addresses[0].country"
+                                        ng-disabled="isExistingPerson && existingPerson.addresses[0].country"
+                                        ng-change="changeStates(config.data.originator.person.addresses[0].country)">
+                                    <option ng-repeat="option in countries" value="{{option.key}}">
+                                        {{option.value | translate}}
+                                    </option>
+                                </select>
+                                <span class="text-danger" ng-if="!config.data.originator.person.addresses[0].country && formInvalid"
+                                        translate>
+                            consultations.newConsultation.country.validation.error</span>
+                            </div>
+                            <div class="col-sm-2">
+                                <label for="addressType" translate>consultations.newConsultation.address.type.label</label>
+                            </div>
+                            <div class="col-sm-4">
+                                <select id="addressType" class="form-control" ng-model="config.data.originator.person.addresses[0].type"
+                                        ng-disabled="isExistingPerson && existingPerson.addresses[0].type && existingPerson.addresses[0].streetAddress">
+                                    <option ng-repeat="option in addressTypes" value="{{option.key}}">
+                                        {{option.value | translate}}
+                                    </option>
+                                </select>
+                                <span class="text-danger"
+                                        ng-if="!config.data.originator.person.addresses[0].type && formInvalid"
+                                        translate>
+                            consultations.newConsultation.address.type.validation.error</span>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-sm-2">
+                                <label for="address1" translate>consultations.newConsultation.address.label </label>
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="address1"
+                                        ng-model="config.data.originator.person.addresses[0].streetAddress"
+                                        placeholder="{{'consultations.newConsultation.address.placeholder' | translate}}" name="address1"
+                                        ng-disabled="isExistingPerson && existingPerson.addresses[0].streetAddress">
+                                <span class="text-danger"
+                                        ng-if="!config.data.originator.person.addresses[0].streetAddress && formInvalid"
+                                        translate>
+                                consultations.newConsultation.address.validation.error</span>
+                            </div>
+                            <div class="col-sm-2">
+                                <label for="address2" translate>consultations.newConsultation.address2.label</label>
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="address2"
+                                        ng-model="config.data.originator.person.addresses[0].streetAddress2"
+                                        placeholder="{{'consultations.newConsultation.address2.placeholder' | translate}}" name="address2" ng-disabled="isExistingPerson &&
+                                    (existingPerson.addresses[0].streetAddress || existingPerson.addresses[0].streetAddress2)">
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-sm-2">
+                                <label for="city" translate>consultations.newConsultation.city.label</label>
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="city" ng-model="config.data.originator.person.addresses[0].city"
+                                        placeholder="{{'consultations.newConsultation.city.placeholder' | translate}}" name="city"
+                                        ng-disabled="isExistingPerson && existingPerson.addresses[0].city">
+                            </div>
+                            <div class="col-sm-2">
+                                <label for="state" translate>consultations.newConsultation.state.label</label>
+                            </div>
+                            <div class="col-sm-4">
+                                <div ng-if="config.data.originator.person.addresses[0].country == 'US'
+                            || config.data.originator.person.addresses[0].country == 'CA'
+                            || config.data.originator.person.addresses[0].country == 'JP'">
+                                    <select id="state" name="state" ng-model="config.data.originator.person.addresses[0].state"
+                                            ng-options="state.key as state.value | translate for state in states" class="form-control input-md"
+                                            ng-disabled="isExistingPerson && existingPerson.addresses[0].state">
+                                    </select>
+                                </div>
+                                <div ng-if="config.data.originator.person.addresses[0].country != 'US' && config.data.originator.person.addresses[0].country != 'CA' && config.data.originator.person.addresses[0].country != 'JP'">
+                                    <input id="txtState" type="text" ng-model="config.data.originator.person.addresses[0].state"
+                                            class="input-md form-control" placeholder="{{ 'consultations.newConsultation.state.placeholder' | translate }}"
+                                            ng-disabled="isExistingPerson && existingPerson.addresses[0].state">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-sm-2">
+                                <label for="zip" translate>consultations.newConsultation.zip.label</label>
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="zip" name="zip" pattern="[0-9]{5}"
+                                        ng-model="config.data.originator.person.addresses[0].zip"
+                                        placeholder="{{'consultations.newConsultation.zip.placeholder' | translate}}"
+                                        ng-disabled="isExistingPerson && existingPerson.addresses[0].zip">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <span translate>consultations.newConsultation.section2</span>
+                </h4>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-3 form-group">
+                        <label for="externalAgency" translate>consultations.newConsultation.externalAgency.label</label>
+                        <span class="required-asterisk">*</span>
+                    </div>
+                    <div class="col-sm-9 form-group">
+                        <input id="externalAgency" name="externalAgency" class="form-control" ng-model="config.data.componentAgency" maxlength="50"
+                                placeholder="{{'consultations.newConsultation.title.placeholder' | translate}}" required="required" />
+                        <span class="text-danger" ng-if="!config.data.externalAgency && formInvalid" translate>
+                                consultations.newConsultation.externalAgency.validation.error</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3 form-group">
+                        <label for="title" translate>consultations.newConsultation.title.label</label>
+                        <span class="required-asterisk">*</span>
+                    </div>
+                    <div class="col-sm-9 form-group">
+                        <input id="title" name="title" class="form-control" ng-model="config.data.title" maxlength="50"
+                                placeholder="{{'consultations.newConsultation.title.placeholder' | translate}}" required="required" />
+                        <span class="text-danger" ng-if="!config.data.title && formInvalid" translate>
+                                consultations.newConsultation.title.validation.error</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3 form-group">
+                        <label for="subject" translate>consultations.newConsultation.subject.label</label>
+                        <span class="required-asterisk">*</span>
+                    </div>
+                    <div class="col-sm-9 form-group">
+                        <textarea rows=5 id="subject" name="subject" class="form-control" ng-model="config.data.details"
+                                placeholder="{{'consultations.newConsultation.subject.placeholder' | translate}}" required="required"></textarea>
+                        <span class="text-danger" ng-if="!config.data.details && formInvalid" translate>
+                                consultations.newConsultation.subject.validation.error</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3 form-group">
+                        <label translate>consultations.newConsultation.dueDate.label</label>
+                    </div>
+                    <div class="col-sm-3 form-group">
+                        <div class="input-group">
+                            <date-time-picker data="config.data.dueDate" property="dueDate"
+                                    on-after-save="dueDateChanged()"
+                                    date-picker-id="dueDate"></date-time-picker>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3 form-group">
+                        <label translate>consultations.newConsultation.addFile.label</label>
+                    </div>
+                    <div class="col-sm-3 form-group">
+                        <button class="btn btn-default" ngf-select="addFile($files)" multiple>
+                            <span translate>consultations.newConsultation.chooseFiles</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="row">
+                    <ul ng-repeat="file in uploadFiles">
+                        <li>
+                            {{file.name}}
+                            <button type="button" class="btn btn-link" ng-click="removeFile($index)">
+                                <i class="fa fa-minus text-danger"></i><span translate>consultations.newConsultation.remove</span>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" data-toggle="tooltip" data-title="Cancel" ng-click="cancelModal()">
+            <span translate>consultations.newConsultation.cancelButton</span>
+        </button>
+        <button type="button" class="btn btn-primary btn-sm" data-toggle="tooltip" ng-click="validateForm(consultationForm)" title="Submit"
+                id="saveButton">
+            <i class="{{loadingIcon}}"></i>
+            <span translate>consultations.newConsultation.saveButton</span>
+        </button>
+    </div>
+</form>

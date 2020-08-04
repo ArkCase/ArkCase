@@ -36,14 +36,15 @@ import com.armedia.acm.plugins.task.service.impl.CreateAdHocTaskService;
 import com.armedia.acm.services.config.lookups.model.StandardLookupEntry;
 import com.armedia.acm.services.config.lookups.service.LookupDao;
 import com.armedia.acm.services.labels.service.TranslationService;
-import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
+import com.armedia.acm.services.notification.service.NotificationService;
 import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.services.users.dao.UserDao;
+import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.service.group.GroupService;
 
 import org.apache.commons.fileupload.FileItem;
@@ -118,7 +119,7 @@ public class PortalRequestService
 
     private LookupDao lookupDao;
 
-    private NotificationDao notificationDao;
+    private NotificationService notificationService;
 
     private GroupService groupService;
 
@@ -305,31 +306,37 @@ public class PortalRequestService
             for (int i = 0; i < membersArray.length(); i++)
             {
                 JSONObject memberObject = membersArray.getJSONObject(i);
-                String emailAddress = getSearchResults().extractString(memberObject, "email_lcs");
-
-                officersGroupMemberEmailAddresses.add(emailAddress);
+                String memberState = getSearchResults().extractString(memberObject, "status_lcs");
+                if (memberState.equals(AcmUserState.VALID.name()))
+                {
+                    String emailAddress = getSearchResults().extractString(memberObject, "email_lcs");
+                    officersGroupMemberEmailAddresses.add(emailAddress);
+                }
             }
         }
 
         if (!officersGroupMemberEmailAddresses.isEmpty())
         {
-            Notification notification = new Notification();
+            String emailAddresses = officersGroupMemberEmailAddresses.stream()
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.joining(","));
+
+            log.debug("Preparing requestDownload notification to [{}]", emailAddresses);
 
             OffsetDateTime downloadedDateTime = OffsetDateTime.now(ZoneOffset.UTC);
             String downloadedDateTimeFormatted = DateTimeFormatter.ofPattern("yyyy-MM-dd / HH:mm:ss").format(downloadedDateTime);
 
-            notification.setTitle(
-                    String.format(translationService.translate(NotificationConstants.REQUEST_DOWNLOADED), request.getCaseNumber()));
-            notification.setTemplateModelName("requestDownloaded");
-            notification.setParentId(request.getId());
-            notification.setParentType(request.getRequestType());
-            notification.setParentName(request.getCaseNumber());
-            notification.setParentTitle(StringUtils.left(request.getDetails(), 1000));
-            notification.setNote(downloadedDateTimeFormatted);
-            notification.setEmailAddresses(officersGroupMemberEmailAddresses.stream().collect(Collectors.joining(",")));
-            notification.setUser(SecurityContextHolder.getContext().getAuthentication().getName());
+            Notification notification = notificationService.getNotificationBuilder()
+                    .newNotification("requestDownloaded",
+                            String.format(translationService.translate(NotificationConstants.REQUEST_DOWNLOADED), request.getCaseNumber()),
+                            request.getObjectType(), request.getId(), SecurityContextHolder.getContext().getAuthentication().getName())
+                    .forObjectWithNumber(request.getCaseNumber())
+                    .forObjectWithTitle(StringUtils.left(request.getDetails(), 1000))
+                    .withEmailAddresses(emailAddresses)
+                    .withNote(downloadedDateTimeFormatted)
+                    .build();
 
-            getNotificationDao().save(notification);
+            notificationService.saveNotification(notification);
         }
     }
 
@@ -530,14 +537,14 @@ public class PortalRequestService
         this.lookupDao = lookupDao;
     }
 
-    public NotificationDao getNotificationDao()
+    public NotificationService getNotificationService()
     {
-        return notificationDao;
+        return notificationService;
     }
 
-    public void setNotificationDao(NotificationDao notificationDao)
+    public void setNotificationService(NotificationService notificationService)
     {
-        this.notificationDao = notificationDao;
+        this.notificationService = notificationService;
     }
 
     public GroupService getGroupService()
@@ -564,7 +571,7 @@ public class PortalRequestService
             throws AcmObjectNotFoundException
     {
         PortalFOIAPerson person = getPortalFOIAPersonDao().findByEmail(emailAddress).get();
-        List<PortalFOIARequestStatus> responseRequests = getRequestDao().getLoggedUserExternalRequests(person.getId());
+        List<PortalFOIARequestStatus> responseRequests = getRequestDao().getLoggedUserExternalRequests(person.getId(), requestId);
         if (responseRequests.isEmpty())
         {
             log.info("FOIA Requests not found for the logged user [{}]]", emailAddress);

@@ -64,9 +64,9 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -83,7 +83,6 @@ import java.util.stream.Collectors;
 @ContextConfiguration(name = "spring", locations = {
         "/spring/spring-library-acm-encryption.xml",
         "/spring/spring-library-activiti-configuration.xml",
-        "/spring/spring-library-admin.xml",
         "/spring/spring-library-audit-service.xml",
         "/spring/spring-library-authentication-token.xml",
         "/spring/spring-library-business-process.xml",
@@ -130,7 +129,6 @@ import java.util.stream.Collectors;
         "/spring/spring-library-service-data.xml",
         "/spring/spring-library-task.xml",
         "/spring/spring-test-quartz-scheduler.xml",
-        "/spring/spring-library-user-service.xml",
         "/spring/spring-library-core-api.xml",
         "/spring/spring-library-user-login.xml",
         "/spring/spring-library-plugin-manager.xml",
@@ -147,9 +145,10 @@ import java.util.stream.Collectors;
         "/spring/spring-library-timesheet-save.xml",
         "/spring/spring-library-timesheet-rules.xml",
         "/spring/spring-library-labels-service.xml",
+        "/spring/spring-library-user-service-test.xml",
         "/spring/spring-library-user-tracker.xml"
 })
-@TransactionConfiguration(defaultRollback = true)
+@Rollback(true)
 public class MergeCaseFileServiceIT
 {
     static
@@ -198,6 +197,7 @@ public class MergeCaseFileServiceIT
     {
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
+        entityManager.clear();
     }
 
     @Test
@@ -373,8 +373,6 @@ public class MergeCaseFileServiceIT
 
         mergeCaseService.mergeCases(auth, ipAddress, mergeCaseOptions);
 
-        entityManager.flush();
-
         CaseFile targetCase = caseFileDao.find(targetId);
         AcmParticipant foundAssignee = null;
         for (AcmParticipant ap : targetCase.getParticipants())
@@ -433,8 +431,6 @@ public class MergeCaseFileServiceIT
 
         CaseFile targetSaved = saveCaseService.saveCase(targetCaseFile, auth, ipAddress);
 
-        entityManager.flush();
-
         targetId = targetSaved.getId();
 
         // verify that case files are saved
@@ -461,8 +457,6 @@ public class MergeCaseFileServiceIT
         mergeCaseOptions.setTargetCaseFileId(targetId);
 
         mergeCaseService.mergeCases(auth, ipAddress, mergeCaseOptions);
-
-        entityManager.flush();
 
         CaseFile targetCase = caseFileDao.find(targetId);
 

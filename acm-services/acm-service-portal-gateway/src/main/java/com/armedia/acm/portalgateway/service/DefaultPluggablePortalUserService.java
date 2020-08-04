@@ -65,6 +65,15 @@ public class DefaultPluggablePortalUserService implements PortalUserService
         return getServiceProvider().requestRegistration(portalId, registrationRequest);
     }
 
+    @Override
+    public UserRegistrationResponse regenerateRegistrationRequest(String portalId, UserRegistrationRequest registrationRequest)
+            throws PortalUserServiceException
+    {
+        log.debug("Regenerating registration for user with [{}] email address for portal with [{}] ID.",
+                registrationRequest.getEmailAddress(), portalId);
+        return getServiceProvider().regenerateRegistrationRequest(portalId, registrationRequest);
+    }
+
     /*
      * (non-Javadoc)
      * @see com.armedia.acm.portalgateway.service.PortalUserService#checkRegistrationStatus(java.lang.String,
@@ -139,6 +148,18 @@ public class DefaultPluggablePortalUserService implements PortalUserService
     {
         log.debug("Password change requested by [{}] user at portal with [{}] ID.", resetRequest.getEmailAddress(), portalId);
         return getServiceProvider().requestPasswordReset(portalId, resetRequest);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.armedia.acm.portalgateway.service.PortalUserService#regeneratePasswordReset(java.lang.String,
+     * com.armedia.acm.portalgateway.model.UserResetRequest)
+     */
+    @Override
+    public UserResetResponse regeneratePasswordReset(String portalId, UserResetRequest resetRequest) throws PortalUserServiceException
+    {
+        log.debug("Regenerating password reset requested by [{}] user at portal with [{}] ID.", resetRequest.getEmailAddress(), portalId);
+        return getServiceProvider().regeneratePasswordReset(portalId, resetRequest);
     }
 
     /*

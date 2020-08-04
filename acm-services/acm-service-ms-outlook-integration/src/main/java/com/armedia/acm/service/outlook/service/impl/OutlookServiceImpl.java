@@ -69,7 +69,6 @@ import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksDTO;
 import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksResultDTO;
 import com.armedia.acm.services.email.sender.service.EmailSenderConfigurationServiceImpl;
 import com.armedia.acm.services.email.service.AcmEmailContentGeneratorService;
-import com.armedia.acm.services.email.service.TemplatingEngine;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import org.apache.commons.codec.digest.DigestUtils;
@@ -130,7 +129,6 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
     private AcmOutlookFolderCreatorDao folderCreatorDao;
     private EcmFileService ecmFileService;
     private AcmContainerDao acmContainerDao;
-    private TemplatingEngine templatingEngine;
 
     private OutlookEventPublisher outlookEventPublisher;
     private OutlookConfig outlookConfig;
@@ -396,12 +394,11 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
     private void sendEmail(EmailWithAttachmentsDTO emailWithAttachmentsDTO, Authentication authentication, AcmOutlookUser outlookUser)
             throws Exception
     {
-        emailWithAttachmentsDTO.setTemplatingEngine(getTemplatingEngine());
-
         ExchangeService service = connect(outlookUser);
+
         EmailMessage emailMessage = new EmailMessage(service);
         emailMessage.setSubject(emailWithAttachmentsDTO.getSubject());
-        emailMessage.setBody(MessageBody.getMessageBodyFromText(emailWithAttachmentsDTO.getMessageBody()));
+        emailMessage.setBody(MessageBody.getMessageBodyFromText(emailWithAttachmentsDTO.getBody()));
         emailMessage.getBody().setBodyType(BodyType.HTML);
         emailMessage.getToRecipients().add(outlookConfig.getSystemUserEmail());
 
@@ -416,6 +413,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         List<EcmFile> attachedFiles = new ArrayList<>();
 
         addAttachmentsAndSend(emailWithAttachmentsDTO.getAttachmentIds(), emailMessage, attachedFiles);
+        emailWithAttachmentsDTO.setMailSent(true);
 
         // use the first method if you don't require a copy
         // use the second if a copy of the sent email is needed
@@ -480,8 +478,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
                     EmailMessage emailMessage = new EmailMessage(service);
                     emailMessage.getToRecipients().add(emailAddress);
                     emailMessage.setSubject(emailWithAttachmentsAndLinksDTO.getSubject());
-                    emailMessage.setBody(MessageBody
-                            .getMessageBodyFromText(generateBody(emailWithAttachmentsAndLinksDTO, emailAddress, authentication)));
+                    emailMessage.setBody(MessageBody.getMessageBodyFromText(generateBody(emailWithAttachmentsAndLinksDTO, emailAddress, authentication)));
                     emailMessage.getBody().setBodyType(BodyType.HTML);
 
                     List<EcmFile> attachedFiles = new ArrayList<>();
@@ -888,7 +885,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
             }
             catch (Exception e)
             {
-                log.error("Can't add permission for user email: {}, reason: ", outlookFolderPermission.getEmail(), e.getMessage());
+                log.error("Can't add permission for user email: {}, reason: {}", outlookFolderPermission.getEmail(), e.getMessage());
             }
         }
 
@@ -903,7 +900,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
             }
             catch (Exception e)
             {
-                log.error("Can't remove permission for user email: {}, reason: ", outlookFolderPermission.getEmail(), e.getMessage());
+                log.error("Can't remove permission for user email: {}, reason: {}", outlookFolderPermission.getEmail(), e.getMessage());
             }
         }
     }
@@ -921,7 +918,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         of.setParentId(folder.getParentFolderId().getUniqueId());
 
         List<OutlookFolderPermission> permissions = folder.getPermissions().getItems().stream().map(this::mapFolderPermission)
-                .collect(Collectors.toCollection(() -> new LinkedList<>()));
+                .collect(Collectors.toCollection(LinkedList::new));
         of.setPermissions(permissions);
 
         return of;
@@ -1063,16 +1060,6 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
     public void setAcmEmailContentGeneratorService(AcmEmailContentGeneratorService acmEmailContentGeneratorService)
     {
         this.acmEmailContentGeneratorService = acmEmailContentGeneratorService;
-    }
-
-    public TemplatingEngine getTemplatingEngine()
-    {
-        return templatingEngine;
-    }
-
-    public void setTemplatingEngine(TemplatingEngine templatingEngine)
-    {
-        this.templatingEngine = templatingEngine;
     }
 
     public EmailSenderConfigurationServiceImpl getEmailSenderConfigurationService()

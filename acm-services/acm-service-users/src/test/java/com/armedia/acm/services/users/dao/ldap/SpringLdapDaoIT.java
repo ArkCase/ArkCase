@@ -64,7 +64,8 @@ import java.util.Optional;
         "/spring/spring-test-quartz-scheduler.xml",
         "/spring/spring-library-websockets.xml",
         "/spring/spring-library-activemq.xml",
-        "/spring/spring-library-configuration.xml" })
+        "/spring/spring-library-configuration.xml",
+        "/spring/spring-library-ldap-directory-config.xml" })
 
 public class SpringLdapDaoIT
 {
@@ -75,6 +76,7 @@ public class SpringLdapDaoIT
         System.setProperty("configuration.server.url", "http://localhost:9999");
         System.setProperty("javax.net.ssl.trustStore", userHomePath + "/.arkcase/acm/private/arkcase.ts");
         System.setProperty("javax.net.ssl.trustStorePassword", "password");
+        System.setProperty("application.name.default", "arkcase,ldap");
     }
 
     static final Logger log = LogManager.getLogger(SpringLdapDaoIT.class);

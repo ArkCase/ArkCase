@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @JsonIdentityInfo(generator = JSOGGenerator.class)
-public class EmailWithEmbeddedLinksDTO extends MessageBodyFactory
+public class EmailWithEmbeddedLinksDTO
 {
 
     private String subject;
@@ -62,10 +62,15 @@ public class EmailWithEmbeddedLinksDTO extends MessageBodyFactory
 
     private String fileVersion;
 
-    public String buildMessageBodyFromTemplate(String body)
-    {
-        return buildMessageBodyFromTemplate(body, getHeader(), getFooter());
-    }
+    private String objectType;
+
+    private String objectId;
+
+    private String objectNumber;
+
+    private String template;
+
+    private String modelReferenceName;
 
     public String getSubject()
     {
@@ -182,5 +187,55 @@ public class EmailWithEmbeddedLinksDTO extends MessageBodyFactory
     public void setFileVersion(String fileVersion)
     {
         this.fileVersion = fileVersion;
+    }
+
+    public String getObjectType()
+    {
+        return objectType;
+    }
+
+    public void setObjectType(String objectType)
+    {
+        this.objectType = objectType;
+    }
+
+    public String getObjectId()
+    {
+        return objectId;
+    }
+
+    public void setObjectId(String objectId)
+    {
+        this.objectId = objectId;
+    }
+
+    public String getObjectNumber()
+    {
+        return objectNumber;
+    }
+
+    public void setObjectNumber(String objectNumber)
+    {
+        this.objectNumber = objectNumber;
+    }
+
+    public String getTemplate()
+    {
+        return template;
+    }
+
+    public void setTemplate(String template)
+    {
+        this.template = template;
+    }
+
+    public String getModelReferenceName()
+    {
+        return modelReferenceName;
+    }
+
+    public void setModelReferenceName(String modelReferenceName)
+    {
+        this.modelReferenceName = modelReferenceName;
     }
 }

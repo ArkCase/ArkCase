@@ -214,6 +214,11 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
      * By default is null and don't need to be set with every creation of EcmFile instance. Developers can use for their
      * needs
      */
+
+    @Column(name = "cm_file_is_duplicate", nullable = false)
+    @Convert(converter = BooleanToStringConverter.class)
+    private Boolean duplicate = Boolean.FALSE;
+
     @Transient
     private String uuid;
 
@@ -683,5 +688,13 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     public void setMailAddress(String mailAddress)
     {
         this.mailAddress = mailAddress;
+    }
+
+    public Boolean isDuplicate() {
+        return duplicate;
+    }
+
+    public void setDuplicate(Boolean duplicate) {
+        this.duplicate = duplicate;
     }
 }

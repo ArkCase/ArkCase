@@ -36,6 +36,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Riste Tutureski <riste.tutureski@armedia.com> on 03/06/2018
@@ -57,5 +58,16 @@ public class EcmFileVersionDao extends AcmAbstractDao<EcmFileVersion>
         Long totalSize = (Long) query.getSingleResult();
         return totalSize == null ? 0L : totalSize;
 
+    }
+
+    public List<EcmFileVersion> getEcmFileVersionWithSameHash(String fileHash)
+    {
+        String queryText = "SELECT fileVersion FROM EcmFileVersion fileVersion WHERE fileVersion.fileHash = :fileHash";
+        Query query = getEm().createQuery(queryText);
+        query.setParameter("fileHash", fileHash);
+
+        List<EcmFileVersion> results = query.getResultList();
+
+        return results;
     }
 }

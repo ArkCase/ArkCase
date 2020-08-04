@@ -177,7 +177,7 @@ angular.module('admin').controller(
                         $scope.okBtn = "admin.security.organizationalHierarchy.createUserDialog.addLdapMember.btn.ok";
                         $scope.cancelBtn = "admin.security.organizationalHierarchy.createUserDialog.addLdapMember.btn.cancel";
                         $scope.user = userForm;
-                        $scope.error = usernameError;
+                        $scope.usernameError = usernameError;
                         $scope.data = {
                             "user": $scope.user,
                             "selectedUser": selectedUser
@@ -244,7 +244,7 @@ angular.module('admin').controller(
             function cloneUser() {
                 LdapConfigService.retrieveDirectories().then(function (directories) {
                     getEnableEditingLdapUsers(directories, selectedUser.directory);
-                    if ($scope.enableLdapUser === 'true') {
+                    if ($scope.enableLdapUser) {
                         var modalInstance = openCloneUserModal({}, "");
                         var deferred = $q.defer();
                         modalInstance.result.then(function (data) {
@@ -378,7 +378,7 @@ angular.module('admin').controller(
             $scope.deleteUserConfirm = function deleteUserConfirm() {
                 LdapConfigService.retrieveDirectories().then(function (directories) {
                     getEnableEditingLdapUsers(directories, selectedUser.directory);
-                    if($scope.enableLdapUser === 'true'){
+                    if($scope.enableLdapUser === true){
                         bootbox.confirm({
                             message: $translate.instant("admin.security.ldap.user.management.deleteUserMsg"),
                             buttons: {

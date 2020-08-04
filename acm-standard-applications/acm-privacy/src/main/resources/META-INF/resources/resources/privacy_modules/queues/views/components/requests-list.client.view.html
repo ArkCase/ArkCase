@@ -1,0 +1,11 @@
+<div ng-controller="Queues.RequestsListController" class="panel panel-grid panel-success">
+    <div class="panel-heading">
+        <div class="clearfix">
+            {{config.queues[selectedQueue.name] | translate}}
+        </div>
+    </div>
+    <div class="panel-body" collapse="isCollapsed">
+        <div ui-grid="gridOptions" ui-grid-resize-columns ui-grid-selection ui-grid-auto-resize ui-grid-pagination class="grid"
+                adjust-table-height="gridOptions.data.length"></div>
+    </div>
+</div>

@@ -27,16 +27,19 @@ package com.armedia.acm.web.api.service;
  * #L%
  */
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.context.ServletContextAware;
 
 import javax.servlet.ServletContext;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 /**
  * Created by jovan.ivanovski on 10/7/2016.
@@ -46,14 +49,18 @@ public class ApplicationMetaInfoService implements InitializingBean, ServletCont
 
     private final Logger log = LogManager.getLogger(getClass());
     ServletContext servletContext;
-    private String version;
+    private Map<String, String> version;
+    @Value("${extension.groupId:}")
+    private String groupId;
+    @Value("${extension.artifactId:}")
+    private String artifactId;
 
-    public String getVersion()
+    public Map<String, String> getVersion()
     {
         return version;
     }
 
-    public void setVersion(String version)
+    public void setVersion(Map<String, String> version)
     {
         this.version = version;
     }
@@ -71,7 +78,14 @@ public class ApplicationMetaInfoService implements InitializingBean, ServletCont
         try (InputStream manifestStream = servletContext.getResourceAsStream("/META-INF/MANIFEST.MF"))
         {
             prop.load(manifestStream);
-            version = prop.getProperty("Implementation-Version", "");
+            version = prop.entrySet().stream().collect(
+                    Collectors.toMap(
+                            e -> (String) e.getKey(),
+                            e -> (String) e.getValue()));
+            if (!groupId.isEmpty() && !artifactId.isEmpty())
+            {
+                extensionVersion();
+            }
         }
         catch (IOException e)
         {
@@ -80,10 +94,46 @@ public class ApplicationMetaInfoService implements InitializingBean, ServletCont
 
     }
 
+    public void extensionVersion()
+    {
+        String extensionVersion;
+        Properties prop = new Properties();
+        InputStream inputStream = getClass().getResourceAsStream("/META-INF/maven/" + groupId + "/" + artifactId + "/pom.properties");
+        try
+        {
+            if (inputStream == null)
+            {
+                return;
+            }
+            prop.load(inputStream);
+            extensionVersion = prop.getProperty("version", "");
+            version.put("extensionVersion", extensionVersion);
+        } catch (IOException e) {
+            log.warn("Could not retrieve version from properties file: ", e.getMessage());
+        }
+    }
+
     @Override
     public void afterPropertiesSet() throws Exception
     {
         findVersion();
     }
 
+    public String getGroupId()
+    {
+        return groupId;
+    }
+
+    public void setGroupId(String groupId)
+    {
+        this.groupId = groupId;
+    }
+
+    public String getArtifactId() {
+        return artifactId;
+    }
+
+    public void setArtifactId(String artifactId) {
+        this.artifactId = artifactId;
+    }
 }

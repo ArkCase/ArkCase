@@ -42,7 +42,6 @@ import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.services.labels.service.LabelManagementService;
-import com.armedia.acm.services.labels.service.TranslationService;
 import com.armedia.acm.services.mediaengine.exception.CreateMediaEngineException;
 import com.armedia.acm.services.mediaengine.exception.GetMediaEngineException;
 import com.armedia.acm.services.mediaengine.exception.MediaEngineProviderNotFound;
@@ -58,9 +57,9 @@ import com.armedia.acm.services.mediaengine.model.MediaEngineStatusType;
 import com.armedia.acm.services.mediaengine.model.MediaEngineType;
 import com.armedia.acm.services.mediaengine.model.MediaEngineUserType;
 import com.armedia.acm.services.mediaengine.service.ArkCaseMediaEngineServiceImpl;
-import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
+import com.armedia.acm.services.notification.service.NotificationService;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
 import com.armedia.acm.services.transcribe.dao.TranscribeDao;
@@ -119,10 +118,9 @@ public class ArkCaseTranscribeServiceImpl extends ArkCaseMediaEngineServiceImpl<
     private LabelManagementService labelManagementService;
     private ItemsMapper itemsMapper;
     private TranscribeProviderFactory transcribeProviderFactory;
-    private NotificationDao notificationDao;
     private EcmFileDao ecmFileDao;
     private TranscribeConfigurationService transcribeConfigurationService;
-    private TranslationService translationService;
+    private NotificationService notificationService;
 
     @Override
     public void notify(Long id, String action)
@@ -137,23 +135,25 @@ public class ArkCaseTranscribeServiceImpl extends ArkCaseMediaEngineServiceImpl<
 
                 getUsersToNotify(users, transcribe);
 
-                Notification notification = new Notification();
-                notification.setTitle(translationService.translate(NotificationConstants.STATUS_TRANSCRIPTION));
-                if(!action.equals("QUEUED"))
+                String template;
+                if (!action.equals("QUEUED"))
                 {
-                    notification.setTemplateModelName("transcribeStatus");
+                    template = "transcribeStatus";
                 }
                 else
                 {
-                    notification.setTemplateModelName("transcribeQueued");
+                    template = "transcribeQueued";
                 }
-                notification.setNote(action);
-                notification.setAttachFiles(false);
-                notification.setParentId(transcribe.getMediaEcmFileVersion().getId());
-                notification.setParentType(transcribe.getObjectType());
-                notification.setEmailAddresses(users.stream().map(AcmUser::getMail).collect(Collectors.joining(",")));
-                notification.setData(transcribe.getMediaEcmFileVersion().getFile().getFileName());
-                notificationDao.save(notification);
+
+                Notification notification = notificationService.getNotificationBuilder()
+                        .newNotification(template, NotificationConstants.STATUS_TRANSCRIPTION, transcribe.getObjectType(),
+                                transcribe.getMediaEcmFileVersion().getId(), null)
+                        .withEmailAddressesForUsers(users)
+                        .withData(transcribe.getMediaEcmFileVersion().getFile().getFileName())
+                        .withNote(action)
+                        .build();
+
+                notificationService.saveNotification(notification);
             }
         }
     }
@@ -948,16 +948,6 @@ public class ArkCaseTranscribeServiceImpl extends ArkCaseMediaEngineServiceImpl<
         this.transcribeProviderFactory = transcribeProviderFactory;
     }
 
-    public NotificationDao getNotificationDao()
-    {
-        return notificationDao;
-    }
-
-    public void setNotificationDao(NotificationDao notificationDao)
-    {
-        this.notificationDao = notificationDao;
-    }
-
     public EcmFileDao getEcmFileDao()
     {
         return ecmFileDao;
@@ -978,13 +968,13 @@ public class ArkCaseTranscribeServiceImpl extends ArkCaseMediaEngineServiceImpl<
         this.transcribeConfigurationService = transcribeConfigurationService;
     }
 
-    public TranslationService getTranslationService()
+    public NotificationService getNotificationService()
     {
-        return translationService;
+        return notificationService;
     }
 
-    public void setTranslationService(TranslationService translationService)
+    public void setNotificationService(NotificationService notificationService)
     {
-        this.translationService = translationService;
+        this.notificationService = notificationService;
     }
 }

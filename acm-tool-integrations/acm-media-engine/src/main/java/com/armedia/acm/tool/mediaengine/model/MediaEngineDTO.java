@@ -62,6 +62,8 @@ public class MediaEngineDTO
 
     private String tempPath;
 
+    private String jobId;
+
     public Long getId()
     {
         return id;
@@ -190,5 +192,15 @@ public class MediaEngineDTO
     public void setTempPath(String tempPath)
     {
         this.tempPath = tempPath;
+    }
+
+    public String getJobId()
+    {
+        return jobId;
+    }
+
+    public void setJobId(String jobId)
+    {
+        this.jobId = jobId;
     }
 }

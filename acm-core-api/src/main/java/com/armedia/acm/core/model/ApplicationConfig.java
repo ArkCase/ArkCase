@@ -94,6 +94,12 @@ public class ApplicationConfig
     @Value("${application.properties.issueCollectorFlag}")
     private Boolean issueCollectorFlag;
 
+
+    @JsonProperty("application.properties.logoutUrl")
+    @Value("${application.properties.logoutUrl}")
+    private String logoutUrl;
+
+
     private HashMap<Object, String> roles;
 
     public Integer getIdleLimit()
@@ -204,5 +210,13 @@ public class ApplicationConfig
     public void setRoles(HashMap<Object, String> roles)
     {
         this.roles = roles;
+    }
+
+    public String getLogoutUrl() {
+        return logoutUrl;
+    }
+
+    public void setLogoutUrl(String logoutUrl) {
+        this.logoutUrl = logoutUrl;
     }
 }

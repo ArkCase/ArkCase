@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
        xmlns="http://www.springframework.org/schema/beans"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <bean id="complaintFolderNameFormat" class="java.lang.String">
         <constructor-arg value="Complaint (%s)"/>
@@ -68,6 +68,10 @@
         <property name="formsTypeCheckService" ref="formsTypeCheckService"/>
         <property name="dao" ref="acmComplaintDao"/>
     </bean>
+    <bean id="complaintTagHandler" class="com.armedia.acm.plugins.complaint.pipeline.postsave.ComplaintTagHandler">
+        <property name="associatedTagService" ref="associatedTagService" />
+        <property name="tagService" ref="tagService" />
+    </bean>
 
     <bean id="complaintPipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
         <property name="preSaveHandlers">
@@ -82,6 +86,7 @@
                 <ref bean="complaintEcmFolderHandler"/>
                 <ref bean="complaintOutlookHandler"/>
                 <ref bean="complaintDocumentHandler"/>
+                <ref bean="complaintTagHandler" />
             </list>
         </property>
     </bean>
@@ -270,7 +275,11 @@
         <property name="complaintDao" ref="acmComplaintDao"/>
     </bean>
 
-    <bean id="complaintTemplateModelProvider" class="com.armedia.acm.plugins.complaint.model.provider.ComplaintTemplateModelProvider">
+    <bean id="complaintTemplateModelProvider" class="com.armedia.acm.plugins.complaint.model.provider.ComplaintTemplateModelProvider"/>
+
+    <bean id="complaintUpdatedNotifier" class="com.armedia.acm.plugins.complaint.service.ComplaintUpdatedNotifier">
+        <property name="notificationService" ref="notificationService"/>
+        <property name="complaintDao" ref="acmComplaintDao"/>
     </bean>
 
 </beans>

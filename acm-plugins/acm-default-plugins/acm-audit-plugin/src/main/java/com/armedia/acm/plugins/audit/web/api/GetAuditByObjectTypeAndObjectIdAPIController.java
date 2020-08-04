@@ -30,16 +30,13 @@ package com.armedia.acm.plugins.audit.web.api;
 import com.armedia.acm.audit.dao.AuditDao;
 import com.armedia.acm.audit.model.AuditConfig;
 import com.armedia.acm.audit.model.AuditEvent;
-import com.armedia.acm.audit.model.AuditEventConfig;
 import com.armedia.acm.core.query.QueryResultPageWithTotalCount;
 import com.armedia.acm.plugins.audit.model.AuditConstants;
-import com.armedia.acm.plugins.audit.service.ReplaceEventTypeNames;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -61,9 +58,7 @@ public class GetAuditByObjectTypeAndObjectIdAPIController
     private final Logger LOG = LogManager.getLogger(getClass());
 
     private AuditDao auditDao;
-    private AuditEventConfig auditEventConfig;
     private AuditConfig auditConfig;
-    private ReplaceEventTypeNames replaceEventTypeNames;
 
     @RequestMapping(value = "/{objectType}/{objectId}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
     @ResponseBody
@@ -72,8 +67,7 @@ public class GetAuditByObjectTypeAndObjectIdAPIController
             @PathVariable(value = "objectId") Long objectId,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,
-            @RequestParam(value = "s", required = false, defaultValue = "eventDate DESC") String s,
-            Authentication authentication)
+            @RequestParam(value = "s", required = false, defaultValue = "eventDate DESC") String s)
     {
 
         LOG.debug("Finding audit for {} with id {}; start row: {}; max rows: {}", objectType, objectId, startRow, maxRows);
@@ -124,32 +118,12 @@ public class GetAuditByObjectTypeAndObjectIdAPIController
         this.auditDao = dao;
     }
 
-    public AuditEventConfig getAuditEventConfig()
-    {
-        return auditEventConfig;
-    }
-
-    public void setAuditEventConfig(AuditEventConfig auditEventConfig)
-    {
-        this.auditEventConfig = auditEventConfig;
-    }
-
-    public ReplaceEventTypeNames getReplaceEventTypeNames()
-    {
-        return replaceEventTypeNames;
-    }
-
-    public void setReplaceEventTypeNames(ReplaceEventTypeNames replaceEventTypeNames)
-    {
-        this.replaceEventTypeNames = replaceEventTypeNames;
-    }
-
-    public AuditConfig getAuditConfig() 
+    public AuditConfig getAuditConfig()
     {
         return auditConfig;
     }
 
-    public void setAuditConfig(AuditConfig auditConfig) 
+    public void setAuditConfig(AuditConfig auditConfig)
     {
         this.auditConfig = auditConfig;
     }

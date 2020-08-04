@@ -1,0 +1,262 @@
+[
+    {
+        "op": "add",
+        "path": "/components/1",
+        "value": {
+            "id": "weather",
+            "title": "Weather Widget",
+            "APPID": "672e193bbf022bdc749986f7be4c0364",
+            "units": "imperial"
+        }
+    },
+    {
+        "op": "replace",
+        "path": "/components/?@.id=='myCases'/columnDefs/?@.name=='name'",
+        "value": {
+            "name": "object_id_s",
+            "displayName": "dashboard.widgets.myCases.table.header.caseId",
+            "headerCellFilter": "translate",
+            "enableSorting": true,
+            "type": "number",
+            "cellTemplate": "<div class='ui-grid-cell-contents'><a data-ui-sref=\"cases.main({id: row.entity.object_id_s})\">{{COL_FIELD CUSTOM_FILTERS}}</a></div>",
+            "width": 130
+        }
+    },
+    {
+        "op": "replace",
+        "path": "/components/?@.id=='myCases'/columnDefs/?@.name=='title_parseable'/displayName",
+        "value": "dashboard.widgets.myCases.table.header.topic"
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='myCases'/columnDefs/?@.name=='status_lcs'"
+    },
+    {
+        "op": "add",
+        "path": "/components/?@.id=='myCases'/columnDefs/2",
+        "value": {
+            "name": "request_status_lcs",
+            "displayName": "dashboard.widgets.myCases.table.header.status",
+            "headerCellFilter": "translate",
+            "enableSorting": true,
+            "width": 150
+        }
+    },
+    {
+        "op": "add",
+        "path": "/components/?@.id=='myCases'/columnDefs/?@.name=='priority_lcs'/width",
+        "value": 70
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='myCases'/columnDefs/?@.name=='assignee_id_lcs'"
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='myCases'/columnDefs/?@.name=='modified_date_tdt'"
+    },
+    {
+        "op": "replace",
+        "path": "/components/?@.id=='myTasks'/columnDefs",
+        "value": [
+            {
+                "name": "parent_type_s",
+                "displayName": "dashboard.widgets.myTasks.table.header.parentType",
+                "headerCellFilter": "translate",
+                "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.parent_type_s == 'CASE_FILE' ? 'REQUEST' : row.entity.parent_type_s}}</div>",
+                "width": 110
+            },
+            {
+                "name": "title_parseable",
+                "displayName": "dashboard.widgets.myTasks.table.header.title",
+                "headerCellFilter": "translate",
+                "cellTemplate": "<a data-ui-sref=\"tasks.main({id: row.entity.object_id_s})\">{{COL_FIELD}}</a>"
+            },
+            {
+                "name": "priority_lcs",
+                "displayName": "dashboard.widgets.myTasks.table.header.priority",
+                "headerCellFilter": "translate",
+                "width": 75
+            },
+            {
+                "name": "dueDate_tdt",
+                "displayName": "dashboard.widgets.myTasks.table.header.dueDate",
+                "headerCellFilter": "translate",
+                "cellTemplate": "<div>{{ row.entity.dueDate_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+                "width": 110
+            },
+            {
+                "field": "alerts",
+                "displayName": "",
+                "cellTemplate": "<div><a ng-if=\"row.entity.isOverdue\" tooltip=\"{{'dashboard.widgets.myTasks.table.overdue.tooltip' | translate}}\" tooltip-append-to-body=\"true\" tooltip-class=\"tooltip-overdue\"><i class=\"fa fa-exclamation-circle icon-overdue\"></i></a><a ng-if=\"row.entity.isDeadline\" tooltip=\"{{'dashboard.widgets.myTasks.table.deadline.tooltip' | translate}}\" tooltip-append-to-body=\"true\" tooltip-class=\"tooltip-due-soon\"><i class=\"fa fa-exclamation-triangle icon-due-soon\"></i></a></div>",
+                "width": 40,
+                "enableSorting": false,
+                "enableColumnMenu": false
+            },
+            {
+                "name": "parent_title_s",
+                "displayName": "dashboard.widgets.myTasks.table.header.parentTitle",
+                "headerCellFilter": "translate",
+                "cellTemplate": "<a data-ui-sref=\"cases.main({title: row.entity.parent_title_s})\">{{COL_FIELD}}<\/a>",
+                "width": 130
+            }
+        ]
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='myComplaints'"
+    },
+    {
+        "op": "add",
+        "path": "/components/?@.id=='casesByQueue'/redirectSettings/Intake",
+        "value": {
+            "title": "dashboard.queues.intake",
+            "state": "queues.queue",
+            "params": {
+                "name": "Intake"
+            }
+        }
+    },
+    {
+        "op": "add",
+        "path": "/components/?@.id=='casesByQueue'/redirectSettings/Fulfill",
+        "value": {
+            "title": "dashboard.queues.fulfill",
+            "state": "queues.queue",
+            "params": {
+                "name": "Fulfill"
+            }
+        }
+    },
+    {
+        "op": "add",
+        "path": "/components/?@.id=='casesByQueue'/redirectSettings/Approve",
+        "value": {
+            "title": "dashboard.queues.approve",
+            "state": "queues.queue",
+            "params": {
+                "name": "Approve"
+            }
+        }
+    },
+    {
+        "op": "add",
+        "path": "/components/?@.id=='casesByQueue'/redirectSettings/Release",
+        "value": {
+            "title": "dashboard.queues.release",
+            "state": "queues.queue",
+            "params": {
+                "name": "Release"
+            }
+        }
+    },
+    {
+        "op": "add",
+        "path": "/components/?@.id=='casesByQueue'/redirectSettings/Suspend",
+        "value": {
+            "title": "dashboard.queues.suspend",
+            "state": "queues.queue",
+            "params": {
+                "name": "Suspend"
+            }
+        }
+    },
+    {
+        "op": "add",
+        "path": "/components/?@.id=='casesByQueue'/redirectSettings/Hold",
+        "value": {
+            "title": "dashboard.queues.hold",
+            "state": "queues.queue",
+            "params": {
+                "name": "Hold"
+            }
+        }
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='teamWorkload'"
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='casesByStatus'"
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='newComplaints'"
+    },
+    {
+        "op": "add",
+        "path": "/components/-",
+        "value": {
+            "id": "myOverdueRequests",
+            "title": "dashboard.widgets.myOverdueRequests.title",
+            "configurable": true,
+            "enableFiltering": false,
+            "paginationPageSizes": [
+                5,
+                10,
+                25
+            ],
+            "paginationPageSize": 5,
+            "columnDefs": [
+                {
+                    "field": "alerts",
+                    "displayName": "",
+                    "cellTemplate": "<div><a tooltip=\"{{'dashboard.widgets.myOverdueRequests.table.overdue.tooltip' | translate}}\" tooltip-append-to-body=\"true\" tooltip-class=\"tooltip-overdue\"><i class=\"fa fa-exclamation-circle icon-overdue\"></i></a></div>",
+                    "width": 40,
+                    "enableSorting": false,
+                    "enableColumnMenu": false
+                },
+                {
+                    "name": "numDays",
+                    "displayName": "dashboard.widgets.myOverdueRequests.numDays",
+                    "headerCellFilter": "translate",
+                    "width": 70,
+                    "enableSorting": true
+                },
+                {
+                    "name": "object_id_s",
+                    "type": "number",
+                    "displayName": "dashboard.widgets.myOverdueRequests.uniqueId",
+                    "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.object_id_s})\">{{row.entity.object_id_s}}</a>",
+                    "headerCellFilter": "translate",
+                    "enableSorting": true
+                },
+                {
+                    "name": "title_parseable_lcs",
+                    "type": "number",
+                    "displayName": "dashboard.widgets.myOverdueRequests.topic",
+                    "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.object_id_s})\">{{row.entity.title_parseable_lcs}}</a>",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "request_status_lcs",
+                    "displayName": "dashboard.widgets.myOverdueRequests.status",
+                    "headerCellFilter": "translate",
+                    "enableSorting": true
+                },
+                {
+                    "name": "priority_lcs",
+                    "displayName": "dashboard.widgets.myOverdueRequests.priority",
+                    "headerCellFilter": "translate",
+                    "enableSorting": true
+                },
+                {
+                    "name": "dueDate_tdt",
+                    "displayName": "dashboard.widgets.myOverdueRequests.dueDate",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.dueDate_tdt | date : 'shortDate' }}</div>"
+                }
+            ]
+        }
+    },
+    {
+        "op": "replace",
+        "path": "/modules/?@.configName=='my-documents'/name",
+        "value": "DOC_REPO"
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='workflowReport'"
+    }
+]

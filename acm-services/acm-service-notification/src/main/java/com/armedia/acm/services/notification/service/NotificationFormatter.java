@@ -27,79 +27,72 @@ package com.armedia.acm.services.notification.service;
  * #L%
  */
 
-import com.armedia.acm.services.notification.model.Notification;
-import com.armedia.acm.services.notification.model.NotificationConfig;
+import com.armedia.acm.core.ObjectLabelConfig;
+import com.armedia.acm.services.labels.service.TranslationService;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 
 public class NotificationFormatter
 {
-    private NotificationConfig notificationConfig;
+    private ObjectLabelConfig objectLabelConfig;
+    private TranslationService translationService;
 
-    public Notification replaceFormatPlaceholders(Notification notification)
+    public String buildTitle(String title, String parentName, String parentType, String userId)
     {
-        String objectTypeLabelPlaceholder = NotificationConstants.OBJECT_TYPE_LABEL_PLACEHOLDER;
-        String parentTypeLabelPlaceholder = NotificationConstants.PARENT_TYPE_LABEL_PLACEHOLDER;
+        String notificationTitle = translationService.translate(title);
+        return replaceFormatPlaceholders(notificationTitle, parentName, parentType, userId);
+    }
 
-        String notificationTitle = notification.getTitle();
-        if (notificationTitle != null && notificationTitle.contains(objectTypeLabelPlaceholder))
+    public String replaceFormatPlaceholders(String notificationTitle, String parentName, String parentType, String userId)
+    {
+        if (notificationTitle != null && notificationTitle.contains(NotificationConstants.NAME_LABEL) && parentName != null)
         {
-            String updatedTitle = replaceObjectTypeLabel(notificationTitle, objectTypeLabelPlaceholder,
-                    notification.getParentType());
-            notification.setTitle(updatedTitle);
-            notificationTitle = updatedTitle;
+            notificationTitle = replacePlaceholderLabel(notificationTitle, NotificationConstants.NAME_LABEL, parentName);
         }
 
-        if (notificationTitle != null && notificationTitle.contains(parentTypeLabelPlaceholder))
+        if (notificationTitle != null && notificationTitle.contains(NotificationConstants.TYPE_LABEL) && parentType != null)
         {
-            String updatedTitle = replaceObjectTypeLabel(notificationTitle, parentTypeLabelPlaceholder,
-                    notification.getRelatedObjectType());
-            notification.setTitle(updatedTitle);
+            notificationTitle = replaceObjectTypeLabel(notificationTitle, NotificationConstants.TYPE_LABEL, parentType);
         }
 
-        String notificationNote = notification.getNote();
-        if (notificationNote != null && notificationNote.contains(objectTypeLabelPlaceholder))
+        if (notificationTitle != null && notificationTitle.contains(NotificationConstants.USER_LABEL) && userId != null)
         {
-            String updatedNote = replaceObjectTypeLabel(notificationNote, objectTypeLabelPlaceholder,
-                    notification.getParentType());
-            notification.setNote(updatedNote);
-            notificationNote = updatedNote;
+            notificationTitle = replacePlaceholderLabel(notificationTitle, NotificationConstants.USER_LABEL, userId);
         }
-
-        if (notificationNote != null && notificationNote.contains(parentTypeLabelPlaceholder))
-        {
-            String updatedNote = replaceObjectTypeLabel(notificationNote, parentTypeLabelPlaceholder,
-                    notification.getRelatedObjectType());
-            notification.setNote(updatedNote);
-        }
-
-        return notification;
-
+        return notificationTitle;
     }
 
     public String replaceSubscriptionTitle(String title, String placeholder, String objectType)
     {
         return replaceObjectTypeLabel(title, placeholder, objectType);
     }
-
     private String replaceObjectTypeLabel(String withPlaceholder, String placeholder, String parentType)
     {
-        String objectTypeLabel = notificationConfig.getLabelForObjectType(parentType);
+        String objectTypeLabel = objectLabelConfig.getLabelForObjectType(parentType);
         return withPlaceholder.replace(placeholder, objectTypeLabel);
     }
 
-    private String replaceParentTypeLabel(String withPlaceholder, String placeholder, String relatedType)
+    private String replacePlaceholderLabel(String withPlaceholder, String placeholder, String value)
     {
-        String parentTypeLabel = notificationConfig.getLabelForObjectType(relatedType);
-        return withPlaceholder.replace(placeholder, parentTypeLabel);
+        return withPlaceholder.replace(placeholder, value);
     }
 
-    public NotificationConfig getNotificationConfig()
+    public ObjectLabelConfig getObjectLabelConfig()
     {
-        return notificationConfig;
+        return objectLabelConfig;
     }
 
-    public void setNotificationConfig(NotificationConfig notificationConfig)
+    public void setObjectLabelConfig(ObjectLabelConfig objectLabelConfig)
     {
-        this.notificationConfig = notificationConfig;
+        this.objectLabelConfig = objectLabelConfig;
+    }
+
+    public TranslationService getTranslationService()
+    {
+        return translationService;
+    }
+
+    public void setTranslationService(TranslationService translationService)
+    {
+        this.translationService = translationService;
     }
 }

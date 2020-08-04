@@ -45,7 +45,6 @@ public class FoiaConfigurationService extends SystemConfigurationService
         foiaConfig.setHoldedAndAppealedRequestsDueDateUpdateEnabled(foiaConfiguration.getHoldedAndAppealedRequestsDueDateUpdateEnabled());
         foiaConfig.setRequestExtensionWorkingDays(foiaConfiguration.getRequestExtensionWorkingDays());
         foiaConfig.setDashboardBannerEnabled(foiaConfiguration.getDashboardBannerEnabled());
-        foiaConfig.setReceivedDateEnabled(foiaConfiguration.getReceivedDateEnabled());
         foiaConfig.setNotificationGroupsEnabled(foiaConfiguration.getNotificationGroupsEnabled());
         foiaConfig.setRequestExtensionWorkingDaysEnabled(foiaConfiguration.getRequestExtensionWorkingDaysEnabled());
         foiaConfig.setExpediteWorkingDaysEnabled(foiaConfiguration.getExpediteWorkingDaysEnabled());
@@ -58,6 +57,13 @@ public class FoiaConfigurationService extends SystemConfigurationService
         foiaConfig.setRequireTimesheetToCompleteDeniedRequest(foiaConfiguration.getRequireTimesheetToCompleteDeniedRequest());
         foiaConfig.setProvideReasonToHoldRequestEnabled(foiaConfiguration.getProvideReasonToHoldRequestEnabled());
         foiaConfig.setRedirectFunctionalityCalculationEnabled(foiaConfiguration.getRedirectFunctionalityCalculationEnabled());
+        foiaConfig.setFeeWaivedRequestsEnabled(foiaConfiguration.getFeeWaivedRequestsEnabled());
+        foiaConfig.setFeeWaivedAppealsEnabled(foiaConfiguration.getFeeWaivedAppealsEnabled());
+        foiaConfig.setLitigationRequestsEnabled(foiaConfiguration.getLitigationRequestsEnabled());
+        foiaConfig.setLitigationAppealsEnabled(foiaConfiguration.getLitigationAppealsEnabled());
+        foiaConfig.setAutomaticCreationOfRequestWhenAppealIsRemandedEnabled(
+                foiaConfiguration.getAutomaticCreationOfRequestWhenAppealIsRemandedEnabled());
+
         configurationPropertyService.updateProperties(foiaConfig);
     }
 
@@ -70,7 +76,6 @@ public class FoiaConfigurationService extends SystemConfigurationService
         foiaConfiguration.setHoldedAndAppealedRequestsDueDateUpdateEnabled(foiaConfig.getHoldedAndAppealedRequestsDueDateUpdateEnabled());
         foiaConfiguration.setRequestExtensionWorkingDays(foiaConfig.getRequestExtensionWorkingDays());
         foiaConfiguration.setDashboardBannerEnabled(foiaConfig.getDashboardBannerEnabled());
-        foiaConfiguration.setReceivedDateEnabled(foiaConfig.getReceivedDateEnabled());
         foiaConfiguration.setNotificationGroupsEnabled(foiaConfig.getNotificationGroupsEnabled());
         foiaConfiguration.setRequestExtensionWorkingDaysEnabled(foiaConfig.getRequestExtensionWorkingDaysEnabled());
         foiaConfiguration.setExpediteWorkingDaysEnabled(foiaConfig.getExpediteWorkingDaysEnabled());
@@ -83,6 +88,13 @@ public class FoiaConfigurationService extends SystemConfigurationService
         foiaConfiguration.setRequireTimesheetToCompleteDeniedRequest(foiaConfig.getRequireTimesheetToCompleteDeniedRequest());
         foiaConfiguration.setProvideReasonToHoldRequestEnabled(foiaConfig.getProvideReasonToHoldRequestEnabled());
         foiaConfiguration.setRedirectFunctionalityCalculationEnabled(foiaConfig.getRedirectFunctionalityCalculationEnabled());
+        foiaConfiguration.setFeeWaivedRequestsEnabled(foiaConfig.getFeeWaivedRequestsEnabled());
+        foiaConfiguration.setFeeWaivedAppealsEnabled(foiaConfig.getFeeWaivedAppealsEnabled());
+        foiaConfiguration.setLitigationRequestsEnabled(foiaConfig.getLitigationRequestsEnabled());
+        foiaConfiguration.setLitigationAppealsEnabled(foiaConfig.getLitigationAppealsEnabled());
+        foiaConfiguration.setAutomaticCreationOfRequestWhenAppealIsRemandedEnabled(
+                foiaConfig.getAutomaticCreationOfRequestWhenAppealIsRemandedEnabled());
+
         return foiaConfiguration;
     }
 

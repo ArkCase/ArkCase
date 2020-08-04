@@ -30,7 +30,8 @@ angular.module('services').factory('ObjectService', [ '$state', '$window', '$log
             TRANSCRIBE_ITEM: "TRANSCRIBE_ITEM",
             ASSOCIATED_TAG: "ASSOCIATED_TAG",
             BUSINESS_PROCESS: "BUSINESS_PROCESS",
-            NOTIFICATION: "NOTIFICATION"
+            NOTIFICATION: "NOTIFICATION",
+            CONSULTATION: "CONSULTATION"
         }
 
         ,

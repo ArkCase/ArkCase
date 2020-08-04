@@ -28,8 +28,7 @@ package com.armedia.acm.services.notification.service;
  */
 
 import com.armedia.acm.core.AcmSpringActiveProfile;
-import com.armedia.acm.services.labels.service.TranslationService;
-import com.armedia.acm.services.notification.dao.NotificationDao;
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.users.dao.UserDao;
@@ -41,34 +40,35 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.slf4j.MDC;
 
-public class ResetPasswordService {
-
-    private NotificationDao notificationDao;
+public class ResetPasswordService
+{
     private UserDao userDao;
     private AcmSpringActiveProfile acmSpringActiveProfile;
     private final Logger log = LogManager.getLogger(getClass());
-    private TranslationService translationService;
-    
+    private NotificationService notificationService;
+    private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
+
     public void sendPasswordResetNotification(AcmUser user)
     {
         if (acmSpringActiveProfile.isSAMLEnabledEnvironment())
         {
             throw new UnsupportedOperationException("Won't send password reset email when SSO environment");
         }
+        log.debug("Create password reset notification for user [{}]", user.getUserId());
         user.setPasswordResetToken(new PasswordResetToken());
         userDao.save(user);
-        Notification notification = new Notification();
+
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY, user.getUserId());
-        notification.setCreator(user.getUserId());
-        notification.setModifier(user.getUserId());
-        notification.setTemplateModelName("changePassword");
-        notification.setParentType("USER");
-        notification.setParentName(user.getUserId());
-        notification.setAttachFiles(false);
-        notification.setEmailAddresses(user.getMail());
-        notification.setTitle(translationService.translate(NotificationConstants.PASSWORD_RESET));
-        notification.setUser(user.getUserId());
-        notificationDao.save(notification);
+        auditPropertyEntityAdapter.setUserId(user.getUserId());
+
+        Notification notification = notificationService.getNotificationBuilder()
+                .newNotification("changePassword", NotificationConstants.PASSWORD_RESET, "USER", user.getIdentifier(),
+                        user.getUserId())
+                .forObjectWithNumber(user.getUserId())
+                .withEmailAddresses(user.getMail())
+                .build();
+
+        notificationService.saveNotification(notification);
     }
 
     public boolean isUserPasswordExpired(String userId)
@@ -76,17 +76,7 @@ public class ResetPasswordService {
         return userDao.isUserPasswordExpired(userId);
     }
 
-    public NotificationDao getNotificationDao()
-    {
-        return notificationDao;
-    }
-
-    public void setNotificationDao(NotificationDao notificationDao)
-    {
-        this.notificationDao = notificationDao;
-    }
-
-    public UserDao getUserDao() 
+    public UserDao getUserDao()
     {
         return userDao;
     }
@@ -96,18 +86,28 @@ public class ResetPasswordService {
         this.userDao = userDao;
     }
 
-    public void setAcmSpringActiveProfile(AcmSpringActiveProfile acmSpringActiveProfile) 
+    public void setAcmSpringActiveProfile(AcmSpringActiveProfile acmSpringActiveProfile)
     {
         this.acmSpringActiveProfile = acmSpringActiveProfile;
     }
 
-    public TranslationService getTranslationService()
+    public NotificationService getNotificationService()
     {
-        return translationService;
+        return notificationService;
     }
 
-    public void setTranslationService(TranslationService translationService)
+    public void setNotificationService(NotificationService notificationService)
     {
-        this.translationService = translationService;
+        this.notificationService = notificationService;
+    }
+
+    public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()
+    {
+        return auditPropertyEntityAdapter;
+    }
+
+    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
+    {
+        this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
     }
 }
