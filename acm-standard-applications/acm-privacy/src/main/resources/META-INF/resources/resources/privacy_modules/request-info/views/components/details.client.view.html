@@ -1,0 +1,21 @@
+<div ng-controller="RequestInfo.DetailsController">
+    <panel-view header="Request Information" collapsible="true" collapsed="false">
+        <fieldset permission="editRequestData" permission-object-type="CASE_FILE" permission-properties="objectInfo" permission-action="disabled">
+            <div class="row">
+                <div class="form-group col-sm-12">
+                    <label class="control-label"><span translate> requests.comp.details.requestType.label</span> <span
+                            ng-if="requiredFields['requestType']" class="required-asterisk">*</span></label> <select
+                        ng-model="requestInfo.requestType" ng-required="requiredFields['requestType']"
+                        ng-options="requestType.id as requestType.name for requestType in requestTypes" ng-disabled="true"
+                        class="form-control input-md">
+                </select>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-12">
+                        <label translate> requests.comp.details.description.label </label>
+                        <textarea rows=5 ng-model="requestInfo.details" class="input-md form-control" ng-disabled="true"></textarea>
+                    </div>
+                </div>
+        </fieldset>
+    </panel-view>
+</div>

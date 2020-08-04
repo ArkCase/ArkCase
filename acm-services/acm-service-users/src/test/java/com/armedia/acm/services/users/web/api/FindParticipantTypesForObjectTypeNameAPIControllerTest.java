@@ -39,10 +39,10 @@ import com.armedia.acm.core.enums.AcmParticipantTypes;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -92,9 +92,9 @@ public class FindParticipantTypesForObjectTypeNameAPIControllerTest
         unit.setAcmApplication(app);
 
         MvcResult result = mockMvc.perform(get("/api/latest/users/participantTypesForObjectTypeName/{objectTypeName}", objectTypeName)
-                .accept(MediaType.parseMediaType("application/json;charset=UTF-8")))
+                .contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8"))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andReturn();
 
         String jsonString = result.getResponse().getContentAsString();

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
 
     <bean id="fileUploadController" class="com.armedia.acm.plugins.ecm.web.api.FileUploadAPIController">
         <property name="ecmFileService" ref="ecmFileService"/>
@@ -168,6 +168,10 @@
     </bean>
 
     <bean id="getLinkTargetEcmFile" class="com.armedia.acm.plugins.ecm.web.api.GetLinkTargetEcmFileAPIController">
+        <property name="fileService" ref="ecmFileService"/>
+    </bean>
+
+    <bean id="fileDuplicatesAPIController" class="com.armedia.acm.plugins.ecm.web.api.FileDuplicatesAPIController">
         <property name="fileService" ref="ecmFileService"/>
     </bean>
 </beans>

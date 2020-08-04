@@ -4,7 +4,10 @@ angular.module('admin').controller('Admin.ApplicationVersionController', [ '$sco
 
     $scope.applicationVersion = "";
     ApplicationVersionService.getApplicationVersion().then(function (result) {
-        var applicationVersion = result.data.applicationVersion;
-        $scope.applicationVersion = applicationVersion;
+        $scope.applicationVersion = result.data["Implementation-Version"];
+        $scope.buildTime = result.data["Build-Time"];
+        if (result.data["extensionVersion"]) {
+            $scope.extensionVersion = result.data["extensionVersion"];
+        }
     });
 }]);

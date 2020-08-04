@@ -52,6 +52,9 @@ public interface PortalUserService
     UserRegistrationResponse requestRegistration(String portalId, UserRegistrationRequest registrationRequest)
             throws PortalUserServiceException;
 
+    UserRegistrationResponse regenerateRegistrationRequest(String portalId, UserRegistrationRequest registrationRequest)
+            throws PortalUserServiceException;
+
     /**
      * @param portalId
      * @param registrationId
@@ -94,6 +97,13 @@ public interface PortalUserService
      * @throws PortalUserServiceException
      */
     UserResetResponse requestPasswordReset(String portalId, UserResetRequest resetRequest) throws PortalUserServiceException;
+
+    /*
+     * (non-Javadoc)
+     * @see com.armedia.acm.portalgateway.service.PortalUserService#regeneratePasswordReset(java.lang.String,
+     * com.armedia.acm.portalgateway.model.UserResetRequest)
+     */
+    UserResetResponse regeneratePasswordReset(String portalId, UserResetRequest resetRequest) throws PortalUserServiceException;
 
     /**
      * @param portalId

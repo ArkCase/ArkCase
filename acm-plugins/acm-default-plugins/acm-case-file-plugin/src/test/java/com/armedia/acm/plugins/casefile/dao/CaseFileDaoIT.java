@@ -45,9 +45,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -90,7 +90,7 @@ import java.util.UUID;
         "/spring/spring-integration-case-file-test.xml",
         "/spring/spring-library-folder-watcher.xml"
 })
-@TransactionConfiguration(defaultRollback = true)
+@Rollback(true)
 public class CaseFileDaoIT
 {
 
@@ -99,6 +99,8 @@ public class CaseFileDaoIT
         String userHomePath = System.getProperty("user.home");
         System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
         System.setProperty("configuration.server.url", "http://localhost:9999");
+        System.setProperty("javax.net.ssl.trustStore", userHomePath + "/.arkcase/acm/private/arkcase.ts");
+        System.setProperty("javax.net.ssl.trustStorePassword", "password");
     }
 
     @Autowired
@@ -121,6 +123,7 @@ public class CaseFileDaoIT
         authentication = new AcmAuthentication(null, null, null, true,
                 "user", 0L);
         auditAdapter.setUserId("auditUser");
+        entityManager.clear();
     }
 
     @Test
@@ -152,8 +155,6 @@ public class CaseFileDaoIT
 
         CaseFile saved = caseFileDao.save(caseFile);
 
-        entityManager.flush();
-
         assertNotNull(saved.getId());
     }
 
@@ -181,6 +182,7 @@ public class CaseFileDaoIT
         caseFile.setContainer(container);
 
         CaseFile saved = caseFileDao.save(caseFile);
+
         assertNotNull(saved.getId());
 
         AcmObjectLock lock = acmObjectLockingManager.acquireObjectLock(saved.getId(), saved.getObjectType(), "OBJECT_LOCK", null, false,
@@ -222,8 +224,6 @@ public class CaseFileDaoIT
         caseFile.setQueue(queue);
 
         CaseFile saved = caseFileDao.save(caseFile);
-
-        entityManager.flush();
 
         saved = caseFileDao.find(saved.getId());
 

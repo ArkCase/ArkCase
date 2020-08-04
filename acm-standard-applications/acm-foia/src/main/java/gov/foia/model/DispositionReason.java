@@ -44,6 +44,7 @@ import javax.persistence.TemporalType;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * Created by ivana.shekerova
@@ -173,5 +174,34 @@ public class DispositionReason implements Serializable, AcmEntity
     public void setModifier(String modifier)
     {
         this.modifier = modifier;
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        Objects.requireNonNull(obj, "Comparable object must not be null");
+        if (!(obj instanceof DispositionReason))
+        {
+            return false;
+        }
+        DispositionReason other = (DispositionReason) obj;
+        if (this.getId() == null || other.getId() == null)
+        {
+            return false;
+        }
+        return Objects.equals(id, other.id);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        if (getId() == null)
+        {
+            return super.hashCode();
+        }
+        else
+        {
+            return getId().hashCode();
+        }
     }
 }

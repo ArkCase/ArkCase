@@ -1,0 +1,67 @@
+{
+    "Entities": [
+        {
+            "Category": "MEDICATION",
+            "BeginOffset": 0,
+            "EndOffset": 7,
+            "Text": "aspirin",
+            "Traits": [],
+            "Score": 0.9988090991973877,
+            "Attributes": [
+                {
+                    "BeginOffset": 20,
+                    "EndOffset": 25,
+                    "Text": "20 mg",
+                    "Traits": [],
+                    "Score": 0.9559056162834167,
+                    "Type": "DOSAGE",
+                    "Id": 1,
+                    "RelationshipScore": 0.9981593489646912
+                },
+                {
+                    "BeginOffset": 26,
+                    "EndOffset": 28,
+                    "Text": "po",
+                    "Traits": [],
+                    "Score": 0.9995359182357788,
+                    "Type": "ROUTE_OR_MODE",
+                    "Id": 2,
+                    "RelationshipScore": 0.9969323873519897
+                },
+                {
+                    "BeginOffset": 29,
+                    "EndOffset": 34,
+                    "Text": "daily",
+                    "Traits": [],
+                    "Score": 0.9803128838539124,
+                    "Type": "FREQUENCY",
+                    "Id": 3,
+                    "RelationshipScore": 0.9990783929824829
+                },
+                {
+                    "BeginOffset": 39,
+                    "EndOffset": 46,
+                    "Text": "2 times",
+                    "Traits": [],
+                    "Score": 0.8623972535133362,
+                    "Type": "DURATION",
+                    "Id": 4,
+                    "RelationshipScore": 0.9996501207351685
+                },
+                {
+                    "BeginOffset": 50,
+                    "EndOffset": 53,
+                    "Text": "tab",
+                    "Traits": [],
+                    "Score": 0.784785270690918,
+                    "Type": "FORM",
+                    "Id": 5,
+                    "RelationshipScore": 0.9986748695373535
+                }
+            ],
+            "Type": "GENERIC_NAME",
+            "Id": 0
+        }
+    ],
+    "UnmappedAttributes": []
+}

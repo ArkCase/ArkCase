@@ -35,6 +35,7 @@ import com.armedia.acm.camelcontext.exception.ArkCaseFileNameAlreadyExistsExcept
 import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
+import com.armedia.acm.plugins.ecm.model.AcmAallowedUploadFileTypesConfig;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConfig;
@@ -56,6 +57,7 @@ import com.armedia.acm.web.api.MDCConstants;
 import org.apache.camel.component.cmis.CamelCMISConstants;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.CountingInputStream;
@@ -94,19 +96,19 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     private PipelineManager<EcmFile, EcmFileTransactionPipelineContext> ecmFileUpdatePipelineManager;
     private CmisConfigUtils cmisConfigUtils;
     private Logger log = LogManager.getLogger(getClass());
-    private Map<String, List<String>> mimeTypesByTika;
+    private AcmAallowedUploadFileTypesConfig allowedUploadFileTypes;
     private EcmFileConfig ecmFileConfig;
     private ProgressIndicatorService progressIndicatorService;
     private EcmFileService ecmFileService;
 
-    public static List<String> getAllTikaMimeTypesForFile(Map<String, List<String>> mimeTypesByTika, String value)
+    public static List<String> getAllAllowedUploadFileTypes(Map<String, List<String>> allowedUploadFileTypes, String value)
     {
         if (value.contains(";"))
         {
             value = value.split(";")[0];
         }
         List<String> keys = new ArrayList<>();
-        for (Map.Entry<String, List<String>> entry : mimeTypesByTika.entrySet())
+        for (Map.Entry<String, List<String>> entry : allowedUploadFileTypes.entrySet())
         {
             if (entry.getValue().contains(value))
             {
@@ -155,7 +157,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
 
             if (activeVersionMimeType != null && detectedMetadata != null
                     && ((detectedMetadata.getContentType().equals(activeVersionMimeType)) ||
-                            (getAllTikaMimeTypesForFile(mimeTypesByTika, activeVersionMimeType)
+                            (getAllAllowedUploadFileTypes(allowedUploadFileTypes.getAllowedUploadFileTypes(), activeVersionMimeType)
                                     .contains(detectedMetadata.getContentType()))))
             {
 
@@ -169,6 +171,9 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
                 EcmFileTransactionPipelineContext pipelineContext = buildEcmFileTransactionPipelineContext(authentication,
                         tempFileContents, targetCmisFolderId, container, metadata.getFileName(), existingCmisDocument,
                         detectedMetadata, ecmUniqueFilename);
+
+                String fileHash = DigestUtils.md5Hex(FileUtils.openInputStream(tempFileContents));
+                pipelineContext.setFileHash(fileHash);
 
                 boolean searchablePDF = false;
                 if (ecmFileConfig.getSnowboundEnableOcr())
@@ -321,8 +326,8 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             }
             if (activeVersionMimeType != null && detectedMetadata != null
                     && ((detectedMetadata.getContentType().equals(activeVersionMimeType)) ||
-                            (getAllTikaMimeTypesForFile(mimeTypesByTika, activeVersionMimeType)
-                                    .contains(detectedMetadata.getContentType()))))
+                            (getAllAllowedUploadFileTypes(allowedUploadFileTypes.getAllowedUploadFileTypes(), activeVersionMimeType)
+                                    .contains(detectedMetadata.getContentType().replaceAll("\\.", "-dot-")))))
             {
 
                 Pair<String, String> mimeTypeAndExtension = buildMimeTypeAndExtension(detectedMetadata, ecmUniqueFilename,
@@ -335,6 +340,9 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
                 EcmFileTransactionPipelineContext pipelineContext = buildEcmFileTransactionPipelineContext(authentication,
                         tempFileContents, targetCmisFolderId, container, metadata.getFileName(), existingCmisDocument,
                         detectedMetadata, ecmUniqueFilename);
+
+                String fileHash = DigestUtils.md5Hex(FileUtils.openInputStream(tempFileContents));
+                pipelineContext.setFileHash(fileHash);
 
                 boolean searchablePDF = false;
                 log.debug("SNOWBOUND ENABLED OCR = [{}]", ecmFileConfig.getSnowboundEnableOcr());
@@ -565,6 +573,9 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             FileUtils.copyInputStreamToFile(fileInputStream, file);
             pipelineContext.setFileContents(file);
 
+            String fileHash = DigestUtils.md5Hex(FileUtils.openInputStream(file));
+            pipelineContext.setFileHash(fileHash);
+
             EcmTikaFile ecmTikaFile = new EcmTikaFile();
 
             try
@@ -636,6 +647,9 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             FileUtils.copyInputStreamToFile(fileInputStream, file);
             pipelineContext.setFileContents(file);
 
+            String fileHash = DigestUtils.md5Hex(FileUtils.openInputStream(file));
+            pipelineContext.setFileHash(fileHash);
+
             EcmTikaFile ecmTikaFile = new EcmTikaFile();
 
             try
@@ -703,6 +717,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         }
 
         getFileEventPublisher().publishFileActiveVersionSetEvent(ecmFile, authentication, ipAddress, true);
+        getFileEventPublisher().publishFileUpdatedEvent(ecmFile, authentication, true);
 
         return ecmFile;
     }
@@ -723,6 +738,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         }
 
         getFileEventPublisher().publishFileActiveVersionSetEvent(ecmFile, authentication, ipAddress, true);
+        getFileEventPublisher().publishFileUpdatedEvent(ecmFile, authentication, true);
 
         return ecmFile;
 
@@ -908,14 +924,14 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         this.cmisConfigUtils = cmisConfigUtils;
     }
 
-    public Map<String, List<String>> getMimeTypesByTika()
+    public AcmAallowedUploadFileTypesConfig getAllowedUploadFileTypes()
     {
-        return mimeTypesByTika;
+        return allowedUploadFileTypes;
     }
 
-    public void setMimeTypesByTika(Map<String, List<String>> mimeTypesByTika)
+    public void setAllowedUploadFileTypes(AcmAallowedUploadFileTypesConfig allowedUploadFileTypes)
     {
-        this.mimeTypesByTika = mimeTypesByTika;
+        this.allowedUploadFileTypes = allowedUploadFileTypes;
     }
 
     public ProgressIndicatorService getProgressIndicatorService()

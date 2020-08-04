@@ -49,9 +49,7 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
-import org.springframework.jms.annotation.JmsListener;
 import org.springframework.ldap.core.support.LdapContextSource;
-import org.springframework.messaging.Message;
 import org.springframework.scheduling.quartz.JobDetailFactoryBean;
 import org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper;
 import org.springframework.security.ldap.authentication.BindAuthenticator;
@@ -68,7 +66,8 @@ import java.util.Map;
  * @author mario.gjurcheski
  *
  */
-public class AcmLdapRegistryServiceImpl implements AcmLdapRegistryService, InitializingBean, ApplicationEventPublisherAware
+public class AcmLdapRegistryServiceImpl
+        implements AcmLdapRegistryService, InitializingBean, ApplicationEventPublisherAware
 {
 
     public static final String LDAP_DIRECTORY_CONFIG = "ldapDirectoryConfig";
@@ -76,7 +75,6 @@ public class AcmLdapRegistryServiceImpl implements AcmLdapRegistryService, Initi
     @Autowired
     private BeanFactory beanFactory;
 
-    @Autowired
     private CollectionPropertiesConfigurationService collectionPropertiesConfigurationService;
 
     private ApplicationEventPublisher applicationEventPublisher;
@@ -91,13 +89,6 @@ public class AcmLdapRegistryServiceImpl implements AcmLdapRegistryService, Initi
     private SpringContextHolder contextHolder;
 
     private static final Logger logger = LogManager.getLogger(AcmLdapRegistryServiceImpl.class);
-
-    @JmsListener(destination = "reload.ldap.beans", containerFactory = "jmsTopicListenerContainerFactory")
-    public void onLdapChanged(Message message)
-    {
-        logger.info("Refreshing on ldap change...");
-        sync();
-    }
 
     @Override
     public void sync()
@@ -114,7 +105,7 @@ public class AcmLdapRegistryServiceImpl implements AcmLdapRegistryService, Initi
 
         ldapDirsConfig.keySet().forEach(directory -> {
 
-            logger.debug("Register bean definition for: [{}]", AcmLdapGroupSyncConfig.class);
+            logger.debug("Register bean definition for: [{}] for directory: [{}]", AcmLdapGroupSyncConfig.class, directory);
 
             Map<String, Object> dirProperties = (Map<String, Object>) ldapDirsConfig.get(directory);
             BeanDefinitionBuilder jobDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(AcmLdapGroupSyncConfig.class);
@@ -130,7 +121,7 @@ public class AcmLdapRegistryServiceImpl implements AcmLdapRegistryService, Initi
 
         ldapDirConfig.keySet().forEach(directory -> {
 
-            logger.debug("Register bean definition for: [{}]", AcmLdapUserSyncConfig.class);
+            logger.debug("Register bean definition for: [{}] for directory [{}]", AcmLdapUserSyncConfig.class, directory);
 
             Map<String, Object> dirProperties = (Map<String, Object>) ldapDirConfig.get(directory);
             BeanDefinitionBuilder jobDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(AcmLdapUserSyncConfig.class);
@@ -613,9 +604,16 @@ public class AcmLdapRegistryServiceImpl implements AcmLdapRegistryService, Initi
         this.configurationPropertyService = configurationPropertyService;
     }
 
+    public void setCollectionPropertiesConfigurationService(
+            CollectionPropertiesConfigurationService collectionPropertiesConfigurationService)
+    {
+        this.collectionPropertiesConfigurationService = collectionPropertiesConfigurationService;
+    }
+
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
     {
         this.applicationEventPublisher = applicationEventPublisher;
     }
+
 }

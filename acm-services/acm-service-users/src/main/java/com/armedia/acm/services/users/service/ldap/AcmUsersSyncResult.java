@@ -33,8 +33,8 @@ import com.armedia.acm.services.users.model.ldap.LdapUser;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,12 +68,28 @@ public class AcmUsersSyncResult
         log.debug("[{}] new users to be synced", newUsers.size());
         modifiedUsers = findModifiedUsers(ldapUsers, currentUsersMap);
         log.debug("[{}] modified users to be synced", modifiedUsers.size());
-        newUsers.forEach(acmUser -> currentUsersMap.put(acmUser.getUserId(), acmUser));
+
         if (fullSync)
         {
             deletedUsers = findDeletedUsers(ldapUsers, acmUsers);
             log.debug("[{}] deleted users to be synced", deletedUsers.size());
         }
+
+        Map<String, AcmUser> currentUsersByDn = getUsersByDnMap(currentUsersMap);
+        newUsers.forEach(acmUser -> {
+            if (currentUsersByDn.containsKey(acmUser.getDistinguishedName()))
+            {
+                AcmUser sameDnUser = currentUsersByDn.get(acmUser.getDistinguishedName());
+                log.debug("Found user [{}] with same DN [{}] as new user [{}].", sameDnUser.getUserId(),
+                        sameDnUser.getDistinguishedName(), acmUser.getUserId());
+                sameDnUser.invalidateUser(sameDnUser);
+                deletedUsers.add(sameDnUser);
+                log.debug("User [{}] changed with state [{}] and DN [{}].", sameDnUser.getUserId(), sameDnUser.getUserState(),
+                        sameDnUser.getDistinguishedName());
+            }
+            currentUsersMap.put(acmUser.getUserId(), acmUser);
+        });
+
         return currentUsersMap;
     }
 
@@ -81,6 +97,12 @@ public class AcmUsersSyncResult
     {
         return users.stream()
                 .collect(Collectors.toMap(AcmUser::getUserId, Function.identity()));
+    }
+
+    public Map<String, AcmUser> getUsersByDnMap(Map<String, AcmUser> users)
+    {
+        return users.values().stream()
+                .collect(Collectors.toMap(AcmUser::getDistinguishedName, Function.identity()));
     }
 
     private List<AcmUser> findNewUsers(List<LdapUser> ldapUsers, Map<String, AcmUser> acmUsers, String defaultLang)
@@ -126,7 +148,7 @@ public class AcmUsersSyncResult
 
         deletedUsers.forEach(it -> {
             log.trace("Deleted user [{}] with dn [{}] to be updated", it.getUserId(), it.getDistinguishedName());
-            it.setUserState(AcmUserState.INVALID);
+            it.invalidateUser(it);
         });
         return deletedUsers;
     }

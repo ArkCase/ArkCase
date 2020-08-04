@@ -1,21 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
     xmlns:beans="http://www.springframework.org/schema/beans"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
 
     <beans:beans profile="extension-foia">
 
-        
-
-        <beans:bean id="baseNotificationSender" class="com.armedia.acm.services.notification.service.NotificationSender"
-            abstract="true">
-            <beans:property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
-            <beans:property name="notificationUtils" ref="notificationUtils"/>
-            <beans:property name="notificationTemplate" value="file:#{notificationConfig.emailTemplatePath}"/>
+        <beans:bean id="userInfoHelper" class="gov.foia.service.FOIAUserInfoHelper">
             <beans:property name="userDao" ref="userJpaDao"/>
-            <beans:property name="dataService" ref="acmDataService"/>
-            <beans:property name="templatingEngine" ref="templatingEngine"/>
-            <beans:property name="templateService" ref="filesystemTemplateConfigurationService"/>
+            <beans:property name="contextHolder" ref="acmContextHolder"/>
+            <beans:property name="acmGroupDao" ref="groupDao"/>
         </beans:bean>
     </beans:beans>
+
 </beans:beans>

@@ -29,6 +29,7 @@ package com.armedia.acm.services.notification.service.provider;
 
 import com.armedia.acm.core.provider.TemplateModelProvider;
 import com.armedia.acm.services.notification.model.Notification;
+import com.armedia.acm.services.notification.service.provider.model.ForgotUsernameModel;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserState;
@@ -36,13 +37,13 @@ import com.armedia.acm.services.users.model.AcmUserState;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ForgotUsernameTemplateModelProvider implements TemplateModelProvider<Notification>
+public class ForgotUsernameTemplateModelProvider implements TemplateModelProvider<ForgotUsernameModel>
 {
 
     private UserDao userDao;
 
     @Override
-    public Notification getModel(Object object)
+    public ForgotUsernameModel getModel(Object object)
     {
         Notification notification = (Notification) object;
         List<AcmUser> users = userDao.findByEmailAddress(notification.getEmailAddresses());
@@ -50,15 +51,13 @@ public class ForgotUsernameTemplateModelProvider implements TemplateModelProvide
                 .filter(user -> user.getUserState() == AcmUserState.VALID)
                 .map(AcmUser::getUserId)
                 .collect(Collectors.toList());
-        notification.setAccountsNumber(userAccounts.size());
-        notification.setUserAccounts(String.join(", ", userAccounts));
-        return notification;
+        return new ForgotUsernameModel(userAccounts.size(), String.join(", ", userAccounts));
     }
 
     @Override
-    public Class<Notification> getType()
+    public Class<ForgotUsernameModel> getType()
     {
-        return Notification.class;
+        return ForgotUsernameModel.class;
     }
 
     public UserDao getUserDao()

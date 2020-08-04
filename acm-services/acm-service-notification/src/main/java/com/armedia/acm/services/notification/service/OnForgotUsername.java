@@ -29,25 +29,21 @@ package com.armedia.acm.services.notification.service;
 
 import com.armedia.acm.auth.web.ForgotUsernameEvent;
 import com.armedia.acm.core.AcmSpringActiveProfile;
-import com.armedia.acm.services.labels.service.TranslationService;
-import com.armedia.acm.services.notification.dao.NotificationDao;
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
-import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-import org.apache.logging.log4j.Logger;
+
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationListener;
-
-
 
 public class OnForgotUsername implements ApplicationListener<ForgotUsernameEvent>
 {
-    private NotificationDao notificationDao;
-    private UserDao userDao;
     private final Logger log = LogManager.getLogger(getClass());
     private AcmSpringActiveProfile acmSpringActiveProfile;
-    private TranslationService translationService;
+    private NotificationService notificationService;
+    private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
 
     @Override
     public void onApplicationEvent(ForgotUsernameEvent forgotUsernameEvent)
@@ -60,49 +56,49 @@ public class OnForgotUsername implements ApplicationListener<ForgotUsernameEvent
             {
                 throw new UnsupportedOperationException("Won't send forgot username email when SSO environment");
             }
-            Notification notification = new Notification();
-            notification.setCreator(user.getUserId());
-            notification.setModifier(user.getUserId());
-            notification.setTemplateModelName("forgotUsername");
-            notification.setParentType(notification.getObjectType());
-            notification.setUser(user.getUserId());
-            notification.setAttachFiles(false);
-            notification.setEmailAddresses(user.getMail());
-            notification.setTitle(translationService.translate(NotificationConstants.USERNAME_FORGOT));
-            notificationDao.save(notification);
+
+            log.debug("Create 'Forgot username' notification for user [{}] with email [{}].", user.getUserId(), user.getMail());
+
+            auditPropertyEntityAdapter.setUserId(user.getUserId());
+
+            Notification notification = notificationService.getNotificationBuilder()
+                    .newNotification("forgotUsername", NotificationConstants.FORGOT_USERNAME, "USER", user.getIdentifier(),
+                            user.getUserId())
+                    .forObjectWithNumber(user.getUserId())
+                    .withEmailAddresses(user.getMail())
+                    .build();
+
+            notificationService.saveNotification(notification);
         }
     }
 
-    public NotificationDao getNotificationDao()
-    {
-        return notificationDao;
-    }
-
-    public void setNotificationDao(NotificationDao notificationDao)
-    {
-        this.notificationDao = notificationDao;
-    }
-
-    public UserDao getUserDao() {
-        return userDao;
-    }
-
-    public void setUserDao(UserDao userDao) {
-        this.userDao = userDao;
-    }
-
-    public void setAcmSpringActiveProfile(AcmSpringActiveProfile acmSpringActiveProfile) 
+    public void setAcmSpringActiveProfile(AcmSpringActiveProfile acmSpringActiveProfile)
     {
         this.acmSpringActiveProfile = acmSpringActiveProfile;
     }
 
-    public TranslationService getTranslationService()
+    public AcmSpringActiveProfile getAcmSpringActiveProfile()
     {
-        return translationService;
+        return acmSpringActiveProfile;
     }
 
-    public void setTranslationService(TranslationService translationService)
+    public NotificationService getNotificationService()
     {
-        this.translationService = translationService;
+        return notificationService;
+    }
+
+    public void setNotificationService(NotificationService notificationService)
+    {
+        this.notificationService = notificationService;
+    }
+
+    public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()
+    {
+        return auditPropertyEntityAdapter;
+    }
+
+    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
+    {
+        this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
     }
 }

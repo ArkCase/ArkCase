@@ -159,12 +159,6 @@ public class Notification implements Serializable, AcmObject, AcmEntity
     private List<EcmFileVersion> files;
 
     @Transient
-    private String userAccounts;
-
-    @Transient
-    private int accountsNumber;
-
-    @Transient
     private String objectLink;
 
     @Override
@@ -445,26 +439,6 @@ public class Notification implements Serializable, AcmObject, AcmEntity
     public void setFiles(List<EcmFileVersion> files)
     {
         this.files = files;
-    }
-
-    public String getUserAccounts()
-    {
-        return userAccounts;
-    }
-
-    public void setUserAccounts(String userAccounts)
-    {
-        this.userAccounts = userAccounts;
-    }
-
-    public int getAccountsNumber()
-    {
-        return accountsNumber;
-    }
-
-    public void setAccountsNumber(int accountsNumber)
-    {
-        this.accountsNumber = accountsNumber;
     }
 
     public String getObjectLink()

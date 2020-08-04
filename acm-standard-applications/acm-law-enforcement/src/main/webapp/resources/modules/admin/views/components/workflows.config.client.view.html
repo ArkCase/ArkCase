@@ -1,11 +1,15 @@
 <div ng-controller="Admin.WorkflowsConfigController">
     <div class="pull-right well">
         <div class="btn-group">
-            <button class="btn btn-xs btn-link" ng-click="openProcessModeler()" ng-disabled="editBtnDisabled"><i class="fa fa-sitemap" />
+            <button class="btn btn-xs btn-link" ng-click="showDeactivatedWorkflows()">
+                <span translate>admin.workflows.config.btn.showDeactivated</span>
+            </button>
+            <button class="btn btn-xs btn-link" ng-click="openProcessModeler()" ng-disabled="editBtnDisabled"><i
+                    class="fa fa-sitemap"/>
                 <span translate>admin.workflows.config.btn.createNew</span>
             </button>
             <button class="btn btn-xs btn-link" ng-click="uploadReplaceBpmn()" ng-disabled="uploadingInProgress">
-                <i class="fa fa-cloud-upload text" />
+                <i class="fa fa-cloud-upload text"/>
                 <span translate>admin.workflows.config.btn.uploadNew</span>
             </button>
         </div>

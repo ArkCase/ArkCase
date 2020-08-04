@@ -123,7 +123,7 @@ public class AcmJobFactory extends SpringBeanJobFactory implements InitializingB
 
         jobDetailsMap = jobConfigurations.stream()
                 .filter(notImplementedConfiguredJob)
-                .peek(it -> logger.info("Job [{}] will be added to the scheduler", it.getName()))
+                .peek(it -> logger.info("Job [{}] will be added to the scheduler if not scheduled already.", it.getName()))
                 .map(it -> new AbstractMap.SimpleEntry<>(it.getName(), springContextHolder.getBeanByName(it.getName(), JobDetail.class)))
                 .collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue));
 
@@ -202,7 +202,7 @@ public class AcmJobFactory extends SpringBeanJobFactory implements InitializingB
             return triggerBuilder
                     .withSchedule(simpleSchedule()
                             .withIntervalInSeconds(jobConfig.getRepeatIntervalInSeconds())
-                            .withMisfireHandlingInstructionNextWithExistingCount()
+                            .withMisfireHandlingInstructionNextWithRemainingCount()
                             .repeatForever());
         }
     }

@@ -65,7 +65,18 @@ angular.module('cases').controller(
 
                     $scope.save = function() {
                         $scope.loadingRequestIcon = "fa fa-circle-o-notch fa-spin";
-                        $scope.$bus.publish('ACTION_SAVE_CASE', {});
+                        var deferred = $q.defer();
+                        if (($scope.objectInfo.queue.name === 'Fulfill' || $scope.objectInfo.queue.name === 'Intake' || $scope.objectInfo.queue.name === 'Hold') && $scope.objectInfo.requestType === 'New Request' && $scope.objectInfo.disposition == null && $scope.objectInfo.dispositionClosedDate != null) {
+                            $scope.$bus.publish('OPEN_REQUEST_DISPOSITION_MODAL', deferred);
+                        } else if ($scope.objectInfo.requestType === 'Appeal' && ($scope.objectInfo.queue.name === 'Fulfill' || $scope.objectInfo.queue.name === 'Appeal' || $scope.objectInfo.queue.name === 'Hold') && $scope.objectInfo.disposition == null && $scope.objectInfo.dispositionClosedDate != null) {
+                            $scope.$bus.publish('OPEN_APPEAL_DISPOSITION_MODAL', deferred);
+                        } else {
+                            deferred.resolve();
+                        }
+
+                        deferred.promise.then(function () {
+                            $scope.$bus.publish('ACTION_SAVE_CASE', {});    
+                        });
                     };
 
                     $scope.$bus.subscribe('report-object-updated', function(caseInfo) {

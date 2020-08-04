@@ -61,10 +61,6 @@ public class MicrosoftExchangeNotificationSender extends NotificationSender
     @Override
     public void sendEmailWithAttachments(EmailWithAttachmentsDTO in, Authentication authentication, AcmUser user) throws Exception
     {
-        if (in.getTemplate() == null)
-        {
-            in.setTemplate(notificationTemplate);
-        }
         getEmailSenderService().sendEmailWithAttachments(in, authentication, user);
     }
 

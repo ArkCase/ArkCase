@@ -120,13 +120,23 @@ angular.module('common').controller('Common.AddPersonModalController', [ '$scope
     $scope.addNewPerson = function() {
         $scope.isNew = true;
 
+        var params = {
+            isOrganizationLocation: true,
+            personLocations: $scope.objectInfo.defaultAddress
+        };
+
         var modalInstance = $modal.open({
             scope: $scope,
             animation: true,
             templateUrl: 'modules/common/views/new-person-modal.client.view.html',
             controller: 'Common.NewPersonModalController',
             size: 'lg',
-            backdrop: 'static'
+            backdrop: 'static',
+            resolve: {
+                params: function() {
+                    return params;
+                }
+            }
         });
 
         modalInstance.result.then(function(data) {

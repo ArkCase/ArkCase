@@ -250,6 +250,7 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         expect(mockContentStream.getFileName()).andReturn(fileName);
         expect(ecmFileVersion.getVersionFileNameExtension()).andReturn(fileNameExtension).anyTimes();
         expect(mockContentStream.getStream()).andReturn(log4jis);
+        expect(mockAuthentication.getDetails()).andReturn(null);
         mockEventPublisher.publishEvent(capture(capturedEvent));
 
         Map<String, Object> messageProps = new HashMap<>();
@@ -330,6 +331,7 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         expect(mockContentStream.getFileName()).andReturn(fileName);
         expect(fromDb.getFileActiveVersionNameExtension()).andReturn(fileNameExtension).anyTimes();
         expect(mockContentStream.getStream()).andReturn(log4jis);
+        expect(mockAuthentication.getDetails()).andReturn(null);
         mockEventPublisher.publishEvent(capture(capturedEvent));
 
         Map<String, Object> messageProps = new HashMap<>();

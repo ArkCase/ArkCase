@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <bean id="changeConsultationStatusDao" class="com.armedia.acm.plugins.consultation.dao.ChangeConsultationStatusDao"/>
+
+    <bean id="consultationEventListener" class="com.armedia.acm.plugins.consultation.listener.ConsultationEventListener">
+        <property name="acmObjectHistoryService" ref="acmObjectHistoryService"/>
+        <property name="acmObjectHistoryEventPublisher" ref="acmObjectHistoryEventPublisher"/>
+        <property name="consultationEventUtility" ref="consultationEventUtility"/>
+        <property name="acmAssignmentDao" ref="acmAssignmentDao"/>
+        <property name="calendarService" ref="outlookContainerService"/>
+        <property name="shouldDeleteCalendarFolder"
+                  value="#{consultationConfig.deleteCalendarFolderAfterConsultationClosed}"/>
+        <property name="consultationStatusClosed" value="#{consultationConfig.statusClosed}"/>
+        <property name="calendarAdminService" ref="outlookCalendarAdminServiceExtension"/>
+        <property name="objectConverter" ref="objectConverter"/>
+        <property name="folderCreatorDao" ref="outlookFolderCreatorDao"/>
+    </bean>
+
+    <bean id="changeConsultationStatusTaskName" class="java.lang.String">
+        <constructor-arg>
+            <value>Request to Change Consultation Status '%s'</value>
+        </constructor-arg>
+    </bean>
+
+    <bean id="pdfChangeConsultationStateDocumentGenerator"
+          class="com.armedia.acm.plugins.consultation.service.PDFChangeConsultationStateDocumentGenerator"
+          parent="pdfDocumentGenerator">
+        <property name="dao" ref="consultationDao"/>
+    </bean>
+
+    <bean id="changeConsultationConfigStatusWorkflowListener"
+          class="com.armedia.acm.plugins.consultation.listener.ChangeConsultationStatusWorkflowListener">
+        <property name="fileWorkflowBusinessRule" ref="fileWorkflowBusinessRule"/>
+        <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
+        <property name="changeConsultationStatusTaskName" ref="changeConsultationStatusTaskName"/>
+    </bean>
+
+    <bean id="checkChangeConsultationState"
+          class="com.armedia.acm.plugins.consultation.pipeline.presave.CheckChangeConsultationState">
+        <property name="consultationDao" ref="consultationDao"/>
+    </bean>
+
+    <bean id="changeConsultationStateHandler"
+          class="com.armedia.acm.plugins.consultation.pipeline.postsave.ChangeConsultationStateHandler">
+        <property name="userActionExecutor" ref="userActionExecutor"/>
+        <property name="consultationDao" ref="consultationDao"/>
+    </bean>
+
+    <bean id="createTaskChangeConsultationHandler"
+          class="com.armedia.acm.plugins.consultation.pipeline.postsave.CreateTaskChangeConsultationHandler">
+        <property name="ecmFileDao" ref="ecmFileDao"/>
+    </bean>
+
+    <bean id="changeConsultationStatusPipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
+        <property name="preSaveHandlers">
+            <list value-type="com.armedia.acm.services.pipeline.handler.PipelineHandler">
+                <ref bean="checkChangeConsultationState"/>
+            </list>
+        </property>
+        <property name="postSaveHandlers">
+            <list>
+                <ref bean="pdfChangeConsultationStateDocumentGeneratorHandler"/>
+                <ref bean="changeConsultationStateHandler"/>
+                <ref bean="createTaskChangeConsultationHandler"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="changeConsultationStateService"
+          class="com.armedia.acm.plugins.consultation.service.ChangeConsultationStateService">
+        <property name="consultationEventUtility" ref="consultationEventUtility"/>
+        <property name="consultationDao" ref="consultationDao"/>
+        <property name="changeConsultationStatusDao" ref="changeConsultationStatusDao"/>
+        <property name="pipelineManager" ref="changeConsultationStatusPipelineManager"/>
+    </bean>
+
+    <bean id="pdfChangeConsultationStateDocumentGeneratorHandler"
+          class="com.armedia.acm.plugins.consultation.pipeline.postsave.PDFChangeConsultationStateDocumentGeneratorHandler"
+          parent="pdfChangeConsultationStateDocumentGenerator">
+        <property name="pdfChangeConsultationStateDocumentGenerator" ref="pdfChangeConsultationStateDocumentGenerator"/>
+        <property name="dao" ref="consultationDao"/>
+    </bean>
+
+    <bean id="consultationToSolrTransformer"
+          class="com.armedia.acm.plugins.consultation.transformer.ConsultationToSolrTransformer">
+        <property name="userDao" ref="userJpaDao"/>
+        <property name="consultationDao" ref="consultationDao"/>
+        <property name="businessProcessDao" ref="businessProcessDao"/>
+        <property name="searchAccessControlFields" ref="searchAccessControlFields"/>
+        <property name="fileAclSolrUpdateHelper" ref="fileAclSolrUpdateHelper"/>
+    </bean>
+
+    <bean id="acmConsultationPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
+        <property name="pluginName" value="ACM Consultation"/>
+        <property name="pluginConfig" ref="consultationConfig"/>
+        <property name="suportedObjectTypesNames">
+            <list>
+                <value>CONSULTATION</value>
+            </list>
+        </property>
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
+    </bean>
+
+    <bean id="changeConsultationStatusProcessEndListener"
+          class="com.armedia.acm.plugins.consultation.listener.ChangeConsultationStatusProcessEndListener">
+        <property name="changeConsultationStateService" ref="changeConsultationStateService"/>
+    </bean>
+
+    <bean id="consultationHistoryListener"
+          class="com.armedia.acm.plugins.consultation.listener.ConsultationHistoryListener">
+        <property name="acmObjectHistoryService" ref="acmObjectHistoryService"/>
+        <property name="nonHistoryGeneratingEvents">
+            <list>
+                <value>com.armedia.acm.consultation.search</value>
+                <value>com.armedia.acm.consultation.viewed</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="consultationBillingInvoiceCreatedHandler"
+          class="com.armedia.acm.plugins.consultation.listener.ConsultationBillingInvoiceCreatedHandler">
+        <property name="consultationBillingInvoiceDocumentGenerator" ref="billingInvoiceDocumentGenerator"/>
+        <property name="consultationDao" ref="consultationDao"/>
+    </bean>
+
+    <bean id="consultationDataAccessUpdateLocator"
+          class="com.armedia.acm.plugins.consultation.service.ConsultationDataAccessUpdateLocator">
+        <property name="consultationDao" ref="consultationDao"/>
+    </bean>
+
+    <bean id="acmConsultationsStateProvider" class="com.armedia.acm.plugins.consultation.state.AcmConsultationsStateProvider">
+        <property name="consultationDao" ref="consultationDao"/>
+    </bean>
+
+    <bean id="consultationTemplateModelProvider"
+          class="com.armedia.acm.plugins.consultation.model.provider.ConsultationTemplateModelProvider">
+    </bean>
+
+    <bean id="consultationConfig" class="com.armedia.acm.plugins.consultation.model.ConsultationConfig" scope="refresh">
+        <aop:scoped-proxy/>
+    </bean>
+
+    <bean id="consultationService" class="com.armedia.acm.plugins.consultation.service.ConsultationServiceImpl">
+        <property name="consultationDao" ref="consultationDao"/>
+        <property name="changeConsultationStatusDao" ref="changeConsultationStatusDao"/>
+        <property name="ecmFileService" ref="ecmFileService"/>
+        <property name="pipelineManager" ref="consultationPipelineManager"/>
+    </bean>
+
+    <bean id="consultationTasksService" class="com.armedia.acm.plugins.consultation.service.ConsultationTasksServiceImpl">
+        <property name="childDocumentsSearchService" ref="childDocumentsSearchService"/>
+    </bean>
+
+    <bean id="consultationUpdatedNotifier"
+          class="com.armedia.acm.plugins.consultation.service.ConsultationUpdatedNotifier">
+        <property name="notificationService" ref="notificationService"/>
+        <property name="consultationDao" ref="consultationDao"/>
+    </bean>
+
+</beans>

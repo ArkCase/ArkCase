@@ -1,0 +1,24 @@
+<div ng-controller="Cases.ExemptionController">
+    <div class="panel panel-success panel-grid">
+        <div class="panel-heading">
+            <div class="panel-title">
+                <span translate>cases.comp.exemption.title</span>
+                <div class="pull-right">
+                    <button class="btn btn-default btn-xs" ng-click="checkCodesDescription()">
+                        <span translate>cases.comp.exemption.description</span></button>
+                    <button type="button" class="btn btn-default btn-xs" ng-click="refresh()">
+                        <i class="fa fa-lg fa-refresh"></i>
+                    </button>
+                    <button type="button" class="btn btn-default btn-xs" ng-click="addNew()"
+                            ng-disabled="isDisabled">
+                        <i class="fa fa-lg fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div ui-grid="gridOptions" ui-grid-resize-columns ui-grid-auto-resize ui-grid-pagination
+                    adjust-table-height="gridOptions.data.length" class="grid"></div>
+        </div>
+    </div>
+</div>

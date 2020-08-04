@@ -44,11 +44,10 @@ import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksDTO;
 import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksResultDTO;
 import com.armedia.acm.services.email.service.AcmEmailContentGeneratorService;
 import com.armedia.acm.services.email.service.AcmEmailSenderService;
-import com.armedia.acm.services.email.service.TemplatingEngine;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.validator.routines.EmailValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationEventPublisher;
@@ -84,11 +83,11 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
 
     private EmailSenderConfig emailSenderConfig;
 
-    private TemplatingEngine templatingEngine;
-
     private DefaultFolderAndFileConverter defaultFolderAndFileConverter;
 
     private AcmMailSender acmMailSender;
+
+    private final EmailValidator emailValidator = EmailValidator.getInstance();
 
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
@@ -131,21 +130,18 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
     public void sendEmailWithAttachments(EmailWithAttachmentsDTO in, Authentication authentication, AcmUser user)
             throws Exception
     {
-        in.setTemplatingEngine(getTemplatingEngine());
-
         Exception exception = null;
 
         List<AcmEvent> sentEvents = new ArrayList<>();
         Map<String, InputStreamDataSource> attachments = processAttachments(in, user, sentEvents);
-        String objectId = extractIdFromEmailWithAttachmentsDTO(in);
-        String objectType = extractObjectTypeFromEmailWithAttachmentsDTO(in);
-        String emailAddresses = in.getEmailAddresses().stream().collect(Collectors.joining(","));
+        String emailAddresses = in.getEmailAddresses().stream()
+                .filter(this::isEmailValid)
+                .collect(Collectors.joining(","));
 
         try
         {
-            acmMailSender.sendMultipartEmail(emailAddresses, in.getEmailGroup(), in.getSubject(), in.getMessageBody(),
-                    new ArrayList<>(attachments.values()), in.getObjectType() != null ? in.getObjectType() : objectType,
-                    in.getObjectId() != null ? in.getObjectId().toString() : objectId);
+            acmMailSender.sendMultipartEmail(emailAddresses, in.getEmailGroup(), in.getSubject(), in.getBody(),
+                    new ArrayList<>(attachments.values()), in.getObjectType(), in.getObjectId());
         }
         catch (Exception e)
         {
@@ -191,14 +187,14 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
 
         List<AcmEvent> sentEvents = new ArrayList<>();
         Map<String, InputStreamDataSource> attachments = processAttachments(in, user, sentEvents);
-        String emailAddresses = in.getEmailAddresses().stream().collect(Collectors.joining(","));
+        String emailAddresses = in.getEmailAddresses().stream()
+                .filter(this::isEmailValid)
+                .collect(Collectors.joining(","));
 
         try
         {
-            acmMailSender.sendMultipartEmail(emailAddresses, in.getSubject(),
-                    makeNote(emailAddresses, in, authentication), new ArrayList<>(attachments.values()),
-                    in.getParentType().contains("Case") ? "CASE_FILE" : in.getParentType().toUpperCase(),
-                    in.getParentNumber().contains("_") ? StringUtils.substringAfter(in.getParentNumber(), "_") : in.getParentNumber());
+            acmMailSender.sendMultipartEmail(emailAddresses, in.getSubject(), makeNote(emailAddresses, in, authentication),
+                    new ArrayList<>(attachments.values()), in.getObjectType(), in.getObjectId());
         }
         catch (Exception e)
         {
@@ -362,15 +358,15 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
         List<EmailWithEmbeddedLinksResultDTO> emailResultList = new ArrayList<>();
         Exception exception = null;
 
-        Long parentId = setFilenames(in);
-        String objectId = extractIdFromEmailWithEmbeddedLinkDTO(in);
-        String emailAddresses = in.getEmailAddresses().stream().collect(Collectors.joining(","));
+        String emailAddresses = in.getEmailAddresses().stream()
+                .filter(this::isEmailValid)
+                .collect(Collectors.joining(","));
 
         try
         {
             // makeNote generates access token so any email address will do
             acmMailSender.sendEmail(emailAddresses, in.getSubject(), makeNote(in.getEmailAddresses().get(0), in, authentication),
-                    in.getParentType(), objectId);
+                    in.getObjectType(), in.getObjectId());
         }
         catch (Exception e)
         {
@@ -395,34 +391,14 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
         return getAcmEmailContentGeneratorService().generateEmailBody(emailWithEmbeddedLinksDTO, emailAddress, authentication);
     }
 
-    private String extractIdFromEmailWithEmbeddedLinkDTO(EmailWithEmbeddedLinksDTO in)
+    public boolean isEmailValid(String emailAddress)
     {
-        String objectId = null;
-        if (in.getParentNumber() != null)
+        boolean isValid = emailValidator.isValid(emailAddress);
+        if (!isValid)
         {
-            objectId = in.getParentNumber().contains("_") ? StringUtils.substringAfter(in.getParentNumber(), "_") : in.getParentNumber();
+            log.warn("Email address: [{}] is not valid.", emailAddress);
         }
-        return objectId;
-    }
-
-    private String extractIdFromEmailWithAttachmentsDTO(EmailWithAttachmentsDTO in)
-    {
-        String objectId = null;
-        if (in.getObjectId() == null && in.getParentNumber() != null)
-        {
-            objectId = in.getParentNumber().contains("_") ? StringUtils.substringAfter(in.getParentNumber(), "_") : in.getParentNumber();
-        }
-        return objectId;
-    }
-
-    private String extractObjectTypeFromEmailWithAttachmentsDTO(EmailWithAttachmentsDTO in)
-    {
-        String objectType = null;
-        if (in.getObjectType() == null && in.getParentType() != null)
-        {
-            objectType = in.getParentType().contains("Case") ? "CASE_FILE" : in.getParentType().toUpperCase();
-        }
-        return objectType;
+        return isValid;
     }
 
     /**
@@ -452,16 +428,6 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
     public void setEmailSenderConfig(EmailSenderConfig emailSenderConfig)
     {
         this.emailSenderConfig = emailSenderConfig;
-    }
-
-    public TemplatingEngine getTemplatingEngine()
-    {
-        return templatingEngine;
-    }
-
-    public void setTemplatingEngine(TemplatingEngine templatingEngine)
-    {
-        this.templatingEngine = templatingEngine;
     }
 
     public DefaultFolderAndFileConverter getDefaultFolderAndFileConverter()

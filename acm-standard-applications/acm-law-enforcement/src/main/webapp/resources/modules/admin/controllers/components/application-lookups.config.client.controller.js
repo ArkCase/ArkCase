@@ -34,7 +34,11 @@ angular.module('admin').controller('Admin.LookupsConfigController',
 
             $scope.getLookups = function() {
                 ObjectLookupService.getLookupsDefs().then(function(data) {
-                    $scope.lookupsDefs = data;
+                    //AFDP-8833, AFDP-8838 - Request and Appeal disposition type and subType lookups should be removed from UI 
+                    _.remove(data, function(lookup) {
+                        return lookup.name === 'appealDispositionType' || lookup.name === 'requestDispositionType' || lookup.name === 'requestDispositionSubType';
+                    });
+                    $scope.lookupsDefs = data
                     var index = 0;
                     if (!Util.isEmpty($scope.selectedLookupDef)) {
                         var _index = _.findIndex($scope.lookupsDefs, {

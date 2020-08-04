@@ -301,6 +301,45 @@
                 }
             }
         },
+        "my-consultations": {
+            "title": {
+                "value": "My Consultations",
+                "defaultValue": "My Consultations",
+                "description": ""
+            },
+            "label": {
+                "description": {
+                    "value": "Displays a user consultations",
+                    "defaultValue": "Displays a user consultations",
+                    "description": ""
+                },
+                "no-tasks-assigned": {
+                    "value": "No active tasks assigned",
+                    "defaultValue": "No active tasks assigned",
+                    "description": ""
+                },
+                "number": {
+                    "value": "ID",
+                    "defaultValue": "ID",
+                    "description": ""
+                },
+                "title": {
+                    "value": "Title",
+                    "defaultValue": "Title",
+                    "description": ""
+                },
+                "priority": {
+                    "value": "Priority",
+                    "defaultValue": "Priority",
+                    "description": ""
+                },
+                "status": {
+                    "value": "Status",
+                    "defaultValue": "Status",
+                    "description": ""
+                }
+            }
+        },
         "my-complaints": {
             "title": {
                 "value": "My Complaints",

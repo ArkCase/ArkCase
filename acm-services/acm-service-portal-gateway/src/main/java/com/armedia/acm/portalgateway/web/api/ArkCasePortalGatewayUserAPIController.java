@@ -81,6 +81,19 @@ public class ArkCasePortalGatewayUserAPIController
     }
 
     @CheckPortalUserAssignement
+    @RequestMapping(value = "/regenerateRegistrationRequest", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE,
+            MediaType.TEXT_PLAIN_VALUE })
+    @ResponseBody
+    public UserRegistrationResponse regenerateRegistrationRequest(Authentication auth,
+            @PortalId @PathVariable(value = "portalId") String portalId,
+            @RequestBody UserRegistrationRequest registrationRequest) throws PortalUserServiceException
+    {
+        log.debug("Regenerating registration request for user with [{}] email address for portal with [{}] ID.",
+                registrationRequest.getEmailAddress(), portalId);
+        return portalUserService.regenerateRegistrationRequest(portalId, registrationRequest);
+    }
+
+    @CheckPortalUserAssignement
     @RequestMapping(value = "/registrations", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE,
             MediaType.TEXT_PLAIN_VALUE })
     @ResponseBody
@@ -142,6 +155,18 @@ public class ArkCasePortalGatewayUserAPIController
         log.debug("Requesting registration for user with [{}] email address for portal with [{}] ID.",
                 resetRequest.getEmailAddress(), portalId);
         return portalUserService.requestPasswordReset(portalId, resetRequest);
+    }
+
+    @CheckPortalUserAssignement
+    @RequestMapping(value = "/registrations/resets/regenerate", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE,
+            MediaType.TEXT_PLAIN_VALUE })
+    @ResponseBody
+    public UserResetResponse regeneratePasswordReset(Authentication auth, @PortalId @PathVariable(value = "portalId") String portalId,
+            @RequestBody UserResetRequest resetRequest) throws PortalUserServiceException
+    {
+        log.debug("Regenerating password reset link for user with [{}] email address for portal with [{}] ID.",
+                resetRequest.getEmailAddress(), portalId);
+        return portalUserService.regeneratePasswordReset(portalId, resetRequest);
     }
 
     @CheckPortalUserAssignement

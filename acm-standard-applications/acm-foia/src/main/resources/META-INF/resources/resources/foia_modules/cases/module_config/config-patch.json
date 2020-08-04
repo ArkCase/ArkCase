@@ -206,7 +206,7 @@
                     "displayName": "cases.comp.exemption.table.columns.statute",
                     "headerCellFilter": "translate",
                     "enableCellEdit": false,
-                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.exemptionStatutes, row.entity.exemptionStatute) | translate }}</div>"
+                    "cellTemplate": "<div class='ui-grid-cell-contents' title='{{grid.appScope.utils.getLookupValue(grid.appScope.exemptionStatutes, row.entity.exemptionStatute) | translate }}'>{{ grid.appScope.utils.getLookupValue(grid.appScope.exemptionStatutes, row.entity.exemptionStatute) | translate }}</div>"
                 }
             ]
         }
@@ -336,9 +336,15 @@
                     "displayName": "cases.comp.exemption.description",
                     "headerCellFilter": "translate",
                     "cellFilter": "translate",
-                    "cellTemplate": "<div class='ui-grid-cell-wrap' translate>{{row.entity.value}}</div>"
+                    "cellTemplate": "<div class='ui-grid-cell-contents' title='{{row.entity.value | translate}}'>{{row.entity.value | translate}}</div>"
                 }
-            ]
+            ],
+            "paginationPageSizes": [
+                5,
+                10,
+                20
+            ],
+            "paginationPageSize": 20
         }
     },
     {

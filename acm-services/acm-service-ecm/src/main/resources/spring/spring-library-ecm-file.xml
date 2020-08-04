@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
     xmlns:aop="http://www.springframework.org/schema/aop"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <bean id="ecmFileDao" class="com.armedia.acm.plugins.ecm.dao.EcmFileDao"/>
 
@@ -173,152 +173,13 @@
         <property name="ecmFileUpdatePipelineManager" ref="ecmFileUpdatePipelineManager"/>
         <property name="cmisConfigUtils" ref="cmisConfigUtils"/>
         <property name="ecmFileConfig" ref="ecmFileConfig"/>
-        <property name="mimeTypesByTika">
-            <map>
-                <entry key="text/plain">
-                    <list>
-                        <value>application/octet-stream</value>
-                        <value>application/vnd.openxmlformats-officedocument.wordprocessingml.document</value>
-                        <value>application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</value>
-                        <value>application/pdf</value>
-                    </list>
-                </entry>
-                <entry key="application/xml">
-                    <list>
-                        <value>text/xml</value>
-                        <value>application/octet-stream</value>
-                    </list>
-                </entry>
-                <entry key="application/xslt+xml">
-                    <list>
-                        <value>text/xml</value>
-                    </list>
-                </entry>
-                <entry key="application/x-dosexec">
-                    <list>
-                        <value>application/x-msdownload</value>
-                    </list>
-                </entry>
-                <entry key="video/x-msvideo">
-                    <list>
-                        <value>video/avi</value>
-                    </list>
-                </entry>
-                <entry key="video/x-m4v">
-                    <list>
-                        <value>video/mp4</value>
-                    </list>
-                </entry>
-                <entry key="model/vnd.mts">
-                    <list>
-                        <value>video/vnd.dlna.mpeg-tts</value>
-                    </list>
-                </entry>
-                <entry key="audio/mpeg">
-                    <list>
-                        <value>audio/mp3</value>
-                    </list>
-                </entry>
-                <entry key="audio/mpga">
-                    <list>
-                        <value>audio/mp3</value>
-                    </list>
-                </entry>
-                <entry key="audio/x-aac">
-                    <list>
-                        <value>audio/vnd.dlna.adts</value>
-                    </list>
-                </entry>
-                <entry key="audio/x-flac">
-                    <list>
-                        <value>audio/flac</value>
-                    </list>
-                </entry>
-                <entry key="audio/midi">
-                    <list>
-                        <value>audio/mid</value>
-                    </list>
-                </entry>
-                <entry key="application/octet-stream">
-                    <list>
-                        <value>audio/vnd.dolby.dd-raw</value>
-                    </list>
-                </entry>
-                <entry key="audio/x-oggflac">
-                    <list>
-                        <value>audio/ogg</value>
-                    </list>
-                </entry>
-                <entry key="audio/vorbis">
-                    <list>
-                        <value>audio/ogg</value>
-                    </list>
-                </entry>
-                <entry key="video/theora">
-                    <list>
-                        <value>video/ogg</value>
-                    </list>
-                </entry>
-                <entry key="audio/mp4">
-                    <list>
-                        <value>audio/x-m4a</value>
-                    </list>
-                </entry>
-                <entry key="audio/amr-wb">
-                    <list>
-                        <value>application/octet-stream</value>
-                    </list>
-                </entry>
-                <entry key="audio/x-aiff">
-                    <list>
-                        <value>audio/aiff</value>
-                    </list>
-                </entry>
-                <entry key="application/vnd.rn-realmedia">
-                    <list>
-                        <value>application/octet-stream</value>
-                    </list>
-                </entry>
-                <entry key="application/xhtml+xml">
-                    <list>
-                        <value>text/html</value>
-                    </list>
-                </entry>
-                <entry key="application/vnd.ms-outlook">
-                    <list>
-                        <value>application/octet-stream</value>
-                    </list>
-                </entry>
-                <entry key="text/csv">
-                    <list>
-                        <value>application/vnd.ms-excel</value>
-                    </list>
-                </entry>
-                <entry key="application/zip">
-                    <list>
-                        <value>application/x-zip-compressed</value>
-                    </list>
-                </entry>
-                <entry key="application/x-dosexec">
-                    <value>application/octet-stream</value>
-                </entry>
-                <entry key="application/json">
-                    <value>application/octet-stream</value>
-                </entry>
-                <entry key="application/vnd.wordperfect">
-                    <list>
-                        <value>application/octet-stream</value>
-                    </list>
-                </entry>
-                <entry key="application/rtf">
-                    <list>
-                        <value>application/msword</value>
-                    </list>
-                </entry>
-            </map>
-        </property>
+        <property name="allowedUploadFileTypes" ref="allowedUploadFileTypes"/>
         <property name="progressIndicatorService" ref="progressIndicatorService"/>
         <property name="ecmFileService" ref="ecmFileService"/>
+    </bean>
+
+    <bean id="allowedUploadFileTypes" class="com.armedia.acm.plugins.ecm.model.AcmAallowedUploadFileTypesConfig" scope="refresh">
+        <aop:scoped-proxy/>
     </bean>
 
     <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
@@ -378,6 +239,7 @@
         <property name="emailSenderConfig" ref="emailSenderConfig"/>
         <property name="progressIndicatorService" ref="progressIndicatorService"/>
         <property name="camelContextManager" ref="camelContextManager"/>
+        <property name="ecmFileVersionDao" ref="ecmFileVersionDao"/>
         <property name="authenticationTokenDao" ref="authenticationTokenDao"/>
     </bean>
 
@@ -579,5 +441,18 @@
         <property name="connectionFactory" ref="jmsConnectionFactory"/>
         <property name="destination" ref="messageDestination"/>
         <property name="messageListener" ref="changedParticipantToArkcaseListener"/>
+    </bean>
+
+
+    <bean id="ecmFileAddedDuplicationListener" class="com.armedia.acm.plugins.ecm.service.EcmFileAddedDuplicationListener">
+        <property name="ecmFileService" ref="ecmFileService"/>
+    </bean>
+
+    <bean id="ecmFileUpdatedDuplicationListener" class="com.armedia.acm.plugins.ecm.service.EcmFileUpdatedDuplicationListener">
+        <property name="ecmFileService" ref="ecmFileService"/>
+    </bean>
+
+    <bean id="ecmFileCopiedDuplicationListener" class="com.armedia.acm.plugins.ecm.service.EcmFileCopiedDuplicationListener">
+        <property name="ecmFileService" ref="ecmFileService"/>
     </bean>
 </beans>

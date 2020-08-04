@@ -44,6 +44,7 @@ angular.module('tasks').controller(
                         scope: $scope
                     });
                     var promiseUsers = gridHelper.getUsers();
+                    var defaultDateTimeUTCFormat = $translate.instant("common.defaultDateTimeUTCFormat");
 
                     ConfigService.getComponentConfig("tasks", "info").then(function(componentConfig) {
                         $scope.config = componentConfig;
@@ -163,22 +164,22 @@ angular.module('tasks').controller(
                         $scope.objectInfo = objectInfo;
                         $scope.dateInfo = $scope.dateInfo || {};
                         if(!Util.isEmpty($scope.objectInfo.dueDate)){
-                            $scope.dateInfo.dueDate = moment.utc($scope.objectInfo.dueDate).local().format('MM/DD/YYYY HH:mm');
+                            $scope.dateInfo.dueDate = moment.utc($scope.objectInfo.dueDate).local().format(defaultDateTimeUTCFormat);
                             $scope.dueDateInfo = $scope.dateInfo.dueDate;
                         }
                         else {
                             $scope.dateInfo.dueDate = null;
                             $scope.dueDateInfo = new Date();
-                            $scope.dueDateInfo = moment($scope.dueDateInfo).format('MM/DD/YYYY HH:mm');
+                            $scope.dueDateInfo = moment($scope.dueDateInfo).format(defaultDateTimeUTCFormat);
                         }
                         if(!Util.isEmpty($scope.objectInfo.taskStartDate)){
-                            $scope.dateInfo.taskStartDate = moment.utc($scope.objectInfo.taskStartDate).local().format('MM/DD/YYYY HH:mm');
+                            $scope.dateInfo.taskStartDate = moment.utc($scope.objectInfo.taskStartDate).local().format(defaultDateTimeUTCFormat);
                             $scope.startDateInfo = $scope.dateInfo.taskStartDate;
                         }
                         else {
                             $scope.dateInfo.taskStartDate = null;
                             $scope.startDateInfo = new Date();
-                            $scope.startDateInfo = moment($scope.startDateInfo).format('MM/DD/YYYY HH:mm');
+                            $scope.startDateInfo = moment($scope.startDateInfo).format(defaultDateTimeUTCFormat);
                         }
 
                         $scope.dateInfo.isOverdue = TaskAlertsService.calculateOverdue(new Date($scope.dateInfo.dueDate));
@@ -273,13 +274,13 @@ angular.module('tasks').controller(
                                 DialogService.alert($translate.instant('tasks.comp.info.alertMessage' ) + $filter("date")(startDate, $translate.instant('common.defaultDateTimeUIFormat')));
                             }else {
                                 $scope.objectInfo.dueDate = moment.utc(dueDate).format();
-                                $scope.dueDateInfo = moment.utc($scope.objectInfo.dueDate).local().format('MM/DD/YYYY HH:mm');
+                                $scope.dueDateInfo = moment.utc($scope.objectInfo.dueDate).local().format(defaultDateTimeUTCFormat);
                                 $scope.dateInfo.dueDate = $scope.dueDateInfo;
                                 $scope.saveTask();
                             }
                         } else {
                             $scope.objectInfo.dueDate = $scope.dueDateBeforeChange;
-                            $scope.dueDateInfo = moment.utc($scope.objectInfo.dueDate).local().format('MM/DD/YYYY HH:mm');
+                            $scope.dueDateInfo = moment.utc($scope.objectInfo.dueDate).local().format(defaultDateTimeUTCFormat);
                             $scope.dateInfo.dueDate = $scope.dueDateInfo;
                             $scope.saveTask();
                         }

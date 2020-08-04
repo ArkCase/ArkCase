@@ -206,8 +206,8 @@ angular
                         }
                     });
 
-                    modalInstance.result.then(function (limitedDeliveryFlag) {
-                        DocTree.limitedDeliveryFlag = limitedDeliveryFlag;
+                    modalInstance.result.then(function (data) {
+                        DocTree.limitedDeliveryFlag = data.limitedDeliveryFlag;
                         deferred.resolve();
                     }, function () {
                         deferred.reject();
@@ -280,7 +280,7 @@ angular
                             ,
                             table: {
                                 indentation: 10, // indent 20px per node level
-                                nodeColumnIdx: 2, // render the node title into the 3rd column
+                                nodeColumnIdx: 3, // render the node title into the 4th column
                                 checkboxColumnIdx: 0
                                 // render the checkboxes into the 1st column
                             },
@@ -499,6 +499,7 @@ angular
                         jqTreeBody.on("dblclick", "select.docversion", DocTree.onDblClickVersion);
                         jqTreeBody.on("change", "select.reviewstatus", DocTree.onChangeReviewStatus);
                         jqTreeBody.on("change", "select.redactionstatus", DocTree.onChangeRedactionStatus);
+                        jqTreeBody.on("click", "button.duplicate", DocTree.Op.showDuplicates);
 
                         var jqTreeHead = jqTree.find("thead");
                         jqTreeHead.find("input:checkbox").on("click", function (e) {
@@ -1376,8 +1377,20 @@ angular
                                     renderer: function (element, node, columnDef, isReadOnly) {
                                         ;
                                     }
-                                },
-                                {
+                                }, {
+                                    name: "duplicate",
+                                    renderer: function(element, node, columnDef, isReadOnly) {
+                                        if(node.data.duplicate) {
+                                            var $td = $("<td/>");
+                                            var $span = $("<span/>").appendTo($td);
+                                            var $button = $("<button type='button'/>").addClass('duplicate').appendTo($span);
+                                            var $text = $("<strong>D</strong>").appendTo($button);
+
+                                            $(element).replaceWith($td);
+                                        }
+                                        ;
+                                    }
+                                }, {
                                     name: "title",
                                     renderer: function (element, node, columnDef, isReadOnly) {
                                         ;
@@ -3263,7 +3276,7 @@ angular
                                     DocTree.markNodeOk(frNode);
                                     dfd.resolve(moveFileInfo);
                                 }, function (errorData) {
-                                    MessageService.error(errorData.data);
+                                    MessageService.error($translate.instant('common.directive.docTree.moveFileError'));
                                     DocTree.markNodeError(frNode);
                                     dfd.reject();
                                 });
@@ -3363,6 +3376,36 @@ angular
                                 }
                             }
                             return dfd.promise();
+                        },
+                        showDuplicates: function() {
+                            var node = DocTree.tree.getActiveNode();
+                            var file = node.data.objectId;
+                            Util.serviceCall({
+                                service: Ecm.getFileDuplicates,
+                                param: {
+                                    fileId: file
+                                },
+                                data: {},
+                                onSuccess: function (response) {
+                                    var params = {
+                                        data: response
+                                    };
+                                    var modalInstance = $modal.open({
+                                        templateUrl: "modules/common/views/showDuplicates-modal.client.view.html",
+                                        controller: "Common.ShowDuplicates",
+                                        animation: true,
+                                        windowClass: 'modal-width-80',
+                                        resolve: {
+                                            params: function () {
+                                                return params;
+                                            }
+                                        }
+                                    });
+                                    modalInstance.result.then(function() {
+                                        modalInstance.close();
+                                    });
+                                }
+                            })
                         },
                         openDeleteConfirmationModal: function (data, onClickOk) {
                             var modalInstance = $modal.open({
@@ -3808,9 +3851,8 @@ angular
                     replaceFile: function () {
                         DocTree.jqFileInput.removeAttr("multiple");
                         DocTree.makeUploadDocForm(DocTree.jqTree);
-                        setTimeout(function () {
-                            DocTree.jqFileInput.click();
-                        });
+                        var fileInput = DocTree.jqFileInput.click();
+                        var timeOut = setTimeout(fileInput, 0);
                     }
 
                     ,
@@ -3992,6 +4034,7 @@ angular
                             nodeData.data.publicFlag = Util.goodValue(fileData.publicFlag);
                             nodeData.data.modifier = Util.goodValue(fileData.modifier);
                             nodeData.data.link = Util.goodValue(fileData.link);
+                            nodeData.data.duplicate = Util.goodValue(fileData.duplicate);
 
                             for (var versionIndex = 0; versionIndex < fileData.versionList.length; versionIndex++) {
                                 if (fileData.versionList[versionIndex].versionTag === fileData.version) {
@@ -4161,9 +4204,6 @@ angular
                         $(node.tr).find("select.reviewstatus").prop('disabled', true);
                         $(node.tr).find("select.redactionstatus").prop('disabled', true);
 
-                        var nodeParentFolder = node.parent;
-                        var cacheKey = DocTree.getCacheKeyByNode(nodeParentFolder);
-
                         if (statusType === "review") {
                             Util.serviceCall({
                                 service: Ecm.setFileReviewStatus,
@@ -4179,7 +4219,6 @@ angular
                                 $(node.tr).find("select.reviewstatus").prop('disabled', false);
                                 $(node.tr).find("select.redactionstatus").prop('disabled', false);
                                 node.data.reviewStatus = statusValue;
-                                DocTree.cacheFolderList.remove(cacheKey);
 
                                 return data;
                             }, function (error) {
@@ -4205,7 +4244,6 @@ angular
                                 $(node.tr).find("select.reviewstatus").prop('disabled', false);
                                 $(node.tr).find("select.redactionstatus").prop('disabled', false);
                                 node.data.redactionStatus = statusValue;
-                                DocTree.cacheFolderList.remove(cacheKey);
 
                                 return data;
                             }, function (error) {
@@ -4223,7 +4261,6 @@ angular
                     onViewChangedParent: function (objType, objId) {
                         DocTree.switchObject(objType, objId);
                     }
-
                     ,
                     onChangeVersion: function (event) {
                         var node = DocTree.tree.getActiveNode();

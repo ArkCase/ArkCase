@@ -1,25 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:aop="http://www.springframework.org/schema/aop" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       xmlns:aop="http://www.springframework.org/schema/aop" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
 		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
-		http://www.springframework.org/schema/integration/mail http://www.springframework.org/schema/integration/mail/spring-integration-mail.xsd
+
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
-       xmlns:int="http://www.springframework.org/schema/integration" xmlns:int-mail="http://www.springframework.org/schema/integration/mail"
+       xmlns:int="http://www.springframework.org/schema/integration"
        xmlns:util="http://www.springframework.org/schema/util">
 
     <!-- if we add task executor in publish-subscribe-channel than all mail processing will be done async,
     that would be needed if we are dealing with lot of incoming mails-->
     <int:publish-subscribe-channel id="mailChannelCaseFile"/>
 
-    <int-mail:inbound-channel-adapter id="emailReceiverAdapter"
-                                      store-uri="imaps://#{emailReceiverConfig.caseFileUser}:#{emailReceiverConfig.caseFilePassword}@#{emailReceiverConfig.host}:#{emailReceiverConfig.port}/#{emailReceiverConfig.fetchFolder}"
-                                      channel="mailChannelCaseFile"
-                                      auto-startup="true" should-delete-messages="#{emailReceiverConfig.shouldDeleteMessages}"
-                                      should-mark-messages-as-read="#{emailReceiverConfig.shouldMarkMessagesAsRead}"
-                                      java-mail-properties="javaMailPropertiesCaseFile" max-fetch-size="1">
-        <int:poller max-messages-per-poll="#{emailReceiverConfig.maxMessagesPerPoll}" fixed-rate="#{emailReceiverConfig.fixedRate}"
-                    error-channel="mailErrorChannelCaseFile"/>
-    </int-mail:inbound-channel-adapter>
+    <bean id="acmEmailReceiverAdapter" class="com.armedia.acm.email.model.AcmEmailReceiverAdapter">
+        <property name="emailReceiverConfig" ref="emailReceiverConfig"/>
+        <property name="javaMailPropertiesCaseFile" ref="javaMailPropertiesCaseFile"/>
+        <property name="javaMailPropertiesComplaint" ref="javaMailPropertiesComplaint"/>
+    </bean>
+
+    <bean id="caseImapMailReceiver" class="org.springframework.integration.mail.ImapMailReceiver" scope="refresh">
+        <constructor-arg index="0"
+                         value="imaps://#{emailReceiverConfig.caseFileUser}:#{emailReceiverConfig.caseFilePassword}@#{emailReceiverConfig.host}:#{emailReceiverConfig.port}/#{emailReceiverConfig.fetchFolder}"/>
+        <aop:scoped-proxy/>
+    </bean>
 
     <bean id="loggingHandlerCaseFile" class="org.springframework.integration.handler.LoggingHandler">
         <constructor-arg value="ERROR"/>
@@ -40,15 +42,11 @@
     <!-- Complaint mail channel -->
     <int:publish-subscribe-channel id="mailChannelComplaint"/>
 
-    <int-mail:inbound-channel-adapter id="emailReceiverAdapterComplaint"
-                                      store-uri="imaps://#{emailReceiverConfig.complaintUser}:#{emailReceiverConfig.complaintPassword}@#{emailReceiverConfig.host}:#{emailReceiverConfig.port}/#{emailReceiverConfig.fetchFolder}"
-                                      channel="mailChannelComplaint"
-                                      auto-startup="true" should-delete-messages="#{emailReceiverConfig.shouldDeleteMessages}"
-                                      should-mark-messages-as-read="#{emailReceiverConfig.shouldMarkMessagesAsRead}"
-                                      java-mail-properties="javaMailPropertiesComplaint" max-fetch-size="1">
-        <int:poller max-messages-per-poll="#{emailReceiverConfig.maxMessagesPerPoll}" fixed-rate="#{emailReceiverConfig.fixedRate}"
-                    error-channel="mailErrorChannelComplaint"/>
-    </int-mail:inbound-channel-adapter>
+    <bean id="complaintImapMailReceiver" class="org.springframework.integration.mail.ImapMailReceiver" scope="refresh">
+        <constructor-arg index="0"
+                         value="imaps://#{emailReceiverConfig.complaintUser}:#{emailReceiverConfig.complaintPassword}@#{emailReceiverConfig.host}:#{emailReceiverConfig.port}/#{emailReceiverConfig.fetchFolder}"/>
+        <aop:scoped-proxy/>
+    </bean>
 
     <bean id="loggingHandlerComplaint" class="org.springframework.integration.handler.LoggingHandler">
         <constructor-arg value="ERROR"/>

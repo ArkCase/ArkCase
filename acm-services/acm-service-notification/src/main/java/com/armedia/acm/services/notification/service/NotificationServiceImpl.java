@@ -36,11 +36,10 @@ import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.notification.model.NotificationRule;
 import com.armedia.acm.spring.SpringContextHolder;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -49,7 +48,6 @@ import java.util.Map;
 
 public class NotificationServiceImpl implements NotificationService
 {
-
     private final Logger LOG = LogManager.getLogger(getClass());
 
     private NotificationConfig notificationConfig;
@@ -58,6 +56,7 @@ public class NotificationServiceImpl implements NotificationService
     private SpringContextHolder springContextHolder;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private NotificationFormatter notificationFormatter;
+    private NotificationBuilder notificationBuilder;
 
     /**
      * This method is called by scheduled task
@@ -74,15 +73,6 @@ public class NotificationServiceImpl implements NotificationService
 
         try
         {
-            // Riste Tutureski on 28 November 2017: I will comment this method that make correction of the last
-            // notification run date for one minute
-            // For now we will use date without correction, because we have problem if the run is set less than one
-            // minute, multiple emails are sent.
-            // Needed further investigation on DEV environments before removing commented line below. Locally works
-            // fine.
-
-            // Date lastRun = getLastRunDate(lastRun, dateFormat);
-
             Map<String, NotificationRule> rules = getSpringContextHolder().getAllBeansOfType(NotificationRule.class);
 
             if (rules != null)
@@ -119,8 +109,9 @@ public class NotificationServiceImpl implements NotificationService
             {
                 firstResult += maxResult;
 
-                notifications.stream().map(element -> getNotificationFormatter().replaceFormatPlaceholders(element))
-                        .map(element -> rule.getExecutor().execute(element)).map(element -> getNotificationDao().save(element))
+                notifications.stream()
+                        .map(element -> rule.getExecutor().execute(element))
+                        .map(element -> getNotificationDao().save(element))
                         .forEach(element -> {
                             ApplicationNotificationEvent event = new ApplicationNotificationEvent(element,
                                     NotificationConstants.OBJECT_TYPE.toLowerCase(), true, null);
@@ -130,25 +121,28 @@ public class NotificationServiceImpl implements NotificationService
         } while (!notifications.isEmpty());
     }
 
-    /**
-     * Get the last run date corrected for 1 minute before
-     *
-     * @param lastRunDate
-     * @return
-     * @throws ParseException
-     */
-    private Date getLastRunDate(String lastRunDate, SimpleDateFormat dateFormat) throws ParseException
+    @Override
+    public NotificationBuilder getNotificationBuilder()
     {
-        Date date = dateFormat.parse(lastRunDate);
+        return notificationBuilder;
+    }
 
-        Calendar calendar = Calendar.getInstance();
+    @Override
+    public Notification saveNotification(Notification notification)
+    {
+        if (StringUtils.isBlank(notification.getEmailAddresses()))
+        {
+            LOG.warn("Notification with template [{}], for object [{}] with id [{}] won't be created for empty email addresses list.",
+                    notification.getTemplateModelName(), notification.getParentType(), notification.getParentId());
+            return null;
+        }
 
-        calendar.setTime(date);
-        calendar.set(Calendar.MINUTE, calendar.get(Calendar.MINUTE) - 1);
+        Notification saved = notificationDao.save(notification);
+        LOG.debug("Created notification with template [{}], for object [{}] with id [{}] and email addresses [{}].",
+                notification.getTemplateModelName(), notification.getParentType(), notification.getParentId(),
+                notification.getEmailAddresses());
 
-        date = calendar.getTime();
-
-        return date;
+        return saved;
     }
 
     /**
@@ -244,5 +238,10 @@ public class NotificationServiceImpl implements NotificationService
     public void setNotificationConfig(NotificationConfig notificationConfig)
     {
         this.notificationConfig = notificationConfig;
+    }
+
+    public void setNotificationBuilder(NotificationBuilder notificationBuilder)
+    {
+        this.notificationBuilder = notificationBuilder;
     }
 }

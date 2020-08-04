@@ -506,7 +506,7 @@ public class ExecuteSolrQuery
             NamedList<Object> response = client.request(solrRequest, collection);
             stopWatch.stop();
 
-            log.debug("Received response from Solr in {}ms", stopWatch.getTotalTimeMillis());
+            log.trace("Received response from Solr in {}ms", stopWatch.getTotalTimeMillis());
             log.trace("Received response from Solr: [{}]", response);
             return (String) response.get(SOLR_PARAM_RESPONSE);
         }

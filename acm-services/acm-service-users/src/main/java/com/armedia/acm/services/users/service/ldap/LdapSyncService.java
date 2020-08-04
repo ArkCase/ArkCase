@@ -39,6 +39,7 @@ import com.armedia.acm.services.users.model.ldap.LdapUser;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.quartz.JobDataMap;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.ldap.core.LdapTemplate;
@@ -135,6 +136,11 @@ public class LdapSyncService implements ApplicationEventPublisherAware
         getLdapSyncProcessor().sync(ldapUsers, ldapGroups, ldapSyncConfig, !lastRunDate.isPresent());
     }
 
+    /**
+    * This method will be used only for older versions or extensions.
+    * Otherwise, use triggering of the desired scheduled Job {@link AcmSchedulerService#triggerJob(String, JobDataMap)}
+     */
+    @Deprecated
     @Async
     public void initiateSync(String principal, boolean fullSync, AcmLdapSyncConfig ldapSyncConfig)
     {

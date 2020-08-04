@@ -37,7 +37,6 @@ import org.springframework.core.Ordered;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.MutablePropertySources;
 import org.springframework.core.env.PropertySource;
-import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
 
 /**
@@ -54,9 +53,6 @@ public class LdapConfigurationPropertySourceInitializer implements Ordered, Init
     @Autowired
     LdapConfigurationContainer ldapConfiguration;
 
-    @Autowired
-    JmsTemplate jmsTemplate;
-
     private PropertySource getPropertySource()
     {
         ldapConfiguration.refresh();
@@ -64,7 +60,7 @@ public class LdapConfigurationPropertySourceInitializer implements Ordered, Init
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception
+    public void afterPropertiesSet()
     {
         MutablePropertySources propertySources = configurableEnvironment.getPropertySources();
         propertySources.addLast(getPropertySource());

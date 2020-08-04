@@ -49,13 +49,24 @@ angular.module('admin').factory('Admin.PortalConfigurationService', [ '$http', f
             }
         });
     };
+    var revertPortal = function (portal) {
+        return $http({
+            method: 'PUT',
+            url: 'api/latest/service/portalgateway/admin/portals/revert',
+            data: portal,
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+    };
 
     return {
         getPortals: getPortals,
         savePortal: savePortal,
         updatePortal: updatePortal,
         deletePortal: deletePortal,
-        getPortalUsers: getPortalUsers
+        getPortalUsers: getPortalUsers,
+        revertPortal: revertPortal
     };
 
 } ]);

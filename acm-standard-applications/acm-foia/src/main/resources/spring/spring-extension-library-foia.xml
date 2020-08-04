@@ -2,7 +2,7 @@
 <beans:beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:beans="http://www.springframework.org/schema/beans"
     xmlns:aop="http://www.springframework.org/schema/aop"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
               http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <beans:beans profile="extension-foia">
@@ -62,15 +62,17 @@
             <beans:property name="userDao" ref="userJpaDao"/>
             <beans:property name="translationService" ref="translationService" />
             <beans:property name="acmUserEventPublisher" ref="acmUserEventPublisher"/>
+            <beans:property name="organizationDao" ref="acmOrganizationDao"/>
+            <beans:property name="requestAssignmentService" ref="requestAssignmentService"/>
         </beans:bean>
 
         <beans:bean id="portalCreateRequestService" class="gov.foia.service.PortalCreateRequestService">
             <beans:property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
             <beans:property name="userTrackerService" ref="userTrackerService"/>
             <beans:property name="saveFOIARequestService" ref="saveFOIARequestService"/>
-            <beans:property name="organizationDao" ref="acmOrganizationDao"/>
             <beans:property name="portalFOIAPersonDao" ref="portalFOIAPersonDao"/>
             <beans:property name="portalRequestService" ref="portalRequestService"/>
+            <beans:property name="portalUserServiceProvider" ref="foiaPortalUserServiceProvider"/>
         </beans:bean>
         <beans:bean id="portalCreateInquiryService" class="gov.foia.service.PortalCreateInquiryService">
             <property name="taskDao" ref="acmTaskDao"/>
@@ -91,7 +93,7 @@
             <beans:property name="portalFOIAPersonDao" ref="portalFOIAPersonDao"/>
             <beans:property name="personAssociationDao" ref="acmPersonAssociationDao"/>
             <beans:property name="lookupDao" ref="lookupDao"/>
-            <beans:property name="notificationDao" ref="notificationDao"/>
+            <beans:property name="notificationService" ref="notificationService"/>
             <beans:property name="groupService" ref="groupService"/>
             <beans:property name="searchResults" ref="searchResults"/>
             <beans:property name="translationService" ref="translationService"/>
@@ -171,6 +173,7 @@
                     <beans:ref bean="foiaExemptionCodeMigrationExecutor"/>
                     <beans:ref bean="solrReindexFOIAPortalPersonExecutor"/>
                     <beans:ref bean="foiaPortalRegistrationCleanupExecutor"/>
+                    <beans:ref bean="solrReindexAcmUserExecutor"/>
                 </beans:list>
             </beans:property>
 
@@ -189,6 +192,10 @@
             <beans:property name="userDao" ref="userJpaDao"/>
             <beans:property name="registrationDao" ref="userRegistrationRequestDao"/>
             <beans:property name="portalInfoDAO" ref="portalInfoDAO"/>
+        </beans:bean>
+
+        <beans:bean id="solrReindexAcmUserExecutor" class="gov.foia.service.dataupdate.SolrReindexAcmUserExecutor">
+            <beans:property name="solrReindexService" ref="solrReindexService"/>
         </beans:bean>
 
         <beans:bean id="queuesTimeToCompleteService" class="gov.foia.service.QueuesTimeToCompleteService">
@@ -224,6 +231,9 @@
         <beans:bean id="foiaFileUpdatedEventListener" class="gov.foia.listener.FOIAFileUpdatedEventListener">
             <beans:property name="foiaRequestFileBrokerClient" ref="foiaRequestFileBrokerClient"/>
             <beans:property name="ecmFileService" ref="ecmFileService"/>
+            <beans:property name="acmParticipantService" ref="acmParticipantService"/>
+            <beans:property name="caseFileDao" ref="caseFileDao"/>
+            <beans:property name="portalAdminService" ref="portalAdminService"/>
         </beans:bean>
 
         <beans:bean id="foiaQueuedEventListener" class="gov.foia.listener.FOIAQueuedEventListener">
@@ -257,6 +267,15 @@
             <beans:property name="template" value="Request Received Acknowledgement Letter"/>
         </beans:bean>
 
+        <beans:bean id="appealReceivedAcknowledgementDocumentDescriptor" class="gov.foia.model.FOIADocumentDescriptor">
+            <beans:property name="type" value="Appeal"/>
+            <beans:property name="reqAck" value="RECEIVE_ACK"/>
+            <beans:property name="doctype" value="Appeal Received Acknowledgement Letter"/>
+            <beans:property name="filenameFormat" value="AppealReceivedAcknowledgementLetter-%s.docx"/>
+            <beans:property name="targetFileExtension" value="docx"/>
+            <beans:property name="template" value="Appeal Received Acknowledgement Letter"/>
+        </beans:bean>
+
         <beans:bean id="appealDocumentDescriptor" class="gov.foia.model.FOIADocumentDescriptor">
             <beans:property name="type" value="Appeal"/>
             <beans:property name="reqAck" value="REQ"/>
@@ -275,6 +294,15 @@
             <beans:property name="template" value="Appeal Acknowledgement Letter"/>
         </beans:bean>
 
+        <beans:bean id="appealExtensionDocumentDescriptor" class="gov.foia.model.FOIADocumentDescriptor">
+            <beans:property name="type" value="Appeal"/>
+            <beans:property name="reqAck" value="REQ_EXTENSION"/>
+            <beans:property name="doctype" value="Request Extension Letter"/>
+            <beans:property name="filenameFormat" value="ExtensionLetter-%s.docx"/>
+            <beans:property name="targetFileExtension" value="docx"/>
+            <beans:property name="template" value="Request Extension Letter"/>
+        </beans:bean>
+
         <beans:bean id="requestDenialLetterDocumentDescriptor" class="gov.foia.model.FOIADocumentDescriptor">
             <beans:property name="type" value="New Request"/>
             <beans:property name="reqAck" value="DENIAL"/>
@@ -282,24 +310,6 @@
             <beans:property name="filenameFormat" value="DenialLetter.docx-%s.docx"/>
             <beans:property name="targetFileExtension" value="docx"/>
             <beans:property name="template" value="Denial Letter"/>
-        </beans:bean>
-
-        <beans:bean id="appealDenialLetterDocumentDescriptor" class="gov.foia.model.FOIADocumentDescriptor">
-            <beans:property name="type" value="Appeal"/>
-            <beans:property name="reqAck" value="DENIAL"/>
-            <beans:property name="doctype" value="Denial Letter"/>
-            <beans:property name="filenameFormat" value="DenialLetter.docx-%s.docx"/>
-            <beans:property name="targetFileExtension" value="docx"/>
-            <beans:property name="template" value="Denial Letter"/>
-        </beans:bean>
-
-        <beans:bean id="requestDeleteDocumentDescriptor" class="gov.foia.model.FOIADocumentDescriptor">
-            <beans:property name="type" value="New Request"/>
-            <beans:property name="reqAck" value="REQ_DELETE"/>
-            <beans:property name="doctype" value="Request Delete Letter"/>
-            <beans:property name="filenameFormat" value="RequestDeleteCorrespondenceLetter-%s.docx"/>
-            <beans:property name="targetFileExtension" value="docx"/>
-            <beans:property name="template" value="Request Delete Letter"/>
         </beans:bean>
 
         <beans:bean id="requestExtensionDocumentDescriptor" class="gov.foia.model.FOIADocumentDescriptor">
@@ -325,15 +335,9 @@
         </beans:bean>
 
         <beans:bean id="firstAssigneeOwningGroupNotify" class="gov.foia.service.FirstAssigneeOwningGroupNotify">
-            <beans:property name="groupService" ref="groupService"/>
-            <beans:property name="searchResults" ref="searchResults"/>
-            <beans:property name="userDao" ref="userJpaDao"/>
             <beans:property name="notificationUtils" ref="notificationUtils"/>
-            <beans:property name="templatingEngine" ref="templatingEngine"/>
-            <beans:property name="emailBodyTemplate" value="file:${user.home}/.arkcase/acm/templates/requestAssigned.html"/>
-            <beans:property name="notificationDao" ref="notificationDao"/>
-            <beans:property name="translationService" ref="translationService" />
             <beans:property name="userInfoHelper" ref="userInfoHelper"/>
+            <beans:property name="notificationService" ref="notificationService"/>
         </beans:bean>
 
         <beans:bean id="foiaExecutiveGroupNotificationService" class="gov.foia.service.FOIAExecutiveGroupNotificationService">
@@ -386,6 +390,7 @@
             <beans:property name="fileParticipantService" ref="fileParticipantService"/>
             <beans:property name="recycleBinItemService" ref="recycleBinItemServiceImpl"/>
             <beans:property name="authenticationTokenDao" ref="authenticationTokenDao"/>
+            <beans:property name="ecmFileVersionDao" ref="ecmFileVersionDao"/>
             <property name="camelContextManager" ref="camelContextManager"/>
         </beans:bean>
 
@@ -417,6 +422,9 @@
             <beans:property name="springContextHolder" ref="acmContextHolder"/>
         </beans:bean>
 
+        <beans:bean id="assignmentNotifier" class="gov.foia.listener.FoiaAssignmentNotifier">
+            <beans:property name="notificationService" ref="notificationService"/>
+        </beans:bean>
 
     </beans:beans>
 </beans:beans>

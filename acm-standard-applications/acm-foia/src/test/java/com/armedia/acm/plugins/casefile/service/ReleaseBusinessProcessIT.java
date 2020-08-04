@@ -104,7 +104,7 @@ public class ReleaseBusinessProcessIT extends EasyMockSupport
     public void setUp() throws Exception
     {
         // deploy
-        repo.createDeployment().addClasspathResource("activiti/foia-extension-release-process_v14.bpmn20.xml").deploy();
+        repo.createDeployment().addClasspathResource("activiti/foia-extension-release-process_v16.bpmn20.xml").deploy();
 
         mockedApplicationEventPublisher = createMock(ApplicationEventPublisher.class);
         responseFolderCompressorService.setApplicationEventPublisher(mockedApplicationEventPublisher);
@@ -126,6 +126,7 @@ public class ReleaseBusinessProcessIT extends EasyMockSupport
         processVariables.put("OBJECT_TYPE", objectType);
         processVariables.put("OBJECT_ID", foiaId);
         processVariables.put("USERNAME", "jgarcia");
+        processVariables.put("OBJECT_DENIED_FLAG", false);
 
         changeObjectStatusService.change(foiaId, objectType, "Released");
         expect(queueCaseService.enqueue(foiaId, "Release")).andReturn(new FOIARequest());
