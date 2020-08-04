@@ -34,14 +34,42 @@ public class NiemExportUtils
 {
 
     public final String DEFAULT_CSV_EXPECTED_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
+    public final String DEFAULT_XLSX_EXPORTED_EXPECTED_FORMAT = "MM/dd/yyyy";
+
     public final String DEFAULT_NIEM_EXPECTED_FORMAT = "yyyy-MM-dd";
 
-    public String formatDateToNiemExpectedDate(String dateOfReceipt) throws ParseException
+    public String formatDateToNiemExpectedDate(String dateString) throws ParseException
     {
         SimpleDateFormat csvDateFormat = new SimpleDateFormat(DEFAULT_CSV_EXPECTED_FORMAT);
+        SimpleDateFormat xlsxDateFormat = new SimpleDateFormat(DEFAULT_XLSX_EXPORTED_EXPECTED_FORMAT);
         SimpleDateFormat niemDateFormat = new SimpleDateFormat(DEFAULT_NIEM_EXPECTED_FORMAT);
 
-        return niemDateFormat.format(csvDateFormat.parse(dateOfReceipt));
+        if (isParsable(csvDateFormat, dateString))
+        {
+            return niemDateFormat.format(csvDateFormat.parse(dateString));
+        }
+        else if (isParsable(xlsxDateFormat, dateString))
+        {
+            return niemDateFormat.format(xlsxDateFormat.parse(dateString));
+        }
+        else
+        {
+            return dateString;
+        }
+
+    }
+
+    private boolean isParsable(SimpleDateFormat dateFormat, String dateString)
+    {
+        try
+        {
+            dateFormat.parse(dateString);
+            return true;
+        }
+        catch (ParseException e)
+        {
+            return false;
+        }
     }
 
 }
