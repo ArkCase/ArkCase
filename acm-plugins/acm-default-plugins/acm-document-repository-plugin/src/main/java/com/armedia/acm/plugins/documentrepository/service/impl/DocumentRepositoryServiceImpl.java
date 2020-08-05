@@ -186,13 +186,11 @@ public class DocumentRepositoryServiceImpl implements DocumentRepositoryService
     public String getDocumentRepositoryTasks(Long id, String sort, int startRow, int maxRows, Authentication authentication)
             throws SolrException
     {
-        String rowQueryParameters = String.format(
-                "q1=parent_object_id_i:%s AND parent_object_type_s: DOC_REPO&fq=object_type_s:TASK&fq=-status_s:DELETE",
-                id);
-        String query = "({!join from=parent_object_id_i to=parent_object_id_i v=$q1})";
+        String query = "object_type_s:TASK AND -status_s: DELETE AND parent_object_type_s : DOC_REPO + AND parent_object_id_i:" + id;
 
-        return getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, startRow, maxRows, sort,
-                rowQueryParameters);
+        String retval = executeSolrQuery.getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, 0, 1000, sort);
+
+        return retval;
     }
 
     public DocumentRepositoryDao getDocumentRepositoryDao()
