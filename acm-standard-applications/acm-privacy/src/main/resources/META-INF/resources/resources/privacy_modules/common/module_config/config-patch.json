@@ -369,6 +369,7 @@
             "name": "reviewStatus",
             "field": "reviewStatus",
             "displayName": "common.duplicates.columnDefs.reviewStatus",
+            "headerCellFilter": "translate",
             "icon": "<i class='fa fa-fw' data-sort='reviewStatus' data-dir='ASC'></i>",
             "width": "8%",
             "index": 8
@@ -381,6 +382,7 @@
             "name": "redactionStatus",
             "field": "redactionStatus",
             "displayName": "common.duplicates.columnDefs.redactionStatus",
+            "headerCellFilter": "translate",
             "icon": "<i class='fa fa-fw' data-sort='redactionStatus' data-dir='ASC'></i>",
             "width": "8%",
             "index": 9
