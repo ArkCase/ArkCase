@@ -369,9 +369,8 @@
             "name": "reviewStatus",
             "field": "reviewStatus",
             "displayName": "common.duplicates.columnDefs.reviewStatus",
-            "headTemplate": "<label id='reviewStatus' class='doc-tree-header' style='cursor: pointer;'></label>",
+            "headerCellFilter": "translate",
             "icon": "<i class='fa fa-fw' data-sort='reviewStatus' data-dir='ASC'></i>",
-            "__todo__cellTemplate": "<div>{{ row.entity.reviewStatus }}</div>",
             "width": "8%",
             "index": 8
         }
@@ -383,9 +382,8 @@
             "name": "redactionStatus",
             "field": "redactionStatus",
             "displayName": "common.duplicates.columnDefs.redactionStatus",
-            "headTemplate": "<label id='redactionStatus' class='doc-tree-header' style='cursor: pointer;'></label>",
+            "headerCellFilter": "translate",
             "icon": "<i class='fa fa-fw' data-sort='redactionStatus' data-dir='ASC'></i>",
-            "__todo__cellTemplate": "<div>{{ row.entity.redactionStatus }}</div>",
             "width": "8%",
             "index": 9
         }

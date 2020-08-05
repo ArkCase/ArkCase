@@ -390,8 +390,8 @@
             <beans:property name="fileParticipantService" ref="fileParticipantService"/>
             <beans:property name="recycleBinItemService" ref="recycleBinItemServiceImpl"/>
             <beans:property name="authenticationTokenDao" ref="authenticationTokenDao"/>
-            <beans:property name="ecmFileVersionDao" ref="ecmFileVersionDao"/>
-            <property name="camelContextManager" ref="camelContextManager"/>
+            <beans:property name="camelContextManager" ref="camelContextManager"/>
+            <beans:property name="fileEventPublisher" ref="fileEventPublisher"/>
         </beans:bean>
 
         <beans:bean id="foiaConfig" class="gov.foia.model.FoiaConfig" scope="refresh">
