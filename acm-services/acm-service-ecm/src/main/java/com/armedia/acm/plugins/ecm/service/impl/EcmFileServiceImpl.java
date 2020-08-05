@@ -63,6 +63,7 @@ import com.armedia.acm.plugins.ecm.model.RecycleBinItem;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileConvertEvent;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
+import com.armedia.acm.plugins.ecm.service.FileEventPublisher;
 import com.armedia.acm.plugins.ecm.service.ProgressIndicatorService;
 import com.armedia.acm.plugins.ecm.service.RecycleBinItemService;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
@@ -178,6 +179,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     private CamelContextManager camelContextManager;
 
     private AuthenticationTokenDao authenticationTokenDao;
+
+    private FileEventPublisher fileEventPublisher;
 
     @Override
     public CmisObject findObjectByPath(String path) throws Exception
@@ -1169,6 +1172,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
             EcmFile result = getEcmFileDao().save(fileCopy);
 
+            getFileEventPublisher().publishFileCopiedEvent(fileCopy, file, SecurityContextHolder.getContext().getAuthentication(), null, true);
+
             return getFileParticipantService().setFileParticipantsFromParentFolder(result);
         }
         catch (PersistenceException | ArkCaseFileRepositoryException e)
@@ -1372,17 +1377,9 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
         ecmFile = getEcmFileDao().save(ecmFile);
 
-        publishFileUpdatedEvent(ecmFile, SecurityContextHolder.getContext().getAuthentication(), true, eventProperties);
+        getFileEventPublisher().publishFileUpdatedEvent(ecmFile, SecurityContextHolder.getContext().getAuthentication(), true);
         log.info("File update successful [{}]", ecmFile);
         return ecmFile;
-    }
-
-    private void publishFileUpdatedEvent(EcmFile file, Authentication authentication, boolean success, Map<String, Object> eventProperties)
-    {
-        EcmFileUpdatedEvent event = new EcmFileUpdatedEvent(file, authentication);
-        event.setEventProperties(eventProperties);
-        event.setSucceeded(success);
-        applicationEventPublisher.publishEvent(event);
     }
 
     @Override
@@ -2609,4 +2606,11 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         this.camelContextManager = camelContextManager;
     }
 
+    public FileEventPublisher getFileEventPublisher() {
+        return fileEventPublisher;
+    }
+
+    public void setFileEventPublisher(FileEventPublisher fileEventPublisher) {
+        this.fileEventPublisher = fileEventPublisher;
+    }
 }

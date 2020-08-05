@@ -55,7 +55,6 @@ angular.module('common').controller(
             };
 
             $scope.deleteFile = function(rowEntity) {
-                var dfd = $.Deferred();
                 for (var i = 0; i < rowEntity.length; i++) {
                     var fileId = rowEntity[i].fileId;
                     Util.serviceCall({
@@ -64,19 +63,14 @@ angular.module('common').controller(
                             fileId: fileId
                         },
                         data: {},
-                        onSuccess: function(data) {
+                        onSuccess: function() {
                             MessageService.succsessAction();
+                            $modalInstance.close('done');
                         },
                         onError: function(error) {
-                            MessageService.error(error.data.message);
-                            dfd.reject();
+                            MessageService.error(error.data);
                         }
-                    }).then(function(deletedFileId) {
-                        dfd.resolve(deletedFileId);
-                    }, function(errorData) {
-                        MessageService.error(errorData.data);
-                        dfd.reject();
-                    });
+                    })
                 }
             };
 
