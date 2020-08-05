@@ -1377,9 +1377,17 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
         ecmFile = getEcmFileDao().save(ecmFile);
 
-        getFileEventPublisher().publishFileUpdatedEvent(ecmFile, SecurityContextHolder.getContext().getAuthentication(), true);
+        publishFileUpdatedEvent(ecmFile, SecurityContextHolder.getContext().getAuthentication(), true, eventProperties);
         log.info("File update successful [{}]", ecmFile);
         return ecmFile;
+    }
+
+    private void publishFileUpdatedEvent(EcmFile file, Authentication authentication, boolean success, Map<String, Object> eventProperties)
+    {
+        EcmFileUpdatedEvent event = new EcmFileUpdatedEvent(file, authentication);
+        event.setEventProperties(eventProperties);
+        event.setSucceeded(success);
+        applicationEventPublisher.publishEvent(event);
     }
 
     @Override
