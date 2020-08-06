@@ -1,7 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <bean id="configExceptionResolver" class="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver"/>
+
+    <bean id="acmApplication" class="com.armedia.acm.core.AcmApplication"/>
+
+    <bean id="acmEncryptablePropertyEncryptionProperties"
+        class="com.armedia.acm.crypto.properties.AcmEncryptablePropertyEncryptionProperties">
+        <property name="cryptoUtils" ref="acmCryptoUtils"/>
+        <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+        <property name="propertiesEncryptionAlgorithm" value="AES"/>
+        <property name="propertiesEncryptionBlockCipherMode" value="CBC"/>
+        <property name="propertiesEncryptionPadding" value="PKCS5Padding"/>
+        <property name="propertiesEncryptionKeySize" value="256"/>
+        <property name="propertiesEncryptionIVSize" value="128"/>
+        <property name="propertiesEncryptionMagicSize" value="8"/>
+        <property name="propertiesEncryptionSaltSize" value="8"/>
+        <property name="propertiesEncryptionPassPhraseIterations" value="1"/>
+        <property name="propertiesEncryptionPassPhraseHashAlgorithm" value="MD5"/>
+        <property name="encryptedSymmetricKeyEncryptionAlgorithm" value="RSA/ECB/PKCS1Padding"/>
+        <property name="encryptedSymmetricKeyFilePath"
+            value="#{systemProperties['user.home']}/.arkcase/acm/encryption/symmetricKey.encrypted"/>
+        <property name="keystoreType" value="JKS"/>
+        <property name="keystorePath" value="#{systemProperties['user.home']}/.arkcase/acm/private/encryption-keystore"/>
+        <property name="keystorePassword" value="password"/>
+        <property name="privateKeyAlias" value="armedia"/>
+    </bean>
+
+    <bean id="lookupDao" class="com.armedia.acm.services.config.lookups.service.ConfigLookupDao">
+        <property name="objectConverter" ref="objectConverter"/>
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
+        <property name="lookupConfig" ref="lookupsConfiguration"/>
+        <property name="propertiesConfigurationService" ref="collectionPropertiesConfigurationService"/>
+    </bean>
+
+    <bean id="lookupsConfiguration" class="com.armedia.acm.services.config.lookups.model.AcmLookupConfig" scope="refresh">
+        <aop:scoped-proxy/>
+    </bean>
+
+    <bean id="lookupsApi" class="com.armedia.acm.services.config.lookups.web.api.LookupsApiController">
+        <property name="lookupDao" ref="lookupDao"/>
+    </bean>
+
+    <bean id="getAnnotationTagsAPIController" class="com.armedia.acm.services.config.lookups.web.api.GetAnnotationTagsAPIController">
+        <property name="lookupDao" ref="lookupDao"/>
+    </bean>
 
 </beans>

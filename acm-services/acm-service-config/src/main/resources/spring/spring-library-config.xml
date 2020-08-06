@@ -12,29 +12,11 @@
         <property name="configList" ref="configList"/>
     </bean>
 
-    <bean id="lookupsJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
-        <constructor-arg type="java.io.InputStream">
-            <bean class="java.io.FileInputStream" destroy-method="close">
-                <constructor-arg type="java.io.File" value="${user.home}/.arkcase/acm/lookups/lookups.json"/>
-            </bean>
-        </constructor-arg>
-        <constructor-arg value="UTF-8"/>
-    </bean>
-
-    <bean id="lookupsJsonExtConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
-        <constructor-arg type="java.io.InputStream">
-            <bean class="java.io.FileInputStream" destroy-method="close">
-                <constructor-arg type="java.io.File" value="${user.home}/.arkcase/acm/lookups/lookups-ext.json"/>
-            </bean>
-        </constructor-arg>
-        <constructor-arg value="UTF-8"/>
-    </bean>
-
     <bean id="lookupDao" class="com.armedia.acm.services.config.lookups.service.ConfigLookupDao">
         <property name="objectConverter" ref="objectConverter"/>
-        <property name="lookups" ref="lookupsJsonConfig"/>
-        <property name="lookupsExt" ref="lookupsJsonExtConfig"/>
-        <property name="lookupsExtFileLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/lookups/lookups-ext.json"/>
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
+        <property name="lookupConfig" ref="lookupsConfiguration"/>
+        <property name="propertiesConfigurationService" ref="collectionPropertiesConfigurationService"/>
     </bean>
 
     <bean id="objectTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
@@ -53,6 +35,10 @@
             </bean>
         </constructor-arg>
         <constructor-arg value="UTF-8"/>
+    </bean>
+
+    <bean id="lookupsConfiguration" class="com.armedia.acm.services.config.lookups.model.AcmLookupConfig" scope="refresh">
+        <aop:scoped-proxy/>
     </bean>
 
     <bean id="configList" class="java.util.ArrayList">
