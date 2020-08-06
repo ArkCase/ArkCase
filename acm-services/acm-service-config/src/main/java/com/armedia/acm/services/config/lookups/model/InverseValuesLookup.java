@@ -29,6 +29,10 @@ package com.armedia.acm.services.config.lookups.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -91,5 +95,29 @@ public class InverseValuesLookup extends AcmLookup<InverseValuesLookupEntry>
         }
 
         return new LookupValidationResult(true, null);
+    }
+
+    @Override
+    @JsonIgnore
+    public AcmLookupTransformer transformToConfigurationEntries(List<?> entries)
+    {
+
+        List<Map<String, Object>> lookupEntries = new ArrayList<>();
+        List<InverseValuesLookupEntry> inverseLookupEntries = (List<InverseValuesLookupEntry>) entries;
+
+        inverseLookupEntries.forEach(entry -> {
+            Map<String, Object> lookupEntry = new HashMap<>();
+            lookupEntry.put("key", entry.getKey());
+            lookupEntry.put("inverseValue", entry.getValue());
+            lookupEntry.put("inverseKey", entry.getInverseKey());
+            lookupEntry.put("value", entry.getValue());
+            lookupEntry.put("readonly", entry.isReadonly());
+            lookupEntry.put("description", entry.getDescription());
+
+            lookupEntries.add(lookupEntry);
+        });
+
+        return new AcmLookupTransformer(lookupEntries);
+
     }
 }
