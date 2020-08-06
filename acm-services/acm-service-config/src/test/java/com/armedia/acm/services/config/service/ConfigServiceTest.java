@@ -41,19 +41,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {
-        "classpath:/spring/spring-web-acm-web.xml",
-        "classpath:/spring/spring-library-config-plugin-test.xml" })
 public class ConfigServiceTest extends EasyMockSupport
 {
     private List<AcmConfig> mockConfigList;
