@@ -29,6 +29,7 @@ package com.armedia.acm.configuration.service;
 
 import com.armedia.acm.configuration.annotations.MapValue;
 import com.armedia.acm.configuration.core.ConfigurationContainer;
+import com.armedia.acm.configuration.core.LookupsConfigurationContainer;
 import com.armedia.acm.configuration.util.MergeFlags;
 import com.armedia.acm.configuration.util.MergePropertiesUtil;
 
@@ -64,6 +65,9 @@ public class CollectionPropertiesConfigurationServiceImpl implements CollectionP
 
     @Autowired
     private ConfigurationContainer configurationContainer;
+
+    @Autowired
+    private LookupsConfigurationContainer lookupsConfigurationContainer;
 
     private static final Logger log = LogManager.getLogger(CollectionPropertiesConfigurationServiceImpl.class);
 
@@ -265,6 +269,17 @@ public class CollectionPropertiesConfigurationServiceImpl implements CollectionP
         }
 
         return modifiedProperties;
+    }
+
+    @Override
+    public Map<String, Object> getLookupConfiguration(String mapPropertyKey, String mapEntryKey)
+    {
+        Map<String, Object> configurationMap = lookupsConfigurationContainer.getRuntimeMap();
+
+        Map<String, Object> filteredProperties = filterAndConvertProperties(mapPropertyKey + "." + mapEntryKey,
+                configurationMap, false, true);
+
+        return filteredProperties;
     }
 
     /**

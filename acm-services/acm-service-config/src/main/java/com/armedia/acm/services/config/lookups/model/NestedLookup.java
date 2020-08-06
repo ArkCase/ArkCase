@@ -29,6 +29,10 @@ package com.armedia.acm.services.config.lookups.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -85,5 +89,40 @@ public class NestedLookup extends AcmLookup<NestedLookupEntry>
         }
 
         return new LookupValidationResult(true, null);
+    }
+
+    @Override
+    @JsonIgnore
+    public AcmLookupTransformer transformToConfigurationEntries(List<?> entries)
+    {
+
+        List<Map<String, Object>> lookupEntries = new ArrayList<>();
+        List<NestedLookupEntry> inverseLookupEntries = (List<NestedLookupEntry>) entries;
+
+        inverseLookupEntries.forEach(entry -> {
+            Map<String, Object> lookupEntry = new HashMap<>();
+            Map<String, Object> subLookupEntries = new HashMap<>();
+            List<StandardLookupEntry> sublookups = entry.getSubLookup();
+
+            if (sublookups.size() > 0)
+            {
+                for (StandardLookupEntry subLookupKey : sublookups)
+                {
+                    Map<String, Object> value = new HashMap<>();
+                    value.put("value", subLookupKey.getValue());
+                    subLookupEntries.put(subLookupKey.getKey(), value);
+                }
+
+                lookupEntry.put("subLookup", subLookupEntries);
+            }
+
+            lookupEntry.put("key", entry.getKey());
+            lookupEntry.put("value", entry.getValue());
+            lookupEntry.put("readonly", entry.isReadonly());
+            lookupEntry.put("description", entry.getDescription());
+            lookupEntries.add(lookupEntry);
+        });
+
+        return new AcmLookupTransformer(lookupEntries);
     }
 }

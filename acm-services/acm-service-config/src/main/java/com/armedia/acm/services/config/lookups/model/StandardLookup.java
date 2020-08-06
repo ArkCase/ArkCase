@@ -29,6 +29,10 @@ package com.armedia.acm.services.config.lookups.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -78,4 +82,25 @@ public class StandardLookup extends AcmLookup<StandardLookupEntry>
 
         return new LookupValidationResult(true, null);
     }
+
+    @Override
+    @JsonIgnore
+    public AcmLookupTransformer transformToConfigurationEntries(List<?> entries)
+    {
+        List<Map<String, Object>> lookupEntries = new ArrayList<>();
+        List<StandardLookupEntry> standardLookupEntries = (List<StandardLookupEntry>) entries;
+
+        standardLookupEntries.forEach(entry -> {
+            Map<String, Object> lookupEntry = new HashMap<>();
+            lookupEntry.put("key", entry.getKey());
+            lookupEntry.put("value", entry.getValue());
+            lookupEntry.put("readonly", entry.isReadonly());
+            lookupEntry.put("primary", entry.isPrimary());
+            lookupEntry.put("description", entry.getDescription());
+            lookupEntries.add(lookupEntry);
+        });
+
+        return new AcmLookupTransformer(lookupEntries);
+    }
+
 }

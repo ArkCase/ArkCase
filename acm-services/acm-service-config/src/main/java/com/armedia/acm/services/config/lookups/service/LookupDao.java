@@ -80,5 +80,25 @@ public interface LookupDao
      * @throws IOException
      *             when the underlying store cannot be accessed
      */
-    String deleteLookup(String name) throws AcmResourceNotFoundException, AcmResourceNotModifiableException, IOException;
+    String deleteLookup(String name, String lookupType) throws AcmResourceNotFoundException, AcmResourceNotModifiableException, IOException;
+
+    /**
+     * Delete lookup with given name.
+     *
+     * @param subLookupName
+     *            the {@link subLookupName} for the lookup to be deleted
+     * @param parentName
+     *            the {@link parentName} for the lookup to be deleted
+     * @param lookupDefinition
+     *            the {@link LookupDefinition} for the lookup to be deleted
+     * @return all the updated lookups as json
+     * @throws AcmResourceNotFoundException
+     *             when the lookup cannot be found
+     * @throws AcmResourceNotModifiableException
+     *             when the lookup cannot be modified
+     * @throws IOException
+     *             when the underlying store cannot be accessed
+     */
+    String deleteSubLookup(String subLookupName, String parentName, LookupDefinition lookupDefinition)
+            throws AcmResourceNotFoundException, AcmResourceNotModifiableException, IOException;
 }
