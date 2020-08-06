@@ -188,7 +188,7 @@ public class DocumentRepositoryServiceImpl implements DocumentRepositoryService
     {
         String query = "object_type_s:TASK AND -status_s: DELETE AND parent_object_type_s : DOC_REPO + AND parent_object_id_i:" + id;
 
-        String retval = executeSolrQuery.getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, 0, 1000, sort);
+        String retval = executeSolrQuery.getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, startRow, maxRows, sort);
 
         return retval;
     }
