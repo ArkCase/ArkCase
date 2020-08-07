@@ -52,29 +52,43 @@ angular.module('admin').controller(
             var currentAuthGroups;
             var selectedUser;
             var objectTitle = $translate.instant('admin.security.ldap.user.management.user');
-            $scope.lastSelectedUser;
-            $scope.userData = {
-                "chooseObject": [],
-                "selectedNotAuthorized": [],
-                "selectedAuthorized": []
-            };
-            $scope.scrollLoadData = {
-                "loadObjectsScroll": $scope.userScroll,
-                "loadUnauthorizedScroll": $scope.unauthorizedScroll,
-                "loadAuthorizedScroll": $scope.authorizedScroll
-            };
-            $scope.filterData = {
-                "objectsFilter": $scope.userManagementFilter,
-                "unauthorizedFilter": $scope.userUnauthorizedFilter,
-                "authorizedFilter": $scope.userAuthorizedFilter
+            function initializeData() {
+                $scope.lastSelectedUser = "";
+                $scope.userData = {
+                    "chooseObject": [],
+                    "selectedNotAuthorized": [],
+                    "selectedAuthorized": []
+                };
+                $scope.scrollLoadData = {
+                    "loadObjectsScroll": $scope.userScroll,
+                    "loadUnauthorizedScroll": $scope.unauthorizedScroll,
+                    "loadAuthorizedScroll": $scope.authorizedScroll
+                };
+                $scope.filterData = {
+                    "objectsFilter": $scope.userManagementFilter,
+                    "unauthorizedFilter": $scope.userUnauthorizedFilter,
+                    "authorizedFilter": $scope.userAuthorizedFilter
+                };
+            }
+            initializeData();
+
+            $scope.selectDirectory = function (directoryName) {
+                initializeData();
+                initUser(null, directoryName);
             };
 
-            function initUser(userNumber) {
+            LdapConfigService.retrieveDirectories().then(function(directories) {
+                $scope.directories = Object.keys(directories.data).sort();
+                $scope.directoryName = $scope.directoryName ? $scope.directoryName : $scope.directories[0];
+                $scope.initUser(null, $scope.directoryName);
+            });
+
+            function initUser(userNumber, directoryName) {
                 var userRequestInfo = {};
                 userRequestInfo.n = Util.isEmpty(userNumber) ? 50 : userNumber;
                 userRequestInfo.start = Util.isEmpty(userNumber) ? 0 : $scope.userData.chooseObject.length;
-                if (makePaginationRequest) {
-                    LdapUserManagementService.getNUsers(userRequestInfo).then(function(response) {
+                if (makePaginationRequest || !_.isEmpty(directoryName)) {
+                    LdapUserManagementService.getNUsers(userRequestInfo, directoryName).then(function(response) {
                         $scope.fillList($scope.userData.chooseObject, response.data.response.docs);
                         if (_.isEmpty($scope.lastSelectedUser)) {
                             $scope.lastSelectedUser = $scope.userData.chooseObject[0];
@@ -84,8 +98,6 @@ angular.module('admin').controller(
                     });
                 }
             }
-
-            $scope.initUser();
 
             //callback function when user is selected
             function onObjSelect(selectedObject) {
@@ -290,7 +302,7 @@ angular.module('admin').controller(
             }
 
             function userScroll() {
-                $scope.initUser($scope.userData.chooseObject.length * 2);
+                $scope.initUser($scope.userData.chooseObject.length * 2, null);
             }
 
             function retrieveDataScroll(data, methodName, panelName) {
