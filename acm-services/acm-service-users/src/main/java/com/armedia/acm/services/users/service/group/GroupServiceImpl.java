@@ -219,11 +219,12 @@ public class GroupServiceImpl implements GroupService
     }
 
     @Override
-    public String getGroupsByNameFilter(Authentication authentication, String nameFilter, int start, int max, String sortBy, String sortDir)
+    public String getGroupsByNameFilter(Authentication authentication, String directoryName, String nameFilter, int start, int max,
+            String sortBy, String sortDir)
             throws SolrException
     {
         String query = "object_type_s:GROUP AND status_lcs:ACTIVE AND -ascendants_id_ss:* AND name_partial:"
-                + nameFilter;
+                + nameFilter + " AND directory_name_s:" + directoryName;
         return executeSolrQuery.getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query, start, max,
                 sortBy + " " + sortDir);
     }
@@ -696,7 +697,8 @@ public class GroupServiceImpl implements GroupService
     }
 
     @Override
-    public String getTopLevelGroups(List<String> groupSubtype, int startRow, int maxRows, String sort, Authentication auth)
+    public String getTopLevelGroups(List<String> groupSubtype, int startRow, int maxRows, String sort, Authentication auth,
+            String directoryName)
             throws SolrException
     {
         Map<String, AcmLdapSyncConfig> ldapSyncConfigMap = springContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class);
@@ -731,7 +733,8 @@ public class GroupServiceImpl implements GroupService
                 + " AND object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE "
                 + "AND -status_lcs:INACTIVE AND -status_lcs:CLOSED) OR (object_type_s:GROUP AND "
                 + "-ascendants_id_ss:* AND -status_lcs:COMPLETE AND -status_lcs:DELETE "
-                + "AND -status_lcs:INACTIVE AND -status_lcs:CLOSED)";
+                + "AND -status_lcs:INACTIVE AND -status_lcs:CLOSED "
+                + "AND directory_name_s:" + directoryName + ")";
 
         if (groupSubtype != null && !groupSubtype.isEmpty())
         {
