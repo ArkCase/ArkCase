@@ -51,6 +51,7 @@ import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.persistence.PersistenceException;
 import java.io.File;
@@ -146,6 +147,8 @@ public class SAREcmFileServiceImpl extends EcmFileServiceImpl implements SAREcmF
             fileCopy.getVersions().add(fileCopyVersion);
 
             SARFile result = getSARFileDao().save(fileCopy);
+
+            getFileEventPublisher().publishFileCopiedEvent(fileCopy, file, SecurityContextHolder.getContext().getAuthentication(), null, true);
 
             return getFileParticipantService().setFileParticipantsFromParentFolder(result);
         }

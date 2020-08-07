@@ -29,6 +29,7 @@ package com.armedia.acm.configuration.annotations;
 
 import com.armedia.acm.configuration.core.ConfigurationContainer;
 import com.armedia.acm.configuration.core.LdapConfigurationContainer;
+import com.armedia.acm.configuration.core.LookupsConfigurationContainer;
 import com.armedia.acm.configuration.service.CollectionPropertiesConfigurationService;
 
 import org.aspectj.lang.annotation.Around;
@@ -54,6 +55,9 @@ public class MapValueAspect
     private LdapConfigurationContainer ldapConfiguration;
 
     @Autowired
+    private LookupsConfigurationContainer lookupsConfiguration;
+
+    @Autowired
     private CollectionPropertiesConfigurationService collectionPropertiesConfigurationService;
 
     /**
@@ -65,13 +69,17 @@ public class MapValueAspect
     {
         Map<String, Object> propsFromConfiguration;
 
-        if (propertyKey.configurationName().equals("ldapConfiguration"))
+        switch (propertyKey.configurationName())
         {
+        case "ldapConfiguration":
             propsFromConfiguration = ldapConfiguration.getLdapDefaultMap();
-        }
-        else
-        {
+            break;
+        case "lookupsConfiguration":
+            propsFromConfiguration = lookupsConfiguration.getLookupsDefaultMap();
+            break;
+        default:
             propsFromConfiguration = configurationContainer.getConfigurationMap();
+            break;
         }
 
         return collectionPropertiesConfigurationService.filterAndConvertProperties(propertyKey.value() + ".",

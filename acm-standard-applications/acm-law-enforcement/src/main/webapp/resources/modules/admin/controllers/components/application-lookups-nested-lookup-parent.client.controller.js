@@ -92,13 +92,14 @@ angular.module('admin').controller('Admin.NestedLookupParentController', [ '$sco
                 if (result) {
                     var idx;
                     _.find($scope.lookup, function(entry, entryIdx) {
-                        if (entry.key == rowEntity.key) {
+                        if (entry.key === rowEntity.key) {
                             idx = entryIdx;
+                            $scope.lookup = [];
+                            $scope.lookup.push(entry);
                             return true;
                         }
                     });
                     $scope.parentLookupValueSelected(null);
-                    $scope.lookup.splice(idx, 1);
                     saveLookup();
                 }
             }
@@ -154,7 +155,6 @@ angular.module('admin').controller('Admin.NestedLookupParentController', [ '$sco
         var promiseSaveInfo = ObjectLookupService.saveLookup($scope.selectedLookupDef, $scope.lookup);
         promiseSaveInfo.then(function(lookup) {
             MessageService.succsessAction();
-            fetchLookup();
             return lookup;
         }, function(error) {
             MessageService.error(error.data ? error.data : error);
@@ -169,7 +169,9 @@ angular.module('admin').controller('Admin.NestedLookupParentController', [ '$sco
         ObjectLookupService.getLookup($scope.selectedLookupDef).then(function(lookup) {
             // if we change the reference of $scope.lookup variable the UI is not updated, so we change the elements in the array
             $scope.lookup.splice(0, $scope.lookup.length);
-            $scope.lookup.push.apply($scope.lookup, lookup);
+            if (lookup !== "") {
+                $scope.lookup.push.apply($scope.lookup, lookup);
+            }
         });
     }
 

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('admin').controller('Admin.StandardLookupController', ['$scope', '$translate', '$modal', 'Object.LookupService', 'Helper.UiGridService', 'UtilService', 'MessageService', function ($scope, $translate, $modal, ObjectLookupService, HelperUiGridService, Util, MessageService) {
+angular.module('admin').controller('Admin.StandardLookupController', ['$scope', '$translate', '$modal', 'Object.LookupService', 'Helper.UiGridService', 'UtilService', 'MessageService', '$timeout', function ($scope, $translate, $modal, ObjectLookupService, HelperUiGridService, Util, MessageService, $timeout) {
 
     var gridHelper = new HelperUiGridService.Grid({
         scope: $scope
@@ -23,7 +23,7 @@ angular.module('admin').controller('Admin.StandardLookupController', ['$scope', 
                 return false;
             }
         };
-        
+
         // TODO: This should be checked in the HelperUiGridService (ignore addButton with same name)
         if (!_.findWhere(columnDefs, {
             name: 'act'
@@ -91,13 +91,13 @@ angular.module('admin').controller('Admin.StandardLookupController', ['$scope', 
             callback: function (result) {
                 if (result) {
                     var idx;
-                    _.find($scope.lookup, function (entry, entryIdx) {
-                        if (entry.key == rowEntity.key) {
-                            idx = entryIdx;
+                    _.find($scope.lookup, function (entry) {
+                        if (entry.key === rowEntity.key) {
+                            $scope.lookup = [];
+                            $scope.lookup.push(entry);
                             return true;
                         }
                     });
-                    $scope.lookup.splice(idx, 1);
                     saveLookup();
                 }
             }
@@ -161,7 +161,6 @@ angular.module('admin').controller('Admin.StandardLookupController', ['$scope', 
         var promiseSaveInfo = ObjectLookupService.saveLookup($scope.selectedLookupDef, $scope.lookup);
         promiseSaveInfo.then(function (lookup) {
             MessageService.succsessAction();
-            fetchLookup();
             return lookup;
         }, function (error) {
             MessageService.error(error.data ? error.data : error);
@@ -176,7 +175,9 @@ angular.module('admin').controller('Admin.StandardLookupController', ['$scope', 
         ObjectLookupService.getLookup($scope.selectedLookupDef).then(function (lookup) {
             // if we change the reference of $scope.lookup variable the UI is not updated, so we change the elements in the array
             $scope.lookup.splice(0, $scope.lookup.length);
-            $scope.lookup.push.apply($scope.lookup, lookup);
+            if (lookup !== "") {
+                $scope.lookup.push.apply($scope.lookup, lookup);
+            }
         });
     }
 

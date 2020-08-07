@@ -75,7 +75,7 @@ public interface AcmUserService
      *            sortBy, sortDirection, startRow, maxRows
      * @return users
      */
-    String getNUsers(Authentication auth, String sortBy, String sortDirection, int startRow, int maxRows)
+    String getNUsers(Authentication auth, String sortBy, String sortDirection, int startRow, int maxRows, String directoryName)
             throws SolrException;
 
     /**

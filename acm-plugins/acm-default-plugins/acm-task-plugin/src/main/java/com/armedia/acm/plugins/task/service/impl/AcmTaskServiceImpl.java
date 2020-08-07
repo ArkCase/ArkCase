@@ -756,12 +756,13 @@ public class AcmTaskServiceImpl implements AcmTaskService
             pvars.put("taskDueDateExpression", configuration.getTaskDueDateExpression());
             pvars.put("taskPriority", configuration.getTaskPriority());
 
-            pvars.put("approver1", approvers.get(0));
-            pvars.put("approver2", approvers.get(1));
-            pvars.put("approver3", approvers.get(2));
+            pvars.put("approver1", task.getAssignee());
+            pvars.put("approver2", approvers.get(0));
+            pvars.put("approver3", approvers.get(1));
+            pvars.put("approver4", approvers.get(2));
 
             pvars.put("currentTaskName", task.getTitle());
-            pvars.put("owningGroup", "");
+            pvars.put("owningGroup", task.getCandidateGroups());
             pvars.put("dueDate", configuration.getTaskDueDateExpression());
 
             AcmTask createdAcmTask = taskDao.startBusinessProcess(pvars, processName);

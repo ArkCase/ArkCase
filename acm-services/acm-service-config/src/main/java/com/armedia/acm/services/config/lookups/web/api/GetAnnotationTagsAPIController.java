@@ -31,8 +31,8 @@ import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.services.config.lookups.model.StandardLookupEntry;
 import com.armedia.acm.services.config.lookups.service.LookupDao;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -62,7 +62,7 @@ public class GetAnnotationTagsAPIController
         log.debug("Finding annotation types");
 
         List<StandardLookupEntry> lookupEntries = (List<StandardLookupEntry>) getLookupDao().getLookupByName("annotationTags").getEntries();
-        return lookupEntries.stream().map(StandardLookupEntry::getKey).toArray(String[]::new);
+        return lookupEntries.stream().map(StandardLookupEntry::getValue).toArray(String[]::new);
     }
 
     public LookupDao getLookupDao()

@@ -115,11 +115,11 @@ public class AcmUserServiceImpl implements AcmUserService
     }
 
     @Override
-    public String getNUsers(Authentication auth, String sortBy, String sortDirection, int startRow, int maxRows)
+    public String getNUsers(Authentication auth, String sortBy, String sortDirection, int startRow, int maxRows, String directoryName)
             throws SolrException
     {
 
-        String query = "object_type_s:USER AND status_lcs:VALID";
+        String query = "object_type_s:USER AND status_lcs:VALID AND directory_name_s:" + directoryName;
         String filterSystemUsers = String.format("fq=-name:%s&fq=-name:%s", AcmUsersConstants.OCR_SYSTEM_USER,
                 AcmUsersConstants.TRANSCRIBE_SYSTEM_USER);
 
