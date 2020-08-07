@@ -304,22 +304,6 @@
             <aop:scoped-proxy/>
         </beans:bean>
 
-        <beans:bean id="acmUserService" class="gov.privacy.service.SARAcmUserServiceImpl">
-            <beans:property name="userDao" ref="userJpaDao"/>
-            <beans:property name="executeSolrQuery" ref="executeSolrQuery"/>
-            <beans:property name="userRoleService" ref="userRoleService"/>
-            <beans:property name="rolesToPrivilegesConfig" ref="rolesToPrivileges"/>
-            <beans:property name="acmContextHolder" ref="acmContextHolder"/>
-        </beans:bean>
-
-        <beans:bean id="groupService" class="gov.privacy.service.SARGroupServiceImpl">
-            <beans:property name="userDao" ref="userJpaDao"/>
-            <beans:property name="groupDao" ref="groupDao"/>
-            <beans:property name="executeSolrQuery" ref="executeSolrQuery"/>
-            <beans:property name="acmGroupEventPublisher" ref="acmGroupEventPublisher"/>
-            <beans:property name="springContextHolder" ref="acmContextHolder"/>
-        </beans:bean>
-
         <beans:bean id="assignmentNotifier" class="gov.privacy.listener.SARAssignmentNotifier">
             <beans:property name="notificationService" ref="notificationService"/>
         </beans:bean>
