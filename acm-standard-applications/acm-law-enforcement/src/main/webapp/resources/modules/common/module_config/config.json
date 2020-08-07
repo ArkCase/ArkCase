@@ -418,14 +418,6 @@
             }
           },
           {
-            "title": "New Task",
-            "cmd": "reviewDocument",
-            "uiIcon": "ui-icon-circle-check",
-            "data": {
-              "readOnly": true
-            }
-          },
-          {
             "title": "----"
           },
           {
