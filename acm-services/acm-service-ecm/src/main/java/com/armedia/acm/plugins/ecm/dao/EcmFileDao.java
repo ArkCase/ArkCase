@@ -32,7 +32,6 @@ import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.LinkTargetFileDTO;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.transaction.annotation.Propagation;
@@ -43,7 +42,6 @@ import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -338,6 +336,20 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
         {
             return null;
         }
+    }
+
+    public List<EcmFile> getEcmFilesWithSameHash(String fileHash)
+    {
+        String queryText = "SELECT f FROM EcmFile f INNER JOIN f.versions efv " +
+                "WHERE f.fileId NOT IN (SELECT rbi.sourceObjectId FROM RecycleBinItem rbi WHERE " +
+                "rbi.sourceObjectType = :objectType) AND f.link = false AND efv.fileHash=:fileHash";
+        Query query = getEm().createQuery(queryText);
+        query.setParameter("fileHash", fileHash);
+        query.setParameter("objectType", "FILE");
+
+        List<EcmFile> results = query.getResultList();
+
+        return results;
     }
 
     @Transactional

@@ -390,8 +390,8 @@
             <beans:property name="fileParticipantService" ref="fileParticipantService"/>
             <beans:property name="recycleBinItemService" ref="recycleBinItemServiceImpl"/>
             <beans:property name="authenticationTokenDao" ref="authenticationTokenDao"/>
-            <beans:property name="ecmFileVersionDao" ref="ecmFileVersionDao"/>
-            <property name="camelContextManager" ref="camelContextManager"/>
+            <beans:property name="camelContextManager" ref="camelContextManager"/>
+            <beans:property name="fileEventPublisher" ref="fileEventPublisher"/>
         </beans:bean>
 
         <beans:bean id="foiaConfig" class="gov.foia.model.FoiaConfig" scope="refresh">
@@ -404,22 +404,6 @@
 
         <beans:bean id="ecmFileCopiedExemptionCodeListener" class="gov.foia.listener.EcmFileCopiedExemptionCodeListener">
             <beans:property name="foiaExemptionService" ref="foiaExemptionService"/>
-        </beans:bean>
-
-        <beans:bean id="acmUserService" class="gov.foia.service.FOIAAcmUserServiceImpl">
-            <beans:property name="userDao" ref="userJpaDao"/>
-            <beans:property name="executeSolrQuery" ref="executeSolrQuery"/>
-            <beans:property name="userRoleService" ref="userRoleService"/>
-            <beans:property name="rolesToPrivilegesConfig" ref="rolesToPrivileges"/>
-            <beans:property name="acmContextHolder" ref="acmContextHolder"/>
-        </beans:bean>
-
-        <beans:bean id="groupService" class="gov.foia.service.FOIAGroupServiceImpl">
-            <beans:property name="userDao" ref="userJpaDao"/>
-            <beans:property name="groupDao" ref="groupDao"/>
-            <beans:property name="executeSolrQuery" ref="executeSolrQuery"/>
-            <beans:property name="acmGroupEventPublisher" ref="acmGroupEventPublisher"/>
-            <beans:property name="springContextHolder" ref="acmContextHolder"/>
         </beans:bean>
 
         <beans:bean id="assignmentNotifier" class="gov.foia.listener.FoiaAssignmentNotifier">

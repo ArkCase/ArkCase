@@ -27,12 +27,17 @@ package com.armedia.acm.services.config.lookups.service;
  * #L%
  */
 
+import com.armedia.acm.configuration.service.CollectionPropertiesConfigurationService;
+import com.armedia.acm.configuration.service.ConfigurationPropertyService;
+import com.armedia.acm.configuration.util.MergeFlags;
 import com.armedia.acm.core.exceptions.AcmResourceNotFoundException;
 import com.armedia.acm.core.exceptions.AcmResourceNotModifiableException;
 import com.armedia.acm.core.exceptions.InvalidLookupException;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.services.config.lookups.model.AcmLookup;
+import com.armedia.acm.services.config.lookups.model.AcmLookupConfig;
 import com.armedia.acm.services.config.lookups.model.AcmLookupEntry;
+import com.armedia.acm.services.config.lookups.model.AcmLookupTransformer;
 import com.armedia.acm.services.config.lookups.model.InverseValuesLookup;
 import com.armedia.acm.services.config.lookups.model.InverseValuesLookupEntry;
 import com.armedia.acm.services.config.lookups.model.LookupDefinition;
@@ -42,10 +47,11 @@ import com.armedia.acm.services.config.lookups.model.NestedLookup;
 import com.armedia.acm.services.config.lookups.model.NestedLookupEntry;
 import com.armedia.acm.services.config.lookups.model.StandardLookup;
 import com.armedia.acm.services.config.lookups.model.StandardLookupEntry;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.Option;
@@ -55,149 +61,136 @@ import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.springframework.beans.factory.InitializingBean;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
  * Created by bojan.milenkoski on 25.8.2017
  */
-public class ConfigLookupDao implements LookupDao, InitializingBean
+public class ConfigLookupDao implements LookupDao
 {
     private static final Configuration configuration = Configuration.builder().jsonProvider(new JacksonJsonNodeJsonProvider())
             .mappingProvider(new JacksonMappingProvider()).build();
     private static final Configuration configurationWithSuppressedExceptions = Configuration.builder().options(Option.SUPPRESS_EXCEPTIONS)
             .jsonProvider(new JacksonJsonNodeJsonProvider()).mappingProvider(new JacksonMappingProvider()).build();
+    private static final String ENTRIES_CONFIG_KEY = "entries";
+    private static final String SUBLOOKUP_CONFIG_KEY = "subLookup";
     private transient final Logger log = LogManager.getLogger(getClass());
     private ObjectConverter objectConverter;
+    private AcmLookupConfig lookupConfig;
+    private ConfigurationPropertyService configurationPropertyService;
+    private CollectionPropertiesConfigurationService propertiesConfigurationService;
 
-    private String lookups;
-    private String lookupsExt;
-    private String mergedLookups;
     private String lookupsExtFileLocation;
 
     @Override
     public AcmLookup<?> getLookupByName(String name)
     {
-        String mergedLookups = getMergedLookups();
+
+        String lookup = getLookupsFromConfiguration();
 
         for (LookupType lookupType : LookupType.values())
         {
-            ArrayNode jsonArray = JsonPath.using(configurationWithSuppressedExceptions).parse(mergedLookups)
-                    .read("$." + lookupType.getTypeName() + "..[?(@.name=='" + name + "')]");
 
-            if (jsonArray.size() == 0)
+            JsonNode jsonLookupNode = JsonPath.using(configurationWithSuppressedExceptions).parse(lookup.trim())
+                    .read("$." + lookupType.getTypeName() + "." + name);
+
+            if (jsonLookupNode == null || jsonLookupNode.size() == 0)
             {
                 continue;
             }
 
-            String lookupAsJson = jsonArray.get(0).toString();
+            // avoid empty arrays during deserealization
+            getObjectConverter().getJsonMarshaller().getMapper().enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
 
-            return getObjectConverter().getJsonUnmarshaller().unmarshall(lookupAsJson, lookupType.getLookupClass());
+            AcmLookup<?> obj = getObjectConverter().getJsonUnmarshaller().unmarshall(jsonLookupNode.toString(),
+                    lookupType.getLookupClass());
+
+            if (obj != null)
+            {
+                obj.setName(name);
+                if (obj.getEntries() == null)
+                {
+                    obj.setEntries(new ArrayList<>());
+                }
+                return obj;
+            }
+            else
+            {
+                return null;
+            }
         }
-
         return null;
     }
 
-    @Override
-    public void afterPropertiesSet()
+    private String getLookupsFromConfiguration()
     {
-        mergeLookups();
+        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        try
+        {
+            Map<String, Object> lookups = convertInAcmLookupMap(lookupConfig.getLookups());
+            return ow.writeValueAsString(lookups);
+        }
+        catch (JsonProcessingException e)
+        {
+
+            log.error("Converting of merged lookups to json format failed: ", e.getMessage());
+            return null;
+        }
     }
 
     @Override
     public String getMergedLookups()
     {
-        if (mergedLookups != null)
-        {
-            return mergedLookups;
-        }
-
-        mergeLookups();
-
-        return mergedLookups;
-    }
-
-    private void mergeLookups()
-    {
-        mergedLookups = lookups;
-
-        // merge both json files
-        for (LookupType lookupType : LookupType.values()) // get lookupType
-        {
-            ArrayNode jsonArrayExt = JsonPath.using(configurationWithSuppressedExceptions).parse(lookupsExt)
-                    .read("$." + lookupType.getTypeName());
-
-            ArrayNode jsonArray = JsonPath.using(configurationWithSuppressedExceptions).parse(lookups)
-                    .read("$." + lookupType.getTypeName());
-
-            if (jsonArrayExt != null)
-            {
-                for (JsonNode lookupExt : jsonArrayExt)
-                {
-                    // find lookup from core lookups
-                    ArrayNode coreLookup = JsonPath.using(configurationWithSuppressedExceptions).parse(lookups)
-                            .read("$." + lookupType.getTypeName() + "..[?(@.name=='" + lookupExt.get("name").textValue() + "')]");
-
-                    if (coreLookup.size() == 0)
-                    {
-                        // add lookupExt object to jsonArray
-                        jsonArray.add(lookupExt);
-                    }
-                    else
-                    {
-                        // replace coreLookup object in jsonArray with extLookup
-                        for (int i = 0; i < jsonArray.size(); i++)
-                        {
-                            JsonNode lookup = jsonArray.get(i);
-                            if (lookup.has("name") && lookup.get("name").equals(lookupExt.get("name")))
-                            {
-                                jsonArray.set(i, lookupExt);
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-
-            mergedLookups = JsonPath.using(configuration).parse(mergedLookups).set("$." + lookupType.getTypeName(), jsonArray).jsonString();
-        }
+        return getLookupsFromConfiguration();
     }
 
     @Override
     public synchronized String saveLookup(LookupDefinition lookupDefinition)
-            throws InvalidLookupException, IOException, AcmResourceNotModifiableException
+            throws InvalidLookupException, AcmResourceNotModifiableException
     {
-        // find lookup by name in lookups-ext.json
         boolean found = false;
-        ArrayNode jsonArray = JsonPath.using(configurationWithSuppressedExceptions).parse(lookupsExt)
-                .read("$." + lookupDefinition.getLookupType().getTypeName() + "..[?(@.name=='" + lookupDefinition.getName() + "')]");
+        JsonNode jsonArray = JsonPath.using(configurationWithSuppressedExceptions).parse(getLookupsFromConfiguration())
+                .read("$." + lookupDefinition.getLookupType().getTypeName() + "." + lookupDefinition.getName());
 
-        if (jsonArray.size() > 0)
+        if (jsonArray != null)
         {
-            // if found update the lookup entries and save lookups-ext.json file
+            // if found update the lookup entries in yaml configuration
             updateLookup(lookupDefinition);
             found = true;
         }
 
         if (!found)
         {
-            // if not found add new lookup in lookups-ext.json and save
+            // if not found add new empty lookup
             addNewLookup(lookupDefinition);
         }
 
         return getMergedLookups();
     }
 
+    private void addNewLookup(LookupDefinition lookupDefinition) throws AcmResourceNotModifiableException
+    {
+        // entriesArr is empty when adding new lookup
+        JSONArray entriesArr = new JSONArray(lookupDefinition.getLookupEntriesAsJson());
+
+        if (entriesArr.length() > 0)
+        {
+            checkReadOnlyEntries(lookupDefinition);
+        }
+        else
+        {
+            addEmptyLookup(lookupDefinition);
+        }
+    }
+
     @Override
-    public String deleteLookup(String name) throws AcmResourceNotFoundException, AcmResourceNotModifiableException, IOException
+    public String deleteLookup(String name, String lookupType) throws AcmResourceNotFoundException, AcmResourceNotModifiableException
     {
         AcmLookup<?> lookup = getLookupByName(name);
 
@@ -211,13 +204,13 @@ public class ConfigLookupDao implements LookupDao, InitializingBean
             throw new AcmResourceNotModifiableException("Lookup with name: '" + name + "' is readonly!");
         }
 
-        deleteLookupFromExtLookups(name);
+        deleteLookupDefinition(lookup.getName(), lookupType);
 
         return getMergedLookups();
     }
 
     private synchronized void updateLookup(LookupDefinition lookupDefinition)
-            throws InvalidLookupException, IOException, AcmResourceNotModifiableException
+            throws InvalidLookupException, AcmResourceNotModifiableException
     {
         // validate lookup
         AcmLookup<?> lookup = getObjectConverter().getJsonUnmarshaller().unmarshall(
@@ -241,14 +234,42 @@ public class ConfigLookupDao implements LookupDao, InitializingBean
 
         checkReadOnlyEntries(lookupDefinition);
 
-        // replace the json content of the lookup to update
-        String updatedLookupsAsJson;
         try
         {
-            updatedLookupsAsJson = JsonPath.using(configuration).parse(lookupsExt)
-                    .set("$." + lookupDefinition.getLookupType().getTypeName() + "..[?(@.name=='" + lookupDefinition.getName()
-                            + "')].entries", lookup.getEntries())
-                    .jsonString();
+            AcmLookupTransformer configurationTransformedLookup;
+
+            AcmLookup<?> lookupsFromConfiguration = getLookupByName(lookupDefinition.getName());
+
+            if (lookupDefinition.getLookupType().equals(LookupType.NESTED_LOOKUP))
+            {
+                List<NestedLookupEntry> entries = getObjectConverter().getJsonUnmarshaller()
+                        .unmarshallCollection(lookupDefinition.getLookupEntriesAsJson(), List.class, NestedLookupEntry.class);
+
+                entries.forEach(entry -> {
+
+                });
+                configurationTransformedLookup = lookupsFromConfiguration.transformToConfigurationEntries(entries);
+
+                updateSubLookupConfiguration(lookupDefinition, configurationTransformedLookup, lookupsFromConfiguration, entries.size());
+            }
+            else if (lookupDefinition.getLookupType().equals(LookupType.INVERSE_VALUES_LOOKUP))
+            {
+                List<InverseValuesLookupEntry> entries = getObjectConverter().getJsonUnmarshaller()
+                        .unmarshallCollection(lookupDefinition.getLookupEntriesAsJson(), List.class, InverseValuesLookupEntry.class);
+
+                configurationTransformedLookup = lookupsFromConfiguration.transformToConfigurationEntries(entries);
+
+                updateSubLookupConfiguration(lookupDefinition, configurationTransformedLookup, lookupsFromConfiguration, entries.size());
+            }
+            else
+            {
+                List<StandardLookupEntry> entries = getObjectConverter().getJsonUnmarshaller()
+                        .unmarshallCollection(lookupDefinition.getLookupEntriesAsJson(), List.class, StandardLookupEntry.class);
+
+                configurationTransformedLookup = lookupsFromConfiguration.transformToConfigurationEntries(entries);
+
+                updateSubLookupConfiguration(lookupDefinition, configurationTransformedLookup, lookupsFromConfiguration, entries.size());
+            }
         }
         catch (RuntimeException e)
         {
@@ -256,12 +277,23 @@ public class ConfigLookupDao implements LookupDao, InitializingBean
                     lookupDefinition.getName(), lookupDefinition.getLookupEntriesAsJson());
             throw new InvalidLookupException("Invalid lookup Json: " + lookupDefinition.getLookupEntriesAsJson(), e);
         }
-
-        // save updated lookups to file
-        saveLookupsExt(updatedLookupsAsJson);
     }
 
-    private void checkStandardLookupReadOnlyEntries(LookupDefinition lookupDefinition) throws AcmResourceNotModifiableException
+    private void updateSubLookupConfiguration(LookupDefinition lookupDefinition, AcmLookupTransformer configurationTransformedLookup,
+            AcmLookup<?> lookupsFromConfiguration, int size)
+    {
+        if (lookupsFromConfiguration.getEntries().size() > size)
+        {
+            deleteLookupEntry(configurationTransformedLookup.getTransformedEntries(), lookupDefinition);
+        }
+        else
+        {
+            addNewLookupEntry(lookupDefinition, configurationTransformedLookup.getTransformedEntries());
+        }
+    }
+
+    private void checkStandardLookupReadOnlyEntries(LookupDefinition lookupDefinition)
+            throws AcmResourceNotModifiableException
     {
 
         List<StandardLookupEntry> protectedEntries = ((StandardLookup) getLookupByName(lookupDefinition.getName()))
@@ -282,7 +314,8 @@ public class ConfigLookupDao implements LookupDao, InitializingBean
 
     }
 
-    private void checkInverseLookupReadOnlyEntries(LookupDefinition lookupDefinition) throws AcmResourceNotModifiableException
+    private void checkInverseLookupReadOnlyEntries(LookupDefinition lookupDefinition)
+            throws AcmResourceNotModifiableException
     {
 
         List<InverseValuesLookupEntry> protectedEntries = ((InverseValuesLookup) getLookupByName(lookupDefinition.getName()))
@@ -303,16 +336,17 @@ public class ConfigLookupDao implements LookupDao, InitializingBean
 
     }
 
-    private void checkNestedLookupReadOnlyEntries(LookupDefinition lookupDefinition) throws AcmResourceNotModifiableException
+    private void checkNestedLookupReadOnlyEntries(LookupDefinition lookupDefinition)
+            throws AcmResourceNotModifiableException
     {
-
-        List<NestedLookupEntry> protectedMainEntries = ((NestedLookup) getLookupByName(lookupDefinition.getName()))
-                .getEntries().stream()
-                .filter(AcmLookupEntry::isReadonly)
-                .collect(Collectors.toList());
 
         List<NestedLookupEntry> entries = getObjectConverter().getJsonUnmarshaller()
                 .unmarshallCollection(lookupDefinition.getLookupEntriesAsJson(), List.class, NestedLookupEntry.class);
+
+        List<NestedLookupEntry> protectedMainEntries = ((NestedLookup) getLookupByName(lookupDefinition.getName()))
+                .getEntries().stream()
+                .filter(entry -> entry.getKey().equals(entries.get(0).getKey()))
+                .collect(Collectors.toList());
 
         // we expect that a protected entry in sublookup must have a protected main entry
         for (NestedLookupEntry protectedMainEntry : protectedMainEntries)
@@ -330,7 +364,7 @@ public class ConfigLookupDao implements LookupDao, InitializingBean
             Optional<NestedLookupEntry> optionalNestedLookupEntry = entries.stream()
                     .filter(entry -> entry.getKey().equals(protectedMainEntry.getKey()))
                     .findFirst();
-            List<StandardLookupEntry> subEntries = null;
+            List<StandardLookupEntry> subEntries;
             if (optionalNestedLookupEntry.isPresent())
             {
                 subEntries = optionalNestedLookupEntry.get().getSubLookup();
@@ -384,123 +418,315 @@ public class ConfigLookupDao implements LookupDao, InitializingBean
 
     }
 
-    private void addNewLookup(LookupDefinition lookupDefinition) throws IOException, AcmResourceNotModifiableException
+    private void deleteLookupDefinition(String lookupName, String lookupType)
     {
-        // entriesArr is empty when adding new lookup
-        JSONArray entriesArr = new JSONArray(lookupDefinition.getLookupEntriesAsJson());
-        if (entriesArr.length() > 0)
+        Map<String, Object> lookupDefinitionForDelete = new HashMap<>();
+
+        Map<String, Object> configurationLookupMap = propertiesConfigurationService.getLookupConfiguration(
+                AcmLookupConfig.LOOKUPS_PROP_KEY + "." + lookupType,
+                lookupName + "." + ENTRIES_CONFIG_KEY);
+
+        if (configurationLookupMap.isEmpty())
         {
-            checkReadOnlyEntries(lookupDefinition);
+            lookupName = MergeFlags.MERGE.getSymbol() + lookupName;
         }
 
-        // add lookupExt object to jsonArrayExt
-        ArrayNode jsonArrayExt = JsonPath.using(configurationWithSuppressedExceptions).parse(lookupsExt)
-                .read("$." + lookupDefinition.getLookupType().getTypeName());
+        lookupDefinitionForDelete.put(AcmLookupConfig.LOOKUPS_PROP_KEY + "." + lookupType + "." + lookupName + "." + ENTRIES_CONFIG_KEY,
+                MergeFlags.REMOVE.getSymbol());
 
-        ObjectNode lookupExt = new ObjectNode(new JsonNodeFactory(false));
-
-        lookupExt.put("name", lookupDefinition.getName());
-        lookupExt.put("readonly", lookupDefinition.getReadonly());
-
-        ArrayNode entriesNode = lookupExt.putArray("entries");
-        if (LookupType.INVERSE_VALUES_LOOKUP.equals(lookupDefinition.getLookupType()))
-        {
-            List<InverseValuesLookupEntry> entries = getObjectConverter().getJsonUnmarshaller()
-                    .unmarshallCollection(lookupDefinition.getLookupEntriesAsJson(), List.class, InverseValuesLookupEntry.class);
-
-            entries.forEach(entry -> {
-                ObjectNode entryNode = new ObjectNode(new JsonNodeFactory(false));
-                entryNode.put("key", entry.getKey());
-                entryNode.put("value", entry.getValue());
-                entryNode.put("inverseKey", entry.getInverseKey());
-                entryNode.put("inverseValue", entry.getInverseValue());
-                entryNode.put("readonly", entry.isReadonly());
-                entryNode.put("description", entry.getDescription());
-                entriesNode.add(entryNode);
-            });
-        }
-        else if (lookupDefinition.getLookupType().equals(LookupType.NESTED_LOOKUP))
-        {
-            List<NestedLookupEntry> entries = getObjectConverter().getJsonUnmarshaller()
-                    .unmarshallCollection(lookupDefinition.getLookupEntriesAsJson(), List.class, NestedLookupEntry.class);
-
-            entries.forEach(entry -> {
-                ObjectNode entryNode = new ObjectNode(new JsonNodeFactory(false));
-                entryNode.put("key", entry.getKey());
-                entryNode.put("value", entry.getValue());
-                entryNode.put("readonly", entry.isReadonly());
-                entryNode.put("description", entry.getDescription());
-                ArrayNode sublookupNode = entryNode.putArray("subLookup");
-
-                entry.getSubLookup().forEach(sublookupEntry -> {
-                    ObjectNode subEntryNode = new ObjectNode(new JsonNodeFactory(false));
-                    subEntryNode.put("key", sublookupEntry.getKey());
-                    subEntryNode.put("value", sublookupEntry.getValue());
-                    subEntryNode.put("readonly", sublookupEntry.isReadonly());
-                    subEntryNode.put("description", sublookupEntry.getDescription());
-
-                    sublookupNode.add(subEntryNode);
-                });
-
-                entryNode.set("subLookup", sublookupNode);
-
-                entriesNode.add(entryNode);
-            });
-        }
-        else if (lookupDefinition.getLookupType().equals(LookupType.STANDARD_LOOKUP))
-        {
-            List<StandardLookupEntry> entries = getObjectConverter().getJsonUnmarshaller()
-                    .unmarshallCollection(lookupDefinition.getLookupEntriesAsJson(), List.class, StandardLookupEntry.class);
-
-            entries.forEach(entry -> {
-                ObjectNode entryNode = new ObjectNode(new JsonNodeFactory(false));
-                entryNode.put("key", entry.getKey());
-                entryNode.put("value", entry.getValue());
-                entryNode.put("readonly", entry.isReadonly());
-                entryNode.put("primary", entry.isPrimary());
-                entryNode.put("description", entry.getDescription());
-                entriesNode.add(entryNode);
-            });
-        }
-        jsonArrayExt.add(lookupExt);
-
-        String updatedLookupsAsJson = JsonPath.using(configuration).parse(lookupsExt)
-                .set("$." + lookupDefinition.getLookupType().getTypeName(), jsonArrayExt).jsonString();
-
-        saveLookupsExt(updatedLookupsAsJson);
+        updateLookupConfiguration(lookupDefinitionForDelete);
     }
 
-    private void deleteLookupFromExtLookups(String lookupName) throws IOException
+    private void deleteLookupEntry(List<Map<String, Object>> lookupEntries,
+            LookupDefinition lookupDefinition)
     {
-        String updatedLookupsAsJson = null;
-        for (LookupType lookupType : LookupType.values())
-        {
-            ArrayNode jsonArrayExt = JsonPath.using(configurationWithSuppressedExceptions).parse(lookupsExt)
-                    .read("$." + lookupType.getTypeName());
+        Map<String, Object> lookupEntryForDelete = new HashMap<>();
+        Map<String, Object> lookupEntriesUpdatedFromConfiguration = new HashMap<>();
 
-            if (jsonArrayExt != null)
+        Map<String, Object> configurationLookupMap = getLookupEntryFromConfiguration(lookupDefinition);
+
+        if (configurationLookupMap.get(ENTRIES_CONFIG_KEY) != null)
+        {
+            lookupEntriesUpdatedFromConfiguration = (Map<String, Object>) configurationLookupMap.get(ENTRIES_CONFIG_KEY);
+        }
+
+        for (Map<String, Object> lookupEntry : lookupEntries)
+        {
+            String lookupEntryKey = (String) lookupEntry.get("key");
+
+            if (!lookupEntriesUpdatedFromConfiguration.isEmpty())
             {
-                for (int i = 0; i < jsonArrayExt.size(); i++)
+
+                if (lookupEntriesUpdatedFromConfiguration.get(lookupEntryKey) != null)
                 {
-                    JsonNode node = jsonArrayExt.get(i);
-                    if (lookupName.equals(node.get("name").asText()))
-                    {
-                        jsonArrayExt.remove(i);
-                        updatedLookupsAsJson = JsonPath.using(configuration).parse(lookupsExt)
-                                .set("$." + lookupType.getTypeName(), jsonArrayExt).jsonString();
-                        break;
-                    }
+                    lookupEntriesUpdatedFromConfiguration.remove(lookupEntryKey);
                 }
+                lookupEntriesUpdatedFromConfiguration
+                        .putAll(convertIntoConfigurationEntry(lookupEntry, MergeFlags.REMOVE.getSymbol()));
+
+            }
+            else
+            {
+                lookupEntriesUpdatedFromConfiguration
+                        .putAll(convertIntoConfigurationEntry(lookupEntry, MergeFlags.REMOVE.getSymbol()));
+
             }
         }
-        saveLookupsExt(updatedLookupsAsJson);
+
+        lookupEntryForDelete.put(AcmLookupConfig.LOOKUPS_PROP_KEY + "." + lookupDefinition.getLookupType().getTypeName() + "."
+                + lookupDefinition.getName() + "." + ENTRIES_CONFIG_KEY,
+                lookupEntriesUpdatedFromConfiguration);
+
+        updateLookupConfiguration(lookupEntryForDelete);
     }
 
-    private void saveLookupsExt(String updatedLookupsAsJson) throws JSONException, IOException
+    @Override
+    public String deleteSubLookup(String subLookupName, String parentName, LookupDefinition lookupDefinition)
+            throws AcmResourceNotFoundException, AcmResourceNotModifiableException
     {
-        Files.write(Paths.get(getLookupsExtFileLocation()), new JSONObject(updatedLookupsAsJson).toString(2).getBytes());
-        lookupsExt = updatedLookupsAsJson;
-        mergeLookups();
+
+        AcmLookup<?> lookup = getLookupByName(lookupDefinition.getName());
+
+        if (lookup == null)
+        {
+            throw new AcmResourceNotFoundException("Lookup with name: '" + parentName + "' does not exist!");
+        }
+
+        if (lookup.isReadonly())
+        {
+            throw new AcmResourceNotModifiableException("Lookup with name: '" + parentName + "' is readonly!");
+        }
+
+        deleteSubLookupDefinition(subLookupName, parentName, lookupDefinition);
+
+        return getMergedLookups();
+    }
+
+    private void deleteSubLookupDefinition(String subLookupName, String parentName, LookupDefinition lookupDefinition)
+    {
+        Map<String, Object> configurationLookupMap = getLookupEntryFromConfiguration(lookupDefinition);
+        Map<String, Object> updatedConfigurationMap = new HashMap<>();
+        Map<String, Object> subLookupEntries = new HashMap<>();
+        Map<String, Object> nestedEntrySublookups = new HashMap<>();
+        Map<String, Object> nestedConfigurationMap = new HashMap<>();
+
+        if (configurationLookupMap.isEmpty())
+        {
+            getRemoveSublookupEntryKey(subLookupName, parentName, lookupDefinition, configurationLookupMap);
+            updateLookupConfiguration(configurationLookupMap);
+        }
+        else
+        {
+            Map<String, Object> parentEntries = (Map<String, Object>) configurationLookupMap.get(ENTRIES_CONFIG_KEY);
+
+            if (parentEntries != null)
+            {
+                Map<String, Object> parentMergedEntries = (Map<String, Object>) parentEntries.get(parentName);
+                Map<String, Object> parentSubLookups = (Map<String, Object>) parentMergedEntries.get(SUBLOOKUP_CONFIG_KEY);
+                parentSubLookups.remove(subLookupName);
+
+                subLookupEntries.putAll(parentSubLookups);
+            }
+
+            if (nestedEntrySublookups.get(parentName) == null)
+            {
+                subLookupEntries.put(MergeFlags.REMOVE.getSymbol() + subLookupName, "");
+            }
+            else
+            {
+                subLookupEntries = (Map<String, Object>) nestedEntrySublookups.get(SUBLOOKUP_CONFIG_KEY);
+
+                if (subLookupEntries.get(subLookupName) == null)
+                {
+                    subLookupEntries.put(MergeFlags.REMOVE.getSymbol() + subLookupName, "");
+
+                }
+                else
+                {
+                    subLookupEntries.remove(subLookupName);
+                    subLookupEntries.put(MergeFlags.REMOVE.getSymbol() + subLookupName, "");
+                }
+            }
+
+            nestedEntrySublookups.put(SUBLOOKUP_CONFIG_KEY, subLookupEntries);
+            updatedConfigurationMap.put(parentName, nestedEntrySublookups);
+
+            nestedConfigurationMap.put(AcmLookupConfig.LOOKUPS_PROP_KEY + "." + lookupDefinition.getLookupType().getTypeName() + "."
+                    + lookupDefinition.getName() + "." + ENTRIES_CONFIG_KEY, updatedConfigurationMap);
+
+            updateLookupConfiguration(nestedConfigurationMap);
+
+        }
+    }
+
+    private void getRemoveSublookupEntryKey(String subLookupName, String parentName, LookupDefinition lookupDefinition,
+            Map<String, Object> configurationLookupMap)
+    {
+        configurationLookupMap.put(AcmLookupConfig.LOOKUPS_PROP_KEY + "." + lookupDefinition.getLookupType().getTypeName() + "."
+                + lookupDefinition.getName() + "." + ENTRIES_CONFIG_KEY + "." + parentName + "." + SUBLOOKUP_CONFIG_KEY + "."
+                + MergeFlags.REMOVE.getSymbol()
+                + subLookupName,
+                "");
+    }
+
+    private void updateLookupConfiguration(Map<String, Object> configurationMap)
+    {
+        configurationPropertyService.updateProperties(configurationMap, "lookups");
+        log.info("Configuration updated successfully");
+    }
+
+    private void addEmptyLookup(LookupDefinition lookupDefinition)
+    {
+
+        Map<String, Object> lookupEntry = new HashMap<>();
+
+        lookupEntry.put(AcmLookupConfig.LOOKUPS_PROP_KEY + "." + lookupDefinition.getLookupType().getTypeName() + "."
+                + lookupDefinition.getName()
+                + "." + ENTRIES_CONFIG_KEY, "");
+
+        updateLookupConfiguration(lookupEntry);
+    }
+
+    private void addNewLookupEntry(LookupDefinition lookupDefinition, List<Map<String, Object>> lookupEntries)
+    {
+
+        Map<String, Object> lookupEntry = addNewLookupEntryToConfiguration(lookupDefinition, lookupEntries);
+
+        updateLookupConfiguration(lookupEntry);
+    }
+
+    private Map<String, Object> addNewLookupEntryToConfiguration(LookupDefinition lookupDefinition, List<Map<String, Object>> lookupEntries)
+    {
+        Map<String, Object> lookupEntriesUpdated = new HashMap<>();
+        Map<String, Object> lookupEntry = new HashMap<>();
+
+        Map<String, Object> configurationLookupMap = getLookupEntryFromConfiguration(lookupDefinition);
+
+        if (configurationLookupMap.size() > 0)
+        {
+            if (configurationLookupMap.get(ENTRIES_CONFIG_KEY) == "")
+            {
+                configurationLookupMap.remove(ENTRIES_CONFIG_KEY);
+            }
+            else
+            {
+                lookupEntriesUpdated = (Map<String, Object>) configurationLookupMap.get(ENTRIES_CONFIG_KEY);
+            }
+        }
+
+        for (Map<String, Object> entries : lookupEntries)
+        {
+            lookupEntriesUpdated.putAll(convertIntoConfigurationEntry(entries, null));
+        }
+
+        lookupEntry.put(AcmLookupConfig.LOOKUPS_PROP_KEY + "." + lookupDefinition.getLookupType().getTypeName() + "."
+                + lookupDefinition.getName()
+                + "." + ENTRIES_CONFIG_KEY,
+                lookupEntriesUpdated);
+
+        return lookupEntry;
+    }
+
+    private Map<String, Object> convertIntoConfigurationEntry(Map<String, Object> lookupEntries, String operation)
+    {
+        Map<String, Object> confEntry = new HashMap<>();
+        String uniqueKey = (String) lookupEntries.get("key");
+
+        lookupEntries.remove("key");
+
+        if (operation != null)
+        {
+            confEntry.put(operation + uniqueKey, "");
+            confEntry.put(operation + uniqueKey, lookupEntries);
+        }
+        else
+        {
+            confEntry.put(uniqueKey, "");
+            confEntry.put(uniqueKey, lookupEntries);
+        }
+        return confEntry;
+    }
+
+    private Map<String, Object> getLookupEntryFromConfiguration(LookupDefinition lookupDefinition)
+    {
+        Map<String, Object> configurationLookupMapp = propertiesConfigurationService.getLookupConfiguration(
+                AcmLookupConfig.LOOKUPS_PROP_KEY + "." + lookupDefinition.getLookupType().getTypeName(),
+                lookupDefinition.getName() + "." + ENTRIES_CONFIG_KEY);
+        configurationLookupMapp = (Map<String, Object>) configurationLookupMapp.get(lookupDefinition.getLookupType().getTypeName());
+
+        if (configurationLookupMapp != null)
+        {
+            return (Map<String, Object>) configurationLookupMapp.get(lookupDefinition.getName());
+        }
+        else
+        {
+            configurationLookupMapp = propertiesConfigurationService.getLookupConfiguration(
+                    AcmLookupConfig.LOOKUPS_PROP_KEY + "." + lookupDefinition.getLookupType().getTypeName(),
+                    MergeFlags.MERGE.getSymbol() + lookupDefinition.getName() + "." + ENTRIES_CONFIG_KEY);
+            configurationLookupMapp = (Map<String, Object>) configurationLookupMapp.get(lookupDefinition.getLookupType().getTypeName());
+
+            if (configurationLookupMapp != null)
+            {
+                return (Map<String, Object>) configurationLookupMapp.get(MergeFlags.MERGE.getSymbol() + lookupDefinition.getName());
+            }
+        }
+        return new HashMap<>();
+    }
+
+    private Map<String, Object> convertInAcmLookupMap(Map<String, Object> lookups)
+    {
+
+        Map<String, Object> acmLookupMap = new HashMap<>();
+
+        for (String lookupType : lookups.keySet())
+        {
+
+            Map<String, Object> lookupEntries = (Map<String, Object>) lookups.get(lookupType);
+
+            Map<String, Object> updatedLookupEntries = new HashMap<>();
+
+            for (String entryTypeKey : lookupEntries.keySet())
+            {
+                Map<String, Object> updatedLookup = new HashMap<>();
+                List<Map<String, Object>> updatedEntries = new ArrayList<>();
+
+                Map<String, Object> specifiedLookupEntries = (Map<String, Object>) lookupEntries.get(entryTypeKey);
+
+                if (specifiedLookupEntries.get(ENTRIES_CONFIG_KEY) != "")
+                {
+                    Map<String, Object> entries = (Map<String, Object>) specifiedLookupEntries.get(ENTRIES_CONFIG_KEY);
+
+                    for (String standardEntryKey : entries.keySet())
+                    {
+                        Map<String, Object> entry = (Map<String, Object>) entries.get(standardEntryKey);
+
+                        if (lookupType.equals(LookupType.INVERSE_VALUES_LOOKUP.getTypeName()))
+                        {
+                            updatedEntries.add(AcmLookupTransformer.transformIntoInverseLookupEntry(standardEntryKey, entry));
+                        }
+                        else if (lookupType.equals(LookupType.STANDARD_LOOKUP.getTypeName()))
+                        {
+                            updatedEntries.add(AcmLookupTransformer.transformIntoStandardLookupEntry(standardEntryKey, entry));
+                        }
+                        else if (lookupType.equals(LookupType.NESTED_LOOKUP.getTypeName()))
+                        {
+                            updatedEntries.add(AcmLookupTransformer.transformIntoNestedLookupEntry(standardEntryKey, entry));
+                        }
+                    }
+                    updatedLookup.put(ENTRIES_CONFIG_KEY, updatedEntries);
+                }
+                else
+                {
+                    updatedLookup.put(ENTRIES_CONFIG_KEY, "");
+                }
+                updatedLookup.put("readonly", specifiedLookupEntries.get("readonly"));
+
+                updatedLookupEntries.put(entryTypeKey, updatedLookup);
+            }
+            acmLookupMap.put(lookupType, updatedLookupEntries);
+        }
+
+        return acmLookupMap;
     }
 
     public ObjectConverter getObjectConverter()
@@ -513,24 +739,14 @@ public class ConfigLookupDao implements LookupDao, InitializingBean
         this.objectConverter = converter;
     }
 
-    public String getLookups()
+    public void setLookupConfig(AcmLookupConfig lookupConfig)
     {
-        return lookups;
+        this.lookupConfig = lookupConfig;
     }
 
-    public void setLookups(String lookups)
+    public void setConfigurationPropertyService(ConfigurationPropertyService configurationPropertyService)
     {
-        this.lookups = lookups;
-    }
-
-    public String getLookupsExt()
-    {
-        return lookupsExt;
-    }
-
-    public void setLookupsExt(String lookupsExt)
-    {
-        this.lookupsExt = lookupsExt;
+        this.configurationPropertyService = configurationPropertyService;
     }
 
     public String getLookupsExtFileLocation()
@@ -541,5 +757,10 @@ public class ConfigLookupDao implements LookupDao, InitializingBean
     public void setLookupsExtFileLocation(String lookupsExtFileLocation)
     {
         this.lookupsExtFileLocation = lookupsExtFileLocation;
+    }
+
+    public void setPropertiesConfigurationService(CollectionPropertiesConfigurationService propertiesConfigurationService)
+    {
+        this.propertiesConfigurationService = propertiesConfigurationService;
     }
 }

@@ -1050,36 +1050,35 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
         return LookupService.getLookups().then(function (lookups) {
             var lookupsDefs = [];
             if (lookups.standardLookup) {
-                for (var i = 0, len = lookups.standardLookup.length; i < len; i++) {
+                _.forEach(lookups.standardLookup, function (value, key) {
                     lookupsDefs.push({
-                        'name': lookups.standardLookup[i].name,
+                        'name': key,
                         'lookupType': 'standardLookup',
-                        'readonly': lookups.standardLookup[i].readonly
+                        'readonly': value.readonly
                     });
-                }
+                });
             }
             if (lookups.nestedLookup) {
-                for (var i = 0, len = lookups.nestedLookup.length; i < len; i++) {
+                _.forEach(lookups.nestedLookup, function (value, key) {
                     lookupsDefs.push({
-                        'name': lookups.nestedLookup[i].name,
+                        'name': key,
                         'lookupType': 'nestedLookup',
-                        'readonly': lookups.nestedLookup[i].readonly
+                        'readonly': value.readonly
                     });
-                }
+                });
             }
             if (lookups.inverseValuesLookup) {
-                for (var i = 0, len = lookups.inverseValuesLookup.length; i < len; i++) {
+                _.forEach(lookups.inverseValuesLookup, function (value, key) {
                     lookupsDefs.push({
-                        'name': lookups.inverseValuesLookup[i].name,
+                        'name': key,
                         'lookupType': 'inverseValuesLookup',
-                        'readonly': lookups.inverseValuesLookup[i].readonly
+                        'readonly': value.readonly
                     });
-                }
+                });
             }
 
             return lookupsDefs;
         });
-
     };
 
     /**
@@ -1113,16 +1112,22 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
      */
     Service.getLookupByLookupName = function (name) {
         return LookupService.getLookups().then(function (lookups) {
+            var lookup;
             for (var lookupType in lookups) {
                 if (lookups.hasOwnProperty(lookupType)) {
-                    for (var i = 0, len = lookups[lookupType].length; i < len; i++) {
-                        if (lookups[lookupType][i].name == name) {
-                            // return a deep copy of the lookup not to allow clients to change the original object
-                            return _.cloneDeep(lookups[lookupType][i].entries);
-                        }
-                    }
+                    _.map(lookups, function (value, key) {
+                        _.forEach(value, function (value, key) {
+                            if (key === name) {
+                                lookup = value.entries;
+                            }
+                        });
+
+                    });
                 }
             }
+
+            // return a deep copy of the lookup not to allow clients to change the original object
+            return _.cloneDeep(lookup);
         });
     };
 
