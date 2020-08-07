@@ -33,9 +33,6 @@ import com.armedia.acm.portalgateway.model.PortalInfo;
 import com.armedia.acm.portalgateway.service.PortalAdminService;
 import com.armedia.acm.portalgateway.service.PortalAdminServiceException;
 import com.armedia.acm.portalgateway.service.PortalServiceExceptionMapper;
-import com.armedia.acm.services.search.exception.SolrException;
-import com.armedia.acm.services.search.model.solr.SolrCore;
-import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
 import com.armedia.acm.services.users.web.api.SecureLdapController;
 import com.armedia.acm.spring.SpringContextHolder;
@@ -52,7 +49,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
@@ -69,8 +65,6 @@ public class ArkCasePortalAdminAPIController extends SecureLdapController
     private transient final Logger log = LogManager.getLogger(getClass());
 
     private PortalAdminService portalAdminService;
-
-    private ExecuteSolrQuery executeSolrQuery;
 
     @Value("${foia.portalserviceprovider.directory.name}")
     private String directoryName;
@@ -160,31 +154,6 @@ public class ArkCasePortalAdminAPIController extends SecureLdapController
         return ResponseEntity.status(exceptionMapper.getStatusCode()).body(errorDetails);
     }
 
-    @RequestMapping(value = "/portals/users", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public String listPortalUsers(Authentication auth, @RequestParam(value = "start", required = false, defaultValue = "0") int start,
-            @RequestParam(value = "n", required = false, defaultValue = "20") int n,
-            @RequestParam(value = "sortBy", required = false, defaultValue = "id") String sortBy,
-            @RequestParam(value = "sortDir", required = false, defaultValue = "asc") String sortDir)
-            throws AcmObjectNotFoundException
-    {
-
-        String query = String.format("object_type_s:PERSON AND object_sub_type_s:PORTAL_FOIA_PERSON");
-        String sortParam = sortBy + " " + sortDir;
-        try
-        {
-            String solrResponse = executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, start, n, sortParam);
-            return solrResponse;
-
-        }
-        catch (SolrException e)
-        {
-            log.error("Error while executing Solr query: {}", query, e);
-            throw new AcmObjectNotFoundException("Portal Users", null, "Could not retrieve portal users.", e);
-        }
-
-    }
-
     /**
      * @param portalAdminService
      *            the portalAdminService to set
@@ -192,16 +161,6 @@ public class ArkCasePortalAdminAPIController extends SecureLdapController
     public void setPortalAdminService(PortalAdminService portalAdminService)
     {
         this.portalAdminService = portalAdminService;
-    }
-
-    public ExecuteSolrQuery getExecuteSolrQuery()
-    {
-        return executeSolrQuery;
-    }
-
-    public void setExecuteSolrQuery(ExecuteSolrQuery executeSolrQuery)
-    {
-        this.executeSolrQuery = executeSolrQuery;
     }
 
     @Override
