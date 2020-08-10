@@ -5,21 +5,21 @@ variables:
   # Start a release branch from develop branch. Sets the develop branch to new snapshot version
   # --------------------------------------------------------------------------------------------
   # RELEASE_START: true
-  # RELEASE_VERSION: 3.3.3
-  # DEVELOP_NEW_VERSION: 3.3.4-SNAPSHOT
+  # RELEASE_VERSION: 3.3.3 (2020.01)
+  # DEVELOP_NEW_VERSION: 3.3.4-SNAPSHOT (2020.02-SNAPSHOT)
   # RELEASE_ALL: true (Optional: if you want to trigger the release pipeline on all othe projects: configuration, externa-portal-ui, external-portal-backend, configuration server)
 
   # Release RC1 (X) from release branch
   # -----------------------------------
   # RELEASE_CANDIDATE_X: true
-  # RELEASE_VERSION: 3.3.3
+  # RELEASE_VERSION: 3.3.3 (2020.01)
   # RELEASE_CANDIDATE_SUFFIX: RC1
   # RELEASE_ALL: true (Optional: if you want to trigger the release pipeline on all othe projects: configuration, externa-portal-ui, external-portal-backend, configuration server)
 
   # Release final version, merges release branch in master (after no more release candidates are planned)
   # -----------------------------------------------------------------------------------------------------
   # RELEASE: true
-  # RELEASE_VERSION: 3.3.3
+  # RELEASE_VERSION: 3.3.3 (2020.01)
   # RELEASE_ALL: true (Optional: if you want to trigger the release pipeline on all othe projects: configuration, externa-portal-ui, external-portal-backend, configuration server)
 
 
@@ -29,21 +29,21 @@ variables:
   # Start support branch for a released Arkcase version (creates support/3.3.2 branch which can be used for all future release fixes for 3.3.2 version)
   # ---------------------------------------------------------------------------------------------------------------------------------------------------
   # START_SUPPORT_BRANCH: true
-  # RELEASE_TAG: 3.3.2
+  # RELEASE_TAG: 3.3.2 (2020.01)
   # RELEASE_ALL: true (Optional: if you want to trigger the release pipeline on all othe projects: configuration, externa-portal-ui, external-portal-backend, configuration server)
 
   # Start hotfix for Arkcase support
   # --------------------------------
   # START_HOTFIX: true
-  # HOTFIX_SUPPORT_VERSION: 3.3.2 (**** keep this version for all additional hotfixes to the same base released version ****)
-  # RELEASE_VERSION: 3.3.2.1       (**** increment this version for additional hotfixes like 3.3.2.2 ****)
+  # HOTFIX_SUPPORT_VERSION: 3.3.2 (2020.01) (**** keep this version for all additional hotfixes to the same base released version ****)
+  # RELEASE_VERSION: 3.3.2.1      (2020.01.01) (**** increment this version for additional hotfixes like 3.3.2.2 ****)
   # RELEASE_ALL: true (Optional: if you want to trigger the release pipeline on all othe projects: configuration, externa-portal-ui, external-portal-backend, configuration server)
 
   # Release new hotfix version
   # --------------------------
   # RELEASE_HOTFIX: true
-  # HOTFIX_SUPPORT_VERSION: 3.3.2
-  # RELEASE_VERSION: 3.3.2.1
+  # HOTFIX_SUPPORT_VERSION: 3.3.2 (2020.01)
+  # RELEASE_VERSION: 3.3.2.1      (2020.01.01)
   # RELEASE_ALL: true (Optional: if you want to trigger the release pipeline on all othe projects: configuration, externa-portal-ui, external-portal-backend, configuration server)
   GIT_USERNAME: 'Arkcase Build'
   GIT_USERMAIL: 'arkcase-build@armedia.com'

@@ -27,11 +27,6 @@ package com.armedia.acm.plugins.ecm.service.impl;
  * #L%
  */
 
-import static org.easymock.EasyMock.capture;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.junit.Assert.assertEquals;
-
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.dao.RecycleBinItemDao;
@@ -44,7 +39,6 @@ import com.armedia.acm.plugins.ecm.model.RecycleBinItem;
 import com.armedia.acm.plugins.ecm.model.RecycleBinItemDTO;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.FileEventPublisher;
-
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -54,6 +48,11 @@ import org.springframework.security.core.Authentication;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author darko.dimitrievski
@@ -154,6 +153,8 @@ public class RecycleBinItemServiceImplTest extends EasyMockSupport
 
         expect(mockEcmFileService.moveFile(toBeDeleted.getFileId(), destinationContainer.getContainerObjectId(),
                 destinationContainer.getContainerObjectType(), destinationContainer.getFolder().getId())).andReturn(toBeDeleted);
+
+        mockEcmFileService.checkDuplicatesByHash(toBeDeleted);
 
         mockEventPublisher.publishFileMovedInRecycleBinEvent(toBeDeleted, mockAuthentication, "ipAddress", true);
         expectLastCall();

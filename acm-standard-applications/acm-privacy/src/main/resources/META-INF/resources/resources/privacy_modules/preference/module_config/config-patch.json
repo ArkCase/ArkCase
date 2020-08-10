@@ -1,0 +1,15 @@
+[
+    {
+        "op": "replace",
+        "path": "/menus",
+        "value": []
+    },
+    {
+        "op": "remove",
+        "path": "/configurable"
+    },
+    {
+        "op": "remove",
+        "path": "/moduleWidgetPreferences"
+    }
+]

@@ -2,7 +2,7 @@ package com.armedia.acm.plugins.consultation.model;
 
 /*-
  * #%L
- * ACM Default Plugin: Case File
+ * ACM Default Plugin: Consultation
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%

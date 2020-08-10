@@ -1,0 +1,21 @@
+<div ng-controller="Queues.QueuesListController">
+    <div class="module-header">
+        <h3 translate>queues.title</h3>
+    </div>
+
+    <ul class="nav nav-pills nav-stacked">
+        <li ng-repeat="queue in ::queuesUp | orderBy : 'displayRequest'" ng-class="{active: (queue.id == selectedQueue.id)}">
+            <a href="#" ng-click="selectQueue($event, queue);">
+                <i class="fa fa-caret-right"></i>
+                {{config.queues[queue.name] | translate}}
+            </a>
+        </li>
+        <hr>
+        <li ng-repeat="queue in ::queuesDown | orderBy : 'displayRequest'" ng-class="{active: (queue.id == selectedQueue.id)}">
+            <a href="#" ng-click="selectQueue($event, queue);">
+                <i class="fa fa-caret-right"></i>
+                {{config.queues[queue.name] | translate}}
+            </a>
+        </li>
+    </ul>
+</div>

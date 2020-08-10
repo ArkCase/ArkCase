@@ -27,10 +27,7 @@ package com.armedia.acm.plugins.consultation.service;
  * #L%
  */
 
-import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
-import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
-import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.consultation.model.Consultation;
 import com.armedia.acm.plugins.consultation.model.ConsultationsByStatusDto;
 import com.armedia.acm.plugins.consultation.model.TimePeriod;
@@ -40,7 +37,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -66,14 +62,10 @@ public interface ConsultationService
 
     @Transactional
     Consultation saveConsultation(Consultation consultation, List<MultipartFile> files, Authentication authentication, String ipAddress)
-            throws AcmUserActionFailedException,
-            AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmObjectNotFoundException, PipelineProcessException,
-            IOException;
+            throws PipelineProcessException;
 
     @Transactional
     Consultation saveConsultation(Consultation consultation, Map<String, List<MultipartFile>> filesMap, Authentication authentication,
             String ipAddress)
-            throws AcmUserActionFailedException,
-            AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmObjectNotFoundException, PipelineProcessException,
-            IOException;
+            throws PipelineProcessException;
 }

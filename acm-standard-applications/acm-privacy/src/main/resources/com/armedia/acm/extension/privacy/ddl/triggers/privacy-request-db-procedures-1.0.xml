@@ -1,0 +1,304 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <!-- AFDP-7342 renamed all procedures to avoid name conflicts with built-in functions and procedures -->        
+    <changeSet id="01-AFDP-7342-stored-procedures-for-median-calculations" author="marko.stojanoski" dbms="mysql"
+               logicalFilePath="/ddl/triggers/foia-db-procedures-1.0.xml">
+        <createProcedure>
+            <![CDATA[
+            CREATE PROCEDURE ark_Median( tbl CHAR(64), col CHAR(64), OUT res DOUBLE )
+            BEGIN
+              SET @sql = CONCAT( 'SELECT ((COUNT(*))/2) INTO @c FROM ', tbl );
+              PREPARE stmt FROM @sql;
+              EXECUTE stmt;
+              DROP PREPARE stmt;
+              SET @a = CONVERT(FLOOR(@c), SIGNED);
+              IF @a = @c THEN
+                BEGIN
+                  SET @a = @a-1;
+                  SET @b = 2;
+                  SET @arg = CONCAT( 'AVG(', col, ')' );
+                END;
+              ELSE
+                BEGIN
+                  SET @b = 1;
+                  SET @arg = col;
+                END;
+              END IF;
+              SET @sql = CONCAT('SELECT ', @arg, ' INTO @res FROM (SELECT ', col, ' FROM ', tbl,
+                                ' ORDER BY ', col, ' LIMIT ?,?) as tmp');
+              PREPARE stmt FROM @sql;
+              EXECUTE stmt USING @a, @b;
+              DROP PREPARE stmt;
+              SET res=@res;
+            END;
+            ]]>
+        </createProcedure>
+        <createProcedure>
+            <![CDATA[
+            create procedure ark_MedianWithTableDrop(in p_table_name text, in p_table_column text, out result text)
+            begin
+
+            set @t = p_table_name;
+            set @c = p_table_column;
+            set @r = result;
+
+            prepare medianstmt from 'call ark_Median(?, ?, ?)';
+            execute medianstmt using @t, @c, @r;
+            deallocate prepare medianstmt;
+
+            prepare dropstmt FROM 'drop table ?';
+            execute dropstmt using @t;
+            deallocate prepare dropstmt;
+
+            end
+            ]]>
+        </createProcedure>
+        <createProcedure>
+            <![CDATA[
+            create procedure ark_MedianDataForAllProcessedRequests(in p_component_agency text, in p_request_track text, in p_start_date text, in p_end_date text, out result text)
+            begin
+            SELECT LEFT(UUID(), 8) INTO @tmpTableName;
+
+            set @x = p_request_track;
+            set @y = p_component_agency;
+            set @z = p_start_date;
+            set @u = p_end_date;
+
+            SET @c = concat("CREATE TABLE ", @tmpTableName, " AS
+            select acf.fo_component_agency, datediff(date(acf.cm_queue_enter_date), date(acf.fo_received_date)) as 'response_time' from acm_case_file acf
+            where
+            acf.fo_request_type = 'New Request'
+            and acf.cm_case_status = 'Released'
+            and acf.fo_request_track = ?
+            and acf.fo_component_agency = ?
+            and date(cm_queue_enter_date) >= STR_TO_DATE(?,'%m/%d/%Y')
+            and date(cm_queue_enter_date) <= STR_TO_DATE(?,'%m/%d/%Y')");
+
+            PREPARE stmt from @c;
+
+            EXECUTE stmt using @x, @y, @z, @u;
+            DEALLOCATE PREPARE stmt;
+
+            SELECT @tmpTableName INTO result;
+            end
+            ]]>
+        </createProcedure>
+        <createProcedure>
+            <![CDATA[
+            create procedure ark_MedianDataForAllPendingRequests(in p_component_agency text, in p_request_track text, in p_start_date text, in p_end_date text, out result text)
+            begin
+            SELECT LEFT(UUID(), 8) INTO @tmpTableName;
+
+            set @x = p_end_date;
+            set @y = p_request_track;
+            set @z = p_component_agency;
+            set @u = p_end_date;
+            set @i = p_request_track;
+            set @o = p_component_agency;
+            set @p = p_end_date;
+            set @r = p_end_date;
+
+            SET @c = concat("CREATE TABLE ", @tmpTableName, " AS
+            select acf.fo_component_agency, datediff(STR_TO_DATE(?,'%m/%d/%Y'), date(fo_received_date)) as 'pending_time'
+            from acm_case_file acf
+            where
+            (acf.fo_request_type = 'New Request' AND acf.cm_case_status <> 'Released' AND acf.fo_request_track = ? AND acf.fo_component_agency = ? AND DATE(fo_received_date) <= STR_TO_DATE(?,'%m/%d/%Y'))
+            OR
+            (acf.fo_request_type = 'New Request' AND acf.cm_case_status = 'Released' AND acf.fo_request_track = ? AND acf.fo_component_agency = ? AND DATE(fo_received_date) <= STR_TO_DATE(?,'%m/%d/%Y') AND DATE(cm_queue_enter_date) >= STR_TO_DATE(?,'%m/%d/%Y'))");
+            PREPARE stmt from @c;
+
+
+
+            EXECUTE stmt using @x, @y, @z, @u, @i, @o, @p, @r;
+            DEALLOCATE PREPARE stmt;
+
+            SELECT @tmpTableName into result;
+            end
+            ]]>
+        </createProcedure>
+        <createProcedure>
+            <![CDATA[
+            create procedure ark_MedianForAllProcessedRequests(in component_agency text, in request_track text, in start_date text, in end_date text, out medianValueRes text)
+            begin
+
+            set @c = component_agency;
+            set @r = request_track;
+            set @s = start_date;
+            set @e = end_date;
+            set @m = medianValueRes;
+
+
+            prepare stmt1 from 'call ark_MedianDataForAllProcessedRequests(?, ?, ?, ?, ?)';
+            execute stmt1 using @c, @r, @s, @e, @dataTable;
+            deallocate prepare stmt1;
+
+
+            set @p = "response_time";
+            prepare stmt2 from 'call ark_MedianWithTableDrop(?, ?, ?)';
+            execute stmt2 using @dataTable, @p, @m;
+            deallocate prepare stmt2;
+
+            end
+            ]]>
+        </createProcedure>
+        <createProcedure>
+            <![CDATA[
+            create procedure ark_MedianForAllPendingRequests(in component_agency text, in request_track text, in start_date text, in end_date text, out medianValueRes text)
+            begin
+
+            set @c = component_agency;
+            set @r = request_track;
+            set @s = start_date;
+            set @e = end_date;
+            set @m = medianValueRes;
+
+            prepare stmt1 from 'call ark_MedianDataForAllPendingRequests(?, ?, ?, ?, ?)';
+            execute stmt1 using @c, @r, @s, @e, @dataTable;
+            deallocate prepare stmt1;
+
+            set @p = "pending_time";
+            prepare stmt2 from 'call ark_MedianWithTableDrop(?, ?, ?)';
+            execute stmt2 using @dataTable, @p, @m;
+            deallocate prepare stmt2;
+
+            end
+            ]]>
+        </createProcedure>
+    </changeSet>
+
+    <changeSet id="02-AFDP-7342-functions-for-median-calculations" author="bojan.milenkoski" dbms="mysql"
+               logicalFilePath="/ddl/triggers/foia-db-procedures-1.0.xml">
+        <createProcedure>
+            <![CDATA[
+            CREATE FUNCTION `ark_MedianForRequests` (p_component_agency text, p_case_status text, p_request_track text, p_start_date text, p_end_date text)
+            RETURNS TEXT
+            begin
+                DECLARE median_val TEXT; 
+                DECLARE a, b, ct INT;
+    
+                # Create temporary table with data to calculate median value
+                DROP TEMPORARY TABLE IF EXISTS tmpMedianTable;
+                CREATE TEMPORARY TABLE tmpMedianTable AS
+                select acf.fo_component_agency, datediff(date(acf.cm_queue_enter_date), date(acf.fo_received_date)) + 1 as 'response_time' from acm_case_file acf
+                where
+                    acf.fo_request_type = 'New Request'
+                    and acf.cm_case_status = p_case_status
+                    and acf.fo_request_track LIKE p_request_track
+                    and acf.fo_component_agency = p_component_agency
+                    and date(cm_queue_enter_date) >= STR_TO_DATE(p_start_date,'%m/%d/%Y')
+                    and date(cm_queue_enter_date) <= STR_TO_DATE(p_end_date,'%m/%d/%Y');
+    
+                # Calculate Median value
+                SELECT AVG(dd.response_time) into median_val
+                FROM (
+                SELECT d.response_time, @rownum:=@rownum+1 as `row_number`, @total_rows:=@rownum
+                  FROM tmpMedianTable d, (SELECT @rownum:=0) r
+                  WHERE d.response_time is NOT NULL
+                  -- put some where clause here
+                  ORDER BY d.response_time
+                ) as dd
+                WHERE dd.row_number IN ( FLOOR((@total_rows+1)/2), FLOOR((@total_rows+2)/2) );
+    
+                # drop temporary table
+                DROP TEMPORARY TABLE tmpMedianTable;
+    
+                RETURN median_val;
+            end
+            ]]>
+        </createProcedure>
+        <createProcedure>
+            <![CDATA[
+            CREATE FUNCTION `ark_MedianForPendingRequests`(p_component_agency text, p_request_track text, p_end_date text) 
+            RETURNS TEXT
+            begin
+                DECLARE median_val TEXT; 
+                DECLARE a, b, ct INT;
+                
+                # Create temporary table with data to calculate median value
+                DROP TEMPORARY TABLE IF EXISTS tmpMedianTable;
+                CREATE TEMPORARY TABLE tmpMedianTable AS
+                select acf.fo_component_agency, datediff(date(acf.cm_queue_enter_date), date(acf.fo_received_date)) + 1 as 'response_time' from acm_case_file acf
+                where
+                    (acf.fo_request_type = 'New Request'
+                    and cm_case_status <> 'Released'
+                    and acf.fo_request_track = p_request_track
+                    and acf.fo_component_agency = p_component_agency
+                    and date(fo_received_date) <= STR_TO_DATE(p_end_date,'%m/%d/%Y'))
+                    or
+                    (acf.fo_request_type = 'New Request'
+                    and cm_case_status = 'Released'
+                    and acf.fo_request_track = p_request_track
+                    and acf.fo_component_agency = p_component_agency
+                    and date(cm_queue_enter_date) >= STR_TO_DATE(p_end_date,'%m/%d/%Y')
+                    and date(fo_received_date) <= STR_TO_DATE(p_end_date,'%m/%d/%Y'));
+    
+                
+                # Calculate Median value
+                SELECT AVG(dd.response_time) into median_val
+                FROM (
+                SELECT d.response_time, @rownum:=@rownum+1 as `row_number`, @total_rows:=@rownum
+                  FROM tmpMedianTable d, (SELECT @rownum:=0) r
+                  WHERE d.response_time is NOT NULL
+                  -- put some where clause here
+                  ORDER BY d.response_time
+                ) as dd
+                WHERE dd.row_number IN ( FLOOR((@total_rows+1)/2), FLOOR((@total_rows+2)/2) );
+                            
+                # drop temporary table
+                DROP TEMPORARY TABLE tmpMedianTable;
+                
+                RETURN median_val;
+            end
+            ]]>
+        </createProcedure>
+    </changeSet>
+    
+    <changeSet id="03-AFDP-7342-functions-for-median-calculations" author="bojan.milenkoski" dbms="mysql"
+               logicalFilePath="/ddl/triggers/foia-db-procedures-1.0.xml">
+        <createProcedure>
+            <![CDATA[
+            CREATE FUNCTION `ark_MedianForPendingRequestsAnyTrack`(p_component_agency text, p_end_date text) 
+            RETURNS TEXT
+            begin
+                DECLARE median_val TEXT; 
+                DECLARE a, b, ct INT;
+                
+                # Create temporary table with data to calculate median value
+                DROP TEMPORARY TABLE IF EXISTS tmpMedianTable;
+                CREATE TEMPORARY TABLE tmpMedianTable AS
+                select acf.fo_component_agency, datediff(date(acf.cm_queue_enter_date), date(acf.fo_received_date)) + 1 as 'response_time' from acm_case_file acf
+                where
+                    (acf.fo_request_type = 'New Request'
+                    and cm_case_status <> 'Released'
+                    and acf.fo_component_agency = p_component_agency
+                    and date(fo_received_date) <= STR_TO_DATE(p_end_date,'%m/%d/%Y'))
+                    or
+                    (acf.fo_request_type = 'New Request'
+                    and cm_case_status = 'Released'
+                    and acf.fo_component_agency = p_component_agency
+                    and date(cm_queue_enter_date) >= STR_TO_DATE(p_end_date,'%m/%d/%Y')
+                    and date(fo_received_date) <= STR_TO_DATE(p_end_date,'%m/%d/%Y'));
+    
+                # Calculate Median value
+                SELECT AVG(dd.response_time) into median_val
+                FROM (
+                SELECT d.response_time, @rownum:=@rownum+1 as `row_number`, @total_rows:=@rownum
+                  FROM tmpMedianTable d, (SELECT @rownum:=0) r
+                  WHERE d.response_time is NOT NULL
+                  -- put some where clause here
+                  ORDER BY d.response_time
+                ) as dd
+                WHERE dd.row_number IN ( FLOOR((@total_rows+1)/2), FLOOR((@total_rows+2)/2) );
+                            
+                # drop temporary table
+                DROP TEMPORARY TABLE tmpMedianTable;
+                
+                RETURN median_val;
+            end
+            ]]>
+        </createProcedure>
+    </changeSet>    
+</databaseChangeLog>
+

@@ -125,26 +125,9 @@ public class ConsultationEventListener implements ApplicationListener<AcmObjectH
                                     "details.changed");
                         }
 
-                        String title = existing.getTitle();
-                        String updatedTitle = updatedConsultation.getTitle();
-                        if (!Objects.equals(title, updatedTitle))
-                        {
-                            getConsultationEventUtility().raiseConsultationModifiedEvent(updatedConsultation, event.getIpAddress(),
-                                    "title.changed",
-                                    "Consultation Title changed from " + title + " to " + updatedTitle);
-                        }
+                        checkTitle(event, updatedConsultation, existing);
 
-                        String owningGroup = ParticipantUtils.getOwningGroupIdFromParticipants(existing.getParticipants());
-                        String updatedOwningGroup = ParticipantUtils
-                                .getOwningGroupIdFromParticipants(updatedConsultation.getParticipants());
-                        if (!Objects.equals(owningGroup, updatedOwningGroup))
-                        {
-                            AcmParticipant updatedParticipant = updatedConsultation.getParticipants().stream()
-                                    .filter(p -> "owning group".equals(p.getParticipantType())).findFirst().orElse(null);
-                            getConsultationEventUtility().raiseParticipantsModifiedInConsultation(updatedParticipant, updatedConsultation,
-                                    event.getIpAddress(), "changed",
-                                    "Owning Group Changed from " + owningGroup + " to " + updatedOwningGroup);
-                        }
+                        checkOwningGroup(event, updatedConsultation, existing);
 
                         checkPersonAssociation(existing, updatedConsultation, event.getIpAddress());
 
@@ -238,6 +221,35 @@ public class ConsultationEventListener implements ApplicationListener<AcmObjectH
         return !Objects.equals(details, updatedDetails);
     }
 
+    private void checkOwningGroup(AcmObjectHistoryEvent event, Consultation updatedConsultation, Consultation existing)
+    {
+        String owningGroup = ParticipantUtils.getOwningGroupIdFromParticipants(existing.getParticipants());
+        String updatedOwningGroup = ParticipantUtils
+                .getOwningGroupIdFromParticipants(updatedConsultation.getParticipants());
+
+        if (!Objects.equals(owningGroup, updatedOwningGroup))
+        {
+            AcmParticipant updatedParticipant = updatedConsultation.getParticipants().stream()
+                    .filter(p -> "owning group".equals(p.getParticipantType())).findFirst().orElse(null);
+            getConsultationEventUtility().raiseParticipantsModifiedInConsultation(updatedParticipant, updatedConsultation,
+                    event.getIpAddress(), "changed",
+                    "Owning Group Changed from " + owningGroup + " to " + updatedOwningGroup);
+        }
+    }
+
+    private void checkTitle(AcmObjectHistoryEvent event, Consultation updatedConsultation, Consultation existing)
+    {
+        String title = existing.getTitle();
+        String updatedTitle = updatedConsultation.getTitle();
+
+        if (!Objects.equals(title, updatedTitle))
+        {
+            getConsultationEventUtility().raiseConsultationModifiedEvent(updatedConsultation, event.getIpAddress(),
+                    "title.changed",
+                    "Consultation Title changed from " + title + " to " + updatedTitle);
+        }
+    }
+
     public void checkPersonAssociation(Consultation existingConsultation, Consultation updatedConsultation, String ipAddress)
     {
         List<PersonAssociation> existingPersons = existingConsultation.getPersonAssociations();
@@ -314,7 +326,6 @@ public class ConsultationEventListener implements ApplicationListener<AcmObjectH
 
     private boolean checkExecution(String objectType)
     {
-
         return objectType.equals(ConsultationConstants.OBJECT_TYPE);
     }
 
