@@ -27,9 +27,7 @@ package com.armedia.acm.drools;
  * #L%
  */
 
-import com.armedia.acm.files.AbstractConfigurationFileEvent;
-import com.armedia.acm.files.ConfigurationFileAddedEvent;
-import com.armedia.acm.files.ConfigurationFileChangedEvent;
+import com.armedia.acm.configuration.service.FileConfigurationService;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -43,10 +41,9 @@ import org.kie.internal.builder.KnowledgeBuilder;
 import org.kie.internal.builder.KnowledgeBuilderError;
 import org.kie.internal.builder.KnowledgeBuilderFactory;
 import org.kie.internal.io.ResourceFactory;
-import org.springframework.context.ApplicationListener;
+import org.springframework.jms.annotation.JmsListener;
+import org.springframework.messaging.Message;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -54,15 +51,16 @@ import java.io.InputStream;
  * Created by armdev on 4/17/14.
  */
 public abstract class SimpleStatelessSingleObjectRuleManager<T>
-        implements ApplicationListener<AbstractConfigurationFileEvent>
 {
+    private static final String RULES_LOCATION = "rules";
 
     private String ruleSpreadsheetFilename;
 
     private transient Logger log = LogManager.getLogger(getClass());
 
     private KieBase kieBase;
-    private String ruleFileLocation;
+
+    private FileConfigurationService fileConfigurationService;
 
     public KieBase getKieBase()
     {
@@ -97,38 +95,32 @@ public abstract class SimpleStatelessSingleObjectRuleManager<T>
 
     public void afterPropertiesSet() throws Exception
     {
-        String ruleFileName = getRuleFileLocation() + "/" + getRuleSpreadsheetFilename();
-        log.debug("Loading rules from {}", ruleFileName);
-
-        File ruleFile = new File(ruleFileName);
-
-        if (ruleFile.exists() && ruleFile.isFile())
-        {
-            updateRulesFromFile(ruleFile);
-        }
-        else
-        {
-            log.warn("No such file: {}", ruleFileName);
-        }
-
+        updateRulesFromConfiguration();
     }
 
-    @Override
-    public void onApplicationEvent(AbstractConfigurationFileEvent fileEvent)
+    @JmsListener(destination = "rules.changed", containerFactory = "jmsTopicListenerContainerFactory")
+    public void getRulesFromConfiguration(Message message) throws IOException
     {
-        if (fileEvent != null &&
-                fileEvent.getConfigFile() != null &&
-                getRuleSpreadsheetFilename().equals(fileEvent.getConfigFile().getName()))
-        {
-            if (fileEvent instanceof ConfigurationFileAddedEvent ||
-                    fileEvent instanceof ConfigurationFileChangedEvent)
-            {
-                updateRulesFromFile(fileEvent.getConfigFile());
-            }
+        if (getRuleSpreadsheetFilename().equals(message.getPayload().toString())) {
+            updateRulesFromConfiguration();
         }
     }
 
-    public synchronized void updateRulesFromFile(File configFile)
+    private void updateRulesFromConfiguration()
+    {
+        log.debug("Getting rules from {}", RULES_LOCATION + "/" + getRuleSpreadsheetFilename());
+
+        try (InputStream stream = fileConfigurationService.getInputStreamFromConfiguration(RULES_LOCATION + "/" + getRuleSpreadsheetFilename());)
+        {
+            updateRulesFromStream(stream);
+        }
+        catch (IOException e)
+        {
+            log.debug("Error getting rules {}", e.getMessage(), e);
+        }
+    }
+
+    private void updateRulesFromStream(InputStream stream)
     {
         SpreadsheetCompiler sc = new SpreadsheetCompiler();
 
@@ -138,22 +130,19 @@ public abstract class SimpleStatelessSingleObjectRuleManager<T>
             KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
             DecisionTableConfiguration dtconf = KnowledgeBuilderFactory.newDecisionTableConfiguration();
             dtconf.setInputType(DecisionTableInputType.XLS);
-            kbuilder.add(ResourceFactory.newFileResource(configFile), ResourceType.DTABLE, dtconf);
+            kbuilder.add(ResourceFactory.newInputStreamResource(stream), ResourceType.DTABLE, dtconf);
 
             if (kbuilder.hasErrors())
             {
-                try (InputStream drlStream = new FileInputStream(configFile))
-                {
-                    String drl = sc.compile(drlStream, InputType.XLS);
-                    log.error("DRL with errors: {}", drl);
+                String drl = sc.compile(stream, InputType.XLS);
+                log.error("DRL with errors: {}", drl);
 
-                    for (KnowledgeBuilderError error : kbuilder.getErrors())
-                    {
-                        log.error("Error building rules: {}", error);
-                    }
+                for (KnowledgeBuilderError error : kbuilder.getErrors())
+                {
+                    log.error("Error building rules: {}", error);
                 }
 
-                throw new RuntimeException(String.format("Could not build rules from %s", configFile.getAbsolutePath()));
+                throw new RuntimeException(String.format("Could not build rules from %s", getRuleSpreadsheetFilename()));
             }
 
             KieBase base = kbuilder.newKieBase();
@@ -163,7 +152,7 @@ public abstract class SimpleStatelessSingleObjectRuleManager<T>
             log.debug("Updated business rules from file '{}'", getRuleSpreadsheetFilename());
 
         }
-        catch (IOException e)
+        catch (Exception e)
         {
             log.error("Could not update rules: {}", e.getMessage(), e);
         }
@@ -179,13 +168,13 @@ public abstract class SimpleStatelessSingleObjectRuleManager<T>
         this.ruleSpreadsheetFilename = ruleSpreadsheetFilename;
     }
 
-    public String getRuleFileLocation()
+    public FileConfigurationService getFileConfigurationService()
     {
-        return ruleFileLocation;
+        return fileConfigurationService;
     }
 
-    public void setRuleFileLocation(String ruleFileLocation)
+    public void setFileConfigurationService(FileConfigurationService fileConfigurationService)
     {
-        this.ruleFileLocation = ruleFileLocation;
+        this.fileConfigurationService = fileConfigurationService;
     }
 }
