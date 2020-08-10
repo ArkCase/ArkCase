@@ -4,36 +4,6 @@
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
 
     <beans:beans profile="extension-foia">
-        <beans:bean id="caseFileStartBusinessProcessBusinessRule"
-            class="com.armedia.acm.plugins.casefile.service.CaseFileStartBusinessProcessBusinessRule">
-            <beans:property name="ruleSpreadsheetFilename" value="drools-start-business-process-rules-foia.xlsx"/>
-        </beans:bean>
-
-        <beans:bean id="caseFileNextPossibleQueuesBusinessRule"
-            class="com.armedia.acm.plugins.casefile.service.CaseFileNextPossibleQueuesBusinessRule">
-            <beans:property name="ruleSpreadsheetFilename" value="drools-next-possible-queues-rules-foia.xlsx"/>
-        </beans:bean>
-
-        <beans:bean id="saveCaseFileBusinessRule" class="com.armedia.acm.plugins.casefile.service.SaveCaseFileBusinessRule">
-            <beans:property name="ruleSpreadsheetFilename" value="drools-case-file-rules-foia.xlsx"/>
-        </beans:bean>
-
-        <beans:bean id="leaveCurrentQueueBusinessRule" class="com.armedia.acm.plugins.casefile.service.LeaveCurrentQueueBusinessRule">
-            <beans:property name="ruleSpreadsheetFilename" value="drools-leave-current-queue-rules-foia.xlsx"/>
-        </beans:bean>
-
-        <beans:bean id="enterQueueBusinessRule" class="com.armedia.acm.plugins.casefile.service.EnterQueueBusinessRule">
-            <beans:property name="ruleSpreadsheetFilename" value="drools-enter-queue-rules-foia.xlsx"/>
-        </beans:bean>
-
-        <beans:bean id="onLeaveQueueBusinessRule" class="com.armedia.acm.plugins.casefile.service.OnLeaveQueueBusinessRule">
-            <beans:property name="ruleSpreadsheetFilename" value="drools-on-leave-queue-rules-foia.xlsx"/>
-        </beans:bean>
-
-        <beans:bean id="onEnterQueueBusinessRule" class="com.armedia.acm.plugins.casefile.service.OnEnterQueueBusinessRule">
-            <beans:property name="ruleSpreadsheetFilename" value="drools-on-enter-queue-rules-foia.xlsx"/>
-        </beans:bean>
-
         <beans:bean id="foiaExtensionHandler" class="gov.foia.pipeline.presave.FOIAExtensionHandler">
             <beans:property name="foiaRequestDao" ref="foiaRequestDao"/>
             <beans:property name="holidayConfigurationService" ref="holidayConfigurationService"/>
