@@ -122,6 +122,7 @@ public interface NotificationConstants
      */
     String NOTIFICATION_TASK_COMPLETED = "notifications.task.completed";
     String NOTIFICATION_FOIA_EXTENSION = "notifications.foia.extension.notification";
+    String NOTIFICATION_PRIVACY_EXTENSION = "notifications.privacy.extension.notification";
     String PASSWORD_RESET = "notifications.password.reset";
     String FORGOT_USERNAME = "notifications.username.forgot";
     String STATUS_TRANSCRIPTION = "notifications.status.transcription";
@@ -143,7 +144,7 @@ public interface NotificationConstants
     String PARTICIPANTS_DELETED = "notifications.participants.deleted";
     String OBJECT_UNASSIGNED = "notifications.object.unassigned";
     String OBJECT_ASSIGNED = "notifications.object.assigned";
-    String ARREST_WARRANT = "notifications.arrest.warrant";
+    String SINGLE_TASK_WORKFLOW = "notifications.acmdocumentsingletask.workflow";
     String EMAIL_MENTIONS = "notifications.email.mentions";
     String REQUEST_ASSIGNED = "notifications.request.assigned";
     String REQUEST_DOWNLOADED = "notifications.request.downloaded";

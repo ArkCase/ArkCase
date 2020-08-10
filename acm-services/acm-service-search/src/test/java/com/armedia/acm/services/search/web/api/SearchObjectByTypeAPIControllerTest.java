@@ -155,7 +155,7 @@ public class SearchObjectByTypeAPIControllerTest extends EasyMockSupport
                         .session(mockHttpSession)
                         .principal(mockAuthentication))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json;charset=ISO-8859-1"))
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn();
 
         verifyAll();

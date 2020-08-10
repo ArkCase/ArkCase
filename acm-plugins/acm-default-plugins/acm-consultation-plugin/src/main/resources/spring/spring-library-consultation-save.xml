@@ -16,7 +16,6 @@
                 <ref bean="consultationOutlookHandler"/>
                 <ref bean="consultationFolderStructureHandler"/>
                 <ref bean="consultationUploadAttachmentsHandler"/>
-                <ref bean="consultationStartBusinessProcessIfNeededHandler"/>
                 <ref bean="consultationDocumentHandler"/>
             </list>
         </property>
@@ -41,11 +40,6 @@
         <property name="folderStructureAsString" value="#{consultationConfig.folderStructure}"/>
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="acmFolderService" ref="acmFolderService"/>
-    </bean>
-    <bean id="consultationStartBusinessProcessIfNeededHandler"
-          class="com.armedia.acm.plugins.consultation.pipeline.postsave.ConsultationStartBusinessProcessIfNeededHandler">
-        <property name="startBusinessProcessBusinessRule" ref="consultationStartBusinessProcessBusinessRule"/>
-        <property name="startBusinessProcessService" ref="startBusinessProcessService"/>
     </bean>
 
     <bean id="pdfConsultationDocumentGenerator"

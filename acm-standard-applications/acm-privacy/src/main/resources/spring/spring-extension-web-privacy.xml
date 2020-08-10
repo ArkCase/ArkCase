@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
+
+    <beans:beans profile="extension-privacy">
+        <beans:bean id="printDocumentsAPIController" class="gov.privacy.web.api.PrintDocumentsAPIController">
+            <beans:property name="documentPrintingService" ref="sarDocumentPrintService"/>
+        </beans:bean>
+
+        <beans:bean id="startWorkingOnRequestAPIController"
+                    class="gov.privacy.web.api.StartWorkingOnRequestAPIController">
+            <beans:property name="requestAssignmentService" ref="requestAssignmentService"/>
+            <beans:property name="caseFileEventUtility" ref="caseFileEventUtility"/>
+            <beans:property name="requestService" ref="sarService"/>
+        </beans:bean>
+
+        <beans:bean id="portalRequestAPIController" class="gov.privacy.web.api.PortalRequestAPIController">
+            <beans:property name="portalRequestService" ref="portalRequestService"/>
+            <beans:property name="personService" ref="personService"/>
+        </beans:bean>
+
+        <beans:bean id="saveSubjectAccessRequestAPIController"
+                    class="gov.privacy.web.api.SaveSubjectAccessRequestAPIController">
+            <beans:property name="saveSARService" ref="saveSARService"/>
+        </beans:bean>
+
+        <beans:bean id="queuesTimeToCompleteAPIController"
+                    class="gov.privacy.web.api.QueuesTimeToCompleteAPIController">
+            <beans:property name="queuesTimeToCompleteService" ref="queuesTimeToCompleteService"/>
+        </beans:bean>
+
+        <beans:bean id="sarConfigurationAPIController" class="gov.privacy.web.api.SARConfigurationAPIController">
+            <beans:property name="SARConfigurationService" ref="sarConfigurationService"/>
+        </beans:bean>
+
+        <beans:bean id="publicFlagAPIController" class="gov.privacy.web.api.PublicFlagAPIController">
+            <beans:property name="publicFlagService" ref="publicFlagService"/>
+        </beans:bean>
+
+        <beans:bean id="requestResponseFolderAPIController"
+                    class="gov.privacy.web.api.RequestResponseFolderAPIController">
+            <beans:property name="requestResponseFolderService" ref="requestResponseFolderService"/>
+        </beans:bean>
+
+        <beans:bean id="setReviewRedactionStatusAPIController"
+                    class="gov.privacy.web.api.SetReviewRedactionStatusAPIController">
+            <beans:property name="SAREcmFileService" ref="ecmFileService"/>
+        </beans:bean>
+
+        <beans:bean id="requestFolderStructureAPIController"
+                    class="gov.privacy.web.api.RequestFolderStructureAPIController">
+            <beans:property name="requestFolderStructureService" ref="requestFolderStructureService"/>
+        </beans:bean>
+
+        <beans:bean id="getNextAvailableRequestAPIController"
+                    class="gov.privacy.web.api.GetNextAvailableRequestAPIController">
+            <beans:property name="SARService" ref="sarService"/>
+        </beans:bean>
+    </beans:beans>
+</beans:beans>
