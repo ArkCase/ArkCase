@@ -102,10 +102,10 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
 
     private AcmEmailSenderService emailSenderService;
 
-    @Value("${foia.portalserviceprovider.registrationrequest.template}")
+    @Value("${portal.serviceProvider.registrationRequest.template}")
     private String registrationRequestEmailTemplate;
 
-    @Value("${foia.portalserviceprovider.passwordresetrequest.template}")
+    @Value("${portal.serviceProvider.passwordResetRequest.template}")
     private String passwordResetRequestEmailTemplate;
 
     private UserRegistrationRequestDao registrationDao;
@@ -122,7 +122,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
 
     private RequestAssignmentService requestAssignmentService;
 
-    @Value("${foia.portalserviceprovider.directory.name}")
+    @Value("${portal.serviceProvider.directory.name}")
     private String directoryName;
 
     private NotificationDao notificationDao;
