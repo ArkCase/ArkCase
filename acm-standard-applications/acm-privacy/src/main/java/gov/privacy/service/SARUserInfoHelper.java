@@ -51,7 +51,7 @@ public class SARUserInfoHelper extends UserInfoHelper
     private UserDao userDao;
     private SpringContextHolder contextHolder;
     private AcmGroupDao acmGroupDao;
-    @Value("${privacy.portalserviceprovider.directory.name}")
+    @Value("${portal.serviceProvider.directory.name}")
     private String portalDirectoryName;
 
     @Override
@@ -83,7 +83,8 @@ public class SARUserInfoHelper extends UserInfoHelper
             {
                 log.debug("Error processing portal user prefix", e);
             }
-            if (StringUtils.isNotBlank(portalDirectoryName) && StringUtils.isNotBlank(portalUserPrefix) && baseUserId.startsWith(portalUserPrefix))
+            if (StringUtils.isNotBlank(portalDirectoryName) && StringUtils.isNotBlank(portalUserPrefix)
+                    && baseUserId.startsWith(portalUserPrefix))
             {
                 baseUserId = user.getMail();
             }

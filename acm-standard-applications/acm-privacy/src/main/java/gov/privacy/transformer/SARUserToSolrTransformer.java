@@ -43,7 +43,7 @@ import org.springframework.beans.factory.annotation.Value;
  */
 public class SARUserToSolrTransformer extends UserToSolrTransformer
 {
-    @Value("${privacy.portalserviceprovider.directory.name}")
+    @Value("${portal.serviceProvider.directory.name}")
     private String directoryName;
 
     private SpringContextHolder acmContextHolder;

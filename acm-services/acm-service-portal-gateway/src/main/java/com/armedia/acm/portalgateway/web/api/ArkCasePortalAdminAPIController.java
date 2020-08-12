@@ -66,11 +66,11 @@ public class ArkCasePortalAdminAPIController extends SecureLdapController
 
     private PortalAdminService portalAdminService;
 
-    @Value("${foia.portalserviceprovider.directory.name}")
+    @Value("${portal.serviceProvider.directory.name}")
     private String directoryName;
 
-    @RequestMapping(value = "/portals", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE,
-            MediaType.TEXT_PLAIN_VALUE})
+    @RequestMapping(value = "/portals", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE,
+            MediaType.TEXT_PLAIN_VALUE })
     @ResponseBody
     public List<PortalInfoDTO> listRegisteredPortals(Authentication auth)
     {

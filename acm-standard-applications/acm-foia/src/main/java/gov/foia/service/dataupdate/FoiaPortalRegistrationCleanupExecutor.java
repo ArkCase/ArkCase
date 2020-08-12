@@ -55,7 +55,7 @@ public class FoiaPortalRegistrationCleanupExecutor implements AcmDataUpdateExecu
 
     private SpringContextHolder acmContextHolder;
 
-    @Value("${foia.portalserviceprovider.directory.name}")
+    @Value("${portal.serviceProvider.directory.name}")
     private String directoryName;
 
     private UserDao userDao;
@@ -71,16 +71,22 @@ public class FoiaPortalRegistrationCleanupExecutor implements AcmDataUpdateExecu
     }
 
     @Override
-    public void execute() {
+    public void execute()
+    {
         List<PortalInfo> portalInfoList = portalInfoDAO.findAll();
-        if (portalInfoList.size() > 0) {
-            AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).get(String.format("%s_sync", directoryName));
-            if (ldapSyncConfig != null && ldapSyncConfig.getUserPrefix() != null) {
+        if (portalInfoList.size() > 0)
+        {
+            AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class)
+                    .get(String.format("%s_sync", directoryName));
+            if (ldapSyncConfig != null && ldapSyncConfig.getUserPrefix() != null)
+            {
                 List<AcmUser> acmUsers = userDao.findByPrefix(ldapSyncConfig.getUserPrefix());
                 String portalId = portalInfoList.get(0).getPortalId();
                 acmUsers.forEach(user -> {
-                    Optional<UserRegistrationRequestRecord> registrationRequestRecord  = registrationDao.findByEmail(user.getMail(), portalId);
-                    if (registrationRequestRecord.isPresent()) {
+                    Optional<UserRegistrationRequestRecord> registrationRequestRecord = registrationDao.findByEmail(user.getMail(),
+                            portalId);
+                    if (registrationRequestRecord.isPresent())
+                    {
                         registrationDao.delete(registrationRequestRecord.get());
                     }
                 });
@@ -88,23 +94,28 @@ public class FoiaPortalRegistrationCleanupExecutor implements AcmDataUpdateExecu
         }
     }
 
-    public void setAcmContextHolder(SpringContextHolder acmContextHolder) {
+    public void setAcmContextHolder(SpringContextHolder acmContextHolder)
+    {
         this.acmContextHolder = acmContextHolder;
     }
 
-    public void setDirectoryName(String directoryName) {
+    public void setDirectoryName(String directoryName)
+    {
         this.directoryName = directoryName;
     }
 
-    public void setUserDao(UserDao userDao) {
+    public void setUserDao(UserDao userDao)
+    {
         this.userDao = userDao;
     }
 
-    public void setRegistrationDao(UserRegistrationRequestDao registrationDao) {
+    public void setRegistrationDao(UserRegistrationRequestDao registrationDao)
+    {
         this.registrationDao = registrationDao;
     }
 
-    public void setPortalInfoDAO(PortalInfoDAO portalInfoDAO) {
+    public void setPortalInfoDAO(PortalInfoDAO portalInfoDAO)
+    {
         this.portalInfoDAO = portalInfoDAO;
     }
 }
