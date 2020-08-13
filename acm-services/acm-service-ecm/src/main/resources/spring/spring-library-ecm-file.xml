@@ -337,7 +337,7 @@
     <bean id="fileCreatedWorkflowHandler"
         class="com.armedia.acm.plugins.ecm.handler.FileCreatedBuckslipWorkflowHandler">
         <property name="fileWorkflowBusinessRule" ref="fileWorkflowBusinessRule"/>
-        <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
+        <property name="acmBpmnService" ref="processDefinitionManagementService"/>
         <property name="objectConverter" ref="objectConverter"/>
         <property name="userDao" ref="userJpaDao"/>
     </bean>

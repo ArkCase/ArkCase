@@ -35,7 +35,7 @@
 
     <bean id="timesheetWorkflowListener" class="com.armedia.acm.services.timesheet.service.TimesheetWorkflowListener">
         <property name="fileWorkflowBusinessRule" ref="fileWorkflowBusinessRule"/>
-        <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
+        <property name="acmBpmnService" ref="processDefinitionManagementService"/>
         <property name="timesheetConfig" ref="timesheetConfig"/>
     </bean>
 

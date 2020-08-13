@@ -27,16 +27,16 @@ package com.armedia.acm.form.closecomplaint.service;
  * #L%
  */
 
+import com.armedia.acm.activiti.services.AcmBpmnService;
 import com.armedia.acm.form.closecomplaint.model.CloseComplaintFormEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 import com.armedia.acm.plugins.ecm.workflow.EcmFileWorkflowConfiguration;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 
-import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationListener;
 
 import java.util.ArrayList;
@@ -51,7 +51,7 @@ public class CloseComplaintWorkflowListener implements ApplicationListener<Close
 {
     private final Logger log = LogManager.getLogger(getClass());
     private FileWorkflowBusinessRule fileWorkflowBusinessRule;
-    private RuntimeService activitiRuntimeService;
+    private AcmBpmnService acmBpmnService;
     private String closeComplaintTaskName;
 
     @Override
@@ -124,7 +124,7 @@ public class CloseComplaintWorkflowListener implements ApplicationListener<Close
 
         log.debug("starting process: [{}]", processName);
 
-        ProcessInstance pi = getActivitiRuntimeService().startProcessInstanceByKey(processName, pvars);
+        ProcessInstance pi = getAcmBpmnService().startBusinessProcess(processName, pvars);
 
         log.debug("process ID: [{}]", pi.getId());
     }
@@ -152,16 +152,6 @@ public class CloseComplaintWorkflowListener implements ApplicationListener<Close
         this.fileWorkflowBusinessRule = fileWorkflowBusinessRule;
     }
 
-    public RuntimeService getActivitiRuntimeService()
-    {
-        return activitiRuntimeService;
-    }
-
-    public void setActivitiRuntimeService(RuntimeService activitiRuntimeService)
-    {
-        this.activitiRuntimeService = activitiRuntimeService;
-    }
-
     public String getCloseComplaintTaskName()
     {
         return closeComplaintTaskName;
@@ -170,5 +160,15 @@ public class CloseComplaintWorkflowListener implements ApplicationListener<Close
     public void setCloseComplaintTaskName(String closeComplaintTaskName)
     {
         this.closeComplaintTaskName = closeComplaintTaskName;
+    }
+
+    public AcmBpmnService getAcmBpmnService()
+    {
+        return acmBpmnService;
+    }
+
+    public void setAcmBpmnService(AcmBpmnService acmBpmnService)
+    {
+        this.acmBpmnService = acmBpmnService;
     }
 }

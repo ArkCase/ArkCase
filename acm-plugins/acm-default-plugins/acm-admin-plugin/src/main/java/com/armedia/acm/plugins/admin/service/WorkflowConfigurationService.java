@@ -159,12 +159,6 @@ public class WorkflowConfigurationService
         acmBpmnService.makeActive(processDefinition);
     }
 
-    public void makeInactive(String key, int version)
-    {
-        AcmProcessDefinition processDefinition = acmBpmnService.getByKeyAndVersion(key, version);
-        acmBpmnService.makeInactive(processDefinition);
-    }
-
     public boolean validateOrderByParam(String orderByParam)
     {
         return ORDERABLE_PROPERTIES.contains(orderByParam);

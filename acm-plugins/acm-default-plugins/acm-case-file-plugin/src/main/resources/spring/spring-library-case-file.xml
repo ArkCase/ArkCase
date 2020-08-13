@@ -34,7 +34,7 @@
     <bean id="changeCaseStatusWorkflowListener123"
         class="com.armedia.acm.plugins.casefile.service.ChangeCaseStatusWorkflowListener">
         <property name="fileWorkflowBusinessRule" ref="fileWorkflowBusinessRule"/>
-        <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
+        <property name="acmBpmnService" ref="processDefinitionManagementService"/>
         <property name="changeCaseStatusTaskName" ref="changeCaseStatusTaskName"/>
     </bean>
 
@@ -211,7 +211,7 @@
         <property name="onLeaveQueueBusinessRule" ref="onLeaveQueueBusinessRule"/>
         <property name="onEnterQueueBusinessRule" ref="onEnterQueueBusinessRule"/>
         <property name="queueService" ref="queueService"/>
-        <property name="startBusinessProcessService" ref="startBusinessProcessService"/>
+        <property name="acmBpmnService" ref="processDefinitionManagementService"/>
         <property name="saveCaseFileBusinessRule" ref="saveCaseFileBusinessRule"/>
         <property name="acmObjectLockService" ref="objectLockService"/>
         <property name="systemConfigurationService" ref="systemConfigurationService"/>

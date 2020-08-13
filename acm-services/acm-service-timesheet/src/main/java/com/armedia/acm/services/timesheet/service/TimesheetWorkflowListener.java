@@ -30,6 +30,7 @@ package com.armedia.acm.services.timesheet.service;
  * #L%
  */
 
+import com.armedia.acm.activiti.services.AcmBpmnService;
 import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 import com.armedia.acm.services.participants.model.AcmParticipant;
@@ -39,7 +40,6 @@ import com.armedia.acm.services.timesheet.model.AcmTimesheetEvent;
 import com.armedia.acm.services.timesheet.model.TimesheetConfig;
 import com.armedia.acm.services.timesheet.model.TimesheetConstants;
 
-import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -62,7 +62,7 @@ public class TimesheetWorkflowListener implements ApplicationListener<AcmTimeshe
     private final Logger LOG = LogManager.getLogger(getClass());
 
     private FileWorkflowBusinessRule fileWorkflowBusinessRule;
-    private RuntimeService activitiRuntimeService;
+    private AcmBpmnService acmBpmnService;
     private TimesheetConfig timesheetConfig;
 
     @Override
@@ -104,7 +104,7 @@ public class TimesheetWorkflowListener implements ApplicationListener<AcmTimeshe
 
         LOG.debug("Starting process: " + processName);
 
-        ProcessInstance pi = getActivitiRuntimeService().startProcessInstanceByKey(processName, pvars);
+        ProcessInstance pi = getAcmBpmnService().startBusinessProcess(processName, pvars);
 
         LOG.debug("process ID: " + pi.getId());
     }
@@ -161,14 +161,14 @@ public class TimesheetWorkflowListener implements ApplicationListener<AcmTimeshe
         this.fileWorkflowBusinessRule = fileWorkflowBusinessRule;
     }
 
-    public RuntimeService getActivitiRuntimeService()
+    public AcmBpmnService getAcmBpmnService()
     {
-        return activitiRuntimeService;
+        return acmBpmnService;
     }
 
-    public void setActivitiRuntimeService(RuntimeService activitiRuntimeService)
+    public void setAcmBpmnService(AcmBpmnService acmBpmnService)
     {
-        this.activitiRuntimeService = activitiRuntimeService;
+        this.acmBpmnService = acmBpmnService;
     }
 
     public TimesheetConfig getTimesheetConfig()

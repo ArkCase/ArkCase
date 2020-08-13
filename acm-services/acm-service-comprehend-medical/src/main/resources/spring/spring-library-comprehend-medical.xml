@@ -28,6 +28,7 @@
         <property name="tagService" ref="tagService"/>
         <property name="associatedTagService" ref="associatedTagService"/>
         <property name="notificationService" ref="notificationService"/>
+        <property name="acmBpmnService" ref="processDefinitionManagementService"/>
     </bean>
 
 

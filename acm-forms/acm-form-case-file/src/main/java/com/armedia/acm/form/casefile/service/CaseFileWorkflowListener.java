@@ -27,6 +27,7 @@ package com.armedia.acm.form.casefile.service;
  * #L%
  */
 
+import com.armedia.acm.activiti.services.AcmBpmnService;
 import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 import com.armedia.acm.frevvo.model.UploadedFiles;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
@@ -36,8 +37,8 @@ import com.armedia.acm.plugins.ecm.workflow.EcmFileWorkflowConfiguration;
 
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,6 +53,7 @@ import java.util.stream.Collectors;
 public class CaseFileWorkflowListener
 {
     private final Logger log = LogManager.getLogger(getClass());
+    private AcmBpmnService acmBpmnService;
 
     public void handleNewCaseFile(CaseFile caseFile, UploadedFiles files, RuntimeService activitiRuntimeService,
             FileWorkflowBusinessRule fileWorkflowBusinessRule,
@@ -118,8 +120,19 @@ public class CaseFileWorkflowListener
 
         log.debug("starting process: " + processName);
 
-        ProcessInstance pi = activitiRuntimeService.startProcessInstanceByKey(processName, pvars);
+        ProcessInstance pi = getAcmBpmnService().startBusinessProcess(processName, pvars);
 
         log.debug("process ID: " + pi.getId());
     }
+
+    public AcmBpmnService getAcmBpmnService()
+    {
+        return acmBpmnService;
+    }
+
+    public void setAcmBpmnService(AcmBpmnService acmBpmnService)
+    {
+        this.acmBpmnService = acmBpmnService;
+    }
+
 }

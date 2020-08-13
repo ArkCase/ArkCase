@@ -30,6 +30,7 @@
         <property name="transcribeConfigurationService" ref="transcribeConfigurationService"/>
         <property name="auditDao" ref="auditDao"/>
         <property name="notificationService" ref="notificationService"/>
+        <property name="acmBpmnService" ref="processDefinitionManagementService"/>
     </bean>
 
     <bean id="transcribeToSolrTransformer" class="com.armedia.acm.services.transcribe.transformer.TranscribeToSolrTransformer">
