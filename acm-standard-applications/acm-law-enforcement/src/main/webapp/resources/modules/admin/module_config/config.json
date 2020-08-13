@@ -1706,6 +1706,13 @@
                 ]
             },
             {
+                "type": "p/document/deDuplication",
+                "label": "admin.documentManagement.deDuplication.title",
+                "components": [
+                    "de-duplication"
+                ]
+            },
+            {
                 "type": "p/mediaServices",
                 "label": "admin.mediaServices.title",
                 "icon": "fa fa-wrench",

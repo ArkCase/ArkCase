@@ -105,10 +105,11 @@ angular.module('directives').directive(
             'MessageService',
             'ObjectService',
             'Admin.FileUploaderConfigurationService',
+            'Admin.DeDuplicationConfigurationService',
             '$timeout',
             'Websockets.MessageHandler',
             'DocumentDetails.MedicalComprehendService',
-            function ($q, $translate, $modal, $filter, $log, $injector, Store, Util, UtilDateService, ConfigService, PluginService, UserInfoService, Ecm, EmailSenderConfigurationService, LocaleHelper, LookupService, MessageService, ObjectService, FileUploaderConfigurationService, $timeout, MessageHandler, MedicalComprehendService) {
+            function ($q, $translate, $modal, $filter, $log, $injector, Store, Util, UtilDateService, ConfigService, PluginService, UserInfoService, Ecm, EmailSenderConfigurationService, LocaleHelper, LookupService, MessageService, ObjectService, FileUploaderConfigurationService, DeDuplicationConfigurationService, $timeout, MessageHandler, MedicalComprehendService) {
                 var cacheTree = new Store.CacheFifo();
                 var cacheFolderList = new Store.CacheFifo();
 
@@ -1257,15 +1258,20 @@ angular.module('directives').directive(
                                 }, {
                                     name: "duplicate",
                                     renderer: function(element, node, columnDef, isReadOnly) {
-                                        if(node.data.duplicate) {
-                                            var $td = $("<td/>");
-                                            var $span = $("<span/>").appendTo($td);
-                                            var $button = $("<button type='button'/>").addClass('duplicate').appendTo($span);
-                                            var $text = $("<strong>D</strong>").appendTo($button);
+                                        var deDuplication;
+                                        DeDuplicationConfigurationService.getDeDuplicationConfiguration().then(function (response) {
+                                            var duplication = response.data;
+                                            deDuplication = duplication['enableDeDuplication'];
+                                            if(node.data.duplicate && deDuplication) {
+                                                var $td = $("<td/>");
+                                                var $span = $("<span/>").appendTo($td);
+                                                var $button = $("<button type='button'/>").addClass('duplicate').appendTo($span);
+                                                var $text = $("<strong>D</strong>").appendTo($button);
 
-                                            $(element).replaceWith($td);
-                                        }
-                                        ;
+                                                $(element).replaceWith($td);
+                                            }
+                                            ;
+                                        });
                                     }
                                 }, {
                                     name: "lock",
