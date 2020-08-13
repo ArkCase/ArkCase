@@ -55,6 +55,7 @@ public class AcmLookupTransformer
         updatedEntry.put("value", entry.get("value"));
         updatedEntry.put("readonly", entry.get("readonly"));
         updatedEntry.put("description", entry.get("description"));
+        updatedEntry.put("order", entry.get("order"));
 
         return updatedEntry;
 
@@ -70,6 +71,7 @@ public class AcmLookupTransformer
         updatedEntry.put("readonly", entry.get("readonly"));
         updatedEntry.put("primary", entry.get("primary"));
         updatedEntry.put("description", entry.get("description"));
+        updatedEntry.put("order", entry.get("order"));
 
         return updatedEntry;
 
@@ -100,6 +102,7 @@ public class AcmLookupTransformer
         updatedEntry.put("value", entry.get("value"));
         updatedEntry.put("readonly", entry.get("readonly"));
         updatedEntry.put("description", entry.get("description"));
+        updatedEntry.put("order", entry.get("order"));
 
         return updatedEntry;
     }
