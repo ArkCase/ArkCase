@@ -1,8 +1,8 @@
-package com.armedia.acm.plugins.report.niem;
+package gov.foia.service;
 
 /*-
  * #%L
- * ACM Default Plugin: report
+ * ACM Standard Application: Freedom of Information Act
  * %%
  * Copyright (C) 2014 - 2020 ArkCase LLC
  * %%
@@ -27,34 +27,292 @@ package com.armedia.acm.plugins.report.niem;
  * #L%
  */
 
-import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toList;
 
+import com.armedia.acm.pentaho.config.PentahoReportsConfig;
+import com.armedia.acm.plugins.report.model.Report;
+import com.armedia.acm.plugins.report.service.ReportService;
+import com.armedia.acm.services.config.lookups.model.StandardLookupEntry;
+import com.armedia.acm.services.config.lookups.service.LookupDao;
+
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.web.client.RestTemplate;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.text.ParseException;
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class NiemExportService
+import gov.foia.model.FoiaConfig;
+
+public class NiemExportServiceImpl implements NiemExportService
 {
+    private final Logger LOG = LogManager.getLogger(getClass());
 
     public static final String AGENCY_IDENTIFIER_COLUMN = "Agency / Component";
     public static final String LOWER_THAN_ONE_IDENTIFIER = "LT1";
 
-    private NiemExportUtils niemExportUtils;
-    private Map<String, String> componentMap = new HashMap<>();
+    private RestTemplate restTemplate;
+    private LookupDao lookupDao;
+    private ReportService reportService;
+    private PentahoReportsConfig reportsConfig;
+    private FoiaConfig foiaConfig;
 
+    @Override
+    public File exportSingleReport(DOJReport report) throws Exception
+    {
+        LOG.debug("Started exporting a single DOJ Yearly report section in NIEM XML Format");
+
+        List<Report> reportsToExport = reportService.getPentahoReports();
+        Map<String, String> dojYearlyReports = foiaConfig.getDojYearlyReports();
+        Map<String, String> agencyIdentifiers = getComponentAgencies();
+
+        Document document = createYearlyReportDocumentWithBaseData(agencyIdentifiers);
+        Element foiaAnnualReport = (Element) document.getElementsByTagName("iepd:FoiaAnnualReport").item(0);
+
+        File temp = File.createTempFile("reports-merged-file", ".xls");
+        FileOutputStream fileOutputStream = new FileOutputStream(temp);
+
+        String dojReportPropertyName = dojYearlyReports.get(report.name());
+
+        Report acmReport = reportsToExport.stream().filter(rep -> rep.getPropertyName().equals(dojReportPropertyName)).findAny()
+                .orElse(null);
+
+        if (acmReport != null)
+        {
+            String reportPath = acmReport.getName();
+
+            String path = reportsConfig.getServerUrl() + reportsConfig.getReportUrl() + reportPath
+                    + "/service/export?format=CSV";
+
+            ResponseEntity<Resource> response = exportPenathoReportInCSV(path);
+
+            InputStream csvInputStream = response.getBody().getInputStream();
+            List<Map<String, String>> data = NiemExportUtils.getDataMapFromCSVInputStream(csvInputStream);
+
+            appendReportSection(data, foiaAnnualReport, agencyIdentifiers, report);
+        }
+
+        Transformer tf = TransformerFactory.newInstance().newTransformer();
+        tf.setOutputProperty(OutputKeys.INDENT, "yes");
+
+        checkDoc(document);
+
+        tf.transform(new DOMSource(document), new StreamResult(fileOutputStream));
+
+        LOG.debug("Finished exporting a single DOJ Yearly report section in NIEM XML Format");
+
+        return temp;
+    }
+
+    @Override
+    public File exportYearlyReport() throws Exception
+    {
+        LOG.debug("Started exporting all DOJ Yearly reports in NIEM XML Format");
+
+        List<Report> reportsToExport = reportService.getPentahoReports();
+        Map<String, String> dojYearlyReports = foiaConfig.getDojYearlyReports();
+        Map<String, String> agencyIdentifiers = getComponentAgencies();
+
+        Document document = createYearlyReportDocumentWithBaseData(agencyIdentifiers);
+        Element foiaAnnualReport = (Element) document.getElementsByTagName("iepd:FoiaAnnualReport").item(0);
+
+        File temp = File.createTempFile("reports-merged-file", ".xls");
+        FileOutputStream fileOutputStream = new FileOutputStream(temp);
+
+        for (DOJReport report : DOJReport.values())
+        {
+            String dojReportPropertyName = dojYearlyReports.get(report.name());
+
+            Report acmReport = reportsToExport.stream().filter(rep -> rep.getPropertyName().equals(dojReportPropertyName)).findAny()
+                    .orElse(null);
+
+            if (acmReport != null)
+            {
+                String reportPath = acmReport.getName();
+
+                String path = reportsConfig.getServerUrl() + reportsConfig.getReportUrl() + reportPath
+                        + "/service/export?format=CSV";
+
+                ResponseEntity<Resource> response = exportPenathoReportInCSV(path);
+
+                InputStream csvInputStream = response.getBody().getInputStream();
+                List<Map<String, String>> data = NiemExportUtils.getDataMapFromCSVInputStream(csvInputStream);
+
+                appendReportSection(data, foiaAnnualReport, agencyIdentifiers, report);
+            }
+        }
+
+        Transformer tf = TransformerFactory.newInstance().newTransformer();
+        tf.setOutputProperty(OutputKeys.INDENT, "yes");
+
+        checkDoc(document);
+
+        tf.transform(new DOMSource(document), new StreamResult(fileOutputStream));
+
+        LOG.debug("Finished exporting all DOJ Yearly reports in NIEM XML Format");
+
+        return temp;
+    }
+
+    @Override
+    public List<String> getYearlyReportTitlesOrdered() throws Exception
+    {
+        Map<String, String> dojYearlyReports = foiaConfig.getDojYearlyReports();
+        List<Report> allPentahoReports = reportService.getPentahoReports();
+
+        List<String> reportTitles = new LinkedList<>();
+
+        for (DOJReport report : DOJReport.values())
+        {
+            String dojReportPropertyName = dojYearlyReports.get(report.name());
+
+            allPentahoReports.stream()
+                    .filter(rep -> rep.getPropertyName().equals(dojReportPropertyName))
+                    .findAny()
+                    .ifPresent(acmReport -> reportTitles.add(acmReport.getName()));
+        }
+        return reportTitles;
+    }
+
+    /**
+     * This method will check and report on null data in the generated XML document
+     * If such data exists, the document cannot be exported
+     */
+    private void checkDoc(Node node)
+    {
+        if (node instanceof Text)
+        {
+            if (((Text) node).getData() == null)
+            {
+                LOG.warn("Null text data in [{}]", node.getParentNode());
+            }
+        }
+
+        NodeList l = node.getChildNodes();
+        for (int i = 0; i < l.getLength(); ++i)
+        {
+            checkDoc(l.item(i));
+        }
+    }
+
+    private ResponseEntity<Resource> exportPenathoReportInCSV(String path)
+    {
+        SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
+        requestFactory.setReadTimeout(60 * 1000);
+        RestTemplate restTemplate = new RestTemplate(requestFactory);
+
+        String auth = reportsConfig.getServerUser() + ":" + reportsConfig.getServerPassword();
+        byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(Charset.forName("US-ASCII")));
+        String basicAuthenticationHeaderValue = "Basic " + new String(encodedAuth);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_OCTET_STREAM));
+        headers.set(HttpHeaders.AUTHORIZATION, basicAuthenticationHeaderValue);
+
+        org.springframework.http.HttpEntity<Object> entity = new org.springframework.http.HttpEntity<>("body", headers);
+
+        LOG.debug("Pentaho report PATH: [{}]", path);
+
+        return restTemplate.exchange(path, HttpMethod.GET, entity, Resource.class);
+    }
+
+    private Map<String, String> getComponentAgencies()
+    {
+        Map<String, String> agencyIdentifiers = new LinkedHashMap<>();
+
+        List<StandardLookupEntry> componentAgenciesLookupEntries = (List<StandardLookupEntry>) getLookupDao()
+                .getLookupByName("componentsAgencies")
+                .getEntries();
+
+        for (int i = 0; i < componentAgenciesLookupEntries.size(); i++)
+        {
+            agencyIdentifiers.put(componentAgenciesLookupEntries.get(i).getKey(), String.format("ORG%d", i + 1));
+        }
+
+        return agencyIdentifiers;
+    }
+
+    @Override
+    public Document createYearlyReportDocumentWithBaseData(Map<String, String> agencyIdentifiers) throws ParserConfigurationException
+    {
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        DocumentBuilder docBuilder = dbf.newDocumentBuilder();
+        Document document = docBuilder.newDocument();
+
+        Element foiaAnnualReport = document.createElement("iepd:FoiaAnnualReport");
+
+        foiaAnnualReport.setAttribute("xmlns:iepd", "http://leisp.usdoj.gov/niem/FoiaAnnualReport/exchange/1.03");
+        foiaAnnualReport.setAttribute("xsi:schemaLocation",
+                "http://leisp.usdoj.gov/niem/FoiaAnnualReport/exchange/1.03 ../schema/exchange/FoiaAnnualReport.xsd");
+        foiaAnnualReport.setAttribute("xmlns:foia", "http://leisp.usdoj.gov/niem/FoiaAnnualReport/extension/1.03");
+        foiaAnnualReport.setAttribute("xmlns:j", "http://niem.gov/niem/domains/jxdm/4.1");
+        foiaAnnualReport.setAttribute("xmlns:nc", "http://niem.gov/niem/niem-core/2.0");
+        foiaAnnualReport.setAttribute("xmlns:s", "http://niem.gov/niem/structures/2.0");
+        foiaAnnualReport.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+
+        document.appendChild(foiaAnnualReport);
+
+        Element docApplicationName = document.createElement("nc:DocumentApplicationName");
+        docApplicationName.setAttribute("nc:applicationVersionText", "1.1");
+        docApplicationName.appendChild(document.createTextNode("FOIA Annual Report Workbook"));
+        foiaAnnualReport.appendChild(docApplicationName);
+
+        Element docCreationDate = document.createElement("nc:DocumentCreationDate");
+        addElement(docCreationDate, "nc:Date", NiemExportUtils.currentDateInNiemFormat());
+        foiaAnnualReport.appendChild(docCreationDate);
+
+        addElement(foiaAnnualReport, "nc:DocumentDescriptionText", "FOIA Annual Report");
+
+        appendOrganizationSection(foiaAnnualReport, agencyIdentifiers);
+
+        addElement(foiaAnnualReport, "foia:DocumentFiscalYearDate", String.valueOf(Year.now().getValue()));
+
+        return document;
+    }
+
+    @Override
     public void appendReportSection(List<Map<String, String>> data, Element parent,
-            Map<String, String> agencyIdentifiers, DOJReport report) throws ParseException
+            Map<String, String> agencyIdentifiers, DOJReport report)
     {
         switch (report)
         {
+        case EXEMPTION_3_STATUTE:
+            generateExemption3StatuteSection(data, parent, agencyIdentifiers);
+            break;
         case PROCESSED_REQUESTS:
             generateProcessedRequestSection(data, parent, agencyIdentifiers);
             break;
@@ -151,14 +409,13 @@ public class NiemExportService
         }
     }
 
-    // TODO rethink organization parent
-    public void appendOrganizationSection(Element parent, Map<String, String> agencyIdentifiers) throws ParseException
+    private void appendOrganizationSection(Element parent, Map<String, String> agencyIdentifiers)
     {
         Element organizationElement = parent.getOwnerDocument().createElement("nc:Organization");
         organizationElement.setAttribute("s:id", "ORG0");
 
-        addElement(organizationElement, "nc:OrganizationAbbreviationText", "EEOC");
-        addElement(organizationElement, "nc:OrganizationName", "Equal Employment Opportunity Commission (EEOC)");
+        addElement(organizationElement, "nc:OrganizationAbbreviationText", foiaConfig.getDojNiemOrganizationName());
+        addElement(organizationElement, "nc:OrganizationName", foiaConfig.getDojNiemAbbreviationText());
 
         for (Map.Entry<String, String> subUnit : agencyIdentifiers.entrySet())
         {
@@ -180,111 +437,177 @@ public class NiemExportService
         organizationElement.appendChild(orgSubUnitElement);
     }
 
-    public void generateOldestPendingAppealsSection(List<Map<String, String>> data, Element parent,
-            Map<String, String> agencyIdentifiers) throws ParseException
+    /*
+     * This sections organization associations elements differs from all other sections due to the fact that
+     * it includes the quantity of exemptions used in the association elements as opposed to the main data
+     */
+    private void generateExemption3StatuteSection(List<Map<String, String>> data, Element parent, Map<String, String> agencyIdentifiers)
+    {
+        DOJReport report = DOJReport.EXEMPTION_3_STATUTE;
+
+        Element exemption3StatuteSection = parent.getOwnerDocument().createElement(report.getSectionName());
+
+        int id = 1;
+
+        for (List<Map<String, String>> exemptionData : groupDataByExemption(data).values())
+        {
+            String componentDataReference = report.getIdPrefix() + id;
+            id++;
+            exemptionData = getDataWithPredifinedComponentReference(exemptionData, agencyIdentifiers, componentDataReference);
+
+            appendReliedUponStatuteElement(exemption3StatuteSection, exemptionData, componentDataReference);
+        }
+
+        for (Map<String, String> componentData : data)
+        {
+            appendReliedUponStatuteOrganizationAssociation(exemption3StatuteSection, componentData);
+        }
+
+        parent.appendChild(exemption3StatuteSection);
+    }
+
+    private void appendReliedUponStatuteElement(Element exemption3StatuteSection, List<Map<String, String>> exemptionData,
+            String componentDataReference)
+    {
+        String statuteDescriptionText = exemptionData.get(0).get("Statute");
+        String infoWithheldText = exemptionData.get(0).get("Type of Information Withheld");
+        String caseCitationText = exemptionData.get(0).get("Case Citation");
+
+        Element reliedUponStatuteElement = exemption3StatuteSection.getOwnerDocument().createElement("foia:ReliedUponStatute");
+
+        addElement(reliedUponStatuteElement, "j:StatuteDescriptionText", statuteDescriptionText);
+        addElement(reliedUponStatuteElement, "foia:ReliedUponStatuteInformationWithheldText", infoWithheldText);
+
+        Element caseElement = exemption3StatuteSection.getOwnerDocument().createElement("nc:Case");
+        addElement(caseElement, "nc:CaseTitleText", caseCitationText);
+        reliedUponStatuteElement.appendChild(caseElement);
+
+        reliedUponStatuteElement.setAttribute("s:id", componentDataReference);
+        exemption3StatuteSection.appendChild(reliedUponStatuteElement);
+    }
+
+    private void appendReliedUponStatuteOrganizationAssociation(Element parent, Map<String, String> record)
+    {
+        Element reliedUponStatuteElement = parent.getOwnerDocument().createElement("foia:ReliedUponStatuteOrganizationAssociation");
+
+        Element componentDataReference = parent.getOwnerDocument().createElement("foia:ComponentDataReference");
+        componentDataReference.setAttribute("s:ref", record.get("ComponentDataReference"));
+        reliedUponStatuteElement.appendChild(componentDataReference);
+
+        Element organizationReference = parent.getOwnerDocument().createElement("nc:OrganizationReference");
+        organizationReference.setAttribute("s:ref", record.get("OrganizationReference"));
+        reliedUponStatuteElement.appendChild(organizationReference);
+
+        String reliedUponStatute = record.get("Number of Times Relied upon by Agency / Component");
+        addElement(reliedUponStatuteElement, "foia:ReliedUponStatuteQuantity", reliedUponStatute);
+
+        parent.appendChild(reliedUponStatuteElement);
+    }
+
+    private void generateOldestPendingAppealsSection(List<Map<String, String>> data, Element parent,
+            Map<String, String> agencyIdentifiers)
     {
         generateOldestPendingSection(data, parent, agencyIdentifiers, DOJReport.OLDEST_PENDING_APPEALS);
     }
 
-    public void generateOldestPendingRequestsSection(List<Map<String, String>> data, Element parent,
-            Map<String, String> agencyIdentifiers) throws ParseException
+    private void generateOldestPendingRequestsSection(List<Map<String, String>> data, Element parent,
+            Map<String, String> agencyIdentifiers)
     {
         generateOldestPendingSection(data, parent, agencyIdentifiers, DOJReport.OLDEST_PENDING_REQUESTS);
     }
 
-    public void generateOldestPendingConsultationsSection(List<Map<String, String>> data, Element parent,
-            Map<String, String> agencyIdentifiers) throws ParseException
+    private void generateOldestPendingConsultationsSection(List<Map<String, String>> data, Element parent,
+            Map<String, String> agencyIdentifiers)
     {
         generateOldestPendingSection(data, parent, agencyIdentifiers, DOJReport.OLDEST_PENDING_CONSULTATIONS);
     }
 
     private void generateOldestPendingSection(List<Map<String, String>> data, Element parent,
-            Map<String, String> agencyIdentifiers, DOJReport report) throws ParseException
+            Map<String, String> agencyIdentifiers, DOJReport report)
     {
-        int idSuffix = 1;
-
         Element oldestPendingSectionElement = parent.getOwnerDocument().createElement(report.getSectionName());
 
         parent.appendChild(oldestPendingSectionElement);
 
-        Collection<List<Map<String, String>>> dataByComponents = groupByComponentAndFilter(data).values();
+        int id = 1;
 
-        // Look into erasing the id counter
-        Map<String, String> associationData = new LinkedHashMap<>();
+        Collection<List<Map<String, String>>> dataByComponent = groupByComponentAndFilter(data).values();
 
-        List<String> agencies = data.stream().map(it -> it.get(AGENCY_IDENTIFIER_COLUMN)).distinct().collect(Collectors.toList());
-
-        for (int index = 0; index < dataByComponents.size(); index++)
+        for (List<Map<String, String>> componentData : dataByComponent)
         {
-            String id = report.getIdPrefix().concat(String.valueOf(index + 1));
-            String agency = agencies.get(index);
+            String componentDataReference = report.getIdPrefix() + id;
+            id++;
+            componentData = getDataWithPredifinedComponentReference(componentData, agencyIdentifiers, componentDataReference);
 
-            associationData.put(agency, id);
+            appendOldestPendingItems(oldestPendingSectionElement, componentData, componentDataReference);
         }
-        // Look into erasing the id counter
 
-        for (List<Map<String, String>> componentData : dataByComponents)
+        for (List<Map<String, String>> componentData : dataByComponent)
         {
-            String id = report.getIdPrefix().concat(String.valueOf(idSuffix));
-            idSuffix++;
-
-            String agency = componentData.get(0).get(AGENCY_IDENTIFIER_COLUMN);
-
-            appendOldestPendingItems(oldestPendingSectionElement, componentData, id);
-
-            appendProcessingAssociations(oldestPendingSectionElement,
-                    "foia:OldestPendingItemsOrganizationAssociation", id, agency);
+            appendProcessingAssociations(oldestPendingSectionElement, componentData.get(0),
+                    "foia:OldestPendingItemsOrganizationAssociation");
         }
     }
 
-    private void appendOldestPendingItems(Element parent, List<Map<String, String>> componentData, String id) throws ParseException
+    private void appendOldestPendingItems(Element parent, List<Map<String, String>> componentData, String id)
     {
         Element oldestPendingItemsElement = parent.getOwnerDocument().createElement("foia:OldestPendingItems");
         oldestPendingItemsElement.setAttribute("s:id", id);
+
+        // The data is expected to be in reversed order - the oldest element needs to be first
+        Collections.reverse(componentData);
 
         for (Map<String, String> record : componentData)
         {
             String dateOfReceipt = record.get("Date of Receipt");
             String daysPending = record.get("Number of Days Pending");
 
-            String formattedDate = niemExportUtils.formatDateToNiemExpectedDate(dateOfReceipt);
+            try
+            {
+                String formattedDate = NiemExportUtils.formatDateToNiemExpectedFormat(dateOfReceipt);
 
-            Element oldItem = parent.getOwnerDocument().createElement("foia:OldItem");
+                if (NumberUtils.isParsable(daysPending) && Integer.parseInt(daysPending) > 0)
+                {
+                    Element oldItem = parent.getOwnerDocument().createElement("foia:OldItem");
 
-            addElement(oldItem, "foia:OldItemReceiptDate", formattedDate);
-            addElement(oldItem, "foia:OldItemPendingDaysQuantity", daysPending);
+                    addElement(oldItem, "foia:OldItemReceiptDate", formattedDate);
+                    addElement(oldItem, "foia:OldItemPendingDaysQuantity", daysPending);
 
-            oldestPendingItemsElement.appendChild(oldItem);
+                    oldestPendingItemsElement.appendChild(oldItem);
+                }
+            }
+            catch (ParseException e)
+            {
+                LOG.warn("Date: [{}] cannot be parsed!", dateOfReceipt);
+            }
+
         }
         parent.appendChild(oldestPendingItemsElement);
     }
 
-    public void generateRequestDenialOtherReasonSection(List<Map<String, String>> data, Element parent,
-            Map<String, String> agencyIdentifiers) throws ParseException
+    private void generateRequestDenialOtherReasonSection(List<Map<String, String>> data, Element parent,
+            Map<String, String> agencyIdentifiers)
     {
         generateDenialOtherReasonSection(data, parent, agencyIdentifiers, DOJReport.REQUEST_DENIAL_OTHER_REASON);
     }
 
-    public void generateAppealDenialOtherReasonSection(List<Map<String, String>> data, Element parent,
-            Map<String, String> agencyIdentifiers) throws ParseException
+    private void generateAppealDenialOtherReasonSection(List<Map<String, String>> data, Element parent,
+            Map<String, String> agencyIdentifiers)
     {
         generateDenialOtherReasonSection(data, parent, agencyIdentifiers, DOJReport.APPEAL_DENIAL_OTHER_REASON);
     }
 
     private void generateDenialOtherReasonSection(List<Map<String, String>> data, Element parent,
-            Map<String, String> agencyIdentifiers, DOJReport report) throws ParseException
+            Map<String, String> agencyIdentifiers, DOJReport report)
     {
         Element denialOtherReasonSectionElement = parent.getOwnerDocument().createElement(report.getSectionName());
 
-        String descriptionColumn = "Description of \"Other\" Reasons for Denial on Appeal from Chart C(2)";
-        String quantityColumn = "Number of Times \"Other\" Reason Was Relied Upon";
-
-        List<Map<String, String>> rearrangedData = rearrangeMultiLineData(data,
-                descriptionColumn, quantityColumn);
+        // The data needs to be rearranged in order to use the standard ways of generating elements
+        List<Map<String, String>> rearrangedData = rearrangeMultiLineData(data);
         List<Map<String, String>> filteredData = getDataWithComponentReferences(rearrangedData, agencyIdentifiers, report);
 
         filteredData.forEach(componentData -> appendOtherDenialReasonItem(denialOtherReasonSectionElement, componentData));
-        filteredData.forEach(componentData -> appendProcessingAssociations2(denialOtherReasonSectionElement,
+        filteredData.forEach(componentData -> appendProcessingAssociations(denialOtherReasonSectionElement,
                 componentData, "foia:OtherDenialReasonOrganizationAssociation"));
 
         parent.appendChild(denialOtherReasonSectionElement);
@@ -317,8 +640,7 @@ public class NiemExportService
         parent.appendChild(componentOtherDenialReason);
     }
 
-    private List<Map<String, String>> rearrangeMultiLineData(List<Map<String, String>> data, String descriptionColumn,
-            String quantityColumn)
+    private List<Map<String, String>> rearrangeMultiLineData(List<Map<String, String>> data)
     {
         List<Map<String, String>> mainData = new ArrayList<>();
 
@@ -335,6 +657,8 @@ public class NiemExportService
             for (Map<String, String> record : componentData)
             {
                 record.remove(AGENCY_IDENTIFIER_COLUMN);
+                String descriptionColumn = "Description of \"Other\" Reasons for Denial on Appeal from Chart C(2)";
+                String quantityColumn = "Number of Times \"Other\" Reason Was Relied Upon";
                 String description = record.get(descriptionColumn);
                 String quantity = record.get(quantityColumn);
 
@@ -354,14 +678,14 @@ public class NiemExportService
         return mainData;
     }
 
-    public void generateProcessedRequestResponseTimeSection(List<Map<String, String>> data, Element parent,
+    private void generateProcessedRequestResponseTimeSection(List<Map<String, String>> data, Element parent,
             Map<String, String> agencyIdentifiers)
     {
         DOJReport report = DOJReport.PROCESSED_PERFECTED_REQUESTS_RESPONSE_TIME;
         appendProcessedRequestResponseTimeSection(data, parent, agencyIdentifiers, report);
     }
 
-    public void generateInformationGrantedResponseTimeSection(List<Map<String, String>> data, Element parent,
+    private void generateInformationGrantedResponseTimeSection(List<Map<String, String>> data, Element parent,
             Map<String, String> agencyIdentifiers)
     {
         DOJReport report = DOJReport.INFORMATION_GRANTED_REQUESTS_RESPONSE_TIME;
@@ -376,7 +700,7 @@ public class NiemExportService
         List<Map<String, String>> filteredData = getDataWithComponentReferences(data, agencyIdentifiers, report);
 
         filteredData.forEach(componentData -> appendProcessedResponseTimeItem(processedRequestResponseTimeElement, componentData));
-        filteredData.forEach(componentData -> appendProcessingAssociations2(processedRequestResponseTimeElement,
+        filteredData.forEach(componentData -> appendProcessingAssociations(processedRequestResponseTimeElement,
                 componentData, "foia:ProcessedResponseTimeOrganizationAssociation"));
 
         parent.appendChild(processedRequestResponseTimeElement);
@@ -415,6 +739,10 @@ public class NiemExportService
         addResponseTimeElementIfValid(parent, highestNumberOfDays, "foia:ResponseTimeHighestDaysCode", "foia:ResponseTimeHighestDaysValue");
     }
 
+    /*
+     * The xml uses different tag names for the response time data
+     * If a value is lower than 1, the FOIA NIEM standard expects the use of a Code tag name and LT1 as value
+     */
     private void addResponseTimeElementIfValid(Element parent, String numberOfDays, String codeName, String valueName)
     {
         if (NumberUtils.isParsable(numberOfDays) && Double.parseDouble(numberOfDays) > 0
@@ -428,7 +756,7 @@ public class NiemExportService
         }
     }
 
-    public void generatePendingPerfectedRequestsSection(List<Map<String, String>> data, Element parent,
+    private void generatePendingPerfectedRequestsSection(List<Map<String, String>> data, Element parent,
             Map<String, String> agencyIdentifiers)
     {
         DOJReport report = DOJReport.ALL_PENDING_PERFECTED_REQUESTS;
@@ -437,7 +765,7 @@ public class NiemExportService
         List<Map<String, String>> filteredData = getDataWithComponentReferences(data, agencyIdentifiers, report);
 
         filteredData.forEach(componentData -> appendPendingPerfectedRequestsItem(processedRequestResponseTimeElement, componentData));
-        filteredData.forEach(componentData -> appendProcessingAssociations2(processedRequestResponseTimeElement,
+        filteredData.forEach(componentData -> appendProcessingAssociations(processedRequestResponseTimeElement,
                 componentData, "foia:PendingPerfectedRequestsOrganizationAssociation"));
 
         parent.appendChild(processedRequestResponseTimeElement);
@@ -478,34 +806,34 @@ public class NiemExportService
 
     }
 
-    public void generateSimpleResponseTimeIncrementsSection(List<Map<String, String>> data, Element parent,
-            Map<String, String> agencyIdentifiers) throws ParseException
+    private void generateSimpleResponseTimeIncrementsSection(List<Map<String, String>> data, Element parent,
+            Map<String, String> agencyIdentifiers)
     {
         generateResponseTimeIncrementsSection(data, parent, agencyIdentifiers, DOJReport.SIMPLE_RESPONSE_TIME_INCREMENTS);
     }
 
-    public void generateComplexResponseTimeIncrementsSection(List<Map<String, String>> data, Element parent,
-            Map<String, String> agencyIdentifiers) throws ParseException
+    private void generateComplexResponseTimeIncrementsSection(List<Map<String, String>> data, Element parent,
+            Map<String, String> agencyIdentifiers)
     {
         generateResponseTimeIncrementsSection(data, parent, agencyIdentifiers, DOJReport.COMPLEX_RESPONSE_TIME_INCREMENTS);
     }
 
-    public void generateExpeditedResponseTimeIncrementsSection(List<Map<String, String>> data, Element parent,
-            Map<String, String> agencyIdentifiers) throws ParseException
+    private void generateExpeditedResponseTimeIncrementsSection(List<Map<String, String>> data, Element parent,
+            Map<String, String> agencyIdentifiers)
     {
         generateResponseTimeIncrementsSection(data, parent, agencyIdentifiers, DOJReport.EXPEDITED_RESPONSE_TIME_INCREMENTS);
     }
 
     private void generateResponseTimeIncrementsSection(List<Map<String, String>> data, Element parent,
             Map<String, String> agencyIdentifiers, DOJReport report)
-            throws ParseException
+
     {
         Element responseTimeIncrementsSectionElement = parent.getOwnerDocument().createElement(report.getSectionName());
 
         List<Map<String, String>> filteredData = getDataWithComponentReferences(data, agencyIdentifiers, report);
 
         filteredData.forEach(componentData -> appendTimeIncrementItem(responseTimeIncrementsSectionElement, componentData));
-        filteredData.forEach(componentData -> appendProcessingAssociations2(responseTimeIncrementsSectionElement,
+        filteredData.forEach(componentData -> appendProcessingAssociations(responseTimeIncrementsSectionElement,
                 componentData, "foia:ResponseTimeIncrementsOrganizationAssociation"));
 
         parent.appendChild(responseTimeIncrementsSectionElement);
@@ -543,8 +871,8 @@ public class NiemExportService
         parent.appendChild(componentResponseTimeIncrements);
     }
 
-    public void generateAppealDispositionSection(List<Map<String, String>> data, Element parent, Map<String, String> agencyIdentifiers)
-            throws ParseException
+    private void generateAppealDispositionSection(List<Map<String, String>> data, Element parent, Map<String, String> agencyIdentifiers)
+
     {
         DOJReport report = DOJReport.APPEAL_DISPOSITION;
 
@@ -553,7 +881,7 @@ public class NiemExportService
         List<Map<String, String>> filteredData = getDataWithComponentReferences(data, agencyIdentifiers, report);
 
         filteredData.forEach(componentData -> appendAppealDispositionItem(appealDispositionSection, componentData));
-        filteredData.forEach(componentData -> appendProcessingAssociations2(appealDispositionSection,
+        filteredData.forEach(componentData -> appendProcessingAssociations(appealDispositionSection,
                 componentData, "foia:AppealDispositionOrganizationAssociation"));
 
         parent.appendChild(appealDispositionSection);
@@ -585,8 +913,8 @@ public class NiemExportService
         parent.appendChild(appealDispositionElement);
     }
 
-    public void generateRequestDispositionSection(List<Map<String, String>> data, Element parent, Map<String, String> agencyIdentifiers)
-            throws ParseException
+    private void generateRequestDispositionSection(List<Map<String, String>> data, Element parent, Map<String, String> agencyIdentifiers)
+
     {
         DOJReport report = DOJReport.REQUEST_DISPOSITION;
 
@@ -595,7 +923,7 @@ public class NiemExportService
         List<Map<String, String>> filteredData = getDataWithComponentReferences(data, agencyIdentifiers, report);
 
         filteredData.forEach(componentData -> appendRequestDispositionItem(requestDispositionSection, componentData));
-        filteredData.forEach(componentData -> appendProcessingAssociations2(requestDispositionSection,
+        filteredData.forEach(componentData -> appendProcessingAssociations(requestDispositionSection,
                 componentData, "foia:RequestDispositionOrganizationAssociation"));
 
         parent.appendChild(requestDispositionSection);
@@ -645,7 +973,7 @@ public class NiemExportService
         parent.appendChild(requestDispositionElement);
     }
 
-    public void generateAppealNonExemptionDenialSection(List<Map<String, String>> data, Element parent,
+    private void generateAppealNonExemptionDenialSection(List<Map<String, String>> data, Element parent,
             Map<String, String> agencyIdentifiers)
     {
         DOJReport report = DOJReport.APPEAL_NON_EXEMPTION_DENIAL;
@@ -655,7 +983,7 @@ public class NiemExportService
         List<Map<String, String>> filteredData = getDataWithComponentReferences(data, agencyIdentifiers, report);
 
         filteredData.forEach(componentData -> appendAppealNonExemptionDenialItem(appealNonExemptionSection, componentData));
-        filteredData.forEach(componentData -> appendProcessingAssociations2(appealNonExemptionSection,
+        filteredData.forEach(componentData -> appendProcessingAssociations(appealNonExemptionSection,
                 componentData, "foia:AppealNonExemptionDenialOrganizationAssociation"));
 
         parent.appendChild(appealNonExemptionSection);
@@ -711,23 +1039,21 @@ public class NiemExportService
         parentElement.appendChild(nonExemptionDenialElement);
     }
 
-    public void generateAppealDispositionAppliedExemptionsSection(List<Map<String, String>> data, Element parent,
-            Map<String, String> agencyIdentifiers) throws ParseException
+    private void generateAppealDispositionAppliedExemptionsSection(List<Map<String, String>> data, Element parent,
+            Map<String, String> agencyIdentifiers)
     {
         appendDispositionAppliedExemptionsSection(data, parent, agencyIdentifiers, DOJReport.APPEAL_DISPOSITION_APPLIED_EXEMPTIONS);
-
     }
 
-    public void generateRequestDispositionAppliedExemptionsSection(List<Map<String, String>> data, Element parent,
-            Map<String, String> agencyIdentifiers) throws ParseException
+    private void generateRequestDispositionAppliedExemptionsSection(List<Map<String, String>> data, Element parent,
+            Map<String, String> agencyIdentifiers)
     {
         appendDispositionAppliedExemptionsSection(data, parent, agencyIdentifiers, DOJReport.REQUEST_DISPOSITION_APPLIED_EXEMPTIONS);
-
     }
 
     private void appendDispositionAppliedExemptionsSection(List<Map<String, String>> data, Element parent,
             Map<String, String> agencyIdentifiers, DOJReport report)
-            throws ParseException
+
     {
         Element dispositionAppliedExemptionsSection = parent.getOwnerDocument().createElement(report.getSectionName());
 
@@ -735,7 +1061,7 @@ public class NiemExportService
 
         filteredData.forEach(
                 componentData -> appendAppealDispositionAppliedExemptionsItem(dispositionAppliedExemptionsSection, componentData));
-        filteredData.forEach(componentData -> appendProcessingAssociations2(dispositionAppliedExemptionsSection,
+        filteredData.forEach(componentData -> appendProcessingAssociations(dispositionAppliedExemptionsSection,
                 componentData, "foia:ComponentAppliedExemptionsOrganizationAssociation"));
 
         parent.appendChild(dispositionAppliedExemptionsSection);
@@ -765,21 +1091,21 @@ public class NiemExportService
         parent.appendChild(componentAppliedExemptionsElement);
     }
 
-    public void generateProcessedRequestComparisonSection(List<Map<String, String>> data, Element parent,
-            Map<String, String> agencyIdentifiers) throws ParseException
+    private void generateProcessedRequestComparisonSection(List<Map<String, String>> data, Element parent,
+            Map<String, String> agencyIdentifiers)
     {
         generateProcessedComparisonSection(data, parent, agencyIdentifiers, DOJReport.REQUEST_PROCESSED_COMPARISON);
     }
 
-    public void generateProcessedAppealsComparisonSection(List<Map<String, String>> data, Element parent,
-            Map<String, String> agencyIdentifiers) throws ParseException
+    private void generateProcessedAppealsComparisonSection(List<Map<String, String>> data, Element parent,
+            Map<String, String> agencyIdentifiers)
     {
         generateProcessedComparisonSection(data, parent, agencyIdentifiers, DOJReport.APPEAL_PROCESSED_COMPARISON);
     }
 
     private void generateProcessedComparisonSection(List<Map<String, String>> data, Element parent,
             Map<String, String> agencyIdentifiers, DOJReport report)
-            throws ParseException
+
     {
         Element processedComparisonSection = parent.getOwnerDocument().createElement(report.getSectionName());
 
@@ -787,7 +1113,7 @@ public class NiemExportService
 
         filteredData.forEach(
                 componentData -> appendProcessingComparisonItem(processedComparisonSection, componentData));
-        filteredData.forEach(componentData -> appendProcessingAssociations2(processedComparisonSection,
+        filteredData.forEach(componentData -> appendProcessingAssociations(processedComparisonSection,
                 componentData, "foia:ProcessingComparisonOrganizationAssociation"));
 
         parent.appendChild(processedComparisonSection);
@@ -813,63 +1139,85 @@ public class NiemExportService
         parent.appendChild(processingComparisonElement);
     }
 
-    public void generateProcessedRequestSection(List<Map<String, String>> data, Element parent,
-            Map<String, String> agencyIdentifiers) throws ParseException
+    private void generateProcessedRequestSection(List<Map<String, String>> data, Element parent,
+            Map<String, String> agencyIdentifiers)
     {
         generateProcessedSection(data, parent, agencyIdentifiers, DOJReport.PROCESSED_REQUESTS);
     }
 
-    public void generateProcessedAppealsSection(List<Map<String, String>> data, Element parent,
-            Map<String, String> agencyIdentifiers) throws ParseException
+    private void generateProcessedAppealsSection(List<Map<String, String>> data, Element parent,
+            Map<String, String> agencyIdentifiers)
     {
         generateProcessedSection(data, parent, agencyIdentifiers, DOJReport.PROCESSED_APPEALS);
     }
 
-    public void generateProcessedConsultationsSection(List<Map<String, String>> data, Element parent,
-            Map<String, String> agencyIdentifiers) throws ParseException
+    private void generateProcessedConsultationsSection(List<Map<String, String>> data, Element parent,
+            Map<String, String> agencyIdentifiers)
     {
         generateProcessedSection(data, parent, agencyIdentifiers, DOJReport.PROCESSED_CONSULTATIONS);
     }
 
     private void generateProcessedSection(List<Map<String, String>> data, Element parent,
             Map<String, String> agencyIdentifiers, DOJReport report)
-            throws ParseException
+
     {
         Element processedSection = parent.getOwnerDocument().createElement(report.getSectionName());
 
         List<Map<String, String>> filteredData = getDataWithComponentReferences(data, agencyIdentifiers, report);
 
         filteredData.forEach(
-                componentData -> appendProcessingItem(processedSection, componentData));
-        filteredData.forEach(componentData -> appendProcessingAssociations2(processedSection,
+                componentData -> appendProcessingItem(processedSection, componentData, report));
+        filteredData.forEach(componentData -> appendProcessingAssociations(processedSection,
                 componentData, "foia:ProcessingStatisticsOrganizationAssociation"));
 
         parent.appendChild(processedSection);
     }
 
-    private void appendProcessingItem(Element parent, Map<String, String> record)
+    private void appendProcessingItem(Element parent, Map<String, String> record, DOJReport report)
     {
         Element processingElement = parent.getOwnerDocument().createElement("foia:ProcessingStatistics");
         processingElement.setAttribute("s:id", record.get("ComponentDataReference"));
 
-        String itemsPendingAtStart = record.get("Number of Pending as of Start of Fiscal Year");
-        String itemsReceived = record.get("Number of Received in Fiscal Year");
-        String itemsProcessed = record.get("Number of Processed in Fiscal Year");
+        String itemsPendingAtStart;
+        String itemsReceived;
+        String itemsProcessed;
+        String itemsPendingAtEnd;
 
-        int itemsPendingAtEnd = Integer.parseInt(itemsPendingAtStart) + Integer.parseInt(itemsReceived)
-                - Integer.parseInt(itemsProcessed);
+        if (report == DOJReport.PROCESSED_REQUESTS)
+        {
+            itemsPendingAtStart = record.get("Number of Requests Pending as of Start of  Fiscal Year");
+            itemsReceived = record.get("Number of Requests Received");
+            itemsProcessed = record.get("Number of Requests Processed");
+            itemsPendingAtEnd = record.get("Number of Requests Pending");
+        }
+        else if (report == DOJReport.PROCESSED_APPEALS)
+        {
+            itemsPendingAtStart = record.get("Number of Appeals Pending as of Start of Fiscal Year");
+            itemsReceived = record.get("Number of Appeals Received");
+            itemsProcessed = record.get("Number of Appeals Processed");
+            itemsPendingAtEnd = record.get("Number of Appeals Pending ");
+        }
+        else
+        {
+            itemsPendingAtStart = record
+                    .get("Number of Consultations Received from Other Agencies that were Pending at the Agency as of Start of the Fiscal Year");
+            itemsReceived = record.get("Number of Consultations Received from Other Agencies During the Fiscal Year");
+            itemsProcessed = record
+                    .get("Number of Consultations Received from Other Agencies that were Processed by the Agency During the Fiscal Year");
+            itemsPendingAtEnd = record
+                    .get("Number of Consultations Received from Other Agencies that were Pending at the Agency as of End of the Fiscal Year");
+        }
 
         addElement(processingElement, "foia:ProcessingStatisticsPendingAtStartQuantity", itemsPendingAtStart);
         addElement(processingElement, "foia:ProcessingStatisticsReceivedQuantity", itemsReceived);
         addElement(processingElement, "foia:ProcessingStatisticsProcessedQuantity", itemsProcessed);
-        addElement(processingElement, "foia:ProcessingStatisticsPendingAtEndQuantity",
-                String.valueOf(itemsPendingAtEnd));
+        addElement(processingElement, "foia:ProcessingStatisticsPendingAtEndQuantity", itemsPendingAtEnd);
 
         parent.appendChild(processingElement);
     }
 
-    public void generateAppealResponseTimeSection(List<Map<String, String>> data, Element parent,
-            Map<String, String> agencyIdentifiers) throws ParseException
+    private void generateAppealResponseTimeSection(List<Map<String, String>> data, Element parent,
+            Map<String, String> agencyIdentifiers)
     {
         DOJReport report = DOJReport.APPEAL_RESPONSE_TIME;
 
@@ -879,7 +1227,7 @@ public class NiemExportService
 
         filteredData.forEach(
                 componentData -> appendResponseTimeItem(appealResponseTimeSection, componentData));
-        filteredData.forEach(componentData -> appendProcessingAssociations2(appealResponseTimeSection,
+        filteredData.forEach(componentData -> appendProcessingAssociations(appealResponseTimeSection,
                 componentData, "foia:ResponseTimeOrganizationAssociation"));
 
         parent.appendChild(appealResponseTimeSection);
@@ -887,7 +1235,7 @@ public class NiemExportService
 
     private void appendResponseTimeItem(Element parent, Map<String, String> record)
     {
-        Element responseTimeElement = parent.getOwnerDocument().createElement("foia:ProcessingStatistics");
+        Element responseTimeElement = parent.getOwnerDocument().createElement("foia:ResponseTime");
         responseTimeElement.setAttribute("s:id", record.get("ComponentDataReference"));
 
         String medianNumberOfDays = record.get("Median number of Days");
@@ -895,21 +1243,20 @@ public class NiemExportService
         String lowestNumberOfDays = record.get("Lowest Number of Days");
         String highestNumberOfDays = record.get("Highest Number of Days");
 
-        addElement(responseTimeElement, "foia:ResponseTimeMedianDaysValue", medianNumberOfDays);
-        addElement(responseTimeElement, "foia:ResponseTimeAverageDaysValue", averageNumberOfDays);
-        if (Double.parseDouble(lowestNumberOfDays) < 1)
-        {
-            lowestNumberOfDays = "LT1";
-        }
-        addElement(responseTimeElement, "foia:ResponseTimeLowestDaysValue", lowestNumberOfDays);
-        addElement(responseTimeElement, "foia:ResponseTimeHighestDaysValue",
-                highestNumberOfDays);
+        addResponseTimeElementIfValid(responseTimeElement, medianNumberOfDays, "foia:ResponseTimeMedianDaysCode",
+                "foia:ResponseTimeMedianDaysValue");
+        addResponseTimeElementIfValid(responseTimeElement, averageNumberOfDays, "foia:ResponseTimeAverageDaysCode",
+                "foia:ResponseTimeAverageDaysValue");
+        addResponseTimeElementIfValid(responseTimeElement, lowestNumberOfDays, "foia:ResponseTimeLowestDaysCode",
+                "foia:ResponseTimeLowestDaysValue");
+        addResponseTimeElementIfValid(responseTimeElement, highestNumberOfDays, "foia:ResponseTimeHighestDaysCode",
+                "foia:ResponseTimeHighestDaysValue");
 
         parent.appendChild(responseTimeElement);
     }
 
-    public void generateExpeditedProcessingSection(List<Map<String, String>> data, Element parent,
-            Map<String, String> agencyIdentifiers) throws ParseException
+    private void generateExpeditedProcessingSection(List<Map<String, String>> data, Element parent,
+            Map<String, String> agencyIdentifiers)
     {
         DOJReport report = DOJReport.EXPEDITED_PROCESSING;
 
@@ -919,7 +1266,7 @@ public class NiemExportService
 
         filteredData.forEach(
                 componentData -> appendExpeditedProcessingItem(expeditedProcessingSection, componentData));
-        filteredData.forEach(componentData -> appendProcessingAssociations2(expeditedProcessingSection,
+        filteredData.forEach(componentData -> appendProcessingAssociations(expeditedProcessingSection,
                 componentData, "foia:ExpeditedProcessingOrganizationAssociation"));
 
         parent.appendChild(expeditedProcessingSection);
@@ -938,8 +1285,9 @@ public class NiemExportService
 
         addElement(expeditedProcessingElement, "foia:RequestGrantedQuantity", granted);
         addElement(expeditedProcessingElement, "foia:RequestDeniedQuantity", denied);
-        if (NumberUtils.isParsable(granted) && Double.parseDouble(granted) > 0 && NumberUtils.isParsable(denied)
-                && Double.parseDouble(denied) > 0)
+
+        if (NumberUtils.isParsable(averageDaysToAdjudicate) && Double.parseDouble(averageDaysToAdjudicate) > 0
+                && NumberUtils.isParsable(medianDaysToAdjudicate) && Double.parseDouble(medianDaysToAdjudicate) > 0)
         {
             addElement(expeditedProcessingElement, "foia:AdjudicationMedianDaysValue", medianDaysToAdjudicate);
             addElement(expeditedProcessingElement, "foia:AdjudicationAverageDaysValue",
@@ -951,8 +1299,8 @@ public class NiemExportService
         parent.appendChild(expeditedProcessingElement);
     }
 
-    public void generateFeeWaiverSection(List<Map<String, String>> data, Element parent,
-            Map<String, String> agencyIdentifiers) throws ParseException
+    private void generateFeeWaiverSection(List<Map<String, String>> data, Element parent,
+            Map<String, String> agencyIdentifiers)
     {
         DOJReport report = DOJReport.FEE_WAIVER;
 
@@ -962,7 +1310,7 @@ public class NiemExportService
 
         filteredData.forEach(
                 componentData -> appendFeeWaiverItem(feeWaiverSection, componentData));
-        filteredData.forEach(componentData -> appendProcessingAssociations2(feeWaiverSection,
+        filteredData.forEach(componentData -> appendProcessingAssociations(feeWaiverSection,
                 componentData, "foia:FeeWaiverOrganizationAssociation"));
 
         parent.appendChild(feeWaiverSection);
@@ -980,8 +1328,8 @@ public class NiemExportService
 
         addElement(feeWaiverElement, "foia:RequestGrantedQuantity", granted);
         addElement(feeWaiverElement, "foia:RequestDeniedQuantity", denied);
-        if (NumberUtils.isParsable(granted) && Double.parseDouble(granted) > 0 && NumberUtils.isParsable(denied)
-                && Double.parseDouble(denied) > 0)
+        if (NumberUtils.isParsable(averageDaysToAdjudicate) && Double.parseDouble(averageDaysToAdjudicate) > 0
+                && NumberUtils.isParsable(medianDaysToAdjudicate) && Double.parseDouble(medianDaysToAdjudicate) > 0)
         {
             addElement(feeWaiverElement, "foia:AdjudicationMedianDaysValue", medianDaysToAdjudicate);
             addElement(feeWaiverElement, "foia:AdjudicationAverageDaysValue",
@@ -991,8 +1339,8 @@ public class NiemExportService
         parent.appendChild(feeWaiverElement);
     }
 
-    public void generatePersonnelAndCostSection(List<Map<String, String>> data, Element parent,
-            Map<String, String> agencyIdentifiers) throws ParseException
+    private void generatePersonnelAndCostSection(List<Map<String, String>> data, Element parent,
+            Map<String, String> agencyIdentifiers)
     {
         DOJReport report = DOJReport.PERSONNEL_AND_COST;
 
@@ -1002,7 +1350,7 @@ public class NiemExportService
 
         filteredData.forEach(
                 componentData -> generatePersonnelAndCostItem(personnelAndCostSection, componentData));
-        filteredData.forEach(componentData -> appendProcessingAssociations2(personnelAndCostSection,
+        filteredData.forEach(componentData -> appendProcessingAssociations(personnelAndCostSection,
                 componentData, "foia:PersonnelAndCostOrganizationAssociation"));
 
         parent.appendChild(personnelAndCostSection);
@@ -1010,8 +1358,8 @@ public class NiemExportService
 
     private void generatePersonnelAndCostItem(Element parent, Map<String, String> record)
     {
-        Element personelAndCostElement = parent.getOwnerDocument().createElement("foia:PersonnelAndCost");
-        personelAndCostElement.setAttribute("s:id", record.get("ComponentDataReference"));
+        Element personnelAndCostElement = parent.getOwnerDocument().createElement("foia:PersonnelAndCost");
+        personnelAndCostElement.setAttribute("s:id", record.get("ComponentDataReference"));
 
         String fullTimeStaff = record.get("Number of \"Full-Time FOIA Employees\"");
         String equivalentStaff = record.get("Number of \"Equivalent Full-Time FOIA Employees\"");
@@ -1020,18 +1368,18 @@ public class NiemExportService
         String litigationCosts = record.get("Litigation-Related Costs");
         String totalCosts = record.get("Total Costs");
 
-        addElement(personelAndCostElement, "foia:FullTimeEmployeeQuantity", fullTimeStaff);
-        addElement(personelAndCostElement, "foia:EquivalentFullTimeEmployeeQuantity", equivalentStaff);
-        addElement(personelAndCostElement, "foia:TotalFullTimeStaffQuantity", totalStaff);
-        addElement(personelAndCostElement, "foia:ProcessingCostAmount", processingCosts);
-        addElement(personelAndCostElement, "foia:LitigationCostAmount", litigationCosts);
-        addElement(personelAndCostElement, "foia:TotalCostAmount", totalCosts);
+        addElement(personnelAndCostElement, "foia:FullTimeEmployeeQuantity", fullTimeStaff);
+        addElement(personnelAndCostElement, "foia:EquivalentFullTimeEmployeeQuantity", equivalentStaff);
+        addElement(personnelAndCostElement, "foia:TotalFullTimeStaffQuantity", totalStaff);
+        addElement(personnelAndCostElement, "foia:ProcessingCostAmount", processingCosts);
+        addElement(personnelAndCostElement, "foia:LitigationCostAmount", litigationCosts);
+        addElement(personnelAndCostElement, "foia:TotalCostAmount", totalCosts);
 
-        parent.appendChild(personelAndCostElement);
+        parent.appendChild(personnelAndCostElement);
     }
 
-    public void generateFeesCollectedSection(List<Map<String, String>> data, Element parent,
-            Map<String, String> agencyIdentifiers) throws ParseException
+    private void generateFeesCollectedSection(List<Map<String, String>> data, Element parent,
+            Map<String, String> agencyIdentifiers)
     {
         DOJReport report = DOJReport.FEES_COLLECTED;
 
@@ -1041,7 +1389,7 @@ public class NiemExportService
 
         filteredData.forEach(
                 componentData -> appendFeesCollectedItem(feesCollectedSection, componentData));
-        filteredData.forEach(componentData -> appendProcessingAssociations2(feesCollectedSection,
+        filteredData.forEach(componentData -> appendProcessingAssociations(feesCollectedSection,
                 componentData, "foia:FeesCollectedOrganizationAssociation"));
 
         parent.appendChild(feesCollectedSection);
@@ -1056,13 +1404,17 @@ public class NiemExportService
         String percentageOfTotalCosts = record.get("Percentage of Total Costs");
 
         addElement(feesCollectedElement, "foia:FeesCollectedAmount", totalAmountOfFeesCollected);
-        addElement(feesCollectedElement, "foia:FeesCollectedCostPercent", percentageOfTotalCosts);
+        if (NumberUtils.isParsable(percentageOfTotalCosts))
+        {
+            float feesCollectedCostPercent = Float.parseFloat(percentageOfTotalCosts);
+            addElement(feesCollectedElement, "foia:FeesCollectedCostPercent", String.format("%.4f", feesCollectedCostPercent));
+        }
 
         parent.appendChild(feesCollectedElement);
     }
 
-    public void generateSubsectionUsedSection(List<Map<String, String>> data, Element parent,
-            Map<String, String> agencyIdentifiers) throws ParseException
+    private void generateSubsectionUsedSection(List<Map<String, String>> data, Element parent,
+            Map<String, String> agencyIdentifiers)
     {
         DOJReport report = DOJReport.SUBSECTION_USED;
 
@@ -1072,7 +1424,7 @@ public class NiemExportService
 
         filteredData.forEach(
                 componentData -> appendSubsectionUsedItem(subsectionUsedSection, componentData));
-        filteredData.forEach(componentData -> appendProcessingAssociations2(subsectionUsedSection,
+        filteredData.forEach(componentData -> appendProcessingAssociations(subsectionUsedSection,
                 componentData, "foia:SubsectionUsedOrganizationAssociation"));
 
         parent.appendChild(subsectionUsedSection);
@@ -1090,8 +1442,8 @@ public class NiemExportService
         parent.appendChild(subsectionUsedElement);
     }
 
-    public void generateSubsectionPostSection(List<Map<String, String>> data, Element parent,
-            Map<String, String> agencyIdentifiers) throws ParseException
+    private void generateSubsectionPostSection(List<Map<String, String>> data, Element parent,
+            Map<String, String> agencyIdentifiers)
     {
         DOJReport report = DOJReport.SUBSECTION_POST;
 
@@ -1101,7 +1453,7 @@ public class NiemExportService
 
         filteredData.forEach(
                 componentData -> appendSubsectionPostItem(subsectionPostSection, componentData));
-        filteredData.forEach(componentData -> appendProcessingAssociations2(subsectionPostSection,
+        filteredData.forEach(componentData -> appendProcessingAssociations(subsectionPostSection,
                 componentData, "foia:SubsectionPostOrganizationAssociation"));
 
         parent.appendChild(subsectionPostSection);
@@ -1121,8 +1473,8 @@ public class NiemExportService
         parent.appendChild(subsectionPostElement);
     }
 
-    public void generateBacklogSection(List<Map<String, String>> data, Element parent,
-            Map<String, String> agencyIdentifiers) throws ParseException
+    private void generateBacklogSection(List<Map<String, String>> data, Element parent,
+            Map<String, String> agencyIdentifiers)
     {
         DOJReport report = DOJReport.BACKLOG;
 
@@ -1132,7 +1484,7 @@ public class NiemExportService
 
         filteredData.forEach(
                 componentData -> appendBacklogItem(backlogSection, componentData));
-        filteredData.forEach(componentData -> appendProcessingAssociations2(backlogSection,
+        filteredData.forEach(componentData -> appendProcessingAssociations(backlogSection,
                 componentData, "foia:BacklogOrganizationAssociation"));
 
         parent.appendChild(backlogSection);
@@ -1152,20 +1504,20 @@ public class NiemExportService
         parent.appendChild(backlogElement);
     }
 
-    public void generateBackloggedRequestComparisonSection(List<Map<String, String>> data, Element parent,
-            Map<String, String> agencyIdentifiers) throws ParseException
+    private void generateBackloggedRequestComparisonSection(List<Map<String, String>> data, Element parent,
+            Map<String, String> agencyIdentifiers)
     {
         generateBacklogComparisonSection(data, parent, agencyIdentifiers, DOJReport.BACKLOG_REQUEST_COMPARISON);
     }
 
-    public void generateBackloggedAppealsComparisonSection(List<Map<String, String>> data, Element parent,
-            Map<String, String> agencyIdentifiers) throws ParseException
+    private void generateBackloggedAppealsComparisonSection(List<Map<String, String>> data, Element parent,
+            Map<String, String> agencyIdentifiers)
     {
         generateBacklogComparisonSection(data, parent, agencyIdentifiers, DOJReport.BACKLOG_APPEAL_COMPARISON);
     }
 
     private void generateBacklogComparisonSection(List<Map<String, String>> data, Element parent,
-            Map<String, String> agencyIdentifiers, DOJReport report) throws ParseException
+            Map<String, String> agencyIdentifiers, DOJReport report)
     {
 
         Element backlogComparisonSection = parent.getOwnerDocument().createElement(report.getSectionName());
@@ -1174,7 +1526,7 @@ public class NiemExportService
 
         filteredData.forEach(
                 componentData -> appendBacklogComparisonItem(backlogComparisonSection, componentData, report));
-        filteredData.forEach(componentData -> appendProcessingAssociations2(backlogComparisonSection,
+        filteredData.forEach(componentData -> appendProcessingAssociations(backlogComparisonSection,
                 componentData, "foia:BacklogComparisonOrganizationAssociation"));
 
         parent.appendChild(backlogComparisonSection);
@@ -1209,13 +1561,29 @@ public class NiemExportService
         parent.appendChild(backlogComparisonElement);
     }
 
+    private boolean isValidAgencyRow(Map<String, String> agency)
+    {
+        return !agency.get(AGENCY_IDENTIFIER_COLUMN).contains("Total")
+                || agency.get(AGENCY_IDENTIFIER_COLUMN).equals("Grand Total");
+    }
+
     private Map<String, List<Map<String, String>>> groupByComponentAndFilter(List<Map<String, String>> data)
     {
-        Map<String, List<Map<String, String>>> listMap = data.stream()
-                .filter(it -> !it.get(AGENCY_IDENTIFIER_COLUMN).contains("Total")
-                        || it.get(AGENCY_IDENTIFIER_COLUMN).equals("Grand Total"))
-                .collect(groupingBy(it -> it.get(AGENCY_IDENTIFIER_COLUMN)));
-        return listMap;
+        return data.stream()
+                .filter(this::isValidAgencyRow)
+                .collect(Collectors.groupingBy(
+                        it -> it.get(AGENCY_IDENTIFIER_COLUMN),
+                        LinkedHashMap::new,
+                        toList()));
+    }
+
+    private Map<String, List<Map<String, String>>> groupDataByExemption(List<Map<String, String>> data)
+    {
+        return data.stream()
+                .collect(Collectors.groupingBy(
+                        it -> it.get("Statute"),
+                        LinkedHashMap::new,
+                        toList()));
     }
 
     private void addElement(Element parent, String elemName, String elemValue)
@@ -1225,20 +1593,33 @@ public class NiemExportService
         parent.appendChild(elem);
     }
 
-    private void appendProcessingAssociations(Element parentElement, String associationsElementName, String id,
-            String agency)
+    private List<Map<String, String>> getDataWithPredifinedComponentReference(List<Map<String, String>> data,
+            Map<String, String> agencyIdentifiers, String componentDataReference)
     {
-        Element organizationAssociationElement = parentElement.getOwnerDocument().createElement(associationsElementName);
+        List<Map<String, String>> filteredData = new ArrayList<>();
 
-        Element componentDataReference = parentElement.getOwnerDocument().createElement("foia:ComponentDataReference");
-        componentDataReference.setAttribute("s:ref", id);
-        organizationAssociationElement.appendChild(componentDataReference);
+        for (int i = 0; i < data.size(); i++)
+        {
+            Map<String, String> record = data.get(i);
+            String agency = record.get(AGENCY_IDENTIFIER_COLUMN);
 
-        Element organizationReference = parentElement.getOwnerDocument().createElement("nc:OrganizationReference");
-        organizationReference.setAttribute("s:ref", componentMap.get(agency));
-        organizationAssociationElement.appendChild(organizationReference);
+            if (agencyIdentifiers.get(agency) != null)
+            {
+                Map<String, String> filteredRecord = getComponentReferencedRecord(record, componentDataReference,
+                        agencyIdentifiers.get(agency));
+                filteredData.add(filteredRecord);
+            }
+            else if (agency.equals("Grand Total"))
+            {
+                Map<String, String> filteredRecord = getComponentReferencedRecord(record, componentDataReference, "ORG0");
+                filteredData.add(filteredRecord);
+            }
+        }
+        filteredData = filteredData.stream()
+                .filter(entry -> entry.get("ComponentDataReference") != null)
+                .collect(toList());
 
-        parentElement.appendChild(organizationAssociationElement);
+        return filteredData;
     }
 
     private List<Map<String, String>> getDataWithComponentReferences(List<Map<String, String>> data, Map<String, String> agencyIdentifiers,
@@ -1248,25 +1629,26 @@ public class NiemExportService
 
         for (int index = 0; index < data.size(); index++)
         {
-            String agency = data.get(index).get(AGENCY_IDENTIFIER_COLUMN);
+            Map<String, String> record = data.get(index);
+            String agency = record.get(AGENCY_IDENTIFIER_COLUMN);
 
             if (agencyIdentifiers.get(agency) != null)
             {
                 String componentDataReference = report.getIdPrefix().concat(String.valueOf(index + 1));
-                Map<String, String> record = getComponentReferencedRecord(data.get(index), componentDataReference,
+                Map<String, String> filteredRecord = getComponentReferencedRecord(record, componentDataReference,
                         agencyIdentifiers.get(agency));
-                filteredData.add(record);
+                filteredData.add(filteredRecord);
             }
-            else if (agency.equals("Grand Total"))
+            else if ("Grand Total".equals(agency))
             {
                 String componentDataReference = report.getIdPrefix().concat(String.valueOf(0));
-                Map<String, String> record = getComponentReferencedRecord(data.get(index), componentDataReference, "ORG0");
-                filteredData.add(record);
+                Map<String, String> filteredRecord = getComponentReferencedRecord(record, componentDataReference, "ORG0");
+                filteredData.add(filteredRecord);
             }
         }
         filteredData = filteredData.stream()
                 .filter(entry -> entry.get("ComponentDataReference") != null)
-                .collect(Collectors.toList());
+                .collect(toList());
 
         return filteredData;
     }
@@ -1279,7 +1661,7 @@ public class NiemExportService
         return record;
     }
 
-    private void appendProcessingAssociations2(Element parentElement, Map<String, String> data, String associationsElementName)
+    private void appendProcessingAssociations(Element parentElement, Map<String, String> data, String associationsElementName)
     {
         Element organizationAssociationElement = parentElement.getOwnerDocument().createElement(associationsElementName);
 
@@ -1294,23 +1676,53 @@ public class NiemExportService
         parentElement.appendChild(organizationAssociationElement);
     }
 
-    public NiemExportUtils getNiemExportUtils()
+    public RestTemplate getRestTemplate()
     {
-        return niemExportUtils;
+        return restTemplate;
     }
 
-    public void setNiemExportUtils(NiemExportUtils niemExportUtils)
+    private void setRestTemplate(RestTemplate restTemplate)
     {
-        this.niemExportUtils = niemExportUtils;
+        this.restTemplate = restTemplate;
     }
 
-    public Map<String, String> getComponentMap()
+    public LookupDao getLookupDao()
     {
-        return componentMap;
+        return lookupDao;
     }
 
-    public void setComponentMap(Map<String, String> componentMap)
+    private void setLookupDao(LookupDao lookupDao)
     {
-        this.componentMap = componentMap;
+        this.lookupDao = lookupDao;
+    }
+
+    public ReportService getReportService()
+    {
+        return reportService;
+    }
+
+    private void setReportService(ReportService reportService)
+    {
+        this.reportService = reportService;
+    }
+
+    public PentahoReportsConfig getReportsConfig()
+    {
+        return reportsConfig;
+    }
+
+    private void setReportsConfig(PentahoReportsConfig reportsConfig)
+    {
+        this.reportsConfig = reportsConfig;
+    }
+
+    public FoiaConfig getFoiaConfig()
+    {
+        return foiaConfig;
+    }
+
+    private void setFoiaConfig(FoiaConfig foiaConfig)
+    {
+        this.foiaConfig = foiaConfig;
     }
 }

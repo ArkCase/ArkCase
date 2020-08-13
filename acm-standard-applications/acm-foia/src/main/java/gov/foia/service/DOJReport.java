@@ -1,27 +1,27 @@
-package com.armedia.acm.plugins.report.niem;
+package gov.foia.service;
 
 /*-
  * #%L
- * ACM Default Plugin: report
+ * ACM Standard Application: Freedom of Information Act
  * %%
  * Copyright (C) 2014 - 2020 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
@@ -29,6 +29,7 @@ package com.armedia.acm.plugins.report.niem;
 
 public enum DOJReport
 {
+    EXEMPTION_3_STATUTE("ES", "foia:Exemption3StatuteSection"),
     PROCESSED_REQUESTS("PS", "foia:ProcessedRequestSection"),
     REQUEST_DISPOSITION("RD", "foia:RequestDispositionSection"),
     REQUEST_DENIAL_OTHER_REASON("CODR", "foia:RequestDenialOtherReasonSection"),
@@ -46,7 +47,7 @@ public enum DOJReport
     COMPLEX_RESPONSE_TIME_INCREMENTS("CRT", "foia:ComplexResponseTimeIncrementsSection"),
     EXPEDITED_RESPONSE_TIME_INCREMENTS("ERT", "foia:ExpeditedResponseTimeIncrementsSection"),
     ALL_PENDING_PERFECTED_REQUESTS("PPR", "foia:PendingPerfectedRequestsSection"),
-    OLDEST_PENDING_REQUESTS("OPR", "foia:OldestPendingAppealSection"),
+    OLDEST_PENDING_REQUESTS("OPR", "foia:OldestPendingRequestSection"),
     EXPEDITED_PROCESSING("EP", "foia:ExpeditedProcessingSection"),
     FEE_WAIVER("FW", "foia:FeeWaiverSection"),
     PERSONNEL_AND_COST("PC", "foia:PersonnelAndCostSection"),
@@ -55,7 +56,7 @@ public enum DOJReport
     SUBSECTION_POST("SP", "foia:SubsectionPostSection"),
     BACKLOG("BK", "foia:BacklogSection"),
     PROCESSED_CONSULTATIONS("PCN", "foia:ProcessedConsultationSection"),
-    OLDEST_PENDING_CONSULTATIONS("OPC", "foia:OldestPendingAppealSection"),
+    OLDEST_PENDING_CONSULTATIONS("OPC", "foia:OldestPendingConsultationSection"),
     REQUEST_PROCESSED_COMPARISON("RPC", "foia:ProcessedRequestComparisonSection"),
     BACKLOG_REQUEST_COMPARISON("RBC", "foia:BackloggedRequestComparisonSection"),
     APPEAL_PROCESSED_COMPARISON("APC", "foia:ProcessedAppealComparisonSection"),
