@@ -833,7 +833,7 @@ public class NiemExportServiceImpl implements NiemExportService
      */
     private void addResponseTimeElementIfValid(Element parent, String numberOfDays, String codeName, String valueName)
     {
-        if (NumberUtils.isParsable(numberOfDays) && Double.parseDouble(numberOfDays) > 0
+        if (NumberUtils.isParsable(numberOfDays) && Double.parseDouble(numberOfDays) >= 0
                 && Double.parseDouble(numberOfDays) < 1)
         {
             addElement(parent, codeName, LOWER_THAN_ONE_IDENTIFIER);
@@ -2037,7 +2037,7 @@ public class NiemExportServiceImpl implements NiemExportService
         return restTemplate;
     }
 
-    private void setRestTemplate(RestTemplate restTemplate)
+    public void setRestTemplate(RestTemplate restTemplate)
     {
         this.restTemplate = restTemplate;
     }
@@ -2047,7 +2047,7 @@ public class NiemExportServiceImpl implements NiemExportService
         return lookupDao;
     }
 
-    private void setLookupDao(LookupDao lookupDao)
+    public void setLookupDao(LookupDao lookupDao)
     {
         this.lookupDao = lookupDao;
     }
@@ -2057,7 +2057,7 @@ public class NiemExportServiceImpl implements NiemExportService
         return reportService;
     }
 
-    private void setReportService(ReportService reportService)
+    public void setReportService(ReportService reportService)
     {
         this.reportService = reportService;
     }
@@ -2067,7 +2067,7 @@ public class NiemExportServiceImpl implements NiemExportService
         return reportsConfig;
     }
 
-    private void setReportsConfig(PentahoReportsConfig reportsConfig)
+    public void setReportsConfig(PentahoReportsConfig reportsConfig)
     {
         this.reportsConfig = reportsConfig;
     }
@@ -2077,7 +2077,7 @@ public class NiemExportServiceImpl implements NiemExportService
         return foiaConfig;
     }
 
-    private void setFoiaConfig(FoiaConfig foiaConfig)
+    public void setFoiaConfig(FoiaConfig foiaConfig)
     {
         this.foiaConfig = foiaConfig;
     }

@@ -95,6 +95,8 @@ angular.module('reports').controller('ReportsController',
                 });
                 $scope.modalInstance = modalInstance;
 
+                $scope.showGenerateNiemXmlButton = false;
+
                 $scope.iframeLoadedCallBack = function () {
                     $scope.modalInstance.close();
                     var niemXMLReportSection = _.invert($scope.dojYearlyReports)[$scope.data.reportSelected];
@@ -133,8 +135,7 @@ angular.module('reports').controller('ReportsController',
                 } else {
                     $scope.showReportParameters = false;
                 }
-            }
-            ;
+            };
 
         }
     ]);
