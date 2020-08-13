@@ -209,7 +209,7 @@ public class NiemExportServiceImpl implements NiemExportService
     }
 
     /**
-     * This method will check and report on null data in the generated XML document
+     * This method will check and report for null data in the generated XML document
      * If such data exists, the document cannot be exported
      */
     private void checkDoc(Node node)
@@ -437,9 +437,19 @@ public class NiemExportServiceImpl implements NiemExportService
         organizationElement.appendChild(orgSubUnitElement);
     }
 
-    /*
-     * This sections organization associations elements differs from all other sections due to the fact that
+    /**
+     *
+     * Section: IV. EXEMPTION 3 STATUTES
+     * 
+     * Note: This sections organization associations elements differs from all other sections due to the fact that
      * it includes the quantity of exemptions used in the association elements as opposed to the main data
+     *
+     * @param data
+     *            List of mapped values, where the table headers are the keys for each entry
+     * @param parent
+     *            The parent that we will append the section to
+     * @param agencyIdentifiers
+     *            All the agency components that can occur in the data
      */
     private void generateExemption3StatuteSection(List<Map<String, String>> data, Element parent, Map<String, String> agencyIdentifiers)
     {
@@ -504,18 +514,52 @@ public class NiemExportServiceImpl implements NiemExportService
         parent.appendChild(reliedUponStatuteElement);
     }
 
+    /**
+     *
+     * Section: VI.C.(5). TEN OLDEST PENDING ADMINISTRATIVE APPEALS
+     *
+     * @param data
+     *            List of mapped values, where the table headers are the keys for each entry
+     * @param parent
+     *            The parent that we will append the section to
+     * @param agencyIdentifiers
+     *            All the agency components that can occur in the data
+     */
     private void generateOldestPendingAppealsSection(List<Map<String, String>> data, Element parent,
             Map<String, String> agencyIdentifiers)
     {
         generateOldestPendingSection(data, parent, agencyIdentifiers, DOJReport.OLDEST_PENDING_APPEALS);
     }
 
+    /**
+     *
+     * Section: VII.E. PENDING REQUESTS -- TEN OLDEST PENDING PERFECTED REQUESTS
+     *
+     * @param data
+     *            List of mapped values, where the table headers are the keys for each entry
+     * @param parent
+     *            The parent that we will append the section to
+     * @param agencyIdentifiers
+     *            All the agency components that can occur in the data
+     */
     private void generateOldestPendingRequestsSection(List<Map<String, String>> data, Element parent,
             Map<String, String> agencyIdentifiers)
     {
         generateOldestPendingSection(data, parent, agencyIdentifiers, DOJReport.OLDEST_PENDING_REQUESTS);
     }
 
+    /**
+     *
+     * Section: XII.C. CONSULTATIONS ON FOIA REQUESTS -- TEN OLDEST CONSULTATIONS RECEIVED FROM OTHER AGENCIES AND
+     * PENDING AT THE AGENCY
+     *
+     * @param data
+     *            List of mapped values, where the table headers are the keys for each entry
+     * @param parent
+     *            The parent that we will append the section to
+     * @param agencyIdentifiers
+     *            All the agency components that can occur in the data
+     */
     private void generateOldestPendingConsultationsSection(List<Map<String, String>> data, Element parent,
             Map<String, String> agencyIdentifiers)
     {
@@ -585,12 +629,35 @@ public class NiemExportServiceImpl implements NiemExportService
         parent.appendChild(oldestPendingItemsElement);
     }
 
+    /**
+     *
+     * Section: V.B.(2). DISPOSITION OF FOIA REQUESTS -- "OTHER" REASONS FOR "FULL DENIALS BASED ON REASONS OTHER THAN
+     * EXEMPTIONS"
+     *
+     * @param data
+     *            List of mapped values, where the table headers are the keys for each entry
+     * @param parent
+     *            The parent that we will append the section to
+     * @param agencyIdentifiers
+     *            All the agency components that can occur in the data
+     */
     private void generateRequestDenialOtherReasonSection(List<Map<String, String>> data, Element parent,
             Map<String, String> agencyIdentifiers)
     {
         generateDenialOtherReasonSection(data, parent, agencyIdentifiers, DOJReport.REQUEST_DENIAL_OTHER_REASON);
     }
 
+    /**
+     *
+     * Section: VI.C.(3). REASONS FOR DENIAL ON APPEAL -- "OTHER" REASONS
+     *
+     * @param data
+     *            List of mapped values, where the table headers are the keys for each entry
+     * @param parent
+     *            The parent that we will append the section to
+     * @param agencyIdentifiers
+     *            All the agency components that can occur in the data
+     */
     private void generateAppealDenialOtherReasonSection(List<Map<String, String>> data, Element parent,
             Map<String, String> agencyIdentifiers)
     {
@@ -678,13 +745,34 @@ public class NiemExportServiceImpl implements NiemExportService
         return mainData;
     }
 
+    /**
+     *
+     * Section: VII.A. FOIA REQUESTS -- RESPONSE TIME FOR ALL PROCESSED PERFECTED REQUESTS
+     *
+     * @param data
+     *            List of mapped values, where the table headers are the keys for each entry
+     * @param parent
+     *            The parent that we will append the section to
+     * @param agencyIdentifiers
+     *            All the agency components that can occur in the data
+     */
     private void generateProcessedRequestResponseTimeSection(List<Map<String, String>> data, Element parent,
             Map<String, String> agencyIdentifiers)
     {
-        DOJReport report = DOJReport.PROCESSED_PERFECTED_REQUESTS_RESPONSE_TIME;
-        appendProcessedRequestResponseTimeSection(data, parent, agencyIdentifiers, report);
+        appendProcessedRequestResponseTimeSection(data, parent, agencyIdentifiers, DOJReport.PROCESSED_PERFECTED_REQUESTS_RESPONSE_TIME);
     }
 
+    /**
+     *
+     * Section: VII.B. PROCESSED REQUESTS -- RESPONSE TIME FOR PERFECTED REQUESTS IN WHICH INFORMATION WAS GRANTED
+     *
+     * @param data
+     *            List of mapped values, where the table headers are the keys for each entry
+     * @param parent
+     *            The parent that we will append the section to
+     * @param agencyIdentifiers
+     *            All the agency components that can occur in the data
+     */
     private void generateInformationGrantedResponseTimeSection(List<Map<String, String>> data, Element parent,
             Map<String, String> agencyIdentifiers)
     {
@@ -756,6 +844,17 @@ public class NiemExportServiceImpl implements NiemExportService
         }
     }
 
+    /**
+     *
+     * Section: VII.D. PENDING REQUESTS -- ALL PENDING PERFECTED REQUESTS
+     *
+     * @param data
+     *            List of mapped values, where the table headers are the keys for each entry
+     * @param parent
+     *            The parent that we will append the section to
+     * @param agencyIdentifiers
+     *            All the agency components that can occur in the data
+     */
     private void generatePendingPerfectedRequestsSection(List<Map<String, String>> data, Element parent,
             Map<String, String> agencyIdentifiers)
     {
@@ -806,22 +905,55 @@ public class NiemExportServiceImpl implements NiemExportService
 
     }
 
+    /**
+     *
+     * Section: VII.C.1 PROCESSED SIMPLE REQUESTS -- RESPONSE TIME IN DAY INCREMENTS
+     *
+     * @param data
+     *            List of mapped values, where the table headers are the keys for each entry
+     * @param parent
+     *            The parent that we will append the section to
+     * @param agencyIdentifiers
+     *            All the agency components that can occur in the data
+     */
     private void generateSimpleResponseTimeIncrementsSection(List<Map<String, String>> data, Element parent,
             Map<String, String> agencyIdentifiers)
     {
         generateResponseTimeIncrementsSection(data, parent, agencyIdentifiers, DOJReport.SIMPLE_RESPONSE_TIME_INCREMENTS);
     }
 
-    private void generateComplexResponseTimeIncrementsSection(List<Map<String, String>> data, Element parent,
-            Map<String, String> agencyIdentifiers)
-    {
-        generateResponseTimeIncrementsSection(data, parent, agencyIdentifiers, DOJReport.COMPLEX_RESPONSE_TIME_INCREMENTS);
-    }
-
+    /**
+     *
+     * Section: VII.C.2 PROCESSED COMPLEX REQUESTS -- RESPONSE TIME IN DAY INCREMENTS
+     *
+     * @param data
+     *            List of mapped values, where the table headers are the keys for each entry
+     * @param parent
+     *            The parent that we will append the section to
+     * @param agencyIdentifiers
+     *            All the agency components that can occur in the data
+     */
     private void generateExpeditedResponseTimeIncrementsSection(List<Map<String, String>> data, Element parent,
             Map<String, String> agencyIdentifiers)
     {
         generateResponseTimeIncrementsSection(data, parent, agencyIdentifiers, DOJReport.EXPEDITED_RESPONSE_TIME_INCREMENTS);
+    }
+
+    /**
+     *
+     * Section: VII.C.3 PROCESSED REQUESTS GRANTED EXPEDITED PROCESSING -- RESPONSE TIME IN DAY INCREMENTS
+     *
+     * @param data
+     *            List of mapped values, where the table headers are the keys for each entry
+     * @param parent
+     *            The parent that we will append the section to
+     * @param agencyIdentifiers
+     *            All the agency components that can occur in the data
+     */
+    private void generateComplexResponseTimeIncrementsSection(List<Map<String, String>> data, Element parent,
+            Map<String, String> agencyIdentifiers)
+    {
+        generateResponseTimeIncrementsSection(data, parent, agencyIdentifiers, DOJReport.COMPLEX_RESPONSE_TIME_INCREMENTS);
     }
 
     private void generateResponseTimeIncrementsSection(List<Map<String, String>> data, Element parent,
@@ -871,6 +1003,17 @@ public class NiemExportServiceImpl implements NiemExportService
         parent.appendChild(componentResponseTimeIncrements);
     }
 
+    /**
+     *
+     * Section: VI.B. DISPOSITION OF ADMINISTRATIVE APPEALS -- ALL PROCESSED APPEALS
+     *
+     * @param data
+     *            List of mapped values, where the table headers are the keys for each entry
+     * @param parent
+     *            The parent that we will append the section to
+     * @param agencyIdentifiers
+     *            All the agency components that can occur in the data
+     */
     private void generateAppealDispositionSection(List<Map<String, String>> data, Element parent, Map<String, String> agencyIdentifiers)
 
     {
@@ -913,6 +1056,17 @@ public class NiemExportServiceImpl implements NiemExportService
         parent.appendChild(appealDispositionElement);
     }
 
+    /**
+     *
+     * Section: V.B.(1). DISPOSITION OF FOIA REQUESTS -- ALL PROCESSED REQUESTS
+     *
+     * @param data
+     *            List of mapped values, where the table headers are the keys for each entry
+     * @param parent
+     *            The parent that we will append the section to
+     * @param agencyIdentifiers
+     *            All the agency components that can occur in the data
+     */
     private void generateRequestDispositionSection(List<Map<String, String>> data, Element parent, Map<String, String> agencyIdentifiers)
 
     {
@@ -973,6 +1127,17 @@ public class NiemExportServiceImpl implements NiemExportService
         parent.appendChild(requestDispositionElement);
     }
 
+    /**
+     *
+     * Section: VI.C.(2). REASONS FOR DENIAL ON APPEAL -- REASONS OTHER THAN EXEMPTIONS
+     *
+     * @param data
+     *            List of mapped values, where the table headers are the keys for each entry
+     * @param parent
+     *            The parent that we will append the section to
+     * @param agencyIdentifiers
+     *            All the agency components that can occur in the data
+     */
     private void generateAppealNonExemptionDenialSection(List<Map<String, String>> data, Element parent,
             Map<String, String> agencyIdentifiers)
     {
@@ -1039,12 +1204,34 @@ public class NiemExportServiceImpl implements NiemExportService
         parentElement.appendChild(nonExemptionDenialElement);
     }
 
+    /**
+     *
+     * Section: VI.C.(1). REASONS FOR DENIAL ON APPEAL -- NUMBER OF TIMES EXEMPTIONS APPLIED
+     *
+     * @param data
+     *            List of mapped values, where the table headers are the keys for each entry
+     * @param parent
+     *            The parent that we will append the section to
+     * @param agencyIdentifiers
+     *            All the agency components that can occur in the data
+     */
     private void generateAppealDispositionAppliedExemptionsSection(List<Map<String, String>> data, Element parent,
             Map<String, String> agencyIdentifiers)
     {
         appendDispositionAppliedExemptionsSection(data, parent, agencyIdentifiers, DOJReport.APPEAL_DISPOSITION_APPLIED_EXEMPTIONS);
     }
 
+    /**
+     *
+     * Section: V.B.(3). DISPOSITION OF FOIA REQUESTS -- NUMBER OF TIMES EXEMPTIONS APPLIED
+     *
+     * @param data
+     *            List of mapped values, where the table headers are the keys for each entry
+     * @param parent
+     *            The parent that we will append the section to
+     * @param agencyIdentifiers
+     *            All the agency components that can occur in the data
+     */
     private void generateRequestDispositionAppliedExemptionsSection(List<Map<String, String>> data, Element parent,
             Map<String, String> agencyIdentifiers)
     {
@@ -1091,12 +1278,36 @@ public class NiemExportServiceImpl implements NiemExportService
         parent.appendChild(componentAppliedExemptionsElement);
     }
 
+    /**
+     *
+     * Section: XII.D.(1). COMPARISON OF NUMBERS OF REQUESTS FROM PREVIOUS AND CURRENT ANNUAL REPORT -- REQUESTS
+     * RECEIVED AND PROCESSED
+     *
+     * @param data
+     *            List of mapped values, where the table headers are the keys for each entry
+     * @param parent
+     *            The parent that we will append the section to
+     * @param agencyIdentifiers
+     *            All the agency components that can occur in the data
+     */
     private void generateProcessedRequestComparisonSection(List<Map<String, String>> data, Element parent,
             Map<String, String> agencyIdentifiers)
     {
         generateProcessedComparisonSection(data, parent, agencyIdentifiers, DOJReport.REQUEST_PROCESSED_COMPARISON);
     }
 
+    /**
+     *
+     * Section: XII.E.(1). COMPARISON OF NUMBERS OF ADMINISTRATIVE APPEALS FROM PREVIOUS AND CURRENT ANNUAL REPORT --
+     * APPEALS RECEIVED AND PROCESSED
+     *
+     * @param data
+     *            List of mapped values, where the table headers are the keys for each entry
+     * @param parent
+     *            The parent that we will append the section to
+     * @param agencyIdentifiers
+     *            All the agency components that can occur in the data
+     */
     private void generateProcessedAppealsComparisonSection(List<Map<String, String>> data, Element parent,
             Map<String, String> agencyIdentifiers)
     {
@@ -1139,18 +1350,51 @@ public class NiemExportServiceImpl implements NiemExportService
         parent.appendChild(processingComparisonElement);
     }
 
+    /**
+     *
+     * Section: V.A. FOIA REQUESTS -- RECEIVED, PROCESSED AND PENDING FOIA REQUESTS
+     *
+     * @param data
+     *            List of mapped values, where the table headers are the keys for each entry
+     * @param parent
+     *            The parent that we will append the section to
+     * @param agencyIdentifiers
+     *            All the agency components that can occur in the data
+     */
     private void generateProcessedRequestSection(List<Map<String, String>> data, Element parent,
             Map<String, String> agencyIdentifiers)
     {
         generateProcessedSection(data, parent, agencyIdentifiers, DOJReport.PROCESSED_REQUESTS);
     }
 
+    /**
+     *
+     * Section: VI.B. DISPOSITION OF ADMINISTRATIVE APPEALS -- ALL PROCESSED APPEALS
+     *
+     * @param data
+     *            List of mapped values, where the table headers are the keys for each entry
+     * @param parent
+     *            The parent that we will append the section to
+     * @param agencyIdentifiers
+     *            All the agency components that can occur in the data
+     */
     private void generateProcessedAppealsSection(List<Map<String, String>> data, Element parent,
             Map<String, String> agencyIdentifiers)
     {
         generateProcessedSection(data, parent, agencyIdentifiers, DOJReport.PROCESSED_APPEALS);
     }
 
+    /**
+     *
+     * Section: XII.B. CONSULTATIONS ON FOIA REQUESTS -- RECEIVED, PROCESSED, AND PENDING CONSULTATIONS
+     *
+     * @param data
+     *            List of mapped values, where the table headers are the keys for each entry
+     * @param parent
+     *            The parent that we will append the section to
+     * @param agencyIdentifiers
+     *            All the agency components that can occur in the data
+     */
     private void generateProcessedConsultationsSection(List<Map<String, String>> data, Element parent,
             Map<String, String> agencyIdentifiers)
     {
@@ -1216,6 +1460,17 @@ public class NiemExportServiceImpl implements NiemExportService
         parent.appendChild(processingElement);
     }
 
+    /**
+     *
+     * Section: VI.C.(4). RESPONSE TIME FOR ADMINISTRATIVE APPEALS
+     *
+     * @param data
+     *            List of mapped values, where the table headers are the keys for each entry
+     * @param parent
+     *            The parent that we will append the section to
+     * @param agencyIdentifiers
+     *            All the agency components that can occur in the data
+     */
     private void generateAppealResponseTimeSection(List<Map<String, String>> data, Element parent,
             Map<String, String> agencyIdentifiers)
     {
@@ -1255,6 +1510,17 @@ public class NiemExportServiceImpl implements NiemExportService
         parent.appendChild(responseTimeElement);
     }
 
+    /**
+     *
+     * Section: VIII.A. REQUESTS FOR EXPEDITED PROCESSING
+     *
+     * @param data
+     *            List of mapped values, where the table headers are the keys for each entry
+     * @param parent
+     *            The parent that we will append the section to
+     * @param agencyIdentifiers
+     *            All the agency components that can occur in the data
+     */
     private void generateExpeditedProcessingSection(List<Map<String, String>> data, Element parent,
             Map<String, String> agencyIdentifiers)
     {
@@ -1299,6 +1565,17 @@ public class NiemExportServiceImpl implements NiemExportService
         parent.appendChild(expeditedProcessingElement);
     }
 
+    /**
+     *
+     * Section: VIII.B. REQUESTS FOR FEE WAIVER
+     *
+     * @param data
+     *            List of mapped values, where the table headers are the keys for each entry
+     * @param parent
+     *            The parent that we will append the section to
+     * @param agencyIdentifiers
+     *            All the agency components that can occur in the data
+     */
     private void generateFeeWaiverSection(List<Map<String, String>> data, Element parent,
             Map<String, String> agencyIdentifiers)
     {
@@ -1339,6 +1616,17 @@ public class NiemExportServiceImpl implements NiemExportService
         parent.appendChild(feeWaiverElement);
     }
 
+    /**
+     *
+     * Section: IX. FOIA PERSONNEL AND COSTS
+     *
+     * @param data
+     *            List of mapped values, where the table headers are the keys for each entry
+     * @param parent
+     *            The parent that we will append the section to
+     * @param agencyIdentifiers
+     *            All the agency components that can occur in the data
+     */
     private void generatePersonnelAndCostSection(List<Map<String, String>> data, Element parent,
             Map<String, String> agencyIdentifiers)
     {
@@ -1349,14 +1637,14 @@ public class NiemExportServiceImpl implements NiemExportService
         List<Map<String, String>> filteredData = getDataWithComponentReferences(data, agencyIdentifiers, report);
 
         filteredData.forEach(
-                componentData -> generatePersonnelAndCostItem(personnelAndCostSection, componentData));
+                componentData -> appendPersonnelAndCostItem(personnelAndCostSection, componentData));
         filteredData.forEach(componentData -> appendProcessingAssociations(personnelAndCostSection,
                 componentData, "foia:PersonnelAndCostOrganizationAssociation"));
 
         parent.appendChild(personnelAndCostSection);
     }
 
-    private void generatePersonnelAndCostItem(Element parent, Map<String, String> record)
+    private void appendPersonnelAndCostItem(Element parent, Map<String, String> record)
     {
         Element personnelAndCostElement = parent.getOwnerDocument().createElement("foia:PersonnelAndCost");
         personnelAndCostElement.setAttribute("s:id", record.get("ComponentDataReference"));
@@ -1378,6 +1666,17 @@ public class NiemExportServiceImpl implements NiemExportService
         parent.appendChild(personnelAndCostElement);
     }
 
+    /**
+     *
+     * Section: X. FEES COLLECTED FOR PROCESSING REQUESTS
+     *
+     * @param data
+     *            List of mapped values, where the table headers are the keys for each entry
+     * @param parent
+     *            The parent that we will append the section to
+     * @param agencyIdentifiers
+     *            All the agency components that can occur in the data
+     */
     private void generateFeesCollectedSection(List<Map<String, String>> data, Element parent,
             Map<String, String> agencyIdentifiers)
     {
@@ -1413,6 +1712,17 @@ public class NiemExportServiceImpl implements NiemExportService
         parent.appendChild(feesCollectedElement);
     }
 
+    /**
+     *
+     * Section: XI.A. NUMBER OF TIMES SUBSECTION (C) USED
+     *
+     * @param data
+     *            List of mapped values, where the table headers are the keys for each entry
+     * @param parent
+     *            The parent that we will append the section to
+     * @param agencyIdentifiers
+     *            All the agency components that can occur in the data
+     */
     private void generateSubsectionUsedSection(List<Map<String, String>> data, Element parent,
             Map<String, String> agencyIdentifiers)
     {
@@ -1442,6 +1752,17 @@ public class NiemExportServiceImpl implements NiemExportService
         parent.appendChild(subsectionUsedElement);
     }
 
+    /**
+     *
+     * Section: XI.B. NUMBER OF SUBSECTION (A)(2) POSTINGS
+     *
+     * @param data
+     *            List of mapped values, where the table headers are the keys for each entry
+     * @param parent
+     *            The parent that we will append the section to
+     * @param agencyIdentifiers
+     *            All the agency components that can occur in the data
+     */
     private void generateSubsectionPostSection(List<Map<String, String>> data, Element parent,
             Map<String, String> agencyIdentifiers)
     {
@@ -1473,6 +1794,17 @@ public class NiemExportServiceImpl implements NiemExportService
         parent.appendChild(subsectionPostElement);
     }
 
+    /**
+     *
+     * Section: XII.A. BACKLOGS OF FOIA REQUESTS AND ADMINISTRATIVE APPEALS
+     *
+     * @param data
+     *            List of mapped values, where the table headers are the keys for each entry
+     * @param parent
+     *            The parent that we will append the section to
+     * @param agencyIdentifiers
+     *            All the agency components that can occur in the data
+     */
     private void generateBacklogSection(List<Map<String, String>> data, Element parent,
             Map<String, String> agencyIdentifiers)
     {
@@ -1504,12 +1836,36 @@ public class NiemExportServiceImpl implements NiemExportService
         parent.appendChild(backlogElement);
     }
 
+    /**
+     *
+     * Section: XII.D.(2). COMPARISON OF NUMBERS OF REQUESTS FROM PREVIOUS AND CURRENT ANNUAL REPORT -- BACKLOGGED
+     * REQUESTS
+     *
+     * @param data
+     *            List of mapped values, where the table headers are the keys for each entry
+     * @param parent
+     *            The parent that we will append the section to
+     * @param agencyIdentifiers
+     *            All the agency components that can occur in the data
+     */
     private void generateBackloggedRequestComparisonSection(List<Map<String, String>> data, Element parent,
             Map<String, String> agencyIdentifiers)
     {
         generateBacklogComparisonSection(data, parent, agencyIdentifiers, DOJReport.BACKLOG_REQUEST_COMPARISON);
     }
 
+    /**
+     *
+     * Section: XII.E.(2). COMPARISON OF NUMBERS OF ADMINISTRATIVE APPEALS FROM PREVIOUS AND CURRENT ANNUAL REPORT --
+     * BACKLOGGED APPEALS
+     * 
+     * @param data
+     *            List of mapped values, where the table headers are the keys for each entry
+     * @param parent
+     *            The parent that we will append the section to
+     * @param agencyIdentifiers
+     *            All the agency components that can occur in the data
+     */
     private void generateBackloggedAppealsComparisonSection(List<Map<String, String>> data, Element parent,
             Map<String, String> agencyIdentifiers)
     {
