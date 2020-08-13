@@ -113,6 +113,7 @@ public class InverseValuesLookup extends AcmLookup<InverseValuesLookupEntry>
             lookupEntry.put("value", entry.getValue());
             lookupEntry.put("readonly", entry.isReadonly());
             lookupEntry.put("description", entry.getDescription());
+            lookupEntry.put("order", 0);
 
             lookupEntries.add(lookupEntry);
         });

@@ -27,20 +27,16 @@ package com.armedia.acm.services.config.lookups.web.api;
  * #L%
  */
 
-import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.services.config.lookups.model.StandardLookupEntry;
 import com.armedia.acm.services.config.lookups.service.LookupDao;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.servlet.http.HttpSession;
 
 import java.util.List;
 
@@ -56,7 +52,7 @@ public class GetAnnotationTagsAPIController
 
     @RequestMapping(value = "/annotationTypes", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String[] annotationsTags(Authentication authentication, HttpSession session) throws AcmListObjectsFailedException
+    public String[] annotationsTags()
     {
 
         log.debug("Finding annotation types");
