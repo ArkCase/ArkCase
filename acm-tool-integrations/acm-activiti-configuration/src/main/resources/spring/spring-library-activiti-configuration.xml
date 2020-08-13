@@ -135,6 +135,7 @@
     <bean id="processDefinitionManagementService" class="com.armedia.acm.activiti.services.AcmBpmnServiceImpl">
         <property name="activitiRepositoryService" ref="activitiRepositoryService"/>
         <property name="acmBpmnDao" ref="acmProcessDefinitionDao"/>
+        <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
     </bean>
 
     <bean id="acmProcessDefinitionDao" class="com.armedia.acm.activiti.services.dao.AcmBpmnDao"/>

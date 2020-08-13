@@ -150,14 +150,14 @@
 
         <beans:bean id="scheduledBillingQueuePurger" class="gov.foia.service.ScheduledBillingQueuePurger">
             <beans:property name="requestDao" ref="foiaRequestDao"/>
-            <beans:property name="startBusinessProcessService" ref="startBusinessProcessService"/>
+            <beans:property name="acmBpmnService" ref="processDefinitionManagementService"/>
             <beans:property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
             <beans:property name="foiaConfigurationService" ref="foiaConfigurationService"/>
         </beans:bean>
 
         <beans:bean id="scheduledHoldQueuePurger" class="gov.foia.service.ScheduledHoldQueuePurger">
             <beans:property name="requestDao" ref="foiaRequestDao"/>
-            <beans:property name="startBusinessProcessService" ref="startBusinessProcessService"/>
+            <beans:property name="acmBpmnService" ref="processDefinitionManagementService"/>
             <beans:property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
             <beans:property name="foiaConfigurationService" ref="foiaConfigurationService"/>
         </beans:bean>
@@ -283,7 +283,7 @@
             <beans:property name="onLeaveQueueBusinessRule" ref="onLeaveQueueBusinessRule"/>
             <beans:property name="onEnterQueueBusinessRule" ref="onEnterQueueBusinessRule"/>
             <beans:property name="queueService" ref="queueService"/>
-            <beans:property name="startBusinessProcessService" ref="startBusinessProcessService"/>
+            <beans:property name="acmBpmnService" ref="processDefinitionManagementService"/>
             <beans:property name="saveCaseFileBusinessRule" ref="saveCaseFileBusinessRule"/>
             <beans:property name="acmObjectLockService" ref="objectLockService"/>
             <beans:property name="systemConfigurationService" ref="foiaConfigurationService"/>

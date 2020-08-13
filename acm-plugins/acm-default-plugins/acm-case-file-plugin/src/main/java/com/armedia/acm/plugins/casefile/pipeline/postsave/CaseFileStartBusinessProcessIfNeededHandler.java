@@ -27,7 +27,7 @@ package com.armedia.acm.plugins.casefile.pipeline.postsave;
  * #L%
  */
 
-import com.armedia.acm.plugins.businessprocess.service.StartBusinessProcessService;
+import com.armedia.acm.activiti.services.AcmBpmnService;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.CaseFileStartBusinessProcessModel;
 import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
@@ -35,11 +35,12 @@ import com.armedia.acm.plugins.casefile.service.CaseFileStartBusinessProcessBusi
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,7 +52,7 @@ public class CaseFileStartBusinessProcessIfNeededHandler implements PipelineHand
      */
     private final Logger log = LogManager.getLogger(getClass());
     private CaseFileStartBusinessProcessBusinessRule startBusinessProcessBusinessRule;
-    private StartBusinessProcessService startBusinessProcessService;
+    private AcmBpmnService acmBpmnService;
     @PersistenceContext
     private EntityManager em;
 
@@ -81,7 +82,7 @@ public class CaseFileStartBusinessProcessIfNeededHandler implements PipelineHand
 
             String processName = result.getProcessName();
 
-            getStartBusinessProcessService().startBusinessProcess(processName, processVariables);
+            getAcmBpmnService().startBusinessProcess(processName, processVariables);
         }
     }
 
@@ -102,13 +103,13 @@ public class CaseFileStartBusinessProcessIfNeededHandler implements PipelineHand
         this.startBusinessProcessBusinessRule = startBusinessProcessBusinessRule;
     }
 
-    public StartBusinessProcessService getStartBusinessProcessService()
+    public AcmBpmnService getAcmBpmnService()
     {
-        return startBusinessProcessService;
+        return acmBpmnService;
     }
 
-    public void setStartBusinessProcessService(StartBusinessProcessService startBusinessProcessService)
+    public void setAcmBpmnService(AcmBpmnService acmBpmnService)
     {
-        this.startBusinessProcessService = startBusinessProcessService;
+        this.acmBpmnService = acmBpmnService;
     }
 }

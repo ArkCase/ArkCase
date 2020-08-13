@@ -33,10 +33,13 @@ import com.armedia.acm.activiti.model.AcmProcessDefinition;
 import com.armedia.acm.activiti.services.dao.AcmBpmnDao;
 
 import org.activiti.engine.ActivitiException;
+import org.activiti.engine.ActivitiObjectNotFoundException;
 import org.activiti.engine.RepositoryService;
+import org.activiti.engine.RuntimeService;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.DeploymentBuilder;
 import org.activiti.engine.repository.ProcessDefinition;
+import org.activiti.engine.runtime.ProcessInstance;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -61,6 +64,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by nebojsha on 13.04.2015.
@@ -74,6 +78,7 @@ public class AcmBpmnServiceImpl implements AcmBpmnService
 
     private RepositoryService activitiRepositoryService;
     private AcmBpmnDao acmBpmnDao;
+    private RuntimeService activitiRuntimeService;
 
     @Override
     public List<AcmProcessDefinition> list(String orderBy, boolean isAsc)
@@ -115,20 +120,6 @@ public class AcmBpmnServiceImpl implements AcmBpmnService
             acmBpmnDao.save(activeVersion);
         }
         processDefinition.setActive(true);
-        acmBpmnDao.save(processDefinition);
-    }
-
-    @Override
-    @Transactional
-    public void makeInactive(AcmProcessDefinition processDefinition)
-    {
-        AcmProcessDefinition activeVersion = acmBpmnDao.getActive(processDefinition.getKey());
-        if (activeVersion != null)
-        {
-            activeVersion.setActive(false);
-            acmBpmnDao.save(activeVersion);
-        }
-        processDefinition.setActive(false);
         acmBpmnDao.save(processDefinition);
     }
 
@@ -274,6 +265,39 @@ public class AcmBpmnServiceImpl implements AcmBpmnService
     }
 
     @Override
+    public ProcessInstance startBusinessProcess(String processName, Map<String, Object> processVariables)
+    {
+
+        log.debug("Starting process named: {}.", processName);
+        ProcessInstance pi;
+        try
+        {
+            AcmProcessDefinition activeVersion = getActive(processName);
+
+            if (activeVersion != null)
+            {
+                ProcessDefinition activeProcessDefinition = getProcessDefinition(activeVersion.getDeploymentId(),
+                        activeVersion.getKey(),
+                        activeVersion.getVersion());
+
+                pi = getActivitiRuntimeService().startProcessInstanceById(activeProcessDefinition.getId(), processVariables);
+            }
+            else
+            {
+                pi = getActivitiRuntimeService().startProcessInstanceByKey(processName,
+                        processVariables);
+            }
+            log.debug("Started process with ID: {}.", pi.getId());
+        }
+        catch (ActivitiObjectNotFoundException e)
+        {
+            throw new ActivitiObjectNotFoundException(
+                    String.format("No process definition is deployed with the given name [%s]", processName), null);
+        }
+        return pi;
+    }
+
+    @Override
     public AcmProcessDefinition getByKeyAndVersion(String processDefinitionKey, int version)
     {
         return acmBpmnDao.getByKeyAndVersion(processDefinitionKey, version);
@@ -329,7 +353,8 @@ public class AcmBpmnServiceImpl implements AcmBpmnService
         return acmBpmnDao.listAllDeactivatedVersions();
     }
 
-    private ProcessDefinition getProcessDefinition(String deploymentId, String key, int version)
+    @Override
+    public ProcessDefinition getProcessDefinition(String deploymentId, String key, int version)
     {
         ProcessDefinition processDefinition = null;
 
@@ -371,4 +396,13 @@ public class AcmBpmnServiceImpl implements AcmBpmnService
         }
     }
 
+    public RuntimeService getActivitiRuntimeService()
+    {
+        return activitiRuntimeService;
+    }
+
+    public void setActivitiRuntimeService(RuntimeService activitiRuntimeService)
+    {
+        this.activitiRuntimeService = activitiRuntimeService;
+    }
 }

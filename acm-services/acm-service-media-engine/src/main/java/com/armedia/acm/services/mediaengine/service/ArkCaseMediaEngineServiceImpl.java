@@ -27,6 +27,7 @@ package com.armedia.acm.services.mediaengine.service;
  * #L%
  */
 
+import com.armedia.acm.activiti.services.AcmBpmnService;
 import com.armedia.acm.audit.dao.AuditDao;
 import com.armedia.acm.audit.model.AuditEvent;
 import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
@@ -107,6 +108,7 @@ public abstract class ArkCaseMediaEngineServiceImpl<T extends MediaEngine>
     private EcmFileService ecmFileService;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private AuditDao auditDao;
+    private AcmBpmnService acmBpmnService;
 
     @Override
     @Transactional
@@ -579,7 +581,7 @@ public abstract class ArkCaseMediaEngineServiceImpl<T extends MediaEngine>
         processVariables.put(MediaEngineBusinessProcessVariableKey.SERVICE_NAME.toString(), getServiceName());
         processVariables.put(MediaEngineBusinessProcessVariableKey.MESSAGE.toString(), "");
 
-        ProcessInstance processInstance = getActivitiRuntimeService().startProcessInstanceByKey(mediaEngineBusinessProcessModel.getName(),
+        ProcessInstance processInstance = getAcmBpmnService().startBusinessProcess(mediaEngineBusinessProcessModel.getName(),
                 processVariables);
 
         mediaEngine.setProcessId(processInstance.getId());
@@ -894,5 +896,15 @@ public abstract class ArkCaseMediaEngineServiceImpl<T extends MediaEngine>
     public void setAuditDao(AuditDao auditDao)
     {
         this.auditDao = auditDao;
+    }
+
+    public AcmBpmnService getAcmBpmnService()
+    {
+        return acmBpmnService;
+    }
+
+    public void setAcmBpmnService(AcmBpmnService acmBpmnService)
+    {
+        this.acmBpmnService = acmBpmnService;
     }
 }

@@ -58,16 +58,6 @@ angular.module('admin').controller(
                         return componentConfig;
                     });
 
-                    $scope.deactivateWorkflow = function (rowEntity) {
-                        var template = angular.copy(rowEntity);
-                        gridHelper.deleteRow(rowEntity);
-                        workflowsConfigService.deactivate(template.key, template.version).then(function () {
-                            messageService.info($translate.instant('admin.workflows.config.deactivate.success'));
-                        }, function () {
-                            messageService.error($translate.instant('admin.workflows.config.deactivate.error'));
-                        });
-                    };
-
                     $scope.showDeactivatedWorkflows = function () {
                         var modalInstance = $modal.open({
                             animation: true,
