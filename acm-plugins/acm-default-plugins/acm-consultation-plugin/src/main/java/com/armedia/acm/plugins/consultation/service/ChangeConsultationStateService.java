@@ -28,7 +28,6 @@ package com.armedia.acm.plugins.consultation.service;
  */
 
 import com.armedia.acm.auth.AuthenticationUtils;
-import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.consultation.dao.ChangeConsultationStatusDao;
 import com.armedia.acm.plugins.consultation.dao.ConsultationDao;
 import com.armedia.acm.plugins.consultation.model.ChangeConsultationStatus;
@@ -76,43 +75,6 @@ public class ChangeConsultationStateService
         });
     }
 
-    public Consultation changeConsultationState(Authentication auth, Long consultationId, String newState, String ipAddress)
-            throws AcmUserActionFailedException
-    {
-        try
-        {
-            log.info("Consultation ID : [{}] and incoming status is : [{}]", consultationId, newState);
-            Consultation retval = getConsultationDao().find(consultationId);
-
-            // do we need to do anything?
-            if (retval.getStatus().equals(newState))
-            {
-                return retval;
-            }
-
-            Date now = new Date();
-
-            retval.setStatus(newState);
-
-            if ("CLOSED".equals(newState))
-            {
-                retval.setClosed(now);
-            }
-
-            retval = getConsultationDao().save(retval);
-
-            log.info("Consultation ID : [{}] and saved status is : [{}]", consultationId, retval.getStatus());
-
-            getConsultationEventUtility().raiseEvent(retval, newState, now, ipAddress, auth.getName(), auth);
-
-            return retval;
-        }
-        catch (Exception e)
-        {
-            throw new AcmUserActionFailedException("Set consultation to " + newState, "Consultation", consultationId, e.getMessage(), e);
-        }
-    }
-
     public void handleChangeConsultationStatusApproved(Long consultationId, Long requestId, String userId, Date approvalDate,
             String ipAddress)
     {
@@ -130,6 +92,11 @@ public class ChangeConsultationStateService
 
         Consultation toSave = getConsultationDao().find(consultationId);
         toSave.setStatus(changeConsultationStatus.getStatus());
+
+        if ("CLOSED".equals(changeConsultationStatus.getStatus()))
+        {
+            toSave.setClosed(new Date());
+        }
 
         Consultation updated = getConsultationDao().save(toSave);
 
