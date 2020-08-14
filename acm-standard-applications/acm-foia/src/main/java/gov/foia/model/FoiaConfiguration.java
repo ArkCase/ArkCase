@@ -29,6 +29,8 @@ package gov.foia.model;
 
 import com.armedia.acm.plugins.businessprocess.model.SystemConfiguration;
 
+import java.util.Map;
+
 public class FoiaConfiguration extends SystemConfiguration
 {
     private Integer maxDaysInBillingQueue;
@@ -53,6 +55,7 @@ public class FoiaConfiguration extends SystemConfiguration
     private Boolean litigationRequestsEnabled;
     private Boolean litigationAppealsEnabled;
     private Boolean automaticCreationOfRequestWhenAppealIsRemandedEnabled;
+    private Map<String, String> dojYearlyReports;
 
     public Integer getMaxDaysInBillingQueue()
     {
@@ -279,5 +282,15 @@ public class FoiaConfiguration extends SystemConfiguration
     public void setAutomaticCreationOfRequestWhenAppealIsRemandedEnabled(Boolean automaticCreationOfRequestWhenAppealIsRemandedEnabled)
     {
         this.automaticCreationOfRequestWhenAppealIsRemandedEnabled = automaticCreationOfRequestWhenAppealIsRemandedEnabled;
+    }
+
+    public Map<String, String> getDojYearlyReports()
+    {
+        return dojYearlyReports;
+    }
+
+    public void setDojYearlyReports(Map<String, String> dojYearlyReports)
+    {
+        this.dojYearlyReports = dojYearlyReports;
     }
 }

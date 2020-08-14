@@ -27,9 +27,12 @@ package gov.foia.model;
  * #L%
  */
 
+import com.armedia.acm.configuration.annotations.MapValue;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.springframework.beans.factory.annotation.Value;
+
+import java.util.Map;
 
 public class FoiaConfig
 {
@@ -120,6 +123,16 @@ public class FoiaConfig
     @JsonProperty("litigationAppealsEnabled")
     @Value("${litigationAppealsEnabled}")
     private Boolean litigationAppealsEnabled;
+
+    private Map<String, String> dojYearlyReports;
+
+    @JsonProperty("dojNiemOrganizationName")
+    @Value("${dojNiemOrganizationName}")
+    private String dojNiemOrganizationName;
+
+    @JsonProperty("dojNiemAbbreviationText")
+    @Value("${dojNiemAbbreviationText}")
+    private String dojNiemAbbreviationText;
 
     public Integer getMaxDaysInHoldQueue()
     {
@@ -346,5 +359,36 @@ public class FoiaConfig
     public void setLitigationAppealsEnabled(Boolean litigationAppealsEnabled)
     {
         this.litigationAppealsEnabled = litigationAppealsEnabled;
+    }
+
+    @MapValue(value = "dojYearlyReports")
+    public Map<String, String> getDojYearlyReports()
+    {
+        return dojYearlyReports;
+    }
+
+    public void setDojYearlyReports(Map<String, String> dojYearlyReports)
+    {
+        this.dojYearlyReports = dojYearlyReports;
+    }
+
+    public String getDojNiemOrganizationName()
+    {
+        return dojNiemOrganizationName;
+    }
+
+    public void setDojNiemOrganizationName(String dojNiemOrganizationName)
+    {
+        this.dojNiemOrganizationName = dojNiemOrganizationName;
+    }
+
+    public String getDojNiemAbbreviationText()
+    {
+        return dojNiemAbbreviationText;
+    }
+
+    public void setDojNiemAbbreviationText(String dojNiemAbbreviationText)
+    {
+        this.dojNiemAbbreviationText = dojNiemAbbreviationText;
     }
 }
