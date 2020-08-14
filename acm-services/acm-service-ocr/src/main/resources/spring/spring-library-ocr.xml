@@ -25,6 +25,7 @@
         <property name="ecmFileTransaction" ref="ecmFileTransaction"/>
         <property name="ocrConfigurationService" ref="ocrConfigurationService"/>
         <property name="auditDao" ref="auditDao"/>
+        <property name="acmBpmnService" ref="processDefinitionManagementService"/>
     </bean>
 
     <bean id="ocrQueueJobService" class="com.armedia.acm.services.ocr.job.OCRQueueJob">

@@ -27,6 +27,7 @@ package com.armedia.acm.plugins.ecm.handler;
  * #L%
  */
 
+import com.armedia.acm.activiti.services.AcmBpmnService;
 import com.armedia.acm.data.BuckslipFutureTask;
 import com.armedia.acm.objectonverter.AcmMarshaller;
 import com.armedia.acm.objectonverter.ObjectConverter;
@@ -39,8 +40,8 @@ import com.armedia.acm.services.users.model.AcmUser;
 
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationListener;
 
 import java.util.ArrayList;
@@ -61,6 +62,7 @@ public class FileCreatedBuckslipWorkflowHandler implements ApplicationListener<E
     private RuntimeService activitiRuntimeService;
     private ObjectConverter objectConverter;
     private UserDao userDao;
+    private AcmBpmnService acmBpmnService;
 
     @Override
     public void onApplicationEvent(EcmFileAddedEvent event)
@@ -121,7 +123,7 @@ public class FileCreatedBuckslipWorkflowHandler implements ApplicationListener<E
         pvars.put("futureTasks",
                 getFutureTasks(approvers, configuration.getTaskName(), "", configuration.getTaskName(), event.getUserId(), 3));
 
-        ProcessInstance pi = getActivitiRuntimeService().startProcessInstanceByKey(processName, pvars);
+        ProcessInstance pi = getAcmBpmnService().startBusinessProcess(processName, pvars);
 
         LOG.debug("Started business process with id {} for file of type {}, id {}", pi.getId(), event.getSource().getFileType(),
                 event.getEcmFileId());
@@ -167,17 +169,6 @@ public class FileCreatedBuckslipWorkflowHandler implements ApplicationListener<E
     {
         this.fileWorkflowBusinessRule = fileWorkflowBusinessRule;
     }
-
-    public RuntimeService getActivitiRuntimeService()
-    {
-        return activitiRuntimeService;
-    }
-
-    public void setActivitiRuntimeService(RuntimeService activitiRuntimeService)
-    {
-        this.activitiRuntimeService = activitiRuntimeService;
-    }
-
     public UserDao getUserDao()
     {
         return userDao;
@@ -196,5 +187,15 @@ public class FileCreatedBuckslipWorkflowHandler implements ApplicationListener<E
     public void setObjectConverter(ObjectConverter objectConverter)
     {
         this.objectConverter = objectConverter;
+    }
+
+    public AcmBpmnService getAcmBpmnService()
+    {
+        return acmBpmnService;
+    }
+
+    public void setAcmBpmnService(AcmBpmnService acmBpmnService)
+    {
+        this.acmBpmnService = acmBpmnService;
     }
 }
