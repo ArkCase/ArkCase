@@ -10,11 +10,9 @@ angular.module('consultations').controller(
             $scope.approverName = "";
             $scope.groupName = "";
             //Functions
-            $scope.statusChanged = statusChanged;
             $scope.save = save;
             $scope.cancelModal = cancelModal;
             //Objects
-            $scope.showConsultationCloseStatus = false;
             $scope.showApprover= modalParams.showApprover;
             $scope.changeConsultationStatus = {
                 consultationId: modalParams.info.consultationId,
@@ -47,10 +45,6 @@ angular.module('consultations').controller(
             ObjectLookupService.getLookupByLookupName("changeConsultationStatuses").then(function(consultationStatuses) {
                 $scope.statuses = consultationStatuses;
             });
-
-            function statusChanged() {
-                $scope.showConsultationCloseStatus = $scope.changeConsultationStatus.status === "CLOSED";
-            }
 
             // ---------------------------            approver         --------------------------------------
             $scope.userOrGroupSearch = function() {
