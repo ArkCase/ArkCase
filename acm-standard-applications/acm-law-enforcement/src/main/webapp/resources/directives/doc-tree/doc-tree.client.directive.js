@@ -1274,7 +1274,7 @@ angular.module('directives').directive(
                                         } else {
                                             DeDuplicationConfigurationService.getDeDuplicationConfiguration().then(function (response) {
                                                 DocTree.deDuplication = response.data;
-                                                deDuplication = duplication['enableDeDuplication'];
+                                                deDuplication = DocTree.deDuplication['enableDeDuplication'];
                                                 if(node.data.duplicate && deDuplication) {
                                                     var $td = $("<td/>");
                                                     var $span = $("<span/>").appendTo($td);
