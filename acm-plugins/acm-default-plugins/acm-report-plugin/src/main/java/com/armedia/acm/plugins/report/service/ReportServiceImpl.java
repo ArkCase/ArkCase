@@ -634,7 +634,6 @@ public class ReportServiceImpl implements ReportService
             File file = File.createTempFile("pentaho-downloaded-report", ".pdf");
             FileUtils.copyInputStreamToFile(response.getBody().getInputStream(), file);
 
-            // split pdf document to get only report table page
             PDDocument document = PDDocument.load(file);
             // hide page numbers
             for (int i = 0; i < document.getPages().getCount(); i++)
@@ -650,16 +649,17 @@ public class ReportServiceImpl implements ReportService
             }
             document.save(file);
 
+            // split pdf document to get only report table page
             Splitter splitter = new Splitter();
-            List<PDDocument> Pages = splitter.split(document);
+            List<PDDocument> pages = splitter.split(document);
 
             PdfReader pdfReader = new PdfReader(file.getAbsolutePath());
 
-            for (int i = 2; i <= Pages.subList(1, Pages.size()).size() + 1; i++)
+            for (int i = 2; i <= pages.subList(1, pages.size()).size() + 1; i++)
             {
                 if (!PdfTextExtractor.getTextFromPage(pdfReader, i).contains("About this Report"))
                 {
-                    PDDocument pageToMerge = Pages.get(i - 1);
+                    PDDocument pageToMerge = pages.get(i - 1);
 
                     ByteArrayOutputStream out = new ByteArrayOutputStream();
                     pageToMerge.save(out);
