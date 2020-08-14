@@ -414,6 +414,15 @@
         <property name="configurationPropertyService" ref="configurationPropertyService"/>
     </bean>
 
+    <bean id="ecmFileDeDuplicationConfig" class="com.armedia.acm.plugins.ecm.model.EcmFileDeDuplicationConfig" scope="refresh">
+        <aop:scoped-proxy/>
+    </bean>
+
+    <bean id="ecmFileDeDuplicationConfigurationService" class="com.armedia.acm.plugins.ecm.service.impl.EcmFileDeDuplicationConfigurationServiceImpl">
+        <property name="ecmFileDeDuplicationConfig" ref="ecmFileDeDuplicationConfig"/>
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
+    </bean>
+
     <bean id="removeExpiredFilesService" class="com.armedia.acm.plugins.ecm.service.RemoveExpiredFilesService">
         <property name="fileChunkService" ref="fileChunkService"/>
         <property name="ecmFileService" ref="ecmFileService"/>
