@@ -471,7 +471,15 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
      * @returns {Object} An array returned by $resource
      */
     Service.getAddressTypes = function () {
-        return Service.getLookupByLookupName("addressTypes");
+        Service.getAddressTypes = function () {
+            var selectEntry = {key: null, value: "core.lookups.addressTypes.selectAddressType"};
+            var addressTypes = [];
+            return Service.getLookupByLookupName("addressTypes").then(function (adresses) {
+                addressTypes = adresses;
+                addressTypes.unshift(selectEntry);
+                return addressTypes;
+            });
+        };
     };
 
     /**
@@ -687,7 +695,15 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
      * @returns {Object} An array returned by $resource
      */
     Service.getCountries = function () {
-        return Service.getLookupByLookupName("countries");
+        Service.getCountries = function () {
+            var selectEntry = {key: null, value: "core.lookups.countries.selectCountry"};
+            var countriesTypes = [];
+            return Service.getLookupByLookupName("countries").then(function (countries) {
+                countriesTypes = countries;
+                countriesTypes.unshift(selectEntry);
+                return countriesTypes;
+            });
+        };
     };
 
     /**
