@@ -40,6 +40,8 @@ import com.armedia.acm.services.users.model.AcmUser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.List;
+
 import gov.privacy.model.PortalSARPerson;
 import gov.privacy.model.SARPerson;
 import gov.privacy.model.SubjectAccessRequest;
@@ -65,29 +67,34 @@ public class SARPortalUserParticipantsHandler implements PipelineHandler<Subject
 
         if (entity.getId() != null && requester instanceof PortalSARPerson)
         {
+            List<AcmUser> portalUsers = getUserDao().findByEmailAddress(requester.getDefaultEmail().getValue());
 
-            AcmUser portalUser = getUserDao().findByEmailAddress(requester.getDefaultEmail().getValue()).get(0);
-
-            boolean isPortalUserParticipant = entity.getParticipants().stream()
-                    .anyMatch(
-                            p -> ParticipantTypes.READER.equals(p.getParticipantType())
-                                    && p.getParticipantLdapId().equals(portalUser.getUserId()));
-
-            if (!isPortalUserParticipant)
+            if (portalUsers.size() > 0)
             {
-                AcmParticipant addedParticipant = null;
-                try
-                {
-                    addedParticipant = getAcmParticipantService().saveParticipant(portalUser.getUserId(),
-                            ParticipantTypes.READER, entity.getId(), entity.getObjectType());
 
-                    entity.getParticipants().add(addedParticipant);
+                AcmUser portalUser = portalUsers.get(0);
 
-                    log.debug("Successfully set portal user as participant for case file: [{}]", entity.getId());
-                }
-                catch (AcmAccessControlException e)
+                boolean isPortalUserParticipant = entity.getParticipants().stream()
+                        .anyMatch(
+                                p -> ParticipantTypes.READER.equals(p.getParticipantType())
+                                        && p.getParticipantLdapId().equals(portalUser.getUserId()));
+
+                if (!isPortalUserParticipant)
                 {
-                    log.error("Unable to set portal user as participant for case file: [{}]", entity.getId());
+                    AcmParticipant addedParticipant = null;
+                    try
+                    {
+                        addedParticipant = getAcmParticipantService().saveParticipant(portalUser.getUserId(),
+                                ParticipantTypes.READER, entity.getId(), entity.getObjectType());
+
+                        entity.getParticipants().add(addedParticipant);
+
+                        log.debug("Successfully set portal user as participant for case file: [{}]", entity.getId());
+                    }
+                    catch (AcmAccessControlException e)
+                    {
+                        log.error("Unable to set portal user as participant for case file: [{}]", entity.getId());
+                    }
                 }
             }
         }

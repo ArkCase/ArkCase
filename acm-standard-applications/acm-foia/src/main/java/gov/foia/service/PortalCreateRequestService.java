@@ -38,12 +38,7 @@ import com.armedia.acm.plugins.person.model.OrganizationAssociation;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.users.service.tracker.UserTrackerService;
 import com.armedia.acm.web.api.MDCConstants;
-import gov.foia.dao.PortalFOIAPersonDao;
-import gov.foia.model.FOIARequest;
-import gov.foia.model.FOIARequesterAssociation;
-import gov.foia.model.PortalFOIAPerson;
-import gov.foia.model.PortalFOIARequest;
-import gov.foia.model.PortalFOIARequestFile;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.slf4j.MDC;
@@ -58,6 +53,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import gov.foia.dao.PortalFOIAPersonDao;
+import gov.foia.model.FOIARequest;
+import gov.foia.model.FOIARequesterAssociation;
+import gov.foia.model.PortalFOIAPerson;
+import gov.foia.model.PortalFOIARequest;
+import gov.foia.model.PortalFOIARequestFile;
 
 public class PortalCreateRequestService
 {
@@ -159,7 +161,10 @@ public class PortalCreateRequestService
         PortalFOIAPerson requester;
 
         Optional<PortalFOIAPerson> person = getPortalFOIAPersonDao().findByEmail(in.getEmail());
-        requester = person.orElseGet(() -> populateRequesterAndOrganizationFromRequest(in));
+
+        requester = person
+                .map(portalFOIAPerson -> updatePersonInfo(in, portalFOIAPerson))
+                .orElseGet(() -> populateRequesterAndOrganizationFromRequest(in));
 
         requesterAssociation.setPerson(requester);
         request.getPersonAssociations().add(requesterAssociation);
@@ -214,6 +219,35 @@ public class PortalCreateRequestService
         return requester;
     }
 
+    private PortalFOIAPerson updatePersonInfo(PortalFOIARequest in, PortalFOIAPerson existingPerson)
+    {
+        PortalFOIAPerson requester = existingPerson;
+
+        requester.setGivenName(in.getFirstName());
+        requester.setFamilyName(in.getLastName());
+        requester.setMiddleName(in.getMiddleName());
+        requester.setTitle(in.getPrefix());
+        requester.setPosition(in.getPosition());
+
+        PostalAddress address = getPostalAddressFromPortalFOIARequest(in);
+        if (addressHasData(address) && requester.getAddresses().stream().noneMatch(add -> areAddressesEqual(add, address)))
+        {
+            requester.getAddresses().add(address);
+        }
+
+        if (in.getPhone() != null && !in.getPhone().isEmpty() && isNewContactMethod(requester, in.getPhone()))
+        {
+            ContactMethod phone = buildContactMethod("phone", in.getPhone());
+            requester.getContactMethods().add(phone);
+        }
+
+        if (in.getOrganization() != null && in.getOrganization().length() > 0)
+        {
+            getPortalUserServiceProvider().findOrCreateOrganizationAndPersonOrganizationAssociation(requester, in.getOrganization());
+        }
+        return requester;
+    }
+
     private boolean addressHasData(PostalAddress address)
     {
         return (address.getStreetAddress() != null && !address.getStreetAddress().equals(""))
@@ -221,6 +255,20 @@ public class PortalCreateRequestService
                 || (address.getCity() != null && !address.getCity().equals(""))
                 || (address.getZip() != null && !address.getZip().equals(""))
                 || (address.getState() != null && !address.getState().equals(""));
+    }
+
+    private boolean areAddressesEqual(PostalAddress address1, PostalAddress address2)
+    {
+        return !address1.getStreetAddress().equals(address2.getStreetAddress())
+                || !address1.getStreetAddress2().equals(address2.getStreetAddress2())
+                || !address1.getCity().equals(address2.getCity())
+                || !address1.getZip().equals(address2.getZip())
+                || !address1.getState().equals(address2.getState());
+    }
+
+    private boolean isNewContactMethod(PortalFOIAPerson requester, String contactMethodValue)
+    {
+        return requester.getContactMethods().stream().noneMatch(cm -> cm.getValue().equals(contactMethodValue));
     }
 
     private PostalAddress getPostalAddressFromPortalFOIARequest(PortalFOIARequest in)
