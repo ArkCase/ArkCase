@@ -410,5 +410,12 @@
             <beans:property name="notificationService" ref="notificationService"/>
         </beans:bean>
 
+        <beans:bean id="niemExportService" class="gov.foia.service.NiemExportServiceImpl">
+            <beans:property name="lookupDao" ref="lookupDao"/>
+            <beans:property name="reportsConfig" ref="pentahoReportsConfig"/>
+            <beans:property name="reportService" ref="reportService"/>
+            <beans:property name="foiaConfig" ref="foiaConfig"/>
+        </beans:bean>
+
     </beans:beans>
 </beans:beans>
