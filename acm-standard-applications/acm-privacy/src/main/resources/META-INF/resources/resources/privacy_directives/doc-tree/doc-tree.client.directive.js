@@ -1383,9 +1383,8 @@ angular
                                     name: "duplicate",
                                     renderer: function (element, node, columnDef, isReadOnly) {
                                         var deDuplication;
-                                        DeDuplicationConfigurationService.getDeDuplicationConfiguration().then(function (response) {
-                                            var duplication = response.data;
-                                            deDuplication = duplication['enableDeDuplication'];
+                                        if(DocTree.deDuplication) {
+                                            deDuplication = DocTree.deDuplication['enableDeDuplication'];
                                             if(node.data.duplicate && deDuplication) {
                                                 var $td = $("<td/>");
                                                 var $span = $("<span/>").appendTo($td);
@@ -1395,7 +1394,21 @@ angular
                                                 $(element).replaceWith($td);
                                             }
                                             ;
-                                        });
+                                        } else {
+                                            DeDuplicationConfigurationService.getDeDuplicationConfiguration().then(function (response) {
+                                                DocTree.deDuplication = response.data;
+                                                deDuplication = duplication['enableDeDuplication'];
+                                                if(node.data.duplicate && deDuplication) {
+                                                    var $td = $("<td/>");
+                                                    var $span = $("<span/>").appendTo($td);
+                                                    var $button = $("<button type='button'/>").addClass('duplicate').appendTo($span);
+                                                    var $text = $("<strong>D</strong>").appendTo($button);
+
+                                                    $(element).replaceWith($td);
+                                                }
+                                                ;
+                                            });
+                                        }
                                     }
                                 },
                                 {
