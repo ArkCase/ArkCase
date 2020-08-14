@@ -37,6 +37,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.armedia.acm.activiti.services.AcmBpmnService;
 import com.armedia.acm.plugins.ecm.dao.EcmFileVersionDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
@@ -115,6 +116,9 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
     @Mock
     private TranscribeConfiguration transcribeConfiguration;
 
+    @Mock
+    private AcmBpmnService acmBpmnService;
+
     private static String TRANSCRIBE = "TRANSCRIBE";
     private static String AWS_PROVIDER = "AWS";
     private static String MEDIA_ENGINE_WORKFLOW = "MediaEngineWorkFlow";
@@ -148,6 +152,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         arkCaseTranscribeService.setMediaEngineEventPublisher(mediaEngineEventPublisher);
         arkCaseTranscribeService.setSpringContextHolder(springContextHolder);
         arkCaseTranscribeService.setTranscribeConfigurationService(transcribeConfigurationService);
+        arkCaseTranscribeService.setAcmBpmnService(acmBpmnService);
     }
 
     @Test
@@ -442,14 +447,14 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
 
         when(processHandlerMap.get(any())).thenReturn(mediaEngineBusinessProcessRulesExecutor);
         when(mediaEngineBusinessProcessRulesExecutor.applyRules(any())).thenReturn(model);
-        when(activitiRuntimeService.startProcessInstanceByKey(eq(model.getName()), (Map<String, Object>) any()))
+        when(acmBpmnService.startBusinessProcess(eq(model.getName()), (Map<String, Object>) any()))
                 .thenReturn(processInstance);
         when(processInstance.getId()).thenReturn("123");
 
         arkCaseTranscribeService.startBusinessProcess(transcribe, arkCaseTranscribeService.getServiceName());
 
         verify(mediaEngineBusinessProcessRulesExecutor).applyRules(any());
-        verify(activitiRuntimeService).startProcessInstanceByKey(eq(model.getName()), (Map<String, Object>) any());
+        verify(acmBpmnService).startBusinessProcess(eq(model.getName()), (Map<String, Object>) any());
         verify(processInstance).getId();
 
         assertEquals("123", transcribe.getProcessId());

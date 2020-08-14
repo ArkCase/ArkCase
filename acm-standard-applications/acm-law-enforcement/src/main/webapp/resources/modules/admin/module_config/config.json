@@ -518,13 +518,6 @@
                     "name": "modifier",
                     "displayName": "modifier",
                     "visible": false
-                },
-                {
-                    "name": "status",
-                    "displayName": "admin.workflows.config.grid.status",
-                    "visible": true,
-                    "headerCellFilter": "translate",
-                    "cellTemplate": "<div align='center'><span ng-if='!row.entity.active' class='label label-warning' translate>admin.workflows.config.grid.deactivated</span><span ng-if='row.entity.active' ng-click='grid.appScope.deactivateWorkflow(row.entity)' class='label label-success' translate>admin.workflows.config.grid.activated</span></div>'"
                 }
             ],
             "createNewUrl": "https://activiti.alfresco.com/activiti-app/#/login"
