@@ -63,6 +63,7 @@ import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,8 +75,7 @@ import java.util.stream.Collectors;
  */
 public class ConfigLookupDao implements LookupDao
 {
-    private static final Configuration configuration = Configuration.builder().jsonProvider(new JacksonJsonNodeJsonProvider())
-            .mappingProvider(new JacksonMappingProvider()).build();
+
     private static final Configuration configurationWithSuppressedExceptions = Configuration.builder().options(Option.SUPPRESS_EXCEPTIONS)
             .jsonProvider(new JacksonJsonNodeJsonProvider()).mappingProvider(new JacksonMappingProvider()).build();
     private static final String ENTRIES_CONFIG_KEY = "entries";
@@ -85,8 +85,6 @@ public class ConfigLookupDao implements LookupDao
     private AcmLookupConfig lookupConfig;
     private ConfigurationPropertyService configurationPropertyService;
     private CollectionPropertiesConfigurationService propertiesConfigurationService;
-
-    private String lookupsExtFileLocation;
 
     @Override
     public AcmLookup<?> getLookupByName(String name)
@@ -245,9 +243,6 @@ public class ConfigLookupDao implements LookupDao
                 List<NestedLookupEntry> entries = getObjectConverter().getJsonUnmarshaller()
                         .unmarshallCollection(lookupDefinition.getLookupEntriesAsJson(), List.class, NestedLookupEntry.class);
 
-                entries.forEach(entry -> {
-
-                });
                 configurationTransformedLookup = lookupsFromConfiguration.transformToConfigurationEntries(entries);
 
                 updateSubLookupConfiguration(lookupDefinition, configurationTransformedLookup, lookupsFromConfiguration, entries.size());
@@ -713,6 +708,12 @@ public class ConfigLookupDao implements LookupDao
                             updatedEntries.add(AcmLookupTransformer.transformIntoNestedLookupEntry(standardEntryKey, entry));
                         }
                     }
+
+                    if (!updatedEntries.isEmpty())
+                    {
+                        updatedEntries.sort(Comparator.comparing(entry -> (Integer) entry.get("order")));
+                    }
+
                     updatedLookup.put(ENTRIES_CONFIG_KEY, updatedEntries);
                 }
                 else
@@ -747,16 +748,6 @@ public class ConfigLookupDao implements LookupDao
     public void setConfigurationPropertyService(ConfigurationPropertyService configurationPropertyService)
     {
         this.configurationPropertyService = configurationPropertyService;
-    }
-
-    public String getLookupsExtFileLocation()
-    {
-        return lookupsExtFileLocation;
-    }
-
-    public void setLookupsExtFileLocation(String lookupsExtFileLocation)
-    {
-        this.lookupsExtFileLocation = lookupsExtFileLocation;
     }
 
     public void setPropertiesConfigurationService(CollectionPropertiesConfigurationService propertiesConfigurationService)

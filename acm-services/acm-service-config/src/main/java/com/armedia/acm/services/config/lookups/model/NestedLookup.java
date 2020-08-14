@@ -97,9 +97,9 @@ public class NestedLookup extends AcmLookup<NestedLookupEntry>
     {
 
         List<Map<String, Object>> lookupEntries = new ArrayList<>();
-        List<NestedLookupEntry> inverseLookupEntries = (List<NestedLookupEntry>) entries;
+        List<NestedLookupEntry> nestedLookupEntries = (List<NestedLookupEntry>) entries;
 
-        inverseLookupEntries.forEach(entry -> {
+        nestedLookupEntries.forEach(entry -> {
             Map<String, Object> lookupEntry = new HashMap<>();
             Map<String, Object> subLookupEntries = new HashMap<>();
             List<StandardLookupEntry> sublookups = entry.getSubLookup();
@@ -120,6 +120,7 @@ public class NestedLookup extends AcmLookup<NestedLookupEntry>
             lookupEntry.put("value", entry.getValue());
             lookupEntry.put("readonly", entry.isReadonly());
             lookupEntry.put("description", entry.getDescription());
+            lookupEntry.put("order", 0);
             lookupEntries.add(lookupEntry);
         });
 
