@@ -44,6 +44,9 @@ public class ConfigurationClientConfig
     @Value("${application.profile}")
     private String activeProfile;
 
+    @Value("${application.profile.reversed}")
+    private String activeProfileReversed;
+
     @Value("${configuration.server.url}")
     private String configurationUrl;
 
@@ -102,5 +105,15 @@ public class ConfigurationClientConfig
     public String getUpdateFilePropertiesEndpoint()
     {
         return String.format("%s%s", this.configurationUrl, this.updateFilePath);
+    }
+
+    public String getActiveProfileReversed()
+    {
+        return activeProfileReversed;
+    }
+
+    public void setActiveProfileReversed(String activeProfileReversed)
+    {
+        this.activeProfileReversed = activeProfileReversed;
     }
 }
