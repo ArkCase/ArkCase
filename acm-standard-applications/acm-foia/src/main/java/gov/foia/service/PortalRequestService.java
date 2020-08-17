@@ -101,6 +101,8 @@ import gov.foia.model.WithdrawRequest;
  */
 public class PortalRequestService
 {
+    private static final int MAX_READING_ROOM_RESULTS = 500;
+
     private final Logger log = LogManager.getLogger(getClass());
 
     private FOIARequestDao requestDao;
@@ -237,7 +239,7 @@ public class PortalRequestService
 
         query += "&fl=object_id_s,title_parseable,ext_s,parent_ref_s,modified_date_tdt";
 
-        String results = getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, 0, 99999, "", true, "",
+        String results = getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, 0, MAX_READING_ROOM_RESULTS, "", true, "",
                 false, false, "catch_all");
 
         SearchResults searchResults = new SearchResults();
@@ -349,7 +351,8 @@ public class PortalRequestService
 
         query += "&fl=name,title_parseable,description_no_html_tags_parseable";
 
-        String results = getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, 0, 99999, "");
+        // a query based on id can only have 1 result, so we only need max_rows of 1 below.
+        String results = getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, 0, 1, "");
 
         SearchResults searchResults = new SearchResults();
         JSONArray docRequests = searchResults.getDocuments(results);
