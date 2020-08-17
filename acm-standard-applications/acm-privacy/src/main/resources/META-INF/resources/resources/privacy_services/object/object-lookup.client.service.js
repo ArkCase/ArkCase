@@ -990,10 +990,14 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
      *
      * @returns {Object} An array returned by $resource
      */
-
     Service.getRequestCategories = function () {
-        return Service.getLookupByLookupName('requestCategory');
-
+        var selectEntry = {key: null, value: "Select Request Category"};
+        var requestCategories = [];
+        return Service.getLookupByLookupName("requestCategory").then(function (categories) {
+            requestCategories = categories;
+            requestCategories.unshift(selectEntry);
+            return requestCategories;
+        });
     };
 
     /**
@@ -1006,10 +1010,14 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
      *
      * @returns {Object} An array returned by $resource
      */
-
     Service.getDeliveryMethodOfResponses = function () {
-        return Service.getLookupByLookupName('deliveryMethodOfResponses');
-
+        var selectEntry = {key: null, value: "core.lookups.deliveryMethodOfResponses.select"};
+        var deliveryMethods = [];
+        return Service.getLookupByLookupName("deliveryMethodOfResponses").then(function (methods) {
+            deliveryMethods = methods;
+            deliveryMethods.unshift(selectEntry);
+            return deliveryMethods;
+        });
     };
 
     /**
@@ -1022,10 +1030,14 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
      *
      * @returns {Object} An array returned by $resource
      */
-
     Service.getPayFees = function () {
-        return Service.getLookupByLookupName('payFees');
-
+        var selectEntry = {key: null, value: "Select Pay Fee"};
+        var payFees = [];
+        return Service.getLookupByLookupName("payFees").then(function (fees) {
+            payFees = fees;
+            payFees.unshift(selectEntry);
+            return payFees;
+        });
     };
 
 
