@@ -56,6 +56,8 @@ import java.util.stream.Stream;
 public class SimilarObjectsServiceImpl implements SimilarObjectsService
 {
 
+    private static final int MAX_SIMILAR_OBJECTS = 100;
+
     private final Logger log = LoggerFactory.getLogger(getClass().getName());
 
     private ExecuteSolrQuery executeSolrQuery;
@@ -102,7 +104,7 @@ public class SimilarObjectsServiceImpl implements SimilarObjectsService
             }
 
             String results = getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query.toString(),
-                    0, 99999, "", true, "", false, false, "catch_all");
+                    0, MAX_SIMILAR_OBJECTS, "", true, "", false, false, "catch_all");
 
             SearchResults searchResults = new SearchResults();
             JSONArray docFiles = searchResults.getDocuments(results);
@@ -141,7 +143,7 @@ public class SimilarObjectsServiceImpl implements SimilarObjectsService
             }
 
             String fileResults = getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, fileQuery.toString(),
-                    0, 99999, "", true, "", false, false, "catch_all");
+                    0, MAX_SIMILAR_OBJECTS, "", true, "", false, false, "catch_all");
 
             SearchResults fileSearchResults = new SearchResults();
             JSONArray fileDocFiles = fileSearchResults.getDocuments(fileResults);
