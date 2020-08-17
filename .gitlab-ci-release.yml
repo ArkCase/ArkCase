@@ -236,7 +236,7 @@ release_all:
       --form "variables[RELEASE_HOTFIX]=$RELEASE_HOTFIX"
       https://gitlab.armedia.com/api/v4/projects/322/trigger/pipeline
     # Snowbound
-    - curl -k --request POST --form token=$SNOWBOUND_PROJECT_TOKEN --form ref=snowbound-4.10
+    - curl -k --request POST --form token=$SNOWBOUND_PROJECT_TOKEN --form ref=snowbound-5.2
       --form "variables[RELEASE_START]=$RELEASE_START"
       --form "variables[RELEASE_VERSION]=$RELEASE_VERSION"
       --form "variables[DEVELOP_NEW_VERSION]=$DEVELOP_NEW_VERSION"
