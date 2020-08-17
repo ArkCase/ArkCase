@@ -28,12 +28,14 @@ variables:
 
   # Start support branch for a released Arkcase version (creates support/3.3.2 branch which can be used for all future release fixes for 3.3.2 version)
   # ---------------------------------------------------------------------------------------------------------------------------------------------------
+  # Create for: 3.3.2
   # START_SUPPORT_BRANCH: true
   # RELEASE_TAG: 3.3.2 (2020.01)
   # RELEASE_ALL: true (Optional: if you want to trigger the release pipeline on all othe projects: configuration, externa-portal-ui, external-portal-backend, configuration server)
 
   # Start hotfix for Arkcase support
   # --------------------------------
+  # Create for: 3.3.2
   # START_HOTFIX: true
   # HOTFIX_SUPPORT_VERSION: 3.3.2 (2020.01) (**** keep this version for all additional hotfixes to the same base released version ****)
   # RELEASE_VERSION: 3.3.2.1      (2020.01.01) (**** increment this version for additional hotfixes like 3.3.2.2 ****)
@@ -41,6 +43,7 @@ variables:
 
   # Release new hotfix version
   # --------------------------
+  # Create for: 3.3.2
   # RELEASE_HOTFIX: true
   # HOTFIX_SUPPORT_VERSION: 3.3.2 (2020.01)
   # RELEASE_VERSION: 3.3.2.1      (2020.01.01)
