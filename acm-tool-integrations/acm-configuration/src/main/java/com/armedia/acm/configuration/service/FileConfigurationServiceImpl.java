@@ -92,7 +92,7 @@ public class FileConfigurationServiceImpl implements FileConfigurationService
 
         ResponseEntity<Resource> exchange = configRestTemplate.exchange(
                 configurationClientConfig.getConfigurationUrl() + "/" + configurationClientConfig.getDefaultApplicationName() + "/"
-                        + configurationClientConfig.getActiveProfile() + "/*/" + BRANDING_LOCATION + "/" + fileName,
+                        + configurationClientConfig.getActiveProfileReversed() + "/*/" + BRANDING_LOCATION + "/" + fileName,
                 HttpMethod.GET, entity,
                 Resource.class);
 
@@ -118,7 +118,7 @@ public class FileConfigurationServiceImpl implements FileConfigurationService
 
         ResponseEntity<Resource> exchange = configRestTemplate.exchange(
                 configurationClientConfig.getConfigurationUrl() + "/" + configurationClientConfig.getDefaultApplicationName() + "/"
-                        + configurationClientConfig.getActiveProfile() + "/*/" + filePath,
+                        + configurationClientConfig.getActiveProfileReversed() + "/*/" + filePath,
                 HttpMethod.GET, entity,
                 Resource.class);
 
