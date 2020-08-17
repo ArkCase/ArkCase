@@ -181,9 +181,16 @@ release_all:
     variables:
      - $RELEASE_ALL
   script:
+    - export CONFIGURATION_TAG=$([[ $CI_COMMIT_REF_NAME = "develop" ]] && echo "core" || echo "core-"$CI_COMMIT_REF_NAME)
+    TODO TODO TODO TODO
+    - export PORTAL_BACKEND_TAG=$([[ $CI_COMMIT_REF_NAME = "develop" ]] && echo "develop" || [[ $CI_COMMIT_REF_NAME < "2020" ]] && echo $CI_COMMIT_REF_NAME || echo "foia-"$CI_COMMIT_REF_NAME)
+    TODO TODO TODO TODO
+    - export PORTAL_FRONTEND_TAG=$([[ $CI_COMMIT_REF_NAME = "develop" ]] && echo "develop" || [[ $CI_COMMIT_REF_NAME < "2020" ]] && echo $CI_COMMIT_REF_NAME || echo "foia-"$CI_COMMIT_REF_NAME)
+    - export CONFIG_SERVER_TAG=$CI_COMMIT_REF_NAME
+    - export SNOWBOUND_TAG=$([[ $CI_COMMIT_REF_NAME = "develop" ]] && echo "snowbound-5.2" || echo "snowbound-"$CI_COMMIT_REF_NAME)
     # Trigger other project releases:
     # Configuration
-    - curl -k --request POST --form token=$CONFIGURATION_PROJECT_TOKEN --form ref=core
+    - curl -k --request POST --form token=$CONFIGURATION_PROJECT_TOKEN --form ref=$CONFIGURATION_TAG
       --form "variables[RELEASE_START]=$RELEASE_START"
       --form "variables[RELEASE_VERSION]=$RELEASE_VERSION"
       --form "variables[DEVELOP_NEW_VERSION]=$DEVELOP_NEW_VERSION"
@@ -197,7 +204,7 @@ release_all:
       --form "variables[RELEASE_HOTFIX]=$RELEASE_HOTFIX"
       https://***REMOVED***/api/v4/projects/30/trigger/pipeline
     # Portal backend
-    - curl -k --request POST --form token=$EXTERNAL_WEB_PORTAL_PROJECT_TOKEN --form ref=develop
+    - curl -k --request POST --form token=$EXTERNAL_WEB_PORTAL_PROJECT_TOKEN --form ref=$PORTAL_BACKEND_TAG
       --form "variables[RELEASE_START]=$RELEASE_START"
       --form "variables[RELEASE_VERSION]=$RELEASE_VERSION"
       --form "variables[DEVELOP_NEW_VERSION]=$DEVELOP_NEW_VERSION"
@@ -211,7 +218,7 @@ release_all:
       --form "variables[RELEASE_HOTFIX]=$RELEASE_HOTFIX"
       https://***REMOVED***/api/v4/projects/193/trigger/pipeline
     # Portal UI
-    - curl -k --request POST --form token=$EXTERNAL_WEB_PORTAL_UI_PROJECT_TOKEN --form ref=develop
+    - curl -k --request POST --form token=$EXTERNAL_WEB_PORTAL_UI_PROJECT_TOKEN --form ref=$PORTAL_FRONTEND_TAG
       --form "variables[RELEASE_START]=$RELEASE_START"
       --form "variables[RELEASE_VERSION]=$RELEASE_VERSION"
       --form "variables[DEVELOP_NEW_VERSION]=$DEVELOP_NEW_VERSION"
@@ -225,7 +232,7 @@ release_all:
       --form "variables[RELEASE_HOTFIX]=$RELEASE_HOTFIX"
       https://***REMOVED***/api/v4/projects/237/trigger/pipeline
     # Config server
-    - curl -k --request POST --form token=$CONFIG_SERVER_PROJECT_TOKEN --form ref=develop
+    - curl -k --request POST --form token=$CONFIG_SERVER_PROJECT_TOKEN --form ref=$CONFIG_SERVER_TAG
       --form "variables[RELEASE_START]=$RELEASE_START"
       --form "variables[RELEASE_VERSION]=$RELEASE_VERSION"
       --form "variables[DEVELOP_NEW_VERSION]=$DEVELOP_NEW_VERSION"
@@ -239,7 +246,7 @@ release_all:
       --form "variables[RELEASE_HOTFIX]=$RELEASE_HOTFIX"
       https://***REMOVED***/api/v4/projects/322/trigger/pipeline
     # Snowbound
-    - curl -k --request POST --form token=$SNOWBOUND_PROJECT_TOKEN --form ref=snowbound-5.2
+    - curl -k --request POST --form token=$SNOWBOUND_PROJECT_TOKEN --form ref=$SNOWBOUND_TAG
       --form "variables[RELEASE_START]=$RELEASE_START"
       --form "variables[RELEASE_VERSION]=$RELEASE_VERSION"
       --form "variables[DEVELOP_NEW_VERSION]=$DEVELOP_NEW_VERSION"
