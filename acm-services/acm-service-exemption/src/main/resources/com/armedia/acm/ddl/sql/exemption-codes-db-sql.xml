@@ -1,0 +1,75 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="1-acm_exemption_code-update-cm-exemption-code" author="mario.gjurcheski"
+        logicalFilePath="/ddl/sql/exemption-codes-db-sql.xml">
+        <sql>UPDATE acm_exemption_code SET cm_exemption_code = 'Ex1' WHERE cm_exemption_code= 'Ex.1'</sql>
+    </changeSet>
+    <changeSet id="2-acm_exemption_code-update-cm-exemption-code" author="mario.gjurcheski"
+        logicalFilePath="/ddl/sql/exemption-codes-db-sql.xml">
+        <sql>UPDATE acm_exemption_code SET cm_exemption_code = 'Ex2' WHERE cm_exemption_code= 'Ex.2'</sql>
+    </changeSet>
+    <changeSet id="3-acm_exemption_code-update-cm-exemption-code" author="mario.gjurcheski"
+        logicalFilePath="/ddl/sql/exemption-codes-db-sql.xml">
+        <sql>UPDATE acm_exemption_code SET cm_exemption_code = 'Ex3' WHERE cm_exemption_code= 'Ex.3'</sql>
+    </changeSet>
+    <changeSet id="4-acm_exemption_code-update-cm-exemption-code" author="mario.gjurcheski"
+        logicalFilePath="/ddl/sql/exemption-codes-db-sql.xml">
+        <sql>UPDATE acm_exemption_code SET cm_exemption_code = 'Ex4' WHERE cm_exemption_code= 'Ex.4'</sql>
+    </changeSet>
+    <changeSet id="5-acm_exemption_code-update-cm-exemption-code" author="mario.gjurcheski"
+        logicalFilePath="/ddl/sql/exemption-codes-db-sql.xml">
+        <sql>UPDATE acm_exemption_code SET cm_exemption_code = 'Ex5' WHERE cm_exemption_code= 'Ex.5'</sql>
+    </changeSet>
+    <changeSet id="6-acm_exemption_code-update-cm-exemption-code" author="mario.gjurcheski"
+        logicalFilePath="/ddl/sql/exemption-codes-db-sql.xml">
+        <sql>UPDATE acm_exemption_code SET cm_exemption_code = 'Ex6' WHERE cm_exemption_code= 'Ex.6'</sql>
+    </changeSet>
+    <changeSet id="7-acm_exemption_code-update-cm-exemption-code" author="mario.gjurcheski"
+        logicalFilePath="/ddl/sql/exemption-codes-db-sql.xml">
+        <sql>UPDATE acm_exemption_code SET cm_exemption_code = 'Ex7a' WHERE cm_exemption_code= 'Ex.7a'</sql>
+    </changeSet>
+    <changeSet id="8-acm_exemption_code-update-cm-exemption-code" author="mario.gjurcheski"
+        logicalFilePath="/ddl/sql/exemption-codes-db-sql.xml">
+        <sql>UPDATE acm_exemption_code SET cm_exemption_code = 'Ex7b' WHERE cm_exemption_code= 'Ex.7b'</sql>
+    </changeSet>
+    <changeSet id="9-acm_exemption_code-update-cm-exemption-code" author="mario.gjurcheski"
+        logicalFilePath="/ddl/sql/exemption-codes-db-sql.xml">
+        <sql>UPDATE acm_exemption_code SET cm_exemption_code = 'Ex7c' WHERE cm_exemption_code= 'Ex.7c'</sql>
+    </changeSet>
+    <changeSet id="10-acm_exemption_code-update-cm-exemption-code" author="mario.gjurcheski"
+        logicalFilePath="/ddl/sql/exemption-codes-db-sql.xml">
+        <sql>UPDATE acm_exemption_code SET cm_exemption_code = 'Ex7d' WHERE cm_exemption_code= 'Ex.7d'</sql>
+    </changeSet>
+    <changeSet id="11-acm_exemption_code-update-cm-exemption-code" author="mario.gjurcheski"
+        logicalFilePath="/ddl/sql/exemption-codes-db-sql.xml">
+        <sql>UPDATE acm_exemption_code SET cm_exemption_code = 'Ex7e' WHERE cm_exemption_code= 'Ex.7e'</sql>
+    </changeSet>
+    <changeSet id="12-acm_exemption_code-update-cm-exemption-code" author="mario.gjurcheski"
+        logicalFilePath="/ddl/sql/exemption-codes-db-sql.xml">
+        <sql>UPDATE acm_exemption_code SET cm_exemption_code = 'Ex.7f' WHERE cm_exemption_code= 'Ex.7f'</sql>
+    </changeSet>
+    <changeSet id="13-acm_exemption_code-update-cm-exemption-code" author="mario.gjurcheski"
+        logicalFilePath="/ddl/sql/exemption-codes-db-sql.xml">
+        <sql>UPDATE acm_exemption_code SET cm_exemption_code = 'Ex8' WHERE cm_exemption_code= 'Ex.8'</sql>
+    </changeSet>
+    <changeSet id="14-acm_exemption_code-update-cm-exemption-code" author="mario.gjurcheski"
+        logicalFilePath="/ddl/sql/exemption-codes-db-sql.xml">
+        <sql>UPDATE acm_exemption_code SET cm_exemption_code = 'Ex9' WHERE cm_exemption_code= 'Ex.9'</sql>
+    </changeSet>
+    <changeSet id="15-acm_exemption_code-update-cm-exemption-code" author="mario.gjurcheski"
+        logicalFilePath="/ddl/sql/exemption-codes-db-sql.xml">
+        <sql>UPDATE acm_exemption_code SET cm_exemption_code = 'X51' WHERE cm_exemption_code= 'X5.1'</sql>
+    </changeSet>
+    <changeSet id="16-acm_exemption_code-update-cm-exemption-code" author="mario.gjurcheski"
+        logicalFilePath="/ddl/sql/exemption-codes-db-sql.xml">
+        <sql>UPDATE acm_exemption_code SET cm_exemption_code = 'X52' WHERE cm_exemption_code= 'X5.2'</sql>
+    </changeSet>
+    <changeSet id="17-acm_exemption_code-update-cm-exemption-code" author="mario.gjurcheski"
+        logicalFilePath="/ddl/sql/exemption-codes-db-sql.xml">
+        <sql>UPDATE acm_exemption_code SET cm_exemption_code = 'X53' WHERE cm_exemption_code= 'X5.3'</sql>
+    </changeSet>
+
+</databaseChangeLog>
+
