@@ -50,6 +50,10 @@
         logicalFilePath="/ddl/sql/exemption-codes-db-sql.xml">
         <sql>UPDATE acm_exemption_code SET cm_exemption_code = 'Ex.7f' WHERE cm_exemption_code= 'Ex.7f'</sql>
     </changeSet>
+    <changeSet id="12-acm_exemption_code-update-cm-exemption-code-fix" author="mario.gjurcheski"
+        logicalFilePath="/ddl/sql/exemption-codes-db-sql.xml">
+        <sql>UPDATE acm_exemption_code SET cm_exemption_code = 'Ex7f' WHERE cm_exemption_code= 'Ex.7f'</sql>
+    </changeSet>
     <changeSet id="13-acm_exemption_code-update-cm-exemption-code" author="mario.gjurcheski"
         logicalFilePath="/ddl/sql/exemption-codes-db-sql.xml">
         <sql>UPDATE acm_exemption_code SET cm_exemption_code = 'Ex8' WHERE cm_exemption_code= 'Ex.8'</sql>
