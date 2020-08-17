@@ -29,6 +29,7 @@ package com.armedia.acm.drools;
 
 import com.armedia.acm.configuration.service.FileConfigurationService;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.drools.decisiontable.InputType;
@@ -101,7 +102,8 @@ public abstract class SimpleStatelessSingleObjectRuleManager<T>
     @JmsListener(destination = "rules.changed", containerFactory = "jmsTopicListenerContainerFactory")
     public void getRulesFromConfiguration(Message message) throws IOException
     {
-        if (getRuleSpreadsheetFilename().equals(message.getPayload().toString())) {
+        if (message.getPayload().toString().startsWith(FilenameUtils.removeExtension(getRuleSpreadsheetFilename())))
+        {
             updateRulesFromConfiguration();
         }
     }
