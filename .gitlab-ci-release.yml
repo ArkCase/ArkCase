@@ -4,6 +4,7 @@ variables:
 
   # Start a release branch from develop branch. Sets the develop branch to new snapshot version
   # --------------------------------------------------------------------------------------------
+  # Create for: develop
   # RELEASE_START: true
   # RELEASE_VERSION: 3.3.3 (2020.01)
   # DEVELOP_NEW_VERSION: 3.3.4-SNAPSHOT (2020.02-SNAPSHOT)
@@ -11,6 +12,7 @@ variables:
 
   # Release RC1 (X) from release branch
   # -----------------------------------
+  # Create for: develop
   # RELEASE_CANDIDATE_X: true
   # RELEASE_VERSION: 3.3.3 (2020.01)
   # RELEASE_CANDIDATE_SUFFIX: RC1
@@ -18,6 +20,7 @@ variables:
 
   # Release final version, merges release branch in master (after no more release candidates are planned)
   # -----------------------------------------------------------------------------------------------------
+  # Create for: develop
   # RELEASE: true
   # RELEASE_VERSION: 3.3.3 (2020.01)
   # RELEASE_ALL: true (Optional: if you want to trigger the release pipeline on all othe projects: configuration, externa-portal-ui, external-portal-backend, configuration server)
@@ -28,14 +31,14 @@ variables:
 
   # Start support branch for a released Arkcase version (creates support/3.3.2 branch which can be used for all future release fixes for 3.3.2 version)
   # ---------------------------------------------------------------------------------------------------------------------------------------------------
-  # Create for: 3.3.2
+  # Create for: 3.3.2 (2020.01) Use a tag if you set RELEASE_ALL: true
   # START_SUPPORT_BRANCH: true
   # RELEASE_TAG: 3.3.2 (2020.01)
   # RELEASE_ALL: true (Optional: if you want to trigger the release pipeline on all othe projects: configuration, externa-portal-ui, external-portal-backend, configuration server)
 
   # Start hotfix for Arkcase support
   # --------------------------------
-  # Create for: 3.3.2
+  # Create for: 3.3.2 (2020.01) Use a tag if you set RELEASE_ALL: true
   # START_HOTFIX: true
   # HOTFIX_SUPPORT_VERSION: 3.3.2 (2020.01) (**** keep this version for all additional hotfixes to the same base released version ****)
   # RELEASE_VERSION: 3.3.2.1      (2020.01.01) (**** increment this version for additional hotfixes like 3.3.2.2 ****)
@@ -43,7 +46,7 @@ variables:
 
   # Release new hotfix version
   # --------------------------
-  # Create for: 3.3.2
+  # Create for: 3.3.2 (2020.01) Use a tag if you set RELEASE_ALL: true
   # RELEASE_HOTFIX: true
   # HOTFIX_SUPPORT_VERSION: 3.3.2 (2020.01)
   # RELEASE_VERSION: 3.3.2.1      (2020.01.01)
@@ -181,9 +184,14 @@ release_all:
     variables:
      - $RELEASE_ALL
   script:
+    - export CONFIGURATION_TAG=$([[ $CI_COMMIT_REF_NAME = "develop" ]] && echo "core" || echo "core-"$CI_COMMIT_REF_NAME)
+    - export PORTAL_BACKEND_TAG=$([[ $CI_COMMIT_REF_NAME = "develop" ]] && echo "develop" || ([[ $CI_COMMIT_REF_NAME = "`echo -e "$CI_COMMIT_REF_NAME\n3.3.10" | sort -V | head -n1`" ]] && echo $CI_COMMIT_REF_NAME || echo "foia-"$CI_COMMIT_REF_NAME))
+    - export PORTAL_FRONTEND_TAG=$([[ $CI_COMMIT_REF_NAME = "develop" ]] && echo "develop" || ([[ $CI_COMMIT_REF_NAME = "`echo -e "$CI_COMMIT_REF_NAME\n3.3.10" | sort -V | head -n1`" ]] && echo $CI_COMMIT_REF_NAME || echo "foia-"$CI_COMMIT_REF_NAME))
+    - export CONFIG_SERVER_TAG=$CI_COMMIT_REF_NAME
+    - export SNOWBOUND_TAG=$([[ $CI_COMMIT_REF_NAME = "develop" ]] && echo "snowbound-5.2" || echo "snowbound-"$CI_COMMIT_REF_NAME)
     # Trigger other project releases:
     # Configuration
-    - curl -k --request POST --form token=$CONFIGURATION_PROJECT_TOKEN --form ref=core
+    - curl -k --request POST --form token=$CONFIGURATION_PROJECT_TOKEN --form ref=$CONFIGURATION_TAG
       --form "variables[RELEASE_START]=$RELEASE_START"
       --form "variables[RELEASE_VERSION]=$RELEASE_VERSION"
       --form "variables[DEVELOP_NEW_VERSION]=$DEVELOP_NEW_VERSION"
@@ -197,7 +205,7 @@ release_all:
       --form "variables[RELEASE_HOTFIX]=$RELEASE_HOTFIX"
       https://***REMOVED***/api/v4/projects/30/trigger/pipeline
     # Portal backend
-    - curl -k --request POST --form token=$EXTERNAL_WEB_PORTAL_PROJECT_TOKEN --form ref=develop
+    - curl -k --request POST --form token=$EXTERNAL_WEB_PORTAL_PROJECT_TOKEN --form ref=$PORTAL_BACKEND_TAG
       --form "variables[RELEASE_START]=$RELEASE_START"
       --form "variables[RELEASE_VERSION]=$RELEASE_VERSION"
       --form "variables[DEVELOP_NEW_VERSION]=$DEVELOP_NEW_VERSION"
@@ -211,7 +219,7 @@ release_all:
       --form "variables[RELEASE_HOTFIX]=$RELEASE_HOTFIX"
       https://***REMOVED***/api/v4/projects/193/trigger/pipeline
     # Portal UI
-    - curl -k --request POST --form token=$EXTERNAL_WEB_PORTAL_UI_PROJECT_TOKEN --form ref=develop
+    - curl -k --request POST --form token=$EXTERNAL_WEB_PORTAL_UI_PROJECT_TOKEN --form ref=$PORTAL_FRONTEND_TAG
       --form "variables[RELEASE_START]=$RELEASE_START"
       --form "variables[RELEASE_VERSION]=$RELEASE_VERSION"
       --form "variables[DEVELOP_NEW_VERSION]=$DEVELOP_NEW_VERSION"
@@ -225,7 +233,7 @@ release_all:
       --form "variables[RELEASE_HOTFIX]=$RELEASE_HOTFIX"
       https://***REMOVED***/api/v4/projects/237/trigger/pipeline
     # Config server
-    - curl -k --request POST --form token=$CONFIG_SERVER_PROJECT_TOKEN --form ref=develop
+    - curl -k --request POST --form token=$CONFIG_SERVER_PROJECT_TOKEN --form ref=$CONFIG_SERVER_TAG
       --form "variables[RELEASE_START]=$RELEASE_START"
       --form "variables[RELEASE_VERSION]=$RELEASE_VERSION"
       --form "variables[DEVELOP_NEW_VERSION]=$DEVELOP_NEW_VERSION"
@@ -239,7 +247,7 @@ release_all:
       --form "variables[RELEASE_HOTFIX]=$RELEASE_HOTFIX"
       https://***REMOVED***/api/v4/projects/322/trigger/pipeline
     # Snowbound
-    - curl -k --request POST --form token=$SNOWBOUND_PROJECT_TOKEN --form ref=snowbound-5.2
+    - curl -k --request POST --form token=$SNOWBOUND_PROJECT_TOKEN --form ref=$SNOWBOUND_TAG
       --form "variables[RELEASE_START]=$RELEASE_START"
       --form "variables[RELEASE_VERSION]=$RELEASE_VERSION"
       --form "variables[DEVELOP_NEW_VERSION]=$DEVELOP_NEW_VERSION"
