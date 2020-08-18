@@ -102,6 +102,7 @@ angular
             'Profile.UserInfoService',
             'EcmService',
             'Admin.EmailSenderConfigurationService',
+            'Admin.DeDuplicationConfigurationService',
             'Helper.LocaleService',
             'PublicFlag.Service',
             'RequestResponseFolder.Service',
@@ -112,7 +113,7 @@ angular
             'Websockets.MessageHandler',
             'Admin.PrivacyConfigService',
             function ($q, $translate, $modal, $filter, $log, $injector, Store, Util, UtilDateService, ConfigService,
-                      PluginService, UserInfoService, Ecm, EmailSenderConfigurationService, LocaleHelper, PublicFlagService, RequestResponseFolderService, LookupService, MessageService, ObjectLookupService, $timeout, MessageHandler, AdminPrivacyConfigService) {
+                      PluginService, UserInfoService, Ecm, EmailSenderConfigurationService, DeDuplicationConfigurationService, LocaleHelper, PublicFlagService, RequestResponseFolderService, LookupService, MessageService, ObjectLookupService, $timeout, MessageHandler, AdminPrivacyConfigService) {
                 var cacheTree = new Store.CacheFifo();
                 var cacheFolderList = new Store.CacheFifo();
 
@@ -1381,15 +1382,33 @@ angular
                                 {
                                     name: "duplicate",
                                     renderer: function (element, node, columnDef, isReadOnly) {
-                                        if (node.data.duplicate) {
-                                            var $td = $("<td/>");
-                                            var $span = $("<span/>").appendTo($td);
-                                            var $button = $("<button type='button'/>").addClass('duplicate').appendTo($span);
-                                            var $text = $("<strong>D</strong>").appendTo($button);
+                                        var deDuplication;
+                                        if(DocTree.deDuplication) {
+                                            deDuplication = DocTree.deDuplication['enableDeDuplication'];
+                                            if(node.data.duplicate && deDuplication) {
+                                                var $td = $("<td/>");
+                                                var $span = $("<span/>").appendTo($td);
+                                                var $button = $("<button type='button'/>").addClass('duplicate').appendTo($span);
+                                                var $text = $("<strong>D</strong>").appendTo($button);
 
-                                            $(element).replaceWith($td);
+                                                $(element).replaceWith($td);
+                                            }
+                                            ;
+                                        } else {
+                                            DeDuplicationConfigurationService.getDeDuplicationConfiguration().then(function (response) {
+                                                DocTree.deDuplication = response.data;
+                                                deDuplication = DocTree.deDuplication['enableDeDuplication'];
+                                                if(node.data.duplicate && deDuplication) {
+                                                    var $td = $("<td/>");
+                                                    var $span = $("<span/>").appendTo($td);
+                                                    var $button = $("<button type='button'/>").addClass('duplicate').appendTo($span);
+                                                    var $text = $("<strong>D</strong>").appendTo($button);
+
+                                                    $(element).replaceWith($td);
+                                                }
+                                                ;
+                                            });
                                         }
-                                        ;
                                     }
                                 },
                                 {
@@ -3404,6 +3423,7 @@ angular
                                         }
                                     });
                                     modalInstance.result.then(function() {
+                                        DocTree.refreshNode(node.parent);
                                         modalInstance.close();
                                     });
                                 }

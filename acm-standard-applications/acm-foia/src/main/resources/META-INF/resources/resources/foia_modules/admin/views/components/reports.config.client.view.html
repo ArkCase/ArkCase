@@ -1,0 +1,39 @@
+<div ng-controller="Admin.ReportsConfigController">
+    <div class="pull-right well">
+        <div class="btn-group">
+            <button class="btn btn-xs btn-link" ng-click="openPentaho()"><i class="fa fa-plus" />
+                <span translate>admin.reports.btn.reportDesigner</span>
+            </button>
+        </div>
+
+        <div class="btn-group">
+            <button class="btn btn-xs btn-link" ng-click="syncReports()"><i class="fa fa-refresh" />
+                <span translate>admin.reports.btn.sync</span>
+            </button>
+        </div>
+    </div>
+    <panel-view header="{{'admin.reports.config' | translate}}" collapsible="false">
+        <div class="row">
+            <object-authorization data="reportsData" object-display-name="name" on-object-selected="onObjSelect" role-display-name="name"
+                    on-auth-role-change="onAuthRoleSelected" object-title="{{'admin.reports.title' | translate}}"
+                    pagination-data-control="scrollLoadData" selected-object="lastSelectedReport" filter-data-control="filterData" />
+        </div>
+    </panel-view>
+    <panel-view header="{{'admin.reports.export.title' | translate}}" collapsible="false">
+        <div class="row form-group">
+            <div class="col-sm-3">
+                <label translate>admin.reports.export.label</label>
+                <select id="exportTypes" class="form-control" ng-model="exportType"
+                        ng-options="exportType.key as exportType.value | translate for exportType in exportTypes"></select>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-sm-3">
+                <button class="btn btn-primary" ng-click="exportReports(exportType)">
+                    <i class="{{loadingIcon}}"></i>
+                    <span translate>admin.reports.btn.export</span>
+                </button>
+            </div>
+        </div>
+    </panel-view>
+</div>

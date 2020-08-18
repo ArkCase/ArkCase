@@ -117,7 +117,7 @@ public class SARDao extends AcmAbstractDao<SubjectAccessRequest>
 
     public List<PortalSARStatus> getExternalRequests(PortalSARStatus portalRequestStatus)
     {
-        String queryText = "SELECT sar FROM SubjectAccessRequest sar JOIN PersonAssociation pa JOIN pa.person p"
+        String queryText = "SELECT DISTINCT sar FROM SubjectAccessRequest sar JOIN PersonAssociation pa JOIN pa.person p"
                 + " WHERE sar.id = pa.parentId"
                 + " AND pa.parentType='CASE_FILE'"
                 + " AND (pa.personType = 'Requester' OR pa.personType = 'Subject')";

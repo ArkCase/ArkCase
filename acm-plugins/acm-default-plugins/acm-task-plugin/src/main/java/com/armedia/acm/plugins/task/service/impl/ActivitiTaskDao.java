@@ -27,6 +27,7 @@ package com.armedia.acm.plugins.task.service.impl;
  * #L%
  */
 
+import com.armedia.acm.activiti.services.AcmBpmnService;
 import com.armedia.acm.core.AcmNotifiableEntity;
 import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
@@ -128,6 +129,7 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
     private EcmFileParticipantService fileParticipantService;
 
     private ObjectConverter objectConverter;
+    private AcmBpmnService acmBpmnService;
 
     @Override
     public List<ProcessInstance> findProcessesByProcessVariables(Map<String, Object> matchProcessVariables)
@@ -1618,7 +1620,7 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
     @Override
     public AcmTask startBusinessProcess(Map<String, Object> pVars, String businessProcessName) throws AcmTaskException
     {
-        ProcessInstance pi = getActivitiRuntimeService().startProcessInstanceByKey(businessProcessName, pVars);
+        ProcessInstance pi = getAcmBpmnService().startBusinessProcess(businessProcessName, pVars);
         Task activitiTask = getActivitiTaskService().createTaskQuery().processInstanceId(pi.getProcessInstanceId()).singleResult();
         AcmTask createdAcmTask = acmTaskFromActivitiTask(activitiTask, activitiTask.getProcessVariables(),
                 activitiTask.getTaskLocalVariables());
@@ -1926,6 +1928,16 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
     public void setObjectConverter(ObjectConverter objectConverter)
     {
         this.objectConverter = objectConverter;
+    }
+
+    public AcmBpmnService getAcmBpmnService()
+    {
+        return acmBpmnService;
+    }
+
+    public void setAcmBpmnService(AcmBpmnService acmBpmnService)
+    {
+        this.acmBpmnService = acmBpmnService;
     }
 
     @Override

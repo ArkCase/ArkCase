@@ -27,6 +27,7 @@ package com.armedia.acm.plugins.consultation.listener;
  * #L%
  */
 
+import com.armedia.acm.activiti.services.AcmBpmnService;
 import com.armedia.acm.plugins.consultation.model.ChangeConsultationStatusEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
@@ -34,7 +35,6 @@ import com.armedia.acm.plugins.ecm.workflow.EcmFileWorkflowConfiguration;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.ParticipantTypes;
 
-import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -53,7 +53,7 @@ public class ChangeConsultationStatusWorkflowListener implements ApplicationList
 
     private final Logger LOG = LogManager.getLogger(getClass());
     private FileWorkflowBusinessRule fileWorkflowBusinessRule;
-    private RuntimeService activitiRuntimeService;
+    private AcmBpmnService acmBpmnService;
     private String changeConsultationStatusTaskName;
 
     @Override
@@ -127,7 +127,7 @@ public class ChangeConsultationStatusWorkflowListener implements ApplicationList
 
         LOG.debug("Starting process: [{}]", processName);
 
-        ProcessInstance pi = getActivitiRuntimeService().startProcessInstanceByKey(processName, pvars);
+        ProcessInstance pi = getAcmBpmnService().startBusinessProcess(processName, pvars);
 
         LOG.debug("Process ID: [{}]", pi.getId());
     }
@@ -172,14 +172,14 @@ public class ChangeConsultationStatusWorkflowListener implements ApplicationList
         this.fileWorkflowBusinessRule = fileWorkflowBusinessRule;
     }
 
-    public RuntimeService getActivitiRuntimeService()
+    public AcmBpmnService getAcmBpmnService()
     {
-        return activitiRuntimeService;
+        return acmBpmnService;
     }
 
-    public void setActivitiRuntimeService(RuntimeService activitiRuntimeService)
+    public void setAcmBpmnService(AcmBpmnService acmBpmnService)
     {
-        this.activitiRuntimeService = activitiRuntimeService;
+        this.acmBpmnService = acmBpmnService;
     }
 
     public String getChangeConsultationStatusTaskName()

@@ -79,7 +79,7 @@ angular.module('admin').controller(
                     function refreshPageData() {
                         // set delay for solr to finish indexing
                         $timeout(function() {
-                            $scope.onLoadMore(gridCurrentPage, gridPageSize);
+                            $scope.onLoadMore(gridCurrentPage, gridPageSize, $scope.directoryName);
                         }, 2000);
                     }
 
@@ -118,9 +118,17 @@ angular.module('admin').controller(
                         }
                     }
 
-                    $scope.onLoadMore = function(currentPage, pageSize) {
+                    $scope.selectDirectory = function (directoryName) {
+                        $scope.onLoadMore(gridCurrentPage, gridPageSize, directoryName);
+                    };
+
+                    $scope.onLoadMore = function (currentPage, pageSize, directoryName) {
                         gridPageSize = pageSize;
                         gridCurrentPage = currentPage;
+                        LdapConfigService.retrieveDirectories().then(function (directories) {
+                            $scope.directories = Object.keys(directories.data).sort();
+                            $scope.directoryName = $scope.directoryName ? $scope.directoryName : $scope.directories[0];
+                            directoryName = directoryName ? directoryName : $scope.directoryName;
 
                         var successCallback = function(payload) {
                             var groups = _.get(payload, 'data.response.docs');
@@ -140,21 +148,23 @@ angular.module('admin').controller(
                         if (!_.isEmpty($scope.searchParams)) {
                             $scope.searchParams.n = pageSize;
                             $scope.searchParams.start = (currentPage - 1) * pageSize;
+                            $scope.searchParams.directoryName = directoryName;
                             organizationalHierarchyService.getGroupsByName($scope.searchParams).then(successCallback);
                         } else {
-                            organizationalHierarchyService.getGroupsTopLevel(currentPage, pageSize, []).then(successCallback);
+                            organizationalHierarchyService.getGroupsTopLevel(currentPage, pageSize, [], directoryName).then(successCallback);
                         }
+                        });
                     };
 
                     $scope.searchParams = {};
                     $scope.onSearch = function() {
-                        $scope.onLoadMore(gridCurrentPage, gridPageSize);
+                        $scope.onLoadMore(gridCurrentPage, gridPageSize, $scope.directoryName);
                     };
 
                     $scope.onFilterChange = function(searchFilter) {
                         if (searchFilter === '') {
                             $scope.searchParams = {};
-                            $scope.onLoadMore(gridCurrentPage, gridPageSize);
+                            $scope.onLoadMore(gridCurrentPage, gridPageSize, $scope.directoryName);
                         }
                     };
 
@@ -771,6 +781,7 @@ angular.module('admin').controller(
                             $scope.error = errorMessage;
                             $scope.directoryServers = directoryServers;
                             $scope.selectedConfig = {};
+                            $scope.selectedConfig.directory = $scope.directoryServers ? $scope.directoryServers[0] : null;
                             $scope.ok = onOK($scope, $modalInstance, $scope.selectedConfig);
                             $scope.cancel = function() {
                                 $modalInstance.dismiss('cancel');
@@ -803,7 +814,7 @@ angular.module('admin').controller(
                         }))
                     }
 
-                    function openCreateGroupModal(group, errorMessage) {
+                    function openCreateGroupModal(group, directoryName, errorMessage) {
                         return groupModal(groupController(true, group, errorMessage, {}, function(scope, modal) {
                             return function() {
                                 scope.data = {
@@ -812,7 +823,10 @@ angular.module('admin').controller(
                                 };
                                 modal.close(scope.data);
                             };
-                        }, $scope.directoryServers))
+                        }, _.filter($scope.directoryServers, function(directory){
+                            return directory.id == directoryName;
+                            })
+                        ))
                     }
 
                     function onLdapGroupAdd(data, deferred) {
@@ -844,9 +858,9 @@ angular.module('admin').controller(
                         });
                     }
 
-                    $scope.createLdapGroup = function() {
+                    $scope.createLdapGroup = function(directoryName) {
                         var deferred = $q.defer();
-                        var modalInstance = openCreateGroupModal({});
+                        var modalInstance = openCreateGroupModal({}, directoryName);
 
                         var onAdd = function(data) {
                             onLdapGroupAdd(data, deferred);

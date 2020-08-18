@@ -34,6 +34,7 @@ import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.spring.SpringContextHolder;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -46,15 +47,17 @@ public class FOIAUserInfoHelper extends UserInfoHelper
     private UserDao userDao;
     private SpringContextHolder contextHolder;
     private AcmGroupDao acmGroupDao;
-    @Value("${foia.portalserviceprovider.directory.name}")
+    @Value("${portal.serviceProvider.directory.name}")
     private String portalDirectoryName;
 
+    @Override
     public String getUserEmail(String userId)
     {
         AcmUser user = getUserDao().findByUserId(userId);
         return user.getMail();
     }
 
+    @Override
     public String removeUserPrefix(String userId)
     {
         AcmUser user = getUserDao().findByUserId(userId);
@@ -76,7 +79,8 @@ public class FOIAUserInfoHelper extends UserInfoHelper
             {
                 log.debug("Error processing portal user prefix", e);
             }
-            if (StringUtils.isNotBlank(portalDirectoryName) && StringUtils.isNotBlank(portalUserPrefix) && baseUserId.startsWith(portalUserPrefix))
+            if (StringUtils.isNotBlank(portalDirectoryName) && StringUtils.isNotBlank(portalUserPrefix)
+                    && baseUserId.startsWith(portalUserPrefix))
             {
                 baseUserId = user.getMail();
             }
@@ -106,6 +110,7 @@ public class FOIAUserInfoHelper extends UserInfoHelper
         return baseUserId;
     }
 
+    @Override
     public String removeGroupPrefix(String groupId)
     {
         AcmGroup acmGroup = getAcmGroupDao().findByName(groupId);
@@ -137,31 +142,37 @@ public class FOIAUserInfoHelper extends UserInfoHelper
         return baseGroupId;
     }
 
+    @Override
     public UserDao getUserDao()
     {
         return userDao;
     }
 
+    @Override
     public void setUserDao(UserDao userDao)
     {
         this.userDao = userDao;
     }
 
+    @Override
     public SpringContextHolder getContextHolder()
     {
         return contextHolder;
     }
 
+    @Override
     public void setContextHolder(SpringContextHolder contextHolder)
     {
         this.contextHolder = contextHolder;
     }
 
+    @Override
     public AcmGroupDao getAcmGroupDao()
     {
         return acmGroupDao;
     }
 
+    @Override
     public void setAcmGroupDao(AcmGroupDao acmGroupDao)
     {
         this.acmGroupDao = acmGroupDao;

@@ -164,7 +164,9 @@ angular.module('organizations').controller(
                             isDefault: !hasPeople(),
                             types: $scope.personAssociationTypes,
                             returnValueValidationFunction: validatePersonAssociation,
-                            hideNoField: !hasPeople()
+                            hideNoField: !hasPeople(),
+                            isOrganizationLocation: true,
+                            personLocations: $scope.objectInfo.defaultAddress
                         };
 
                         var modalInstance = $modal.open({

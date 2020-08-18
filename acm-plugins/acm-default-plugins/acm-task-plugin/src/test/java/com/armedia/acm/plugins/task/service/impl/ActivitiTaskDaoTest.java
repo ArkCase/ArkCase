@@ -37,6 +37,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import com.armedia.acm.activiti.services.AcmBpmnService;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
@@ -129,6 +130,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
     private AcmContainer mockAcmContainer;
 
     private EcmFileService mockFileService;
+    private AcmBpmnService mockAcmBpmnService;
 
     @Before
     public void setUp() throws Exception
@@ -163,6 +165,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         mockAcmContainerDao = createMock(AcmContainerDao.class);
         mockAcmContainer = createMock(AcmContainer.class);
         mockFileService = createMock(EcmFileService.class);
+        mockAcmBpmnService = createMock(AcmBpmnService.class);
         unit = new ActivitiTaskDao();
 
         Map<String, Integer> acmPriorityToActivitiPriority = new HashMap<>();
@@ -180,6 +183,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         unit.setTaskEventPublisher(mockTaskEventPublisher);
         unit.setContainerFolderDao(mockAcmContainerDao);
         unit.setFileService(mockFileService);
+        unit.setAcmBpmnService(mockAcmBpmnService);
         //
     }
 
@@ -1208,7 +1212,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         pVars.put("PARENT_OBJECT_TYPE", "CASE_FILE");
         pVars.put("PARENT_OBJECT_ID", 500L);
 
-        expect(mockRuntimeService.startProcessInstanceByKey(businessProcessName, pVars)).andReturn(mockProcessInstance);
+        expect(mockAcmBpmnService.startBusinessProcess(businessProcessName, pVars)).andReturn(mockProcessInstance);
         expect(mockProcessInstance.getProcessInstanceId()).andReturn(processId);
         expect(mockTaskService.createTaskQuery()).andReturn(mockTaskQuery);
         expect(mockTaskQuery.processInstanceId(processId)).andReturn(mockTaskQuery);
