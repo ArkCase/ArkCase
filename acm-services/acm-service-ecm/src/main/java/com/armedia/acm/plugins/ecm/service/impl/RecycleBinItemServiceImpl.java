@@ -205,6 +205,7 @@ public class RecycleBinItemServiceImpl implements RecycleBinItemService
                 EcmFile ecmFile = getEcmFileDao().find(fileFromTrash.getObjectId());
                 moveToCMISFolder(ecmFile, destinationContainer.getContainerObjectId(), destinationContainer.getContainerObjectType(),
                         recycleBinItem.getSourceFolderId());
+                getEcmFileService().checkDuplicatesByHash(ecmFile);
             }
             removeItemFromRecycleBin(recycleBinItem.getId());
             log.info("Item {} from Recycle Bin successfully restored, by user {}", fileFromTrash.getObjectId(), authentication.getName());
