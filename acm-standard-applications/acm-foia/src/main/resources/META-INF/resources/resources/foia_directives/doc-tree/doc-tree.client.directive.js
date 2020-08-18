@@ -3422,6 +3422,7 @@ angular
                                     });
                                     modalInstance.result.then(function() {
                                         modalInstance.close();
+                                        DocTree.refreshTree();
                                     });
                                 }
                             })
