@@ -68,7 +68,7 @@ angular.module('consultations').controller(
                     },
                     personAssociations: [],
                     participants: [],
-                    componentAgency: ''
+                    externalRequestingAgency: ''
                 };
                 $scope.config.data.organizationAssociations = [];
                 $scope.config.data.originator.person.title = $scope.prefixes[0].key;
