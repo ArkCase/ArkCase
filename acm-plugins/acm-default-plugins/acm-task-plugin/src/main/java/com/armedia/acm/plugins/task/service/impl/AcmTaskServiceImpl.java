@@ -80,6 +80,7 @@ import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.web.api.MDCConstants;
 import com.google.common.collect.ImmutableMap;
+
 import org.activiti.engine.ActivitiException;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -792,38 +793,41 @@ public class AcmTaskServiceImpl implements AcmTaskService
             return;
         }
 
-        AcmAbstractDao<AcmObject> acmObjectAcmAbstractDao = getAcmDataService().getDaoByObjectType(parentObjectType);
-        AcmContainerEntity containerEntity = (AcmContainerEntity) acmObjectAcmAbstractDao.find(parentObjectId);
-        Long parentFolderId = containerEntity.getContainer().getFolder().getId();
-
-        // Add Task-folder to parent
-        AcmFolder taskFolder = getAcmFolderService().addNewFolder(parentFolderId, taskFolderName, parentObjectId, parentObjectType);
-
-        // Create link to task attachment folder
-        getAcmFolderService().copyFolderAsLink(task.getContainer().getFolder(), taskFolder, task.getContainer().getFolder().getId(),
-                task.getContainer().getFolder().getObjectType(), "Attachments");
-        // Check if arrayList is empty
-        String documentsUnderReviewFolderName = "Documents Under Review";
-        AcmFolder documentsUnderReviewFolder = null;
-
-        if (task.getDocumentsToReview() != null)
+        if (parentObjectId != null)
         {
-            if (!task.getDocumentsToReview().isEmpty())
+            AcmAbstractDao<AcmObject> acmObjectAcmAbstractDao = getAcmDataService().getDaoByObjectType(parentObjectType);
+            AcmContainerEntity containerEntity = (AcmContainerEntity) acmObjectAcmAbstractDao.find(parentObjectId);
+            Long parentFolderId = containerEntity.getContainer().getFolder().getId();
+
+            // Add Task-folder to parent
+            AcmFolder taskFolder = getAcmFolderService().addNewFolder(parentFolderId, taskFolderName, parentObjectId, parentObjectType);
+
+            // Create link to task attachment folder
+            getAcmFolderService().copyFolderAsLink(task.getContainer().getFolder(), taskFolder, task.getContainer().getFolder().getId(),
+                    task.getContainer().getFolder().getObjectType(), "Attachments");
+            // Check if arrayList is empty
+            String documentsUnderReviewFolderName = "Documents Under Review";
+            AcmFolder documentsUnderReviewFolder = null;
+
+            if (task.getDocumentsToReview() != null)
+            {
+                if (!task.getDocumentsToReview().isEmpty())
+                {
+                    documentsUnderReviewFolder = getAcmFolderService().addNewFolder(taskFolder.getId(), documentsUnderReviewFolderName,
+                            parentObjectId, parentObjectType);
+                    addDocumentToReviewLinksToParentObject(task.getDocumentsToReview(), parentObjectId, parentObjectType,
+                            documentsUnderReviewFolder.getId());
+                }
+            }
+            else if (task.getDocumentUnderReview() != null)
             {
                 documentsUnderReviewFolder = getAcmFolderService().addNewFolder(taskFolder.getId(), documentsUnderReviewFolderName,
                         parentObjectId, parentObjectType);
-                addDocumentToReviewLinksToParentObject(task.getDocumentsToReview(), parentObjectId, parentObjectType,
+                ArrayList<EcmFile> docToReview = new ArrayList<>();
+                docToReview.add(task.getDocumentUnderReview());
+                addDocumentToReviewLinksToParentObject(docToReview, parentObjectId, parentObjectType,
                         documentsUnderReviewFolder.getId());
             }
-        }
-        else if (task.getDocumentUnderReview() != null)
-        {
-            documentsUnderReviewFolder = getAcmFolderService().addNewFolder(taskFolder.getId(), documentsUnderReviewFolderName,
-                    parentObjectId, parentObjectType);
-            ArrayList<EcmFile> docToReview = new ArrayList<>();
-            docToReview.add(task.getDocumentUnderReview());
-            addDocumentToReviewLinksToParentObject(docToReview, parentObjectId, parentObjectType,
-                    documentsUnderReviewFolder.getId());
         }
     }
 
