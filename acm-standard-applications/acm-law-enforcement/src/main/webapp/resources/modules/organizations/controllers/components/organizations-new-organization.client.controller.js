@@ -2,8 +2,8 @@
 
 angular.module('organizations').controller(
         'Organizations.NewOrganizationController',
-    ['$scope', '$stateParams', '$translate', 'Organization.InfoService', '$state', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService', '$modal', 'ConfigService', 'Person.InfoService', 'ObjectService', 'modalParams', 'Mentions.Service', 'PhoneValidationService', 'SimilarOrganizationService',
-        function ($scope, $stateParams, $translate, OrganizationInfoService, $state, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, PersonInfoService, ObjectService, modalParams, MentionsService, PhoneValidationService, SimilarOrganizationService) {
+    ['$scope', '$stateParams', '$translate', '$q', 'Organization.InfoService', '$state', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService', '$modal', 'ConfigService', 'Person.InfoService', 'ObjectService', 'modalParams', 'Mentions.Service', 'PhoneValidationService', 'SimilarOrganizationService',
+        function ($scope, $stateParams, $translate, $q, OrganizationInfoService, $state, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, PersonInfoService, ObjectService, modalParams, MentionsService, PhoneValidationService, SimilarOrganizationService) {
 
                     $scope.modalParams = modalParams;
                     $scope.loading = false;
@@ -232,17 +232,17 @@ angular.module('organizations').controller(
                         $scope.identificationTypes = identificationTypes;
                     });
 
-                    ObjectLookupService.getStates().then(function(states) {
-                        $scope.states = states;
-                    });
+            var promiseGetStates = ObjectLookupService.getStates();
 
-                    ObjectLookupService.getCountries().then(function(countries) {
-                        $scope.countries = countries;
-                    });
+            var promiseGetCountries = ObjectLookupService.getCountries();
 
-                    ObjectLookupService.getAddressTypes().then(function(addressTypes) {
-                        $scope.addressTypes = addressTypes;
-                    });
+            var promiseGetAdressTypes = ObjectLookupService.getAddressTypes();
+
+            $q.all([promiseGetAdressTypes, promiseGetCountries, promiseGetStates]).then(function (data) {
+                $scope.states = data[2];
+                $scope.countries = data[1];
+                $scope.addressTypes = data[0];
+            });
 
                     ObjectLookupService.getOrganizationTypes().then(function(organizationTypes) {
                         $scope.organizationTypes = organizationTypes;
