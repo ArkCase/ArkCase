@@ -31,5 +31,46 @@
             cm_case_modified = NOW() WHERE fo_request_type= 'Appeal'
         </sql>
     </changeSet>
+    <changeSet id="1-update-pay-fees" author="mario.gjurcheski"
+        logicalFilePath="/ddl/sql/foia-request-db-sql-1.0.xml">
+        <sql>UPDATE acm_case_file SET fo_pay_fee = '$25' WHERE fo_pay_fee= '$25.00'</sql>
+    </changeSet>
+    <changeSet id="2-update-pay-fees" author="mario.gjurcheski"
+        logicalFilePath="/ddl/sql/foia-request-db-sql-1.0.xml">
+        <sql>UPDATE acm_case_file SET fo_pay_fee = '$55' WHERE fo_pay_fee= '$55.00'</sql>
+    </changeSet>
+    <changeSet id="3-update-pay-fees" author="mario.gjurcheski"
+        logicalFilePath="/ddl/sql/foia-request-db-sql-1.0.xml">
+        <sql>UPDATE acm_case_file SET fo_pay_fee = '$75' WHERE fo_pay_fee= '$75.00'</sql>
+    </changeSet>
+    <changeSet id="4-update-pay-fees" author="mario.gjurcheski"
+        logicalFilePath="/ddl/sql/foia-request-db-sql-1.0.xml">
+        <sql>UPDATE acm_case_file SET fo_pay_fee = '$100' WHERE fo_pay_fee= '$100.00'</sql>
+    </changeSet>
+    <changeSet id="5-update-pay-fees" author="mario.gjurcheski"
+        logicalFilePath="/ddl/sql/foia-request-db-sql-1.0.xml">
+        <sql>UPDATE acm_case_file SET fo_pay_fee = '$125' WHERE fo_pay_fee= '$125.00'</sql>
+    </changeSet>
+    <changeSet id="6-update-pay-fees" author="mario.gjurcheski"
+        logicalFilePath="/ddl/sql/foia-request-db-sql-1.0.xml">
+        <sql>UPDATE acm_case_file SET fo_pay_fee = '$150' WHERE fo_pay_fee= '$150.00'</sql>
+    </changeSet>
+    <changeSet id="7-update-pay-fees" author="mario.gjurcheski"
+        logicalFilePath="/ddl/sql/foia-request-db-sql-1.0.xml">
+        <sql>UPDATE acm_case_file SET fo_pay_fee = '$175' WHERE fo_pay_fee= '$175.00'</sql>
+    </changeSet>
+    <changeSet id="8-update-pay-fees" author="mario.gjurcheski"
+        logicalFilePath="/ddl/sql/foia-request-db-sql-1.0.xml">
+        <sql>UPDATE acm_case_file SET fo_pay_fee = '$200' WHERE fo_pay_fee= '$200.00'</sql>
+    </changeSet>
+    <changeSet id="9-update-pay-fees" author="mario.gjurcheski"
+        logicalFilePath="/ddl/sql/foia-request-db-sql-1.0.xml">
+        <sql>UPDATE acm_case_file SET fo_pay_fee = '$225' WHERE fo_pay_fee= '$225.00'</sql>
+    </changeSet>
+    <changeSet id="10-update-pay-fees" author="mario.gjurcheski"
+        logicalFilePath="/ddl/sql/foia-request-db-sql-1.0.xml">
+        <sql>UPDATE acm_case_file SET fo_pay_fee = '$250' WHERE fo_pay_fee= '$250.00'</sql>
+    </changeSet>
+
 </databaseChangeLog>
 

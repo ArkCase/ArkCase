@@ -27,16 +27,16 @@ package com.armedia.acm.plugins.complaint.service;
  * #L%
  */
 
+import com.armedia.acm.activiti.services.AcmBpmnService;
 import com.armedia.acm.plugins.complaint.model.closeModal.CloseComplaintEvent;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 import com.armedia.acm.plugins.ecm.workflow.EcmFileWorkflowConfiguration;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.ParticipantTypes;
 
-import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationListener;
 
 import java.util.ArrayList;
@@ -48,7 +48,7 @@ public class CloseComplaintWorkflowListener implements ApplicationListener<Close
 {
     private final Logger log = LogManager.getLogger(getClass());
     private FileWorkflowBusinessRule fileWorkflowBusinessRule;
-    private RuntimeService activitiRuntimeService;
+    private AcmBpmnService acmBpmnService;
     private String closeComplaintTaskName;
     private PDFCloseComplaintDocumentGenerator pdfCloseComplaintDocumentGenerator;
 
@@ -122,7 +122,7 @@ public class CloseComplaintWorkflowListener implements ApplicationListener<Close
 
         log.debug("starting process: [{}]", processName);
 
-        ProcessInstance pi = getActivitiRuntimeService().startProcessInstanceByKey(processName, pvars);
+        ProcessInstance pi = getAcmBpmnService().startBusinessProcess(processName, pvars);
 
         log.debug("process ID: [{}]", pi.getId());
     }
@@ -155,14 +155,14 @@ public class CloseComplaintWorkflowListener implements ApplicationListener<Close
         return candidateGroups;
     }
 
-    public RuntimeService getActivitiRuntimeService()
+    public AcmBpmnService getAcmBpmnService()
     {
-        return activitiRuntimeService;
+        return acmBpmnService;
     }
 
-    public void setActivitiRuntimeService(RuntimeService activitiRuntimeService)
+    public void setAcmBpmnService(AcmBpmnService acmBpmnService)
     {
-        this.activitiRuntimeService = activitiRuntimeService;
+        this.acmBpmnService = acmBpmnService;
     }
 
     public String getCloseComplaintTaskName()

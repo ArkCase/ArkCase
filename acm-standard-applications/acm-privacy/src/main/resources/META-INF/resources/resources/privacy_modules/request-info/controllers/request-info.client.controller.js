@@ -155,6 +155,11 @@ angular.module('request-info').controller(
 
             function onSelectAnnotationTags(data) {
                 var params = $scope.allAnnotationTags;
+                // from Snowbound v5.2 we have data.selectedAnnotations
+                if (data.selectedAnnotations) {
+                    params.annotationTags = $scope.allAnnotationTags;
+                    params.existingAnnotationTags = data.selectedAnnotations;
+                }
                 var modalInstance = $modal.open({
                     animation: true,
                     templateUrl: 'modules/document-details/views/components/annotation-tags-modal.client.view.html',

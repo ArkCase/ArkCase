@@ -31,12 +31,10 @@ import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 
 import javax.persistence.Query;
-
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by Riste Tutureski <riste.tutureski@armedia.com> on 03/06/2018
@@ -60,14 +58,4 @@ public class EcmFileVersionDao extends AcmAbstractDao<EcmFileVersion>
 
     }
 
-    public List<EcmFileVersion> getEcmFileVersionWithSameHash(String fileHash)
-    {
-        String queryText = "SELECT fileVersion FROM EcmFileVersion fileVersion WHERE fileVersion.fileHash = :fileHash";
-        Query query = getEm().createQuery(queryText);
-        query.setParameter("fileHash", fileHash);
-
-        List<EcmFileVersion> results = query.getResultList();
-
-        return results;
-    }
 }

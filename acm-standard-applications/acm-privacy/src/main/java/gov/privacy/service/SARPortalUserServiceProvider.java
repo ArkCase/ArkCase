@@ -102,10 +102,10 @@ public class SARPortalUserServiceProvider implements PortalUserServiceProvider
 
     private AcmEmailSenderService emailSenderService;
 
-    @Value("${privacy.portalserviceprovider.registrationrequest.template}")
+    @Value("${portal.serviceProvider.registrationRequest.template}")
     private String registrationRequestEmailTemplate;
 
-    @Value("${privacy.portalserviceprovider.passwordresetrequest.template}")
+    @Value("${portal.serviceProvider.passwordResetRequest.template}")
     private String passwordResetRequestEmailTemplate;
 
     private UserRegistrationRequestDao registrationDao;
@@ -122,7 +122,7 @@ public class SARPortalUserServiceProvider implements PortalUserServiceProvider
 
     private RequestAssignmentService requestAssignmentService;
 
-    @Value("${privacy.portalserviceprovider.directory.name}")
+    @Value("${portal.serviceProvider.directory.name}")
     private String directoryName;
 
     private NotificationDao notificationDao;

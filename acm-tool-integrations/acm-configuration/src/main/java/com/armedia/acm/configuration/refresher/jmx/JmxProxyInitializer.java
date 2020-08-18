@@ -83,4 +83,15 @@ public class JmxProxyInitializer
 
         return mBeanProxyFactoryBean;
     }
+
+    @Bean(name = "proxyLookupsFacade")
+    public MBeanProxyFactoryBean getMBeanProxyLookupFactoryBean() throws MalformedObjectNameException
+    {
+        MBeanProxyFactoryBean mBeanProxyFactoryBean = new MBeanProxyFactoryBean();
+        mBeanProxyFactoryBean.setObjectName(
+                "configuration:name=lookups-service,type=com.armedia.acm.configuration.ConfigurationService,artifactId=lookups-service");
+        mBeanProxyFactoryBean.setProxyInterface(ConfigurationFacade.class);
+
+        return mBeanProxyFactoryBean;
+    }
 }
