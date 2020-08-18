@@ -24,10 +24,11 @@ angular.module('common').controller(
                 $scope.gridOptions = {
                     enableColumnResizing: true,
                     enableRowSelection: true,
-                    enableRowHeaderSelection: false,
                     multiSelect: true,
                     noUnselect: false,
                     columnDefs: $scope.config.columnDefs,
+                    paginationPageSizes: $scope.config.paginationPageSizes,
+                    paginationPageSize: $scope.config.paginationPageSize,
                     data: $scope.data,
                     onRegisterApi: function (gridApi) {
                         //set gridApi on scope
@@ -66,11 +67,13 @@ angular.module('common').controller(
                         onSuccess: function() {
                             MessageService.succsessAction();
                             $modalInstance.close('done');
+                            return true;
                         },
                         onError: function(error) {
-                            MessageService.error(error.data);
+                            MessageService.error(error.data.message);
+                            $modalInstance.close('error');
                         }
-                    })
+                    });
                 }
             };
 
