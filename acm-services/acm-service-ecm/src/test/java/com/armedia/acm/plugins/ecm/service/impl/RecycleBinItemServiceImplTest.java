@@ -289,6 +289,8 @@ public class RecycleBinItemServiceImplTest extends EasyMockSupport
 
         expect(mockEcmFileService.moveFile(recycleBinItemDTO.getObjectId(), container.getContainerObjectId(),
                 container.getContainerObjectType(), recycleBinItem.getSourceFolderId())).andReturn(fileToBeRestored);
+        
+        mockEcmFileService.checkDuplicatesByHash(fileToBeRestored);
 
         replayAll();
 
