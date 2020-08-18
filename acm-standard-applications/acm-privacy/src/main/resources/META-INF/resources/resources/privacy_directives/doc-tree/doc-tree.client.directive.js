@@ -3423,8 +3423,8 @@ angular
                                         }
                                     });
                                     modalInstance.result.then(function() {
-                                        DocTree.refreshNode(node.parent);
                                         modalInstance.close();
+                                        DocTree.refreshTree();
                                     });
                                 }
                             })

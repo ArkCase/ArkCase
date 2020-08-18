@@ -3175,6 +3175,7 @@ angular.module('directives').directive(
                                         });
                                         modalInstance.result.then(function() {
                                             modalInstance.close();
+                                            DocTree.refreshTree();
                                         });
                                     }
                                 })
