@@ -1572,20 +1572,20 @@
                     "width": "15%"
                 },
                 {
+                    "name": "itemType",
+                    "field": "itemType",
+                    "displayName": "complaints.comp.billing.table.columns.object",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<a ng-click='grid.appScope.onClickObjLink($event, row.entity)' ng-class='{\"no-link\": row.entity.itemType == \"Adhoc\"}'>{{row.entity.itemType}}</a>",
+                    "width": "20%"
+                },
+                {
                     "name": "itemDescription",
                     "field": "itemDescription",
                     "displayName": "complaints.comp.billing.table.columns.description",
                     "headerCellFilter": "translate",
                     "footerCellTemplate": "<div class='ui-grid-cell-contents pull-right'>Total: </div>",
                     "width": "*"
-                },
-                {
-                    "name": "itemType",
-                    "field": "itemType",
-                    "displayName": "complaints.comp.billing.table.columns.type",
-                    "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.itemType || 'Adhoc' }}</div>",
-                    "width": "20%"
                 },
                 {
                     "name": "itemAmount",
