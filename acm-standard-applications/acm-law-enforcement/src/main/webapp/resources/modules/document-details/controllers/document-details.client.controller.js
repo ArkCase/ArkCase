@@ -33,7 +33,7 @@ angular.module('document-details').controller(
                     };
 
                     $scope.showFailureMessage = function showFailureMessage() {
-                        DialogService.alert($scope.transcribeObjectModel.failureReason);
+                        DialogService.alert($scope.transcribeObjectModel.failureReason.split(".", 1));
                     }
 
                      function onShowLoader() {
