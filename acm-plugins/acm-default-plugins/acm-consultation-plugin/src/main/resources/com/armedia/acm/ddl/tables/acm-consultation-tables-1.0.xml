@@ -230,5 +230,17 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="10-add-column-external-requesting-agency" author="stefan.sanevski" dbms="oracle,postgresql,mssql,mysql">
+        <addColumn tableName="acm_consultation">
+            <column name="cm_external_requesting_agency" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    
+    <changeSet id="11-drop-not-null-on-component-agency" author="stefan.sanevski">
+        <dropNotNullConstraint tableName="acm_consultation" columnName="cm_component_agency" columnDataType="VARCHAR(4000)"/>
+    </changeSet>
+
 
 </databaseChangeLog>
