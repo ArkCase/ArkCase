@@ -91,6 +91,7 @@ public class AcmEmailContentGeneratorService
         messageBodyFactory.setModelReferenceName("documentAttached");
         messageBodyFactory.addPropertyToModel("parentNumber", in.getObjectNumber());
         messageBodyFactory.addPropertyToModel("parentType", parentTypeLabel);
+        messageBodyFactory.addPropertyToModel("body", in.getBody());
         return messageBodyFactory.buildMessageBodyFromTemplate(in.getBody(), in.getHeader(), in.getFooter());
     }
 
