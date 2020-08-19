@@ -11,7 +11,7 @@
  * This service is used to manage login and logout. It holds login information, for example login status, idle time, current login ID, error statistics, etc.
  */
 
-angular.module('services').factory('Acm.LoginService', [ '$q', '$state', '$injector', '$log', '$http', 'Acm.StoreService', 'UtilService', 'ConfigService', 'Analytics', 'WebSocketsListener', function($q, $state, $injector, $log, $http, Store, Util, ConfigService, Analytics, WebSocketService) {
+angular.module('services').factory('Acm.LoginService', [ '$q', '$state', '$injector', '$log', '$http', 'Acm.StoreService', 'UtilService', 'ConfigService', 'LookupService', 'Analytics', 'WebSocketsListener', function($q, $state, $injector, $log, $http, Store, Util, ConfigService, LookupService, Analytics, WebSocketService) {
     var Service = {
         LocalCacheNames: {
             LOGIN_INFO: "AcmLoginInfo",
@@ -303,11 +303,11 @@ angular.module('services').factory('Acm.LoginService', [ '$q', '$state', '$injec
          */
         ,
         logout: function() {
-            if (Service.getIsLoggedIntoPentaho()) {
+            if (Service.getIsLoggedIntoPentaho() && Service.pentahoLogoutApi) {
                 // AFDP-9211: Need to logout of Pentaho before ArkCase session ends
                 return $http({
                     method: 'GET',
-                    url: 'pentaho/Logout'
+                    url: Service.pentahoLogoutApi
                 }).then(function (data) {
                     // AFDP-9211: Need to wait until Pentaho logout completed before logging out of ArkCase to
                     // prevent the Pentaho logout call from being interrupted when the ArkCase session is closed
@@ -323,6 +323,11 @@ angular.module('services').factory('Acm.LoginService', [ '$q', '$state', '$injec
     };
 
     Service._deferSetLogin = $q.defer();
+
+    var promiseReportsServerConfig = LookupService.getConfig("acm-reports-server-config");
+    promiseReportsServerConfig.then(function (data) {
+        Service.pentahoLogoutApi = data["report.plugin.PENTAHO_ADHOC_REPORTS_LOGOUT"];
+    });
 
     return Service;
 } ]);

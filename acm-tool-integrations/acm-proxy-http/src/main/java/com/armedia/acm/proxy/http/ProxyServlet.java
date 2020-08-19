@@ -182,6 +182,9 @@ public class ProxyServlet extends HttpServlet
      */
     public static final String P_SET_ADDITIONAL_HEADERS = "setAdditionalHeaders";
 
+    public static final String P_REQUEST_URL_MATCHERS = "requestUrlMatchers";
+    public static final String P_REQUEST_CONTENT_REWRITE_PAIRS = "requestContentRewritePairs";
+
     public static final String JSESSIONID = "JSESSIONID";
     public static final String PENTAHO_LOGOUT = "/Logout";
 
@@ -277,6 +280,9 @@ public class ProxyServlet extends HttpServlet
     private final Map<String, Pattern> compiledPatterns = new HashMap<>();
 
     protected final Map<String, Object> mutableInstanceFields = new HashMap<>();
+
+    protected final List<String> requestUrlMatchers = new ArrayList<>();
+    protected final List<String> requestContentRewritePairs = new ArrayList<>();
 
     private void initMutableInstanceFields()
     {
@@ -396,6 +402,8 @@ public class ProxyServlet extends HttpServlet
         skipResponseUrlMatchers.addAll(parseCsvAsList(getConfigParam(P_SKIP_RESPONSE_URL_MATCHERS)));
         appendUrlParams.addAll(parseCsvAsList(getConfigParam(P_APPEND_URL_PARAMS)));
         additionalHeaders.addAll(parseCsvAsList(getConfigParam(P_SET_ADDITIONAL_HEADERS)));
+        requestUrlMatchers.addAll(parseCsvAsList(getConfigParam(P_REQUEST_URL_MATCHERS)));
+        requestContentRewritePairs.addAll(parseCsvAsList(getConfigParam(P_REQUEST_CONTENT_REWRITE_PAIRS)));
 
         initTarget();// sets target*
 
@@ -560,10 +568,10 @@ public class ProxyServlet extends HttpServlet
         HttpResponse proxyResponse = null;
         try
         {
-            // AFDP-9211: Pentaho gwtrpc calls require that we change /arkcase/pentaho -> /pentaho
-            if (servletRequest.getRequestURI().contains("gwtrpc"))
+            // Rewrites request content based on configured patterns before executing the request
+            if (requiresRequestContentRewrite(servletRequest.getRequestURI()))
             {
-                fixGwtRpcUrl(proxyRequest);
+                rewriteRequestContent(proxyRequest);
             }
 
             // Execute the request
@@ -1242,19 +1250,41 @@ public class ProxyServlet extends HttpServlet
         return pattern.matcher(value).matches();
     }
 
-    private void fixGwtRpcUrl(HttpRequest proxyRequest)
+    protected void rewriteRequestContent(HttpRequest proxyRequest)
     {
-        try
+        for (String pair : requestContentRewritePairs)
         {
-            BasicHttpEntityEnclosingRequest req = (BasicHttpEntityEnclosingRequest)proxyRequest;
-            byte[] content = new byte[(int)req.getEntity().getContentLength()];
-            IOUtils.readFully(req.getEntity().getContent(), content);
-            String updated = new String(content).replaceAll("/arkcase/pentaho", "/pentaho");
-            HttpEntity newEntity = new ByteArrayEntity(updated.getBytes());
-            req.setEntity(newEntity);
-        } catch (Exception e)
-        {
-            logger.error("Failed to fix the gwtrpc url path", e);
+            String[] pairsArray = pair.split(":");
+            if (pairsArray.length != 2)
+            {
+                logger.warn("Error split pair(pattern, replacement) for [{}]", pair);
+                continue;
+            }
+
+            try
+            {
+                BasicHttpEntityEnclosingRequest req = (BasicHttpEntityEnclosingRequest)proxyRequest;
+                byte[] content = new byte[(int)req.getEntity().getContentLength()];
+                IOUtils.readFully(req.getEntity().getContent(), content);
+                String updated = new String(content).replaceAll(pairsArray[0], pairsArray[1]);
+                HttpEntity newEntity = new ByteArrayEntity(updated.getBytes());
+                req.setEntity(newEntity);
+            } catch (Exception e)
+            {
+                logger.error("Failed to replace pattern for request", e);
+            }
         }
+    }
+
+    protected boolean requiresRequestContentRewrite(String requestUri)
+    {
+        for (String pattern : requestUrlMatchers)
+        {
+            if (matches(pattern, requestUri))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }
