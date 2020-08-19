@@ -151,4 +151,11 @@ angular.module('complaints').controller('Complaints.BillingController', ['$scope
             ComplaintBillingService.addBillingItem(itemData);
         }
 
+        $scope.onClickObjLink = function (event, rowEntity) {
+            event.preventDefault();
+            var targetType = Util.goodMapValue(rowEntity, "itemType").toUpperCase();
+            var targetId = Util.goodMapValue(rowEntity, "referenceObjectId");
+            gridHelper.showObject(targetType, targetId);
+        };
+
     }]);
