@@ -135,7 +135,7 @@
         <quartz.version>2.3.2</quartz.version>
         <jaudiotagger.version>2.0.3</jaudiotagger.version>
         <reflections.version>0.9.9</reflections.version>
-        <camel.spring.version>3.4.3</camel.spring.version>
+        <camel.spring.version>3.0.0-M3</camel.spring.version>
         <camel.spi.version>3.4.3</camel.spi.version>
         <camel.core.version>3.4.3</camel.core.version>
         <camel.cmis.version>3.5.0-rc1</camel.cmis.version>
