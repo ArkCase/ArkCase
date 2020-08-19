@@ -250,6 +250,9 @@ public class Consultation implements Serializable, AcmAssignedObject, AcmEntity,
     
     @Column(name = "cm_component_agency")
     private String componentAgency;
+    
+    @Column(name = "cm_external_requesting_agency")
+    private String externalRequestingAgency;
 
     @PrePersist
     protected void beforeInsert()
@@ -799,5 +802,15 @@ public class Consultation implements Serializable, AcmAssignedObject, AcmEntity,
     public void setComponentAgency(String componentAgency)
     {
         this.componentAgency = componentAgency;
+    }
+
+    public String getExternalRequestingAgency() 
+    {
+        return externalRequestingAgency;
+    }
+
+    public void setExternalRequestingAgency(String externalRequestingAgency) 
+    {
+        this.externalRequestingAgency = externalRequestingAgency;
     }
 }
