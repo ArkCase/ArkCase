@@ -29,12 +29,12 @@ package com.armedia.acm.plugins.admin.service;
 
 import com.armedia.acm.activiti.model.AcmProcessDefinition;
 import com.armedia.acm.activiti.services.AcmBpmnService;
+import com.armedia.acm.configuration.service.FileConfigurationService;
 import com.armedia.acm.plugins.admin.exception.AcmLinkFormsWorkflowException;
 import com.armedia.acm.plugins.admin.model.LinkFormsWorkflowsConstants;
 import com.armedia.acm.plugins.ecm.service.AcmFileTypesService;
 
 import org.apache.commons.codec.binary.Hex;
-import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.CellType;
@@ -47,10 +47,11 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.JSONObject;
 import org.openxmlformats.schemas.spreadsheetml.x2006.main.STCellType;
+import org.springframework.core.io.InputStreamResource;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -68,10 +69,10 @@ public class LinkFormsWorkflowsService implements LinkFormsWorkflowsConstants
 {
     private final String[] START_PROCESS_VALUES = new String[] { "", "true", "false" };
     private Logger log = LogManager.getLogger(LdapConfigurationService.class);
-    private String configurationLocation;
+    private static final String RULES_LOCATION = "rules";
     private String configurationFile;
     private String configurationFileBackupTemplate;
-    private String configurationFileBackupRegex;
+    private FileConfigurationService fileConfigurationService;
     private AcmBpmnService acmBpmnService;
     private AcmFileTypesService acmFileTypesService;
 
@@ -84,10 +85,11 @@ public class LinkFormsWorkflowsService implements LinkFormsWorkflowsConstants
     public JSONObject retrieveConfigurationAsJson() throws AcmLinkFormsWorkflowException
     {
 
-        try (FileInputStream file = new FileInputStream(new File(configurationLocation + configurationFile)))
+        try (InputStream stream = fileConfigurationService.getInputStreamFromConfiguration(RULES_LOCATION + "/"
+                + configurationFile))
         {
 
-            XSSFWorkbook workbook = new XSSFWorkbook(file);
+            XSSFWorkbook workbook = new XSSFWorkbook(stream);
 
             // Get Sheet number 0;
             XSSFSheet sheet = workbook.getSheetAt(0);
@@ -366,10 +368,11 @@ public class LinkFormsWorkflowsService implements LinkFormsWorkflowsConstants
     public void updateConfiguration(List<List<String>> newValues) throws AcmLinkFormsWorkflowException
     {
 
-        try (FileInputStream inputFile = new FileInputStream(new File(configurationLocation + configurationFile)))
+        try (InputStream inputStream = fileConfigurationService.getInputStreamFromConfiguration(RULES_LOCATION + "/"
+                + configurationFile))
         {
 
-            XSSFWorkbook workbook = new XSSFWorkbook(inputFile);
+            XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
 
             // Get Sheet number 0;
             XSSFSheet sheet = workbook.getSheetAt(0);
@@ -415,15 +418,17 @@ public class LinkFormsWorkflowsService implements LinkFormsWorkflowsConstants
             // Generate backup file name based on current time.
             String destFileName = String.format(configurationFileBackupTemplate, (new Date()).getTime());
 
-            // Save current configuration file as backup
-            FileUtils.copyFile(
-                    new File(configurationLocation + configurationFile),
-                    new File(configurationLocation + destFileName));
+            // TODO Save current configuration file as backup
 
             // Store updates
-            try (FileOutputStream outputFile = new FileOutputStream(configurationLocation + configurationFile))
+            try (ByteArrayOutputStream outputBytes = new ByteArrayOutputStream())
             {
-                workbook.write(outputFile);
+                workbook.write(outputBytes);
+                try (ByteArrayInputStream inputBytes = new ByteArrayInputStream(outputBytes.toByteArray()))
+                {
+                    fileConfigurationService.moveFileToConfiguration(new InputStreamResource(inputBytes),
+                            RULES_LOCATION + "/" + configurationFile);
+                }
             }
 
         }
@@ -440,19 +445,14 @@ public class LinkFormsWorkflowsService implements LinkFormsWorkflowsConstants
         this.configurationFile = configurationFile;
     }
 
-    public void setConfigurationLocation(String configurationLocation)
-    {
-        this.configurationLocation = configurationLocation;
-    }
-
     public void setConfigurationFileBackupTemplate(String configurationFileBackupTemplate)
     {
         this.configurationFileBackupTemplate = configurationFileBackupTemplate;
     }
 
-    public void setConfigurationFileBackupRegex(String configurationFileBackupRegex)
+    public void setFileConfigurationService(FileConfigurationService fileConfigurationService)
     {
-        this.configurationFileBackupRegex = configurationFileBackupRegex;
+        this.fileConfigurationService = fileConfigurationService;
     }
 
     public void setAcmBpmnService(AcmBpmnService acmBpmnService)

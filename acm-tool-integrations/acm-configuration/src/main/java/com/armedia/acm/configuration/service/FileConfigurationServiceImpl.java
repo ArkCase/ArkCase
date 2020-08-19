@@ -61,6 +61,8 @@ public class FileConfigurationServiceImpl implements FileConfigurationService
 
     private static final String BRANDING_LOCATION = "branding";
 
+    private static final String RULES_EXTENSION = "xlsx";
+
     private static final Logger log = LogManager.getLogger(FileConfigurationServiceImpl.class);
 
     @Override
@@ -105,6 +107,10 @@ public class FileConfigurationServiceImpl implements FileConfigurationService
     @JmsListener(destination = "VirtualTopic.ConfigFileUpdated", containerFactory = "jmsTopicListenerContainerFactory")
     public void downloadFileFromConfiguration(Message message) throws IOException
     {
+        if (message.getPayload().toString().toLowerCase().endsWith(RULES_EXTENSION))
+        {
+            return;
+        }
         getFileFromConfiguration(message.getPayload().toString(), customFilesLocation);
     }
 
