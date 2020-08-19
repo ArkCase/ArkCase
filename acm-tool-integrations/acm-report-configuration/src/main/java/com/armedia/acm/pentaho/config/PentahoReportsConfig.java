@@ -87,6 +87,10 @@ public class PentahoReportsConfig
     @Value("${report.plugin.PENTAHO_ADHOC_REPORTS_CONTEXT}")
     private String adhocReportsContext;
 
+    @JsonProperty("report.plugin.PENTAHO_ADHOC_REPORTS_LOGOUT")
+    @Value("${report.plugin.PENTAHO_ADHOC_REPORTS_LOGOUT}")
+    private String adhocReportsLogout;
+
     @JsonProperty("report.plugin.PENTAHO_SCHEDULE_INPUT_FOLDER")
     @Value("${report.plugin.PENTAHO_SCHEDULE_INPUT_FOLDER}")
     private String scheduleInputFolder;
@@ -263,6 +267,16 @@ public class PentahoReportsConfig
     public void setAdhocReportsContext(String adhocReportsContext)
     {
         this.adhocReportsContext = adhocReportsContext;
+    }
+
+    public String getAdhocReportsLogout()
+    {
+        return adhocReportsLogout;
+    }
+
+    public void setAdhocReportsLogout(String adhocReportsLogout)
+    {
+        this.adhocReportsLogout = adhocReportsLogout;
     }
 
     public String getScheduleInputFolder()
