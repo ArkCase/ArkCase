@@ -88,6 +88,8 @@ public class AcmEmailContentGeneratorService
         messageBodyFactory.setParentNumber(in.getObjectNumber());
         String parentTypeLabel = objectLabelConfig.getLabelForObjectType(in.getObjectType());
         messageBodyFactory.setParentType(parentTypeLabel);
+        messageBodyFactory.setModelReferenceName(in.getModelReferenceName());
+        messageBodyFactory.addPropertyToModel("body", in.getBody());
         return messageBodyFactory.buildMessageBodyFromTemplate(in.getBody(), in.getHeader(), in.getFooter());
     }
 
