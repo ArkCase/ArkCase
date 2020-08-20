@@ -107,8 +107,9 @@ public class FileConfigurationServiceImpl implements FileConfigurationService
     @JmsListener(destination = "VirtualTopic.ConfigFileUpdated", containerFactory = "jmsTopicListenerContainerFactory")
     public void downloadFileFromConfiguration(Message message) throws IOException
     {
-        if (message.getPayload().toString().toLowerCase().endsWith(RULES_EXTENSION))
+        if (message.getPayload().toString().toLowerCase().contains("." + RULES_EXTENSION))
         {
+            // Rules files are not copied.
             return;
         }
         getFileFromConfiguration(message.getPayload().toString(), customFilesLocation);
