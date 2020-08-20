@@ -103,6 +103,8 @@ public class MessageBodyFactory
         model.put("header", header);
         model.put("body", body);
         model.put("footer", footer);
+        addPropertyToModel("parentNumber", parentNumber);
+        addPropertyToModel("parentType", parentType);
         if (getTemplatingEngine() == null || this.template.contains("${body}") || this.template.contains("${model.body}"))
         {
             return buildMessageBodyFromTemplate(model);
