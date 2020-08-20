@@ -258,7 +258,7 @@ start_security_scan:
     variables:
       - $START_SECURITY_SCAN
   script:
-    - export ARKCASE_VERSION=$(mvn --non-recursive help:evaluate -Dexpression=project.version | grep -v '\[.*' | grep -v 'Downloading.*')
+    - export ARKCASE_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
     - echo $ARKCASE_VERSION
     - wget https://github.com/brian1917/vcodeHMAC-CLI/releases/download/v1.0/vcodeHMAC-CLI_linux
     - chmod 755 vcodeHMAC-CLI_linux
