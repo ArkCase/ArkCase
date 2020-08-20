@@ -252,7 +252,7 @@ deploy_backend_bcgeu_dev:
     ARKCASE_UI_VARIANT: ui-core
     ARKCASE_SERVICE_USER_NAME: arkuser
 
- start_security_scan:
+start_security_scan:
   stage: start_security_scan
   only:
     variables:
