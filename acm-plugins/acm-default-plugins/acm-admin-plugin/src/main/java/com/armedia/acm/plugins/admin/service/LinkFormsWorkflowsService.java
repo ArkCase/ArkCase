@@ -35,6 +35,7 @@ import com.armedia.acm.plugins.admin.model.LinkFormsWorkflowsConstants;
 import com.armedia.acm.plugins.ecm.service.AcmFileTypesService;
 
 import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.CellType;
@@ -372,62 +373,73 @@ public class LinkFormsWorkflowsService implements LinkFormsWorkflowsConstants
                 + configurationFile))
         {
 
-            XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
+            byte[] receivedBinary = IOUtils.toByteArray(inputStream);
 
-            // Get Sheet number 0;
-            XSSFSheet sheet = workbook.getSheetAt(0);
-
-            // Update all not locked cells' values
-            for (int rowNum = 0; rowNum < newValues.size(); rowNum++)
+            try (ByteArrayInputStream receivedBytes = new ByteArrayInputStream(receivedBinary))
             {
-                List<String> valuesRow = newValues.get(rowNum);
-                for (int colNum = 0; colNum < valuesRow.size(); colNum++)
+
+                XSSFWorkbook workbook = new XSSFWorkbook(receivedBytes);
+
+                // Get Sheet number 0;
+                XSSFSheet sheet = workbook.getSheetAt(0);
+
+                // Update all not locked cells' values
+                for (int rowNum = 0; rowNum < newValues.size(); rowNum++)
                 {
-                    String value = valuesRow.get(colNum);
-                    if (value != null)
+                    List<String> valuesRow = newValues.get(rowNum);
+                    for (int colNum = 0; colNum < valuesRow.size(); colNum++)
                     {
-                        if (sheet.getRow(rowNum) != null)
+                        String value = valuesRow.get(colNum);
+                        if (value != null)
                         {
-                            XSSFCell cell = sheet.getRow(rowNum).getCell(colNum);
-                            if (cell != null && cell.getCellStyle() != null)
+                            if (sheet.getRow(rowNum) != null)
                             {
-                                if (!cell.getCellStyle().getLocked())
+                                XSSFCell cell = sheet.getRow(rowNum).getCell(colNum);
+                                if (cell != null && cell.getCellStyle() != null)
                                 {
-                                    if (cell.getCTCell().getT() == STCellType.INLINE_STR)
-                                    { // cell has inline string in it
-                                        if (cell.getCTCell().isSetIs())
-                                        { // inline string has is element
-                                            cell.getCTCell().getIs().setT(value); // set t element in is element
+                                    if (!cell.getCellStyle().getLocked())
+                                    {
+                                        if (cell.getCTCell().getT() == STCellType.INLINE_STR)
+                                        { // cell has inline string in it
+                                            if (cell.getCTCell().isSetIs())
+                                            { // inline string has is element
+                                                cell.getCTCell().getIs().setT(value); // set t element in is element
+                                            }
+                                            else
+                                            {
+                                                cell.getCTCell().setV(value); // set v element of inline string
+                                            }
                                         }
                                         else
                                         {
-                                            cell.getCTCell().setV(value); // set v element of inline string
+                                            cell.setCellValue(value); // set shared string cell value
                                         }
-                                    }
-                                    else
-                                    {
-                                        cell.setCellValue(value); // set shared string cell value
                                     }
                                 }
                             }
                         }
                     }
                 }
-            }
 
-            // Generate backup file name based on current time.
-            String destFileName = String.format(configurationFileBackupTemplate, (new Date()).getTime());
+                // Generate backup file name based on current time.
+                String destFileName = String.format(configurationFileBackupTemplate, (new Date()).getTime());
 
-            // TODO Save current configuration file as backup
-
-            // Store updates
-            try (ByteArrayOutputStream outputBytes = new ByteArrayOutputStream())
-            {
-                workbook.write(outputBytes);
-                try (ByteArrayInputStream inputBytes = new ByteArrayInputStream(outputBytes.toByteArray()))
+                // Save current configuration file as backup
+                try (ByteArrayInputStream inputBytes = new ByteArrayInputStream(receivedBinary))
                 {
                     fileConfigurationService.moveFileToConfiguration(new InputStreamResource(inputBytes),
-                            RULES_LOCATION + "/" + configurationFile);
+                            RULES_LOCATION + "/" + destFileName);
+                }
+
+                // Store updates
+                try (ByteArrayOutputStream outputBytes = new ByteArrayOutputStream())
+                {
+                    workbook.write(outputBytes);
+                    try (ByteArrayInputStream inputBytes = new ByteArrayInputStream(outputBytes.toByteArray()))
+                    {
+                        fileConfigurationService.moveFileToConfiguration(new InputStreamResource(inputBytes),
+                                RULES_LOCATION + "/" + configurationFile);
+                    }
                 }
             }
 
@@ -435,8 +447,8 @@ public class LinkFormsWorkflowsService implements LinkFormsWorkflowsConstants
         catch (Exception e)
         {
 
-            log.error("Can't retrieve Link Forms Workflows configuration file", e);
-            throw new AcmLinkFormsWorkflowException("Can't retrieve Link Forms Workflows configuration file", e);
+            log.error("Can't update Link Forms Workflows configuration file", e);
+            throw new AcmLinkFormsWorkflowException("Can't update Link Forms Workflows configuration file", e);
         }
     }
 
