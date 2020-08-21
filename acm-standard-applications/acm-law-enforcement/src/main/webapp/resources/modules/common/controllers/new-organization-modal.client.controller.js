@@ -42,7 +42,7 @@ angular.module('common').controller(
                         }
                     };
 
-                    ObjectLookupService.getOrganizationPersonRelationTypes().then(function(types) {
+                    ObjectLookupService.getPersonOrganizationRelationTypes().then(function(types) {
                         $scope.personAssociationTypes = types;
                         return types;
                     });
