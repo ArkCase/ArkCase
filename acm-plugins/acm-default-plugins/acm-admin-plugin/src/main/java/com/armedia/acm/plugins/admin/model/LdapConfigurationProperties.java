@@ -57,6 +57,7 @@ public interface LdapConfigurationProperties
     String LDAP_PROP_GROUP_CONTROL_GROUP = "ldapConfig.groupControlGroup";
     String LDAP_PROP_ENABLE_EDITING_LDAP_USERS = "ldapConfig.enableEditingLdapUsers";
     String LDAP_PROP_SYNC_ENABLED = "ldapConfig.syncEnabled";
+    String LDAP_PROP_AUTO_GENERATE_USER_ID = "ldapConfig.autoGenerateUserId";
     String LDAP_PROP_SYNC_PAGE_SIZE = "ldapConfig.syncPageSize";
     String LDAP_PROP_ADD_USER_TEMPLATE = "ldapConfig.addUserTemplate";
     String LDAP_PROP_ADD_GROUP_TEMPLATE = "ldapConfig.addGroupTemplate";
