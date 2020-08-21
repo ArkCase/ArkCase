@@ -1,0 +1,15 @@
+{
+    "id": "adhoc-reports",
+    "title": "Adhoc Reports",
+    "menus": [
+        {
+            "menuId": "leftnav",
+            "menuItemURL": "adhoc-reports",
+            "menuItemTitle": "adhoc-reports.menus.leftnav.item",
+            "moduleId": "adhoc-report",
+            "iconClass": "fa fa-pie-chart",
+            "position": 111
+        }
+    ],
+    "components": []
+}
