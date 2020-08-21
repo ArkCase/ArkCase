@@ -43,7 +43,7 @@ angular.module('organizations').controller(
                         details: ''
                     };
 
-                    ObjectLookupService.getOrganizationPersonRelationTypes().then(function(types) {
+                    ObjectLookupService.getPersonOrganizationRelationTypes().then(function(types) {
                         $scope.personAssociationTypes = types;
                         return types;
                     });
@@ -187,8 +187,8 @@ angular.module('organizations').controller(
                     function setPersonAssociation(association, data) {
                         association.person = data.person;
                         association.organization = $scope.organization;
-                        association.organizationToPersonAssociationType = data.type;
-                        association.personToOrganizationAssociationType = data.inverseType;
+                        association.organizationToPersonAssociationType = data.inverseType;
+                        association.personToOrganizationAssociationType = data.type;
 
                         if (data.isDefault) {
                             //find and change previously primary contact
