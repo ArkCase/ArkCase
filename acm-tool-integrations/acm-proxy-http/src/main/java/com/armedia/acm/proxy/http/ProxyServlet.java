@@ -181,6 +181,13 @@ public class ProxyServlet extends HttpServlet
      * A String parameter name to set additional headers for given url matcher
      */
     public static final String P_SET_ADDITIONAL_HEADERS = "setAdditionalHeaders";
+
+    public static final String P_REQUEST_URL_MATCHERS = "requestUrlMatchers";
+    public static final String P_REQUEST_CONTENT_REWRITE_PAIRS = "requestContentRewritePairs";
+
+    public static final String JSESSIONID = "JSESSIONID";
+    public static final String PENTAHO_LOGOUT = "/Logout";
+
     /**
      * The parameter name for the target (destination) URI to proxy to.
      */
@@ -273,6 +280,9 @@ public class ProxyServlet extends HttpServlet
     private final Map<String, Pattern> compiledPatterns = new HashMap<>();
 
     protected final Map<String, Object> mutableInstanceFields = new HashMap<>();
+
+    protected final List<String> requestUrlMatchers = new ArrayList<>();
+    protected final List<String> requestContentRewritePairs = new ArrayList<>();
 
     private void initMutableInstanceFields()
     {
@@ -392,6 +402,8 @@ public class ProxyServlet extends HttpServlet
         skipResponseUrlMatchers.addAll(parseCsvAsList(getConfigParam(P_SKIP_RESPONSE_URL_MATCHERS)));
         appendUrlParams.addAll(parseCsvAsList(getConfigParam(P_APPEND_URL_PARAMS)));
         additionalHeaders.addAll(parseCsvAsList(getConfigParam(P_SET_ADDITIONAL_HEADERS)));
+        requestUrlMatchers.addAll(parseCsvAsList(getConfigParam(P_REQUEST_URL_MATCHERS)));
+        requestContentRewritePairs.addAll(parseCsvAsList(getConfigParam(P_REQUEST_CONTENT_REWRITE_PAIRS)));
 
         initTarget();// sets target*
 
@@ -556,6 +568,12 @@ public class ProxyServlet extends HttpServlet
         HttpResponse proxyResponse = null;
         try
         {
+            // Rewrites request content based on configured patterns before executing the request
+            if (requiresRequestContentRewrite(servletRequest.getRequestURI()))
+            {
+                rewriteRequestContent(proxyRequest);
+            }
+
             // Execute the request
             proxyResponse = doExecute(servletRequest, servletResponse, proxyRequest);
 
@@ -642,7 +660,8 @@ public class ProxyServlet extends HttpServlet
         // because of reason that media type is form_url_encoded
         // inputStream of the request is empty i.e. already consumed
         // so we need to send those parameters to the proxyRequest
-        if (servletRequest.getContentType().contains(MediaType.APPLICATION_FORM_URLENCODED_VALUE))
+        if (servletRequest.getContentType() != null &&
+                servletRequest.getContentType().contains(MediaType.APPLICATION_FORM_URLENCODED_VALUE))
         {
             List<NameValuePair> params = new LinkedList<>();
             servletRequest.getParameterMap().entrySet().stream().forEach(entry -> {
@@ -826,6 +845,14 @@ public class ProxyServlet extends HttpServlet
         if (path.isEmpty())
         {
             path = "/";
+        }
+
+        // AFDP-9211: Need to remove the JSESSIONID returned from the Pentaho logout call in order to
+        // prevent the user from staying logged into Pentaho in the ArkCase adhoc reports iframe.
+        String uri = servletRequest.getRequestURI();
+        if (StringUtils.containsIgnoreCase(uri, PENTAHO_LOGOUT))
+        {
+            cookies.removeIf(c -> StringUtils.containsIgnoreCase(c.getName(), JSESSIONID));
         }
 
         for (HttpCookie cookie : cookies)
@@ -1221,5 +1248,43 @@ public class ProxyServlet extends HttpServlet
     {
         Pattern pattern = compiledPatterns.computeIfAbsent(patternStr, k -> Pattern.compile(k));
         return pattern.matcher(value).matches();
+    }
+
+    protected void rewriteRequestContent(HttpRequest proxyRequest)
+    {
+        for (String pair : requestContentRewritePairs)
+        {
+            String[] pairsArray = pair.split(":");
+            if (pairsArray.length != 2)
+            {
+                logger.warn("Error split pair(pattern, replacement) for [{}]", pair);
+                continue;
+            }
+
+            try
+            {
+                BasicHttpEntityEnclosingRequest req = (BasicHttpEntityEnclosingRequest)proxyRequest;
+                byte[] content = new byte[(int)req.getEntity().getContentLength()];
+                IOUtils.readFully(req.getEntity().getContent(), content);
+                String updated = new String(content).replaceAll(pairsArray[0], pairsArray[1]);
+                HttpEntity newEntity = new ByteArrayEntity(updated.getBytes());
+                req.setEntity(newEntity);
+            } catch (Exception e)
+            {
+                logger.error("Failed to replace pattern for request", e);
+            }
+        }
+    }
+
+    protected boolean requiresRequestContentRewrite(String requestUri)
+    {
+        for (String pattern : requestUrlMatchers)
+        {
+            if (matches(pattern, requestUri))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }
