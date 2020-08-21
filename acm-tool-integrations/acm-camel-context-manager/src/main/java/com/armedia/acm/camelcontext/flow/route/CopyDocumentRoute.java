@@ -48,11 +48,6 @@ public class CopyDocumentRoute extends ArkCaseAbstractRoute
 {
     private Logger log = LogManager.getLogger(getClass());
 
-    /*
-     * HOW TO CHECK IF FILE WITH SAME NAME ALREADY EXISTS IN THIS FOLDER??
-     * TODO check if file exists with same name!
-     */
-
     @Override
     public void configure()
     {
