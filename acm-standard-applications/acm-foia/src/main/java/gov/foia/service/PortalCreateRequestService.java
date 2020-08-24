@@ -52,6 +52,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import gov.foia.dao.PortalFOIAPersonDao;
@@ -230,7 +231,8 @@ public class PortalCreateRequestService
         requester.setPosition(in.getPosition());
 
         PostalAddress address = getPostalAddressFromPortalFOIARequest(in);
-        if (addressHasData(address) && requester.getAddresses().stream().noneMatch(add -> areAddressesEqual(add, address)))
+        if (addressHasData(address)
+                && requester.getAddresses().stream().noneMatch(existingAddress -> areAddressesEqual(existingAddress, address)))
         {
             requester.getAddresses().add(address);
         }
@@ -259,11 +261,11 @@ public class PortalCreateRequestService
 
     private boolean areAddressesEqual(PostalAddress address1, PostalAddress address2)
     {
-        return !address1.getStreetAddress().equals(address2.getStreetAddress())
-                || !address1.getStreetAddress2().equals(address2.getStreetAddress2())
-                || !address1.getCity().equals(address2.getCity())
-                || !address1.getZip().equals(address2.getZip())
-                || !address1.getState().equals(address2.getState());
+        return Objects.equals(address1.getStreetAddress(), address2.getStreetAddress())
+                && Objects.equals(address1.getStreetAddress2(), address2.getStreetAddress2())
+                && Objects.equals(address1.getCity(), address2.getCity())
+                && Objects.equals(address1.getZip(), address2.getZip())
+                && Objects.equals(address1.getState(), address2.getState());
     }
 
     private boolean isNewContactMethod(PortalFOIAPerson requester, String contactMethodValue)
