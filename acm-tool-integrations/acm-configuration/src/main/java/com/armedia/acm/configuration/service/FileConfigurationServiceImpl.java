@@ -63,6 +63,8 @@ public class FileConfigurationServiceImpl implements FileConfigurationService
 
     private static final String BRANDING_LOCATION = "branding";
 
+    private static final String RULES_EXTENSION = "xlsx";
+
     private static final Logger log = LogManager.getLogger(FileConfigurationServiceImpl.class);
 
     @Override
@@ -94,7 +96,7 @@ public class FileConfigurationServiceImpl implements FileConfigurationService
 
         ResponseEntity<Resource> exchange = configRestTemplate.exchange(
                 configurationClientConfig.getConfigurationUrl() + "/" + configurationClientConfig.getDefaultApplicationName() + "/"
-                        + configurationClientConfig.getActiveProfile() + "/*/" + BRANDING_LOCATION + "/" + fileName,
+                        + configurationClientConfig.getActiveProfileReversed() + "/*/" + BRANDING_LOCATION + "/" + fileName,
                 HttpMethod.GET, entity,
                 Resource.class);
 
@@ -107,6 +109,11 @@ public class FileConfigurationServiceImpl implements FileConfigurationService
     @JmsListener(destination = "VirtualTopic.ConfigFileUpdated", containerFactory = "jmsTopicListenerContainerFactory")
     public void downloadFileFromConfiguration(Message message) throws IOException
     {
+        if (message.getPayload().toString().toLowerCase().contains("." + RULES_EXTENSION))
+        {
+            // Rules files are not copied.
+            return;
+        }
         getFileFromConfiguration(message.getPayload().toString(), customFilesLocation);
     }
 
@@ -120,7 +127,7 @@ public class FileConfigurationServiceImpl implements FileConfigurationService
 
         ResponseEntity<Resource> exchange = configRestTemplate.exchange(
                 configurationClientConfig.getConfigurationUrl() + "/" + configurationClientConfig.getDefaultApplicationName() + "/"
-                        + configurationClientConfig.getActiveProfile() + "/*/" + filePath,
+                        + configurationClientConfig.getActiveProfileReversed() + "/*/" + filePath,
                 HttpMethod.GET, entity,
                 Resource.class);
 
