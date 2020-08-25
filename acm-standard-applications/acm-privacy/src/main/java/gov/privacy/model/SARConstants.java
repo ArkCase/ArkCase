@@ -63,7 +63,7 @@ public interface SARConstants
 
     String EMAIL_RELEASE_SUBJECT = "Request Complete";
 
-    String EMAIL_RESPONSE_FOLDER_ZIP = "New installment of documents is now available for your Subject Acces Request";
+    String EMAIL_RESPONSE_FOLDER_ZIP = "New installment of documents is now available for your Subject Access Request";
 
     String PRIVACY_PIPELINE_EXTENSION_PROPERTY_KEY = "privacy_request_extension";
 
