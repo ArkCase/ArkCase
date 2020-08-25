@@ -99,7 +99,7 @@ angular.module('request-info').controller(
             };
 
             $scope.showFailureMessage = function showFailureMessage() {
-                DialogService.alert($scope.transcribeObjectModel.failureReason);
+                DialogService.alert($scope.transcribeObjectModel.failureReason.split(".", 1));
             };
 
             function onShowLoader() {
@@ -154,7 +154,12 @@ angular.module('request-info').controller(
             }
 
             function onSelectAnnotationTags(data) {
-                var params = $scope.allAnnotationTags;
+                var params = {};
+                // from Snowbound v5.2 we have data.selectedAnnotations
+                if (data.selectedAnnotations) {
+                    params.annotationTags = $scope.allAnnotationTags;
+                    params.existingAnnotationTags = data.selectedAnnotations;
+                }
                 var modalInstance = $modal.open({
                     animation: true,
                     templateUrl: 'modules/document-details/views/components/annotation-tags-modal.client.view.html',
@@ -432,6 +437,7 @@ angular.module('request-info').controller(
             $scope.showVideoPlayer = false;
             $scope.showPdfJs = false;
             $scope.transcriptionTabActive = false;
+            $scope.transcriptionTabViewEnabled = false;
 
             // Obtains authentication token for ArkCase
             var ticketInfo = TicketService.getArkCaseTicket();
@@ -794,6 +800,7 @@ angular.module('request-info').controller(
                 }
 
                 $scope.transcriptionTabActive = $scope.showVideoPlayer && $scope.transcribeEnabled;
+                $scope.transcriptionTabViewEnabled = $scope.transcriptionTabActive;
 
             });
             $scope.onPlayerReady = function (API) {
@@ -1287,8 +1294,15 @@ angular.module('request-info').controller(
             $scope.requestTrackChanged = function (requestTrack) {
                 if (requestTrack === 'expedite') {
                     expediteDueDate();
+                    $scope.objectInfo.expediteDate = new Date();
                 } else {
                     resetDueDate();
+                }
+            };
+
+            $scope.feeWaivedFlagChange = function(feeWaiver) {
+                if (feeWaiver) {
+                    $scope.objectInfo.feeWaivedDate = new Date();
                 }
             };
 

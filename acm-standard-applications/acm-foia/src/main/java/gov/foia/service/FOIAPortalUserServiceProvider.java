@@ -102,10 +102,10 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
 
     private AcmEmailSenderService emailSenderService;
 
-    @Value("${foia.portalserviceprovider.registrationrequest.template}")
+    @Value("${portal.serviceProvider.registrationRequest.template}")
     private String registrationRequestEmailTemplate;
 
-    @Value("${foia.portalserviceprovider.passwordresetrequest.template}")
+    @Value("${portal.serviceProvider.passwordResetRequest.template}")
     private String passwordResetRequestEmailTemplate;
 
     private UserRegistrationRequestDao registrationDao;
@@ -122,7 +122,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
 
     private RequestAssignmentService requestAssignmentService;
 
-    @Value("${foia.portalserviceprovider.directory.name}")
+    @Value("${portal.serviceProvider.directory.name}")
     private String directoryName;
 
     private NotificationDao notificationDao;
@@ -213,6 +213,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         notification.setNote(registrationLink);
         notification.setEmailAddresses(registrationRequest.getEmailAddress());
         notification.setUser(SecurityContextHolder.getContext().getAuthentication().getName());
+        notification.setParentType("USER");
 
         getNotificationDao().save(notification);
     }
@@ -575,6 +576,26 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         return requestPasswordReset(portalId, resetRequest, templateName, emailTitle);
     }
 
+    /*
+     * (non-Javadoc)
+     * @see com.armedia.acm.portalgateway.service.PortalUserServiceProvider#regeneratePasswordReset(java.lang.String,
+     * com.armedia.acm.portalgateway.model.UserResetRequest)
+     */
+    @Override
+    public UserResetResponse regeneratePasswordReset(String portalId, UserResetRequest resetRequest) throws PortalUserServiceException
+    {
+        Optional<UserResetRequestRecord> resetRecord = resetDao.findByEmail(resetRequest.getEmailAddress());
+        if (resetRecord.isPresent())
+        {
+            resetDao.delete(resetRecord.get());
+            return requestPasswordReset(portalId, resetRequest);
+        }
+        else
+        {
+            return UserResetResponse.reqistrationRequired();
+        }
+    }
+
     @Override
     public UserResetResponse requestPasswordReset(String portalId, UserResetRequest resetRequest, String templateName, String emailTitle)
             throws PortalUserServiceException
@@ -612,6 +633,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
                 notification.setNote(resetLink);
                 notification.setEmailAddresses(resetRequest.getEmailAddress());
                 notification.setUser(SecurityContextHolder.getContext().getAuthentication().getName());
+                notification.setParentType("USER");
 
                 getNotificationDao().save(notification);
 
@@ -774,6 +796,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
                 if (phoneContact != null)
                 {
                     phoneContact.setValue(user.getPhoneNumber());
+                    person.setDefaultPhone(phoneContact);
                 }
                 else
                 {
@@ -785,8 +808,10 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
             else
             {
                 List<ContactMethod> contactMethods = new ArrayList<>();
-                contactMethods.add(buildContactMethod("phone", user.getPhoneNumber()));
+                ContactMethod newPhoneContact = buildContactMethod("phone", user.getPhoneNumber());
+                contactMethods.add(newPhoneContact);
                 person.setContactMethods(contactMethods);
+                person.setDefaultPhone(newPhoneContact);
             }
         }
         else
@@ -1051,6 +1076,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         {
             ContactMethod phone = buildContactMethod("phone", user.getPhoneNumber());
             person.getContactMethods().add(phone);
+            person.setDefaultPhone(phone);
         }
 
         if (user.getEmail() != null && !user.getEmail().isEmpty())

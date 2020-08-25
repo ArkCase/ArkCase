@@ -153,6 +153,7 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
 
         String participantsListJson = ParticipantUtils.createParticipantsListJson(in.getParticipants());
         doc.setAdditionalProperty("acm_participants_lcs", participantsListJson);
+        doc.setAdditionalProperty("duplicate_b", in.isDuplicate());
         return doc;
     }
 
@@ -278,6 +279,8 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
 
         String participantsListJson = ParticipantUtils.createParticipantsListJson(in.getParticipants());
         solr.setAdditionalProperty("acm_participants_lcs", participantsListJson);
+
+        solr.setAdditionalProperty("duplicate_b", in.isDuplicate());
 
         return solr;
     }

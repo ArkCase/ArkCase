@@ -28,8 +28,8 @@ package com.armedia.acm.spring;
  */
 
 import org.apache.commons.io.FileUtils;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -120,6 +120,8 @@ public class SpringConfigCopier implements ApplicationContextAware
                     log.debug("Done scanning for resources matching '{}'", resourcePattern);
                 }
             }
+
+            log.info("Done copying resources to builtin folder [{}].", builtinFolderPath);
         }
         catch (IOException e)
         {

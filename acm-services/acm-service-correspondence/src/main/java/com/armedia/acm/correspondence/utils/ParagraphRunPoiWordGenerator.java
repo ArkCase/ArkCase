@@ -40,31 +40,27 @@ import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.spring.SpringContextHolder;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFRun;
-import org.apache.poi.xwpf.usermodel.XWPFTable;
-import org.apache.poi.xwpf.usermodel.XWPFTableCell;
-import org.apache.poi.xwpf.usermodel.XWPFTableRow;
+import org.apache.poi.xwpf.usermodel.*;
+import org.apache.xmlbeans.XmlObject;
 import org.springframework.core.io.Resource;
 import org.springframework.expression.spel.SpelEvaluationException;
 import org.springframework.expression.spel.SpelParserConfiguration;
 import org.springframework.expression.spel.standard.SpelExpression;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
+import org.apache.xmlbeans.XmlCursor;
+
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.StringJoiner;
+import java.util.*;
 
 /**
  * Created by armdev on 12/11/14.
@@ -96,6 +92,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
         {
             List<XWPFParagraph> graphs = template.getParagraphs();
             List<XWPFTable> tables = template.getTables();
+            List<XWPFHeader> headers = template.getHeaderList();
 
             AcmAbstractDao<AcmEntity> correspondedObjectDao = getCorrespondenceService().getAcmAbstractDao(objectType);
             Object correspondenedObject = correspondedObjectDao.find(parentObjectId);
@@ -115,6 +112,9 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
 
             // Update all text in the word document who is inside tables/rows/cells
             updateTables(tables, correspondenedObject, objectType);
+
+            //Update all text in the word documents in headers
+            updateHeaders(headers, correspondenedObject, objectType);
 
             log.debug("writing correspondence to stream: " + targetStream);
 
@@ -183,9 +183,14 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
     {
         for (XWPFParagraph graph : graphs)
         {
-            replace(graph, object, objectType);
+            if (StringUtils.isNotEmpty(graph.getPictureText()))
+            {
+                replacePictureText(graph, object, objectType);
+            } else
+            {
+                replace(graph, object, objectType);
+            }
         }
-
         return graphs;
     }
 
@@ -197,6 +202,14 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
         }
 
         return graphs;
+    }
+    private List<XWPFHeader> updateHeaders(List<XWPFHeader> headers, Object object, String objectType)
+    {
+        for (XWPFHeader header : headers)
+        {
+            updateGraphs(header.getParagraphs(), object, objectType);
+        }
+        return headers;
     }
 
     public <V> void replace(XWPFParagraph paragraph, String searchText, V replacement)
@@ -377,6 +390,60 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                     paragraph.removeRun(i);
                 }
                 paragraph.getRuns().get(runNum).setBold(true);
+            }
+        }
+    }
+
+    //This method is used for text in textbox.
+    public <V> void replacePictureText(XWPFParagraph paragraph, Object object, String objectType)
+    {
+        XmlCursor cursor = paragraph.getCTP().newCursor();
+        cursor.selectPath("declare namespace w='http://schemas.openxmlformats.org/wordprocessingml/2006/main' .//*/w:txbxContent/w:p/w:r");
+
+        List<XmlObject> ctrsintxtbx = new ArrayList<XmlObject>();
+
+        while(cursor.hasNextSelection()) {
+            cursor.toNextSelection();
+            XmlObject obj = cursor.getObject();
+            ctrsintxtbx.add(obj);
+        }
+        for (XmlObject obj : ctrsintxtbx) {
+            String texts[] = { "" };
+            try {
+                CTR ctr = CTR.Factory.parse(obj.xmlText());
+                XWPFRun bufferrun = new XWPFRun(ctr, (IRunBody) paragraph);
+
+                String text = bufferrun.getText(0);
+                if (text != null && !text.isEmpty()) {
+                    if (text.contains(SUBSTITUTION_PREFIX)) {
+                        text = text.replace(SUBSTITUTION_PREFIX, "");
+                    }
+                    if (text.contains(SUBSTITUTION_SUFFIX)) {
+                        text = text.replace(SUBSTITUTION_SUFFIX, "");
+                    }
+                    if (text.isEmpty())
+                    {
+                        obj.newCursor().removeXml();
+                    } else {
+                        if (!(text.contains(":")))
+                        {
+                            texts = evaluateSpelExpression(object, text, objectType).split("\n");
+                            if (texts[0] != null && !texts[0].equals("")) {
+                                bufferrun.setText(texts[0], 0);
+                            }
+                            else {
+                                bufferrun.setText(text, 0);
+                            }
+                        }
+                        obj.set(bufferrun.getCTR());
+                    }
+                }
+                else {
+                    obj.newCursor().removeXml();
+                }
+            }
+            catch (Exception e){
+                log.error("TextBox failed to parse.", e);
             }
         }
     }

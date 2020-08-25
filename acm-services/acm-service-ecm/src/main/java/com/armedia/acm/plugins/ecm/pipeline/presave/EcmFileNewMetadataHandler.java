@@ -85,7 +85,7 @@ public class EcmFileNewMetadataHandler implements PipelineHandler<EcmFile, EcmFi
             version.setVersionTag(cmisDocument.getVersionLabel());
             version.setVersionMimeType(entity.getFileActiveVersionMimeType());
             version.setVersionFileNameExtension(entity.getFileActiveVersionNameExtension());
-
+            version.setFileHash(pipelineContext.getFileHash());
             version.setSearchablePDF(pipelineContext.isSearchablePDF());
 
             long fileSizeBytes = pipelineContext.getMergedFile() != null &&

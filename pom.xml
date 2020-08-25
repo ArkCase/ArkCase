@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.armedia</groupId>
     <artifactId>acm</artifactId>
-    <version>3.3.10-SNAPSHOT</version>
+    <version>2020.14-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>ArkCase Case Management System</name>
     <description>Cloud-based case management system with a very nice UI</description>
@@ -132,13 +132,13 @@
         <mockito.core.version>2.20.0</mockito.core.version>
         <powermock.version2>2.0.0</powermock.version2>
         <hazelcast.version>3.11.2</hazelcast.version>
-        <quartz.version>2.3.1</quartz.version>
+        <quartz.version>2.3.2</quartz.version>
         <jaudiotagger.version>2.0.3</jaudiotagger.version>
         <reflections.version>0.9.9</reflections.version>
         <camel.spring.version>3.0.0-M3</camel.spring.version>
         <camel.spi.version>3.0.0-M3</camel.spi.version>
         <camel.core.version>3.0.0-M3</camel.core.version>
-        <camel.cmis.version>3.0.0-M3-rc2</camel.cmis.version>
+        <camel.cmis.version>3.5.0-rc1</camel.cmis.version>
         <camel.support.version>3.0.0-M3</camel.support.version>
         <camel.api.version>3.0.0-M3</camel.api.version>
         <kryo.version>5.0.0-RC4</kryo.version>

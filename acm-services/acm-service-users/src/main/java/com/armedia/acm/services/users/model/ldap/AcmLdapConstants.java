@@ -63,4 +63,5 @@ public interface AcmLdapConstants
     String LDAP_GROUP_OBJECT_CLASS_VALUE = "top,groupOfNames,sortableGroupofnames";
     String ACTIVE_DIRECTORY_USER_OBJECT_CLASS_VALUE = "top,person,user,organizationalPerson";
     String ACTIVE_DIRECTORY_GROUP_OBJECT_CLASS_VALUE = "top,group";
+    String DC_DELETED = "DC=Deleted";
 }

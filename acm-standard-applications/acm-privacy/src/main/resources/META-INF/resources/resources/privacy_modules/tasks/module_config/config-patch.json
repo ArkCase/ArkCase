@@ -1,0 +1,140 @@
+[
+    {
+        "op": "add",
+        "path": "/hasOverviewWidgets",
+        "value": true
+    },
+    {
+        "op": "replace",
+        "path": "/tree/nodeTypes/?@.label=='tasks.tree.nodeTypes.docReview.label'/type",
+        "value": "p/TASK/docrev"
+    },
+    {
+        "op": "replace",
+        "path": "/tree/nodeTypes/?@.type=='p/ADHOC'/components",
+        "value": [
+            "details",
+            "rejcomments",
+            "people",
+            "parentdocs",
+            "attachments",
+            "notes",
+            "references",
+            "workflow",
+            "history",
+            "signatures",
+            "tags"
+        ]
+    },
+    {
+        "op": "remove",
+        "path": "/tree/nodeTypes/?@.type=='p/ADHOC/docrev'"
+    },
+    {
+        "op": "add",
+        "path": "/tree/nodeTypes/17",
+        "value": {
+            "type": "p/ADHOC/people",
+            "label": "tasks.tree.nodeTypes.people.label",
+            "icon": "fa fa-user",
+            "components": [
+                "people"
+            ]
+        }
+    },
+    {
+        "op": "remove",
+        "path": "/tree/nodeTypes/?@.type=='p/ERROR'"
+    },
+    {
+        "op": "replace",
+        "path": "/components/?@.id=='main'/widgets/?@.id=='documentsunderreview'/columnDefs/?@.displayName=='tasks.comp.documentsunderreview.table.columns.created'/name",
+        "value": "created"
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id='main'/widgets/?@.id=='documentsunderreview'/columnDefs/?@.displayName=='tasks.comp.documentsunderreview.table.columns.created'/cellTemplate"
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id='main'/widgets/?@.id=='documentsunderreview'/columnDefs/?@.name=='status'/cellTemplate"
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='main'/widgets/?@.id=='parentDocs'"
+    },
+    {
+        "op": "replace",
+        "path": "/components/?@.id=='reworkdetails'",
+        "value": {
+            "id": "reworkdetails",
+            "title": "tasks.comp.reworkdetails.title",
+            "icon": "fa fa-repeat",
+            "enabled": true,
+            "type": "empty"
+        }
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='tags'/columnDefs/?@.name=='creator'/lookup"
+    },
+    {
+        "op": "add",
+        "path": "/components/?@.id=='tags'/columnDefs/?@.name=='creator'/fullNameField",
+        "value": "creator_full_name_lcs"
+    },
+    {
+        "op": "replace",
+        "path": "/components/?@.id=='referenceSearchGrid'/searchFilter",
+        "value": "\"Object Type\": CASE_FILE|TASK|FILE"
+    },
+    {
+        "op": "replace",
+        "path": "/components/?@.id=='newTask'/attachedToObjectType",
+        "value": [
+            {
+                "name": "Request",
+                "id": "CASE_FILE"
+            }
+        ]
+    },
+    {
+        "op": "add",
+        "path": "/components/-",
+        "value": {
+            "id": "people",
+            "title": "tasks.comp.people.title",
+            "icon": "fa fa-user",
+            "className": "com.armedia.acm.plugins.person.model.SARPerson",
+            "personAssociationClassName": "com.armedia.acm.plugins.person.model.PersonAssociation",
+            "enabled": true,
+            "configurable": true,
+            "type": "grid",
+            "enableFiltering": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 5,
+            "columnDefs": [
+                {
+                    "name": "personType",
+                    "displayName": "tasks.comp.people.table.columns.type",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.personTypes, row.entity.type_lcs) | translate }}</div>",
+                    "lookup": "personTypes"
+                },
+                {
+                    "name": "fulName",
+                    "field": "creator_full_name_lcs",
+                    "displayName": "tasks.comp.people.table.columns.fullName",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<a data-ui-sref=\"people.main({id: row.entity.child_id_s})\">{{COL_FIELD}}</a>"
+                }
+            ]
+
+        }
+    }
+]

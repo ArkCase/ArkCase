@@ -49,19 +49,19 @@
 
             <div class="col-xs-9 col-md-3">
                 <div class="h4 font-bold no-margin">
-                    <a editable-combodate="startDateInfo" e-template="MMM/DD/YYYY HH:mm"
+                    <a editable-combodate="startDateInfo" e-template="MMM/DD/YYYY h:mmA"
                        e-min-year="{{minYear}}" e-max-year="{{maxYear}}" e-minute-step="1" onaftersave="updateStartDate($data, dateInfo.taskStartDate)"
                        permission="editTask" permission-object-type="TASK" permission-properties="objectInfo" permission-action="disable">
-                        {{dateInfo.taskStartDate}}</a>
+                        {{ (dateInfo.taskStartDate | date: ('common.defaultDateTimeUIFormat' | translate)) }}</a>
                 </div>
                 <small class="text-muted"><span translate>tasks.comp.info.startDate.label</span></small>
             </div>
             <div class="col-xs-9 col-md-3">
                 <div class="h4 font-bold no-margin">
-                    <a editable-combodate="dueDateInfo" e-template="MMM/DD/YYYY HH:mm"
+                    <a editable-combodate="dueDateInfo" e-template="MMM/DD/YYYY h:mmA"
                        e-min-year="{{minYear}}" e-max-year="{{maxYear}}" e-minute-step="1" onaftersave="updateDueDate($data, dateInfo.dueDate)"
                        permission="editTask" permission-object-type="TASK" permission-properties="objectInfo" permission-action="disable" e-required>
-                        {{ dateInfo.dueDate}}</a>
+                        {{ (dateInfo.dueDate | date: ('common.defaultDateTimeUIFormat' | translate)) }}</a>
                     <a ng-if="dateInfo.isOverdue" tooltip="{{'tasks.comp.info.overdue.tooltip' | translate}}" tooltip-append-to-body="true"
                             tooltip-class="tooltip-overdue">
                         <i class="fa fa-exclamation-circle icon-overdue"></i>

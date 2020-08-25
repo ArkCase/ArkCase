@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+    <bean class="com.armedia.acm.plugins.consultation.web.api.ChangeConsultationStatusApiController">
+        <property name="changeConsultationStateService" ref="changeConsultationStateService"/>
+        <property name="consultationEventUtility" ref="consultationEventUtility"/>
+        <property name="consultationDao" ref="consultationDao"/>
+    </bean>
+
+    <bean id="consultationBillingInvoiceEmailSenderAPIController"
+          class="com.armedia.acm.plugins.consultation.web.api.ConsultationBillingInvoiceEmailSenderAPIController">
+        <property name="consultationBillingInvoiceEmailSenderService" ref="billingInvoiceEmailSenderService"/>
+        <property name="consultationService" ref="consultationService"/>
+    </bean>
+
+    <bean id="getConsultationAPIController" class="com.armedia.acm.plugins.consultation.web.api.GetConsultationAPIController">
+        <property name="consultationService" ref="consultationService"/>
+        <property name="consultationEventUtility" ref="consultationEventUtility"/>
+        <property name="arkPermissionEvaluator" ref="arkPermissionEvaluator"/>
+    </bean>
+
+    <bean id="getConsultationByStatusAPIController"
+          class="com.armedia.acm.plugins.consultation.web.api.GetConsultationByStatusAPIController">
+        <property name="executeSolrQuery" ref="executeSolrQuery"/>
+        <property name="consultationService" ref="consultationService"/>
+    </bean>
+
+    <bean id="getConsultationTypesAPIController" class="com.armedia.acm.plugins.consultation.web.api.GetConsultationTypesAPIController">
+        <property name="lookupDao" ref="lookupDao"/>
+    </bean>
+
+    <bean id="queryConsultationChildrenTasksAPIController"
+          class="com.armedia.acm.plugins.consultation.web.api.QueryConsultationChildrenTasksAPIController">
+        <property name="consultationTasksService" ref="consultationTasksService"/>
+    </bean>
+
+    <bean id="saveConsultationAPIController" class="com.armedia.acm.plugins.consultation.web.api.SaveConsultationAPIController">
+        <property name="consultationService" ref="consultationService"/>
+        <property name="consultationEventUtility" ref="consultationEventUtility"/>
+        <property name="userTrackerService" ref="userTrackerService"/>
+    </bean>
+</beans>

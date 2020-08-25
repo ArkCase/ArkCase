@@ -91,6 +91,10 @@ public class AlfrescoRmaConfig
     @Value("${rma_categoryFolder_CASE_FILE}")
     private String categoryFolderCaseFile;
 
+    @JsonProperty("rma_categoryFolder_CONSULTATION")
+    @Value("${rma_categoryFolder_CONSULTATION}")
+    private String categoryFolderConsultation;
+
     @JsonProperty("rma_categoryFolder_TASK")
     @Value("${rma_categoryFolder_TASK}")
     private String categoryFolderTask;
@@ -109,6 +113,8 @@ public class AlfrescoRmaConfig
             return categoryFolderCaseFile;
         case "TASK":
             return categoryFolderTask;
+        case "CONSULTATION":
+            return categoryFolderConsultation;
         default:
             return "";
         }
@@ -232,6 +238,16 @@ public class AlfrescoRmaConfig
     public void setCategoryFolderCaseFile(String categoryFolderCaseFile)
     {
         this.categoryFolderCaseFile = categoryFolderCaseFile;
+    }
+
+    public String getCategoryFolderConsultation()
+    {
+        return categoryFolderConsultation;
+    }
+
+    public void setCategoryFolderConsultation(String categoryFolderConsultation)
+    {
+        this.categoryFolderConsultation = categoryFolderConsultation;
     }
 
     public String getCategoryFolderTask()

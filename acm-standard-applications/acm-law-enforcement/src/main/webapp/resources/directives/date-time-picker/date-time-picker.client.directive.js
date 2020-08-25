@@ -1,4 +1,4 @@
-angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateService', 'UtilService', function (moment, UtilDateService, UtilService) {
+angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateService', 'UtilService', '$translate', function (moment, UtilDateService, UtilService, $translate) {
     return{
         restrict: 'E',
         templateUrl: 'directives/date-time-picker/date-time-picker.client.directive.html',
@@ -24,6 +24,7 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
             $scope.minYear = "";
             $scope.utcDate = "";
             $scope.maxYear = "";
+            var defaultDateTimePickerFormat = $translate.instant("common.defaultDateTimePickerFormat");
 
             $scope.setDate = function (date) {
                 if (UtilService.isEmpty(date)) {
@@ -33,7 +34,7 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
                     if ($scope.timeFormatDisabled === "true") {
                         $scope.today = (date instanceof String || typeof date == 'string') ? moment(date).local().format("MM/DD/YYYY") : moment(date).format("MM/DD/YYYY");
                     } else {
-                        $scope.today = (date instanceof String || typeof date == 'string') ? moment.utc(date).local().format("MM/DD/YYYY HH:mm") : moment(date).format("MM/DD/YYYY HH:mm");
+                        $scope.today = (date instanceof String || typeof date == 'string') ? moment.utc(date).local().format(defaultDateTimePickerFormat) : moment(date).format(defaultDateTimePickerFormat);
                     }
                     $scope.dateInPicker = UtilDateService.isoToDate($scope.today);
                 }
@@ -70,8 +71,8 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
                     $scope.dateInPicker = !UtilService.isEmpty($scope.data) ? UtilDateService.isoToDate($scope.data) : new Date();
                 } else {
                     $(comboField).combodate({
-                        format: 'MM/DD/YYYY HH:mm',
-                        template: 'MMM / DD / YYYY HH:mm',
+                        format: defaultDateTimePickerFormat,
+                        template: 'MMM / DD / YYYY h:mm A',
                         minuteStep: 1,
                         minYear: $scope.minYear,
                         maxYear: $scope.maxYear,
@@ -79,7 +80,7 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
                         value: $scope.dateInPicker
                     });
                     if(!UtilService.isEmpty($scope.data)) {
-                        $scope.today = ($scope.data instanceof String || typeof $scope.data == 'string') ? moment.utc($scope.data).local().format('MM/DD/YYYY HH:mm') : moment($scope.data).format('MM/DD/YYYY HH:mm');
+                        $scope.today = ($scope.data instanceof String || typeof $scope.data == 'string') ? moment.utc($scope.data).local().format(defaultDateTimePickerFormat) : moment($scope.data).format(defaultDateTimePickerFormat);
                     } else {
                         $scope.today = "";
                     }

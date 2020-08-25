@@ -31,13 +31,10 @@ import com.armedia.acm.core.AcmApplication;
 import com.armedia.acm.core.model.ApplicationConfig;
 import com.armedia.acm.services.email.model.EmailMentionsDTO;
 import com.armedia.acm.services.email.service.AcmEmailServiceException;
-import com.armedia.acm.services.email.service.TemplatingEngine;
-import com.armedia.acm.services.labels.service.TranslationService;
-import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
-
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.users.model.AcmUser;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -49,14 +46,11 @@ import java.util.stream.Collectors;
  */
 public class AcmEmailMentionsService
 {
-
     private final Logger log = LogManager.getLogger(getClass());
 
     private AcmApplication acmAppConfiguration;
-    private TemplatingEngine templatingEngine;
-    private NotificationDao notificationDao;
     private ApplicationConfig applicationConfig;
-    private TranslationService translationService;
+    private NotificationService notificationService;
 
     private String buildObjectUrl(EmailMentionsDTO in)
     {
@@ -72,25 +66,22 @@ public class AcmEmailMentionsService
                     .filter(acmObjectType -> acmObjectType.getName().equals(in.getObjectType()))
                     .map(acmObjectType -> acmObjectType.getUrl().get(subType))
                     .collect(Collectors.toList()).stream().findFirst();
-            return objectUrl.isPresent() ? baseUrl + String.format(objectUrl.get(), in.getObjectId()) : baseUrl;
+            return objectUrl.map(s -> baseUrl + String.format(s, in.getObjectId())).orElse(baseUrl);
         }
     }
 
     public void sendMentionsEmail(EmailMentionsDTO in, AcmUser user) throws AcmEmailServiceException
     {
+        Notification notification = notificationService.getNotificationBuilder()
+                .newNotification("mentions", NotificationConstants.EMAIL_MENTIONS, in.getObjectType(), in.getObjectId(),
+                        user.getUserId())
+                .forObjectWithNumber(in.getObjectId().toString())
+                .withNote(in.getTextMentioned())
+                .withData(buildObjectUrl(in))
+                .withEmailAddresses(String.join(",", in.getEmailAddresses()))
+                .build(user.getFullName());
 
-        Notification notification = new Notification();
-        notification.setTemplateModelName("mentions");
-        notification.setTitle(String.format(translationService.translate(NotificationConstants.EMAIL_MENTIONS), user.getFullName(), in.getObjectType(), in.getObjectId()));
-        notification.setAttachFiles(false);
-        notification.setParentType(in.getObjectType());
-        notification.setParentId(in.getObjectId());
-        notification.setNote(in.getTextMentioned());
-        notification.setData(buildObjectUrl(in));
-        notification.setUser(user.getUserId());
-        notification.setEmailAddresses(in.getEmailAddresses().stream().collect(Collectors.joining(",")));
-        notificationDao.save(notification);
-
+        notificationService.saveNotification(notification);
     }
 
     public void setAcmAppConfiguration(AcmApplication acmAppConfiguration)
@@ -98,38 +89,18 @@ public class AcmEmailMentionsService
         this.acmAppConfiguration = acmAppConfiguration;
     }
 
-    public TemplatingEngine getTemplatingEngine()
-    {
-        return templatingEngine;
-    }
-
-    public void setTemplatingEngine(TemplatingEngine templatingEngine)
-    {
-        this.templatingEngine = templatingEngine;
-    }
-
-    public NotificationDao getNotificationDao()
-    {
-        return notificationDao;
-    }
-
-    public void setNotificationDao(NotificationDao notificationDao)
-    {
-        this.notificationDao = notificationDao;
-    }
-
     public void setApplicationConfig(ApplicationConfig applicationConfig)
     {
         this.applicationConfig = applicationConfig;
     }
 
-    public TranslationService getTranslationService()
+    public NotificationService getNotificationService()
     {
-        return translationService;
+        return notificationService;
     }
 
-    public void setTranslationService(TranslationService translationService)
+    public void setNotificationService(NotificationService notificationService)
     {
-        this.translationService = translationService;
+        this.notificationService = notificationService;
     }
 }

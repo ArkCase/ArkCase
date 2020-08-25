@@ -68,6 +68,10 @@ public class LdapUser
         acmUser.setFirstName(firstName);
         acmUser.setLastName(lastName);
         acmUser.setUserState(AcmUserState.valueOf(state));
+        if (acmUser.getUserState() == AcmUserState.VALID)
+        {
+            acmUser.setDeletedAt(null);
+        }
         acmUser.setMail(mail);
         acmUser.setFullName(fullName);
         acmUser.setsAMAccountName(sAMAccountName);

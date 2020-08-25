@@ -111,14 +111,15 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
      *
      * @returns List of users
      */
-    function getNUsers(data) {
+    function getNUsers(data, directoryName) {
         var url = 'api/latest/users/';
         return $http({
             method: 'GET',
             url: url,
             params: {
                 start: (data.start ? data.start : 0),
-                n: (data.n ? data.n : 50)
+                n: (data.n ? data.n : 50),
+                directoryName: directoryName
             }
         });
     }

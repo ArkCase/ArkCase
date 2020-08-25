@@ -30,9 +30,13 @@ package com.armedia.acm.activiti.services;
 import com.armedia.acm.activiti.exceptions.AcmBpmnException;
 import com.armedia.acm.activiti.model.AcmProcessDefinition;
 
+import org.activiti.engine.repository.ProcessDefinition;
+import org.activiti.engine.runtime.ProcessInstance;
+
 import java.io.File;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by nebojsha on 09.04.2015.
@@ -50,8 +54,6 @@ public interface AcmBpmnService
 
     public void makeActive(AcmProcessDefinition processDefinition);
 
-    public void makeInactive(AcmProcessDefinition processDefinition);
-
     public List<AcmProcessDefinition> getVersionHistory(AcmProcessDefinition processDefinition);
 
     public long count();
@@ -66,5 +68,9 @@ public interface AcmBpmnService
     public byte[] getDiagram(String deploymentId, String key, Integer version) throws AcmBpmnException;
 
     public List<AcmProcessDefinition> listAllDeactivatedVersions();
+
+    public ProcessDefinition getProcessDefinition(String deploymentId, String key, int version);
+
+    ProcessInstance startBusinessProcess(String processName, Map<String, Object> processVariables);
 
 }

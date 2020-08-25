@@ -161,7 +161,7 @@ public class AuditWriter implements ApplicationListener<ApplicationEvent>
         }
         else
         {
-            log.warn("Event [{}] is not auditable", acmEvent.getEventType());
+            log.warn("Event of class [{}] is not auditable", acmEvent.getClass().getName());
         }
     }
 

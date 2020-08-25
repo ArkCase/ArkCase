@@ -29,12 +29,17 @@ package com.armedia.acm.drools;
 
 import static org.junit.Assert.assertEquals;
 
+import com.armedia.acm.configuration.service.FileConfigurationService;
 import org.junit.Before;
 import org.junit.Test;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
+import org.springframework.core.io.InputStreamResource;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Created by dmiller on 3/24/2017.
@@ -49,15 +54,29 @@ public class SimpleStatelessSingleObjectRuleManagerTest
     public void setUp() throws Exception
     {
         unit = new StringBuilderRuleManager();
+        unit.setFileConfigurationService(new FileConfigurationService()
+        {
+            @Override
+            public void moveFileToConfiguration(InputStreamResource file, String fileName) throws IOException
+            {
+            }
+
+            @Override
+            public void getFileFromConfiguration(String fileName, String customFilesLocation) throws IOException
+            {
+            }
+
+            @Override
+            public InputStream getInputStreamFromConfiguration(String filePath) throws IOException
+            {
+                return new FileInputStream(new ClassPathResource("/" + filePath).getFile().getCanonicalPath());
+            }
+        });
     }
 
     @Test
     public void afterPropertiesSet() throws Exception
     {
-        Resource ruleFolder = new ClassPathResource("/rules");
-        String ruleFolderPath = ruleFolder.getFile().getCanonicalPath();
-
-        unit.setRuleFileLocation(ruleFolderPath);
         unit.setRuleSpreadsheetFilename("drools-form-string-builder-rules.xlsx");
 
         StringBuilder stringBuilder = new StringBuilder();

@@ -68,6 +68,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import us.fatehi.pointlocation6709.Angle;
 import us.fatehi.pointlocation6709.Latitude;
@@ -119,10 +120,15 @@ public class EcmTikaFileServiceImpl implements EcmTikaFileService
     public EcmTikaFile detectFileUsingTika(File file, String fileName) throws IOException, SAXException, TikaException
     {
         Map<String, Object> metadata = extract(file, fileName);
-        metadata.entrySet().stream().sorted(Map.Entry.comparingByKey()).forEach(e -> logger.debug("{}: {}", e.getKey(), e.getValue()));
-        EcmTikaFile retval = fromMetadata(metadata);
 
-        return retval;
+        String metadataLog = metadata.entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByKey())
+                .map(e -> String.format("%s: %s", e.getKey(), e.getValue()))
+                .collect(Collectors.joining(";\n", "[", "]"));
+        logger.debug("Metadata for file [{}]: {}", fileName, metadataLog);
+
+        return fromMetadata(metadata);
     }
 
     protected EcmTikaFile fromMetadata(Map<String, Object> metadata)

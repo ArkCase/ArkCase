@@ -18,6 +18,7 @@ variables:
   #   45 - dev.foia
   #   46 - test.core
   #   47 - test.foia
+  #   58 - dev.privacy
 
   GIT_SSL_NO_VERIFY: "true"
   GIT_STRATEGY: clone
@@ -151,6 +152,21 @@ deploy_backend_foia_dev:
     # Dev Foia repository ID on tower.armedia.com is 45
     - 'curl -H "Content-Type: application/json" -X POST -s -u gitlabci:$GITLABCI_TOWER_PASSWORD -d ''{ "inventory": 45, "job_tags": "core,foia", "extra_vars": "{\"arkcase_version\": \"\", \"arkcase_configuration_version\":\"\", \"arkcase_config_server_version\":\"\", \"snowbound_arkcase_version\":\"\"}"}'' -k https://tower.armedia.com/api/v2/job_templates/129/launch/'
 
+deploy_backend_privacy_dev:
+  stage: deploy
+  only:
+    - develop
+  except:
+    changes:
+      - .gitlab-ci.yaml
+  environment:
+    name: Dev Privacy
+    url: https://dev.privacy.arkcase.com
+  script:
+    # Dev Privacy repository ID on tower.armedia.com is 58
+    - 'curl -H "Content-Type: application/json" -X POST -s -u gitlabci:$GITLABCI_TOWER_PASSWORD -d ''{ "inventory": 58, "job_tags": "core,privacy", "extra_vars": "{\"arkcase_version\": \"\", \"arkcase_configuration_version\":\"\", \"arkcase_config_server_version\":\"\", \"snowbound_arkcase_version\":\"\"}"}'' -k https://tower.armedia.com/api/v2/job_templates/129/launch/'
+
+
 .deploy_backend:
   stage: deploy
   script:
@@ -236,12 +252,14 @@ deploy_backend_bcgeu_dev:
     ARKCASE_UI_VARIANT: ui-core
     ARKCASE_SERVICE_USER_NAME: arkuser
 
-.start_security_scan:
+start_security_scan:
   stage: start_security_scan
   only:
     variables:
       - $START_SECURITY_SCAN
   script:
+    - export ARKCASE_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+    - echo $ARKCASE_VERSION
     - wget https://github.com/brian1917/vcodeHMAC-CLI/releases/download/v1.0/vcodeHMAC-CLI_linux
     - chmod 755 vcodeHMAC-CLI_linux
     - touch credentials
@@ -258,12 +276,7 @@ deploy_backend_bcgeu_dev:
     - 'curl -k --compressed -H "Authorization: $(./vcodeHMAC-CLI_linux -credsFile credentials -url https://analysiscenter.veracode.com/api/5.0/beginprescan.do -method POST)" https://analysiscenter.veracode.com/api/5.0/beginprescan.do -F "app_id=529559"'
     # Start Software Composition Analysis
     - curl -sSL https://download.sourceclear.com/ci.sh | sh
-
-start_security_scan_arkcase_snapshot:
-  extends: .start_security_scan
-  variables:
-    ARKCASE_VERSION: 3.3.10-SNAPSHOT
-    ARKCASE_REPOSITORY: arkcase.snapshot
+    
 
 security_scan_results:
   stage: security_scan_results

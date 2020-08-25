@@ -60,6 +60,7 @@ public class UserDTO
         acmUser.setFirstName(firstName);
         acmUser.setLastName(lastName);
         acmUser.setMail(mail);
+        acmUser.setDeletedAt(null);
         return acmUser;
     }
 

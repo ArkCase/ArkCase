@@ -1,0 +1,44 @@
+<div ng-controller="ReportsController">
+    <div class="module-content">
+        <div class="left-sidebar">
+            <div class="module-header">
+                <h3>
+                    <span translate>reports.title</span>
+                </h3>
+            </div>
+            <div class="well panel">
+                <div class="panel-body">
+
+                    <div ng-include="'modules/reports/views/components/reports-selection.client.view.html'"></div>
+                    <div ng-include="'modules/reports/views/components/reports-type.client.view.html'"></div>
+                    <div ng-show="showReportParameters" ng-include="'modules/reports/views/components/reports-datepickers.client.view.html'"></div>
+
+                    <div ng-show="showReportParameters" class="checkbox">
+                        <label>
+                            <input type="checkbox" ng-model="showXmlReport">
+                            <span translate>
+                                reports.checkBox.xmlReport
+                            </span>
+                        </label>
+                    </div>
+
+                    <div>
+                        <button class="btn btn-sm" id="generateReportButton" ng-click="generateReport()"
+                                ng-disabled="!data.reportSelected">
+                            <span translate>reports.btn.generateReport</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-body">
+            <div ng-switch on="showXmlReport">
+                <div ng-switch-when="false">
+                    <iframe name="reports-iframe" id="reportsIframe" iframe-onload="iframeLoadedCallBack()" class="reports-iframe"
+                            frameborder="0" ng-src="{{reportUrl}}"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

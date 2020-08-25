@@ -43,6 +43,8 @@ abstract public class AcmLookup<Entry>
 
     abstract public LookupValidationResult validate();
 
+    abstract public AcmLookupTransformer transformToConfigurationEntries(List<?> entries);
+
     public List<Entry> getEntries()
     {
         return entries;

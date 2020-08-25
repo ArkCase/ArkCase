@@ -84,6 +84,7 @@ public class EcmFileMergedMetadataHandler implements PipelineHandler<EcmFile, Ec
             version.setVersionTag(cmisDocument.getVersionLabel());
             version.setVersionMimeType(oldFile.getFileActiveVersionMimeType());
             version.setVersionFileNameExtension(oldFile.getFileActiveVersionNameExtension());
+            version.setFileHash(pipelineContext.getFileHash());
             oldFile.getVersions().add(version);
             oldFile.setModified(new Date());
             try

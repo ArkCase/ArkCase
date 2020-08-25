@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
+    xmlns:beans="http://www.springframework.org/schema/beans"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
+
+    <beans:beans profile="extension-privacy">
+
+        <beans:bean id="userInfoHelper" class="gov.privacy.service.SARUserInfoHelper">
+            <beans:property name="userDao" ref="userJpaDao"/>
+            <beans:property name="contextHolder" ref="acmContextHolder"/>
+            <beans:property name="acmGroupDao" ref="groupDao"/>
+        </beans:bean>
+    </beans:beans>
+
+</beans:beans>

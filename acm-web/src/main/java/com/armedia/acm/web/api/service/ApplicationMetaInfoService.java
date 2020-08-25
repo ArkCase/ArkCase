@@ -27,8 +27,8 @@ package com.armedia.acm.web.api.service;
  * #L%
  */
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.context.ServletContextAware;
@@ -101,6 +101,10 @@ public class ApplicationMetaInfoService implements InitializingBean, ServletCont
         InputStream inputStream = getClass().getResourceAsStream("/META-INF/maven/" + groupId + "/" + artifactId + "/pom.properties");
         try
         {
+            if (inputStream == null)
+            {
+                return;
+            }
             prop.load(inputStream);
             extensionVersion = prop.getProperty("version", "");
             version.put("extensionVersion", extensionVersion);

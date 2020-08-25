@@ -32,7 +32,6 @@ import com.armedia.acm.services.dataaccess.service.impl.AcmDataAccessBatchPolicy
 
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 import org.quartz.PersistJobDataAfterExecution;
 
 @DisallowConcurrentExecution
@@ -48,7 +47,7 @@ public class AcmDataAccessPolicyUpdateJobDescriptor extends AcmJobDescriptor
     }
 
     @Override
-    public void executeJob(JobExecutionContext context) throws JobExecutionException
+    public void executeJob(JobExecutionContext context)
     {
         dataAccessBatchPolicyUpdateService.batchPolicyUpdate(context.getPreviousFireTime());
     }

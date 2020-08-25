@@ -75,12 +75,12 @@ public class OnLdapContextChangedUpdateScheduler implements ApplicationListener<
                 if (!schedulerService.isJobScheduled(ldapSyncTriggerName))
                 {
                     scheduleJob(ldapSyncJobName, ldapSyncConfig.getFullSyncCron());
-                    logger.info("Schedule ldap sync job [{}] for directory [{}].", ldapSyncJobName, directoryId);
+                    logger.info("Scheduled ldap sync job [{}] for directory [{}].", ldapSyncJobName, directoryId);
                 }
                 if (!schedulerService.isJobScheduled(ldapPartialSyncTriggerName))
                 {
                     scheduleJob(ldapPartialSyncJobName, ldapSyncConfig.getPartialSyncCron());
-                    logger.info("Schedule ldap partial sync job [{}] for directory [{}].", ldapPartialSyncJobName, directoryId);
+                    logger.info("Scheduled ldap partial sync job [{}] for directory [{}].", ldapPartialSyncJobName, directoryId);
                 }
 
                 // when new ldap configuration added trigger full ldap sync
@@ -88,12 +88,13 @@ public class OnLdapContextChangedUpdateScheduler implements ApplicationListener<
             }
             else if (event instanceof LdapDirectoryReplaced)
             {
-                rescheduleJob(ldapSyncJobName, ldapSyncConfig.getFullSyncCron());
                 logger.info("On ldap context replaced, reschedule job [{}] with trigger [{}].", ldapSyncJobName, ldapSyncTriggerName);
+                rescheduleJob(ldapSyncJobName, ldapSyncConfig.getFullSyncCron());
 
-                rescheduleJob(ldapPartialSyncJobName, ldapSyncConfig.getPartialSyncCron());
                 logger.info("On ldap context replaced, reschedule job [{}] with trigger [{}].",
                         ldapPartialSyncJobName, ldapPartialSyncJobName);
+                rescheduleJob(ldapPartialSyncJobName, ldapSyncConfig.getPartialSyncCron());
+
             }
             else if (event instanceof LdapDirectoryDeleted)
             {
@@ -117,9 +118,12 @@ public class OnLdapContextChangedUpdateScheduler implements ApplicationListener<
             Trigger trigger = jobFactory.createTrigger(getJobConfig(cronExpression, syncJobName), jobDetail);
             schedulerService.rescheduleJob(trigger.getKey().getName(), trigger);
         }
+        else
+        {
+            logger.info("Job [{}] won't be rescheduled since the trigger's cron is not changed.", syncJobName);
+        }
 
     }
-
 
     private void scheduleJob(String syncJobName, String cronExpression)
     {

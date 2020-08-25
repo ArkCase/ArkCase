@@ -1,0 +1,219 @@
+<section ng-controller="RequestInfoController">
+    <div class="module-content" tabindex="1" ng-keydown="checkEscape($event)">
+        <div class="module-header" ng-if="!viewerOnly">
+            <div class="well-sm clearfix">
+                <div class="row">
+                    <div class="col-sm-6 col-md-12">
+                        <div class="pull-right">
+                            <div class="col-xs-12">
+                                <a class="btn btn-default" href="" ng-click="showVideoPlayer ? videoExpand() : documentExpand()">
+                                    <i class="fa fa-expand"></i>
+                                </a>
+                                <a class="btn btn-default" href="javascript:window.close();">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="h4 font-bold">{{ecmFile.fileName || requestInfo.title }}</div>
+                    </div>
+
+                    <div class="col-xs-12 col-md-2">
+                        <div class="h4 font-bold">{{requestInfo.creator | mapKeyValue: userList:'object_id_s':'name' ||
+                            'common.value.unknown' | translate}}
+                        </div>
+                        <small class="text-muted"><span translate>requests.comp.info.creator.label</span></small>
+                    </div>
+                    <div class="col-xs-12 col-md-2">
+                        <div class="h4 font-bold">{{requestInfo.created | date: ('common.defaultDateUIFormat' |
+                            translate)}}
+                        </div>
+                        <small class="text-muted"><span translate>requests.comp.info.created.label</span></small>
+
+                    </div>
+                    <div class="col-xs-12 col-md-2">
+                        <div class="h4 font-bold">{{objectInfo.caseNumber }}</div>
+                        <small class="text-muted"><span translate>requests.comp.info.requestId.label</span></small>
+                    </div>
+                    <div class="col-xs-12 col-md-2">
+                        <div class="h4 font-bold">{{requestInfo.queue.name }}</div>
+                        <small class="text-muted"><span translate>requests.comp.info.queue.label</span></small>
+                    </div>
+                    <div class="col-xs-12 col-md-2">
+                        <div class="h4 font-bold">{{requestInfo.status}}
+                        </div>
+                        <small class="text-muted"><span translate>requests.comp.info.status.label</span></small>
+
+                    </div>
+                    <div class="col-xs-12 col-md-2">
+                        <div class="h4 font-bold">{{(ecmFile.fileType| mapKeyValue: fileTypes:'key':'value' | translate) ||
+                            requestInfo.requestType}}
+                        </div>
+                        <small class="text-muted"><span translate>requests.comp.info.type.label</span></small>
+
+                    </div>
+
+                </div>
+                <div class="row" ng-if="transcribeEnabled && showVideoPlayer">
+                    <div class="col-sm-6 col-md-2">
+                        <div class="h4 font-bold">{{transcribeObjectModel.language || 'common.value.unknown' | translate}}</div>
+                        <small class="text-muted" translate>documentDetails.comp.transcription.mediaViewer.language</small>
+                    </div>
+
+                    <div class="col-sm-6 col-md-2">
+                        <div class="h4 font-bold">{{transcribeObjectModel.wordCount || 0}}</div>
+                        <small class="text-muted" translate>documentDetails.comp.transcription.mediaViewer.wordCount</small>
+                    </div>
+                    <div class="col-sm-6 col-md-2">
+                        <div class="h4 font-bold">{{transcribeObjectModel.confidence || 0}}%</div>
+                        <small class="text-muted" translate>documentDetails.comp.transcription.mediaViewer.confidence</small>
+                    </div>
+                    <div class="col-sm-6 col-md-2">
+                        <div class="h4 font-bold" ng-style="{'color': colorTranscribeStatus()}">{{transcribeObjectModel.status ||
+                            'documentDetails.comp.transcription.mediaViewer.readyForTranscription' | translate}}
+
+                            <a ng-show="transcribeObjectModel.status == 'FAILED' " class="fa fa-info-circle"
+                                    ng-click="showFailureMessage()">
+                            </a>
+                        </div>
+                        <small class="text-muted" translate>documentDetails.comp.transcription.mediaViewer.transcriptStatus</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="module-header" ng-if="viewerOnly">
+            <div class="row">
+                <div class="col-sm-6 col-md-12">
+                    <div class="pull-right">
+                        <div class="col-xs-12">
+                            <a class="btn btn-default" href="" ng-click="documentCompress()">
+                                <i class="fa fa-compress"></i>
+                            </a>
+                            <a class="btn btn-default" href="javascript:window.close();">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <a ng-show="!editingMode" class="btn btn-sm btn-default" ng-click="enableEditing()">
+                <i class="fa fa-edit"></i>
+                <span translate>documentDetails.enableEditing</span>
+            </a>
+        </div>
+        <div ng-class="viewerOnly? 'content-body well-sm full-docview' : 'content-body well-sm'">
+            <div ng-include="'modules/document-details/views/document-viewer.client.view.html'"></div>
+        </div>
+        <div class="right-sidebar well-sm" ng-if="!viewerOnly"
+                ng-style="showVideoPlayer && transcribeEnabled ? {'top': '205px'} : {'top': '172px'}">
+            <ng-form name="createNewRequestForm" novalidate>
+                <tabset>
+                    <tab active="detailsTabActive">
+                        <div ng-include="'modules/request-info/views/components/details.client.view.html'" ng-if="detailsTabActive"></div>
+                        <tab-heading>
+                            <span ng-class="{'text-danger': createNewRequestForm.$invalid}">{{'requests.tabs.details' | translate}}</span>
+                        </tab-heading>
+                    </tab>
+                    <tab active="documentsTabActive">
+                        <tab-heading>
+                            <span translate>requests.tabs.documents</span>
+                        </tab-heading>
+                        <ng-form name="documentsForm" novalidate>
+                            <div ng-include="'modules/request-info/views/components/documents.client.view.html'"
+                                    ng-if="documentsTabActive"></div>
+
+                        </ng-form>
+                    </tab>
+                    <tab active="tasksTabActive">
+                        <tab-heading>
+                            <span translate>requests.tabs.tasks</span>
+                        </tab-heading>
+                        <div ng-include="'modules/request-info/views/components/tasks.client.view.html'" ng-if="tasksTabActive"></div>
+                    </tab>
+                    <tab active="tagsTabActive">
+                        <tab-heading>
+                            <span translate>requests.tabs.tags</span>
+                        </tab-heading>
+                        <div ng-include="'modules/request-info/views/components/tags.client.view.html'" ng-if="tagsTabActive"></div>
+                    </tab>
+                    <tab active="referencesTabActive">
+                        <tab-heading>
+                            <span translate>requests.tabs.references</span>
+                        </tab-heading>
+                        <div ng-include="'modules/request-info/views/components/references.client.view.html'"
+                                ng-if="referencesTabActive"></div>
+                    </tab>
+                    <tab active="historyTabActive">
+                        <tab-heading>
+                            <span translate>requests.tabs.history</span>
+                        </tab-heading>
+                        <div ng-include="'modules/request-info/views/components/history.client.view.html'" ng-if="historyTabActive"></div>
+                    </tab>
+                    <tab active="notesTabActive">
+                        <tab-heading>
+                            <span translate>requests.tabs.notes</span>
+                        </tab-heading>
+                        <div ng-include="'modules/request-info/views/components/notes.client.view.html'" ng-if="notesTabActive"></div>
+                    </tab>
+                    <tab active="transcriptionTabActive" ng-show="transcriptionTabViewEnabled">
+                        <tab-heading>
+                            <span translate>documentDetails.comp.transcription.title</span>
+                        </tab-heading>
+                        <div ng-include="'modules/document-details/views/components/transcription.client.view.html'"
+                             ng-if="transcriptionTabViewEnabled"></div>
+                    </tab>
+                </tabset>
+                <footer class="panel" ng-if="requestInfo.queue">
+                    <div class="panel-body">
+                        <fieldset permission="buttonAction" permission-object-type="CASE_FILE" permission-properties="requestInfo"
+                                permission-action="disable">
+                            <div class="pull-left">
+                                <button class="btn btn-sm btn-default" ng-disabled="requestInProgress" ng-click="saveAndReferesh()">
+                                    <i class="{{saveLoadingIcon}}"></i>
+                                </button>
+
+                                <button class="btn btn-sm btn-default" ng-disabled="requestInProgress" ng-show="printEnabled"
+                                        ng-click="printDocument()">
+                                    <span class="fa fa-print"></span>
+                                </button>
+
+                                <button class="btn btn-sm btn-default" permission="subscribe" permission-object-type="CASE_FILE"
+                                        permission-properties="requestInfo" permission-action="hide"
+                                        ng-disabled="!subscribeEnabled || requestInProgress" ng-show="!requestSubscribed"
+                                        ng-click="subscribe()">
+                                    <span class="fa fa-bell-o"></span>
+                                </button>
+
+                                <button class="btn btn-sm btn-default" permission="subscribe" permission-object-type="CASE_FILE"
+                                        permission-properties="requestInfo" permission-action="hide"
+                                        ng-disabled="!subscribeEnabled || requestInProgress" ng-show="requestSubscribed"
+                                        ng-click="unsubscribe()">
+                                    <span class="fa fa-bell-slash"></span>
+                                </button>
+                            </div>
+                            <div class="pull-right">
+                                <div class="btn-group">
+                                    <button class="btn btn-sm btn-default"
+                                            ng-click="onClickNextQueue(nextQueue.name, createNewRequestForm.$dirty)"
+                                            ng-disabled="requestInProgress  || (nextQueue.disabled && requestInfo.queue.name =='Intake')"
+                                            ng-repeat="nextQueue in availableQueues">
+                                        <i class="{{loadingIcon}}" ng-if="nextQueue.name == nameButton && loading"></i>
+                                        <i class="fa fa-check" ng-hide="loading && nextQueue.name == nameButton"></i>
+                                        <span>{{nextQueue.name}}</span>
+                                    </button>
+                                    <button class="btn btn-sm btn-default" ng-click="nextAvailableRequest()" ng-disabled="!hasNextRequest">
+                                        <i class="{{loadingIcon}}" ng-if="nextQueue.name == nameButton && loading"></i>
+                                        <i class="fa fa-check" ng-hide="loading && nextQueue.name == nameButton"></i>
+                                        <span translate>requests.next.btn</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </footer>
+            </ng-form>
+        </div>
+    </div>
+</section>

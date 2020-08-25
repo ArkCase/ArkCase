@@ -9,27 +9,14 @@ angular.module('admin').controller(
                         scope: $scope
                     });
 
-                    var paginationOptions = {
-                        pageNumber: 1,
-                        pageSize: 20,
-                        sortBy: 'id',
-                        sortDir: 'asc'
-                    };
-
                     $scope.gridOptions = $scope.gridOptions || {};
-                    $scope.gridUserOptions = $scope.gridUserOptions || {};
 
                     $scope.config.$promise.then(function (adminConfig) {
                         var config = angular.copy(_.find(adminConfig.components, {
                             id: 'portalsConfiguration'
                         }));
 
-                        var userConfig = angular.copy(_.find(adminConfig.components, {
-                            id: 'portalUsersConfiguration'
-                        }));
-
                         $scope.config = config;
-                        $scope.userConfig = userConfig;
 
                         gridHelper.addButton(config, "edit");
                         gridHelper.addButton(config, "delete");
@@ -50,37 +37,6 @@ angular.module('admin').controller(
                             paginationPageSize: $scope.config.paginationPageSize,
                             data: []
                         };
-
-                        $scope.gridUserOptions = {
-                            enableColumnResizing: true,
-                            enableRowSelection: true,
-                            enableRowHeaderSelection: false,
-                            multiSelect: false,
-                            noUnselect: false,
-                            columnDefs: $scope.userConfig.columnDefs,
-                            totalItems: 0,
-                            useExternalPagination: true,
-                            paginationPageSizes: $scope.userConfig.paginationPageSizes,
-                            paginationPageSize: $scope.userConfig.paginationPageSize,
-                            data: [],
-                            onRegisterApi: function (gridApi) {
-                                $scope.gridApi = gridApi;
-                                gridApi.core.on.sortChanged($scope, function (grid, sortColumns) {
-                                    if (sortColumns.length == 0) {
-                                        paginationOptions.sort = null;
-                                    } else {
-                                        paginationOptions.sortBy = sortColumns[0].name;
-                                        paginationOptions.sortDir = sortColumns[0].sort.direction;
-                                    }
-                                    getPortalUsers(paginationOptions);
-                                });
-                                gridApi.pagination.on.paginationChanged($scope, function (newPage, pageSize) {
-                                    paginationOptions.pageNumber = newPage;
-                                    paginationOptions.pageSize = pageSize;
-                                    getPortalUsers(paginationOptions);
-                                });
-                            }
-                        };
                     });
 
 
@@ -97,21 +53,6 @@ angular.module('admin').controller(
                         });
                     };
                     getAndRefresh();
-
-                    var getPortalUsers = function (paginationOptions) {
-                        var params = {};
-                        params.start = (paginationOptions.pageNumber - 1) * paginationOptions.pageSize;
-                        params.maxRows = paginationOptions.pageSize;
-                        params.sortBy = paginationOptions.sortBy;
-                        params.sortDir = paginationOptions.sortDir;
-                        AdminPortalConfigurationService.getPortalUsers(Util.goodValue(params.start, 0), Util.goodValue(params.maxRows, 20), params.sortBy, params.sortDir).then(function (response) {
-                            if (!Util.isEmpty(response.data)) {
-                                $scope.gridUserOptions.data = response.data.response.docs;
-                                $scope.gridUserOptions.totalItems = response.data.response.numFound;
-                            }
-                        })
-                    };
-                    getPortalUsers(paginationOptions);
 
                     function showModal(portal) {
                         var params = {};

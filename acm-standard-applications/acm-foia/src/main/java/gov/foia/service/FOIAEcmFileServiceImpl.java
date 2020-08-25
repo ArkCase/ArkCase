@@ -46,6 +46,7 @@ import com.armedia.acm.service.objectlock.annotation.AcmAcquireAndReleaseObjectL
 import com.armedia.acm.web.api.MDCConstants;
 
 import org.apache.chemistry.opencmis.client.api.Document;
+import org.apache.chemistry.opencmis.commons.PropertyIds;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -88,7 +89,7 @@ public class FOIAEcmFileServiceImpl extends EcmFileServiceImpl implements FOIAEc
         Map<String, Object> props = new HashMap<>();
         props.put(EcmFileConstants.CMIS_DOCUMENT_ID, getFolderAndFilesUtils().getActiveVersionCmisId(file));
         props.put(EcmFileConstants.DST_FOLDER_ID, targetFolder.getCmisFolderId());
-        props.put(EcmFileConstants.FILE_NAME, internalFileName);
+        props.put(PropertyIds.NAME, internalFileName);
         props.put(EcmFileConstants.FILE_MIME_TYPE, file.getFileActiveVersionMimeType());
         String cmisRepositoryId = targetFolder.getCmisRepositoryId();
         if (cmisRepositoryId == null)
@@ -121,6 +122,7 @@ public class FOIAEcmFileServiceImpl extends EcmFileServiceImpl implements FOIAEc
             fileCopy.setLegacySystemId(file.getLegacySystemId());
             fileCopy.setPageCount(file.getPageCount());
             fileCopy.setSecurityField(file.getSecurityField());
+            fileCopy.setDuplicate(file.isDuplicate());
 
             fileCopy.setPublicFlag(file.getPublicFlag());
 

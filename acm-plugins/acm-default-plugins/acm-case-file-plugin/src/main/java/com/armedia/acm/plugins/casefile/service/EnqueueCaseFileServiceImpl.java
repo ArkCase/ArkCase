@@ -27,7 +27,7 @@ package com.armedia.acm.plugins.casefile.service;
  * #L%
  */
 
-import com.armedia.acm.auth.AcmAuthenticationDetails;
+import com.armedia.acm.activiti.services.AcmBpmnService;
 import com.armedia.acm.plugins.businessprocess.model.EnterQueueModel;
 import com.armedia.acm.plugins.businessprocess.model.LeaveCurrentQueueModel;
 import com.armedia.acm.plugins.businessprocess.model.NextPossibleQueuesModel;
@@ -35,7 +35,6 @@ import com.armedia.acm.plugins.businessprocess.model.OnEnterQueueModel;
 import com.armedia.acm.plugins.businessprocess.model.OnLeaveQueueModel;
 import com.armedia.acm.plugins.businessprocess.model.SystemConfiguration;
 import com.armedia.acm.plugins.businessprocess.service.QueueService;
-import com.armedia.acm.plugins.businessprocess.service.StartBusinessProcessService;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
@@ -57,6 +56,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
 {
@@ -76,7 +76,7 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
 
     private QueueService queueService;
 
-    private StartBusinessProcessService startBusinessProcessService;
+    private AcmBpmnService acmBpmnService;
 
     private SaveCaseFileBusinessRule saveCaseFileBusinessRule;
 
@@ -108,8 +108,7 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
         Boolean oldDeniedFlag = caseFile.getDeniedFlag();
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        AcmAuthenticationDetails details = (AcmAuthenticationDetails) auth.getDetails();
-        String ipAddress = details.getRemoteAddress();
+        String ipAddress = context.getIpAddress();
 
         boolean hasAnyAssociatedTimesheets = getTimesheetService().getByObjectIdAndType(
                 caseId, CaseFileConstants.OBJECT_TYPE, 0, 1, "") != null;
@@ -160,7 +159,7 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
         startLeaveProcess(context, caseFile);
         startEnterProcess(context, caseFile);
 
-        if (nextQueueAction.equals(CaseFileConstants.NEXT_QUEUE_ACTION_NEXT))
+        if (Objects.equals(nextQueueAction, CaseFileConstants.NEXT_QUEUE_ACTION_NEXT))
         {
             caseFile.getParticipants().stream()
                     .filter(p -> "assignee".equals(p.getParticipantType()) || "owning group".equals(p.getParticipantType())).forEach(p -> {
@@ -220,7 +219,7 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
         if (leaveProcessName != null && !leaveProcessName.isEmpty())
         {
             Map<String, Object> processVariables = createProcessVariables(caseFile);
-            getStartBusinessProcessService().startBusinessProcess(leaveProcessName, processVariables);
+            getAcmBpmnService().startBusinessProcess(leaveProcessName, processVariables);
         }
     }
 
@@ -243,7 +242,7 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
             processVariables.put("TASK_NAME", onEnterModel.getTaskName());
             processVariables.put("TASK_OWNING_GROUP", onEnterModel.getTaskOwningGroup());
             processVariables.put("USERNAME", context.getAuthentication().getName());
-            getStartBusinessProcessService().startBusinessProcess(enterProcessName, processVariables);
+            getAcmBpmnService().startBusinessProcess(enterProcessName, processVariables);
 
             getCaseFileDao().getEm().flush();
             caseFile = getCaseFileDao().find(caseFile.getId());
@@ -331,14 +330,14 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
         this.queueService = queueService;
     }
 
-    public StartBusinessProcessService getStartBusinessProcessService()
+    public AcmBpmnService getAcmBpmnService()
     {
-        return startBusinessProcessService;
+        return acmBpmnService;
     }
 
-    public void setStartBusinessProcessService(StartBusinessProcessService startBusinessProcessService)
+    public void setAcmBpmnService(AcmBpmnService acmBpmnService)
     {
-        this.startBusinessProcessService = startBusinessProcessService;
+        this.acmBpmnService = acmBpmnService;
     }
 
     public SaveCaseFileBusinessRule getSaveCaseFileBusinessRule()

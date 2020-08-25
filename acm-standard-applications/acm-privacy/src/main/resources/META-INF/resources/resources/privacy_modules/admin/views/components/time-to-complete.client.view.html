@@ -1,0 +1,61 @@
+<div data-ng-controller="Admin.TimeToCompleteController">
+    <ng-form name="timeToCompleteConfiguration">
+        <div class="pull-right well">
+            <div class="btn-group">
+                <button class="btn btn-xs btn-link" ng-disabled="timeToCompleteConfiguration.$invalid" ng-click="save()">
+                    <i class="fa fa-save"></i>
+                    <span translate>admin.queues.timeToComplete.saveButton
+                    </span>
+                </button>
+            </div>
+        </div>
+        <panel-view header="{{'admin.queues.timeToComplete.title' | translate}}" collapsible="false">
+
+            <div class="row">
+                <div class="col-lg-4">
+                    <select id="timeToCompleteType" name="timeToCompleteType" ng-model="timeToCompleteType"
+                            ng-options="timeToCompleteType.id as timeToCompleteType.name | translate for timeToCompleteType in timeToCompleteTypes"
+                            class="form-control input-md"></select>
+                </div>
+            </div>
+            <div ng-show="timeToCompleteType == 'Request'">
+                <div class="row">
+                    <div class="col-lg-4 form-group">
+                        <label for="intake" translate>admin.queues.timeToComplete.label.intake
+                        </label>
+                        <input name="intake" type="number" id="intake" ng-model="timeToComplete.request.intake" class="form-control"
+                                ng-change="requestCalculation()" ng-keypress="ignoreNonDigits($event)" required />
+                    </div>
+
+                    <div class="col-lg-4 form-group">
+                        <label for="requestFulfill" translate>admin.queues.timeToComplete.label.fulfill
+                        </label>
+                        <input name="requestFulfill" type="number" id="requestFulfill" ng-model="timeToComplete.request.fulfill"
+                                ng-change="requestCalculation()" class="form-control" ng-keypress="ignoreNonDigits($event)" required />
+                    </div>
+                    <div class="col-lg-4 form-group">
+                        <label for="requestApprove" translate>admin.queues.timeToComplete.label.approve
+                        </label>
+                        <input name="requestApprove" type="number" id="requestApprove" ng-model="timeToComplete.request.approve"
+                                ng-change="requestCalculation()" class="form-control" ng-keypress="ignoreNonDigits($event)" required />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4 form-group">
+                        <label for="requestRelease" translate>admin.queues.timeToComplete.label.release
+                        </label>
+                        <input name="requestRelease" type="number" id="requestRelease" ng-model="timeToComplete.request.release"
+                                ng-change="requestCalculation()" class="form-control" ng-keypress="ignoreNonDigits($event)" required />
+                    </div>
+
+                    <div class="col-lg-4 form-group">
+                        <label for="requestTotalTimeToComplete" translate>admin.queues.timeToComplete.label.totalTimeToComplete
+                        </label>
+                        <input name="requestTotalTimeToComplete" id="requestTotalTimeToComplete" ng-disabled="true"
+                               ng-model="timeToComplete.request.totalTimeToComplete" class="form-control"/>
+                    </div>
+                </div>
+            </div>
+        </panel-view>
+    </ng-form>
+</div>

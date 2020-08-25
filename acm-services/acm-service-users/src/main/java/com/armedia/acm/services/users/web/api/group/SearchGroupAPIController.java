@@ -51,9 +51,10 @@ public class SearchGroupAPIController
             @RequestParam(value = "s", defaultValue = "name_lcs") String sortBy,
             @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
             @RequestParam(value = "nameFq") String nameFilter,
+            @RequestParam(value = "directoryName") String directoryName,
             Authentication auth) throws SolrException
     {
-        return groupService.getGroupsByNameFilter(auth, nameFilter, startRow, maxRows, sortBy, sortDirection);
+        return groupService.getGroupsByNameFilter(auth, directoryName, nameFilter, startRow, maxRows, sortBy, sortDirection);
     }
 
     public void setGroupService(GroupService groupService)

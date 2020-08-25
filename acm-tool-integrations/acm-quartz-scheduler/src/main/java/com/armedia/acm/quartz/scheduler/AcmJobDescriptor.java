@@ -31,7 +31,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 
 import java.util.Map;
 
@@ -42,23 +41,21 @@ public abstract class AcmJobDescriptor implements Job
     private static final Logger logger = LogManager.getLogger(AcmJobDescriptor.class);
 
     @Override
-    public void execute(JobExecutionContext context) throws JobExecutionException
+    public void execute(JobExecutionContext context)
     {
         logger.debug("Start execution of job [{}].", this::getJobName);
         try
         {
             executeJob(context);
+            logger.debug("Job [{}] finished execution.", this::getJobName);
         }
         catch (Exception e)
         {
-            logger.error("Job [{}] failed to complete. Cause: {}.", getJobName(), e.getMessage());
+            logger.error("Job [{}] failed to complete. Cause: {}.", getJobName(), e.getMessage(), e);
             jobEventPublisher.publishJobEvent(new AcmJobState(getJobName(), context.getTrigger().getKey().getName(),
                             context.getTrigger().getPreviousFireTime(), context.getNextFireTime(), false),
                     AcmJobEventPublisher.JOB_FAILED, context.getFireInstanceId());
-            throw new JobExecutionException(e);
         }
-
-        logger.debug("Job [{}] finished execution.", this::getJobName);
     }
 
     public abstract String getJobName();

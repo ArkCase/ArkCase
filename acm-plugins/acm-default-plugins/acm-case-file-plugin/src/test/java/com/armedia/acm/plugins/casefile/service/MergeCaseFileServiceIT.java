@@ -197,6 +197,7 @@ public class MergeCaseFileServiceIT
     {
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
+        entityManager.clear();
     }
 
     @Test
@@ -372,8 +373,6 @@ public class MergeCaseFileServiceIT
 
         mergeCaseService.mergeCases(auth, ipAddress, mergeCaseOptions);
 
-        entityManager.flush();
-
         CaseFile targetCase = caseFileDao.find(targetId);
         AcmParticipant foundAssignee = null;
         for (AcmParticipant ap : targetCase.getParticipants())
@@ -432,8 +431,6 @@ public class MergeCaseFileServiceIT
 
         CaseFile targetSaved = saveCaseService.saveCase(targetCaseFile, auth, ipAddress);
 
-        entityManager.flush();
-
         targetId = targetSaved.getId();
 
         // verify that case files are saved
@@ -460,8 +457,6 @@ public class MergeCaseFileServiceIT
         mergeCaseOptions.setTargetCaseFileId(targetId);
 
         mergeCaseService.mergeCases(auth, ipAddress, mergeCaseOptions);
-
-        entityManager.flush();
 
         CaseFile targetCase = caseFileDao.find(targetId);
 

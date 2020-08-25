@@ -104,6 +104,10 @@ public class RecycleBinItemServiceImpl implements RecycleBinItemService
         getRecycleBinItemDao().save(recycleBinItem);
         moveToCMISFolder(ecmFile, destinationContainer.getContainerObjectId(), destinationContainer.getContainerObjectType(),
                 destinationContainer.getFolder().getId());
+
+        //Setting duplicate to false, so when it is restored to be its default value
+        ecmFile.setDuplicate(false);
+        getEcmFileService().checkDuplicatesByHash(ecmFile);
         log.info("File {} successfully moved in Recycle Bin, by user {}", ecmFile.getFileName(), authentication.getName());
         getFileEventPublisher().publishFileMovedInRecycleBinEvent(ecmFile, authentication, ipAddress, true);
         return recycleBinItem;
@@ -201,6 +205,7 @@ public class RecycleBinItemServiceImpl implements RecycleBinItemService
                 EcmFile ecmFile = getEcmFileDao().find(fileFromTrash.getObjectId());
                 moveToCMISFolder(ecmFile, destinationContainer.getContainerObjectId(), destinationContainer.getContainerObjectType(),
                         recycleBinItem.getSourceFolderId());
+                getEcmFileService().checkDuplicatesByHash(ecmFile);
             }
             removeItemFromRecycleBin(recycleBinItem.getId());
             log.info("Item {} from Recycle Bin successfully restored, by user {}", fileFromTrash.getObjectId(), authentication.getName());
