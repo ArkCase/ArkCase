@@ -50,6 +50,8 @@ import org.springframework.core.io.InputStreamResource;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -93,6 +95,12 @@ public class DecoratedParticipantAnnotationTest
             public InputStream getInputStreamFromConfiguration(String filePath) throws IOException
             {
                 return new FileInputStream(new ClassPathResource("/" + filePath).getFile().getCanonicalPath());
+            }
+
+            @Override
+            public URI getLocationUriFromConfiguration(String locationPath) throws URISyntaxException
+            {
+                return null;
             }
         });
         decoratedParticipantAspect = new DecoratedAssignedObjectParticipantAspect();
