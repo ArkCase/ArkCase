@@ -137,7 +137,7 @@ public class FileConfigurationServiceImpl implements FileConfigurationService
     public URI getLocationUriFromConfiguration(String locationPath) throws URISyntaxException
     {
         return new URI(configurationClientConfig.getConfigurationUrl() + "/" + configurationClientConfig.getDefaultApplicationName() + "/"
-                + configurationClientConfig.getActiveProfile() + "/*/" + locationPath);
+                + configurationClientConfig.getActiveProfileReversed() + "/*/" + locationPath);
     }
 
     private HttpEntity<LinkedMultiValueMap<String, Object>> prepareFileProperties(InputStreamResource file, String fileName)
