@@ -38,16 +38,7 @@ public interface NotificationService
 
     void runRule(Date lastRun, NotificationRule rule);
 
-    Notification createNotification(String templateModel, String title, String parentType, Long parentId, String parentName,
-                                    String parentTitle, String emailAddresses, String user);
+    NotificationBuilder getNotificationBuilder();
 
-    Notification createNotification(String templateModel, String title, String parentType, Long parentId, String parentName,
-            String parentTitle, String emailAddresses, String user, String relatedUser);
-
-    Notification createNotification(String templateModel, String title, String parentType, Long parentId, String parentName,
-                                    String parentTitle, String emailAddresses, String user, String relatedUser, String note);
-
-    Notification createNotification(String templateModel, String title, String parentType, Long parentId, String parentName,
-            String parentTitle, Long relatedObjectId, String relatedObjectType, String relatedObjectName, String emailAddresses,
-            String user, String relatedUser, String note);
+    Notification saveNotification(Notification notification);
 }

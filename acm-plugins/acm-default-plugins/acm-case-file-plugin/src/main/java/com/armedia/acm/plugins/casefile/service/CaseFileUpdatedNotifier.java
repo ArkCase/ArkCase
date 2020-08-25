@@ -32,9 +32,9 @@ import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.CaseFileModifiedEvent;
 import com.armedia.acm.plugins.casefile.model.CaseFileParticipantsModifiedEvent;
+import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.notification.service.NotificationService;
-import com.armedia.acm.services.notification.service.NotificationUtils;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -43,7 +43,6 @@ import org.springframework.context.ApplicationListener;
 public class CaseFileUpdatedNotifier implements ApplicationListener<AcmEvent>
 {
     private NotificationService notificationService;
-    private NotificationUtils notificationUtils;
     private CaseFileDao caseFileDao;
 
     private static final Logger logger = LogManager.getLogger(CaseFileUpdatedNotifier.class);
@@ -56,29 +55,34 @@ public class CaseFileUpdatedNotifier implements ApplicationListener<AcmEvent>
         if (event instanceof CaseFileModifiedEvent)
         {
             CaseFile caseFile = (CaseFile) event.getSource();
-            String emailAddresses = notificationUtils.getEmailsCommaSeparatedForParticipants(caseFile.getParticipants());
 
             if (eventType.equals("com.armedia.acm.casefile.status.changed"))
             {
                 logger.debug("On 'Case status changed' event create notification for participants.");
 
-                notificationService.createNotification("caseStatusChanged", NotificationConstants.CASE_STATUS_CHANGED,
-                        caseFile.getObjectType(), caseFile.getId(), caseFile.getCaseNumber(), caseFile.getTitle(), emailAddresses,
-                        event.getUserId(), null);
+                Notification notification = notificationService.getNotificationBuilder()
+                        .newNotification("caseStatusChanged", NotificationConstants.CASE_STATUS_CHANGED, caseFile.getObjectType(),
+                                caseFile.getId(), event.getUserId())
+                        .forObjectWithNumber(caseFile.getCaseNumber())
+                        .forObjectWithTitle(caseFile.getTitle())
+                        .withEmailAddressesForParticipants(caseFile.getParticipants())
+                        .build();
 
-                logger.debug("Notification 'Case status changed' created for case [{}] for participants with addresses [{}].",
-                        caseFile.getId(), emailAddresses);
+                notificationService.saveNotification(notification);
             }
             else if (eventType.equals("com.armedia.acm.casefile.priority.changed"))
             {
                 logger.debug("On 'Case priority changed' event create notification for participants.");
 
-                notificationService.createNotification("casePriorityChanged", NotificationConstants.CASE_PRIORITY_CHANGED,
-                        caseFile.getObjectType(), caseFile.getId(), caseFile.getCaseNumber(), caseFile.getTitle(), emailAddresses,
-                        event.getUserId(), null);
+                Notification notification = notificationService.getNotificationBuilder()
+                        .newNotification("casePriorityChanged", NotificationConstants.CASE_PRIORITY_CHANGED, caseFile.getObjectType(),
+                                caseFile.getId(), event.getUserId())
+                        .forObjectWithNumber(caseFile.getCaseNumber())
+                        .forObjectWithTitle(caseFile.getTitle())
+                        .withEmailAddressesForParticipants(caseFile.getParticipants())
+                        .build();
 
-                logger.debug("Notification 'Case priority changed' created for case [{}] for participants with addresses [{}].",
-                        caseFile.getId(), emailAddresses);
+                notificationService.saveNotification(notification);
             }
         }
         else if (event instanceof CaseFileParticipantsModifiedEvent)
@@ -93,13 +97,15 @@ public class CaseFileUpdatedNotifier implements ApplicationListener<AcmEvent>
                 {
                     logger.debug("On 'Case participants added' event create notification for participants.");
 
-                    String emailAddresses = notificationUtils.getEmailsCommaSeparatedForParticipants(caseFile.getParticipants());
-                    notificationService.createNotification("participantsAdded", NotificationConstants.PARTICIPANTS_ADDED,
-                            event.getObjectType(), event.getObjectId(), null, null, caseFile.getId(),
-                            caseFile.getObjectType(), caseFile.getCaseNumber(), emailAddresses, event.getUserId(), null, null);
+                    Notification notification = notificationService.getNotificationBuilder()
+                            .newNotification("participantsAdded", NotificationConstants.PARTICIPANTS_ADDED, event.getObjectType(),
+                                    event.getObjectId(), event.getUserId())
+                            .forRelatedObjectTypeAndId(caseFile.getObjectType(), caseFile.getId())
+                            .forRelatedObjectWithNumber(caseFile.getCaseNumber())
+                            .withEmailAddressesForParticipants(caseFile.getParticipants())
+                            .build();
 
-                    logger.debug("Notification 'Participants added' created for Case [{}] for participants with addresses [{}].",
-                            caseFile.getId(), emailAddresses);
+                    notificationService.saveNotification(notification);
                 }
 
             }
@@ -110,14 +116,15 @@ public class CaseFileUpdatedNotifier implements ApplicationListener<AcmEvent>
                 {
                     logger.debug("On 'Case participants deleted' event create notification for participants.");
 
-                    String emailAddresses = notificationUtils.getEmailsCommaSeparatedForParticipants(caseFile.getParticipants());
-                    notificationService.createNotification("participantsDeleted", NotificationConstants.PARTICIPANTS_DELETED,
-                            event.getObjectType(), event.getObjectId(), null, null, caseFile.getId(),
-                            caseFile.getObjectType(), caseFile.getCaseNumber(), emailAddresses, event.getUserId(), null, null);
+                    Notification notification = notificationService.getNotificationBuilder()
+                            .newNotification("participantsDeleted", NotificationConstants.PARTICIPANTS_DELETED, event.getObjectType(),
+                                    event.getObjectId(), event.getUserId())
+                            .forRelatedObjectTypeAndId(caseFile.getObjectType(), caseFile.getId())
+                            .forRelatedObjectWithNumber(caseFile.getCaseNumber())
+                            .withEmailAddressesForParticipants(caseFile.getParticipants())
+                            .build();
 
-                    logger.debug("Notification 'Participants deleted' created for Case [{}] for participants with addresses [{}].",
-                            caseFile.getId(), emailAddresses);
-
+                    notificationService.saveNotification(notification);
                 }
             }
         }
@@ -131,16 +138,6 @@ public class CaseFileUpdatedNotifier implements ApplicationListener<AcmEvent>
     public void setNotificationService(NotificationService notificationService)
     {
         this.notificationService = notificationService;
-    }
-
-    public NotificationUtils getNotificationUtils()
-    {
-        return notificationUtils;
-    }
-
-    public void setNotificationUtils(NotificationUtils notificationUtils)
-    {
-        this.notificationUtils = notificationUtils;
     }
 
     public CaseFileDao getCaseFileDao()

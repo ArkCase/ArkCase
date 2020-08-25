@@ -1,0 +1,20 @@
+/* @override 
+	https://star.arkcase.dev.armedia.com/arkcase/assets/css/arkcase-extension.css */
+
+.well-sm .row .input-md {
+    margin-bottom: 5px;
+}
+
+.module-content .right-sidebar {
+    top: 172px;
+}
+
+.right-sidebar.well-sm .panel-body {
+    overflow-x: scroll;
+}
+
+/* Fix selection */
+.ui-grid-pinned-container .ui-grid-cell .ui-grid-cell-contents,
+.ui-grid-pinned-container .ui-grid-cell .ui-grid-cell-contents .ui-grid-selection-row-header-buttons {
+    padding: 0;
+}

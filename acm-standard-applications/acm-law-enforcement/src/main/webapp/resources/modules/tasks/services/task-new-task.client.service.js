@@ -63,11 +63,16 @@ angular.module('tasks').factory('Task.NewTaskService', [ '$http', '$httpParamSer
         });
     };
     
-    Service.reviewNewDocuments = function(formData) {
-       
+    Service.reviewNewDocuments = function(formData, businessProcessName) {
+        var params = {
+            businessProcessName: businessProcessName
+        };
+
+        var urlArgs = $httpParamSerializer(params);
+
         return $http({
             method: 'POST',
-            url: 'api/latest/plugin/tasks/newdocuments/review',
+            url: 'api/latest/plugin/tasks/newdocuments/review'  + '?' + urlArgs,
             data: formData,
             headers: {
                 'Content-Type': undefined

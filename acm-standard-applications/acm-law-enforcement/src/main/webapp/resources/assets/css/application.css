@@ -473,7 +473,7 @@ span.fancytree-title {
 
 .module-content .left-sidebar header.header .btn-group.select.pull-right {
     position: relative;
-    top: -90px;
+    top: -107px;
 
 }
 
@@ -1844,6 +1844,16 @@ a.primary {
     color: #dd1144;
     position: absolute;
 }
+
+/* Wrapping required asterisk for proof of identity label */
+.required-asterisk-proof-identity-label {
+    color: #dd1144;
+    position: absolute;
+    bottom: 5px;
+    left: 76px;
+}
+
+
 
 .ui-grid .ui-grid-render-container-body .ui-grid-viewport {
     overflow-x: auto !important;

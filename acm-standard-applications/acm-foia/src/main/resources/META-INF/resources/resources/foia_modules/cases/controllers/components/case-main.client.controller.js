@@ -174,8 +174,15 @@ angular.module('cases').controller(
             $scope.requestTrackChanged = function (requestTrack) {
                 if (requestTrack === 'expedite') {
                     expediteDueDate();
+                    $scope.objectInfo.expediteDate = new Date();
                 } else {
                     resetDueDate();
+                }
+            };
+
+            $scope.feeWaivedFlagChange = function(feeWaiver) {
+                if (feeWaiver) {
+                    $scope.objectInfo.feeWaivedDate = new Date();
                 }
             };
 

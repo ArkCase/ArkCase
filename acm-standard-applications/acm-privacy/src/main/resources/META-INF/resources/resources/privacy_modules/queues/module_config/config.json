@@ -1,0 +1,192 @@
+{
+    "id": "queues",
+    "title": "Queues",
+    "menus": [
+        {
+            "menuId": "leftnav",
+            "menuItemURL": "queues",
+            "menuItemTitle": "queues.menus.leftnav.item",
+            "moduleId": "queue",
+            "iconClass": "fa fa-check-circle-o",
+            "position": 19
+        }
+    ],
+    "components": [
+        {
+            "id": "requests",
+            "title": "Requests",
+            "enabled": true,
+            "queues": {
+                "Intake": "queues.queues.intake",
+                "Hold": "queues.queues.hold",
+                "Suspend": "queues.queues.suspend",
+                "Fulfill": "queues.queues.fulfill",
+                "Approve": "queues.queues.approve",
+                "Release": "queues.queues.release"
+            },
+            "type": "grid",
+            "enableFiltering": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                25,
+                50,
+                75,
+                100
+            ],
+            "paginationPageSize": 10,
+            "columnDefs": [
+                {
+                    "field": "alerts",
+                    "displayName": "",
+                    "cellTemplate": "<div><a ng-if=\"row.entity.isOverdue\" tooltip=\"{{'queues.table.overdue.tooltip' | translate}}\" tooltip-append-to-body=\"true\" tooltip-class=\"tooltip-overdue\"><i class=\"fa fa-exclamation-circle icon-overdue\"></i></a><a ng-if=\"row.entity.isDeadline\" tooltip=\"{{'queues.table.deadline.tooltip' | translate}}\" tooltip-append-to-body=\"true\" tooltip-class=\"tooltip-due-soon\"><i class=\"fa fa-exclamation-triangle icon-due-soon\"></i></a></div>",
+                    "width": 40,
+                    "enableSorting": false,
+                    "enableColumnMenu": false,
+                    "enableFiltering": false
+                },
+                {
+                    "name": "locked",
+                    "displayName": "queues.table.header.lock",
+                    "headerCellFilter": "translate",
+                    "headerTooltip": "queues.table.headerTooltip.lock",
+                    "enableSorting": false,
+                    "enableFiltering": false,
+                    "cellTemplate": "<div ng-click='grid.appScope.rowClick(row);' style='cursor:pointer;'  class='ui-grid-cell-contents text-center'><span ng-if='row.entity.locked' class='fa fa-lock'></span></div>",
+                    "width": 60
+                },
+                {
+                    "name": "object_id_s",
+                    "displayName": "queues.table.header.id",
+                    "headerCellFilter": "translate",
+                    "headerTooltip": "queues.table.headerTooltip.requestId",
+                    "cellTemplate": "<div ng-click='grid.appScope.rowClick(row);' style='cursor:pointer;'  class='ui-grid-cell-contents'>{{COL_FIELD CUSTOM_FILTERS}}</div>",
+                    "width": 50
+                },
+                {
+                    "name": "status_lcs",
+                    "displayName": "queues.table.header.status",
+                    "headerCellFilter": "translate",
+                    "headerTooltip": "queues.table.headerTooltip.status",
+                    "cellTemplate": "<div ng-click='grid.appScope.rowClick(row);' style='cursor:pointer;'  class='ui-grid-cell-contents'>{{COL_FIELD CUSTOM_FILTERS}}</div>",
+                    "minWidth": 67
+                },
+                {
+                    "name": "title_parseable",
+                    "displayName": "queues.table.header.title",
+                    "headerCellFilter": "translate",
+                    "headerTooltip": "queues.table.headerTooltip.title",
+                    "cellTemplate": "<div ng-click='grid.appScope.rowClick(row);' style='cursor:pointer;'  class='ui-grid-cell-contents'>{{COL_FIELD CUSTOM_FILTERS}}</div>",
+                    "width": 100
+                },
+                {
+                    "name": "queue_name_s",
+                    "displayName": "queues.table.header.queue",
+                    "headerCellFilter": "translate",
+                    "headerTooltip": "queues.table.headerTooltip.queueName",
+                    "cellTemplate": "<div ng-click='grid.appScope.rowClick(row);' style='cursor:pointer;'  class='ui-grid-cell-contents'>{{COL_FIELD CUSTOM_FILTERS}}</div>",
+                    "width": 67
+                },
+                {
+                    "name": "requester_name_s",
+                    "displayName": "queues.table.header.requester",
+                    "headerCellFilter": "translate",
+                    "headerTooltip": "queues.table.headerTooltip.requester",
+                    "cellTemplate": "<div ng-click='grid.appScope.rowClick(row);' style='cursor:pointer;' class='ui-grid-cell-contents'>{{COL_FIELD CUSTOM_FILTERS}}</div>",
+                    "width": 100
+                },
+                {
+                    "name": "request_type_lcs",
+                    "displayName": "queues.table.header.type",
+                    "headerCellFilter": "translate",
+                    "headerTooltip": "queues.table.headerTooltip.requestType",
+                    "cellTemplate": "<div ng-click='grid.appScope.rowClick(row);' style='cursor:pointer;'  class='ui-grid-cell-contents'>{{COL_FIELD CUSTOM_FILTERS}}</div>",
+                    "width": 100
+                },
+                {
+                    "name": "queue_enter_date_tdt",
+                    "displayName": "queues.table.header.enteredQueue",
+                    "headerCellFilter": "translate",
+                    "headerTooltip": "queues.table.headerTooltip.queueEnterDate",
+                    "cellTemplate": "<div ng-click='grid.appScope.rowClick(row);' style='cursor:pointer;' class='ui-grid-cell-contents'>{{COL_FIELD CUSTOM_FILTERS}}</div>",
+                    "type": "date",
+                    "minWidth": 130,
+                    "cellFilter": "date : ('common.defaultQueueDateFormat' | translate)",
+                    "filters": [
+                        {
+                            "placeholder": "from...",
+                            "condition": 64,
+                            "flags": {
+                                "date": true
+                            }
+                        },
+                        {
+                            "placeholder": "to...",
+                            "condition": 256,
+                            "flags": {
+                                "date": true
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "queueDueDate",
+                    "displayName": "queues.table.header.due",
+                    "headerCellFilter": "translate",
+                    "headerTooltip": "queues.table.headerTooltip.queueDueDate",
+                    "enableFiltering": false,
+                    "cellTemplate": "<div ng-click='grid.appScope.rowClick(row);' style='cursor:pointer;' class='ui-grid-cell-contents'>{{COL_FIELD CUSTOM_FILTERS}}</div>",
+                    "type": "date",
+                    "minWidth": 130
+                },
+                {
+                    "name": "daysInQueue",
+                    "displayName": "queues.table.header.days",
+                    "headerCellFilter": "translate",
+                    "headerTooltip": "queues.table.headerTooltip.daysInQueue",
+                    "enableFiltering": false,
+                    "cellTemplate": "<div ng-click='grid.appScope.rowClick(row);' style='cursor:pointer;' class='ui-grid-cell-contents'>{{COL_FIELD CUSTOM_FILTERS}}</div>",
+                    "minWidth": 120
+                },
+                {
+                    "name": "daysToComplete",
+                    "displayName": "queues.table.header.daysToComplete",
+                    "headerCellFilter": "translate",
+                    "headerTooltip": "queues.table.headerTooltip.daysToComplete",
+                    "enableFiltering": false,
+                    "cellTemplate": "<div ng-click='grid.appScope.rowClick(row);' style='cursor:pointer;' class='ui-grid-cell-contents'>{{COL_FIELD CUSTOM_FILTERS}}</div>",
+                    "minWidth": 135
+                },
+                {
+                    "name": "assignee_full_name_lcs",
+                    "displayName": "queues.table.header.assignee",
+                    "headerCellFilter": "translate",
+                    "headerTooltip": "queues.table.headerTooltip.assignee",
+                    "cellTemplate": "<div ng-click='grid.appScope.rowClick(row);' style='cursor:pointer;' class='ui-grid-cell-contents'>{{COL_FIELD CUSTOM_FILTERS}}</div>",
+                    "minWidth": 80
+                },
+                {
+                    "name": "owning_group_id_s",
+                    "displayName": "queues.table.header.group",
+                    "headerCellFilter": "translate",
+                    "headerTooltip": "queues.table.headerTooltip.owningGroup",
+                    "cellTemplate": "<div ng-click='grid.appScope.rowClick(row);' style='cursor:pointer;' class='ui-grid-cell-contents'>{{COL_FIELD CUSTOM_FILTERS}}</div>",
+                    "minWidth": 80
+                }
+            ]
+        },
+        {
+            "id": "queues",
+            "title": "Queues",
+            "enabled": true,
+            "queues": {
+                "Intake": "queues.queues.intake",
+                "Fulfill": "queues.queues.fulfill",
+                "Approve": "queues.queues.approve",
+                "Release": "queues.queues.release",
+                "Hold": "queues.queues.hold",
+                "Suspend": "queues.queues.suspend"
+            }
+        }
+    ]
+}

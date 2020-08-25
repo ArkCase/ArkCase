@@ -2,8 +2,8 @@
 
 angular.module('common').controller(
     'Common.NewPersonModalController',
-    ['$scope', '$stateParams', '$translate', 'Person.InfoService', '$state', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService', '$modal', '$modalInstance', 'ConfigService', 'Organization.InfoService', 'PhoneValidationService',
-        function ($scope, $stateParams, $translate, PersonInfoService, $state, ObjectLookupService, MessageService, $timeout, Util, $modal, $modalInstance, ConfigService, OrganizationInfoService, PhoneValidationService) {
+    ['$scope', '$stateParams', '$translate', 'Person.InfoService', '$state', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService', '$modal', '$modalInstance', 'ConfigService', 'Organization.InfoService', 'PhoneValidationService', 'params',
+        function ($scope, $stateParams, $translate, PersonInfoService, $state, ObjectLookupService, MessageService, $timeout, Util, $modal, $modalInstance, ConfigService, OrganizationInfoService, PhoneValidationService, params) {
             //used for showing/hiding buttons in communication accounts
             var contactMethodsCounts = {
                 'url': 0,
@@ -138,6 +138,10 @@ angular.module('common').controller(
                         return object === address;
                     });
                 }, 0);
+            };
+
+            if (params.isOrganizationLocation && (params.personLocations !== null)) {
+                $scope.person.addresses.push(params.personLocations);
             };
 
             $scope.addEmptyPicture = function () {
@@ -321,8 +325,10 @@ angular.module('common').controller(
                 //addresses
                 if (person.defaultAddress && !person.defaultAddress.streetAddress) {
                     person.defaultAddress = null;
-                } else {
+                } else if (person.defaultAddress) {
                     person.addresses.push(person.defaultAddress);
+                } else if (person.addresses.length > 0) {
+                    person.defaultAddress = person.addresses[0];
                 }
                 //aliases
                 if (person.defaultAlias) {

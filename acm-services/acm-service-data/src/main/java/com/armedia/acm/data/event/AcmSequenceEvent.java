@@ -27,13 +27,13 @@ package com.armedia.acm.data.event;
  * #L%
  */
 
-import com.armedia.acm.core.model.AcmEvent;
+import org.springframework.context.ApplicationEvent;
 
 /**
  * @author sasko.tanaskoski
  *
  */
-public class AcmSequenceEvent extends AcmEvent
+public class AcmSequenceEvent extends ApplicationEvent
 {
 
     private static final long serialVersionUID = -8724629643697739675L;

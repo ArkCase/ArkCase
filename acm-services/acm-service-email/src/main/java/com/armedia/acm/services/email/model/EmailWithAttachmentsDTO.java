@@ -51,6 +51,7 @@ public class EmailWithAttachmentsDTO implements AttachmentsProcessableDTO
     private List<String> emailAddresses;
     private Boolean mailSent = false;
     private String emailGroup;
+    private String modelReferenceName;
 
     /*
      * (non-Javadoc)
@@ -191,5 +192,15 @@ public class EmailWithAttachmentsDTO implements AttachmentsProcessableDTO
     public void setEmailGroup(String emailGroup)
     {
         this.emailGroup = emailGroup;
+    }
+
+    public String getModelReferenceName() 
+    {
+        return modelReferenceName;
+    }
+
+    public void setModelReferenceName(String modelReferenceName) 
+    {
+        this.modelReferenceName = modelReferenceName;
     }
 }

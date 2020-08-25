@@ -34,6 +34,7 @@ import static org.junit.Assert.assertTrue;
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISActions;
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
 import com.armedia.acm.camelcontext.context.CamelContextManager;
+import com.armedia.acm.plugins.ecm.model.AcmFolderConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.utils.EcmFileCamelUtils;
@@ -47,6 +48,7 @@ import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -90,6 +92,8 @@ public class AddFileFlowIT
         System.setProperty("javax.net.ssl.trustStorePassword", "password");
     }
 
+    private static final String testPath = "/Sites/acm/documentLibrary/test";
+
     @Autowired
     private CamelContextManager camelContextManager;
 
@@ -103,18 +107,30 @@ public class AddFileFlowIT
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "ann-acm");
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
 
-        String testPath = "/Sites/acm/documentLibrary/test/folder";
         Map<String, Object> messageProperties = new HashMap<>();
 
         messageProperties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
         messageProperties.put(PropertyIds.PATH, testPath);
-        messageProperties.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "");
+        messageProperties.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
 
         Folder folder = (Folder) camelContextManager.send(ArkCaseCMISActions.GET_OR_CREATE_FOLDER_BY_PATH, messageProperties);
 
         String folderId = folder.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID);
 
         testFolderId = folderId;
+    }
+
+    @After
+    public void teardown() throws Exception
+    {
+        Map<String, Object> messageProperties = new HashMap<>();
+
+        messageProperties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+        messageProperties.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
+        messageProperties.put(AcmFolderConstants.ACM_FOLDER_ID, testFolderId);
+        messageProperties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+
+        camelContextManager.send(ArkCaseCMISActions.DELETE_FOLDER, messageProperties);
     }
 
     @Test

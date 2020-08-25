@@ -95,14 +95,14 @@ angular.module('organizations').controller(
                         return validationResult;
                     };
 
-                    ObjectLookupService.getOrganizationPersonRelationTypes().then(function(types) {
+                    ObjectLookupService.getPersonOrganizationRelationTypes().then(function(types) {
                         $scope.personAssociationTypes = [];
                         for (var i = 0; i < types.length; i++) {
                             $scope.personAssociationTypes.push({
-                                "key": types[i].inverseKey,
-                                "value": types[i].inverseValue,
-                                "inverseKey": types[i].key,
-                                "inverseValue": types[i].value
+                                "key": types[i].key,
+                                "value": types[i].value,
+                                "inverseKey": types[i].inverseKey,
+                                "inverseValue": types[i].inverseValue
                             });
                         }
                         return types;
@@ -164,7 +164,9 @@ angular.module('organizations').controller(
                             isDefault: !hasPeople(),
                             types: $scope.personAssociationTypes,
                             returnValueValidationFunction: validatePersonAssociation,
-                            hideNoField: !hasPeople()
+                            hideNoField: !hasPeople(),
+                            isOrganizationLocation: true,
+                            personLocations: $scope.objectInfo.defaultAddress
                         };
 
                         var modalInstance = $modal.open({

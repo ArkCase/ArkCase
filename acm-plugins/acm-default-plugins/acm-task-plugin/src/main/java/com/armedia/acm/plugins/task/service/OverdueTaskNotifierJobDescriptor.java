@@ -31,7 +31,6 @@ import com.armedia.acm.plugins.task.service.impl.OverdueTasksNotifier;
 import com.armedia.acm.quartz.scheduler.AcmJobDescriptor;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 import org.quartz.PersistJobDataAfterExecution;
 
 @DisallowConcurrentExecution
@@ -47,7 +46,7 @@ public class OverdueTaskNotifierJobDescriptor extends AcmJobDescriptor
     }
 
     @Override
-    public void executeJob(JobExecutionContext context) throws JobExecutionException
+    public void executeJob(JobExecutionContext context)
     {
         overdueTasksNotifier.notifyTaskAssignees();
     }

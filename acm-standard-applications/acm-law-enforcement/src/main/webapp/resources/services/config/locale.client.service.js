@@ -476,6 +476,30 @@ angular.module('services').config(function($provide) {
     Service.requestLocale = function(localeCode) {
         var localeData = Service.getLocaleData();
 
+        var arkcaseRtl = document.getElementById("arkcase-rtl");
+        var bootstrapRtl = document.getElementById("bootstrap-rtl");
+
+        if (localeCode === "ar" && arkcaseRtl === null && bootstrapRtl === null) {
+            arkcaseRtl = document.createElement("link");
+            arkcaseRtl.setAttribute("rel", "stylesheet");
+            arkcaseRtl.setAttribute("href", "assets/css/arkcase-rtl.css");
+            arkcaseRtl.setAttribute("id", "arkcase-rtl");
+            document.getElementsByTagName("head")[0].appendChild(arkcaseRtl);
+
+            bootstrapRtl = document.createElement("link");
+            bootstrapRtl.setAttribute("rel", "stylesheet");
+            bootstrapRtl.setAttribute("href", "assets/css/bootstrap-rtl.css");
+            bootstrapRtl.setAttribute("id", "bootstrap-rtl");
+            document.getElementsByTagName("head")[0].appendChild(bootstrapRtl);
+        }
+
+        if (localeCode !== "ar") {
+            if (arkcaseRtl && bootstrapRtl) {
+                arkcaseRtl.remove();
+                bootstrapRtl.remove();
+            }
+        }
+
         var locale = _.find(localeData.locales, {
             code: localeCode
         });

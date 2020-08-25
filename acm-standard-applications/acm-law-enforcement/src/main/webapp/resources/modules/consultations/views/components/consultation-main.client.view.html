@@ -1,0 +1,17 @@
+<div ng-controller="Consultations.MainController">
+    <div class="container-fluid">
+        <adf-dashboard name="{{dashboard.name}}" collapsible="{{dashboard.collapsible}}" maximizable="{{dashboard.maximizable}}"
+                structure="{{dashboard.structure}}" adf-model="dashboard.model" />
+    </div>
+
+    <div class="tab-content">
+        <div class="panel panel-success panel-grid" ng-repeat="widget in widgets">
+            <div class="panel-heading">
+                <div class="panel-title">{{widget.title}}
+                </div>
+            </div>
+            <div class="panel-body">{{widgetData[widget.id]}}
+            </div>
+        </div>
+    </div>
+</div>

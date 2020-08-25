@@ -30,8 +30,10 @@ package com.armedia.acm.services.users.service.ldap;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.group.AcmGroupStatus;
+import com.armedia.acm.services.users.model.ldap.AcmLdapConstants;
 import com.armedia.acm.services.users.model.ldap.LdapGroup;
 import com.armedia.acm.services.users.model.ldap.LdapGroupNode;
+import com.armedia.acm.services.users.model.ldap.MapperUtils;
 import com.armedia.acm.services.users.service.group.AcmGroupUtils;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -265,7 +267,17 @@ public class AcmGroupsSyncResult
                     Set<String> removedUsers = ldapGroup.groupRemovedUsers(groupUserMemberDns);
                     log.debug("Found [{}] removed users from [{}] group", removedUsers.size(), groupForUpdate.getName());
                     List<AcmUser> removedAcmUsers = removedUsers.stream()
-                            .map(syncedUsersByDn::get)
+                            .map(dn -> {
+                                AcmUser removedUser = syncedUsersByDn.get(dn);
+                                if (removedUser == null)
+                                {
+                                    // if user not found, maybe the user is a deleted one
+                                    // check with dn for deleted users
+                                    String deletedUserDn = MapperUtils.appendToDn(dn, AcmLdapConstants.DC_DELETED);
+                                    removedUser = syncedUsersByDn.get(deletedUserDn);
+                                }
+                                return removedUser;
+                            })
                             .collect(Collectors.toList());
 
                     removedAcmUsers.forEach(acmUser -> {

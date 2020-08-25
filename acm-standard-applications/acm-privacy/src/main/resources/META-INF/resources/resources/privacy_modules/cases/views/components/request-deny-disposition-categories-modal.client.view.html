@@ -1,0 +1,42 @@
+<div class="modal-header">
+    <h3>
+        <span translate>cases.comp.requestDispositionCategory.modal.title</span>
+    </h3>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-lg-6">
+            <label class="control-label" translate> cases.comp.main.dispositionType.label</label>
+            <select ng-model="requestDispositionCategory" class="form-control input-md"
+                    ng-options="requestDispositionCategory.key as requestDispositionCategory.value | translate for requestDispositionCategory in requestDispositionCategories"
+                    ng-change="changeDispositionCategory(requestDispositionCategory)">
+            </select>
+        </div>
+        <div class="col-lg-6">
+            <label class="control-panel" translate>cases.comp.requestDispositionCategory.modal.deny.other.label</label>
+            <select ng-model="requestOtherReason" class="form-control input-md"
+                    ng-options="requestOtherReason.key as requestOtherReason.value | translate for requestOtherReason in requestOtherReasons"
+                    ng-disabled="requestDispositionCategory != 'other'">
+            </select>
+        </div>
+    </div></br>
+    <div class="row">
+        <div class="col-lg-6">
+            <label class="control-panel" translate>cases.comp.requestDispositionCategory.modal.deny.custom.label</label>
+            <input type="text" ng-model="customReason"
+                    placeholder="{{'cases.comp.requestDispositionCategory.modal.deny.custom.placeholder' | translate}}" class="form-control"
+                    ng-disabled="requestOtherReason != 'custom' || (requestOtherReason == 'custom' && requestDispositionCategory != 'other')">
+        </div></br>
+        <span class="text-danger" ng-if="showErrorMessageNoExemptions" translate>cases.comp.requestDispositionCategory.modal.deny.errorMessageNoExemptions</span>
+        <span class="text-danger" ng-if="showErrorMessageHasExemptions" translate>cases.comp.requestDispositionCategory.modal.deny.errorMessageHasExemptions</span>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-secondary" ng-click="onClickCancel()">
+        <span translate>cases.comp.requestDispositionCategory.modal.buttons.cancel</span>
+    </button>
+    <button class="btn btn-primary" ng-disabled="showErrorMessageNoExemptions || showErrorMessageHasExemptions || requestDispositionCategory == null || (requestOtherReason == null && requestDispositionCategory == 'other') || (requestOtherReason == 'custom' && customReason == '')"
+            ng-click="onClickSave()">
+        <span translate>cases.comp.requestDispositionCategory.modal.buttons.save</span>
+    </button>
+</div>

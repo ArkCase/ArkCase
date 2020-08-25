@@ -2,9 +2,9 @@
 
 angular.module('cases').controller(
     'Cases.InfoController',
-    [ '$scope', '$stateParams', '$state', '$translate', '$timeout', 'UtilService', 'Util.DateService', 'ConfigService', 'Object.LookupService', 'Case.LookupService', 'Case.InfoService', 'Object.ModelService', 'Helper.ObjectBrowserService', 'DueDate.Service', 'Admin.HolidayService',
-        'MessageService', '$modal', 'LookupService', 'Admin.FoiaConfigService', 'Admin.ObjectTitleConfigurationService', 'Cases.SuggestedCases', 'Case.ExemptionService', 'ObjectService', '$filter',
-        function($scope, $stateParams, $state, $translate, $timeout, Util, UtilDateService, ConfigService, ObjectLookupService, CaseLookupService, CaseInfoService, ObjectModelService, HelperObjectBrowserService, DueDateService, AdminHolidayService, MessageService, $modal, LookupService, AdminFoiaConfigService, AdminObjectTitleConfigurationService, SuggestedCasesService, CaseExemptionService, ObjectService, $filter) {
+    ['$scope', '$stateParams', '$state', '$translate', '$timeout', 'UtilService', 'Util.DateService', 'ConfigService', 'Object.LookupService', 'Case.LookupService', 'Case.InfoService', 'Object.ModelService', 'Helper.ObjectBrowserService', 'DueDate.Service', 'Admin.HolidayService',
+        'MessageService', '$modal', 'LookupService', 'Admin.FoiaConfigService', 'Admin.ObjectTitleConfigurationService', 'SuggestedObjectsService', 'Case.ExemptionService', 'ObjectService', '$filter',
+        function ($scope, $stateParams, $state, $translate, $timeout, Util, UtilDateService, ConfigService, ObjectLookupService, CaseLookupService, CaseInfoService, ObjectModelService, HelperObjectBrowserService, DueDateService, AdminHolidayService, MessageService, $modal, LookupService, AdminFoiaConfigService, AdminObjectTitleConfigurationService, SuggestedObjectsService, CaseExemptionService, ObjectService, $filter) {
 
             new HelperObjectBrowserService.Component({
                 scope: $scope,
@@ -133,14 +133,14 @@ angular.module('cases').controller(
 
                 $scope.isAmendmentAdded = data.amendmentFlag;
 
-                SuggestedCasesService.getSuggestedCases($scope.objectInfo.title, $scope.objectInfo.id).then(function (value) {
-                    $scope.hasSuggestedCases = value.data.length > 0 ? true : false;
+                SuggestedObjectsService.getSuggestedObjects($scope.objectInfo.title, "CASE_FILE", $scope.objectInfo.id).then(function (value) {
+                    $scope.hasSuggestedCases = value.data.length > 0;
                     $scope.numberOfSuggestedCases = value.data.length;
                 });
-                
+
                 CaseExemptionService.hasExemptionOnAnyDocumentsOnRequest($scope.objectInfo.id, ObjectService.ObjectTypes.CASE_FILE).then(function (value) {
                     $scope.hasExemptionsOnAnyDocuments = value.data && $scope.objectInfo.disposition == 'grantedInFull' ? true : false;
-                    CaseExemptionService.getExemptionCode($scope.objectInfo.id, ObjectService.ObjectTypes.CASE_FILE).then(function (value1) { 
+                    CaseExemptionService.getExemptionCode($scope.objectInfo.id, ObjectService.ObjectTypes.CASE_FILE).then(function (value1) {
                         $scope.fullGrantAndExemptionWarning = ($scope.hasExemptionsOnAnyDocuments || value1.data.length > 0) && $scope.objectInfo.disposition == 'Full Grant' ? true : false;
                     });
                 });

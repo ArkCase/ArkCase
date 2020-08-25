@@ -32,7 +32,6 @@ import com.armedia.acm.quartz.scheduler.AcmJobDescriptor;
 
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 import org.quartz.PersistJobDataAfterExecution;
 
 @DisallowConcurrentExecution
@@ -48,7 +47,7 @@ public class UpcomingTaskNotifierJobDescription extends AcmJobDescriptor
     }
 
     @Override
-    public void executeJob(JobExecutionContext context) throws JobExecutionException
+    public void executeJob(JobExecutionContext context)
     {
         upcomingTasksNotifier.notifyTaskAssignees();
     }

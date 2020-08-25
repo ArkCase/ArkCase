@@ -4,7 +4,7 @@
 
     <bean id="simpleStatelessSingleObjectRuleManager" class="com.armedia.acm.drools.SimpleStatelessSingleObjectRuleManager" abstract="true"
         init-method="afterPropertiesSet">
-        <property name="ruleFileLocation" value="${user.home}/.arkcase/acm/rules"/>
+        <property name="fileConfigurationService" ref="fileConfigurationServiceImpl"/>
     </bean>
 
 </beans>

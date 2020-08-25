@@ -44,7 +44,7 @@ public class AcmTriggerListener extends TriggerListenerSupport
     {
         String jobName = context.getJobDetail().getKey().getName();
         String triggerName = trigger.getKey().getName();
-        logger.debug("Trigger [{}] for job [{}] fired.", triggerName, jobName);
+        logger.debug("Trigger [{}] for job [{}] fired. Next fire time is [{}].", triggerName, jobName, trigger.getNextFireTime());
         jobEventPublisher.publishJobEvent(new AcmJobState(jobName, triggerName, trigger.getPreviousFireTime(),
                 trigger.getNextFireTime(), true), AcmJobEventPublisher.JOB_TRIGGERED, context.getFireInstanceId());
     }

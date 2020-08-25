@@ -158,6 +158,18 @@ public class ArkCasePortalGatewayUserAPIController
     }
 
     @CheckPortalUserAssignement
+    @RequestMapping(value = "/registrations/resets/regenerate", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE,
+            MediaType.TEXT_PLAIN_VALUE })
+    @ResponseBody
+    public UserResetResponse regeneratePasswordReset(Authentication auth, @PortalId @PathVariable(value = "portalId") String portalId,
+            @RequestBody UserResetRequest resetRequest) throws PortalUserServiceException
+    {
+        log.debug("Regenerating password reset link for user with [{}] email address for portal with [{}] ID.",
+                resetRequest.getEmailAddress(), portalId);
+        return portalUserService.regeneratePasswordReset(portalId, resetRequest);
+    }
+
+    @CheckPortalUserAssignement
     @RequestMapping(value = "/registrations/resets", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE,
             MediaType.TEXT_PLAIN_VALUE })
     @ResponseBody

@@ -1,0 +1,28 @@
+<div ng-controller="Consultations.DetailsController">
+    <div class="panel panel-success panel-grid">
+        <div class="panel-heading">
+            <div class="panel-title">
+                <span translate>consultations.comp.details.consultationSummary.title</span>
+                <div class="pull-right">
+                    <button class="btn btn-default btn-xs" ng-click="saveDetailsSummary()"><i class="fa fa-lg fa-save"></i></button>
+                </div>
+            </div>
+        </div>
+        <div>
+            <textarea rows=5 ng-model="objectInfo.consultationDetailsSummary" class="input-md form-control"></textarea>
+        </div>
+    </div>
+    <div class="panel panel-success panel-grid">
+        <div class="panel-heading">
+            <div class="panel-title">
+                <span translate>consultations.comp.details.title</span>
+                <div class="pull-right">
+                    <button class="btn btn-default btn-xs" ng-click="saveDetails()"><i class="fa fa-lg fa-save"></i></button>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body remove-margin-bottom-from-summernote">
+            <mention-summernote ng-model="objectInfo.details" params="paramsSummernote" focus="true"></mention-summernote>
+        </div>
+    </div>
+</div>

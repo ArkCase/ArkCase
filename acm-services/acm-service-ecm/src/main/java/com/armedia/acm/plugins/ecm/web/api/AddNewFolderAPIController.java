@@ -35,8 +35,8 @@ import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.FolderEventPublisher;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -55,7 +55,7 @@ public class AddNewFolderAPIController
     private FolderEventPublisher folderEventPublisher;
 
     @PreAuthorize("hasPermission(#parentFolderId, 'FOLDER', 'write|group-write')")
-    @RequestMapping(value = "/folder/{parentFolderId}/{newFolderName}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/folder/{parentFolderId}/{newFolderName:.+}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmFolder addNewFolder(@PathVariable("parentFolderId") Long parentFolderId, @PathVariable("newFolderName") String newFolderName)
             throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException

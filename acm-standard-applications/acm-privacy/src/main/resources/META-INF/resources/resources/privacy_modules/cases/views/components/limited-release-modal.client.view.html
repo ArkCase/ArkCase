@@ -1,0 +1,30 @@
+<div class="modal-header">
+    <h3>
+        <span translate>cases.comp.limitedRelease.modal.title</span>
+    </h3>
+
+</div>
+
+<div class="modal-body">
+    <span translate>cases.comp.limitedRelease.modal.body</span>
+
+    <div class="checkbox">
+        <label>
+            <input type="checkbox" ng-model="limitedDeliveryFlag">
+            <span translate>cases.comp.limitedRelease.modal.choice</span>
+            <span>{{ pageCount }}</span>
+            <span translate>cases.comp.limitedRelease.modal.pages</span>
+            <span translate>cases.comp.limitedRelease.modal.additionalComment</span>
+        </label>
+    </div>
+
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-secondary" ng-click="onClickCancel()">
+        <span translate>cases.comp.limitedRelease.modal.buttons.cancel</span>
+    </button>
+    <button class="btn btn-primary" ng-click="onClickOk()">
+        <span translate>cases.comp.limitedRelease.modal.buttons.ok</span>
+    </button>
+</div>

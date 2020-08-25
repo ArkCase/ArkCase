@@ -32,6 +32,7 @@ import static org.junit.Assert.assertNotNull;
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISActions;
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
 import com.armedia.acm.camelcontext.context.CamelContextManager;
+import com.armedia.acm.plugins.ecm.model.AcmFolderConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.utils.EcmFileCamelUtils;
@@ -44,6 +45,8 @@ import org.apache.chemistry.opencmis.client.api.Folder;
 import org.apache.chemistry.opencmis.commons.PropertyIds;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.MDC;
@@ -109,23 +112,45 @@ public class ContentFileToSolrFlowIT
     @Autowired
     private SendDocumentsToSolr sendDocumentsToSolr;
 
-    @Test
-    public void sendFile() throws Exception
+    private String testFolderId;
+
+    private static final String testPath = "/Sites/acm/documentLibrary/test";
+
+    @Before
+    public void setUp() throws Exception
     {
-        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "ann-acm");
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
 
-        String testPath = "/Sites/acm/documentLibrary/test/folder";
-        Map<String, Object> folderMessageProperties = new HashMap<>();
+        Map<String, Object> messageProperties = new HashMap<>();
 
-        folderMessageProperties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
-        folderMessageProperties.put(PropertyIds.PATH, testPath);
-        folderMessageProperties.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "");
+        messageProperties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+        messageProperties.put(PropertyIds.PATH, testPath);
+        messageProperties.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
 
-        Folder folder = (Folder) camelContextManager.send(ArkCaseCMISActions.GET_OR_CREATE_FOLDER_BY_PATH, folderMessageProperties);
+        Folder folder = (Folder) camelContextManager.send(ArkCaseCMISActions.GET_OR_CREATE_FOLDER_BY_PATH, messageProperties);
 
         String folderId = folder.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID);
 
+        testFolderId = folderId;
+    }
+
+    @After
+    public void teardown() throws Exception
+    {
+        Map<String, Object> messageProperties = new HashMap<>();
+
+        messageProperties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+        messageProperties.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
+        messageProperties.put(AcmFolderConstants.ACM_FOLDER_ID, testFolderId);
+        messageProperties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+
+        camelContextManager.send(ArkCaseCMISActions.DELETE_FOLDER, messageProperties);
+    }
+
+    @Test
+    public void sendFile() throws Exception
+    {
         Resource uploadFile = new ClassPathResource("/spring/spring-library-add-file-camel.xml");
         InputStream is = uploadFile.getInputStream();
 
@@ -135,7 +160,7 @@ public class ContentFileToSolrFlowIT
         ecmFile.setFileActiveVersionMimeType("text/plain");
 
         Map<String, Object> messageProperties = new HashMap<>();
-        messageProperties.put("cmisFolderId", folderId);
+        messageProperties.put("cmisFolderId", testFolderId);
         messageProperties.put("inputStream", is);
         messageProperties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
         messageProperties.put("versioningState", "MAJOR");

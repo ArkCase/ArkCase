@@ -163,9 +163,11 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', [ '$http
      *
      * param {string} currentPage
      * param {string} pageSize
+     * param {string} groupSubtype
+     * param {string} directoryName
      * @returns {HttpPromise} Future info about groups
      */
-    function getGroupsTopLevel(currentPage, pageSize, groupSubtype) {
+    function getGroupsTopLevel(currentPage, pageSize, groupSubtype, directoryName) {
         //s and n are 0 and 50 by default
         var start = 0, n = 50;
         if (pageSize) {
@@ -175,7 +177,7 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', [ '$http
         }
         return $http({
             method: 'GET',
-            url: 'api/latest/users/group/get/toplevel?n=' + n + '&start=' + start + '&s=name asc' + '&groupSubtype=' + groupSubtype
+            url: 'api/latest/users/group/get/toplevel?n=' + n + '&start=' + start + '&s=name asc' + '&groupSubtype=' + groupSubtype + '&directoryName=' + directoryName
         });
     }
 

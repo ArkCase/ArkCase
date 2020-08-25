@@ -132,10 +132,10 @@
                     <tab heading="{{'documentDetails.comp.tags.title' | translate}}">
                         <div ng-include="'modules/document-details/views/components/tags.client.view.html'"></div>
                     </tab>
-                    <tab active="transcriptionTabActive" ng-show="transcriptionTabActive"
-                            heading="{{'documentDetails.comp.transcription.title' | translate}}">
+                    <tab active="transcriptionTabActive" ng-show="transcriptionTabViewEnabled"
+                         heading="{{'documentDetails.comp.transcription.title' | translate}}">
                         <div ng-include="'modules/document-details/views/components/transcription.client.view.html'"
-                                ng-if="transcriptionTabActive"></div>
+                             ng-if="transcriptionTabViewEnabled"></div>
                     </tab>
                     <tab heading="{{'documentDetails.comp.billing.title' | translate}}" ng-if="billingPrivilege">
                         <div ng-include="'modules/document-details/views/components/billing.client.view.html'"></div>

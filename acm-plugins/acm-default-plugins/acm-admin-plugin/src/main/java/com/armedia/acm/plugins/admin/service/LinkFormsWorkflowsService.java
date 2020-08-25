@@ -29,12 +29,13 @@ package com.armedia.acm.plugins.admin.service;
 
 import com.armedia.acm.activiti.model.AcmProcessDefinition;
 import com.armedia.acm.activiti.services.AcmBpmnService;
+import com.armedia.acm.configuration.service.FileConfigurationService;
 import com.armedia.acm.plugins.admin.exception.AcmLinkFormsWorkflowException;
 import com.armedia.acm.plugins.admin.model.LinkFormsWorkflowsConstants;
 import com.armedia.acm.plugins.ecm.service.AcmFileTypesService;
 
 import org.apache.commons.codec.binary.Hex;
-import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.CellType;
@@ -47,10 +48,11 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.JSONObject;
 import org.openxmlformats.schemas.spreadsheetml.x2006.main.STCellType;
+import org.springframework.core.io.InputStreamResource;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -68,10 +70,10 @@ public class LinkFormsWorkflowsService implements LinkFormsWorkflowsConstants
 {
     private final String[] START_PROCESS_VALUES = new String[] { "", "true", "false" };
     private Logger log = LogManager.getLogger(LdapConfigurationService.class);
-    private String configurationLocation;
+    private static final String RULES_LOCATION = "rules";
     private String configurationFile;
     private String configurationFileBackupTemplate;
-    private String configurationFileBackupRegex;
+    private FileConfigurationService fileConfigurationService;
     private AcmBpmnService acmBpmnService;
     private AcmFileTypesService acmFileTypesService;
 
@@ -84,10 +86,11 @@ public class LinkFormsWorkflowsService implements LinkFormsWorkflowsConstants
     public JSONObject retrieveConfigurationAsJson() throws AcmLinkFormsWorkflowException
     {
 
-        try (FileInputStream file = new FileInputStream(new File(configurationLocation + configurationFile)))
+        try (InputStream stream = fileConfigurationService.getInputStreamFromConfiguration(RULES_LOCATION + "/"
+                + configurationFile))
         {
 
-            XSSFWorkbook workbook = new XSSFWorkbook(file);
+            XSSFWorkbook workbook = new XSSFWorkbook(stream);
 
             // Get Sheet number 0;
             XSSFSheet sheet = workbook.getSheetAt(0);
@@ -366,72 +369,86 @@ public class LinkFormsWorkflowsService implements LinkFormsWorkflowsConstants
     public void updateConfiguration(List<List<String>> newValues) throws AcmLinkFormsWorkflowException
     {
 
-        try (FileInputStream inputFile = new FileInputStream(new File(configurationLocation + configurationFile)))
+        try (InputStream inputStream = fileConfigurationService.getInputStreamFromConfiguration(RULES_LOCATION + "/"
+                + configurationFile))
         {
 
-            XSSFWorkbook workbook = new XSSFWorkbook(inputFile);
+            byte[] receivedBinary = IOUtils.toByteArray(inputStream);
 
-            // Get Sheet number 0;
-            XSSFSheet sheet = workbook.getSheetAt(0);
-
-            // Update all not locked cells' values
-            for (int rowNum = 0; rowNum < newValues.size(); rowNum++)
+            try (ByteArrayInputStream receivedBytes = new ByteArrayInputStream(receivedBinary))
             {
-                List<String> valuesRow = newValues.get(rowNum);
-                for (int colNum = 0; colNum < valuesRow.size(); colNum++)
+
+                XSSFWorkbook workbook = new XSSFWorkbook(receivedBytes);
+
+                // Get Sheet number 0;
+                XSSFSheet sheet = workbook.getSheetAt(0);
+
+                // Update all not locked cells' values
+                for (int rowNum = 0; rowNum < newValues.size(); rowNum++)
                 {
-                    String value = valuesRow.get(colNum);
-                    if (value != null)
+                    List<String> valuesRow = newValues.get(rowNum);
+                    for (int colNum = 0; colNum < valuesRow.size(); colNum++)
                     {
-                        if (sheet.getRow(rowNum) != null)
+                        String value = valuesRow.get(colNum);
+                        if (value != null)
                         {
-                            XSSFCell cell = sheet.getRow(rowNum).getCell(colNum);
-                            if (cell != null && cell.getCellStyle() != null)
+                            if (sheet.getRow(rowNum) != null)
                             {
-                                if (!cell.getCellStyle().getLocked())
+                                XSSFCell cell = sheet.getRow(rowNum).getCell(colNum);
+                                if (cell != null && cell.getCellStyle() != null)
                                 {
-                                    if (cell.getCTCell().getT() == STCellType.INLINE_STR)
-                                    { // cell has inline string in it
-                                        if (cell.getCTCell().isSetIs())
-                                        { // inline string has is element
-                                            cell.getCTCell().getIs().setT(value); // set t element in is element
+                                    if (!cell.getCellStyle().getLocked())
+                                    {
+                                        if (cell.getCTCell().getT() == STCellType.INLINE_STR)
+                                        { // cell has inline string in it
+                                            if (cell.getCTCell().isSetIs())
+                                            { // inline string has is element
+                                                cell.getCTCell().getIs().setT(value); // set t element in is element
+                                            }
+                                            else
+                                            {
+                                                cell.getCTCell().setV(value); // set v element of inline string
+                                            }
                                         }
                                         else
                                         {
-                                            cell.getCTCell().setV(value); // set v element of inline string
+                                            cell.setCellValue(value); // set shared string cell value
                                         }
-                                    }
-                                    else
-                                    {
-                                        cell.setCellValue(value); // set shared string cell value
                                     }
                                 }
                             }
                         }
                     }
                 }
-            }
 
-            // Generate backup file name based on current time.
-            String destFileName = String.format(configurationFileBackupTemplate, (new Date()).getTime());
+                // Generate backup file name based on current time.
+                String destFileName = String.format(configurationFileBackupTemplate, (new Date()).getTime());
 
-            // Save current configuration file as backup
-            FileUtils.copyFile(
-                    new File(configurationLocation + configurationFile),
-                    new File(configurationLocation + destFileName));
+                // Save current configuration file as backup
+                try (ByteArrayInputStream inputBytes = new ByteArrayInputStream(receivedBinary))
+                {
+                    fileConfigurationService.moveFileToConfiguration(new InputStreamResource(inputBytes),
+                            RULES_LOCATION + "/" + destFileName);
+                }
 
-            // Store updates
-            try (FileOutputStream outputFile = new FileOutputStream(configurationLocation + configurationFile))
-            {
-                workbook.write(outputFile);
+                // Store updates
+                try (ByteArrayOutputStream outputBytes = new ByteArrayOutputStream())
+                {
+                    workbook.write(outputBytes);
+                    try (ByteArrayInputStream inputBytes = new ByteArrayInputStream(outputBytes.toByteArray()))
+                    {
+                        fileConfigurationService.moveFileToConfiguration(new InputStreamResource(inputBytes),
+                                RULES_LOCATION + "/" + configurationFile);
+                    }
+                }
             }
 
         }
         catch (Exception e)
         {
 
-            log.error("Can't retrieve Link Forms Workflows configuration file", e);
-            throw new AcmLinkFormsWorkflowException("Can't retrieve Link Forms Workflows configuration file", e);
+            log.error("Can't update Link Forms Workflows configuration file", e);
+            throw new AcmLinkFormsWorkflowException("Can't update Link Forms Workflows configuration file", e);
         }
     }
 
@@ -440,19 +457,14 @@ public class LinkFormsWorkflowsService implements LinkFormsWorkflowsConstants
         this.configurationFile = configurationFile;
     }
 
-    public void setConfigurationLocation(String configurationLocation)
-    {
-        this.configurationLocation = configurationLocation;
-    }
-
     public void setConfigurationFileBackupTemplate(String configurationFileBackupTemplate)
     {
         this.configurationFileBackupTemplate = configurationFileBackupTemplate;
     }
 
-    public void setConfigurationFileBackupRegex(String configurationFileBackupRegex)
+    public void setFileConfigurationService(FileConfigurationService fileConfigurationService)
     {
-        this.configurationFileBackupRegex = configurationFileBackupRegex;
+        this.fileConfigurationService = fileConfigurationService;
     }
 
     public void setAcmBpmnService(AcmBpmnService acmBpmnService)

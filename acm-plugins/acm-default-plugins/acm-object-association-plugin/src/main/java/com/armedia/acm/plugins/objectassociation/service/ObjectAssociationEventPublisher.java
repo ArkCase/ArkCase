@@ -59,21 +59,33 @@ public class ObjectAssociationEventPublisher implements ApplicationEventPublishe
 
     public void publishAddReferenceEvent(ObjectAssociation source, Authentication authentication, boolean succeeded)
     {
-        String ipAddress = ((AcmAuthenticationDetails) authentication.getDetails()).getRemoteAddress();
+        String ipAddress = "";
+        if (authentication != null && authentication.getDetails() != null)
+        {
+            ipAddress = ((AcmAuthenticationDetails) authentication.getDetails()).getRemoteAddress();
+        }
         AddReferenceEvent event = new AddReferenceEvent(source, ipAddress);
         publishEvent(event, authentication, succeeded);
     }
 
     public void publishUpdateReferenceEvent(ObjectAssociation source, Authentication authentication, boolean succeeded)
     {
-        String ipAddress = ((AcmAuthenticationDetails) authentication.getDetails()).getRemoteAddress();
+        String ipAddress = "";
+        if (authentication != null && authentication.getDetails() != null)
+        {
+            ipAddress = ((AcmAuthenticationDetails) authentication.getDetails()).getRemoteAddress();
+        }
         UpdateReferenceEvent event = new UpdateReferenceEvent(source, ipAddress);
         publishEvent(event, authentication, succeeded);
     }
 
     public void publishDeleteReferenceEvent(ObjectAssociation source, Authentication authentication, boolean succeeded)
     {
-        String ipAddress = ((AcmAuthenticationDetails) authentication.getDetails()).getRemoteAddress();
+        String ipAddress = "";
+        if (authentication != null && authentication.getDetails() != null)
+        {
+            ipAddress = ((AcmAuthenticationDetails) authentication.getDetails()).getRemoteAddress();
+        }
         DeleteReferenceEvent event = new DeleteReferenceEvent(source, ipAddress);
         publishEvent(event, authentication, succeeded);
     }
@@ -89,7 +101,8 @@ public class ObjectAssociationEventPublisher implements ApplicationEventPublishe
 
     private void publishEvent(AcmEvent event, Authentication authentication, boolean succeeded)
     {
-        event.setUserId(authentication.getName());
+        String userId = authentication != null ? authentication.getName() : "";
+        event.setUserId(userId);
         event.setSucceeded(succeeded);
         eventPublisher.publishEvent(event);
     }

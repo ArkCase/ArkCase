@@ -161,7 +161,8 @@ public interface GroupService
      * @return groups
      * @throws SolrException
      */
-    String getGroupsByNameFilter(Authentication authentication, String nameFilter, int start, int max, String sortBy, String sortDir)
+    String getGroupsByNameFilter(Authentication authentication, String directoryName, String nameFilter, int start, int max, String sortBy,
+            String sortDir)
             throws SolrException;
 
     /**
@@ -360,6 +361,6 @@ public interface GroupService
      */
     String getGroupsByParent(String groupId, int startRow, int maxRows, String sort, Authentication auth) throws SolrException;
 
-    String getTopLevelGroups(List<String> groupSubtype, int startRow, int maxRows, String sort, Authentication auth)
+    String getTopLevelGroups(List<String> groupSubtype, int startRow, int maxRows, String sort, Authentication auth, String directoryName)
             throws SolrException;
 }

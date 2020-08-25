@@ -218,8 +218,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         AcmUser user = findByUserId(id);
         if (user != null)
         {
-            user.setUserState(AcmUserState.INVALID);
-            user.setDeletedAt(new Date());
+            user.invalidateUser(user);
         }
         return user;
     }

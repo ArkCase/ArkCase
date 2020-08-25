@@ -1,0 +1,19 @@
+<div>
+    <div class="modal-header" translate>requests.comp.userSessionExpired.title</div>
+
+    <div class="modal-body">
+        <p class="text-center" translate>requests.comp.userSessionExpired.msg</p>
+        <p class="text-center">
+            <b>{{timerCounter}}</b>
+        </p>
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-sm btn-default pull-left" ng-click="saveAndClose()">
+            <span translate>requests.comp.userSessionExpired.saveAndClose.btn</span>
+        </button>
+        <button class="btn btn-sm btn-primary pull-right" ng-click="continueWorking()">
+            <span translate>requests.comp.userSessionExpired.continue.btn</span>
+        </button>
+    </div>
+</div>

@@ -31,7 +31,6 @@ import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 
 import javax.persistence.Query;
-
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -58,4 +57,5 @@ public class EcmFileVersionDao extends AcmAbstractDao<EcmFileVersion>
         return totalSize == null ? 0L : totalSize;
 
     }
+
 }

@@ -62,6 +62,7 @@ public class EcmFileTransactionPipelineContext extends AbstractPipelineContext
     private boolean searchablePDF;
     private File mergedFile;
     private boolean fileNameAlreadyInEcmSystem;
+    private String fileHash;
 
     public String getOriginalFileName()
     {
@@ -239,6 +240,15 @@ public class EcmFileTransactionPipelineContext extends AbstractPipelineContext
     public void setSearchablePDF(boolean searchablePDF)
     {
         this.searchablePDF = searchablePDF;
+
+    }
+
+    public String getFileHash() {
+        return fileHash;
+    }
+
+    public void setFileHash(String fileHash) {
+        this.fileHash = fileHash;
     }
 
     @Deprecated

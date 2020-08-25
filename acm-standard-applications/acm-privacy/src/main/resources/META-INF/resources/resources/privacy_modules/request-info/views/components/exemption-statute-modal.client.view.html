@@ -1,0 +1,32 @@
+<div class="modal-header">
+    <h3>
+        <span translate>requests.comp.exemption.statute.title</span>
+        <div class="pull-right">
+            <h5 class="exemption-description" ng-click="showExemptionStatutes()">
+                <span translate>requests.comp.exemption.description</span>
+            </h5>
+        </div>
+    </h3>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-sm-6 form-group">
+            <select id="statute" ng-model="statute" class="input-sm form-control">
+                <option value="" disabled selected hidden translate>
+                    requests.comp.exemption.statute.placeholder
+                </option>
+                <option ng-repeat="option in exemptionStatutes" value="{{option.key}}" title="{{option.key}}" translate>
+                    {{option.key | limitTo: 120}}
+                </option>
+            </select>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-secondary" ng-click="cancel()">
+        <span translate>requests.comp.exemption.modal.buttons.cancel</span>
+    </button>
+    <button class="btn btn-primary" ng-click="save()">
+        <span translate>requests.comp.exemption.modal.buttons.save</span>
+    </button>
+</div>

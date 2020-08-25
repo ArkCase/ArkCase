@@ -2,8 +2,10 @@
 
 angular.module('tasks').controller(
         'Tasks.DetailsController',
-        [ '$scope', '$stateParams', '$translate', 'UtilService', 'ConfigService', 'Task.InfoService', 'MessageService', 'Helper.ObjectBrowserService', 'Mentions.Service',
-                function($scope, $stateParams, $translate, Util, ConfigService, TaskInfoService, MessageService, HelperObjectBrowserService, MentionsService) {
+        [ '$scope', '$stateParams', '$translate', 'UtilService', 'ConfigService', 'Task.InfoService', 'MessageService',
+            'Helper.ObjectBrowserService', 'Mentions.Service', 'ObjectService',
+                function($scope, $stateParams, $translate, Util, ConfigService, TaskInfoService, MessageService, HelperObjectBrowserService,
+                         MentionsService, ObjectService) {
 
                     new HelperObjectBrowserService.Component({
                         moduleId: "tasks",

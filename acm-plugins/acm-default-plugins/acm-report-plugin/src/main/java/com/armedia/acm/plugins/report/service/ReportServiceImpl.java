@@ -6,22 +6,22 @@ package com.armedia.acm.plugins.report.service;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
@@ -32,6 +32,7 @@ import com.armedia.acm.configuration.service.ConfigurationPropertyService;
 import com.armedia.acm.configuration.util.MergeFlags;
 import com.armedia.acm.pentaho.config.PentahoReportUrl;
 import com.armedia.acm.pentaho.config.PentahoReportsConfig;
+import com.armedia.acm.plugins.ecm.utils.PDFUtils;
 import com.armedia.acm.plugins.report.model.Report;
 import com.armedia.acm.plugins.report.model.Reports;
 import com.armedia.acm.report.config.ReportsToRolesConfig;
@@ -39,7 +40,11 @@ import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.services.users.model.ApplicationRolesConfig;
 import com.armedia.acm.services.users.service.AcmUserRoleService;
+import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.parser.PdfTextExtractor;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -49,8 +54,25 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.pdfbox.io.MemoryUsageSetting;
+import org.apache.pdfbox.multipdf.PDFMergerUtility;
+import org.apache.pdfbox.multipdf.Splitter;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.font.PDFont;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.util.Matrix;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.client.RestTemplate;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -60,9 +82,14 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import java.awt.*;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -93,6 +120,7 @@ public class ReportServiceImpl implements ReportService
     private ConfigurationPropertyService configurationPropertyService;
     private AcmUserRoleService userRoleService;
     private ApplicationRolesConfig rolesConfig;
+    private RestTemplate restTemplate;
 
     @Override
     public List<Report> getPentahoReports() throws Exception
@@ -573,6 +601,138 @@ public class ReportServiceImpl implements ReportService
         return result.stream().skip(startRow).limit(maxRows).collect(Collectors.toList());
     }
 
+    @Override
+    public File exportReportsPDFFormat(List<String> orderedReportTitles) throws Exception
+    {
+        PDFMergerUtility pdfMergerUtility = new PDFMergerUtility();
+        File temp = File.createTempFile("reports-merged-file", ".pdf");
+        FileOutputStream fileOutputStream = new FileOutputStream(temp);
+
+        File mergedPDFs = File.createTempFile("reports-merged-pdfs", ".pdf");
+        FileOutputStream fos = new FileOutputStream(mergedPDFs);
+
+        for (String reportTitle : orderedReportTitles)
+        {
+            String reportToExportUrl = reportsConfig.getServerUrl() + reportsConfig.getReportUrl() + reportTitle
+                    + "/service/export";
+            SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
+            requestFactory.setReadTimeout(60 * 1000);
+            RestTemplate restTemplate = new RestTemplate(requestFactory);
+
+            String auth = reportsConfig.getServerUser() + ":" + reportsConfig.getServerPassword();
+            byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(Charset.forName("US-ASCII")));
+            String basicAuthenticationHeaderValue = "Basic " + new String(encodedAuth);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setAccept(Collections.singletonList(MediaType.APPLICATION_OCTET_STREAM));
+            headers.set(HttpHeaders.AUTHORIZATION, basicAuthenticationHeaderValue);
+
+            org.springframework.http.HttpEntity<Object> entity = new org.springframework.http.HttpEntity<>("body", headers);
+
+            ResponseEntity<Resource> response = restTemplate.exchange(reportToExportUrl, HttpMethod.GET, entity, Resource.class);
+
+            File file = File.createTempFile("pentaho-downloaded-report", ".pdf");
+            FileUtils.copyInputStreamToFile(response.getBody().getInputStream(), file);
+
+            PDDocument document = PDDocument.load(file);
+            // hide page numbers
+            for (int i = 0; i < document.getPages().getCount(); i++)
+            {
+                PDPage page = document.getPage(i);
+
+                PDPageContentStream contentStream = new PDPageContentStream(document, page, true, true, true);
+                contentStream.setNonStrokingColor(Color.WHITE);
+
+                contentStream.addRect(550, 670, 100, 100);
+                contentStream.fill();
+                contentStream.close();
+            }
+            document.save(file);
+
+            // split pdf document to get only report table page
+            Splitter splitter = new Splitter();
+            List<PDDocument> pages = splitter.split(document);
+
+            PdfReader pdfReader = new PdfReader(file.getAbsolutePath());
+
+            for (int i = 2; i <= pages.subList(1, pages.size()).size() + 1; i++)
+            {
+                if (!PdfTextExtractor.getTextFromPage(pdfReader, i).contains("About this Report"))
+                {
+                    PDDocument pageToMerge = pages.get(i - 1);
+
+                    ByteArrayOutputStream out = new ByteArrayOutputStream();
+                    pageToMerge.save(out);
+                    pageToMerge.close();
+                    ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
+                    pdfMergerUtility.addSource(in);
+                }
+                else
+                {
+                    break;
+                }
+
+            }
+
+            document.close();
+            pdfReader.close();
+            file.delete();
+
+        }
+        // Merges the documents together and creates an in-memory copy of the new combined document
+        pdfMergerUtility.setDestinationStream(fileOutputStream);
+        // using at most 32MB memory, the rest goes to disk
+        MemoryUsageSetting memoryUsageSetting = MemoryUsageSetting.setupMixed(PDFUtils.MAX_MAIN_MEMORY_BYTES);
+        pdfMergerUtility.mergeDocuments(memoryUsageSetting);
+
+        fileOutputStream.close();
+        // set new page numbers
+        try (PDDocument doc = PDDocument.load(temp))
+        {
+            PDFont font = PDType1Font.HELVETICA;
+            float fontSize = 8.0f;
+
+            for (int i = 1; i <= doc.getNumberOfPages(); i++)
+            {
+                PDRectangle pageSize = doc.getPage(i - 1).getMediaBox();
+                float stringWidth = font.getStringWidth("Page " + i + " of " + doc.getNumberOfPages()) * fontSize / 1000f;
+                // calculate to center of the page
+                int rotation = doc.getPage(i - 1).getRotation();
+                boolean rotate = rotation == 90 || rotation == 270;
+                float pageWidth = rotate ? pageSize.getHeight() : pageSize.getWidth();
+                float pageHeight = rotate ? pageSize.getWidth() : pageSize.getHeight();
+                float centerX = rotate ? pageHeight / 1.05f : (pageWidth - stringWidth) / 2f;
+                float centerY = rotate ? (pageWidth - stringWidth) / 2f : pageHeight / 2f;
+
+                // append the content to the existing stream
+                try (PDPageContentStream contentStream = new PDPageContentStream(doc, doc.getPage(i - 1),
+                        PDPageContentStream.AppendMode.APPEND, true, true))
+                {
+                    contentStream.beginText();
+                    // set font and font size
+                    contentStream.setFont(font, fontSize);
+                    // set text color
+                    contentStream.setNonStrokingColor(0, 0, 0);
+                    if (rotate)
+                    {
+                        // rotate the text according to the page rotation
+                        contentStream.setTextMatrix(Matrix.getRotateInstance(Math.PI / 2, centerX, centerY));
+                    }
+                    else
+                    {
+                        contentStream.setTextMatrix(Matrix.getTranslateInstance(centerX, centerY));
+                    }
+                    contentStream.showText("Page " + i + " of " + doc.getNumberOfPages());
+                    contentStream.endText();
+                }
+            }
+
+            doc.save(fos);
+        }
+
+        return mergedPDFs;
+    }
+
     public PentahoReportUrl getReportUrl()
     {
         return reportUrl;
@@ -657,5 +817,15 @@ public class ReportServiceImpl implements ReportService
             CollectionPropertiesConfigurationService collectionPropertiesConfigurationService)
     {
         this.collectionPropertiesConfigurationService = collectionPropertiesConfigurationService;
+    }
+
+    public RestTemplate getRestTemplate()
+    {
+        return restTemplate;
+    }
+
+    public void setRestTemplate(RestTemplate restTemplate)
+    {
+        this.restTemplate = restTemplate;
     }
 }

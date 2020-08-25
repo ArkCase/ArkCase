@@ -4,6 +4,6 @@
 
     <bean id="reportOfInvestigationWorkflowListener" class="com.armedia.acm.forms.roi.service.ReportOfInvestigationWorkflowListener">
         <property name="fileWorkflowBusinessRule" ref="fileWorkflowBusinessRule"/>
-        <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
+        <property name="acmBpmnService" ref="processDefinitionManagementService"/>
     </bean>
 </beans>

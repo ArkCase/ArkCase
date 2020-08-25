@@ -152,6 +152,18 @@ public class DefaultPluggablePortalUserService implements PortalUserService
 
     /*
      * (non-Javadoc)
+     * @see com.armedia.acm.portalgateway.service.PortalUserService#regeneratePasswordReset(java.lang.String,
+     * com.armedia.acm.portalgateway.model.UserResetRequest)
+     */
+    @Override
+    public UserResetResponse regeneratePasswordReset(String portalId, UserResetRequest resetRequest) throws PortalUserServiceException
+    {
+        log.debug("Regenerating password reset requested by [{}] user at portal with [{}] ID.", resetRequest.getEmailAddress(), portalId);
+        return getServiceProvider().regeneratePasswordReset(portalId, resetRequest);
+    }
+
+    /*
+     * (non-Javadoc)
      * @see com.armedia.acm.portalgateway.service.PortalUserService#checkPasswordResetStatus(java.lang.String,
      * java.lang.String)
      */

@@ -183,7 +183,23 @@ angular.module('tasks').controller(
                             angular.forEach($scope.filesToUpload, function (value) {
                                 formData.append('files', value);
                             });
-                            TaskNewTaskService.reviewNewDocuments(formData).then(reviewDocumentTaskSuccessCallback,errorCallback);
+                            TaskNewTaskService.reviewNewDocuments(formData, $scope.selectedBusinessProcessType).then(reviewDocumentTaskSuccessCallback,errorCallback);
+                        } else if ($scope.documentsToReview && $scope.selectedBusinessProcessType == 'acmDocumentSingleTaskWorkflow' && $scope.filesToUpload.length < 1) {
+                            taskData.documentsToReview = processDocumentsUnderReview();
+                            TaskNewTaskService.reviewDocuments(taskData, $scope.selectedBusinessProcessType).then(reviewDocumentTaskSuccessCallback, errorCallback);
+                        }
+                        else if (($scope.documentsToReview || $scope.taskType != 'REVIEW_DOCUMENT') && $scope.selectedBusinessProcessType == 'acmDocumentSingleTaskWorkflow' && $scope.filesToUpload)  {
+                            taskData.documentsToReview = processDocumentsUnderReview();
+                            var formData = new FormData();
+                            var data = new Blob([ angular.toJson(JSOG.encode(Util.omitNg(taskData))) ], {
+                                type: 'application/json'
+                            });
+                            formData.append('task', data);
+                            formData.append('businessProcessName',$scope.selectedBusinessProcessType);
+                            angular.forEach($scope.filesToUpload, function (value) {
+                                formData.append('files', value);
+                            });
+                            TaskNewTaskService.reviewNewDocuments(formData, $scope.selectedBusinessProcessType).then(reviewDocumentTaskSuccessCallback, errorCallback);
                         }
                         else {
                             taskData.documentsToReview = processDocumentsUnderReview();
@@ -196,10 +212,10 @@ angular.module('tasks').controller(
                                 formData.append('files', value);
                             });
                             TaskNewTaskService.saveAdHocTask(formData).then(saveNewTaskSuccessCallback, errorCallback);
-                            
+
                         }
                     };
-                    
+
 
                     function reviewDocumentTaskSuccessCallback(data) {
                         $scope.saved = false;
@@ -302,7 +318,7 @@ angular.module('tasks').controller(
                         $scope.config.data.assignee = null;
                         $scope.userName = "";
                     };
-                    
+
                     $scope.onSelectAttachment = function(file){
                         if($scope.opened.isFileAllowed){
                             $scope.filesToUpload.push(file);

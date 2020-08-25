@@ -339,6 +339,12 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
                 }
             case "DOC_REPO":
                 return Service.getLookupByLookupName("documentPersonTypes");
+            case "CONSULTATION":
+                if (initiator) {
+                    return Service.getLookupByLookupName("consultationPersonInitiatorTypes");
+                } else {
+                    return Service.getLookupByLookupName("consultationPersonTypes");
+                }
         }
     };
 
@@ -392,6 +398,7 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
                 return Service.getLookupByLookupName("organizationalParticipantTypes");
             case "COMPLAINT":
             case "CASE_FILE":
+            case "CONSULTATION":
             case "DOC_REPO":
                 return Service.getLookupByLookupName("entitiesParticipantTypes");
             case "FILE":
@@ -464,7 +471,15 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
      * @returns {Object} An array returned by $resource
      */
     Service.getAddressTypes = function () {
-        return Service.getLookupByLookupName("addressTypes");
+        Service.getAddressTypes = function () {
+            var selectEntry = {key: null, value: "core.lookups.addressTypes.selectAddressType"};
+            var addressTypes = [];
+            return Service.getLookupByLookupName("addressTypes").then(function (adresses) {
+                addressTypes = adresses;
+                addressTypes.unshift(selectEntry);
+                return addressTypes;
+            });
+        };
     };
 
     /**
@@ -680,7 +695,15 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
      * @returns {Object} An array returned by $resource
      */
     Service.getCountries = function () {
-        return Service.getLookupByLookupName("countries");
+        Service.getCountries = function () {
+            var selectEntry = {key: null, value: "core.lookups.countries.selectCountry"};
+            var countriesTypes = [];
+            return Service.getLookupByLookupName("countries").then(function (countries) {
+                countriesTypes = countries;
+                countriesTypes.unshift(selectEntry);
+                return countriesTypes;
+            });
+        };
     };
 
     /**
@@ -695,20 +718,6 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
      */
     Service.getPersonOrganizationRelationTypes = function () {
         return Service.getLookupByLookupName("personOrganizationRelationTypes");
-    };
-
-    /**
-     * @ngdoc method
-     * @name getOrganizationPersonRelationTypes
-     * @methodOf services:Object.LookupService
-     *
-     * @description
-     * Query list of organization-person relation types
-     *
-     * @returns {Object} An array returned by $resource
-     */
-    Service.getOrganizationPersonRelationTypes = function () {
-        return Service.getLookupByLookupName("organizationPersonRelationTypes");
     };
 
     /**
@@ -967,10 +976,14 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
      *
      * @returns {Object} An array returned by $resource
      */
-
     Service.getRequestCategories = function () {
-        return Service.getLookupByLookupName('requestCategory');
-
+        var selectEntry = {key: null, value: "Select Request Category"};
+        var requestCategories = [];
+        return Service.getLookupByLookupName("requestCategory").then(function (categories) {
+            requestCategories = categories;
+            requestCategories.unshift(selectEntry);
+            return requestCategories;
+        });
     };
 
     /**
@@ -985,8 +998,13 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
      */
 
     Service.getDeliveryMethodOfResponses = function () {
-        return Service.getLookupByLookupName('deliveryMethodOfResponses');
-
+        var selectEntry = {key: null, value: "core.lookups.deliveryMethodOfResponses.select"};
+        var deliveryMethods = [];
+        return Service.getLookupByLookupName("deliveryMethodOfResponses").then(function (methods) {
+            deliveryMethods = methods;
+            deliveryMethods.unshift(selectEntry);
+            return deliveryMethods;
+        });
     };
 
     /**
@@ -999,10 +1017,14 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
      *
      * @returns {Object} An array returned by $resource
      */
-
     Service.getPayFees = function () {
-        return Service.getLookupByLookupName('payFees');
-
+        var selectEntry = {key: null, value: "Select Pay Fee"};
+        var payFees = [];
+        return Service.getLookupByLookupName("payFees").then(function (fees) {
+            payFees = fees;
+            payFees.unshift(selectEntry);
+            return payFees;
+        });
     };
 
 
@@ -1043,36 +1065,35 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
         return LookupService.getLookups().then(function (lookups) {
             var lookupsDefs = [];
             if (lookups.standardLookup) {
-                for (var i = 0, len = lookups.standardLookup.length; i < len; i++) {
+                _.forEach(lookups.standardLookup, function (value, key) {
                     lookupsDefs.push({
-                        'name': lookups.standardLookup[i].name,
+                        'name': key,
                         'lookupType': 'standardLookup',
-                        'readonly': lookups.standardLookup[i].readonly
+                        'readonly': value.readonly
                     });
-                }
+                });
             }
             if (lookups.nestedLookup) {
-                for (var i = 0, len = lookups.nestedLookup.length; i < len; i++) {
+                _.forEach(lookups.nestedLookup, function (value, key) {
                     lookupsDefs.push({
-                        'name': lookups.nestedLookup[i].name,
+                        'name': key,
                         'lookupType': 'nestedLookup',
-                        'readonly': lookups.nestedLookup[i].readonly
+                        'readonly': value.readonly
                     });
-                }
+                });
             }
             if (lookups.inverseValuesLookup) {
-                for (var i = 0, len = lookups.inverseValuesLookup.length; i < len; i++) {
+                _.forEach(lookups.inverseValuesLookup, function (value, key) {
                     lookupsDefs.push({
-                        'name': lookups.inverseValuesLookup[i].name,
+                        'name': key,
                         'lookupType': 'inverseValuesLookup',
-                        'readonly': lookups.inverseValuesLookup[i].readonly
+                        'readonly': value.readonly
                     });
-                }
+                });
             }
 
             return lookupsDefs;
         });
-
     };
 
     /**
@@ -1106,16 +1127,22 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
      */
     Service.getLookupByLookupName = function (name) {
         return LookupService.getLookups().then(function (lookups) {
+            var lookup;
             for (var lookupType in lookups) {
                 if (lookups.hasOwnProperty(lookupType)) {
-                    for (var i = 0, len = lookups[lookupType].length; i < len; i++) {
-                        if (lookups[lookupType][i].name == name) {
-                            // return a deep copy of the lookup not to allow clients to change the original object
-                            return _.cloneDeep(lookups[lookupType][i].entries);
-                        }
-                    }
+                    _.map(lookups, function (value, key) {
+                        _.forEach(value, function (value, key) {
+                            if (key === name) {
+                                lookup = value.entries;
+                            }
+                        });
+
+                    });
                 }
             }
+
+            // return a deep copy of the lookup not to allow clients to change the original object
+            return _.cloneDeep(lookup);
         });
     };
 

@@ -100,7 +100,6 @@ public class RefreshScope implements Scope, BeanFactoryPostProcessor
     @Override
     public void registerDestructionCallback(String name, final Runnable callback)
     {
-        logger.info("DESTRUCTION CALLBACK");
     }
 
     @Override

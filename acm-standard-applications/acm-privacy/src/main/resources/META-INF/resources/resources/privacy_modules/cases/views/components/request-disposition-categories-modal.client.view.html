@@ -1,0 +1,23 @@
+<div class="modal-header">
+    <h3>
+        <span translate>cases.comp.requestDispositionCategory.modal.title</span>
+    </h3>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-md-12">
+            <label class="control-label" translate> cases.comp.main.dispositionType.label</label>
+            <select ng-model="requestDispositionCategory" class="form-control input-md"
+                    ng-options="requestDispositionCategory.key as requestDispositionCategory.value | translate for requestDispositionCategory in requestDispositionCategories">
+            </select>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-secondary" ng-click="onClickCancel()">
+        <span translate>cases.comp.requestDispositionCategory.modal.buttons.cancel</span>
+    </button>
+    <button class="btn btn-primary" ng-disabled="requestDispositionCategory == null" ng-click="onClickSave()">
+        <span translate>cases.comp.requestDispositionCategory.modal.buttons.save</span>
+    </button>
+</div>

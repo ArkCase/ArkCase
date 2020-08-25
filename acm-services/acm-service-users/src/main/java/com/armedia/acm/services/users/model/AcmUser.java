@@ -29,6 +29,8 @@ package com.armedia.acm.services.users.model;
 
 import com.armedia.acm.data.converter.LocalDateConverter;
 import com.armedia.acm.services.users.model.group.AcmGroup;
+import com.armedia.acm.services.users.model.ldap.AcmLdapConstants;
+import com.armedia.acm.services.users.model.ldap.MapperUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.MoreObjects;
 
@@ -431,6 +433,14 @@ public class AcmUser implements Serializable
     public void setPasswordResetToken(PasswordResetToken passwordResetToken)
     {
         this.passwordResetToken = passwordResetToken;
+    }
+
+    public void invalidateUser(AcmUser acmUser)
+    {
+        acmUser.setUserState(AcmUserState.INVALID);
+        String invalidDn = MapperUtils.appendToDn(acmUser.getDistinguishedName(), AcmLdapConstants.DC_DELETED);
+        acmUser.setDistinguishedName(invalidDn);
+        acmUser.setDeletedAt(new Date());
     }
 
     @Override

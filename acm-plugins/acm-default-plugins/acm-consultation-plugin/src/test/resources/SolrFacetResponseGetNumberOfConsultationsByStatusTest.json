@@ -1,0 +1,41 @@
+{
+    "responseHeader": {
+        "status": 0,
+        "QTime": 0,
+        "params": {
+            "q": "object_type_s:CONSULTATION",
+            "facet.field": "status_s",
+            "indent": "true",
+            "facet.mincount": "1",
+            "rows": "0",
+            "wt": "json",
+            "facet": "true"
+        }
+    },
+    "response": {
+        "numFound": 783,
+        "start": 0,
+        "docs": []
+    },
+    "facet_counts": {
+        "facet_queries": {},
+        "facet_fields": {
+            "status_s": [
+                "DRAFT",
+                152,
+                "ACTIVE",
+                431,
+                "Inactive",
+                20,
+                "Closed",
+                176,
+                "Deleted",
+                4
+            ]
+        },
+        "facet_dates": {},
+        "facet_ranges": {},
+        "facet_intervals": {},
+        "facet_heatmaps": {}
+    }
+}

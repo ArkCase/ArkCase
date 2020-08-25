@@ -33,7 +33,7 @@ angular.module('document-details').controller(
                     };
 
                     $scope.showFailureMessage = function showFailureMessage() {
-                        DialogService.alert($scope.transcribeObjectModel.failureReason);
+                        DialogService.alert($scope.transcribeObjectModel.failureReason.split(".", 1));
                     }
 
                      function onShowLoader() {
@@ -66,6 +66,11 @@ angular.module('document-details').controller(
 
                     function onSelectAnnotationTags(data) {
                         var params = $scope.allAnnotationTags;
+                        // from Snowbound v5.2 we have data.selectedAnnotations
+                        if (data.selectedAnnotations) {
+                            params.annotationTags = $scope.allAnnotationTags;
+                            params.existingAnnotationTags = data.selectedAnnotations;
+                        }
                         var modalInstance = $modal.open({
                             animation: true,
                             templateUrl: 'modules/document-details/views/components/annotation-tags-modal.client.view.html',
@@ -113,6 +118,7 @@ angular.module('document-details').controller(
                 $scope.showVideoPlayer = false;
                 $scope.showPdfJs = false;
                 $scope.transcriptionTabActive = false;
+                $scope.transcriptionTabViewEnabled = false;
                 $scope.ocrInfoActive = false;
                 $scope.comprehendMedicalEnabled = false;
                 $scope.loaderOpened = false;
@@ -334,6 +340,7 @@ angular.module('document-details').controller(
                         }
 
                         $scope.transcriptionTabActive = $scope.showVideoPlayer && $scope.transcribeEnabled;
+                        $scope.transcriptionTabViewEnabled = $scope.transcriptionTabActive;
                     });
 
                     $scope.onPlayerReady = function(API) {

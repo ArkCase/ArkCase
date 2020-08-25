@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.armedia.acm</groupId>
+    <artifactId>ui-privacy</artifactId>
+    <version>3.3.3-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>ArkCase Case Management System UI</name>
+    <description>Cloud-based case management system with a very nice UI</description>
+    <inceptionYear>2014</inceptionYear>
+    <licenses>
+        <license>
+            <name>GNU Lesser General Public License</name>
+            <url>https://www.gnu.org/licenses/lgpl-3.0.en.html</url>
+        </license>
+    </licenses>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+    <organization>
+        <name>ArkCase LLC</name>
+        <url>http://www.arkcase.com</url>
+    </organization>
+    <developers>
+        <developer>
+            <name>David Miller</name>
+            <email>david.miller@arkcase.com</email>
+            <roles>
+                <role>Technical Lead</role>
+            </roles>
+            <timezone>America/New_York</timezone>
+        </developer>
+        <developer>
+            <name>Riste Tutureski</name>
+            <email>riste.tutureski@armedia.com</email>
+            <roles>
+                <role>Architect</role>
+            </roles>
+            <timezone>Europe/Skopje</timezone>
+        </developer>
+    </developers>
+    <contributors>
+        <contributor>
+            <name>James Bailey</name>
+            <email>james.bailey@arkcase.com</email>
+            <roles>
+                <role>Sponsor</role>
+            </roles>
+            <timezone>America/New_York</timezone>
+        </contributor>
+    </contributors>
+    <distributionManagement>
+        <repository>
+            <id>${release-repository.id}</id>
+            <name>${release-repository.name}</name>
+            <url>${release-repository.url}</url>
+        </repository>
+    </distributionManagement>
+    <build>
+      <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <executions>
+                <execution>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>single</goal>
+                    </goals>
+                    <configuration>
+                        <appendAssemblyId>false</appendAssemblyId>
+                        <descriptors>
+                            <descriptor>assembly.xml</descriptor>
+                        </descriptors>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+      </plugins>
+    </build>
+</project>

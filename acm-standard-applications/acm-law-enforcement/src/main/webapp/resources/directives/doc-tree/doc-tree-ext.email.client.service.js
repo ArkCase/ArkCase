@@ -319,6 +319,9 @@ angular.module('directives').controller('directives.DocTreeEmailDialogController
         case 'SEND_HYPERLINKS':
             $scope.emailDataModel.body = $translate.instant('common.directive.docTree.email.defaultBodyLinks');
             break;
+        case 'SEND_ATTACHMENTS_AND_HYPERLINKS':
+            $scope.emailDataModel.body = $translate.instant('common.directive.docTree.email.defaultBodyAttachmentsAndLinks');
+            break;
         }
     };
 
@@ -370,6 +373,9 @@ angular.module('directives').controller('directives.DocTreeEmailDialogController
                 break;
             case 'SEND_HYPERLINKS':
                 $scope.emailDataModel.body = $translate.instant('common.directive.docTree.email.defaultBodyLinks');
+                break;
+            case 'SEND_ATTACHMENTS_AND_HYPERLINKS':
+                $scope.emailDataModel.body = $translate.instant('common.directive.docTree.email.defaultBodyAttachmentsAndLinks');
                 break;
             }
         }

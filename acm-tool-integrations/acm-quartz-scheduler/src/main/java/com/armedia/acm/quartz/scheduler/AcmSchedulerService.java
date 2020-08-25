@@ -40,6 +40,7 @@ import org.quartz.Trigger;
 import org.quartz.TriggerKey;
 import org.quartz.impl.matchers.GroupMatcher;
 import org.quartz.utils.Key;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -151,6 +152,7 @@ public class AcmSchedulerService
         }
     }
 
+    @Transactional
     public void deleteJob(String name)
     {
         try
@@ -165,6 +167,7 @@ public class AcmSchedulerService
         }
     }
 
+    @Transactional
     public void scheduleJob(JobDetail jobDetail, Trigger trigger)
     {
         String jobName = jobDetail.getKey().getName();
@@ -181,6 +184,7 @@ public class AcmSchedulerService
         }
     }
 
+    @Transactional
     public void rescheduleJob(String oldTriggerName, Trigger newTrigger)
     {
         try
@@ -198,6 +202,7 @@ public class AcmSchedulerService
         }
     }
 
+    @Transactional
     public void pauseJob(String name)
     {
         try
@@ -214,6 +219,7 @@ public class AcmSchedulerService
         }
     }
 
+    @Transactional
     public void resumeJob(String name)
     {
         try
@@ -256,6 +262,7 @@ public class AcmSchedulerService
         }
     }
 
+    @Transactional
     public void triggerJob(String jobName)
     {
         try
@@ -269,6 +276,7 @@ public class AcmSchedulerService
         }
     }
 
+    @Transactional
     public void triggerJob(String jobName, JobDataMap jobDataMap)
     {
         try

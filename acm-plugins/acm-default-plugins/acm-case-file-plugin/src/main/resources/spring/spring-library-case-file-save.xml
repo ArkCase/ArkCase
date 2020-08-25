@@ -50,7 +50,7 @@
     <bean id="caseFileStartBusinessProcessIfNeededHandler"
         class="com.armedia.acm.plugins.casefile.pipeline.postsave.CaseFileStartBusinessProcessIfNeededHandler">
         <property name="startBusinessProcessBusinessRule" ref="caseFileStartBusinessProcessBusinessRule"/>
-        <property name="startBusinessProcessService" ref="startBusinessProcessService"/>
+        <property name="acmBpmnService" ref="processDefinitionManagementService"/>
     </bean>
 
     <bean id="pdfCasefileDocumentGenerator"

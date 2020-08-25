@@ -90,6 +90,74 @@
             ]
         },
         {
+            "id": "myConsultations",
+            "title": "dashboard.comp.myConsultations.title",
+            "configurable": true,
+            "enableFiltering": false,
+            "paginationPageSizes": [
+                5,
+                10,
+                25
+            ],
+            "paginationPageSize": 5,
+            "columnDefs": [
+                {
+                    "field": "alerts",
+                    "displayName": "",
+                    "cellTemplate": "<div><a ng-if=\"row.entity.isOverdue\" tooltip=\"{{'dashboard.widgets.myConsultations.table.overdue.tooltip' | translate}}\" tooltip-append-to-body=\"true\" tooltip-class=\"tooltip-overdue\"><i class=\"fa fa-exclamation-circle icon-overdue\"></i></a><a ng-if=\"row.entity.isDeadline\" tooltip=\"{{'dashboard.widgets.myConsultations.table.deadline.tooltip' | translate}}\" tooltip-append-to-body=\"true\" tooltip-class=\"tooltip-due-soon\"><i class=\"fa fa-exclamation-triangle icon-due-soon\"></i></a></div>",
+                    "width": 40,
+                    "enableSorting": false,
+                    "enableColumnMenu": false
+                },
+                {
+                    "name": "name",
+                    "displayName": "dashboard.widgets.myConsultations.table.header.consultationId",
+                    "headerCellFilter": "translate",
+                    "enableSorting": true,
+                    "cellTemplate": "<a data-ui-sref=\"consultations.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>"
+                },
+                {
+                    "name": "title_parseable",
+                    "sortField": "title_parseable_lcs",
+                    "displayName": "dashboard.widgets.myConsultations.table.header.title",
+                    "headerCellFilter": "translate",
+                    "enableSorting": true,
+                    "cellTemplate": "<a data-ui-sref=\"consultations.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>"
+                },
+                {
+                    "name": "priority_lcs",
+                    "displayName": "dashboard.widgets.myConsultations.table.header.priority",
+                    "headerCellFilter": "translate",
+                    "enableSorting": true
+                },
+                {
+                    "name": "status_lcs",
+                    "displayName": "dashboard.widgets.myConsultations.table.header.status",
+                    "headerCellFilter": "translate",
+                    "enableSorting": true
+                },
+                {
+                    "name": "assignee_id_lcs",
+                    "field": "assignee_full_name_lcs",
+                    "displayName": "dashboard.widgets.myConsultations.table.header.assignee",
+                    "headerCellFilter": "translate",
+                    "enableSorting": true
+                },
+                {
+                    "name": "dueDate_tdt",
+                    "displayName": "dashboard.widgets.myConsultations.table.header.dueDate",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.dueDate_tdt | date : 'shortDate' }}</div>"
+                },
+                {
+                    "name": "modified_date_tdt",
+                    "displayName": "dashboard.widgets.myConsultations.table.header.modified",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : 'shortDate' }}</div>"
+                }
+            ]
+        },
+        {
             "id": "myTasks",
             "title": "dashboard.comp.myTasks.title",
             "configurable": true,
@@ -766,6 +834,31 @@
                 "ADF_WIDGET_TOOLTIP_EDIT": "編輯小部件配置",
                 "ADF_WIDGET_TOOLTIP_FULLSCREEN": "全屏幕小部件",
                 "ADF_WIDGET_TOOLTIP_REMOVE": "刪除小部件"
+            }
+        },
+        {
+            "iso": "ar",
+            "translations": {
+                "ADF_COMMON_CLOSE": "قريب",
+                "ADF_COMMON_DELETE": "حذف",
+                "ADF_COMMON_TITLE": "عنوان",
+                "ADF_COMMON_CANCEL": "إلغاء",
+                "ADF_COMMON_APPLY": "تطبيق",
+                "ADF_COMMON_EDIT_DASHBOARD": "تعديل لوحة القيادة",
+                "ADF_EDIT_DASHBOARD_STRUCTURE_LABEL": "بناء",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_ADD": "أضف أداة جديدة",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_SAVE": "احفظ التغييرات",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_EDIT_MODE": "تمكين وضع التحرير",
+                "ADF_DASHBOARD_TITLE_TOOLTIP_UNDO": "التراجع عن التغييرات",
+                "ADF_WIDGET_ADD_HEADER": "أضف أداة جديدة",
+                "ADF_WIDGET_DELETE_CONFIRM_MESSAGE": "هل أنت متأكد أنك تريد حذف هذه القطعة؟",
+                "ADF_WIDGET_TOOLTIP_REFRESH": "إعادة تحميل محتوى القطعة",
+                "ADF_WIDGET_TOOLTIP_MOVE": "تغيير موقع القطعة",
+                "ADF_WIDGET_TOOLTIP_COLLAPSE": "أداة طي",
+                "ADF_WIDGET_TOOLTIP_EXPAND": "قم بتوسيع القطعة",
+                "ADF_WIDGET_TOOLTIP_EDIT": "تحرير تكوين القطعة",
+                "ADF_WIDGET_TOOLTIP_FULLSCREEN": "القطعة ملء الشاشة",
+                "ADF_WIDGET_TOOLTIP_REMOVE": "إزالة القطعة"
             }
         }
     ]

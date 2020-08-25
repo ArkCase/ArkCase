@@ -40,6 +40,8 @@ import com.armedia.acm.services.users.model.AcmUser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.List;
+
 import gov.foia.model.FOIAPerson;
 import gov.foia.model.FOIARequest;
 import gov.foia.model.PortalFOIAPerson;
@@ -62,28 +64,33 @@ public class FOIARequestPortalUserParticipantsHandler implements PipelineHandler
         if (entity.getId() != null && requester instanceof PortalFOIAPerson)
         {
 
-            AcmUser portalUser = getUserDao().findByEmailAddress(requester.getDefaultEmail().getValue()).get(0);
+            List<AcmUser> portalUsers = getUserDao().findByEmailAddress(requester.getDefaultEmail().getValue());
 
-            boolean isPortalUserParticipant = entity.getParticipants().stream()
-                    .anyMatch(
-                            p -> ParticipantTypes.READER.equals(p.getParticipantType())
-                                    && p.getParticipantLdapId().equals(portalUser.getUserId()));
-
-            if (!isPortalUserParticipant)
+            if (portalUsers.size() > 0)
             {
-                AcmParticipant addedParticipant = null;
-                try
-                {
-                    addedParticipant = getAcmParticipantService().saveParticipant(portalUser.getUserId(),
-                            ParticipantTypes.READER, entity.getId(), entity.getObjectType());
+                AcmUser portalUser = portalUsers.get(0);
 
-                    entity.getParticipants().add(addedParticipant);
+                boolean isPortalUserParticipant = entity.getParticipants().stream()
+                        .anyMatch(
+                                p -> ParticipantTypes.READER.equals(p.getParticipantType())
+                                        && p.getParticipantLdapId().equals(portalUser.getUserId()));
 
-                    log.debug("Successfully set portal user as participant for case file: [{}]", entity.getId());
-                }
-                catch (AcmAccessControlException e)
+                if (!isPortalUserParticipant)
                 {
-                    log.error("Unable to set portal user as participant for case file: [{}]", entity.getId());
+                    AcmParticipant addedParticipant = null;
+                    try
+                    {
+                        addedParticipant = getAcmParticipantService().saveParticipant(portalUser.getUserId(),
+                                ParticipantTypes.READER, entity.getId(), entity.getObjectType());
+
+                        entity.getParticipants().add(addedParticipant);
+
+                        log.debug("Successfully set portal user as participant for case file: [{}]", entity.getId());
+                    }
+                    catch (AcmAccessControlException e)
+                    {
+                        log.error("Unable to set portal user as participant for case file: [{}]", entity.getId());
+                    }
                 }
             }
         }
@@ -116,7 +123,4 @@ public class FOIARequestPortalUserParticipantsHandler implements PipelineHandler
     {
         this.userDao = userDao;
     }
-
-    // getAcmParticipantService().getParticipantByLdapIdParticipantTypeObjectTypeObjectId(portalUser.getAcmUserId(),
-    // ParticipantTypes.READER, entity.getObjectType(), entity.getId()).;
 }

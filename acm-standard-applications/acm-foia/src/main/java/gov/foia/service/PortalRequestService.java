@@ -44,6 +44,7 @@ import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.services.users.dao.UserDao;
+import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.service.group.GroupService;
 
 import org.apache.commons.fileupload.FileItem;
@@ -100,6 +101,8 @@ import gov.foia.model.WithdrawRequest;
  */
 public class PortalRequestService
 {
+    private static final int MAX_READING_ROOM_RESULTS = 500;
+
     private final Logger log = LogManager.getLogger(getClass());
 
     private FOIARequestDao requestDao;
@@ -236,7 +239,7 @@ public class PortalRequestService
 
         query += "&fl=object_id_s,title_parseable,ext_s,parent_ref_s,modified_date_tdt";
 
-        String results = getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, 0, 99999, "", true, "",
+        String results = getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, 0, MAX_READING_ROOM_RESULTS, "", true, "",
                 false, false, "catch_all");
 
         SearchResults searchResults = new SearchResults();
@@ -305,33 +308,37 @@ public class PortalRequestService
             for (int i = 0; i < membersArray.length(); i++)
             {
                 JSONObject memberObject = membersArray.getJSONObject(i);
-                String emailAddress = getSearchResults().extractString(memberObject, "email_lcs");
-
-                officersGroupMemberEmailAddresses.add(emailAddress);
+                String memberState = getSearchResults().extractString(memberObject, "status_lcs");
+                if (memberState.equals(AcmUserState.VALID.name()))
+                {
+                    String emailAddress = getSearchResults().extractString(memberObject, "email_lcs");
+                    officersGroupMemberEmailAddresses.add(emailAddress);
+                }
             }
         }
 
         if (!officersGroupMemberEmailAddresses.isEmpty())
         {
-            log.debug("Preparing requestDownload notification to [{}]",
-                    officersGroupMemberEmailAddresses.stream().collect(Collectors.joining(",")));
+            String emailAddresses = officersGroupMemberEmailAddresses.stream()
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.joining(","));
+
+            log.debug("Preparing requestDownload notification to [{}]", emailAddresses);
 
             OffsetDateTime downloadedDateTime = OffsetDateTime.now(ZoneOffset.UTC);
             String downloadedDateTimeFormatted = DateTimeFormatter.ofPattern("yyyy-MM-dd / HH:mm:ss").format(downloadedDateTime);
 
-            Notification requestDownloadNotification = getNotificationService().createNotification(
-                    "requestDownloaded",
-                    String.format(translationService.translate(NotificationConstants.REQUEST_DOWNLOADED), request.getCaseNumber()),
-                    request.getObjectType(),
-                    request.getId(),
-                    request.getCaseNumber(),
-                    StringUtils.left(request.getDetails(), 1000),
-                    officersGroupMemberEmailAddresses.stream().filter(Objects::nonNull).collect(Collectors.joining(",")),
-                    SecurityContextHolder.getContext().getAuthentication().getName(),
-                    null,
-                    downloadedDateTimeFormatted);
+            Notification notification = notificationService.getNotificationBuilder()
+                    .newNotification("requestDownloaded",
+                            String.format(translationService.translate(NotificationConstants.REQUEST_DOWNLOADED), request.getCaseNumber()),
+                            request.getObjectType(), request.getId(), SecurityContextHolder.getContext().getAuthentication().getName())
+                    .forObjectWithNumber(request.getCaseNumber())
+                    .forObjectWithTitle(StringUtils.left(request.getDetails(), 1000))
+                    .withEmailAddresses(emailAddresses)
+                    .withNote(downloadedDateTimeFormatted)
+                    .build();
 
-            log.debug("Succesfully created requestDownload notification to [{}]", requestDownloadNotification.getEmailAddresses());
+            notificationService.saveNotification(notification);
         }
     }
 
@@ -344,7 +351,8 @@ public class PortalRequestService
 
         query += "&fl=name,title_parseable,description_no_html_tags_parseable";
 
-        String results = getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, 0, 99999, "");
+        // a query based on id can only have 1 result, so we only need max_rows of 1 below.
+        String results = getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, 0, 1, "");
 
         SearchResults searchResults = new SearchResults();
         JSONArray docRequests = searchResults.getDocuments(results);

@@ -35,15 +35,13 @@ import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
 import com.armedia.acm.plugins.ecm.service.PageCountService;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
-
+import gov.foia.model.FOIAEcmFileVersion;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.Date;
-
-import gov.foia.model.FOIAEcmFileVersion;
 
 /**
  * Created by joseph.mcgrady on 9/28/2015.
@@ -87,6 +85,7 @@ public class FOIAEcmFileMergedMetadataHandler implements PipelineHandler<EcmFile
             version.setVersionFileNameExtension(oldFile.getFileActiveVersionNameExtension());
             version.setReviewStatus("");
             version.setRedactionStatus("");
+            version.setFileHash(pipelineContext.getFileHash());
             oldFile.getVersions().add(version);
             oldFile.setModified(new Date());
             try

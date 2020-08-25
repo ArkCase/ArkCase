@@ -32,6 +32,7 @@ import com.armedia.acm.plugins.report.model.Report;
 
 import org.springframework.security.core.Authentication;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -72,5 +73,7 @@ public interface ReportService
     List<Report> sync() throws Exception;
 
     List<String> getRolesForReport(Boolean authorized, String reportId, int startRow, int maxRows, String sortBy, String sortDirection, String filterName);
+
+    File exportReportsPDFFormat(List<String> orderedReportTitles) throws Exception;
 
 }

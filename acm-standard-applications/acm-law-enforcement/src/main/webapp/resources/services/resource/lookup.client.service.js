@@ -37,11 +37,10 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
             }
         },
         _deleteLookup: {
-            url: "api/latest/service/config/lookups/:name",
+            url: "api/latest/service/config/lookups/:name/:lookupType",
             method: "DELETE",
             cache: false
         }
-
         /**
          * @ngdoc method
          * @name _getUsers
@@ -75,11 +74,17 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
             url: "api/latest/plugin/search/USER?n=1000&s=name asc",
             method: "GET",
             cache: false
+        },
+        _deleteSubLookup: {
+            url: "api/latest/service/config/lookups/:name/:parentName/sublookup",
+            method: "POST",
+            cache: false
         }
 
     });
 
     Service.SessionCacheNames = {
+
         USERS: "AcmUsers",
         USERS_BASIC: "AcmUsersBasic",
         USER_FULL_NAMES: "AcmUserFullNames",
@@ -445,19 +450,20 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
      *
      * @returns {Object} Promise
      */
-
-    Service.deleteLookup = function(lookupName) {
+    Service.deleteLookup = function (lookupName, lookupType) {
         var cacheConfigMap = new Store.SessionData(Service.SessionCacheNames.CONFIG_MAP);
         var configMap = cacheConfigMap.get();
         var lookups = Util.goodMapValue(configMap, 'lookups', null);
         return Util.serviceCall({
             service: Service._deleteLookup,
             param: {
-                name: lookupName
+                name: lookupName,
+                lookupType: lookupType
             },
             onSuccess: handleSaveLookupSuccess
         });
     };
+
 
     /**
      * @ngdoc method
@@ -549,6 +555,34 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
         return Util.serviceCall({
             service: Service._saveLookup,
             data: lookupDef,
+            onSuccess: handleSaveLookupSuccess
+        });
+    };
+
+    /**
+     * @ngdoc method
+     * @name deleteSubLookup
+     * @methodOf services.service:LookupService
+     *
+     * @description
+     * Delete sub lookup
+     *
+     * @param {String} subLookupName
+     * @param {String} parentName
+     * @param {Object} lookupDefinition
+     *
+     * @returns {Object} Promise
+     */
+    Service.deleteSubLookup = function (subLookupName, parentName, lookupDefinition) {
+        lookupDefinition.lookupEntriesAsJson = "";
+        lookupDefinition = JSON.parse(angular.toJson(lookupDefinition))
+        return Util.serviceCall({
+            service: Service._deleteSubLookup,
+            param: {
+                name: subLookupName,
+                parentName: parentName
+            },
+            data: lookupDefinition,
             onSuccess: handleSaveLookupSuccess
         });
     };

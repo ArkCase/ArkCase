@@ -30,6 +30,7 @@ package com.armedia.acm.services.notification.service;
 import com.armedia.acm.calendar.service.AcmCalendarEvent;
 import com.armedia.acm.calendar.service.Attendee;
 import com.armedia.acm.core.model.AcmEvent;
+import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 
 import org.apache.logging.log4j.LogManager;
@@ -67,14 +68,18 @@ public class CalendarEventAddedNotifier implements ApplicationListener<AcmEvent>
             {
                 emailAddresses = notificationUtils.getEmailForUser(event.getUserId());
             }
+
             logger.debug("On 'Calendar event added' event create notification for participants.");
 
-            notificationService.createNotification("calendarEventAdded", NotificationConstants.CALENDAR_EVENT_ADDED,
-                    event.getObjectType(), event.getObjectId(), null, null, event.getParentObjectId(), event.getParentObjectType(),
-                    event.getParentObjectName(), emailAddresses, event.getUserId(), null, null);
+            Notification notification = notificationService.getNotificationBuilder()
+                    .newNotification("calendarEventAdded", NotificationConstants.CALENDAR_EVENT_ADDED, event.getObjectType(),
+                            event.getObjectId(), event.getUserId())
+                    .forRelatedObjectTypeAndId(event.getParentObjectType(), event.getParentObjectId())
+                    .forRelatedObjectWithNumber(event.getParentObjectName())
+                    .withEmailAddresses(emailAddresses)
+                    .build();
 
-            logger.debug("Notification 'Calendar event added' created for object [{}] with id [{}] for participants with addresses [{}].",
-                    event.getParentObjectType(), event.getParentObjectId(), emailAddresses);
+            notificationService.saveNotification(notification);
         }
     }
 

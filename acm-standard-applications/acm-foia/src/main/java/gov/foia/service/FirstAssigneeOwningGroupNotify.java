@@ -28,50 +28,27 @@ package gov.foia.service;
  */
 
 import com.armedia.acm.plugins.casefile.model.CaseEvent;
-import com.armedia.acm.services.email.service.TemplatingEngine;
-import com.armedia.acm.services.labels.service.TranslationService;
-import com.armedia.acm.services.notification.dao.NotificationDao;
+import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.services.notification.helper.UserInfoHelper;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
+import com.armedia.acm.services.notification.service.NotificationService;
 import com.armedia.acm.services.notification.service.NotificationUtils;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
-import com.armedia.acm.services.search.exception.SolrException;
-import com.armedia.acm.services.search.service.SearchResults;
-import com.armedia.acm.services.users.dao.UserDao;
-import com.armedia.acm.services.users.model.AcmUser;
-import com.armedia.acm.services.users.service.group.GroupService;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.context.ApplicationListener;
-import org.springframework.core.io.Resource;
 
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 public class FirstAssigneeOwningGroupNotify implements ApplicationListener<CaseEvent>
 {
-    private transient Logger LOG = LogManager.getLogger(getClass());
-    private GroupService groupService;
-    private SearchResults searchResults;
-    private UserDao userDao;
+    private final transient Logger logger = LogManager.getLogger(getClass());
     private NotificationUtils notificationUtils;
-    private String emailBodyTemplate;
-    private TemplatingEngine templatingEngine;
-    private NotificationDao notificationDao;
-    private TranslationService translationService;
     private UserInfoHelper userInfoHelper;
+    private NotificationService notificationService;
 
     @Override
     public void onApplicationEvent(CaseEvent event)
@@ -83,92 +60,35 @@ public class FirstAssigneeOwningGroupNotify implements ApplicationListener<CaseE
 
             if (Objects.nonNull(owningGroupId))
             {
-                try
+                logger.debug("On 'Request created' event create notification for members of first assigned owning group [{}].",
+                        owningGroupId);
+
+                CaseFile caseFile = event.getCaseFile();
+
+                Set<String> emailAddresses = notificationUtils.getEmailAddressForParticipant(NotificationConstants.PARTICIPANT_TYPE_GROUP,
+                        owningGroupId);
+
+                if (Objects.nonNull(assigneeId))
                 {
-                    Map<String, String> usersEmails = new HashMap<>();
-
-                    String members = groupService.getUserMembersForGroup(owningGroupId, Optional.empty(), event.getEventUser());
-                    JSONArray membersArray = getSearchResults().getDocuments(members);
-                    for (int i = 0; i < membersArray.length(); i++)
+                    String assigneeEmail = notificationUtils.getEmailForUser(assigneeId);
+                    if (emailAddresses.contains(assigneeEmail))
                     {
-                        JSONObject memberObject = membersArray.getJSONObject(i);
-
-                        String userId = getSearchResults().extractString(memberObject, "object_id_s");
-                        String emailAddress = getSearchResults().extractString(memberObject, "email_lcs");
-
-                        usersEmails.putIfAbsent(userId, emailAddress);
-                    }
-
-                    if (Objects.nonNull(assigneeId))
-                    {
-                        if (usersEmails.containsKey(assigneeId))
-                        {
-                            usersEmails.remove(assigneeId);
-                        }
-                    }
-
-                    List<String> emailAddresses = new ArrayList<>(usersEmails.values());
-
-                    if (assigneeId != null && !assigneeId.isEmpty())
-                    {
-                        AcmUser user = getUserDao().findByUserId(assigneeId);
-
-                        String assigneeFullName = user.getFullName();
-
-                        Notification notification = new Notification();
-                        notification.setTemplateModelName("requestAssigned");
-                        notification.setParentType(event.getObjectType());
-                        notification.setParentId(event.getObjectId());
-                        notification.setEmailAddresses(emailAddresses.stream().collect(Collectors.joining(",")));
-                        notification.setEmailGroup(userInfoHelper.removeGroupPrefix(owningGroupId));
-                        notification.setTitle(String.format(translationService.translate(NotificationConstants.REQUEST_ASSIGNED),
-                                event.getCaseFile().getCaseNumber(), assigneeFullName));
-                        notification.setAttachFiles(false);
-                        notification.setUser(user.getUserId());
-                        notificationDao.save(notification);
+                        emailAddresses.remove(assigneeId);
                     }
                 }
-                catch (SolrException e)
-                {
-                    LOG.error("Solr error occurred while searching for owning group members", e);
-                }
-                catch (Exception e)
-                {
-                    LOG.error("Error occurred while trying to send Assignee email to owning group members", e);
-                }
 
+                Notification notification = notificationService.getNotificationBuilder()
+                        .newNotification("requestAssigned", NotificationConstants.REQUEST_ASSIGNED, event.getObjectType(),
+                                event.getObjectId(), assigneeId)
+                        .forObjectWithNumber(caseFile.getCaseNumber())
+                        .forObjectWithTitle(caseFile.getTitle())
+                        .withEmailAddresses(String.join(",", emailAddresses))
+                        .withEmailGroup(userInfoHelper.removeGroupPrefix(owningGroupId))
+                        .build(assigneeId);
+
+                notificationService.saveNotification(notification);
             }
         }
-    }
-
-    public GroupService getGroupService()
-    {
-        return groupService;
-    }
-
-    public void setGroupService(GroupService groupService)
-    {
-        this.groupService = groupService;
-    }
-
-    public SearchResults getSearchResults()
-    {
-        return searchResults;
-    }
-
-    public void setSearchResults(SearchResults searchResults)
-    {
-        this.searchResults = searchResults;
-    }
-
-    public UserDao getUserDao()
-    {
-        return userDao;
-    }
-
-    public void setUserDao(UserDao userDao)
-    {
-        this.userDao = userDao;
     }
 
     public NotificationUtils getNotificationUtils()
@@ -181,51 +101,6 @@ public class FirstAssigneeOwningGroupNotify implements ApplicationListener<CaseE
         this.notificationUtils = notificationUtils;
     }
 
-    public String getEmailBodyTemplate()
-    {
-        return emailBodyTemplate;
-    }
-
-    public void setEmailBodyTemplate(Resource emailBodyTemplate) throws IOException
-    {
-        try (DataInputStream resourceStream = new DataInputStream(emailBodyTemplate.getInputStream()))
-        {
-            byte[] bytes = new byte[resourceStream.available()];
-            resourceStream.readFully(bytes);
-            this.emailBodyTemplate = new String(bytes, Charset.forName("UTF-8"));
-        }
-    }
-
-    public TemplatingEngine getTemplatingEngine()
-    {
-        return templatingEngine;
-    }
-
-    public void setTemplatingEngine(TemplatingEngine templatingEngine)
-    {
-        this.templatingEngine = templatingEngine;
-    }
-
-    public NotificationDao getNotificationDao()
-    {
-        return notificationDao;
-    }
-
-    public void setNotificationDao(NotificationDao notificationDao)
-    {
-        this.notificationDao = notificationDao;
-    }
-
-    public TranslationService getTranslationService()
-    {
-        return translationService;
-    }
-
-    public void setTranslationService(TranslationService translationService)
-    {
-        this.translationService = translationService;
-    }
-
     public UserInfoHelper getUserInfoHelper()
     {
         return userInfoHelper;
@@ -234,5 +109,15 @@ public class FirstAssigneeOwningGroupNotify implements ApplicationListener<CaseE
     public void setUserInfoHelper(UserInfoHelper userInfoHelper)
     {
         this.userInfoHelper = userInfoHelper;
+    }
+
+    public NotificationService getNotificationService()
+    {
+        return notificationService;
+    }
+
+    public void setNotificationService(NotificationService notificationService)
+    {
+        this.notificationService = notificationService;
     }
 }
