@@ -96,7 +96,7 @@ public class NiemExportServiceImpl implements NiemExportService
     {
         LOG.debug("Started exporting a single DOJ Yearly report section in NIEM XML Format");
 
-        List<Report> reportsToExport = reportService.getPentahoReports();
+        List<Report> acmReports = reportService.getPentahoReports();
         Map<String, String> dojYearlyReports = foiaConfig.getDojYearlyReports();
         Map<String, String> agencyIdentifiers = getComponentAgencies();
 
@@ -106,24 +106,17 @@ public class NiemExportServiceImpl implements NiemExportService
         File temp = File.createTempFile("reports-merged-file", ".xls");
         FileOutputStream fileOutputStream = new FileOutputStream(temp);
 
-        String dojReportPropertyName = dojYearlyReports.get(report.name());
+        List<Map<String, String>> data = exportPentahoReportToDataList(acmReports, dojYearlyReports, report);
 
-        Report acmReport = reportsToExport.stream().filter(rep -> rep.getPropertyName().equals(dojReportPropertyName)).findAny()
-                .orElse(null);
-
-        if (acmReport != null)
+        if (data != null)
         {
-            String reportPath = acmReport.getName();
-
-            String path = reportsConfig.getServerUrl() + reportsConfig.getReportUrl() + reportPath
-                    + "/service/export?format=CSV";
-
-            ResponseEntity<Resource> response = exportPenathoReportInCSV(path);
-
-            InputStream csvInputStream = response.getBody().getInputStream();
-            List<Map<String, String>> data = NiemExportUtils.getDataMapFromCSVInputStream(csvInputStream);
-
             appendReportSection(data, foiaAnnualReport, agencyIdentifiers, report);
+        }
+        else
+        {
+            Element emptyReportElement = document.createElement(report.getSectionName());
+            foiaAnnualReport.appendChild(emptyReportElement);
+            LOG.warn("Report section {} won't be included and may not exists.", report.name());
         }
 
         Transformer tf = TransformerFactory.newInstance().newTransformer();
@@ -143,7 +136,7 @@ public class NiemExportServiceImpl implements NiemExportService
     {
         LOG.debug("Started exporting all DOJ Yearly reports in NIEM XML Format");
 
-        List<Report> reportsToExport = reportService.getPentahoReports();
+        List<Report> acmReports = reportService.getPentahoReports();
         Map<String, String> dojYearlyReports = foiaConfig.getDojYearlyReports();
         Map<String, String> agencyIdentifiers = getComponentAgencies();
 
@@ -153,26 +146,28 @@ public class NiemExportServiceImpl implements NiemExportService
         File temp = File.createTempFile("reports-merged-file", ".xls");
         FileOutputStream fileOutputStream = new FileOutputStream(temp);
 
+        Map<String, List<Map<String, String>>> downloadedReportsData = Arrays.asList(DOJReport.values())
+                .parallelStream()
+                .map(report -> {
+
+                    List<Map<String, String>> data = exportPentahoReportToDataList(acmReports, dojYearlyReports, report);
+                    return new AbstractMap.SimpleEntry<>(report.name(), data);
+
+                })
+                .collect(HashMap::new, (m, v) -> m.put(v.getKey(), v.getValue()), HashMap::putAll);
+
         for (DOJReport report : DOJReport.values())
         {
-            String dojReportPropertyName = dojYearlyReports.get(report.name());
-
-            Report acmReport = reportsToExport.stream().filter(rep -> rep.getPropertyName().equals(dojReportPropertyName)).findAny()
-                    .orElse(null);
-
-            if (acmReport != null)
+            List<Map<String, String>> data = downloadedReportsData.get(report.name());
+            if (data != null)
             {
-                String reportPath = acmReport.getName();
-
-                String path = reportsConfig.getServerUrl() + reportsConfig.getReportUrl() + reportPath
-                        + "/service/export?format=CSV";
-
-                ResponseEntity<Resource> response = exportPenathoReportInCSV(path);
-
-                InputStream csvInputStream = response.getBody().getInputStream();
-                List<Map<String, String>> data = NiemExportUtils.getDataMapFromCSVInputStream(csvInputStream);
-
                 appendReportSection(data, foiaAnnualReport, agencyIdentifiers, report);
+            }
+            else
+            {
+                Element emptyReportElement = document.createElement(report.getSectionName());
+                foiaAnnualReport.appendChild(emptyReportElement);
+                LOG.warn("Report section {} won't be included and may not exists.", report.name());
             }
         }
 
@@ -186,6 +181,38 @@ public class NiemExportServiceImpl implements NiemExportService
         LOG.debug("Finished exporting all DOJ Yearly reports in NIEM XML Format");
 
         return temp;
+    }
+
+    private List<Map<String, String>> exportPentahoReportToDataList(List<Report> acmReports, Map<String, String> dojYearlyReports,
+            DOJReport report)
+    {
+        String dojReportPropertyName = dojYearlyReports.get(report.name());
+        Report acmReport = acmReports.stream().filter(rep -> rep.getPropertyName().equals(dojReportPropertyName)).findAny()
+                .orElse(null);
+
+        List<Map<String, String>> data = null;
+
+        if (acmReport != null)
+        {
+            String reportPath = acmReport.getName();
+
+            String path = reportsConfig.getServerUrl() + reportsConfig.getReportUrl() + reportPath
+                    + "/service/export?format=CSV";
+
+            ResponseEntity<Resource> response = exportPenathoReportInCSV(path);
+
+            try
+            {
+                InputStream csvInputStream = response.getBody().getInputStream();
+                data = NiemExportUtils.getDataMapFromCSVInputStream(csvInputStream);
+            }
+            catch (IOException e)
+            {
+                LOG.warn("Failed to export report {}.", reportPath);
+            }
+
+        }
+        return data;
     }
 
     @Override
@@ -231,21 +258,8 @@ public class NiemExportServiceImpl implements NiemExportService
 
     private ResponseEntity<Resource> exportPenathoReportInCSV(String path)
     {
-        SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
-        requestFactory.setReadTimeout(60 * 1000);
-        RestTemplate restTemplate = new RestTemplate(requestFactory);
-
-        String auth = reportsConfig.getServerUser() + ":" + reportsConfig.getServerPassword();
-        byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(Charset.forName("US-ASCII")));
-        String basicAuthenticationHeaderValue = "Basic " + new String(encodedAuth);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_OCTET_STREAM));
-        headers.set(HttpHeaders.AUTHORIZATION, basicAuthenticationHeaderValue);
-
-        org.springframework.http.HttpEntity<Object> entity = new org.springframework.http.HttpEntity<>("body", headers);
-
-        LOG.debug("Pentaho report PATH: [{}]", path);
+        RestTemplate restTemplate = getRestTemplate();
+        org.springframework.http.HttpEntity<Object> entity = buildRestEntity();
 
         return restTemplate.exchange(path, HttpMethod.GET, entity, Resource.class);
     }
@@ -2032,14 +2046,22 @@ public class NiemExportServiceImpl implements NiemExportService
         parentElement.appendChild(organizationAssociationElement);
     }
 
-    public RestTemplate getRestTemplate()
+    private RestTemplate getRestTemplate()
     {
-        return restTemplate;
+        SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
+        requestFactory.setReadTimeout(60 * 1000);
+        return new RestTemplate(requestFactory);
     }
 
-    public void setRestTemplate(RestTemplate restTemplate)
+    private org.springframework.http.HttpEntity<Object> buildRestEntity()
     {
-        this.restTemplate = restTemplate;
+        String auth = String.format("%s:%s", reportsConfig.getServerUser(), reportsConfig.getServerPassword());
+        byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(StandardCharsets.US_ASCII));
+        String basicAuthenticationHeaderValue = "Basic " + new String(encodedAuth);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_OCTET_STREAM));
+        headers.set(HttpHeaders.AUTHORIZATION, basicAuthenticationHeaderValue);
+        return new org.springframework.http.HttpEntity<>("body", headers);
     }
 
     public LookupDao getLookupDao()
