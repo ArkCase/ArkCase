@@ -1935,3 +1935,11 @@ textarea {
 .page-wrapper.collapsed .analytics-iframe { 
 	padding-right: 65px;
 }
+
+#adhoc-reports-iframe {
+    padding-right: 225px
+}
+
+.page-wrapper.collapsed #adhoc-reports-iframe {
+    padding-right: 65px
+}
