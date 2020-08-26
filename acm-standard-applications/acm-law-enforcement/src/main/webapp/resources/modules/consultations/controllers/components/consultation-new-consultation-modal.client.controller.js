@@ -168,6 +168,20 @@ angular.module('consultations').controller(
                     }
                 }
             };
+
+            $scope.changeStates = function (country) {
+                switch (country) {
+                    case 'US':
+                        $scope.states = $scope.usStates;
+                        break;
+                    case 'CA':
+                        $scope.states = $scope.canadaProvinces;
+                        break;
+                    case 'JP':
+                        $scope.states = $scope.japanStates;
+                        break;
+                }
+            };
             
             // -------------------  people --------------------------------------------------------------------
             $scope.searchPerson = function () {
