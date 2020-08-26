@@ -430,9 +430,7 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
      * @returns {Object} Promise
      */
     Service.getLookups = function() {
-        var cacheConfigMap = new Store.SessionData(Service.SessionCacheNames.CONFIG_MAP);
-        var configMap = cacheConfigMap.get();
-        var lookups = Util.goodMapValue(configMap, 'lookups', null);
+        var lookups = null;
         return Util.serviceCall({
             service: Service._getLookups,
             result: lookups,
