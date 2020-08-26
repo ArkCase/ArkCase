@@ -63,13 +63,17 @@ import javax.xml.transform.stream.StreamResult;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.time.Year;
+import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -684,7 +688,19 @@ public class NiemExportServiceImpl implements NiemExportService
         Element denialOtherReasonSectionElement = parent.getOwnerDocument().createElement(report.getSectionName());
 
         // The data needs to be rearranged in order to use the standard ways of generating elements
-        List<Map<String, String>> rearrangedData = rearrangeMultiLineData(data);
+        String descriptionColumn;
+        String quantityColumn;
+        if (report == DOJReport.REQUEST_DENIAL_OTHER_REASON)
+        {
+            descriptionColumn = "Description of \"Other\" Reasons for Denials from Chart B(1)";
+            quantityColumn = "Number of Times \"Other\" Reason Was Relied Upon";
+        }
+        else
+        {
+            descriptionColumn = "Description of \"Other\" Reasons for Denials from Chart C(2)";
+            quantityColumn = "Number of Times \"Other\" Reason Was Relied Upon";
+        }
+        List<Map<String, String>> rearrangedData = rearrangeMultiLineData(data, descriptionColumn, quantityColumn);
         List<Map<String, String>> filteredData = getDataWithComponentReferences(rearrangedData, agencyIdentifiers, report);
 
         filteredData.forEach(componentData -> appendOtherDenialReasonItem(denialOtherReasonSectionElement, componentData));
@@ -721,7 +737,8 @@ public class NiemExportServiceImpl implements NiemExportService
         parent.appendChild(componentOtherDenialReason);
     }
 
-    private List<Map<String, String>> rearrangeMultiLineData(List<Map<String, String>> data)
+    private List<Map<String, String>> rearrangeMultiLineData(List<Map<String, String>> data, String descriptionColumn,
+            String quantityColumn)
     {
         List<Map<String, String>> mainData = new ArrayList<>();
 
@@ -738,8 +755,6 @@ public class NiemExportServiceImpl implements NiemExportService
             for (Map<String, String> record : componentData)
             {
                 record.remove(AGENCY_IDENTIFIER_COLUMN);
-                String descriptionColumn = "Description of \"Other\" Reasons for Denial on Appeal from Chart C(2)";
-                String quantityColumn = "Number of Times \"Other\" Reason Was Relied Upon";
                 String description = record.get(descriptionColumn);
                 String quantity = record.get(quantityColumn);
 
@@ -910,6 +925,10 @@ public class NiemExportServiceImpl implements NiemExportService
         String medianNumberOfDays = record.get(track + "~Median Number of Days");
         String averageNumberOfDays = record.get(track + "~Average Number of Days");
 
+        if (!NumberUtils.isParsable(numberPending))
+        {
+            numberPending = "0";
+        }
         addElement(parent, "foia:PendingRequestQuantity", numberPending);
         if (NumberUtils.isParsable(numberPending) && Double.parseDouble(numberPending) > 0)
         {
@@ -1665,10 +1684,14 @@ public class NiemExportServiceImpl implements NiemExportService
 
         String fullTimeStaff = record.get("Number of \"Full-Time FOIA Employees\"");
         String equivalentStaff = record.get("Number of \"Equivalent Full-Time FOIA Employees\"");
-        String totalStaff = record.get("Total Number of \"Full-Time FOIA Staff\"");
+        String totalStaff = record.get("Total Number of \"Full- Time FOIA Staff\"");
         String processingCosts = record.get("Processing Costs");
         String litigationCosts = record.get("Litigation-Related Costs");
         String totalCosts = record.get("Total Costs");
+
+        processingCosts = NiemExportUtils.formatCurrencyToNiemExpectedFormat(processingCosts);
+        litigationCosts = NiemExportUtils.formatCurrencyToNiemExpectedFormat(litigationCosts);
+        totalCosts = NiemExportUtils.formatCurrencyToNiemExpectedFormat(totalCosts);
 
         addElement(personnelAndCostElement, "foia:FullTimeEmployeeQuantity", fullTimeStaff);
         addElement(personnelAndCostElement, "foia:EquivalentFullTimeEmployeeQuantity", equivalentStaff);
@@ -1716,12 +1739,19 @@ public class NiemExportServiceImpl implements NiemExportService
         String totalAmountOfFeesCollected = record.get("Total Amount of Fees Collected");
         String percentageOfTotalCosts = record.get("Percentage of Total Costs");
 
+        totalAmountOfFeesCollected = NiemExportUtils.formatCurrencyToNiemExpectedFormat(totalAmountOfFeesCollected);
         addElement(feesCollectedElement, "foia:FeesCollectedAmount", totalAmountOfFeesCollected);
+
+        float feesCollectedCostPercent;
         if (NumberUtils.isParsable(percentageOfTotalCosts))
         {
-            float feesCollectedCostPercent = Float.parseFloat(percentageOfTotalCosts);
-            addElement(feesCollectedElement, "foia:FeesCollectedCostPercent", String.format("%.4f", feesCollectedCostPercent));
+            feesCollectedCostPercent = Float.parseFloat(percentageOfTotalCosts);
         }
+        else
+        {
+            feesCollectedCostPercent = 0;
+        }
+        addElement(feesCollectedElement, "foia:FeesCollectedCostPercent", String.format("%.4f", feesCollectedCostPercent));
 
         parent.appendChild(feesCollectedElement);
     }
@@ -1800,7 +1830,7 @@ public class NiemExportServiceImpl implements NiemExportService
         subsectionPostElement.setAttribute("s:id", record.get("ComponentDataReference"));
 
         String postedByFOIAOffice = record.get("Number of Records Posted by the FOIA Office");
-        String postedByProgramOffices = record.get("Number of Records Posted by Program Offices");
+        String postedByProgramOffices = record.get("Number of Records Posted by the Program Office");
 
         addElement(subsectionPostElement, "foia:PostedbyFOIAQuantity", postedByFOIAOffice);
         addElement(subsectionPostElement, "foia:PostedbyProgramQuantity", postedByProgramOffices);
