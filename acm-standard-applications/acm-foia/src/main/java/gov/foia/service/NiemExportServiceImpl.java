@@ -35,16 +35,13 @@ import com.armedia.acm.plugins.report.service.ReportService;
 import com.armedia.acm.services.config.lookups.model.StandardLookupEntry;
 import com.armedia.acm.services.config.lookups.service.LookupDao;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -63,13 +60,16 @@ import javax.xml.transform.stream.StreamResult;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.time.Year;
+import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -96,7 +96,7 @@ public class NiemExportServiceImpl implements NiemExportService
     {
         LOG.debug("Started exporting a single DOJ Yearly report section in NIEM XML Format");
 
-        List<Report> reportsToExport = reportService.getPentahoReports();
+        List<Report> acmReports = reportService.getPentahoReports();
         Map<String, String> dojYearlyReports = foiaConfig.getDojYearlyReports();
         Map<String, String> agencyIdentifiers = getComponentAgencies();
 
@@ -106,24 +106,17 @@ public class NiemExportServiceImpl implements NiemExportService
         File temp = File.createTempFile("reports-merged-file", ".xls");
         FileOutputStream fileOutputStream = new FileOutputStream(temp);
 
-        String dojReportPropertyName = dojYearlyReports.get(report.name());
+        List<Map<String, String>> data = exportPentahoReportToDataList(acmReports, dojYearlyReports, report);
 
-        Report acmReport = reportsToExport.stream().filter(rep -> rep.getPropertyName().equals(dojReportPropertyName)).findAny()
-                .orElse(null);
-
-        if (acmReport != null)
+        if (data != null)
         {
-            String reportPath = acmReport.getName();
-
-            String path = reportsConfig.getServerUrl() + reportsConfig.getReportUrl() + reportPath
-                    + "/service/export?format=CSV";
-
-            ResponseEntity<Resource> response = exportPenathoReportInCSV(path);
-
-            InputStream csvInputStream = response.getBody().getInputStream();
-            List<Map<String, String>> data = NiemExportUtils.getDataMapFromCSVInputStream(csvInputStream);
-
             appendReportSection(data, foiaAnnualReport, agencyIdentifiers, report);
+        }
+        else
+        {
+            Element emptyReportElement = document.createElement(report.getSectionName());
+            foiaAnnualReport.appendChild(emptyReportElement);
+            LOG.warn("Report section {} won't be included and may not exists.", report.name());
         }
 
         Transformer tf = TransformerFactory.newInstance().newTransformer();
@@ -143,7 +136,7 @@ public class NiemExportServiceImpl implements NiemExportService
     {
         LOG.debug("Started exporting all DOJ Yearly reports in NIEM XML Format");
 
-        List<Report> reportsToExport = reportService.getPentahoReports();
+        List<Report> acmReports = reportService.getPentahoReports();
         Map<String, String> dojYearlyReports = foiaConfig.getDojYearlyReports();
         Map<String, String> agencyIdentifiers = getComponentAgencies();
 
@@ -153,26 +146,28 @@ public class NiemExportServiceImpl implements NiemExportService
         File temp = File.createTempFile("reports-merged-file", ".xls");
         FileOutputStream fileOutputStream = new FileOutputStream(temp);
 
+        Map<String, List<Map<String, String>>> downloadedReportsData = Arrays.asList(DOJReport.values())
+                .parallelStream()
+                .map(report -> {
+
+                    List<Map<String, String>> data = exportPentahoReportToDataList(acmReports, dojYearlyReports, report);
+                    return new AbstractMap.SimpleEntry<>(report.name(), data);
+
+                })
+                .collect(HashMap::new, (m, v) -> m.put(v.getKey(), v.getValue()), HashMap::putAll);
+
         for (DOJReport report : DOJReport.values())
         {
-            String dojReportPropertyName = dojYearlyReports.get(report.name());
-
-            Report acmReport = reportsToExport.stream().filter(rep -> rep.getPropertyName().equals(dojReportPropertyName)).findAny()
-                    .orElse(null);
-
-            if (acmReport != null)
+            List<Map<String, String>> data = downloadedReportsData.get(report.name());
+            if (data != null)
             {
-                String reportPath = acmReport.getName();
-
-                String path = reportsConfig.getServerUrl() + reportsConfig.getReportUrl() + reportPath
-                        + "/service/export?format=CSV";
-
-                ResponseEntity<Resource> response = exportPenathoReportInCSV(path);
-
-                InputStream csvInputStream = response.getBody().getInputStream();
-                List<Map<String, String>> data = NiemExportUtils.getDataMapFromCSVInputStream(csvInputStream);
-
                 appendReportSection(data, foiaAnnualReport, agencyIdentifiers, report);
+            }
+            else
+            {
+                Element emptyReportElement = document.createElement(report.getSectionName());
+                foiaAnnualReport.appendChild(emptyReportElement);
+                LOG.warn("Report section {} won't be included and may not exists.", report.name());
             }
         }
 
@@ -186,6 +181,38 @@ public class NiemExportServiceImpl implements NiemExportService
         LOG.debug("Finished exporting all DOJ Yearly reports in NIEM XML Format");
 
         return temp;
+    }
+
+    private List<Map<String, String>> exportPentahoReportToDataList(List<Report> acmReports, Map<String, String> dojYearlyReports,
+            DOJReport report)
+    {
+        String dojReportPropertyName = dojYearlyReports.get(report.name());
+        Report acmReport = acmReports.stream().filter(rep -> rep.getPropertyName().equals(dojReportPropertyName)).findAny()
+                .orElse(null);
+
+        List<Map<String, String>> data = null;
+
+        if (acmReport != null)
+        {
+            String reportPath = acmReport.getName();
+
+            String path = reportsConfig.getServerUrl() + reportsConfig.getReportUrl() + reportPath
+                    + "/service/export?format=CSV";
+
+            ResponseEntity<Resource> response = exportPenathoReportInCSV(path);
+
+            try
+            {
+                InputStream csvInputStream = response.getBody().getInputStream();
+                data = NiemExportUtils.getDataMapFromCSVInputStream(csvInputStream);
+            }
+            catch (IOException e)
+            {
+                LOG.warn("Failed to export report {}.", reportPath);
+            }
+
+        }
+        return data;
     }
 
     @Override
@@ -231,21 +258,8 @@ public class NiemExportServiceImpl implements NiemExportService
 
     private ResponseEntity<Resource> exportPenathoReportInCSV(String path)
     {
-        SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
-        requestFactory.setReadTimeout(60 * 1000);
-        RestTemplate restTemplate = new RestTemplate(requestFactory);
-
-        String auth = reportsConfig.getServerUser() + ":" + reportsConfig.getServerPassword();
-        byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(Charset.forName("US-ASCII")));
-        String basicAuthenticationHeaderValue = "Basic " + new String(encodedAuth);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_OCTET_STREAM));
-        headers.set(HttpHeaders.AUTHORIZATION, basicAuthenticationHeaderValue);
-
-        org.springframework.http.HttpEntity<Object> entity = new org.springframework.http.HttpEntity<>("body", headers);
-
-        LOG.debug("Pentaho report PATH: [{}]", path);
+        RestTemplate restTemplate = getReportService().buildReportsRestTemplate();
+        HttpEntity<Object> entity = getReportService().buildReportsRestEntity();
 
         return restTemplate.exchange(path, HttpMethod.GET, entity, Resource.class);
     }
@@ -670,7 +684,19 @@ public class NiemExportServiceImpl implements NiemExportService
         Element denialOtherReasonSectionElement = parent.getOwnerDocument().createElement(report.getSectionName());
 
         // The data needs to be rearranged in order to use the standard ways of generating elements
-        List<Map<String, String>> rearrangedData = rearrangeMultiLineData(data);
+        String descriptionColumn;
+        String quantityColumn;
+        if (report == DOJReport.REQUEST_DENIAL_OTHER_REASON)
+        {
+            descriptionColumn = "Description of \"Other\" Reasons for Denials from Chart B(1)";
+            quantityColumn = "Number of Times \"Other\" Reason Was Relied Upon";
+        }
+        else
+        {
+            descriptionColumn = "Description of \"Other\" Reasons for Denials from Chart C(2)";
+            quantityColumn = "Number of Times \"Other\" Reason Was Relied Upon";
+        }
+        List<Map<String, String>> rearrangedData = rearrangeMultiLineData(data, descriptionColumn, quantityColumn);
         List<Map<String, String>> filteredData = getDataWithComponentReferences(rearrangedData, agencyIdentifiers, report);
 
         filteredData.forEach(componentData -> appendOtherDenialReasonItem(denialOtherReasonSectionElement, componentData));
@@ -707,7 +733,8 @@ public class NiemExportServiceImpl implements NiemExportService
         parent.appendChild(componentOtherDenialReason);
     }
 
-    private List<Map<String, String>> rearrangeMultiLineData(List<Map<String, String>> data)
+    private List<Map<String, String>> rearrangeMultiLineData(List<Map<String, String>> data, String descriptionColumn,
+            String quantityColumn)
     {
         List<Map<String, String>> mainData = new ArrayList<>();
 
@@ -724,8 +751,6 @@ public class NiemExportServiceImpl implements NiemExportService
             for (Map<String, String> record : componentData)
             {
                 record.remove(AGENCY_IDENTIFIER_COLUMN);
-                String descriptionColumn = "Description of \"Other\" Reasons for Denial on Appeal from Chart C(2)";
-                String quantityColumn = "Number of Times \"Other\" Reason Was Relied Upon";
                 String description = record.get(descriptionColumn);
                 String quantity = record.get(quantityColumn);
 
@@ -896,6 +921,10 @@ public class NiemExportServiceImpl implements NiemExportService
         String medianNumberOfDays = record.get(track + "~Median Number of Days");
         String averageNumberOfDays = record.get(track + "~Average Number of Days");
 
+        if (!NumberUtils.isParsable(numberPending))
+        {
+            numberPending = "0";
+        }
         addElement(parent, "foia:PendingRequestQuantity", numberPending);
         if (NumberUtils.isParsable(numberPending) && Double.parseDouble(numberPending) > 0)
         {
@@ -1651,10 +1680,14 @@ public class NiemExportServiceImpl implements NiemExportService
 
         String fullTimeStaff = record.get("Number of \"Full-Time FOIA Employees\"");
         String equivalentStaff = record.get("Number of \"Equivalent Full-Time FOIA Employees\"");
-        String totalStaff = record.get("Total Number of \"Full-Time FOIA Staff\"");
+        String totalStaff = record.get("Total Number of \"Full- Time FOIA Staff\"");
         String processingCosts = record.get("Processing Costs");
         String litigationCosts = record.get("Litigation-Related Costs");
         String totalCosts = record.get("Total Costs");
+
+        processingCosts = NiemExportUtils.formatCurrencyToNiemExpectedFormat(processingCosts);
+        litigationCosts = NiemExportUtils.formatCurrencyToNiemExpectedFormat(litigationCosts);
+        totalCosts = NiemExportUtils.formatCurrencyToNiemExpectedFormat(totalCosts);
 
         addElement(personnelAndCostElement, "foia:FullTimeEmployeeQuantity", fullTimeStaff);
         addElement(personnelAndCostElement, "foia:EquivalentFullTimeEmployeeQuantity", equivalentStaff);
@@ -1702,12 +1735,19 @@ public class NiemExportServiceImpl implements NiemExportService
         String totalAmountOfFeesCollected = record.get("Total Amount of Fees Collected");
         String percentageOfTotalCosts = record.get("Percentage of Total Costs");
 
+        totalAmountOfFeesCollected = NiemExportUtils.formatCurrencyToNiemExpectedFormat(totalAmountOfFeesCollected);
         addElement(feesCollectedElement, "foia:FeesCollectedAmount", totalAmountOfFeesCollected);
+
+        float feesCollectedCostPercent;
         if (NumberUtils.isParsable(percentageOfTotalCosts))
         {
-            float feesCollectedCostPercent = Float.parseFloat(percentageOfTotalCosts);
-            addElement(feesCollectedElement, "foia:FeesCollectedCostPercent", String.format("%.4f", feesCollectedCostPercent));
+            feesCollectedCostPercent = Float.parseFloat(percentageOfTotalCosts);
         }
+        else
+        {
+            feesCollectedCostPercent = 0;
+        }
+        addElement(feesCollectedElement, "foia:FeesCollectedCostPercent", String.format("%.4f", feesCollectedCostPercent));
 
         parent.appendChild(feesCollectedElement);
     }
@@ -1786,7 +1826,7 @@ public class NiemExportServiceImpl implements NiemExportService
         subsectionPostElement.setAttribute("s:id", record.get("ComponentDataReference"));
 
         String postedByFOIAOffice = record.get("Number of Records Posted by the FOIA Office");
-        String postedByProgramOffices = record.get("Number of Records Posted by Program Offices");
+        String postedByProgramOffices = record.get("Number of Records Posted by the Program Office");
 
         addElement(subsectionPostElement, "foia:PostedbyFOIAQuantity", postedByFOIAOffice);
         addElement(subsectionPostElement, "foia:PostedbyProgramQuantity", postedByProgramOffices);
@@ -2030,16 +2070,6 @@ public class NiemExportServiceImpl implements NiemExportService
         organizationAssociationElement.appendChild(organizationReference);
 
         parentElement.appendChild(organizationAssociationElement);
-    }
-
-    public RestTemplate getRestTemplate()
-    {
-        return restTemplate;
-    }
-
-    public void setRestTemplate(RestTemplate restTemplate)
-    {
-        this.restTemplate = restTemplate;
     }
 
     public LookupDao getLookupDao()
