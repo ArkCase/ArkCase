@@ -30,9 +30,9 @@ package com.armedia.acm.plugins.report.service;
 import com.armedia.acm.configuration.service.CollectionPropertiesConfigurationService;
 import com.armedia.acm.configuration.service.ConfigurationPropertyService;
 import com.armedia.acm.configuration.util.MergeFlags;
+import com.armedia.acm.pdf.service.PdfService;
 import com.armedia.acm.pentaho.config.PentahoReportUrl;
 import com.armedia.acm.pentaho.config.PentahoReportsConfig;
-import com.armedia.acm.plugins.ecm.utils.PDFUtils;
 import com.armedia.acm.plugins.report.model.Report;
 import com.armedia.acm.plugins.report.model.Reports;
 import com.armedia.acm.report.config.ReportsToRolesConfig;
@@ -54,16 +54,9 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.pdfbox.io.MemoryUsageSetting;
 import org.apache.pdfbox.multipdf.PDFMergerUtility;
 import org.apache.pdfbox.multipdf.Splitter;
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.common.PDRectangle;
-import org.apache.pdfbox.pdmodel.font.PDFont;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
-import org.apache.pdfbox.util.Matrix;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -82,15 +75,15 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import java.awt.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -121,6 +114,7 @@ public class ReportServiceImpl implements ReportService
     private AcmUserRoleService userRoleService;
     private ApplicationRolesConfig rolesConfig;
     private RestTemplate restTemplate;
+    private PdfService pdfService;
 
     @Override
     public List<Report> getPentahoReports() throws Exception
@@ -604,133 +598,107 @@ public class ReportServiceImpl implements ReportService
     @Override
     public File exportReportsPDFFormat(List<String> orderedReportTitles) throws Exception
     {
-        PDFMergerUtility pdfMergerUtility = new PDFMergerUtility();
-        File temp = File.createTempFile("reports-merged-file", ".pdf");
-        FileOutputStream fileOutputStream = new FileOutputStream(temp);
+        RestTemplate restTemplate = buildReportsRestTemplate();
+        org.springframework.http.HttpEntity<Object> entity = buildReportsRestEntity();
 
-        File mergedPDFs = File.createTempFile("reports-merged-pdfs", ".pdf");
-        FileOutputStream fos = new FileOutputStream(mergedPDFs);
+        PDFMergerUtility pdfMergerUtility = new PDFMergerUtility();
+
+        Map<String, File> downloadedReports = orderedReportTitles.parallelStream()
+                .map(reportTitle -> {
+                    String reportToExportUrl = String.format("%s%s%s/service/export", reportsConfig.getServerUrl(),
+                            reportsConfig.getReportUrl(), reportTitle);
+
+                    ResponseEntity<Resource> response = restTemplate.exchange(reportToExportUrl, HttpMethod.GET, entity, Resource.class);
+
+                    File file = null;
+                    try
+                    {
+                        file = File.createTempFile("pentaho-downloaded-report", ".pdf");
+                        FileUtils.copyInputStreamToFile(response.getBody().getInputStream(), file);
+                    }
+                    catch (IOException e)
+                    {
+                        LOG.warn("Failed to save temp file for report {}.", reportTitle);
+                    }
+                    return new AbstractMap.SimpleEntry<>(reportTitle, file);
+                })
+                .collect(HashMap::new, (m, v) -> m.put(v.getKey(), v.getValue()), HashMap::putAll);
 
         for (String reportTitle : orderedReportTitles)
         {
-            String reportToExportUrl = reportsConfig.getServerUrl() + reportsConfig.getReportUrl() + reportTitle
-                    + "/service/export";
-            SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
-            requestFactory.setReadTimeout(60 * 1000);
-            RestTemplate restTemplate = new RestTemplate(requestFactory);
+            File downloadedReport = downloadedReports.get(reportTitle);
 
-            String auth = reportsConfig.getServerUser() + ":" + reportsConfig.getServerPassword();
-            byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(Charset.forName("US-ASCII")));
-            String basicAuthenticationHeaderValue = "Basic " + new String(encodedAuth);
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.setAccept(Collections.singletonList(MediaType.APPLICATION_OCTET_STREAM));
-            headers.set(HttpHeaders.AUTHORIZATION, basicAuthenticationHeaderValue);
-
-            org.springframework.http.HttpEntity<Object> entity = new org.springframework.http.HttpEntity<>("body", headers);
-
-            ResponseEntity<Resource> response = restTemplate.exchange(reportToExportUrl, HttpMethod.GET, entity, Resource.class);
-
-            File file = File.createTempFile("pentaho-downloaded-report", ".pdf");
-            FileUtils.copyInputStreamToFile(response.getBody().getInputStream(), file);
-
-            PDDocument document = PDDocument.load(file);
-            // hide page numbers
-            for (int i = 0; i < document.getPages().getCount(); i++)
+            if (downloadedReport == null)
             {
-                PDPage page = document.getPage(i);
-
-                PDPageContentStream contentStream = new PDPageContentStream(document, page, true, true, true);
-                contentStream.setNonStrokingColor(Color.WHITE);
-
-                contentStream.addRect(550, 670, 100, 100);
-                contentStream.fill();
-                contentStream.close();
-            }
-            document.save(file);
-
-            // split pdf document to get only report table page
-            Splitter splitter = new Splitter();
-            List<PDDocument> pages = splitter.split(document);
-
-            PdfReader pdfReader = new PdfReader(file.getAbsolutePath());
-
-            for (int i = 2; i <= pages.subList(1, pages.size()).size() + 1; i++)
-            {
-                if (!PdfTextExtractor.getTextFromPage(pdfReader, i).contains("About this Report"))
-                {
-                    PDDocument pageToMerge = pages.get(i - 1);
-
-                    ByteArrayOutputStream out = new ByteArrayOutputStream();
-                    pageToMerge.save(out);
-                    pageToMerge.close();
-                    ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
-                    pdfMergerUtility.addSource(in);
-                }
-                else
-                {
-                    break;
-                }
-
+                LOG.warn("Report {} won't be included and may not exists.", reportTitle);
+                continue;
             }
 
-            document.close();
-            pdfReader.close();
-            file.delete();
+            try (FileInputStream downloadedReportInputStream = FileUtils.openInputStream(downloadedReport);
+                    PDDocument document = PDDocument.load(downloadedReportInputStream))
+            {
+                // split pdf document to get only report table page
+                Splitter splitter = new Splitter();
+                List<PDDocument> pages = splitter.split(document);
+                PdfReader pdfReader = new PdfReader(downloadedReport.getAbsolutePath());
 
+                if (!PdfTextExtractor.getTextFromPage(pdfReader, 2).contains("About this Report"))
+                {
+                    PDDocument pageToMerge = pages.get(1);
+
+                    try (ByteArrayOutputStream out = new ByteArrayOutputStream())
+                    {
+                        pageToMerge.save(out);
+                        pageToMerge.close();
+                        try (ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray()))
+                        {
+                            pdfService.addSource(pdfMergerUtility, in);
+                        }
+                    }
+                }
+
+                pdfReader.close();
+            }
+
+            downloadedReport.delete();
         }
-        // Merges the documents together and creates an in-memory copy of the new combined document
-        pdfMergerUtility.setDestinationStream(fileOutputStream);
-        // using at most 32MB memory, the rest goes to disk
-        MemoryUsageSetting memoryUsageSetting = MemoryUsageSetting.setupMixed(PDFUtils.MAX_MAIN_MEMORY_BYTES);
-        pdfMergerUtility.mergeDocuments(memoryUsageSetting);
 
-        fileOutputStream.close();
-        // set new page numbers
-        try (PDDocument doc = PDDocument.load(temp))
+        File mergedReportsTemp = File.createTempFile("reports-merged-files", ".pdf");
+        File mergedPDFs = File.createTempFile("reports-merged-pdfs", ".pdf");
+
+        try (FileOutputStream fileOutputStream = new FileOutputStream(mergedReportsTemp);
+                FileOutputStream fos = new FileOutputStream(mergedPDFs))
         {
-            PDFont font = PDType1Font.HELVETICA;
-            float fontSize = 8.0f;
+            pdfService.mergeSources(pdfMergerUtility, fileOutputStream);
 
-            for (int i = 1; i <= doc.getNumberOfPages(); i++)
+            try (PDDocument document = PDDocument.load(mergedReportsTemp))
             {
-                PDRectangle pageSize = doc.getPage(i - 1).getMediaBox();
-                float stringWidth = font.getStringWidth("Page " + i + " of " + doc.getNumberOfPages()) * fontSize / 1000f;
-                // calculate to center of the page
-                int rotation = doc.getPage(i - 1).getRotation();
-                boolean rotate = rotation == 90 || rotation == 270;
-                float pageWidth = rotate ? pageSize.getHeight() : pageSize.getWidth();
-                float pageHeight = rotate ? pageSize.getWidth() : pageSize.getHeight();
-                float centerX = rotate ? pageHeight / 1.05f : (pageWidth - stringWidth) / 2f;
-                float centerY = rotate ? (pageWidth - stringWidth) / 2f : pageHeight / 2f;
-
-                // append the content to the existing stream
-                try (PDPageContentStream contentStream = new PDPageContentStream(doc, doc.getPage(i - 1),
-                        PDPageContentStream.AppendMode.APPEND, true, true))
-                {
-                    contentStream.beginText();
-                    // set font and font size
-                    contentStream.setFont(font, fontSize);
-                    // set text color
-                    contentStream.setNonStrokingColor(0, 0, 0);
-                    if (rotate)
-                    {
-                        // rotate the text according to the page rotation
-                        contentStream.setTextMatrix(Matrix.getRotateInstance(Math.PI / 2, centerX, centerY));
-                    }
-                    else
-                    {
-                        contentStream.setTextMatrix(Matrix.getTranslateInstance(centerX, centerY));
-                    }
-                    contentStream.showText("Page " + i + " of " + doc.getNumberOfPages());
-                    contentStream.endText();
-                }
+                PDDocument updatedDocument = pdfService.replacePageNumbers(document);
+                updatedDocument.save(fos);
             }
-
-            doc.save(fos);
         }
 
         return mergedPDFs;
+    }
+
+    @Override
+    public RestTemplate buildReportsRestTemplate()
+    {
+        SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
+        requestFactory.setReadTimeout(60 * 1000);
+        return new RestTemplate(requestFactory);
+    }
+
+    @Override
+    public org.springframework.http.HttpEntity<Object> buildReportsRestEntity()
+    {
+        String auth = String.format("%s:%s", reportsConfig.getServerUser(), reportsConfig.getServerPassword());
+        byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(StandardCharsets.US_ASCII));
+        String basicAuthenticationHeaderValue = "Basic " + new String(encodedAuth);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_OCTET_STREAM));
+        headers.set(HttpHeaders.AUTHORIZATION, basicAuthenticationHeaderValue);
+        return new org.springframework.http.HttpEntity<>("body", headers);
     }
 
     public PentahoReportUrl getReportUrl()
@@ -819,13 +787,13 @@ public class ReportServiceImpl implements ReportService
         this.collectionPropertiesConfigurationService = collectionPropertiesConfigurationService;
     }
 
-    public RestTemplate getRestTemplate()
+    public PdfService getPdfService()
     {
-        return restTemplate;
+        return pdfService;
     }
 
-    public void setRestTemplate(RestTemplate restTemplate)
+    public void setPdfService(PdfService pdfService)
     {
-        this.restTemplate = restTemplate;
+        this.pdfService = pdfService;
     }
 }

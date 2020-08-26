@@ -36,6 +36,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -101,6 +102,28 @@ public final class NiemExportUtils
             data.add(map);
         }
         return data;
+    }
+
+    /**
+     * 
+     * Converts a currency string into the NIEM expected number format
+     * 
+     * @param currencyString
+     *            Report generated currency string
+     * @return String of a float value
+     */
+    public static String formatCurrencyToNiemExpectedFormat(String currencyString)
+    {
+        NumberFormat format = NumberFormat.getCurrencyInstance();
+        try
+        {
+            Number number = format.parse(currencyString);
+            return number.toString();
+        }
+        catch (ParseException e)
+        {
+            return currencyString;
+        }
     }
 
     /**
