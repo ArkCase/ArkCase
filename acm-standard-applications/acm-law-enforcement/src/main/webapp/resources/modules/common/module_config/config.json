@@ -850,7 +850,7 @@
           "name":  "parent_ref_s",
           "displayName": "common.dialogObjectPicker.table.columns.parentTitle",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a ng-if='row.entity.parent_document.title_parseable' href='#' ng-click='grid.appScope.onClickObjLink($event, {parentId:row.entity.parent_ref_s, object_type_s:row.entity.parent_ref_s})'>{{row.entity.parent_document.title_parseable}}</a>"
+          "cellTemplate": "<a ng-if='row.entity.parent_ref_s' href='#' ng-click='grid.appScope.onClickObjLink($event, {parentId:row.entity.parent_ref_s, object_type_s:row.entity.parent_ref_s}, true, true)'>{{row.entity.parent_ref_s}}</a>"
         }
       ],
       "paginationPageSizes": [
