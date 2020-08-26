@@ -35,16 +35,13 @@ import com.armedia.acm.plugins.report.service.ReportService;
 import com.armedia.acm.services.config.lookups.model.StandardLookupEntry;
 import com.armedia.acm.services.config.lookups.service.LookupDao;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -65,7 +62,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.time.Year;
 import java.util.AbstractMap;
@@ -262,8 +258,8 @@ public class NiemExportServiceImpl implements NiemExportService
 
     private ResponseEntity<Resource> exportPenathoReportInCSV(String path)
     {
-        RestTemplate restTemplate = getRestTemplate();
-        org.springframework.http.HttpEntity<Object> entity = buildRestEntity();
+        RestTemplate restTemplate = getReportService().buildReportsRestTemplate();
+        HttpEntity<Object> entity = getReportService().buildReportsRestEntity();
 
         return restTemplate.exchange(path, HttpMethod.GET, entity, Resource.class);
     }
@@ -2074,24 +2070,6 @@ public class NiemExportServiceImpl implements NiemExportService
         organizationAssociationElement.appendChild(organizationReference);
 
         parentElement.appendChild(organizationAssociationElement);
-    }
-
-    private RestTemplate getRestTemplate()
-    {
-        SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
-        requestFactory.setReadTimeout(60 * 1000);
-        return new RestTemplate(requestFactory);
-    }
-
-    private org.springframework.http.HttpEntity<Object> buildRestEntity()
-    {
-        String auth = String.format("%s:%s", reportsConfig.getServerUser(), reportsConfig.getServerPassword());
-        byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(StandardCharsets.US_ASCII));
-        String basicAuthenticationHeaderValue = "Basic " + new String(encodedAuth);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_OCTET_STREAM));
-        headers.set(HttpHeaders.AUTHORIZATION, basicAuthenticationHeaderValue);
-        return new org.springframework.http.HttpEntity<>("body", headers);
     }
 
     public LookupDao getLookupDao()

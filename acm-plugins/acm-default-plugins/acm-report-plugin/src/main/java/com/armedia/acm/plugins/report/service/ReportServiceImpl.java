@@ -598,8 +598,8 @@ public class ReportServiceImpl implements ReportService
     @Override
     public File exportReportsPDFFormat(List<String> orderedReportTitles) throws Exception
     {
-        RestTemplate restTemplate = getRestTemplate();
-        org.springframework.http.HttpEntity<Object> entity = buildRestEntity();
+        RestTemplate restTemplate = buildReportsRestTemplate();
+        org.springframework.http.HttpEntity<Object> entity = buildReportsRestEntity();
 
         PDFMergerUtility pdfMergerUtility = new PDFMergerUtility();
 
@@ -681,14 +681,16 @@ public class ReportServiceImpl implements ReportService
         return mergedPDFs;
     }
 
-    private RestTemplate getRestTemplate()
+    @Override
+    public RestTemplate buildReportsRestTemplate()
     {
         SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
         requestFactory.setReadTimeout(60 * 1000);
         return new RestTemplate(requestFactory);
     }
 
-    private org.springframework.http.HttpEntity<Object> buildRestEntity()
+    @Override
+    public org.springframework.http.HttpEntity<Object> buildReportsRestEntity()
     {
         String auth = String.format("%s:%s", reportsConfig.getServerUser(), reportsConfig.getServerPassword());
         byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(StandardCharsets.US_ASCII));
