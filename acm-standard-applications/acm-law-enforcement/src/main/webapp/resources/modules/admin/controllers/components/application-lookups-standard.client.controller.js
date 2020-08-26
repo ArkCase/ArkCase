@@ -90,11 +90,11 @@ angular.module('admin').controller('Admin.StandardLookupController', ['$scope', 
             },
             callback: function (result) {
                 if (result) {
-                    var idx;
-                    _.find($scope.lookup, function (entry) {
+                    _.find($scope.lookup, function (entry, entryIdx) {
                         if (entry.key === rowEntity.key) {
                             $scope.lookup = [];
                             $scope.lookup.push(entry);
+                            $scope.gridOptions.data.splice(entryIdx, 1);
                             return true;
                         }
                     });
@@ -159,12 +159,16 @@ angular.module('admin').controller('Admin.StandardLookupController', ['$scope', 
 
     function saveLookup() {
         var promiseSaveInfo = ObjectLookupService.saveLookup($scope.selectedLookupDef, $scope.lookup);
-        promiseSaveInfo.then(function (lookup) {
+        promiseSaveInfo.then(function () {
             MessageService.succsessAction();
-            return lookup;
+            $timeout(function () {
+                fetchLookup();
+            }, 5000);
         }, function (error) {
             MessageService.error(error.data ? error.data : error);
-            fetchLookup();
+            $timeout(function () {
+                fetchLookup();
+            }, 5000);
             return error;
         });
 
@@ -177,6 +181,7 @@ angular.module('admin').controller('Admin.StandardLookupController', ['$scope', 
             $scope.lookup.splice(0, $scope.lookup.length);
             if (lookup !== "") {
                 $scope.lookup.push.apply($scope.lookup, lookup);
+                $scope.gridOptions.data = $scope.lookup;
             }
         });
     }

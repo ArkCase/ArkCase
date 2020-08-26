@@ -40,12 +40,12 @@ angular.module('admin').controller('Admin.LookupsConfigController',
                 _.remove(data, function (lookup) {
                     return lookup.name === 'appealDispositionType' || lookup.name === 'requestDispositionType' || lookup.name === 'requestDispositionSubType';
                 });
-                $scope.lookupsDefs = data
+                $scope.lookupsDefs = data;
                 var index = 0;
                 if (!Util.isEmpty($scope.selectedLookupDef)) {
                     var _index = _.findIndex($scope.lookupsDefs, {
                         name: $scope.selectedLookupDef.name
-                    })
+                    });
                     if (!Util.isEmpty(_index) && _index > -1) {
                         index = _index;
                     }
@@ -82,13 +82,23 @@ angular.module('admin').controller('Admin.LookupsConfigController',
             //delete function
             var promise = LookupService.deleteLookup($scope.selectedLookupDef.name, $scope.selectedLookupDef.lookupType);
             promise.then(function (success) {
+                _.find($scope.lookupsDefs, function (entry, entryIdx) {
+                    if(entry != undefined){
+                        if (entry.name === $scope.selectedLookupDef.name) {
+                            $scope.lookupsDefs.splice(entryIdx, 1);
+                        }
+                    }
+                });
                 MessageService.info($translate.instant('admin.application.lookups.config.delete.success'));
                 $timeout(function () {
                     $scope.getLookups();
-                }, 3000);
+                }, 5000);
                 return success;
             }, function (error) {
                 MessageService.error(error.data ? error.data : error);
+                $timeout(function () {
+                    $scope.getLookups();
+                }, 5000);
                 return error;
             });
             return promise;
