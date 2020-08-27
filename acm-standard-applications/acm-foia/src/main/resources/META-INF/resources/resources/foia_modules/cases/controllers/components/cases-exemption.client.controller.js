@@ -54,7 +54,7 @@ angular.module('cases').controller('Cases.ExemptionController',
                 if ($scope.isDisabled) {
                     return true;
                 } else {
-                    if (rowEntity.exemptionCode != 'Ex.3') {
+                    if (rowEntity.exemptionCode != 'Ex3') {
                         return true;
                     }
                 }
