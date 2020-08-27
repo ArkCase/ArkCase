@@ -97,7 +97,15 @@ public class StandardLookup extends AcmLookup<StandardLookupEntry>
             lookupEntry.put("readonly", entry.isReadonly());
             lookupEntry.put("primary", entry.isPrimary());
             lookupEntry.put("description", entry.getDescription());
-            lookupEntry.put("order", 0);
+            if (entry.getOrder() != null)
+            {
+                lookupEntry.put("order", entry.getOrder());
+
+            }
+            else
+            {
+                lookupEntry.put("order", entries.size() + 1);
+            }
             lookupEntries.add(lookupEntry);
         });
 
