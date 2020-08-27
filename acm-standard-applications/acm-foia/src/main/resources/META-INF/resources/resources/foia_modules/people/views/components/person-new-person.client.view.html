@@ -9,6 +9,7 @@
                 <span class="required-asterisk">*</span>
                 <select ng-model="person.title" id="prefix" name="prefix"
                         ng-options="prefix.key as prefix.value | translate for prefix in prefixes" class="form-control input-md" required>
+                    <option value='' selected ng-value="null" translate>core.lookups.personTitles.selectPrefix</option>
                 </select>
             </div>
             <div class="col-sm-3">
