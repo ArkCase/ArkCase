@@ -58,6 +58,7 @@
                                 <select ng-model="config.data.originator.person.title" id="prefix" name="prefix"
                                         ng-options="prefix.key as prefix.value | translate for prefix in prefixes" class="form-control input-md"
                                         required ng-disabled="isExistingPerson && existingPerson.title">
+                                    <option value='' selected ng-value="null" translate>core.lookups.personTitles.selectPrefix</option>
                                 </select>
                                 <span class="text-danger" ng-if="!config.data.originator.person.title && formInvalid" translate>
                             consultations.newConsultation.prefix.validation.error</span>

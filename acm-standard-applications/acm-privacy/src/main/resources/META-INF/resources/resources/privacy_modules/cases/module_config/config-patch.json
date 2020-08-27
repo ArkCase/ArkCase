@@ -268,16 +268,6 @@
                     "name": "All Others",
                     "id": "All Others"
                 }
-            ],
-            "prefixes": [
-                {
-                    "name": "Mr.",
-                    "id": "Mr."
-                },
-                {
-                    "name": "Ms.",
-                    "id": "Ms."
-                }
             ]
         }
     },

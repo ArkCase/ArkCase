@@ -93,9 +93,8 @@ angular.module('people').controller(
                 return organizationTypes;
             });
 
-            ObjectLookupService.getPrefixes().then(function (prefixes) {
+            ObjectLookupService.getPersonTitles().then(function (prefixes) {
                 $scope.prefixes = prefixes;
-                $scope.person.title = $scope.prefixes[0].key;
                 return prefixes;
             });
 
