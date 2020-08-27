@@ -71,7 +71,6 @@ angular.module('consultations').controller(
                     componentAgency: ''
                 };
                 $scope.config.data.organizationAssociations = [];
-                $scope.config.data.originator.person.title = $scope.prefixes[0].key;
                 $scope.config.data.receivedDate = moment.utc().format("YYYY-MM-DDTHH:mm:ss.sss");
                 $scope.config.data.dueDate = moment.utc().format("YYYY-MM-DDTHH:mm:ss.sss");
 

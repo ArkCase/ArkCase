@@ -87,7 +87,7 @@ angular.module('cases').controller(
             var payFeesRequest = ObjectLookupService.getPayFees();
             var deliveryMethodOfResponsesRequest = ObjectLookupService.getDeliveryMethodOfResponses();
             var newRequestTypes = ObjectLookupService.getRequestTypes();
-            var prefixNewRequest = ObjectLookupService.getPrefixes();
+            var prefixNewRequest = ObjectLookupService.getPersonTitles();
             var requestConfig = ConfigService.getModuleConfig("cases");
             var componentsAgenciesPromise = ObjectLookupService.getLookupByLookupName("componentsAgencies");
             var organizationTypeLookup = ObjectLookupService.getPersonOrganizationRelationTypes();
@@ -172,7 +172,6 @@ angular.module('cases').controller(
                 } else {
                     $scope.config.data.componentAgency = $scope.componentsAgencies[0].key;
                 }
-                $scope.config.data.originator.person.title = $scope.prefixes[0].key;
                 $scope.config.data.deliveryMethodOfResponse = $scope.deliveryMethodOfResponses[0].key;
                 $scope.config.data.payFee = $scope.payFees[0].key;
 
