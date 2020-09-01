@@ -733,8 +733,15 @@ public class GroupServiceImpl implements GroupService
                 + " AND object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE "
                 + "AND -status_lcs:INACTIVE AND -status_lcs:CLOSED) OR (object_type_s:GROUP AND "
                 + "-ascendants_id_ss:* AND -status_lcs:COMPLETE AND -status_lcs:DELETE "
-                + "AND -status_lcs:INACTIVE AND -status_lcs:CLOSED "
-                + "AND directory_name_s:" + directoryName + ")";
+                + "AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
+
+        if (directoryName.equals("adhoc"))
+        {
+            query += " AND -directory_name_s:[* TO *])";
+        }
+        else {
+            query += " AND directory_name_s:" + directoryName + ")";
+        }
 
         if (groupSubtype != null && !groupSubtype.isEmpty())
         {
