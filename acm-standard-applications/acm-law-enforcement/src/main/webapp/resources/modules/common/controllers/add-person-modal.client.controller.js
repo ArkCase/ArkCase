@@ -120,10 +120,10 @@ angular.module('common').controller('Common.AddPersonModalController', [ '$scope
     $scope.addNewPerson = function() {
         $scope.isNew = true;
 
-        var params = {
-            isOrganizationLocation: true,
-            personLocations: $scope.objectInfo.defaultAddress
-        };
+        var params = {};
+        var defaultAddress = $scope.objectInfo ? $scope.objectInfo.defaultAddress : null;
+        params.isOrganizationLocation = true;
+        params.personLocations = defaultAddress ? defaultAddress : null;
 
         var modalInstance = $modal.open({
             scope: $scope,
