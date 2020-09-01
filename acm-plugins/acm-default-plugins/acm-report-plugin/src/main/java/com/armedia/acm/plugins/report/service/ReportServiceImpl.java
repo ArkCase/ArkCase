@@ -596,7 +596,7 @@ public class ReportServiceImpl implements ReportService
     }
 
     @Override
-    public File exportReportsPDFFormat(List<String> orderedReportTitles) throws Exception
+    public File exportReportsPDFFormat(List<String> orderedReportTitles, int fiscalYear) throws Exception
     {
         RestTemplate restTemplate = buildReportsRestTemplate();
         org.springframework.http.HttpEntity<Object> entity = buildReportsRestEntity();
@@ -605,8 +605,8 @@ public class ReportServiceImpl implements ReportService
 
         Map<String, File> downloadedReports = orderedReportTitles.parallelStream()
                 .map(reportTitle -> {
-                    String reportToExportUrl = String.format("%s%s%s/service/export", reportsConfig.getServerUrl(),
-                            reportsConfig.getReportUrl(), reportTitle);
+                    String reportToExportUrl = String.format("%s%s%s/service/export?FISCAL_YEAR=%s", reportsConfig.getServerUrl(),
+                            reportsConfig.getReportUrl(), reportTitle, fiscalYear);
 
                     ResponseEntity<Resource> response = restTemplate.exchange(reportToExportUrl, HttpMethod.GET, entity, Resource.class);
 

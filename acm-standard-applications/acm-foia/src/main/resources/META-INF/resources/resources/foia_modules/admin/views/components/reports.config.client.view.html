@@ -22,14 +22,26 @@
     <panel-view header="{{'admin.reports.export.title' | translate}}" collapsible="false">
         <div class="row form-group">
             <div class="col-sm-3">
-                <label translate>admin.reports.export.label</label>
+                <label translate>admin.reports.export.label</label><span class="required-asterisk">*</span>
                 <select id="exportTypes" class="form-control" ng-model="exportType"
-                        ng-options="exportType.key as exportType.value | translate for exportType in exportTypes"></select>
+                        ng-options="exportType.key as exportType.value | translate for exportType in exportTypes">
+                    <option value="" translate>core.lookups.reportExportTypes.selectLabel</option>
+                </select>
+            </div>
+            <div class="col-sm-3">
+
+                <label for="selectionReports" translate>reports.fiscalYear.label</label> <span class="required-asterisk">*</span>
+                <p class="input-group">
+                    <select id="selectionReports" ng-model="fiscalYear" class="form-control"
+                            ng-options="fiscalYear for fiscalYear in fiscalYears | orderBy:'-name'" class="form-control input-sm">
+                        <option value="" translate>reports.fiscalYear.selectLabel</option>
+                    </select>
+                </p>
             </div>
         </div>
         <div class="row form-group">
             <div class="col-sm-3">
-                <button class="btn btn-primary" ng-click="exportReports(exportType)">
+                <button class="btn btn-primary" ng-disabled="!fiscalYear || !exportType" ng-click="exportReports(exportType, fiscalYear)">
                     <i class="{{loadingIcon}}"></i>
                     <span translate>admin.reports.btn.export</span>
                 </button>
