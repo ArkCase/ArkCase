@@ -123,7 +123,7 @@ public class NiemExportServiceImpl implements NiemExportService
             {
                 Element emptyReportElement = document.createElement(report.getSectionName());
                 foiaAnnualReport.appendChild(emptyReportElement);
-                LOG.warn("Report section {} won't be included and may not exists.", report.name());
+                LOG.warn("Report {} won't be included and may not exists.", report.name());
             }
 
             checkDoc(document);
@@ -173,7 +173,7 @@ public class NiemExportServiceImpl implements NiemExportService
                 {
                     Element emptyReportElement = document.createElement(report.getSectionName());
                     foiaAnnualReport.appendChild(emptyReportElement);
-                    LOG.warn("Report section {} won't be included and may not exists.", report.name());
+                    LOG.warn("Report {} won't be included and may not exists.", report.name());
                 }
             }
 
