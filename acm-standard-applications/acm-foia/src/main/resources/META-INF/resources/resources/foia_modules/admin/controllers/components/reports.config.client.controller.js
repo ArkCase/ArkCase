@@ -117,9 +117,10 @@ angular.module('admin').controller('Admin.ReportsConfigController', ['$scope', '
             var tempReportsPentahoPromise = ReportsConfigService.getReportsPaged({});
             var promiseServerConfig = LookupService.getConfig("acm-reports-server-config");
             var tempReportsRolesPromise = ReportsConfigService.getReportsRoles();
+            var fiscalYearPropertiesPromise = LookupService.getConfig("fiscalYear");
 
             //wait all promises to resolve
-            $q.all([tempReportsPentahoPromise, promiseServerConfig, tempReportsRolesPromise]).then(function (payload) {
+            $q.all([tempReportsPentahoPromise, promiseServerConfig, tempReportsRolesPromise, fiscalYearPropertiesPromise]).then(function (payload) {
                 $scope.reportsData.chooseObject = [];
                 //get all reports
                 fillListReport($scope.reportsMap, payload[0].data, $scope.reportsData.chooseObject);
@@ -131,6 +132,13 @@ angular.module('admin').controller('Admin.ReportsConfigController', ['$scope', '
                 var url = $scope.reportsConfig['report.plugin.PENTAHO_SERVER_URL'] + '/pentaho';
                 $scope.reportDesignerUrl = $sce.trustAsResourceUrl(url);
                 $scope.onObjSelect($scope.reportsData.chooseObject[0]);
+
+                var fiscalYearProperties = payload[3];
+                $scope.fiscalYears = [];
+                var now = moment();
+                for (var year = fiscalYearProperties['fiscal.year.start.year']; year <= now.year() + 1; year++) {
+                    $scope.fiscalYears.push(year);
+                }
             });
         };
 
@@ -280,10 +288,10 @@ angular.module('admin').controller('Admin.ReportsConfigController', ['$scope', '
             });
         }
 
-        $scope.exportReports = function (exportType) {
+        $scope.exportReports = function (exportType, fiscalYear) {
             $scope.loading = true;
             $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
-            ReportsConfigService.exportReports(exportType).then(function (result) {
+            ReportsConfigService.exportReports(exportType, fiscalYear).then(function (result) {
                 $scope.loading = false;
                 $scope.loadingIcon = "fa fa-floppy-o";
                 var data = new Blob([result.data], {
