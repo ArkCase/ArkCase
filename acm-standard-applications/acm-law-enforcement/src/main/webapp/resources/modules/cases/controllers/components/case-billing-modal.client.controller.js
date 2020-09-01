@@ -9,6 +9,8 @@ angular.module('cases').controller('Cases.BillingModalController', ['$scope', '$
 
         $scope.objectDataModel.itemNumber = params.gridData.length+1;
 
+        $scope.objectDataModel.itemType = "Adhoc";
+
         $scope.cancel = function() {
             $modalInstance.dismiss('cancel');
         };
