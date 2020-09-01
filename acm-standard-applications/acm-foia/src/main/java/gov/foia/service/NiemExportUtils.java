@@ -63,11 +63,13 @@ public final class NiemExportUtils
      */
     public static List<Map<String, String>> getDataMapFromCSVFile(File csvFile) throws IOException
     {
-        CSVParser parser = new CSVParser(
+        try (CSVParser parser = new CSVParser(
                 new InputStreamReader(new FileInputStream(csvFile)),
-                CSVFormat.DEFAULT.withFirstRecordAsHeader());
+                CSVFormat.DEFAULT.withFirstRecordAsHeader()))
+        {
 
-        return extractDataMapFromCSVRecords(parser.getRecords(), parser.getHeaderNames());
+            return extractDataMapFromCSVRecords(parser.getRecords(), parser.getHeaderNames());
+        }
     }
 
     /**
@@ -81,11 +83,13 @@ public final class NiemExportUtils
      */
     public static List<Map<String, String>> getDataMapFromCSVInputStream(InputStream csvInputStream) throws IOException
     {
-        CSVParser parser = new CSVParser(
+        try (CSVParser parser = new CSVParser(
                 new InputStreamReader(csvInputStream),
-                CSVFormat.DEFAULT.withFirstRecordAsHeader());
+                CSVFormat.DEFAULT.withFirstRecordAsHeader()))
+        {
 
-        return extractDataMapFromCSVRecords(parser.getRecords(), parser.getHeaderNames());
+            return extractDataMapFromCSVRecords(parser.getRecords(), parser.getHeaderNames());
+        }
     }
 
     private static List<Map<String, String>> extractDataMapFromCSVRecords(List<CSVRecord> records, List<String> headers)

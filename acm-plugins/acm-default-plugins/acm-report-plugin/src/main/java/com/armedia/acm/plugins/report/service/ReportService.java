@@ -76,7 +76,7 @@ public interface ReportService
 
     List<String> getRolesForReport(Boolean authorized, String reportId, int startRow, int maxRows, String sortBy, String sortDirection, String filterName);
 
-    File exportReportsPDFFormat(List<String> orderedReportTitles) throws Exception;
+    File exportReportsPDFFormat(List<String> orderedReportTitles, int fiscalYear) throws Exception;
 
     RestTemplate buildReportsRestTemplate();
 
