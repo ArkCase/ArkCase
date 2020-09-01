@@ -127,6 +127,7 @@ angular.module('admin').controller(
                         gridCurrentPage = currentPage;
                         LdapConfigService.retrieveDirectories().then(function (directories) {
                             $scope.directories = Object.keys(directories.data).sort();
+                            $scope.directories.push("adhoc");
                             $scope.directoryName = $scope.directoryName ? $scope.directoryName : $scope.directories[0];
                             directoryName = directoryName ? directoryName : $scope.directoryName;
 
