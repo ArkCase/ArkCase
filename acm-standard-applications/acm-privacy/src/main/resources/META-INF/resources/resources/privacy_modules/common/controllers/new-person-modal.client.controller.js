@@ -2,8 +2,8 @@
 
 angular.module('common').controller(
     'Common.NewPersonModalController',
-    ['$scope', '$stateParams', '$translate', 'Person.InfoService', '$state', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService', '$modal', '$modalInstance', 'ConfigService', 'Organization.InfoService', 'PhoneValidationService',
-        function ($scope, $stateParams, $translate, PersonInfoService, $state, ObjectLookupService, MessageService, $timeout, Util, $modal, $modalInstance, ConfigService, OrganizationInfoService, PhoneValidationService) {
+    ['$scope', '$stateParams', '$translate', 'Person.InfoService', '$state', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService', '$modal', '$modalInstance', 'ConfigService', 'Organization.InfoService', 'PhoneValidationService', 'params',
+        function ($scope, $stateParams, $translate, PersonInfoService, $state, ObjectLookupService, MessageService, $timeout, Util, $modal, $modalInstance, ConfigService, OrganizationInfoService, PhoneValidationService, params) {
             //used for showing/hiding buttons in communication accounts
             var contactMethodsCounts = {
                 'url': 0,
@@ -68,9 +68,8 @@ angular.module('common').controller(
                 return organizationTypes;
             });
 
-            ObjectLookupService.getPrefixes().then(function (prefixes) {
+            ObjectLookupService.getPersonTitles().then(function (prefixes) {
                 $scope.prefixes = prefixes;
-                $scope.person.title = $scope.prefixes[0].key;
                 return prefixes;
             });
 
@@ -145,6 +144,10 @@ angular.module('common').controller(
                     });
                 }, 0);
             };
+
+            if (params.isOrganizationLocation && (params.personLocations !== null)) {
+                $scope.person.addresses.push(params.personLocations);
+            }
 
             $scope.addEmptyPicture = function () {
                 $scope.pictures.push({});

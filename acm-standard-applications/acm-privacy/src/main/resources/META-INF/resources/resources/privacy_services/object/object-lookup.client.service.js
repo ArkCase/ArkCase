@@ -722,20 +722,6 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
 
     /**
      * @ngdoc method
-     * @name getOrganizationPersonRelationTypes
-     * @methodOf services:Object.LookupService
-     *
-     * @description
-     * Query list of organization-person relation types
-     *
-     * @returns {Object} An array returned by $resource
-     */
-    Service.getOrganizationPersonRelationTypes = function () {
-        return Service.getLookupByLookupName("organizationPersonRelationTypes");
-    };
-
-    /**
-     * @ngdoc method
      * @name getBusinessProcessTypes
      * @methodOf services:Object.LookupService
      *
@@ -929,22 +915,6 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
 
     Service.getExemptionStatutes = function () {
         return Service.getLookupByLookupName('exemptionStatutes');
-
-    };
-
-    /**
-     * @ngdoc method
-     * @name getPrefixes
-     * @methodOf services:Object.LookupService
-     *
-     * @description
-     * Query list of all exemptionStatutes
-     *
-     * @returns {Object} An array returned by $resource
-     */
-
-    Service.getPrefixes = function () {
-        return Service.getLookupByLookupName('prefixNewRequest');
 
     };
 

@@ -558,7 +558,7 @@ public class AcmLdapRegistryServiceImpl
 
         properties.put("ldapAddGroupConfig", getLdapGroupConfig(directoryId, (String) properties.get("directoryType")));
         properties.put("ldapAddUserConfig", getLdapUserConfig(directoryId, (String) properties.get("directoryType")));
-        properties.put("autoGenerateUserId", false);
+        properties.put("autoGenerateUserId", properties.get("autoGenerateUserId"));
         dirConfig.put(directoryId, properties);
 
         ldapConfiguration.put(AcmLdapConfiguration.LDAP_SYNC_CONFIG_PROP_KEY + "." + LDAP_DIRECTORY_CONFIG, dirConfig);

@@ -2,8 +2,8 @@
 
 angular.module('people').controller(
     'People.NewPersonController',
-    ['$scope', '$stateParams', '$translate', 'Person.InfoService', '$state', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService', '$modal', 'ConfigService', 'Organization.InfoService', 'ObjectService', 'modalParams', 'Mentions.Service', 'PhoneValidationService',
-        function ($scope, $stateParams, $translate, PersonInfoService, $state, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, OrganizationInfoService, ObjectService, modalParams, MentionsService, PhoneValidationService) {
+    ['$scope', '$stateParams', '$translate', '$q', 'Person.InfoService', '$state', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService', '$modal', 'ConfigService', 'Organization.InfoService', 'ObjectService', 'modalParams', 'Mentions.Service', 'PhoneValidationService',
+        function ($scope, $stateParams, $translate, $q, PersonInfoService, $state, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, OrganizationInfoService, ObjectService, modalParams, MentionsService, PhoneValidationService) {
 
             $scope.modalParams = modalParams;
             $scope.loading = false;
@@ -79,12 +79,13 @@ angular.module('people').controller(
                 }
             };
 
-            ObjectLookupService.getCountries().then(function (countries) {
-                $scope.countries = countries;
-            });
+            var promiseGetCountries = ObjectLookupService.getCountries();
 
-            ObjectLookupService.getAddressTypes().then(function (addressTypes) {
-                $scope.addressTypes = addressTypes;
+            var promiseGetAdressTypes = ObjectLookupService.getAddressTypes();
+
+            $q.all([promiseGetAdressTypes, promiseGetCountries]).then(function (data) {
+                $scope.countries = data[1];
+                $scope.addressTypes = data[0];
             });
 
             ObjectLookupService.getPersonOrganizationRelationTypes().then(function (organizationTypes) {
@@ -92,9 +93,8 @@ angular.module('people').controller(
                 return organizationTypes;
             });
 
-            ObjectLookupService.getPrefixes().then(function (prefixes) {
+            ObjectLookupService.getPersonTitles().then(function (prefixes) {
                 $scope.prefixes = prefixes;
-                $scope.person.title = $scope.prefixes[0].key;
                 return prefixes;
             });
 
