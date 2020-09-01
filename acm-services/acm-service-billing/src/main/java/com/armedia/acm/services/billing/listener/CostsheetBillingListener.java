@@ -65,7 +65,7 @@ public class CostsheetBillingListener implements ApplicationListener<AcmCostshee
     {
         AcmCostsheet costsheet = (AcmCostsheet) acmCostsheetEvent.getSource();
         BillingItem costsheetBillingItem = populateBillingItem(acmCostsheetEvent.getUserId(), costsheet.getTitle(), costsheet.getParentId(),
-                costsheet.getParentType(), costsheet.calculateBalance(), BillingConstants.BILLING_ITEM_TYPE_COSTSHEET);
+                costsheet.getParentType(), costsheet.calculateBalance(), BillingConstants.BILLING_ITEM_TYPE_COSTSHEET, costsheet.getId());
 
         try
         {
@@ -79,7 +79,7 @@ public class CostsheetBillingListener implements ApplicationListener<AcmCostshee
     }
 
     private BillingItem populateBillingItem(String creator, String itemDescription, Long parentObjectId, String parentObjectType,
-            Double itemAmount, String itemType)
+            Double itemAmount, String itemType, Long referenceObjectId)
     {
         BillingItem billingItem = new BillingItem();
         billingItem.setCreator(creator);
@@ -89,6 +89,7 @@ public class CostsheetBillingListener implements ApplicationListener<AcmCostshee
         billingItem.setParentObjectType(parentObjectType);
         billingItem.setItemAmount(itemAmount);
         billingItem.setItemType(itemType);
+        billingItem.setReferenceObjectId(referenceObjectId);
         return billingItem;
     }
 

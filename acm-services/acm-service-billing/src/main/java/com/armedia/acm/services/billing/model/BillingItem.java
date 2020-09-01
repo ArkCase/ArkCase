@@ -112,6 +112,9 @@ public class BillingItem implements Serializable, AcmObject, AcmEntity, AcmParen
     @Column(name = "cm_class_name")
     private String className = this.getClass().getName();
 
+    @Column(name = "cm_billing_reference_object_id")
+    private Long referenceObjectId;
+
     @PrePersist
     public void beforeInsert()
     {
@@ -338,4 +341,20 @@ public class BillingItem implements Serializable, AcmObject, AcmEntity, AcmParen
         this.className = className;
     }
 
+    /**
+     * @return the referenceObjectId
+     */
+    public Long getReferenceObjectId()
+    {
+        return referenceObjectId;
+    }
+
+    /**
+     * @param referenceObjectId
+     *            the referenceObjectId to set
+     */
+    public void setReferenceObjectId(Long referenceObjectId)
+    {
+        this.referenceObjectId = referenceObjectId;
+    }
 }
