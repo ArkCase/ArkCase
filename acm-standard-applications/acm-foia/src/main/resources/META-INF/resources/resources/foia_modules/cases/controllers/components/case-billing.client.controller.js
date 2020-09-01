@@ -152,4 +152,11 @@ angular.module('cases').controller('Cases.BillingController', ['$scope', '$modal
             CaseBillingService.addBillingItem(itemData);
         }
 
+        $scope.onClickObjLink = function (event, rowEntity) {
+            event.preventDefault();
+            var targetType = Util.goodMapValue(rowEntity, "itemType").toUpperCase();
+            var targetId = Util.goodMapValue(rowEntity, "referenceObjectId");
+            gridHelper.showObject(targetType, targetId);
+        };
+
     }]);

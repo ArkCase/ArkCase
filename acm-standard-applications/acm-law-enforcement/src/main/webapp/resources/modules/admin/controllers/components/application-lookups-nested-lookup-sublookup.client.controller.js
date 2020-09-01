@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('admin').controller('Admin.NestedLookupSubLookupController', ['$scope', '$translate', '$modal', 'Object.LookupService', 'Helper.UiGridService', 'UtilService', 'MessageService', 'LookupService', function ($scope, $translate, $modal, ObjectLookupService, HelperUiGridService, Util, MessageService, LookupService) {
+angular.module('admin').controller('Admin.NestedLookupSubLookupController', ['$scope', '$translate', '$modal', '$timeout', 'Object.LookupService', 'Helper.UiGridService', 'UtilService', 'MessageService', 'LookupService', function ($scope, $translate, $modal, $timeout, ObjectLookupService, HelperUiGridService, Util, MessageService, LookupService) {
 
     var gridHelper = new HelperUiGridService.Grid({
         scope: $scope
@@ -89,6 +89,7 @@ angular.module('admin').controller('Admin.NestedLookupSubLookupController', ['$s
                         if (entry.key === rowEntity.key) {
                             $scope.lookup = [];
                             $scope.lookup.push(entry);
+                            $scope.gridOptions.data.splice(entryIdx, 1);
                             idx = entryIdx;
                             return true;
                         }
@@ -153,10 +154,14 @@ angular.module('admin').controller('Admin.NestedLookupSubLookupController', ['$s
         var promiseSaveInfo = LookupService.deleteSubLookup($scope.lookup[0].key, $scope.selectedParentLookupValue.key, $scope.selectedLookupDef);
         promiseSaveInfo.then(function (lookup) {
             MessageService.succsessAction();
-            return lookup;
+            $timeout(function () {
+                fetchLookup();
+            }, 5000);
         }, function (error) {
             MessageService.error(error.data ? error.data : error);
-            fetchLookup();
+            $timeout(function () {
+                fetchLookup();
+            }, 5000);
             return error;
         });
     }
