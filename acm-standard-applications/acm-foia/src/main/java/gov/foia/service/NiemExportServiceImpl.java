@@ -49,11 +49,13 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
@@ -80,12 +82,16 @@ import gov.foia.model.FoiaConfig;
 
 public class NiemExportServiceImpl implements NiemExportService
 {
-    private final Logger LOG = LogManager.getLogger(getClass());
+    public static final String IEPD_FOIA_ANNUAL_REPORT_TAG = "iepd:FoiaAnnualReport";
+    public static final String NIEM_REFERENCE_ATTRIBUTE = "s:ref";
 
     public static final String AGENCY_IDENTIFIER_COLUMN = "Agency / Component";
     public static final String LOWER_THAN_ONE_IDENTIFIER = "LT1";
+    public static final String COMPONENT_DATA_REFERENCE = "ComponentDataReference";
+    public static final String ORGANIZATION_REFERENCE = "OrganizationReference";
+    public static final String GRAND_TOTAL_ROW = "Grand Total";
 
-    private RestTemplate restTemplate;
+    private final Logger LOG = LogManager.getLogger(getClass());
     private LookupDao lookupDao;
     private ReportService reportService;
     private PentahoReportsConfig reportsConfig;
@@ -95,70 +101,20 @@ public class NiemExportServiceImpl implements NiemExportService
     public File exportSingleReport(DOJReport report) throws Exception
     {
         LOG.debug("Started exporting a single DOJ Yearly report section in NIEM XML Format");
+        int fiscalYear = Year.now().getValue();
 
         List<Report> acmReports = reportService.getPentahoReports();
         Map<String, String> dojYearlyReports = foiaConfig.getDojYearlyReports();
         Map<String, String> agencyIdentifiers = getComponentAgencies();
 
-        Document document = createYearlyReportDocumentWithBaseData(agencyIdentifiers);
-        Element foiaAnnualReport = (Element) document.getElementsByTagName("iepd:FoiaAnnualReport").item(0);
+        Document document = createYearlyReportDocumentWithBaseData(agencyIdentifiers, fiscalYear);
+        Element foiaAnnualReport = (Element) document.getElementsByTagName(IEPD_FOIA_ANNUAL_REPORT_TAG).item(0);
 
-        File temp = File.createTempFile("reports-merged-file", ".xls");
-        FileOutputStream fileOutputStream = new FileOutputStream(temp);
-
-        List<Map<String, String>> data = exportPentahoReportToDataList(acmReports, dojYearlyReports, report);
-
-        if (data != null)
+        File temp = File.createTempFile("reports-merged-file", ".xml");
+        try (FileOutputStream fileOutputStream = new FileOutputStream(temp))
         {
-            appendReportSection(data, foiaAnnualReport, agencyIdentifiers, report);
-        }
-        else
-        {
-            Element emptyReportElement = document.createElement(report.getSectionName());
-            foiaAnnualReport.appendChild(emptyReportElement);
-            LOG.warn("Report section {} won't be included and may not exists.", report.name());
-        }
+            List<Map<String, String>> data = exportPentahoReportToDataList(acmReports, dojYearlyReports, report, fiscalYear);
 
-        Transformer tf = TransformerFactory.newInstance().newTransformer();
-        tf.setOutputProperty(OutputKeys.INDENT, "yes");
-
-        checkDoc(document);
-
-        tf.transform(new DOMSource(document), new StreamResult(fileOutputStream));
-
-        LOG.debug("Finished exporting a single DOJ Yearly report section in NIEM XML Format");
-
-        return temp;
-    }
-
-    @Override
-    public File exportYearlyReport() throws Exception
-    {
-        LOG.debug("Started exporting all DOJ Yearly reports in NIEM XML Format");
-
-        List<Report> acmReports = reportService.getPentahoReports();
-        Map<String, String> dojYearlyReports = foiaConfig.getDojYearlyReports();
-        Map<String, String> agencyIdentifiers = getComponentAgencies();
-
-        Document document = createYearlyReportDocumentWithBaseData(agencyIdentifiers);
-        Element foiaAnnualReport = (Element) document.getElementsByTagName("iepd:FoiaAnnualReport").item(0);
-
-        File temp = File.createTempFile("reports-merged-file", ".xls");
-        FileOutputStream fileOutputStream = new FileOutputStream(temp);
-
-        Map<String, List<Map<String, String>>> downloadedReportsData = Arrays.asList(DOJReport.values())
-                .parallelStream()
-                .map(report -> {
-
-                    List<Map<String, String>> data = exportPentahoReportToDataList(acmReports, dojYearlyReports, report);
-                    return new AbstractMap.SimpleEntry<>(report.name(), data);
-
-                })
-                .collect(HashMap::new, (m, v) -> m.put(v.getKey(), v.getValue()), HashMap::putAll);
-
-        for (DOJReport report : DOJReport.values())
-        {
-            List<Map<String, String>> data = downloadedReportsData.get(report.name());
             if (data != null)
             {
                 appendReportSection(data, foiaAnnualReport, agencyIdentifiers, report);
@@ -169,14 +125,62 @@ public class NiemExportServiceImpl implements NiemExportService
                 foiaAnnualReport.appendChild(emptyReportElement);
                 LOG.warn("Report section {} won't be included and may not exists.", report.name());
             }
+
+            checkDoc(document);
+
+            transformXMLToFile(document, fileOutputStream);
+
         }
 
-        Transformer tf = TransformerFactory.newInstance().newTransformer();
-        tf.setOutputProperty(OutputKeys.INDENT, "yes");
+        LOG.debug("Finished exporting a single DOJ Yearly report section in NIEM XML Format");
 
-        checkDoc(document);
+        return temp;
+    }
 
-        tf.transform(new DOMSource(document), new StreamResult(fileOutputStream));
+    @Override
+    public File exportYearlyReport(int fiscalYear) throws Exception
+    {
+        LOG.debug("Started exporting all DOJ Yearly reports in NIEM XML Format");
+
+        List<Report> acmReports = reportService.getPentahoReports();
+        Map<String, String> dojYearlyReports = foiaConfig.getDojYearlyReports();
+        Map<String, String> agencyIdentifiers = getComponentAgencies();
+
+        Document document = createYearlyReportDocumentWithBaseData(agencyIdentifiers, fiscalYear);
+        Element foiaAnnualReport = (Element) document.getElementsByTagName(IEPD_FOIA_ANNUAL_REPORT_TAG).item(0);
+
+        File temp = File.createTempFile("reports-merged-file", ".xml");
+        try (FileOutputStream fileOutputStream = new FileOutputStream(temp))
+        {
+            Map<String, List<Map<String, String>>> downloadedReportsData = Arrays.asList(DOJReport.values())
+                    .parallelStream()
+                    .map(report -> {
+
+                        List<Map<String, String>> data = exportPentahoReportToDataList(acmReports, dojYearlyReports, report, fiscalYear);
+                        return new AbstractMap.SimpleEntry<>(report.name(), data);
+
+                    })
+                    .collect(HashMap::new, (m, v) -> m.put(v.getKey(), v.getValue()), HashMap::putAll);
+
+            for (DOJReport report : DOJReport.values())
+            {
+                List<Map<String, String>> data = downloadedReportsData.get(report.name());
+                if (data != null)
+                {
+                    appendReportSection(data, foiaAnnualReport, agencyIdentifiers, report);
+                }
+                else
+                {
+                    Element emptyReportElement = document.createElement(report.getSectionName());
+                    foiaAnnualReport.appendChild(emptyReportElement);
+                    LOG.warn("Report section {} won't be included and may not exists.", report.name());
+                }
+            }
+
+            checkDoc(document);
+
+            transformXMLToFile(document, fileOutputStream);
+        }
 
         LOG.debug("Finished exporting all DOJ Yearly reports in NIEM XML Format");
 
@@ -184,7 +188,7 @@ public class NiemExportServiceImpl implements NiemExportService
     }
 
     private List<Map<String, String>> exportPentahoReportToDataList(List<Report> acmReports, Map<String, String> dojYearlyReports,
-            DOJReport report)
+            DOJReport report, int fiscalYear)
     {
         String dojReportPropertyName = dojYearlyReports.get(report.name());
         Report acmReport = acmReports.stream().filter(rep -> rep.getPropertyName().equals(dojReportPropertyName)).findAny()
@@ -197,7 +201,7 @@ public class NiemExportServiceImpl implements NiemExportService
             String reportPath = acmReport.getName();
 
             String path = reportsConfig.getServerUrl() + reportsConfig.getReportUrl() + reportPath
-                    + "/service/export?format=CSV";
+                    + "/service/export?FISCAL_YEAR=" + fiscalYear + "&format=CSV";
 
             ResponseEntity<Resource> response = exportPenathoReportInCSV(path);
 
@@ -213,6 +217,17 @@ public class NiemExportServiceImpl implements NiemExportService
 
         }
         return data;
+    }
+
+    private void transformXMLToFile(Document document, FileOutputStream fileOutputStream) throws TransformerException
+    {
+        TransformerFactory factory = TransformerFactory.newInstance();
+        factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+
+        Transformer transformer = factory.newTransformer();
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+
+        transformer.transform(new DOMSource(document), new StreamResult(fileOutputStream));
     }
 
     @Override
@@ -268,9 +283,12 @@ public class NiemExportServiceImpl implements NiemExportService
     {
         Map<String, String> agencyIdentifiers = new LinkedHashMap<>();
 
-        List<StandardLookupEntry> componentAgenciesLookupEntries = (List<StandardLookupEntry>) getLookupDao()
+        List<StandardLookupEntry> componentAgenciesLookupEntries = getLookupDao()
                 .getLookupByName("componentsAgencies")
-                .getEntries();
+                .getEntries()
+                .stream()
+                .map(obj -> (StandardLookupEntry) obj)
+                .collect(Collectors.toList());
 
         for (int i = 0; i < componentAgenciesLookupEntries.size(); i++)
         {
@@ -281,13 +299,14 @@ public class NiemExportServiceImpl implements NiemExportService
     }
 
     @Override
-    public Document createYearlyReportDocumentWithBaseData(Map<String, String> agencyIdentifiers) throws ParserConfigurationException
+    public Document createYearlyReportDocumentWithBaseData(Map<String, String> agencyIdentifiers, int fiscalYear)
+            throws ParserConfigurationException
     {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = dbf.newDocumentBuilder();
         Document document = docBuilder.newDocument();
 
-        Element foiaAnnualReport = document.createElement("iepd:FoiaAnnualReport");
+        Element foiaAnnualReport = document.createElement(IEPD_FOIA_ANNUAL_REPORT_TAG);
 
         foiaAnnualReport.setAttribute("xmlns:iepd", "http://leisp.usdoj.gov/niem/FoiaAnnualReport/exchange/1.03");
         foiaAnnualReport.setAttribute("xsi:schemaLocation",
@@ -313,7 +332,7 @@ public class NiemExportServiceImpl implements NiemExportService
 
         appendOrganizationSection(foiaAnnualReport, agencyIdentifiers);
 
-        addElement(foiaAnnualReport, "foia:DocumentFiscalYearDate", String.valueOf(Year.now().getValue()));
+        addElement(foiaAnnualReport, "foia:DocumentFiscalYearDate", String.valueOf(fiscalYear));
 
         return document;
     }
@@ -515,11 +534,11 @@ public class NiemExportServiceImpl implements NiemExportService
         Element reliedUponStatuteElement = parent.getOwnerDocument().createElement("foia:ReliedUponStatuteOrganizationAssociation");
 
         Element componentDataReference = parent.getOwnerDocument().createElement("foia:ComponentDataReference");
-        componentDataReference.setAttribute("s:ref", record.get("ComponentDataReference"));
+        componentDataReference.setAttribute(NIEM_REFERENCE_ATTRIBUTE, record.get(COMPONENT_DATA_REFERENCE));
         reliedUponStatuteElement.appendChild(componentDataReference);
 
         Element organizationReference = parent.getOwnerDocument().createElement("nc:OrganizationReference");
-        organizationReference.setAttribute("s:ref", record.get("OrganizationReference"));
+        organizationReference.setAttribute(NIEM_REFERENCE_ATTRIBUTE, record.get(ORGANIZATION_REFERENCE));
         reliedUponStatuteElement.appendChild(organizationReference);
 
         String reliedUponStatute = record.get("Number of Times Relied upon by Agency / Component");
@@ -689,13 +708,12 @@ public class NiemExportServiceImpl implements NiemExportService
         if (report == DOJReport.REQUEST_DENIAL_OTHER_REASON)
         {
             descriptionColumn = "Description of \"Other\" Reasons for Denials from Chart B(1)";
-            quantityColumn = "Number of Times \"Other\" Reason Was Relied Upon";
         }
         else
         {
             descriptionColumn = "Description of \"Other\" Reasons for Denials from Chart C(2)";
-            quantityColumn = "Number of Times \"Other\" Reason Was Relied Upon";
         }
+        quantityColumn = "Number of Times \"Other\" Reason Was Relied Upon";
         List<Map<String, String>> rearrangedData = rearrangeMultiLineData(data, descriptionColumn, quantityColumn);
         List<Map<String, String>> filteredData = getDataWithComponentReferences(rearrangedData, agencyIdentifiers, report);
 
@@ -709,7 +727,7 @@ public class NiemExportServiceImpl implements NiemExportService
     private void appendOtherDenialReasonItem(Element parent, Map<String, String> record)
     {
         Element componentOtherDenialReason = parent.getOwnerDocument().createElement("foia:ComponentOtherDenialReason");
-        componentOtherDenialReason.setAttribute("s:id", record.get("ComponentDataReference"));
+        componentOtherDenialReason.setAttribute("s:id", record.get(COMPONENT_DATA_REFERENCE));
 
         String total = record.remove("Total");
 
@@ -822,7 +840,7 @@ public class NiemExportServiceImpl implements NiemExportService
     private void appendProcessedResponseTimeItem(Element parent, Map<String, String> record)
     {
         Element processedResponseTimeElement = parent.getOwnerDocument().createElement("foia:ProcessedResponseTime");
-        processedResponseTimeElement.setAttribute("s:id", record.get("ComponentDataReference"));
+        processedResponseTimeElement.setAttribute("s:id", record.get(COMPONENT_DATA_REFERENCE));
 
         Element simpleResponseTimeElement = parent.getOwnerDocument().createElement("foia:SimpleResponseTime");
         appendResponseTimeValuesPerTrack(simpleResponseTimeElement, record, "simple");
@@ -898,7 +916,7 @@ public class NiemExportServiceImpl implements NiemExportService
     private void appendPendingPerfectedRequestsItem(Element parent, Map<String, String> record)
     {
         Element pendingPerfectedRequestsElement = parent.getOwnerDocument().createElement("foia:PendingPerfectedRequests");
-        pendingPerfectedRequestsElement.setAttribute("s:id", record.get("ComponentDataReference"));
+        pendingPerfectedRequestsElement.setAttribute("s:id", record.get(COMPONENT_DATA_REFERENCE));
 
         Element simplePendingRequestsElement = parent.getOwnerDocument().createElement("foia:SimplePendingRequestStatistics");
         appendPendingRequestStatisticsPerTrack(simplePendingRequestsElement, record, "simple");
@@ -1003,7 +1021,7 @@ public class NiemExportServiceImpl implements NiemExportService
     private void appendTimeIncrementItem(Element parent, Map<String, String> record)
     {
         Element componentResponseTimeIncrements = parent.getOwnerDocument().createElement("foia:ComponentResponseTimeIncrements");
-        componentResponseTimeIncrements.setAttribute("s:id", record.get("ComponentDataReference"));
+        componentResponseTimeIncrements.setAttribute("s:id", record.get(COMPONENT_DATA_REFERENCE));
 
         int totalTimeIncrementQuantity = 0;
 
@@ -1062,7 +1080,7 @@ public class NiemExportServiceImpl implements NiemExportService
     private void appendAppealDispositionItem(Element parent, Map<String, String> record)
     {
         Element appealDispositionElement = parent.getOwnerDocument().createElement("foia:AppealDisposition");
-        appealDispositionElement.setAttribute("s:id", record.get("ComponentDataReference"));
+        appealDispositionElement.setAttribute("s:id", record.get(COMPONENT_DATA_REFERENCE));
 
         String affirmedAppealCountString = record.get("Number Affirmed on Appeal");
         String partialAppealCountString = record.get("Number Partially Affirmed & Partially Reversed/Remanded on Appeal");
@@ -1115,7 +1133,7 @@ public class NiemExportServiceImpl implements NiemExportService
     private void appendRequestDispositionItem(Element parent, Map<String, String> record)
     {
         Element requestDispositionElement = parent.getOwnerDocument().createElement("foia:RequestDisposition");
-        requestDispositionElement.setAttribute("s:id", record.get("ComponentDataReference"));
+        requestDispositionElement.setAttribute("s:id", record.get(COMPONENT_DATA_REFERENCE));
 
         String fullGrant = record.get("Number of Full Grants");
         String partialGrant = record.get("Number of Partial Grants/Partial Denials");
@@ -1186,7 +1204,7 @@ public class NiemExportServiceImpl implements NiemExportService
     private void appendAppealNonExemptionDenialItem(Element parent, Map<String, String> record)
     {
         Element appealDispositionElement = parent.getOwnerDocument().createElement("foia:AppealNonExemptionDenial");
-        appealDispositionElement.setAttribute("s:id", record.get("ComponentDataReference"));
+        appealDispositionElement.setAttribute("s:id", record.get(COMPONENT_DATA_REFERENCE));
 
         String noRecords = record.get("No Records");
         String referred = record.get("Records Referred at Initial Request Level");
@@ -1286,7 +1304,7 @@ public class NiemExportServiceImpl implements NiemExportService
     private void appendAppealDispositionAppliedExemptionsItem(Element parent, Map<String, String> record)
     {
         Element componentAppliedExemptionsElement = parent.getOwnerDocument().createElement("foia:ComponentAppliedExemptions");
-        componentAppliedExemptionsElement.setAttribute("s:id", record.get("ComponentDataReference"));
+        componentAppliedExemptionsElement.setAttribute("s:id", record.get(COMPONENT_DATA_REFERENCE));
 
         for (Map.Entry<String, String> exemptionEntry : record.entrySet())
         {
@@ -1362,7 +1380,7 @@ public class NiemExportServiceImpl implements NiemExportService
     private void appendProcessingComparisonItem(Element parent, Map<String, String> record)
     {
         Element processingComparisonElement = parent.getOwnerDocument().createElement("foia:ProcessingComparison");
-        processingComparisonElement.setAttribute("s:id", record.get("ComponentDataReference"));
+        processingComparisonElement.setAttribute("s:id", record.get(COMPONENT_DATA_REFERENCE));
 
         String itemsReceivedLastYear = record.get("Number Received During Fiscal Year from Last Year's Annual Report");
         String itemsReceivedCurrentYear = record.get("Number Received During Fiscal Year from Current Annual Report");
@@ -1449,7 +1467,7 @@ public class NiemExportServiceImpl implements NiemExportService
     private void appendProcessingItem(Element parent, Map<String, String> record, DOJReport report)
     {
         Element processingElement = parent.getOwnerDocument().createElement("foia:ProcessingStatistics");
-        processingElement.setAttribute("s:id", record.get("ComponentDataReference"));
+        processingElement.setAttribute("s:id", record.get(COMPONENT_DATA_REFERENCE));
 
         String itemsPendingAtStart;
         String itemsReceived;
@@ -1520,7 +1538,7 @@ public class NiemExportServiceImpl implements NiemExportService
     private void appendResponseTimeItem(Element parent, Map<String, String> record)
     {
         Element responseTimeElement = parent.getOwnerDocument().createElement("foia:ResponseTime");
-        responseTimeElement.setAttribute("s:id", record.get("ComponentDataReference"));
+        responseTimeElement.setAttribute("s:id", record.get(COMPONENT_DATA_REFERENCE));
 
         String medianNumberOfDays = record.get("Median number of Days");
         String averageNumberOfDays = record.get("Average Number of Days");
@@ -1570,7 +1588,7 @@ public class NiemExportServiceImpl implements NiemExportService
     private void appendExpeditedProcessingItem(Element parent, Map<String, String> record)
     {
         Element expeditedProcessingElement = parent.getOwnerDocument().createElement("foia:ExpeditedProcessing");
-        expeditedProcessingElement.setAttribute("s:id", record.get("ComponentDataReference"));
+        expeditedProcessingElement.setAttribute("s:id", record.get(COMPONENT_DATA_REFERENCE));
 
         String granted = record.get("Number Granted");
         String denied = record.get("Number Denied");
@@ -1625,7 +1643,7 @@ public class NiemExportServiceImpl implements NiemExportService
     private void appendFeeWaiverItem(Element parent, Map<String, String> record)
     {
         Element feeWaiverElement = parent.getOwnerDocument().createElement("foia:FeeWaiver");
-        feeWaiverElement.setAttribute("s:id", record.get("ComponentDataReference"));
+        feeWaiverElement.setAttribute("s:id", record.get(COMPONENT_DATA_REFERENCE));
 
         String granted = record.get("Number Granted");
         String denied = record.get("Number Denied");
@@ -1676,7 +1694,7 @@ public class NiemExportServiceImpl implements NiemExportService
     private void appendPersonnelAndCostItem(Element parent, Map<String, String> record)
     {
         Element personnelAndCostElement = parent.getOwnerDocument().createElement("foia:PersonnelAndCost");
-        personnelAndCostElement.setAttribute("s:id", record.get("ComponentDataReference"));
+        personnelAndCostElement.setAttribute("s:id", record.get(COMPONENT_DATA_REFERENCE));
 
         String fullTimeStaff = record.get("Number of \"Full-Time FOIA Employees\"");
         String equivalentStaff = record.get("Number of \"Equivalent Full-Time FOIA Employees\"");
@@ -1730,7 +1748,7 @@ public class NiemExportServiceImpl implements NiemExportService
     private void appendFeesCollectedItem(Element parent, Map<String, String> record)
     {
         Element feesCollectedElement = parent.getOwnerDocument().createElement("foia:FeesCollected");
-        feesCollectedElement.setAttribute("s:id", record.get("ComponentDataReference"));
+        feesCollectedElement.setAttribute("s:id", record.get(COMPONENT_DATA_REFERENCE));
 
         String totalAmountOfFeesCollected = record.get("Total Amount of Fees Collected");
         String percentageOfTotalCosts = record.get("Percentage of Total Costs");
@@ -1783,7 +1801,7 @@ public class NiemExportServiceImpl implements NiemExportService
     private void appendSubsectionUsedItem(Element parent, Map<String, String> record)
     {
         Element subsectionUsedElement = parent.getOwnerDocument().createElement("foia:SubsectionUsed");
-        subsectionUsedElement.setAttribute("s:id", record.get("ComponentDataReference"));
+        subsectionUsedElement.setAttribute("s:id", record.get(COMPONENT_DATA_REFERENCE));
 
         String timesUsed = record.get("Number of Times Subsection Used");
 
@@ -1823,7 +1841,7 @@ public class NiemExportServiceImpl implements NiemExportService
     private void appendSubsectionPostItem(Element parent, Map<String, String> record)
     {
         Element subsectionPostElement = parent.getOwnerDocument().createElement("foia:Subsection");
-        subsectionPostElement.setAttribute("s:id", record.get("ComponentDataReference"));
+        subsectionPostElement.setAttribute("s:id", record.get(COMPONENT_DATA_REFERENCE));
 
         String postedByFOIAOffice = record.get("Number of Records Posted by the FOIA Office");
         String postedByProgramOffices = record.get("Number of Records Posted by the Program Office");
@@ -1865,7 +1883,7 @@ public class NiemExportServiceImpl implements NiemExportService
     private void appendBacklogItem(Element parent, Map<String, String> record)
     {
         Element backlogElement = parent.getOwnerDocument().createElement("foia:Backlog");
-        backlogElement.setAttribute("s:id", record.get("ComponentDataReference"));
+        backlogElement.setAttribute("s:id", record.get(COMPONENT_DATA_REFERENCE));
 
         String backloggedRequestQuantity = record.get("Number of Backlogged Requests as of End of Fiscal Year");
         String backloggedAppealQuantity = record.get("Number of Backlogged Appeals as of End of Fiscal Year");
@@ -1931,7 +1949,7 @@ public class NiemExportServiceImpl implements NiemExportService
     private void appendBacklogComparisonItem(Element parent, Map<String, String> record, DOJReport report)
     {
         Element backlogComparisonElement = parent.getOwnerDocument().createElement("foia:BacklogComparison");
-        backlogComparisonElement.setAttribute("s:id", record.get("ComponentDataReference"));
+        backlogComparisonElement.setAttribute("s:id", record.get(COMPONENT_DATA_REFERENCE));
 
         String backlogLastYearQuantity;
         String backlogCurrentYearQuantity;
@@ -1960,7 +1978,7 @@ public class NiemExportServiceImpl implements NiemExportService
     private boolean isValidAgencyRow(Map<String, String> agency)
     {
         return !agency.get(AGENCY_IDENTIFIER_COLUMN).contains("Total")
-                || agency.get(AGENCY_IDENTIFIER_COLUMN).equals("Grand Total");
+                || agency.get(AGENCY_IDENTIFIER_COLUMN).equals(GRAND_TOTAL_ROW);
     }
 
     private Map<String, List<Map<String, String>>> groupByComponentAndFilter(List<Map<String, String>> data)
@@ -1994,9 +2012,8 @@ public class NiemExportServiceImpl implements NiemExportService
     {
         List<Map<String, String>> filteredData = new ArrayList<>();
 
-        for (int i = 0; i < data.size(); i++)
+        for (Map<String, String> record : data)
         {
-            Map<String, String> record = data.get(i);
             String agency = record.get(AGENCY_IDENTIFIER_COLUMN);
 
             if (agencyIdentifiers.get(agency) != null)
@@ -2005,14 +2022,14 @@ public class NiemExportServiceImpl implements NiemExportService
                         agencyIdentifiers.get(agency));
                 filteredData.add(filteredRecord);
             }
-            else if (agency.equals("Grand Total"))
+            else if (agency.equals(GRAND_TOTAL_ROW))
             {
                 Map<String, String> filteredRecord = getComponentReferencedRecord(record, componentDataReference, "ORG0");
                 filteredData.add(filteredRecord);
             }
         }
         filteredData = filteredData.stream()
-                .filter(entry -> entry.get("ComponentDataReference") != null)
+                .filter(entry -> entry.get(COMPONENT_DATA_REFERENCE) != null)
                 .collect(toList());
 
         return filteredData;
@@ -2035,7 +2052,7 @@ public class NiemExportServiceImpl implements NiemExportService
                         agencyIdentifiers.get(agency));
                 filteredData.add(filteredRecord);
             }
-            else if ("Grand Total".equals(agency))
+            else if (GRAND_TOTAL_ROW.equals(agency))
             {
                 String componentDataReference = report.getIdPrefix().concat(String.valueOf(0));
                 Map<String, String> filteredRecord = getComponentReferencedRecord(record, componentDataReference, "ORG0");
@@ -2043,7 +2060,7 @@ public class NiemExportServiceImpl implements NiemExportService
             }
         }
         filteredData = filteredData.stream()
-                .filter(entry -> entry.get("ComponentDataReference") != null)
+                .filter(entry -> entry.get(COMPONENT_DATA_REFERENCE) != null)
                 .collect(toList());
 
         return filteredData;
@@ -2052,8 +2069,8 @@ public class NiemExportServiceImpl implements NiemExportService
     private Map<String, String> getComponentReferencedRecord(Map<String, String> record, String componentDataReference,
             String organizationReference)
     {
-        record.put("ComponentDataReference", componentDataReference);
-        record.put("OrganizationReference", organizationReference);
+        record.put(COMPONENT_DATA_REFERENCE, componentDataReference);
+        record.put(ORGANIZATION_REFERENCE, organizationReference);
         return record;
     }
 
@@ -2062,11 +2079,11 @@ public class NiemExportServiceImpl implements NiemExportService
         Element organizationAssociationElement = parentElement.getOwnerDocument().createElement(associationsElementName);
 
         Element componentDataReference = parentElement.getOwnerDocument().createElement("foia:ComponentDataReference");
-        componentDataReference.setAttribute("s:ref", data.get("ComponentDataReference"));
+        componentDataReference.setAttribute(NIEM_REFERENCE_ATTRIBUTE, data.get(COMPONENT_DATA_REFERENCE));
         organizationAssociationElement.appendChild(componentDataReference);
 
         Element organizationReference = parentElement.getOwnerDocument().createElement("nc:OrganizationReference");
-        organizationReference.setAttribute("s:ref", data.get("OrganizationReference"));
+        organizationReference.setAttribute(NIEM_REFERENCE_ATTRIBUTE, data.get(ORGANIZATION_REFERENCE));
         organizationAssociationElement.appendChild(organizationReference);
 
         parentElement.appendChild(organizationAssociationElement);
