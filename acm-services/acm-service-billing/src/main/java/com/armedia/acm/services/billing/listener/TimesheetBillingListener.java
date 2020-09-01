@@ -70,16 +70,17 @@ public class TimesheetBillingListener implements ApplicationListener<AcmTimeshee
 
         getTimesheetService().accumulateTimesheetByTypeAndChangeCode(timesheet).values().forEach(acmTime -> {
             createBillingItem(event.getUserId(), timesheet.getTitle(), acmTime.getObjectId(), acmTime.getType(), acmTime.getTotalCost(),
-                    BillingConstants.BILLING_ITEM_TYPE_TIMESHEET);
+                    BillingConstants.BILLING_ITEM_TYPE_TIMESHEET, timesheet.getId());
         });
     }
 
     private void createBillingItem(String userId, String title, Long parentObjectId, String parentObjectType, double balance,
-            String itemType)
+            String itemType, Long referenceObjectId)
     {
         try
         {
-            getBillingService().createBillingItem(populateBillingItem(userId, title, parentObjectId, parentObjectType, balance, itemType));
+            getBillingService().createBillingItem(
+                    populateBillingItem(userId, title, parentObjectId, parentObjectType, balance, itemType, referenceObjectId));
         }
         catch (CreateBillingItemException e)
         {
@@ -89,7 +90,7 @@ public class TimesheetBillingListener implements ApplicationListener<AcmTimeshee
     }
 
     private BillingItem populateBillingItem(String creator, String itemDescription, Long parentObjectId, String parentObjectType,
-            Double itemAmount, String itemType)
+            Double itemAmount, String itemType, Long referenceObjectId)
     {
         BillingItem billingItem = new BillingItem();
         billingItem.setCreator(creator);
@@ -99,6 +100,7 @@ public class TimesheetBillingListener implements ApplicationListener<AcmTimeshee
         billingItem.setParentObjectType(parentObjectType);
         billingItem.setItemAmount(itemAmount);
         billingItem.setItemType(itemType);
+        billingItem.setReferenceObjectId(referenceObjectId);
         return billingItem;
     }
 

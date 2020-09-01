@@ -920,22 +920,6 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
 
     /**
      * @ngdoc method
-     * @name getPrefixes
-     * @methodOf services:Object.LookupService
-     *
-     * @description
-     * Query list of all exemptionStatutes
-     *
-     * @returns {Object} An array returned by $resource
-     */
-
-    Service.getPrefixes = function () {
-        return Service.getLookupByLookupName('prefixNewRequest');
-
-    };
-
-    /**
-     * @ngdoc method
      * @name getRequestTypes
      * @methodOf services:Object.LookupService
      *
