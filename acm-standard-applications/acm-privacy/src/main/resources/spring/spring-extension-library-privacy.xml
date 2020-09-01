@@ -71,6 +71,7 @@
             <beans:property name="userTrackerService" ref="userTrackerService"/>
             <beans:property name="saveSARService" ref="saveSARService"/>
             <beans:property name="portalSARPersonDao" ref="portalSARPersonDao"/>
+            <beans:property name="personDao" ref="acmPersonDao"/>
             <beans:property name="portalRequestService" ref="portalRequestService"/>
             <beans:property name="portalUserServiceProvider" ref="sarPortalUserServiceProvider"/>
         </beans:bean>

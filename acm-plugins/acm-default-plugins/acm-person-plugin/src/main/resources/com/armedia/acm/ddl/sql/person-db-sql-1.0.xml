@@ -9,4 +9,21 @@
         <sql>UPDATE acm_person SET cm_family_name='update-empty-family-name' where cm_family_name=''</sql>
     </changeSet>
 
+    <changeSet id="02-acm_person-update-person-title" author="aleksandar.acevski"
+               logicalFilePath="/ddl/sql/person-db-sql-1.0.xml">
+        <sql>UPDATE acm_person SET cm_person_title = 'ms' WHERE cm_person_title= 'Ms.'</sql>
+    </changeSet>
+    <changeSet id="03-acm_person-update-person-title" author="aleksandar.acevski"
+               logicalFilePath="/ddl/sql/person-db-sql-1.0.xml">
+        <sql>UPDATE acm_person SET cm_person_title = 'mr' WHERE cm_person_title= 'Mr.'</sql>
+    </changeSet>
+    <changeSet id="04-acm_person-update-person-title" author="aleksandar.acevski"
+               logicalFilePath="/ddl/sql/person-db-sql-1.0.xml">
+        <sql>UPDATE acm_person SET cm_person_title = 'ms' WHERE cm_person_title= 'Ms'</sql>
+    </changeSet>
+    <changeSet id="05-acm_person-update-person-title" author="aleksandar.acevski"
+               logicalFilePath="/ddl/sql/person-db-sql-1.0.xml">
+        <sql>UPDATE acm_person SET cm_person_title = 'mr' WHERE cm_person_title= 'Mr'</sql>
+    </changeSet>
+
 </databaseChangeLog>

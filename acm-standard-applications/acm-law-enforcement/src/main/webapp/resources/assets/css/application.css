@@ -1923,3 +1923,23 @@ textarea {
     cursor: pointer;
     text-decoration: underline;
 }
+
+
+
+/* Adjust IFRAME padding when user collapses left navigation */
+.page-wrapper.collapsed .new-iframe, .page-wrapper.collapsed .reports-iframe, .page-wrapper.collapsed .audit-iframe {
+    padding-right: 15px;
+}
+
+
+.page-wrapper.collapsed .analytics-iframe { 
+	padding-right: 65px;
+}
+
+#adhoc-reports-iframe {
+    padding-right: 225px
+}
+
+.page-wrapper.collapsed #adhoc-reports-iframe {
+    padding-right: 65px
+}

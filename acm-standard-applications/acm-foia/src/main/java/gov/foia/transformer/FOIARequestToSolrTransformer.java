@@ -56,17 +56,15 @@ public class FOIARequestToSolrTransformer extends CaseFileToSolrTransformer
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(CaseFile in)
     {
         SolrAdvancedSearchDocument solr = null;
-
         if (in instanceof FOIARequest)
         {
             FOIARequest requestIn = (FOIARequest) in;
             solr = super.toSolrAdvancedSearch(requestIn);
-
             if (solr != null)
             {
                 mapRequestProperties(requestIn, solr.getAdditionalProperties());
+                solr.setObject_sub_type_s("FOIA_REQUEST");
             }
-
             return solr;
         }
         else
@@ -85,12 +83,11 @@ public class FOIARequestToSolrTransformer extends CaseFileToSolrTransformer
         {
             FOIARequest requestIn = (FOIARequest) in;
             solr = super.toSolrQuickSearch(requestIn);
-
             if (solr != null)
             {
                 mapRequestProperties(requestIn, solr.getAdditionalProperties());
+                solr.getAdditionalProperties().put("object_sub_type_s", "FOIA_REQUEST");
             }
-
             return solr;
         }
         else
@@ -112,7 +109,6 @@ public class FOIARequestToSolrTransformer extends CaseFileToSolrTransformer
      */
     protected void mapRequestProperties(FOIARequest requestIn, Map<String, Object> additionalProperties)
     {
-        additionalProperties.put("object_sub_type_s", "FOIA_REQUEST");
 
         additionalProperties.put("received_date_tdt", requestIn.getReceivedDate());
         additionalProperties.put("final_reply_date_tdt", requestIn.getFinalReplyDate());

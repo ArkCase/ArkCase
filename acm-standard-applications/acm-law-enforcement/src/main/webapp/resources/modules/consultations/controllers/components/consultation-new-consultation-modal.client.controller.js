@@ -71,7 +71,6 @@ angular.module('consultations').controller(
                     externalRequestingAgency: ''
                 };
                 $scope.config.data.organizationAssociations = [];
-                $scope.config.data.originator.person.title = $scope.prefixes[0].key;
                 $scope.config.data.receivedDate = moment.utc().format("YYYY-MM-DDTHH:mm:ss.sss");
                 $scope.config.data.dueDate = moment.utc().format("YYYY-MM-DDTHH:mm:ss.sss");
 
@@ -166,6 +165,20 @@ angular.module('consultations').controller(
                     } else {
                         $scope.confirmationEmail = '';
                     }
+                }
+            };
+
+            $scope.changeStates = function (country) {
+                switch (country) {
+                    case 'US':
+                        $scope.states = $scope.usStates;
+                        break;
+                    case 'CA':
+                        $scope.states = $scope.canadaProvinces;
+                        break;
+                    case 'JP':
+                        $scope.states = $scope.japanStates;
+                        break;
                 }
             };
             

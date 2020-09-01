@@ -334,8 +334,6 @@ angular.module('request-info').controller(
                 });
                 $scope.categories = reqConfig.categories;
                 $scope.requestTypes = reqConfig.requestTypes;
-                $scope.prefixes = reqConfig.prefixes;
-
             });
 
             ObjectLookupService.getPriorities().then(function (priorities) {

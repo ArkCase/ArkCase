@@ -276,7 +276,7 @@ title: ArkCase Document Management
             application/json:
               schema:
                 !include folder-list-schema.json    
-  /folder/{parentFolderId}/{newFolderName}:
+  /folder/{parentFolderId}/{newFolderName:.+}:
     description: Create a new folder.  API doc last verified on 2015-05-11.
     uriParameters:
       parentFolderId:

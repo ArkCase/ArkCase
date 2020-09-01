@@ -44,16 +44,16 @@ import com.armedia.acm.plugins.ecm.utils.EcmFileCamelUtils;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.service.objectlock.annotation.AcmAcquireAndReleaseObjectLock;
 import com.armedia.acm.web.api.MDCConstants;
-import gov.privacy.dao.SARFileDao;
-import gov.privacy.model.SAREcmFileVersion;
-import gov.privacy.model.SARFile;
+
 import org.apache.chemistry.opencmis.client.api.Document;
+import org.apache.chemistry.opencmis.commons.PropertyIds;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.persistence.PersistenceException;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -63,6 +63,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+
+import gov.privacy.dao.SARFileDao;
+import gov.privacy.model.SAREcmFileVersion;
+import gov.privacy.model.SARFile;
 
 /**
  * @author Vladimir Cherepnalkovski <vladimir.cherepnalkovski@armedia.com> on Jun, 2020
@@ -90,7 +94,7 @@ public class SAREcmFileServiceImpl extends EcmFileServiceImpl implements SAREcmF
         Map<String, Object> props = new HashMap<>();
         props.put(EcmFileConstants.CMIS_DOCUMENT_ID, getFolderAndFilesUtils().getActiveVersionCmisId(file));
         props.put(EcmFileConstants.DST_FOLDER_ID, targetFolder.getCmisFolderId());
-        props.put(EcmFileConstants.FILE_NAME, internalFileName);
+        props.put(PropertyIds.NAME, internalFileName);
         props.put(EcmFileConstants.FILE_MIME_TYPE, file.getFileActiveVersionMimeType());
         String cmisRepositoryId = targetFolder.getCmisRepositoryId();
         if (cmisRepositoryId == null)

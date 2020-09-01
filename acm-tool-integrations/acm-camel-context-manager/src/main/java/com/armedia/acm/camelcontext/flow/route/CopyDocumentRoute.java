@@ -48,11 +48,6 @@ public class CopyDocumentRoute extends ArkCaseAbstractRoute
 {
     private Logger log = LogManager.getLogger(getClass());
 
-    /*
-     * HOW TO CHECK IF FILE WITH SAME NAME ALREADY EXISTS IN THIS FOLDER??
-     * TODO check if file exists with same name!
-     */
-
     @Override
     public void configure()
     {
@@ -69,6 +64,7 @@ public class CopyDocumentRoute extends ArkCaseAbstractRoute
                     routeProperties = (Map<String, Object>) exchange.getIn().getBody();
                     exchange.getIn().getHeaders().put(PropertyIds.OBJECT_TYPE_ID, CamelCMISConstants.CMIS_DOCUMENT);
                     exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_OBJECT_ID, routeProperties.get("cmisDocumentId"));
+                    exchange.getIn().getHeaders().put(PropertyIds.NAME, routeProperties.get(PropertyIds.NAME));
                     exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_DESTIONATION_FOLDER_ID, routeProperties.get("dstFolderId"));
                     exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_ACTION, CamelCMISActions.COPY_DOCUMENT);
                     MDC.put(HttpInvokerUtil.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY,

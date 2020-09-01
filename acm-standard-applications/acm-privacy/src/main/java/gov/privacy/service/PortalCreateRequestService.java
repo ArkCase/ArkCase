@@ -33,8 +33,10 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
+import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.OrganizationAssociation;
+import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.users.service.tracker.UserTrackerService;
 import com.armedia.acm.web.api.MDCConstants;
@@ -53,6 +55,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -81,6 +84,8 @@ public class PortalCreateRequestService
     private SaveSARService saveSARService;
 
     private PortalSARPersonDao portalSARPersonDao;
+
+    private PersonDao personDao;
 
     private PortalRequestService portalRequestService;
 
@@ -192,10 +197,69 @@ public class PortalCreateRequestService
 
         SARPerson portalPerson;
         PortalPersonDTO portalPersonDTO = personType.equalsIgnoreCase("Subject") ? in.getSubject() : in.getRequester();
-        portalPerson = populateRequesterAndOrganizationFromRequest(portalPersonDTO);
+
+        Optional<Person> existingPerson = getPersonDao().findByEmail(portalPersonDTO.getEmail());
+
+        if (existingPerson.isPresent() && existingPerson.get() instanceof SARPerson)
+        {
+            portalPerson = updatePersonInfo(portalPersonDTO, existingPerson.get());
+        }
+        else
+        {
+            portalPerson = populateRequesterAndOrganizationFromRequest(portalPersonDTO);
+        }
 
         personAssociation.setPerson(portalPerson);
         return personAssociation;
+    }
+
+    private SARPerson updatePersonInfo(PortalPersonDTO portalPersonDTO, Person existingPerson)
+    {
+        SARPerson portalPerson = (SARPerson) existingPerson;
+
+        portalPerson.setGivenName(portalPersonDTO.getFirstName());
+        portalPerson.setFamilyName(portalPersonDTO.getLastName());
+        portalPerson.setMiddleName(portalPersonDTO.getMiddleName());
+        portalPerson.setTitle(portalPersonDTO.getPrefix());
+        portalPerson.setPosition(portalPersonDTO.getPosition());
+        portalPerson.setDateOfBirth(portalPersonDTO.getDateOfBirth());
+
+        PostalAddress address = getPostalAddressFromPortalSAR(portalPersonDTO.getAddress());
+        if (addressHasData(address) && existingPerson.getAddresses().stream().noneMatch(add -> areAddressesEqual(add, address)))
+        {
+            portalPerson.getAddresses().add(address);
+        }
+
+        List<ContactMethod> contactMethod = new ArrayList<>();
+        portalPerson.setContactMethods(contactMethod);
+
+        if (portalPersonDTO.getPhone() != null && !portalPersonDTO.getPhone().isEmpty()
+                && isNewContactMethod(existingPerson, portalPersonDTO.getPhone()))
+        {
+            ContactMethod phone = buildContactMethod("phone", portalPersonDTO.getPhone());
+            portalPerson.getContactMethods().add(phone);
+        }
+        if (portalPersonDTO.getEmail() != null && !portalPersonDTO.getEmail().isEmpty())
+        {
+            ContactMethod email = buildContactMethod("email", portalPersonDTO.getEmail());
+            portalPerson.getContactMethods().add(email);
+        }
+
+        return portalPerson;
+    }
+
+    private boolean areAddressesEqual(PostalAddress address1, PostalAddress address2)
+    {
+        return !address1.getStreetAddress().equals(address2.getStreetAddress())
+                || !address1.getStreetAddress2().equals(address2.getStreetAddress2())
+                || !address1.getCity().equals(address2.getCity())
+                || !address1.getZip().equals(address2.getZip())
+                || !address1.getState().equals(address2.getState());
+    }
+
+    private boolean isNewContactMethod(Person requester, String contactMethodValue)
+    {
+        return requester.getContactMethods().stream().noneMatch(cm -> cm.getValue().equals(contactMethodValue));
     }
 
     private OrganizationAssociation createOrganizationAssociation(SARPersonAssociation personAssociation)
@@ -339,5 +403,15 @@ public class PortalCreateRequestService
     public void setPortalUserServiceProvider(SARPortalUserServiceProvider portalUserServiceProvider)
     {
         this.portalUserServiceProvider = portalUserServiceProvider;
+    }
+
+    public PersonDao getPersonDao()
+    {
+        return personDao;
+    }
+
+    public void setPersonDao(PersonDao personDao)
+    {
+        this.personDao = personDao;
     }
 }
