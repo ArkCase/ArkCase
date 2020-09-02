@@ -367,12 +367,13 @@ angular.module('admin').service('Admin.ReportsConfigService', function ($http) {
      * Export data for all (DOJ) reports in a single document.
      *
      */
-    function exportReports(formatType) {
+    function exportReports(formatType, fiscalYear) {
         return $http({
             method: 'GET',
             url: 'api/latest/plugin/report/exportYearlyReport',
             params: {
-                "exportFormatType": formatType
+                "exportFormatType": formatType,
+                "fiscalYear": fiscalYear
             },
             responseType: 'arraybuffer'
         });

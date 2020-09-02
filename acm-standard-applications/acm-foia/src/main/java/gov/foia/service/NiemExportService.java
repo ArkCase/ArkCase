@@ -54,11 +54,13 @@ public interface NiemExportService
     /**
      * 
      * Converts all Pentaho exported CSV reports to an XML file in accordance to the FOIA Yearly Report NIEM Standard
-     * 
+     *
+     * @param fiscalYear
+     *            fiscal year for report generation
      * @return XML File in accordance to the FOIA Yearly Report NIEM Standard
      * @throws Exception
      */
-    File exportYearlyReport() throws Exception;
+    File exportYearlyReport(int fiscalYear) throws Exception;
 
     /**
      * 
@@ -75,10 +77,13 @@ public interface NiemExportService
      * 
      * @param agencyIdentifiers
      *            The agency name (as expected in the report) and their identification throughout the report
+     * @param fiscalYear
+     *            fiscal year for report generation
      * @return XML Document
      * @throws ParserConfigurationException
      */
-    Document createYearlyReportDocumentWithBaseData(Map<String, String> agencyIdentifiers) throws ParserConfigurationException;
+    Document createYearlyReportDocumentWithBaseData(Map<String, String> agencyIdentifiers, int fiscalYear)
+            throws ParserConfigurationException;
 
     /**
      * 
