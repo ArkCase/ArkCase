@@ -673,7 +673,7 @@ public class ReportServiceImpl implements ReportService
 
             try (PDDocument document = PDDocument.load(mergedReportsTemp))
             {
-                PDDocument updatedDocument = pdfService.replacePageNumbers(document);
+                PDDocument updatedDocument = pdfService.replacePageNumbersAndAddFiscalYear(document, fiscalYear);
                 updatedDocument.save(fos);
             }
         }
