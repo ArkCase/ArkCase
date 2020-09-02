@@ -203,6 +203,47 @@ public class SARQueueCorrespondenceService
         }
     }
 
+    public void handleRequestResponseLetter(Long requestId)
+    {
+        SubjectAccessRequest request = requestDao.find(requestId);
+        try
+        {
+            SARDocumentDescriptor documentDescriptor;
+            documentDescriptor = documentGeneratorService.getDocumentDescriptor(request, SARConstants.RECEIVE_RES);
+
+            String arkcaseFilename = String.format(documentDescriptor.getFilenameFormat(), request.getId());
+            String targetFolderId = request.getContainer().getAttachmentFolder() == null
+                    ? request.getContainer().getFolder().getCmisFolderId()
+                    : request.getContainer().getAttachmentFolder().getCmisFolderId();
+
+            SARFile letter = (SARFile) documentGenerator.generateAndUpload(documentDescriptor, request,
+                    targetFolderId, arkcaseFilename, documentGeneratorService.getReportSubstitutions(request));
+
+            EcmFileVersion ecmFileVersions = letter.getVersions().get(letter.getVersions().size() - 1);
+
+            AcmUser user = request.getAssigneeLdapId() != null ? userDao.findByUserId(request.getAssigneeLdapId()) : null;
+
+            String emailAddress = extractRequestorEmailAddress(request.getOriginator().getPerson());
+
+
+            Notification notification = notificationService.getNotificationBuilder()
+                    .newNotification("requestDocumentAttached", String.format("%s %s", request.getRequestType(), request.getCaseNumber()),
+                            request.getObjectType(), requestId, user != null ? user.getUserId() : null)
+                    .withFiles(Arrays.asList(ecmFileVersions))
+                    .withEmailAddresses(emailAddress)
+                    .forObjectWithNumber(request.getCaseNumber())
+                    .forObjectWithTitle(request.getTitle())
+                    .build();
+
+            notificationService.saveNotification(notification);
+
+        }
+        catch (Exception e)
+        {
+            log.error("Unable to generate and email Response Letter for {} [{}]", request.getRequestType(), request.getId(), e);
+        }
+    }
+
     public EcmFile generateCorrespondenceLetter(SubjectAccessRequest request, SARDocumentDescriptor documentDescriptor)
             throws AcmObjectNotFoundException, DocumentGeneratorException, AcmFolderException, AcmUserActionFailedException
     {
