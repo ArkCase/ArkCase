@@ -154,9 +154,6 @@ public class RecycleBinItemServiceImplTest extends EasyMockSupport
         expect(mockEcmFileService.moveFile(toBeDeleted.getFileId(), destinationContainer.getContainerObjectId(),
                 destinationContainer.getContainerObjectType(), destinationContainer.getFolder().getId())).andReturn(toBeDeleted);
 
-        mockEcmFileService.checkDuplicatesByHash(toBeDeleted);
-
-        mockEventPublisher.publishFileMovedInRecycleBinEvent(toBeDeleted, mockAuthentication, "ipAddress", true);
         expectLastCall();
         replayAll();
 
@@ -290,7 +287,7 @@ public class RecycleBinItemServiceImplTest extends EasyMockSupport
         expect(mockEcmFileService.moveFile(recycleBinItemDTO.getObjectId(), container.getContainerObjectId(),
                 container.getContainerObjectType(), recycleBinItem.getSourceFolderId())).andReturn(fileToBeRestored);
         
-        mockEcmFileService.checkDuplicatesByHash(fileToBeRestored);
+        mockEcmFileService.checkAndSetDuplicatesByHash(fileToBeRestored);
 
         replayAll();
 
