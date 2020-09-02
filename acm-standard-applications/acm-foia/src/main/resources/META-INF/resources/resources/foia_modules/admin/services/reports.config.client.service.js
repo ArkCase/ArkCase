@@ -31,6 +31,7 @@ angular.module('admin').service('Admin.ReportsConfigService', function ($http) {
         saveReports: saveReports,
         syncReports: syncReports,
         exportReports: exportReports,
+        downloadExportedReports: downloadExportedReports,
         exportReportToNIEMXml: exportReportToNIEMXml
     });
 
@@ -374,6 +375,26 @@ angular.module('admin').service('Admin.ReportsConfigService', function ($http) {
             params: {
                 "exportFormatType": formatType,
                 "fiscalYear": fiscalYear
+            },
+            responseType: 'arraybuffer'
+        });
+    }
+
+    /**
+     * @ngdoc method
+     * @name downloadExportedReports
+     * @methodOf admin.service:Admin.ReportsConfigService
+     *
+     * @description
+     * Downlaod exported data for all (DOJ) reports in a single document.
+     *
+     */
+    function downloadExportedReports(filePath) {
+        return $http({
+            method: 'GET',
+            url: 'api/latest/plugin/report/exportYearlyReport/download',
+            params: {
+                "filePath": filePath,
             },
             responseType: 'arraybuffer'
         });
