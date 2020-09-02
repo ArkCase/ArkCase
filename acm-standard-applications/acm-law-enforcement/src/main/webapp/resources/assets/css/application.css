@@ -1943,3 +1943,10 @@ textarea {
 .page-wrapper.collapsed #adhoc-reports-iframe {
     padding-right: 65px
 }
+
+/* Workaround for multi-select boxes that need horizontal scrolling.  */
+select[multiple]:hover, select[size]:hover {
+    width:auto;
+    position: relative;
+    z-index: 1000;
+}
