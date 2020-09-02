@@ -122,7 +122,7 @@ angular.module('services').factory(
                             param : {
                                 type : "documentrepository"
                             },
-                            data : repository,
+                            data : JSOG.encode(repository),
                             onSuccess : function(data) {
                                 if (Service.validateDocumentRepositoryInfo(data)) {
                                     var cacheDocumentRepositoryInfo = new Store.CacheFifo(Service.CacheNames.DOC_REPO_INFO);
