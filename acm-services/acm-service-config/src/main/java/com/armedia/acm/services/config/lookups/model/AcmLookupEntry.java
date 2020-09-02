@@ -36,6 +36,8 @@ public abstract class AcmLookupEntry
 
     private String description;
 
+    private Integer order;
+
     public boolean isReadonly()
     {
         return readonly;
@@ -64,5 +66,15 @@ public abstract class AcmLookupEntry
     public void setDescription(String description)
     {
         this.description = description;
+    }
+
+    public Integer getOrder()
+    {
+        return order;
+    }
+
+    public void setOrder(Integer order)
+    {
+        this.order = order;
     }
 }
