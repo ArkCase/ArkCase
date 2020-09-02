@@ -541,7 +541,7 @@ public class NiemExportServiceImpl implements NiemExportService
         organizationReference.setAttribute(NIEM_REFERENCE_ATTRIBUTE, record.get(ORGANIZATION_REFERENCE));
         reliedUponStatuteElement.appendChild(organizationReference);
 
-        String reliedUponStatute = record.get("Number of Times Relied upon by Agency / Component");
+        String reliedUponStatute = record.get("Number of Times Relied upon by Agency Overall");
         addElement(reliedUponStatuteElement, "foia:ReliedUponStatuteQuantity", reliedUponStatute);
 
         parent.appendChild(reliedUponStatuteElement);
@@ -1477,16 +1477,16 @@ public class NiemExportServiceImpl implements NiemExportService
         if (report == DOJReport.PROCESSED_REQUESTS)
         {
             itemsPendingAtStart = record.get("Number of Requests Pending as of Start of  Fiscal Year");
-            itemsReceived = record.get("Number of Requests Received");
-            itemsProcessed = record.get("Number of Requests Processed");
-            itemsPendingAtEnd = record.get("Number of Requests Pending");
+            itemsReceived = record.get("Number of Requests Received in Fiscal Year");
+            itemsProcessed = record.get("Number of Requests Processed in Fiscal Year");
+            itemsPendingAtEnd = record.get("Number of Requests Pending as of End of Fiscal Year");
         }
         else if (report == DOJReport.PROCESSED_APPEALS)
         {
             itemsPendingAtStart = record.get("Number of Appeals Pending as of Start of Fiscal Year");
-            itemsReceived = record.get("Number of Appeals Received");
-            itemsProcessed = record.get("Number of Appeals Processed");
-            itemsPendingAtEnd = record.get("Number of Appeals Pending ");
+            itemsReceived = record.get("Number of Appeals Received in Fiscal Year");
+            itemsProcessed = record.get("Number of Appeals Processed in Fiscal Year");
+            itemsPendingAtEnd = record.get("Number of Appeals Pending as of End of Fiscal Year");
         }
         else
         {
@@ -1994,6 +1994,7 @@ public class NiemExportServiceImpl implements NiemExportService
     private Map<String, List<Map<String, String>>> groupDataByExemption(List<Map<String, String>> data)
     {
         return data.stream()
+                .filter(record -> record.get("Agency / Component") != null && !record.get(AGENCY_IDENTIFIER_COLUMN).equals(""))
                 .collect(Collectors.groupingBy(
                         it -> it.get("Statute"),
                         LinkedHashMap::new,
