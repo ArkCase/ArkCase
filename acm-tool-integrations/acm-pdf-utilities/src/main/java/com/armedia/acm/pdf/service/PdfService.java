@@ -251,11 +251,14 @@ public interface PdfService
 
     /**
      * 
-     * Replaces the bottom of each page of the document with a rectangle box that contains the page numbers
+     * Replaces the bottom of each page of the document with a rectangle box that contains the page numbers and adds the
+     * fiscal year
      * 
      * @param document
      *            source document
+     * @param fiscalYear
+     *            the fiscal year for the document
      * @return document with numbering
      */
-    PDDocument replacePageNumbers(PDDocument document) throws IOException;
+    PDDocument replacePageNumbersAndAddFiscalYear(PDDocument document, int fiscalYear) throws IOException;
 }
