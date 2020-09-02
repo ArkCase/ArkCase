@@ -56,18 +56,20 @@ public class ExportPentahoReportsAPIController
 
     @RequestMapping(value = "/exportYearlyReport", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<?> exportPentahoReportsToPDF(@RequestParam(value = "exportFormatType") String exportFormatType) throws Exception
+    public ResponseEntity<InputStreamResource> exportPentahoReportsToPDF(@RequestParam(value = "exportFormatType") String exportFormatType,
+            @RequestParam(value = "fiscalYear") int fiscalYear)
+            throws Exception
     {
         File mergedFile = null;
         if (exportFormatType.equals("pdf"))
         {
             List<String> reportTitles = niemExportService.getYearlyReportTitlesOrdered();
 
-            mergedFile = reportService.exportReportsPDFFormat(reportTitles);
+            mergedFile = reportService.exportReportsPDFFormat(reportTitles, fiscalYear);
         }
         else if (exportFormatType.equals("xml"))
         {
-            mergedFile = niemExportService.exportYearlyReport();
+            mergedFile = niemExportService.exportYearlyReport(fiscalYear);
         }
         return ResponseEntity
                 .ok()
@@ -79,7 +81,7 @@ public class ExportPentahoReportsAPIController
 
     @RequestMapping(value = "/exportReportToNIEMXml", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<?> exportReportToNIEMXml(@RequestParam(value = "report") String reportName) throws Exception
+    public ResponseEntity<InputStreamResource> exportReportToNIEMXml(@RequestParam(value = "report") String reportName) throws Exception
     {
 
         DOJReport report = DOJReport.valueOf(reportName);
