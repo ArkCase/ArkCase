@@ -28,6 +28,7 @@ package com.armedia.acm.plugins.report.service;
  */
 
 import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
+import com.armedia.acm.pdf.PdfServiceException;
 import com.armedia.acm.plugins.report.model.Report;
 
 import org.springframework.http.HttpEntity;
@@ -76,9 +77,14 @@ public interface ReportService
 
     List<String> getRolesForReport(Boolean authorized, String reportId, int startRow, int maxRows, String sortBy, String sortDirection, String filterName);
 
-    File exportReportsPDFFormat(List<String> orderedReportTitles, int fiscalYear) throws Exception;
+    void exportReportsPDFFormat(List<String> orderedReportTitles, int fiscalYear, Authentication auth)
+            throws IOException, PdfServiceException;
+
+    File exportReportsPDFFormat(List<String> orderedReportTitles, int fiscalYear) throws IOException, PdfServiceException;
 
     RestTemplate buildReportsRestTemplate();
 
     HttpEntity<Object> buildReportsRestEntity();
+
+    void sendReportsExport(String filePath, int fiscalYear, Authentication auth);
 }
