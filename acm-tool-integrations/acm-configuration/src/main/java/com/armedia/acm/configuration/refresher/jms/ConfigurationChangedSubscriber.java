@@ -60,6 +60,10 @@ public class ConfigurationChangedSubscriber
     @Named("proxyLdapFacade")
     private ConfigurationFacade ldapFacade;
 
+    @Autowired
+    @Named("proxyLookupsFacade")
+    private ConfigurationFacade lookupsFascade;
+
     @JmsListener(destination = "configuration.changed", containerFactory = "jmsTopicListenerContainerFactory")
     public void onConfigurationChanged(Message message)
     {
@@ -92,6 +96,16 @@ public class ConfigurationChangedSubscriber
         if (ldapFacade != null)
         {
             ldapFacade.refresh();
+        }
+    }
+
+    @JmsListener(destination = "lookups.changed", containerFactory = "jmsTopicListenerContainerFactory")
+    public void onLookupsChanged(Message message)
+    {
+        log.info("Refreshing on lookups change...");
+        if (lookupsFascade != null)
+        {
+            lookupsFascade.refresh();
         }
     }
 }

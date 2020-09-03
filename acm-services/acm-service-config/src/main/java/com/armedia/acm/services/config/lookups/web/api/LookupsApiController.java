@@ -33,8 +33,8 @@ import com.armedia.acm.core.exceptions.InvalidLookupException;
 import com.armedia.acm.services.config.lookups.model.LookupDefinition;
 import com.armedia.acm.services.config.lookups.service.LookupDao;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -83,15 +83,38 @@ public class LookupsApiController
      * @throws IOException
      *             when the underlying store cannot be accessed
      */
-    @RequestMapping(value = "/{name:.+}", method = RequestMethod.DELETE, produces = {
+    @RequestMapping(value = "/{name:.+}/{lookupType}", method = RequestMethod.DELETE, produces = {
             MediaType.APPLICATION_JSON_UTF8_VALUE,
             MediaType.TEXT_HTML_VALUE })
     @ResponseBody
-    public String deleteLookup(@PathVariable String name)
+    public String deleteLookup(@PathVariable("name") String name, @PathVariable("lookupType") String lookupType)
+            throws AcmResourceNotFoundException, AcmResourceNotModifiableException, IOException
+    {
+        log.debug("Deleting lookup with name: {} from configuration", name);
+        return lookupDao.deleteLookup(name, lookupType);
+    }
+
+    /**
+     * Rest API method to delete a sub lookup.
+     *
+     * @return all the updated lookups as json
+     * @throws AcmResourceNotFoundException
+     *             when the lookup cannot be found
+     * @throws AcmResourceNotModifiableException
+     *             when the lookup cannot be modified
+     * @throws IOException
+     *             when the underlying store cannot be accessed
+     */
+    @RequestMapping(value = "/{subLookupName:.+}/{parentName}/sublookup", method = RequestMethod.POST, produces = {
+            MediaType.APPLICATION_JSON_UTF8_VALUE,
+            MediaType.TEXT_HTML_VALUE })
+    @ResponseBody
+    public String deleteSubLookup(@PathVariable("subLookupName") String name, @PathVariable("parentName") String lookupType,
+            @RequestBody LookupDefinition lookupDefinition)
             throws AcmResourceNotFoundException, AcmResourceNotModifiableException, IOException
     {
         log.debug("Deleting lookup:" + name);
-        return lookupDao.deleteLookup(name);
+        return lookupDao.deleteSubLookup(name, lookupType, lookupDefinition);
     }
 
     /**

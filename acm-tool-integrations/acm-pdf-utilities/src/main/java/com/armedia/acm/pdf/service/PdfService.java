@@ -35,6 +35,8 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import javax.xml.transform.Source;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
@@ -221,6 +223,18 @@ public interface PdfService
     void mergeSources(PDFMergerUtility pdfMergerUtility, String filename) throws PdfServiceException;
 
     /**
+     * Merge multiple sources into single PDF document.
+     *
+     * @param pdfMergerUtility
+     *            PDF merger utility
+     * @param fos
+     *            output stream
+     * @throws PdfServiceException
+     *             on error creating merged document
+     */
+    void mergeSources(PDFMergerUtility pdfMergerUtility, FileOutputStream fos) throws PdfServiceException;
+
+    /**
      * Create new document out of extracted pages from another document.
      *
      * @param is
@@ -234,4 +248,17 @@ public interface PdfService
      *             on error creating extracted document
      */
     InputStream extractPages(InputStream is, String filename, List<Integer> pageNumbers) throws PdfServiceException;
+
+    /**
+     * 
+     * Replaces the bottom of each page of the document with a rectangle box that contains the page numbers and adds the
+     * fiscal year
+     * 
+     * @param document
+     *            source document
+     * @param fiscalYear
+     *            the fiscal year for the document
+     * @return document with numbering
+     */
+    PDDocument replacePageNumbersAndAddFiscalYear(PDDocument document, int fiscalYear) throws IOException;
 }

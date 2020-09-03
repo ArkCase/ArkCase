@@ -81,46 +81,6 @@
         "path": "/components/",
         "op": "add",
         "value": {
-            "id": "portalUsersConfiguration",
-            "title": "admin.portals.portalUsersConfiguration.title",
-            "enabled": true,
-            "type": "grid",
-            "enableFiltering": false,
-            "configurable": true,
-            "columnDefs": [
-                {
-                    "name": "first_name_lcs",
-                    "displayName": "admin.portals.portalUsersConfiguration.firstName",
-                    "visible": true,
-                    "headerCellFilter": "translate",
-                    "cellTemplate": "<a data-ui-sref=\"people.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>"
-                },
-                {
-                    "name": "last_name_lcs",
-                    "displayName": "admin.portals.portalUsersConfiguration.lastName",
-                    "visible": true,
-                    "headerCellFilter": "translate"
-                },
-                {
-                    "name": "default_email_lcs",
-                    "displayName": "admin.portals.portalUsersConfiguration.email",
-                    "visible": true,
-                    "headerCellFilter": "translate"
-                }
-            ],
-            "paginationPageSizes": [
-                5,
-                10,
-                20,
-                50
-            ],
-            "paginationPageSize": 20
-        }
-    },
-    {
-        "path": "/components/",
-        "op": "add",
-        "value": {
             "id": "userSearch",
             "title": "admin.userSearch.title",
             "enableFiltering": false,

@@ -30,8 +30,11 @@ package com.armedia.acm.plugins.report.service;
 import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
 import com.armedia.acm.plugins.report.model.Report;
 
+import org.springframework.http.HttpEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.client.RestTemplate;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -73,4 +76,9 @@ public interface ReportService
 
     List<String> getRolesForReport(Boolean authorized, String reportId, int startRow, int maxRows, String sortBy, String sortDirection, String filterName);
 
+    File exportReportsPDFFormat(List<String> orderedReportTitles, int fiscalYear) throws Exception;
+
+    RestTemplate buildReportsRestTemplate();
+
+    HttpEntity<Object> buildReportsRestEntity();
 }

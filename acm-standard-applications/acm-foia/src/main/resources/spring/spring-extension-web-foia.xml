@@ -58,5 +58,11 @@
         <beans:bean id="getNextAvailableRequestAPIController" class="gov.foia.web.api.GetNextAvailableRequestAPIController">
             <beans:property name="foiaRequestService" ref="foiaRequestService"/>
         </beans:bean>
+
+        <beans:bean id="exportPentahoAPIController" class="gov.foia.web.api.ExportPentahoReportsAPIController">
+            <beans:property name="reportService" ref="reportService"/>
+            <beans:property name="niemExportService" ref="niemExportService"/>
+        </beans:bean>
+
     </beans:beans>
 </beans:beans>

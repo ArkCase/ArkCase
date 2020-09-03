@@ -39,17 +39,17 @@ angular.module('tasks').controller(
                 if (!Util.isEmpty($scope.objectInfo.assignee)) {
                     if (Util.compare($scope.userId, $scope.objectInfo.assignee)) {
                         if ($scope.objectInfo.adhocTask || Util.isArrayEmpty($scope.objectInfo.availableOutcomes)) {
-                            if ($scope.objectInfo.businessProcessName == 'acmDocumentSignleTaskWorkflow' && !Util.goodValue($scope.objectInfo.completed, false)) {
+                            if ($scope.objectInfo.businessProcessName == 'acmDocumentSingleTaskWorkflow' && !Util.goodValue($scope.objectInfo.completed, false)) {
                                 $scope.showBtnApprove = true;
                             }
-                            if (!Util.goodValue($scope.objectInfo.completed, false) && $scope.objectInfo.businessProcessName != 'acmDocumentSignleTaskWorkflow') {
+                            if (!Util.goodValue($scope.objectInfo.completed, false) && $scope.objectInfo.businessProcessName != 'acmDocumentSingleTaskWorkflow') {
                                 $scope.showBtnSignature = true;
                                 $scope.showBtnDelete = true;
                                 $scope.showBtnComplete = true;
                             }
 
                             if (!Util.isEmpty($scope.objectInfo.owner) && !Util.isEmpty($scope.objectInfo.assignee)) {
-                                if (($scope.objectInfo.owner != $scope.objectInfo.assignee) && $scope.objectInfo.businessProcessName != 'acmDocumentSignleTaskWorkflow'
+                                if (($scope.objectInfo.owner != $scope.objectInfo.assignee) && $scope.objectInfo.businessProcessName != 'acmDocumentSingleTaskWorkflow'
                                     && $scope.objectInfo.type != 'web-portal-withdrawal' && $scope.objectInfo.type != 'web-portal-inquiry') {
                                     $scope.showBtnSignature = true;
                                     $scope.showBtnReject = true;

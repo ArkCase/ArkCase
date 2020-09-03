@@ -68,7 +68,7 @@ public class ActivityClassPathBpmnDeployer implements ApplicationContextAware
                     log.info("Found resource [{}]", resourceFilename);
                     File file = new File(resourceFilename).getAbsoluteFile();
                     FileCopyUtils.copy(resource.getInputStream(), new FileOutputStream(file));
-                    acmBpmnService.deploy(file, "", false, false);
+                    acmBpmnService.deploy(file, "", true, false);
                 }
             }
         }

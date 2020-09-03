@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('admin').controller('Admin.NestedLookupParentController', [ '$scope', '$translate', '$modal', 'Object.LookupService', 'Helper.UiGridService', 'UtilService', 'MessageService', function($scope, $translate, $modal, ObjectLookupService, HelperUiGridService, Util, MessageService) {
+angular.module('admin').controller('Admin.NestedLookupParentController', ['$scope', '$translate', '$modal', '$timeout', 'Object.LookupService', 'Helper.UiGridService', 'UtilService', 'MessageService', function ($scope, $translate, $modal, $timeout, ObjectLookupService, HelperUiGridService, Util, MessageService) {
 
     var gridHelper = new HelperUiGridService.Grid({
         scope: $scope
@@ -92,13 +92,15 @@ angular.module('admin').controller('Admin.NestedLookupParentController', [ '$sco
                 if (result) {
                     var idx;
                     _.find($scope.lookup, function(entry, entryIdx) {
-                        if (entry.key == rowEntity.key) {
+                        if (entry.key === rowEntity.key) {
                             idx = entryIdx;
+                            $scope.lookup = [];
+                            $scope.lookup.push(entry);
+                            $scope.gridOptions.data.splice(entryIdx, 1);
                             return true;
                         }
                     });
                     $scope.parentLookupValueSelected(null);
-                    $scope.lookup.splice(idx, 1);
                     saveLookup();
                 }
             }
@@ -152,13 +154,16 @@ angular.module('admin').controller('Admin.NestedLookupParentController', [ '$sco
 
     function saveLookup() {
         var promiseSaveInfo = ObjectLookupService.saveLookup($scope.selectedLookupDef, $scope.lookup);
-        promiseSaveInfo.then(function(lookup) {
+        promiseSaveInfo.then(function () {
             MessageService.succsessAction();
-            fetchLookup();
-            return lookup;
+            $timeout(function () {
+                fetchLookup();
+            }, 5000);
         }, function(error) {
             MessageService.error(error.data ? error.data : error);
-            fetchLookup();
+            $timeout(function () {
+                fetchLookup();
+            }, 5000);
             return error;
         });
 
@@ -169,7 +174,9 @@ angular.module('admin').controller('Admin.NestedLookupParentController', [ '$sco
         ObjectLookupService.getLookup($scope.selectedLookupDef).then(function(lookup) {
             // if we change the reference of $scope.lookup variable the UI is not updated, so we change the elements in the array
             $scope.lookup.splice(0, $scope.lookup.length);
-            $scope.lookup.push.apply($scope.lookup, lookup);
+            if (lookup !== "") {
+                $scope.lookup.push.apply($scope.lookup, lookup);
+            }
         });
     }
 

@@ -42,8 +42,13 @@ import org.apache.pdfbox.io.MemoryUsageSetting;
 import org.apache.pdfbox.multipdf.PDFMergerUtility;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.font.PDFont;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.PDFRenderer;
+import org.apache.pdfbox.util.Matrix;
 
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
@@ -59,6 +64,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.stream.StreamSource;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
@@ -477,6 +483,35 @@ public class PdfServiceImpl implements PdfService
     }
 
     /**
+     * Merge multiple sources into single PDF document.
+     *
+     * @param pdfMergerUtility
+     *            PDF merger utility
+     * @param fos
+     *            output stream
+     * @throws PdfServiceException
+     *             on error creating merged document
+     */
+    @Override
+    public void mergeSources(PDFMergerUtility pdfMergerUtility, FileOutputStream fos) throws PdfServiceException
+    {
+        // using at most 32MB memory, the rest goes to disk
+        MemoryUsageSetting memoryUsageSetting = MemoryUsageSetting.setupMixed(MAX_MAIN_MEMORY_BYTES);
+        try
+        {
+            log.debug("About to merge multiple PDF documents to a file output stream");
+            pdfMergerUtility.setDestinationStream(fos);
+            pdfMergerUtility.mergeDocuments(memoryUsageSetting);
+        }
+        catch (IOException e)
+        {
+            log.error("Unable to merge multiple PDF documents to a file output stream", e);
+            throw new PdfServiceException(e);
+        }
+        log.debug("Multiple PDF documents successfully merged to a file output stream");
+    }
+
+    /**
      * Create new document out of extracted pages from another document.
      *
      * @param is
@@ -517,5 +552,78 @@ public class PdfServiceImpl implements PdfService
             log.error("Unable to extract pages from [{}]", filename, e);
             throw new PdfServiceException(e);
         }
+    }
+
+    /**
+     *
+     * Replaces the bottom of each page of the document with a rectangle box that contains the page numbers and adds the
+     * fiscal year
+     *
+     * @param document
+     *            source document
+     * @param fiscalYear
+     *            the fiscal year for the document
+     * @return document with numbering
+     */
+    @Override
+    public PDDocument replacePageNumbersAndAddFiscalYear(PDDocument document, int fiscalYear) throws IOException
+    {
+        PDFont font = PDType1Font.HELVETICA;
+        float fontSize = 8.0f;
+
+        for (int i = 0; i < document.getNumberOfPages(); i++)
+        {
+            PDPage page = document.getPage(i);
+
+            try (PDPageContentStream contentStream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true,
+                    true))
+            {
+                // Adds a blank rectangle to bottom of the page to replace text
+                contentStream.setNonStrokingColor(Color.WHITE);
+                contentStream.addRect(550, 670, 100, 100);
+                contentStream.fill();
+
+                PDRectangle pageSize = document.getPage(i).getMediaBox();
+                String pageNumberingString = String.format("Page %d of %d", i + 1, document.getNumberOfPages());
+                contentStream.setLeading(14.5f);
+
+                float stringWidth = font.getStringWidth(pageNumberingString) * fontSize / 1000f;
+                // calculate to center of the page
+                int rotation = document.getPage(i).getRotation();
+                boolean rotate = rotation == 90 || rotation == 270;
+                float pageWidth = rotate ? pageSize.getHeight() : pageSize.getWidth();
+                float pageHeight = rotate ? pageSize.getWidth() : pageSize.getHeight();
+                float centerX = rotate ? pageHeight / 1.05f : (pageWidth - stringWidth) / 2f;
+                float centerY = rotate ? (pageWidth - stringWidth) / 2f : pageHeight / 2f;
+
+                // append the content to the existing stream
+
+                contentStream.beginText();
+                // set font and font size
+                contentStream.setFont(font, fontSize);
+                // set text color
+                contentStream.setNonStrokingColor(0, 0, 0);
+                if (rotate)
+                {
+                    // rotate the text according to the page rotation
+                    contentStream.setTextMatrix(Matrix.getRotateInstance(Math.PI / 2, centerX, centerY));
+                }
+                else
+                {
+                    contentStream.setTextMatrix(Matrix.getTranslateInstance(centerX, centerY));
+                }
+                contentStream.showText(pageNumberingString);
+
+                String fiscalYearString = "Fiscal Year: " + fiscalYear;
+                float fiscalYearStringWidth = font.getStringWidth(fiscalYearString) * fontSize / 1000f;
+
+                contentStream.newLineAtOffset((stringWidth - fiscalYearStringWidth) / 2, -14.5f);
+                contentStream.showText(fiscalYearString);
+
+                contentStream.endText();
+            }
+        }
+
+        return document;
     }
 }

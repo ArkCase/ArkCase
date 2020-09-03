@@ -47,6 +47,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collections;
 
 public class FileConfigurationServiceImpl implements FileConfigurationService
@@ -59,6 +60,8 @@ public class FileConfigurationServiceImpl implements FileConfigurationService
     private String customFilesLocation;
 
     private static final String BRANDING_LOCATION = "branding";
+
+    private static final String RULES_EXTENSION = "xlsx";
 
     private static final Logger log = LogManager.getLogger(FileConfigurationServiceImpl.class);
 
@@ -91,7 +94,7 @@ public class FileConfigurationServiceImpl implements FileConfigurationService
 
         ResponseEntity<Resource> exchange = configRestTemplate.exchange(
                 configurationClientConfig.getConfigurationUrl() + "/" + configurationClientConfig.getDefaultApplicationName() + "/"
-                        + configurationClientConfig.getActiveProfile() + "/*/" + BRANDING_LOCATION + "/" + fileName,
+                        + configurationClientConfig.getActiveProfileReversed() + "/*/" + BRANDING_LOCATION + "/" + fileName,
                 HttpMethod.GET, entity,
                 Resource.class);
 
@@ -104,7 +107,29 @@ public class FileConfigurationServiceImpl implements FileConfigurationService
     @JmsListener(destination = "VirtualTopic.ConfigFileUpdated", containerFactory = "jmsTopicListenerContainerFactory")
     public void downloadFileFromConfiguration(Message message) throws IOException
     {
+        if (message.getPayload().toString().toLowerCase().contains("." + RULES_EXTENSION))
+        {
+            // Rules files are not copied.
+            return;
+        }
         getFileFromConfiguration(message.getPayload().toString(), customFilesLocation);
+    }
+
+    @Override
+    public InputStream getInputStreamFromConfiguration(String filePath) throws IOException
+    {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_OCTET_STREAM));
+
+        HttpEntity<Object> entity = new HttpEntity<>("body", headers);
+
+        ResponseEntity<Resource> exchange = configRestTemplate.exchange(
+                configurationClientConfig.getConfigurationUrl() + "/" + configurationClientConfig.getDefaultApplicationName() + "/"
+                        + configurationClientConfig.getActiveProfileReversed() + "/*/" + filePath,
+                HttpMethod.GET, entity,
+                Resource.class);
+
+        return exchange.getBody().getInputStream();
     }
 
     private HttpEntity<LinkedMultiValueMap<String, Object>> prepareFileProperties(InputStreamResource file, String fileName)

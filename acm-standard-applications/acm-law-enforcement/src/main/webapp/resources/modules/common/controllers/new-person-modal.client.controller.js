@@ -325,8 +325,10 @@ angular.module('common').controller(
                 //addresses
                 if (person.defaultAddress && !person.defaultAddress.streetAddress) {
                     person.defaultAddress = null;
-                } else {
+                } else if (person.defaultAddress) {
                     person.addresses.push(person.defaultAddress);
+                } else if (person.addresses.length > 0) {
+                    person.defaultAddress = person.addresses[0];
                 }
                 //aliases
                 if (person.defaultAlias) {

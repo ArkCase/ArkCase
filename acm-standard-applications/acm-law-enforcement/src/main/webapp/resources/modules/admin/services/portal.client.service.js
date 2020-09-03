@@ -37,18 +37,6 @@ angular.module('admin').factory('Admin.PortalConfigurationService', [ '$http', f
         })
     };
 
-    var getPortalUsers = function (start, maxRows, sortBy, sortDir) {
-        return $http({
-            method: 'GET',
-            url: 'api/latest/service/portalgateway/admin/portals/users',
-            params: {
-                start: start,
-                n: maxRows,
-                sortBy: sortBy,
-                sortDir: sortDir
-            }
-        });
-    };
     var revertPortal = function (portal) {
         return $http({
             method: 'PUT',
@@ -65,7 +53,6 @@ angular.module('admin').factory('Admin.PortalConfigurationService', [ '$http', f
         savePortal: savePortal,
         updatePortal: updatePortal,
         deletePortal: deletePortal,
-        getPortalUsers: getPortalUsers,
         revertPortal: revertPortal
     };
 

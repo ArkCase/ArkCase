@@ -30,6 +30,7 @@ package com.armedia.acm.forms.roi.service;
  * #L%
  */
 
+import com.armedia.acm.activiti.services.AcmBpmnService;
 import com.armedia.acm.form.config.Item;
 import com.armedia.acm.forms.roi.model.ReportOfInvestigationFormEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
@@ -38,10 +39,9 @@ import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 import com.armedia.acm.plugins.ecm.workflow.EcmFileWorkflowConfiguration;
 import com.armedia.acm.plugins.task.model.TaskConstants;
 
-import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationListener;
 
 import java.util.ArrayList;
@@ -58,7 +58,7 @@ public class ReportOfInvestigationWorkflowListener implements ApplicationListene
 
     private final Logger LOG = LogManager.getLogger(getClass());
     private FileWorkflowBusinessRule fileWorkflowBusinessRule;
-    private RuntimeService activitiRuntimeService;
+    private AcmBpmnService acmBpmnService;
 
     @Override
     public void onApplicationEvent(ReportOfInvestigationFormEvent event)
@@ -119,7 +119,7 @@ public class ReportOfInvestigationWorkflowListener implements ApplicationListene
 
         LOG.debug("Starting process: " + processName);
 
-        ProcessInstance pi = getActivitiRuntimeService().startProcessInstanceByKey(processName, pvars);
+        ProcessInstance pi = getAcmBpmnService().startBusinessProcess(processName, pvars);
 
         LOG.debug("Process ID: " + pi.getId());
     }
@@ -147,14 +147,14 @@ public class ReportOfInvestigationWorkflowListener implements ApplicationListene
         this.fileWorkflowBusinessRule = fileWorkflowBusinessRule;
     }
 
-    public RuntimeService getActivitiRuntimeService()
+    public AcmBpmnService getAcmBpmnService()
     {
-        return activitiRuntimeService;
+        return acmBpmnService;
     }
 
-    public void setActivitiRuntimeService(RuntimeService activitiRuntimeService)
+    public void setAcmBpmnService(AcmBpmnService acmBpmnService)
     {
-        this.activitiRuntimeService = activitiRuntimeService;
+        this.acmBpmnService = acmBpmnService;
     }
 
 }

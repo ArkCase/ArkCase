@@ -30,8 +30,8 @@ package gov.privacy.service;
  * #L%
  */
 
+import com.armedia.acm.activiti.services.AcmBpmnService;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
-import com.armedia.acm.plugins.businessprocess.service.StartBusinessProcessService;
 import com.armedia.acm.web.api.MDCConstants;
 
 import org.apache.logging.log4j.Logger;
@@ -54,7 +54,7 @@ public abstract class AbstractScheduledQueuePurger
 
     private SARDao requestDao;
 
-    private StartBusinessProcessService startBusinessProcessService;
+    private AcmBpmnService acmBpmnService;
 
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
 
@@ -99,7 +99,7 @@ public abstract class AbstractScheduledQueuePurger
                 for (SubjectAccessRequest request : requestsForPurging)
                 {
                     Map<String, Object> processVariables = createProcessVariables(request);
-                    startBusinessProcessService.startBusinessProcess(getBusinessProcessName(), processVariables);
+                    getAcmBpmnService().startBusinessProcess(getBusinessProcessName(), processVariables);
                 }
             }
             catch (Exception e)
@@ -151,13 +151,14 @@ public abstract class AbstractScheduledQueuePurger
         this.requestDao = requestDao;
     }
 
-    /**
-     * @param startBusinessProcessService
-     *            the startBusinessProcessService to set
-     */
-    public void setStartBusinessProcessService(StartBusinessProcessService startBusinessProcessService)
+    public AcmBpmnService getAcmBpmnService()
     {
-        this.startBusinessProcessService = startBusinessProcessService;
+        return acmBpmnService;
+    }
+
+    public void setAcmBpmnService(AcmBpmnService acmBpmnService)
+    {
+        this.acmBpmnService = acmBpmnService;
     }
 
     /**

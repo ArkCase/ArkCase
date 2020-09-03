@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('admin').controller('Admin.NestedLookupSubLookupController', [ '$scope', '$translate', '$modal', 'Object.LookupService', 'Helper.UiGridService', 'UtilService', 'MessageService', function($scope, $translate, $modal, ObjectLookupService, HelperUiGridService, Util, MessageService) {
+angular.module('admin').controller('Admin.NestedLookupSubLookupController', ['$scope', '$translate', '$modal', '$timeout', 'Object.LookupService', 'Helper.UiGridService', 'UtilService', 'MessageService', 'LookupService', function ($scope, $translate, $modal, $timeout, ObjectLookupService, HelperUiGridService, Util, MessageService, LookupService) {
 
     var gridHelper = new HelperUiGridService.Grid({
         scope: $scope
@@ -86,13 +86,15 @@ angular.module('admin').controller('Admin.NestedLookupSubLookupController', [ '$
                 if (result) {
                     var idx;
                     _.find($scope.lookup, function(entry, entryIdx) {
-                        if (entry.key == rowEntity.key) {
+                        if (entry.key === rowEntity.key) {
+                            $scope.lookup = [];
+                            $scope.lookup.push(entry);
+                            $scope.gridOptions.data.splice(entryIdx, 1);
                             idx = entryIdx;
                             return true;
                         }
                     });
-                    $scope.lookup.splice(idx, 1);
-                    saveLookup();
+                    deleteSubLookup();
                 }
             }
         });
@@ -146,13 +148,30 @@ angular.module('admin').controller('Admin.NestedLookupSubLookupController', [ '$
         }
     }
 
+    function deleteSubLookup() {
+        $scope.selectedParentLookupValue.subLookup = $scope.lookup;
+
+        var promiseSaveInfo = LookupService.deleteSubLookup($scope.lookup[0].key, $scope.selectedParentLookupValue.key, $scope.selectedLookupDef);
+        promiseSaveInfo.then(function (lookup) {
+            MessageService.succsessAction();
+            $timeout(function () {
+                fetchLookup();
+            }, 5000);
+        }, function (error) {
+            MessageService.error(error.data ? error.data : error);
+            $timeout(function () {
+                fetchLookup();
+            }, 5000);
+            return error;
+        });
+    }
+
     function saveLookup() {
         $scope.selectedParentLookupValue.subLookup = $scope.lookup;
 
         var promiseSaveInfo = ObjectLookupService.saveLookup($scope.selectedLookupDef, $scope.parentLookup);
         promiseSaveInfo.then(function(lookup) {
             MessageService.succsessAction();
-            fetchLookup();
             return lookup;
         }, function(error) {
             MessageService.error(error.data ? error.data : error);

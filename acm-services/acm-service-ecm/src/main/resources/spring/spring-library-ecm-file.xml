@@ -337,7 +337,7 @@
     <bean id="fileCreatedWorkflowHandler"
         class="com.armedia.acm.plugins.ecm.handler.FileCreatedBuckslipWorkflowHandler">
         <property name="fileWorkflowBusinessRule" ref="fileWorkflowBusinessRule"/>
-        <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
+        <property name="acmBpmnService" ref="processDefinitionManagementService"/>
         <property name="objectConverter" ref="objectConverter"/>
         <property name="userDao" ref="userJpaDao"/>
     </bean>
@@ -411,6 +411,15 @@
 
     <bean id="ecmFileUploaderConfigurationService" class="com.armedia.acm.plugins.ecm.service.impl.EcmFileUploaderConfigurationServiceImpl">
         <property name="ecmFileUploaderConfig" ref="ecmFileUploaderConfig"/>
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
+    </bean>
+
+    <bean id="ecmFileDeDuplicationConfig" class="com.armedia.acm.plugins.ecm.model.EcmFileDeDuplicationConfig" scope="refresh">
+        <aop:scoped-proxy/>
+    </bean>
+
+    <bean id="ecmFileDeDuplicationConfigurationService" class="com.armedia.acm.plugins.ecm.service.impl.EcmFileDeDuplicationConfigurationServiceImpl">
+        <property name="ecmFileDeDuplicationConfig" ref="ecmFileDeDuplicationConfig"/>
         <property name="configurationPropertyService" ref="configurationPropertyService"/>
     </bean>
 
