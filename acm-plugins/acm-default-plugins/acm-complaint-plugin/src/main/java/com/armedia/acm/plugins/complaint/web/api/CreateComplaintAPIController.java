@@ -28,6 +28,7 @@ package com.armedia.acm.plugins.complaint.web.api;
  */
 
 import com.armedia.acm.auth.AuthenticationUtils;
+import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.form.config.FormsTypeCheckService;
 import com.armedia.acm.frevvo.config.FrevvoFormService;
@@ -50,6 +51,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.persistence.PersistenceException;
 import java.util.Date;
 
 @Controller
@@ -69,8 +71,7 @@ public class CreateComplaintAPIController
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @DecoratedAssignedObjectParticipants
     @ResponseBody
-    public Complaint createComplaint(@RequestBody Complaint in, Authentication auth) throws AcmCreateObjectFailedException
-    {
+    public Complaint createComplaint(@RequestBody Complaint in, Authentication auth) throws AcmCreateObjectFailedException, AcmAppErrorJsonMsg {
         log.trace("Got a complaint: {}; complaint ID: '{}'", in, in.getComplaintId());
         log.trace("complaint type: {}", in.getComplaintType());
 
@@ -114,6 +115,10 @@ public class CreateComplaintAPIController
             getEventPublisher().publishComplaintEvent(in, null, auth, isInsert, false);
 
             throw new AcmCreateObjectFailedException("complaint", e.getMessage(), e);
+        }
+        catch(PersistenceException e)
+        {
+            throw new AcmAppErrorJsonMsg("Sequence number has already been used on Complaint object", in.getObjectType(), "duplicateEntry", e);
         }
 
     }

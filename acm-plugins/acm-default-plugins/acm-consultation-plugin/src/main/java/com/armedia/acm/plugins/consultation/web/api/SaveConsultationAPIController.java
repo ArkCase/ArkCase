@@ -28,6 +28,7 @@ package com.armedia.acm.plugins.consultation.web.api;
  */
 
 import com.armedia.acm.auth.AuthenticationUtils;
+import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
@@ -83,8 +84,7 @@ public class SaveConsultationAPIController
     @ResponseBody
     public Consultation createConsultation(@RequestBody Consultation in, HttpSession session, Authentication auth)
             throws AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException,
-            IOException
-    {
+            IOException, AcmAppErrorJsonMsg {
         return saveConsultation(in, null, session, auth);
     }
 
@@ -94,8 +94,7 @@ public class SaveConsultationAPIController
     public Consultation createConsultationMutipart(@RequestPart(name = "consultation") Consultation in,
                                                    MultipartHttpServletRequest request, HttpSession session, Authentication auth)
             throws AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException,
-            IOException
-    {
+            IOException, AcmAppErrorJsonMsg {
         Map<String, List<MultipartFile>> attachments = request.getMultiFileMap();
         Map<String, List<MultipartFile>> files = new HashMap<>();
 
@@ -115,8 +114,7 @@ public class SaveConsultationAPIController
     private Consultation saveConsultation(Consultation in, Map<String, List<MultipartFile>> filesMap, HttpSession session,
             Authentication auth)
             throws AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException,
-            IOException
-    {
+            IOException, AcmAppErrorJsonMsg {
         log.trace("Got a consultation: [{}] ; consultation ID: [{}]", in, in.getId());
         String ipAddress = (String) session.getAttribute("acm_ip_address");
 
@@ -150,9 +148,13 @@ public class SaveConsultationAPIController
 
             return saved;
         }
-        catch (PipelineProcessException | PersistenceException e)
+        catch (PipelineProcessException e)
         {
             throw new AcmCreateObjectFailedException("Consultation", e.getMessage(), e);
+        }
+        catch (PersistenceException e)
+        {
+            throw new AcmAppErrorJsonMsg("Sequence number has already been used on Consultation object", in.getObjectType(), "duplicateEntry", e);
         }
     }
 

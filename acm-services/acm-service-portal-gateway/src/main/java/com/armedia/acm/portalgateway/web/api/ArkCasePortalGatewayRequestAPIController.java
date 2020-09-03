@@ -28,6 +28,7 @@ package com.armedia.acm.portalgateway.web.api;
  */
 
 import com.armedia.acm.auth.AcmAuthentication;
+import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.portalgateway.service.CheckPortalUserAssignement;
 import com.armedia.acm.portalgateway.service.PortalId;
 import com.armedia.acm.portalgateway.service.PortalRequestService;
@@ -82,8 +83,7 @@ public class ArkCasePortalGatewayRequestAPIController
     @RequestMapping(value = "/{portalId}/requests", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE })
     @ResponseBody
     public PortalResponse submitRequest(Authentication auth, @PortalId @PathVariable(value = "portalId") String portalId,
-            @RequestBody PortalRequest request) throws PortalRequestServiceException
-    {
+            @RequestBody PortalRequest request) throws PortalRequestServiceException, AcmAppErrorJsonMsg {
         log.debug("Submitting request from portal with [{}] ID for portal user with [{}] ID of [{}] type.", portalId, auth.getName(),
                 request.getRequestType());
         return portalRequestService.submitRequest(portalId, auth.getName(), request);
