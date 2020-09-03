@@ -200,7 +200,7 @@
     <bean id="complaintCloseWorkflowListener"
           class="com.armedia.acm.plugins.complaint.service.CloseComplaintWorkflowListener">
         <property name="fileWorkflowBusinessRule" ref="fileWorkflowBusinessRule"/>
-        <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
+        <property name="acmBpmnService" ref="processDefinitionManagementService"/>
         <property name="closeComplaintTaskName" ref="closeComplaintTaskName"/>
     </bean>
 

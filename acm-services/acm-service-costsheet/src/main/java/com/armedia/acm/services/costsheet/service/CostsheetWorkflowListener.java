@@ -30,6 +30,7 @@ package com.armedia.acm.services.costsheet.service;
  * #L%
  */
 
+import com.armedia.acm.activiti.services.AcmBpmnService;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 import com.armedia.acm.services.costsheet.model.AcmCostsheet;
 import com.armedia.acm.services.costsheet.model.AcmCostsheetEvent;
@@ -38,7 +39,6 @@ import com.armedia.acm.services.costsheet.model.CostsheetConstants;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.ParticipantTypes;
 
-import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -60,7 +60,7 @@ public class CostsheetWorkflowListener implements ApplicationListener<AcmCostshe
     private final Logger LOG = LogManager.getLogger(getClass());
 
     private FileWorkflowBusinessRule fileWorkflowBusinessRule;
-    private RuntimeService activitiRuntimeService;
+    private AcmBpmnService acmBpmnService;
     private CostsheetConfig costsheetConfig;
 
     @Override
@@ -102,7 +102,7 @@ public class CostsheetWorkflowListener implements ApplicationListener<AcmCostshe
 
         LOG.debug("Starting process: " + processName);
 
-        ProcessInstance pi = getActivitiRuntimeService().startProcessInstanceByKey(processName, pvars);
+        ProcessInstance pi = getAcmBpmnService().startBusinessProcess(processName, pvars);
 
         LOG.debug("process ID: " + pi.getId());
     }
@@ -156,14 +156,14 @@ public class CostsheetWorkflowListener implements ApplicationListener<AcmCostshe
         this.fileWorkflowBusinessRule = fileWorkflowBusinessRule;
     }
 
-    public RuntimeService getActivitiRuntimeService()
+    public AcmBpmnService getAcmBpmnService()
     {
-        return activitiRuntimeService;
+        return acmBpmnService;
     }
 
-    public void setActivitiRuntimeService(RuntimeService activitiRuntimeService)
+    public void setAcmBpmnService(AcmBpmnService acmBpmnService)
     {
-        this.activitiRuntimeService = activitiRuntimeService;
+        this.acmBpmnService = acmBpmnService;
     }
 
     public CostsheetConfig getCostsheetConfig()

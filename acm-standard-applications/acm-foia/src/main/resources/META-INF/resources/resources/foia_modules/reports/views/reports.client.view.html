@@ -11,7 +11,8 @@
 
                     <div ng-include="'modules/reports/views/components/reports-selection.client.view.html'"></div>
                     <div ng-include="'modules/reports/views/components/reports-type.client.view.html'"></div>
-                    <div ng-show="showReportParameters" ng-include="'modules/reports/views/components/reports-datepickers.client.view.html'"></div>
+                    <div ng-show="showReportParameters"
+                            ng-include="'modules/reports/views/components/reports-datepickers.client.view.html'"></div>
 
                     <div ng-show="showReportParameters" class="checkbox">
                         <label>
@@ -23,11 +24,20 @@
                     </div>
 
                     <div>
-                        <button class="btn btn-sm" id="generateReportButton" ng-click="generateReport()"
-                                ng-disabled="!data.reportSelected">
+                        <button class="btn btn-sm" id="generateReportButton" ng-click="generateReport()" ng-disabled="!data.reportSelected">
                             <span translate>reports.btn.generateReport</span>
                         </button>
                     </div>
+
+                    <br />
+
+                    <div>
+                        <button class="btn btn-sm" id="generateNiemXmlButton" ng-click="generateNiemXmlReport()"
+                                ng-show="showGenerateNiemXmlButton">
+                            <span translate>reports.btn.generateNiemXml</span>
+                        </button>
+                    </div>
+
                 </div>
             </div>
         </div>

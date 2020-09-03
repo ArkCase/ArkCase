@@ -30,16 +30,16 @@ package com.armedia.acm.form.changecasestatus.service;
  * #L%
  */
 
+import com.armedia.acm.activiti.services.AcmBpmnService;
 import com.armedia.acm.form.changecasestatus.model.ChangeCaseStatusFormEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 import com.armedia.acm.plugins.ecm.workflow.EcmFileWorkflowConfiguration;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 
-import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationListener;
 
 import java.util.ArrayList;
@@ -55,8 +55,8 @@ public class ChangeCaseStatusWorkflowListener implements ApplicationListener<Cha
 
     private final Logger LOG = LogManager.getLogger(getClass());
     private FileWorkflowBusinessRule fileWorkflowBusinessRule;
-    private RuntimeService activitiRuntimeService;
     private String changeCaseStatusTaskName;
+    private AcmBpmnService acmBpmnService;
 
     @Override
     public void onApplicationEvent(ChangeCaseStatusFormEvent event)
@@ -127,7 +127,7 @@ public class ChangeCaseStatusWorkflowListener implements ApplicationListener<Cha
 
         LOG.debug("Starting process: [{}]", processName);
 
-        ProcessInstance pi = getActivitiRuntimeService().startProcessInstanceByKey(processName, pvars);
+        ProcessInstance pi = getAcmBpmnService().startBusinessProcess(processName, pvars);
 
         LOG.debug("Process ID: [{}]", pi.getId());
     }
@@ -157,16 +157,6 @@ public class ChangeCaseStatusWorkflowListener implements ApplicationListener<Cha
         this.fileWorkflowBusinessRule = fileWorkflowBusinessRule;
     }
 
-    public RuntimeService getActivitiRuntimeService()
-    {
-        return activitiRuntimeService;
-    }
-
-    public void setActivitiRuntimeService(RuntimeService activitiRuntimeService)
-    {
-        this.activitiRuntimeService = activitiRuntimeService;
-    }
-
     public String getChangeCaseStatusTaskName()
     {
         return changeCaseStatusTaskName;
@@ -175,5 +165,15 @@ public class ChangeCaseStatusWorkflowListener implements ApplicationListener<Cha
     public void setChangeCaseStatusTaskName(String changeCaseStatusTaskName)
     {
         this.changeCaseStatusTaskName = changeCaseStatusTaskName;
+    }
+
+    public AcmBpmnService getAcmBpmnService()
+    {
+        return acmBpmnService;
+    }
+
+    public void setAcmBpmnService(AcmBpmnService acmBpmnService)
+    {
+        this.acmBpmnService = acmBpmnService;
     }
 }

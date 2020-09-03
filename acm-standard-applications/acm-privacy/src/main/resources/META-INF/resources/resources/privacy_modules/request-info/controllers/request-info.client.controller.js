@@ -99,7 +99,7 @@ angular.module('request-info').controller(
             };
 
             $scope.showFailureMessage = function showFailureMessage() {
-                DialogService.alert($scope.transcribeObjectModel.failureReason);
+                DialogService.alert($scope.transcribeObjectModel.failureReason.split(".", 1));
             };
 
             function onShowLoader() {
@@ -155,6 +155,11 @@ angular.module('request-info').controller(
 
             function onSelectAnnotationTags(data) {
                 var params = $scope.allAnnotationTags;
+                // from Snowbound v5.2 we have data.selectedAnnotations
+                if (data.selectedAnnotations) {
+                    params.annotationTags = $scope.allAnnotationTags;
+                    params.existingAnnotationTags = data.selectedAnnotations;
+                }
                 var modalInstance = $modal.open({
                     animation: true,
                     templateUrl: 'modules/document-details/views/components/annotation-tags-modal.client.view.html',
@@ -329,8 +334,6 @@ angular.module('request-info').controller(
                 });
                 $scope.categories = reqConfig.categories;
                 $scope.requestTypes = reqConfig.requestTypes;
-                $scope.prefixes = reqConfig.prefixes;
-
             });
 
             ObjectLookupService.getPriorities().then(function (priorities) {

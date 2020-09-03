@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.armedia</groupId>
     <artifactId>acm</artifactId>
-    <version>2020.12</version>
+    <version>2020.13</version>
     <packaging>pom</packaging>
     <name>ArkCase Case Management System</name>
     <description>Cloud-based case management system with a very nice UI</description>
@@ -138,7 +138,7 @@
         <camel.spring.version>3.0.0-M3</camel.spring.version>
         <camel.spi.version>3.0.0-M3</camel.spi.version>
         <camel.core.version>3.0.0-M3</camel.core.version>
-        <camel.cmis.version>3.0.0-M3-rc2</camel.cmis.version>
+        <camel.cmis.version>3.5.0-rc1</camel.cmis.version>
         <camel.support.version>3.0.0-M3</camel.support.version>
         <camel.api.version>3.0.0-M3</camel.api.version>
         <kryo.version>5.0.0-RC4</kryo.version>

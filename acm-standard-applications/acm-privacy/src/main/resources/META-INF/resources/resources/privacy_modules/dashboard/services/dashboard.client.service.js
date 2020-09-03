@@ -35,13 +35,13 @@ angular.module('dashboard').factory('Dashboard.DashboardService',
                 },
                 queryNewComplaints: {
                     method: 'GET',
-                    url: 'api/v1/plugin/search/advancedSearch?q=object_type_s\\:COMPLAINT+' + 'AND+create_date_tdt\\:%5BNOW/DAY-1MONTH TO NOW%252B1DAY%5D%26rows=100',
+                    url: 'api/v1/plugin/search/advancedSearch?q=object_type_s\\:COMPLAINT+' + 'AND+create_date_tdt\\:%5BNOW/DAY-1MONTH TO NOW%252B1DAY%5D&n=100&s=create_date_tdt desc',
                     isArray: false,
                     data: ''
                 },
                 queryNewCases: {
                     method: 'GET',
-                    url: 'api/v1/plugin/search/advancedSearch?q=object_type_s\\:CASE_FILE+' + 'AND+NOT status_lcs\\:DELETED AND create_date_tdt\\:%5BNOW/DAY-1MONTH TO NOW%252B1DAY%5D%26rows=100',
+                    url: 'api/v1/plugin/search/advancedSearch?q=object_type_s\\:CASE_FILE+' + 'AND+NOT status_lcs\\:DELETED AND create_date_tdt\\:%5BNOW/DAY-1MONTH TO NOW%252B1DAY%5D&n=100&s=create_date_tdt desc',
                     isArray: false
                 },
                 queryMyTasks: {

@@ -55,9 +55,10 @@ public class SearchUserAPIController
             @RequestParam(value = "s", required = false, defaultValue = "name_lcs") String sortBy,
             @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
-            @RequestParam(value = "n", required = false, defaultValue = "1000") int n) throws SolrException
+            @RequestParam(value = "n", required = false, defaultValue = "1000") int n,
+            @RequestParam(value = "directoryName") String directoryName) throws SolrException
     {
-        return acmUserService.getNUsers(auth, sortBy, sortDirection, startRow, n);
+        return acmUserService.getNUsers(auth, sortBy, sortDirection, startRow, n, directoryName);
     }
 
     @RequestMapping(value = "/", params = { "fq" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

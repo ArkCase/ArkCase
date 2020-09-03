@@ -73,7 +73,7 @@ public class NotificationGroupEmailSenderService
                 .getEntries();
         NestedLookupEntry notificationEntry = notificationLookup
                 .stream()
-                .filter(nestedLookupEntry -> nestedLookupEntry.getKey().equals(notificationGroupName))
+                .filter(nestedLookupEntry -> nestedLookupEntry.getValue().equals(notificationGroupName))
                 .findFirst()
                 .orElse(null);
 

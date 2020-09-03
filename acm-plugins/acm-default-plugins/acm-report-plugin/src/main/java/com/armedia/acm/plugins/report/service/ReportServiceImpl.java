@@ -6,22 +6,22 @@ package com.armedia.acm.plugins.report.service;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
@@ -30,6 +30,7 @@ package com.armedia.acm.plugins.report.service;
 import com.armedia.acm.configuration.service.CollectionPropertiesConfigurationService;
 import com.armedia.acm.configuration.service.ConfigurationPropertyService;
 import com.armedia.acm.configuration.util.MergeFlags;
+import com.armedia.acm.pdf.service.PdfService;
 import com.armedia.acm.pentaho.config.PentahoReportUrl;
 import com.armedia.acm.pentaho.config.PentahoReportsConfig;
 import com.armedia.acm.plugins.report.model.Report;
@@ -39,7 +40,11 @@ import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.services.users.model.ApplicationRolesConfig;
 import com.armedia.acm.services.users.service.AcmUserRoleService;
+import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.parser.PdfTextExtractor;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -49,8 +54,18 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.pdfbox.multipdf.PDFMergerUtility;
+import org.apache.pdfbox.multipdf.Splitter;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.client.RestTemplate;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -61,9 +76,14 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -93,6 +113,8 @@ public class ReportServiceImpl implements ReportService
     private ConfigurationPropertyService configurationPropertyService;
     private AcmUserRoleService userRoleService;
     private ApplicationRolesConfig rolesConfig;
+    private RestTemplate restTemplate;
+    private PdfService pdfService;
 
     @Override
     public List<Report> getPentahoReports() throws Exception
@@ -573,6 +595,112 @@ public class ReportServiceImpl implements ReportService
         return result.stream().skip(startRow).limit(maxRows).collect(Collectors.toList());
     }
 
+    @Override
+    public File exportReportsPDFFormat(List<String> orderedReportTitles, int fiscalYear) throws Exception
+    {
+        RestTemplate restTemplate = buildReportsRestTemplate();
+        org.springframework.http.HttpEntity<Object> entity = buildReportsRestEntity();
+
+        PDFMergerUtility pdfMergerUtility = new PDFMergerUtility();
+
+        Map<String, File> downloadedReports = orderedReportTitles.parallelStream()
+                .map(reportTitle -> {
+                    String reportToExportUrl = String.format("%s%s%s/service/export?FISCAL_YEAR=%s", reportsConfig.getServerUrl(),
+                            reportsConfig.getReportUrl(), reportTitle, fiscalYear);
+
+                    ResponseEntity<Resource> response = restTemplate.exchange(reportToExportUrl, HttpMethod.GET, entity, Resource.class);
+
+                    File file = null;
+                    try
+                    {
+                        file = File.createTempFile("pentaho-downloaded-report", ".pdf");
+                        FileUtils.copyInputStreamToFile(response.getBody().getInputStream(), file);
+                    }
+                    catch (IOException e)
+                    {
+                        LOG.warn("Failed to save temp file for report {}.", reportTitle);
+                    }
+                    return new AbstractMap.SimpleEntry<>(reportTitle, file);
+                })
+                .collect(HashMap::new, (m, v) -> m.put(v.getKey(), v.getValue()), HashMap::putAll);
+
+        for (String reportTitle : orderedReportTitles)
+        {
+            File downloadedReport = downloadedReports.get(reportTitle);
+
+            if (downloadedReport == null)
+            {
+                LOG.warn("Report {} won't be included and may not exists.", reportTitle);
+                continue;
+            }
+
+            try (FileInputStream downloadedReportInputStream = FileUtils.openInputStream(downloadedReport);
+                    PDDocument document = PDDocument.load(downloadedReportInputStream))
+            {
+                // split pdf document to get only report table page
+                Splitter splitter = new Splitter();
+                List<PDDocument> pages = splitter.split(document);
+                PdfReader pdfReader = new PdfReader(downloadedReport.getAbsolutePath());
+
+                if (!PdfTextExtractor.getTextFromPage(pdfReader, 2).contains("About this Report"))
+                {
+                    PDDocument pageToMerge = pages.get(1);
+
+                    try (ByteArrayOutputStream out = new ByteArrayOutputStream())
+                    {
+                        pageToMerge.save(out);
+                        pageToMerge.close();
+                        try (ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray()))
+                        {
+                            pdfService.addSource(pdfMergerUtility, in);
+                        }
+                    }
+                }
+
+                pdfReader.close();
+            }
+
+            downloadedReport.delete();
+        }
+
+        File mergedReportsTemp = File.createTempFile("reports-merged-files", ".pdf");
+        File mergedPDFs = File.createTempFile("reports-merged-pdfs", ".pdf");
+
+        try (FileOutputStream fileOutputStream = new FileOutputStream(mergedReportsTemp);
+                FileOutputStream fos = new FileOutputStream(mergedPDFs))
+        {
+            pdfService.mergeSources(pdfMergerUtility, fileOutputStream);
+
+            try (PDDocument document = PDDocument.load(mergedReportsTemp))
+            {
+                PDDocument updatedDocument = pdfService.replacePageNumbersAndAddFiscalYear(document, fiscalYear);
+                updatedDocument.save(fos);
+            }
+        }
+
+        return mergedPDFs;
+    }
+
+    @Override
+    public RestTemplate buildReportsRestTemplate()
+    {
+        SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
+        requestFactory.setReadTimeout(60 * 1000);
+        return new RestTemplate(requestFactory);
+    }
+
+    @Override
+    public org.springframework.http.HttpEntity<Object> buildReportsRestEntity()
+    {
+        String auth = String.format("%s:%s", reportsConfig.getServerUser(), reportsConfig.getServerPassword());
+        byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(StandardCharsets.US_ASCII));
+        String basicAuthenticationHeaderValue = "Basic " + new String(encodedAuth);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_OCTET_STREAM));
+        headers.set(HttpHeaders.AUTHORIZATION, basicAuthenticationHeaderValue);
+        return new org.springframework.http.HttpEntity<>("body", headers);
+    }
+
     public PentahoReportUrl getReportUrl()
     {
         return reportUrl;
@@ -657,5 +785,15 @@ public class ReportServiceImpl implements ReportService
             CollectionPropertiesConfigurationService collectionPropertiesConfigurationService)
     {
         this.collectionPropertiesConfigurationService = collectionPropertiesConfigurationService;
+    }
+
+    public PdfService getPdfService()
+    {
+        return pdfService;
+    }
+
+    public void setPdfService(PdfService pdfService)
+    {
+        this.pdfService = pdfService;
     }
 }

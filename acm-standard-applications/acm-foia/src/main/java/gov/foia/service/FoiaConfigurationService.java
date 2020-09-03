@@ -94,6 +94,8 @@ public class FoiaConfigurationService extends SystemConfigurationService
         foiaConfiguration.setLitigationAppealsEnabled(foiaConfig.getLitigationAppealsEnabled());
         foiaConfiguration.setAutomaticCreationOfRequestWhenAppealIsRemandedEnabled(
                 foiaConfig.getAutomaticCreationOfRequestWhenAppealIsRemandedEnabled());
+        foiaConfiguration.setDojYearlyReports(
+                foiaConfig.getDojYearlyReports());
 
         return foiaConfiguration;
     }

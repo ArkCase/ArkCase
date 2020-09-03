@@ -29,7 +29,7 @@
       },
       {
         "name": "duplicate",
-        "displayName": "Dup",
+        "displayName": "",
         "width": "2%",
         "headTemplate": "",
         "index": 1
@@ -413,14 +413,6 @@
             "titleKey": "common.directive.docTree.menu.email",
             "cmd": "email",
             "uiIcon": "ui-icon-mail-closed",
-            "data": {
-              "readOnly": true
-            }
-          },
-          {
-            "title": "New Task",
-            "cmd": "reviewDocument",
-            "uiIcon": "ui-icon-circle-check",
             "data": {
               "readOnly": true
             }
@@ -848,18 +840,10 @@
           "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, {object_id_s:row.entity.object_id_s, object_type_s:row.entity.object_type_s}, true)'>{{row.entity.title_parseable}}</a>"
         },
         {
-          "name": "parent_ref_s",
-          "cellFilter": "beautifyParentRefToParentId",
-          "type": "number",
-          "displayName": "common.dialogObjectPicker.table.columns.parentId",
+          "name":  "parent_number_lcs",
+          "displayName": "common.dialogObjectPicker.table.columns.parentNumber",
           "headerCellFilter": "translate",
-          "visible": true
-        },
-        {
-          "field":  "parent_ref_s",
-          "displayName": "common.dialogObjectPicker.table.columns.parentTitle",
-          "headerCellFilter": "translate",
-          "cellTemplate": "<a ng-if='row.entity.parent_document.title_parseable' href='#' ng-click='grid.appScope.onClickObjLink($event, {parentId:row.entity.parent_ref_s, object_type_s:row.entity.parent_ref_s})'>{{row.entity.parent_document.title_parseable}}</a>"
+          "cellTemplate": "<a ng-if='row.entity.parent_number_lcs' href='#' ng-click='grid.appScope.onClickObjLink($event, {parentId:row.entity.parent_ref_s, object_type_s:row.entity.parent_ref_s}, true, true)'>{{row.entity.parent_number_lcs}}</a>"
         }
       ],
       "paginationPageSizes": [
@@ -1001,22 +985,22 @@
         "displayName": "common.duplicates.columnDefs.type",
         "headerCellFilter": "translate",
         "icon": "<i class='fa fa-fw' data-sort='type' data-dir='ASC'></i>",
-        "width": "10%",
-        "index": 5
+        "width": "10%"
       },
       {
         "name": "created",
         "displayName": "common.duplicates.columnDefs.created",
         "headerCellFilter": "translate",
         "icon": "<i class='fa fa-fw' data-sort='created' data-dir='ASC'></i>",
-        "width": "10%",
-        "index": 6
+        "cellTemplate": "<div>{{ row.entity.created | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
+        "width": "10%"
       },
       {
         "name": "modified",
         "displayName": "common.duplicates.columnDefs.modified",
         "headerCellFilter": "translate",
         "icon": "<i class='fa fa-fw' data-sort='modified' data-dir='ASC'></i>",
+        "cellTemplate": "<div>{{ row.entity.modified | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
         "width": "10%"
       },
       {

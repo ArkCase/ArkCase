@@ -28,7 +28,7 @@
                                 <span translate>consultations.comp.change.status.information.status.title</span>
                                 <span class="required-asterisk">*</span>
                                 <p class="input-group">
-                                    <select ng-model="changeConsultationStatus.status" ng-change="statusChanged()" class="form-control input-md"
+                                    <select ng-model="changeConsultationStatus.status" class="form-control input-md"
                                             required>
                                         <option ng-repeat="option in statuses" ng-value="option.key">
                                             {{option.value | translate}}
@@ -40,25 +40,6 @@
                                 <span class="h4 font-bold" translate="consultations.comp.change.status.information.status.current" />
                                 <span class="h4 font-bold">{{": " + currentStatus}}</span>
                             </div>
-                        </div>
-                    </div>
-                    <div class="row form-group" ng-if="showConsultationCloseStatus">
-                        <div class="col-sm-6">
-                            <span translate>consultations.comp.change.status.information.status.resolution.title</span>
-                            <p class="input-group">
-                                <label class="radio-inline"><input ng-model="changeConsultationStatus.consultationResolution" type="radio"
-                                        name="consultationResolution"
-                                        value="{{'consultations.comp.change.status.information.status.resolution.denied' | translate}}"><span
-                                        translate>consultations.comp.change.status.information.status.resolution.denied</span></label>
-                                <label class="radio-inline"><input ng-model="changeConsultationStatus.consultationResolution" type="radio"
-                                        name="consultationResolution"
-                                        value="{{'consultations.comp.change.status.information.status.resolution.full' | translate}}"><span
-                                        translate>consultations.comp.change.status.information.status.resolution.full</span></label>
-                                <label class="radio-inline"><input ng-model="changeConsultationStatus.consultationResolution" type="radio"
-                                        name="consultationResolution"
-                                        value="{{'consultations.comp.change.status.information.status.resolution.partial' | translate}}"><span
-                                        translate>consultations.comp.change.status.information.status.resolution.partial</span></label>
-                            </p>
                         </div>
                     </div>
                 </div>

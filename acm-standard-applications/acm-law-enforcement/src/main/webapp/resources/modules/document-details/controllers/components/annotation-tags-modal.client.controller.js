@@ -3,7 +3,19 @@
 angular.module('document-details').controller('Document.AnnotationTagsModalController',
     ['$scope', '$q', '$modalInstance', 'UtilService', 'params', function ($scope, $q, $modalInstance, Utils, params) {
 
-        $scope.allAnnotationTags = convertToKeyName(params);
+        if (!params.annotationTags) {
+            // Backward compatibility with Snowbound 4.10
+            $scope.allAnnotationTags = convertToKeyName(params);
+            $scope.selectedAnnotations = [];
+        } else {
+            $scope.allAnnotationTags = convertToKeyName(params.annotationTags);
+            if (params.existingAnnotationTags) {
+                $scope.selectedAnnotations = convertStringsToKeyName(params.existingAnnotationTags);
+            } else {
+                $scope.selectedAnnotations = [];
+            }
+        }
+
         $scope.annotationTags = [];
         $scope.annotationNotes = [];
         $scope.data = {
@@ -14,9 +26,16 @@ angular.module('document-details').controller('Document.AnnotationTagsModalContr
 
         $scope.init = function () {
             $scope.data.selectedNotAuthorized = $scope.allAnnotationTags;
-            $scope.data.selectedAuthorized = [];
+            $scope.data.selectedAuthorized = $scope.selectedAnnotations;
             $scope.data.firstSelectHide = true;
             $scope.data.hideFilter = true;
+            for (var i = $scope.data.selectedNotAuthorized.length - 1; i >= 0; --i) {
+                for (var j = 0; j < $scope.data.selectedAuthorized.length; j++) {
+                    if ($scope.data.selectedNotAuthorized[i].key == $scope.data.selectedAuthorized[j].key) {
+                        $scope.data.selectedNotAuthorized.splice(i,1);
+                    }
+                }
+            }
         }
         $scope.onChange = function (selectedObject, authorized, notAuthorized) {
             var deferred = $q.defer();
@@ -50,6 +69,16 @@ angular.module('document-details').controller('Document.AnnotationTagsModalContr
                 });
             }
 
+            return [];
+        }
+
+        function convertStringsToKeyName(array) {
+            if (!Utils.isArrayEmpty(array)) {
+                return array.map(function (item) {
+                    return {"key": item, "name": item, "value": item};
+                });
+            }
+            
             return [];
         }
 

@@ -224,10 +224,6 @@
         }
     },
     {
-        "op": "remove",
-        "path": "/docTree/menu/record/file/?@.title=='New Task'"
-    },
-    {
         "op": "add",
         "path": "/docTree/menu/batch/files/-",
         "value": {

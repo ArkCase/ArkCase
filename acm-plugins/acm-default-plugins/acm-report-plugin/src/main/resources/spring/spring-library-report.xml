@@ -19,6 +19,7 @@
         <property name="userRoleService" ref="userRoleService"/>
         <property name="rolesConfig" ref="applicationRolesConfig"/>
         <property name="collectionPropertiesConfigurationService" ref="collectionPropertiesConfigurationService"/>
+        <property name="pdfService" ref="pdfService"/>
     </bean>
 
     <bean id="uploadReportService" class="com.armedia.acm.plugins.report.service.PentahoUploadGeneratedReportService">

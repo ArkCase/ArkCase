@@ -260,11 +260,12 @@ public class AcmGroupAPIController
             @RequestParam(value = "n", required = false, defaultValue = "50") int maxRows,
             @RequestParam(value = "s", required = false, defaultValue = "") String sort,
             @RequestParam(value = "groupSubtype", required = false) List<String> groupSubtype,
+            @RequestParam(value = "directoryName") String directoryName,
             Authentication auth) throws Exception
     {
         LOG.info("Taking all top level groups from Solr.");
 
-        return groupService.getTopLevelGroups(groupSubtype, startRow, maxRows, sort, auth);
+        return groupService.getTopLevelGroups(groupSubtype, startRow, maxRows, sort, auth, directoryName);
     }
 
     @RequestMapping(value = "/group/save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
