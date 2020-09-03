@@ -20,6 +20,7 @@
         <property name="rolesConfig" ref="applicationRolesConfig"/>
         <property name="collectionPropertiesConfigurationService" ref="collectionPropertiesConfigurationService"/>
         <property name="pdfService" ref="pdfService"/>
+        <property name="genericMessagesChannel" ref="genericMessagesChannel"/>
     </bean>
 
     <bean id="uploadReportService" class="com.armedia.acm.plugins.report.service.PentahoUploadGeneratedReportService">

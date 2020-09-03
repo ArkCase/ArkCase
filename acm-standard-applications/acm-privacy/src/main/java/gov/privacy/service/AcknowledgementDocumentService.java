@@ -107,6 +107,7 @@ public class AcknowledgementDocumentService
         if (Objects.isNull(request.getPreviousQueue()))
         {
             SARQueueCorrespondenceService.handleRequestReceivedAcknowledgementLetter(requestId);
+            SARQueueCorrespondenceService.handleRequestResponseLetter(requestId);
         }
     }
 

@@ -601,14 +601,17 @@ public class PdfServiceImpl implements PdfService
 
     /**
      *
-     * Replaces the bottom of each page of the document with a rectangle box that contains the page numbers
+     * Replaces the bottom of each page of the document with a rectangle box that contains the page numbers and adds the
+     * fiscal year
      *
      * @param document
      *            source document
+     * @param fiscalYear
+     *            the fiscal year for the document
      * @return document with numbering
      */
     @Override
-    public PDDocument replacePageNumbers(PDDocument document) throws IOException
+    public PDDocument replacePageNumbersAndAddFiscalYear(PDDocument document, int fiscalYear) throws IOException
     {
         PDFont font = PDType1Font.HELVETICA;
         float fontSize = 8.0f;
@@ -627,6 +630,7 @@ public class PdfServiceImpl implements PdfService
 
                 PDRectangle pageSize = document.getPage(i).getMediaBox();
                 String pageNumberingString = String.format("Page %d of %d", i + 1, document.getNumberOfPages());
+                contentStream.setLeading(14.5f);
 
                 float stringWidth = font.getStringWidth(pageNumberingString) * fontSize / 1000f;
                 // calculate to center of the page
@@ -654,6 +658,13 @@ public class PdfServiceImpl implements PdfService
                     contentStream.setTextMatrix(Matrix.getTranslateInstance(centerX, centerY));
                 }
                 contentStream.showText(pageNumberingString);
+
+                String fiscalYearString = "Fiscal Year: " + fiscalYear;
+                float fiscalYearStringWidth = font.getStringWidth(fiscalYearString) * fontSize / 1000f;
+
+                contentStream.newLineAtOffset((stringWidth - fiscalYearStringWidth) / 2, -14.5f);
+                contentStream.showText(fiscalYearString);
+
                 contentStream.endText();
             }
         }
