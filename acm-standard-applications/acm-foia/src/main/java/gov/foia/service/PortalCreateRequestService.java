@@ -28,6 +28,7 @@ package gov.foia.service;
  */
 
 import com.armedia.acm.auth.AcmAuthentication;
+import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
@@ -79,8 +80,7 @@ public class PortalCreateRequestService
     private FOIAPortalUserServiceProvider portalUserServiceProvider;
 
     public FOIARequest createFOIARequest(PortalFOIARequest in)
-            throws PipelineProcessException, AcmUserActionFailedException, AcmCreateObjectFailedException
-    {
+            throws PipelineProcessException, AcmUserActionFailedException, AcmCreateObjectFailedException, AcmAppErrorJsonMsg {
         log.debug("Received request {}", in);
 
         getAuditPropertyEntityAdapter().setUserId(in.getUserId());

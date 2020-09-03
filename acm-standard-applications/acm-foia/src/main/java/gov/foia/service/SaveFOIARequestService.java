@@ -27,6 +27,7 @@ package gov.foia.service;
  * #L%
  */
 
+import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility;
@@ -66,8 +67,7 @@ public class SaveFOIARequestService
     private FOIAExemptionService foiaExemptionService;
 
     public CaseFile saveFOIARequest(CaseFile in, Map<String, List<MultipartFile>> filesMap, HttpSession session, Authentication auth)
-            throws AcmCreateObjectFailedException
-    {
+            throws AcmCreateObjectFailedException, AcmAppErrorJsonMsg {
         CaseFile oldCaseFile = null;
         if (in.getId() != null)
         {
@@ -82,8 +82,7 @@ public class SaveFOIARequestService
     }
 
     public CaseFile saveFOIARequest(CaseFile in, Map<String, List<MultipartFile>> filesMap, Authentication auth, String ipAddress)
-            throws AcmCreateObjectFailedException
-    {
+            throws AcmCreateObjectFailedException, AcmAppErrorJsonMsg {
         CaseFile oldCaseFile = null;
         if (in.getId() != null)
         {
@@ -97,8 +96,7 @@ public class SaveFOIARequestService
     }
 
     public CaseFile savePortalRequest(CaseFile in, Map<String, List<MultipartFile>> filesMap, Authentication auth, String ipAddress)
-            throws AcmCreateObjectFailedException
-    {
+            throws AcmCreateObjectFailedException, AcmAppErrorJsonMsg {
         CaseFile saved = getFoiaRequestService().saveRequest(in, filesMap, auth, ipAddress);
         raiseCaseEvent(in.getId() == null, saved, null, auth, ipAddress, null);
         return saved;

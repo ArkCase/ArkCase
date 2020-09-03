@@ -465,6 +465,7 @@ angular.module('complaints').controller(
                             $scope.loadingIcon = "fa fa-floppy-o";
                             if (error.data && error.data.message) {
                                 $scope.error = error.data.message;
+                                MessageService.error($scope.error);
                             } else {
                                 MessageService.error(error);
                             }

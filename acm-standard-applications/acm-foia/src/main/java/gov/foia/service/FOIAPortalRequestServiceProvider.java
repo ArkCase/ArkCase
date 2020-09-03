@@ -26,6 +26,7 @@ package gov.foia.service;
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
+import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
@@ -81,8 +82,7 @@ public class FOIAPortalRequestServiceProvider implements PortalRequestServicePro
      * com.armedia.acm.portalgateway.web.api.PortalRequest)
      */
     @Override
-    public PortalResponse submitRequest(String portalId, String portalUserId, PortalRequest request) throws PortalRequestServiceException
-    {
+    public PortalResponse submitRequest(String portalId, String portalUserId, PortalRequest request) throws PortalRequestServiceException, AcmAppErrorJsonMsg {
         log.debug("Submitting request from portal with [{}] ID for portal user with [{}] ID of [{}] type.", portalId, portalUserId,
                 request.getRequestType());
         String rawRequestContent = request.getRawRequestContent();
