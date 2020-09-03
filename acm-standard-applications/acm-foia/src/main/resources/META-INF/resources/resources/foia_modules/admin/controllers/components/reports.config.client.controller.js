@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('admin').controller('Admin.ReportsConfigController', ['$scope', 'Admin.ReportsConfigService', 'LookupService', '$q', '$sce', 'MessageService', 'Object.LookupService', 'FileSaver',
+angular.module('admin').controller('Admin.ReportsConfigController', ['$scope', '$translate', 'Admin.ReportsConfigService', 'LookupService', '$q', '$sce', 'MessageService', 'Object.LookupService', 'FileSaver',
 
-    function ($scope, ReportsConfigService, LookupService, $q, $sce, MessageService, ObjectLookupService, FileSaver) {
+    function ($scope, $translate, ReportsConfigService, LookupService, $q, $sce, MessageService, ObjectLookupService, FileSaver) {
         var deferred = $q.defer();
 
         $scope.fillList = fillList;
@@ -16,9 +16,6 @@ angular.module('admin').controller('Admin.ReportsConfigController', ['$scope', '
         $scope.reportsScroll = reportsScroll;
         $scope.reportsUnauthorizedScroll = reportsUnauthorizedScroll;
         $scope.reportsAuthorizedScroll = reportsAuthorizedScroll;
-
-        $scope.loading = false;
-        $scope.loadingIcon = "fa fa-floppy-o";
 
         fillExportTypes();
 
@@ -289,15 +286,23 @@ angular.module('admin').controller('Admin.ReportsConfigController', ['$scope', '
         }
 
         $scope.exportReports = function (exportType, fiscalYear) {
-            $scope.loading = true;
-            $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
-            ReportsConfigService.exportReports(exportType, fiscalYear).then(function (result) {
-                $scope.loading = false;
-                $scope.loadingIcon = "fa fa-floppy-o";
-                var data = new Blob([result.data], {
-                    type: 'application/octet-stream'
-                });
-                FileSaver.saveAs(data, 'DOJ-reports.' + exportType);
+            ReportsConfigService.exportReports(exportType, fiscalYear).then(function (data) {
+                MessageService.info($translate.instant("admin.reportsExport.message.start"));
+            }, function () {
+                MessageService.errorAction();
             });
         };
+
+        $scope.$bus.subscribe("reports_export_completed", function (data) {
+            ReportsConfigService.downloadExportedReports(data.filePath).then(function (result) {
+                var fileData = new Blob([result.data], {
+                    type: 'application/octet-stream'
+                });
+                FileSaver.saveAs(fileData, 'DOJ-Yearly-Reports-' + data.fiscalYear + '.' + data.exportType);
+                MessageService.info($translate.instant("admin.reportsExport.message.finish"));
+            }).catch(function (res) {
+                MessageService.error($translate.instant("admin.reportsExport.message.error"));
+            });
+        });
+
     }]);

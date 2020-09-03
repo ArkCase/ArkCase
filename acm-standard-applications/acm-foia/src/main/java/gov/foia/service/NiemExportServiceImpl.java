@@ -42,6 +42,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.client.RestTemplate;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -98,23 +100,22 @@ public class NiemExportServiceImpl implements NiemExportService
     private FoiaConfig foiaConfig;
 
     @Override
-    public File exportSingleReport(DOJReport report) throws Exception
+    public File exportSingleReport(DOJReport report) throws IOException, TransformerException, ParserConfigurationException
     {
         LOG.debug("Started exporting a single DOJ Yearly report section in NIEM XML Format");
         int fiscalYear = Year.now().getValue();
 
-        List<Report> acmReports = reportService.getPentahoReports();
+        List<Report> acmReports = reportService.getAcmReports();
         Map<String, String> dojYearlyReports = foiaConfig.getDojYearlyReports();
         Map<String, String> agencyIdentifiers = getComponentAgencies();
-
-        Document document = createYearlyReportDocumentWithBaseData(agencyIdentifiers, fiscalYear);
-        Element foiaAnnualReport = (Element) document.getElementsByTagName(IEPD_FOIA_ANNUAL_REPORT_TAG).item(0);
 
         File temp = File.createTempFile("reports-merged-file", ".xml");
         try (FileOutputStream fileOutputStream = new FileOutputStream(temp))
         {
-            List<Map<String, String>> data = exportPentahoReportToDataList(acmReports, dojYearlyReports, report, fiscalYear);
+            Document document = createYearlyReportDocumentWithBaseData(agencyIdentifiers, fiscalYear);
+            Element foiaAnnualReport = (Element) document.getElementsByTagName(IEPD_FOIA_ANNUAL_REPORT_TAG).item(0);
 
+            List<Map<String, String>> data = exportPentahoReportToDataList(acmReports, dojYearlyReports, report, fiscalYear);
             if (data != null)
             {
                 appendReportSection(data, foiaAnnualReport, agencyIdentifiers, report);
@@ -138,20 +139,29 @@ public class NiemExportServiceImpl implements NiemExportService
     }
 
     @Override
-    public File exportYearlyReport(int fiscalYear) throws Exception
+    @Async
+    public void exportYearlyReport(int fiscalYear, Authentication auth)
+            throws IOException, TransformerException, ParserConfigurationException
+    {
+        File exportFile = exportYearlyReport(fiscalYear);
+        reportService.sendReportsExport(exportFile.getPath(), fiscalYear, auth);
+    }
+
+    @Override
+    public File exportYearlyReport(int fiscalYear) throws IOException, TransformerException, ParserConfigurationException
     {
         LOG.debug("Started exporting all DOJ Yearly reports in NIEM XML Format");
 
-        List<Report> acmReports = reportService.getPentahoReports();
+        List<Report> acmReports = reportService.getAcmReports();
         Map<String, String> dojYearlyReports = foiaConfig.getDojYearlyReports();
         Map<String, String> agencyIdentifiers = getComponentAgencies();
-
-        Document document = createYearlyReportDocumentWithBaseData(agencyIdentifiers, fiscalYear);
-        Element foiaAnnualReport = (Element) document.getElementsByTagName(IEPD_FOIA_ANNUAL_REPORT_TAG).item(0);
 
         File temp = File.createTempFile("reports-merged-file", ".xml");
         try (FileOutputStream fileOutputStream = new FileOutputStream(temp))
         {
+            Document document = createYearlyReportDocumentWithBaseData(agencyIdentifiers, fiscalYear);
+            Element foiaAnnualReport = (Element) document.getElementsByTagName(IEPD_FOIA_ANNUAL_REPORT_TAG).item(0);
+
             Map<String, List<Map<String, String>>> downloadedReportsData = Arrays.asList(DOJReport.values())
                     .parallelStream()
                     .map(report -> {
@@ -176,7 +186,6 @@ public class NiemExportServiceImpl implements NiemExportService
                     LOG.warn("Report {} won't be included and may not exists.", report.name());
                 }
             }
-
             checkDoc(document);
 
             transformXMLToFile(document, fileOutputStream);
@@ -231,10 +240,10 @@ public class NiemExportServiceImpl implements NiemExportService
     }
 
     @Override
-    public List<String> getYearlyReportTitlesOrdered() throws Exception
+    public List<String> getYearlyReportTitlesOrdered()
     {
         Map<String, String> dojYearlyReports = foiaConfig.getDojYearlyReports();
-        List<Report> allPentahoReports = reportService.getPentahoReports();
+        List<Report> allPentahoReports = reportService.getAcmReports();
 
         List<String> reportTitles = new LinkedList<>();
 
@@ -541,7 +550,7 @@ public class NiemExportServiceImpl implements NiemExportService
         organizationReference.setAttribute(NIEM_REFERENCE_ATTRIBUTE, record.get(ORGANIZATION_REFERENCE));
         reliedUponStatuteElement.appendChild(organizationReference);
 
-        String reliedUponStatute = record.get("Number of Times Relied upon by Agency / Component");
+        String reliedUponStatute = record.get("Number of Times Relied upon by Agency Overall");
         addElement(reliedUponStatuteElement, "foia:ReliedUponStatuteQuantity", reliedUponStatute);
 
         parent.appendChild(reliedUponStatuteElement);
@@ -1477,16 +1486,16 @@ public class NiemExportServiceImpl implements NiemExportService
         if (report == DOJReport.PROCESSED_REQUESTS)
         {
             itemsPendingAtStart = record.get("Number of Requests Pending as of Start of  Fiscal Year");
-            itemsReceived = record.get("Number of Requests Received");
-            itemsProcessed = record.get("Number of Requests Processed");
-            itemsPendingAtEnd = record.get("Number of Requests Pending");
+            itemsReceived = record.get("Number of Requests Received in Fiscal Year");
+            itemsProcessed = record.get("Number of Requests Processed in Fiscal Year");
+            itemsPendingAtEnd = record.get("Number of Requests Pending as of End of Fiscal Year");
         }
         else if (report == DOJReport.PROCESSED_APPEALS)
         {
             itemsPendingAtStart = record.get("Number of Appeals Pending as of Start of Fiscal Year");
-            itemsReceived = record.get("Number of Appeals Received");
-            itemsProcessed = record.get("Number of Appeals Processed");
-            itemsPendingAtEnd = record.get("Number of Appeals Pending ");
+            itemsReceived = record.get("Number of Appeals Received in Fiscal Year");
+            itemsProcessed = record.get("Number of Appeals Processed in Fiscal Year");
+            itemsPendingAtEnd = record.get("Number of Appeals Pending as of End of Fiscal Year");
         }
         else
         {
@@ -1994,6 +2003,7 @@ public class NiemExportServiceImpl implements NiemExportService
     private Map<String, List<Map<String, String>>> groupDataByExemption(List<Map<String, String>> data)
     {
         return data.stream()
+                .filter(record -> record.get("Agency / Component") != null && !record.get(AGENCY_IDENTIFIER_COLUMN).equals(""))
                 .collect(Collectors.groupingBy(
                         it -> it.get("Statute"),
                         LinkedHashMap::new,

@@ -115,6 +115,9 @@ angular.module('tasks').controller(
                             var parent = $scope.objectInfo;
                             var target = chosenReference;
                             if (target) {
+                                if (target.object_type_s == "REQUEST") {
+                                    target.object_type_s = ObjectService.ObjectTypes.CASE_FILE;
+                                }
                                 var association = ObjectAssociationService.createAssociationInfo(parent.taskId, ObjectService.ObjectTypes.TASK, parent.title, parent.title, target.object_id_s, target.object_type_s, target.title_parseable, target.name, 'REFERENCE', 'REFERENCE');
                                 ObjectAssociationService.saveObjectAssociation(association).then(function(payload) {
                                     //success
