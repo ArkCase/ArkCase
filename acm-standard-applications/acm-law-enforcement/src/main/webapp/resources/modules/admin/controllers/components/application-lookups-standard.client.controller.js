@@ -44,6 +44,7 @@ angular.module('admin').controller('Admin.StandardLookupController', ['$scope', 
             rowTemplate: rowTemplate,
             onRegisterApi: function (gridApi) {
                 gridApi.draggableRows.on.rowDropped($scope, function (info, dropTarget) {
+                    rearrangeOrderOfLookups();
                     saveLookup();
                 });
             }
@@ -157,13 +158,19 @@ angular.module('admin').controller('Admin.StandardLookupController', ['$scope', 
         }
     }
 
+    function rearrangeOrderOfLookups() {
+        for (var i = 0; i < $scope.lookup.length; i++) {
+            $scope.lookup[i].order = i + 1;
+        }
+    }
+
     function saveLookup() {
         var promiseSaveInfo = ObjectLookupService.saveLookup($scope.selectedLookupDef, $scope.lookup);
         promiseSaveInfo.then(function () {
             MessageService.succsessAction();
             $timeout(function () {
                 fetchLookup();
-            }, 5000);
+            }, 10000);
         }, function (error) {
             MessageService.error(error.data ? error.data : error);
             $timeout(function () {
