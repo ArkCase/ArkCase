@@ -109,6 +109,7 @@
                     "ids",
                     "complaints",
                     "cases",
+                    "consultations",
                     "related",
                     "history"
                 ]
@@ -207,6 +208,14 @@
                 "icon": "fa fa-folder",
                 "components": [
                     "cases"
+                ]
+            },
+            {
+                "type": "p/PERSON/con",
+                "label": "people.tree.nodeTypes.consultations.label",
+                "icon": "fa fa-folder",
+                "components": [
+                    "consultations"
                 ]
             },
             {
@@ -611,6 +620,49 @@
                             "name": "modified",
                             "field": "parent_object.modified_date_tdt",
                             "displayName": "people.comp.cases.table.columns.modified",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<div>{{ row.entity.parent_object.modified_date_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+                        }
+                    ]
+                },
+                {
+                    "id": "consultations",
+                    "type": "component",
+                    "columnDefs": [
+                        {
+                            "name": "id",
+                            "field": "parent_object.object_id_s",
+                            "displayName": "people.comp.consultations.table.columns.id",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<a data-ui-sref=\"consultations.main({id: row.entity.parent_object.object_id_s})\">{{COL_FIELD}}<\/a>",
+                            "width": 130
+                        },
+                        {
+                            "name": "title",
+                            "field": "parent_object.title_parseable",
+                            "displayName": "people.comp.consultations.table.columns.title",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<a data-ui-sref=\"consultations.main({id: row.entity.parent_object.object_id_s})\">{{COL_FIELD}}<\/a>"
+                        },
+                        {
+                            "name": "status",
+                            "field": "parent_object.status_lcs",
+                            "displayName": "people.comp.consultations.table.columns.status",
+                            "headerCellFilter": "translate"
+                        },
+                        {
+                            "width": 150,
+                            "name": "assignee",
+                            "field": "parent_object.assignee_id_lcs",
+                            "displayName": "people.comp.consultations.table.columns.assignee",
+                            "headerCellFilter": "translate",
+                            "lookup": "userFullNames"
+                        },
+                        {
+                            "width": 150,
+                            "name": "modified",
+                            "field": "parent_object.modified_date_tdt",
+                            "displayName": "people.comp.consultations.table.columns.modified",
                             "headerCellFilter": "translate",
                             "cellTemplate": "<div>{{ row.entity.parent_object.modified_date_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                         }
@@ -1284,6 +1336,74 @@
                     "name": "modified",
                     "field": "parent_object.modified_date_tdt",
                     "displayName": "people.comp.cases.table.columns.modified",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.parent_object.modified_date_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+                }
+            ]
+        },
+        {
+            "id": "consultations",
+            "title": "people.comp.consultations.title",
+            "icon": "fa fa-folder",
+            "enabled": true,
+            "configurable": true,
+            "type": "grid",
+            "enableFiltering": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 10,
+            "columnDefs": [
+                {
+                    "name": "type",
+                    "field": "type_lcs",
+                    "displayName": "people.comp.consultations.table.columns.role",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{grid.appScope.utils.getLookupValue(grid.appScope.personTypes, row.entity.type_lcs) | translate }}</div>"
+                },
+                {
+                    "name": "priority",
+                    "field": "parent_object.priority_lcs",
+                    "displayName": "people.comp.consultations.table.columns.priority",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "id",
+                    "field": "parent_object.object_id_s",
+                    "displayName": "people.comp.consultations.table.columns.id",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<a data-ui-sref=\"consultations.main({id: row.entity.parent_object.object_id_s})\">{{COL_FIELD}}<\/a>",
+                    "width": 130
+                },
+                {
+                    "name": "title",
+                    "field": "parent_object.title_parseable",
+                    "displayName": "people.comp.consultations.table.columns.title",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<a data-ui-sref=\"consultations.main({id: row.entity.parent_object.object_id_s})\">{{COL_FIELD}}<\/a>"
+                },
+                {
+                    "name": "status",
+                    "field": "parent_object.status_lcs",
+                    "displayName": "people.comp.consultations.table.columns.status",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "width": 150,
+                    "name": "assignee",
+                    "field": "parent_object.assignee_id_lcs",
+                    "displayName": "people.comp.consultations.table.columns.assignee",
+                    "headerCellFilter": "translate",
+                    "lookup": "userFullNames"
+                },
+                {
+                    "width": 150,
+                    "name": "modified",
+                    "field": "parent_object.modified_date_tdt",
+                    "displayName": "people.comp.consultations.table.columns.modified",
                     "headerCellFilter": "translate",
                     "cellTemplate": "<div>{{ row.entity.parent_object.modified_date_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                 }
