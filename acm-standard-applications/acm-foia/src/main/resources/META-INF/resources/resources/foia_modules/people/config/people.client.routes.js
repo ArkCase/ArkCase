@@ -1,20 +1,20 @@
 'use strict';
 
 //Setting up route
-angular.module('people').config([ '$stateProvider', function($stateProvider) {
+angular.module('people').config(['$stateProvider', function ($stateProvider) {
 
     // Project state routing
     $stateProvider.state('people', {
         url: '/people',
         templateUrl: 'modules/people/views/people.client.view.html',
         resolve: {
-            translatePartialLoader: [ '$translate', '$translatePartialLoader', function($translate, $translatePartialLoader) {
+            translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
                 $translatePartialLoader.addPart('common');
                 $translatePartialLoader.addPart('dashboard');
                 $translatePartialLoader.addPart('people');
                 $translatePartialLoader.addPart('preference');
                 return $translate.refresh();
-            } ]
+            }]
         }
     })
 
@@ -86,6 +86,11 @@ angular.module('people').config([ '$stateProvider', function($stateProvider) {
             templateUrl: 'modules/people/views/components/person-cases.client.view.html'
         })
 
+        .state('people.consultations', {
+            url: '/:id/consultations',
+            templateUrl: 'modules/people/views/components/person-consultations.client.view.html'
+        })
+
         .state('people.complaints', {
             url: '/:id/complaints',
             templateUrl: 'modules/people/views/components/person-complaints.client.view.html'
@@ -113,14 +118,14 @@ angular.module('people').config([ '$stateProvider', function($stateProvider) {
             url: '/newPerson',
             templateUrl: 'modules/people/views/components/person-new-person.client.view.html',
             resolve: {
-                translatePartialLoader: [ '$translate', '$translatePartialLoader', function($translate, $translatePartialLoader) {
+                translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
                     $translatePartialLoader.addPart('common');
                     $translatePartialLoader.addPart('people');
                     return $translate.refresh();
-                } ]
+                }]
             }
         })
 
-} ]).run([ 'Helper.DashboardService', function(DashboardHelper) {
+}]).run(['Helper.DashboardService', function (DashboardHelper) {
     DashboardHelper.addLocales();
-} ]);
+}]);
