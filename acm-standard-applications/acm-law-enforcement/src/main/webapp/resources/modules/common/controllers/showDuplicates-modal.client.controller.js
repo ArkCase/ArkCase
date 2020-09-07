@@ -33,8 +33,12 @@ angular.module('common').controller(
                     onRegisterApi: function (gridApi) {
                         //set gridApi on scope
                         $scope.gridApi = gridApi;
-                        gridApi.selection.on.rowSelectionChanged($scope, function(row) {
+                        gridApi.selection.on.rowSelectionChanged($scope, function (row) {
                             $scope.selectedRows = gridApi.selection.getSelectedRows();
+                        });
+
+                        gridApi.selection.on.rowSelectionChangedBatch($scope, function (rows) {
+                            $scope.selectedRows = $scope.gridApi.selection.getSelectedRows();
                         });
                     }
                 };

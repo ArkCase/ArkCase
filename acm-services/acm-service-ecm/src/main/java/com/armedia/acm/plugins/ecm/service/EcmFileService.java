@@ -429,7 +429,7 @@ public interface EcmFileService
 
     LinkTargetFileDTO getLinkTargetFileInfo(EcmFile ecmFile) throws EcmFileLinkException;
 
-    void checkDuplicatesByHash(EcmFile ecmFile);
+    void checkAndSetDuplicatesByHash(EcmFile ecmFile);
 
     List<EcmFile> findFilesByFolder(Long folderId);
 
