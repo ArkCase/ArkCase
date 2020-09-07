@@ -44,15 +44,17 @@ import com.armedia.acm.plugins.ecm.utils.EcmFileCamelUtils;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.service.objectlock.annotation.AcmAcquireAndReleaseObjectLock;
 import com.armedia.acm.web.api.MDCConstants;
-
+import gov.foia.dao.FOIAFileDao;
+import gov.foia.model.FOIAEcmFileVersion;
+import gov.foia.model.FOIAFile;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.commons.PropertyIds;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.persistence.PersistenceException;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -62,10 +64,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
-import gov.foia.dao.FOIAFileDao;
-import gov.foia.model.FOIAEcmFileVersion;
-import gov.foia.model.FOIAFile;
 
 public class FOIAEcmFileServiceImpl extends EcmFileServiceImpl implements FOIAEcmFileService
 {
@@ -144,6 +142,8 @@ public class FOIAEcmFileServiceImpl extends EcmFileServiceImpl implements FOIAEc
             fileCopy.getVersions().add(fileCopyVersion);
 
             FOIAFile result = getFoiaFileDao().save(fileCopy);
+
+            getFileEventPublisher().publishFileCopiedEvent(result, file, SecurityContextHolder.getContext().getAuthentication(), null, true);
 
             return getFileParticipantService().setFileParticipantsFromParentFolder(result);
         }
