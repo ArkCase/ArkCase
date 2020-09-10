@@ -27,10 +27,13 @@ package com.armedia.acm.services.sequence.service;
  * #L%
  */
 
+import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
+import com.armedia.acm.services.sequence.annotation.AcmSequence;
 import com.armedia.acm.services.sequence.dao.AcmSequenceDao;
 import com.armedia.acm.services.sequence.dao.AcmSequenceRegistryDao;
 import com.armedia.acm.services.sequence.dao.AcmSequenceResetDao;
 import com.armedia.acm.services.sequence.exception.AcmSequenceException;
+import com.armedia.acm.services.sequence.generator.AcmSequenceGeneratorManager;
 import com.armedia.acm.services.sequence.model.AcmSequenceEntity;
 import com.armedia.acm.services.sequence.model.AcmSequenceEntityId;
 import com.armedia.acm.services.sequence.model.AcmSequencePart;
@@ -38,14 +41,20 @@ import com.armedia.acm.services.sequence.model.AcmSequenceRegistry;
 import com.armedia.acm.services.sequence.model.AcmSequenceReset;
 import com.armedia.acm.services.sequence.model.AcmSequenceResetId;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.reflections.Reflections;
+import org.reflections.scanners.FieldAnnotationsScanner;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.FlushModeType;
 
+import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author sasko.tanaskoski
@@ -60,6 +69,10 @@ public class AcmSequenceServiceImpl implements AcmSequenceService
     private AcmSequenceRegistryDao sequenceRegistryDao;
 
     private AcmSequenceResetDao sequenceResetDao;
+
+    private String packagesToScan;
+
+    private AcmSequenceGeneratorManager sequenceGeneratorManager;
 
     @Override
     public AcmSequenceEntity getSequenceEntity(String sequenceName, String sequencePartName, FlushModeType flushModeType)
@@ -106,6 +119,69 @@ public class AcmSequenceServiceImpl implements AcmSequenceService
                     String.format("Unable to update Sequence Entity for [%s] [%s]", sequenceEntity.getSequenceName(),
                             sequenceEntity.getSequencePartName()),
                     e);
+        }
+    }
+
+    public AcmSequenceEntity getNextGeneratedSequence(AcmSequenceEntity sequenceEntity, AcmSequencePart sequencePart, Boolean isReset)
+            throws AcmSequenceException
+    {
+        try
+        {
+            AcmSequenceEntity toUpdate = new AcmSequenceEntity();
+            toUpdate.setSequenceName(sequenceEntity.getSequenceName());
+            toUpdate.setSequencePartName(sequenceEntity.getSequencePartName());
+            toUpdate.setSequencePartValue(sequenceEntity.getSequencePartValue());
+
+            if (isReset)
+            {
+                toUpdate.setSequencePartValue(
+                        Long.valueOf(sequencePart.getSequenceStartNumber() + sequencePart.getSequenceIncrementSize()));
+            }
+            else
+            {
+                toUpdate.setSequencePartValue(sequenceEntity.getSequencePartValue() + sequencePart.getSequenceIncrementSize());
+            }
+            return toUpdate;
+        }
+        catch (Exception e)
+        {
+            throw new AcmSequenceException(
+                    String.format("Unable to update Sequence Entity for [%s] [%s]", sequenceEntity.getSequenceName(),
+                            sequenceEntity.getSequencePartName()),
+                    e);
+        }
+    }
+
+    @Override
+    public void validateSequence(AcmSequenceEntity acmSequenceEntity) throws AcmAppErrorJsonMsg, AcmSequenceException
+    {
+
+        Object[] packages = Arrays.stream(packagesToScan.split(","))
+                .map(it -> StringUtils.substringBeforeLast(it, ".*"))
+                .toArray();
+
+        Set<Field> fieldsAnnotatedWith = new Reflections(packages, new FieldAnnotationsScanner())
+                .getFieldsAnnotatedWith(AcmSequence.class);
+
+        for (Field field : fieldsAnnotatedWith)
+        {
+            if (field.getAnnotation(AcmSequence.class).sequenceName().equals(acmSequenceEntity.getSequenceName()))
+            {
+                Class clazz = field.getDeclaringClass();
+                String fieldName = field.getName();
+
+                String sequenceName = field.getAnnotation(AcmSequence.class).sequenceName();
+
+                String generatedSequence = getSequenceGeneratorManager().getGenerateValue(sequenceName, clazz,
+                        acmSequenceEntity);
+
+                List<Object> result = getSequenceDao().getUsedSequenceObject(clazz, fieldName, generatedSequence);
+                if (!result.isEmpty())
+                {
+                    throw new AcmAppErrorJsonMsg("Sequence number has already been used", null,
+                            "existingSequence", null);
+                }
+            }
         }
     }
 
@@ -425,4 +501,23 @@ public class AcmSequenceServiceImpl implements AcmSequenceService
         this.sequenceResetDao = sequenceResetDao;
     }
 
+    public String getPackagesToScan()
+    {
+        return packagesToScan;
+    }
+
+    public void setPackagesToScan(String packagesToScan)
+    {
+        this.packagesToScan = packagesToScan;
+    }
+
+    public AcmSequenceGeneratorManager getSequenceGeneratorManager()
+    {
+        return sequenceGeneratorManager;
+    }
+
+    public void setSequenceGeneratorManager(AcmSequenceGeneratorManager sequenceGeneratorManager)
+    {
+        this.sequenceGeneratorManager = sequenceGeneratorManager;
+    }
 }

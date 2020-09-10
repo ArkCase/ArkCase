@@ -30,7 +30,6 @@ package com.armedia.acm.portalgateway.service;
  * #L%
  */
 
-import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.portalgateway.web.api.PortalRequest;
 import com.armedia.acm.portalgateway.web.api.PortalResponse;
 import com.armedia.acm.spring.SpringContextHolder;
@@ -58,7 +57,8 @@ public class DefaultPluggablePortalRequestService implements PortalRequestServic
      * com.armedia.acm.portalgateway.web.api.PortalRequest)
      */
     @Override
-    public PortalResponse submitRequest(String portalId, String portalUserId, PortalRequest request) throws PortalRequestServiceException, AcmAppErrorJsonMsg {
+    public PortalResponse submitRequest(String portalId, String portalUserId, PortalRequest request) throws PortalRequestServiceException
+    {
         log.debug("Submitting request from portal with [{}] ID for portal user with [{}] ID of [{}] type.", portalId, portalUserId,
                 request.getRequestType());
         return getServiceProvider(request.getRequestType()).submitRequest(portalId, portalUserId, request);

@@ -28,7 +28,6 @@ package com.armedia.acm.plugins.complaint.web.api;
  */
 
 import com.armedia.acm.auth.AuthenticationUtils;
-import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.form.config.FormsTypeCheckService;
 import com.armedia.acm.frevvo.config.FrevvoFormService;
@@ -71,7 +70,7 @@ public class CreateComplaintAPIController
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @DecoratedAssignedObjectParticipants
     @ResponseBody
-    public Complaint createComplaint(@RequestBody Complaint in, Authentication auth) throws AcmCreateObjectFailedException, AcmAppErrorJsonMsg {
+    public Complaint createComplaint(@RequestBody Complaint in, Authentication auth) throws AcmCreateObjectFailedException  {
         log.trace("Got a complaint: {}; complaint ID: '{}'", in, in.getComplaintId());
         log.trace("complaint type: {}", in.getComplaintType());
 
@@ -115,10 +114,6 @@ public class CreateComplaintAPIController
             getEventPublisher().publishComplaintEvent(in, null, auth, isInsert, false);
 
             throw new AcmCreateObjectFailedException("complaint", e.getMessage(), e);
-        }
-        catch(PersistenceException e)
-        {
-            throw new AcmAppErrorJsonMsg("Sequence number has already been used on Complaint object", in.getObjectType(), "duplicateEntry", e);
         }
 
     }

@@ -1,5 +1,6 @@
 package com.armedia.acm.services.sequence.service;
 
+import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.services.sequence.exception.AcmSequenceException;
 
 /*-
@@ -57,6 +58,11 @@ public interface AcmSequenceService
     @Retryable(maxAttempts = 30, value = OptimisticLockException.class, backoff = @Backoff(delay = 100))
     public AcmSequenceEntity updateSequenceEntity(AcmSequenceEntity sequenceEntity, AcmSequencePart sequencePart, Boolean isReset)
             throws AcmSequenceException;
+
+    public AcmSequenceEntity getNextGeneratedSequence(AcmSequenceEntity sequenceEntity, AcmSequencePart sequencePart, Boolean isReset)
+            throws AcmSequenceException;
+
+    public void validateSequence(AcmSequenceEntity acmSequenceEntity) throws AcmAppErrorJsonMsg, AcmSequenceException;
 
     public AcmSequenceEntity updateSequenceEntity(AcmSequenceEntity acmSequenceEntity)
             throws AcmSequenceException;

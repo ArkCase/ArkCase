@@ -28,7 +28,6 @@ package gov.foia.service;
  */
 
 import com.armedia.acm.auth.AuthenticationUtils;
-import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
@@ -75,8 +74,6 @@ import gov.foia.model.FOIAConstants;
 import gov.foia.model.FOIARequest;
 import gov.foia.model.FoiaConfig;
 
-import javax.persistence.PersistenceException;
-
 /**
  * @author sasko.tanaskoski
  */
@@ -99,9 +96,10 @@ public class FOIARequestService
     private ExecuteSolrQuery executeSolrQuery;
     private FoiaConfig foiaConfig;
 
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional
     public CaseFile saveRequest(CaseFile in, Map<String, List<MultipartFile>> filesMap, Authentication auth, String ipAddress)
-            throws AcmCreateObjectFailedException, AcmAppErrorJsonMsg {
+            throws AcmCreateObjectFailedException
+    {
         log.trace("Saving FOIARequest with Request Number: [{}], Request title: [{}], Request ID: [{}]", in.getCaseNumber(), in.getTitle(),
                 in.getId());
 
@@ -190,10 +188,11 @@ public class FOIARequestService
         {
             throw new AcmCreateObjectFailedException("FOIARequest", e.getMessage(), e);
         }
-        catch (PersistenceException e)
-        {
-            throw new AcmAppErrorJsonMsg("Sequence number has already been used on Request object", in.getObjectType(), "duplicateEntry", e);
-        }
+        // catch (PersistenceException e)
+        // {
+        // throw new AcmAppErrorJsonMsg("Sequence number has already been used on Request object", in.getObjectType(),
+        // "duplicateEntry", e);
+        // }
     }
 
     public Map<String, Long> getNextAvailableRequestsInQueue(Long queueId, String requestCreatedDate) throws ParseException
