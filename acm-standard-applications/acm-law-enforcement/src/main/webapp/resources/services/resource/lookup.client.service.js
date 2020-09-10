@@ -10,17 +10,19 @@
 
  * LookupService contains functions to lookup data (typically static data).
  */
-angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreService', 'UtilService', 'SearchService', 'MessageService', '$log', '$q', function ($resource, Store, Util, SearchService, MessageService, $log, $q) {
-    var Service = $resource('api/latest/plugin', {}, {
+angular.module('services').factory('LookupService',
+    ['$rootScope', '$resource', 'Acm.StoreService', 'UtilService', 'SearchService', 'MessageService', '$log', '$q',
+        function ($rootScope, $resource, Store, Util, SearchService, MessageService, $log, $q) {
+            var Service = $resource('api/latest/plugin', {}, {
 
-        _getConfig: {
-            url: "api/latest/service/config/:name",
-            method: "GET",
-            cache: false
-        },
-        _getLookups: {
-            url: "api/latest/service/config/lookups",
-            method: "GET",
+                _getConfig: {
+                    url: "api/latest/service/config/:name",
+                    method: "GET",
+                    cache: false
+                },
+                _getLookups: {
+                    url: "api/latest/service/config/lookups",
+                    method: "GET",
             cache: false
         },
         _getLookup: {
@@ -102,16 +104,16 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
      *
      * @returns {Object} Promise
      */
-    Service.getUsers = function() {
+    Service.getUsers = function () {
         var cacheUsers = new Store.SessionData(Service.SessionCacheNames.USERS);
         var users = cacheUsers.get();
         return Util.serviceCall({
             service: Service._getUsers,
             result: users,
-            onSuccess: function(data) {
+            onSuccess: function (data) {
                 if (Service.validateUsersRaw(data)) {
                     users = [];
-                    _.each(data, function(item) {
+                    _.each(data, function (item) {
                         users.push(Util.goodJsonObj(item));
                     });
                     cacheUsers.set(users);
@@ -131,13 +133,13 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
      *
      * @returns {Object} Promise
      */
-    Service.getUserFullNames = function() {
+    Service.getUserFullNames = function () {
         var cacheUserFullNames = new Store.SessionData(Service.SessionCacheNames.USER_FULL_NAMES);
         var userFullNames = cacheUserFullNames.get();
         return Util.serviceCall({
             service: Service._getUsers,
             result: userFullNames,
-            onSuccess: function(data) {
+            onSuccess: function (data) {
                 if (Service.validateUsersRaw(data)) {
                     userFullNames = [];
                     var arr = data;
@@ -196,18 +198,18 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
      * @returns {Object} approvers
      */
 
-    Service.getApprovers = function(objectInfo) {
-        return Service.getUserFullNames().then(function(users) {
-            var approvers = [];
-            if (!Util.isArrayEmpty(objectInfo.participants) && !Util.isArrayEmpty(users)) {
-                for (var i = 0; i < objectInfo.participants.length; i++) {
-                    for (var j = 0; j < users.length; j++) {
-                        if (objectInfo.participants[i].participantLdapId === users[j].id && objectInfo.participants[i].participantType === 'approver') {
-                            approvers.push({
-                                fullName: users[j].name,
-                                userId: users[j].id
-                            });
-                            break;
+            Service.getApprovers = function (objectInfo) {
+                return Service.getUserFullNames().then(function (users) {
+                    var approvers = [];
+                    if (!Util.isArrayEmpty(objectInfo.participants) && !Util.isArrayEmpty(users)) {
+                        for (var i = 0; i < objectInfo.participants.length; i++) {
+                            for (var j = 0; j < users.length; j++) {
+                                if (objectInfo.participants[i].participantLdapId === users[j].id && objectInfo.participants[i].participantType === 'approver') {
+                                    approvers.push({
+                                        fullName: users[j].name,
+                                        userId: users[j].id
+                                    });
+                                    break;
                         }
                     }
                 }
@@ -228,7 +230,7 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
      *
      * @returns {Boolean} Return true if data is valid
      */
-    Service.validateUsersRaw = function(data) {
+    Service.validateUsersRaw = function (data) {
         if (!Util.isArray(data)) {
             return false;
         }
@@ -245,16 +247,16 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
      *
      * @returns {Object} Promise
      */
-    Service.getUsersBasic = function() {
+    Service.getUsersBasic = function () {
         var cacheUsers = new Store.SessionData(Service.SessionCacheNames.USERS_BASIC);
         var users = cacheUsers.get();
         return Util.serviceCall({
             service: Service._getUsersBasic,
             result: users,
-            onSuccess: function(data) {
+            onSuccess: function (data) {
                 if (Service.validateUsersBasic(data)) {
                     users = [];
-                    _.each(data.response.docs, function(doc) {
+                    _.each(data.response.docs, function (doc) {
                         var user = {};
                         user.id = Util.goodValue(doc.object_id_s, 0);
                         user.name = Util.goodValue(doc.name);
@@ -280,7 +282,7 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
      *
      * @returns {Boolean} Return true if data is valid
      */
-    Service.validateUsersBasic = function(data) {
+    Service.validateUsersBasic = function (data) {
         if (!Util.validateSolrData(data)) {
             return false;
         }
@@ -301,7 +303,7 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
      *
      * @returns {Object} Promise
      */
-    Service.getConfig = function(name, arrBlackListPropertyNames) {
+    Service.getConfig = function (name, arrBlackListPropertyNames) {
         var cacheConfigMap = new Store.SessionData(Service.SessionCacheNames.CONFIG_MAP);
         var configMap = cacheConfigMap.get();
         var config = Util.goodMapValue(configMap, name, null);
@@ -311,7 +313,7 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
                 name: name
             },
             result: config,
-            onSuccess: function(data) {
+            onSuccess: function (data) {
                 if (Service.validateConfig(data, name)) {
                     config = Util.omitNg(data);
                     if (arrBlackListPropertyNames) {
@@ -339,7 +341,7 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
      *
      * @returns {Boolean} Return true if data is valid
      */
-    Service.validateConfig = function(data, name) {
+    Service.validateConfig = function (data, name) {
         if (Util.isEmpty(data)) {
             return false;
         }
@@ -359,7 +361,7 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
      * @returns {Object} Promise
      * @deprecated Use getLookups() from lookup.client.service.js or getLookupByLookupName(name) from object-lookup.client.service.js
      */
-    Service.getLookup = function(name) {
+    Service.getLookup = function (name) {
         $log.warn("Using deprecated function getLookup(name) from lookup.client.service.js!");
         var cacheConfigMap = new Store.SessionData(Service.SessionCacheNames.CONFIG_MAP);
         var configMap = cacheConfigMap.get();
@@ -370,7 +372,7 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
                 name: name
             },
             result: config,
-            onSuccess: function(data) {
+            onSuccess: function (data) {
                 if (Service.validateLookup(data, name)) {
                     config = Util.omitNg(data);
                     configMap = configMap || {};
@@ -429,8 +431,10 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
      *
      * @returns {Object} Promise
      */
-    Service.getLookups = function() {
-        var lookups = null;
+    Service.getLookups = function () {
+        var cacheConfigMap = new Store.SessionData(Service.SessionCacheNames.CONFIG_MAP);
+        var configMap = cacheConfigMap.get();
+        var lookups = Util.goodMapValue(configMap, 'lookups', null);
         return Util.serviceCall({
             service: Service._getLookups,
             result: lookups,
@@ -438,15 +442,34 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
         });
     };
 
-    /**
-     * @ngdoc method
-     * @name deleteLookup
-     * @methodOf services.service:LookupService
-     *
-     * @description
-     * Delete lookup
-     *
-     * @returns {Object} Promise
+            /**
+             * @ngdoc method
+             * @name reloadLookups
+             * @methodOf services.service:LookupService
+             *
+             * @description
+             * Clears the cached lookups and reloads the lookups.
+             *
+             * @returns {Object} Promise
+             */
+            Service.reloadLookups = function () {
+                var cacheConfigMap = new Store.SessionData(Service.SessionCacheNames.CONFIG_MAP);
+                var configMap = cacheConfigMap.get();
+                delete configMap['lookups'];
+                cacheConfigMap.set(configMap);
+                $rootScope.bus.publish('lookups-reloaded');
+                return Service.getLookups();
+            };
+
+            /**
+             * @ngdoc method
+             * @name deleteLookup
+             * @methodOf services.service:LookupService
+             *
+             * @description
+             * Delete lookup
+             *
+             * @returns {Object} Promise
      */
     Service.deleteLookup = function (lookupName, lookupType) {
         var cacheConfigMap = new Store.SessionData(Service.SessionCacheNames.CONFIG_MAP);
@@ -476,7 +499,7 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
      *
      * @returns {Boolean} Return true if data is valid
      */
-    Service.validateLookup = function(data, name) {
+    Service.validateLookup = function (data, name) {
         if (!Util.isArray(data)) {
             return false;
         }
@@ -495,9 +518,9 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
      *
      * @returns {Boolean} Return true if data is valid
      */
-    Service.validateLookups = function(data) {
+    Service.validateLookups = function (data) {
         // check if the data contains only known lookup types
-        for ( var prop in data) {
+        for (var prop in data) {
             if (prop !== 'standardLookup' && prop !== 'nestedLookup' && prop !== 'inverseValuesLookup') {
                 return false;
             }
@@ -505,21 +528,21 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
 
         // check if the lookups are array objects
         if (data.standardLookup) {
-            angular.forEach(data.standardLookup, function(value, key) {
+            angular.forEach(data.standardLookup, function (value, key) {
                 if (!Util.isArray(value.entries)) {
                     return false;
                 }
             });
         }
         if (data.nestedLookup) {
-            angular.forEach(data.nestedLookup, function(value, key) {
+            angular.forEach(data.nestedLookup, function (value, key) {
                 if (!Util.isArray(value.entries)) {
                     return false;
                 }
             });
         }
         if (data.inverseValuesLookup) {
-            angular.forEach(data.inverseValuesLookup, function(value, key) {
+            angular.forEach(data.inverseValuesLookup, function (value, key) {
                 if (!Util.isArray(value.entries)) {
                     return false;
                 }
@@ -548,7 +571,7 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
      *
      * @returns {Object} Promise returning all lookups from server.
      */
-    Service.saveLookup = function(lookupDef, lookup) {
+    Service.saveLookup = function (lookupDef, lookup) {
         lookupDef.lookupEntriesAsJson = JSON.stringify(lookup);
         return Util.serviceCall({
             service: Service._saveLookup,
@@ -599,7 +622,7 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
             return MessageService.error('Lookups returned from server are invalid!');
         }
     }
-    ;
+            ;
 
-    return Service;
-} ]);
+            return Service;
+        }]);

@@ -43,8 +43,8 @@
         </dependency>
         <dependency>
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
-            <artifactId>acm-configuration</artifactId>
-            <version>${acm.version}</version>
+            <artifactId>acm-encryption</artifactId>
+            <version>2020.14-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
