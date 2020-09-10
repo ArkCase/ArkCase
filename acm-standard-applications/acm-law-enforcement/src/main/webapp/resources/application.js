@@ -182,8 +182,9 @@ angular.module(ApplicationConfiguration.applicationModuleName).config(
             // Load lookups in cache
             LookupService.getLookups();
 
-            $rootScope.$bus.subscribe("lookups-updated", function (result) {
-                LookupService.reloadLookups();
+            $rootScope.$bus.subscribe('lookups-updated', function (result) {
+                var lookups = JSON.parse(result.lookupsData);
+                LookupService.reloadLookups(lookups);
             });
 
         }]);
