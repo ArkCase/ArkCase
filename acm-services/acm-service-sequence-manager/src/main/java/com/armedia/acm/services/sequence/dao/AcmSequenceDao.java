@@ -91,23 +91,6 @@ public class AcmSequenceDao extends AcmAbstractDao<AcmSequenceEntity>
         return sequenceEntity;
     }
 
-    public void checkSequenceNumber(Class clazz, String fieldName, String generatedSequence) throws AcmAppErrorJsonMsg
-    {
-        CriteriaBuilder builder = getEm().getCriteriaBuilder();
-
-        CriteriaQuery query = builder.createQuery(clazz);
-        Root c = query.from(clazz);
-        query.select(c).where(builder.equal(c.get(fieldName), generatedSequence));
-
-        List<Object> result = getEm().createQuery(query).getResultList();
-        if (!result.isEmpty()) // if there is an existing entry in DB
-        {
-            System.out.println(result);
-            throw new AcmAppErrorJsonMsg("Sequence number has already been used", null,
-                    "existingSequence", null);
-        }
-    }
-
     public List<Object> getUsedSequenceObject(Class clazz, String fieldName, String generatedSequence)
     {
         CriteriaBuilder builder = getEm().getCriteriaBuilder();
