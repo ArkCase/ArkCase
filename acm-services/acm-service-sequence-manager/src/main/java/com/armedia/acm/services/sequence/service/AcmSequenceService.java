@@ -59,8 +59,7 @@ public interface AcmSequenceService
     public AcmSequenceEntity updateSequenceEntity(AcmSequenceEntity sequenceEntity, AcmSequencePart sequencePart, Boolean isReset)
             throws AcmSequenceException;
 
-    public AcmSequenceEntity getNextGeneratedSequence(AcmSequenceEntity sequenceEntity, AcmSequencePart sequencePart, Boolean isReset)
-            throws AcmSequenceException;
+    public AcmSequenceEntity getNextGeneratedSequence(AcmSequenceEntity sequenceEntity, AcmSequencePart sequencePart);
 
     public void validateSequence(AcmSequenceEntity acmSequenceEntity) throws AcmAppErrorJsonMsg, AcmSequenceException;
 

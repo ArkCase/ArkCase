@@ -122,7 +122,7 @@ public class AcmAutoincrementSequenceGenerator implements AcmSequenceGenerator
 
     @Override
     public String getGeneratePartValue(String sequenceName, AcmSequencePart sequencePart, Object object,
-                                       Map<String, Long> autoincrementPartNameToValue, AcmSequenceEntity acmSequenceEntity) throws AcmSequenceException
+                                       Map<String, Long> autoincrementPartNameToValue, AcmSequenceEntity acmSequenceEntity)
     {
         String autoIncrementPartValue = "";
 
@@ -165,9 +165,9 @@ public class AcmAutoincrementSequenceGenerator implements AcmSequenceGenerator
     }
 
     private Long getNextGeneratedSequence(AcmSequenceEntity sequenceEntity, String sequenceName, AcmSequencePart sequencePart,
-            Map<String, Long> autoincrementPartNameToValue) throws AcmSequenceException
+            Map<String, Long> autoincrementPartNameToValue)
     {
-        AcmSequenceEntity updated = getSequenceService().getNextGeneratedSequence(sequenceEntity, sequencePart, false);
+        AcmSequenceEntity updated = getSequenceService().getNextGeneratedSequence(sequenceEntity, sequencePart);
         Long partValue = updated.getSequencePartValue();
         autoincrementPartNameToValue.put(sequencePart.getSequencePartName(), partValue);
         return partValue;
