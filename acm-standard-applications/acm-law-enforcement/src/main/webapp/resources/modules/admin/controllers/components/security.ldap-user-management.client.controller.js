@@ -2,8 +2,8 @@
 
 angular.module('admin').controller(
     'Admin.LdapUserManagementController',
-    [ '$scope', '$q', '$modal', '$timeout', 'Admin.LdapUserManagementService', 'LookupService', 'MessageService', 'Acm.StoreService', 'UtilService', '$log', '$translate', 'Admin.LdapConfigService','Dialog.BootboxService',
-        function($scope, $q, $modal, $timeout, LdapUserManagementService, LookupService, MessageService, Store, Util, $log, $translate, LdapConfigService, DialogService) {
+    ['$scope', '$q', '$modal', 'Admin.LdapUserManagementService', 'LookupService', 'MessageService', 'Acm.StoreService', 'UtilService', '$log', '$translate', 'Admin.LdapConfigService', 'Dialog.BootboxService',
+        function ($scope, $q, $modal, LdapUserManagementService, LookupService, MessageService, Store, Util, $log, $translate, LdapConfigService, DialogService) {
 
             $scope.cloneUser = cloneUser;
             $scope.onObjSelect = onObjSelect;

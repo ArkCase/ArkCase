@@ -21,6 +21,7 @@ angular.module("services").factory("WebSocketsListener", ['$q', '$timeout', 'Web
         LISTEN_TOPIC_OBJECTS: "/topic/objects/changed",
         GENERIC_TOPIC: "/topic/generic/",
         SCHEDULED_JOBS_TOPIC: "/topic/jobStatus",
+        CONFIGURATION_UPDATED_TOPIC: "/topic/configuration/updated",
         UPLOAD_FILE_MANAGER_QUEUE: "/queue/Consumer.[CLIENT_ID].VirtualTopic.UploadFileManager:[USERNAME]",
         MESSAGE_BROKER: "/app/print-message",
         shouldStart: true,
@@ -29,7 +30,7 @@ angular.module("services").factory("WebSocketsListener", ['$q', '$timeout', 'Web
             stomp: null
         },
 
-        connect: function() {
+        connect: function () {
             if (this.isConnected()) {
                 return;
             }
@@ -72,19 +73,26 @@ angular.module("services").factory("WebSocketsListener", ['$q', '$timeout', 'Web
                     //4 seconds delay so solr can index the object
                 }, 4000);
             });
-            target.socket.stomp.subscribe(target.GENERIC_TOPIC + user.userId, function(data) {
+            target.socket.stomp.subscribe(target.GENERIC_TOPIC + user.userId, function (data) {
                 var message = JSON.parse(data.body);
                 messageHandler.handleGenericMessage(message);
             });
-
-            target.socket.stomp.subscribe(target.SCHEDULED_JOBS_TOPIC, function(data) {
+            target.socket.stomp.subscribe(target.SCHEDULED_JOBS_TOPIC, function (data) {
                 var message = JSON.parse(data.body);
                 messageHandler.handleScheduledJobStatusMessage(message);
             });
 
+            target.socket.stomp.subscribe(target.CONFIGURATION_UPDATED_TOPIC, function (data) {
+                var message = JSON.parse(data.body);
+                $timeout(function () {
+                    messageHandler.handleConfigurationUpdatedMessage(message);
+                    // 2 seconds delay so the changes can be saved
+                }, 2000);
+            });
+
             var username = user.userId.replace(/\./g, "_DOT_").replace(/@/g, "_AT_");
             var destination = target.UPLOAD_FILE_MANAGER_QUEUE.replace("[CLIENT_ID]", username).replace("[USERNAME]", username);
-            target.socket.stomp.subscribe(destination, function(data) {
+            target.socket.stomp.subscribe(destination, function (data) {
                 var message = JSON.parse(data.body);
                 messageHandler.handleGenericMessage(message);
             });
