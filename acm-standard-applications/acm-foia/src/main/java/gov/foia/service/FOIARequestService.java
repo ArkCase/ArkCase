@@ -188,11 +188,6 @@ public class FOIARequestService
         {
             throw new AcmCreateObjectFailedException("FOIARequest", e.getMessage(), e);
         }
-        // catch (PersistenceException e)
-        // {
-        // throw new AcmAppErrorJsonMsg("Sequence number has already been used on Request object", in.getObjectType(),
-        // "duplicateEntry", e);
-        // }
     }
 
     public Map<String, Long> getNextAvailableRequestsInQueue(Long queueId, String requestCreatedDate) throws ParseException
