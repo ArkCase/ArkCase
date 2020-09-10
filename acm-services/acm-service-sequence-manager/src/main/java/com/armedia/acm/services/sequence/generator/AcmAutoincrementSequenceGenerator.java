@@ -120,6 +120,28 @@ public class AcmAutoincrementSequenceGenerator implements AcmSequenceGenerator
         return autoIncrementPartValue;
     }
 
+    @Override
+    public String getGeneratePartValue(String sequenceName, AcmSequencePart sequencePart, Object object,
+                                       Map<String, Long> autoincrementPartNameToValue, AcmSequenceEntity acmSequenceEntity) throws AcmSequenceException
+    {
+        String autoIncrementPartValue = "";
+
+        Long nextValue = 0L;
+
+        nextValue = getNextGeneratedSequence(acmSequenceEntity, sequenceName, sequencePart, autoincrementPartNameToValue);
+
+        if (sequencePart.getSequenceNumberLength() != null && sequencePart.getSequenceNumberLength() > 0)
+        {
+            autoIncrementPartValue += String.format("%0" + sequencePart.getSequenceNumberLength() + "d", nextValue);
+        }
+        else
+        {
+            autoIncrementPartValue += nextValue;
+        }
+
+        return autoIncrementPartValue;
+    }
+
     private Long createSequence(String sequenceName, AcmSequencePart sequencePart, Map<String, Long> autoincrementPartNameToValue)
             throws AcmSequenceException
     {
@@ -137,6 +159,15 @@ public class AcmAutoincrementSequenceGenerator implements AcmSequenceGenerator
             Map<String, Long> autoincrementPartNameToValue) throws AcmSequenceException
     {
         AcmSequenceEntity updated = getSequenceService().updateSequenceEntity(sequenceEntity, sequencePart, false);
+        Long partValue = updated.getSequencePartValue();
+        autoincrementPartNameToValue.put(sequencePart.getSequencePartName(), partValue);
+        return partValue;
+    }
+
+    private Long getNextGeneratedSequence(AcmSequenceEntity sequenceEntity, String sequenceName, AcmSequencePart sequencePart,
+            Map<String, Long> autoincrementPartNameToValue) throws AcmSequenceException
+    {
+        AcmSequenceEntity updated = getSequenceService().getNextGeneratedSequence(sequenceEntity, sequencePart, false);
         Long partValue = updated.getSequencePartValue();
         autoincrementPartNameToValue.put(sequencePart.getSequencePartName(), partValue);
         return partValue;

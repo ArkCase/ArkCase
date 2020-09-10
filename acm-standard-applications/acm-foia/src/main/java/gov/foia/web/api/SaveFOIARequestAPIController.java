@@ -47,7 +47,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpSession;
 
 import java.util.HashMap;
@@ -74,7 +73,8 @@ public class SaveFOIARequestAPIController
             MediaType.TEXT_XML_VALUE })
     @ResponseBody
     public CaseFile saveFOIARequest(@RequestBody CaseFile in, HttpSession session, Authentication auth)
-            throws AcmCreateObjectFailedException, AcmAppErrorJsonMsg {
+            throws AcmCreateObjectFailedException
+    {
         return getSaveFOIARequestService().saveFOIARequest(in, null, session, auth);
     }
 
@@ -82,7 +82,8 @@ public class SaveFOIARequestAPIController
             MediaType.TEXT_XML_VALUE })
     @ResponseBody
     public CaseFile saveMassAssignedFOIARequest(@RequestBody CaseFile in, HttpSession session, Authentication auth)
-            throws AcmCreateObjectFailedException, AcmAppErrorJsonMsg {
+            throws AcmCreateObjectFailedException
+    {
         return getSaveFOIARequestService().saveFOIARequest(in, null, session, auth);
     }
 

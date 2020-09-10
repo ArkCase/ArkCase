@@ -26,16 +26,23 @@ package com.armedia.acm.services.sequence.dao;
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
+
+import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.services.sequence.model.AcmSequenceEntity;
 import com.armedia.acm.services.sequence.model.AcmSequenceEntityId;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.persistence.FlushModeType;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
+import java.util.List;
 
 /**
  * @author sasko.tanaskoski
@@ -82,6 +89,34 @@ public class AcmSequenceDao extends AcmAbstractDao<AcmSequenceEntity>
         }
 
         return sequenceEntity;
+    }
+
+    public void checkSequenceNumber(Class clazz, String fieldName, String generatedSequence) throws AcmAppErrorJsonMsg
+    {
+        CriteriaBuilder builder = getEm().getCriteriaBuilder();
+
+        CriteriaQuery query = builder.createQuery(clazz);
+        Root c = query.from(clazz);
+        query.select(c).where(builder.equal(c.get(fieldName), generatedSequence));
+
+        List<Object> result = getEm().createQuery(query).getResultList();
+        if (!result.isEmpty()) // if there is an existing entry in DB
+        {
+            System.out.println(result);
+            throw new AcmAppErrorJsonMsg("Sequence number has already been used", null,
+                    "existingSequence", null);
+        }
+    }
+
+    public List<Object> getUsedSequenceObject(Class clazz, String fieldName, String generatedSequence)
+    {
+        CriteriaBuilder builder = getEm().getCriteriaBuilder();
+
+        CriteriaQuery query = builder.createQuery(clazz);
+        Root c = query.from(clazz);
+        query.select(c).where(builder.equal(c.get(fieldName), generatedSequence));
+
+        return getEm().createQuery(query).getResultList();
     }
 
     @Override

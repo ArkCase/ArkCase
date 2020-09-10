@@ -28,7 +28,6 @@ package gov.foia.service;
 
 import com.armedia.acm.auth.AcmAuthentication;
 import com.armedia.acm.auth.AcmAuthenticationManager;
-import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.objectonverter.AcmUnmarshaller;
 import com.armedia.acm.objectonverter.ObjectConverter;
@@ -142,7 +141,7 @@ public class FOIARequestEventListener implements ApplicationListener<AcmObjectHi
                                             saved = (FOIARequest) getSaveFOIARequestService()
                                                     .saveFOIARequest(newRequest, null, authentication, event.getIpAddress());
                                         }
-                                        catch (AcmCreateObjectFailedException | AcmAppErrorJsonMsg e)
+                                        catch (AcmCreateObjectFailedException e)
                                         {
                                             log.error("Can't save Remanded Foia Request for Request with id [{}]", initialRequestId, e);
                                         }

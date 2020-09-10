@@ -28,7 +28,6 @@ package com.armedia.acm.plugins.casefile.web.api;
  */
 
 import com.armedia.acm.auth.AuthenticationUtils;
-import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
@@ -79,7 +78,8 @@ public class SaveCaseFileAPIController
     @ResponseBody
     public CaseFile createCaseFile(@RequestBody CaseFile in, HttpSession session, Authentication auth)
             throws AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException,
-            IOException, AcmAppErrorJsonMsg {
+            IOException
+    {
         return saveCase(in, null, session, auth);
     }
 
@@ -89,13 +89,15 @@ public class SaveCaseFileAPIController
     public CaseFile createCaseFileMutipart(@RequestPart(name = "casefile") CaseFile in,
             @RequestPart(name = "files")Map<String, List<MultipartFile>> filesMap, HttpSession session, Authentication auth)
             throws AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException,
-            IOException, AcmAppErrorJsonMsg {
+            IOException
+    {
         return saveCase(in, filesMap, session, auth);
     }
 
     private CaseFile saveCase(CaseFile in, Map<String, List<MultipartFile>> filesMap, HttpSession session, Authentication auth)
             throws AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException,
-            IOException, AcmAppErrorJsonMsg {
+            IOException
+    {
         log.trace("Got a case file: [{}] ; case ID: [{}]", in, in.getId());
         String ipAddress = (String) session.getAttribute("acm_ip_address");
 
@@ -129,13 +131,9 @@ public class SaveCaseFileAPIController
 
             return saved;
         }
-        catch (PipelineProcessException e)
+        catch (PipelineProcessException | PersistenceException e)
         {
             throw new AcmCreateObjectFailedException("Case File", e.getMessage(), e);
-        }
-        catch (PersistenceException e)
-        {
-            throw new AcmAppErrorJsonMsg("Sequence number has already been used on Case File object", in.getObjectType(), "duplicateEntry", e);
         }
     }
 

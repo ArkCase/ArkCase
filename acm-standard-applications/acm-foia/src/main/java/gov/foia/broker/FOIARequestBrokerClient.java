@@ -27,7 +27,6 @@ package gov.foia.broker;
  * #L%
  */
 
-import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
@@ -101,7 +100,7 @@ public class FOIARequestBrokerClient extends AcmObjectBrokerClient<PortalFOIAReq
                     LOG.error("Not allowed external access");
                 }
             }
-            catch (PipelineProcessException | AcmUserActionFailedException | AcmCreateObjectFailedException | AcmAppErrorJsonMsg e)
+            catch (PipelineProcessException | AcmUserActionFailedException | AcmCreateObjectFailedException e)
             {
                 LOG.error("Error occurred while saving external FOIA request ", e);
             }

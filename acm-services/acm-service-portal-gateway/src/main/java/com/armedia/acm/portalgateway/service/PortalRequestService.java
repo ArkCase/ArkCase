@@ -27,7 +27,6 @@ package com.armedia.acm.portalgateway.service;
  * #L%
  */
 
-import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.portalgateway.web.api.PortalRequest;
 import com.armedia.acm.portalgateway.web.api.PortalResponse;
 
@@ -50,7 +49,7 @@ public interface PortalRequestService
      * @return
      * @throws PortalRequestServiceException
      */
-    PortalResponse submitRequest(String portalId, String externalUserId, PortalRequest request) throws PortalRequestServiceException, AcmAppErrorJsonMsg;
+    PortalResponse submitRequest(String portalId, String externalUserId, PortalRequest request) throws PortalRequestServiceException;
 
     /**
      * @param portalId
