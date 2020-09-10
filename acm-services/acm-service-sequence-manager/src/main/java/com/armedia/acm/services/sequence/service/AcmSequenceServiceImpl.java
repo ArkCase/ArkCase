@@ -122,34 +122,15 @@ public class AcmSequenceServiceImpl implements AcmSequenceService
         }
     }
 
-    public AcmSequenceEntity getNextGeneratedSequence(AcmSequenceEntity sequenceEntity, AcmSequencePart sequencePart, Boolean isReset)
-            throws AcmSequenceException
+    @Override
+    public AcmSequenceEntity getNextGeneratedSequence(AcmSequenceEntity sequenceEntity, AcmSequencePart sequencePart)
     {
-        try
-        {
             AcmSequenceEntity toUpdate = new AcmSequenceEntity();
             toUpdate.setSequenceName(sequenceEntity.getSequenceName());
             toUpdate.setSequencePartName(sequenceEntity.getSequencePartName());
-            toUpdate.setSequencePartValue(sequenceEntity.getSequencePartValue());
+            toUpdate.setSequencePartValue(sequenceEntity.getSequencePartValue() + sequencePart.getSequenceIncrementSize());
 
-            if (isReset)
-            {
-                toUpdate.setSequencePartValue(
-                        Long.valueOf(sequencePart.getSequenceStartNumber() + sequencePart.getSequenceIncrementSize()));
-            }
-            else
-            {
-                toUpdate.setSequencePartValue(sequenceEntity.getSequencePartValue() + sequencePart.getSequenceIncrementSize());
-            }
             return toUpdate;
-        }
-        catch (Exception e)
-        {
-            throw new AcmSequenceException(
-                    String.format("Unable to update Sequence Entity for [%s] [%s]", sequenceEntity.getSequenceName(),
-                            sequenceEntity.getSequencePartName()),
-                    e);
-        }
     }
 
     @Override
