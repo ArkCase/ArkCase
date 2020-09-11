@@ -17,6 +17,8 @@
     <task:executor id="channelExecutor" pool-size="4"/>
     <!-- Channel for sending all acm object changes, it can have as many subscribers to that channel-->
     <int:publish-subscribe-channel id="objectEventChannel" task-executor="channelExecutor" min-subscribers="1"/>
+    <!-- Channel for sending all configuration updates, it can have as many subscribers to that channel-->
+    <int:publish-subscribe-channel id="configurationUpdatedChannel" task-executor="channelExecutor" min-subscribers="1"/>
     <!-- Channel for sending simple generic messages for general purposes -->
     <int:publish-subscribe-channel id="genericMessagesChannel" task-executor="channelExecutor" min-subscribers="1"/>
     <!-- Channel for sending scheduled jobs status messages -->
