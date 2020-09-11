@@ -1,18 +1,38 @@
 package com.armedia.acm.services.sequence.web.api;
 
+import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
+import com.armedia.acm.services.sequence.annotation.AcmSequence;
 import com.armedia.acm.services.sequence.exception.AcmSequenceException;
+import com.armedia.acm.services.sequence.generator.AcmSequenceGeneratorManager;
 import com.armedia.acm.services.sequence.model.AcmSequenceConfiguration;
 import com.armedia.acm.services.sequence.model.AcmSequenceEntity;
 import com.armedia.acm.services.sequence.service.AcmSequenceConfigurationService;
 import com.armedia.acm.services.sequence.service.AcmSequenceService;
+
+import org.apache.commons.lang3.StringUtils;
+import org.reflections.Reflections;
+import org.reflections.scanners.FieldAnnotationsScanner;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.persistence.EntityManager;
 import javax.persistence.FlushModeType;
+import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import javax.servlet.http.HttpSession;
+
+import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 /*-
  * #%L
@@ -82,9 +102,12 @@ public class SequenceConfigurationAPIController
 
     @RequestMapping(value = "/configuration/updateSequenceNumber", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AcmSequenceEntity updateSequenceNumber(@RequestBody AcmSequenceEntity acmSequenceEntity) throws AcmSequenceException
+    public AcmSequenceEntity updateSequenceNumber(@RequestBody AcmSequenceEntity acmSequenceEntity)
+            throws AcmSequenceException, AcmAppErrorJsonMsg
     {
-        return getSequenceService().updateSequenceEntity(acmSequenceEntity);
+        getSequenceService().validateSequence(acmSequenceEntity);
+        AcmSequenceEntity updatedAcmSequenceEntity = getSequenceService().updateSequenceEntity(acmSequenceEntity);
+        return updatedAcmSequenceEntity;
     }
 
     @RequestMapping(value = "configuration/getSequence", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
