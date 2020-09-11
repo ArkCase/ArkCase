@@ -62,6 +62,8 @@
         <property name="sequenceDao" ref="acmSequenceDao"/>
         <property name="sequenceRegistryDao" ref="acmSequenceRegistryDao"/>
         <property name="sequenceResetDao" ref="acmSequenceResetDao"/>
+        <property name="packagesToScan" value="#{dataSourceConfig.jpaModelPackages}"/>
+        <property name="sequenceGeneratorManager" ref="acmSequenceGeneratorManager"/>
     </bean>
 
     <bean id="acmSequenceConfigurationService" class="com.armedia.acm.services.sequence.service.AcmSequenceConfigurationServiceImpl">
