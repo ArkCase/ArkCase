@@ -7,6 +7,8 @@ angular.module('services').factory('Websockets.MessageHandler', ['$q', '$rootSco
 
     Service.handleGenericMessage = handleGenericMessage;
 
+    Service.handleConfigurationUpdatedMessage = handleConfigurationUpdatedMessage;
+
     Service.handleZipGenerationMessage = handleZipGenerationMessage;
 
     Service.handleScheduledJobStatusMessage = handleScheduledJobStatusMessage;
@@ -37,6 +39,11 @@ angular.module('services').factory('Websockets.MessageHandler', ['$q', '$rootSco
             $rootScope.$bus.publish('move-portal-users-finished', message);
             return;
         }
+        var eventName = message.eventType;
+        $rootScope.$bus.publish(eventName, message);
+    }
+
+    function handleConfigurationUpdatedMessage(message) {
         var eventName = message.eventType;
         $rootScope.$bus.publish(eventName, message);
     }

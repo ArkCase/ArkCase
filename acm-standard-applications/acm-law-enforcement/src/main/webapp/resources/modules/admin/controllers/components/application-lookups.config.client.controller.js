@@ -1,17 +1,18 @@
 'use strict';
 
 angular.module('admin').controller('Admin.LookupsConfigController',
-    ['$scope', '$q', '$templateCache', '$modal', '$http', 'Object.LookupService', 'LookupService', 'MessageService', 'UtilService', '$translate', '$timeout', function ($scope, $q, $templateCache, $modal, $http, ObjectLookupService, LookupService, MessageService, Util, $translate, $timeout) {
+    ['$scope', '$q', '$templateCache', '$modal', '$http', 'Object.LookupService', 'LookupService', 'MessageService', 'UtilService', '$translate',
+        function ($scope, $q, $templateCache, $modal, $http, ObjectLookupService, LookupService, MessageService, Util, $translate) {
 
-        $scope.lookupsDefs = [];
+            $scope.lookupsDefs = [];
 
-        $scope.selectLookupDef = function (selectedLookupDef) {
-            if (Util.isEmpty(this.selectedLookupDef)) {
-                var found = _.find($scope.lookupsDefs, {
-                    name: $scope.selectedLookupDef.name
-                });
-                if (Util.isEmpty(found)) {
-                    this.selectedLookupDef = $scope.lookupsDefs[0];
+            $scope.selectLookupDef = function (selectedLookupDef) {
+                if (Util.isEmpty(this.selectedLookupDef)) {
+                    var found = _.find($scope.lookupsDefs, {
+                        name: $scope.selectedLookupDef.name
+                    });
+                    if (Util.isEmpty(found)) {
+                        this.selectedLookupDef = $scope.lookupsDefs[0];
                 } else {
                     this.selectedLookupDef = $scope.selectedLookupDef;
                 }
@@ -31,18 +32,26 @@ angular.module('admin').controller('Admin.LookupsConfigController',
                     console.error("Unknown lookup type!");
                     break;
             }
-            $scope.$broadcast('lookup-def-selected', $scope.selectedLookupDef);
-        };
+                $scope.$broadcast('lookup-def-selected', $scope.selectedLookupDef);
+            };
 
-        $scope.getLookups = function () {
-            ObjectLookupService.getLookupsDefs().then(function (data) {
-                //AFDP-8833, AFDP-8838 - Request and Appeal disposition type and subType lookups should be removed from UI
-                _.remove(data, function (lookup) {
-                    return lookup.name === 'appealDispositionType' || lookup.name === 'requestDispositionType' || lookup.name === 'requestDispositionSubType';
+            function awaitLookupUpdateAndReloadLookupsDefs() {
+                var subscription = $scope.$bus.subscribe('lookups-reloaded', function (result) {
+                    $scope.getLookups();
+                    $scope.$bus.unsubscribe(subscription);
                 });
-                $scope.lookupsDefs = data;
-                var index = 0;
-                if (!Util.isEmpty($scope.selectedLookupDef)) {
+            }
+
+
+            $scope.getLookups = function () {
+                ObjectLookupService.getLookupsDefs().then(function (data) {
+                    //AFDP-8833, AFDP-8838 - Request and Appeal disposition type and subType lookups should be removed from UI
+                    _.remove(data, function (lookup) {
+                        return lookup.name === 'appealDispositionType' || lookup.name === 'requestDispositionType' || lookup.name === 'requestDispositionSubType';
+                    });
+                    $scope.lookupsDefs = data;
+                    var index = 0;
+                    if (!Util.isEmpty($scope.selectedLookupDef)) {
                     var _index = _.findIndex($scope.lookupsDefs, {
                         name: $scope.selectedLookupDef.name
                     });
@@ -90,15 +99,11 @@ angular.module('admin').controller('Admin.LookupsConfigController',
                     }
                 });
                 MessageService.info($translate.instant('admin.application.lookups.config.delete.success'));
-                $timeout(function () {
-                    $scope.getLookups();
-                }, 5000);
+                awaitLookupUpdateAndReloadLookupsDefs();
                 return success;
             }, function (error) {
                 MessageService.error(error.data ? error.data : error);
-                $timeout(function () {
-                    $scope.getLookups();
-                }, 5000);
+                awaitLookupUpdateAndReloadLookupsDefs();
                 return error;
             });
             return promise;

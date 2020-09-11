@@ -43,7 +43,7 @@
         </dependency>
         <dependency>
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
-            <artifactId>acm-configuration</artifactId>
+            <artifactId>acm-encryption</artifactId>
             <version>${acm.version}</version>
         </dependency>
     </dependencies>
