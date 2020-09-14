@@ -126,7 +126,7 @@ angular.module('admin').controller('Admin.ReportsConfigController', ['$scope', '
 
                 $scope.reportsRoles = payload[2].data;
 
-                var url = $scope.reportsConfig['report.plugin.PENTAHO_SERVER_URL'] + '/pentaho';
+                var url = $scope.reportsConfig['report.plugin.PENTAHO_SERVER_URL'] + $scope.reportsConfig['report.plugin.PENTAHO_DESIGNER_CONTEXT'];
                 $scope.reportDesignerUrl = $sce.trustAsResourceUrl(url);
                 $scope.onObjSelect($scope.reportsData.chooseObject[0]);
 
