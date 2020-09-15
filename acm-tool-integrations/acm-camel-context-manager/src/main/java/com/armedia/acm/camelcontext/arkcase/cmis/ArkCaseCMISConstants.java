@@ -33,6 +33,7 @@ package com.armedia.acm.camelcontext.arkcase.cmis;
 public class ArkCaseCMISConstants
 {
     public static final String CMIS_API_URL = "cmisApiURL";
-    public static final String ARKCASE_CMIS_COMPONENT = "arkcase-cmis://";
+    // This is endpoint for Apache cmis component
+    public static final String ARKCASE_CMIS_COMPONENT = "cmis://";
     public static final String CAMEL_CMIS_DEFAULT_REPO_ID = "alfresco";
 }
