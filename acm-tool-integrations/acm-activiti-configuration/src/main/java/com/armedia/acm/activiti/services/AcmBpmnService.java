@@ -73,4 +73,6 @@ public interface AcmBpmnService
 
     ProcessInstance startBusinessProcess(String processName, Map<String, Object> processVariables);
 
+    public void resetWorkflows();
+
 }
