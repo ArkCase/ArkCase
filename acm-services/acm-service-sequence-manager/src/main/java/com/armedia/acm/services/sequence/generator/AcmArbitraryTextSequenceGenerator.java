@@ -27,6 +27,8 @@ package com.armedia.acm.services.sequence.generator;
  * #L%
  */
 
+import com.armedia.acm.services.sequence.exception.AcmSequenceException;
+import com.armedia.acm.services.sequence.model.AcmSequenceEntity;
 import com.armedia.acm.services.sequence.model.AcmSequencePart;
 
 import java.util.Map;
@@ -54,6 +56,13 @@ public class AcmArbitraryTextSequenceGenerator implements AcmSequenceGenerator
             Map<String, Long> autoincrementPartNameToValue)
     {
         return sequencePart.getSequenceArbitraryText();
+    }
+
+    @Override
+    public String getGeneratePartValue(String sequenceName, AcmSequencePart sequencePart, Object object,
+            Map<String, Long> autoincrementPartNameToValue, AcmSequenceEntity acmSequenceEntity)
+    {
+        return generatePartValue(sequenceName, sequencePart, object, autoincrementPartNameToValue);
     }
 
     /**
