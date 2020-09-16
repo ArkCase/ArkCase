@@ -69,7 +69,8 @@ public class AcmEncryptablePropertyUtilsImplIT
     @Test
     public void decryptPassword() throws AcmEncryptionException
     {
-        String encryptedPassword = "ENC(U2FsdGVkX18opRRmCattSZiUNjfr598Qq7P3DgZSwGw=)";
+
+        String encryptedPassword = "ENC(U2FsdGVkX1+SMOIdK/h2Cy5ONteYLksBQnHZllFZcKs=)";
 
         String decryptedPassword = utils.decryptPropertyValue(encryptedPassword);
 
