@@ -99,6 +99,7 @@ public class PersonContactIT
         String userHomePath = System.getProperty("user.home");
         System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
         System.setProperty("configuration.server.url", "http://localhost:9999");
+        System.setProperty("application.profile.reversed", "runtime");
     }
     @Autowired
     private PersonContactDao personContactDao;
