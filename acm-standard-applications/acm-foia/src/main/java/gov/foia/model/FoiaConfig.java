@@ -48,6 +48,10 @@ public class FoiaConfig
     @Value("${requestExtensionWorkingDaysEnabled}")
     private Boolean requestExtensionWorkingDaysEnabled;
 
+    @JsonProperty("complexRequestTrackOptionEnabled")
+    @Value("${complexRequestTrackOptionEnabled}")
+    private Boolean complexRequestTrackOptionEnabled;
+
     @JsonProperty("expediteWorkingDaysEnabled")
     @Value("${expediteWorkingDaysEnabled}")
     private Boolean expediteWorkingDaysEnabled;
@@ -162,6 +166,16 @@ public class FoiaConfig
     public void setRequestExtensionWorkingDaysEnabled(Boolean requestExtensionWorkingDaysEnabled)
     {
         this.requestExtensionWorkingDaysEnabled = requestExtensionWorkingDaysEnabled;
+    }
+
+    public Boolean getComplexRequestTrackOptionEnabled()
+    {
+        return complexRequestTrackOptionEnabled;
+    }
+
+    public void setComplexRequestTrackOptionEnabled(Boolean complexRequestTrackOptionEnabled)
+    {
+        this.complexRequestTrackOptionEnabled = complexRequestTrackOptionEnabled;
     }
 
     public Boolean getExpediteWorkingDaysEnabled()

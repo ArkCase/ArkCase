@@ -47,6 +47,7 @@ public class FoiaConfigurationService extends SystemConfigurationService
         foiaConfig.setDashboardBannerEnabled(foiaConfiguration.getDashboardBannerEnabled());
         foiaConfig.setNotificationGroupsEnabled(foiaConfiguration.getNotificationGroupsEnabled());
         foiaConfig.setRequestExtensionWorkingDaysEnabled(foiaConfiguration.getRequestExtensionWorkingDaysEnabled());
+        foiaConfig.setComplexRequestTrackOptionEnabled(foiaConfiguration.getComplexRequestTrackOptionEnabled());
         foiaConfig.setExpediteWorkingDaysEnabled(foiaConfiguration.getExpediteWorkingDaysEnabled());
         foiaConfig.setExpediteWorkingDays(foiaConfiguration.getExpediteWorkingDays());
         foiaConfig.setPurgeRequestWhenInHoldEnabled(foiaConfiguration.getPurgeRequestWhenInHoldEnabled());
@@ -78,6 +79,7 @@ public class FoiaConfigurationService extends SystemConfigurationService
         foiaConfiguration.setDashboardBannerEnabled(foiaConfig.getDashboardBannerEnabled());
         foiaConfiguration.setNotificationGroupsEnabled(foiaConfig.getNotificationGroupsEnabled());
         foiaConfiguration.setRequestExtensionWorkingDaysEnabled(foiaConfig.getRequestExtensionWorkingDaysEnabled());
+        foiaConfiguration.setComplexRequestTrackOptionEnabled(foiaConfig.getComplexRequestTrackOptionEnabled());
         foiaConfiguration.setExpediteWorkingDaysEnabled(foiaConfig.getExpediteWorkingDaysEnabled());
         foiaConfiguration.setExpediteWorkingDays(foiaConfig.getExpediteWorkingDays());
         foiaConfiguration.setPurgeRequestWhenInHoldEnabled(foiaConfig.getPurgeRequestWhenInHoldEnabled());
