@@ -2,8 +2,8 @@
 
 angular.module('cases').controller(
     'Cases.MainController',
-    ['$scope', '$state', '$stateParams', '$translate', '$rootScope', '$modal', 'Case.InfoService', 'Helper.ObjectBrowserService', 'ConfigService', 'UtilService', 'Util.DateService', 'Object.LookupService', 'LookupService', 'DueDate.Service', 'Admin.HolidayService', 'Admin.FoiaConfigService', 'Admin.ObjectTitleConfigurationService', 'EcmService',
-        function ($scope, $state, $stateParams, $translate, $rootScope, $modal, CaseInfoService, HelperObjectBrowserService, ConfigService, Util, UtilDateService, ObjectLookupService, LookupService, DueDateService, AdminHolidayService, AdminFoiaConfigService, AdminObjectTitleConfigurationService, EcmService) {
+    ['$scope', '$state', '$stateParams', '$translate', '$rootScope', '$modal', 'Case.InfoService', 'Helper.ObjectBrowserService', 'ConfigService', 'UtilService', 'Util.DateService', 'MessageService', 'Object.LookupService', 'LookupService', 'DueDate.Service', 'Admin.HolidayService', 'Admin.FoiaConfigService', 'Admin.ObjectTitleConfigurationService', 'EcmService',
+        function ($scope, $state, $stateParams, $translate, $rootScope, $modal, CaseInfoService, HelperObjectBrowserService, ConfigService, Util, UtilDateService, MessageService, ObjectLookupService, LookupService, DueDateService, AdminHolidayService, AdminFoiaConfigService, AdminObjectTitleConfigurationService, EcmService) {
 
             new HelperObjectBrowserService.Component({
                 scope: $scope,
@@ -19,6 +19,8 @@ angular.module('cases').controller(
 
             var onObjectInfoRetrieved = function (objectInfo) {
                 $scope.objectInfo = objectInfo;
+                $scope.requestAlreadyExtended = objectInfo.extensionFlag;
+                $scope.originalRequestTrack = objectInfo.requestTrack;
 
                 ObjectLookupService.getRequestCategories().then(function (requestCategories) {
                     $scope.requestCategories = requestCategories;
@@ -172,9 +174,16 @@ angular.module('cases').controller(
             }
 
             $scope.requestTrackChanged = function (requestTrack) {
+                // Automatically sets the extension flag if the 'complex' request track is selected.
+                if ($scope.complexRequestTrackOptionEnabled) {
+                    $scope.objectInfo.extensionFlag = (requestTrack === 'complex');
+                }
+
                 if (requestTrack === 'expedite') {
                     expediteDueDate();
                     $scope.objectInfo.expediteDate = new Date();
+                } else if (requestTrack === 'complex' && $scope.complexRequestTrackOptionEnabled) {
+                    extendDueDate();
                 } else {
                     resetDueDate();
                 }
@@ -283,6 +292,7 @@ angular.module('cases').controller(
             AdminFoiaConfigService.getFoiaConfig().then(function (response) {
                 $scope.extensionWorkingDays = response.data.requestExtensionWorkingDays;
                 $scope.requestExtensionWorkingDaysEnabled = response.data.requestExtensionWorkingDaysEnabled;
+                $scope.complexRequestTrackOptionEnabled = response.data.complexRequestTrackOptionEnabled;
                 $scope.expediteWorkingDays = response.data.expediteWorkingDays;
                 $scope.expediteWorkingDaysEnabled = response.data.expediteWorkingDaysEnabled;
             }, function (err) {
@@ -291,21 +301,27 @@ angular.module('cases').controller(
 
             $scope.extensionClicked = function ($event) {
                 if (!$event.target.checked) {
+                    $scope.objectInfo.requestTrack = $scope.originalRequestTrack;
                     resetDueDate();
                 } else {
-                    if ($scope.includeWeekends) {
-                        $scope.extendedDueDate = DueDateService.dueDateWithWeekends($scope.originalDueDate, $scope.extensionWorkingDays, $scope.holidays);
-                    } else {
-                        $scope.extendedDueDate = DueDateService.dueDateWorkingDays($scope.originalDueDate, $scope.extensionWorkingDays, $scope.holidays);
-                    }
-                    $scope.objectInfo.dueDate = $scope.extendedDueDate;
-                    $rootScope.$broadcast('dueDate-changed', $scope.extendedDueDate);
+                    $scope.objectInfo.requestTrack = 'complex';
+                    extendDueDate();
                 }
             };
 
             function resetDueDate() {
                 $scope.objectInfo.dueDate = $scope.originalDueDate;
                 $rootScope.$broadcast('dueDate-changed', $scope.originalDueDate);
+            }
+
+            function extendDueDate() {
+                if ($scope.includeWeekends) {
+                    $scope.extendedDueDate = DueDateService.dueDateWithWeekends($scope.originalDueDate, $scope.extensionWorkingDays, $scope.holidays);
+                } else {
+                    $scope.extendedDueDate = DueDateService.dueDateWorkingDays($scope.originalDueDate, $scope.extensionWorkingDays, $scope.holidays);
+                }
+                $scope.objectInfo.dueDate = $scope.extendedDueDate;
+                $rootScope.$broadcast('dueDate-changed', $scope.extendedDueDate);
             }
 
             function expediteDueDate() {
