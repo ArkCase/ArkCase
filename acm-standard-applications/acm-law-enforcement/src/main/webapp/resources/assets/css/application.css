@@ -1943,3 +1943,14 @@ textarea {
 .page-wrapper.collapsed #adhoc-reports-iframe {
     padding-right: 65px
 }
+
+
+/* Created custom CSS for the busy indicator */
+.busy-indicator-container.waitPopup {
+	bottom: 0;
+	display: block;
+	left: 0;
+	position: absolute;
+	right: 0;
+	top: calc(50% - 58px);
+}
