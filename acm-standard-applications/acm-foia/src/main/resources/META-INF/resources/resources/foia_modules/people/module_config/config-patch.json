@@ -18,6 +18,7 @@
             "organizations",
             "ids",
             "cases",
+            "consultations",
             "tasks",
             "related",
             "history"

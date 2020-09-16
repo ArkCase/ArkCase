@@ -1,49 +1,50 @@
 'use strict';
 
-angular.module('admin').controller('Admin.StandardLookupController', ['$scope', '$translate', '$modal', 'Object.LookupService', 'Helper.UiGridService', 'UtilService', 'MessageService', '$timeout', function ($scope, $translate, $modal, ObjectLookupService, HelperUiGridService, Util, MessageService, $timeout) {
+angular.module('admin').controller('Admin.StandardLookupController', ['$scope', '$translate', '$modal', 'Object.LookupService', 'Helper.UiGridService', 'UtilService', 'MessageService',
+    function ($scope, $translate, $modal, ObjectLookupService, HelperUiGridService, Util, MessageService) {
 
-    var gridHelper = new HelperUiGridService.Grid({
-        scope: $scope
-    });
-    $scope.lookup = [];
-
-    //get config and init grid settings
-    $scope.config.$promise.then(function (config) {
-        var componentConfig = _.find(config.components, {
-            id: 'standardLookup'
+        var gridHelper = new HelperUiGridService.Grid({
+            scope: $scope
         });
-        var columnDefs = componentConfig.columnDefs;
-        var rowTemplate = componentConfig.rowTemplate;
+        $scope.lookup = [];
 
-        $scope.isActionDisabled = function (rowEntity) {
-            if (rowEntity.readonly) {
-                return rowEntity.readonly;
+        //get config and init grid settings
+        $scope.config.$promise.then(function (config) {
+            var componentConfig = _.find(config.components, {
+                id: 'standardLookup'
+            });
+            var columnDefs = componentConfig.columnDefs;
+            var rowTemplate = componentConfig.rowTemplate;
+
+            $scope.isActionDisabled = function (rowEntity) {
+                if (rowEntity.readonly) {
+                    return rowEntity.readonly;
+                } else {
+                    return false;
+                }
+            };
+
+            // TODO: This should be checked in the HelperUiGridService (ignore addButton with same name)
+            if (!_.findWhere(columnDefs, {
+                name: 'act'
+            })) {
+                gridHelper.addButton(componentConfig, "edit", null, null, "isActionDisabled");
+                gridHelper.addButton(componentConfig, "delete", null, null, "isActionDisabled");
             }
-            else {
-                return false;
-            }
-        };
 
-        // TODO: This should be checked in the HelperUiGridService (ignore addButton with same name)
-        if (!_.findWhere(columnDefs, {
-            name: 'act'
-        })) {
-            gridHelper.addButton(componentConfig, "edit", null, null, "isActionDisabled");
-            gridHelper.addButton(componentConfig, "delete", null, null, "isActionDisabled");
-        }
-
-        $scope.gridOptions = {
-            enableColumnResizing: true,
-            enableRowSelection: true,
-            enableRowHeaderSelection: false,
-            multiSelect: false,
-            noUnselect: false,
-            columnDefs: columnDefs,
-            totalItems: 0,
-            data: [],
-            rowTemplate: rowTemplate,
-            onRegisterApi: function (gridApi) {
+            $scope.gridOptions = {
+                enableColumnResizing: true,
+                enableRowSelection: true,
+                enableRowHeaderSelection: false,
+                multiSelect: false,
+                noUnselect: false,
+                columnDefs: columnDefs,
+                totalItems: 0,
+                data: [],
+                rowTemplate: rowTemplate,
+                onRegisterApi: function (gridApi) {
                 gridApi.draggableRows.on.rowDropped($scope, function (info, dropTarget) {
+                    rearrangeOrderOfLookups();
                     saveLookup();
                 });
             }
@@ -138,53 +139,62 @@ angular.module('admin').controller('Admin.StandardLookupController', ['$scope', 
         });
     }
 
-    $scope.$on('lookup-def-selected', lookupDefSelected);
+        $scope.$on('lookup-def-selected', lookupDefSelected);
 
-    function lookupDefSelected(e, selectedLookupDef) {
-        if (selectedLookupDef.lookupType === 'standardLookup') {
-            $scope.selectedLookupDef = selectedLookupDef;
-            fetchLookup();
+        function lookupDefSelected(e, selectedLookupDef) {
+            if (selectedLookupDef.lookupType === 'standardLookup') {
+                $scope.selectedLookupDef = selectedLookupDef;
+                fetchLookup();
+            }
         }
-    }
 
-    function changePrimaryEntry(data, entry) {
-        if ($scope.entry.primary) {
-            data.forEach(function (value) {
-                if (value.key !== entry.key) {
-                    value.primary = false;
+        function changePrimaryEntry(data, entry) {
+            if ($scope.entry.primary) {
+                data.forEach(function (value) {
+                    if (value.key !== entry.key) {
+                        value.primary = false;
+                    }
+                });
+            }
+        }
+
+        function rearrangeOrderOfLookups() {
+            for (var i = 0; i < $scope.lookup.length; i++) {
+                $scope.lookup[i].order = i + 1;
+            }
+        }
+
+        function saveLookup() {
+            var promiseSaveInfo = ObjectLookupService.saveLookup($scope.selectedLookupDef, $scope.lookup);
+            promiseSaveInfo.then(function () {
+                MessageService.succsessAction();
+                awaitLookupUpdateAndReloadGrid();
+            }, function (error) {
+                MessageService.error(error.data ? error.data : error);
+                awaitLookupUpdateAndReloadGrid();
+                return error;
+            });
+
+            return promiseSaveInfo;
+        }
+
+        function awaitLookupUpdateAndReloadGrid() {
+            var subscription = $scope.$bus.subscribe('lookups-reloaded', function (result) {
+                fetchLookup();
+                $scope.$bus.unsubscribe(subscription);
+            });
+        }
+
+        function fetchLookup() {
+            ObjectLookupService.getLookup($scope.selectedLookupDef).then(function (lookup) {
+                // if we change the reference of $scope.lookup variable the UI is not updated, so we change the elements in the array
+                $scope.lookup.splice(0, $scope.lookup.length);
+                if (lookup !== "") {
+                    $scope.lookup.push.apply($scope.lookup, lookup);
+                    $scope.gridOptions.data = $scope.lookup;
                 }
             });
         }
-    }
 
-    function saveLookup() {
-        var promiseSaveInfo = ObjectLookupService.saveLookup($scope.selectedLookupDef, $scope.lookup);
-        promiseSaveInfo.then(function () {
-            MessageService.succsessAction();
-            $timeout(function () {
-                fetchLookup();
-            }, 5000);
-        }, function (error) {
-            MessageService.error(error.data ? error.data : error);
-            $timeout(function () {
-                fetchLookup();
-            }, 5000);
-            return error;
-        });
-
-        return promiseSaveInfo;
-    }
-
-    function fetchLookup() {
-        ObjectLookupService.getLookup($scope.selectedLookupDef).then(function (lookup) {
-            // if we change the reference of $scope.lookup variable the UI is not updated, so we change the elements in the array
-            $scope.lookup.splice(0, $scope.lookup.length);
-            if (lookup !== "") {
-                $scope.lookup.push.apply($scope.lookup, lookup);
-                $scope.gridOptions.data = $scope.lookup;
-            }
-        });
-    }
-
-    $scope.$emit('lookup-controller-loaded');
-}]);
+        $scope.$emit('lookup-controller-loaded');
+    }]);

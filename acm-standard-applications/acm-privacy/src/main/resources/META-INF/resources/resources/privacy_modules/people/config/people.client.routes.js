@@ -86,6 +86,11 @@ angular.module('people').config([ '$stateProvider', function($stateProvider) {
             templateUrl: 'modules/people/views/components/person-cases.client.view.html'
         })
 
+        .state('people.consultations', {
+            url: '/:id/consultations',
+            templateUrl: 'modules/people/views/components/person-consultations.client.view.html'
+        })
+
         .state('people.complaints', {
             url: '/:id/complaints',
             templateUrl: 'modules/people/views/components/person-complaints.client.view.html'

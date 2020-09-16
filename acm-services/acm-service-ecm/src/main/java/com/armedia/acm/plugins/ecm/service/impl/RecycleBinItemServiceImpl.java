@@ -39,7 +39,6 @@ import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.AcmFolderConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.RecycleBinConstants;
 import com.armedia.acm.plugins.ecm.model.RecycleBinDTO;
 import com.armedia.acm.plugins.ecm.model.RecycleBinItem;
@@ -53,7 +52,6 @@ import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
@@ -61,7 +59,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -94,7 +91,6 @@ public class RecycleBinItemServiceImpl implements RecycleBinItemService
     @Transactional(rollbackFor = Exception.class)
     public RecycleBinItem putFileIntoRecycleBin(EcmFile ecmFile, Authentication authentication, HttpSession session)
             throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException, LinkAlreadyExistException {
-        String ipAddress = (String) session.getAttribute(EcmFileConstants.IP_ADDRESS_ATTRIBUTE);
         AcmContainer destinationContainer = getOrCreateContainerForRecycleBin(RecycleBinConstants.OBJECT_TYPE,
                 ecmFile.getCmisRepositoryId());
         AcmContainer sourceContainer = getFolderService().findContainerByFolderIdTransactionIndependent(ecmFile.getFolder().getId());
@@ -105,11 +101,7 @@ public class RecycleBinItemServiceImpl implements RecycleBinItemService
         moveToCMISFolder(ecmFile, destinationContainer.getContainerObjectId(), destinationContainer.getContainerObjectType(),
                 destinationContainer.getFolder().getId());
 
-        //Setting duplicate to false, so when it is restored to be its default value
-        ecmFile.setDuplicate(false);
-        getEcmFileService().checkDuplicatesByHash(ecmFile);
         log.info("File {} successfully moved in Recycle Bin, by user {}", ecmFile.getFileName(), authentication.getName());
-        getFileEventPublisher().publishFileMovedInRecycleBinEvent(ecmFile, authentication, ipAddress, true);
         return recycleBinItem;
     }
 
@@ -186,6 +178,8 @@ public class RecycleBinItemServiceImpl implements RecycleBinItemService
     @Transactional(rollbackFor = Exception.class)
     public List<RecycleBinItemDTO> restoreItemsFromRecycleBin(List<RecycleBinItemDTO> itemsToBeRestored, Authentication authentication)
             throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException, AcmFolderException, LinkAlreadyExistException {
+
+        EcmFile ecmFile = null;
         for (RecycleBinItemDTO fileFromTrash : itemsToBeRestored)
         {
 
@@ -202,13 +196,13 @@ public class RecycleBinItemServiceImpl implements RecycleBinItemService
             }
             else
             {
-                EcmFile ecmFile = getEcmFileDao().find(fileFromTrash.getObjectId());
+                ecmFile = getEcmFileDao().find(fileFromTrash.getObjectId());
                 moveToCMISFolder(ecmFile, destinationContainer.getContainerObjectId(), destinationContainer.getContainerObjectType(),
                         recycleBinItem.getSourceFolderId());
-                getEcmFileService().checkDuplicatesByHash(ecmFile);
             }
             removeItemFromRecycleBin(recycleBinItem.getId());
             log.info("Item {} from Recycle Bin successfully restored, by user {}", fileFromTrash.getObjectId(), authentication.getName());
+            getEcmFileService().checkAndSetDuplicatesByHash(ecmFile);
         }
 
         return itemsToBeRestored;

@@ -29,6 +29,7 @@ package com.armedia.acm.services.sequence.generator;
 import com.armedia.acm.services.sequence.event.AcmSequenceConfigurationUpdatedEvent;
 import com.armedia.acm.services.sequence.exception.AcmSequenceException;
 import com.armedia.acm.services.sequence.model.AcmSequenceConfiguration;
+import com.armedia.acm.services.sequence.model.AcmSequenceEntity;
 import com.armedia.acm.services.sequence.model.AcmSequencePart;
 import com.armedia.acm.services.sequence.model.AcmSequenceRegistry;
 import com.armedia.acm.services.sequence.service.AcmSequenceConfigurationService;
@@ -104,6 +105,29 @@ public class AcmSequenceGeneratorManager implements ApplicationListener<AcmSeque
         if (!sequenceValue.isEmpty())
         {
             registerSequence(sequenceValue, sequenceName, autoincrementPartNameToValue);
+        }
+
+        return sequenceValue;
+    }
+
+    public String getGenerateValue(String sequenceName, Object object, AcmSequenceEntity acmSequenceEntity) throws AcmSequenceException
+    {
+
+        String sequenceValue = "";
+        List<AcmSequencePart> sequenceParts = sequenceMap.get(sequenceName).getSequenceParts();
+        Map<String, Long> autoincrementPartNameToValue = new HashMap<>();
+        for (AcmSequencePart sequencePart : sequenceParts)
+        {
+            if (sequencePart.getSequencePartType() != null)
+            {
+                if (StringUtils.isBlank(sequencePart.getSequenceCondition()) || (StringUtils.isNotBlank(sequencePart.getSequenceCondition())
+                        && evaluateSequencePartCondition(sequencePart.getSequenceCondition(), object)))
+                {
+                    sequenceValue += generatorsMap.get(sequencePart.getSequencePartType()).getGeneratePartValue(sequenceName, sequencePart,
+                            object,
+                            autoincrementPartNameToValue, acmSequenceEntity);
+                }
+            }
         }
 
         return sequenceValue;

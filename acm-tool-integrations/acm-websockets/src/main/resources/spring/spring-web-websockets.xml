@@ -53,6 +53,9 @@
 
     <int:service-activator ref="objectUpdateNotifier" input-channel="objectEventChannel" method="notifyChange"/>
 
+    <bean id="configurationUpdateNotifier" class="com.armedia.acm.websockets.ConfigurationUpdateNotifier"/>
+    <int:service-activator ref="configurationUpdateNotifier" input-channel="configurationUpdatedChannel" method="notifyChange"/>
+
     <bean id="simplePushNotifier" class="com.armedia.acm.websockets.SimplePushNotifier"/>
     <int:service-activator ref="simplePushNotifier" input-channel="genericMessagesChannel" method="receiveMessage"/>
 

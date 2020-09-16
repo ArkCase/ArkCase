@@ -163,22 +163,31 @@ angular.module(ApplicationConfiguration.applicationModuleName).config(
                         AnalyticsProvider.enterDebugMode(GOOGLE_ANALYTICS_DEBUG); // configuration debug flag
                         AnalyticsProvider.setPageEvent('$stateChangeSuccess');
                     }
-                } ]).run(
-        [ '$translate', '$translatePartialLoader', '$rootScope', '$http', 'CacheFactory',
-                function($translate, $translatePartialLoader, $rootScope, $http, CacheFactory) {
-                    $translatePartialLoader.addPart('core');
-                    $translatePartialLoader.addPart('welcome');
-                    $translate.refresh();
-                    $rootScope.utils = utils;
-                    /*
-                     *this is cache for all $http calls if cache is enabled
-                     */
-                    $http.defaults.cache = CacheFactory('defaultCache', {
-                        maxAge : 10 * 1000, // Items added to this cache expire after 10 seconds
-                        cacheFlushInterval : 60 * 60 * 1000, // This cache will clear itself every hour
-                        deleteOnExpire : 'aggressive' // Items will be deleted from this cache when they expire
-                    });
-                } ]);
+                }]).run(
+    ['$translate', '$translatePartialLoader', '$rootScope', '$http', 'CacheFactory', 'LookupService',
+        function ($translate, $translatePartialLoader, $rootScope, $http, CacheFactory, LookupService) {
+            $translatePartialLoader.addPart('core');
+            $translatePartialLoader.addPart('welcome');
+            $translate.refresh();
+            $rootScope.utils = utils;
+            /*
+             *this is cache for all $http calls if cache is enabled
+             */
+            $http.defaults.cache = CacheFactory('defaultCache', {
+                maxAge: 10 * 1000, // Items added to this cache expire after 10 seconds
+                cacheFlushInterval: 60 * 60 * 1000, // This cache will clear itself every hour
+                deleteOnExpire: 'aggressive' // Items will be deleted from this cache when they expire
+            });
+
+            // Load lookups in cache
+            LookupService.getLookups();
+
+            $rootScope.$bus.subscribe('lookups-updated', function (result) {
+                var lookups = JSON.parse(result.lookupsData);
+                LookupService.reloadLookups(lookups);
+            });
+
+        }]);
 
 var utils = {};
 utils.getLookupValue = function(objArray, key) {
