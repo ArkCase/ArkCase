@@ -298,6 +298,7 @@
 
     <bean id="resetConfigurationAPIController" class="com.armedia.acm.plugins.admin.web.api.ResetConfigurationAPIController">
         <property name="configurationPropertyService" ref="configurationPropertyService"/>
+        <property name="acmBpmnService" ref="processDefinitionManagementService"/>
     </bean>
 
 </beans>

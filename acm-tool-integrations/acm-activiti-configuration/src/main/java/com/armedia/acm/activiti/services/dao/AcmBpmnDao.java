@@ -190,6 +190,31 @@ public class AcmBpmnDao
         return query.getResultList();
     }
 
+    @Transactional
+    public void activateLatestVersionBySystemUser()
+    {
+        String activateQueryText = "UPDATE AcmProcessDefinition apd SET apd.active = TRUE" +
+                " WHERE apd.version IN (SELECT MAX(apd2.version)" +
+                " FROM AcmProcessDefinition as apd2" +
+                " WHERE apd2.creator = 'SYSTEM_USER'" +
+                " AND apd2.key = apd.key)";
+
+        TypedQuery<AcmProcessDefinition> activateLatestVersionBySystemUserQuery = getEm().createQuery(activateQueryText,
+                AcmProcessDefinition.class);
+        activateLatestVersionBySystemUserQuery.executeUpdate();
+
+        String deactivateQueryText = "UPDATE AcmProcessDefinition apd SET apd.active = FALSE" +
+                " WHERE apd.version NOT IN (SELECT MAX(apd2.version)" +
+                " FROM AcmProcessDefinition as apd2" +
+                " WHERE apd2.creator = 'SYSTEM_USER'" +
+                " AND apd2.key = apd.key)";
+
+        TypedQuery<AcmProcessDefinition> deactivateOtherVersionsQuery = getEm().createQuery(deactivateQueryText,
+                AcmProcessDefinition.class);
+        deactivateOtherVersionsQuery.executeUpdate();
+
+    }
+
     public EntityManager getEm()
     {
         return em;
