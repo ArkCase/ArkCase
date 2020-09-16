@@ -44,7 +44,7 @@
         </sequenceFlow>
         <serviceTask id="sid-59B480D3-8042-491C-89F9-A490BC2B8106" name="Compress the Response folder"
                      activiti:expression="#{responseFolderCompressorService.compressResponseFolder(OBJECT_ID)}"
-                     activiti:resultVariableName="compressFolderPath">
+                     activiti:resultVariable="compressFolderPath">
             <extensionElements>
                 <modeler:editor-resource-id><![CDATA[sid-59B480D3-8042-491C-89F9-A490BC2B8106]]></modeler:editor-resource-id>
             </extensionElements>
