@@ -75,13 +75,17 @@ angular.module('complaints').controller(
                     });
 
                     ObjectLookupService.getDispositionTypes().then(function(dispositionTypes) {
-                        _.forEach(dispositionTypes, function(item) {
+                        _.forEach(dispositionTypes, function (item) {
                             var dispositionType = {
                                 "key": item.key,
                                 "value": $translate.instant(item.value)
                             };
                             $scope.complaintDispositions.push(dispositionType);
-                        })
+                        });
+                        $scope.closeComplaintRequest.disposition.dispositionType = _.find($scope.complaintDispositions, {
+                            primary: true
+                        });
+
                     });
 
                     ObjectLookupService.getPersonTypes(ObjectService.ObjectTypes.COMPLAINT).then(function(data) {

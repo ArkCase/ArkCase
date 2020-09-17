@@ -44,6 +44,9 @@ angular.module('consultations').controller(
 
             ObjectLookupService.getLookupByLookupName("changeConsultationStatuses").then(function(consultationStatuses) {
                 $scope.statuses = consultationStatuses;
+                $scope.changeConsultationStatus.status = _.find(consultationStatuses, {
+                    primary: true
+                });
             });
 
             // ---------------------------            approver         --------------------------------------

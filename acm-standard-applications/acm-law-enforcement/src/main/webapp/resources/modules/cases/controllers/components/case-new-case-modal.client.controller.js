@@ -89,10 +89,11 @@ angular.module('cases').controller(
                         };
                     }
 
-                    var initiatorType = 'Initiator';
-
                     ObjectLookupService.getCaseFileTypes().then(function(caseTypes) {
                         $scope.caseCategory = caseTypes;
+                        $scope.casefile.caseType = _.find(caseTypes, {
+                            primary: true
+                        });
                     });
 
                     ObjectLookupService.getPersonTypes(ObjectService.ObjectTypes.CASE_FILE).then(function(personTypes) {
@@ -101,6 +102,10 @@ angular.module('cases').controller(
                     });
                     ObjectLookupService.getPersonTypes(ObjectService.ObjectTypes.CASE_FILE, true).then(function(personTypes) {
                         $scope.personTypesInitiator = personTypes;
+                        $scope.initiatorType = _.find(personTypes, {
+                            primary: true
+                        });
+
                         return personTypes;
                     });
 
@@ -131,7 +136,7 @@ angular.module('cases').controller(
 
                         var params = {};
                         params.types = $scope.personTypesInitiator;
-                        params.type = initiatorType;
+                        params.type = $scope.initiatorType;
                         params.typeEnabled = false;
                         association = new newPersonAssociation();
 

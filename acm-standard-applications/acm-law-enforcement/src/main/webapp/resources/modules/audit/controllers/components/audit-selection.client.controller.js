@@ -4,6 +4,9 @@ angular.module('audit').controller('Audit.SelectionController', [ '$scope', 'Uti
 
     ObjectLookupService.getLookupByLookupName("auditReportNames").then(function(auditReportNames) {
         $scope.auditReportNames = auditReportNames;
+        $scope.auditReportName = _.find($scope.auditReportNames, {
+            primary: true
+        });
         return auditReportNames;
     });
 
