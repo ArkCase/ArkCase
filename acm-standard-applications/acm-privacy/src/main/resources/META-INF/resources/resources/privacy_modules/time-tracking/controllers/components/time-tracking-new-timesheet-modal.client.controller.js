@@ -48,11 +48,10 @@ angular.module('time-tracking').controller(
                 UserInfoService.getUserInfo().then(function (infoData) {
                     if (!$scope.isEdit) {
                         //new timesheet with predefined values
-                        $scope.isTypeSelected = false;
                         $scope.isApproverAdded = false;
                         $scope.timesheet = {
                             className: $scope.config.className,
-                            status: 'DRAFT',
+                            status: $scope.defaultTimesheetStatus ? $scope.defaultTimesheetStatus.key : 'DRAFT',
                             times: [],
                             participants: []
                         };
@@ -64,12 +63,14 @@ angular.module('time-tracking').controller(
                         $scope.selectedWeek = updateChoosedWeekText($scope.selectedDate);
 
                         $scope.timesForms = [{
+                            type: $scope.defaultType.key,
+                            chargeRole: $scope.defaultChargeRole.key,
                             totalWeekHours: 0,
                             totalCost: 0,
                             dayHours: [0, 0, 0, 0, 0, 0, 0]
                         }];
-
-                        if(!Util.isEmpty($scope.modalParams.timeType) && !Util.isEmpty($scope.modalParams.timeNumber) && !Util.isEmpty($scope.modalParams.timeId)) {
+                        $scope.isTypeSelected = $scope.timesForms.type != undefined;
+                        if (!Util.isEmpty($scope.modalParams.timeType) && !Util.isEmpty($scope.modalParams.timeNumber) && !Util.isEmpty($scope.modalParams.timeId)) {
                             $scope.timesForms[0].objectId = $scope.modalParams.timeId;
                             $scope.timesForms[0].type = $scope.modalParams.timeType;
                             $scope.timesForms[0].code = $scope.modalParams.timeNumber;
@@ -77,7 +78,6 @@ angular.module('time-tracking').controller(
                         }
                     }
                 });
-
 
 
                 $scope.newTimeObjectPicker = _.find(moduleConfig.components, {
@@ -101,7 +101,7 @@ angular.module('time-tracking').controller(
 
             var timesheetConfig = TimesheetConfigurationService.getConfig();
 
-            TimesheetConfigurationService.getProperties().then(function(response) {
+            TimesheetConfigurationService.getProperties().then(function (response) {
                 if (!Util.isEmpty(response.data)) {
                     $scope.timesheetProperties = response.data;
                 }
@@ -109,19 +109,30 @@ angular.module('time-tracking').controller(
 
             ObjectLookupService.getTimesheetTypes().then(function (timesheetTypes) {
                 $scope.timesheetTypes = timesheetTypes;
+                $scope.time.type = _.find($scope.timesheetStatuses, {
+                    primary: true
+                });
             });
 
             ObjectLookupService.getTimesheetChargeRoles().then(function (timesheetChargeRoles) {
                 $scope.timesheetChargeRoles = timesheetChargeRoles;
+                $scope.defaultChargeRole = _.find($scope.timesheetChargeRoles, {
+                    primary: true
+                });
             });
+
             ObjectLookupService.getTimesheetStatuses().then(function (timesheetStatuses) {
                 $scope.timesheetStatuses = timesheetStatuses;
 
-                    for(var i = $scope.timesheetStatuses.length - 1; i >= 0; i--) {
-                        if($scope.timesheetStatuses[i].key !== "DRAFT" && $scope.timesheetStatuses[i].key !== "FINAL") {
-                            $scope.timesheetStatuses.splice(i, 1);
-                        }
+                for (var i = $scope.timesheetStatuses.length - 1; i >= 0; i--) {
+                    if ($scope.timesheetStatuses[i].key !== "DRAFT" && $scope.timesheetStatuses[i].key !== "FINAL") {
+                        $scope.timesheetStatuses.splice(i, 1);
                     }
+                }
+                $scope.defaultTimesheetStatus = _.find($scope.timesheetStatuses, {
+                    primary: true
+                });
+
             });
 
             // ----------------------------- total ----------------------------------------------------------
@@ -140,7 +151,7 @@ angular.module('time-tracking').controller(
             };
 
             $scope.updateTotalCost = function (timesForm) {
-                $q.when(timesheetConfig).then(function (response){
+                $q.when(timesheetConfig).then(function (response) {
                     $scope.timesheetConfiguration = response.data;
 
                     if (!Util.isEmpty(timesForm.chargeRole)) {
@@ -159,12 +170,12 @@ angular.module('time-tracking').controller(
                 if (tmpTimesheet.participants != undefined) {
                     if (!Util.isArrayEmpty(tmpTimesheet.participants)) {
                         _.forEach(tmpTimesheet.participants, function (participant) {
-                            if(participant.participantType == participantTypeApprover){
-                                UserInfoService.getUserInfoById(participant.participantLdapId).then(function(userInfo) {
+                            if (participant.participantType == participantTypeApprover) {
+                                UserInfoService.getUserInfoById(participant.participantLdapId).then(function (userInfo) {
                                     $scope.approverName = userInfo.fullName;
                                 });
                             }
-                            if(participant.participantType == participantTypeOwningGroup){
+                            if (participant.participantType == participantTypeOwningGroup) {
                                 $scope.groupName = participant.participantLdapId;
                             }
                         });
@@ -436,11 +447,11 @@ angular.module('time-tracking').controller(
             function fillTotalCost(hour, chargeRole) {
                 var hourRate = 0;
                 if ($scope.timesheetConfiguration !== undefined) {
-                    for(var i=0; i<$scope.timesheetConfiguration.chargeRoleItems.length; i++){
-                         if($scope.timesheetConfiguration.chargeRoleItems[i].chargeRole === chargeRole && $scope.timesheetConfiguration.chargeRoleItems[i].active === "ACTIVE"){
-                             hourRate = $scope.timesheetConfiguration.chargeRoleItems[i].rate;
-                             break;
-                         }
+                    for (var i = 0; i < $scope.timesheetConfiguration.chargeRoleItems.length; i++) {
+                        if ($scope.timesheetConfiguration.chargeRoleItems[i].chargeRole === chargeRole && $scope.timesheetConfiguration.chargeRoleItems[i].active === "ACTIVE") {
+                            hourRate = $scope.timesheetConfiguration.chargeRoleItems[i].rate;
+                            break;
+                        }
                     }
                 }
                 return hour * hourRate;
@@ -462,21 +473,21 @@ angular.module('time-tracking').controller(
                             };
                             if (!$scope.isEdit) {
                                 timesheet.times.push(time);
-                            }else {
+                            } else {
                                 var alreadyExists = false;
                                 _.forEach(timesheet.times, function (timesheetTime) {
-                                    if(moment(timesheetTime.date).format("YYYY-MM-DD") == moment(time.date).format("YYYY-MM-DD")
+                                    if (moment(timesheetTime.date).format("YYYY-MM-DD") == moment(time.date).format("YYYY-MM-DD")
                                         && timesheetTime.type == time.type && timesheetTime.code == time.code
-                                        && timesheetTime.chargeRole == time.chargeRole){
-                                        if(timesheetTime.value != time.value){
+                                        && timesheetTime.chargeRole == time.chargeRole) {
+                                        if (timesheetTime.value != time.value) {
                                             timesheetTime.value = time.value;
                                             timesheetTime.totalCost = time.totalCost;
                                         }
                                         alreadyExists = true;
                                     }
                                 });
-                                if(!alreadyExists) {
-                                    if(Util.isEmpty(time.objectId)){
+                                if (!alreadyExists) {
+                                    if (Util.isEmpty(time.objectId)) {
                                         time.objectId = time.code.split("_")[1];
                                     }
                                     timesheet.times.push(time);
@@ -488,7 +499,7 @@ angular.module('time-tracking').controller(
             }
 
             // ---------------------------            approver         --------------------------------------
-            $scope.userOrGroupSearch = function() {
+            $scope.userOrGroupSearch = function () {
                 var params = {};
                 params.header = $translate.instant("timeTracking.comp.newTimesheet.userSearch.title");
                 params.filter = "fq=\"object_type_s\":(GROUP OR USER)&fq=\"status_lcs\":(ACTIVE OR VALID)";
@@ -498,25 +509,25 @@ angular.module('time-tracking').controller(
 
                 var modalInstance = $modal.open({
                     templateUrl: "directives/core-participants/participants-user-group-search.client.view.html",
-                    controller: [ '$scope', '$modalInstance', 'params', function($scope, $modalInstance, params) {
+                    controller: ['$scope', '$modalInstance', 'params', function ($scope, $modalInstance, params) {
                         $scope.modalInstance = $modalInstance;
                         $scope.header = params.header;
                         $scope.filter = params.filter;
                         $scope.config = params.config;
                         $scope.secondGrid = params.secondGrid;
                         $scope.extraFilter = params.extraFilter;
-                    } ],
+                    }],
                     animation: true,
                     size: 'lg',
                     backdrop: 'static',
                     resolve: {
-                        params: function() {
+                        params: function () {
                             return params;
                         }
                     }
                 });
 
-                modalInstance.result.then(function(selection) {
+                modalInstance.result.then(function (selection) {
                     if (selection) {
                         var selectedObjectType = selection.masterSelectedItem.object_type_s;
                         if (selectedObjectType === 'USER') { // Selected user
@@ -550,14 +561,14 @@ angular.module('time-tracking').controller(
                         }
                     }
 
-                }, function() {
+                }, function () {
                     // Cancel button was clicked.
                     return [];
                 });
 
             };
 
-            function addParticipantInTimesheet(participantType, participantLdapId){
+            function addParticipantInTimesheet(participantType, participantLdapId) {
                 var newParticipant = {};
                 newParticipant.className = $scope.participantsConfig.className;
                 newParticipant.participantType = participantType;
@@ -566,20 +577,20 @@ angular.module('time-tracking').controller(
                 if (ObjectParticipantService.validateParticipants([newParticipant], true)) {
                     var participantExists = false;
                     _.forEach($scope.timesheet.participants, function (participant) {
-                        if(participant.participantType == participantType){
+                        if (participant.participantType == participantType) {
                             participantExists = true;
                             participant.participantLdapId = newParticipant.participantLdapId;
                             participant.replaceChildrenParticipant = true;
                             return false;
                         }
                     });
-                    if(!participantExists){
+                    if (!participantExists) {
                         $scope.timesheet.participants.push(newParticipant);
                     }
                 }
             }
 
-            function updateIsApproverAdded(participants){
+            function updateIsApproverAdded(participants) {
                 var approver = _.find(participants, function (participant) {
                     return participant.participantType == participantTypeApprover;
                 });
@@ -589,14 +600,14 @@ angular.module('time-tracking').controller(
             //-----------------------------------------------------------------------------------------------
 
             $scope.save = function (submissionName) {
-                $q.when(timesheetConfig).then(function (response){
+                $q.when(timesheetConfig).then(function (response) {
                     $scope.timesheetConfiguration = response.data;
 
                     if (!$scope.isEdit) {
                         $scope.loading = true;
                         $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
                         fillTimes($scope.timesheet);
-                        if($scope.timesheet.status === "FINAL") {
+                        if ($scope.timesheet.status === "FINAL") {
                             submissionName = "SaveFinal";
                         }
                         TimeTrackingInfoService.saveNewTimesheetInfo(clearNotFilledElements(_.cloneDeep($scope.timesheet)), submissionName).then(function (objectInfo) {
@@ -628,7 +639,7 @@ angular.module('time-tracking').controller(
                         checkForChanges($scope.objectInfo);
                         if (TimeTrackingInfoService.validateTimesheet($scope.objectInfo)) {
                             var objectInfo = Util.omitNg($scope.objectInfo);
-                            if($scope.objectInfo.status === "FINAL") {
+                            if ($scope.objectInfo.status === "FINAL") {
                                 submissionName = "SaveFinal";
                             }
                             promiseSaveInfo = TimeTrackingInfoService.saveTimesheetInfo(objectInfo, submissionName);
@@ -675,38 +686,38 @@ angular.module('time-tracking').controller(
                     objectInfo.status = $scope.timesheet.status;
                 }
 
-                var addedApprover =  _.find($scope.timesheet.participants, function (participant) {
+                var addedApprover = _.find($scope.timesheet.participants, function (participant) {
                     return participant.participantType == participantTypeApprover;
                 });
 
-                if(!Util.isEmpty(addedApprover)){
+                if (!Util.isEmpty(addedApprover)) {
                     var hasApprover = false;
                     _.forEach(objectInfo.participants, function (participant, idx) {
-                        if((participant.participantType == participantTypeApprover)){
+                        if ((participant.participantType == participantTypeApprover)) {
                             hasApprover = true;
                             objectInfo.participants.splice(idx, 1, addedApprover);
                             return false;
                         }
                     });
-                    if(!hasApprover){
+                    if (!hasApprover) {
                         objectInfo.participants.push(addedApprover);
                     }
                 }
 
-                var addedOwningGroup =  _.find($scope.timesheet.participants, function (participant) {
+                var addedOwningGroup = _.find($scope.timesheet.participants, function (participant) {
                     return participant.participantType == participantTypeOwningGroup;
                 });
 
-                if(!Util.isEmpty(addedOwningGroup)){
+                if (!Util.isEmpty(addedOwningGroup)) {
                     var hasOwningGroup = false;
                     _.forEach(objectInfo.participants, function (participant, idx) {
-                        if((participant.participantType == participantTypeOwningGroup)){
+                        if ((participant.participantType == participantTypeOwningGroup)) {
                             hasOwningGroup = true;
                             objectInfo.participants.splice(idx, 1, addedOwningGroup);
                             return false;
                         }
                     });
-                    if(!hasOwningGroup){
+                    if (!hasOwningGroup) {
                         objectInfo.participants.push(addedOwningGroup);
                     }
                 }

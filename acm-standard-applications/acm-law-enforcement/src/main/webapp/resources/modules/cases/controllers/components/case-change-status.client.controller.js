@@ -46,6 +46,9 @@ angular.module('cases').controller(
 
                     ObjectLookupService.getLookupByLookupName("changeCaseStatuses").then(function(caseStatuses) {
                         $scope.statuses = caseStatuses;
+                        $scope.changeCaseStatus.status = _.find(caseStatuses, {
+                            primary: true
+                        });
                     });
 
                     function statusChanged() {

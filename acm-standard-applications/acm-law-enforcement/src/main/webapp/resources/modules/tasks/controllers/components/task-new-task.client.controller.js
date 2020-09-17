@@ -42,7 +42,14 @@ angular.module('tasks').controller(
                     $scope.selectedBusinessProcessType = null;
                     ObjectLookupService.getBusinessProcessTypes().then(function(res) {
                         $scope.businessProcessTypes = res;
-                        $scope.selectedBusinessProcessType = res[1].key;
+                        var defaultBusinessProcessType = _.find($scope.businessProcessTypes, {
+                            primary: true
+                        });
+                        if (defaultBusinessProcessType != null) {
+                            $scope.selectedBusinessProcessType = defaultBusinessProcessType;
+                        } else {
+                            $scope.selectedBusinessProcessType = res[1].key;
+                        }
                     });
 
                     if ($scope.taskType === 'REVIEW_DOCUMENT') {
@@ -71,6 +78,9 @@ angular.module('tasks').controller(
 
                     ObjectLookupService.getLookupByLookupName("taskParentTypes").then(function(taskParentTypes) {
                         $scope.taskParentTypes = taskParentTypes;
+                        $scope.config.data.attachedToObjectType = _.find($scope.taskParentTypes, {
+                            primary: true
+                        });
                         return taskParentTypes;
                     });
 

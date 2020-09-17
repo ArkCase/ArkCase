@@ -72,18 +72,26 @@ angular.module('complaints').controller(
                             $scope.isAddressTypeSelected = false;
                     };
 
-                    var initiatorType = 'Initiator';
-
                     ObjectLookupService.getComplaintTypes().then(function(complaintTypes) {
                         $scope.incidentCategory = complaintTypes;
+                        $scope.complaint.complaintType = _.find(complaintTypes, {
+                            primary: true
+                        });
+
                     });
 
                     ObjectLookupService.getPriorities().then(function(priorities) {
                         $scope.priorities = priorities;
+                        $scope.complaint.priority = _.find(priorities, {
+                            primary: true
+                        });
                     });
 
                     ObjectLookupService.getFrequencies().then(function(frequencies) {
                         $scope.frequencies = frequencies;
+                        $scope.complaint.frequency = _.find(priorities, {
+                            primary: true
+                        });
                     });
 
                     ObjectLookupService.getAddressTypes().then(function(addressTypes) {
@@ -104,6 +112,10 @@ angular.module('complaints').controller(
                     });
                     ObjectLookupService.getPersonTypes(ObjectService.ObjectTypes.COMPLAINT, true).then(function(personTypes) {
                         $scope.personTypesInitiator = personTypes;
+                        $scope.initiatorType = _.find(personTypes, {
+                            primary: true
+                        });
+
                         return personTypes;
                     });
 
@@ -165,7 +177,7 @@ angular.module('complaints').controller(
 
                         var params = {};
                         params.types = $scope.personTypesInitiator;
-                        params.type = initiatorType;
+                        params.type = $scope.initiatorType;
                         params.typeEnabled = false;
                         association = new newPersonAssociation();
 

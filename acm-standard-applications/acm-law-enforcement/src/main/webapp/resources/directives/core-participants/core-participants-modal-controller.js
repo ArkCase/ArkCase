@@ -6,7 +6,7 @@ angular.module('directives').controller('Directives.CoreParticipantsModalControl
         participantLdapId: $scope.participant.participantLdapId,
         replaceChildrenParticipant: $scope.participant.replaceChildrenParticipant
     };
-    $scope.onClickOk = function() {
+    $scope.onClickOk = function () {
         $modalInstance.close({
             participant: $scope.participantEdit,
             isEdit: $scope.isEdit,
@@ -14,10 +14,19 @@ angular.module('directives').controller('Directives.CoreParticipantsModalControl
             id: $scope.id
         });
     };
-    $scope.onClickCancel = function() {
+
+    $scope.defaultParticipantType = _.find($scope.participant.participantTypes, {
+        primary: true
+    });
+
+    if (($scope.participant.participantType == null || $scope.participant.participantType === '') && $scope.defaultType != null) {
+        $scope.selectedType = $scope.defaultParticipantType;
+    }
+
+    $scope.onClickCancel = function () {
         $modalInstance.dismiss('cancel');
     };
-    $scope.pickParticipant = function() {
+    $scope.pickParticipant = function () {
 
         var params = {};
         $scope.owningGroup = paramsOwn.owningGroup;

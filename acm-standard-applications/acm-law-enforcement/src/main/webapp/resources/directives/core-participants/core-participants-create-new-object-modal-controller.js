@@ -26,21 +26,29 @@ angular.module('directives').controller('Directives.CoreParticipantsCreateNewObj
             params.secondGrid = 'true';
         }
 
+        $scope.defaultParticipantType = _.find($scope.participant.participantTypes, {
+            primary: true
+        });
+
+        if (($scope.participant.participantType == null || $scope.participant.participantType === '') && $scope.defaultType != null) {
+            $scope.participant.participantType = $scope.defaultParticipantType;
+        }
+        
         var modalInstance = $modal.open({
             templateUrl: "directives/core-participants/participants-user-group-search.client.view.html",
-            controller: [ '$scope', '$modalInstance', 'params', function($scope, $modalInstance, params) {
+            controller: ['$scope', '$modalInstance', 'params', function ($scope, $modalInstance, params) {
                 $scope.modalInstance = $modalInstance;
                 $scope.header = params.header;
                 $scope.filter = params.filter;
                 $scope.config = params.config;
                 $scope.secondGrid = params.secondGrid;
                 $scope.extraFilter = params.extraFilter;
-            } ],
+            }],
             animation: true,
             size: 'lg',
             backdrop: 'static',
             resolve: {
-                params: function() {
+                params: function () {
                     return params;
                 }
             }
