@@ -15,12 +15,12 @@ angular.module('directives').controller('Directives.CoreParticipantsModalControl
         });
     };
 
-    $scope.defaultParticipantType = _.find($scope.participant.participantTypes, {
+    var defaultParticipantType = _.find($scope.participant.participantTypes, {
         primary: true
     });
 
-    if (($scope.participant.participantType == null || $scope.participant.participantType === '') && $scope.defaultType != null) {
-        $scope.selectedType = $scope.defaultParticipantType;
+    if (($scope.participant.participantType == null || $scope.participant.participantType === '') && defaultParticipantType != null) {
+        $scope.participant.participantType = defaultParticipantType;
     }
 
     $scope.onClickCancel = function () {

@@ -61,7 +61,6 @@ angular.module('common').controller(
 
             ObjectLookupService.getAddressTypes().then(function (addressTypes) {
                 $scope.addressTypes = addressTypes;
-                $scope.defaultAddressType = ObjectLookupService.getPrimaryLookup($scope.addressTypes);
             });
 
             ObjectLookupService.getPersonOrganizationRelationTypes().then(function (organizationTypes) {
@@ -133,10 +132,13 @@ angular.module('common').controller(
 
             $scope.addAddress = function () {
                 $timeout(function () {
+                    var defaultAddressType = ObjectLookupService.getPrimaryLookup($scope.addressTypes);
+                    var defaultCountry = ObjectLookupService.getPrimaryLookup($scope.countries);
+
                     //add empty address
                     $scope.person.addresses.push({
-                        type: $scope.defaultAddressType ? $scope.defaultAddressType.key : null,
-                        country: $scope.defaultCountry ? $scope.defaultCountry.key : null
+                        type: defaultAddressType ? defaultAddressType.key : null,
+                        country: defaultCountry ? defaultCountry.key : null
                     });
                 }, 0);
             };

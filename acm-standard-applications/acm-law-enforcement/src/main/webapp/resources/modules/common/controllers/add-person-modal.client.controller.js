@@ -44,10 +44,10 @@ angular.module('common').controller('Common.AddPersonModalController', ['$scope'
         return type.key == params.type;
     });
 
-    $scope.defaultType = ObjectLookupService.getPrimaryLookup($scope.types);
+    var defaultType = ObjectLookupService.getPrimaryLookup($scope.types);
 
-    if ($scope.type == null && $scope.defaultType != null) {
-        $scope.type = $scope.defaultType;
+    if ($scope.type == null && defaultType != null) {
+        $scope.type = defaultType;
     }
     $scope.isNew = params.isNew;
 

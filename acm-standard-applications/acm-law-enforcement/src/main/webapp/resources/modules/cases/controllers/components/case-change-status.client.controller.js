@@ -46,9 +46,9 @@ angular.module('cases').controller(
 
                     ObjectLookupService.getLookupByLookupName("changeCaseStatuses").then(function(caseStatuses) {
                         $scope.statuses = caseStatuses;
-                        $scope.defaultChangeCaseStatus = ObjectLookupService.getPrimaryLookup($scope.statuses);
-                        if ($scope.defaultChangeCaseStatus && !$scope.changeCaseStatus.status) {
-                            $scope.changeCaseStatus.status = $scope.defaultChangeCaseStatus.key;
+                        var defaultChangeCaseStatus = ObjectLookupService.getPrimaryLookup($scope.statuses);
+                        if (defaultChangeCaseStatus && !$scope.changeCaseStatus.status) {
+                            $scope.changeCaseStatus.status = defaultChangeCaseStatus.key;
                         }
                     });
 

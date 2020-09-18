@@ -43,11 +43,14 @@ angular.module('cost-tracking').controller(
                             if (!$scope.isEdit) {
                                 //new costsheet with predefined values
                                 $scope.isApproverAdded = false;
+                                var defaultStatus = ObjectLookupService.getPrimaryLookup($scope.costsheetStatuses);
+                                var costsheetDefaultType = ObjectLookupService.getPrimaryLookup($scope.costsheetTypes);
+
                                 $scope.costsheet = {
                                     className: $scope.config.className,
-                                    status: $scope.defaultStatus ? $scope.defaultStatus : 'DRAFT',
+                                    status: defaultStatus ? defaultStatus : 'DRAFT',
                                     parentId: '',
-                                    parentType: $scope.costsheetDefaultType ? $scope.costsheetDefaultType.key : '',
+                                    parentType: costsheetDefaultType ? costsheetDefaultType.key : '',
                                     parentNumber: '',
                                     details: '',
                                     costs: [{
@@ -142,7 +145,6 @@ angular.module('cost-tracking').controller(
 
                     ObjectLookupService.getCostsheetTypes().then(function (costsheetTypes) {
                         $scope.costsheetTypes = costsheetTypes;
-                        $scope.costsheetDefaultType = ObjectLookupService.getPrimaryLookup($scope.costsheetTypes);
                     });
 
                     ObjectLookupService.getCostsheetTitles().then(function (costsheetTitles) {
@@ -175,8 +177,6 @@ angular.module('cost-tracking').controller(
                                     }
                                 }
                             }
-                            $scope.defaultStatus = ObjectLookupService.getPrimaryLookup($scope.costsheetStatuses);
-
                         });
                     });
 

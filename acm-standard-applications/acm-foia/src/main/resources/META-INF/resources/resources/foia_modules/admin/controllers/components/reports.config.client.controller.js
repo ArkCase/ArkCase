@@ -282,10 +282,10 @@ angular.module('admin').controller('Admin.ReportsConfigController', ['$scope', '
         function fillExportTypes() {
             ObjectLookupService.getLookupByLookupName("reportExportTypes").then(function (data) {
                 $scope.exportTypes = data;
-                $scope.defaultExportType = ObjectLookupService.getPrimaryLookup($scope.exportTypes);
+                var defaultExportType = ObjectLookupService.getPrimaryLookup($scope.exportTypes);
 
-                if ($scope.defaultExportType) {
-                    $scope.exportType = $scope.defaultExportType.key;
+                if (defaultExportType) {
+                    $scope.exportType = defaultExportType.key;
                 }
 
             });

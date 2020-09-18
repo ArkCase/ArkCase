@@ -27,17 +27,17 @@ angular.module('complaints').controller('Complaint.AddressesModalController', ['
 
     ObjectLookupService.getCountries().then(function (countries) {
         $scope.countries = countries;
-        $scope.defaultCountry = ObjectLookupService.getPrimaryLookup($scope.countries);
+        var defaultCountry = ObjectLookupService.getPrimaryLookup($scope.countries);
+        if (defaultCountry && !$scope.address) {
+            $scope.address.country = defaultCountry.key;
+        }
+
     });
 
     $scope.address = params.address;
     $scope.isEdit = params.isEdit;
     $scope.isDefault = params.isDefault;
     $scope.hideNoField = params.isDefault;
-
-    if ($scope.defaultCountry && !$scope.address) {
-        $scope.address.country = $scope.defaultCountry.key;
-    }
 
     $scope.changeStates($scope.address.country);
 

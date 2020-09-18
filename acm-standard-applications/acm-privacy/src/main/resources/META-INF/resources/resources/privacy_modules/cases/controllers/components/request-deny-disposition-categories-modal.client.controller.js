@@ -7,9 +7,9 @@ angular.module('cases').controller('Cases.RequestDenyDispositionCategoriesModalC
 
     ObjectLookupService.getLookupByLookupName('requestDispositionSubType').then(function (requestDispositionType) {
         $scope.requestDispositionCategories = requestDispositionType;
-        $scope.defaultRequestDispositionCategory = ObjectLookupService.getPrimaryLookup($scope.requestDispositionCategories);
-        if ($scope.defaultRequestDispositionCategory) {
-            $scope.requestDispositionCategory = $scope.defaultRequestDispositionCategory.key;
+        var defaultRequestDispositionCategory = ObjectLookupService.getPrimaryLookup($scope.requestDispositionCategories);
+        if (defaultRequestDispositionCategory) {
+            $scope.requestDispositionCategory = defaultRequestDispositionCategory.key;
         } else {
             $scope.requestDispositionCategory = $scope.requestDispositionCategories[0].key;
         }
@@ -17,9 +17,9 @@ angular.module('cases').controller('Cases.RequestDenyDispositionCategoriesModalC
     
     ObjectLookupService.getLookupByLookupName('requestOtherReason').then(function (data) {
         $scope.requestOtherReasons = data;
-        $scope.defaultRequestOtherReason = ObjectLookupService.getPrimaryLookup($scope.requestOtherReasons);
-        if ($scope.defaultRequestOtherReason) {
-            $scope.requestOtherReason = $scope.defaultRequestOtherReason.key;
+        var defaultRequestOtherReason = ObjectLookupService.getPrimaryLookup($scope.requestOtherReasons);
+        if (defaultRequestOtherReason) {
+            $scope.requestOtherReason = defaultRequestOtherReason.key;
         } else {
             $scope.requestOtherReason = $scope.requestOtherReasons[0].key;
         }

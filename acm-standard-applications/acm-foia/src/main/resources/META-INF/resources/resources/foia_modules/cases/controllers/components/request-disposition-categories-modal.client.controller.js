@@ -6,9 +6,9 @@ angular.module('cases').controller('Cases.RequestDispositionCategoriesModalContr
     
     ObjectLookupService.getLookupByLookupName('requestDispositionType').then(function (requestDispositionType) {
         $scope.requestDispositionCategories = requestDispositionType;
-        $scope.defaultRequestDispositionCategory = ObjectLookupService.getPrimaryLookup($scope.requestDispositionCategories);
-        if ($scope.defaultRequestDispositionCategory) {
-            $scope.requestDispositionCategory = $scope.defaultRequestDispositionCategory.key;
+        var defaultRequestDispositionCategory = ObjectLookupService.getPrimaryLookup($scope.requestDispositionCategories);
+        if (defaultRequestDispositionCategory) {
+            $scope.requestDispositionCategory = defaultRequestDispositionCategory.key;
         } else {
             $scope.requestDispositionCategory = $scope.requestDispositionCategories[0].key;
         }

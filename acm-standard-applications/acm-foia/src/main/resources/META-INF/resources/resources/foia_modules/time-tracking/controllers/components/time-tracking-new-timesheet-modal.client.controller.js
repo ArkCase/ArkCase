@@ -49,9 +49,10 @@ angular.module('time-tracking').controller(
                     if (!$scope.isEdit) {
                         //new timesheet with predefined values
                         $scope.isApproverAdded = false;
+                        var defaultTimesheetStatus = ObjectLookupService.getPrimaryLookup($scope.timesheetStatuses);
                         $scope.timesheet = {
                             className: $scope.config.className,
-                            status: $scope.defaultTimesheetStatus ? $scope.defaultTimesheetStatus.key : 'DRAFT',
+                            status: defaultTimesheetStatus ? defaultTimesheetStatus.key : 'DRAFT',
                             times: [],
                             participants: []
                         };
@@ -61,14 +62,17 @@ angular.module('time-tracking').controller(
 
                         $scope.selectedDate = new Date();
                         $scope.selectedWeek = updateChoosedWeekText($scope.selectedDate);
+                        var defaultType = ObjectLookupService.getPrimaryLookup($scope.timesheetTypes);
+                        var defaultChargeRole = ObjectLookupService.getPrimaryLookup($scope.timesheetChargeRoles);
 
                         $scope.timesForms = [{
-                            type: $scope.defaultType ? $scope.defaultType.key : null,
-                            chargeRole: $scope.defaultChargeRole ? $scope.defaultChargeRole.key : null,
+                            type: defaultType ? defaultType.key : null,
+                            chargeRole: defaultChargeRole ? defaultChargeRole.key : null,
                             totalWeekHours: 0,
                             totalCost: 0,
                             dayHours: [0, 0, 0, 0, 0, 0, 0]
                         }];
+
                         $scope.isTypeSelected = $scope.timesForms.type != undefined;
 
 
@@ -111,12 +115,10 @@ angular.module('time-tracking').controller(
 
             ObjectLookupService.getTimesheetTypes().then(function (timesheetTypes) {
                 $scope.timesheetTypes = timesheetTypes;
-                $scope.defaultType = ObjectLookupService.getPrimaryLookup($scope.timesheetTypes);
             });
 
             ObjectLookupService.getTimesheetChargeRoles().then(function (timesheetChargeRoles) {
                 $scope.timesheetChargeRoles = timesheetChargeRoles;
-                $scope.defaultChargeRole = ObjectLookupService.getPrimaryLookup($scope.timesheetChargeRoles);
             });
 
             ObjectLookupService.getTimesheetStatuses().then(function (timesheetStatuses) {
@@ -127,7 +129,6 @@ angular.module('time-tracking').controller(
                         $scope.timesheetStatuses.splice(i, 1);
                     }
                 }
-                $scope.defaultTimesheetStatus = ObjectLookupService.getPrimaryLookup($scope.timesheetStatuses);
             });
 
             // ----------------------------- total ----------------------------------------------------------

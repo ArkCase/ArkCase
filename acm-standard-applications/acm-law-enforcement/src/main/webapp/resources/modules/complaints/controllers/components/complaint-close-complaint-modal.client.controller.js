@@ -82,9 +82,9 @@ angular.module('complaints').controller(
                     };
                     $scope.complaintDispositions.push(dispositionType);
                 });
-                $scope.defaultComplaintDisposition = ObjectLookupService.getPrimaryLookup($scope.complaintDispositions);
-                if ($scope.defaultComplaintDisposition && !$scope.closeComplaintRequest.disposition.dispositionType) {
-                    $scope.closeComplaintRequest.disposition.dispositionType = $scope.defaultComplaintDisposition.key;
+                var defaultComplaintDisposition = ObjectLookupService.getPrimaryLookup($scope.complaintDispositions);
+                if (defaultComplaintDisposition && !$scope.closeComplaintRequest.disposition.dispositionType) {
+                    $scope.closeComplaintRequest.disposition.dispositionType = defaultComplaintDisposition.key;
                 }
 
             });

@@ -246,9 +246,9 @@ angular.module('organizations').controller(
 
             ObjectLookupService.getOrganizationTypes().then(function (organizationTypes) {
                 $scope.organizationTypes = organizationTypes;
-                $scope.defaultOrganizationType = ObjectLookupService.getPrimaryLookup($scope.organizationTypes);
-                if ($scope.defaultOrganizationType) {
-                    $scope.organization.organizationType = $scope.defaultOrganizationType.key;
+                var defaultOrganizationType = ObjectLookupService.getPrimaryLookup($scope.organizationTypes);
+                if (defaultOrganizationType) {
+                    $scope.organization.organizationType = defaultOrganizationType.key;
                 }
             });
 
@@ -321,10 +321,13 @@ angular.module('organizations').controller(
 
                     $scope.addAddress = function() {
                         $timeout(function() {
+                            var defaultAddressType = ObjectLookupService.getPrimaryLookup($scope.addressTypes);
+                            var defaultCountry = ObjectLookupService.getPrimaryLookup($scope.countries);
+
                             //add empty address
                             $scope.organization.addresses.push({
-                                type: $scope.defaultAddressType ? $scope.defaultAddressType.key : null,
-                                country: $scope.defaultCountry ? $scope.defaultCountry.key : null
+                                type: defaultAddressType ? defaultAddressType.key : null,
+                                country: defaultCountry ? defaultCountry.key : null
                             });
                         }, 0);
 

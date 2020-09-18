@@ -37,14 +37,14 @@ angular.module('admin').controller(
 
                     ObjectLookupService.getCmisVersioningState().then(function(cmisVersioningState) {
                         $scope.cmisVersioningState = cmisVersioningState;
-                        $scope.defaultCmisVersioningState = ObjectLookupService.getPrimaryLookup($scope.cmisVersioningState);
                     });
 
                     $scope.showModal = function(cmisConfig, isEdit, originalConfig) {
                         var modalScope = $scope.$new();
                         modalScope.cmisConfig = cmisConfig || {};
-                        if ($scope.defaultCmisVersioningState && !cmisConfig || !cmisConfig.cmisVersioningState) {
-                            modalScope.cmisConfig.cmisVersioningState = $scope.defaultCmisVersioningState.key;
+                        var defaultCmisVersioningState = ObjectLookupService.getPrimaryLookup($scope.cmisVersioningState);
+                        if (defaultCmisVersioningState && !cmisConfig || !cmisConfig.cmisVersioningState) {
+                            modalScope.cmisConfig.cmisVersioningState = defaultCmisVersioningState.key;
                         }
                         modalScope.isEdit = isEdit || false;
                         modalScope.testConnection = testConnection;

@@ -54,12 +54,10 @@ angular.module('organizations').controller(
 
                     ObjectLookupService.getAddressTypes().then(function(addressTypes) {
                         $scope.addressTypes = addressTypes;
-                        $scope.defaultAddressType = ObjectLookupService.getPrimaryLookup($scope.addressTypes);
                     });
 
                     ObjectLookupService.getCountries().then(function(countries) {
                         $scope.countries = countries;
-                        $scope.defaultCountry = ObjectLookupService.getPrimaryLookup($scope.countries);
                     });
 
                     //Addresses
@@ -70,16 +68,19 @@ angular.module('organizations').controller(
                         address.creator = $scope.userId;
                         address.className = "com.armedia.acm.plugins.addressable.model.PostalAddress";
                         $scope.address = address;
+                        var defaultAddressType = ObjectLookupService.getPrimaryLookup($scope.addressTypes);
+                        var defaultCountry = ObjectLookupService.getPrimaryLookup($scope.countries);
+
                         var item = {
                             id: '',
                             parentId: $scope.objectInfo.id,
-                            addressType: $scope.defaultAddressType ? $scope.defaultAddressType.key : '',
+                            addressType: defaultAddressType ? defaultAddressType.key : '',
                             streetAddress: '',
                             streetAddress2: '',
                             city: '',
                             state: '',
                             zip: '',
-                            country: $scope.defaultCountry ? $scope.defaultCountry.key : ''
+                            country: defaultCountry ? defaultCountry.key : ''
                         };
                         showModal(item, false);
                     };
