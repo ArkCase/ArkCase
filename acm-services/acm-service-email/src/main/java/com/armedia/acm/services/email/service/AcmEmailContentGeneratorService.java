@@ -27,7 +27,6 @@ package com.armedia.acm.services.email.service;
  * #L%
  */
 
-import com.armedia.acm.core.ObjectLabelConfig;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
@@ -35,7 +34,8 @@ import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenS
 import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksDTO;
 import com.armedia.acm.services.email.model.MessageBodyFactory;
-
+import com.armedia.acm.services.labels.service.ObjectLabelConfig;
+import com.armedia.acm.services.labels.service.TranslationService;
 import org.springframework.security.core.Authentication;
 
 /**
@@ -48,6 +48,8 @@ public class AcmEmailContentGeneratorService
     private TemplatingEngine templatingEngine;
     private EcmFileDao ecmFileDao;
     private ObjectLabelConfig objectLabelConfig;
+    private TranslationService translationService;
+
 
     public String generateEmailBody(EmailWithEmbeddedLinksDTO emailDTO, String emailAddress, Authentication authentication)
     {
@@ -55,7 +57,7 @@ public class AcmEmailContentGeneratorService
         messageBodyFactory.setTemplatingEngine(getTemplatingEngine());
         messageBodyFactory.setModelReferenceName(emailDTO.getModelReferenceName());
         messageBodyFactory.setParentNumber(emailDTO.getObjectNumber());
-        String parentTypeLabel = objectLabelConfig.getLabelForObjectType(emailDTO.getObjectType());
+        String parentTypeLabel = translationService.translate(objectLabelConfig.getTypeLabel().get(emailDTO.getObjectType()));
         messageBodyFactory.setParentType(parentTypeLabel);
         messageBodyFactory.addPropertyToModel("fileIds", emailDTO.getFileIds());
         messageBodyFactory.addPropertyToModel("fileNames", emailDTO.getFileNames());
@@ -86,7 +88,7 @@ public class AcmEmailContentGeneratorService
         MessageBodyFactory messageBodyFactory = new MessageBodyFactory(template);
         messageBodyFactory.setTemplatingEngine(getTemplatingEngine());
         messageBodyFactory.setParentNumber(in.getObjectNumber());
-        String parentTypeLabel = objectLabelConfig.getLabelForObjectType(in.getObjectType());
+        String parentTypeLabel = translationService.translate(objectLabelConfig.getTypeLabel().get(in.getObjectType()));
         messageBodyFactory.setParentType(parentTypeLabel);
         messageBodyFactory.setModelReferenceName(in.getModelReferenceName());
         messageBodyFactory.addPropertyToModel("body", in.getBody());
@@ -141,5 +143,15 @@ public class AcmEmailContentGeneratorService
     public void setObjectLabelConfig(ObjectLabelConfig objectLabelConfig)
     {
         this.objectLabelConfig = objectLabelConfig;
+    }
+
+    public TranslationService getTranslationService()
+    {
+        return translationService;
+    }
+
+    public void setTranslationService(TranslationService translationService)
+    {
+        this.translationService = translationService;
     }
 }
