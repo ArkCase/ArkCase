@@ -105,6 +105,7 @@ angular.module('directives').directive(
                             });
                             var promiseOrganizationTypes = ObjectLookupService.getOrganizationTypes().then(function(organizationTypes) {
                                 scope.organizationTypes = organizationTypes;
+                                scope.defaultOrganizationType = ObjectLookupService.getPrimaryLookup(scope.organizationTypes);
                                 return organizationTypes;
                             });
                             var promiseAddressTypes = ObjectLookupService.getAddressTypes().then(function(addressTypes) {
@@ -352,7 +353,7 @@ angular.module('directives').directive(
                                 var item = {
                                     id: '',
                                     parentId: rowParent.entity.id,
-                                    organizationType: '',
+                                    organizationType: scope.defaultOrganizationType ? scope.defaultOrganizationType.key : '',
                                     organizationValue: '',
                                     organizationTypes: scope.organizationTypes
                                 };

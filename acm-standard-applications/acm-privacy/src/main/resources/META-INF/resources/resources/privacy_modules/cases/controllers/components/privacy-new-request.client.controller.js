@@ -146,21 +146,33 @@ angular.module('cases').controller(
                 //get json data for new Subject Access Request
                 angular.copy(Data.getData(), $scope.config.data);
 
-                $scope.config.data.organizationAssociations = [];
-                $scope.config.data.requestType = $scope.requestTypes[0].key;
-                $scope.config.data.requestCategory = $scope.categories[0].key;
-
-                var defaultComponentAgencyFound = _.find($scope.componentsAgencies, function (value) {
-                    return value.primary === true;
-                });
+                $scope.defaultRequestType = ObjectLookupService.getPrimaryLookup($scope.requestTypes);
+                $scope.defaultRequestCategory = ObjectLookupService.getPrimaryLookup($scope.categories);
+                $scope.defaultComponentAgencyFound = ObjectLookupService.getPrimaryLookup($scope.componentsAgencies);
                 $scope.defaultAddressType = ObjectLookupService.getPrimaryLookup($scope.addressTypes);
+                $scope.defaultCountry = ObjectLookupService.getPrimaryLookup($scope.countries);
+                $scope.defaultDeliveryMethod = ObjectLookupService.getPrimaryLookup($scope.deliveryMethodOfResponses);
 
-                if (!Util.isEmpty(defaultComponentAgencyFound)) {
-                    $scope.config.data.componentAgency = defaultComponentAgencyFound.key;
+                if (!Util.isEmpty($scope.defaultComponentAgencyFound)) {
+                    $scope.config.data.componentAgency = $scope.defaultComponentAgencyFound.key;
                 } else {
                     $scope.config.data.componentAgency = $scope.componentsAgencies[0].key;
                 }
-                $scope.config.data.deliveryMethodOfResponse = $scope.deliveryMethodOfResponses[0].key;
+                if (!Util.isEmpty($scope.defaultRequestType)) {
+                    $scope.config.data.requestType = $scope.defaultRequestType.key;
+                } else {
+                    $scope.config.data.requestType = $scope.requestTypes[0].key;
+                }
+                if (!Util.isEmpty($scope.defaultRequestCategory)) {
+                    $scope.config.data.requestCategory = $scope.defaultRequestCategory.key;
+                } else {
+                    $scope.config.data.requestCategory = $scope.categories[0].key;
+                }
+                if (!Util.isEmpty($scope.defaultDeliveryMethod)) {
+                    $scope.config.data.deliveryMethodOfResponse = $scope.defaultDeliveryMethod.key;
+                } else {
+                    $scope.config.data.deliveryMethodOfResponse = $scope.deliveryMethodOfResponses[0].key;
+                }
                 $scope.config.data.payFee = $scope.payFees[0].key;
 
                 $scope.portals = portals.data;
