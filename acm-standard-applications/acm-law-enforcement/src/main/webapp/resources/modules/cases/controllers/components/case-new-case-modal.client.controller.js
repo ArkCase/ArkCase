@@ -91,9 +91,7 @@ angular.module('cases').controller(
 
                     ObjectLookupService.getCaseFileTypes().then(function(caseTypes) {
                         $scope.caseCategory = caseTypes;
-                        $scope.casefile.caseType = _.find(caseTypes, {
-                            primary: true
-                        });
+                        $scope.casefile.caseType = ObjectLookupService.getPrimaryLookup($scope.caseCategory);
                     });
 
                     ObjectLookupService.getPersonTypes(ObjectService.ObjectTypes.CASE_FILE).then(function(personTypes) {
@@ -102,10 +100,7 @@ angular.module('cases').controller(
                     });
                     ObjectLookupService.getPersonTypes(ObjectService.ObjectTypes.CASE_FILE, true).then(function(personTypes) {
                         $scope.personTypesInitiator = personTypes;
-                        $scope.initiatorType = _.find(personTypes, {
-                            primary: true
-                        });
-
+                        $scope.initiatorType = ObjectLookupService.getPrimaryLookup($scope.personTypesInitiator);
                         return personTypes;
                     });
 

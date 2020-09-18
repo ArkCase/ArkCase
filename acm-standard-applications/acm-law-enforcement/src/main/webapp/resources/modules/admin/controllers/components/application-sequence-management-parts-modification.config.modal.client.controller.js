@@ -40,9 +40,7 @@ angular.module('admin').controller('Admin.SequenceManagementPartsModalConfigCont
 
         ObjectLookupService.getSequenceObjectProperty().then(function(sequenceObjectProperty){
             $scope.sequenceObjectProperties = sequenceObjectProperty;
-            $scope.sequencePart.sequenceObjectPropertyName = _.find($scope.sequenceObjectProperties, {
-                primary: true
-            });
+            $scope.sequencePart.sequenceObjectPropertyName = ObjectLookupService.getPrimaryLookup($scope.sequenceObjectProperties);
         });
 
         $scope.onClickOk = function () {

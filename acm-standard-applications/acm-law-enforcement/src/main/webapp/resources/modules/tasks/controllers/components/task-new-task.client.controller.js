@@ -42,11 +42,10 @@ angular.module('tasks').controller(
                     $scope.selectedBusinessProcessType = null;
                     ObjectLookupService.getBusinessProcessTypes().then(function(res) {
                         $scope.businessProcessTypes = res;
-                        var defaultBusinessProcessType = _.find($scope.businessProcessTypes, {
-                            primary: true
-                        });
-                        if (defaultBusinessProcessType != null) {
-                            $scope.selectedBusinessProcessType = defaultBusinessProcessType;
+                        $scope.defaultBusinessProcessType = ObjectLookupService.getPrimaryLookup($scope.businessProcessTypes);
+
+                        if ($scope.defaultBusinessProcessType != null) {
+                            $scope.selectedBusinessProcessType = $scope.defaultBusinessProcessType;
                         } else {
                             $scope.selectedBusinessProcessType = res[1].key;
                         }
@@ -78,9 +77,11 @@ angular.module('tasks').controller(
 
                     ObjectLookupService.getLookupByLookupName("taskParentTypes").then(function(taskParentTypes) {
                         $scope.taskParentTypes = taskParentTypes;
-                        $scope.config.data.attachedToObjectType = _.find($scope.taskParentTypes, {
-                            primary: true
-                        });
+                        $scope.defaultTaskParentType = ObjectLookupService.getPrimaryLookup($scope.taskParentTypes);
+                        if (!$scope.config.data.attachedToObjectType && $scope.defaultTaskParentType) {
+                            $scope.config.data.attachedToObjectType = $scope.defaultTaskParentType.key;
+                        }
+
                         return taskParentTypes;
                     });
 

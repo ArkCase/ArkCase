@@ -166,6 +166,8 @@ angular.module('cases').controller(
                 var defaultComponentAgencyFound = _.find($scope.componentsAgencies, function (value) {
                     return value.primary === true;
                 });
+                $scope.defaultAddressType = ObjectLookupService.getPrimaryLookup($scope.addressTypes);
+                $scope.defaultCountry = ObjectLookupService.getPrimaryLookup($scope.countries);
 
                 if (!Util.isEmpty(defaultComponentAgencyFound)) {
                     $scope.config.data.componentAgency = defaultComponentAgencyFound.key;
@@ -179,10 +181,10 @@ angular.module('cases').controller(
                 $scope.config.chosenPortal = $scope.portals[0];
 
                 $scope.states = "";
-                $scope.config.data.originator.person.addresses[0].country = countries[0].key;
-                $scope.config.data.originator.person.addresses[0].type = addressTypes[0].key;
+                $scope.config.data.originator.person.addresses[0].country = $scope.defaultCountry ? $scope.defaultCountry.key : countries[0].key;
+                $scope.config.data.originator.person.addresses[0].type = $scope.defaultAddressType ? $scope.defaultAddressType.key : addressTypes[0].key;
                 $scope.config.data.receivedDate = moment.utc().format("YYYY-MM-DDTHH:mm:ss.sss");
-                
+
                 $scope.blankPerson = angular.copy($scope.config.data.originator.person);
             });
 

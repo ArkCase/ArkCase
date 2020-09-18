@@ -237,22 +237,27 @@ angular.module('common').controller(
 
                     ObjectLookupService.getOrganizationIdTypes().then(function(identificationTypes) {
                         $scope.identificationTypes = identificationTypes;
+                        $scope.defaultIdentificationType = ObjectLookupService.getPrimaryLookup($scope.identificationTypes);
                     });
 
                     ObjectLookupService.getCountries().then(function(countries) {
                         $scope.countries = countries;
+                        $scope.defaultCountry = ObjectLookupService.getPrimaryLookup($scope.countries);
                     });
 
                     ObjectLookupService.getAddressTypes().then(function(addressTypes) {
                         $scope.addressTypes = addressTypes;
+                        $scope.defaultAddressType = ObjectLookupService.getPrimaryLookup($scope.addressTypes);
                     });
 
                     ObjectLookupService.getOrganizationTypes().then(function(organizationTypes) {
                         $scope.organizationTypes = organizationTypes;
+                        $scope.defaultOrganizationType = ObjectLookupService.getPrimaryLookup($scope.organizationTypes);
                     });
 
                     ObjectLookupService.getPersonOrganizationRelationTypes().then(function(personOrganizationRelationTypes) {
                         $scope.personOrganizationRelationTypes = personOrganizationRelationTypes;
+                        $scope.defaultPersonOrganizationRelationType = ObjectLookupService.getPrimaryLookup($scope.personOrganizationRelationTypes);
                     });
 
             $scope.changeStates = function (country) {
@@ -315,7 +320,10 @@ angular.module('common').controller(
                     $scope.addAddress = function() {
                         $timeout(function() {
                             //add empty address
-                            $scope.organization.addresses.push({});
+                            $scope.organization.addresses.push({
+                                type: $scope.defaultAddressType ? $scope.defaultAddressType.key : null,
+                                country: $scope.defaultCountry ? $scope.defaultCountry.key : null
+                            });
                         }, 0);
                     };
 

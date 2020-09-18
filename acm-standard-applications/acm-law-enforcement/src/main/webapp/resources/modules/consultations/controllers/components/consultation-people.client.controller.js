@@ -16,10 +16,7 @@ angular.module('consultations').controller(
             });
             ObjectLookupService.getPersonTypes(ObjectService.ObjectTypes.CONSULTATION, true).then(function(personTypes) {
                 $scope.personTypesInitiator = personTypes;
-                $scope.initiatorType = _.find(personTypes, {
-                    primary: true
-                });
-
+                $scope.initiatorType = ObjectLookupService.getPrimaryLookup($scope.personTypesInitiator);
                 return personTypes;
             });
 

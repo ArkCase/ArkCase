@@ -74,28 +74,31 @@ angular.module('complaints').controller(
 
                     ObjectLookupService.getComplaintTypes().then(function(complaintTypes) {
                         $scope.incidentCategory = complaintTypes;
-                        $scope.complaint.complaintType = _.find(complaintTypes, {
-                            primary: true
-                        });
-
+                        $scope.defaultComplaintType = ObjectLookupService.getPrimaryLookup(complaintTypes);
+                        if ($scope.defaultComplaintType) {
+                            $scope.complaint.complaintType = $scope.defaultComplaintType.key;
+                        }
                     });
 
                     ObjectLookupService.getPriorities().then(function(priorities) {
                         $scope.priorities = priorities;
-                        $scope.complaint.priority = _.find(priorities, {
-                            primary: true
-                        });
+                        $scope.defaultPriority = ObjectLookupService.getPrimaryLookup($scope.priorities);
+                        if ($scope.defaultPriority) {
+                            $scope.complaint.priority = $scope.defaultPriority.key;
+                        }
                     });
 
                     ObjectLookupService.getFrequencies().then(function(frequencies) {
                         $scope.frequencies = frequencies;
-                        $scope.complaint.frequency = _.find(priorities, {
-                            primary: true
-                        });
+                        $scope.defaultFrequency = ObjectLookupService.getPrimaryLookup($scope.frequencies);
+                        if ($scope.defaultFrequency) {
+                            $scope.complaint.frequency = $scope.defaultPriority.key;
+                        }
                     });
 
                     ObjectLookupService.getAddressTypes().then(function(addressTypes) {
                         $scope.addressTypes = addressTypes;
+                        $scope.defaultAddressType = ObjectLookupService.getPrimaryLookup($scope.addressTypes);
                     });
 
                     ObjectLookupService.getStates().then(function(states) {
@@ -104,6 +107,10 @@ angular.module('complaints').controller(
 
                     ObjectLookupService.getCountries().then(function(countries) {
                         $scope.countries = countries;
+                        $scope.defaultCountry = ObjectLookupService.getPrimaryLookup($scope.countries);
+                        if ($scope.defaultCountry && !$scope.complaint.defaultAddress) {
+                            $scope.complaint.defaultAddress = $scope.defaultCountry;
+                        }
                     });
 
                     ObjectLookupService.getPersonTypes(ObjectService.ObjectTypes.COMPLAINT).then(function(personTypes) {
@@ -112,10 +119,7 @@ angular.module('complaints').controller(
                     });
                     ObjectLookupService.getPersonTypes(ObjectService.ObjectTypes.COMPLAINT, true).then(function(personTypes) {
                         $scope.personTypesInitiator = personTypes;
-                        $scope.initiatorType = _.find(personTypes, {
-                            primary: true
-                        });
-
+                        $scope.initiatorType = ObjectLookupService.getPrimaryLookup($scope.personTypesInitiator);
                         return personTypes;
                     });
 
@@ -443,7 +447,10 @@ angular.module('complaints').controller(
                     $scope.addAddress = function () {
                         $timeout(function () {
                             //add empty address
-                            $scope.complaint.addresses.push({});
+                            $scope.complaint.addresses.push({
+                                type: $scope.defaultAddressType ? $scope.defaultAddressType.key : null,
+                                country: $scope.defaultCountry ? $scope.defaultCountry.key : null
+                            });
                         }, 0);
                     };
 

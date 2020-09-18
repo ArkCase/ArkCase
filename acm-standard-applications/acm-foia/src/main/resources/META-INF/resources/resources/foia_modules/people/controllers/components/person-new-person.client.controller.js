@@ -86,6 +86,7 @@ angular.module('people').controller(
             $q.all([promiseGetAdressTypes, promiseGetCountries]).then(function (data) {
                 $scope.countries = data[1];
                 $scope.addressTypes = data[0];
+                $scope.defaultAddressType = ObjectLookupService.getPrimaryLookup($scope.addressTypes);
             });
 
             ObjectLookupService.getPersonOrganizationRelationTypes().then(function (organizationTypes) {
@@ -152,7 +153,10 @@ angular.module('people').controller(
             $scope.addAddress = function () {
                 $timeout(function () {
                     //add empty address
-                    $scope.person.addresses.push({});
+                    $scope.person.addresses.push({
+                        type: $scope.defaultAddressType ? $scope.defaultAddressType.key : null,
+                        country: $scope.defaultCountry ? $scope.defaultCountry.key : null
+                    });
                 }, 0);
             };
 

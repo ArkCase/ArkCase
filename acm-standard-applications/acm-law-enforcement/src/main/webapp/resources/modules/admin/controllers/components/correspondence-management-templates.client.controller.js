@@ -183,10 +183,8 @@ angular.module('admin').controller('Admin.CMTemplatesController',
 
                 ObjectLookupService.getCorrespondenceObjectTypes().then(function(correspondenceObject) {
                     $scope.correspondenceObjectTypes = correspondenceObject;
-                    $scope.mergingType = _.find($scope.objectTypes, {
-                        primary: true
-                    });
-                    if ($scope.mergingType == undefined) {
+                    $scope.mergingType = ObjectLookupService.getPrimaryLookup($scope.objectTypes);
+                    if ($scope.mergingType) {
                         $scope.mergingType = $scope.correspondenceObjectTypes[0].key;
                     }
                     correspondenceMergeFieldsService.retrieveActiveMergeFieldsByType($scope.mergingType).then(function (mergeFields) {

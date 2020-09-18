@@ -54,11 +54,12 @@ angular.module('people').controller(
 
                     ObjectLookupService.getAddressTypes().then(function(addressTypes) {
                         $scope.addressTypes = addressTypes;
-                        return addressTypes;
+                        $scope.defaultAddressType = ObjectLookupService.getPrimaryLookup($scope.addressTypes);
                     });
 
                     ObjectLookupService.getCountries().then(function(countries) {
                         $scope.countries = countries;
+                        $scope.defaultCountry = ObjectLookupService.getPrimaryLookup($scope.countries);
                     });
 
                     //Addresses
@@ -72,13 +73,13 @@ angular.module('people').controller(
                         var item = {
                             id: '',
                             parentId: $scope.objectInfo.id,
-                            addressType: '',
+                            addressType: $scope.defaultAddressType ? $scope.defaultAddressType.key : '',
                             streetAddress: '',
                             streetAddress2: '',
                             city: '',
                             state: '',
                             zip: '',
-                            country: ''
+                            country: $scope.defaultCountry ? $scope.defaultCountry.key : ''
                         };
                         showModal(item, false);
                     };

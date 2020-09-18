@@ -142,9 +142,7 @@ angular.module('cost-tracking').controller(
 
                     ObjectLookupService.getCostsheetTypes().then(function (costsheetTypes) {
                         $scope.costsheetTypes = costsheetTypes;
-                        $scope.costsheetDefaultType = _.find($scope.costsheetTypes, {
-                            primary: true
-                        });
+                        $scope.costsheetDefaultType = ObjectLookupService.getPrimaryLookup($scope.costsheetTypes);
                     });
 
                     ObjectLookupService.getCostsheetTitles().then(function (costsheetTitles) {
@@ -177,9 +175,7 @@ angular.module('cost-tracking').controller(
                                     }
                                 }
                             }
-                            $scope.defaultStatus = _.find($scope.costsheetStatuses, {
-                                primary: true
-                            });
+                            $scope.defaultStatus = ObjectLookupService.getPrimaryLookup($scope.costsheetStatuses);
 
                         });
                     });

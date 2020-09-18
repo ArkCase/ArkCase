@@ -153,6 +153,7 @@ angular.module('cases').controller(
                 var defaultComponentAgencyFound = _.find($scope.componentsAgencies, function (value) {
                     return value.primary === true;
                 });
+                $scope.defaultAddressType = ObjectLookupService.getPrimaryLookup($scope.addressTypes);
 
                 if (!Util.isEmpty(defaultComponentAgencyFound)) {
                     $scope.config.data.componentAgency = defaultComponentAgencyFound.key;
@@ -167,9 +168,9 @@ angular.module('cases').controller(
 
                 $scope.states = "";
                 $scope.config.data.originator.person.addresses[0].country = countries[0].key;
-                $scope.config.data.originator.person.addresses[0].type = addressTypes[0].key;
+                $scope.config.data.originator.person.addresses[0].type = $scope.defaultAddressType ? $scope.defaultAddressType.key : addressTypes[0].key;
                 $scope.config.data.subject.person.addresses[0].country = countries[0].key;
-                $scope.config.data.subject.person.addresses[0].type = addressTypes[0].key;
+                $scope.config.data.subject.person.addresses[0].type = $scope.defaultAddressType ? $scope.defaultAddressType.key : addressTypes[0].key;
                 $scope.config.data.receivedDate = moment.utc().format("YYYY-MM-DDTHH:mm:ss.sss");
                 $scope.config.data.subject.person.dateOfBirth = moment.utc().format("YYYY-MM-DD");
 
