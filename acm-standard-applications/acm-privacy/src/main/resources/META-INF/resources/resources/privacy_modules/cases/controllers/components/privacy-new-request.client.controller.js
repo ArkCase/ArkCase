@@ -146,30 +146,30 @@ angular.module('cases').controller(
                 //get json data for new Subject Access Request
                 angular.copy(Data.getData(), $scope.config.data);
 
-                $scope.defaultRequestType = ObjectLookupService.getPrimaryLookup($scope.requestTypes);
-                $scope.defaultRequestCategory = ObjectLookupService.getPrimaryLookup($scope.categories);
-                $scope.defaultComponentAgencyFound = ObjectLookupService.getPrimaryLookup($scope.componentsAgencies);
-                $scope.defaultAddressType = ObjectLookupService.getPrimaryLookup($scope.addressTypes);
-                $scope.defaultCountry = ObjectLookupService.getPrimaryLookup($scope.countries);
-                $scope.defaultDeliveryMethod = ObjectLookupService.getPrimaryLookup($scope.deliveryMethodOfResponses);
+                var defaultRequestType = ObjectLookupService.getPrimaryLookup($scope.requestTypes);
+                var defaultRequestCategory = ObjectLookupService.getPrimaryLookup($scope.categories);
+                var defaultComponentAgencyFound = ObjectLookupService.getPrimaryLookup($scope.componentsAgencies);
+                var defaultAddressType = ObjectLookupService.getPrimaryLookup($scope.addressTypes);
+                var defaultCountry = ObjectLookupService.getPrimaryLookup($scope.countries);
+                var defaultDeliveryMethod = ObjectLookupService.getPrimaryLookup($scope.deliveryMethodOfResponses);
 
-                if (!Util.isEmpty($scope.defaultComponentAgencyFound)) {
-                    $scope.config.data.componentAgency = $scope.defaultComponentAgencyFound.key;
+                if (!Util.isEmpty(defaultComponentAgencyFound)) {
+                    $scope.config.data.componentAgency = defaultComponentAgencyFound.key;
                 } else {
                     $scope.config.data.componentAgency = $scope.componentsAgencies[0].key;
                 }
-                if (!Util.isEmpty($scope.defaultRequestType)) {
-                    $scope.config.data.requestType = $scope.defaultRequestType.key;
+                if (!Util.isEmpty(defaultRequestType)) {
+                    $scope.config.data.requestType = defaultRequestType.key;
                 } else {
                     $scope.config.data.requestType = $scope.requestTypes[0].key;
                 }
-                if (!Util.isEmpty($scope.defaultRequestCategory)) {
-                    $scope.config.data.requestCategory = $scope.defaultRequestCategory.key;
+                if (!Util.isEmpty(defaultRequestCategory)) {
+                    $scope.config.data.requestCategory = defaultRequestCategory.key;
                 } else {
                     $scope.config.data.requestCategory = $scope.categories[0].key;
                 }
-                if (!Util.isEmpty($scope.defaultDeliveryMethod)) {
-                    $scope.config.data.deliveryMethodOfResponse = $scope.defaultDeliveryMethod.key;
+                if (!Util.isEmpty(defaultDeliveryMethod)) {
+                    $scope.config.data.deliveryMethodOfResponse = defaultDeliveryMethod.key;
                 } else {
                     $scope.config.data.deliveryMethodOfResponse = $scope.deliveryMethodOfResponses[0].key;
                 }
@@ -180,9 +180,9 @@ angular.module('cases').controller(
 
                 $scope.states = "";
                 $scope.config.data.originator.person.addresses[0].country = countries[0].key;
-                $scope.config.data.originator.person.addresses[0].type = $scope.defaultAddressType ? $scope.defaultAddressType.key : addressTypes[0].key;
-                $scope.config.data.subject.person.addresses[0].country = countries[0].key;
-                $scope.config.data.subject.person.addresses[0].type = $scope.defaultAddressType ? $scope.defaultAddressType.key : addressTypes[0].key;
+                $scope.config.data.originator.person.addresses[0].type = defaultAddressType ? defaultAddressType.key : addressTypes[0].key;
+                $scope.config.data.subject.person.addresses[0].country = defaultCountry ? defaultCountry.key : countries[0].key;
+                $scope.config.data.subject.person.addresses[0].type = defaultAddressType ? defaultAddressType.key : addressTypes[0].key;
                 $scope.config.data.receivedDate = moment.utc().format("YYYY-MM-DDTHH:mm:ss.sss");
                 $scope.config.data.subject.person.dateOfBirth = moment.utc().format("YYYY-MM-DD");
 

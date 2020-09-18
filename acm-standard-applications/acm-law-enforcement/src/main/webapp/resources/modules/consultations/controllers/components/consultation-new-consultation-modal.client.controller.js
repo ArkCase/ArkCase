@@ -71,11 +71,11 @@ angular.module('consultations').controller(
                     externalRequestingAgency: ''
                 };
 
-                $scope.defaultAddressType = ObjectLookupService.getPrimaryLookup($scope.addressTypes);
-                $scope.defaultCountry = ObjectLookupService.getPrimaryLookup($scope.countries);
+                var defaultAddressType = ObjectLookupService.getPrimaryLookup($scope.addressTypes);
+                var defaultCountry = ObjectLookupService.getPrimaryLookup($scope.countries);
 
-                $scope.config.data.originator.person.addresses[0].country = $scope.defaultCountry ? $scope.defaultCountry.key : countries[0].key;
-                $scope.config.data.originator.person.addresses[0].type = $scope.defaultAddressType ? $scope.defaultAddressType.key : addressTypes[0].key;
+                $scope.config.data.originator.person.addresses[0].country = defaultCountry ? defaultCountry.key : countries[0].key;
+                $scope.config.data.originator.person.addresses[0].type = defaultAddressType ? defaultAddressType.key : addressTypes[0].key;
 
                 $scope.config.data.organizationAssociations = [];
                 $scope.config.data.receivedDate = moment.utc().format("YYYY-MM-DDTHH:mm:ss.sss");

@@ -1,7 +1,11 @@
 angular.module('organizations').controller('Organizations.DBAsModalController', [ '$scope', '$translate', '$modalInstance', 'Object.LookupService', 'params', 'Mentions.Service', function($scope, $translate, $modalInstance, ObjectLookupService, params, MentionsService) {
+
     ObjectLookupService.getDBAsTypes().then(function (response) {
         $scope.dbasTypes = response;
-        $scope.defaultDbasType = ObjectLookupService.getPrimaryLookup($scope.dbasTypes);
+        var defaultDbasType = ObjectLookupService.getPrimaryLookup($scope.dbasTypes);
+        if (defaultDbasType != null && $scope.dba == null) {
+            $scope.dba.type = defaultAlias.key;
+        }
     });
 
     $scope.dba = params.dba;
@@ -9,9 +13,6 @@ angular.module('organizations').controller('Organizations.DBAsModalController', 
     $scope.isDefault = params.isDefault;
     $scope.hideNoField = params.isDefault;
 
-    if ($scope.defaultDbasType != null && $scope.dba == null) {
-        $scope.dba.type = $scope.defaultAlias.key;
-    }
 
     // --------------  mention --------------
     $scope.params = {

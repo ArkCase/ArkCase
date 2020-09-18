@@ -1,12 +1,10 @@
 angular.module('people').controller('Person.AliasesModalController', [ '$scope', '$translate', '$modalInstance', 'Object.LookupService', 'params', 'Mentions.Service', function($scope, $translate, $modalInstance, ObjectLookupService, params, MentionsService) {
     ObjectLookupService.getAliasTypes().then(function (response) {
         $scope.aliasTypes = response;
-        $scope.defaultAlias = ObjectLookupService.getPrimaryLookup($scope.aliasTypes);
-
-        if ($scope.defaultAlias != null && $scope.alias.aliasType == '') {
-            $scope.alias.aliasType = $scope.defaultAlias.key;
+        var defaultAlias = ObjectLookupService.getPrimaryLookup($scope.aliasTypes);
+        if (defaultAlias != null && $scope.alias.aliasType == '') {
+            $scope.alias.aliasType = defaultAlias.key;
         }
-
     });
 
     $scope.alias = params.alias;

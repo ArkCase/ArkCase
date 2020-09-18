@@ -12,10 +12,10 @@ angular.module('admin').controller('Admin.SequenceManagementModalController', ['
 
     ObjectLookupService.getSequenceName().then(function (sequenceName) {
         $scope.sequences = sequenceName;
-        $scope.defaultSequenceName = ObjectLookupService.getPrimaryLookup($scope.sequences);
+        var defaultSequenceName = ObjectLookupService.getPrimaryLookup($scope.sequences);
 
-        if ($scope.sequence.sequenceName == null && $scope.defaultSequenceName != null) {
-            $scope.sequence.sequenceName = $scope.defaultSequenceName.key;
+        if ($scope.sequence.sequenceName == null && defaultSequenceName != null) {
+            $scope.sequence.sequenceName = defaultSequenceName.key;
         }
 
     });
