@@ -247,6 +247,9 @@ angular.module('organizations').controller(
             ObjectLookupService.getOrganizationTypes().then(function (organizationTypes) {
                 $scope.organizationTypes = organizationTypes;
                 $scope.defaultOrganizationType = ObjectLookupService.getPrimaryLookup($scope.organizationTypes);
+                if ($scope.organization.isNew && $scope.defaultOrganizationType) {
+                    $scope.organization.type = $scope.defaultOrganizationType.key;
+                }
             });
 
             ObjectLookupService.getPersonOrganizationRelationTypes().then(function (personOrganizationRelationTypes) {

@@ -7,12 +7,22 @@ angular.module('cases').controller('Cases.RequestDenyDispositionCategoriesModalC
 
     ObjectLookupService.getLookupByLookupName('requestDispositionSubType').then(function (requestDispositionType) {
         $scope.requestDispositionCategories = requestDispositionType;
-        $scope.requestDispositionCategory = $scope.requestDispositionCategories[0].key;
+        $scope.defaultRequestDispositionCategory = ObjectLookupService.getPrimaryLookup($scope.requestDispositionCategories);
+        if ($scope.defaultRequestDispositionCategory) {
+            $scope.requestDispositionCategory = $scope.defaultRequestDispositionCategory.key;
+        } else {
+            $scope.requestDispositionCategory = $scope.requestDispositionCategories[0].key;
+        }
     });
     
     ObjectLookupService.getLookupByLookupName('requestOtherReason').then(function (data) {
         $scope.requestOtherReasons = data;
-        $scope.requestOtherReason = $scope.requestOtherReasons[0].key;
+        $scope.defaultRequestOtherReason = ObjectLookupService.getPrimaryLookup($scope.requestOtherReasons);
+        if ($scope.defaultRequestOtherReason) {
+            $scope.requestOtherReason = $scope.defaultRequestOtherReason.key;
+        } else {
+            $scope.requestOtherReason = $scope.requestOtherReasons[0].key;
+        }
     });
 
     var hasExemptionsOnRequestOnAnyDocuments = CaseExemptionService.hasExemptionOnAnyDocumentsOnRequest($scope.objectId, ObjectService.ObjectTypes.CASE_FILE);
