@@ -229,8 +229,9 @@ public class ReportServiceImpl implements ReportService
 
             if (reports != null)
             {
+                Set<String> userRoles = userRoleService.getUserRoles(userId);
                 userReports = reports.stream()
-                        .filter(report -> checkReportAuthorization(report, userId))
+                        .filter(report -> checkReportAuthorization(report, userRoles))
                         .collect(Collectors.toList());
             }
         }
@@ -251,11 +252,9 @@ public class ReportServiceImpl implements ReportService
         return retval;
     }
 
-    private boolean checkReportAuthorization(Report report, String userId)
+    private boolean checkReportAuthorization(Report report, Set<String> userRoles)
     {
         boolean authorized = false;
-
-        Set<String> userRoles = userRoleService.getUserRoles(userId);
 
         Map<String, List<String>> reportsToRolesMap = getReportToRolesMap();
 
