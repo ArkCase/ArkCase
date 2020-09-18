@@ -27,28 +27,32 @@ package com.armedia.acm.services.notification.service;
  * #L%
  */
 
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-
-import com.armedia.acm.core.ObjectLabelConfig;
-import com.armedia.acm.services.notification.model.NotificationConfig;
+import com.armedia.acm.services.labels.service.ObjectLabelConfig;
+import com.armedia.acm.services.labels.service.TranslationService;
 import com.armedia.acm.services.notification.model.NotificationConstants;
-
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Collections;
+
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
 
 public class NotificationFormatterTest extends EasyMockSupport
 {
     private NotificationFormatter notificationFormatter;
     private ObjectLabelConfig mockConfig;
+    private TranslationService mockTranslationService;
 
     @Before
     public void setUp()
     {
         notificationFormatter = new NotificationFormatter();
         mockConfig = createMock(ObjectLabelConfig.class);
+        mockTranslationService = createMock(TranslationService.class);
         notificationFormatter.setObjectLabelConfig(mockConfig);
+        notificationFormatter.setTranslationService(mockTranslationService);
     }
 
     /**
@@ -58,17 +62,19 @@ public class NotificationFormatterTest extends EasyMockSupport
     public void replaceObjectTypeLabelInTitle()
     {
         String parentType = "CASE_FILE";
-        String expectedTitle = "Title with label placeholder: object_label";
-        String actualTitle = "Title with label placeholder: " + NotificationConstants.TYPE_LABEL;
+        String expectedTitle = "Title with label placeholder: Case File";
+        String inputTitle = "Title with label placeholder: " + NotificationConstants.TYPE_LABEL;
 
-        expect(mockConfig.getLabelForObjectType(parentType)).andReturn("object_label");
+        expect(mockConfig.getTypeLabel()).andReturn(Collections.singletonMap(parentType, "object.label.casefile"));
+        expect(mockTranslationService.translate("object.label.casefile")).andReturn("Case File");
 
         // when
         replayAll();
-        String title = notificationFormatter.replaceFormatPlaceholders(actualTitle, null, parentType, null);
+        String title = notificationFormatter.replaceFormatPlaceholders(inputTitle, null, parentType, null);
 
         // then
         verifyAll();
-        assertEquals(title, expectedTitle);
+        assertEquals(expectedTitle, title);
+
     }
 }
