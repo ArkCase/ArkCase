@@ -63,8 +63,8 @@ angular.module('time-tracking').controller(
                         $scope.selectedWeek = updateChoosedWeekText($scope.selectedDate);
 
                         $scope.timesForms = [{
-                            type: $scope.defaultType.key,
-                            chargeRole: $scope.defaultChargeRole.key,
+                            type: $scope.defaultType ? $scope.defaultType.key : null,
+                            chargeRole: $scope.defaultChargeRole ? $scope.defaultChargeRole.key : null,
                             totalWeekHours: 0,
                             totalCost: 0,
                             dayHours: [0, 0, 0, 0, 0, 0, 0]
@@ -111,7 +111,7 @@ angular.module('time-tracking').controller(
 
             ObjectLookupService.getTimesheetTypes().then(function (timesheetTypes) {
                 $scope.timesheetTypes = timesheetTypes;
-                $scope.time.type = ObjectLookupService.getPrimaryLookup($scope.timesheetTypes);
+                $scope.defaultType = ObjectLookupService.getPrimaryLookup($scope.timesheetTypes);
             });
 
             ObjectLookupService.getTimesheetChargeRoles().then(function (timesheetChargeRoles) {

@@ -35,7 +35,7 @@ angular.module('organizations').controller(
                         $scope.organizationTypes = organizationTypes;
                         $scope.defaultOrganizationType = ObjectLookupService.getPrimaryLookup($scope.organizationTypes);
                         if ($scope.organization.isNew && $scope.defaultOrganizationType) {
-                            $scope.organization.type = $scope.defaultOrganizationType.key;
+                            $scope.organization.organizationType = $scope.defaultOrganizationType.key;
                         }
                     });
 

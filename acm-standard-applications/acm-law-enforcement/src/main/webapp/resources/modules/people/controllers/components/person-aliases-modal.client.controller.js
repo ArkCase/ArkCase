@@ -3,6 +3,10 @@ angular.module('people').controller('Person.AliasesModalController', [ '$scope',
         $scope.aliasTypes = response;
         $scope.defaultAlias = ObjectLookupService.getPrimaryLookup($scope.aliasTypes);
 
+        if ($scope.defaultAlias != null && $scope.alias.aliasType == '') {
+            $scope.alias.aliasType = $scope.defaultAlias.key;
+        }
+
     });
 
     $scope.alias = params.alias;
@@ -10,9 +14,6 @@ angular.module('people').controller('Person.AliasesModalController', [ '$scope',
     $scope.isDefault = params.isDefault;
     $scope.hideNoField = params.isDefault;
 
-    if ($scope.defaultAlias != null && $scope.alias == null) {
-        $scope.alias.aliasType = $scope.defaultAlias.key;
-    }
 
     // --------------  mention --------------
     $scope.params = {
