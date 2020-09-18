@@ -45,10 +45,7 @@ angular.module('admin').controller('Admin.CMMergeFieldsController',
                         gridHelper.disableGridScrolling(config);
                         $scope.config = config;
                         $scope.objectTypes = $scope.correspondenceObjectTypes;
-                        $scope.mergingType = _.find($scope.objectTypes, {
-                            primary: true
-                        });
-
+                        $scope.mergingType = ObjectLookupService.getPrimaryLookup($scope.objectTypes);
                         reloadGrid();
                     });
                 });

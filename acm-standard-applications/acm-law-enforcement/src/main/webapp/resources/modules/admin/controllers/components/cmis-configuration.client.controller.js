@@ -37,9 +37,7 @@ angular.module('admin').controller(
 
                     ObjectLookupService.getCmisVersioningState().then(function(cmisVersioningState) {
                         $scope.cmisVersioningState = cmisVersioningState;
-                        $scope.defaultCmisVersioningState = _.find(cmisVersioningState, {
-                            primary: true
-                        });
+                        $scope.defaultCmisVersioningState = ObjectLookupService.getPrimaryLookup($scope.cmisVersioningState);
                     });
 
                     $scope.showModal = function(cmisConfig, isEdit, originalConfig) {

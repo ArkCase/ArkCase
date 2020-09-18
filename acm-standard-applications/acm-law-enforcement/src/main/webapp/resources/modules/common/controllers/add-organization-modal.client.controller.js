@@ -55,9 +55,7 @@ angular.module('common').controller(
                         return type.key == params.type;
                     });
 
-                    $scope.defaultType = _.find($scope.types, {
-                        primary: true
-                    });
+                    $scope.defaultType = ObjectLookupService.getPrimaryLookup($scope.types);
 
                     if ($scope.type == null && $scope.defaultType != null) {
                         $scope.type = $scope.defaultType;

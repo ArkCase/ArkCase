@@ -44,9 +44,7 @@ angular.module('admin').controller('Admin.TimesheetController',
 
             ObjectLookupService.getLookupByLookupName("timesheetChargeRoles").then(function(chargeRoles) {
                 $scope.chargeRoleDropdownOptions = chargeRoles;
-                $scope.chargeRoleItem.chargeRole = _.find($scope.timesheetChargeRoles, {
-                    primary: true
-                });
+                $scope.chargeRoleItem.chargeRole = ObjectLookupService.getPrimaryLookup($scope.timesheetChargeRoles);
             });
 
             TimesheetConfigurationService.getConfig().then(function(response) {

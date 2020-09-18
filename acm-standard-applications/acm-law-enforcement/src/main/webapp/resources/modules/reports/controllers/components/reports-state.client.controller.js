@@ -18,9 +18,7 @@ angular.module('reports').controller('Reports.StateController', [ '$scope', 'Con
 
     ObjectLookupService.getLookupByLookupName("reportStates").then(function(reportStates) {
         $scope.reportStates = reportStates;
-        $scope.data.stateSelected = _.find($scope.reportStates, {
-            primary: true
-        });
+        $scope.data.stateSelected = ObjectLookupService.getPrimaryLookup($scope.reportStates);
         return reportStates;
     });
 

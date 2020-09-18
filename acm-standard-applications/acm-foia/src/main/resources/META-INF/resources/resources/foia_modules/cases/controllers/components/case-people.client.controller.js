@@ -16,9 +16,7 @@ angular.module('cases').controller(
                     });
                     ObjectLookupService.getPersonTypes(ObjectService.ObjectTypes.CASE_FILE, true).then(function(personTypes) {
                         $scope.personTypesInitiator = personTypes;
-                        $scope.initiatorType = _.find(personTypes, {
-                            primary: true
-                        });
+                        $scope.initiatorType = ObjectLookupService.getPrimaryLookup($scope.personTypesInitiator);
 
                         return personTypes;
                     });

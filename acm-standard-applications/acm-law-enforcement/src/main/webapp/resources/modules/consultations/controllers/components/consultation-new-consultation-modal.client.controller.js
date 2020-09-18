@@ -70,6 +70,13 @@ angular.module('consultations').controller(
                     participants: [],
                     externalRequestingAgency: ''
                 };
+
+                $scope.defaultAddressType = ObjectLookupService.getPrimaryLookup($scope.addressTypes);
+                $scope.defaultCountry = ObjectLookupService.getPrimaryLookup($scope.countries);
+
+                $scope.config.data.originator.person.addresses[0].country = $scope.defaultCountry ? $scope.defaultCountry.key : countries[0].key;
+                $scope.config.data.originator.person.addresses[0].type = $scope.defaultAddressType ? $scope.defaultAddressType.key : addressTypes[0].key;
+
                 $scope.config.data.organizationAssociations = [];
                 $scope.config.data.receivedDate = moment.utc().format("YYYY-MM-DDTHH:mm:ss.sss");
                 $scope.config.data.dueDate = moment.utc().format("YYYY-MM-DDTHH:mm:ss.sss");
@@ -77,7 +84,7 @@ angular.module('consultations').controller(
                 $scope.consultationPeopleConfig = _.find(moduleConfig.components, {
                     id: "people"
                 });
-                
+
             });
 
             var newPersonAssociation = function() {

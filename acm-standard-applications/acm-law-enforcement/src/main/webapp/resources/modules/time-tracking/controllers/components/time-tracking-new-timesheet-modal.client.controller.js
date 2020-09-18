@@ -106,16 +106,12 @@ angular.module('time-tracking').controller(
 
             ObjectLookupService.getTimesheetTypes().then(function (timesheetTypes) {
                 $scope.timesheetTypes = timesheetTypes;
-                $scope.time.type = _.find($scope.timesheetStatuses, {
-                    primary: true
-                });
+                $scope.time.type = ObjectLookupService.getPrimaryLookup($scope.timesheetTypes);
             });
 
             ObjectLookupService.getTimesheetChargeRoles().then(function (timesheetChargeRoles) {
                 $scope.timesheetChargeRoles = timesheetChargeRoles;
-                $scope.defaultChargeRole = _.find($scope.timesheetChargeRoles, {
-                    primary: true
-                });
+                $scope.defaultChargeRole = ObjectLookupService.getPrimaryLookup($scope.timesheetChargeRoles);
             });
 
             ObjectLookupService.getTimesheetStatuses().then(function (timesheetStatuses) {
@@ -139,10 +135,7 @@ angular.module('time-tracking').controller(
                         }
                     }
                 });
-                $scope.defaultTimesheetStatus = _.find($scope.timesheetStatuses, {
-                    primary: true
-                });
-
+                $scope.defaultTimesheetStatus = ObjectLookupService.getPrimaryLookup($scope.timesheetStatuses);
             });
 
             // ---------------------   mention   ---------------------------------
