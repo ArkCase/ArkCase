@@ -6,7 +6,12 @@ angular.module('cases').controller('Cases.RequestDispositionCategoriesModalContr
     
     ObjectLookupService.getLookupByLookupName('requestDispositionType').then(function (requestDispositionType) {
         $scope.requestDispositionCategories = requestDispositionType;
-        $scope.requestDispositionCategory = $scope.requestDispositionCategories[0].key;
+        var defaultRequestDispositionCategory = ObjectLookupService.getPrimaryLookup($scope.requestDispositionCategories);
+        if (defaultRequestDispositionCategory) {
+            $scope.requestDispositionCategory = defaultRequestDispositionCategory.key;
+        } else {
+            $scope.requestDispositionCategory = $scope.requestDispositionCategories[0].key;
+        }
     });
 
     var hasExemptionsOnRequestOnAnyDocument = CaseExemptionService.hasExemptionOnAnyDocumentsOnRequest($scope.objectId, ObjectService.ObjectTypes.CASE_FILE);

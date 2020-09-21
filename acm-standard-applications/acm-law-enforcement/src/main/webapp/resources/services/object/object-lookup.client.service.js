@@ -1021,6 +1021,24 @@ angular.module('services').factory('Object.LookupService', [ '$q', '$resource', 
 
     /**
      * @ngdoc method
+     * @name getPrimaryLookup
+     * @methodOf services:Object.LookupService
+     *
+     * @description
+     * Returns primary lookup
+     *
+     * @param {array} name    The lookup name
+     *
+     * @returns {Object} Promise returning the lookup entries as array
+     */
+    Service.getPrimaryLookup = function (lookupEntries) {
+        return _.find(lookupEntries, {
+            primary: true
+        });
+    };
+
+    /**
+     * @ngdoc method
      * @name validateLookup
      * @methodOf services:Object.LookupService
      *

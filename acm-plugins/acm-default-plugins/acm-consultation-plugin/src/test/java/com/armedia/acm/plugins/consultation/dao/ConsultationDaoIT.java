@@ -99,6 +99,7 @@ public class ConsultationDaoIT
         System.setProperty("configuration.server.url", "http://localhost:9999");
         System.setProperty("javax.net.ssl.trustStore", userHomePath + "/.arkcase/acm/private/arkcase.ts");
         System.setProperty("javax.net.ssl.trustStorePassword", "password");
+        System.setProperty("application.profile.reversed", "runtime");
     }
 
     @Autowired

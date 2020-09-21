@@ -54,6 +54,10 @@ public class FOIAUserInfoHelper extends UserInfoHelper
     public String getUserEmail(String userId)
     {
         AcmUser user = getUserDao().findByUserId(userId);
+        if (user == null)
+        {
+            return null;
+        }
         return user.getMail();
     }
 
@@ -61,6 +65,10 @@ public class FOIAUserInfoHelper extends UserInfoHelper
     public String removeUserPrefix(String userId)
     {
         AcmUser user = getUserDao().findByUserId(userId);
+        if (user == null)
+        {
+            return userId;
+        }
         String directoryName = user.getUserDirectoryName();
 
         String baseUserId = user.getUserId();

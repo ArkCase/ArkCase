@@ -42,6 +42,10 @@ angular.module('admin').controller(
                     $scope.showModal = function(cmisConfig, isEdit, originalConfig) {
                         var modalScope = $scope.$new();
                         modalScope.cmisConfig = cmisConfig || {};
+                        var defaultCmisVersioningState = ObjectLookupService.getPrimaryLookup($scope.cmisVersioningState);
+                        if (defaultCmisVersioningState && !cmisConfig || !cmisConfig.cmisVersioningState) {
+                            modalScope.cmisConfig.cmisVersioningState = defaultCmisVersioningState.key;
+                        }
                         modalScope.isEdit = isEdit || false;
                         modalScope.testConnection = testConnection;
 
@@ -49,14 +53,14 @@ angular.module('admin').controller(
                             scope: modalScope,
                             templateUrl: 'modules/admin/views/components/cmis-configuration.addconfig.modal.html',
                             backdrop: 'static',
-                            controller: function($scope, $modalInstance) {
-                                $scope.ok = function() {
+                            controller: function ($scope, $modalInstance) {
+                                $scope.ok = function () {
                                     $modalInstance.close({
                                         cmisConfig: $scope.cmisConfig,
                                         isEdit: $scope.isEdit
                                     });
                                 };
-                                $scope.cancel = function() {
+                                $scope.cancel = function () {
                                     $modalInstance.dismiss('cancel');
                                 }
                             }

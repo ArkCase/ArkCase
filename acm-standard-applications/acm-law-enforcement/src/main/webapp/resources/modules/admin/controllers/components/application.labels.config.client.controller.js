@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('admin').controller('Admin.LabelsConfigController', [ '$scope', '$q', '$modal', '$timeout', 'UtilService', 'Admin.LabelsConfigService', 'MessageService', 'Config.LocaleService', function($scope, $q, $modal, $timeout, Util, LabelsConfigService, messageService, LocaleService) {
+angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', '$q', '$modal', 'UtilService', 'Admin.LabelsConfigService', 'MessageService', 'Config.LocaleService', function ($scope, $q, $modal, Util, LabelsConfigService, messageService, LocaleService) {
 
     $scope.settings = {};
     $scope.disabledInputs = true;

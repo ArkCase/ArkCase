@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('admin').controller('Admin.SequenceManagementModalController', [ '$scope', '$modalInstance', 'params', 'Util.DateService', '$filter', 'Object.LookupService', function($scope, $modalInstance, params, UtilDateService, $filter, ObjectLookupService) {
+angular.module('admin').controller('Admin.SequenceManagementModalController', ['$scope', '$modalInstance', 'params', 'Util.DateService', '$filter', 'Object.LookupService', function ($scope, $modalInstance, params, UtilDateService, $filter, ObjectLookupService) {
 
 
     $scope.sequence = params.sequence;
@@ -10,16 +10,22 @@ angular.module('admin').controller('Admin.SequenceManagementModalController', [ 
     $scope.sequenceParts = [];
     $scope.isEdit = params.isEdit;
 
-    ObjectLookupService.getSequenceName().then(function(sequenceName){
+    ObjectLookupService.getSequenceName().then(function (sequenceName) {
         $scope.sequences = sequenceName;
+        var defaultSequenceName = ObjectLookupService.getPrimaryLookup($scope.sequences);
+
+        if ($scope.sequence.sequenceName == null && defaultSequenceName != null) {
+            $scope.sequence.sequenceName = defaultSequenceName.key;
+        }
+
     });
 
-    $scope.onClickCancel = function() {
+    $scope.onClickCancel = function () {
         $modalInstance.dismiss('Cancel');
     };
 
-    $scope.onClickOk = function() {
+    $scope.onClickOk = function () {
         $modalInstance.close($scope.sequence);
     };
 
-} ]);
+}]);
