@@ -605,7 +605,7 @@ angular.module('services').factory(
                                 ,
                                 width: 40,
                                 headerCellTemplate: "<span></span>",
-                                cellTemplate: "<span><i class='fa fa-trash-o fa-lg' style='cursor :pointer' ng-hide='grid.appScope.isReadOnly(row.entity)' ng-click='" + onClickDelete + "'></i></span>"
+                                cellTemplate: "<span title=\"{{'admin.security.ldapConfig.table.deleteRecord' | translate}}\">" + "<i class='fa fa-trash-o fa-lg' style='cursor :pointer' ng-hide='grid.appScope.isReadOnly(row.entity)' ng-click='" + onClickDelete + "'></i></span>"
                             };
                             columnDefs.push(columnDef);
                         }
