@@ -4,6 +4,10 @@ angular.module('audit').controller('Audit.SelectionController', [ '$scope', 'Uti
 
     ObjectLookupService.getLookupByLookupName("auditReportNames").then(function(auditReportNames) {
         $scope.auditReportNames = auditReportNames;
+        var defaultAuditReportName = ObjectLookupService.getPrimaryLookup($scope.auditReportNames);
+        if (defaultAuditReportName && !$scope.auditReportName) {
+            $scope.auditReportName = defaultAuditReportName.key;
+        }
         return auditReportNames;
     });
 

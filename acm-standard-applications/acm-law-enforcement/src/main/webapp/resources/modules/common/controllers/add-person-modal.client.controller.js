@@ -1,6 +1,6 @@
-angular.module('common').controller('Common.AddPersonModalController', [ '$scope', '$modal', '$modalInstance', '$translate', 'Object.LookupService', 'UtilService', 'ConfigService', 'params', function($scope, $modal, $modalInstance, $translate, ObjectLookupService, Util, ConfigService, params) {
+angular.module('common').controller('Common.AddPersonModalController', ['$scope', '$modal', '$modalInstance', '$translate', 'Object.LookupService', 'UtilService', 'ConfigService', 'params', function ($scope, $modal, $modalInstance, $translate, ObjectLookupService, Util, ConfigService, params) {
 
-    ConfigService.getModuleConfig("common").then(function(moduleConfig) {
+    ConfigService.getModuleConfig("common").then(function (moduleConfig) {
         $scope.config = moduleConfig;
         return moduleConfig;
     });
@@ -40,16 +40,22 @@ angular.module('common').controller('Common.AddPersonModalController', [ '$scope
         $scope.isDefault = params.isFirstPerson;
         $scope.hideNoField = !params.isFirstPerson;
     }
-    $scope.type = _.find($scope.types, function(type) {
+    $scope.type = _.find($scope.types, function (type) {
         return type.key == params.type;
     });
+
+    var defaultType = ObjectLookupService.getPrimaryLookup($scope.types);
+
+    if ($scope.type == null && defaultType != null) {
+        $scope.type = defaultType;
+    }
     $scope.isNew = params.isNew;
 
-    $scope.onClickCancel = function() {
+    $scope.onClickCancel = function () {
         $modalInstance.dismiss('Cancel');
     };
 
-    $scope.onClickOk = function() {
+    $scope.onClickOk = function () {
         var retValue = {
             personId: $scope.personId,
             type: Util.isEmpty($scope.type) ? "" : $scope.type.key,
@@ -76,11 +82,11 @@ angular.module('common').controller('Common.AddPersonModalController', [ '$scope
         }
     };
 
-    $scope.isInvalid = function() {
+    $scope.isInvalid = function () {
         return !Util.isEmpty(params.isEditPerson) && !Util.isEmpty($scope.type) && !Util.isEmpty(params.type) && $scope.type.key === params.type;
     };
 
-    $scope.pickPerson = function() {
+    $scope.pickPerson = function () {
         $scope.isNew = false;
 
         var params = {};
@@ -94,22 +100,22 @@ angular.module('common').controller('Common.AddPersonModalController', [ '$scope
 
         var modalInstance = $modal.open({
             templateUrl: "modules/common/views/object-picker-modal.client.view.html",
-            controller: [ '$scope', '$modalInstance', 'params', function($scope, $modalInstance, params) {
+            controller: ['$scope', '$modalInstance', 'params', function ($scope, $modalInstance, params) {
                 $scope.modalInstance = $modalInstance;
                 $scope.header = params.header;
                 $scope.filter = params.filter;
                 $scope.config = params.config;
-            } ],
+            }],
             animation: true,
             size: 'lg',
             backdrop: 'static',
             resolve: {
-                params: function() {
+                params: function () {
                     return params;
                 }
             }
         });
-        modalInstance.result.then(function(selected) {
+        modalInstance.result.then(function (selected) {
             if (!Util.isEmpty(selected)) {
                 $scope.personId = selected.object_id_s;
                 $scope.personName = selected.name;
@@ -117,7 +123,7 @@ angular.module('common').controller('Common.AddPersonModalController', [ '$scope
         });
     };
 
-    $scope.addNewPerson = function() {
+    $scope.addNewPerson = function () {
         $scope.isNew = true;
 
         var params = {};
@@ -133,17 +139,17 @@ angular.module('common').controller('Common.AddPersonModalController', [ '$scope
             size: 'lg',
             backdrop: 'static',
             resolve: {
-                params: function() {
+                params: function () {
                     return params;
                 }
             }
         });
 
-        modalInstance.result.then(function(data) {
+        modalInstance.result.then(function (data) {
             $scope.personId = '';
             $scope.personName = data.person.givenName + ' ' + data.person.familyName;
             $scope.person = data.person;
             $scope.personImages = data.images;
         });
     };
-} ]);
+}]);

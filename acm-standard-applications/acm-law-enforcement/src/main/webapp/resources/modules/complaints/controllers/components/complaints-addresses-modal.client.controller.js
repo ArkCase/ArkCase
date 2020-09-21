@@ -1,6 +1,6 @@
 angular.module('complaints').controller('Complaint.AddressesModalController', ['$scope', '$modalInstance', 'Object.LookupService', 'params', 'UtilService', function ($scope, $modalInstance, ObjectLookupService, params, Util) {
 
-    ObjectLookupService.getAddressTypes().then(function(addressTypes) {
+    ObjectLookupService.getAddressTypes().then(function (addressTypes) {
         $scope.addressTypes = addressTypes;
         return addressTypes;
     });
@@ -25,8 +25,13 @@ angular.module('complaints').controller('Complaint.AddressesModalController', ['
         }
     };
 
-    ObjectLookupService.getCountries().then(function(countries) {
+    ObjectLookupService.getCountries().then(function (countries) {
         $scope.countries = countries;
+        var defaultCountry = ObjectLookupService.getPrimaryLookup($scope.countries);
+        if (defaultCountry && !$scope.address) {
+            $scope.address.country = defaultCountry.key;
+        }
+
     });
 
     $scope.address = params.address;
@@ -35,15 +40,15 @@ angular.module('complaints').controller('Complaint.AddressesModalController', ['
     $scope.hideNoField = params.isDefault;
 
     $scope.changeStates($scope.address.country);
-    
-    $scope.onClickCancel = function() {
+
+    $scope.onClickCancel = function () {
         $modalInstance.dismiss('Cancel');
     };
-    $scope.onClickOk = function() {
+    $scope.onClickOk = function () {
         $modalInstance.close({
             address: $scope.address,
             isDefault: $scope.isDefault,
             isEdit: $scope.isEdit
         });
     };
-} ]);
+}]);

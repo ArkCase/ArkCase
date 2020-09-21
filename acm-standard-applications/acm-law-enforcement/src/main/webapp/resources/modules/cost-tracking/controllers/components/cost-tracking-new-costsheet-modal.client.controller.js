@@ -42,22 +42,24 @@ angular.module('cost-tracking').controller(
                         UserInfoService.getUserInfo().then(function(infoData) {
                             if (!$scope.isEdit) {
                                 //new costsheet with predefined values
-                                $scope.isTypeSelected = false;
                                 $scope.isApproverAdded = false;
+                                var defaultStatus = ObjectLookupService.getPrimaryLookup($scope.costsheetStatuses);
+                                var costsheetDefaultType = ObjectLookupService.getPrimaryLookup($scope.costsheetTypes);
+
                                 $scope.costsheet = {
                                     className: $scope.config.className,
-                                    status: 'DRAFT',
+                                    status: defaultStatus ? defaultStatus : 'DRAFT',
                                     parentId: '',
-                                    parentType: '',
+                                    parentType: costsheetDefaultType ? costsheetDefaultType.key : '',
                                     parentNumber: '',
                                     details: '',
-                                    costs: [ {
+                                    costs: [{
                                         date: new Date(),
                                         title: $scope.primaryTitle ? $scope.primaryTitle.key : ''
-                                    } ],
+                                    }],
                                     participants: []
                                 };
-
+                                $scope.isTypeSelected = $scope.costsheet.parentType !== '';
                                 $scope.costsheet.user = infoData;
 
                                 $scope.approverName = "";
@@ -141,19 +143,20 @@ angular.module('cost-tracking').controller(
                         };
                     }
 
-                    ObjectLookupService.getCostsheetTypes().then(function(costsheetTypes) {
+                    ObjectLookupService.getCostsheetTypes().then(function (costsheetTypes) {
                         $scope.costsheetTypes = costsheetTypes;
                     });
 
-                    ObjectLookupService.getCostsheetTitles().then(function(costsheetTitles) {
+                    ObjectLookupService.getCostsheetTitles().then(function (costsheetTitles) {
                         $scope.costsheetTitles = costsheetTitles;
                         $scope.primaryTitle = null;
-                        $scope.costsheetTitles.forEach(function(title) {
+                        $scope.costsheetTitles.forEach(function (title) {
                             if (title.primary === true) {
                                 $scope.primaryTitle = title;
                             }
                         });
                     });
+                    
                     ObjectLookupService.getCostsheetStatuses().then(function(costsheetStatuses) {
                         $scope.costsheetStatuses = costsheetStatuses;
                         CostsheetConfigurationService.getProperties().then(function(response) {
