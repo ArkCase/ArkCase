@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('admin').controller('Admin.NestedLookupParentController', ['$scope', '$translate', '$modal', '$timeout', 'Object.LookupService', 'Helper.UiGridService', 'UtilService', 'MessageService', function ($scope, $translate, $modal, $timeout, ObjectLookupService, HelperUiGridService, Util, MessageService) {
+angular.module('admin').controller('Admin.NestedLookupParentController', ['$scope', '$translate', '$modal', 'Object.LookupService', 'Helper.UiGridService', 'UtilService', 'MessageService', function ($scope, $translate, $modal, ObjectLookupService, HelperUiGridService, Util, MessageService) {
 
     var gridHelper = new HelperUiGridService.Grid({
         scope: $scope
@@ -8,7 +8,7 @@ angular.module('admin').controller('Admin.NestedLookupParentController', ['$scop
     $scope.lookup = [];
 
     //get config and init grid settings
-    $scope.config.$promise.then(function(config) {
+    $scope.config.$promise.then(function (config) {
         var componentConfig = _.find(config.components, {
             id: 'standardLookup'
         });
@@ -156,22 +156,25 @@ angular.module('admin').controller('Admin.NestedLookupParentController', ['$scop
         var promiseSaveInfo = ObjectLookupService.saveLookup($scope.selectedLookupDef, $scope.lookup);
         promiseSaveInfo.then(function () {
             MessageService.succsessAction();
-            $timeout(function () {
-                fetchLookup();
-            }, 5000);
-        }, function(error) {
+            awaitLookupUpdateAndReloadGrid();
+        }, function (error) {
             MessageService.error(error.data ? error.data : error);
-            $timeout(function () {
-                fetchLookup();
-            }, 5000);
+            awaitLookupUpdateAndReloadGrid();
             return error;
         });
 
         return promiseSaveInfo;
     }
 
+    function awaitLookupUpdateAndReloadGrid() {
+        var subscription = $scope.$bus.subscribe('lookups-reloaded', function (result) {
+            fetchLookup();
+            $scope.$bus.unsubscribe(subscription);
+        });
+    }
+
     function fetchLookup() {
-        ObjectLookupService.getLookup($scope.selectedLookupDef).then(function(lookup) {
+        ObjectLookupService.getLookup($scope.selectedLookupDef).then(function (lookup) {
             // if we change the reference of $scope.lookup variable the UI is not updated, so we change the elements in the array
             $scope.lookup.splice(0, $scope.lookup.length);
             if (lookup !== "") {

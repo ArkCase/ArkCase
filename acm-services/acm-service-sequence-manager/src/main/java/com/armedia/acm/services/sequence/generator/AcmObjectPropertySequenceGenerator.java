@@ -28,6 +28,7 @@ package com.armedia.acm.services.sequence.generator;
  */
 
 import com.armedia.acm.services.sequence.exception.AcmSequenceException;
+import com.armedia.acm.services.sequence.model.AcmSequenceEntity;
 import com.armedia.acm.services.sequence.model.AcmSequencePart;
 
 import org.apache.logging.log4j.LogManager;
@@ -78,6 +79,13 @@ public class AcmObjectPropertySequenceGenerator implements AcmSequenceGenerator
         }
         return objectPropertyValue;
 
+    }
+
+    @Override
+    public String getGeneratePartValue(String sequenceName, AcmSequencePart sequencePart, Object object,
+            Map<String, Long> autoincrementPartNameToValue, AcmSequenceEntity acmSequenceEntity) throws AcmSequenceException
+    {
+        return generatePartValue(sequenceName, sequencePart, object, autoincrementPartNameToValue);
     }
 
     /**

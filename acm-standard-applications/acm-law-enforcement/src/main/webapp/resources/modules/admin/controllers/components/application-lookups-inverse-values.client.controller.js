@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('admin').controller('Admin.InverseValuesLookupController', ['$scope', '$translate', '$modal', '$timeout', 'Object.LookupService', 'Helper.UiGridService', 'UtilService', 'MessageService', function ($scope, $translate, $modal, $timeout, ObjectLookupService, HelperUiGridService, Util, MessageService) {
+angular.module('admin').controller('Admin.InverseValuesLookupController', ['$scope', '$translate', '$modal', 'Object.LookupService', 'Helper.UiGridService', 'UtilService', 'MessageService', function ($scope, $translate, $modal, ObjectLookupService, HelperUiGridService, Util, MessageService) {
 
     var gridHelper = new HelperUiGridService.Grid({
         scope: $scope
@@ -8,7 +8,7 @@ angular.module('admin').controller('Admin.InverseValuesLookupController', ['$sco
     $scope.lookup = [];
 
     //get config and init grid settings
-    $scope.config.$promise.then(function(config) {
+    $scope.config.$promise.then(function (config) {
         var componentConfig = _.find(config.components, {
             id: 'inverseValuesLookup'
         });
@@ -33,8 +33,8 @@ angular.module('admin').controller('Admin.InverseValuesLookupController', ['$sco
             totalItems: 0,
             data: [],
             rowTemplate: rowTemplate,
-            onRegisterApi: function(gridApi) {
-                gridApi.draggableRows.on.rowDropped($scope, function(info, dropTarget) {
+            onRegisterApi: function (gridApi) {
+                gridApi.draggableRows.on.rowDropped($scope, function (info, dropTarget) {
                     saveLookup();
                 });
             }
@@ -44,7 +44,7 @@ angular.module('admin').controller('Admin.InverseValuesLookupController', ['$sco
         $scope.gridOptions.data = $scope.lookup;
     });
 
-    $scope.addNew = function() {
+    $scope.addNew = function () {
         var entry = {};
 
         //put entry to scope, we will need it when we return from popup
@@ -59,7 +59,7 @@ angular.module('admin').controller('Admin.InverseValuesLookupController', ['$sco
         showModal(item, false);
     };
 
-    $scope.editRow = function(rowEntity) {
+    $scope.editRow = function (rowEntity) {
         $scope.entry = rowEntity;
         var item = {
             key: rowEntity.key,
@@ -72,19 +72,19 @@ angular.module('admin').controller('Admin.InverseValuesLookupController', ['$sco
 
     };
 
-    $scope.deleteRow = function(rowEntity) {
+    $scope.deleteRow = function (rowEntity) {
         //change for AFDP-6803 change ok button content
         bootbox.confirm({
             message: $translate.instant("admin.application.lookups.config.deleteEntryMsg"),
             buttons: {
-                confirm:{
-                    label:  $translate.instant("admin.application.lookups.config.dialog.deleteEntryConfirm")
+                confirm: {
+                    label: $translate.instant("admin.application.lookups.config.dialog.deleteEntryConfirm")
                 },
                 cancel: {
-                    label:  $translate.instant("admin.application.lookups.config.dialog.cancel")
+                    label: $translate.instant("admin.application.lookups.config.dialog.cancel")
                 }
             },
-            callback: function(result){
+            callback: function (result) {
                 if (result) {
                     _.find($scope.lookup, function (entry, entryIdx) {
                         if (entry.key === rowEntity.key) {
@@ -113,12 +113,12 @@ angular.module('admin').controller('Admin.InverseValuesLookupController', ['$sco
             size: 'md',
             backdrop: 'static',
             resolve: {
-                params: function() {
+                params: function () {
                     return params;
                 }
             }
         });
-        modalInstance.result.then(function(data) {
+        modalInstance.result.then(function (data) {
             $scope.entry.key = data.entry.key;
             $scope.entry.value = data.entry.value;
             $scope.entry.inverseKey = data.entry.inverseKey;
@@ -145,22 +145,25 @@ angular.module('admin').controller('Admin.InverseValuesLookupController', ['$sco
         var promiseSaveInfo = ObjectLookupService.saveLookup($scope.selectedLookupDef, $scope.lookup);
         promiseSaveInfo.then(function () {
             MessageService.succsessAction();
-            $timeout(function () {
-                fetchLookup();
-            }, 5000);
-        }, function(error) {
+            awaitLookupUpdateAndReloadGrid();
+        }, function (error) {
             MessageService.error(error.data ? error.data : error);
-            $timeout(function () {
-                fetchLookup();
-            }, 5000);
+            awaitLookupUpdateAndReloadGrid();
             return error;
         });
 
         return promiseSaveInfo;
     }
 
+    function awaitLookupUpdateAndReloadGrid() {
+        var subscription = $scope.$bus.subscribe('lookups-reloaded', function (result) {
+            fetchLookup();
+            $scope.$bus.unsubscribe(subscription);
+        });
+    }
+
     function fetchLookup() {
-        ObjectLookupService.getLookup($scope.selectedLookupDef).then(function(lookup) {
+        ObjectLookupService.getLookup($scope.selectedLookupDef).then(function (lookup) {
             // if we change the reference of $scope.lookup variable the UI is not updated, so we change the elements in the array
             $scope.lookup.splice(0, $scope.lookup.length);
             if (lookup !== "") {
@@ -170,4 +173,4 @@ angular.module('admin').controller('Admin.InverseValuesLookupController', ['$sco
     }
 
     $scope.$emit('lookup-controller-loaded');
-} ]);
+}]);

@@ -27,11 +27,6 @@ package com.armedia.acm.services.email.service;
  * #L%
  */
 
-import static junit.framework.TestCase.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.when;
-
-import com.armedia.acm.core.ObjectLabelConfig;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
@@ -39,7 +34,8 @@ import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationTokenConstants;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksDTO;
-
+import com.armedia.acm.services.labels.service.ObjectLabelConfig;
+import com.armedia.acm.services.labels.service.TranslationService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,6 +47,10 @@ import org.springframework.security.core.Authentication;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static junit.framework.TestCase.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by manoj.dhungana on 7/17/2017.
@@ -74,7 +74,10 @@ public class AcmEmailContentGeneratorServiceTest
     private EcmFileDao mockEcmFileDao;
 
     @Mock
-    private ObjectLabelConfig objectLabelConfig;
+    private ObjectLabelConfig mockObjectLabelConfig;
+
+    @Mock
+    private TranslationService mockTranslationService;
 
     @Before
     public void setUp() throws Exception
@@ -82,7 +85,8 @@ public class AcmEmailContentGeneratorServiceTest
         acmEmailContentGeneratorService.setAuthenticationTokenDao(mockAuthenticationTokenDao);
         acmEmailContentGeneratorService.setAuthenticationTokenService(mockAuthenticationTokenService);
         acmEmailContentGeneratorService.setEcmFileDao(mockEcmFileDao);
-        acmEmailContentGeneratorService.setObjectLabelConfig(objectLabelConfig);
+        acmEmailContentGeneratorService.setObjectLabelConfig(mockObjectLabelConfig);
+        acmEmailContentGeneratorService.setTranslationService(mockTranslationService);
     }
 
     @Test
@@ -134,5 +138,4 @@ public class AcmEmailContentGeneratorServiceTest
         assertTrue(emailContent.contains(header));
         assertTrue(emailContent.contains(footer));
     }
-
 }

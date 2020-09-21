@@ -105,10 +105,12 @@ angular.module('directives').directive(
                             });
                             var promiseOrganizationTypes = ObjectLookupService.getOrganizationTypes().then(function(organizationTypes) {
                                 scope.organizationTypes = organizationTypes;
+                                scope.defaultOrganizationType = ObjectLookupService.getPrimaryLookup(scope.organizationTypes);
                                 return organizationTypes;
                             });
                             var promiseAddressTypes = ObjectLookupService.getAddressTypes().then(function(addressTypes) {
                                 scope.addressTypes = addressTypes;
+                                scope.defaultAddressType = ObjectLookupService.getPrimaryLookup(scope.addressTypes);
                                 return addressTypes;
                             });
                             var promiseAliasTypes = ObjectLookupService.getAliasTypes().then(function(aliasTypes) {
@@ -351,7 +353,7 @@ angular.module('directives').directive(
                                 var item = {
                                     id: '',
                                     parentId: rowParent.entity.id,
-                                    organizationType: '',
+                                    organizationType: scope.defaultOrganizationType ? scope.defaultOrganizationType.key : '',
                                     organizationValue: '',
                                     organizationTypes: scope.organizationTypes
                                 };
@@ -397,7 +399,7 @@ angular.module('directives').directive(
                                 var item = {
                                     id: '',
                                     parentId: rowParent.entity.id,
-                                    addressType: '',
+                                    addressType: scope.defaultAddressType ? scope.defaultAddressType : '',
                                     addressTypes: scope.addressTypes,
                                     streetAddress: '',
                                     city: '',
