@@ -100,7 +100,6 @@ angular.module('document-details').controller(
 
                     ObjectLookupService.getOrganizationTypes().then(function(organizationTypes) {
                         $scope.organizationTypes = organizationTypes;
-                        return organizationTypes;
                     });
 
                     $scope.getActiveVersion = function(ecmFile) {

@@ -54,7 +54,6 @@ angular.module('people').controller(
 
                     ObjectLookupService.getAddressTypes().then(function(addressTypes) {
                         $scope.addressTypes = addressTypes;
-                        return addressTypes;
                     });
 
                     ObjectLookupService.getCountries().then(function(countries) {
@@ -69,16 +68,19 @@ angular.module('people').controller(
                         address.creator = $scope.userId;
                         address.className = "com.armedia.acm.plugins.addressable.model.PostalAddress";
                         $scope.address = address;
+                        var defaultAddressType = ObjectLookupService.getPrimaryLookup($scope.addressTypes);
+                        var defaultCountry = ObjectLookupService.getPrimaryLookup($scope.countries);
+
                         var item = {
                             id: '',
                             parentId: $scope.objectInfo.id,
-                            addressType: '',
+                            addressType: defaultAddressType ? defaultAddressType.key : '',
                             streetAddress: '',
                             streetAddress2: '',
                             city: '',
                             state: '',
                             zip: '',
-                            country: ''
+                            country: defaultCountry ? defaultCountry.key : ''
                         };
                         showModal(item, false);
                     };
