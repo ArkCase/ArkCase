@@ -215,7 +215,7 @@ angular.module('admin').controller('Admin.LdapConfigController',
                 width: 40,
                 cellClass: 'text-center',
                 headerCellTemplate: "<span></span>",
-                cellTemplate: "<span><i class='fa fa-pencil fa-lg' style='cursor :pointer' " + "ng-click='grid.appScope.editRow(row.entity)'></i></span>"
+                cellTemplate: "<span title=\"{{'admin.security.ldapConfig.table.editRecord' | translate}}\">" + "<i class='fa fa-pencil fa-lg' style='cursor :pointer' " + "ng-click='grid.appScope.editRow(row.entity)'></i></span>"
             };
         }
 
@@ -227,7 +227,7 @@ angular.module('admin').controller('Admin.LdapConfigController',
                 width: 40,
                 cellClass: 'text-center',
                 headerCellTemplate: "<span></span>",
-                cellTemplate: "<span><i class='fa fa-lock fa-lg' style='cursor :pointer' " + "ng-click='grid.appScope.editPassword(row.entity)'></i></span>"
+                cellTemplate: "<span title=\"{{'admin.security.ldapConfig.table.editPassword' | translate}}\">" + "<i class='fa fa-lock fa-lg' style='cursor :pointer' " + "ng-click='grid.appScope.editPassword(row.entity)'></i></span>"
             };
         }
 
