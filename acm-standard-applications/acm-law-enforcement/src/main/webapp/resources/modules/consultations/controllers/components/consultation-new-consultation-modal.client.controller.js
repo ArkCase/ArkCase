@@ -63,7 +63,7 @@ angular.module('consultations').controller(
                             title: '',
                             organizationAssociations: [],
                             contactMethods: [],
-                            addresses: []
+                            addresses: [{}],
                         }
                     },
                     personAssociations: [],
