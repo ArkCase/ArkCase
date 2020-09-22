@@ -3163,7 +3163,7 @@ angular.module('directives').directive(
                                             data: response
                                         };
                                         var modalInstance = $modal.open({
-                                            templateUrl: "modules/common/views/showDuplicates-modal.client.view.html",
+                                            templateUrl: "modules/common/views/show-duplicates-modal.client.view.html",
                                             controller: "Common.ShowDuplicates",
                                             animation: true,
                                             windowClass: 'modal-width-80',
