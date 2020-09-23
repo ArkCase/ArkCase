@@ -110,7 +110,7 @@ public class ComplaintBillingInvoiceDocumentGenerator
                 Document document = buildDocument(complaint, billingInvoice);
                 Source source = new DOMSource(document);
 
-                InputStream xslStream = fileConfigurationService.getInputStreamFromConfiguration(BillingConstants.INVOICE_DOCUMENT_STYLESHEET + "/" + BillingConstants.INVOICE_DOCUMENT_STYLESHEET);
+                InputStream xslStream = fileConfigurationService.getInputStreamFromConfiguration(PDF_STYLESHEETS_LOCATION + "/" + BillingConstants.INVOICE_DOCUMENT_STYLESHEET);
                 URI baseURI = fileConfigurationService.getLocationUriFromConfiguration(PDF_STYLESHEETS_LOCATION);
                 filename = getPdfService().generatePdf(xslStream, baseURI, source);
                 log.debug("Created {} document [{}]", BillingConstants.INVOICE_DOCUMENT_TYPE, filename);
