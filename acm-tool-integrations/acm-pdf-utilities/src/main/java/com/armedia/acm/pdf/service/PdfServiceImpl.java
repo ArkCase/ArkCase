@@ -229,6 +229,24 @@ public class PdfServiceImpl implements PdfService
         return filename;
     }
 
+    @Override
+    public String generatePdf(InputStream xslStream, URI baseURI, Map<String, String> parameters) throws PdfServiceException
+    {
+        // create a temporary file name
+        String filename = String.format("%s/acm-%020d.pdf", System.getProperty("java.io.tmpdir"), Math.abs(random.nextLong()));
+        log.debug("PDF creation: using [{}] as temporary file name", filename);
+        try (OutputStream os = new BufferedOutputStream(new FileOutputStream(filename)))
+        {
+            generatePdf(xslStream, baseURI, os, parameters);
+        }
+        catch (IOException e)
+        {
+            log.error("Unable to generate PDF document", e);
+            throw new PdfServiceException(e);
+        }
+        return filename;
+    }
+
     /**
      * Generate PDF file based on XSL-FO stylesheet, XML data source and replacement parameters. NOTE: the caller is
      * responsible for deleting the file afterwards (not to leave mess behind)
@@ -302,6 +320,32 @@ public class PdfServiceImpl implements PdfService
 
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer(new StreamSource(xslFile));
+
+            parameters.forEach((name, value) -> transformer.setParameter(name, value != null ? value : "N/A"));
+
+            Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, foUserAgent, targetStream);
+            Result result = new SAXResult(fop.getDefaultHandler());
+            transformer.transform(new DOMSource(), result);
+        }
+        catch (FOPException | TransformerException e)
+        {
+            log.error("Unable to generate PDF document", e);
+            throw new PdfServiceException(e);
+        }
+
+    }
+
+    @Override
+    public void generatePdf(InputStream xslStream, URI baseURI, OutputStream targetStream, Map<String, String> parameters) throws PdfServiceException
+    {
+        try
+        {
+            log.debug("Using [{}] as FOP base URI", baseURI);
+            FopFactory fopFactory = FopFactory.newInstance(baseURI);
+            FOUserAgent foUserAgent = fopFactory.newFOUserAgent();
+
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer(new StreamSource(xslStream));
 
             parameters.forEach((name, value) -> transformer.setParameter(name, value != null ? value : "N/A"));
 

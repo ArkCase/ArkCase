@@ -129,6 +129,22 @@ public interface PdfService
      * Generate PDF file based on XSL-FO stylesheet and replacement parameters (no XML data source).
      * NOTE: the caller is responsible for deleting the file afterwards (not to leave mess behind)
      *
+     * @param xslStream
+     *            XSL-FO stylesheet
+     * @param baseURI
+     *            base URI where the FOP engine will be resolving URIs against
+     * @param parameters
+     *            a key-value map of parameters to be replaced in the stylesheet
+     * @return path to the newly generated PDF file (random filename stored in temp folder)
+     * @throws PdfServiceException
+     *             on PDF creation error
+     */
+    String generatePdf(InputStream xslStream, URI baseURI, Map<String, String> parameters) throws PdfServiceException;
+
+    /**
+     * Generate PDF file based on XSL-FO stylesheet and replacement parameters (no XML data source).
+     * NOTE: the caller is responsible for deleting the file afterwards (not to leave mess behind)
+     *
      * @param xslFilename
      *            path to XSL-FO stylesheet
      * @param parameters
@@ -142,7 +158,7 @@ public interface PdfService
     /**
      * Generate PDF file based on XSL-FO stylesheet and replacement parameters (no XML data source) to the given
      * targetStream.
-     * 
+     *
      * @param xslFile
      *            XSL-FO stylesheet
      * @param source
@@ -155,6 +171,23 @@ public interface PdfService
      *             on PDF creation error
      */
     void generatePdf(File xslFile, Source source, OutputStream targetStream, Map<String, String> parameters) throws PdfServiceException;
+
+    /**
+     * Generate PDF file based on XSL-FO stylesheet and replacement parameters (no XML data source) to the given
+     * targetStream.
+     *
+     * @param xslStream
+     *            XSL-FO stylesheet
+     * @param baseURI
+     *            base URI where the FOP engine will be resolving URIs against
+     * @param targetStream
+     *            the stream to write the generated file
+     * @param parameters
+     *            a key-value map of parameters to be replaced in the stylesheet
+     * @throws PdfServiceException
+     *             on PDF creation error
+     */
+    void generatePdf(InputStream xslStream, URI baseURI, OutputStream targetStream, Map<String, String> parameters) throws PdfServiceException;
 
     /**
      * Append one PDF file to another (incremental merge)
