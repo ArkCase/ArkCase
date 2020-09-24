@@ -37,7 +37,7 @@ import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 import com.armedia.acm.plugins.ecm.workflow.EcmFileWorkflowConfiguration;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-
+import com.armedia.acm.services.users.model.group.AcmGroup;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.apache.logging.log4j.LogManager;
@@ -50,6 +50,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -142,13 +143,15 @@ public class FileCreatedBuckslipWorkflowHandler implements ApplicationListener<E
             AcmUser approverUser = getUserDao().findByUserId(approver);
             AcmUser addedByUser = getUserDao().findByUserId(addedBy);
 
+            Optional<AcmGroup> group = approverUser.getGroups().stream().findFirst();
+
             String approverFullName = Objects.nonNull(approverUser) ? approverUser.getFullName() : "";
             String addedByFullName = Objects.nonNull(addedByUser) ? addedByUser.getFullName() : "";
 
             task.setApproverId(approver);
             task.setApproverFullName(approverFullName);
             task.setTaskName(taskName);
-            task.setGroupName(groupName);
+            task.setGroupName(group.isPresent() ? group.get().getName() : "");
             task.setDetails(details);
             task.setAddedBy(addedBy);
             task.setAddedByFullName(addedByFullName);
