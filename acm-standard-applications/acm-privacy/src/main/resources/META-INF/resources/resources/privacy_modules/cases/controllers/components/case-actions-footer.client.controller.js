@@ -230,6 +230,7 @@ angular.module('cases').controller('Cases.ActionsFooterController',
                             note: data.holdReason,
                             parentId: $stateParams['id'],
                             parentType: 'CASE_FILE',
+                            parentTitle: $scope.objectInfo.caseNumber,
                             type: 'HOLD_REASON'
                         }).then(function (addedNote) {
                             // Note saved
