@@ -29,6 +29,7 @@ package gov.foia.service;
 
 import static gov.foia.model.FOIAConstants.MIME_TYPE_PDF;
 
+import com.armedia.acm.configuration.service.FileConfigurationService;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.pdf.PdfServiceException;
@@ -47,6 +48,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
@@ -58,12 +62,15 @@ import gov.foia.model.FOIAObject;
  */
 public class PDFDocumentGenerator implements DocumentGenerator
 {
+    private static final String PDF_STYLESHEETS_LOCATION = "pdf-stylesheets";
+
     private Logger log = LogManager.getLogger(getClass());
     private final DateTimeFormatter datePattern = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     private EcmFileService ecmFileService;
     private EcmFileDao ecmFileDao;
     private PdfService pdfService;
+    private FileConfigurationService fileConfigurationService;
     private FolderAndFilesUtils folderAndFilesUtils;
 
     @Override
@@ -74,7 +81,11 @@ public class PDFDocumentGenerator implements DocumentGenerator
 
         try
         {
-            filename = getPdfService().generatePdf(documentDescriptor.getTemplate(), substitutions);
+            InputStream xslStream = fileConfigurationService.getInputStreamFromConfiguration(PDF_STYLESHEETS_LOCATION + "/"
+                    + documentDescriptor.getTemplate());
+            URI baseURI = fileConfigurationService.getLocationUriFromConfiguration(PDF_STYLESHEETS_LOCATION);
+            filename = getPdfService().generatePdf(xslStream, baseURI, substitutions);
+
             log.debug("Created {} document [{}]", documentDescriptor.getDoctype(), filename);
 
             String arkcaseFilename = String.format(documentDescriptor.getFilenameFormat(), acmObject.getId());
@@ -101,7 +112,7 @@ public class PDFDocumentGenerator implements DocumentGenerator
                 }
             }
         }
-        catch (PdfServiceException | AcmCreateObjectFailedException | AcmUserActionFailedException | IOException e)
+        catch (URISyntaxException | PdfServiceException | AcmCreateObjectFailedException | AcmUserActionFailedException | IOException e)
         {
             throw new DocumentGeneratorException("Failed to generate Word document for objectId: [" + acmObject.getId() + "], objectType: ["
                     + acmObject.getObjectType() + "] and template:[" + documentDescriptor.getTemplate() + "]", e);
@@ -130,6 +141,16 @@ public class PDFDocumentGenerator implements DocumentGenerator
     public void setPdfService(PdfService pdfService)
     {
         this.pdfService = pdfService;
+    }
+
+    public FileConfigurationService getFileConfigurationService()
+    {
+        return fileConfigurationService;
+    }
+
+    public void setFileConfigurationService(FileConfigurationService fileConfigurationService)
+    {
+        this.fileConfigurationService = fileConfigurationService;
     }
 
     public DateTimeFormatter getDatePattern()
