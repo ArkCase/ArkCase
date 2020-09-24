@@ -46,7 +46,7 @@ angular.module('common').controller(
 
             $scope.onClickObjLink = function(event, rowEntity) {
                 event.preventDefault();
-                $state.go($scope.modalParams.returnState, {
+                $state.go('request-info', {
                     id: rowEntity.container.containerObjectId,
                     fileId: rowEntity.fileId
                 }, true);
@@ -54,7 +54,7 @@ angular.module('common').controller(
 
             $scope.openCaseFile = function(event, rowEntity) {
                 event.preventDefault();
-                $state.go('cases.main', {
+                $state.go('cases.documents', {
                     id: rowEntity.container.containerObjectId,
                 }, true);
             };
