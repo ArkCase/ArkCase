@@ -40,8 +40,8 @@
             </and>
         </preConditions>
         <addForeignKeyConstraint baseTableName="acm_user_org" baseColumnNames="cm_container_id" constraintName="fk_user_org_container"
-            referencedTableName="acm_container" referencedColumnNames="cm_container_id" deferrable="${deferrable}"
-            initiallyDeferred="${initially.deferred}"/>
+                                 referencedTableName="acm_container" referencedColumnNames="cm_container_id" deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
     <changeSet id="profile-constraint-04-container-id" author="bojan.milenkoski">
@@ -51,8 +51,13 @@
             </not>
         </preConditions>
         <addForeignKeyConstraint baseTableName="acm_user_org" baseColumnNames="cm_ecm_signature_file_id"
-            constraintName="fk_user_org_signature_fileid" referencedTableName="acm_file" referencedColumnNames="cm_file_id"
-            deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
+                                 constraintName="fk_user_org_signature_fileid" referencedTableName="acm_file"
+                                 referencedColumnNames="cm_file_id"
+                                 deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
+    </changeSet>
+
+    <changeSet id="profile-constraint-05-unique-user" author="aleksandar.acevski">
+        <addUniqueConstraint tableName="acm_user_org" columnNames="cm_user"/>
     </changeSet>
 
 </databaseChangeLog>
