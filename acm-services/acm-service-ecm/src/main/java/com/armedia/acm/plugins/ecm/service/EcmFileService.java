@@ -39,7 +39,7 @@ import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.LinkTargetFileDTO;
 import com.armedia.acm.plugins.ecm.model.RecycleBinItem;
-
+import com.armedia.acm.services.participants.model.AcmParticipant;
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.springframework.retry.annotation.Backoff;
@@ -52,7 +52,6 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpSession;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -434,4 +433,6 @@ public interface EcmFileService
     List<EcmFile> findFilesByFolder(Long folderId);
 
     List<EcmFile> getFileDuplicates(Long fileId) throws AcmObjectNotFoundException;
+
+    List<AcmParticipant> getParticipantsFromParentObject(Long parentObjectId, String parentObjectType);
 }
