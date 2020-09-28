@@ -241,6 +241,7 @@
         <property name="camelContextManager" ref="camelContextManager"/>
         <property name="authenticationTokenDao" ref="authenticationTokenDao"/>
         <property name="fileEventPublisher" ref="fileEventPublisher"/>
+        <property name="acmDataService" ref="acmDataService"/>
     </bean>
 
     <bean id="ecmFileToSolrTrasnformer" class="com.armedia.acm.plugins.ecm.service.EcmFileToSolrTransformer">
@@ -340,6 +341,7 @@
         <property name="acmBpmnService" ref="processDefinitionManagementService"/>
         <property name="objectConverter" ref="objectConverter"/>
         <property name="userDao" ref="userJpaDao"/>
+        <property name="ecmFileService" ref="ecmFileService"/>
     </bean>
 
     <bean id="cmisConfigUtils" class="com.armedia.acm.plugins.ecm.utils.CmisConfigUtils">

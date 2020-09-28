@@ -33,11 +33,13 @@ import com.armedia.acm.objectonverter.AcmMarshaller;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileAddedEvent;
+import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 import com.armedia.acm.plugins.ecm.workflow.EcmFileWorkflowConfiguration;
+import com.armedia.acm.services.participants.model.AcmParticipant;
+import com.armedia.acm.services.participants.utils.ParticipantUtils;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-import com.armedia.acm.services.users.model.group.AcmGroup;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.apache.logging.log4j.LogManager;
@@ -50,7 +52,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -64,6 +65,7 @@ public class FileCreatedBuckslipWorkflowHandler implements ApplicationListener<E
     private ObjectConverter objectConverter;
     private UserDao userDao;
     private AcmBpmnService acmBpmnService;
+    private EcmFileService ecmFileService;
 
     @Override
     public void onApplicationEvent(EcmFileAddedEvent event)
@@ -96,6 +98,10 @@ public class FileCreatedBuckslipWorkflowHandler implements ApplicationListener<E
 
         Map<String, Object> pvars = new HashMap<>();
 
+        //getting owningGroup needed for Future Tasks
+        List<AcmParticipant> participants = getEcmFileService().getParticipantsFromParentObject(event.getParentObjectId(), event.getParentObjectType());
+        String owningGroup = ParticipantUtils.getOwningGroupIdFromParticipants(participants);
+
         String approversCsv = configuration.getApprovers();
         List<String> approvers = approversCsv == null ? new ArrayList<>()
                 : Arrays.stream(approversCsv.split(",")).filter(s -> s != null).map(s -> s.trim()).collect(Collectors.toList());
@@ -122,7 +128,7 @@ public class FileCreatedBuckslipWorkflowHandler implements ApplicationListener<E
         pvars.put("taskPriority", configuration.getTaskPriority());
 
         pvars.put("futureTasks",
-                getFutureTasks(approvers, configuration.getTaskName(), "", configuration.getTaskName(), event.getUserId(), 3));
+                getFutureTasks(approvers, configuration.getTaskName(), owningGroup, configuration.getTaskName(), event.getUserId(), 3));
 
         ProcessInstance pi = getAcmBpmnService().startBusinessProcess(processName, pvars);
 
@@ -143,15 +149,13 @@ public class FileCreatedBuckslipWorkflowHandler implements ApplicationListener<E
             AcmUser approverUser = getUserDao().findByUserId(approver);
             AcmUser addedByUser = getUserDao().findByUserId(addedBy);
 
-            Optional<AcmGroup> group = approverUser.getGroups().stream().findFirst();
-
             String approverFullName = Objects.nonNull(approverUser) ? approverUser.getFullName() : "";
             String addedByFullName = Objects.nonNull(addedByUser) ? addedByUser.getFullName() : "";
 
             task.setApproverId(approver);
             task.setApproverFullName(approverFullName);
             task.setTaskName(taskName);
-            task.setGroupName(group.isPresent() ? group.get().getName() : "");
+            task.setGroupName(groupName);
             task.setDetails(details);
             task.setAddedBy(addedBy);
             task.setAddedByFullName(addedByFullName);
@@ -200,5 +204,13 @@ public class FileCreatedBuckslipWorkflowHandler implements ApplicationListener<E
     public void setAcmBpmnService(AcmBpmnService acmBpmnService)
     {
         this.acmBpmnService = acmBpmnService;
+    }
+
+    public EcmFileService getEcmFileService() {
+        return ecmFileService;
+    }
+
+    public void setEcmFileService(EcmFileService ecmFileService) {
+        this.ecmFileService = ecmFileService;
     }
 }

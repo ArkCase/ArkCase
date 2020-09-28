@@ -31,10 +31,13 @@ import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISActions;
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
 import com.armedia.acm.camelcontext.context.CamelContextManager;
 import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
+import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.data.AcmAbstractDao;
+import com.armedia.acm.data.service.AcmDataService;
 import com.armedia.acm.email.model.EmailSenderConfig;
 import com.armedia.acm.objectonverter.ArkCaseBeanUtils;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
@@ -77,6 +80,8 @@ import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
 import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationTokenConstants;
+import com.armedia.acm.services.participants.model.AcmAssignedObject;
+import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.service.AcmParticipantService;
 import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.search.model.SearchConstants;
@@ -84,7 +89,6 @@ import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.web.api.MDCConstants;
-
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.client.api.Folder;
@@ -109,7 +113,6 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpSession;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -181,6 +184,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     private AuthenticationTokenDao authenticationTokenDao;
 
     private FileEventPublisher fileEventPublisher;
+
+    private AcmDataService acmDataService;
 
     @Override
     public CmisObject findObjectByPath(String path) throws Exception
@@ -2375,6 +2380,16 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         return files;
     }
 
+    @Override
+    public List<AcmParticipant> getParticipantsFromParentObject(Long parentObjectId, String parentObjectType)
+    {
+        AcmAbstractDao<AcmObject> acmObjectAcmAbstractDao = getAcmDataService().getDaoByObjectType(parentObjectType);
+        AcmAssignedObject assignedObject = (AcmAssignedObject) acmObjectAcmAbstractDao.find(parentObjectId);
+
+        List<AcmParticipant> participants = assignedObject.getParticipants();
+
+        return participants;
+    }
     private void deleteAuthenticationTokens(Long fileId)
     {
         List<AuthenticationToken> authenticationTokens = getAuthenticationTokenDao().findAuthenticationTokenByTokenFileId(fileId);
@@ -2629,5 +2644,13 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
     public void setFileEventPublisher(FileEventPublisher fileEventPublisher) {
         this.fileEventPublisher = fileEventPublisher;
+    }
+
+    public AcmDataService getAcmDataService() {
+        return acmDataService;
+    }
+
+    public void setAcmDataService(AcmDataService acmDataService) {
+        this.acmDataService = acmDataService;
     }
 }
