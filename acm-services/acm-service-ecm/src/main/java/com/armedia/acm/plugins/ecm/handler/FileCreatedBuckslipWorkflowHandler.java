@@ -35,9 +35,11 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileAddedEvent;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 import com.armedia.acm.plugins.ecm.workflow.EcmFileWorkflowConfiguration;
+import com.armedia.acm.services.participants.model.AcmParticipant;
+import com.armedia.acm.services.participants.service.AcmParticipantService;
+import com.armedia.acm.services.participants.utils.ParticipantUtils;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.apache.logging.log4j.LogManager;
@@ -63,6 +65,7 @@ public class FileCreatedBuckslipWorkflowHandler implements ApplicationListener<E
     private ObjectConverter objectConverter;
     private UserDao userDao;
     private AcmBpmnService acmBpmnService;
+    private AcmParticipantService acmParticipantService;
 
     @Override
     public void onApplicationEvent(EcmFileAddedEvent event)
@@ -95,6 +98,10 @@ public class FileCreatedBuckslipWorkflowHandler implements ApplicationListener<E
 
         Map<String, Object> pvars = new HashMap<>();
 
+        //getting owningGroup needed for Future Tasks
+        List<AcmParticipant> participants = getAcmParticipantService().getParticipantsFromParentObject(event.getParentObjectId(), event.getParentObjectType());
+        String owningGroup = ParticipantUtils.getOwningGroupIdFromParticipants(participants);
+
         String approversCsv = configuration.getApprovers();
         List<String> approvers = approversCsv == null ? new ArrayList<>()
                 : Arrays.stream(approversCsv.split(",")).filter(s -> s != null).map(s -> s.trim()).collect(Collectors.toList());
@@ -121,7 +128,7 @@ public class FileCreatedBuckslipWorkflowHandler implements ApplicationListener<E
         pvars.put("taskPriority", configuration.getTaskPriority());
 
         pvars.put("futureTasks",
-                getFutureTasks(approvers, configuration.getTaskName(), "", configuration.getTaskName(), event.getUserId(), 3));
+                getFutureTasks(approvers, configuration.getTaskName(), owningGroup, configuration.getTaskName(), event.getUserId(), 3));
 
         ProcessInstance pi = getAcmBpmnService().startBusinessProcess(processName, pvars);
 
@@ -197,5 +204,13 @@ public class FileCreatedBuckslipWorkflowHandler implements ApplicationListener<E
     public void setAcmBpmnService(AcmBpmnService acmBpmnService)
     {
         this.acmBpmnService = acmBpmnService;
+    }
+
+    public AcmParticipantService getAcmParticipantService() {
+        return acmParticipantService;
+    }
+
+    public void setAcmParticipantService(AcmParticipantService acmParticipantService) {
+        this.acmParticipantService = acmParticipantService;
     }
 }
