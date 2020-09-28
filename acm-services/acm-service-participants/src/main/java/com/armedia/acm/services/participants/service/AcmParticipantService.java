@@ -27,14 +27,17 @@ package com.armedia.acm.services.participants.service;
  * #L%
  */
 
+import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.exceptions.AcmAccessControlException;
+import com.armedia.acm.data.AcmAbstractDao;
+import com.armedia.acm.data.service.AcmDataService;
 import com.armedia.acm.services.participants.dao.AcmParticipantDao;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.CheckParticipantListModel;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.persistence.FlushModeType;
 import javax.persistence.metamodel.EntityType;
@@ -56,6 +59,7 @@ public class AcmParticipantService
     private ParticipantsBusinessRule participantsBusinessRule;
     private AcmParticipantEventPublisher acmParticipantEventPublisher;
     private Set<Class<?>> assignedObjectClasses;
+    private AcmDataService acmDataService;
 
     public void init()
     {
@@ -157,6 +161,17 @@ public class AcmParticipantService
         getAcmParticipantEventPublisher().publishParticipantUpdatedEvent(updatedParticipant, true);
 
         return updatedParticipant;
+    }
+
+
+    public List<AcmParticipant> getParticipantsFromParentObject(Long parentObjectId, String parentObjectType)
+    {
+        AcmAbstractDao<AcmObject> acmObjectAcmAbstractDao = getAcmDataService().getDaoByObjectType(parentObjectType);
+        AcmAssignedObject assignedObject = (AcmAssignedObject) acmObjectAcmAbstractDao.find(parentObjectId);
+
+        List<AcmParticipant> participants = assignedObject.getParticipants();
+
+        return participants;
     }
 
     public List<AcmParticipant> listAllParticipantsPerObjectTypeAndId(String objectType, Long objectId)
@@ -269,5 +284,13 @@ public class AcmParticipantService
     public void setAcmParticipantEventPublisher(AcmParticipantEventPublisher acmParticipantEventPublisher)
     {
         this.acmParticipantEventPublisher = acmParticipantEventPublisher;
+    }
+
+    public AcmDataService getAcmDataService() {
+        return acmDataService;
+    }
+
+    public void setAcmDataService(AcmDataService acmDataService) {
+        this.acmDataService = acmDataService;
     }
 }
