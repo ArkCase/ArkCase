@@ -31,7 +31,7 @@
                       targetRef="sid-59B480D3-8042-491C-89F9-A490BC2B8106"/>
         <serviceTask id="sid-59B480D3-8042-491C-89F9-A490BC2B8106" name="Compress the Response folder"
                      activiti:expression="#{responseFolderCompressorService.compressResponseFolder(OBJECT_ID)}"
-                     activiti:resultVariableName="compressFolderPath"/>
+                     activiti:resultVariable="compressFolderPath"/>
         <sequenceFlow id="sid-c6395a53-d720-4191-9fab-41b52b5eed79" sourceRef="sid-59B480D3-8042-491C-89F9-A490BC2B8106"
                       targetRef="sid-e81ce45d-afdf-4c11-aadf-c70166212249"/>
         <serviceTask id="sid-e81ce45d-afdf-4c11-aadf-c70166212249" name="Send the compressed Response folder file to outbound message queue"

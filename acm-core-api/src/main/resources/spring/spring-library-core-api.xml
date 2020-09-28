@@ -23,8 +23,4 @@
         <aop:scoped-proxy/>
     </bean>
 
-    <bean id="objectLabelConfig" class="com.armedia.acm.core.ObjectLabelConfig" scope="refresh">
-        <aop:scoped-proxy/>
-    </bean>
-
 </beans>

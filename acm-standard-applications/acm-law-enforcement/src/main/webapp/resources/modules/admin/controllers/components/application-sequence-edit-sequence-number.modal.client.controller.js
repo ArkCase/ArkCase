@@ -20,8 +20,12 @@ angular.module('admin').controller('Admin.SequenceEditSequenceNumberController',
         $modalInstance.close(
             AdminSequenceManagementService.updateSequenceNumber($scope.sequenceEntity).then(function () {
                 MessageService.succsessAction();
-            }, function () {
-                MessageService.errorAction();
+            }, function (error) {
+                if (error.data && error.data.message) {
+                    MessageService.error(error.data.message);
+                } else {
+                    MessageService.errorAction();
+                }
             })
         )
     };

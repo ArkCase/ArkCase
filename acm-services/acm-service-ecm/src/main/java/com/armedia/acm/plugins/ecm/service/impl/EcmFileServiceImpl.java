@@ -1172,7 +1172,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
             EcmFile result = getEcmFileDao().save(fileCopy);
 
-            getFileEventPublisher().publishFileCopiedEvent(fileCopy, file, SecurityContextHolder.getContext().getAuthentication(), null, true);
+            getFileEventPublisher().publishFileCopiedEvent(result, file, SecurityContextHolder.getContext().getAuthentication(), null,
+                    true);
 
             return getFileParticipantService().setFileParticipantsFromParentFolder(result);
         }
@@ -2336,7 +2337,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
-    public void checkDuplicatesByHash(EcmFile ecmFile)
+    public void checkAndSetDuplicatesByHash(EcmFile ecmFile)
     {
         EcmFileVersion ecmFileVersion = getFolderAndFilesUtils().getVersion(ecmFile, ecmFile.getActiveVersionTag());
 
@@ -2347,12 +2348,20 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             {
                 for (EcmFile ef : efList)
                 {
-                    ef.setDuplicate(true);
+                    if (!ef.isDuplicate()) {
+                        ef.setDuplicate(true);
+                        getEcmFileDao().save(ef);
+                    }
                 }
             }
             else if (efList.size() == 1)
             {
-                efList.get(0).setDuplicate(false);
+                EcmFile notDuplicate = efList.get(0);
+                if (notDuplicate.isDuplicate())
+                {
+                    notDuplicate.setDuplicate(false);
+                    getEcmFileDao().save(notDuplicate);
+                }
             }
         }
     }

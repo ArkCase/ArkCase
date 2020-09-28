@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('admin').controller('Admin.NestedLookupSubLookupController', ['$scope', '$translate', '$modal', '$timeout', 'Object.LookupService', 'Helper.UiGridService', 'UtilService', 'MessageService', 'LookupService', function ($scope, $translate, $modal, $timeout, ObjectLookupService, HelperUiGridService, Util, MessageService, LookupService) {
+angular.module('admin').controller('Admin.NestedLookupSubLookupController', ['$scope', '$translate', '$modal', 'Object.LookupService', 'Helper.UiGridService', 'UtilService', 'MessageService', 'LookupService', function ($scope, $translate, $modal, ObjectLookupService, HelperUiGridService, Util, MessageService, LookupService) {
 
     var gridHelper = new HelperUiGridService.Grid({
         scope: $scope
@@ -154,15 +154,18 @@ angular.module('admin').controller('Admin.NestedLookupSubLookupController', ['$s
         var promiseSaveInfo = LookupService.deleteSubLookup($scope.lookup[0].key, $scope.selectedParentLookupValue.key, $scope.selectedLookupDef);
         promiseSaveInfo.then(function (lookup) {
             MessageService.succsessAction();
-            $timeout(function () {
-                fetchLookup();
-            }, 5000);
+            awaitLookupUpdateAndReloadGrid();
         }, function (error) {
             MessageService.error(error.data ? error.data : error);
-            $timeout(function () {
-                fetchLookup();
-            }, 5000);
+            awaitLookupUpdateAndReloadGrid();
             return error;
+        });
+    }
+
+    function awaitLookupUpdateAndReloadGrid() {
+        var subscription = $scope.$bus.subscribe('lookups-reloaded', function (result) {
+            fetchLookup();
+            $scope.$bus.unsubscribe(subscription);
         });
     }
 
@@ -170,10 +173,10 @@ angular.module('admin').controller('Admin.NestedLookupSubLookupController', ['$s
         $scope.selectedParentLookupValue.subLookup = $scope.lookup;
 
         var promiseSaveInfo = ObjectLookupService.saveLookup($scope.selectedLookupDef, $scope.parentLookup);
-        promiseSaveInfo.then(function(lookup) {
+        promiseSaveInfo.then(function (lookup) {
             MessageService.succsessAction();
             return lookup;
-        }, function(error) {
+        }, function (error) {
             MessageService.error(error.data ? error.data : error);
             fetchLookup();
             return error;

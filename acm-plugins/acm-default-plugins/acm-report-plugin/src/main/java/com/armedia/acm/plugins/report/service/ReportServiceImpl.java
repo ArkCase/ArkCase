@@ -30,6 +30,7 @@ package com.armedia.acm.plugins.report.service;
 import com.armedia.acm.configuration.service.CollectionPropertiesConfigurationService;
 import com.armedia.acm.configuration.service.ConfigurationPropertyService;
 import com.armedia.acm.configuration.util.MergeFlags;
+import com.armedia.acm.pdf.PdfServiceException;
 import com.armedia.acm.pdf.service.PdfService;
 import com.armedia.acm.pentaho.config.PentahoReportUrl;
 import com.armedia.acm.pentaho.config.PentahoReportsConfig;
@@ -63,6 +64,10 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.support.MessageBuilder;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.client.RestTemplate;
@@ -104,6 +109,7 @@ public class ReportServiceImpl implements ReportService
     private final String PENTAHO_VIEW_REPORT_URL_PRPTI_TEMPLATE_DEFAULT = "/pentaho/api/repos/{path}/prpti.view";
     private final String PENTAHO_VIEW_DASHBOARD_REPORT_URL_TEMPLATE_DEFAULT = "/pentaho/api/repos/{path}/viewer?ts={timestamp}";
     private final String PENTAHO_VIEW_ANALYSIS_REPORT_URL_TEMPLATE_DEFAULT = "/pentaho/api/repos/{path}/viewer";
+    private final String REPORTS_EXPORT_COMPLETED = "reports_export_completed";
     private CollectionPropertiesConfigurationService collectionPropertiesConfigurationService;
     private PentahoReportUrl reportUrl;
     private ExecuteSolrQuery executeSolrQuery;
@@ -113,7 +119,7 @@ public class ReportServiceImpl implements ReportService
     private ConfigurationPropertyService configurationPropertyService;
     private AcmUserRoleService userRoleService;
     private ApplicationRolesConfig rolesConfig;
-    private RestTemplate restTemplate;
+    private MessageChannel genericMessagesChannel;
     private PdfService pdfService;
 
     @Override
@@ -176,6 +182,7 @@ public class ReportServiceImpl implements ReportService
                     Report report = new Report();
                     report.setPropertyName(entry.getKey());
                     report.setPropertyPath(entry.getValue());
+                    report.setName(StringUtils.substringBefore(StringUtils.substringAfterLast(entry.getValue(), ":"), "/"));
                     report.setTitle(createReportTitleFromKey(entry.getKey()));
                     return report;
                 }).collect(Collectors.toList());
@@ -222,8 +229,9 @@ public class ReportServiceImpl implements ReportService
 
             if (reports != null)
             {
+                Set<String> userRoles = userRoleService.getUserRoles(userId);
                 userReports = reports.stream()
-                        .filter(report -> checkReportAuthorization(report, userId))
+                        .filter(report -> checkReportAuthorization(report, userRoles))
                         .collect(Collectors.toList());
             }
         }
@@ -244,11 +252,9 @@ public class ReportServiceImpl implements ReportService
         return retval;
     }
 
-    private boolean checkReportAuthorization(Report report, String userId)
+    private boolean checkReportAuthorization(Report report, Set<String> userRoles)
     {
         boolean authorized = false;
-
-        Set<String> userRoles = userRoleService.getUserRoles(userId);
 
         Map<String, List<String>> reportsToRolesMap = getReportToRolesMap();
 
@@ -596,7 +602,16 @@ public class ReportServiceImpl implements ReportService
     }
 
     @Override
-    public File exportReportsPDFFormat(List<String> orderedReportTitles, int fiscalYear) throws Exception
+    @Async
+    public void exportReportsPDFFormat(List<String> orderedReportTitles, int fiscalYear, Authentication auth)
+            throws IOException, PdfServiceException
+    {
+        File exportFile = exportReportsPDFFormat(orderedReportTitles, fiscalYear);
+        sendReportsExport(exportFile.getPath(), fiscalYear, auth);
+    }
+
+    @Override
+    public File exportReportsPDFFormat(List<String> orderedReportTitles, int fiscalYear) throws IOException, PdfServiceException
     {
         RestTemplate restTemplate = buildReportsRestTemplate();
         org.springframework.http.HttpEntity<Object> entity = buildReportsRestEntity();
@@ -679,6 +694,20 @@ public class ReportServiceImpl implements ReportService
         }
 
         return mergedPDFs;
+    }
+
+    @Override
+    public void sendReportsExport(String filePath, int fiscalYear, Authentication auth)
+    {
+        Map<String, Object> message = new HashMap<>();
+        message.put("filePath", filePath);
+        message.put("user", auth.getName());
+        message.put("exportType", StringUtils.substringAfterLast(filePath, "."));
+        message.put("fiscalYear", fiscalYear);
+        message.put("eventType", REPORTS_EXPORT_COMPLETED);
+        Message<Map<String, Object>> progressMessage = MessageBuilder.withPayload(message).build();
+
+        genericMessagesChannel.send(progressMessage);
     }
 
     @Override
@@ -796,4 +825,10 @@ public class ReportServiceImpl implements ReportService
     {
         this.pdfService = pdfService;
     }
+
+    public void setGenericMessagesChannel(MessageChannel genericMessagesChannel)
+    {
+        this.genericMessagesChannel = genericMessagesChannel;
+    }
+
 }

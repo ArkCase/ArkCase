@@ -40,6 +40,7 @@ public class FoiaConfiguration extends SystemConfiguration
     private Boolean dashboardBannerEnabled;
     private Boolean notificationGroupsEnabled;
     private Boolean requestExtensionWorkingDaysEnabled;
+    private Boolean complexRequestTrackOptionEnabled;
     private Boolean expediteWorkingDaysEnabled;
     private Integer expediteWorkingDays;
     private Boolean purgeRequestWhenInHoldEnabled;
@@ -125,6 +126,16 @@ public class FoiaConfiguration extends SystemConfiguration
     public void setRequestExtensionWorkingDaysEnabled(Boolean requestExtensionWorkingDaysEnabled)
     {
         this.requestExtensionWorkingDaysEnabled = requestExtensionWorkingDaysEnabled;
+    }
+
+    public Boolean getComplexRequestTrackOptionEnabled()
+    {
+        return complexRequestTrackOptionEnabled;
+    }
+
+    public void setComplexRequestTrackOptionEnabled(Boolean complexRequestTrackOptionEnabled)
+    {
+        this.complexRequestTrackOptionEnabled = complexRequestTrackOptionEnabled;
     }
 
     public Boolean getExpediteWorkingDaysEnabled()

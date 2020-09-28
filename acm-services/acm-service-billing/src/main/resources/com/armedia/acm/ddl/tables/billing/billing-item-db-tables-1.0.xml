@@ -117,4 +117,11 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="05-add-billing-reference-object-id" author="ana.serafimoska">
+        <addColumn tableName="acm_billing_item">
+            <column name="cm_billing_reference_object_id" type="${idType}"></column>
+        </addColumn>
+    </changeSet>
+
+
 </databaseChangeLog>
