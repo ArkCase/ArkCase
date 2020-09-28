@@ -33,10 +33,10 @@ import com.armedia.acm.objectonverter.AcmMarshaller;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileAddedEvent;
-import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 import com.armedia.acm.plugins.ecm.workflow.EcmFileWorkflowConfiguration;
 import com.armedia.acm.services.participants.model.AcmParticipant;
+import com.armedia.acm.services.participants.service.AcmParticipantService;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -65,7 +65,7 @@ public class FileCreatedBuckslipWorkflowHandler implements ApplicationListener<E
     private ObjectConverter objectConverter;
     private UserDao userDao;
     private AcmBpmnService acmBpmnService;
-    private EcmFileService ecmFileService;
+    private AcmParticipantService acmParticipantService;
 
     @Override
     public void onApplicationEvent(EcmFileAddedEvent event)
@@ -99,7 +99,7 @@ public class FileCreatedBuckslipWorkflowHandler implements ApplicationListener<E
         Map<String, Object> pvars = new HashMap<>();
 
         //getting owningGroup needed for Future Tasks
-        List<AcmParticipant> participants = getEcmFileService().getParticipantsFromParentObject(event.getParentObjectId(), event.getParentObjectType());
+        List<AcmParticipant> participants = getAcmParticipantService().getParticipantsFromParentObject(event.getParentObjectId(), event.getParentObjectType());
         String owningGroup = ParticipantUtils.getOwningGroupIdFromParticipants(participants);
 
         String approversCsv = configuration.getApprovers();
@@ -206,11 +206,11 @@ public class FileCreatedBuckslipWorkflowHandler implements ApplicationListener<E
         this.acmBpmnService = acmBpmnService;
     }
 
-    public EcmFileService getEcmFileService() {
-        return ecmFileService;
+    public AcmParticipantService getAcmParticipantService() {
+        return acmParticipantService;
     }
 
-    public void setEcmFileService(EcmFileService ecmFileService) {
-        this.ecmFileService = ecmFileService;
+    public void setAcmParticipantService(AcmParticipantService acmParticipantService) {
+        this.acmParticipantService = acmParticipantService;
     }
 }
