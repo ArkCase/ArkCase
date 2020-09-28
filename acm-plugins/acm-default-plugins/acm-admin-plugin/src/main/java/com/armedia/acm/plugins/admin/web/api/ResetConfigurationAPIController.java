@@ -27,7 +27,9 @@ package com.armedia.acm.plugins.admin.web.api;
  * #L%
  */
 
+import com.armedia.acm.activiti.services.AcmBpmnService;
 import com.armedia.acm.configuration.service.ConfigurationPropertyService;
+
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,12 +47,14 @@ public class ResetConfigurationAPIController
 
 
     private ConfigurationPropertyService configurationPropertyService;
+    private AcmBpmnService acmBpmnService;
 
     @RequestMapping(method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public void resetPropertiesToDefault()
     {
         getConfigurationPropertyService().resetPropertiesToDefault();
+        getAcmBpmnService().resetWorkflows();
     }
 
     public ConfigurationPropertyService getConfigurationPropertyService() {
@@ -60,5 +64,15 @@ public class ResetConfigurationAPIController
 
     public void setConfigurationPropertyService(ConfigurationPropertyService configurationPropertyService) {
         this.configurationPropertyService = configurationPropertyService;
+    }
+
+    public AcmBpmnService getAcmBpmnService()
+    {
+        return acmBpmnService;
+    }
+
+    public void setAcmBpmnService(AcmBpmnService acmBpmnService)
+    {
+        this.acmBpmnService = acmBpmnService;
     }
 }

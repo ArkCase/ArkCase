@@ -27,12 +27,15 @@ package gov.foia.service;
  * #L%
  */
 
+import org.springframework.security.core.Authentication;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -47,9 +50,9 @@ public interface NiemExportService
      * @param report
      *            Single section of the Yearly report
      * @return XML File in accordance to the FOIA Yearly Report NIEM Standard
-     * @throws Exception
+     * @throws IOException
      */
-    File exportSingleReport(DOJReport report) throws Exception;
+    File exportSingleReport(DOJReport report) throws IOException, TransformerException, ParserConfigurationException;
 
     /**
      * 
@@ -58,18 +61,33 @@ public interface NiemExportService
      * @param fiscalYear
      *            fiscal year for report generation
      * @return XML File in accordance to the FOIA Yearly Report NIEM Standard
-     * @throws Exception
+     * @throws IOException
+     * @throws TransformerException
+     * @throws ParserConfigurationException
      */
-    File exportYearlyReport(int fiscalYear) throws Exception;
+    File exportYearlyReport(int fiscalYear) throws IOException, TransformerException, ParserConfigurationException;
+
+    /**
+     * 
+     * Converts all Pentaho exported CSV reports to an XML file in accordance to the FOIA Yearly Report NIEM Standard
+     * asynchronously
+     *
+     * @param fiscalYear
+     *            fiscal year for report generation
+     * @return XML File in accordance to the FOIA Yearly Report NIEM Standard
+     * @throws IOException
+     * @throws TransformerException
+     * @throws ParserConfigurationException
+     */
+    void exportYearlyReport(int fiscalYear, Authentication auth) throws IOException, TransformerException, ParserConfigurationException;
 
     /**
      * 
      * Returns an ordered list of the report titles that should be included in the FOIA Yearly Report
      * 
      * @return List of report titles
-     * @throws Exception
      */
-    List<String> getYearlyReportTitlesOrdered() throws Exception;
+    List<String> getYearlyReportTitlesOrdered();
 
     /**
      * 

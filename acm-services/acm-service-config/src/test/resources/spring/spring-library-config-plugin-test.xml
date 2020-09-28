@@ -19,7 +19,7 @@
         <property name="propertiesEncryptionMagicSize" value="8"/>
         <property name="propertiesEncryptionSaltSize" value="8"/>
         <property name="propertiesEncryptionPassPhraseIterations" value="1"/>
-        <property name="propertiesEncryptionPassPhraseHashAlgorithm" value="MD5"/>
+        <property name="propertiesEncryptionPassPhraseHashAlgorithm" value="SHA256"/>
         <property name="encryptedSymmetricKeyEncryptionAlgorithm" value="RSA/ECB/PKCS1Padding"/>
         <property name="encryptedSymmetricKeyFilePath"
             value="#{systemProperties['user.home']}/.arkcase/acm/encryption/symmetricKey.encrypted"/>

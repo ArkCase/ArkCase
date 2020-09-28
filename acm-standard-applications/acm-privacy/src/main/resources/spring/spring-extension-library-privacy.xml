@@ -71,6 +71,7 @@
             <beans:property name="userTrackerService" ref="userTrackerService"/>
             <beans:property name="saveSARService" ref="saveSARService"/>
             <beans:property name="portalSARPersonDao" ref="portalSARPersonDao"/>
+            <beans:property name="personDao" ref="acmPersonDao"/>
             <beans:property name="portalRequestService" ref="portalRequestService"/>
             <beans:property name="portalUserServiceProvider" ref="sarPortalUserServiceProvider"/>
         </beans:bean>
@@ -183,6 +184,15 @@
             <beans:property name="template" value="SAR Confirmation Letter"/>
         </beans:bean>
 
+        <beans:bean id="dataAccessRequestResponseLetterDescriptor" class="gov.privacy.model.SARDocumentDescriptor">
+            <beans:property name="type" value="Data Access Request"/>
+            <beans:property name="reqAck" value="RECEIVE_RES"/>
+            <beans:property name="doctype" value="SAR Response Letter"/>
+            <beans:property name="filenameFormat" value="SARResponseLetter-%s.docx"/>
+            <beans:property name="targetFileExtension" value="docx"/>
+            <beans:property name="template" value="SAR Response Letter"/>
+        </beans:bean>
+
         <beans:bean id="forgottenRequestDocumentDescriptor" class="gov.privacy.model.SARDocumentDescriptor">
             <beans:property name="type" value="Right to be Forgotten Request"/>
             <beans:property name="reqAck" value="REQ"/>
@@ -199,6 +209,15 @@
             <beans:property name="filenameFormat" value="SARConfirmationLetter-%s.docx"/>
             <beans:property name="targetFileExtension" value="docx"/>
             <beans:property name="template" value="SAR Confirmation Letter"/>
+        </beans:bean>
+
+        <beans:bean id="forgottenRequestResponseLetterDescriptor" class="gov.privacy.model.SARDocumentDescriptor">
+            <beans:property name="type" value="Right to be Forgotten Request"/>
+            <beans:property name="reqAck" value="RECEIVE_RES"/>
+            <beans:property name="doctype" value="SAR Response Letter"/>
+            <beans:property name="filenameFormat" value="SARResponseLetter-%s.docx"/>
+            <beans:property name="targetFileExtension" value="docx"/>
+            <beans:property name="template" value="SAR Response Letter"/>
         </beans:bean>
 
         <beans:bean id="dataModificationRequestDocumentDescriptor" class="gov.privacy.model.SARDocumentDescriptor">
@@ -219,6 +238,15 @@
             <beans:property name="template" value="SAR Confirmation Letter"/>
         </beans:bean>
 
+        <beans:bean id="dataModificationResponseLetterDescriptor" class="gov.privacy.model.SARDocumentDescriptor">
+            <beans:property name="type" value="Data Modification Request"/>
+            <beans:property name="reqAck" value="RECEIVE_RES"/>
+            <beans:property name="doctype" value="SAR Response Letter"/>
+            <beans:property name="filenameFormat" value="SARResponseLetter-%s.docx"/>
+            <beans:property name="targetFileExtension" value="docx"/>
+            <beans:property name="template" value="SAR Response Letter"/>
+        </beans:bean>
+
         <beans:bean id="otherRequestDocumentDescriptor" class="gov.privacy.model.SARDocumentDescriptor">
             <beans:property name="type" value="Other"/>
             <beans:property name="reqAck" value="REQ"/>
@@ -235,6 +263,15 @@
             <beans:property name="filenameFormat" value="SARConfirmationLetter-%s.docx"/>
             <beans:property name="targetFileExtension" value="docx"/>
             <beans:property name="template" value="SAR Confirmation Letter"/>
+        </beans:bean>
+
+        <beans:bean id="otherRequestResponseLetterDescriptor" class="gov.privacy.model.SARDocumentDescriptor">
+            <beans:property name="type" value="Other"/>
+            <beans:property name="reqAck" value="RECEIVE_RES"/>
+            <beans:property name="doctype" value="SAR Response Letter"/>
+            <beans:property name="filenameFormat" value="SARResponseLetter-%s.docx"/>
+            <beans:property name="targetFileExtension" value="docx"/>
+            <beans:property name="template" value="SAR Response Letter"/>
         </beans:bean>
 
         <beans:bean id="publicFlagService" class="gov.privacy.service.PublicFlagService">

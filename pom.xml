@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.armedia</groupId>
     <artifactId>acm</artifactId>
-    <version>2020.13</version>
+    <version>2020.14</version>
     <packaging>pom</packaging>
     <name>ArkCase Case Management System</name>
     <description>Cloud-based case management system with a very nice UI</description>
@@ -135,12 +135,13 @@
         <quartz.version>2.3.2</quartz.version>
         <jaudiotagger.version>2.0.3</jaudiotagger.version>
         <reflections.version>0.9.9</reflections.version>
-        <camel.spring.version>3.0.0-M3</camel.spring.version>
-        <camel.spi.version>3.0.0-M3</camel.spi.version>
-        <camel.core.version>3.0.0-M3</camel.core.version>
-        <camel.cmis.version>3.5.0-rc1</camel.cmis.version>
-        <camel.support.version>3.0.0-M3</camel.support.version>
-        <camel.api.version>3.0.0-M3</camel.api.version>
+        <camel.spring.version>3.5.0</camel.spring.version>
+        <camel.core.engine.version>3.5.0</camel.core.engine.version>
+        <camel.spi.version>3.5.0</camel.spi.version>
+        <camel.core.version>3.5.0</camel.core.version>
+        <camel.cmis.version>3.5.0</camel.cmis.version>
+        <camel.support.version>3.5.0</camel.support.version>
+        <camel.api.version>3.5.0</camel.api.version>
         <kryo.version>5.0.0-RC4</kryo.version>
         <subzero.version>0.9</subzero.version>
         <xsync-version>1.2</xsync-version>
@@ -866,9 +867,15 @@
             </dependency>
             <!-- camel -->
             <dependency>
-                <groupId>org.apache.camel</groupId>
+                <groupId>org.apache.camel.springboot</groupId>
                 <artifactId>camel-spring-boot-starter</artifactId>
                 <version>${camel.spring.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-core-engine</artifactId>
+                <version>${camel.core.engine.version}</version>
             </dependency>
 
             <dependency>
@@ -897,7 +904,7 @@
 
             <dependency>
                 <groupId>org.apache.camel</groupId>
-                <artifactId>camel-cmis-arkcase</artifactId>
+                <artifactId>camel-cmis</artifactId>
                 <version>${camel.cmis.version}</version>
             </dependency>
 

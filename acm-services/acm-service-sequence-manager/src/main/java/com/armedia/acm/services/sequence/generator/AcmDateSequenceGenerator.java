@@ -27,6 +27,7 @@ package com.armedia.acm.services.sequence.generator;
  * #L%
  */
 import com.armedia.acm.services.sequence.exception.AcmSequenceException;
+import com.armedia.acm.services.sequence.model.AcmSequenceEntity;
 import com.armedia.acm.services.sequence.model.AcmSequencePart;
 
 import java.time.LocalDateTime;
@@ -63,6 +64,13 @@ public class AcmDateSequenceGenerator implements AcmSequenceGenerator
         {
             throw new AcmSequenceException(String.format("Illegal Date Format in sequence name [%s]", sequenceName), e);
         }
+    }
+
+    @Override
+    public String getGeneratePartValue(String sequenceName, AcmSequencePart sequencePart, Object object,
+            Map<String, Long> autoincrementPartNameToValue, AcmSequenceEntity acmSequenceEntity) throws AcmSequenceException
+    {
+        return generatePartValue(sequenceName, sequencePart, object, autoincrementPartNameToValue);
     }
 
     /**

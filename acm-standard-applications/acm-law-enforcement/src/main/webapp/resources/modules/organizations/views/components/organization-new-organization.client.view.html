@@ -167,7 +167,12 @@
                             </div>
                             <div class="col-sm-4 form-group">
                                 <label translate>organizations.comp.newOrganization.people.personType</label>
-                                <input class="form-control" readonly ng-model="personAssociation.personToOrganizationAssociationType">
+                                <select class="input-md form-control"
+                                        ng-model="personAssociation.personToOrganizationAssociationType"
+                                        ng-options="item.key as item.value | translate for item in personAssociationTypes"
+                                        id="personToOrganizationAssociationType" name="personToOrganizationAssociationType"
+                                        ng-disabled="true">
+                                </select>
                             </div>
                             <div class="col-sm-4 form-group">
                                 <div class="pull-left">

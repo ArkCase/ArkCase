@@ -27,20 +27,27 @@ package gov.foia.web.api;
  * #L%
  */
 
+import com.armedia.acm.pdf.PdfServiceException;
 import com.armedia.acm.plugins.report.service.ReportService;
 
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.List;
 
 import gov.foia.service.DOJReport;
@@ -56,27 +63,46 @@ public class ExportPentahoReportsAPIController
 
     @RequestMapping(value = "/exportYearlyReport", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<InputStreamResource> exportPentahoReportsToPDF(@RequestParam(value = "exportFormatType") String exportFormatType,
-            @RequestParam(value = "fiscalYear") int fiscalYear)
-            throws Exception
+    public ResponseEntity exportPentahoReports(@RequestParam(value = "exportFormatType") String exportFormatType,
+            @RequestParam(value = "fiscalYear") int fiscalYear, Authentication auth)
+            throws TransformerException, ParserConfigurationException, IOException, PdfServiceException
     {
-        File mergedFile = null;
         if (exportFormatType.equals("pdf"))
         {
             List<String> reportTitles = niemExportService.getYearlyReportTitlesOrdered();
-
-            mergedFile = reportService.exportReportsPDFFormat(reportTitles, fiscalYear);
+            reportService.exportReportsPDFFormat(reportTitles, fiscalYear, auth);
         }
         else if (exportFormatType.equals("xml"))
         {
-            mergedFile = niemExportService.exportYearlyReport(fiscalYear);
+            niemExportService.exportYearlyReport(fiscalYear, auth);
         }
-        return ResponseEntity
-                .ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + mergedFile.getName())
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .contentLength(mergedFile.length())
-                .body(new InputStreamResource(new FileInputStream(mergedFile)));
+        else
+        {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/exportYearlyReport/download", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<?> downloadExportPentahoReports(@RequestParam(value = "filePath") String filePath)
+            throws Exception
+    {
+        String fileName = filePath.substring(filePath.lastIndexOf(File.separator) + 1);
+        File exportFile = new File(filePath);
+        if (exportFile.exists())
+        {
+            return ResponseEntity
+                    .ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName)
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .contentLength(exportFile.length())
+                    .body(new InputStreamResource(new FileInputStream(exportFile)));
+        }
+        else
+        {
+            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @RequestMapping(value = "/exportReportToNIEMXml", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

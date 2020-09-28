@@ -47,6 +47,7 @@ public interface SARConstants
     String REQ = "REQ";
     String ACK = "ACK";
     String RECEIVE_ACK = "RECEIVE_ACK";
+    String RECEIVE_RES = "RECEIVE_RES";
     String REQ_DELETE = "REQ_DELETE";
     String DENIAL = "DENIAL";
     String REQ_EXTENSION = "REQ_EXTENSION";
