@@ -141,7 +141,7 @@ angular.module('admin').service('Admin.ReportsConfigService', function ($http) {
     function getRolesForReport(data) {
         return $http({
             method: "GET",
-            url: "api/latest/plugin/report/" + data.report.key + "/roles",
+            url: "api/latest/plugin/report/" + encodeURIComponent(data.report.key) + "/roles",
             cache: false,
             params: {
                 authorized: data.isAuthorized,
@@ -170,7 +170,7 @@ angular.module('admin').service('Admin.ReportsConfigService', function ($http) {
     function getRolesForReportByName(data) {
         return $http({
             method: "GET",
-            url: "api/latest/plugin/report/" + data.report.key + "/roles",
+            url: "api/latest/plugin/report/" + encodeURIComponent(data.report.key) + "/roles",
             cache: false,
             params: {
                 authorized: data.isAuthorized,
@@ -283,7 +283,7 @@ angular.module('admin').service('Admin.ReportsConfigService', function ($http) {
     function addRolesToReport(privilegeName, roles) {
         return $http({
             method: 'PUT',
-            url: 'api/latest/plugin/report/' + privilegeName + '/roles',
+            url: 'api/latest/plugin/report/' + encodeURIComponent(privilegeName) + '/roles',
             data: roles,
             cache: false,
             headers: {
@@ -308,7 +308,7 @@ angular.module('admin').service('Admin.ReportsConfigService', function ($http) {
     function removeRolesFromReport(privilegeName, roles) {
         return $http({
             method: 'DELETE',
-            url: 'api/latest/plugin/report/' + privilegeName + '/roles',
+            url: 'api/latest/plugin/report/' + encodeURIComponent(privilegeName) + '/roles',
             data: roles,
             cache: false,
             headers: {
