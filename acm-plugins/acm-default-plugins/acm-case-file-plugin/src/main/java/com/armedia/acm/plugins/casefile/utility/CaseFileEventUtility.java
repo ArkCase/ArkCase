@@ -39,6 +39,7 @@ import com.armedia.acm.plugins.person.model.PersonAssociationAddEvent;
 import com.armedia.acm.plugins.person.model.PersonAssociationDeletedEvent;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationEventPublisher;
@@ -136,7 +137,7 @@ public class CaseFileEventUtility implements ApplicationEventPublisherAware
         // since the participant entity modifier field is not updated
         if ("deleted".equalsIgnoreCase(eventStatus))
         {
-            event.setUserId(AuthenticationUtils.getUsername());
+            event.setUserId(getAuthenticatedUserId());
         }
 
         applicationEventPublisher.publishEvent(event);
@@ -158,7 +159,7 @@ public class CaseFileEventUtility implements ApplicationEventPublisherAware
         // since the participant entity modifier field is not updated
         if ("deleted".equalsIgnoreCase(eventStatus))
         {
-            event.setUserId(AuthenticationUtils.getUsername());
+            event.setUserId(getAuthenticatedUserId());
         }
 
         applicationEventPublisher.publishEvent(event);
@@ -189,6 +190,15 @@ public class CaseFileEventUtility implements ApplicationEventPublisherAware
         CaseEvent event = new CaseEvent(source, ipAddress, authentication.getName(), CaseFileConstants.EVENT_TYPE_VIEWED, new Date(), true,
                 authentication);
         applicationEventPublisher.publishEvent(event);
+    }
+
+    protected String getAuthenticatedUserId()
+    {
+        if (StringUtils.isNotEmpty(AuthenticationUtils.getUsername()))
+        {
+            return AuthenticationUtils.getUsername();
+        }
+        return "SYSTEM_USER";
     }
 
     @Override
