@@ -218,6 +218,8 @@
             <beans:property name="templatingEngine" ref="templatingEngine"/>
             <beans:property name="emailBodyTemplate" value="file:${user.home}/.arkcase/acm/templates/requestDocumentAttached.html"/>
             <beans:property name="notificationService" ref="notificationService"/>
+            <beans:property name="translationService" ref="translationService" />
+            <beans:property name="lookupDao" ref="lookupDao" />
         </beans:bean>
 
         <beans:bean id="requestAssignmentService" class="gov.foia.service.RequestAssignmentService">
