@@ -50,6 +50,12 @@ public class ConfigurationClientConfig
     @Value("${configuration.server.url}")
     private String configurationUrl;
 
+    @Value("${configuration.client.rules.path}")
+    private String rulesPath;
+
+    @Value("${configuration.client.stylesheets.path}")
+    private String stylesheetsPath;
+
     private String updatePropertiesEndpoint;
 
     public String getDefaultApplicationName()
@@ -115,5 +121,25 @@ public class ConfigurationClientConfig
     public void setActiveProfileReversed(String activeProfileReversed)
     {
         this.activeProfileReversed = activeProfileReversed;
+    }
+
+    public String getRulesPath()
+    {
+        return rulesPath;
+    }
+
+    public void setRulesPath(String rulesPath)
+    {
+        this.rulesPath = rulesPath;
+    }
+
+    public String getStylesheetsPath()
+    {
+        return stylesheetsPath;
+    }
+
+    public void setStylesheetsPath(String stylesheetsPath)
+    {
+        this.stylesheetsPath = stylesheetsPath;
     }
 }

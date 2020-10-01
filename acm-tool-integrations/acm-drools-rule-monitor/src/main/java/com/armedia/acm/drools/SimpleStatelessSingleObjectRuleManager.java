@@ -27,6 +27,7 @@ package com.armedia.acm.drools;
  * #L%
  */
 
+import com.armedia.acm.configuration.model.ConfigurationClientConfig;
 import com.armedia.acm.configuration.service.FileConfigurationService;
 
 import org.apache.commons.io.FilenameUtils;
@@ -53,7 +54,6 @@ import java.io.InputStream;
  */
 public abstract class SimpleStatelessSingleObjectRuleManager<T>
 {
-    private static final String RULES_LOCATION = "rules";
 
     private String ruleSpreadsheetFilename;
 
@@ -62,6 +62,8 @@ public abstract class SimpleStatelessSingleObjectRuleManager<T>
     private KieBase kieBase;
 
     private FileConfigurationService fileConfigurationService;
+
+    private ConfigurationClientConfig configurationClientConfig;
 
     public KieBase getKieBase()
     {
@@ -110,9 +112,11 @@ public abstract class SimpleStatelessSingleObjectRuleManager<T>
 
     private void updateRulesFromConfiguration()
     {
-        log.debug("Getting rules from {}", RULES_LOCATION + "/" + getRuleSpreadsheetFilename());
+        String ruleSpreadsheetPath = configurationClientConfig.getRulesPath() + "/" + getRuleSpreadsheetFilename();
 
-        try (InputStream stream = fileConfigurationService.getInputStreamFromConfiguration(RULES_LOCATION + "/" + getRuleSpreadsheetFilename());)
+        log.debug("Getting rules from {}", ruleSpreadsheetPath);
+
+        try (InputStream stream = fileConfigurationService.getInputStreamFromConfiguration(ruleSpreadsheetPath))
         {
             updateRulesFromStream(stream);
         }
@@ -178,5 +182,15 @@ public abstract class SimpleStatelessSingleObjectRuleManager<T>
     public void setFileConfigurationService(FileConfigurationService fileConfigurationService)
     {
         this.fileConfigurationService = fileConfigurationService;
+    }
+
+    public ConfigurationClientConfig getConfigurationClientConfig()
+    {
+        return configurationClientConfig;
+    }
+
+    public void setConfigurationClientConfig(ConfigurationClientConfig configurationClientConfig)
+    {
+        this.configurationClientConfig = configurationClientConfig;
     }
 }

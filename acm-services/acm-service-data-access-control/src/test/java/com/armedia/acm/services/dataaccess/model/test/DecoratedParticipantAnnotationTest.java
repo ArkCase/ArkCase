@@ -31,6 +31,7 @@ import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 
+import com.armedia.acm.configuration.model.ConfigurationClientConfig;
 import com.armedia.acm.configuration.service.FileConfigurationService;
 import com.armedia.acm.data.service.AcmDataService;
 import com.armedia.acm.services.dataaccess.annotations.DecoratedAssignedObjectParticipantAspect;
@@ -101,6 +102,13 @@ public class DecoratedParticipantAnnotationTest
             public URI getLocationUriFromConfiguration(String locationPath) throws URISyntaxException
             {
                 return null;
+            }
+        });
+        assignmentBusinessRule.setConfigurationClientConfig(new ConfigurationClientConfig()
+        {
+            @Override
+            public String getRulesPath() {
+                return "rules";
             }
         });
         decoratedParticipantAspect = new DecoratedAssignedObjectParticipantAspect();

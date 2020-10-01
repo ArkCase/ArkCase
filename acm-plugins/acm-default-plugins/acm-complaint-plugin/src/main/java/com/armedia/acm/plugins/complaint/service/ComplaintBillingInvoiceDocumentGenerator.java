@@ -27,6 +27,7 @@ package com.armedia.acm.plugins.complaint.service;
  * #L%
  */
 
+import com.armedia.acm.configuration.model.ConfigurationClientConfig;
 import com.armedia.acm.configuration.service.FileConfigurationService;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
@@ -77,8 +78,6 @@ import java.util.Optional;
 public class ComplaintBillingInvoiceDocumentGenerator
 {
 
-    private static final String PDF_STYLESHEETS_LOCATION = "pdf-stylesheets";
-
     private ComplaintDao complaintDao;
 
     private BillingService billingService;
@@ -92,6 +91,8 @@ public class ComplaintBillingInvoiceDocumentGenerator
     private PdfService pdfService;
 
     private FileConfigurationService fileConfigurationService;
+
+    private ConfigurationClientConfig configurationClientConfig;
 
     private Logger log = LogManager.getLogger(getClass());
 
@@ -110,8 +111,9 @@ public class ComplaintBillingInvoiceDocumentGenerator
                 Document document = buildDocument(complaint, billingInvoice);
                 Source source = new DOMSource(document);
 
-                InputStream xslStream = fileConfigurationService.getInputStreamFromConfiguration(PDF_STYLESHEETS_LOCATION + "/" + BillingConstants.INVOICE_DOCUMENT_STYLESHEET);
-                URI baseURI = fileConfigurationService.getLocationUriFromConfiguration(PDF_STYLESHEETS_LOCATION);
+                String pdfStylesheetsLocation = configurationClientConfig.getStylesheetsPath();
+                InputStream xslStream = fileConfigurationService.getInputStreamFromConfiguration(pdfStylesheetsLocation + "/" + BillingConstants.INVOICE_DOCUMENT_STYLESHEET);
+                URI baseURI = fileConfigurationService.getLocationUriFromConfiguration(pdfStylesheetsLocation);
                 filename = getPdfService().generatePdf(xslStream, baseURI, source);
                 log.debug("Created {} document [{}]", BillingConstants.INVOICE_DOCUMENT_TYPE, filename);
 
@@ -337,6 +339,23 @@ public class ComplaintBillingInvoiceDocumentGenerator
     public void setFileConfigurationService(FileConfigurationService fileConfigurationService)
     {
         this.fileConfigurationService = fileConfigurationService;
+    }
+
+    /**
+     * @return the configurationClientConfig
+     */
+    public ConfigurationClientConfig getConfigurationClientConfig()
+    {
+        return configurationClientConfig;
+    }
+
+    /**
+     * @param configurationClientConfig
+     *            the configurationClientConfig to set
+     */
+    public void setConfigurationClientConfig(ConfigurationClientConfig configurationClientConfig)
+    {
+        this.configurationClientConfig = configurationClientConfig;
     }
 
 }
