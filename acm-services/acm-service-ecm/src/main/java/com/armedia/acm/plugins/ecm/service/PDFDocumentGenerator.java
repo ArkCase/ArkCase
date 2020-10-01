@@ -26,6 +26,7 @@ package com.armedia.acm.plugins.ecm.service;
  * #L%
  */
 
+import com.armedia.acm.configuration.model.ConfigurationClientConfig;
 import com.armedia.acm.configuration.service.FileConfigurationService;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
@@ -69,8 +70,6 @@ public abstract class PDFDocumentGenerator<T>
     private String FILE_ID = "FILE_ID";
     private String FILE_VERSION = "FILE_VERSION";
 
-    private static final String PDF_STYLESHEETS_LOCATION = "pdf-stylesheets";
-
     private T businessObject;
 
     private EcmFileService ecmFileService;
@@ -80,6 +79,8 @@ public abstract class PDFDocumentGenerator<T>
     private PdfService pdfService;
 
     private FileConfigurationService fileConfigurationService;
+
+    private ConfigurationClientConfig configurationClientConfig;
 
     private FolderAndFilesUtils folderAndFilesUtils;
 
@@ -98,8 +99,10 @@ public abstract class PDFDocumentGenerator<T>
 
             try
             {
-                InputStream xslStream = fileConfigurationService.getInputStreamFromConfiguration(PDF_STYLESHEETS_LOCATION + "/" + stylesheet);
-                URI baseURI = fileConfigurationService.getLocationUriFromConfiguration(PDF_STYLESHEETS_LOCATION);
+                String pdfStylesheetsLocation = configurationClientConfig.getStylesheetsPath();
+                InputStream xslStream = fileConfigurationService.getInputStreamFromConfiguration(pdfStylesheetsLocation + "/"
+                        + stylesheet);
+                URI baseURI = fileConfigurationService.getLocationUriFromConfiguration(pdfStylesheetsLocation);
                 filename = getPdfService().generatePdf(xslStream, baseURI, source);
                 log.debug("Created {} document [{}]", documentName, filename);
 
@@ -254,6 +257,16 @@ public abstract class PDFDocumentGenerator<T>
     public void setFileConfigurationService(FileConfigurationService fileConfigurationService)
     {
         this.fileConfigurationService = fileConfigurationService;
+    }
+
+    public ConfigurationClientConfig getConfigurationClientConfig()
+    {
+        return configurationClientConfig;
+    }
+
+    public void setConfigurationClientConfig(ConfigurationClientConfig configurationClientConfig)
+    {
+        this.configurationClientConfig = configurationClientConfig;
     }
 
     public DateTimeFormatter getDatePattern()

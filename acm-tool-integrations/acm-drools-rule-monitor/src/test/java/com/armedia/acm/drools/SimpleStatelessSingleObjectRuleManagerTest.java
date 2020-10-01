@@ -29,6 +29,7 @@ package com.armedia.acm.drools;
 
 import static org.junit.Assert.assertEquals;
 
+import com.armedia.acm.configuration.model.ConfigurationClientConfig;
 import com.armedia.acm.configuration.service.FileConfigurationService;
 import org.junit.Before;
 import org.junit.Test;
@@ -78,6 +79,13 @@ public class SimpleStatelessSingleObjectRuleManagerTest
             public URI getLocationUriFromConfiguration(String locationPath) throws URISyntaxException
             {
                 return null;
+            }
+        });
+        unit.setConfigurationClientConfig(new ConfigurationClientConfig()
+        {
+            @Override
+            public String getRulesPath() {
+                return "rules";
             }
         });
     }

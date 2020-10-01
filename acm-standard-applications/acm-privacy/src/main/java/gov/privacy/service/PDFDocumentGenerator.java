@@ -29,6 +29,7 @@ package gov.privacy.service;
 
 import static gov.privacy.model.SARConstants.MIME_TYPE_PDF;
 
+import com.armedia.acm.configuration.model.ConfigurationClientConfig;
 import com.armedia.acm.configuration.service.FileConfigurationService;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
@@ -63,7 +64,6 @@ import gov.privacy.model.SARObject;
  */
 public class PDFDocumentGenerator implements DocumentGenerator
 {
-    private static final String PDF_STYLESHEETS_LOCATION = "pdf-stylesheets";
 
     private Logger log = LogManager.getLogger(getClass());
     private final DateTimeFormatter datePattern = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -72,6 +72,7 @@ public class PDFDocumentGenerator implements DocumentGenerator
     private EcmFileDao ecmFileDao;
     private PdfService pdfService;
     private FileConfigurationService fileConfigurationService;
+    private ConfigurationClientConfig configurationClientConfig;
     private FolderAndFilesUtils folderAndFilesUtils;
 
     @Override
@@ -82,9 +83,10 @@ public class PDFDocumentGenerator implements DocumentGenerator
 
         try
         {
-            InputStream xslStream = fileConfigurationService.getInputStreamFromConfiguration(PDF_STYLESHEETS_LOCATION + "/"
+            String pdfStylesheetsLocation = configurationClientConfig.getStylesheetsPath();
+            InputStream xslStream = fileConfigurationService.getInputStreamFromConfiguration(pdfStylesheetsLocation + "/"
                     + documentDescriptor.getTemplate());
-            URI baseURI = fileConfigurationService.getLocationUriFromConfiguration(PDF_STYLESHEETS_LOCATION);
+            URI baseURI = fileConfigurationService.getLocationUriFromConfiguration(pdfStylesheetsLocation);
             filename = getPdfService().generatePdf(xslStream, baseURI, substitutions);
 
             log.debug("Created {} document [{}]", documentDescriptor.getDoctype(), filename);
@@ -152,6 +154,16 @@ public class PDFDocumentGenerator implements DocumentGenerator
     public void setFileConfigurationService(FileConfigurationService fileConfigurationService)
     {
         this.fileConfigurationService = fileConfigurationService;
+    }
+
+    public ConfigurationClientConfig getConfigurationClientConfig()
+    {
+        return configurationClientConfig;
+    }
+
+    public void setConfigurationClientConfig(ConfigurationClientConfig configurationClientConfig)
+    {
+        this.configurationClientConfig = configurationClientConfig;
     }
 
     public DateTimeFormatter getDatePattern()

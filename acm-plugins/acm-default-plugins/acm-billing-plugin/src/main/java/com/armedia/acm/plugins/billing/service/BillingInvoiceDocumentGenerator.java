@@ -27,6 +27,7 @@ package com.armedia.acm.plugins.billing.service;
  * #L%
  */
 
+import com.armedia.acm.configuration.model.ConfigurationClientConfig;
 import com.armedia.acm.configuration.service.FileConfigurationService;
 import com.armedia.acm.core.AcmObjectNumber;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
@@ -78,8 +79,6 @@ import java.util.Optional;
 public class BillingInvoiceDocumentGenerator<T extends AcmContainerEntity & AcmObjectOriginator & AcmObjectNumber>
 {
 
-    private static final String PDF_STYLESHEETS_LOCATION = "pdf-stylesheets";
-
     private T parentObject;
 
     private BillingService billingService;
@@ -93,6 +92,8 @@ public class BillingInvoiceDocumentGenerator<T extends AcmContainerEntity & AcmO
     private PdfService pdfService;
 
     private FileConfigurationService fileConfigurationService;
+
+    private ConfigurationClientConfig configurationClientConfig;
 
     private Logger log = LogManager.getLogger(getClass());
 
@@ -109,8 +110,9 @@ public class BillingInvoiceDocumentGenerator<T extends AcmContainerEntity & AcmO
                 Document document = buildDocument(parentObject, billingInvoice);
                 Source source = new DOMSource(document);
 
-                InputStream xslStream = fileConfigurationService.getInputStreamFromConfiguration(PDF_STYLESHEETS_LOCATION + "/" + BillingConstants.INVOICE_DOCUMENT_STYLESHEET);
-                URI baseURI = fileConfigurationService.getLocationUriFromConfiguration(PDF_STYLESHEETS_LOCATION);
+                String pdfStylesheetsLocation = configurationClientConfig.getStylesheetsPath();
+                InputStream xslStream = fileConfigurationService.getInputStreamFromConfiguration(pdfStylesheetsLocation + "/" + BillingConstants.INVOICE_DOCUMENT_STYLESHEET);
+                URI baseURI = fileConfigurationService.getLocationUriFromConfiguration(pdfStylesheetsLocation);
                 filename = getPdfService().generatePdf(xslStream, baseURI, source);
                 log.debug("Created {} document [{}]", BillingConstants.INVOICE_DOCUMENT_TYPE, filename);
 
@@ -323,6 +325,23 @@ public class BillingInvoiceDocumentGenerator<T extends AcmContainerEntity & AcmO
     public void setFileConfigurationService(FileConfigurationService fileConfigurationService)
     {
         this.fileConfigurationService = fileConfigurationService;
+    }
+
+    /**
+     * @return the configurationClientConfig
+     */
+    public ConfigurationClientConfig getConfigurationClientConfig()
+    {
+        return configurationClientConfig;
+    }
+
+    /**
+     * @param configurationClientConfig
+     *            the configurationClientConfig to set
+     */
+    public void setConfigurationClientConfig(ConfigurationClientConfig configurationClientConfig)
+    {
+        this.configurationClientConfig = configurationClientConfig;
     }
 
 }
