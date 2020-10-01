@@ -1,0 +1,14 @@
+<div>
+    <div ng-if="casesByQueue.showChart">
+        </br>
+        <canvas class="chart chart-bar" chart-data="casesByQueue.data" chart-labels="casesByQueue.labels" chart-series="casesByQueue.series"
+                chart-responsive="true" chart-legend="false" chart-click="casesByQueue.chartClick"></canvas>
+    </div>
+
+    <div class="alert" ng-if="!casesByQueue.showChart">
+        <p class="text-center">
+            <span translate>dashboard.widgets.casesByQueue.noDataMessage</span>
+        </p>
+    </div>
+</div>
+
