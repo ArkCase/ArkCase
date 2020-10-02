@@ -157,8 +157,10 @@ angular.module('cases').controller(
                                 });
                                 $scope.refType = referenceType;
                                 response.response.docs = response.response.docs.map(function(item) {
-                                    if (item.target_object.object_type_s == "CASE_FILE") {
+                                    if (item.target_object.object_type_s === 'CASE_FILE' && item.target_object.request_type_lcs === 'New Request') {
                                         item.target_object.object_type_s = $scope.refType.description.toUpperCase();
+                                    } else if (item.target_object.object_type_s === 'CASE_FILE' && item.target_object.request_type_lcs === 'Appeal') {
+                                        item.target_object.object_type_s = item.target_object.request_type_lcs.toUpperCase();
                                     }
                                     return item;
                                 });
