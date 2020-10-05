@@ -29,9 +29,11 @@ package com.armedia.acm.portalgateway.web.api;
 
 import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
+import com.armedia.acm.portalgateway.model.PortalConfig;
 import com.armedia.acm.portalgateway.model.PortalInfo;
 import com.armedia.acm.portalgateway.service.PortalAdminService;
 import com.armedia.acm.portalgateway.service.PortalAdminServiceException;
+import com.armedia.acm.portalgateway.service.PortalConfigurationService;
 import com.armedia.acm.portalgateway.service.PortalServiceExceptionMapper;
 import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
 import com.armedia.acm.services.users.web.api.SecureLdapController;
@@ -65,6 +67,8 @@ public class ArkCasePortalAdminAPIController extends SecureLdapController
     private transient final Logger log = LogManager.getLogger(getClass());
 
     private PortalAdminService portalAdminService;
+
+    private PortalConfigurationService portalConfigurationService;
 
     @Value("${portal.serviceProvider.directory.name}")
     private String directoryName;
@@ -144,6 +148,22 @@ public class ArkCasePortalAdminAPIController extends SecureLdapController
         return new PortalInfoDTO(portalAdminService.unregisterPortal(portalId));
     }
 
+    @RequestMapping(value = "/portals/authenticatedMode", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public PortalConfig getPortalAuthenticatedMode(Authentication auth)
+    {
+        log.debug("User [{}] is retrieving an authenticated portal mode.", auth.getName());
+        return getPortalConfigurationService().getPortalConfiguration();
+    }
+
+    @RequestMapping(value = "/portals/authenticatedMode", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public void savePortalAuthenticatedMode(Authentication auth, @RequestBody PortalConfig properties)
+    {
+        log.debug("User [{}] is updating an authenticated portal mode.", auth.getName());
+        getPortalConfigurationService().writeConfiguration(properties);
+    }
+
     @ExceptionHandler(PortalAdminServiceException.class)
     @ResponseBody
     public ResponseEntity<?> handleConfigurationException(PortalAdminServiceException se)
@@ -173,6 +193,16 @@ public class ArkCasePortalAdminAPIController extends SecureLdapController
     public void setAcmContextHolder(SpringContextHolder acmContextHolder)
     {
         this.acmContextHolder = acmContextHolder;
+    }
+
+    public PortalConfigurationService getPortalConfigurationService()
+    {
+        return portalConfigurationService;
+    }
+
+    public void setPortalConfigurationService(PortalConfigurationService portalConfigurationService)
+    {
+        this.portalConfigurationService = portalConfigurationService;
     }
 
 }
