@@ -27,7 +27,6 @@ package com.armedia.acm.plugins.person.model;
  * #L%
  */
 
-
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.converter.BooleanToStringConverter;
@@ -701,7 +700,8 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
 
     public void setDefaultOrganization(PersonOrganizationAssociation personOrganizationAssociation)
     {
-
+        organizationAssociations
+                .forEach(association -> association.setDefaultOrganization(association.equals(personOrganizationAssociation)));
     }
 
     public String getDetails()
