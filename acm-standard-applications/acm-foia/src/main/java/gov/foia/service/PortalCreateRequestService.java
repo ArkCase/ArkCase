@@ -235,12 +235,14 @@ public class PortalCreateRequestService
                 && requester.getAddresses().stream().noneMatch(existingAddress -> areAddressesEqual(existingAddress, address)))
         {
             requester.getAddresses().add(address);
+            requester.setDefaultAddress(address);
         }
 
         if (in.getPhone() != null && !in.getPhone().isEmpty() && isNewContactMethod(requester, in.getPhone()))
         {
             ContactMethod phone = buildContactMethod("phone", in.getPhone());
             requester.getContactMethods().add(phone);
+            requester.setDefaultPhone(phone);
         }
 
         if (in.getOrganization() != null && in.getOrganization().length() > 0)
