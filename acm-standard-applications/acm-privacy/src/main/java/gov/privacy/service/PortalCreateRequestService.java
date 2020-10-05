@@ -289,6 +289,7 @@ public class PortalCreateRequestService
         if (addressHasData(address))
         {
             portalPerson.getAddresses().add(address);
+            portalPerson.setDefaultAddress(address);
         }
 
         List<ContactMethod> contactMethod = new ArrayList<>();
@@ -298,6 +299,7 @@ public class PortalCreateRequestService
         {
             ContactMethod phone = buildContactMethod("phone", portalPersonDTO.getPhone());
             portalPerson.getContactMethods().add(phone);
+            portalPerson.setDefaultPhone(phone);
         }
         if (portalPersonDTO.getEmail() != null && !portalPersonDTO.getEmail().isEmpty())
         {
