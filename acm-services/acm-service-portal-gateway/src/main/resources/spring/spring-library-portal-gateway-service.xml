@@ -35,4 +35,13 @@
         <property name="checkUserAssignementService" ref="checkPortalUserService"/>
     </bean>
 
+    <bean id="portalConfigurationService" class="com.armedia.acm.portalgateway.service.PortalConfigurationServiceImpl">
+        <property name="portalConfig" ref="portalConfig"/>
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
+    </bean>
+
+    <bean id="portalConfig" class="com.armedia.acm.portalgateway.model.PortalConfig" scope="refresh">
+        <aop:scoped-proxy/>
+    </bean>
+
 </beans>
