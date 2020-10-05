@@ -33,8 +33,10 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
+import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.OrganizationAssociation;
+import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.users.service.tracker.UserTrackerService;
 import com.armedia.acm.web.api.MDCConstants;
@@ -56,6 +58,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import gov.foia.dao.PortalFOIAPersonDao;
+import gov.foia.model.FOIAPerson;
 import gov.foia.model.FOIARequest;
 import gov.foia.model.FOIARequesterAssociation;
 import gov.foia.model.PortalFOIAPerson;
@@ -73,6 +76,8 @@ public class PortalCreateRequestService
     private SaveFOIARequestService saveFOIARequestService;
 
     private PortalFOIAPersonDao portalFOIAPersonDao;
+
+    private PersonDao personDao;
 
     private PortalRequestService portalRequestService;
 
@@ -159,12 +164,12 @@ public class PortalCreateRequestService
         FOIARequesterAssociation requesterAssociation = new FOIARequesterAssociation();
         requesterAssociation.setPersonType("Requester");
 
-        PortalFOIAPerson requester;
+        FOIAPerson requester;
 
-        Optional<PortalFOIAPerson> person = getPortalFOIAPersonDao().findByEmail(in.getEmail());
+        Optional<Person> existingPerson = getPersonDao().findByEmail(in.getEmail());
 
-        requester = person
-                .map(portalFOIAPerson -> updatePersonInfo(in, portalFOIAPerson))
+        requester = existingPerson
+                .map(portalFOIAPerson -> updatePersonInfo(in, (FOIAPerson) portalFOIAPerson))
                 .orElseGet(() -> populateRequesterAndOrganizationFromRequest(in));
 
         requesterAssociation.setPerson(requester);
@@ -220,9 +225,9 @@ public class PortalCreateRequestService
         return requester;
     }
 
-    private PortalFOIAPerson updatePersonInfo(PortalFOIARequest in, PortalFOIAPerson existingPerson)
+    private FOIAPerson updatePersonInfo(PortalFOIARequest in, FOIAPerson existingPerson)
     {
-        PortalFOIAPerson requester = existingPerson;
+        FOIAPerson requester = existingPerson;
 
         requester.setGivenName(in.getFirstName());
         requester.setFamilyName(in.getLastName());
@@ -235,12 +240,14 @@ public class PortalCreateRequestService
                 && requester.getAddresses().stream().noneMatch(existingAddress -> areAddressesEqual(existingAddress, address)))
         {
             requester.getAddresses().add(address);
+            requester.setDefaultAddress(address);
         }
 
         if (in.getPhone() != null && !in.getPhone().isEmpty() && isNewContactMethod(requester, in.getPhone()))
         {
             ContactMethod phone = buildContactMethod("phone", in.getPhone());
             requester.getContactMethods().add(phone);
+            requester.setDefaultPhone(phone);
         }
 
         if (in.getOrganization() != null && in.getOrganization().length() > 0)
@@ -268,7 +275,7 @@ public class PortalCreateRequestService
                 && Objects.equals(address1.getState(), address2.getState());
     }
 
-    private boolean isNewContactMethod(PortalFOIAPerson requester, String contactMethodValue)
+    private boolean isNewContactMethod(Person requester, String contactMethodValue)
     {
         return requester.getContactMethods().stream().noneMatch(cm -> cm.getValue().equals(contactMethodValue));
     }
@@ -360,4 +367,15 @@ public class PortalCreateRequestService
     {
         this.portalUserServiceProvider = portalUserServiceProvider;
     }
+
+    public PersonDao getPersonDao()
+    {
+        return personDao;
+    }
+
+    public void setPersonDao(PersonDao personDao)
+    {
+        this.personDao = personDao;
+    }
+
 }
