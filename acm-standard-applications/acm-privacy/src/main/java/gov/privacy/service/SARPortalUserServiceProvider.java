@@ -870,6 +870,7 @@ public class SARPortalUserServiceProvider implements PortalUserServiceProvider
             personOrganizationAssociation.setDefaultOrganization(true);
             person.getOrganizations().add(organization);
             person.getOrganizationAssociations().add(personOrganizationAssociation);
+            person.setDefaultOrganization(personOrganizationAssociation);
         }
         else
         {
@@ -879,6 +880,7 @@ public class SARPortalUserServiceProvider implements PortalUserServiceProvider
                 if (poa.getOrganization().getOrganizationValue().equalsIgnoreCase(organization.getOrganizationValue()))
                 {
                     poa.setDefaultOrganization(true);
+                    person.setDefaultOrganization(poa);
                     break;
                 }
             }
