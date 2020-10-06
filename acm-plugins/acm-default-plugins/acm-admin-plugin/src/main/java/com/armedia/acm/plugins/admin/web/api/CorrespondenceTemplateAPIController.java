@@ -27,7 +27,7 @@ package com.armedia.acm.plugins.admin.web.api;
  * #L%
  */
 
-import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
+import com.armedia.acm.correspondence.model.Template;
 import com.armedia.acm.correspondence.service.CorrespondenceService;
 import com.armedia.acm.plugins.admin.exception.CorrespondenceTemplateNotFoundException;
 import com.armedia.acm.plugins.admin.model.CorrespondenceTemplateRequestResponse;
@@ -63,6 +63,7 @@ public class CorrespondenceTemplateAPIController
 
     private CorrespondenceService correspondenceService;
     private String correspondenceFolderName;
+    private String emailTemplatesFolderName;
 
     @RequestMapping(value = "/templates", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -72,11 +73,11 @@ public class CorrespondenceTemplateAPIController
                 .collect(Collectors.toList());
     }
 
-    @RequestMapping(value = "/templates/active", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/templates/active/{templateType}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<CorrespondenceTemplateRequestResponse> getActiveVersionTemplates()
+    public List<CorrespondenceTemplateRequestResponse> getActiveVersionTemplates(@PathVariable(value = "templateType") String templateType)
     {
-        return correspondenceService.getActiveVersionTemplates().stream().map(t -> mapTemplateToResponse(Optional.of(t)))
+        return correspondenceService.getActiveVersionTemplatesByTemplateType(templateType).stream().map(template -> mapTemplateToResponse(Optional.of(template)))
                 .collect(Collectors.toList());
     }
 
@@ -118,11 +119,11 @@ public class CorrespondenceTemplateAPIController
             throws IOException
     {
         List<CorrespondenceTemplateRequestResponse> deleteResponse = new ArrayList<>();
-        List<CorrespondenceTemplate> templates = correspondenceService.getTemplateVersionsById(templateId);
+        List<Template> templates = correspondenceService.getTemplateVersionsById(templateId);
         String msg = "";
-        for (CorrespondenceTemplate template : templates)
+        for (Template template : templates)
         {
-            File templateFile = new File(getCorrespondenceFolderName(), template.getTemplateFilename());
+            File templateFile = new File(template.getTemplateType().equals("emailTemplate") ? getEmailTemplatesFolderName() : getCorrespondenceFolderName(), template.getTemplateFilename());
             if (FileUtils.deleteQuietly(templateFile))
             {
                 deleteResponse.add(mapTemplateToResponse(
@@ -150,7 +151,7 @@ public class CorrespondenceTemplateAPIController
             @PathVariable(value = "templateVersion") String templateVersion) throws IOException, CorrespondenceTemplateNotFoundException
     {
         File templatesDir = new File(System.getProperty("user.home") + "/.arkcase/acm/correspondenceTemplates");
-        Optional<CorrespondenceTemplate> optionalChildDirectory = correspondenceService.getTemplateByIdAndVersion(templateId,
+        Optional<Template> optionalChildDirectory = correspondenceService.getTemplateByIdAndVersion(templateId,
                 templateVersion);
         String childDirectoryName = optionalChildDirectory.map(correspondenceTemplate -> correspondenceTemplate.getTemplateFilename())
                 .orElseThrow(CorrespondenceTemplateNotFoundException::new);
@@ -185,9 +186,9 @@ public class CorrespondenceTemplateAPIController
      * @param templateHolder
      * @return
      */
-    private CorrespondenceTemplateRequestResponse mapTemplateToResponse(Optional<CorrespondenceTemplate> templateHolder)
+    private CorrespondenceTemplateRequestResponse mapTemplateToResponse(Optional<Template> templateHolder)
     {
-        CorrespondenceTemplate template = templateHolder.orElseThrow(CorrespondenceTemplateNotFoundException::new);
+        Template template = templateHolder.orElseThrow(CorrespondenceTemplateNotFoundException::new);
 
         CorrespondenceTemplateRequestResponse response = new CorrespondenceTemplateRequestResponse();
 
@@ -204,6 +205,7 @@ public class CorrespondenceTemplateAPIController
         response.setModifier(template.getModifier());
         response.setModified(template.getModified());
         response.setTemplateModelProvider(template.getTemplateModelProvider());
+        response.setTemplateType(template.getTemplateType());
 
         return response;
     }
@@ -212,9 +214,9 @@ public class CorrespondenceTemplateAPIController
      * @param request
      * @return
      */
-    private CorrespondenceTemplate mapRequestToTemplate(CorrespondenceTemplateRequestResponse request, Authentication auth)
+    private Template mapRequestToTemplate(CorrespondenceTemplateRequestResponse request, Authentication auth)
     {
-        CorrespondenceTemplate template = new CorrespondenceTemplate();
+        Template template = new Template();
 
         template.setTemplateId(request.getTemplateId());
         template.setTemplateVersion(request.getTemplateVersion());
@@ -229,6 +231,7 @@ public class CorrespondenceTemplateAPIController
         template.setModifier(auth.getName());
         template.setModified(new Date());
         template.setTemplateModelProvider(request.getTemplateModelProvider());
+        template.setTemplateType(request.getTemplateType());
 
         return template;
     }
@@ -252,4 +255,13 @@ public class CorrespondenceTemplateAPIController
         this.correspondenceFolderName = correspondenceFolderName;
     }
 
+    public String getEmailTemplatesFolderName() 
+    {
+        return emailTemplatesFolderName;
+    }
+
+    public void setEmailTemplatesFolderName(String emailTemplatesFolderName) 
+    {
+        this.emailTemplatesFolderName = emailTemplatesFolderName;
+    }
 }

@@ -35,6 +35,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -108,17 +109,17 @@ public class AddCorrespondenceTemplatesAPI
         return templateUploadList;
     }
 
-    @RequestMapping(value = "/template/timestamp", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE,
+    @RequestMapping(value = "/template/timestamp/{templateType}", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE,
             MediaType.TEXT_PLAIN_VALUE })
     @ResponseBody
     public List<Object> templateTimestamp(
             // @RequestParam("files[]") MultipartFile file,
-            HttpServletRequest request, Authentication authentication) throws Exception
+            @PathVariable(value = "templateType") String templateType, HttpServletRequest request, Authentication authentication) throws Exception
     {
 
         List<Object> templateUploadList = new ArrayList<>();
         String userHome = System.getProperty("user.home");
-        String pathName = userHome + "/.arkcase/acm/correspondenceTemplates";
+        String pathName = templateType.equals("emailTemplate") ? userHome + "/.arkcase/acm/templates" : userHome + "/.arkcase/acm/correspondenceTemplates";
         try
         {
             // save files to disk
@@ -137,7 +138,7 @@ public class AddCorrespondenceTemplatesAPI
                         for (final MultipartFile attachment : attachmentsList)
                         {
                             log.info("Adding new template : {}", attachment.getOriginalFilename());
-                            String fileName = createTimestampFileName(attachment.getOriginalFilename());
+                            String fileName = templateType.equals("emailTemplate") ? attachment.getOriginalFilename() : createTimestampFileName(attachment.getOriginalFilename());
                             saveMultipartToDisk(attachment, pathName, fileName);
                             retrieveTemplateDetails(authentication, pathName, fileName, templateUploadList);
                         }

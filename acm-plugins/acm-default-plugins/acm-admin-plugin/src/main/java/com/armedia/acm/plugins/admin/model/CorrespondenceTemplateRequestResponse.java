@@ -68,6 +68,8 @@ public class CorrespondenceTemplateRequestResponse
     private String downloadFileName;
 
     private String templateModelProvider;
+    
+    private String templateType;
     /**
      * @return the templateId
      */
@@ -304,5 +306,20 @@ public class CorrespondenceTemplateRequestResponse
     public void setTemplateModelProvider(String templateModelProvider)
     {
         this.templateModelProvider = templateModelProvider;
+    }
+    /**
+     * @return the templateType
+     */
+    public String getTemplateType() 
+    {
+        return templateType;
+    }
+    /**
+     * @param templateType
+     *            the templateType to set
+     */
+    public void setTemplateType(String templateType) 
+    {
+        this.templateType = templateType;
     }
 }
