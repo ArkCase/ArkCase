@@ -148,19 +148,19 @@ public class ArkCasePortalAdminAPIController extends SecureLdapController
         return new PortalInfoDTO(portalAdminService.unregisterPortal(portalId));
     }
 
-    @RequestMapping(value = "/portals/authenticatedMode", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/portals/config", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public PortalConfig getPortalAuthenticatedMode(Authentication auth)
     {
-        log.debug("User [{}] is retrieving an authenticated portal mode.", auth.getName());
+        log.debug("User [{}] is retrieving a portal configuration.", auth.getName());
         return getPortalConfigurationService().getPortalConfiguration();
     }
 
-    @RequestMapping(value = "/portals/authenticatedMode", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/portals/config", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public void savePortalAuthenticatedMode(Authentication auth, @RequestBody PortalConfig properties)
     {
-        log.debug("User [{}] is updating an authenticated portal mode.", auth.getName());
+        log.debug("User [{}] is updating a portal configuration.", auth.getName());
         getPortalConfigurationService().writeConfiguration(properties);
     }
 

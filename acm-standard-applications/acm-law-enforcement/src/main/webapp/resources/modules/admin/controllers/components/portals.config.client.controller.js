@@ -66,7 +66,7 @@ angular.module('admin').controller(
                     };
                     getAuthenticatedMode();
 
-                    $scope.saveAuthenticatedMode = function () {
+                    $scope.savePortalConfig = function () {
                         AdminPortalConfigurationService.saveAuthenticatedMode($scope.portalConfigDataModel).then(function () {
                             MessageService.succsessAction();
                         }, function () {
