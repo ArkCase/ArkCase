@@ -2,7 +2,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
 
-    <bean id="clearanceDenied" class="com.armedia.acm.correspondence.model.CorrespondenceTemplate">
+    <bean id="clearanceDenied" class="com.armedia.acm.correspondence.model.Template">
         <property name="templateFilename" value="ClearanceDenied.docx"/>
         <property name="documentType" value="Clearance Denied"/>
         <property name="dateFormatString" value="MM/dd/yyyy"/>
@@ -29,7 +29,7 @@ WHERE cf.id = ?1
         </property>
     </bean>
 
-    <bean id="clearanceGranted" class="com.armedia.acm.correspondence.model.CorrespondenceTemplate">
+    <bean id="clearanceGranted" class="com.armedia.acm.correspondence.model.Template">
         <property name="templateFilename" value="ClearanceGranted.docx"/>
         <property name="documentType" value="Clearance Granted"/>
         <property name="dateFormatString" value="MM/dd/yyyy"/>
@@ -56,7 +56,7 @@ WHERE cf.id = ?1
         </property>
     </bean>
 
-    <bean id="generalRelease" class="com.armedia.acm.correspondence.model.CorrespondenceTemplate">
+    <bean id="generalRelease" class="com.armedia.acm.correspondence.model.Template">
         <property name="templateFilename" value="GeneralRelease.docx"/>
         <property name="documentType" value="General Release"/>
         <property name="dateFormatString" value="MM/dd/yyyy"/>
@@ -83,7 +83,7 @@ WHERE cf.id = ?1
         </property>
     </bean>
 
-    <bean id="medicalRelease" class="com.armedia.acm.correspondence.model.CorrespondenceTemplate">
+    <bean id="medicalRelease" class="com.armedia.acm.correspondence.model.Template">
         <property name="templateFilename" value="MedicalRelease.docx"/>
         <property name="documentType" value="Medical Release"/>
         <property name="dateFormatString" value="MM/dd/yyyy"/>

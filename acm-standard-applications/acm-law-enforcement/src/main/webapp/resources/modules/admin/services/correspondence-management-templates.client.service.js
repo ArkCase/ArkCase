@@ -61,10 +61,10 @@ angular.module('admin').service('Admin.CMTemplatesService', [ '$http', 'Upload',
      *
      * @returns {HttpPromise} Future info about widgets
      */
-    function retrieveActiveVersionTemplatesList() {
+    function retrieveActiveVersionTemplatesList(templateType) {
         return $http({
             method: "GET",
-            url: "api/latest/plugin/admin/templates/active",
+            url: "api/latest/plugin/admin/templates/active/" + templateType,
             cache: false
         });
     }
@@ -279,9 +279,9 @@ angular.module('admin').service('Admin.CMTemplatesService', [ '$http', 'Upload',
      *
      * @returns {HttpPromise} Future info about file upload
      */
-    function uploadTemplateWithTimestamp(files) {
+    function uploadTemplateWithTimestamp(files, templateType) {
         return Upload.upload({
-            url: 'api/latest/plugin/admin/template/timestamp',
+            url: 'api/latest/plugin/admin/template/timestamp/' + templateType,
             file: files
         });
     };

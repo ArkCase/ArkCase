@@ -2,7 +2,7 @@ package com.armedia.acm.correspondence.service;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
+import com.armedia.acm.correspondence.model.Template;
 import com.armedia.acm.correspondence.utils.SpELWordEvaluator;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
@@ -104,8 +104,8 @@ public class CorrespondenceGenerator
      *             If the correspondence could not be uploaded to the ECM repository.
      */
     public EcmFile generateCorrespondence(Authentication user, String parentObjectType, Long parentObjectId, String targetFolderCmisId,
-            CorrespondenceTemplate template, Object[] queryArguments, OutputStream correspondenceOutputStream,
-            InputStream correspondenceInputStream)
+                                          Template template, Object[] queryArguments, OutputStream correspondenceOutputStream,
+                                          InputStream correspondenceInputStream)
             throws IOException, AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         Resource templateFile = new FileSystemResource(getCorrespondenceFolderName() + File.separator + template.getTemplateFilename());
@@ -137,8 +137,8 @@ public class CorrespondenceGenerator
         return retval;
     }
 
-    public OutputStream generateCorrespondenceOutputStream(CorrespondenceTemplate template, Object[] queryArguments,
-            OutputStream correspondenceOutputStream, Long parentObjectId) throws IOException
+    public OutputStream generateCorrespondenceOutputStream(Template template, Object[] queryArguments,
+                                                           OutputStream correspondenceOutputStream, Long parentObjectId) throws IOException
     {
         Resource templateFile = new FileSystemResource(getCorrespondenceFolderName() + File.separator + template.getTemplateFilename());
 
@@ -148,7 +148,7 @@ public class CorrespondenceGenerator
         return correspondenceOutputStream;
     }
 
-    private String generateUniqueFilename(CorrespondenceTemplate template)
+    private String generateUniqueFilename(Template template)
     {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMdd-HHmmss-SSS");
         return template.getDocumentType() + " " + sdf.format(new Date()) + ".docx";

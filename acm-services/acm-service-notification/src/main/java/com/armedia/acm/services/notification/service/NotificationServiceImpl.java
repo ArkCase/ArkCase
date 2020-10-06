@@ -30,6 +30,7 @@ package com.armedia.acm.services.notification.service;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.ApplicationNotificationEvent;
+import com.armedia.acm.services.notification.model.BasicNotificationRule;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConfig;
 import com.armedia.acm.services.notification.model.NotificationConstants;

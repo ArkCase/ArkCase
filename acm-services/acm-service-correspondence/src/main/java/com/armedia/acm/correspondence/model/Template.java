@@ -37,7 +37,7 @@ import java.util.Date;
  */
 
 @JsonIdentityInfo(generator = JSOGGenerator.class)
-public class CorrespondenceTemplate
+public class Template
 {
 
     /**
@@ -79,6 +79,12 @@ public class CorrespondenceTemplate
      * The class type for generated object that will be used as a model into the template
      */
     private String templateModelProvider;
+    /**
+     * The type of the template, Correspondence Template or Email Template
+     */
+    private String templateType;
+
+    private boolean enabled;
 
     /**
      * The date format that should be applied to any date. All date columns will be displayed in the generated
@@ -317,5 +323,37 @@ public class CorrespondenceTemplate
     public void setTemplateModelProvider(String templateModelProvider)
     {
         this.templateModelProvider = templateModelProvider;
+    }
+    /**
+     * @return the templateType
+     */
+    public String getTemplateType() 
+    {
+        return templateType;
+    }
+    /**
+     * @param templateType
+     *            the templateType to set
+     */
+    public void setTemplateType(String templateType) 
+    {
+        this.templateType = templateType;
+    }
+
+    /**
+     * @return the enabled
+     */
+    public boolean isEnabled() 
+    {
+        return enabled;
+    }
+
+    /**
+     * @param enabled
+     *          the enabled to set
+     */
+    public void setEnabled(boolean enabled) 
+    {
+        this.enabled = enabled;
     }
 }

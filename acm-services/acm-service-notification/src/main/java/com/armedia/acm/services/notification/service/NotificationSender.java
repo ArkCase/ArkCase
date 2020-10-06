@@ -23,6 +23,7 @@ import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.core.io.Resource;
@@ -30,6 +31,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.io.DataInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -85,6 +87,7 @@ public abstract class NotificationSender
     private TemplatingEngine templatingEngine;
     private AcmMailTemplateConfigurationService templateService;
     private NotificationConfig notificationConfig;
+    private Resource templatesConfiguration;
 
     /**
      * Sends the notification to user's email. If successful, sets the notification state to
@@ -144,7 +147,7 @@ public abstract class NotificationSender
                 in.setAttachmentIds(notificationFileIds);
             }
 
-            in.setSubject(notification.getTitle());
+            in.setSubject(notification.getSubject() != null ? notification.getSubject() : notification.getTitle());
             in.setEmailAddresses(Arrays.asList(notification.getEmailAddresses().split(",")));
             in.setEmailGroup(notification.getEmailGroup());
             if (notification.getRelatedObjectId() != null && notification.getRelatedObjectType() != null)
@@ -203,6 +206,33 @@ public abstract class NotificationSender
                 : notification.getNote();
 
         in.setBody(new MessageBodyFactory(notificationTemplate).buildMessageBodyFromTemplate(messageBody, "", ""));
+    }
+    
+    private Boolean isEnabledSendingEmails(Notification notification)
+    {
+//        try
+//        {
+//            File file = templatesConfiguration.getFile();
+//
+//            String resource = FileUtils.readFileToString(file);
+//            if (resource.isEmpty())
+//            {
+//                resource = "[]";
+//            }
+//
+//            List<Template> templateConfigurations = getObjectConverter().getJsonUnmarshaller()
+//                    .unmarshallCollection(resource, List.class, Template.class);
+//
+//            templateConfigurations.stream().forEach(configuration -> {
+//                Template template = mapTemplateFromConfiguration(configuration);
+//
+//            });
+//        }
+//        catch (IOException ioe)
+//        {
+//            throw new IllegalStateException(ioe);
+//        }
+        return true;
     }
 
     public abstract <T> void sendPlainEmail(Stream<T> emailsDataStream, EmailBuilder<T> emailBuilder, EmailBodyBuilder<T> emailBodyBuilder)
@@ -337,5 +367,10 @@ public abstract class NotificationSender
     public void setTemplateService(AcmMailTemplateConfigurationService templateService)
     {
         this.templateService = templateService;
+    }
+
+    public void setTemplatesConfiguration(Resource templatesConfiguration) 
+    {
+        this.templatesConfiguration = templatesConfiguration;
     }
 }

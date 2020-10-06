@@ -25,18 +25,14 @@ angular.module('consultations').controller(
         'Admin.CMTemplatesService',
         'DocTreeExt.Email',
         'ModalDialogService',
-        'Admin.EmailSenderConfigurationService',
         'MultiCorrespondence.Service',
         function($scope, $stateParams, $modal, $q, $timeout, $translate, Util, LocaleService, ConfigService, ObjectService, ObjectLookupService, ConsultationInfoService, DocTreeService, HelperObjectBrowserService, Authentication, PermissionsService, ObjectModelService, DocTreeExtWebDAV,
-                 DocTreeExtCheckin, CorrespondenceService, DocTreeExtEmail, ModalDialogService, EmailSenderConfigurationService, MultiCorrespondenceService) {
+                 DocTreeExtCheckin, CorrespondenceService, DocTreeExtEmail, ModalDialogService, MultiCorrespondenceService) {
             Authentication.queryUserInfo().then(function(userInfo) {
                 $scope.user = userInfo.userId;
                 return userInfo;
             });
 
-            EmailSenderConfigurationService.isEmailSenderAllowDocuments().then(function(emailData) {
-                $scope.sendEmailEnabled = emailData.data;
-            });
 
             var componentHelper = new HelperObjectBrowserService.Component({
                 scope: $scope,
@@ -145,11 +141,6 @@ angular.module('consultations').controller(
                 $scope.treeControl.refreshTree();
             };
 
-            $scope.sendEmail = function() {
-                var nodes = $scope.treeControl.getSelectedNodes();
-                var DocTree = $scope.treeControl.getDocTreeObject();
-                DocTreeExtEmail.openModal(DocTree, nodes);
-            };
 
             $scope.createNewTask = function() {
                 var modalMetadata = {

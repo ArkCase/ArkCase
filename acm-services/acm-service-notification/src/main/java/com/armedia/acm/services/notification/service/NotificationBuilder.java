@@ -192,6 +192,12 @@ public class NotificationBuilder
             this.notification.setRelatedObjectNumber(relatedObjectNumber);
             return this;
         }
+
+        public Builder withSubject(String subject)
+        {
+            this.notification.setSubject(subject);
+            return this;
+        }
     }
 
     public void setNotificationUtils(NotificationUtils notificationUtils)

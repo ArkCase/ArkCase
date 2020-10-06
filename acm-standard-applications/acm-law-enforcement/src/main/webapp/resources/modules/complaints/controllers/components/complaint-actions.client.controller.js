@@ -3,8 +3,8 @@
 angular.module('complaints').controller(
         'Complaints.ActionsController',
         [ '$scope', '$state', '$stateParams', '$q', '$modal', 'UtilService', 'ConfigService', 'ObjectService', 'Authentication', 'Object.LookupService', 'Complaint.LookupService', 'Object.SubscriptionService', 'Complaint.InfoService', 'Helper.ObjectBrowserService', 'Object.ModelService',
-                'Profile.UserInfoService', 'FormsType.Service',
-                function($scope, $state, $stateParams, $q, $modal, Util, ConfigService, ObjectService, Authentication, ObjectLookupService, ComplaintLookupService, ObjectSubscriptionService, ComplaintInfoService, HelperObjectBrowserService, ObjectModelService, UserInfoService, FormsTypeService) {
+                'Profile.UserInfoService', 'FormsType.Service', 'Ecm.EmailService',
+                function($scope, $state, $stateParams, $q, $modal, Util, ConfigService, ObjectService, Authentication, ObjectLookupService, ComplaintLookupService, ObjectSubscriptionService, ComplaintInfoService, HelperObjectBrowserService, ObjectModelService, UserInfoService, FormsTypeService, EcmEmailService) {
 
                     new HelperObjectBrowserService.Component({
                         scope: $scope,
@@ -158,6 +158,46 @@ angular.module('complaints').controller(
 
                         modalInstance.result.then(function(data) {
                             //Do nothing
+                        });
+                    };
+
+                    $scope.sendEmail = function () {
+                        var params = {
+                            objectId: $scope.objectInfo.complaintId,
+                            objectType: ObjectService.ObjectTypes.COMPLAINT,
+                            objectNumber: $scope.objectInfo.complaintNumber,
+                            emailSubject: 'Complaint ' + $scope.objectInfo.complaintNumber
+                        };
+                        var modalInstance = $modal.open({
+                            templateUrl: 'modules/common/views/send-email-modal.client.view.html',
+                            controller: 'Common.SendEmailModalController',
+                            animation: true,
+                            size: 'lg',
+                            backdrop: 'static',
+                            resolve: {
+                                params: function() {
+                                    return params;
+                                }
+                            }
+                        });
+
+                        modalInstance.result.then(function(res) {
+                            var emailData = {};
+                            emailData.subject = res.subject;
+                            emailData.body = res.body;
+                            emailData.footer = '\n\n' + res.footer;
+                            emailData.emailAddresses = res.recipients;
+                            emailData.objectId = $scope.objectInfo.complaintId;
+                            emailData.objectType = ObjectService.ObjectTypes.COMPLAINT;
+                            emailData.objectNumber = $scope.objectInfo.complaintNumber;
+                            emailData.modelReferenceName = res.template;
+
+                            if(emailData.modelReferenceName != 'plainEmail') {
+                                EcmEmailService.sendManualEmail(emailData);
+                            } else {
+                                EcmEmailService.sendPlainEmail(emailData, ObjectService.ObjectTypes.COMPLAINT);
+                            }
+
                         });
                     };
 

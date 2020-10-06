@@ -31,7 +31,7 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.core.provider.TemplateModelProvider;
 import com.armedia.acm.correspondence.model.CorrespondenceMergeField;
-import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
+import com.armedia.acm.correspondence.model.Template;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
@@ -116,7 +116,7 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
             String targetCmisFolderId)
             throws IOException, IllegalArgumentException, AcmCreateObjectFailedException, AcmUserActionFailedException
     {
-        CorrespondenceTemplate template = findTemplate(templateName);
+        Template template = findTemplate(templateName);
 
         File file = File.createTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX);
 
@@ -143,8 +143,8 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
     }
 
     @Override
-    public EcmFile generateMultiTemplate(Authentication authentication, List<CorrespondenceTemplate> templates, String parentObjectType,
-            Long parentObjectId, String targetCmisFolderId, String documentName) throws Exception
+    public EcmFile generateMultiTemplate(Authentication authentication, List<Template> templates, String parentObjectType,
+                                         Long parentObjectId, String targetCmisFolderId, String documentName) throws Exception
     {
 
         EcmFile retval = null;
@@ -164,7 +164,7 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
             // GENERATE TEMP TEMPLATE DOCUMENTS AND ADD THEM TO A LIST
             for (String templateName : templateNames)
             {
-                CorrespondenceTemplate template = findTemplate(templateName);
+                Template template = findTemplate(templateName);
                 File currentCorrespondenceTemplateFile = File.createTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX);
 
                 try (FileOutputStream currentCorrespondenceTemplateFileOutputStream = new FileOutputStream(
@@ -214,10 +214,10 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
     }
 
     @Override
-    public CorrespondenceTemplate findTemplate(String templateName)
+    public Template findTemplate(String templateName)
     {
-        Collection<CorrespondenceTemplate> templates = templateManager.getActiveVersionTemplates();
-        for (CorrespondenceTemplate template : templates)
+        Collection<Template> templates = templateManager.getActiveVersionTemplates();
+        for (Template template : templates)
         {
             if (templateName.equalsIgnoreCase(template.getTemplateFilename()))
             {
@@ -246,7 +246,7 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
      * @return
      */
     @Override
-    public List<CorrespondenceTemplate> getAllTemplates()
+    public List<Template> getAllTemplates()
     {
         return templateManager.getAllTemplates();
     }
@@ -255,7 +255,7 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
      * @return
      */
     @Override
-    public List<CorrespondenceTemplate> getActiveVersionTemplates()
+    public List<Template> getActiveVersionTemplates()
     {
         return templateManager.getActiveVersionTemplates();
     }
@@ -265,9 +265,15 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
      * @return
      */
     @Override
-    public List<CorrespondenceTemplate> getActivatedActiveVersionTemplatesByObjectType(String objectType)
+    public List<Template> getActivatedActiveVersionTemplatesByObjectType(String objectType)
     {
         return templateManager.getActivatedActiveVersionTemplatesByObjectType(objectType);
+    }
+    
+    @Override
+    public List<Template> getActiveVersionTemplatesByTemplateType(String templateType)
+    {
+        return templateManager.getActiveVersionTemplatesByTemplateType(templateType);
     }
 
     /**
@@ -275,7 +281,7 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
      * @return
      */
     @Override
-    public List<CorrespondenceTemplate> getTemplateVersionsById(String templateId)
+    public List<Template> getTemplateVersionsById(String templateId)
     {
         return templateManager.getTemplateVersionsById(templateId);
     }
@@ -285,7 +291,7 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
      * @return
      */
     @Override
-    public Optional<CorrespondenceTemplate> getActiveTemplateById(String templateId)
+    public Optional<Template> getActiveTemplateById(String templateId)
     {
         return templateManager.getActiveTemplateById(templateId);
     }
@@ -296,7 +302,7 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
      * @return
      */
     @Override
-    public Optional<CorrespondenceTemplate> getTemplateByIdAndVersion(String templateId, String templateVersion)
+    public Optional<Template> getTemplateByIdAndVersion(String templateId, String templateVersion)
     {
         return templateManager.getTemplateByIdAndVersion(templateId, templateVersion);
     }
@@ -307,7 +313,7 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
      * @return
      */
     @Override
-    public Optional<CorrespondenceTemplate> getTemplateByIdAndFilename(String templateId, String templateFilename)
+    public Optional<Template> getTemplateByIdAndFilename(String templateId, String templateFilename)
     {
         return templateManager.getTemplateByIdAndFilename(templateId, templateFilename);
     }
@@ -319,7 +325,7 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
      * @throws IOException
      */
     @Override
-    public Optional<CorrespondenceTemplate> deleteTemplateByIdAndVersion(String templateId, String templateVersion) throws IOException
+    public Optional<Template> deleteTemplateByIdAndVersion(String templateId, String templateVersion) throws IOException
     {
         return templateManager.deleteTemplateByIdAndVersion(templateId, templateVersion);
     }
@@ -387,7 +393,7 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
      * @throws IOException
      */
     @Override
-    public Optional<CorrespondenceTemplate> updateTemplate(CorrespondenceTemplate template) throws IOException
+    public Optional<Template> updateTemplate(Template template) throws IOException
     {
         return templateManager.updateTemplate(template);
     }
