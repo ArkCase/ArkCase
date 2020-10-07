@@ -11,7 +11,26 @@
         </div>
         <div class="panel-body">
             <div ui-grid="gridOptions" ui-grid-resize-columns ui-grid-auto-resize ui-grid-pagination
-                    adjust-table-height="gridOptions.data.length" class="grid"></div>
+                 adjust-table-height="gridOptions.data.length" class="grid"></div>
         </div>
     </div>
+    <panel-view header="{{'admin.portals.portalSettings.title' | translate}}" collapsible="false">
+        <div class="row form-group">
+            <div class="col-lg-12">
+                <form>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" ng-model="portalConfigDataModel['portal.authenticatedMode']">
+                            <span translate>admin.portals.portalSettings.authenticatedMode</span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <button ng-click="savePortalConfig()" class="btn btn-sm btn-primary" translate>
+                            admin.portals.portalSettings.applyBtn
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </panel-view>
 </div>
