@@ -3508,6 +3508,7 @@ angular
                                                     folderList.children.splice(deleted, 1);
                                                     folderList.totalChildren--;
                                                     DocTree.cacheFolderList.put(cacheKey, folderList);
+                                                    DocTree.refreshTree();
                                                     return data.deletedFileId;
                                                 }
                                             }
