@@ -3250,7 +3250,7 @@ angular.module('directives').directive(
                                         fileId: fileId
                                     },
                                     data: {},
-                                    onSuccess: function(data) {
+                                    onSuccess: function (data) {
                                         if (Validator.validateDeletedFile(data)) {
                                             if (data.deletedFileId == fileId) {
                                                 var folderList = DocTree.cacheFolderList.get(cacheKey);
@@ -3260,6 +3260,7 @@ angular.module('directives').directive(
                                                         folderList.children.splice(deleted, 1);
                                                         folderList.totalChildren--;
                                                         DocTree.cacheFolderList.put(cacheKey, folderList);
+                                                        DocTree.refreshTree();
                                                         return data.deletedFileId;
                                                     }
                                                 }
