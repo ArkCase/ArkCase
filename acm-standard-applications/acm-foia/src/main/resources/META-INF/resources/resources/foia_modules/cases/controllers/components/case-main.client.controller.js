@@ -2,8 +2,8 @@
 
 angular.module('cases').controller(
     'Cases.MainController',
-    ['$scope', '$state', '$stateParams', '$translate', '$rootScope', '$modal', 'Case.InfoService', 'Helper.ObjectBrowserService', 'ConfigService', 'UtilService', 'Util.DateService', 'MessageService', 'Object.LookupService', 'LookupService', 'DueDate.Service', 'Admin.HolidayService', 'Admin.FoiaConfigService', 'Admin.ObjectTitleConfigurationService', 'EcmService',
-        function ($scope, $state, $stateParams, $translate, $rootScope, $modal, CaseInfoService, HelperObjectBrowserService, ConfigService, Util, UtilDateService, MessageService, ObjectLookupService, LookupService, DueDateService, AdminHolidayService, AdminFoiaConfigService, AdminObjectTitleConfigurationService, EcmService) {
+    ['$scope', '$state', '$stateParams', '$translate', '$rootScope', '$modal', 'Case.InfoService', 'Helper.ObjectBrowserService', 'ConfigService', 'UtilService', 'Util.DateService', 'MessageService', 'Object.LookupService', 'LookupService', 'DueDate.Service', 'Admin.HolidayService', 'Admin.FoiaConfigService', 'Admin.QueuesTimeToCompleteService', 'Admin.ObjectTitleConfigurationService', 'EcmService',
+        function ($scope, $state, $stateParams, $translate, $rootScope, $modal, CaseInfoService, HelperObjectBrowserService, ConfigService, Util, UtilDateService, MessageService, ObjectLookupService, LookupService, DueDateService, AdminHolidayService, AdminFoiaConfigService, AdminQueuesTimeToCompleteService, AdminObjectTitleConfigurationService, EcmService) {
 
             new HelperObjectBrowserService.Component({
                 scope: $scope,
@@ -73,15 +73,25 @@ angular.module('cases').controller(
                 } else {
                     $scope.showDispositionReasonsFlag = true;
                 }
-                $scope.previousDueDate = objectInfo.dueDate;
-                if (objectInfo.requestTrack === 'expedite') {
-                    if ($scope.includeWeekends) {
-                        $scope.previousDueDate = DueDateService.dueDateWithWeekends($scope.objectInfo.dueDate, $scope.expediteWorkingDays, $scope.holidays);
-                    } else {
-                        $scope.previousDueDate = DueDateService.dueDateWorkingDays($scope.objectInfo.dueDate, $scope.expediteWorkingDays, $scope.holidays);
-                    }
+                $scope.originalDueDate = objectInfo.dueDate;
+                if (objectInfo.requestTrack === 'expedite') { // request was already expedited and saved
+                    AdminQueuesTimeToCompleteService.getQueuesConfig().then(function (queuesConfig) {
+                        $scope.queuesConfig = queuesConfig.data;
+                        if (objectInfo.requestType === 'New Request') {
+                            $scope.totalTimeToComplete = $scope.queuesConfig.request.totalTimeToComplete;
+                        } else if (objectInfo.requestType === 'Appeal') {
+                            $scope.totalTimeToComplete = $scope.queuesConfig.appeal.totalTimeToComplete;
+                        }
+
+                        // Calculates the total time to complete due date from before the request was expedited
+                        // This will be needed if the user changes the request track back to simple or extends the request
+                        if ($scope.includeWeekends) {
+                            $scope.totalTimeToCompleteDueDate = DueDateService.dueDateWithWeekends($scope.objectInfo.perfectedDate, $scope.totalTimeToComplete, $scope.holidays);
+                        } else {
+                            $scope.totalTimeToCompleteDueDate = DueDateService.dueDateWorkingDays($scope.objectInfo.perfectedDate, $scope.totalTimeToComplete, $scope.holidays);
+                        }
+                    });
                 }
-                $scope.originalDueDate = $scope.previousDueDate;
                 $scope.enableDispositionClosedDate = objectInfo.dispositionClosedDate == null;
 
                 var otherExistsInAppealReasons = _.some($scope.objectInfo.dispositionReasons, function (value) {
@@ -184,6 +194,8 @@ angular.module('cases').controller(
                     $scope.objectInfo.expediteDate = new Date();
                 } else if (requestTrack === 'complex' && $scope.complexRequestTrackOptionEnabled) {
                     extendDueDate();
+                } else if (requestTrack === 'simple' && $scope.totalTimeToCompleteDueDate) {
+                    resetDueDateToTotalTimeToComplete();
                 } else {
                     resetDueDate();
                 }
@@ -314,11 +326,21 @@ angular.module('cases').controller(
                 $rootScope.$broadcast('dueDate-changed', $scope.originalDueDate);
             }
 
+            function resetDueDateToTotalTimeToComplete() {
+                if ($scope.totalTimeToCompleteDueDate) {
+                    $scope.objectInfo.dueDate = $scope.totalTimeToCompleteDueDate;
+                    $rootScope.$broadcast('dueDate-changed', $scope.totalTimeToCompleteDueDate);
+                }
+            }
+
             function extendDueDate() {
+                // For previously expedited requests, we need to calculate the extended due date starting
+                // from the total time to complete due date before the request was expedited
+                var startDate = ($scope.originalRequestTrack === 'expedite' && $scope.totalTimeToCompleteDueDate) ? $scope.totalTimeToCompleteDueDate : $scope.originalDueDate;
                 if ($scope.includeWeekends) {
-                    $scope.extendedDueDate = DueDateService.dueDateWithWeekends($scope.originalDueDate, $scope.extensionWorkingDays, $scope.holidays);
+                    $scope.extendedDueDate = DueDateService.dueDateWithWeekends(startDate, $scope.extensionWorkingDays, $scope.holidays);
                 } else {
-                    $scope.extendedDueDate = DueDateService.dueDateWorkingDays($scope.originalDueDate, $scope.extensionWorkingDays, $scope.holidays);
+                    $scope.extendedDueDate = DueDateService.dueDateWorkingDays(startDate, $scope.extensionWorkingDays, $scope.holidays);
                 }
                 $scope.objectInfo.dueDate = $scope.extendedDueDate;
                 $rootScope.$broadcast('dueDate-changed', $scope.extendedDueDate);

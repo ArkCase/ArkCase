@@ -7,6 +7,7 @@
         <beans:bean id="foiaExtensionHandler" class="gov.foia.pipeline.presave.FOIAExtensionHandler">
             <beans:property name="foiaRequestDao" ref="foiaRequestDao"/>
             <beans:property name="holidayConfigurationService" ref="holidayConfigurationService"/>
+            <beans:property name="queuesTimeToCompleteService" ref="queuesTimeToCompleteService"/>
             <beans:property name="arkPermissionEvaluator" ref="arkPermissionEvaluator"/>
             <beans:property name="foiaConfig" ref="foiaConfig"/>
         </beans:bean>
