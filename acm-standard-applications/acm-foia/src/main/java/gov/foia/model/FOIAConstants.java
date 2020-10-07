@@ -40,6 +40,7 @@ public interface FOIAConstants
     String APPEAL_REQUEST_TYPE = "Appeal";
 
     String SIMPLE_REQUEST_TRACK = "simple";
+    String EXPEDITE_REQUEST_TRACK = "expedite";
 
     String REQ = "REQ";
     String ACK = "ACK";
