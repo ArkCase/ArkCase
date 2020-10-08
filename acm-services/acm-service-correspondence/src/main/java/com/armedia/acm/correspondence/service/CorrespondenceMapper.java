@@ -55,6 +55,7 @@ public class CorrespondenceMapper
         template.setModified(configuration.getModified());
         template.setTemplateModelProvider(configuration.getTemplateModelProvider());
         template.setTemplateType(configuration.getTemplateType());
+        template.setEnabled(configuration.isEnabled());
 
         return template;
     }

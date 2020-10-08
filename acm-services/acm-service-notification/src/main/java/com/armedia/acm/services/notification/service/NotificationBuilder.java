@@ -198,6 +198,12 @@ public class NotificationBuilder
             this.notification.setSubject(subject);
             return this;
         }
+        
+        public Builder withNotificationType(String notificationType)
+        {
+            this.notification.setNotificationType(notificationType);
+            return this;
+        }
     }
 
     public void setNotificationUtils(NotificationUtils notificationUtils)

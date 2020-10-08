@@ -1,7 +1,9 @@
 package com.armedia.acm.services.notification.service;
 
+import com.armedia.acm.correspondence.model.Template;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.data.service.AcmDataService;
+import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
@@ -88,6 +90,7 @@ public abstract class NotificationSender
     private AcmMailTemplateConfigurationService templateService;
     private NotificationConfig notificationConfig;
     private Resource templatesConfiguration;
+    private ObjectConverter objectConverter;
 
     /**
      * Sends the notification to user's email. If successful, sets the notification state to
@@ -169,15 +172,21 @@ public abstract class NotificationSender
                     : null;
 
             AcmUser acmUser = notification.getUser() != null ? userDao.findByUserId(notification.getUser()) : null;
-
-            getEmailSenderService().sendEmail(in, authentication, acmUser);
-            if (in.getMailSent())
+            if(isEnabledSendingEmails(notification))
             {
-                notification.setState(NotificationConstants.STATE_SENT);
+                getEmailSenderService().sendEmail(in, authentication, acmUser);
+                if (in.getMailSent())
+                {
+                    notification.setState(NotificationConstants.STATE_SENT);
+                }
+                else 
+                {
+                    notification.setState(NotificationConstants.STATE_NOT_SENT);
+                }
             }
             else
             {
-                notification.setState(NotificationConstants.STATE_NOT_SENT);
+                notification.setState(NotificationConstants.STATE_DISABLED);
             }
         }
         catch (Exception e)
@@ -210,29 +219,32 @@ public abstract class NotificationSender
     
     private Boolean isEnabledSendingEmails(Notification notification)
     {
-//        try
-//        {
-//            File file = templatesConfiguration.getFile();
-//
-//            String resource = FileUtils.readFileToString(file);
-//            if (resource.isEmpty())
-//            {
-//                resource = "[]";
-//            }
-//
-//            List<Template> templateConfigurations = getObjectConverter().getJsonUnmarshaller()
-//                    .unmarshallCollection(resource, List.class, Template.class);
-//
-//            templateConfigurations.stream().forEach(configuration -> {
-//                Template template = mapTemplateFromConfiguration(configuration);
-//
-//            });
-//        }
-//        catch (IOException ioe)
-//        {
-//            throw new IllegalStateException(ioe);
-//        }
-        return true;
+        try
+        {
+            File file = templatesConfiguration.getFile();
+            if (!file.exists())
+            {
+                file.createNewFile();
+            }
+
+            String resource = FileUtils.readFileToString(file);
+            if (resource.isEmpty())
+            {
+                resource = "[]";
+            }
+
+            List<Template> templateConfigurations = getObjectConverter().getJsonUnmarshaller()
+                    .unmarshallCollection(resource, List.class, Template.class);
+
+            return templateConfigurations.stream()
+                    .filter(t -> t.getTemplateFilename().equals(notification.getTemplateModelName() + ".html") && t.isEnabled())
+                    .findAny().isPresent();
+                    
+        }
+        catch (IOException ioe)
+        {
+            throw new IllegalStateException(ioe);
+        }
     }
 
     public abstract <T> void sendPlainEmail(Stream<T> emailsDataStream, EmailBuilder<T> emailBuilder, EmailBodyBuilder<T> emailBodyBuilder)
@@ -372,5 +384,15 @@ public abstract class NotificationSender
     public void setTemplatesConfiguration(Resource templatesConfiguration) 
     {
         this.templatesConfiguration = templatesConfiguration;
+    }
+
+    public ObjectConverter getObjectConverter() 
+    {
+        return objectConverter;
+    }
+
+    public void setObjectConverter(ObjectConverter objectConverter) 
+    {
+        this.objectConverter = objectConverter;
     }
 }

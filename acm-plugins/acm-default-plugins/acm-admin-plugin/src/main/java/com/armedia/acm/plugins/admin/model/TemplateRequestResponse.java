@@ -38,7 +38,7 @@ import java.util.Date;
  */
 
 @JsonIdentityInfo(generator = JSOGGenerator.class)
-public class CorrespondenceTemplateRequestResponse
+public class TemplateRequestResponse
 {
 
     private String templateId;
@@ -70,6 +70,8 @@ public class CorrespondenceTemplateRequestResponse
     private String templateModelProvider;
     
     private String templateType;
+    
+    private boolean enabled;
     /**
      * @return the templateId
      */
@@ -321,5 +323,22 @@ public class CorrespondenceTemplateRequestResponse
     public void setTemplateType(String templateType) 
     {
         this.templateType = templateType;
+    }
+
+    /**
+     * @return the enabled
+     */
+    public boolean isEnabled() 
+    {
+        return enabled;
+    }
+
+    /**
+     * @param enabled
+     *          the enabled to set
+     */
+    public void setEnabled(boolean enabled) 
+    {
+        this.enabled = enabled;
     }
 }
