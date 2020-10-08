@@ -168,71 +168,17 @@ public class SaveNotificationAPIController
     {
         // the user is stored in the session during login.
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
-        String note = "";
-        String title = "";
-        switch (emailDTO.getModelReferenceName())
-        {
-            case "casePriorityChanged":
-                title = NotificationConstants.CASE_PRIORITY_CHANGED;
-                break;
-            case "caseStatusChanged":
-                title = NotificationConstants.CASE_STATUS_CHANGED;
-                break;
-            case "complaintPriorityChanged":
-                title = NotificationConstants.COMPLAINT_PRIORITY_CHANGED;
-                break;
-            case "complaintStatusChanged":
-                title = NotificationConstants.COMPLAINT_STATUS_CHANGED;
-                break;
-            case "mentions":
-                title = NotificationConstants.EMAIL_MENTIONS;
-                break;
-            case "noteAdded":
-                title = NotificationConstants.NOTE_ADDED;
-                break;
-            case "objectAssigned":
-                title = NotificationConstants.OBJECT_ASSIGNED;
-                break;
-            case "objectUnassigned":
-                title = NotificationConstants.OBJECT_UNASSIGNED;
-                break;
-            case "participantsAdded":
-                title = NotificationConstants.PARTICIPANTS_ADDED;
-                break;
-            case "participantsDeleted":
-                title = NotificationConstants.PARTICIPANTS_DELETED;
-                break;
-            case "taskOverdue":
-                title = NotificationConstants.TASK_OVERDUE;
-                break;
-            case "taskPriorityChanged":
-                title = NotificationConstants.TASK_PRIORITY_CHANGED;
-                break;
-            case "taskStatusChanged":
-                title = NotificationConstants.TASK_STATUS_CHANGED;
-                break;
-            case "taskUpcoming":
-                title = NotificationConstants.TASK_UPCOMING;
-                break;
-            case "concurNonConcur":
-                title = NotificationConstants.TASK_CONCUR_NONCONCUR;
-                note = NotificationConstants.TASK_CONCUR_NOTE;
-                break;
-                
-        }
+        
+        String title = notificationService.setNotificationTitleForManulNotification(emailDTO.getModelReferenceName());
 
-//        List<String> tokens = new ArrayList<>();
         List<EcmFileVersion> notificationFiles = new ArrayList<>();
         if(emailDTO.getFileIds() != null)
         {
-//            String token;
             EcmFile file;
             for (Long fileId : emailDTO.getFileIds())
             {
                 file = getFileService().findById(fileId);
                 notificationFiles.add(file.getVersions().get(file.getVersions().size() - 1));
-//                token = authenticationTokenService.generateAndSaveAuthenticationToken(fileId, emailDTO.getEmailAddresses().get(0), authentication);
-//                tokens.add(token);
             }
         }
         
@@ -240,11 +186,11 @@ public class SaveNotificationAPIController
                 .newNotification(emailDTO.getModelReferenceName(), title, emailDTO.getObjectType(),
                         Long.parseLong(emailDTO.getObjectId()), user.getUserId())
                 .withSubject(emailDTO.getSubject())
+                .withNotificationType(NotificationConstants.TYPE_MANUAL)
                 .withEmailAddresses(emailDTO.getEmailAddresses().stream().collect(Collectors.joining(",")))
                 .forRelatedObjectWithNumber(emailDTO.getObjectNumber())
                 .forRelatedObjectTypeAndId(emailDTO.getObjectType(), Long.parseLong(emailDTO.getObjectId()))
                 .withFiles(notificationFiles)
-                .withNote(note)
                 .build(user.getUserId());
 
         notificationService.saveNotification(notification);

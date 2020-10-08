@@ -144,6 +144,7 @@
         <property name="notificationConfig" ref="notificationConfig"/>
         <property name="templatesConfiguration"
                   value="file:${user.home}/.arkcase/acm/templates-configuration.json"/>
+        <property name="objectConverter" ref="objectConverter"/>
     </bean>
 
     <bean id="smtpNotificationSender" class="com.armedia.acm.services.notification.service.SmtpNotificationSender"

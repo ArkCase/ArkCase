@@ -165,7 +165,7 @@ public class Notification implements Serializable, AcmObject, AcmEntity
     private String subject;
    
     @Column (name = "cm_type")
-    private String notificationType;
+    private String notificationType = NotificationConstants.TYPE_AUTOMATED;
 
     @Override
     public Long getId()

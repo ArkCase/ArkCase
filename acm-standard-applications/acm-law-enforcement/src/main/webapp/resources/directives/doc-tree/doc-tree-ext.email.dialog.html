@@ -4,7 +4,8 @@
 <div class="modal-body">
     <div class="pull-right">
         <label for="templates" translate> common.directive.docTree.emailDialog.emailTemplates.label </label>
-        <select id="templates" class="form-control" ng-model="template">
+        <span class="required-asterisk">*</span>
+        <select id="templates" class="form-control" ng-model="template" required="required">
             <option ng-repeat="option in emailTemplates" value="{{option.templateFilename}}">
                 {{option.label}}
             </option>

@@ -17,8 +17,6 @@ angular.module('admin').controller('Admin.CMEmailTemplatesController',
             var copyVariablePath = $translate.instant('contextMenu.options.copyVariablePath');
             $scope.templateType = 'emailTemplate';
             
-            $scope.enabled = true;
-
             $scope.navigationTreeMilestones = [];
 
             $scope.gridOptions = {
@@ -167,7 +165,7 @@ angular.module('admin').controller('Admin.CMEmailTemplatesController',
             
             $scope.enable = function (rowEntity) {
                 var template = angular.copy(rowEntity);
-                template.enabled = !rowEntity.activated;
+                template.enabled = !rowEntity.enabled;
                 correspondenceService.saveTemplateData(template).then(function() {
                     clearCachedForms(template);
                     messageService.succsessAction();

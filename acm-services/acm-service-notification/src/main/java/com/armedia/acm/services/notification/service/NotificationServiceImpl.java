@@ -145,6 +145,61 @@ public class NotificationServiceImpl implements NotificationService
 
         return saved;
     }
+    
+    @Override
+    public String setNotificationTitleForManulNotification(String templateName)
+    {
+        String title = "";
+        switch (templateName)
+        {
+            case "casePriorityChanged":
+                title = NotificationConstants.CASE_PRIORITY_CHANGED;
+                break;
+            case "caseStatusChanged":
+                title = NotificationConstants.CASE_STATUS_CHANGED;
+                break;
+            case "complaintPriorityChanged":
+                title = NotificationConstants.COMPLAINT_PRIORITY_CHANGED;
+                break;
+            case "complaintStatusChanged":
+                title = NotificationConstants.COMPLAINT_STATUS_CHANGED;
+                break;
+            case "mentions":
+                title = NotificationConstants.EMAIL_MENTIONS;
+                break;
+            case "noteAdded":
+                title = NotificationConstants.NOTE_ADDED;
+                break;
+            case "objectAssigned":
+                title = NotificationConstants.OBJECT_ASSIGNED;
+                break;
+            case "objectUnassigned":
+                title = NotificationConstants.OBJECT_UNASSIGNED;
+                break;
+            case "participantsAdded":
+                title = NotificationConstants.PARTICIPANTS_ADDED;
+                break;
+            case "participantsDeleted":
+                title = NotificationConstants.PARTICIPANTS_DELETED;
+                break;
+            case "taskOverdue":
+                title = NotificationConstants.TASK_OVERDUE;
+                break;
+            case "taskPriorityChanged":
+                title = NotificationConstants.TASK_PRIORITY_CHANGED;
+                break;
+            case "taskStatusChanged":
+                title = NotificationConstants.TASK_STATUS_CHANGED;
+                break;
+            case "taskUpcoming":
+                title = NotificationConstants.TASK_UPCOMING;
+                break;
+            case "concurNonConcur":
+                title = NotificationConstants.TASK_CONCUR_NONCONCUR;
+                break;
+        }
+        return title;
+    }
 
     /**
      * Create needed JPA query properties. In the DAO we have logic which one should be excluded
