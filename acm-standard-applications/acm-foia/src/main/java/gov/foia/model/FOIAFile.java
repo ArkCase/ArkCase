@@ -58,6 +58,11 @@ public class FOIAFile extends EcmFile
     @Column(name = "cm_exemption_code")
     private List<String> exemptionCodes;
 
+    @ElementCollection
+    @CollectionTable(name = "acm_exemption_statute", joinColumns = @JoinColumn(name = "cm_file_id", referencedColumnName = "cm_file_id"))
+    @Column(name = "cm_exemption_statute")
+    private List<String> exemptionStatutes;
+
     @Column(name = "fo_public_flag")
     @Convert(converter = BooleanToStringConverter.class)
     private Boolean publicFlag;
@@ -87,5 +92,13 @@ public class FOIAFile extends EcmFile
     public void setPublicFlag(Boolean publicFlag)
     {
         this.publicFlag = publicFlag;
+    }
+
+    public List<String> getExemptionStatutes() {
+        return exemptionStatutes;
+    }
+
+    public void setExemptionStatutes(List<String> exemptionStatutes) {
+        this.exemptionStatutes = exemptionStatutes;
     }
 }

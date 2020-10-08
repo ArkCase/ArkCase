@@ -36,4 +36,8 @@ public interface ExemptionConstants
     String EXEMPTION_CODE_CREATED_EVENT = "com.armedia.acm.exemption.code.created";
     String EXEMPTION_CODE_DELETED_EVENT = "com.armedia.acm.exemption.code.deleted";
     String EXEMPTION_CODE_UPDATED_EVENT = "com.armedia.acm.exemption.code.updated";
+
+    String EXEMPTION_STATUTE_CREATED_EVENT = "com.armedia.acm.exemption.statute.created";
+    String EXEMPTION_STATUTE_DELETED_EVENT = "com.armedia.acm.exemption.statute.deleted";
+    String EXEMPTION_STATUTE_UPDATED_EVENT = "com.armedia.acm.exemption.statute.updated";
 }

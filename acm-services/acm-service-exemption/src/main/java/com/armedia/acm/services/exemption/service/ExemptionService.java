@@ -27,12 +27,11 @@ package com.armedia.acm.services.exemption.service;
  * #L%
  */
 
-import java.util.List;
-
 import com.armedia.acm.services.exemption.exception.DeleteExemptionCodeException;
 import com.armedia.acm.services.exemption.exception.SaveExemptionCodeException;
-import com.armedia.acm.services.exemption.exception.UpdateExemptionStatuteException;
 import com.armedia.acm.services.exemption.model.ExemptionCode;
+
+import java.util.List;
 
 public interface ExemptionService
 {
@@ -41,5 +40,4 @@ public interface ExemptionService
 
     void deleteExemptionCode(Long tagId) throws DeleteExemptionCodeException;
 
-    void updateExemptionStatute(ExemptionCode exemptionData) throws UpdateExemptionStatuteException;
 }

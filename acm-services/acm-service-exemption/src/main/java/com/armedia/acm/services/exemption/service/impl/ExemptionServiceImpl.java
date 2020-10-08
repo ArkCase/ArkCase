@@ -27,22 +27,20 @@ package com.armedia.acm.services.exemption.service.impl;
  * #L%
  */
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
+import com.armedia.acm.services.exemption.dao.ExemptionCodeDao;
+import com.armedia.acm.services.exemption.exception.DeleteExemptionCodeException;
+import com.armedia.acm.services.exemption.exception.SaveExemptionCodeException;
+import com.armedia.acm.services.exemption.model.ExemptionCode;
+import com.armedia.acm.services.exemption.model.ExemptionCodeAndStatuteEventPublisher;
+import com.armedia.acm.services.exemption.model.ExemptionConstants;
+import com.armedia.acm.services.exemption.service.ExemptionService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.armedia.acm.services.exemption.dao.ExemptionCodeDao;
-import com.armedia.acm.services.exemption.exception.DeleteExemptionCodeException;
-import com.armedia.acm.services.exemption.exception.SaveExemptionCodeException;
-import com.armedia.acm.services.exemption.exception.UpdateExemptionStatuteException;
-import com.armedia.acm.services.exemption.model.ExemptionCode;
-import com.armedia.acm.services.exemption.model.ExemptionCodeEventPublisher;
-import com.armedia.acm.services.exemption.model.ExemptionConstants;
-import com.armedia.acm.services.exemption.service.ExemptionService;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by ana.serafimoska
@@ -51,7 +49,7 @@ public class ExemptionServiceImpl implements ExemptionService
 {
     private Logger log = LogManager.getLogger(getClass());
     private ExemptionCodeDao exemptionCodeDao;
-    private ExemptionCodeEventPublisher exemptionCodeEventPublisher;
+    private ExemptionCodeAndStatuteEventPublisher exemptionCodeAndStatuteEventPublisher;
 
     @Override
     @Transactional
@@ -75,7 +73,7 @@ public class ExemptionServiceImpl implements ExemptionService
                 exemptionCodeObj.setParentObjectType(exemptionCodes.getParentObjectType());
                 exemptionCodeList.add(exemptionCodeObj);
                 ExemptionCode saved = getExemptionCodeDao().save(exemptionCodeObj);
-                getExemptionCodeEventPublisher().publishExemptionCodeCreatedEvent(saved);
+                getExemptionCodeAndStatuteEventPublisher().publishExemptionCodeCreatedEvent(saved);
             }
             return exemptionCodeList;
         }
@@ -94,33 +92,13 @@ public class ExemptionServiceImpl implements ExemptionService
         {
             ExemptionCode exemptionCode = getExemptionCodeDao().find(tagId);
             getExemptionCodeDao().deleteExemptionCode(tagId);
-            getExemptionCodeEventPublisher().publishExemptionCodeDeletedEvent(exemptionCode);
+            getExemptionCodeAndStatuteEventPublisher().publishExemptionCodeDeletedEvent(exemptionCode);
         }
         catch (Exception e)
         {
             log.error("Delete failed for exemption code with id: {}", tagId);
             throw new DeleteExemptionCodeException("Unable to delete exemption code with id: {}" + tagId, e);
         }
-    }
-
-    @Override
-    @Transactional
-    public void updateExemptionStatute(ExemptionCode exemptionData) throws UpdateExemptionStatuteException
-    {
-        log.info("Updating exemption statute for the code with id: {}", exemptionData.getId());
-        try
-        {
-            getExemptionCodeDao().save(exemptionData);
-            getExemptionCodeEventPublisher().publishExemptionCodeUpdatedEvent(exemptionData);
-        }
-        catch (Exception e)
-        {
-            log.error("Update failed for exemption code with id: {}", exemptionData.getId());
-            throw new UpdateExemptionStatuteException(
-                    "Unable to update exemption statute to exemption code with id: {}" + exemptionData.getId(), e);
-
-        }
-
     }
 
     public ExemptionCodeDao getExemptionCodeDao()
@@ -133,13 +111,13 @@ public class ExemptionServiceImpl implements ExemptionService
         this.exemptionCodeDao = exemptionCodeDao;
     }
 
-    public ExemptionCodeEventPublisher getExemptionCodeEventPublisher()
+    public ExemptionCodeAndStatuteEventPublisher getExemptionCodeAndStatuteEventPublisher()
     {
-        return exemptionCodeEventPublisher;
+        return exemptionCodeAndStatuteEventPublisher;
     }
 
-    public void setExemptionCodeEventPublisher(ExemptionCodeEventPublisher exemptionCodeEventPublisher)
+    public void setExemptionCodeAndStatuteEventPublisher(ExemptionCodeAndStatuteEventPublisher exemptionCodeAndStatuteEventPublisher)
     {
-        this.exemptionCodeEventPublisher = exemptionCodeEventPublisher;
+        this.exemptionCodeAndStatuteEventPublisher = exemptionCodeAndStatuteEventPublisher;
     }
 }
