@@ -5,12 +5,20 @@
 
     <bean id="exemptionCodeDao" class="com.armedia.acm.services.exemption.dao.ExemptionCodeDao"/>
 
+    <bean id="exemptionStatuteDao" class="com.armedia.acm.services.exemption.dao.ExemptionStatuteDao"/>
+
     <bean id="exemptionService" class="com.armedia.acm.services.exemption.service.impl.ExemptionServiceImpl">
         <property name="exemptionCodeDao" ref="exemptionCodeDao"/>
-        <property name="exemptionCodeEventPublisher" ref="exemptionCodeEventPublisher"/>
+        <property name="exemptionCodeAndStatuteEventPublisher" ref="exemptionCodeAndStatuteEventPublisher"/>
     </bean>
 
-    <bean id="exemptionCodeEventPublisher" class="com.armedia.acm.services.exemption.model.ExemptionCodeEventPublisher"/>
+    <bean id="exemptionStatuteService" class="com.armedia.acm.services.exemption.service.impl.ExemptionStatuteServiceImpl">
+        <property name="exemptionStatuteDao" ref="exemptionStatuteDao"/>
+        <property name="exemptionCodeAndStatuteEventPublisher" ref="exemptionCodeAndStatuteEventPublisher"/>
+        <property name="ecmFileDao" ref="ecmFileDao"/>
+    </bean>
+
+    <bean id="exemptionCodeAndStatuteEventPublisher" class="com.armedia.acm.services.exemption.model.ExemptionCodeAndStatuteEventPublisher"/>
 
     <bean id="documentRedactionEventPublisher" class="com.armedia.acm.services.exemption.model.DocumentRedactionEventPublisher"/>
 

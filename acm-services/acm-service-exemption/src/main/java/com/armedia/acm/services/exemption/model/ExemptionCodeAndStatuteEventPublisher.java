@@ -35,7 +35,7 @@ import com.armedia.acm.auth.AuthenticationUtils;
 /**
  * Created by ana.serafimoska
  */
-public class ExemptionCodeEventPublisher implements ApplicationEventPublisherAware
+public class ExemptionCodeAndStatuteEventPublisher implements ApplicationEventPublisherAware
 {
     private ApplicationEventPublisher applicationEventPublisher;
 
@@ -72,6 +72,28 @@ public class ExemptionCodeEventPublisher implements ApplicationEventPublisherAwa
         exemptionCodeUpdatedEvent.setSucceeded(true);
         getApplicationEventPublisher().publishEvent(exemptionCodeUpdatedEvent);
 
+    }
+
+    public void publishExemptionStatuteCreatedEvent(ExemptionStatute source)
+    {
+        ExemptionStatuteCreatedEvent exemptionStatuteCreatedEvent = new ExemptionStatuteCreatedEvent(source);
+        exemptionStatuteCreatedEvent.setUserId(AuthenticationUtils.getUsername());
+        exemptionStatuteCreatedEvent.setIpAddress(AuthenticationUtils.getUserIpAddress());
+        exemptionStatuteCreatedEvent.setParentObjectId(source.getParentObjectId());
+        exemptionStatuteCreatedEvent.setParentObjectType(source.getParentObjectType());
+        exemptionStatuteCreatedEvent.setSucceeded(true);
+        getApplicationEventPublisher().publishEvent(exemptionStatuteCreatedEvent);
+    }
+
+    public void publishExemptionStatuteDeletedEvent(ExemptionStatute source)
+    {
+        ExemptionStatuteDeletedEvent exemptionStatuteDeletedEvent = new ExemptionStatuteDeletedEvent(source);
+        exemptionStatuteDeletedEvent.setUserId(AuthenticationUtils.getUsername());
+        exemptionStatuteDeletedEvent.setIpAddress(AuthenticationUtils.getUserIpAddress());
+        exemptionStatuteDeletedEvent.setParentObjectId(source.getParentObjectId());
+        exemptionStatuteDeletedEvent.setParentObjectType(source.getParentObjectType());
+        exemptionStatuteDeletedEvent.setSucceeded(true);
+        getApplicationEventPublisher().publishEvent(exemptionStatuteDeletedEvent);
     }
 
     public ApplicationEventPublisher getApplicationEventPublisher()
