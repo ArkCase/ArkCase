@@ -9,6 +9,8 @@ angular.module('admin').controller(
                         scope: $scope
                     });
 
+                    $scope.portalConfigDataModel = {};
+
                     $scope.gridOptions = $scope.gridOptions || {};
 
                     $scope.config.$promise.then(function (adminConfig) {
@@ -53,6 +55,25 @@ angular.module('admin').controller(
                         });
                     };
                     getAndRefresh();
+
+
+                    var getAuthenticatedMode = function () {
+                        AdminPortalConfigurationService.getAuthenticatedMode().then(function (response) {
+                            if (!Util.isEmpty(response.data)) {
+                                $scope.portalConfigDataModel["portal.authenticatedMode"] = response.data["portal.authenticatedMode"];
+                            }
+                        });
+                    };
+                    getAuthenticatedMode();
+
+                    $scope.savePortalConfig = function () {
+                        AdminPortalConfigurationService.saveAuthenticatedMode($scope.portalConfigDataModel).then(function () {
+                            MessageService.succsessAction();
+                        }, function () {
+                            MessageService.errorAction();
+                        });
+                    }
+
 
                     function showModal(portal) {
                         var params = {};

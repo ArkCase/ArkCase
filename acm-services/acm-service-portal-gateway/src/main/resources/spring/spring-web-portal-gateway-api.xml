@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
 
     <bean id="portalAdminAPIController" class="com.armedia.acm.portalgateway.web.api.ArkCasePortalAdminAPIController">
         <property name="portalAdminService" ref="portalAdminService"/>
         <property name="acmContextHolder" ref="acmContextHolder"/>
+        <property name="portalConfigurationService" ref="portalConfigurationService"/>
     </bean>
 
     <bean id="portalGatewayUserAPIController" class="com.armedia.acm.portalgateway.web.api.ArkCasePortalGatewayUserAPIController">
