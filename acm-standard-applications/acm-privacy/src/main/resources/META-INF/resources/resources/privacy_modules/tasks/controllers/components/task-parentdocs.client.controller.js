@@ -22,13 +22,14 @@ angular.module('tasks').controller(
                 'DocTreeExt.WebDAV',
                 'DocTreeExt.Checkin',
                 'Case.InfoService',
+                'Consultation.InfoService',
                 'Complaint.InfoService',
                 'CostTracking.InfoService',
                 'TimeTracking.InfoService',
                 'Admin.CMTemplatesService',
                 'DocTreeExt.Email',
                 function($scope, $state, $stateParams, $q, $modal, $translate, Util, LocaleService, ConfigService, ObjectService, ObjectLookupService, TaskInfoService, HelperObjectBrowserService, Authentication, DocTreeService, PermissionsService, DocTreeExtWebDAV, DocTreeExtCheckin,
-                        CaseInfoService, ComplaintInfoService, CostTrackingInfoService, TimeTrackingInfoService, CorrespondenceService, DocTreeExtEmail) {
+                        CaseInfoService, ConsultationInfoService, ComplaintInfoService, CostTrackingInfoService, TimeTrackingInfoService, CorrespondenceService, DocTreeExtEmail) {
 
                     Authentication.queryUserInfo().then(function(userInfo) {
                         $scope.user = userInfo.userId;
@@ -83,6 +84,13 @@ angular.module('tasks').controller(
                             });
                             promiseCorrespondenceForms = CorrespondenceService.getActivatedTemplatesData(ObjectService.ObjectTypes.CASE_FILE);
                             $scope.treeConfig.email.emailSubject = "Request $caseNumber";
+                            break;
+                        case ObjectService.ObjectTypes.CONSULTATION:
+                            ConsultationInfoService.getConsultationInfo($scope.objectInfo.parentObjectId).then(function(consultationInfo) {
+                                $scope.parentInfo = consultationInfo;
+                            });
+                            promiseCorrespondenceForms = CorrespondenceService.getActivatedTemplatesData(ObjectService.ObjectTypes.CONSULTATION);
+                            $scope.treeConfig.email.emailSubject = "Consultation $consultationNumber";
                             break;
                         case ObjectService.ObjectTypes.COSTSHEET:
                             CostTrackingInfoService.getCostsheetInfo($scope.objectInfo.parentObjectId).then(function(costsheetInfo) {
