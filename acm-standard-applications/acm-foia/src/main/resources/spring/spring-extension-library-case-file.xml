@@ -7,6 +7,7 @@
         <beans:bean id="foiaExtensionHandler" class="gov.foia.pipeline.presave.FOIAExtensionHandler">
             <beans:property name="foiaRequestDao" ref="foiaRequestDao"/>
             <beans:property name="holidayConfigurationService" ref="holidayConfigurationService"/>
+            <beans:property name="queuesTimeToCompleteService" ref="queuesTimeToCompleteService"/>
             <beans:property name="arkPermissionEvaluator" ref="arkPermissionEvaluator"/>
             <beans:property name="foiaConfig" ref="foiaConfig"/>
         </beans:bean>
@@ -217,6 +218,8 @@
             <beans:property name="templatingEngine" ref="templatingEngine"/>
             <beans:property name="emailBodyTemplate" value="file:${user.home}/.arkcase/acm/templates/requestDocumentAttached.html"/>
             <beans:property name="notificationService" ref="notificationService"/>
+            <beans:property name="translationService" ref="translationService" />
+            <beans:property name="lookupDao" ref="lookupDao" />
         </beans:bean>
 
         <beans:bean id="requestAssignmentService" class="gov.foia.service.RequestAssignmentService">
