@@ -285,6 +285,7 @@ public class NewCaseFileMailHandler extends AcmObjectMailHandler
 
             ContactMethod contactMethodEmail = new ContactMethod();
             contactMethodEmail.setType("email");
+            contactMethodEmail.setSubType("Business");
             contactMethodEmail.setValue(emailAddress);
             contactMethods.add(contactMethodEmail);
 
