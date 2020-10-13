@@ -361,7 +361,7 @@
                 },
                 {
                     "name": "enabled",
-                    "displayName": "admin.correspondenceManagement.templates.grid.activated",
+                    "displayName": "admin.correspondenceManagement.templates.grid.enabled",
                     "visible": true,
                     "headerCellFilter": "translate",
                     "cellTemplate": "<div align='center'><span ng-if='!row.entity.enabled' class='label label-danger' ng-click='grid.appScope.enable(row.entity)' translate>admin.correspondenceManagement.templates.grid.statusDisabled</span><span ng-if='row.entity.enabled' class='label label-success' ng-click='grid.appScope.enable(row.entity)' translate>admin.correspondenceManagement.templates.grid.statusEnabled</span></div>'",

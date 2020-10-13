@@ -1,4 +1,4 @@
-angular.module('common').controller('Common.SendEmailModalController', [ '$scope', '$modal', '$modalInstance', '$translate', 'ConfigService', 'params', 'Admin.CMTemplatesService', function($scope, $modal, $modalInstance, $translate, ConfigService, params, correspondenceService) {
+angular.module('common').controller('Common.SendEmailModalController', [ '$scope', '$modal', '$modalInstance', '$translate', 'UtilService', 'ConfigService', 'params', 'Admin.CMTemplatesService', function($scope, $modal, $modalInstance, $translate, Util, ConfigService, params, correspondenceService) {
 
     $scope.objectId = params.objectId;
     $scope.objectType = params.objectType;
@@ -72,6 +72,10 @@ angular.module('common').controller('Common.SendEmailModalController', [ '$scope
         $scope.emailDataModel.recipients = $scope.recipientsStr.split('; ');
         $scope.emailDataModel.template = _.contains($scope.template, '.html') ? $scope.template.replace('.html', '') : $scope.template;
         $modalInstance.close($scope.emailDataModel);
+    };
+
+    $scope.disableOk = function() {
+        return Util.isEmpty($scope.recipientsStr) || Util.isEmpty($scope.template);
     };
 
 } ]);

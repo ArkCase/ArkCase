@@ -50,6 +50,7 @@ angular.module('admin').controller('Admin.AddCMTemplateController', [ '$scope', 
                     $scope.template.numberFormatString = template.data.numberFormatString;
                     //we will activate it by default
                     $scope.template.activated = true;
+                    $scope.template.enabled = true;
                     $scope.template.templateType = $scope.templateType;
 
                     var template = $scope.template;
