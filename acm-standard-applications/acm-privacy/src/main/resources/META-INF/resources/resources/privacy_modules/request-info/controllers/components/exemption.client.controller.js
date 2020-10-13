@@ -47,7 +47,7 @@ angular.module('request-info').controller('RequestInfo.ExemptionController',
                 if ($scope.isDisabled) {
                     return true;
                 } else {
-                    if (rowEntity.exemptionCode != 'Ex3') {
+                    if (rowEntity.exemptionCode != '(b)(3)') {
                         return true;
                     }
                 }
