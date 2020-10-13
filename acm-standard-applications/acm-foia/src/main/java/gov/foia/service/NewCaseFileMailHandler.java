@@ -38,6 +38,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
+import com.armedia.acm.plugins.person.model.PersonConstants;
 import com.armedia.acm.service.MimeMessageParser;
 import com.armedia.acm.services.email.event.SmtpEmailReceivedEvent;
 import com.armedia.acm.services.email.handler.AcmObjectMailHandler;
@@ -119,7 +120,7 @@ public class NewCaseFileMailHandler extends AcmObjectMailHandler
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
 
-        FOIARequest request = createRequest(message);
+        FOIARequest request = createRequestFromEmail(message);
 
         if (request != null)
         {
@@ -163,7 +164,7 @@ public class NewCaseFileMailHandler extends AcmObjectMailHandler
     }
 
     @Transactional
-    public FOIARequest createRequest(Message message) throws MessagingException
+    public FOIARequest createRequestFromEmail(Message message) throws MessagingException
     {
         FOIARequest request = new FOIARequest();
 
@@ -266,8 +267,8 @@ public class NewCaseFileMailHandler extends AcmObjectMailHandler
     {
         FOIAPerson person = new FOIAPerson();
 
-        person.setGivenName("Placeholder");
-        person.setFamilyName("Placeholder");
+        person.setGivenName(PersonConstants.GIVEN_NAME_PLACEHOLDER);
+        person.setFamilyName(PersonConstants.FAMILY_NAME_PLACEHOLDER);
 
         if (addresses != null)
         {
