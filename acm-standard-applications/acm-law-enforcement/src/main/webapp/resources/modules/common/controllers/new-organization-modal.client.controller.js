@@ -249,6 +249,10 @@ angular.module('common').controller(
 
                     ObjectLookupService.getOrganizationTypes().then(function(organizationTypes) {
                         $scope.organizationTypes = organizationTypes;
+                        var defaultOrganizationType = ObjectLookupService.getPrimaryLookup($scope.organizationTypes);
+                        if ($scope.organization.isNew && defaultOrganizationType) {
+                            $scope.organization.organizationType = defaultOrganizationType.key;
+                        }
                     });
 
                     ObjectLookupService.getPersonOrganizationRelationTypes().then(function(personOrganizationRelationTypes) {
@@ -275,84 +279,93 @@ angular.module('common').controller(
                 }
             };
 
-            $scope.addContactMethod = function(contactType) {
-                        $timeout(function() {
-                            contactMethodsCounts[contactType]++;
-                            $scope.organization.contactMethods.push({
-                                type: contactType
-                            });
-                        }, 0);
-                    };
+            $scope.addContactMethod = function (contactType) {
+                $timeout(function () {
+                    contactMethodsCounts[contactType]++;
+                    $scope.organization.contactMethods.push({
+                        type: contactType
+                    });
+                }, 0);
+            };
 
-                    $scope.removeContactMethod = function(contact) {
-                        $timeout(function() {
-                            contactMethodsCounts[contact.type]--;
-                            _.remove($scope.organization.contactMethods, function(object) {
-                                return object === contact;
-                            });
-                        }, 0);
-                    };
+            $scope.removeContactMethod = function (contact) {
+                $timeout(function () {
+                    contactMethodsCounts[contact.type]--;
+                    _.remove($scope.organization.contactMethods, function (object) {
+                        return object === contact;
+                    });
+                }, 0);
+            };
 
-                    $scope.showAddAnotherContactMethod = function(contactType) {
-                        return contactMethodsCounts[contactType] < 1;
-                    };
+            $scope.showAddAnotherContactMethod = function (contactType) {
+                return contactMethodsCounts[contactType] < 1;
+            };
 
-                    $scope.addIdentification = function() {
-                        $timeout(function() {
-                            //add empty identification
-                            $scope.organization.identifications.push({});
-                        }, 0);
-                    };
+            $scope.addIdentification = function () {
+                $timeout(function () {
+                    //add empty identification
+                    $scope.organization.identifications.push({});
+                }, 0);
+            };
 
-                    $scope.removeIdentification = function(identification) {
-                        $timeout(function() {
-                            _.remove($scope.organization.identifications, function(object) {
-                                return object === identification;
-                            });
-                        }, 0);
-                    };
+            $scope.removeIdentification = function (identification) {
+                $timeout(function () {
+                    _.remove($scope.organization.identifications, function (object) {
+                        return object === identification;
+                    });
+                }, 0);
+            };
 
-                    $scope.addAddress = function() {
-                        $timeout(function() {
-                            //add empty address
-                            $scope.organization.addresses.push({});
-                        }, 0);
-                    };
+            var defaultAddressType = ObjectLookupService.getPrimaryLookup($scope.addressTypes);
+            var defaultCountry = ObjectLookupService.getPrimaryLookup($scope.countries);
 
-                    $scope.removeAddress = function(address) {
-                        $timeout(function() {
-                            _.remove($scope.organization.addresses, function(object) {
-                                return object === address;
-                            });
-                        }, 0);
-                    };
+            $scope.addAddress = function () {
+                $timeout(function () {
+                    var defaultAddressType = ObjectLookupService.getPrimaryLookup($scope.addressTypes);
+                    var defaultCountry = ObjectLookupService.getPrimaryLookup($scope.countries);
 
-                    $scope.onClickCancel = function() {
-                        $modalInstance.dismiss('Cancel');
-                    };
+                    //add empty address
+                    $scope.organization.addresses.push({
+                        type: defaultAddressType ? defaultAddressType.key : null,
+                        country: defaultCountry ? defaultCountry.key : null
+                    });
+                }, 0);
+            };
 
-                    $scope.save = function() {
-                        $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
+            $scope.removeAddress = function (address) {
+                $timeout(function () {
+                    _.remove($scope.organization.addresses, function (object) {
+                        return object === address;
+                    });
+                }, 0);
+            };
 
-                        $modalInstance.close({
-                            organization: clearNotFilledElements(_.cloneDeep($scope.organization))
-                        });
-                    };
+            $scope.onClickCancel = function () {
+                $modalInstance.dismiss('Cancel');
+            };
 
-                    function clearNotFilledElements(organization) {
+            $scope.save = function () {
+                $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
 
-                        //remove opened property added for the datePickers
-                        if (organization.identifications && organization.identifications.length) {
-                            organization.identifications = _.map(organization.identifications, function(obj) {
-                                return _.omit(obj, 'opened');
-                            });
-                        }
+                $modalInstance.close({
+                    organization: clearNotFilledElements(_.cloneDeep($scope.organization))
+                });
+            };
 
-                        //phones
-                        if (!organization.defaultPhone.value) {
-                            organization.defaultPhone = null;
-                        } else {
-                            organization.contactMethods.push(organization.defaultPhone);
+            function clearNotFilledElements(organization) {
+
+                //remove opened property added for the datePickers
+                if (organization.identifications && organization.identifications.length) {
+                    organization.identifications = _.map(organization.identifications, function (obj) {
+                        return _.omit(obj, 'opened');
+                    });
+                }
+
+                //phones
+                if (!organization.defaultPhone.value) {
+                    organization.defaultPhone = null;
+                } else {
+                    organization.contactMethods.push(organization.defaultPhone);
                         }
 
                         //faxes

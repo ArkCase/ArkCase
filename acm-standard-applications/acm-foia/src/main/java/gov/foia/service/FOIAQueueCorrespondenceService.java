@@ -38,8 +38,11 @@ import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.services.config.lookups.model.StandardLookupEntry;
+import com.armedia.acm.services.config.lookups.service.LookupDao;
 import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.services.email.service.TemplatingEngine;
+import com.armedia.acm.services.labels.service.TranslationService;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.service.NotificationSender;
 import com.armedia.acm.services.notification.service.NotificationService;
@@ -57,6 +60,7 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
+import java.util.List;
 
 import freemarker.template.TemplateException;
 import gov.foia.dao.FOIARequestDao;
@@ -84,6 +88,8 @@ public class FOIAQueueCorrespondenceService
     private String emailBodyTemplate;
     private TemplatingEngine templatingEngine;
     private NotificationService notificationService;
+    private TranslationService translationService;
+    private LookupDao lookupDao;
 
     public void handleApproveCorrespondence(Long requestId)
     {
@@ -207,6 +213,15 @@ public class FOIAQueueCorrespondenceService
             throws AcmObjectNotFoundException, DocumentGeneratorException, AcmFolderException, AcmUserActionFailedException
     {
         String arkcaseFilename = String.format(documentDescriptor.getFilenameFormat(), request.getId());
+        List<StandardLookupEntry> lookupEntries = (List<StandardLookupEntry>) getLookupDao().getLookupByName("requestDispositionSubType").getEntries();
+        if (request.getDisposition() != null)
+        {
+            String dispositionValue = lookupEntries.stream()
+                    .filter(entry -> request.getDisposition().equalsIgnoreCase(entry.getKey()))
+                    .findFirst()
+                    .map(tempDispValue -> getTranslationService().translate(tempDispValue.getValue())).orElse("");
+            request.setDispositionValue(dispositionValue);
+        }
 
         return documentGenerator.generateAndUpload(documentDescriptor, request,
                 getResponseFolderService().getResponseFolder(request).getCmisFolderId(), arkcaseFilename,
@@ -392,5 +407,25 @@ public class FOIAQueueCorrespondenceService
     public void setNotificationService(NotificationService notificationService)
     {
         this.notificationService = notificationService;
+    }
+
+    public TranslationService getTranslationService()
+    {
+        return translationService;
+    }
+
+    public void setTranslationService(TranslationService translationService)
+    {
+        this.translationService = translationService;
+    }
+
+    public LookupDao getLookupDao()
+    {
+        return lookupDao;
+    }
+
+    public void setLookupDao(LookupDao lookupDao)
+    {
+        this.lookupDao = lookupDao;
     }
 }

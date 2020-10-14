@@ -151,8 +151,14 @@ angular.module('people').controller(
 
             $scope.addAddress = function () {
                 $timeout(function () {
+                    var defaultAddressType = ObjectLookupService.getPrimaryLookup($scope.addressTypes);
+                    var defaultCountry = ObjectLookupService.getPrimaryLookup($scope.countries);
+
                     //add empty address
-                    $scope.person.addresses.push({});
+                    $scope.person.addresses.push({
+                        type: defaultAddressType ? defaultAddressType.key : null,
+                        country: defaultCountry ? defaultCountry.key : null
+                    });
                 }, 0);
             };
 

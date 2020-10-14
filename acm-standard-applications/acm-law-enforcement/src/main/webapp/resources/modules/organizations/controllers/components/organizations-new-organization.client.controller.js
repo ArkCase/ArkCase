@@ -244,13 +244,17 @@ angular.module('organizations').controller(
                 $scope.addressTypes = data[0];
             });
 
-                    ObjectLookupService.getOrganizationTypes().then(function(organizationTypes) {
-                        $scope.organizationTypes = organizationTypes;
-                    });
+            ObjectLookupService.getOrganizationTypes().then(function (organizationTypes) {
+                $scope.organizationTypes = organizationTypes;
+                var defaultOrganizationType = ObjectLookupService.getPrimaryLookup($scope.organizationTypes);
+                if (defaultOrganizationType) {
+                    $scope.organization.organizationType = defaultOrganizationType.key;
+                }
+            });
 
-                    ObjectLookupService.getPersonOrganizationRelationTypes().then(function(personOrganizationRelationTypes) {
-                        $scope.personOrganizationRelationTypes = personOrganizationRelationTypes;
-                    });
+            ObjectLookupService.getPersonOrganizationRelationTypes().then(function (personOrganizationRelationTypes) {
+                $scope.personOrganizationRelationTypes = personOrganizationRelationTypes;
+            });
 
             $scope.changeStates = function (country) {
                 $scope.state = "";
@@ -317,9 +321,16 @@ angular.module('organizations').controller(
 
                     $scope.addAddress = function() {
                         $timeout(function() {
+                            var defaultAddressType = ObjectLookupService.getPrimaryLookup($scope.addressTypes);
+                            var defaultCountry = ObjectLookupService.getPrimaryLookup($scope.countries);
+
                             //add empty address
-                            $scope.organization.addresses.push({});
+                            $scope.organization.addresses.push({
+                                type: defaultAddressType ? defaultAddressType.key : null,
+                                country: defaultCountry ? defaultCountry.key : null
+                            });
                         }, 0);
+
                     };
 
                     $scope.removeAddress = function(address) {

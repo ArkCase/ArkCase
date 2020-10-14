@@ -5,8 +5,6 @@ angular.module('cases').controller(
         [ '$scope', '$q', '$stateParams', '$translate', '$modal', 'UtilService', 'ObjectService', 'Case.InfoService', 'Authentication', 'Object.LookupService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Person.InfoService',
                 function($scope, $q, $stateParams, $translate, $modal, Util, ObjectService, CaseInfoService, Authentication, ObjectLookupService, HelperUiGridService, HelperObjectBrowserService, PersonInfoService) {
 
-                    var initiatorType = 'Requester';
-
                     Authentication.queryUserInfo().then(function(userInfo) {
                         $scope.userId = userInfo.userId;
                         return userInfo;
@@ -18,6 +16,7 @@ angular.module('cases').controller(
                     });
                     ObjectLookupService.getPersonTypes(ObjectService.ObjectTypes.CASE_FILE, true).then(function(personTypes) {
                         $scope.personTypesInitiator = personTypes;
+                        $scope.initiatorType = ObjectLookupService.getPrimaryLookup($scope.personTypesInitiator);
                         return personTypes;
                     });
 
@@ -87,7 +86,7 @@ angular.module('cases').controller(
 
                         if (association) {
 
-                            if (association.personType == initiatorType) {
+                            if (association.personType == $scope.initiatorType) {
                                 //change the types only for initiator
                                 params.types = $scope.personTypesInitiator;
                             }
@@ -95,8 +94,8 @@ angular.module('cases').controller(
                                 personId: association.person.id,
                                 personName: association.person.givenName + ' ' + association.person.familyName,
                                 type: association.personType,
-                                selectExistingEnabled: association.personType == initiatorType ? true : false,
-                                typeEnabled: association.personType == initiatorType ? false : true,
+                                selectExistingEnabled: association.personType == $scope.initiatorType ? true : false,
+                                typeEnabled: association.personType == $scope.initiatorType ? false : true,
                                 description: association.personDescription
                             });
                         } else {
@@ -172,6 +171,6 @@ angular.module('cases').controller(
                     }
 
                     $scope.isDeleteDisabled = function(rowEntity) {
-                        return rowEntity.personType == initiatorType;
+                        return rowEntity.personType == $scope.initiatorType;
                     };
                 } ]);
