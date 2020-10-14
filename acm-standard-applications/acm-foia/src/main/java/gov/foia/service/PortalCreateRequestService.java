@@ -243,7 +243,7 @@ public class PortalCreateRequestService
             requester.setDefaultAddress(address);
         }
 
-        if (in.getPhone() != null && !in.getPhone().isEmpty() && isNewContactMethod(requester, in.getPhone()))
+        if (in.getPhone() != null && !in.getPhone().isEmpty() && isNewPhoneContactMethod(requester, in.getPhone()))
         {
             ContactMethod phone = buildContactMethod("phone", in.getPhone());
             requester.getContactMethods().add(phone);
@@ -275,9 +275,10 @@ public class PortalCreateRequestService
                 && Objects.equals(address1.getState(), address2.getState());
     }
 
-    private boolean isNewContactMethod(Person requester, String contactMethodValue)
+    private boolean isNewPhoneContactMethod(Person requester, String contactMethodValue)
     {
-        return requester.getContactMethods().stream().noneMatch(cm -> cm.getValue().equals(contactMethodValue));
+        return requester.getContactMethods().stream().filter(cm -> cm.getType().equalsIgnoreCase("Phone"))
+                .noneMatch(cm -> cm.getValue().equals(contactMethodValue));
     }
 
     private PostalAddress getPostalAddressFromPortalFOIARequest(PortalFOIARequest in)
