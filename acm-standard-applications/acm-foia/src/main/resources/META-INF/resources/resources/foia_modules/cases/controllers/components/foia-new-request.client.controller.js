@@ -160,29 +160,44 @@ angular.module('cases').controller(
                 angular.copy(Data.getData(), $scope.config.data);
 
                 $scope.config.data.organizationAssociations = [];
-                $scope.config.data.requestType = $scope.requestTypes[0].key;
-                $scope.config.data.requestCategory = $scope.categories[0].key;
 
-                var defaultComponentAgencyFound = _.find($scope.componentsAgencies, function (value) {
-                    return value.primary === true;
-                });
+                var defaultRequestType = ObjectLookupService.getPrimaryLookup($scope.requestTypes);
+                var defaultRequestCategory = ObjectLookupService.getPrimaryLookup($scope.categories);
+                var defaultComponentAgencyFound = ObjectLookupService.getPrimaryLookup($scope.componentsAgencies);
+                var defaultAddressType = ObjectLookupService.getPrimaryLookup($scope.addressTypes);
+                var defaultCountry = ObjectLookupService.getPrimaryLookup($scope.countries);
+                var defaultDeliveryMethod = ObjectLookupService.getPrimaryLookup($scope.deliveryMethodOfResponses);
 
                 if (!Util.isEmpty(defaultComponentAgencyFound)) {
                     $scope.config.data.componentAgency = defaultComponentAgencyFound.key;
                 } else {
                     $scope.config.data.componentAgency = $scope.componentsAgencies[0].key;
                 }
-                $scope.config.data.deliveryMethodOfResponse = $scope.deliveryMethodOfResponses[0].key;
+                if (!Util.isEmpty(defaultRequestType)) {
+                    $scope.config.data.requestType = defaultRequestType.key;
+                } else {
+                    $scope.config.data.requestType = $scope.requestTypes[0].key;
+                }
+                if (!Util.isEmpty(defaultRequestCategory)) {
+                    $scope.config.data.requestCategory = defaultRequestCategory.key;
+                } else {
+                    $scope.config.data.requestCategory = $scope.categories[0].key;
+                }
+                if (!Util.isEmpty(defaultDeliveryMethod)) {
+                    $scope.config.data.deliveryMethodOfResponse = defaultDeliveryMethod.key;
+                } else {
+                    $scope.config.data.deliveryMethodOfResponse = $scope.deliveryMethodOfResponses[0].key;
+                }
                 $scope.config.data.payFee = $scope.payFees[0].key;
 
                 $scope.portals = portals.data;
                 $scope.config.chosenPortal = $scope.portals[0];
 
                 $scope.states = "";
-                $scope.config.data.originator.person.addresses[0].country = countries[0].key;
-                $scope.config.data.originator.person.addresses[0].type = addressTypes[0].key;
+                $scope.config.data.originator.person.addresses[0].country = defaultCountry ? defaultCountry.key : countries[0].key;
+                $scope.config.data.originator.person.addresses[0].type = defaultAddressType ? defaultAddressType.key : addressTypes[0].key;
                 $scope.config.data.receivedDate = moment.utc().format("YYYY-MM-DDTHH:mm:ss.sss");
-                
+
                 $scope.blankPerson = angular.copy($scope.config.data.originator.person);
             });
 

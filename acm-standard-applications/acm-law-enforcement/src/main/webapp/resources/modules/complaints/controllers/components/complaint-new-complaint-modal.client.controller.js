@@ -72,38 +72,49 @@ angular.module('complaints').controller(
                             $scope.isAddressTypeSelected = false;
                     };
 
-                    var initiatorType = 'Initiator';
-
                     ObjectLookupService.getComplaintTypes().then(function(complaintTypes) {
                         $scope.incidentCategory = complaintTypes;
+                        var defaultComplaintType = ObjectLookupService.getPrimaryLookup(complaintTypes);
+                        if (defaultComplaintType) {
+                            $scope.complaint.complaintType = defaultComplaintType.key;
+                        }
                     });
 
                     ObjectLookupService.getPriorities().then(function(priorities) {
                         $scope.priorities = priorities;
+                        var defaultPriority = ObjectLookupService.getPrimaryLookup($scope.priorities);
+                        if (defaultPriority) {
+                            $scope.complaint.priority = defaultPriority.key;
+                        }
                     });
 
                     ObjectLookupService.getFrequencies().then(function(frequencies) {
                         $scope.frequencies = frequencies;
+                        var defaultFrequency = ObjectLookupService.getPrimaryLookup($scope.frequencies);
+                        if (defaultFrequency) {
+                            $scope.complaint.frequency = defaultPriority.key;
+                        }
                     });
 
-                    ObjectLookupService.getAddressTypes().then(function(addressTypes) {
+                    ObjectLookupService.getAddressTypes().then(function (addressTypes) {
                         $scope.addressTypes = addressTypes;
                     });
 
-                    ObjectLookupService.getStates().then(function(states) {
+                    ObjectLookupService.getStates().then(function (states) {
                         $scope.states = states;
                     });
 
-                    ObjectLookupService.getCountries().then(function(countries) {
+                    ObjectLookupService.getCountries().then(function (countries) {
                         $scope.countries = countries;
                     });
 
-                    ObjectLookupService.getPersonTypes(ObjectService.ObjectTypes.COMPLAINT).then(function(personTypes) {
+                    ObjectLookupService.getPersonTypes(ObjectService.ObjectTypes.COMPLAINT).then(function (personTypes) {
                         $scope.personTypes = personTypes;
                         return personTypes;
                     });
                     ObjectLookupService.getPersonTypes(ObjectService.ObjectTypes.COMPLAINT, true).then(function(personTypes) {
                         $scope.personTypesInitiator = personTypes;
+                        $scope.initiatorType = ObjectLookupService.getPrimaryLookup($scope.personTypesInitiator);
                         return personTypes;
                     });
 
@@ -165,7 +176,7 @@ angular.module('complaints').controller(
 
                         var params = {};
                         params.types = $scope.personTypesInitiator;
-                        params.type = initiatorType;
+                        params.type = $scope.initiatorType;
                         params.typeEnabled = false;
                         association = new newPersonAssociation();
 
@@ -431,7 +442,13 @@ angular.module('complaints').controller(
                     $scope.addAddress = function () {
                         $timeout(function () {
                             //add empty address
-                            $scope.complaint.addresses.push({});
+                            var defaultAddressType = ObjectLookupService.getPrimaryLookup($scope.addressTypes);
+                            var defaultCountry = ObjectLookupService.getPrimaryLookup($scope.countries);
+
+                            $scope.complaint.addresses.push({
+                                type: defaultAddressType ? defaultAddressType.key : null,
+                                country: defaultCountry ? defaultCountry.key : null
+                            });
                         }, 0);
                     };
 

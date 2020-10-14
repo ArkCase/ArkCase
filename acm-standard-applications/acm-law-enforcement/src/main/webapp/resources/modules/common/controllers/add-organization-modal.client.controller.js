@@ -51,11 +51,18 @@ angular.module('common').controller(
                         $scope.isDefault = params.isFirstOrganization;
                         $scope.hideNoField = params.isFirstOrganization;
                     }
-                    $scope.type = _.find($scope.types, function(type) {
+                    $scope.type = _.find($scope.types, function (type) {
                         return type.key == params.type;
                     });
+
+                    var defaultType = ObjectLookupService.getPrimaryLookup($scope.types);
+
+                    if ($scope.type == null && defaultType != null) {
+                        $scope.type = defaultType;
+                    }
+
                     if (params.infoType) {
-                        $scope.type = _.find($scope.types, function(obj) {
+                        $scope.type = _.find($scope.types, function (obj) {
                             return obj.key.toLowerCase() == "parentcompany";
                         });
                     }

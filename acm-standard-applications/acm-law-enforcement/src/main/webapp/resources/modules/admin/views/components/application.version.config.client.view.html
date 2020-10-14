@@ -8,9 +8,9 @@
         <div class="panel-body">
             <div class="row">
                 <div class="col-lg-12">
-                    <p>Product Version: {{applicationVersion}}</p>
-                    <p ng-if="extensionVersion">Extension Version: {{extensionVersion}}</p>
-                    <p>Date Last Installed: {{buildTime}}</p>
+                    <p>{{'admin.application.productVersion' | translate}}: {{applicationVersion}}</p>
+                    <p ng-if="extensionVersion">{{'admin.application.extensionVersion' | translate}}: {{extensionVersion}}</p>
+                    <p>{{'admin.application.dateLastInstalled' | translate}}: {{buildTime}}</p>
                 </div>
             </div>
         </div>
