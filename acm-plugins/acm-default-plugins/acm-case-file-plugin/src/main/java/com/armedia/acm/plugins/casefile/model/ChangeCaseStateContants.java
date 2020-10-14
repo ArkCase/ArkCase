@@ -34,8 +34,7 @@ public interface ChangeCaseStateContants
     String FILE_ID = "FILE_ID";
     String FILE_VERSION = "FILE_VERSION";
 
-    String CHANGE_CASE_STATUS_STYLESHEET = System.getProperty("user.home")
-            + "/.arkcase/acm/pdf-stylesheets/change-case-file-state-document.xsl";
+    String CHANGE_CASE_STATUS_STYLESHEET = "change-case-file-state-document.xsl";
     String CHANGE_CASE_STATUS_DOCUMENT = "CHANGE_CASE";
     String CHANGE_CASE_STATUS_FILENAMEFORMAT = "Change Case Status.pdf";
     String CHANGE_CASE_STATUS = "CHANGE_CASE_STATUS";

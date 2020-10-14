@@ -363,6 +363,8 @@
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="pdfService" ref="pdfService"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
+        <property name="fileConfigurationService" ref="fileConfigurationServiceImpl"/>
+        <property name="configurationClientConfig" ref="configurationClientConfig"/>
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
     </bean>
 

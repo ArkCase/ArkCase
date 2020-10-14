@@ -26,6 +26,8 @@ package com.armedia.acm.plugins.ecm.service;
  * #L%
  */
 
+import com.armedia.acm.configuration.model.ConfigurationClientConfig;
+import com.armedia.acm.configuration.service.FileConfigurationService;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.pdf.PdfServiceException;
@@ -54,6 +56,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -74,6 +78,10 @@ public abstract class PDFDocumentGenerator<T>
 
     private PdfService pdfService;
 
+    private FileConfigurationService fileConfigurationService;
+
+    private ConfigurationClientConfig configurationClientConfig;
+
     private FolderAndFilesUtils folderAndFilesUtils;
 
     private Logger log = LogManager.getLogger(getClass());
@@ -91,7 +99,11 @@ public abstract class PDFDocumentGenerator<T>
 
             try
             {
-                filename = getPdfService().generatePdf(new File(stylesheet), source);
+                String pdfStylesheetsLocation = configurationClientConfig.getStylesheetsPath();
+                InputStream xslStream = fileConfigurationService.getInputStreamFromConfiguration(pdfStylesheetsLocation + "/"
+                        + stylesheet);
+                URI baseURI = fileConfigurationService.getLocationUriFromConfiguration(pdfStylesheetsLocation);
+                filename = getPdfService().generatePdf(xslStream, baseURI, source);
                 log.debug("Created {} document [{}]", documentName, filename);
 
                 String arkcaseFilename = String.format(fileNameFormat, objectId);
@@ -132,7 +144,7 @@ public abstract class PDFDocumentGenerator<T>
                     }
                 }
             }
-            catch (PdfServiceException | AcmCreateObjectFailedException | AcmUserActionFailedException | IOException e)
+            catch (PdfServiceException | AcmCreateObjectFailedException | AcmUserActionFailedException | IOException | URISyntaxException e)
             {
                 log.error("Unable to create {} document for object [{}]",
                         documentName, objectId, e);
@@ -235,6 +247,26 @@ public abstract class PDFDocumentGenerator<T>
     public void setPdfService(PdfService pdfService)
     {
         this.pdfService = pdfService;
+    }
+
+    public FileConfigurationService getFileConfigurationService()
+    {
+        return fileConfigurationService;
+    }
+
+    public void setFileConfigurationService(FileConfigurationService fileConfigurationService)
+    {
+        this.fileConfigurationService = fileConfigurationService;
+    }
+
+    public ConfigurationClientConfig getConfigurationClientConfig()
+    {
+        return configurationClientConfig;
+    }
+
+    public void setConfigurationClientConfig(ConfigurationClientConfig configurationClientConfig)
+    {
+        this.configurationClientConfig = configurationClientConfig;
     }
 
     public DateTimeFormatter getDatePattern()
