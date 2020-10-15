@@ -189,6 +189,7 @@ release_all:
     - export PORTAL_FRONTEND_TAG=$([[ $CI_COMMIT_REF_NAME = "develop" ]] && echo "develop" || ([[ $CI_COMMIT_REF_NAME = "`echo -e "$CI_COMMIT_REF_NAME\n3.3.10" | sort -V | head -n1`" ]] && echo $CI_COMMIT_REF_NAME || echo "foia-"$CI_COMMIT_REF_NAME))
     - export CONFIG_SERVER_TAG=$CI_COMMIT_REF_NAME
     - export SNOWBOUND_TAG=$([[ $CI_COMMIT_REF_NAME = "develop" ]] && echo "snowbound-5.2" || echo "snowbound-"$CI_COMMIT_REF_NAME)
+    - export FOIA_REPORTS_TAG=$CI_COMMIT_REF_NAME
     # Trigger other project releases:
     # Configuration
     - curl -k --request POST --form token=$CONFIGURATION_PROJECT_TOKEN --form ref=$CONFIGURATION_TAG
@@ -260,4 +261,18 @@ release_all:
       --form "variables[HOTFIX_SUPPORT_VERSION]=$HOTFIX_SUPPORT_VERSION"
       --form "variables[RELEASE_HOTFIX]=$RELEASE_HOTFIX"
       https://gitlab.armedia.com/api/v4/projects/39/trigger/pipeline
+     # Foia analytical reports
+     - curl -k --request POST --form token=$FOIA_REPORTS_PROJECT_TOKEN --form ref=$FOIA_REPORTS_TAG
+      --form "variables[RELEASE_START]=$RELEASE_START"
+      --form "variables[RELEASE_VERSION]=$RELEASE_VERSION"
+      --form "variables[DEVELOP_NEW_VERSION]=$DEVELOP_NEW_VERSION"
+      --form "variables[RELEASE_CANDIDATE_X]=$RELEASE_CANDIDATE_X"
+      --form "variables[RELEASE_CANDIDATE_SUFFIX]=$RELEASE_CANDIDATE_SUFFIX"
+      --form "variables[RELEASE]=$RELEASE"
+      --form "variables[START_SUPPORT_BRANCH]=$START_SUPPORT_BRANCH"
+      --form "variables[RELEASE_TAG]=$RELEASE_TAG"
+      --form "variables[START_HOTFIX]=$START_HOTFIX"
+      --form "variables[HOTFIX_SUPPORT_VERSION]=$HOTFIX_SUPPORT_VERSION"
+      --form "variables[RELEASE_HOTFIX]=$RELEASE_HOTFIX"
+      https://gitlab.armedia.com/api/v4/projects/422/trigger/pipeline
     # Installer
