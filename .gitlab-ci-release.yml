@@ -261,8 +261,8 @@ release_all:
       --form "variables[HOTFIX_SUPPORT_VERSION]=$HOTFIX_SUPPORT_VERSION"
       --form "variables[RELEASE_HOTFIX]=$RELEASE_HOTFIX"
       https://***REMOVED***/api/v4/projects/39/trigger/pipeline
-     # Foia analytical reports
-     - curl -k --request POST --form token=$FOIA_REPORTS_PROJECT_TOKEN --form ref=$FOIA_REPORTS_TAG
+    # Foia analytical reports
+    - curl -k --request POST --form token=$FOIA_REPORTS_PROJECT_TOKEN --form ref=$FOIA_REPORTS_TAG
       --form "variables[RELEASE_START]=$RELEASE_START"
       --form "variables[RELEASE_VERSION]=$RELEASE_VERSION"
       --form "variables[DEVELOP_NEW_VERSION]=$DEVELOP_NEW_VERSION"
