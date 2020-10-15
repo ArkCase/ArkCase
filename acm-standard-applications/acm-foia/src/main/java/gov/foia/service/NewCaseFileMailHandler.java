@@ -40,6 +40,9 @@ import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.plugins.person.model.PersonConstants;
 import com.armedia.acm.service.MimeMessageParser;
+import com.armedia.acm.services.config.lookups.model.AcmLookupEntry;
+import com.armedia.acm.services.config.lookups.model.StandardLookupEntry;
+import com.armedia.acm.services.config.lookups.service.LookupDao;
 import com.armedia.acm.services.email.event.SmtpEmailReceivedEvent;
 import com.armedia.acm.services.email.handler.AcmObjectMailHandler;
 import com.armedia.acm.web.api.MDCConstants;
@@ -79,6 +82,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import gov.foia.model.FOIAConstants;
 import gov.foia.model.FOIAPerson;
@@ -95,6 +99,7 @@ public class NewCaseFileMailHandler extends AcmObjectMailHandler
     private SaveFOIARequestService saveFOIARequestService;
     private EmailReceiverConfig emailReceiverConfig;
     private PersonDao personDao;
+    private LookupDao lookupDao;
 
     public NewCaseFileMailHandler(AcmNameDao dao)
     {
@@ -169,20 +174,17 @@ public class NewCaseFileMailHandler extends AcmObjectMailHandler
         FOIARequest request = new FOIARequest();
 
         request.setTitle(message.getSubject());
-
         request.setRequestType(FOIAConstants.NEW_REQUEST_TYPE);
         request.setRequestSubType(FOIAConstants.REQUEST_SUB_TYPE);
-        request.setComponentAgency(FOIAConstants.DEFAULT_COMPONENT_AGENCY);
-
         request.setDeliveryMethodOfResponse(FOIAConstants.DEFAULT_DELIVERY_METHOD_OF_RESPONSE);
         request.setReceivedDate(LocalDateTime.now());
         request.setRequestCategory(FOIAConstants.REQUEST_CATEGORY_MAIL_SERVICE);
         request.setFeeWaiverFlag(false);
         request.setExpediteFlag(false);
         request.setExternal(true);
-
-        request.getPersonAssociations().add(createRequesterAssociation(message));
+        request.setComponentAgency(getDefaultComponentAgency());
         request.setDetails(MimeMessageParser.getFormattedStringContent(message));
+        request.getPersonAssociations().add(createRequesterAssociation(message));
 
         AcmAuthentication acmAuthentication = new AcmAuthentication(null, null, null, true, "mail-service");
         SecurityContextHolder.getContext().setAuthentication(acmAuthentication);
@@ -206,6 +208,23 @@ public class NewCaseFileMailHandler extends AcmObjectMailHandler
             log.error("Request could not be generated from email with subject [{}]", message.getSubject(), e);
         }
         return request;
+    }
+
+    private String getDefaultComponentAgency()
+    {
+        List<StandardLookupEntry> componentAgenciesLookupEntries = getLookupDao()
+                .getLookupByName("componentsAgencies")
+                .getEntries()
+                .stream()
+                .map(obj -> (StandardLookupEntry) obj)
+                .collect(Collectors.toList());
+
+        StandardLookupEntry defaultComponentAgencyLookup = componentAgenciesLookupEntries.stream()
+                .filter(AcmLookupEntry::isPrimary)
+                .findAny()
+                .orElse(componentAgenciesLookupEntries.get(0));
+
+        return defaultComponentAgencyLookup.getKey();
     }
 
     private List<MultipartFile> getMultipartFileAttachmentList(Message message)
@@ -327,5 +346,15 @@ public class NewCaseFileMailHandler extends AcmObjectMailHandler
     public void setPersonDao(PersonDao personDao)
     {
         this.personDao = personDao;
+    }
+
+    public LookupDao getLookupDao()
+    {
+        return lookupDao;
+    }
+
+    public void setLookupDao(LookupDao lookupDao)
+    {
+        this.lookupDao = lookupDao;
     }
 }
