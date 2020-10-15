@@ -39,7 +39,6 @@ public interface FOIAConstants
     String NEW_REQUEST_TYPE = "New Request";
     String APPEAL_REQUEST_TYPE = "Appeal";
     String REQUEST_SUB_TYPE = "FOIA";
-    String DEFAULT_COMPONENT_AGENCY = "FOIA";
 
     String SIMPLE_REQUEST_TRACK = "simple";
 
