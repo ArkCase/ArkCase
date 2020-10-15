@@ -878,7 +878,13 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
      */
 
     Service.getAppealOtherReasons = function () {
-        return Service.getLookupByLookupName('appealOtherReasons');
+        var selectEntry = {key: null, value: "Select Other Reason"};
+        var otherReasons = [];
+        return Service.getLookupByLookupName("appealOtherReasons").then(function (reasonsData) {
+            otherReasons = reasonsData;
+            otherReasons.unshift(selectEntry);
+            return otherReasons;
+        });
 
     };
 

@@ -68,11 +68,9 @@ angular.module('cases').controller(
                 populateAppealDispositionReasons();
                 populateAppealOtherReasons();
 
-                if ($scope.objectInfo.disposition === 'completely-reversed') {
-                    $scope.showDispositionReasonsFlag = false;
-                } else {
-                    $scope.showDispositionReasonsFlag = true;
-                }
+                // Can only select reasons when the disposition is closed (UI label is "Closed for Other Reasons")
+                $scope.showDispositionReasonsFlag = (Util.isEmpty($scope.objectInfo.disposition) || $scope.objectInfo.disposition === 'closed');
+
                 $scope.originalDueDate = objectInfo.dueDate;
                 if (objectInfo.requestTrack === 'expedite') { // request was already expedited and saved
                     AdminQueuesTimeToCompleteService.getQueuesConfig().then(function (queuesConfig) {
