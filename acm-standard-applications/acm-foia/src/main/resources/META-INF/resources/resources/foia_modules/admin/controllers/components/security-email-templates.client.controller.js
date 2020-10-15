@@ -127,7 +127,7 @@ angular.module('admin').controller('Admin.SecurityEmailTemplatesController',
                 var templatesPromise = emailTemplatesService.listEmailTemplates();
                 templatesPromise.then(function(templates) {
                     var objectTypes = $scope.emailConfig.objectTypes;
-                    templates = templates.map(function(item){ 
+                    templates = templates.map(function(item){
                         item.objectTypesNames = [];
                         for (var i in item.objectTypes) {
                             item.objectTypesNames[i] = takeNameByIdFromModuleConfig(item.objectTypes[i]);
@@ -147,6 +147,7 @@ angular.module('admin').controller('Admin.SecurityEmailTemplatesController',
             }
 
             emailTemplatesService.getEmailReceiverConfiguration().then(function(result) {
+                $scope.originalEmailReceiverConfiguration = result.data;
                 $scope.emailReceiverConfiguration = {
                     enableBurstingAttachments: result.data["email.enableBurstingAttachments"],
                     enableRequest: result.data["email.create.case.enabled"],
@@ -160,7 +161,7 @@ angular.module('admin').controller('Admin.SecurityEmailTemplatesController',
                     "email.create.case.enabled": $scope.emailReceiverConfiguration.enableRequest,
                     "email.CASE_FILE.user": $scope.emailReceiverConfiguration.user_case.replace('@', '%40'),
                     "email.CASE_FILE.password": $scope.emailReceiverConfiguration.pass_case,
-                    "email.enableBurstingAttachments": $scope.emailReceiverConfiguration.enableBurstingAttachments
+                    "email.enableBurstingAttachments": $scope.originalEmailReceiverConfiguration["email.enableBurstingAttachments"]
                 };
                 emailTemplatesService.saveEmailReceiverConfiguration(newEmailReceiverConfiguration).then(function(value) {
                     MessageService.succsessAction();
@@ -171,6 +172,9 @@ angular.module('admin').controller('Admin.SecurityEmailTemplatesController',
 
             $scope.saveBurstingConfiguration = function () {
                 var emailReceiverConfiguration = {
+                    "email.create.case.enabled": $scope.originalEmailReceiverConfiguration["email.create.case.enabled"],
+                    "email.CASE_FILE.user": $scope.originalEmailReceiverConfiguration["email.CASE_FILE.user"],
+                    "email.CASE_FILE.password": $scope.originalEmailReceiverConfiguration["email.CASE_FILE.password"],
                     "email.enableBurstingAttachments": $scope.emailReceiverConfiguration.enableBurstingAttachments
                 };
                 emailTemplatesService.saveEmailReceiverConfiguration(emailReceiverConfiguration).then(function() {
