@@ -161,27 +161,9 @@ angular.module('request-info').controller('RequestInfo.ExemptionController',
                  var promiseQueryCodes = ExemptionService.getDocumentExemptionCodes(params.caseId, params.fileId);
                 $q.all([ promiseQueryCodes ]).then(function(data) {
                     $scope.codes = data[0];
-
-                    var userInfoPromises = [];
-                    for(var i = 0; i<$scope.codes.data.length; i++) {
-                        userInfoPromises.push(UserInfoService.getUserInfoById($scope.codes.data[i].creator));
-                    }
-
-                    $q.all(userInfoPromises).then(function (userInfo) {
-                        for(var j = 0; j < $scope.codes.data.length; j++) {
-                            for(var k = 0; k< userInfo.length; k++) {
-                                if($scope.codes.data[j].creator === userInfo[k].userId) {
-                                    //change creator user id with the user full name
-                                    $scope.codes.data[j].creator = userInfo[k].fullName;
-                                    break;
-                                }
-                            }
-                        }
-
-                        $scope.gridOptions = $scope.gridOptions || {};
-                        $scope.gridOptions.data = $scope.codes.data;
-                        $scope.gridOptions.totalItems = $scope.codes.data.length;
-                    });
+                    $scope.gridOptions = $scope.gridOptions || {};
+                    $scope.gridOptions.data = $scope.codes.data;
+                    $scope.gridOptions.totalItems = $scope.codes.data.length;
                 });
             }
 
