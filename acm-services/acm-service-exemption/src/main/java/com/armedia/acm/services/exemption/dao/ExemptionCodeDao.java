@@ -27,19 +27,17 @@ package com.armedia.acm.services.exemption.dao;
  * #L%
  */
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import com.armedia.acm.data.AcmAbstractDao;
+import com.armedia.acm.services.exemption.model.ExemptionCode;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-
-import org.springframework.transaction.annotation.Transactional;
-
-import com.armedia.acm.data.AcmAbstractDao;
-import com.armedia.acm.services.exemption.model.ExemptionCode;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by ana.serafimoska
@@ -158,6 +156,21 @@ public class ExemptionCodeDao extends AcmAbstractDao<ExemptionCode>
         }
 
         return exemptionMappedList;
+    }
+
+    public List<ExemptionCode> getAllExemptionCode3()
+    {
+        String queryText = "SELECT exemptionCode FROM ExemptionCode exemptionCode WHERE exemptionCode.exemptionStatute IS NOT NULL";
+
+        TypedQuery<ExemptionCode> query = getEntityManager().createQuery(queryText, ExemptionCode.class);
+
+        List<ExemptionCode> exemptionCodeList = query.getResultList();
+        if (exemptionCodeList == null)
+        {
+            exemptionCodeList = new ArrayList<>();
+        }
+        return exemptionCodeList;
+
     }
 
     public EntityManager getEntityManager()

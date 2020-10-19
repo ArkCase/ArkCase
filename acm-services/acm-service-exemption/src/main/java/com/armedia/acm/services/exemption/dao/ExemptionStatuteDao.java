@@ -11,7 +11,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class ExemptionStatuteDao extends AcmAbstractDao<ExemptionStatute> {
+public class ExemptionStatuteDao extends AcmAbstractDao<ExemptionStatute>
+{
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -69,11 +70,13 @@ public class ExemptionStatuteDao extends AcmAbstractDao<ExemptionStatute> {
         }
     }
 
-    public EntityManager getEntityManager() {
+    public EntityManager getEntityManager()
+    {
         return entityManager;
     }
 
-    public void setEntityManager(EntityManager entityManager) {
+    public void setEntityManager(EntityManager entityManager)
+    {
         this.entityManager = entityManager;
     }
 }

@@ -27,6 +27,8 @@ package com.armedia.acm.services.dataupdate.service;
  * #L%
  */
 
+import com.armedia.acm.services.exemption.exception.SaveExemptionStatuteException;
+
 /**
  * Data update executors should implement this interface and
  * provide unique executor id and implement operations to be executed.
@@ -43,5 +45,5 @@ public interface AcmDataUpdateExecutor
     /**
      * Executes update operations.
      */
-    void execute();
+    void execute() throws SaveExemptionStatuteException;
 }
