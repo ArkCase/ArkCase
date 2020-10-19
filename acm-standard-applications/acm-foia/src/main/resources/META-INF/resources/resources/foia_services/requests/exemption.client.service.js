@@ -62,6 +62,4 @@ angular.module('services').factory('ExemptionService', [ '$http', function($http
 
     }
 
-
-
 } ]);

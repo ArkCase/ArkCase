@@ -43,16 +43,6 @@ angular.module('request-info').controller('RequestInfo.ExemptionController',
                 }
             };
 
-            $scope.isEditDisabled = function (rowEntity) {
-                if ($scope.isDisabled) {
-                    return true;
-                } else {
-                    if (rowEntity.exemptionCode != 'Ex3') {
-                        return true;
-                    }
-                }
-            };
-
             $scope.isDeleteDisabled = function (rowEntity) {
                 if ($scope.isDisabled) {
                     return true;
