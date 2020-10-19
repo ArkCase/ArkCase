@@ -66,7 +66,7 @@ angular.module('services').service('Case.ExemptionService', function ($http) {
     function saveExemptionStatute(data) {
         return $http({
             method: 'POST',
-            url: 'api/latest/service/statute/tags',
+            url: 'api/latest/service/exemption/statute/tags',
             data: data,
             headers: {
                 'Content-Type': 'application/json'
@@ -77,7 +77,7 @@ angular.module('services').service('Case.ExemptionService', function ($http) {
     function deleteExemptionStatute(tagId) {
         return $http({
             method: 'DELETE',
-            url: 'api/latest/service/statute/' + tagId
+            url: 'api/latest/service/exemption/statute/' + tagId
         })
     }
 

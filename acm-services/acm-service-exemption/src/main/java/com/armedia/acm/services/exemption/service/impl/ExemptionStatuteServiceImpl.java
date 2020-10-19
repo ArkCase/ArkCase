@@ -4,6 +4,7 @@ import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.services.exemption.dao.ExemptionStatuteDao;
 import com.armedia.acm.services.exemption.exception.DeleteExemptionStatuteException;
+import com.armedia.acm.services.exemption.exception.GetExemptionStatuteException;
 import com.armedia.acm.services.exemption.exception.SaveExemptionStatuteException;
 import com.armedia.acm.services.exemption.model.ExemptionCodeAndStatuteEventPublisher;
 import com.armedia.acm.services.exemption.model.ExemptionConstants;
@@ -45,6 +46,22 @@ public class ExemptionStatuteServiceImpl implements ExemptionStatuteService
         {
             log.error("Saving Exemption Statutes [{}] failed", exemptionStatute.getExemptionStatutes());
             throw new SaveExemptionStatuteException("Unable to save exemption statute [{}]" + exemptionStatute.getExemptionStatutes(), e);
+        }
+    }
+
+    @Override
+    @Transactional
+    public List<ExemptionStatute> getExemptionStatutesOnDocument(Long caseId, Long fileId) throws GetExemptionStatuteException
+    {
+        log.info("Finding  exemption statutes for file: {} associated with objectId: {}", fileId, caseId);
+        try
+        {
+            return getExemptionStatuteDao().getExemptionStatutesByFileIdAndCaseId(caseId, fileId);
+        }
+        catch (Exception e)
+        {
+            log.error("Finding  exemption statutes for file: {} associated with objectId: {} failed", fileId, caseId);
+            throw new GetExemptionStatuteException("Unable to get exemption statutes for objectId: {}" + caseId, e);
         }
     }
 
@@ -93,9 +110,9 @@ public class ExemptionStatuteServiceImpl implements ExemptionStatuteService
         log.info("Deleting exemption statute with id: {}", statuteId);
         try
         {
-            // ExemptionStatute exemptionStatute = getExemptionStatuteDao().find(statuteId);
-            // getExemptionStatuteDao().deleteExemptionStatute(statuteId);
-            // getExemptionCodeAndStatuteEventPublisher().publishExemptionStatuteDeletedEvent(exemptionStatute);
+             ExemptionStatute exemptionStatute = getExemptionStatuteDao().find(statuteId);
+             getExemptionStatuteDao().deleteExemptionStatute(statuteId);
+             getExemptionCodeAndStatuteEventPublisher().publishExemptionStatuteDeletedEvent(exemptionStatute);
         }
         catch (Exception e)
         {
