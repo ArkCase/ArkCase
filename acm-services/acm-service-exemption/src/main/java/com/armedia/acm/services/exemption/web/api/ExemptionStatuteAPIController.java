@@ -79,7 +79,7 @@ public class ExemptionStatuteAPIController
 
         log.debug("User [{}] coming from [{}] is getting exemption statutes of foia request (case file) [{}]", user, caseId);
         tags = getExemptionStatuteService().getExemptionStatutesOnDocument(caseId, fileId);
-        log.debug("Exemption codes [{}] of foia request (case file) [{}] returned", tags, caseId);
+        log.debug("Exemption statutes [{}] of foia request (case file) [{}] returned", tags, caseId);
         return tags;
     }
 
