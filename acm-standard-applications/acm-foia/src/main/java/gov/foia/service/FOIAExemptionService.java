@@ -83,7 +83,7 @@ public class FOIAExemptionService
     }
 
     @Transactional
-    public void copyFileWithExemptionCodes(EcmFile originalFile, EcmFile copiedFile)
+    public void copyFileWithExemptionCodesOrStatutes(EcmFile originalFile, EcmFile copiedFile)
     {
         Long copiedFileId = copiedFile.getFileId();
         List<ExemptionCode> exemptionCodeList = getFoiaExemptionCodeDao().findExemptionCodesByFileId(originalFile.getFileId());
@@ -166,7 +166,7 @@ public class FOIAExemptionService
     }
 
     public List<ExemptionStatute> getExemptionStatutes(Long parentObjectId, String parentObjectType) throws GetExemptionStatuteException {
-        log.info("Finding  exemption codes for objectId: {}", parentObjectId);
+        log.info("Finding  exemption statutes for objectId: {}", parentObjectId);
         try
         {
             List<ExemptionStatute> combineResult = new ArrayList<>();
@@ -188,7 +188,8 @@ public class FOIAExemptionService
 
     public boolean hasExemptionOnAnyDocumentsOnRequest(Long objectId, String objectType)
     {
-        return foiaExemptionCodeDao.hasExemptionOnAnyDocumentsOnRequest(objectId, objectType);
+        return foiaExemptionCodeDao.hasExemptionOnAnyDocumentsOnRequest(objectId, objectType)
+                || foiaExemptionStatuteDao.hasExemptionStatutesOnAnyDocumentsOnRequest(objectId, objectType);
     }
 
     public FOIAExemptionCodeDao getFoiaExemptionCodeDao()

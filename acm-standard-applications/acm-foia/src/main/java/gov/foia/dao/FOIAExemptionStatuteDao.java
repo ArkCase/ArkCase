@@ -6,7 +6,6 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.services.exemption.model.ExemptionStatute;
 import gov.foia.model.FOIARequest;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -116,6 +115,43 @@ public class FOIAExemptionStatuteDao extends AcmAbstractDao<ExemptionStatute>
             exemptionStatuteList = new ArrayList<>();
         }
         return exemptionStatuteList;
+    }
+
+    public boolean hasExemptionStatutesOnAnyDocumentsOnRequest(Long parentObjectId, String parentObjectType)
+    {
+        String queryText = "SELECT af.id " +
+                "FROM AcmContainer ac " +
+                "JOIN AcmFolder af ON af.parentFolder.id = ac.folder.id " +
+                "WHERE ac.containerObjectId = :parentObjectId " +
+                "AND ac.containerObjectType = :parentObjectType ";
+
+        Query query = getEm().createQuery(queryText);
+        query.setParameter("parentObjectId", parentObjectId);
+        query.setParameter("parentObjectType", parentObjectType);
+
+        List<Long> folderIds = query.getResultList();
+
+        for (Long folderId : folderIds)
+        {
+            List<EcmFile> files = getAcmFolderService().getFilesInFolderAndSubfolders(folderId);
+
+            if (!files.isEmpty())
+            {
+                List<Long> fileIds = files.stream()
+                        .map(EcmFile::getFileId)
+                        .collect(Collectors.toList());
+                List<ExemptionStatute> listStatutesOnDocuments = new ArrayList<>();
+                for (Long fileId : fileIds)
+                {
+                    listStatutesOnDocuments = findExemptionStatutesByFileId(fileId);
+                    if (!listStatutesOnDocuments.isEmpty())
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     public EntityManager getEntityManager()
