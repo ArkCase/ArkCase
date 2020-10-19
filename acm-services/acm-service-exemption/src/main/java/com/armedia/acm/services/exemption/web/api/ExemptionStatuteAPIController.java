@@ -1,6 +1,7 @@
 package com.armedia.acm.services.exemption.web.api;
 
 import com.armedia.acm.services.exemption.exception.DeleteExemptionStatuteException;
+import com.armedia.acm.services.exemption.exception.GetExemptionStatuteException;
 import com.armedia.acm.services.exemption.exception.SaveExemptionStatuteException;
 import com.armedia.acm.services.exemption.model.ExemptionStatute;
 import com.armedia.acm.services.exemption.service.ExemptionStatuteService;
@@ -23,7 +24,7 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
-@RequestMapping({ "/api/v1/service/statute", "/api/latest/service/statute" })
+@RequestMapping({ "/api/v1/service/exemption/statute", "/api/latest/service/exemption/statute" })
 public class ExemptionStatuteAPIController
 {
 
@@ -50,7 +51,7 @@ public class ExemptionStatuteAPIController
 
     @RequestMapping(value = "/{fileId}//tags/manually", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public void setExemptionStatutesManually(
+    public void saveExemptionStatutesOnDocumentManually(
             @PathVariable(value = "fileId") String fileId,
             @RequestParam(value = "tags") List<String> tags,
             Authentication auth,
@@ -64,6 +65,22 @@ public class ExemptionStatuteAPIController
         log.debug("User [{}] coming from [{}] is updating exemption statutes [{}] of document [{}]", user, tags, fileId);
         getExemptionStatuteService().saveExemptionStatutesOnDocument(realFileId, tags, user);
         log.debug("Exemption statutes [{}] of document [{}] updated", tags, fileId);
+    }
+
+    @RequestMapping(value = "/{caseId}/tags/{fileId}", method = RequestMethod.GET)
+    public @ResponseBody List<ExemptionStatute> getExemptionStatutesOnDocument(
+            @PathVariable(value = "caseId") Long caseId,
+            @PathVariable(value = "fileId") Long fileId,
+            Authentication auth,
+            HttpSession session) throws GetExemptionStatuteException
+    {
+        List<ExemptionStatute> tags;
+        String user = auth.getName();
+
+        log.debug("User [{}] coming from [{}] is getting exemption statutes of foia request (case file) [{}]", user, caseId);
+        tags = getExemptionStatuteService().getExemptionStatutesOnDocument(caseId, fileId);
+        log.debug("Exemption codes [{}] of foia request (case file) [{}] returned", tags, caseId);
+        return tags;
     }
 
     private String fileIdOnlyChecker(String fileId)

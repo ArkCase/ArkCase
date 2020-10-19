@@ -35,11 +35,11 @@ angular.module('services').factory('ExemptionService', [ '$http', function($http
                     tags: exemptionData
                 }
             });
-        }
+        },
 
         getDocumentExemptionStatutes: function (caseId, fileId) {
             return $http({
-                url: 'api/latest/service/ecm/file/' + caseId + '/tags/' + fileId,
+                url: '/api/latest/service/exemption/statute' + caseId + '/tags/' + fileId,
                 method: 'GET',
                 isArray: true,
                 params: {
@@ -52,7 +52,7 @@ angular.module('services').factory('ExemptionService', [ '$http', function($http
 
         saveDocumentExemptionStatute: function (fileId, exemptionData) {
             return $http({
-                url: 'api/latest/service/ecm/file/' + fileId + '/update/tags/manually',
+                url: '/api/latest/service/exemption/statute' + fileId + '/tags/manually',
                 method: 'POST',
                 params: {
                     tags: exemptionData

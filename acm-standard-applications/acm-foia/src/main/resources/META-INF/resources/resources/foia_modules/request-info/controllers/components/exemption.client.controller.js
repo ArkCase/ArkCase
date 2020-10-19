@@ -6,12 +6,6 @@ angular.module('request-info').controller('RequestInfo.ExemptionController',
 
             $scope.isDisabled = false;
             $scope.statuteGridOptions = {};
-            $scope.exemptionData = {
-                exemptionStatute : {},
-                parentObjectId : $stateParams.id,
-                parentObjectType : "CASE_FILE"
-            };
-
 
             var componentHelper = new HelperObjectBrowserService.Component({
                 scope: $scope,
@@ -193,11 +187,11 @@ angular.module('request-info').controller('RequestInfo.ExemptionController',
                     data: []
                 };
                 gridHelper.addButton(compConfig, "delete", null, null, "isDeleteDisabled");
-                retrieveStatuteGridData();
+                retrieveStatuteGridData($stateParams.id, $stateParams.fileId);
             });
 
             $scope.refreshStatute = function() {
-                retrieveStatuteGridData();
+                retrieveStatuteGridData($stateParams.id, $stateParams.fileId);
             };
 
             $scope.addNewStatute = function() {
@@ -217,8 +211,8 @@ angular.module('request-info').controller('RequestInfo.ExemptionController',
                     }
                 });
                 modalInstance.result.then(function(data) {
-                    $scope.exemptionData.exemptionStatute = data.exemptionStatute;
-                    CaseExemptionService.saveExemptionStatute($scope.exemptionData).then(function (value) {
+                    $scope.exemptionData = data.exemptionStatute;
+                    CaseExemptionService.saveDocumentExemptionStatute($stateParams.fileId, $scope.exemptionData).then(function (value) {
                         $scope.statuteGridOptions.data.push(value);
                         MessageService.succsessAction();
                     }, function () {

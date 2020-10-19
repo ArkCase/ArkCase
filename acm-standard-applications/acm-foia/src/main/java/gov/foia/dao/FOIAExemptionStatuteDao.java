@@ -28,16 +28,6 @@ public class FOIAExemptionStatuteDao extends AcmAbstractDao<ExemptionStatute>
         return ExemptionStatute.class;
     }
 
-    @Transactional
-    public void deleteExemptionStatute(Long id)
-    {
-        ExemptionStatute exemptionStatute = getEm().find(ExemptionStatute.class, id);
-        if (exemptionStatute != null)
-        {
-            getEm().remove(exemptionStatute);
-        }
-    }
-
     public List<ExemptionStatute> getExemptionStatutesByParentObjectIdAndType(Long parentObjectId, String parentObjectType) {
 
         FOIARequest request = (FOIARequest) caseFileDao.find(parentObjectId);

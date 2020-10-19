@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.List;
 
 @Controller
-@RequestMapping({ "/api/v1/service/exemptionStatute", "/api/latest/service/exemptionStatute" })
+@RequestMapping({ "/api/v1/service/exemption/statute", "/api/latest/service/exemption/statute" })
 public class FOIAExemptionStatuteAPIController {
 
     private final Logger log = LogManager.getLogger(getClass());
