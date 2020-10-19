@@ -3,8 +3,10 @@ angular.module('services').service('Case.ExemptionService', function ($http) {
         saveExemptionCode: saveExemptionCode,
         getExemptionCode: getExemptionCode,
         deleteExemptionCode: deleteExemptionCode,
+        hasExemptionOnAnyDocumentsOnRequest: hasExemptionOnAnyDocumentsOnRequest,
         saveExemptionStatute: saveExemptionStatute,
-        hasExemptionOnAnyDocumentsOnRequest: hasExemptionOnAnyDocumentsOnRequest
+        getExemptionStatute: getExemptionStatute,
+        deleteExemptionStatute: deleteExemptionStatute
     });
 
     function saveExemptionCode(data) {
@@ -34,20 +36,38 @@ angular.module('services').service('Case.ExemptionService', function ($http) {
         })
     }
 
-    function saveExemptionStatute(data) {
-        return $http({
-            method: 'PUT',
-            url: 'api/latest/service/exemption/statute',
-            data: data,
-            cache: false
-        })
-    }
-
     function hasExemptionOnAnyDocumentsOnRequest(parentObjectId, parentObjectType) {
         return $http({
             method: 'GET',
             url: 'api/latest/service/exemption/' + parentObjectId + '/' + parentObjectType + '/exemptions'
         });
+    }
+
+// exemption statute service
+    function getExemptionStatute(parentObjectId, parentObjectType) {
+        return $http({
+            method: 'GET',
+            url: 'api/latest/service/exemption/statute/' + parentObjectId + '/' + parentObjectType + '/tags',
+            cache: false
+        })
+    }
+
+    function saveExemptionStatute(data) {
+        return $http({
+            method: 'POST',
+            url: 'api/latest/service/exemption/statute/tags',
+            data: data,
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+    }
+
+    function deleteExemptionStatute(tagId) {
+        return $http({
+            method: 'DELETE',
+            url: 'api/latest/service/exemption/statute/' + tagId
+        })
     }
 
 });

@@ -36,17 +36,6 @@ angular.module('services').service('Case.ExemptionService', function ($http) {
         })
     }
 
-    function saveExemptionStatute(data) {
-        return $http({
-            method: 'POST',
-            url: 'api/latest/service/exemptionStatute/tags',
-            data: data,
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-    }
-
     function hasExemptionOnAnyDocumentsOnRequest(parentObjectId, parentObjectType) {
         return $http({
             method: 'GET',
@@ -58,7 +47,7 @@ angular.module('services').service('Case.ExemptionService', function ($http) {
     function getExemptionStatute(parentObjectId, parentObjectType) {
         return $http({
             method: 'GET',
-            url: 'api/latest/service/exemptionStatute/' + parentObjectId + '/' + parentObjectType + '/tags',
+            url: 'api/latest/service/exemption/statute/' + parentObjectId + '/' + parentObjectType + '/tags',
             cache: false
         })
     }
