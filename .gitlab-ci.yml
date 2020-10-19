@@ -51,6 +51,8 @@ stages:
     - mvn -DskipITs -T 4 -B deploy "-DaltDeploymentRepository=arkcase.snapshot::default::https://project.armedia.com/nexus/repository/arkcase.snapshot/"
     - sshpass -e sftp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null arkcase@fileshare.armedia.com <<< $'put acm-standard-applications/acm-law-enforcement/target/*.war /from-arkcase/arkcase.war' 
  
+
+
 .build_frontend_snapshot:
   stage: build
   script:
@@ -100,16 +102,6 @@ build_backend_develop:
     changes:
       #- .gitlab-ci.yaml
 
-build_backend_feature:
-  stage: build
-  only:
-    - email-templates-feature
-  script:
-    # build war file
-    - export MAVEN_OPTS="-Xmx2048M -Xss256M -XX:MetaspaceSize=2048M -XX:+CMSClassUnloadingEnabled"
-    - mvn -DskipITs -T 4 -B install
-    - sshpass -e sftp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null arkcase@fileshare.armedia.com <<< $'put acm-standard-applications/acm-law-enforcement/target/*.war /from-arkcase/arkcase-email-feature.war' 
- 
 .build_frontend_develop:
   extends: .build_frontend_snapshot
   only:
@@ -145,21 +137,6 @@ deploy_backend_core_dev:
   script:
     # Dev Core repository ID on tower.armedia.com is 44
     - 'curl -H "Content-Type: application/json" -X POST -s -u gitlabci:$GITLABCI_TOWER_PASSWORD -d ''{ "inventory": 44, "job_tags": "core", "extra_vars": "{\"arkcase_version\": \"\", \"arkcase_configuration_version\":\"\", \"arkcase_config_server_version\":\"\", \"snowbound_arkcase_version\":\"\"}"}'' -k https://tower.armedia.com/api/v2/job_templates/129/launch/'
-
-deploy_backend_feature:
-  stage: deploy
-  only:
-    - email-templates-feature
-  except:
-    changes:
-      #- .gitlab-ci.yaml
-  environment:
-    name: Feature
-    url: https://iamk020-arkcase-feature.appdev.armedia.com
-  script:
-    # Feature repository ID on tower.armedia.com is 65
-    - 'curl -H "Content-Type: application/json" -X POST -s -u gitlabci:$GITLABCI_TOWER_PASSWORD -d ''{ "inventory": 65, "job_tags": "core", "extra_vars": "{\"arkcase_version\": \"email-feature\", \"arkcase_configuration_version\":\"email-feature\", \"arkcase_config_server_version\":\"\", \"snowbound_arkcase_version\":\"\"}"}'' -k https://tower.armedia.com/api/v2/job_templates/129/launch/'
-
 
 deploy_backend_foia_dev:
   stage: deploy
