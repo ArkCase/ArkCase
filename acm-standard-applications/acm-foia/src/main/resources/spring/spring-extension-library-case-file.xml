@@ -322,6 +322,7 @@
             <beans:property name="emailReceiverConfig" ref="emailReceiverConfig"/>
             <beans:property name="personDao" ref="acmPersonDao"/>
             <beans:property name="lookupDao" ref="lookupDao"/>
+            <beans:property name="originalEmailExtractor" ref="originalEmailExtractor"/>
         </beans:bean>
 
     </beans:beans>
