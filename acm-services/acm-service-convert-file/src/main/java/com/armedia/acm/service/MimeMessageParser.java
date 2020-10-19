@@ -38,21 +38,19 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.safety.Whitelist;
 
+import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Part;
-import javax.mail.Session;
 import javax.mail.internet.ContentDisposition;
 import javax.mail.internet.ContentType;
-import javax.mail.internet.MimeMessage;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Utility class to parse a MimeMessage.
@@ -61,6 +59,7 @@ import java.util.Optional;
  */
 public class MimeMessageParser
 {
+    public static final String DEFAULT_EMAIL_MIME_TYPE = "message/rfc822";
     /***
      * Walk the Mime Structure recursivly and execute the callback on every part.
      * 
@@ -206,6 +205,35 @@ public class MimeMessageParser
     }
 
     /**
+     * Set the main message body to new string content
+     * 
+     * @param message
+     *            mime object
+     * @param newStringContent
+     *            new message text content
+     * @return the changed message
+     * @throws Exception
+     */
+    public static Part setBodyPart(Part message, String newStringContent) throws IOException, MessagingException
+    {
+        Multipart multipart = (Multipart) message.getContent();
+
+        for (int i = 0; i < multipart.getCount(); i++)
+        {
+            BodyPart bodyPart = multipart.getBodyPart(i);
+
+            if (!Part.ATTACHMENT.equalsIgnoreCase(bodyPart.getDisposition()) && bodyPart.isMimeType("text/html"))
+            {
+                bodyPart.setText(newStringContent);
+                break;
+            }
+        }
+
+        message.setContent(multipart);
+        return message;
+    }
+
+    /**
      * Get all inline images (images with an Content-Id) as a Hashmap.
      * The key is the Content-Id and all images in all multipart containers are included in the map.
      * 
@@ -296,36 +324,16 @@ public class MimeMessageParser
 
     /**
      * 
-     * Finds and returns the original email if one is sent as an attachment
+     * Returns true if an email is the only attachment in a list of attachments
      * 
-     * @param message
-     *            mime message
-     * @return Original forwarded email
+     * @param attachments
+     *            Email attachments
+     * @return boolean true if an email is the only attachment
      * @throws MessagingException
      */
-    public static Optional<Message> getOriginalMessageFromAttachment(Message message) throws MessagingException
+    public static boolean hasForwardedEmailAsAttachment(List<Part> attachments) throws MessagingException
     {
-        try
-        {
-            List<Part> attachments = MimeMessageParser.getAttachments(message);
-
-            if (attachments.size() == 1 && attachments.get(0).isMimeType("message/rfc822"))
-            {
-                Part attachment = attachments.get(0);
-
-                MimeMessage originalMessage = new MimeMessage(
-                        Session.getDefaultInstance(System.getProperties()),
-                        attachment.getInputStream());
-
-                return Optional.of(originalMessage);
-            }
-        }
-        catch (Exception e)
-        {
-            log.error("Couldn't read body of email with subject [{}]", message.getSubject(), e);
-        }
-
-        return Optional.empty();
+        return attachments.size() == 1 && attachments.get(0).isMimeType(DEFAULT_EMAIL_MIME_TYPE);
     }
 
 }

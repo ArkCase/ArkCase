@@ -45,6 +45,7 @@ import com.armedia.acm.services.config.lookups.model.StandardLookupEntry;
 import com.armedia.acm.services.config.lookups.service.LookupDao;
 import com.armedia.acm.services.email.event.SmtpEmailReceivedEvent;
 import com.armedia.acm.services.email.handler.AcmObjectMailHandler;
+import com.armedia.acm.services.email.service.OriginalEmailExtractor;
 import com.armedia.acm.web.api.MDCConstants;
 
 import org.apache.commons.fileupload.FileItem;
@@ -100,6 +101,7 @@ public class NewCaseFileMailHandler extends AcmObjectMailHandler
     private EmailReceiverConfig emailReceiverConfig;
     private PersonDao personDao;
     private LookupDao lookupDao;
+    private OriginalEmailExtractor originalEmailExtractor;
 
     public NewCaseFileMailHandler(AcmNameDao dao)
     {
@@ -115,8 +117,8 @@ public class NewCaseFileMailHandler extends AcmObjectMailHandler
             return;
         }
 
-        // Use the original email if one is forwarded as an attachment
-        message = MimeMessageParser.getOriginalMessageFromAttachment(message).orElse(message);
+        // Use different strategies to extract the original message on forwarded emails to ensure proper request data
+        message = getOriginalEmailExtractor().extractMessage(message);
 
         String userId = emailReceiverConfig.getEmailUserId();
         getAuditPropertyEntityAdapter().setUserId(userId);
@@ -356,5 +358,15 @@ public class NewCaseFileMailHandler extends AcmObjectMailHandler
     public void setLookupDao(LookupDao lookupDao)
     {
         this.lookupDao = lookupDao;
+    }
+
+    public OriginalEmailExtractor getOriginalEmailExtractor()
+    {
+        return originalEmailExtractor;
+    }
+
+    public void setOriginalEmailExtractor(OriginalEmailExtractor originalEmailExtractor)
+    {
+        this.originalEmailExtractor = originalEmailExtractor;
     }
 }
