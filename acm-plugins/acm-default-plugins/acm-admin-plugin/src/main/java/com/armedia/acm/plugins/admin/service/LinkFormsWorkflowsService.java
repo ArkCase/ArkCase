@@ -29,6 +29,7 @@ package com.armedia.acm.plugins.admin.service;
 
 import com.armedia.acm.activiti.model.AcmProcessDefinition;
 import com.armedia.acm.activiti.services.AcmBpmnService;
+import com.armedia.acm.configuration.model.ConfigurationClientConfig;
 import com.armedia.acm.configuration.service.FileConfigurationService;
 import com.armedia.acm.plugins.admin.exception.AcmLinkFormsWorkflowException;
 import com.armedia.acm.plugins.admin.model.LinkFormsWorkflowsConstants;
@@ -70,10 +71,10 @@ public class LinkFormsWorkflowsService implements LinkFormsWorkflowsConstants
 {
     private final String[] START_PROCESS_VALUES = new String[] { "", "true", "false" };
     private Logger log = LogManager.getLogger(LdapConfigurationService.class);
-    private static final String RULES_LOCATION = "rules";
     private String configurationFile;
     private String configurationFileBackupTemplate;
     private FileConfigurationService fileConfigurationService;
+    private ConfigurationClientConfig configurationClientConfig;
     private AcmBpmnService acmBpmnService;
     private AcmFileTypesService acmFileTypesService;
 
@@ -85,8 +86,9 @@ public class LinkFormsWorkflowsService implements LinkFormsWorkflowsConstants
      */
     public JSONObject retrieveConfigurationAsJson() throws AcmLinkFormsWorkflowException
     {
+        String rulesLocation = configurationClientConfig.getRulesPath();
 
-        try (InputStream stream = fileConfigurationService.getInputStreamFromConfiguration(RULES_LOCATION + "/"
+        try (InputStream stream = fileConfigurationService.getInputStreamFromConfiguration(rulesLocation + "/"
                 + configurationFile))
         {
 
@@ -368,8 +370,9 @@ public class LinkFormsWorkflowsService implements LinkFormsWorkflowsConstants
      */
     public void updateConfiguration(List<List<String>> newValues) throws AcmLinkFormsWorkflowException
     {
+        String rulesLocation = configurationClientConfig.getRulesPath();
 
-        try (InputStream inputStream = fileConfigurationService.getInputStreamFromConfiguration(RULES_LOCATION + "/"
+        try (InputStream inputStream = fileConfigurationService.getInputStreamFromConfiguration(rulesLocation + "/"
                 + configurationFile))
         {
 
@@ -428,7 +431,7 @@ public class LinkFormsWorkflowsService implements LinkFormsWorkflowsConstants
                 try (ByteArrayInputStream inputBytes = new ByteArrayInputStream(receivedBinary))
                 {
                     fileConfigurationService.moveFileToConfiguration(new InputStreamResource(inputBytes),
-                            RULES_LOCATION + "/" + destFileName);
+                            rulesLocation + "/" + destFileName);
                 }
 
                 // Store updates
@@ -438,7 +441,7 @@ public class LinkFormsWorkflowsService implements LinkFormsWorkflowsConstants
                     try (ByteArrayInputStream inputBytes = new ByteArrayInputStream(outputBytes.toByteArray()))
                     {
                         fileConfigurationService.moveFileToConfiguration(new InputStreamResource(inputBytes),
-                                RULES_LOCATION + "/" + configurationFile);
+                                rulesLocation + "/" + configurationFile);
                     }
                 }
             }
@@ -465,6 +468,11 @@ public class LinkFormsWorkflowsService implements LinkFormsWorkflowsConstants
     public void setFileConfigurationService(FileConfigurationService fileConfigurationService)
     {
         this.fileConfigurationService = fileConfigurationService;
+    }
+
+    public void setConfigurationClientConfig(ConfigurationClientConfig configurationClientConfig)
+    {
+        this.configurationClientConfig = configurationClientConfig;
     }
 
     public void setAcmBpmnService(AcmBpmnService acmBpmnService)

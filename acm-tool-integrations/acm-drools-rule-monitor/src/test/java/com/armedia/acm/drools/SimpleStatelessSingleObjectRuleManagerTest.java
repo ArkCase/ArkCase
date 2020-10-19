@@ -29,6 +29,7 @@ package com.armedia.acm.drools;
 
 import static org.junit.Assert.assertEquals;
 
+import com.armedia.acm.configuration.model.ConfigurationClientConfig;
 import com.armedia.acm.configuration.service.FileConfigurationService;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,6 +41,8 @@ import org.springframework.core.io.InputStreamResource;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
  * Created by dmiller on 3/24/2017.
@@ -70,6 +73,19 @@ public class SimpleStatelessSingleObjectRuleManagerTest
             public InputStream getInputStreamFromConfiguration(String filePath) throws IOException
             {
                 return new FileInputStream(new ClassPathResource("/" + filePath).getFile().getCanonicalPath());
+            }
+
+            @Override
+            public URI getLocationUriFromConfiguration(String locationPath) throws URISyntaxException
+            {
+                return null;
+            }
+        });
+        unit.setConfigurationClientConfig(new ConfigurationClientConfig()
+        {
+            @Override
+            public String getRulesPath() {
+                return "rules";
             }
         });
     }

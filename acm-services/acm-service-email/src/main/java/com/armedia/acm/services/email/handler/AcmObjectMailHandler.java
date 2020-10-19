@@ -33,7 +33,6 @@ import com.armedia.acm.data.AcmNameDao;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.email.model.EmailReceiverConfig;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
-import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
@@ -42,8 +41,8 @@ import com.armedia.acm.services.email.event.SmtpEmailReceivedEvent;
 import com.armedia.acm.web.api.MDCConstants;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.slf4j.MDC;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
@@ -225,18 +224,13 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
                         continue;
                     }
 
-                    try
+                    try (InputStream is = bodyPart.getInputStream())
                     {
-                        
-                        try (InputStream is = bodyPart.getInputStream())
-                        {
-                            bodyPart.setFileName(checkDuplicateFileName(bodyPart.getFileName(),emailReceivedFolder.getId()));
-                            Authentication auth = new UsernamePasswordAuthenticationToken(userId, "");
-                            getEcmFileService().upload(bodyPart.getFileName(), "attachment", "Document", is, bodyPart.getContentType(),
-                                    bodyPart.getFileName(), auth,
-                                    emailReceivedFolder.getCmisFolderId(), entity.getObjectType(), entity.getId());
-
-                        }
+                        bodyPart.setFileName(checkDuplicateFileName(bodyPart.getFileName(), emailReceivedFolder.getId()));
+                        Authentication auth = new UsernamePasswordAuthenticationToken(userId, "");
+                        getEcmFileService().upload(bodyPart.getFileName(), "attachment", "Document", is, bodyPart.getContentType(),
+                                bodyPart.getFileName(), auth,
+                                emailReceivedFolder.getCmisFolderId(), entity.getObjectType(), entity.getId());
 
                     }
                     catch (Exception e)

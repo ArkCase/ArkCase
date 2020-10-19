@@ -32,6 +32,7 @@ import com.armedia.acm.services.holiday.service.HolidayConfigurationService;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 
+import gov.foia.service.QueuesTimeToCompleteService;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
@@ -40,12 +41,16 @@ import gov.foia.model.FOIAConstants;
 import gov.foia.model.FOIARequest;
 import gov.foia.model.FoiaConfig;
 
+import java.time.ZoneId;
+import java.util.Date;
+
 public class FOIAExtensionHandler implements PipelineHandler<FOIARequest, CaseFilePipelineContext>
 {
     private transient final Logger log = LogManager.getLogger(getClass());
 
     private FOIARequestDao foiaRequestDao;
     private HolidayConfigurationService holidayConfigurationService;
+    private QueuesTimeToCompleteService queuesTimeToCompleteService;
     private ArkPermissionEvaluator arkPermissionEvaluator;
     private FoiaConfig foiaConfig;
 
@@ -75,8 +80,20 @@ public class FOIAExtensionHandler implements PipelineHandler<FOIARequest, CaseFi
                                         + "} is not allowed to extend request due date!");
                     }
 
-                    entity.setDueDate(getHolidayConfigurationService().addWorkingDaysToDate(originalRequest.getDueDate(),
-                            foiaConfig.getRequestExtensionWorkingDays()));
+                    if (FOIAConstants.EXPEDITE_REQUEST_TRACK.equalsIgnoreCase(originalRequest.getRequestTrack()) && originalRequest.getPerfectedDate() != null)
+                    {
+                        // We need to calculate the extended due date starting from the total time to complete due date
+                        // from before the request was expedited
+                        Date baseTTCDueDate = getQueuesTimeToCompleteService().addWorkingDaysToDate(
+                                Date.from(originalRequest.getPerfectedDate().atZone(ZoneId.systemDefault()).toInstant()),
+                                originalRequest.getRequestType());
+                        entity.setDueDate(getHolidayConfigurationService().addWorkingDaysToDate(baseTTCDueDate,
+                                foiaConfig.getRequestExtensionWorkingDays()));
+                    } else
+                    {
+                        entity.setDueDate(getHolidayConfigurationService().addWorkingDaysToDate(originalRequest.getDueDate(),
+                                foiaConfig.getRequestExtensionWorkingDays()));
+                    }
 
                     // we set this property, so we can send a correspondence email to the requester in the postsave
                     // FOIAExtensionEmailHandler
@@ -112,6 +129,16 @@ public class FOIAExtensionHandler implements PipelineHandler<FOIARequest, CaseFi
     public void setHolidayConfigurationService(HolidayConfigurationService holidayConfigurationService)
     {
         this.holidayConfigurationService = holidayConfigurationService;
+    }
+
+    public QueuesTimeToCompleteService getQueuesTimeToCompleteService()
+    {
+        return queuesTimeToCompleteService;
+    }
+
+    public void setQueuesTimeToCompleteService(QueuesTimeToCompleteService queuesTimeToCompleteService)
+    {
+        this.queuesTimeToCompleteService = queuesTimeToCompleteService;
     }
 
     public ArkPermissionEvaluator getArkPermissionEvaluator()
