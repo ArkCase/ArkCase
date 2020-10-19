@@ -4,68 +4,42 @@ import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.services.exemption.dao.ExemptionStatuteDao;
 import com.armedia.acm.services.exemption.exception.DeleteExemptionStatuteException;
-import com.armedia.acm.services.exemption.exception.GetExemptionStatuteException;
 import com.armedia.acm.services.exemption.exception.SaveExemptionStatuteException;
 import com.armedia.acm.services.exemption.model.ExemptionCodeAndStatuteEventPublisher;
 import com.armedia.acm.services.exemption.model.ExemptionConstants;
 import com.armedia.acm.services.exemption.model.ExemptionStatute;
 import com.armedia.acm.services.exemption.service.ExemptionStatuteService;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class ExemptionStatuteServiceImpl implements ExemptionStatuteService
 {
 
-    private Logger log = LogManager.getLogger(getClass());
-    private ExemptionStatuteDao exemptionStatuteDao;
+    private Logger log = LogManager.getLogger(getClass());;
     private ExemptionCodeAndStatuteEventPublisher exemptionCodeAndStatuteEventPublisher;
     private EcmFileDao ecmFileDao;
+    private ExemptionStatuteDao exemptionStatuteDao;
 
     @Override
-    @Transactional
-    public List<ExemptionStatute> getExemptionStatutes(Long caseId, Long fileId) throws GetExemptionStatuteException
-    {
-        log.info("Finding  exemption statutes for file: {} associated with objectId: {}", fileId, caseId);
-        try
-        {
-            return getExemptionStatuteDao().getExemptionStatutesByFileIdAndCaseId(caseId, fileId);
-        }
-        catch (Exception e)
-        {
-            log.error("Finding  exemption statutes for file: {} associated with objectId: {} failed", fileId, caseId);
-            throw new GetExemptionStatuteException("Unable to get exemption statutes for objectId: {}" + caseId, e);
-        }
-    }
-
-    @Override
-    public List<ExemptionStatute> saveExemptionStatutes(ExemptionStatute exemptionStatute, String user) throws SaveExemptionStatuteException
-    {
+    public ExemptionStatute saveExemptionStatutes(ExemptionStatute exemptionStatute, String user) throws SaveExemptionStatuteException {
 
         log.info("Saving Exemption statutes [{}]", exemptionStatute.getExemptionStatutes());
-        try
-        {
-            List<ExemptionStatute> exemptionStatuteList = new ArrayList<>();
-            for (String statute : exemptionStatute.getExemptionStatutes())
-            {
-                ExemptionStatute exStatute = new ExemptionStatute();
-                exStatute.setExemptionStatute(statute);
-                exStatute.setCreated(new Date());
-                exStatute.setCreator(user);
-                exStatute.setExemptionStatus(ExemptionConstants.EXEMPTION_STATUS_MANUAL);
-                exStatute.setManuallyFlag(true);
-                exStatute.setParentObjectId(exemptionStatute.getParentObjectId());
-                exStatute.setParentObjectType(exemptionStatute.getParentObjectType());
-                exemptionStatuteList.add(exStatute);
-                ExemptionStatute saved = getExemptionStatuteDao().save(exStatute);
-                getExemptionCodeAndStatuteEventPublisher().publishExemptionStatuteCreatedEvent(saved);
-            }
-            return exemptionStatuteList;
+        try {
+            ExemptionStatute exStatute = new ExemptionStatute();
+            exStatute.setExemptionStatute(exemptionStatute.getExemptionStatute());
+            exStatute.setCreated(new Date());
+            exStatute.setCreator(user);
+            exStatute.setExemptionStatus(ExemptionConstants.EXEMPTION_STATUS_MANUAL);
+            exStatute.setManuallyFlag(true);
+            exStatute.setParentObjectId(exemptionStatute.getParentObjectId());
+            exStatute.setParentObjectType(exemptionStatute.getParentObjectType());
+            ExemptionStatute saved = getExemptionStatuteDao().save(exStatute);
+            getExemptionCodeAndStatuteEventPublisher().publishExemptionStatuteCreatedEvent(saved);
+            return exStatute;
         }
         catch (Exception e)
         {
@@ -119,9 +93,9 @@ public class ExemptionStatuteServiceImpl implements ExemptionStatuteService
         log.info("Deleting exemption statute with id: {}", statuteId);
         try
         {
-            ExemptionStatute exemptionStatute = getExemptionStatuteDao().find(statuteId);
-            getExemptionStatuteDao().deleteExemptionStatute(statuteId);
-            getExemptionCodeAndStatuteEventPublisher().publishExemptionStatuteDeletedEvent(exemptionStatute);
+            // ExemptionStatute exemptionStatute = getExemptionStatuteDao().find(statuteId);
+            // getExemptionStatuteDao().deleteExemptionStatute(statuteId);
+            // getExemptionCodeAndStatuteEventPublisher().publishExemptionStatuteDeletedEvent(exemptionStatute);
         }
         catch (Exception e)
         {
@@ -129,16 +103,6 @@ public class ExemptionStatuteServiceImpl implements ExemptionStatuteService
             throw new DeleteExemptionStatuteException("Unable to delete exemption statute with id: {}" + statuteId, e);
         }
 
-    }
-
-    public ExemptionStatuteDao getExemptionStatuteDao()
-    {
-        return exemptionStatuteDao;
-    }
-
-    public void setExemptionStatuteDao(ExemptionStatuteDao exemptionStatuteDao)
-    {
-        this.exemptionStatuteDao = exemptionStatuteDao;
     }
 
     public ExemptionCodeAndStatuteEventPublisher getExemptionCodeAndStatuteEventPublisher()
@@ -159,5 +123,15 @@ public class ExemptionStatuteServiceImpl implements ExemptionStatuteService
     public void setEcmFileDao(EcmFileDao ecmFileDao)
     {
         this.ecmFileDao = ecmFileDao;
+    }
+
+    public ExemptionStatuteDao getExemptionStatuteDao()
+    {
+        return exemptionStatuteDao;
+    }
+
+    public void setExemptionStatuteDao(ExemptionStatuteDao exemptionStatuteDao)
+    {
+        this.exemptionStatuteDao = exemptionStatuteDao;
     }
 }
