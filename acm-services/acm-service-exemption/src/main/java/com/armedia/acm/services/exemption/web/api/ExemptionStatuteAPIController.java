@@ -86,7 +86,7 @@ public class ExemptionStatuteAPIController
     private String fileIdOnlyChecker(String fileId)
     {
 
-        // the file id may have a version identifier attached eg. 479:13.0
+        // the file id may have a version identifier attached
         String fileIdOnly = fileId == null ? null
                 : fileId.contains(":") ? StringUtils.substringBefore(fileId, ":")
                         : fileId;

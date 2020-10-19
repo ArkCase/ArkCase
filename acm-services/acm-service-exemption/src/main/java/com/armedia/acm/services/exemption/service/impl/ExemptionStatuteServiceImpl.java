@@ -6,10 +6,12 @@ import com.armedia.acm.services.exemption.dao.ExemptionStatuteDao;
 import com.armedia.acm.services.exemption.exception.DeleteExemptionStatuteException;
 import com.armedia.acm.services.exemption.exception.GetExemptionStatuteException;
 import com.armedia.acm.services.exemption.exception.SaveExemptionStatuteException;
+import com.armedia.acm.services.exemption.model.ExemptionCode;
 import com.armedia.acm.services.exemption.model.ExemptionCodeAndStatuteEventPublisher;
 import com.armedia.acm.services.exemption.model.ExemptionConstants;
 import com.armedia.acm.services.exemption.model.ExemptionStatute;
 import com.armedia.acm.services.exemption.service.ExemptionStatuteService;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,8 +46,8 @@ public class ExemptionStatuteServiceImpl implements ExemptionStatuteService
         }
         catch (Exception e)
         {
-            log.error("Saving Exemption Statutes [{}] failed", exemptionStatute.getExemptionStatutes());
-            throw new SaveExemptionStatuteException("Unable to save exemption statute [{}]" + exemptionStatute.getExemptionStatutes(), e);
+            log.error("Saving Exemption Statutes [{}] failed", exemptionStatute.getExemptionStatute());
+            throw new SaveExemptionStatuteException("Unable to save exemption statute [{}]" + exemptionStatute.getExemptionStatute(), e);
         }
     }
 
@@ -120,6 +122,28 @@ public class ExemptionStatuteServiceImpl implements ExemptionStatuteService
             throw new DeleteExemptionStatuteException("Unable to delete exemption statute with id: {}" + statuteId, e);
         }
 
+    }
+
+    @Override
+    public void saveExemptionStatutesFromExemptionCodesExecutor(ExemptionCode exemptionCode) throws SaveExemptionStatuteException {
+        try {
+            ExemptionStatute exStatute = new ExemptionStatute();
+            exStatute.setExemptionStatute(exemptionCode.getExemptionStatute());
+            exStatute.setCreated(exemptionCode.getCreated());
+            exStatute.setCreator(exemptionCode.getCreator());
+            exStatute.setExemptionStatus(exemptionCode.getExemptionStatus());
+            exStatute.setManuallyFlag(exemptionCode.getManuallyFlag());
+            exStatute.setParentObjectId(exemptionCode.getParentObjectId());
+            exStatute.setParentObjectType(exemptionCode.getParentObjectType());
+            exStatute.setFileId(exemptionCode.getFileId());
+            exStatute.setFileVersion(exemptionCode.getFileVersion());
+
+            ExemptionStatute saved = getExemptionStatuteDao().save(exStatute);
+            getExemptionCodeAndStatuteEventPublisher().publishExemptionStatuteCreatedEvent(saved);
+        } catch (Exception e) {
+            log.error("Saving Exemption Statutes [{}] failed", exemptionCode.getExemptionStatute());
+            throw new SaveExemptionStatuteException("Unable to save exemption statute [{}]" + exemptionCode.getExemptionStatute(), e);
+        }
     }
 
     public ExemptionCodeAndStatuteEventPublisher getExemptionCodeAndStatuteEventPublisher()
