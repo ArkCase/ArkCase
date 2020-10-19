@@ -33,6 +33,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.services.email.model.EmailMentionsDTO;
+import com.armedia.acm.services.email.model.EmailWithAttachmentsAndLinksDTO;
 import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksDTO;
 import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksResultDTO;
 import com.armedia.acm.services.email.service.AcmEmailServiceException;
@@ -163,8 +164,8 @@ public class SaveNotificationAPIController
 
     @RequestMapping(value = "/manualEmail", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public void sendManulEmailAsNotification(@RequestBody EmailWithEmbeddedLinksDTO emailDTO, Authentication authentication,
-                                                                  HttpSession session)
+    public void sendManulEmailAsNotification(@RequestBody EmailWithAttachmentsAndLinksDTO emailDTO, Authentication authentication,
+                                             HttpSession session)
     {
         // the user is stored in the session during login.
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
@@ -172,10 +173,10 @@ public class SaveNotificationAPIController
         String title = notificationService.setNotificationTitleForManulNotification(emailDTO.getModelReferenceName());
 
         List<EcmFileVersion> notificationFiles = new ArrayList<>();
-        if(emailDTO.getFileIds() != null)
+        if(emailDTO.getAttachmentIds() != null)
         {
             EcmFile file;
-            for (Long fileId : emailDTO.getFileIds())
+            for (Long fileId : emailDTO.getAttachmentIds())
             {
                 file = getFileService().findById(fileId);
                 notificationFiles.add(file.getVersions().get(file.getVersions().size() - 1));

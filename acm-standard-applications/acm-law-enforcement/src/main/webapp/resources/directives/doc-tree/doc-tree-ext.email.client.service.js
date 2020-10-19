@@ -148,6 +148,7 @@ angular.module('services').factory('DocTreeExt.Email',
                             emailData.objectType = DocTree._objType;
                             emailData.objectNumber = DocTree.objectInfo.acmObjectNumber;
                             emailData.modelReferenceName = res.template;
+                            emailData.attachmentIds = res.selectedFilesToEmail;
 
                             if(emailData.modelReferenceName != 'plainEmail') {
                                 EcmEmailService.sendManualEmail(emailData);
@@ -159,77 +160,6 @@ angular.module('services').factory('DocTreeExt.Email',
                 }
 
                 ,
-                _buildSubject: function(DocTree) {
-                    var subject = Util.goodMapValue(DocTree, "treeConfig.email.emailSubject");
-                    var regex = new RegExp(Util.goodMapValue(DocTree, "treeConfig.email.subjectRegex"));
-                    var match = subject.match(regex);
-                    if (match) {
-                        var objectType = match[Util.goodMapValue(DocTree, "treeConfig.email.objectTypeRegexGroup")];
-                        var objectNumber = match[Util.goodMapValue(DocTree, "treeConfig.email.objectNumberRegexGroup")];
-                        if (objectType && objectNumber) {
-                            return objectType + DocTree.objectInfo[objectNumber];
-                        }
-                    }
-
-                    return "";
-                },
-                _makeEmailDataForEmailWithLinks: function(DocTree, emailModel) {
-                    var subject = Util.goodMapValue(DocTree, "treeConfig.email.emailSubject");
-                    var regex = new RegExp(Util.goodMapValue(DocTree, "treeConfig.email.subjectRegex"));
-                    var match = subject.match(regex);
-                    
-                    var emailData = {};
-                    emailData.subject = Email._buildSubject(DocTree);
-                    emailData.body = emailModel.body;
-                    emailData.footer = '\n\n' + emailModel.footer;
-                    emailData.emailAddresses = emailModel.recipients;
-                    emailData.fileIds = emailModel.selectedFilesToEmail;
-                    emailData.baseUrl = Email._makeBaseUrl();
-                    emailData.objectId = DocTree._objId;
-                    emailData.objectType = DocTree._objType;
-                    var objectNumber = match[Util.goodMapValue(DocTree, "treeConfig.email.objectNumberRegexGroup")];
-                    emailData.objectNumber = DocTree.objectInfo[objectNumber];
-                    emailData.modelReferenceName = emailModel.template;
-                    return emailData;
-                },
-                _makeEmailDataForEmailWithAttachmentsAndLinks: function(DocTree, emailModel) {
-                    var subject = Util.goodMapValue(DocTree, "treeConfig.email.emailSubject");
-                    var regex = new RegExp(Util.goodMapValue(DocTree, "treeConfig.email.subjectRegex"));
-                    var match = subject.match(regex);
-                    
-                    var emailData = {};
-                    emailData.subject = Email._buildSubject(DocTree);
-                    emailData.body = emailModel.body;
-                    emailData.footer = '\n\n' + emailModel.footer;
-                    emailData.emailAddresses = emailModel.recipients;
-                    emailData.fileIds = emailModel.selectedFilesToEmail;
-                    emailData.attachmentIds = emailModel.selectedFilesToEmail;
-                    emailData.baseUrl = Email._makeBaseUrl();
-                    emailData.objectId = DocTree._objId;
-                    emailData.objectType = DocTree._objType;
-                    var objectNumber = match[Util.goodMapValue(DocTree, "treeConfig.email.objectNumberRegexGroup")];
-                    emailData.objectNumber = DocTree.objectInfo[objectNumber];
-                    emailData.modelReferenceName = emailModel.template;
-                    return emailData;
-                },
-                _makeEmailDataForEmailWithAttachments: function(DocTree, emailModel) {
-                    var subject = Util.goodMapValue(DocTree, "treeConfig.email.emailSubject");
-                    var regex = new RegExp(Util.goodMapValue(DocTree, "treeConfig.email.subjectRegex"));
-                    var match = subject.match(regex);
-                    
-                    var emailData = {};
-                    emailData.subject = Email._buildSubject(DocTree);
-                    emailData.body = emailModel.body;
-                    emailData.footer = '\n\n' + emailModel.footer;
-                    emailData.emailAddresses = emailModel.recipients;
-                    emailData.attachmentIds = emailModel.selectedFilesToEmail;
-                    emailData.objectId = DocTree._objId;
-                    emailData.objectType = DocTree._objType;
-                    var objectNumber = match[Util.goodMapValue(DocTree, "treeConfig.email.objectNumberRegexGroup")];
-                    emailData.objectNumber = DocTree.objectInfo[objectNumber];
-                    emailData.modelReferenceName = emailModel.template;
-                    return emailData;
-                },
                 _extractFileIds: function(nodes) {
                     var fileIds = [];
                     if (Util.isArray(nodes)) {
@@ -238,15 +168,6 @@ angular.module('services').factory('DocTreeExt.Email',
                         }
                     }
                     return fileIds;
-                },
-                _makeBaseUrl: function() {
-                    var url = Util.goodValue(Email.arkcaseUrl);
-                    if (!Util.isEmpty(Email.arkcasePort)) {
-                        url += ":" + Util.goodValue(Email.arkcasePort);
-                    }
-                    var baseHref = $browser.baseHref().slice(0, -1);
-                    url += baseHref + Email.API_DOWNLOAD_DOCUMENT;
-                    return url;
                 }
 
             }; // end Email
