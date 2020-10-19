@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
-    xmlns:beans="http://www.springframework.org/schema/beans"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
 
     <beans:beans profile="extension-foia">
         <beans:bean id="foiaExtensionHandler" class="gov.foia.pipeline.presave.FOIAExtensionHandler">
@@ -147,8 +147,8 @@
         </beans:bean>
 
         <beans:bean id="requestPortalUserParticipantsHandler" class="gov.foia.pipeline.postsave.FOIARequestPortalUserParticipantsHandler">
-            <property name="userDao" ref="userJpaDao"/>
-            <property name="acmParticipantService" ref="acmParticipantService"/>
+            <beans:property name="userDao" ref="userJpaDao"/>
+            <beans:property name="acmParticipantService" ref="acmParticipantService"/>
         </beans:bean>
 
         <beans:bean id="scheduledBillingQueuePurger" class="gov.foia.service.ScheduledBillingQueuePurger">
@@ -317,6 +317,15 @@
 
         <beans:bean id="requestFolderStructureService" class="gov.foia.service.RequestFolderStructureService">
             <beans:property name="folderStructureAsString" value="#{caseConfig.folderStructure}"/>
+        </beans:bean>
+
+        <beans:bean id="newCaseFileMailHandler" class="gov.foia.service.NewCaseFileMailHandler" parent="caseFileMailHandler">
+            <beans:constructor-arg index="0" ref="caseFileDao"/>
+            <beans:property name="saveFOIARequestService" ref="saveFOIARequestService"/>
+            <beans:property name="emailReceiverConfig" ref="emailReceiverConfig"/>
+            <beans:property name="personDao" ref="acmPersonDao"/>
+            <beans:property name="lookupDao" ref="lookupDao"/>
+            <beans:property name="originalEmailExtractor" ref="originalEmailExtractor"/>
         </beans:bean>
 
     </beans:beans>
