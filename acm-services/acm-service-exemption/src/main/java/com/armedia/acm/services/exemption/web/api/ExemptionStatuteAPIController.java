@@ -1,7 +1,6 @@
 package com.armedia.acm.services.exemption.web.api;
 
 import com.armedia.acm.services.exemption.exception.DeleteExemptionStatuteException;
-import com.armedia.acm.services.exemption.exception.GetExemptionStatuteException;
 import com.armedia.acm.services.exemption.exception.SaveExemptionStatuteException;
 import com.armedia.acm.services.exemption.model.ExemptionStatute;
 import com.armedia.acm.services.exemption.service.ExemptionStatuteService;
@@ -24,7 +23,7 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
-@RequestMapping({ "/api/v1/service/exemptionStatute", "/api/latest/service/exemptionStatute" })
+@RequestMapping({ "/api/v1/service/statute", "/api/latest/service/statute" })
 public class ExemptionStatuteAPIController
 {
 
@@ -33,11 +32,11 @@ public class ExemptionStatuteAPIController
 
     @RequestMapping(value = "/tags", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<ExemptionStatute> saveExemptionStatutes(@RequestBody ExemptionStatute exemptionStatutes,
+    public ExemptionStatute saveExemptionStatutes(@RequestBody ExemptionStatute exemptionStatute,
             Authentication authentication) throws SaveExemptionStatuteException
     {
         String user = authentication.getName();
-        return getExemptionStatuteService().saveExemptionStatutes(exemptionStatutes, user);
+        return getExemptionStatuteService().saveExemptionStatutes(exemptionStatute, user);
 
     }
 
@@ -47,22 +46,6 @@ public class ExemptionStatuteAPIController
     {
         getExemptionStatuteService().deleteExemptionStatute(tagId);
         return new ResponseEntity(HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/{caseId}/tags/{fileId}", method = RequestMethod.GET)
-    public @ResponseBody List<ExemptionStatute> getExemptionCodes(
-            @PathVariable(value = "caseId") Long caseId,
-            @PathVariable(value = "fileId") Long fileId,
-            Authentication auth,
-            HttpSession session) throws GetExemptionStatuteException
-    {
-        List<ExemptionStatute> tags;
-        String user = auth.getName();
-
-        log.debug("User [{}] coming from [{}] is getting exemption statutes of foia request (case file) [{}]", user, caseId);
-        tags = getExemptionStatuteService().getExemptionStatutes(caseId, fileId);
-        log.debug("Exemption statutes [{}] of foia request (case file) [{}] returned", tags, caseId);
-        return tags;
     }
 
     @RequestMapping(value = "/{fileId}//tags/manually", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)

@@ -29,15 +29,17 @@ package gov.foia.service;
 
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.services.exemption.exception.GetExemptionCodeException;
+import com.armedia.acm.services.exemption.exception.GetExemptionStatuteException;
 import com.armedia.acm.services.exemption.model.ExemptionCode;
 import com.armedia.acm.services.exemption.model.ExemptionConstants;
-
+import com.armedia.acm.services.exemption.model.ExemptionStatute;
+import gov.foia.dao.FOIAExemptionCodeDao;
+import gov.foia.dao.FOIAExemptionStatuteDao;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Query;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
@@ -45,8 +47,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import gov.foia.dao.FOIAExemptionCodeDao;
 
 /**
  * Created by ana.serafimoska
@@ -56,6 +56,7 @@ public class FOIAExemptionService
 
     private Logger log = LogManager.getLogger(getClass());
     private FOIAExemptionCodeDao foiaExemptionCodeDao;
+    private FOIAExemptionStatuteDao foiaExemptionStatuteDao;
 
     public List<ExemptionCode> getExemptionCodes(Long parentObjectId, String parentObjectType) throws GetExemptionCodeException
     {
@@ -63,11 +64,13 @@ public class FOIAExemptionService
         try
         {
             List<ExemptionCode> combineResult = new ArrayList<>();
-            List<ExemptionCode> listCodesOnDocuments = getFoiaExemptionCodeDao().getExemptionCodesByParentObjectIdAndType(parentObjectId, parentObjectType);
+            List<ExemptionCode> listCodesOnDocuments = getFoiaExemptionCodeDao().getExemptionCodesByParentObjectIdAndType(parentObjectId,
+                    parentObjectType);
             List<ExemptionCode> filterDocumentCodesList = filterExemptionCodes(listCodesOnDocuments);
             combineResult.addAll(filterDocumentCodesList);
 
-            List<ExemptionCode> listCodesOnRequest = getFoiaExemptionCodeDao().getManuallyAddedCodesOnRequestLevel(parentObjectId, parentObjectType);
+            List<ExemptionCode> listCodesOnRequest = getFoiaExemptionCodeDao().getManuallyAddedCodesOnRequestLevel(parentObjectId,
+                    parentObjectType);
             combineResult.addAll(listCodesOnRequest);
             List<ExemptionCode> finalList = filterExemptionCodes(combineResult);
             return finalList;
@@ -84,22 +87,36 @@ public class FOIAExemptionService
     {
         Long copiedFileId = copiedFile.getFileId();
         List<ExemptionCode> exemptionCodeList = getFoiaExemptionCodeDao().findExemptionCodesByFileId(originalFile.getFileId());
+        List<ExemptionStatute> exemptionStatuteList = getFoiaExemptionStatuteDao().findExemptionStatutesByFileId(originalFile.getFileId());
 
-            for (ExemptionCode exemptionCode : exemptionCodeList)
-            {
-                ExemptionCode exemptionCodeObj = new ExemptionCode();
-                exemptionCodeObj.setParentObjectType(exemptionCode.getParentObjectType());
-                exemptionCodeObj.setExemptionCode(exemptionCode.getExemptionCode());
-                exemptionCodeObj.setExemptionStatus(exemptionCode.getExemptionStatus());
-                exemptionCodeObj.setCreated(exemptionCode.getCreated());
-                exemptionCodeObj.setCreator(exemptionCode.getCreator());
-                exemptionCodeObj.setExemptionStatute(exemptionCode.getExemptionStatute());
-                exemptionCodeObj.setFileId(copiedFileId);
-                exemptionCodeObj.setFileVersion(exemptionCode.getFileVersion());
-                exemptionCodeObj.setManuallyFlag(exemptionCode.getManuallyFlag());
-                getFoiaExemptionCodeDao().save(exemptionCodeObj);
-            }
+        for (ExemptionCode exemptionCode : exemptionCodeList)
+        {
+            ExemptionCode exemptionCodeObj = new ExemptionCode();
+            exemptionCodeObj.setParentObjectType(exemptionCode.getParentObjectType());
+            exemptionCodeObj.setExemptionCode(exemptionCode.getExemptionCode());
+            exemptionCodeObj.setExemptionStatus(exemptionCode.getExemptionStatus());
+            exemptionCodeObj.setCreated(exemptionCode.getCreated());
+            exemptionCodeObj.setCreator(exemptionCode.getCreator());
+            exemptionCodeObj.setExemptionStatute(exemptionCode.getExemptionStatute());
+            exemptionCodeObj.setFileId(copiedFileId);
+            exemptionCodeObj.setFileVersion(exemptionCode.getFileVersion());
+            exemptionCodeObj.setManuallyFlag(exemptionCode.getManuallyFlag());
+            getFoiaExemptionCodeDao().save(exemptionCodeObj);
+        }
 
+        for (ExemptionStatute exemptionStatute : exemptionStatuteList)
+        {
+            ExemptionStatute exStatuteObj = new ExemptionStatute();
+            exStatuteObj.setParentObjectType(exemptionStatute.getParentObjectType());
+            exStatuteObj.setExemptionStatute(exemptionStatute.getExemptionStatute());
+            exStatuteObj.setExemptionStatus(exemptionStatute.getExemptionStatus());
+            exStatuteObj.setCreated(exemptionStatute.getCreated());
+            exStatuteObj.setCreator(exemptionStatute.getCreator());
+            exStatuteObj.setFileId(copiedFileId);
+            exStatuteObj.setFileVersion(exemptionStatute.getFileVersion());
+            exStatuteObj.setManuallyFlag(exemptionStatute.getManuallyFlag());
+            getFoiaExemptionStatuteDao().save(exStatuteObj);
+        }
     }
 
     @Transactional
@@ -147,10 +164,31 @@ public class FOIAExemptionService
 
         return resultList;
     }
-    
+
+    public List<ExemptionStatute> getExemptionStatutes(Long parentObjectId, String parentObjectType) throws GetExemptionStatuteException {
+        log.info("Finding  exemption codes for objectId: {}", parentObjectId);
+        try
+        {
+            List<ExemptionStatute> combineResult = new ArrayList<>();
+            List<ExemptionStatute> listStatutesOnDocument = getFoiaExemptionStatuteDao()
+                    .getExemptionStatutesByParentObjectIdAndType(parentObjectId, parentObjectType);
+            combineResult.addAll(listStatutesOnDocument);
+
+            List<ExemptionStatute> listStatutesOnRequest = getFoiaExemptionStatuteDao()
+                    .getManuallyAddedStatuteOnRequestLevel(parentObjectId, parentObjectType);
+            combineResult.addAll(listStatutesOnRequest);
+            return combineResult;
+        }
+        catch (Exception e)
+        {
+            log.error("Finding  exemption statutes for objectId: {} failed", parentObjectId);
+            throw new GetExemptionStatuteException("Unable to get exemption statutes for objectId: {}" + parentObjectId, e);
+        }
+    }
+
     public boolean hasExemptionOnAnyDocumentsOnRequest(Long objectId, String objectType)
     {
-        return foiaExemptionCodeDao.hasExemptionOnAnyDocumentsOnRequest(objectId,objectType);
+        return foiaExemptionCodeDao.hasExemptionOnAnyDocumentsOnRequest(objectId, objectType);
     }
 
     public FOIAExemptionCodeDao getFoiaExemptionCodeDao()
@@ -161,5 +199,15 @@ public class FOIAExemptionService
     public void setFoiaExemptionCodeDao(FOIAExemptionCodeDao foiaExemptionCodeDao)
     {
         this.foiaExemptionCodeDao = foiaExemptionCodeDao;
+    }
+
+    public FOIAExemptionStatuteDao getFoiaExemptionStatuteDao()
+    {
+        return foiaExemptionStatuteDao;
+    }
+
+    public void setFoiaExemptionStatuteDao(FOIAExemptionStatuteDao foiaExemptionStatuteDao)
+    {
+        this.foiaExemptionStatuteDao = foiaExemptionStatuteDao;
     }
 }
