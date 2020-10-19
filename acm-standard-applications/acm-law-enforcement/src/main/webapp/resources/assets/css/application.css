@@ -1960,3 +1960,12 @@ select[multiple]:hover, select[size]:hover {
 	right: 0;
 	top: calc(50% - 58px);
 }
+
+.busy-indicator-container .waitPopup_title {
+    padding-top: 30px;
+    text-align: center;
+}
+
+.busy-indicator-container .waitPopup_msg {
+    text-align: center;
+}

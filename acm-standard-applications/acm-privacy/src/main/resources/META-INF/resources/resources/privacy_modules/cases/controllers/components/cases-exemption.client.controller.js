@@ -42,6 +42,7 @@ angular.module('cases').controller('Cases.ExemptionController',
                 gridHelper.setColumnDefs(config);
                 gridHelper.setBasicOptions(config);
                 gridHelper.disableGridScrolling(config);
+                gridHelper.setUserNameFilterToConfig(promiseUsers, config);
                 gridHelper.addButton(config, "delete", null, null, "isDeleteDisabled");
                 retrieveGridData();
             };
@@ -58,7 +59,7 @@ angular.module('cases').controller('Cases.ExemptionController',
                 if ($scope.isDisabled) {
                     return true;
                 } else {
-                    if (rowEntity.exemptionCode != 'Ex3') {
+                    if (rowEntity.exemptionCode != '(b)(3)') {
                         return true;
                     }
                 }
@@ -132,26 +133,9 @@ angular.module('cases').controller('Cases.ExemptionController',
                 var promiseQueryCodes = CaseExemptionService.getExemptionCode(params.caseId, 'CASE_FILE');
                 $q.all([ promiseQueryCodes ]).then(function(data) {
                     $scope.codes = data[0];
-
-                    var userInfoPromises = [];
-                    for(var i = 0; i<$scope.codes.data.length; i++) {
-                        userInfoPromises.push(UserInfoService.getUserInfoById($scope.codes.data[i].creator));
-                    }
-
-                    $q.all(userInfoPromises).then(function (userInfo) {
-                        for(var j = 0; j < $scope.codes.data.length; j++) {
-                            for(var k = 0; k< userInfo.length; k++) {
-                                if($scope.codes.data[j].creator === userInfo[k].userId) {
-                                    //change creator user id with the user full name
-                                    $scope.codes.data[j].creator = userInfo[k].fullName;
-                                    break;
-                                }
-                            }
-                        }
-                        $scope.gridOptions = $scope.gridOptions || {};
-                        $scope.gridOptions.data = $scope.codes.data;
-                        $scope.gridOptions.totalItems = $scope.codes.data.length;
-                    });
+                    $scope.gridOptions = $scope.gridOptions || {};
+                    $scope.gridOptions.data = $scope.codes.data;
+                    $scope.gridOptions.totalItems = $scope.codes.data.length;
                 });
             }
 
@@ -178,6 +162,7 @@ angular.module('cases').controller('Cases.ExemptionController',
                     totalItems: 0,
                     data: []
                 };
+                gridHelper.setUserNameFilterToConfig(promiseUsers, compConfig);
                 gridHelper.addButton(compConfig, "delete", null, null, "isDeleteDisabled");
                 retrieveStatuteGridData();
             });
@@ -220,26 +205,9 @@ angular.module('cases').controller('Cases.ExemptionController',
                 var promiseQueryStatutes = CaseExemptionService.getExemptionStatute(params.caseId, 'CASE_FILE');
                 $q.all([ promiseQueryStatutes ]).then(function(data) {
                     $scope.statutes = data[0];
-
-                    var userInfoPromises = [];
-                    for(var i = 0; i<$scope.statutes.data.length; i++) {
-                        userInfoPromises.push(UserInfoService.getUserInfoById($scope.statutes.data[i].creator));
-                    }
-
-                    $q.all(userInfoPromises).then(function (userInfo) {
-                        for(var j = 0; j < $scope.statutes.data.length; j++) {
-                            for(var k = 0; k< userInfo.length; k++) {
-                                if($scope.statutes.data[j].creator === userInfo[k].userId) {
-                                    //change creator user id with the user full name
-                                    $scope.statutes.data[j].creator = userInfo[k].fullName;
-                                    break;
-                                }
-                            }
-                        }
-                        $scope.statuteGridOptions = $scope.statuteGridOptions || {};
-                        $scope.statuteGridOptions.data = $scope.statutes.data;
-                        $scope.statuteGridOptions.totalItems = $scope.statutes.data.length;
-                    });
+                    $scope.statuteGridOptions = $scope.statuteGridOptions || {};
+                    $scope.statuteGridOptions.data = $scope.statutes.data;
+                    $scope.statuteGridOptions.totalItems = $scope.statutes.data.length;
                 });
             }
         } ]);

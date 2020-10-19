@@ -1,10 +1,10 @@
-package com.armedia.acm.plugins.casefile.model;
+package com.armedia.acm.plugins.person.model;
 
 /*-
  * #%L
- * ACM Default Plugin: Case File
+ * ACM Default Plugin: Person
  * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
+ * Copyright (C) 2014 - 2020 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 
@@ -27,15 +27,10 @@ package com.armedia.acm.plugins.casefile.model;
  * #L%
  */
 
-public interface ChangeCaseStateContants
+public interface PersonConstants
 {
-    String MIME_TYPE_PDF = "application/pdf";
-    String NEW_FILE = "NEW_FILE";
-    String FILE_ID = "FILE_ID";
-    String FILE_VERSION = "FILE_VERSION";
+    String OBJECT_TYPE = "PERSON";
 
-    String CHANGE_CASE_STATUS_STYLESHEET = "change-case-file-state-document.xsl";
-    String CHANGE_CASE_STATUS_DOCUMENT = "CHANGE_CASE";
-    String CHANGE_CASE_STATUS_FILENAMEFORMAT = "Change Case Status.pdf";
-    String CHANGE_CASE_STATUS = "CHANGE_CASE_STATUS";
+    String GIVEN_NAME_PLACEHOLDER = "Placeholder";
+    String FAMILY_NAME_PLACEHOLDER = "Placeholder";
 }
