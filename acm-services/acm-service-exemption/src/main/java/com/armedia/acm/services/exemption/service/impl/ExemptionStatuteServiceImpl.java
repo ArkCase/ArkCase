@@ -28,10 +28,12 @@ public class ExemptionStatuteServiceImpl implements ExemptionStatuteService
     private ExemptionStatuteDao exemptionStatuteDao;
 
     @Override
-    public ExemptionStatute saveExemptionStatutes(ExemptionStatute exemptionStatute, String user) throws SaveExemptionStatuteException {
+    public ExemptionStatute saveExemptionStatutes(ExemptionStatute exemptionStatute, String user) throws SaveExemptionStatuteException
+    {
 
         log.info("Saving Exemption statutes [{}]", exemptionStatute.getExemptionStatutes());
-        try {
+        try
+        {
             ExemptionStatute exStatute = new ExemptionStatute();
             exStatute.setExemptionStatute(exemptionStatute.getExemptionStatute());
             exStatute.setCreated(new Date());
@@ -112,9 +114,9 @@ public class ExemptionStatuteServiceImpl implements ExemptionStatuteService
         log.info("Deleting exemption statute with id: {}", statuteId);
         try
         {
-             ExemptionStatute exemptionStatute = getExemptionStatuteDao().find(statuteId);
-             getExemptionStatuteDao().deleteExemptionStatute(statuteId);
-             getExemptionCodeAndStatuteEventPublisher().publishExemptionStatuteDeletedEvent(exemptionStatute);
+            ExemptionStatute exemptionStatute = getExemptionStatuteDao().find(statuteId);
+            getExemptionStatuteDao().deleteExemptionStatute(statuteId);
+            getExemptionCodeAndStatuteEventPublisher().publishExemptionStatuteDeletedEvent(exemptionStatute);
         }
         catch (Exception e)
         {
@@ -125,25 +127,21 @@ public class ExemptionStatuteServiceImpl implements ExemptionStatuteService
     }
 
     @Override
-    public void saveExemptionStatutesFromExemptionCodesExecutor(ExemptionCode exemptionCode) throws SaveExemptionStatuteException {
-        try {
-            ExemptionStatute exStatute = new ExemptionStatute();
-            exStatute.setExemptionStatute(exemptionCode.getExemptionStatute());
-            exStatute.setCreated(exemptionCode.getCreated());
-            exStatute.setCreator(exemptionCode.getCreator());
-            exStatute.setExemptionStatus(exemptionCode.getExemptionStatus());
-            exStatute.setManuallyFlag(exemptionCode.getManuallyFlag());
-            exStatute.setParentObjectId(exemptionCode.getParentObjectId());
-            exStatute.setParentObjectType(exemptionCode.getParentObjectType());
-            exStatute.setFileId(exemptionCode.getFileId());
-            exStatute.setFileVersion(exemptionCode.getFileVersion());
+    public void saveExemptionStatutesFromExemptionCodesExecutor(ExemptionCode exemptionCode)
+    {
+        ExemptionStatute exStatute = new ExemptionStatute();
+        exStatute.setExemptionStatute(exemptionCode.getExemptionStatute());
+        exStatute.setCreated(exemptionCode.getCreated());
+        exStatute.setCreator(exemptionCode.getCreator());
+        exStatute.setExemptionStatus(exemptionCode.getExemptionStatus());
+        exStatute.setManuallyFlag(exemptionCode.getManuallyFlag());
+        exStatute.setParentObjectId(exemptionCode.getParentObjectId());
+        exStatute.setParentObjectType(exemptionCode.getParentObjectType());
+        exStatute.setFileId(exemptionCode.getFileId());
+        exStatute.setFileVersion(exemptionCode.getFileVersion());
 
-            ExemptionStatute saved = getExemptionStatuteDao().save(exStatute);
-            getExemptionCodeAndStatuteEventPublisher().publishExemptionStatuteCreatedEvent(saved);
-        } catch (Exception e) {
-            log.error("Saving Exemption Statutes [{}] failed", exemptionCode.getExemptionStatute());
-            throw new SaveExemptionStatuteException("Unable to save exemption statute [{}]" + exemptionCode.getExemptionStatute(), e);
-        }
+        ExemptionStatute saved = getExemptionStatuteDao().save(exStatute);
+        getExemptionCodeAndStatuteEventPublisher().publishExemptionStatuteCreatedEvent(saved);
     }
 
     public ExemptionCodeAndStatuteEventPublisher getExemptionCodeAndStatuteEventPublisher()
