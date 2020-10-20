@@ -74,6 +74,62 @@
         logicalFilePath="/ddl/sql/exemption-codes-db-sql.xml">
         <sql>UPDATE acm_exemption_code SET cm_exemption_code = 'X53' WHERE cm_exemption_code= 'X5.3'</sql>
     </changeSet>
+    <changeSet id="18-acm_exemption_code-update-cm-exemption-code" author="gabriela.miteva"
+        logicalFilePath="/ddl/sql/exemption-codes-db-sql.xml">
+        <sql>UPDATE acm_exemption_code SET cm_exemption_code = '(b)(1)' WHERE cm_exemption_code= 'Ex1'</sql>
+    </changeSet>
+    <changeSet id="19-acm_exemption_code-update-cm-exemption-code" author="gabriela.miteva"
+        logicalFilePath="/ddl/sql/exemption-codes-db-sql.xml">
+        <sql>UPDATE acm_exemption_code SET cm_exemption_code = '(b)(2)' WHERE cm_exemption_code= 'Ex2'</sql>
+    </changeSet>
+    <changeSet id="20-acm_exemption_code-update-cm-exemption-code" author="gabriela.miteva"
+        logicalFilePath="/ddl/sql/exemption-codes-db-sql.xml">
+        <sql>UPDATE acm_exemption_code SET cm_exemption_code = '(b)(3)' WHERE cm_exemption_code= 'Ex3'</sql>
+    </changeSet>
+    <changeSet id="21-acm_exemption_code-update-cm-exemption-code" author="gabriela.miteva"
+        logicalFilePath="/ddl/sql/exemption-codes-db-sql.xml">
+        <sql>UPDATE acm_exemption_code SET cm_exemption_code = '(b)(4)' WHERE cm_exemption_code= 'Ex4'</sql>
+    </changeSet>
+    <changeSet id="22-acm_exemption_code-update-cm-exemption-code" author="gabriela.miteva"
+        logicalFilePath="/ddl/sql/exemption-codes-db-sql.xml">
+        <sql>UPDATE acm_exemption_code SET cm_exemption_code = '(b)(5)' WHERE cm_exemption_code= 'Ex5'</sql>
+    </changeSet>
+    <changeSet id="23-acm_exemption_code-update-cm-exemption-code" author="gabriela.miteva"
+        logicalFilePath="/ddl/sql/exemption-codes-db-sql.xml">
+        <sql>UPDATE acm_exemption_code SET cm_exemption_code = '(b)(6)' WHERE cm_exemption_code= 'Ex6'</sql>
+    </changeSet>
+    <changeSet id="24-acm_exemption_code-update-cm-exemption-code" author="gabriela.miteva"
+        logicalFilePath="/ddl/sql/exemption-codes-db-sql.xml">
+        <sql>UPDATE acm_exemption_code SET cm_exemption_code = '(b)(7)(A)' WHERE cm_exemption_code= 'Ex7'</sql>
+    </changeSet>
+    <changeSet id="25-acm_exemption_code-update-cm-exemption-code" author="gabriela.miteva"
+        logicalFilePath="/ddl/sql/exemption-codes-db-sql.xml">
+        <sql>UPDATE acm_exemption_code SET cm_exemption_code = '(b)(7)(B)' WHERE cm_exemption_code= 'Ex7a'</sql>
+    </changeSet>
+    <changeSet id="26-acm_exemption_code-update-cm-exemption-code" author="gabriela.miteva"
+        logicalFilePath="/ddl/sql/exemption-codes-db-sql.xml">
+        <sql>UPDATE acm_exemption_code SET cm_exemption_code = '(b)(7)(C)' WHERE cm_exemption_code= 'Ex7b'</sql>
+    </changeSet>
+    <changeSet id="27-acm_exemption_code-update-cm-exemption-code" author="gabriela.miteva"
+        logicalFilePath="/ddl/sql/exemption-codes-db-sql.xml">
+        <sql>UPDATE acm_exemption_code SET cm_exemption_code = '(b)(7)(D)' WHERE cm_exemption_code= 'Ex7b'</sql>
+    </changeSet>
+    <changeSet id="28-acm_exemption_code-update-cm-exemption-code" author="gabriela.miteva"
+        logicalFilePath="/ddl/sql/exemption-codes-db-sql.xml">
+        <sql>UPDATE acm_exemption_code SET cm_exemption_code = '(b)(7)(E)' WHERE cm_exemption_code= 'Ex7b'</sql>
+    </changeSet>
+    <changeSet id="29-acm_exemption_code-update-cm-exemption-code" author="gabriela.miteva"
+        logicalFilePath="/ddl/sql/exemption-codes-db-sql.xml">
+        <sql>UPDATE acm_exemption_code SET cm_exemption_code = '(b)(7)(F)' WHERE cm_exemption_code= 'Ex7b'</sql>
+    </changeSet>
+    <changeSet id="30-acm_exemption_code-update-cm-exemption-code" author="gabriela.miteva"
+        logicalFilePath="/ddl/sql/exemption-codes-db-sql.xml">
+        <sql>UPDATE acm_exemption_code SET cm_exemption_code = '(b)(8)' WHERE cm_exemption_code= 'Ex8'</sql>
+    </changeSet>
+    <changeSet id="31-acm_exemption_code-update-cm-exemption-code" author="gabriela.miteva"
+        logicalFilePath="/ddl/sql/exemption-codes-db-sql.xml">
+        <sql>UPDATE acm_exemption_code SET cm_exemption_code = '(b)(9)' WHERE cm_exemption_code= 'Ex9'</sql>
+    </changeSet>
 
 </databaseChangeLog>
 
