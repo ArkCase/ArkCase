@@ -128,6 +128,10 @@ public class FoiaConfig
     @Value("${litigationAppealsEnabled}")
     private Boolean litigationAppealsEnabled;
 
+    @JsonProperty("createNewPortalUserOptionOnArkcaseRequestForm")
+    @Value("${createNewPortalUserOptionOnArkcaseRequestForm}")
+    private Boolean createNewPortalUserOptionOnArkcaseRequestForm;
+
     private Map<String, String> dojYearlyReports;
 
     @JsonProperty("dojNiemOrganizationName")
@@ -404,5 +408,15 @@ public class FoiaConfig
     public void setDojNiemAbbreviationText(String dojNiemAbbreviationText)
     {
         this.dojNiemAbbreviationText = dojNiemAbbreviationText;
+    }
+
+    public Boolean getCreateNewPortalUserOptionOnArkcaseRequestForm()
+    {
+        return createNewPortalUserOptionOnArkcaseRequestForm;
+    }
+
+    public void setCreateNewPortalUserOptionOnArkcaseRequestForm(Boolean createNewPortalUserOptionOnArkcaseRequestForm)
+    {
+        this.createNewPortalUserOptionOnArkcaseRequestForm = createNewPortalUserOptionOnArkcaseRequestForm;
     }
 }

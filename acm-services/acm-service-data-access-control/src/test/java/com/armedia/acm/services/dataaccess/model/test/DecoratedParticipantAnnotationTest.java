@@ -31,6 +31,7 @@ import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 
+import com.armedia.acm.configuration.model.ConfigurationClientConfig;
 import com.armedia.acm.configuration.service.FileConfigurationService;
 import com.armedia.acm.data.service.AcmDataService;
 import com.armedia.acm.services.dataaccess.annotations.DecoratedAssignedObjectParticipantAspect;
@@ -50,6 +51,8 @@ import org.springframework.core.io.InputStreamResource;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -93,6 +96,19 @@ public class DecoratedParticipantAnnotationTest
             public InputStream getInputStreamFromConfiguration(String filePath) throws IOException
             {
                 return new FileInputStream(new ClassPathResource("/" + filePath).getFile().getCanonicalPath());
+            }
+
+            @Override
+            public URI getLocationUriFromConfiguration(String locationPath) throws URISyntaxException
+            {
+                return null;
+            }
+        });
+        assignmentBusinessRule.setConfigurationClientConfig(new ConfigurationClientConfig()
+        {
+            @Override
+            public String getRulesPath() {
+                return "rules";
             }
         });
         decoratedParticipantAspect = new DecoratedAssignedObjectParticipantAspect();

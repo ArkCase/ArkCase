@@ -48,6 +48,8 @@ import org.springframework.web.client.RestTemplate;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Collections;
 
 public class FileConfigurationServiceImpl implements FileConfigurationService
@@ -130,6 +132,12 @@ public class FileConfigurationServiceImpl implements FileConfigurationService
                 Resource.class);
 
         return exchange.getBody().getInputStream();
+    }
+
+    public URI getLocationUriFromConfiguration(String locationPath) throws URISyntaxException
+    {
+        return new URI(configurationClientConfig.getConfigurationUrl() + "/" + configurationClientConfig.getDefaultApplicationName() + "/"
+                + configurationClientConfig.getActiveProfileReversed() + "/*/" + locationPath);
     }
 
     private HttpEntity<LinkedMultiValueMap<String, Object>> prepareFileProperties(InputStreamResource file, String fileName)

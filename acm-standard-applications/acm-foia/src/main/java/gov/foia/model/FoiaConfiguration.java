@@ -55,6 +55,7 @@ public class FoiaConfiguration extends SystemConfiguration
     private Boolean feeWaivedAppealsEnabled;
     private Boolean litigationRequestsEnabled;
     private Boolean litigationAppealsEnabled;
+    private Boolean createNewPortalUserOptionOnArkcaseRequestForm;
     private Boolean automaticCreationOfRequestWhenAppealIsRemandedEnabled;
     private Map<String, String> dojYearlyReports;
 
@@ -293,6 +294,16 @@ public class FoiaConfiguration extends SystemConfiguration
     public void setAutomaticCreationOfRequestWhenAppealIsRemandedEnabled(Boolean automaticCreationOfRequestWhenAppealIsRemandedEnabled)
     {
         this.automaticCreationOfRequestWhenAppealIsRemandedEnabled = automaticCreationOfRequestWhenAppealIsRemandedEnabled;
+    }
+
+    public Boolean getCreateNewPortalUserOptionOnArkcaseRequestForm()
+    {
+        return createNewPortalUserOptionOnArkcaseRequestForm;
+    }
+
+    public void setCreateNewPortalUserOptionOnArkcaseRequestForm(Boolean createNewPortalUserOptionOnArkcaseRequestForm)
+    {
+        this.createNewPortalUserOptionOnArkcaseRequestForm = createNewPortalUserOptionOnArkcaseRequestForm;
     }
 
     public Map<String, String> getDojYearlyReports()

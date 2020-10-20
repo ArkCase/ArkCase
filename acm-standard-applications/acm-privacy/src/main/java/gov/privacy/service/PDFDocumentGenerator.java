@@ -29,6 +29,8 @@ package gov.privacy.service;
 
 import static gov.privacy.model.SARConstants.MIME_TYPE_PDF;
 
+import com.armedia.acm.configuration.model.ConfigurationClientConfig;
+import com.armedia.acm.configuration.service.FileConfigurationService;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.pdf.PdfServiceException;
@@ -47,6 +49,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
@@ -59,23 +64,31 @@ import gov.privacy.model.SARObject;
  */
 public class PDFDocumentGenerator implements DocumentGenerator
 {
+
     private Logger log = LogManager.getLogger(getClass());
     private final DateTimeFormatter datePattern = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     private EcmFileService ecmFileService;
     private EcmFileDao ecmFileDao;
     private PdfService pdfService;
+    private FileConfigurationService fileConfigurationService;
+    private ConfigurationClientConfig configurationClientConfig;
     private FolderAndFilesUtils folderAndFilesUtils;
 
     @Override
     public EcmFile generateAndUpload(SARDocumentDescriptor documentDescriptor, SARObject acmObject, String targetCmisFolderId,
-                                     String targetFilename, Map<String, String> substitutions) throws DocumentGeneratorException
+            String targetFilename, Map<String, String> substitutions) throws DocumentGeneratorException
     {
         String filename = null;
 
         try
         {
-            filename = getPdfService().generatePdf(documentDescriptor.getTemplate(), substitutions);
+            String pdfStylesheetsLocation = configurationClientConfig.getStylesheetsPath();
+            InputStream xslStream = fileConfigurationService.getInputStreamFromConfiguration(pdfStylesheetsLocation + "/"
+                    + documentDescriptor.getTemplate());
+            URI baseURI = fileConfigurationService.getLocationUriFromConfiguration(pdfStylesheetsLocation);
+            filename = getPdfService().generatePdf(xslStream, baseURI, substitutions);
+
             log.debug("Created {} document [{}]", documentDescriptor.getDoctype(), filename);
 
             String arkcaseFilename = String.format(documentDescriptor.getFilenameFormat(), acmObject.getId());
@@ -102,7 +115,7 @@ public class PDFDocumentGenerator implements DocumentGenerator
                 }
             }
         }
-        catch (PdfServiceException | AcmCreateObjectFailedException | AcmUserActionFailedException | IOException e)
+        catch (URISyntaxException | PdfServiceException | AcmCreateObjectFailedException | AcmUserActionFailedException | IOException e)
         {
             throw new DocumentGeneratorException("Failed to generate Word document for objectId: [" + acmObject.getId() + "], objectType: ["
                     + acmObject.getObjectType() + "] and template:[" + documentDescriptor.getTemplate() + "]", e);
@@ -131,6 +144,26 @@ public class PDFDocumentGenerator implements DocumentGenerator
     public void setPdfService(PdfService pdfService)
     {
         this.pdfService = pdfService;
+    }
+
+    public FileConfigurationService getFileConfigurationService()
+    {
+        return fileConfigurationService;
+    }
+
+    public void setFileConfigurationService(FileConfigurationService fileConfigurationService)
+    {
+        this.fileConfigurationService = fileConfigurationService;
+    }
+
+    public ConfigurationClientConfig getConfigurationClientConfig()
+    {
+        return configurationClientConfig;
+    }
+
+    public void setConfigurationClientConfig(ConfigurationClientConfig configurationClientConfig)
+    {
+        this.configurationClientConfig = configurationClientConfig;
     }
 
     public DateTimeFormatter getDatePattern()
