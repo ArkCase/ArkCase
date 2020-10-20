@@ -22,7 +22,7 @@ public class ExemptionCodeStatuteToExemptionStatuteClassUpdateExecutor implement
     }
 
     @Override
-    public void execute() throws SaveExemptionStatuteException
+    public void execute()
     {
 
         List<ExemptionCode> exemptionCodeList = getExemptionCodeDao().getAllExemptionCode3();
