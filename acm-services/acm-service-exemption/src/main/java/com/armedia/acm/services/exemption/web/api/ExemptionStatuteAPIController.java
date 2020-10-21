@@ -51,14 +51,14 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
-@RequestMapping({ "/api/v1/service/exemption/statute", "/api/latest/service/exemption/statute" })
+@RequestMapping({ "/api/v1/service/exemption-statute", "/api/latest/service/exemption-statute" })
 public class ExemptionStatuteAPIController
 {
 
     private final Logger log = LogManager.getLogger(getClass());
     private ExemptionStatuteService exemptionStatuteService;
 
-    @RequestMapping(value = "/tags", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ExemptionStatute saveExemptionStatutes(@RequestBody ExemptionStatute exemptionStatute,
             Authentication authentication) throws SaveExemptionStatuteException
@@ -68,19 +68,19 @@ public class ExemptionStatuteAPIController
 
     }
 
-    @RequestMapping(value = "/{tagId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{statuteId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity deleteExemptionStatute(@PathVariable Long tagId) throws DeleteExemptionStatuteException
+    public ResponseEntity deleteExemptionStatute(@PathVariable Long statuteId) throws DeleteExemptionStatuteException
     {
-        getExemptionStatuteService().deleteExemptionStatute(tagId);
+        getExemptionStatuteService().deleteExemptionStatute(statuteId);
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/{fileId}//tags/manually", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/file/{fileId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public void saveExemptionStatutesOnDocumentManually(
+    public void saveExemptionStatutesOnDocument(
             @PathVariable(value = "fileId") String fileId,
-            @RequestParam(value = "tags") List<String> tags,
+            @RequestParam(value = "statutes") List<String> statutes,
             Authentication auth,
             HttpSession session) throws SaveExemptionStatuteException
     {
@@ -89,25 +89,25 @@ public class ExemptionStatuteAPIController
         String fileIdOnly = fileIdOnlyChecker(fileId);
         Long realFileId = Long.valueOf(fileIdOnly);
 
-        log.debug("User [{}] coming from [{}] is updating exemption statutes [{}] of document [{}]", user, tags, fileId);
-        getExemptionStatuteService().saveExemptionStatutesOnDocument(realFileId, tags, user);
-        log.debug("Exemption statutes [{}] of document [{}] updated", tags, fileId);
+        log.debug("User [{}] coming from [{}] is updating exemption statutes [{}] of document [{}]", user, statutes, fileId);
+        getExemptionStatuteService().saveExemptionStatutesOnDocument(realFileId, statutes, user);
+        log.debug("Exemption statutes [{}] of document [{}] updated", statutes, fileId);
     }
 
-    @RequestMapping(value = "/{caseId}/tags/{fileId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/case/{caseId}/file/{fileId}", method = RequestMethod.GET)
     public @ResponseBody List<ExemptionStatute> getExemptionStatutesOnDocument(
             @PathVariable(value = "caseId") Long caseId,
             @PathVariable(value = "fileId") Long fileId,
             Authentication auth,
             HttpSession session) throws GetExemptionStatuteException
     {
-        List<ExemptionStatute> tags;
+        List<ExemptionStatute> statutes;
         String user = auth.getName();
 
         log.debug("User [{}] coming from [{}] is getting exemption statutes of foia request (case file) [{}]", user, caseId);
-        tags = getExemptionStatuteService().getExemptionStatutesOnDocument(caseId, fileId);
-        log.debug("Exemption statutes [{}] of foia request (case file) [{}] returned", tags, caseId);
-        return tags;
+        statutes = getExemptionStatuteService().getExemptionStatutesOnDocument(caseId, fileId);
+        log.debug("Exemption statutes [{}] of foia request (case file) [{}] returned", statutes, caseId);
+        return statutes;
     }
 
     private String fileIdOnlyChecker(String fileId)

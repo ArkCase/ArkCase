@@ -43,13 +43,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.List;
 
 @Controller
-@RequestMapping({ "/api/v1/service/exemption/statute", "/api/latest/service/exemption/statute" })
+@RequestMapping({ "/api/v1/service/exemption-statute", "/api/latest/service/exemption-statute" })
 public class FOIAExemptionStatuteAPIController {
 
     private final Logger log = LogManager.getLogger(getClass());
     private FOIAExemptionService foiaExemptionService;
 
-    @RequestMapping(value = "/{parentObjectId}/{parentObjectType}/tags", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{parentObjectId}/{parentObjectType}/statutes", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<ExemptionStatute> getExemptionStatutes(@PathVariable Long parentObjectId, @PathVariable String parentObjectType)
             throws GetExemptionStatuteException {

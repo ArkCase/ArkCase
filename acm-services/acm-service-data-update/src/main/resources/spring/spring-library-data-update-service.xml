@@ -42,7 +42,7 @@
                 <ref bean="cmisRepositoryRecycleBinContainerExecutor"/>
                 <ref bean="createTaskFolderStructureInParentObjectUpdateExecutor"/>
                 <ref bean="solrReindexCaseComplaintDocumentRepositoryExecutor"/>
-                <ref bean="exemptionCodeStatuteToExemptionStatuteClass"/>
+                <ref bean="exemptionCodeStatuteToExemptionStatuteClassUpdateExecutor"/>
             </list>
         </property>
         <property name="dataUpdateService" ref="dataUpdateService"/>
@@ -157,7 +157,7 @@
         <property name="taskDao" ref="acmTaskDao"/>
     </bean>
 
-    <bean id="exemptionCodeStatuteToExemptionStatuteClass"
+    <bean id="exemptionCodeStatuteToExemptionStatuteClassUpdateExecutor"
           class="com.armedia.acm.services.dataupdate.service.ExemptionCodeStatuteToExemptionStatuteClassUpdateExecutor">
         <property name="exemptionCodeDao" ref="exemptionCodeDao"/>
         <property name="exemptionStatuteService" ref="exemptionStatuteService"/>
