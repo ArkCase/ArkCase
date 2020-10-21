@@ -51,7 +51,7 @@ public class ExemptionCodeStatuteToExemptionStatuteClassUpdateExecutor implement
     public void execute()
     {
 
-        List<ExemptionCode> exemptionCodeList = getExemptionCodeDao().getAllExemptionCode3();
+        List<ExemptionCode> exemptionCodeList = getExemptionCodeDao().getAllExemptionCodesWithExemptionStatuteFilled();
 
         if (exemptionCodeList != null && !exemptionCodeList.isEmpty())
             for (ExemptionCode exemptionCode : exemptionCodeList)

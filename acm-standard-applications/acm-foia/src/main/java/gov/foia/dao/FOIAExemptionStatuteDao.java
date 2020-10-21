@@ -93,9 +93,9 @@ public class FOIAExemptionStatuteDao extends AcmAbstractDao<ExemptionStatute>
 
     public List<ExemptionStatute> getApprovedAndManualExemptionStatutesByFileId(Long fileId)
     {
-        String queryText = "SELECT statutes FROM ExemptionStatute statutes WHERE statutes.fileId = :fileId " +
-                "AND statutes.exemptionStatus <> 'DRAFT' " +
-                "GROUP BY statutes.exemptionStatute, statutes.exemptionStatus";
+        String queryText = "SELECT statute FROM ExemptionStatute statute WHERE statute.fileId = :fileId " +
+                "AND statute.exemptionStatus <> 'DRAFT' " +
+                "GROUP BY statute.exemptionStatute, statute.exemptionStatus";
         TypedQuery<ExemptionStatute> query = getEm().createQuery(queryText, ExemptionStatute.class);
         query.setParameter("fileId", fileId);
 
@@ -132,7 +132,7 @@ public class FOIAExemptionStatuteDao extends AcmAbstractDao<ExemptionStatute>
 
     public List<ExemptionStatute> findExemptionStatutesByFileId(Long fileId)
     {
-        String queryText = "SELECT statutes FROM ExemptionStatute statutes WHERE statutes.fileId = :fileId";
+        String queryText = "SELECT statute FROM ExemptionStatute statute WHERE statute.fileId = :fileId";
         TypedQuery<ExemptionStatute> query = getEm().createQuery(queryText, ExemptionStatute.class);
         query.setParameter("fileId", fileId);
 

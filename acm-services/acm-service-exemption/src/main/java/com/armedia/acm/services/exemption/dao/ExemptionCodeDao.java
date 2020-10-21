@@ -158,7 +158,7 @@ public class ExemptionCodeDao extends AcmAbstractDao<ExemptionCode>
         return exemptionMappedList;
     }
 
-    public List<ExemptionCode> getAllExemptionCode3()
+    public List<ExemptionCode> getAllExemptionCodesWithExemptionStatuteFilled()
     {
         String queryText = "SELECT exemptionCode FROM ExemptionCode exemptionCode WHERE exemptionCode.exemptionStatute IS NOT NULL";
 

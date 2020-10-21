@@ -52,15 +52,15 @@ public class ExemptionStatuteDao extends AcmAbstractDao<ExemptionStatute>
 
     public List<ExemptionStatute> getExemptionStatutesByFileIdAndCaseId(Long caseId, Long fileId)
     {
-        String queryText = "SELECT statutes.id, statutes.exemptionStatute, statutes.exemptionStatus, statutes.creator, statutes.created, file.fileId, statutes.fileVersion, cont.containerObjectId, statutes.manuallyFlag "
+        String queryText = "SELECT statute.id, statute.exemptionStatute, statute.exemptionStatus, statute.creator, statute.created, file.fileId, statute.fileVersion, cont.containerObjectId, statute.manuallyFlag "
                 +
                 "FROM AcmContainer cont " +
                 "JOIN EcmFile file ON cont.id = file.container.id " +
-                "JOIN ExemptionStatute statutes ON file.fileId = statutes.fileId " +
+                "JOIN ExemptionStatute statute ON file.fileId = statute.fileId " +
                 "WHERE cont.containerObjectId = :caseId " +
                 "AND cont.containerObjectType = 'CASE_FILE' " +
                 "AND file.fileId = :fileId " +
-                "GROUP BY statutes.exemptionStatute";
+                "GROUP BY statute.exemptionStatute";
 
         TypedQuery<Object[]> query = getEntityManager().createQuery(queryText, Object[].class);
         query.setParameter("caseId", caseId);
