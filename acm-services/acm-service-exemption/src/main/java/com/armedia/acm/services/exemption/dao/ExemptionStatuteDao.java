@@ -35,7 +35,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class ExemptionStatuteDao extends AcmAbstractDao<ExemptionStatute>
@@ -62,29 +61,16 @@ public class ExemptionStatuteDao extends AcmAbstractDao<ExemptionStatute>
                 "AND file.fileId = :fileId " +
                 "GROUP BY statute.exemptionStatute";
 
-        TypedQuery<Object[]> query = getEntityManager().createQuery(queryText, Object[].class);
+        TypedQuery<ExemptionStatute> query = getEntityManager().createQuery(queryText, ExemptionStatute.class);
         query.setParameter("caseId", caseId);
         query.setParameter("fileId", fileId);
 
-        List<Object[]> exemptionStatuteList = query.getResultList();
-
-        List<ExemptionStatute> exemptionMappedList = new ArrayList<>();
-        for (Object[] record : exemptionStatuteList)
+        List<ExemptionStatute> exemptionStatuteList = query.getResultList();
+        if (exemptionStatuteList == null)
         {
-            ExemptionStatute exemptionStatute = new ExemptionStatute();
-            exemptionStatute.setId((Long) record[0]);
-            exemptionStatute.setExemptionStatute((String) record[1]);
-            exemptionStatute.setExemptionStatus((String) record[2]);
-            exemptionStatute.setCreator((String) record[3]);
-            exemptionStatute.setCreated((Date) record[4]);
-            exemptionStatute.setFileId((Long) record[5]);
-            exemptionStatute.setFileVersion((String) record[6]);
-            exemptionStatute.setParentObjectId((Long) record[7]);
-            exemptionStatute.setManuallyFlag((Boolean) record[8]);
-            exemptionMappedList.add(exemptionStatute);
+            exemptionStatuteList = new ArrayList<>();
         }
-
-        return exemptionMappedList;
+        return exemptionStatuteList;
     }
 
     @Transactional
