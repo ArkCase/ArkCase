@@ -41,10 +41,7 @@ public class ExemptionCodeStatuteToExemptionStatuteClassUpdateExecutor implement
     @Override
     public String getUpdateId()
     {
-
-        {
-            return "exemption_code_statute_to_exemption_statute_class";
-        }
+        return "exemption_code_statute_to_exemption_statute_class";
     }
 
     @Override
