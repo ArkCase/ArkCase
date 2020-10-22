@@ -117,6 +117,7 @@ public class DeleteFileAPIController
             getFileService().putFileIntoRecycleBin(objectId, authentication, session);
             log.info("File with id: {} temporary deleted, by {}", objectId, source.getModifier());
             getRecycleBinItemEventPublisher().publishFileMovedToRecycleBinEvent(source, authentication, ipAddress, true);
+            getFileEventPublisher().publishFileDeletedToRecycleBinEvent(source, authentication, ipAddress, true);
             return prepareJsonReturnMsg(EcmFileConstants.SUCCESS_TEMPORARY_DELETE_MSG, objectId, source.getFileName());
         }
         catch (AcmUserActionFailedException e)

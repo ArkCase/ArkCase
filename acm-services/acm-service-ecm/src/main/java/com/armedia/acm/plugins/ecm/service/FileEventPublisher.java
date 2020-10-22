@@ -36,6 +36,7 @@ import com.armedia.acm.plugins.ecm.model.event.EcmFileCopiedAsLinkEvent;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileCopiedEvent;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileCreatedEvent;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileDeletedEvent;
+import com.armedia.acm.plugins.ecm.model.event.EcmFileDeletedToRecycleBinEvent;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileMovedEvent;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileRenamedEvent;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileReplacedEvent;
@@ -70,6 +71,16 @@ public class FileEventPublisher implements ApplicationEventPublisherAware
         fileCreatedEvent.setSucceeded(succeeded);
 
         eventPublisher.publishEvent(fileCreatedEvent);
+    }
+
+    public void publishFileDeletedToRecycleBinEvent(EcmFile source, Authentication auth, String ipAddress, boolean succeeded)
+    {
+
+        log.debug("Publishing a file deleted and moved to recycle bin event.");
+        EcmFileDeletedToRecycleBinEvent fileDeletedEvent = new EcmFileDeletedToRecycleBinEvent(source, auth.getName(), ipAddress);
+        fileDeletedEvent.setSucceeded(succeeded);
+
+        eventPublisher.publishEvent(fileDeletedEvent);
     }
 
     public void publishFileDeletedEvent(EcmFile source, Authentication auth, String ipAddress, boolean succeeded)
