@@ -163,6 +163,18 @@ angular.module('admin').controller('Admin.CMTemplatesController',
                 });
             };
 
+                $scope.enable = function (rowEntity) {
+                    var template = angular.copy(rowEntity);
+                    template.enabled = !rowEntity.enabled;
+                    correspondenceService.saveTemplateData(template).then(function() {
+                        clearCachedForms(template);
+                        messageService.succsessAction();
+                        reloadGrid();
+                    }, function() {
+                        messageService.errorAction();
+                    });
+                };
+
             function clearCachedForms(template) {
                 var cacheConfigMap = new Store.SessionData(LookupService.SessionCacheNames.CONFIG_MAP);
                 var configMap = cacheConfigMap.get();
