@@ -35,7 +35,7 @@ import com.armedia.acm.auth.AuthenticationUtils;
 /**
  * Created by ana.serafimoska
  */
-public class ExemptionCodeAndStatuteEventPublisher implements ApplicationEventPublisherAware
+public class ExemptionCodeEventPublisher implements ApplicationEventPublisherAware
 {
     private ApplicationEventPublisher applicationEventPublisher;
 
