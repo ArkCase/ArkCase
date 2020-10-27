@@ -36,8 +36,8 @@ import com.armedia.acm.plugins.ecm.model.event.EcmFileCopiedAsLinkEvent;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileCopiedEvent;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileCreatedEvent;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileDeletedEvent;
-import com.armedia.acm.plugins.ecm.model.event.EcmFileDeletedToRecycleBinEvent;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileMovedEvent;
+import com.armedia.acm.plugins.ecm.model.event.EcmFileMovedToRecycleBinEvent;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileRenamedEvent;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileReplacedEvent;
 
@@ -73,11 +73,11 @@ public class FileEventPublisher implements ApplicationEventPublisherAware
         eventPublisher.publishEvent(fileCreatedEvent);
     }
 
-    public void publishFileDeletedToRecycleBinEvent(EcmFile source, Authentication auth, String ipAddress, boolean succeeded)
+    public void publishFileMovedToRecycleBinEvent(EcmFile source, Authentication auth, String ipAddress, boolean succeeded)
     {
 
         log.debug("Publishing a file deleted and moved to recycle bin event.");
-        EcmFileDeletedToRecycleBinEvent fileDeletedEvent = new EcmFileDeletedToRecycleBinEvent(source, auth.getName(), ipAddress);
+        EcmFileMovedToRecycleBinEvent fileDeletedEvent = new EcmFileMovedToRecycleBinEvent(source, auth.getName(), ipAddress);
         fileDeletedEvent.setSucceeded(succeeded);
 
         eventPublisher.publishEvent(fileDeletedEvent);
@@ -107,16 +107,6 @@ public class FileEventPublisher implements ApplicationEventPublisherAware
     {
 
         log.debug("Publishing a file moved event.");
-        EcmFileMovedEvent fileMovedEvent = new EcmFileMovedEvent(source, auth.getName(), ipAddress);
-        fileMovedEvent.setSucceeded(succeeded);
-
-        eventPublisher.publishEvent(fileMovedEvent);
-    }
-
-    public void publishFileMovedInRecycleBinEvent(EcmFile source, Authentication auth, String ipAddress, boolean succeeded)
-    {
-
-        log.debug("Publishing a file moved in Recycle Bin event.");
         EcmFileMovedEvent fileMovedEvent = new EcmFileMovedEvent(source, auth.getName(), ipAddress);
         fileMovedEvent.setSucceeded(succeeded);
 
