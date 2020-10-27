@@ -75,6 +75,13 @@ public class ExemptionStatute implements Serializable, AcmEntity
     @Column(name = "cm_exemption_creator", nullable = false, updatable = false)
     private String creator;
 
+    @Column(name = "cm_exemption_modified", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date modified;
+
+    @Column(name = "cm_exemption_modifier")
+    private String modifier;
+
     @Column(name = "cm_file_id")
     private Long fileId;
 
@@ -103,13 +110,13 @@ public class ExemptionStatute implements Serializable, AcmEntity
     @Override
     public String getModifier()
     {
-        return null;
+        return modifier;
     }
 
     @Override
     public void setModifier(String modifier)
     {
-
+        this.modifier = modifier;
     }
 
     @Override
@@ -127,12 +134,13 @@ public class ExemptionStatute implements Serializable, AcmEntity
     @Override
     public Date getModified()
     {
-        return null;
+        return modified;
     }
 
     @Override
     public void setModified(Date modified)
     {
+        this.modified = modified;
     }
 
     public Long getId()
