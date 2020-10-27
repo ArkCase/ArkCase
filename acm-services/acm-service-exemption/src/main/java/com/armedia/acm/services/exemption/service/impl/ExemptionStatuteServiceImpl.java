@@ -147,22 +147,6 @@ public class ExemptionStatuteServiceImpl implements ExemptionStatuteService
 
     }
 
-    @Override
-    public void saveExemptionStatutesFromExemptionCodesExecutor(ExemptionCode exemptionCode)
-    {
-        ExemptionStatute exStatute = new ExemptionStatute();
-        exStatute.setExemptionStatute(exemptionCode.getExemptionStatute());
-        exStatute.setExemptionStatus(exemptionCode.getExemptionStatus());
-        exStatute.setManuallyFlag(exemptionCode.getManuallyFlag());
-        exStatute.setParentObjectId(exemptionCode.getParentObjectId());
-        exStatute.setParentObjectType(exemptionCode.getParentObjectType());
-        exStatute.setFileId(exemptionCode.getFileId());
-        exStatute.setFileVersion(exemptionCode.getFileVersion());
-
-        ExemptionStatute saved = getExemptionStatuteDao().save(exStatute);
-        getExemptionCodeAndStatuteEventPublisher().publishExemptionStatuteCreatedEvent(saved);
-    }
-
     public ExemptionCodeAndStatuteEventPublisher getExemptionCodeAndStatuteEventPublisher()
     {
         return exemptionCodeAndStatuteEventPublisher;
