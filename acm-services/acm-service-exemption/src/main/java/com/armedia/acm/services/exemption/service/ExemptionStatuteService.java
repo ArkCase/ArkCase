@@ -30,7 +30,6 @@ package com.armedia.acm.services.exemption.service;
 import com.armedia.acm.services.exemption.exception.DeleteExemptionStatuteException;
 import com.armedia.acm.services.exemption.exception.GetExemptionStatuteException;
 import com.armedia.acm.services.exemption.exception.SaveExemptionStatuteException;
-import com.armedia.acm.services.exemption.model.ExemptionCode;
 import com.armedia.acm.services.exemption.model.ExemptionStatute;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,6 +48,4 @@ public interface ExemptionStatuteService
             throws SaveExemptionStatuteException;
 
     void deleteExemptionStatute(Long statuteId) throws DeleteExemptionStatuteException;
-
-    void saveExemptionStatutesFromExemptionCodesExecutor(ExemptionCode exemptionCode);
 }
