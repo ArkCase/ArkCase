@@ -65,8 +65,6 @@ public class ExemptionServiceImpl implements ExemptionService
             {
                 ExemptionCode exemptionCodeObj = new ExemptionCode();
                 exemptionCodeObj.setExemptionCode(code);
-                exemptionCodeObj.setCreated(created);
-                exemptionCodeObj.setCreator(user);
                 exemptionCodeObj.setExemptionStatus(ExemptionConstants.EXEMPTION_STATUS_MANUAL);
                 exemptionCodeObj.setManuallyFlag(true);
                 exemptionCodeObj.setParentObjectId(exemptionCodes.getParentObjectId());

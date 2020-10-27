@@ -1,0 +1,12 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="1-acm_exemption_statute-insert-from-acm-exemption-code" author="martin.jovanovski"
+               logicalFilePath="/ddl/sql/exemption-statutes-db-sql.xml">
+        <sql>INSERT INTO acm_exemption_statute (cm_parent_object_id, cm_parent_object_type, cm_exemption_statute, cm_exemption_status, cm_exemption_created, cm_exemption_creator, cm_file_id, cm_file_version, cm_manually_flag) SELECT cm_parent_object_id, cm_parent_object_type, cm_exemption_statute, cm_exemption_status, cm_exemption_created, cm_exemption_creator, cm_file_id, cm_file_version, cm_manually_flag FROM acm_exemption_codes WHERE cm_exemption_statute IS NOT NULL
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>
+

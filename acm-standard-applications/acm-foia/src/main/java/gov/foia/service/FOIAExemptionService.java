@@ -95,9 +95,6 @@ public class FOIAExemptionService
             exemptionCodeObj.setParentObjectType(exemptionCode.getParentObjectType());
             exemptionCodeObj.setExemptionCode(exemptionCode.getExemptionCode());
             exemptionCodeObj.setExemptionStatus(exemptionCode.getExemptionStatus());
-            exemptionCodeObj.setCreated(exemptionCode.getCreated());
-            exemptionCodeObj.setCreator(exemptionCode.getCreator());
-            exemptionCodeObj.setExemptionStatute(exemptionCode.getExemptionStatute());
             exemptionCodeObj.setFileId(copiedFileId);
             exemptionCodeObj.setFileVersion(exemptionCode.getFileVersion());
             exemptionCodeObj.setManuallyFlag(exemptionCode.getManuallyFlag());
@@ -110,8 +107,6 @@ public class FOIAExemptionService
             exStatuteObj.setParentObjectType(exemptionStatute.getParentObjectType());
             exStatuteObj.setExemptionStatute(exemptionStatute.getExemptionStatute());
             exStatuteObj.setExemptionStatus(exemptionStatute.getExemptionStatus());
-            exStatuteObj.setCreated(exemptionStatute.getCreated());
-            exStatuteObj.setCreator(exemptionStatute.getCreator());
             exStatuteObj.setFileId(copiedFileId);
             exStatuteObj.setFileVersion(exemptionStatute.getFileVersion());
             exStatuteObj.setManuallyFlag(exemptionStatute.getManuallyFlag());
@@ -133,10 +128,9 @@ public class FOIAExemptionService
             exemptionCodeObj.setExemptionStatus((String) record[1]);
             exemptionCodeObj.setCreator((String) record[2]);
             exemptionCodeObj.setCreated((Date) record[3]);
-            exemptionCodeObj.setExemptionStatute((String) record[4]);
-            exemptionCodeObj.setFileId((Long) record[5]);
-            exemptionCodeObj.setFileVersion((String) record[6]);
-            exemptionCodeObj.setManuallyFlag((Boolean) record[7]);
+            exemptionCodeObj.setFileId((Long) record[4]);
+            exemptionCodeObj.setFileVersion((String) record[5]);
+            exemptionCodeObj.setManuallyFlag((Boolean) record[6]);
             getFoiaExemptionCodeDao().save(exemptionCodeObj);
         }
 
@@ -188,8 +182,7 @@ public class FOIAExemptionService
 
     public boolean hasExemptionOnAnyDocumentsOnRequest(Long objectId, String objectType)
     {
-        return foiaExemptionCodeDao.hasExemptionOnAnyDocumentsOnRequest(objectId, objectType)
-                || foiaExemptionStatuteDao.hasExemptionStatutesOnAnyDocumentsOnRequest(objectId, objectType);
+        return foiaExemptionCodeDao.hasExemptionOnAnyDocumentsOnRequest(objectId, objectType);
     }
 
     public FOIAExemptionCodeDao getFoiaExemptionCodeDao()

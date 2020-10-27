@@ -122,7 +122,7 @@ public class ExemptionCodeDao extends AcmAbstractDao<ExemptionCode>
 
     public List<ExemptionCode> getExemptionCodesByFileIdAndCaseId(Long caseId, Long fileId)
     {
-        String queryText = "SELECT codes.id, codes.exemptionCode, codes.exemptionStatus, codes.exemptionStatute, codes.creator, codes.created, file.fileId, codes.fileVersion, cont.containerObjectId, codes.manuallyFlag "
+        String queryText = "SELECT codes.id, codes.exemptionCode, codes.exemptionStatus, codes.creator, codes.created, file.fileId, codes.fileVersion, cont.containerObjectId, codes.manuallyFlag "
                 +
                 "FROM AcmContainer cont " +
                 "JOIN EcmFile file ON cont.id = file.container.id " +
@@ -145,7 +145,6 @@ public class ExemptionCodeDao extends AcmAbstractDao<ExemptionCode>
             exemptionCode.setId((Long) record[0]);
             exemptionCode.setExemptionCode((String) record[1]);
             exemptionCode.setExemptionStatus((String) record[2]);
-            exemptionCode.setExemptionStatute((String) record[3]);
             exemptionCode.setCreator((String) record[4]);
             exemptionCode.setCreated((Date) record[5]);
             exemptionCode.setFileId((Long) record[6]);
@@ -156,21 +155,6 @@ public class ExemptionCodeDao extends AcmAbstractDao<ExemptionCode>
         }
 
         return exemptionMappedList;
-    }
-
-    public List<ExemptionCode> getAllExemptionCodesWithExemptionStatuteFilled()
-    {
-        String queryText = "SELECT exemptionCode FROM ExemptionCode exemptionCode WHERE exemptionCode.exemptionStatute IS NOT NULL";
-
-        TypedQuery<ExemptionCode> query = getEntityManager().createQuery(queryText, ExemptionCode.class);
-
-        List<ExemptionCode> exemptionCodeList = query.getResultList();
-        if (exemptionCodeList == null)
-        {
-            exemptionCodeList = new ArrayList<>();
-        }
-        return exemptionCodeList;
-
     }
 
     public EntityManager getEntityManager()
