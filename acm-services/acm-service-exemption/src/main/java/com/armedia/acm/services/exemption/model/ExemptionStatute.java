@@ -27,6 +27,8 @@ package com.armedia.acm.services.exemption.model;
  * #L%
  */
 
+import com.armedia.acm.data.AcmEntity;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -43,8 +45,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "acm_exemption_statute")
-public class ExemptionStatute implements Serializable
-{
+public class ExemptionStatute implements Serializable, AcmEntity {
 
     private static final long serialVersionUID = 8484945152180957284L;
 
@@ -85,113 +86,115 @@ public class ExemptionStatute implements Serializable
     @Transient
     private List<String> exemptionStatutes;
 
-    public Long getId()
-    {
+
+    @Override
+    public String getCreator() {
+        return null;
+    }
+
+    @Override
+    public void setCreator(String creator) {
+
+    }
+
+    @Override
+    public String getModifier() {
+        return null;
+    }
+
+    @Override
+    public void setModifier(String modifier) {
+
+    }
+
+    @Override
+    public Date getCreated() {
+        return null;
+    }
+
+    @Override
+    public void setCreated(Date created) {
+
+    }
+
+    @Override
+    public Date getModified() {
+        return null;
+    }
+
+    @Override
+    public void setModified(Date modified) {
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(Long id)
-    {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Long getParentObjectId()
-    {
+    public Long getParentObjectId() {
         return parentObjectId;
     }
 
-    public void setParentObjectId(Long parentObjectId)
-    {
+    public void setParentObjectId(Long parentObjectId) {
         this.parentObjectId = parentObjectId;
     }
 
-    public String getParentObjectType()
-    {
+    public String getParentObjectType() {
         return parentObjectType;
     }
 
-    public void setParentObjectType(String parentObjectType)
-    {
+    public void setParentObjectType(String parentObjectType) {
         this.parentObjectType = parentObjectType;
     }
 
-    public String getExemptionStatute()
-    {
+    public String getExemptionStatute() {
         return exemptionStatute;
     }
 
-    public void setExemptionStatute(String exemptionStatute)
-    {
+    public void setExemptionStatute(String exemptionStatute) {
         this.exemptionStatute = exemptionStatute;
     }
 
-    public String getExemptionStatus()
-    {
+    public String getExemptionStatus() {
         return exemptionStatus;
     }
 
-    public void setExemptionStatus(String exemptionStatus)
-    {
+    public void setExemptionStatus(String exemptionStatus) {
         this.exemptionStatus = exemptionStatus;
     }
 
-    public Date getCreated()
-    {
-        return created;
-    }
-
-    public void setCreated(Date created)
-    {
-        this.created = created;
-    }
-
-    public String getCreator()
-    {
-        return creator;
-    }
-
-    public void setCreator(String creator)
-    {
-        this.creator = creator;
-    }
-
-    public Long getFileId()
-    {
+    public Long getFileId() {
         return fileId;
     }
 
-    public void setFileId(Long fileId)
-    {
+    public void setFileId(Long fileId) {
         this.fileId = fileId;
     }
 
-    public String getFileVersion()
-    {
+    public String getFileVersion() {
         return fileVersion;
     }
 
-    public void setFileVersion(String fileVersion)
-    {
+    public void setFileVersion(String fileVersion) {
         this.fileVersion = fileVersion;
     }
 
-    public Boolean getManuallyFlag()
-    {
+    public Boolean getManuallyFlag() {
         return manuallyFlag;
     }
 
-    public void setManuallyFlag(Boolean manuallyFlag)
-    {
+    public void setManuallyFlag(Boolean manuallyFlag) {
         this.manuallyFlag = manuallyFlag;
     }
 
-    public List<String> getExemptionStatutes()
-    {
+    public List<String> getExemptionStatutes() {
         return exemptionStatutes;
     }
 
-    public void setExemptionStatutes(List<String> exemptionStatutes)
-    {
+    public void setExemptionStatutes(List<String> exemptionStatutes) {
         this.exemptionStatutes = exemptionStatutes;
     }
 }

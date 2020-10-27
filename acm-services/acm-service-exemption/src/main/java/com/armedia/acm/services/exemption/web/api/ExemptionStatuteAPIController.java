@@ -60,11 +60,11 @@ public class ExemptionStatuteAPIController
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ExemptionStatute saveExemptionStatutes(@RequestBody ExemptionStatute exemptionStatute,
-            Authentication authentication) throws SaveExemptionStatuteException
+    public ExemptionStatute saveExemptionStatute(@RequestBody ExemptionStatute exemptionStatute,
+                                                 Authentication authentication) throws SaveExemptionStatuteException
     {
         String user = authentication.getName();
-        return getExemptionStatuteService().saveExemptionStatutes(exemptionStatute, user);
+        return getExemptionStatuteService().saveExemptionStatute(exemptionStatute, user);
 
     }
 
@@ -89,9 +89,9 @@ public class ExemptionStatuteAPIController
         String fileIdOnly = fileIdOnlyChecker(fileId);
         Long realFileId = Long.valueOf(fileIdOnly);
 
-        log.debug("User [{}] coming from [{}] is updating exemption statutes [{}] of document [{}]", user, statutes, fileId);
+        log.debug("User [{}] is saving exemption statute [{}] of document [{}]", user, statutes, fileId);
         getExemptionStatuteService().saveExemptionStatutesOnDocument(realFileId, statutes, user);
-        log.debug("Exemption statutes [{}] of document [{}] updated", statutes, fileId);
+        log.debug("Exemption statutes [{}] of document [{}] saved", statutes, fileId);
     }
 
     @RequestMapping(value = "/case/{caseId}/file/{fileId}", method = RequestMethod.GET)
@@ -104,7 +104,7 @@ public class ExemptionStatuteAPIController
         List<ExemptionStatute> statutes;
         String user = auth.getName();
 
-        log.debug("User [{}] coming from [{}] is getting exemption statutes of foia request (case file) [{}]", user, caseId);
+        log.debug("User [{}] is getting exemption statutes of foia request (case file) [{}]", user, caseId);
         statutes = getExemptionStatuteService().getExemptionStatutesOnDocument(caseId, fileId);
         log.debug("Exemption statutes [{}] of foia request (case file) [{}] returned", statutes, caseId);
         return statutes;

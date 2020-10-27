@@ -38,12 +38,10 @@ import com.armedia.acm.services.exemption.model.ExemptionCodeAndStatuteEventPubl
 import com.armedia.acm.services.exemption.model.ExemptionConstants;
 import com.armedia.acm.services.exemption.model.ExemptionStatute;
 import com.armedia.acm.services.exemption.service.ExemptionStatuteService;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
 import java.util.List;
 
 public class ExemptionStatuteServiceImpl implements ExemptionStatuteService
@@ -55,7 +53,7 @@ public class ExemptionStatuteServiceImpl implements ExemptionStatuteService
     private ExemptionStatuteDao exemptionStatuteDao;
 
     @Override
-    public ExemptionStatute saveExemptionStatutes(ExemptionStatute exemptionStatute, String user) throws SaveExemptionStatuteException
+    public ExemptionStatute saveExemptionStatute(ExemptionStatute exemptionStatute, String user) throws SaveExemptionStatuteException
     {
 
         log.info("Saving Exemption statutes [{}]", exemptionStatute.getExemptionStatutes());
@@ -63,8 +61,6 @@ public class ExemptionStatuteServiceImpl implements ExemptionStatuteService
         {
             ExemptionStatute exStatute = new ExemptionStatute();
             exStatute.setExemptionStatute(exemptionStatute.getExemptionStatute());
-            exStatute.setCreated(new Date());
-            exStatute.setCreator(user);
             exStatute.setExemptionStatus(ExemptionConstants.EXEMPTION_STATUS_MANUAL);
             exStatute.setManuallyFlag(true);
             exStatute.setParentObjectId(exemptionStatute.getParentObjectId());
@@ -76,7 +72,7 @@ public class ExemptionStatuteServiceImpl implements ExemptionStatuteService
         catch (Exception e)
         {
             log.error("Saving Exemption Statutes [{}] failed", exemptionStatute.getExemptionStatute());
-            throw new SaveExemptionStatuteException("Unable to save exemption statute [{}]" + exemptionStatute.getExemptionStatute(), e);
+            throw new SaveExemptionStatuteException("Unable to save exemption statute " + exemptionStatute.getExemptionStatute(), e);
         }
     }
 
@@ -92,7 +88,7 @@ public class ExemptionStatuteServiceImpl implements ExemptionStatuteService
         catch (Exception e)
         {
             log.error("Finding  exemption statutes for file: {} associated with objectId: {} failed", fileId, caseId);
-            throw new GetExemptionStatuteException("Unable to get exemption statutes for objectId: {}" + caseId, e);
+            throw new GetExemptionStatuteException("Unable to get exemption statutes for objectId: " + caseId, e);
         }
     }
 
@@ -112,10 +108,8 @@ public class ExemptionStatuteServiceImpl implements ExemptionStatuteService
                 {
                     ExemptionStatute exStatute = new ExemptionStatute();
                     exStatute.setExemptionStatute(exemptionStatute);
-                    exStatute.setCreator(user);
-                    exStatute.setCreated(new Date());
                     exStatute.setExemptionStatus(ExemptionConstants.EXEMPTION_STATUS_MANUAL);
-                    exStatute.setParentObjectType("DOCUMENT");
+                    exStatute.setParentObjectType("FILE");
                     exStatute.setManuallyFlag(true);
                     exStatute.setFileId(fileId);
                     exStatute.setFileVersion(ecmFile.getActiveVersionTag());
@@ -128,7 +122,7 @@ public class ExemptionStatuteServiceImpl implements ExemptionStatuteService
         catch (Exception e)
         {
             log.error("Saving Exemption Statutes [{}] manually failed", exemptionStatutes);
-            throw new SaveExemptionStatuteException("Unable to save exemption statute [{}] manually" + exemptionStatutes, e);
+            throw new SaveExemptionStatuteException("Unable to save exemption statute " + exemptionStatutes + " manually", e);
         }
         log.debug("Updated exemption statutes [{}] of document [{}]", exemptionStatutes, fileId);
 
@@ -147,8 +141,8 @@ public class ExemptionStatuteServiceImpl implements ExemptionStatuteService
         }
         catch (Exception e)
         {
-            log.error("Delete failed for exemption statute with id: {}", statuteId);
-            throw new DeleteExemptionStatuteException("Unable to delete exemption statute with id: {}" + statuteId, e);
+            log.error("Delete failed for exemption statute with id: " + statuteId);
+            throw new DeleteExemptionStatuteException("Unable to delete exemption statute with id: " + statuteId, e);
         }
 
     }
@@ -158,8 +152,6 @@ public class ExemptionStatuteServiceImpl implements ExemptionStatuteService
     {
         ExemptionStatute exStatute = new ExemptionStatute();
         exStatute.setExemptionStatute(exemptionCode.getExemptionStatute());
-        exStatute.setCreated(exemptionCode.getCreated());
-        exStatute.setCreator(exemptionCode.getCreator());
         exStatute.setExemptionStatus(exemptionCode.getExemptionStatus());
         exStatute.setManuallyFlag(exemptionCode.getManuallyFlag());
         exStatute.setParentObjectId(exemptionCode.getParentObjectId());

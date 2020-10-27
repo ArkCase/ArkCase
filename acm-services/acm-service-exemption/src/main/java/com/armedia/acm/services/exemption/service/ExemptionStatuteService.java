@@ -39,7 +39,7 @@ import java.util.List;
 public interface ExemptionStatuteService
 {
 
-    ExemptionStatute saveExemptionStatutes(ExemptionStatute exemptionStatute, String user) throws SaveExemptionStatuteException;
+    ExemptionStatute saveExemptionStatute(ExemptionStatute exemptionStatute, String user) throws SaveExemptionStatuteException;
 
     @Transactional
     List<ExemptionStatute> getExemptionStatutesOnDocument(Long caseId, Long fileId) throws GetExemptionStatuteException;
