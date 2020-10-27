@@ -88,6 +88,13 @@ public class ExemptionCode implements Serializable, AcmEntity
     @Column(name = "cm_manually_flag")
     private Boolean manuallyFlag;
 
+    @Column(name = "cm_exemption_modified", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date modified;
+
+    @Column(name = "cm_exemption_modifier")
+    private String modifier;
+
     @Transient
     private List<String> exemptionCodes;
 
@@ -208,25 +215,25 @@ public class ExemptionCode implements Serializable, AcmEntity
     @Override
     public String getModifier()
     {
-        return null;
+        return modifier;
     }
 
     @Override
     public void setModifier(String modifier)
     {
-
+        this.modifier = modifier;
     }
 
     @Override
     public Date getModified()
     {
-        return null;
+        return modified;
     }
 
     @Override
     public void setModified(Date modified)
     {
-
+        this.modified = modified;
     }
 
 }
