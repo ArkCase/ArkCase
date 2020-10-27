@@ -50,7 +50,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "acm_exemption_code")
-public class ExemptionCode implements Serializable, AcmEntity {
+public class ExemptionCode implements Serializable, AcmEntity
+{
     private static final long serialVersionUID = -5341895983727433857L;
 
     @Id
@@ -90,117 +91,142 @@ public class ExemptionCode implements Serializable, AcmEntity {
     @Transient
     private List<String> exemptionCodes;
 
-
-    @Override
-    public String getCreator() {
-        return null;
-    }
-
-    @Override
-    public void setCreator(String creator) {
-
-    }
-
-    @Override
-    public String getModifier() {
-        return null;
-    }
-
-    @Override
-    public void setModifier(String modifier) {
-
-    }
-
-    @Override
-    public Date getCreated() {
-        return null;
-    }
-
-    @Override
-    public void setCreated(Date created) {
-
-    }
-
-    @Override
-    public Date getModified() {
-        return null;
-    }
-
-    @Override
-    public void setModified(Date modified) {
-
-    }
-
-    public Long getId() {
+    public Long getId()
+    {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Long id)
+    {
         this.id = id;
     }
 
-    public Long getParentObjectId() {
+    public Long getParentObjectId()
+    {
         return parentObjectId;
     }
 
-    public void setParentObjectId(Long parentObjectId) {
+    public void setParentObjectId(Long parentObjectId)
+    {
         this.parentObjectId = parentObjectId;
     }
 
-    public String getParentObjectType() {
+    public String getParentObjectType()
+    {
         return parentObjectType;
     }
 
-    public void setParentObjectType(String parentObjectType) {
+    public void setParentObjectType(String parentObjectType)
+    {
         this.parentObjectType = parentObjectType;
     }
 
-    public String getExemptionCode() {
+    public String getExemptionCode()
+    {
         return exemptionCode;
     }
 
-    public void setExemptionCode(String exemptionCode) {
+    public void setExemptionCode(String exemptionCode)
+    {
         this.exemptionCode = exemptionCode;
     }
 
-    public String getExemptionStatus() {
+    public String getExemptionStatus()
+    {
         return exemptionStatus;
     }
 
-    public void setExemptionStatus(String exemptionStatus) {
+    public void setExemptionStatus(String exemptionStatus)
+    {
         this.exemptionStatus = exemptionStatus;
     }
 
-    public Long getFileId() {
+    @Override
+    public Date getCreated()
+    {
+        return created;
+    }
+
+    @Override
+    public void setCreated(Date created)
+    {
+        this.created = created;
+    }
+
+    @Override
+    public String getCreator()
+    {
+        return creator;
+    }
+
+    @Override
+    public void setCreator(String creator)
+    {
+        this.creator = creator;
+    }
+
+    public Long getFileId()
+    {
         return fileId;
     }
 
-    public void setFileId(Long fileId) {
+    public void setFileId(Long fileId)
+    {
         this.fileId = fileId;
     }
 
-    public String getFileVersion() {
+    public String getFileVersion()
+    {
         return fileVersion;
     }
 
-    public void setFileVersion(String fileVersion) {
+    public void setFileVersion(String fileVersion)
+    {
         this.fileVersion = fileVersion;
     }
 
-    public Boolean getManuallyFlag() {
+    public Boolean getManuallyFlag()
+    {
         return manuallyFlag;
     }
 
-    public void setManuallyFlag(Boolean manuallyFlag) {
+    public void setManuallyFlag(Boolean manuallyFlag)
+    {
         this.manuallyFlag = manuallyFlag;
     }
 
-    public List<String> getExemptionCodes() {
+    public List<String> getExemptionCodes()
+    {
         return exemptionCodes;
     }
 
-    public void setExemptionCodes(List<String> exemptionCodes) {
+    public void setExemptionCodes(List<String> exemptionCodes)
+    {
         this.exemptionCodes = exemptionCodes;
+    }
+
+    @Override
+    public String getModifier()
+    {
+        return null;
+    }
+
+    @Override
+    public void setModifier(String modifier)
+    {
+
+    }
+
+    @Override
+    public Date getModified()
+    {
+        return null;
+    }
+
+    @Override
+    public void setModified(Date modified)
+    {
+
     }
 
 }
