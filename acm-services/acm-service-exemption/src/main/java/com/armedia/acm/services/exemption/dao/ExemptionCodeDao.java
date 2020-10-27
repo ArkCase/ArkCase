@@ -145,12 +145,12 @@ public class ExemptionCodeDao extends AcmAbstractDao<ExemptionCode>
             exemptionCode.setId((Long) record[0]);
             exemptionCode.setExemptionCode((String) record[1]);
             exemptionCode.setExemptionStatus((String) record[2]);
-            exemptionCode.setCreator((String) record[4]);
-            exemptionCode.setCreated((Date) record[5]);
-            exemptionCode.setFileId((Long) record[6]);
-            exemptionCode.setFileVersion((String) record[7]);
-            exemptionCode.setParentObjectId((Long) record[8]);
-            exemptionCode.setManuallyFlag((Boolean) record[9]);
+            exemptionCode.setCreator((String) record[3]);
+            exemptionCode.setCreated((Date) record[4]);
+            exemptionCode.setFileId((Long) record[5]);
+            exemptionCode.setFileVersion((String) record[6]);
+            exemptionCode.setParentObjectId((Long) record[7]);
+            exemptionCode.setManuallyFlag((Boolean) record[8]);
             exemptionMappedList.add(exemptionCode);
         }
 
