@@ -33,10 +33,9 @@ import com.armedia.acm.services.exemption.dao.ExemptionStatuteDao;
 import com.armedia.acm.services.exemption.exception.DeleteExemptionStatuteException;
 import com.armedia.acm.services.exemption.exception.GetExemptionStatuteException;
 import com.armedia.acm.services.exemption.exception.SaveExemptionStatuteException;
-import com.armedia.acm.services.exemption.model.ExemptionCode;
-import com.armedia.acm.services.exemption.model.ExemptionCodeAndStatuteEventPublisher;
 import com.armedia.acm.services.exemption.model.ExemptionConstants;
 import com.armedia.acm.services.exemption.model.ExemptionStatute;
+import com.armedia.acm.services.exemption.model.ExemptionStatuteEventPublisher;
 import com.armedia.acm.services.exemption.service.ExemptionStatuteService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -48,7 +47,7 @@ public class ExemptionStatuteServiceImpl implements ExemptionStatuteService
 {
 
     private Logger log = LogManager.getLogger(getClass());;
-    private ExemptionCodeAndStatuteEventPublisher exemptionCodeAndStatuteEventPublisher;
+    private ExemptionStatuteEventPublisher exemptionStatuteEventPublisher;
     private EcmFileDao ecmFileDao;
     private ExemptionStatuteDao exemptionStatuteDao;
 
@@ -66,7 +65,7 @@ public class ExemptionStatuteServiceImpl implements ExemptionStatuteService
             exStatute.setParentObjectId(exemptionStatute.getParentObjectId());
             exStatute.setParentObjectType(exemptionStatute.getParentObjectType());
             ExemptionStatute saved = getExemptionStatuteDao().save(exStatute);
-            getExemptionCodeAndStatuteEventPublisher().publishExemptionStatuteCreatedEvent(saved);
+            getExemptionStatuteEventPublisher().publishExemptionStatuteCreatedEvent(saved);
             return exStatute;
         }
         catch (Exception e)
@@ -114,7 +113,7 @@ public class ExemptionStatuteServiceImpl implements ExemptionStatuteService
                     exStatute.setFileId(fileId);
                     exStatute.setFileVersion(ecmFile.getActiveVersionTag());
                     ExemptionStatute saved = getExemptionStatuteDao().save(exStatute);
-                    getExemptionCodeAndStatuteEventPublisher().publishExemptionStatuteCreatedEvent(saved);
+                    getExemptionStatuteEventPublisher().publishExemptionStatuteCreatedEvent(saved);
 
                 }
             }
@@ -137,7 +136,7 @@ public class ExemptionStatuteServiceImpl implements ExemptionStatuteService
         {
             ExemptionStatute exemptionStatute = getExemptionStatuteDao().find(statuteId);
             getExemptionStatuteDao().deleteExemptionStatute(statuteId);
-            getExemptionCodeAndStatuteEventPublisher().publishExemptionStatuteDeletedEvent(exemptionStatute);
+            getExemptionStatuteEventPublisher().publishExemptionStatuteDeletedEvent(exemptionStatute);
         }
         catch (Exception e)
         {
@@ -147,14 +146,12 @@ public class ExemptionStatuteServiceImpl implements ExemptionStatuteService
 
     }
 
-    public ExemptionCodeAndStatuteEventPublisher getExemptionCodeAndStatuteEventPublisher()
-    {
-        return exemptionCodeAndStatuteEventPublisher;
+    public ExemptionStatuteEventPublisher getExemptionStatuteEventPublisher() {
+        return exemptionStatuteEventPublisher;
     }
 
-    public void setExemptionCodeAndStatuteEventPublisher(ExemptionCodeAndStatuteEventPublisher exemptionCodeAndStatuteEventPublisher)
-    {
-        this.exemptionCodeAndStatuteEventPublisher = exemptionCodeAndStatuteEventPublisher;
+    public void setExemptionStatuteEventPublisher(ExemptionStatuteEventPublisher exemptionStatuteEventPublisher) {
+        this.exemptionStatuteEventPublisher = exemptionStatuteEventPublisher;
     }
 
     public EcmFileDao getEcmFileDao()
