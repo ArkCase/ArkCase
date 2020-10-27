@@ -29,12 +29,12 @@ package com.armedia.acm.plugins.ecm.model.event;
 
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 
-public class EcmFileDeletedToRecycleBinEvent extends EcmFilePersistenceEvent
+public class EcmFileMovedToRecycleBinEvent extends EcmFilePersistenceEvent
 {
 
-    private static final String EVENT_TYPE = "com.armedia.acm.file.deleted.recyclebin";
+    private static final String EVENT_TYPE = "com.armedia.acm.ecm.file.moved.recyclebin";
 
-    public EcmFileDeletedToRecycleBinEvent(EcmFile source, String userId, String ipAddress)
+    public EcmFileMovedToRecycleBinEvent(EcmFile source, String userId, String ipAddress)
     {
         super(source, userId, ipAddress);
         setParentObjectType(source.getContainer().getContainerObjectType());
