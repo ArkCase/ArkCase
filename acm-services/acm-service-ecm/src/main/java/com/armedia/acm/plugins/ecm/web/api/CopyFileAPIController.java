@@ -82,7 +82,16 @@ public class CopyFileAPIController
         EcmFile source = getFileService().findById(in.getId());
         try
         {
-            EcmFile copyFile = getFileService().copyFile(in.getId(), targetObjectId, targetObjectType, in.getFolderId());
+            EcmFile copyFile;
+            if (source.getStatus().equals(EcmFileConstants.RECORD))
+            {
+                copyFile = getFileService().copyRecord(in.getId(), in.getFolderId(), targetObjectType, targetObjectId, authentication);
+            }
+            else
+            {
+                copyFile = getFileService().copyFile(in.getId(), targetObjectId, targetObjectType, in.getFolderId());
+            }
+
             if (log.isInfoEnabled())
             {
                 log.info("File with id: " + in.getId() + " successfully copied to the location with id: " + in.getFolderId());

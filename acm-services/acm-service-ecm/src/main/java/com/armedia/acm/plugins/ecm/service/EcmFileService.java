@@ -39,6 +39,7 @@ import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.LinkTargetFileDTO;
 import com.armedia.acm.plugins.ecm.model.RecycleBinItem;
+
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.springframework.retry.annotation.Backoff;
@@ -51,6 +52,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpSession;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -357,6 +359,26 @@ public interface EcmFileService
             int maxRows, String sortBy, String sortDirection) throws AcmListObjectsFailedException, AcmObjectNotFoundException;
 
     EcmFile setFilesActiveVersion(Long fileId, String versionTag) throws PersistenceException;
+
+    /**
+     * Get the record from the cmis repository and re-upload it as a new file in the specified folder
+     * 
+     * @param fileId
+     *            original record ID
+     * @param folderId
+     *            destination folder ID
+     * @param targetObjectType
+     *            container type
+     * @param targetObjectId
+     *            container ID
+     * @param authentication
+     *            authenticaton object
+     * @return
+     * @throws AcmObjectNotFoundException
+     * @throws AcmUserActionFailedException
+     */
+    EcmFile copyRecord(Long fileId, Long folderId, String targetObjectType, Long targetObjectId, Authentication authentication)
+            throws AcmObjectNotFoundException, AcmUserActionFailedException;
 
     EcmFile copyFile(Long documentId, AcmFolder targetFolder, AcmContainer targetContainer)
             throws AcmUserActionFailedException, AcmObjectNotFoundException;
