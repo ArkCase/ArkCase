@@ -3114,7 +3114,7 @@ angular
                             }
                             return find;
                         },
-                        batchCopy: function (srcNodes, frNodes, toNode, mode, actionName) {
+                        batchCopy: async function (srcNodes, frNodes, toNode, mode, actionName) {
                             var dfd = $.Deferred();
                             if (Util.isArrayEmpty(srcNodes) || Util.isArrayEmpty(frNodes)) {
                                 dfd.resolve();
@@ -3127,23 +3127,20 @@ angular
                                     frNodesToCopy.push(find);
                                 }
 
-                                var requests = [];
+                                // This is a workaround for the destination folder locking when multiple calls are made in parallel
+                                // TODO: Implement endpoints for batch actions and rework UI for proper handling of multinode actions
                                 for (var i = 0; i < srcNodesToCopy.length; i++) {
                                     if (DocTree.isFolderNode(srcNodesToCopy[i])) {
-                                        requests.push(DocTree.Op.copyFolder(srcNodesToCopy[i], frNodesToCopy[i], toNode, mode, actionName));
+                                        await DocTree.Op.copyFolder(srcNodesToCopy[i], frNodesToCopy[i], toNode, mode, actionName);
                                     } else if (DocTree.isFileNode(srcNodesToCopy[i])) {
-                                        requests.push(DocTree.Op.copyFile(srcNodesToCopy[i], frNodesToCopy[i], toNode, mode, actionName));
+                                        await DocTree.Op.copyFile(srcNodesToCopy[i], frNodesToCopy[i], toNode, mode, actionName);
                                     }
                                 }
 
-                                $q.all(requests).then(function (data) {
-                                    if (DocTree.CLIPBOARD && DocTree.CLIPBOARD.src && DocTree.CLIPBOARD.batch) {
-                                        DocTree.checkNodes(DocTree.CLIPBOARD.src, true);
-                                    }
-                                    dfd.resolve();
-                                }, function (data) {
-                                    dfd.reject();
-                                });
+                                if (DocTree.CLIPBOARD && DocTree.CLIPBOARD.src && DocTree.CLIPBOARD.batch) {
+                                    DocTree.checkNodes(DocTree.CLIPBOARD.src, true);
+                                }
+                                dfd.resolve();
                             }
                             return dfd.promise();
                         },
@@ -3303,30 +3300,26 @@ angular
 
                             return dfd.promise();
                         },
-                        batchMove: function (frNodes, toNode, mode) {
+                        batchMove: async function (frNodes, toNode, mode) {
                             var dfd = $.Deferred();
                             if (Util.isArrayEmpty(frNodes)) {
                                 dfd.resolve();
-
                             } else {
                                 var moveNodes = DocTree.getTopMostNodes(frNodes);
-                                var requests = [];
+                                // This is a workaround for the destination folder locking when multiple calls are made in parallel
+                                // TODO: Implement endpoints for batch actions and rework UI for proper handling of multinode actions
                                 for (var i = 0; i < moveNodes.length; i++) {
                                     if (DocTree.isFolderNode(moveNodes[i])) {
-                                        requests.push(DocTree.Op.moveFolder(moveNodes[i], toNode, mode));
+                                        await DocTree.Op.moveFolder(moveNodes[i], toNode, mode);
                                     } else if (DocTree.isFileNode(moveNodes[i])) {
-                                        requests.push(DocTree.Op.moveFile(moveNodes[i], toNode, mode));
+                                        await DocTree.Op.moveFile(moveNodes[i], toNode, mode);
                                     }
                                 }
 
-                                $q.all(requests).then(function () {
-                                    if (DocTree.CLIPBOARD && DocTree.CLIPBOARD.data && DocTree.CLIPBOARD.batch) {
-                                        DocTree.checkNodes(DocTree.CLIPBOARD.data, true);
-                                    }
-                                    dfd.resolve();
-                                }, function () {
-                                    dfd.reject();
-                                });
+                                if (DocTree.CLIPBOARD && DocTree.CLIPBOARD.data && DocTree.CLIPBOARD.batch) {
+                                    DocTree.checkNodes(DocTree.CLIPBOARD.data, true);
+                                }
+                                dfd.resolve();
                             }
                             return dfd.promise();
                         },
@@ -3528,27 +3521,23 @@ angular
                             });
                             return dfd.promise();
                         },
-                        batchRemove: function (nodes) {
+                        batchRemove: async function (nodes) {
                             var dfd = $.Deferred();
                             if (Util.isArrayEmpty(nodes)) {
                                 dfd.resolve();
 
                             } else {
                                 var removeNodes = DocTree.getTopMostNodes(nodes);
-                                var requests = [];
+                                // This is a workaround for the destination folder locking when multiple calls are made in parallel
+                                // TODO: Implement endpoints for batch actions and rework UI for proper handling of multinode actions
                                 for (var i = 0; i < removeNodes.length; i++) {
                                     if (DocTree.isFolderNode(removeNodes[i])) {
-                                        requests.push(DocTree.Op.deleteFolder(removeNodes[i]));
+                                        await DocTree.Op.deleteFolder(removeNodes[i]);
                                     } else if (DocTree.isFileNode(removeNodes[i])) {
-                                        requests.push(DocTree.Op.deleteFile(removeNodes[i]));
+                                        await DocTree.Op.deleteFile(removeNodes[i]);
                                     }
                                 }
-
-                                $q.all(requests).then(function () {
-                                    dfd.resolve();
-                                }, function () {
-                                    dfd.reject();
-                                });
+                                dfd.resolve();
                             }
                             return dfd.promise();
                         },
