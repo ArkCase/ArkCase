@@ -5,7 +5,7 @@
  * @name services.service:PermissionsService
  *
  * @description
- * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/auth/permissions.client.service.js services/auth/permissions.client.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/auth/permissions.client.service.js services/auth/permissions.client.service.js}
  *
  * The Permissions service. Performs checking user permissions for action depends on user roles, and objectProperties, like orderInfo, queueInfo
  */

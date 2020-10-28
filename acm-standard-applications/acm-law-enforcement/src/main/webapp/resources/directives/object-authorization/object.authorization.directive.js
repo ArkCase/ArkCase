@@ -7,7 +7,7 @@
  *
  * @description
  *
- ** {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/object-authorization/object.authorization.roles.directive.js directives/object-authorization/object.authorization.roles.directive.js}
+ ** {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/object-authorization/object.authorization.roles.directive.js directives/object-authorization/object.authorization.roles.directive.js}
  *
  * The object authorization roles directive is used for listing objects and change their roles to be authorized or unauthorized.
  *

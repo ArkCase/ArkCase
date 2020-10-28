@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/helper/helper-dashboard.client.service.js services/helper/helper-dashboard.client.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/helper/helper-dashboard.client.service.js services/helper/helper-dashboard.client.service.js}
 
  * Helper.ModulesServices provides modules service functions structure
  */

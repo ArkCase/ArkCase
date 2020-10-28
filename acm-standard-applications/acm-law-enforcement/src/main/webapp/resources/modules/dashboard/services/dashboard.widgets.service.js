@@ -6,7 +6,7 @@
  *
  *@description
  *
- *{@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/dashboard/services/dashboard.widgets.service.js modules/dashboard/services/dashboard.widgets.service.js}
+ *{@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/dashboard/services/dashboard.widgets.service.js modules/dashboard/services/dashboard.widgets.service.js}
  *
  *  The WidgetService is used for fetching data from news api service and for fetching RSS data.
  */

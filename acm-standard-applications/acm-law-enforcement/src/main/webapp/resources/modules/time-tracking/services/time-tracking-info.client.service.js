@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/time-tracking/services/time-tracking-info.client.service.js modules/time-tracking/services/time-tracking-info.client.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/time-tracking/services/time-tracking-info.client.service.js modules/time-tracking/services/time-tracking-info.client.service.js}
 
  * TimeTracking.InfoService provides functions for Timesheet database data
  */

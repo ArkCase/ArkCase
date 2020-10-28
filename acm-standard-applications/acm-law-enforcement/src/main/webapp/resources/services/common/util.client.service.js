@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/common/util.client.service.js services/common/util.client.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/common/util.client.service.js services/common/util.client.service.js}
  *
  * This service package contains various commonly used functions, support functions, or miscellaneous help functions.
  */

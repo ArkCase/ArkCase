@@ -10,7 +10,7 @@
  *
  * @description
  *
- * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/admin/services/form-workflows.link.client.service.js modules/admin/services/form-workflows.link.client.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/admin/services/form-workflows.link.client.service.js modules/admin/services/form-workflows.link.client.service.js}
  *
  * The Admin.FormWorkflowsLinkService provides Form workflows link calls functionality
  */

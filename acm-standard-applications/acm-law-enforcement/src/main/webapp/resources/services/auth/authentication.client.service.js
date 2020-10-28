@@ -5,7 +5,7 @@
  * @name services.service:Authentication
  *
  * @description
- * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/auth/authentication.client.service.js services/auth/authentication.client.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/auth/authentication.client.service.js services/auth/authentication.client.service.js}
  *
  * The Authentication service retrieves user information from server
  */

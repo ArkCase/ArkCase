@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/doc-tree/doc-tree-ext.lodge.client.service.js directives/doc-tree/doc-tree-ext.lodge.client.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/doc-tree/doc-tree-ext.lodge.client.service.js directives/doc-tree/doc-tree-ext.lodge.client.service.js}
  *
  * DocTree extensions for lodge document functions.
  */

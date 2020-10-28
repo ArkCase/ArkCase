@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/common/services/forms-type.client.service.js modules/common/services/forms-type.client.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/common/services/forms-type.client.service.js modules/common/services/forms-type.client.service.js}
  *
  * FormsType.Service provides function which returns boolean whether the type of the forms is angular or not
  */

@@ -7,7 +7,7 @@
  *
  * @description
  *
- * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/popover-html-unsafe/popover-html-unsafe.client.directive.js directives/popover-html-unsafe/popover-html-unsafe.client.directive.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/popover-html-unsafe/popover-html-unsafe.client.directive.js directives/popover-html-unsafe/popover-html-unsafe.client.directive.js}
  *
  * The "popover-html-unsafe" directive, add popover functionality with unsafe html
  *
