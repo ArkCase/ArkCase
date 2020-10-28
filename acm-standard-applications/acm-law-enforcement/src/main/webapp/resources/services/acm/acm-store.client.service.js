@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/acm/acm-store.client.service.js services/acm/acm-store.client.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/acm/acm-store.client.service.js services/acm/acm-store.client.service.js}
  *
  * This service package contains objects and functions for data storage
  */
@@ -93,7 +93,7 @@ angular.module('services').factory('Acm.StoreService', [ '$rootScope', '$window'
          *
          * @description
          *
-         * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/acm/acm-store.client.service.js services/acm/acm-store.client.service.js}
+         * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/acm/acm-store.client.service.js services/acm/acm-store.client.service.js}
          *
          * Store registries maintain list of caches which need to be cleared when logout. There are two registries,
          * one for sessionStorage caches, and one for localStorage caches.
@@ -307,7 +307,7 @@ angular.module('services').factory('Acm.StoreService', [ '$rootScope', '$window'
          *
          * @description
          *
-         * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/acm/acm-store.client.service.js services/acm/acm-store.client.service.js}
+         * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/acm/acm-store.client.service.js services/acm/acm-store.client.service.js}
          *
          * Variable represents map like data structure. Data are saved in Angular $rootScope.
          */
@@ -343,7 +343,7 @@ angular.module('services').factory('Acm.StoreService', [ '$rootScope', '$window'
          *
          * @description
          *
-         * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/acm/acm-store.client.service.js services/acm/acm-store.client.service.js}
+         * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/acm/acm-store.client.service.js services/acm/acm-store.client.service.js}
          *
          * SessionData represent data saved in session. Each data are identified by a name. It persists through the entire login session.
          */
@@ -396,7 +396,7 @@ angular.module('services').factory('Acm.StoreService', [ '$rootScope', '$window'
          *
          * @description
          *
-         * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/acm/acm-store.client.service.js services/acm/acm-store.client.service.js}
+         * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/acm/acm-store.client.service.js services/acm/acm-store.client.service.js}
          *
          * LocalData represent data saved in local storage. Each data are identified by a name. It persists on user computer until deleted.
          */
@@ -448,7 +448,7 @@ angular.module('services').factory('Acm.StoreService', [ '$rootScope', '$window'
          *
          * @description
          *
-         * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/acm/acm-store.client.service.js services/acm/acm-store.client.service.js}
+         * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/acm/acm-store.client.service.js services/acm/acm-store.client.service.js}
          *
          * CacheFifo is cache using first in first out aging algorithm. Each cache is identified by a name.
          * Cache data persists in Angular $rootScope. Data is evicted after timeToLive limit.

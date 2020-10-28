@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/object/object-list.client.service.js services/object/object-list.client.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/object/object-list.client.service.js services/object/object-list.client.service.js}
 
  * Object.ListService includes REST calls related to object list in SOLR
  */

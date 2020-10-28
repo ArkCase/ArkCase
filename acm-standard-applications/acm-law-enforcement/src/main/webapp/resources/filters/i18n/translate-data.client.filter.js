@@ -5,7 +5,7 @@
  *
  * @description
  *
- * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/filters/i18n/translate-data.client.filter.js filters/i18n/translate-data.client.filter.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/filters/i18n/translate-data.client.filter.js filters/i18n/translate-data.client.filter.js}
  *
  * Simulate 'translate' filter translates labels, data-filter translates data from back end data source.
  * Usage:

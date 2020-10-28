@@ -6,7 +6,7 @@
  *
  * @description
  *
- *{@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/pagination-on-scroll/pagination-on-scroll.client.directive.js directives/pagination-on-scroll/pagination-on-scroll.client.directive.js}
+ *{@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/pagination-on-scroll/pagination-on-scroll.client.directive.js directives/pagination-on-scroll/pagination-on-scroll.client.directive.js}
  *
  * The "paginationOnScroll" should be used for infinite pagination while user is scrolling
  *

@@ -5,7 +5,7 @@
  *
  * @description
  *
- * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/search/services/search-query-builder.client.service.js modules/search/services/search-query-builder.client.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/search/services/search-query-builder.client.service.js modules/search/services/search-query-builder.client.service.js}
  *
  * The Search.QueryBuilderService provides functions to build service URL using passed parameters
  */

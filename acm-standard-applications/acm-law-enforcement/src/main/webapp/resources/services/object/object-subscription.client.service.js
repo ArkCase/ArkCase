@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/object/object-subscription.client.service.js services/object/object-subscription.client.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/object/object-subscription.client.service.js services/object/object-subscription.client.service.js}
 
  * Object.SubscriptionService includes methods for managing subscriptions
  */

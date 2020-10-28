@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/common/services/person-association.client.service.js modules/common/services/person-association.client.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/common/services/person-association.client.service.js modules/common/services/person-association.client.service.js}
  *
  * PersonAssociation.Service provides functions for Person database data
  */
