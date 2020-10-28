@@ -3540,6 +3540,7 @@ angular
                                     }
                                 }
                                 dfd.resolve();
+                                DocTree.refreshTree();
                             }
                             return dfd.promise();
                         },

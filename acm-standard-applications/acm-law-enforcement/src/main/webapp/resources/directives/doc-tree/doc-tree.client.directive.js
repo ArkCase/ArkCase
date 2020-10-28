@@ -3291,6 +3291,7 @@ angular.module('directives').directive(
                                         }
                                     }
                                     dfd.resolve();
+                                    DocTree.refreshTree();
                                 }
                                 return dfd.promise();
                             },
