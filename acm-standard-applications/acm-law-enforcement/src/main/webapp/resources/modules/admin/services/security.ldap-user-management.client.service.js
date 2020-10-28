@@ -94,7 +94,7 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
             params: {
                 fq: data.filterWord,
                 n: (data.n ? data.n : 50),
-                start: 0
+                start: (data.start ? data.start : 0)
             }
         });
     }
