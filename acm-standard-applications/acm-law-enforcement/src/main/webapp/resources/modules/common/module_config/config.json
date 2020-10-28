@@ -434,6 +434,12 @@
             "data": {
               "readOnly": true
             }
+          },
+          {
+            "___title": "Copy <kbd>Ctrl+C</kbd>",
+            "titleKey": "common.directive.docTree.menu.copy",
+            "cmd": "copy",
+            "uiIcon": "ui-icon-copy"
           }
         ]
       },
