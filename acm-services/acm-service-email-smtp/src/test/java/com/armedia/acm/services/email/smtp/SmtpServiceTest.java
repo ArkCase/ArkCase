@@ -71,7 +71,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jul 5, 2017
@@ -338,7 +337,7 @@ public class SmtpServiceTest
     @Test
     public void testValidEmail()
     {
-        List<String> validEmails = Arrays.asList("***REMOVED***", "ann-acm@appdev.armedia.com", "ann-acm@yahoo.com",
+        List<String> validEmails = Arrays.asList("ann-acm@arkcase.org", "ann-acm@appdev.arkcase.org", "ann-acm@yahoo.com",
                 "ann-acm@gmail.com", "ann-acm@1.com", "ann-acm@test.com", "ann-acm@test.net", "me@me.mk");
         validEmails.forEach(it -> assertTrue(service.isEmailValid(it)));
     }
@@ -346,7 +345,7 @@ public class SmtpServiceTest
     @Test
     public void testInvalidEmail()
     {
-        List<String> validEmails = Arrays.asList("ann-acm@.armedia.com", "ann-acm@.com", "ann-acm@armedia", "ann-acm@.com.com",
+        List<String> validEmails = Arrays.asList("ann-acm@.arkcase.org", "ann-acm@.com", "ann-acm@arkcase", "ann-acm@.com.com",
                 "ann-acm@%*.com", "ann-acm@com@com");
         validEmails.forEach(it -> assertFalse(service.isEmailValid(it)));
     }

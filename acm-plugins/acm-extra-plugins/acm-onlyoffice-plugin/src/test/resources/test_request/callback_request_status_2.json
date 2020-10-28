@@ -9,33 +9,33 @@
             {
                 "created": "2018-05-31 15:00:33",
                 "user": {
-                    "id": "***REMOVED***",
+                    "id": "ian-acm@arkcase.org",
                     "name": "Ian Investigator"
                 }
             },
             {
                 "created": "2018-05-31 15:01:48",
                 "user": {
-                    "id": "***REMOVED***",
+                    "id": "ann-acm@arkcase.org",
                     "name": "Ann Administrator"
                 }
             },
             {
                 "created": "2018-05-31 15:02:04",
                 "user": {
-                    "id": "***REMOVED***",
+                    "id": "ian-acm@arkcase.org",
                     "name": "Ian Investigator"
                 }
             }
         ]
     },
     "users": [
-        "***REMOVED***"
+        "ian-acm@arkcase.org"
     ],
     "actions": [
         {
             "type": 0,
-            "userid": "***REMOVED***"
+            "userid": "ann-acm@arkcase.org"
         }
     ],
     "lastsave": "2018-05-31T15:02:08.122Z",

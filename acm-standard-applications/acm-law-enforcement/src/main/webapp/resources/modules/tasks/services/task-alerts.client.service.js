@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/tasks/services/task-alerts.client.service.js modules/tasks/services/task-alerts.client.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/tasks/services/task-alerts.client.service.js modules/tasks/services/task-alerts.client.service.js}
  *
  * This service is used to make calculations for overdue or deadline information about tasks
  */

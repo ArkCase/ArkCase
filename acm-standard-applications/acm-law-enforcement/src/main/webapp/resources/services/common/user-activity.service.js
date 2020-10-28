@@ -5,7 +5,7 @@
  * @name services.service:UserActivityService
  *
  * @description
- * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/auth/session.client.service.js services/auth/session.client.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/auth/session.client.service.js services/auth/session.client.service.js}
  *
  * The UserActivity handles user's mouse and keyboard events and fire event if no activity more that specified period.
  * Only one userActivity service can be active at same time

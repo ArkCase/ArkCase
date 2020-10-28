@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/organizations/services/organization-search.client.service.js modules/organizations/services/organization-search.client.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/organizations/services/organization-search.client.service.js modules/organizations/services/organization-search.client.service.js}
  *
  * Organization.SearchService provides functions for Organization database data
  */

@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/tasks/services/task-workflow.client.service.js modules/tasks/services/task-workflow.client.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/tasks/services/task-workflow.client.service.js modules/tasks/services/task-workflow.client.service.js}
  *
  * Task.WorkflowService provides functions for Task workflow
  */

@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/document-repository/services/document-repository-info.client.service.js modules/document-repository/services/document-repository-info.client.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/document-repository/services/document-repository-info.client.service.js modules/document-repository/services/document-repository-info.client.service.js}
  *
  * DocumentRepository.InfoService provides functions for Document Repository database data
  */

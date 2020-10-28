@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/consultations/services/consultation-info.client.service.js modules/consultations/services/consultation-info.client.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/consultations/services/consultation-info.client.service.js modules/consultations/services/consultation-info.client.service.js}
  *
  * Consultation.InfoService provides functions for Consultation database data
  */

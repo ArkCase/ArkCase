@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/object/object-person.client.service.js services/object/object-person.client.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/object/object-person.client.service.js services/object/object-person.client.service.js}
 
  * Object.PersonService includes group of REST calls related to person association.
  */

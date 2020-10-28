@@ -7,7 +7,7 @@
  *
  * @description
  *
- * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/progress-indicator/progress-indicator.directive.js directives/progress-indicator/progress-indicator.directive.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/progress-indicator/progress-indicator.directive.js directives/progress-indicator/progress-indicator.directive.js}
  *
  * The "Progress-Indicator" directive shows progress on longer action for which the current progress is fetched by a generic event
  *

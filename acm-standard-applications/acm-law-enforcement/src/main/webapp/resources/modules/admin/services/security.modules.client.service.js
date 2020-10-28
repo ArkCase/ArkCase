@@ -10,7 +10,7 @@
  *
  * @description
  *
- * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/admin/services/security.modules.client.service.js modules/admin/services/security.modules.client.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/admin/services/security.modules.client.service.js modules/admin/services/security.modules.client.service.js}
  *
  * The Admin.ModulesService provides Modules REST calls functionality
  */

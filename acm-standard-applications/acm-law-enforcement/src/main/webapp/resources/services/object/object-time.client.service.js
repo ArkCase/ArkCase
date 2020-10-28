@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/object/object-time.client.service.js services/object/object-time.client.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/object/object-time.client.service.js services/object/object-time.client.service.js}
 
  * Object.TimeService includes functions for object relate to time.
  */

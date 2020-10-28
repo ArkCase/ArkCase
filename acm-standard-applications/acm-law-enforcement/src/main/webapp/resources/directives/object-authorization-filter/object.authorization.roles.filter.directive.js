@@ -6,7 +6,7 @@
  *
  * @description
  *
- *{@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/object-authorization-filter/object-authorization-filter.client.directive.js directives/object-authorization-filter/object-authorization-filter.client.directive.js}
+ *{@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/object-authorization-filter/object-authorization-filter.client.directive.js directives/object-authorization-filter/object-authorization-filter.client.directive.js}
  *
  * The "objectAuthorizationRolesFilter" directive search data using the search-input data
  *

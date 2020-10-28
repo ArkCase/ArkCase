@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/admin/services/labels.config.client.service.js modules/admin/services/application-settings.client.service.js }
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/admin/services/labels.config.client.service.js modules/admin/services/application-settings.client.service.js }
  *
  * The Admin.ApplicationSettingsService provides service to get and manage application settings.
  */

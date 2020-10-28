@@ -5,7 +5,7 @@
  * @name service:Frevvo.FormService
  *
  * @description
- * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/frevvo/services/frevvo-form.client.service.js modules/frevvo/services/frevvo-form.client.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/frevvo/services/frevvo-form.client.service.js modules/frevvo/services/frevvo-form.client.service.js}
  *
  * This service contains functionality for Frevvo form management.
  */

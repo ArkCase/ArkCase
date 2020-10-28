@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/object/object-audit.client.service.js services/object/object-audit.client.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/object/object-audit.client.service.js services/object/object-audit.client.service.js}
 
  * Object.AuditService includes group of audit related REST calls.
  */
