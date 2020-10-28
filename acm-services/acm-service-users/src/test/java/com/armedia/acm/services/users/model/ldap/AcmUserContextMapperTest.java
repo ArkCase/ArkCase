@@ -47,14 +47,14 @@ public class AcmUserContextMapperTest extends EasyMockSupport
         acmLdapSyncConfig.setBaseDC("dc=armedia");
         acmLdapSyncConfig.setAllUsersSortingAttribute("cn");
         acmLdapSyncConfig.setDirectoryType("openldap");
-        acmLdapSyncConfig.setUserDomain("armedia.com");
+        acmLdapSyncConfig.setUserDomain("arkcase.org");
         unit = new AcmUserContextMapper(acmLdapSyncConfig);
 
         DirContextAdapter dirContextAdapter = new DirContextAdapter();
         dirContextAdapter.setAttributeValue("cn", "common");
         dirContextAdapter.setAttributeValue("userAccountControl", "user account control");
         dirContextAdapter.setAttributeValue("givenName", "given name");
-        dirContextAdapter.setAttributeValue("mail", "***REMOVED***");
+        dirContextAdapter.setAttributeValue("mail", "ann-acm@arkcase.org");
         dirContextAdapter.setAttributeValue("co", "United States of America");
         dirContextAdapter.setAttributeValue("c", "USA");
         dirContextAdapter.setAttributeValue("company", "armedia");
@@ -69,9 +69,9 @@ public class AcmUserContextMapperTest extends EasyMockSupport
 
         assertNotNull(user);
         assertNotNull(user.getUserId());
-        assertEquals(user.getUserId(), "***REMOVED***");
+        assertEquals(user.getUserId(), "ann-acm@arkcase.org");
         assertNotNull(user.getMail());
-        assertEquals(user.getMail(), "***REMOVED***");
+        assertEquals(user.getMail(), "ann-acm@arkcase.org");
         assertNotNull(user.getCountry());
         assertEquals(user.getCountry(), "United States of America");
         assertNotNull(user.getCountryAbbreviation());

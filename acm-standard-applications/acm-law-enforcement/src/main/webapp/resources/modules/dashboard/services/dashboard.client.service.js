@@ -6,7 +6,7 @@
  *
  *@description
  *
- *{@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/dashboard/services/dashboard..client.service.js modules/dashboard/services/dashboard.client.service.js}
+ *{@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/dashboard/services/dashboard..client.service.js modules/dashboard/services/dashboard.client.service.js}
  *
  *  The ArkCaseDashboard.provider is used to customize Angular Dashboard Framework provider with ArkCase's own templates. It also expose dashboard provider functions to be used.
  */

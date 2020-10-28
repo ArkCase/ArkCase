@@ -7,7 +7,7 @@
  *
  * @description
  *
- * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/core/components/acm-login/acm-login.client.directive.js core/components/acm-login/acm-login.client.directive.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/core/components/acm-login/acm-login.client.directive.js core/components/acm-login/acm-login.client.directive.js}
  *
  * The "acm-login" directive monitors login information and user activity; and logout current session if idle time exceeds a limit
  *

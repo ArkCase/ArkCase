@@ -5,7 +5,7 @@
  * @name services.service:TicketService
  *
  * @description
- * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/auth/ticket.client.service.js services/auth/ticket.client.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/auth/ticket.client.service.js services/auth/ticket.client.service.js}
  *
  * The Ticket management service
  */

@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/people/services/person-lookup.client.service.js modules/people/services/person-lookup.client.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/people/services/person-lookup.client.service.js modules/people/services/person-lookup.client.service.js}
  *
  * Person.LookupService provides functions for Person database data
  */

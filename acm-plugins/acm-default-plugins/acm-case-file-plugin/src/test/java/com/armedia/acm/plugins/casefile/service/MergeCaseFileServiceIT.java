@@ -211,7 +211,7 @@ public class MergeCaseFileServiceIT
         String roleAdd = "ROLE_ADMINISTRATOR";
         AcmGrantedAuthority authority = new AcmGrantedAuthority(roleAdd);
 
-        auth = new UsernamePasswordAuthenticationToken("***REMOVED***", "ann-acm", Arrays.asList(authority));
+        auth = new UsernamePasswordAuthenticationToken("ann-acm@arkcase.org", "ann-acm", Arrays.asList(authority));
         ipAddress = "127.0.0.1";
 
         Resource dammyDocument = new ClassPathResource("/documents/textDammydocument.txt");
@@ -330,7 +330,7 @@ public class MergeCaseFileServiceIT
         String roleAdd = "ROLE_ADMINISTRATOR";
         AcmGrantedAuthority authority = new AcmGrantedAuthority(roleAdd);
 
-        auth = new UsernamePasswordAuthenticationToken("***REMOVED***", "ann-acm", Arrays.asList(authority));
+        auth = new UsernamePasswordAuthenticationToken("ann-acm@arkcase.org", "ann-acm", Arrays.asList(authority));
         ipAddress = "127.0.0.1";
 
         assertNotNull(caseFileDao);
@@ -402,7 +402,7 @@ public class MergeCaseFileServiceIT
         String roleAdd = "ROLE_ADMINISTRATOR";
         AcmGrantedAuthority authority = new AcmGrantedAuthority(roleAdd);
 
-        auth = new UsernamePasswordAuthenticationToken("***REMOVED***", "ann-acm", Arrays.asList(authority));
+        auth = new UsernamePasswordAuthenticationToken("ann-acm@arkcase.org", "ann-acm", Arrays.asList(authority));
         ipAddress = "127.0.0.1";
 
         assertNotNull(caseFileDao);
@@ -424,7 +424,7 @@ public class MergeCaseFileServiceIT
         targetCaseFile.setTitle("title");
 
         AcmParticipant assigneeParticipant = new AcmParticipant();
-        assigneeParticipant.setParticipantLdapId("***REMOVED***");
+        assigneeParticipant.setParticipantLdapId("ian-acm@arkcase.org");
         assigneeParticipant.setParticipantType(ParticipantTypes.ASSIGNEE);
         if (targetCaseFile.getParticipants() == null)
             targetCaseFile.setParticipants(new ArrayList<>());
@@ -450,7 +450,7 @@ public class MergeCaseFileServiceIT
             }
         }
         assertNotNull(foundAssignee);
-        assertEquals("***REMOVED***", foundAssignee.getParticipantLdapId());
+        assertEquals("ian-acm@arkcase.org", foundAssignee.getParticipantLdapId());
 
         // merge case files
         MergeCaseOptions mergeCaseOptions = new MergeCaseOptions();
@@ -478,7 +478,7 @@ public class MergeCaseFileServiceIT
         AcmParticipant foundPreviousAssignee = null;
         for (AcmParticipant ap : targetCase.getParticipants())
         {
-            if (ParticipantTypes.FOLLOWER.equals(ap.getParticipantType()) && "***REMOVED***".equals(ap.getParticipantLdapId()))
+            if (ParticipantTypes.FOLLOWER.equals(ap.getParticipantType()) && "ian-acm@arkcase.org".equals(ap.getParticipantLdapId()))
             {
                 foundPreviousAssignee = ap;
                 break;
