@@ -10,7 +10,7 @@
  *
  * @description
  *
- * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/simple-pager/simple-pager.client.directive.js directives/simple-pager/simple-pager.client.directive.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/simple-pager/simple-pager.client.directive.js directives/simple-pager/simple-pager.client.directive.js}
  *
  * The "simple-pager" directive adds paging functionality like ui-grid pager
  *

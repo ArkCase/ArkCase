@@ -9,7 +9,7 @@
  *
  * @description
  *
- * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/core-calendar/core-calendar.client.directive.js directives/core-calendar/core-calendar.client.directive.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/core-calendar/core-calendar.client.directive.js directives/core-calendar/core-calendar.client.directive.js}
  *
  * The "Core-Calendar" calendar functionality to the view
  *

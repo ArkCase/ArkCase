@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/object-model.client.service.js services/object-model.client.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/object-model.client.service.js services/object-model.client.service.js}
 
  * CallObjectsService contains wrapper functions of ObjectsService to support default error handling, data validation and data cache.
  */

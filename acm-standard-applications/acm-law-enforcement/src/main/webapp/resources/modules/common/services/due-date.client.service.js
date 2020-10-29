@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/common/services/due-date.client.service.js modules/common/services/due-date.client.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/common/services/due-date.client.service.js modules/common/services/due-date.client.service.js}
  *
  * DueDate.Service provides functions for calculation for due date without holidays and weekends
  */

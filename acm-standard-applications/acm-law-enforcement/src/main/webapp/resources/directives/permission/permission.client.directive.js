@@ -7,7 +7,7 @@
  *
  * @description
  *
- * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/permission/permission.client.directive.js directives/permission/permission.client.directive.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/permission/permission.client.directive.js directives/permission/permission.client.directive.js}
  *
  * The permission directive controls User Interface control availability depends on security settings.
  * Action name consists of 2 parts: module name and actionName, for example: 'cases.createCase'

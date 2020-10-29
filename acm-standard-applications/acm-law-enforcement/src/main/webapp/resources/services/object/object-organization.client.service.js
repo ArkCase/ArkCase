@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/object/object-organization.client.service.js services/object/object-organization.client.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/object/object-organization.client.service.js services/object/object-organization.client.service.js}
 
  * Object.OrganizationService includes group of REST calls related to organization association.
  */

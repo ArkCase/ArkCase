@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/requests/exemption.client.service.js services/requests/exemption.client.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/requests/exemption.client.service.js services/requests/exemption.client.service.js}
 
  * ExemptionService contains function to get exemption codes
  */

@@ -5,7 +5,7 @@
  *
  * @description
  *
- * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/filters/days/number-of-days-left.client.filter.js filters/days/number-of-days-left.client.filter.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/filters/days/number-of-days-left.client.filter.js filters/days/number-of-days-left.client.filter.js}
  *
  * @param {string} toDate Date string to count the days left;
  *

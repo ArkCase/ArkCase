@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/acm/app.client.service.js services/acm/app.client.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/acm/app.client.service.js services/acm/app.client.service.js}
  *
  * This service is used to hold login information, for example login status, idle time, error statistics, etc.
  */

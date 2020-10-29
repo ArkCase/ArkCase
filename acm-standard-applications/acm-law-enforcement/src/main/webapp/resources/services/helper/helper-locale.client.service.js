@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/helper/helper-locale.client.service.js services/helper/helper-locale.client.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/helper/helper-locale.client.service.js services/helper/helper-locale.client.service.js}
  *
  * Helper.LocaleService save locale code in scope for later use
  */

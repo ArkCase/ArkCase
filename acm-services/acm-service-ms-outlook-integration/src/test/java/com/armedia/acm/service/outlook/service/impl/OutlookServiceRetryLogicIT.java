@@ -103,7 +103,7 @@ public class OutlookServiceRetryLogicIT extends EasyMockSupport
     private transient final Logger log = LogManager.getLogger(getClass());
     @Autowired
     private OutlookService outlookService;
-    private String validUser = "ann-acm@armedia.com";
+    private String validUser = "ann-acm@arkcase.org";
     private String validPassword = "AcMd3v$";
 
     private AcmOutlookUser user = new AcmOutlookUser("ann-acm", validUser, validPassword);

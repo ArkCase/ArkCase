@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/config/application-config.client.service.js services/config/application-config.client.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/config/application-config.client.service.js services/config/application-config.client.service.js}
 
  * ApplicationConfigService loads application configuration
  */

@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/tasks/services/task-people.client.service.js modules/tasks/services/task-people.client.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/tasks/services/task-people.client.service.js modules/tasks/services/task-people.client.service.js}
  *
  * Task.PeopleService provides functions for finding People under Task
  */

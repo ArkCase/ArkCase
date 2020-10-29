@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/doc-tree/doc-tree-ext.paticipants.client.service.js directives/doc-tree/doc-tree-ext.email.participants.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/doc-tree/doc-tree-ext.paticipants.client.service.js directives/doc-tree/doc-tree-ext.email.participants.service.js}
  *
  * DocTree extensions for files and folders participants functions.
  */
