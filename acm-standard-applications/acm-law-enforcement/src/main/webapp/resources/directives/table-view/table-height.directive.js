@@ -7,7 +7,7 @@
  *
  * @description
  *
- * {@link https://***REMOVED***/arkcase/ACM3/blob/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/table-view/table-height.directive.js directives/table-view/table-height.directive.js}
+ * {@link /ACM3/blob/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/table-view/table-height.directive.js directives/table-view/table-height.directive.js}
  *
  * The adjust-table-height directive makes ui-grid 100% height. Also it solves ui-grid scroll problem (https://github.com/angular-ui/ui-grid/issues/1926).
  *

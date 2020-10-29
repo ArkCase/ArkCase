@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/doc-tree/doc-tree-ext.template.client.service.js directives/doc-tree/doc-tree-ext.template.client.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/doc-tree/doc-tree-ext.template.client.service.js directives/doc-tree/doc-tree-ext.template.client.service.js}
  *
  * DocTree extensions for Correspondence Template functions.
  */

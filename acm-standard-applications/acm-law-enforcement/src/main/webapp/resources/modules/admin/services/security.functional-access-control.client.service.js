@@ -10,7 +10,7 @@
  *
  * @description
  *
- * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/admin/services/security.functional-access-control.client.service.js modules/admin/services/security.functional-access-control.client.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/admin/services/security.functional-access-control.client.service.js modules/admin/services/security.functional-access-control.client.service.js}
  *
  * The Admin.FunctionalAccessControlService provides Functional Access Control REST calls functionality
  */

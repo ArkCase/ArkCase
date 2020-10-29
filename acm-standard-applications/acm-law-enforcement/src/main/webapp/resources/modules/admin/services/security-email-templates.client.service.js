@@ -6,7 +6,7 @@
  * @description
  * Contains REST calls for Admin Email Templates Configuration
  *
- * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/admin/services/security-email-templates.client.service.js modules/admin/services/security-email-templates.client.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/admin/services/security-email-templates.client.service.js modules/admin/services/security-email-templates.client.service.js}
  *
  * Contains REST calls for Admin Email Templates Configuration
  */

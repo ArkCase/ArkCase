@@ -10,7 +10,7 @@
  *
  * @description
  *
- * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/admin/services/branding.logo.client.service.js modules/admin/services/branding.logo.client.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/admin/services/branding.logo.client.service.js modules/admin/services/branding.logo.client.service.js}
  *
  * The Admin.BrandingCustomCss provides Branding logo calls functionality
  */

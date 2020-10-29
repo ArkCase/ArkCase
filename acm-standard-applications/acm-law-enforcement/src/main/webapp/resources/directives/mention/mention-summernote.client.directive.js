@@ -7,7 +7,7 @@
  *
  * @description
  *
- * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/mention/mention-summernote.client.directive.js directives/mention/mention-summernote.client.directive.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/mention/mention-summernote.client.directive.js directives/mention/mention-summernote.client.directive.js}
  *
  * @param {string} ngModel - ngModel for the input.
  * @param {Object} params - it contains emailAddresses and usersMentioned array, which contain the email addresses and user names of the users that are mentioned in the input.

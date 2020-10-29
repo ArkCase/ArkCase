@@ -101,10 +101,10 @@ public class MapperUtilsTest
     {
         AcmLdapSyncConfig config = new AcmLdapSyncConfig();
         config.setUserPrefix("dco.");
-        config.setUserDomain("armedia.com");
+        config.setUserDomain("arkcase.org");
         config.setUserIdAttributeName("sAMAccountName");
         String userId = MapperUtils.buildUserId("veryyylongusername", config);
-        assertEquals("dco.veryyylonguserna@armedia.com", userId);
+        assertEquals("dco.veryyylonguserna@arkcase.org", userId);
     }
 
     @Test
@@ -112,10 +112,10 @@ public class MapperUtilsTest
     {
         AcmLdapSyncConfig config = new AcmLdapSyncConfig();
         config.setUserPrefix("dco.");
-        config.setUserDomain("armedia.com");
+        config.setUserDomain("arkcase.org");
         config.setUserIdAttributeName("sAMAccountName");
         String userId = MapperUtils.buildUserId("ann-acm", config);
-        assertEquals("dco.***REMOVED***", userId);
+        assertEquals("dco.ann-acm@arkcase.org", userId);
     }
 
     @Test
@@ -123,18 +123,18 @@ public class MapperUtilsTest
     {
         AcmLdapSyncConfig config = new AcmLdapSyncConfig();
         config.setUserPrefix("dco");
-        config.setUserDomain("armedia.com");
+        config.setUserDomain("arkcase.org");
         config.setUserIdAttributeName("uid");
         String userId = MapperUtils.buildUserId("veryyyyyylongusername", config);
-        assertEquals("dco.veryyyyyylongusername@armedia.com", userId);
+        assertEquals("dco.veryyyyyylongusername@arkcase.org", userId);
     }
 
     @Test
     public void testPrincipalPrefixAndDomainIncluded()
     {
-        String principal = "100.***REMOVED***";
+        String principal = "100.ann-acm@arkcase.org";
 
-        String result = MapperUtils.buildPrincipalName(principal, "100", "armedia.com");
+        String result = MapperUtils.buildPrincipalName(principal, "100", "arkcase.org");
 
         assertEquals(principal, result);
     }
@@ -144,9 +144,9 @@ public class MapperUtilsTest
     {
         String principal = "100.ann-acm";
 
-        String result = MapperUtils.buildPrincipalName(principal, "100", "armedia.com");
+        String result = MapperUtils.buildPrincipalName(principal, "100", "arkcase.org");
 
-        assertEquals("100.***REMOVED***", result);
+        assertEquals("100.ann-acm@arkcase.org", result);
     }
 
     @Test
@@ -154,18 +154,18 @@ public class MapperUtilsTest
     {
         String principal = "ann-acmloooooooooong";
 
-        String result = MapperUtils.buildPrincipalName(principal, "100.", "armedia.com");
+        String result = MapperUtils.buildPrincipalName(principal, "100.", "arkcase.org");
 
-        assertEquals("100.ann-acmloooooooo@armedia.com", result);
+        assertEquals("100.ann-acmloooooooo@arkcase.org", result);
     }
 
     @Test
     public void testLongPrincipalPrefixNotIncludedDomainIncluded()
     {
-        String principal = "ann-acmloooooooooong@armedia.com";
+        String principal = "ann-acmloooooooooong@arkcase.org";
 
-        String result = MapperUtils.buildPrincipalName(principal, "100.", "armedia.com");
+        String result = MapperUtils.buildPrincipalName(principal, "100.", "arkcase.org");
 
-        assertEquals("100.ann-acmloooooooo@armedia.com", result);
+        assertEquals("100.ann-acmloooooooo@arkcase.org", result);
     }
 }

@@ -15,8 +15,10 @@
         <div class="col-lg-6">
             <label class="control-panel" translate>cases.comp.requestDispositionCategory.modal.deny.other.label</label>
             <select ng-model="requestOtherReason" class="form-control input-md"
+					ng-init="requestOtherReason = requestOtherReasons[0]"
                     ng-options="requestOtherReason.key as requestOtherReason.value | translate for requestOtherReason in requestOtherReasons"
                     ng-disabled="requestDispositionCategory != 'other'">
+					<option value=""> </option>
             </select>
         </div>
     </div></br>

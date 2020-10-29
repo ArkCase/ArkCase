@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/common/services/mentions.client.service.js modules/common/services/mentions.client.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/common/services/mentions.client.service.js modules/common/services/mentions.client.service.js}
  *
  * Mentions.Service provides functions for mention functionality
  */

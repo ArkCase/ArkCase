@@ -7,7 +7,7 @@
  *
  * @description
  *
- * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/fallback-err-src/fallback.err.src.client.directive.js directives/fallback-err-src/fallback.err.src.client.directive.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/fallback-err-src/fallback.err.src.client.directive.js directives/fallback-err-src/fallback.err.src.client.directive.js}
  *
  * Directive to watch for an error loading an image and to replace the src.
  *
