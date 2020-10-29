@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/object/object-signature.client.service.js services/object/object-signature.client.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/object/object-signature.client.service.js services/object/object-signature.client.service.js}
 
  * Object.SignatureService includes group of REST calls related to signature.
  */

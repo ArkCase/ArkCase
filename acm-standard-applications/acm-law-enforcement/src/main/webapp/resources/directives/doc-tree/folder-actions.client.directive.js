@@ -7,7 +7,7 @@
  *
  * @description
  *
- * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/doc-tree/folder-actions.directive.js directives/doc-tree/folder-actions.directive.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/doc-tree/folder-actions.directive.js directives/doc-tree/folder-actions.directive.js}
  *
  * The "Folder-Actions" directive exposes functionalities like addNewFolder and addDocument buttons enabled when the user selects a folder
  *

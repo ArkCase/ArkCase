@@ -7,7 +7,7 @@
  * @description
  *
  *
- * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/helper/helper-uigrid.client.service.js services/helper/helper-uigrid.client.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/helper/helper-uigrid.client.service.js services/helper/helper-uigrid.client.service.js}
 
  * Helper.UiGridService has functions for typical usage in ArCase of 'ui-grid' directive
  */

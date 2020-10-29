@@ -5,7 +5,7 @@
  * @name services.service:MessageService
 
  * @description
- * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/common/message.client.service.js services/common/message.client.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/common/message.client.service.js services/common/message.client.service.js}
  *
  * The MessageService displays notify messages
  *

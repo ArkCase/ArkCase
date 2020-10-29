@@ -55,6 +55,7 @@ public class NoteAddedNotifier implements ApplicationListener<ApplicationNoteEve
 
             Notification notification = notificationService.getNotificationBuilder()
                     .newNotification("noteAdded", NotificationConstants.NOTE_ADDED, note.getObjectType(), note.getId(), event.getUserId())
+                    .withNote(note.getNote())
                     .forRelatedObjectTypeAndId(note.getParentObjectType(), note.getParentObjectId())
                     .forRelatedObjectWithNumber(note.getParentTitle())
                     .withEmailAddressesForParticipantsForObject(note.getParentType(), note.getParentId())

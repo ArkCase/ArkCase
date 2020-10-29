@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://***REMOVED***/arkcase/foia-extension/blob/develop/src/main/resources/META-INF/resources/resources/custom_modules/queues/services/queues.client.service.js queues/services/queues.client.service.js}
+ * {@link /foia-extension/blob/develop/src/main/resources/META-INF/resources/resources/custom_modules/queues/services/queues.client.service.js queues/services/queues.client.service.js}
  *
  * The QueuesService provides Queues management functionality.
  */

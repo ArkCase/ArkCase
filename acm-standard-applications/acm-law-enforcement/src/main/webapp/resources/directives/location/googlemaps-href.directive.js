@@ -11,7 +11,7 @@
  *
  * @description
  *
- * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/location/googlemaps-href.directive.js directives/location/googlemaps-href.directive.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/location/googlemaps-href.directive.js directives/location/googlemaps-href.directive.js}
  *
  * The googlemapsHref directive builds google maps href for selected address.
  *

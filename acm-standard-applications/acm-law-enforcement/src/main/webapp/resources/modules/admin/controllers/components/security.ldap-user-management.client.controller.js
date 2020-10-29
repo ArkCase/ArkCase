@@ -48,11 +48,15 @@ angular.module('admin').controller(
                 });
             }
 
-            var makePaginationRequest = true;
             var currentAuthGroups;
             var selectedUser;
+            var userPageSize = 50;
             var objectTitle = $translate.instant('admin.security.ldap.user.management.user');
             function initializeData() {
+                $scope.makePaginationRequest = true;
+                $scope.userFilterWord = null;
+                $scope.unauthorizedFilterWord = null;
+                $scope.authorizedFilterWord = null;
                 $scope.lastSelectedUser = "";
                 $scope.userData = {
                     "chooseObject": [],
@@ -74,27 +78,27 @@ angular.module('admin').controller(
 
             $scope.selectDirectory = function (directoryName) {
                 initializeData();
-                initUser(null, directoryName);
+                initUser(userPageSize, directoryName);
             };
 
             LdapConfigService.retrieveDirectories().then(function(directories) {
                 $scope.directories = Object.keys(directories.data).sort();
                 $scope.directoryName = $scope.directoryName ? $scope.directoryName : $scope.directories[0];
-                $scope.initUser(null, $scope.directoryName);
+                $scope.initUser(userPageSize, $scope.directoryName);
             });
 
             function initUser(userNumber, directoryName) {
                 var userRequestInfo = {};
                 userRequestInfo.n = Util.isEmpty(userNumber) ? 50 : userNumber;
-                userRequestInfo.start = Util.isEmpty(userNumber) ? 0 : $scope.userData.chooseObject.length;
-                if (makePaginationRequest || !_.isEmpty(directoryName)) {
+                userRequestInfo.start = $scope.userData.chooseObject.length;
+                if ($scope.makePaginationRequest) {
                     LdapUserManagementService.getNUsers(userRequestInfo, directoryName).then(function(response) {
                         $scope.fillList($scope.userData.chooseObject, response.data.response.docs);
                         if (_.isEmpty($scope.lastSelectedUser)) {
                             $scope.lastSelectedUser = $scope.userData.chooseObject[0];
                             $scope.onObjSelect($scope.lastSelectedUser);
                         }
-                        makePaginationRequest = response.data.response.numFound > userRequestInfo.n;
+                        $scope.makePaginationRequest = response.data.response.numFound > $scope.userData.chooseObject.length;
                     });
                 }
             }
@@ -302,7 +306,16 @@ angular.module('admin').controller(
             }
 
             function userScroll() {
-                $scope.initUser($scope.userData.chooseObject.length * 2, null);
+                if (Util.isEmpty($scope.userFilterWord)) {
+                    $scope.initUser(userPageSize, $scope.directoryName);
+                } else {
+                    // Retrieves the next page of filtered data since the user panel filter is set
+                    var data = {};
+                    data.filterWord = $scope.userFilterWord;
+                    data.n = userPageSize;
+                    data.start = $scope.userData.chooseObject.length;
+                    $scope.retrieveDataScroll(data, "getUsersFiltered", "chooseObject");
+                }
             }
 
             function retrieveDataScroll(data, methodName, panelName) {
@@ -328,7 +341,13 @@ angular.module('admin').controller(
                 data.member = $scope.lastSelectedUser;
                 data.start = $scope.userData.selectedNotAuthorized.length;
                 data.isAuthorized = false;
-                $scope.retrieveDataScroll(data, "getGroupsForUser", "selectedNotAuthorized");
+                if (Util.isEmpty($scope.unauthorizedFilterWord)) {
+                    $scope.retrieveDataScroll(data, "getGroupsForUser", "selectedNotAuthorized");
+                } else {
+                    // Retrieves the next page of filtered data since the unauthorized panel filter is set
+                    data.filterWord = $scope.unauthorizedFilterWord;
+                    $scope.retrieveDataScroll(data, "getGroupsFiltered", "selectedNotAuthorized");
+                }
             }
 
             function authorizedScroll() {
@@ -336,26 +355,44 @@ angular.module('admin').controller(
                 data.member = $scope.lastSelectedUser;
                 data.start = $scope.userData.selectedAuthorized.length;
                 data.isAuthorized = true;
-                $scope.retrieveDataScroll(data, "getGroupsForUser", "selectedAuthorized");
+                if (Util.isEmpty($scope.authorizedFilterWord)) {
+                    $scope.retrieveDataScroll(data, "getGroupsForUser", "selectedAuthorized");
+                } else {
+                    // Retrieves the next page of filtered data since the authorized panel filter is set
+                    data.filterWord = $scope.authorizedFilterWord;
+                    $scope.retrieveDataScroll(data, "getGroupsFiltered", "selectedAuthorized");
+                }
             }
 
             function retrieveDataFilter(data, methodName, panelName) {
-                LdapUserManagementService[methodName](data).then(function(response) {
-                    $scope.userData[panelName] = [];
-                    if (_.isArray(response.data)) {
-                        $scope.fillList($scope.userData[panelName], response.data);
-                    } else {
+                if (methodName === 'getNUsers') { // The getNUsers method requires the directoryName
+                    LdapUserManagementService.getNUsers(data, $scope.directoryName).then(function(response) {
+                        $scope.userData[panelName] = [];
                         $scope.fillList($scope.userData[panelName], response.data.response.docs);
-                    }
-                    if (methodName == "getNUsers" || methodName == "getUsersFiltered") {
                         $scope.onObjSelect($scope.userData.chooseObject[0]);
-                    }
-                }, function() {
-                    $log.error('Error during calling the method ' + methodName);
-                });
+                        $scope.makePaginationRequest = response.data.response.numFound > $scope.userData.chooseObject.length;
+                    }, function() {
+                        $log.error('Error during calling the method ' + methodName);
+                    });
+                } else {
+                    LdapUserManagementService[methodName](data).then(function(response) {
+                        $scope.userData[panelName] = [];
+                        if (_.isArray(response.data)) {
+                            $scope.fillList($scope.userData[panelName], response.data);
+                        } else {
+                            $scope.fillList($scope.userData[panelName], response.data.response.docs);
+                        }
+                        if (methodName == "getNUsers" || methodName == "getUsersFiltered") {
+                            $scope.onObjSelect($scope.userData.chooseObject[0]);
+                        }
+                    }, function() {
+                        $log.error('Error during calling the method ' + methodName);
+                    });
+                }
             }
 
             function userManagementFilter(data) {
+                $scope.userFilterWord = data.filterWord;
                 if (Util.isEmpty(data.filterWord)) {
                     data.n = Util.isEmpty(data.n) ? 50 : data.n;
                     $scope.retrieveDataFilter(data, "getNUsers", "chooseObject");
@@ -367,6 +404,7 @@ angular.module('admin').controller(
             function userUnauthorizedFilter(data) {
                 data.member = $scope.lastSelectedUser;
                 data.isAuthorized = false;
+                $scope.unauthorizedFilterWord = data.filterWord;
                 if (Util.isEmpty(data.filterWord)) {
                     data.n = Util.isEmpty(data.n) ? 50 : data.n;
                     $scope.retrieveDataFilter(data, "getGroupsForUser", "selectedNotAuthorized");
@@ -378,6 +416,7 @@ angular.module('admin').controller(
             function userAuthorizedFilter(data) {
                 data.member = $scope.lastSelectedUser;
                 data.isAuthorized = true;
+                $scope.authorizedFilterWord = data.filterWord;
                 if (Util.isEmpty(data.filterWord)) {
                     data.n = Util.isEmpty(data.n) ? 50 : data.n;
                     $scope.retrieveDataFilter(data, "getGroupsForUser", "selectedAuthorized");

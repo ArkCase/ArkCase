@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/complaints/services/complaint-lookup.client.service.js modules/complaints/services/complaint-lookup.client.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/complaints/services/complaint-lookup.client.service.js modules/complaints/services/complaint-lookup.client.service.js}
  *
  * Complaint.LookupService provides functions for Complaint database data
  */

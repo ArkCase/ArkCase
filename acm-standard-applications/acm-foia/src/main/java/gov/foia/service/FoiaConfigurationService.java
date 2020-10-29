@@ -62,6 +62,7 @@ public class FoiaConfigurationService extends SystemConfigurationService
         foiaConfig.setFeeWaivedAppealsEnabled(foiaConfiguration.getFeeWaivedAppealsEnabled());
         foiaConfig.setLitigationRequestsEnabled(foiaConfiguration.getLitigationRequestsEnabled());
         foiaConfig.setLitigationAppealsEnabled(foiaConfiguration.getLitigationAppealsEnabled());
+        foiaConfig.setCreateNewPortalUserOptionOnArkcaseRequestForm(foiaConfiguration.getCreateNewPortalUserOptionOnArkcaseRequestForm());
         foiaConfig.setAutomaticCreationOfRequestWhenAppealIsRemandedEnabled(
                 foiaConfiguration.getAutomaticCreationOfRequestWhenAppealIsRemandedEnabled());
 
@@ -94,6 +95,7 @@ public class FoiaConfigurationService extends SystemConfigurationService
         foiaConfiguration.setFeeWaivedAppealsEnabled(foiaConfig.getFeeWaivedAppealsEnabled());
         foiaConfiguration.setLitigationRequestsEnabled(foiaConfig.getLitigationRequestsEnabled());
         foiaConfiguration.setLitigationAppealsEnabled(foiaConfig.getLitigationAppealsEnabled());
+        foiaConfiguration.setCreateNewPortalUserOptionOnArkcaseRequestForm(foiaConfig.getCreateNewPortalUserOptionOnArkcaseRequestForm());
         foiaConfiguration.setAutomaticCreationOfRequestWhenAppealIsRemandedEnabled(
                 foiaConfig.getAutomaticCreationOfRequestWhenAppealIsRemandedEnabled());
         foiaConfiguration.setDojYearlyReports(

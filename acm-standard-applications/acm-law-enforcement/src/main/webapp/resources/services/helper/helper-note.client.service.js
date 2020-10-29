@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/helper/helper-note.client.service.js services/helper/helper-note.client.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/helper/helper-note.client.service.js services/helper/helper-note.client.service.js}
 
  * Helper.NoteService provides common functionality related to the notes tables throughout the application
  */

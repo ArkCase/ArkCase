@@ -5,7 +5,7 @@
  *
  * @description
  *
- * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/filters/days/number-of-days.client.filter.js filters/days/number-of-days.client.filter.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/filters/days/number-of-days.client.filter.js filters/days/number-of-days.client.filter.js}
  *
  * @param {string} fromDateString Date string to start the count of days;
  *

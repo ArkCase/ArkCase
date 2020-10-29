@@ -7,7 +7,7 @@
  *
  * @description
  *
- * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/tree-view/tree-view.client.directive.js directives/tree-view/tree-view.client.directive.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/tree-view/tree-view.client.directive.js directives/tree-view/tree-view.client.directive.js}
  *
  * The treeView directive renders simple FansyTree based Tree View
  *
