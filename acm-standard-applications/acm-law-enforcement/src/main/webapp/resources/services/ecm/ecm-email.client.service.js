@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/ecm/ecm-email.client.service.js services/ecm/ecm-email.client.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/ecm/ecm-email.client.service.js services/ecm/ecm-email.client.service.js}
 
  * Email service for ECM.
  */

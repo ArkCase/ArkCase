@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/servcomm/servcomm.client.service.js services/servcomm/servcomm.client.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/servcomm/servcomm.client.service.js services/servcomm/servcomm.client.service.js}
  *
  * Server communication. Pardon the incomplete ng doc. For now, it is just temporary code. Complete ng doc will be added after real implementation of UI and backend communication
  */

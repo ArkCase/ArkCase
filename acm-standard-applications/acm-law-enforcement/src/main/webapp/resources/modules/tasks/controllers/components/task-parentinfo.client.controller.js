@@ -38,6 +38,8 @@ angular.module('tasks').controller(
                 ObjectService.showObject(ObjectService.ObjectTypes.COSTSHEET, $scope.parentCostsheetInfo.id);
             } else if ($scope.parentTimesheetInfo) {
                 ObjectService.showObject(ObjectService.ObjectTypes.TIMESHEET, $scope.parentTimesheetInfo.id);
+            } else if ($scope.parentConsultationInfo) {
+                ObjectService.showObject(ObjectService.ObjectTypes.CONSULTATION, $scope.parentConsultationInfo.id);
             } else {
                 $log.error('parentCaseInfo is undefined, cannot redirect to the parent case');
             }

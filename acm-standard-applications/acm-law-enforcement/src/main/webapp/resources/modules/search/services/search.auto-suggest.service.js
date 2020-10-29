@@ -5,7 +5,7 @@
  *
  * @description
  *
- * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/search/services/search.auto-suggest.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/search/services/search.auto-suggest.service.js}
  *
  * The AutoSuggestService provides autosuggest search functionality.
  */

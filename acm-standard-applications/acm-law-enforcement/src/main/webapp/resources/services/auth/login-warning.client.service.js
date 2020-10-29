@@ -5,7 +5,7 @@
  * @name services.service:LoginWarningService
  *
  * @description
- * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/auth/login-warning.client.service.js services/auth/login-warning.client.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/auth/login-warning.client.service.js services/auth/login-warning.client.service.js}
  *
  * The LoginWarningService service retrieves warning configuration for login from server
  */

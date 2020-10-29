@@ -100,7 +100,7 @@ public class OnlyOfficeApiControllerTest extends EasyMockSupport
     public void testCallbackRequestStatus2() throws Exception
     {
 
-        EasyMock.expect(mockAuthentication.getName()).andReturn("ann-acm@armedia.com");
+        EasyMock.expect(mockAuthentication.getName()).andReturn("ann-acm@arkcase.org");
         Capture<CallBackData> callBackDataCapture = EasyMock.newCapture();
 
         EasyMock.expect(mockCallbackService.handleCallback(EasyMock.capture(callBackDataCapture), EasyMock.eq(mockAuthentication)))
@@ -125,14 +125,14 @@ public class OnlyOfficeApiControllerTest extends EasyMockSupport
 
         List<Action> actions = callBackData.getActions();
         assertTrue(actions.size() > 0);
-        assertEquals("ann-acm@armedia.com", actions.get(0).getUserid());
+        assertEquals("ann-acm@arkcase.org", actions.get(0).getUserid());
         assertEquals(Integer.valueOf(0), actions.get(0).getType());
 
         History history = callBackData.getHistory();
         assertNotNull(history);
         assertTrue(history.getChanges().size() == 3);
         assertEquals("2018-05-31 15:00:33", history.getChanges().get(0).getCreated());
-        assertEquals("ian-acm@armedia.com", history.getChanges().get(0).getUser().getId());
+        assertEquals("ian-acm@arkcase.org", history.getChanges().get(0).getUser().getId());
         assertEquals("Ian Investigator", history.getChanges().get(0).getUser().getName());
 
         assertEquals(
@@ -143,7 +143,7 @@ public class OnlyOfficeApiControllerTest extends EasyMockSupport
     @Test
     public void testCallbackRequestStatus5Unknows() throws Exception
     {
-        EasyMock.expect(mockAuthentication.getName()).andReturn("ann-acm@armedia.com");
+        EasyMock.expect(mockAuthentication.getName()).andReturn("ann-acm@arkcase.org");
         Capture<CallBackData> callBackDataCapture = EasyMock.newCapture();
 
         EasyMock.expect(mockCallbackService.handleCallback(EasyMock.capture(callBackDataCapture), EasyMock.eq(mockAuthentication)))

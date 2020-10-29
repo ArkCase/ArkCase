@@ -84,11 +84,15 @@ import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.web.api.MDCConstants;
+
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.client.api.Folder;
 import org.apache.chemistry.opencmis.commons.PropertyIds;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -105,13 +109,20 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpSession;
+
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -1118,6 +1129,60 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_COPY_FILE, EcmFileConstants.OBJECT_FILE_TYPE, fileId,
                     "Could not copy file", e);
         }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "READ")
+    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 1, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
+    public EcmFile copyRecord(Long fileId, Long folderId, String targetObjectType, Long targetObjectId, Authentication authentication)
+            throws AcmObjectNotFoundException, AcmUserActionFailedException
+    {
+        AcmFolder folder = getFolderDao().find(folderId);
+        EcmFile ecmFile = getEcmFileDao().find(fileId);
+
+        if (ecmFile == null || folder == null)
+        {
+            throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, fileId, "File or Destination folder not found", null);
+        }
+
+        try
+        {
+            MultipartFile fileToUpload = getMultipartFromEcmFile(ecmFile);
+
+            return upload(ecmFile.getFileName(), ecmFile.getFileType(), null, fileToUpload, authentication, folder.getCmisFolderId(),
+                    targetObjectType, targetObjectId);
+        }
+        catch (Exception e)
+        {
+            log.error("Could not copy record {} ", e.getMessage(), e);
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_COPY_FILE, EcmFileConstants.OBJECT_FILE_TYPE,
+                    ecmFile.getId(),
+                    "Could not copy record", e);
+        }
+    }
+
+    private MultipartFile getMultipartFromEcmFile(EcmFile ecmFile) throws Exception
+    {
+        Document cmisDoc = (Document) findObjectById(ecmFile.getCmisRepositoryId(), ecmFile.getVersionSeriesId());
+
+        InputStream inputStream = cmisDoc.getContentStream().getStream();
+        byte[] content = IOUtils.toByteArray(inputStream);
+
+        File file = new File(ecmFile.getFileName());
+        Path path = Paths.get(file.getAbsolutePath());
+        Files.write(path, content);
+
+        FileItem fileItem = new DiskFileItem("", null, false, file.getName(), (int) file.length(),
+                file.getParentFile());
+
+        try (InputStream input = new FileInputStream(file))
+        {
+            OutputStream os = fileItem.getOutputStream();
+            IOUtils.copy(input, os);
+        }
+
+        return new CommonsMultipartFile(fileItem);
     }
 
     @Override
@@ -2346,7 +2411,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             {
                 for (EcmFile ef : efList)
                 {
-                    if (!ef.isDuplicate()) {
+                    if (!ef.isDuplicate())
+                    {
                         ef.setDuplicate(true);
                         getEcmFileDao().save(ef);
                     }
@@ -2621,11 +2687,13 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         this.camelContextManager = camelContextManager;
     }
 
-    public FileEventPublisher getFileEventPublisher() {
+    public FileEventPublisher getFileEventPublisher()
+    {
         return fileEventPublisher;
     }
 
-    public void setFileEventPublisher(FileEventPublisher fileEventPublisher) {
+    public void setFileEventPublisher(FileEventPublisher fileEventPublisher)
+    {
         this.fileEventPublisher = fileEventPublisher;
     }
 }

@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/core/services/upload-manager-modal.client.service.js modules/core/services/upload-manager-modal.client.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/core/services/upload-manager-modal.client.service.js modules/core/services/upload-manager-modal.client.service.js}
  *
  * Core.UploadManagerModalService provides functions for Large File Upload manager
  */

@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/admin/services/security.ldap.config.client.service.js modules/admin/services/security.ldap.config.client.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/admin/services/security.ldap.config.client.service.js modules/admin/services/security.ldap.config.client.service.js}
  *
  * The Admin.LdapConfigService provides LDAP Config REST calls functionality
  */

@@ -5,7 +5,7 @@
  * @name services.service:SessionService
  *
  * @description
- * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/auth/session.client.service.js services/auth/session.client.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/auth/session.client.service.js services/auth/session.client.service.js}
  *
  * The Session service detects session expiration and shows warning message
  */

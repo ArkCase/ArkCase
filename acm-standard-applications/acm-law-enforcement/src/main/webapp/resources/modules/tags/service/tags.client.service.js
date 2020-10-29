@@ -5,7 +5,7 @@
  *
  * @description
  *
- * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/tags/services/tags.client.service.js modules/tags/services/tags.client.service.js}
+ * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/tags/services/tags.client.service.js modules/tags/services/tags.client.service.js}
  *
  * The ClientsService provides clients  search functionality.
  */
