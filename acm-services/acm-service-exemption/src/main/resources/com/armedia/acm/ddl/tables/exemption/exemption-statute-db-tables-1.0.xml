@@ -27,7 +27,7 @@
 
     <changeSet id="01-create-table-acm_exemption_statute" author="martin.jovanovski" dbms="mysql">
         <createTable tableName="acm_exemption_statute">
-            <column name="cm_exemption_statute_id" type="${idType}">
+            <column name="cm_exemption_statute_id" type="${idType}" autoIncrement="true">
                 <constraints primaryKey="true" primaryKeyName="pk_exemption_statute"></constraints>
             </column>
             <column name="cm_parent_object_id" type="${fkIdType}"></column>
