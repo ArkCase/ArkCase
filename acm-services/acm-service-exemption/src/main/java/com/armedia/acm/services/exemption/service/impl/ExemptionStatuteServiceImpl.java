@@ -146,11 +146,13 @@ public class ExemptionStatuteServiceImpl implements ExemptionStatuteService
 
     }
 
-    public ExemptionStatuteEventPublisher getExemptionStatuteEventPublisher() {
+    public ExemptionStatuteEventPublisher getExemptionStatuteEventPublisher()
+    {
         return exemptionStatuteEventPublisher;
     }
 
-    public void setExemptionStatuteEventPublisher(ExemptionStatuteEventPublisher exemptionStatuteEventPublisher) {
+    public void setExemptionStatuteEventPublisher(ExemptionStatuteEventPublisher exemptionStatuteEventPublisher)
+    {
         this.exemptionStatuteEventPublisher = exemptionStatuteEventPublisher;
     }
 
