@@ -29,21 +29,22 @@ package com.armedia.acm.plugins.ecm.web.api;
 
 import com.armedia.acm.plugins.ecm.model.EcmFileEditingEnabledConfig;
 
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping("/api/latest/plugin/ecm")
+@RequestMapping("/api/latest/service/ecm")
 public class EcmFileEditingEnabledAPIController
 {
 
     private EcmFileEditingEnabledConfig ecmFileEditingEnabledConfig;
 
     @ResponseBody
-    @RequestMapping(value = "/file/enable-editing", method = RequestMethod.GET)
-    public Boolean GetEcmFileEnableEditingConfig() 
+    @RequestMapping(value = "/file/isEditingEnabled", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Boolean GetEcmFileEnableEditingConfig()
     {
         return getEcmFileEditingEnabledConfig().getEnableEditing();
     }

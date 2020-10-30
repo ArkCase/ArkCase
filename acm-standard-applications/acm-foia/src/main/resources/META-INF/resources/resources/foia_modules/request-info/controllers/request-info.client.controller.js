@@ -56,9 +56,10 @@ angular.module('request-info').controller(
         'Object.LockingService',
         'Util.TimerService',
         'Dialog.BootboxService',
+        'FileEditingEnabled',
         function ($rootScope, $scope, $log, $sce, $q, $state, $timeout, $stateParams, $modal, ConfigService, Authentication, RequestsService, WorkflowsService, GenericRequestsService, LookupService, TicketService, QueuesService, PermissionsService, CaseInfoService, ObjectService,
                   HelperObjectBrowserService, ObjectLookupService, ObjectModelService, CaseLookupService, UtilDateService, QueuesSvc, ObjectSubscriptionService, Util, SnowboundService, EcmService, DocumentPrintingService, NotesService, UserInfoService, MessageService, $translate,
-                  DueDateService, AdminHolidayService, AdminFoiaConfigService, TranscriptionManagementService, $window, ArkCaseCrossWindowMessagingService, ObjectLockingService, UtilTimerService, DialogService) {
+                  DueDateService, AdminHolidayService, AdminFoiaConfigService, TranscriptionManagementService, $window, ArkCaseCrossWindowMessagingService, ObjectLockingService, UtilTimerService, DialogService, FileEditingEnabled) {
 
             if (sessionStorage.getItem("startRow") == null) {
                 sessionStorage.setItem("startRow", 0);
@@ -80,7 +81,7 @@ angular.module('request-info').controller(
             $scope.loaderOpened = false;
             $scope.fileEditingEnabled = false;
 
-            EcmService.getFileEditingEnabled().then(function (response) {
+            FileEditingEnabled.getFileEditingEnabled().then(function (response) {
                 $scope.fileEditingEnabled = response.data;
             });
 
