@@ -6,7 +6,8 @@
                     <div class="col-sm-6 col-md-12">
                         <div class="pull-right">
                             <div class="col-xs-12">
-                                <a class="btn btn-default" href="" ng-click="showVideoPlayer ? videoExpand() : documentExpand()">
+                                <a class="btn btn-default" href=""
+                                   ng-click="showVideoPlayer ? videoExpand() : documentExpand()">
                                     <i class="fa fa-expand"></i>
                                 </a>
                                 <a class="btn btn-default" href="javascript:window.close();">
@@ -19,7 +20,8 @@
                         <!--<small class="text-muted" translate>documentDetails.name</small>-->
                     </div>
                     <div class="col-sm-6 col-md-2">
-                        <div class="h4 font-bold">{{::ecmFile.creator | mapKeyValue: userList:'object_id_s':'name' || 'common.value.unknown'
+                        <div class="h4 font-bold">{{::ecmFile.creator | mapKeyValue: userList:'object_id_s':'name' ||
+                            'common.value.unknown'
                             | translate}}
                         </div>
                         <small class="text-muted" translate>documentDetails.creator</small>
@@ -39,7 +41,8 @@
                     <div class="col-sm-6 col-md-2" ng-show="comprehendMedicalEnabled">
                         <div ng-controller="Document.MedicalComprehendController">
                             <div class="h4 font-bold" ng-style="{'color': colorComprehendMedicalStatus}">
-                                {{comprehendMedicalObj.status || 'documentDetails.comp.comprehendMedical.readyStatus' | translate}}
+                                {{comprehendMedicalObj.status || 'documentDetails.comp.comprehendMedical.readyStatus' |
+                                translate}}
                             </div>
                             <small class="text-muted" translate>documentDetails.comp.comprehendMedical.status</small>
                         </div>
@@ -48,24 +51,30 @@
 
                 <div class="row" ng-if="transcribeEnabled && showVideoPlayer">
                     <div class="col-sm-6 col-md-2">
-                        <div class="h4 font-bold">{{transcribeObjectModel.language || 'common.value.unknown' | translate}}</div>
-                        <small class="text-muted" translate>documentDetails.comp.transcription.mediaViewer.language</small>
+                        <div class="h4 font-bold">{{transcribeObjectModel.language || 'common.value.unknown' |
+                            translate}}
+                        </div>
+                        <small class="text-muted"
+                               translate>documentDetails.comp.transcription.mediaViewer.language</small>
                     </div>
 
                     <div class="col-sm-6 col-md-2">
                         <div class="h4 font-bold">{{transcribeObjectModel.wordCount || 0}}</div>
-                        <small class="text-muted" translate>documentDetails.comp.transcription.mediaViewer.wordCount</small>
+                        <small class="text-muted"
+                               translate>documentDetails.comp.transcription.mediaViewer.wordCount</small>
                     </div>
                     <div class="col-sm-6 col-md-2">
                         <div class="h4 font-bold">{{transcribeObjectModel.confidence || 0}}%</div>
-                        <small class="text-muted" translate>documentDetails.comp.transcription.mediaViewer.confidence</small>
+                        <small class="text-muted"
+                               translate>documentDetails.comp.transcription.mediaViewer.confidence</small>
                     </div>
                     <div class="col-sm-6 col-md-2">
-                        <div class="h4 font-bold" ng-style="{'color': colorTranscribeStatus}">{{transcribeObjectModel.status ||
+                        <div class="h4 font-bold" ng-style="{'color': colorTranscribeStatus}">
+                            {{transcribeObjectModel.status ||
                             'documentDetails.comp.transcription.mediaViewer.readyForTranscription' | translate}}
 
                             <a ng-show="transcribeObjectModel.status == 'FAILED' " class="fa fa-info-circle"
-                                    ng-click="showFailureMessage()">
+                               ng-click="showFailureMessage()">
                             </a>
                         </div>
                         <small class="text-muted" translate>documentDetails.comp.transcription.mediaViewer.transcriptStatus</small>
@@ -99,17 +108,24 @@
             </div>
         </div>
         <div>
-            <a ng-show="!editingMode" class="btn btn-sm btn-default" ng-click="enableEditing()">
-                <i class="fa fa-edit"></i>
-                <span translate>documentDetails.enableEditing</span>
-            </a>
+            <div ng-if="fileEditingEnabled">
+                <a ng-show="!editingMode" class="btn btn-sm btn-default" ng-click="enableEditing()">
+                    <i class="fa fa-edit"></i>
+                    <span translate>documentDetails.enableEditing</span>
+                </a>
+            </div>
+            <div ng-if="!fileEditingEnabled">
+                <a class="btn btn-sm btn-default">
+                    <span translate>documentDetails.poweredBySnowbound</span>
+                </a>
+            </div>
         </div>
         <div ng-class="viewerOnly? 'content-body well-sm full-docview' : 'content-body well-sm'">
             <div ng-include="'modules/document-details/views/document-viewer.client.view.html'"></div>
         </div>
 
         <div class="right-sidebar well-sm documentDetails" ng-if="!viewerOnly"
-                ng-style="showVideoPlayer && transcribeEnabled ? {'top': '205px'} : {'top': '172px'}">
+             ng-style="showVideoPlayer && transcribeEnabled ? {'top': '205px'} : {'top': '172px'}">
             <ng-form name="docDetails" novalidate>
                 <tabset>
                     <tab heading="{{'documentDetails.comp.details.title' | translate}}">

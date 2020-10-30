@@ -28,19 +28,21 @@ package com.armedia.acm.plugins.ecm.model;
  */
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.springframework.beans.factory.annotation.Value;
 
+@JsonSerialize(as = EcmFileEditingEnabledConfig.class)
 public class EcmFileEditingEnabledConfig {
 
-    @JsonProperty("file.editing_enabled")
-    @Value("${file.editing_enabled}")
-    private Boolean enableEditing;
+    @JsonProperty("fileEditingEnabled")
+    @Value("${fileEditingEnabled}")
+    private Boolean isEnableEditing;
 
     public Boolean getEnableEditing() {
-        return enableEditing;
+        return isEnableEditing;
     }
 
     public void setEnableEditing(Boolean enableEditing) {
-        this.enableEditing = enableEditing;
+        isEnableEditing = enableEditing;
     }
 }
