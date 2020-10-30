@@ -65,6 +65,8 @@ public class FileConfigurationServiceImpl implements FileConfigurationService
 
     private static final String RULES_EXTENSION = "xlsx";
 
+    private static final String STYLESHEET_EXTENSION = "xsl";
+
     private static final Logger log = LogManager.getLogger(FileConfigurationServiceImpl.class);
 
     @Override
@@ -112,6 +114,11 @@ public class FileConfigurationServiceImpl implements FileConfigurationService
         if (message.getPayload().toString().toLowerCase().contains("." + RULES_EXTENSION))
         {
             // Rules files are not copied.
+            return;
+        }
+        if (message.getPayload().toString().toLowerCase().contains("." + STYLESHEET_EXTENSION))
+        {
+            // PDF stylesheet files are not copied.
             return;
         }
         getFileFromConfiguration(message.getPayload().toString(), customFilesLocation);
