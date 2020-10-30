@@ -169,6 +169,10 @@ angular.module('services').factory('EcmService', [ '$resource', 'UtilService', f
             url: 'api/latest/service/ecm/fileDuplicates/:fileId',
             cache: false,
             isArray: true
+        },
+        getFileEditingEnabled: {
+            method: 'GET',
+            url: 'api/latest/plugin/ecm/file/enable-editing',
         }
     });
 
