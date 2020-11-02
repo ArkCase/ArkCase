@@ -581,6 +581,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
     }
 
     @Override
+    @Transactional
     public List<AcmTask> startReviewDocumentsWorkflow(AcmTask task, String businessProcessName, Authentication authentication)
             throws AcmTaskException, AcmCreateObjectFailedException, AcmUserActionFailedException, LinkAlreadyExistException,
             AcmObjectNotFoundException
@@ -623,6 +624,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
                 AcmContainer container = getEcmFileService().getOrCreateContainer(createdAcmTask.getObjectType(),
                         createdAcmTask.getTaskId());
                 createdAcmTask.setContainer(container);
+                getFileParticipantService().inheritParticipantsFromAssignedObject(createdAcmTask.getParticipants(), new ArrayList<>(), container, createdAcmTask.getRestricted());
                 createdAcmTasks.add(createdAcmTask);
                 if (task.getAttachedToObjectId() != null && task.getAttachedToObjectType() != null)
                 {
@@ -650,7 +652,6 @@ public class AcmTaskServiceImpl implements AcmTaskService
                 EcmFileConstants.DEFAULT_CMIS_REPOSITORY_ID);
         getAcmContainerDao().getEm().flush();
         businessProcess.setContainer(container);
-
         AcmFolder folder = container.getAttachmentFolder();
 
         List<EcmFile> uploadedFiles = new ArrayList<>();
@@ -716,6 +717,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
     }
 
     @Override
+    @Transactional
     public List<AcmTask> startAcmDocumentSingleTaskWorkflow(AcmTask task)
             throws AcmCreateObjectFailedException, AcmUserActionFailedException, LinkAlreadyExistException, AcmObjectNotFoundException
     {
@@ -770,6 +772,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
             AcmContainer container = getEcmFileService().getOrCreateContainer(createdAcmTask.getObjectType(),
                     createdAcmTask.getTaskId());
             createdAcmTask.setContainer(container);
+            getFileParticipantService().inheritParticipantsFromAssignedObject(createdAcmTask.getParticipants(), container.getFolder().getParticipants(), container, createdAcmTask.getRestricted());
             createdAcmTask.setDocumentsToReview(task.getDocumentsToReview());
 
             createTaskFolderStructureInParentObject(createdAcmTask);
