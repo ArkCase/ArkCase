@@ -2746,22 +2746,24 @@ angular.module('directives').directive(
                                         onSuccess: function(data) {
                                             if (Validator.validateCopyFolderInfo(data)) {
                                                 var copyFolderInfo = data;
-                                                if (copyFolderInfo.originalFolderId == subFolderId && copyFolderInfo.newFolder.parentFolder.id == toFolderId) {
-                                                    var frFolderList = DocTree.cacheFolderList.get(frCacheKey);
-                                                    var toFolderList = DocTree.cacheFolderList.get(toCacheKey);
-                                                    if (Validator.validateFolderList(frFolderList) && Validator.validateFolderList(toFolderList)) {
-                                                        var idx = DocTree.findFolderItemIdx(subFolderId, frFolderList);
-                                                        if (0 <= idx) {
-                                                            var folderData = DocTree.folderToSolrData(frFolderList.children[idx]);
-                                                            folderData.objectId = copyFolderInfo.newFolder.id;
-                                                            folderData.folderId = copyFolderInfo.newFolder.parentFolder.id;
-                                                            folderData.modified = Util.goodValue(copyFolderInfo.newFolder.modified);
-                                                            folderData.modifier = Util.goodValue(copyFolderInfo.newFolder.modifier);
-                                                            toFolderList.children.push(folderData);
-                                                            toFolderList.totalChildren++;
-                                                            DocTree.cacheFolderList.put(toCacheKey, toFolderList);
-                                                            return folderData;
-                                                        }
+                                                var frFolderList = DocTree.cacheFolderList.get(frCacheKey);
+                                                var toFolderList = DocTree.cacheFolderList.get(toCacheKey);
+                                                if (Validator.validateFolderList(frFolderList)
+                                                    && Validator.validateFolderList(toFolderList)) {
+                                                    var idx = DocTree.findFolderItemIdx(subFolderId, frFolderList);
+                                                    if (0 <= idx) {
+                                                        var folderData = DocTree
+                                                            .folderToSolrData(frFolderList.children[idx]);
+                                                        folderData.objectId = copyFolderInfo.newFolder.id;
+                                                        folderData.folderId = copyFolderInfo.newFolder.parentFolder.id;
+                                                        folderData.modified = Util
+                                                            .goodValue(copyFolderInfo.newFolder.modified);
+                                                        folderData.modifier = Util
+                                                            .goodValue(copyFolderInfo.newFolder.modifier);
+                                                        toFolderList.children.push(folderData);
+                                                        toFolderList.totalChildren++;
+                                                        DocTree.cacheFolderList.put(toCacheKey, toFolderList);
+                                                        return folderData;
                                                     }
                                                 }
                                             }
@@ -2836,15 +2838,13 @@ angular.module('directives').directive(
                                         onSuccess: function(data) {
                                             if (Validator.validateCopyFileInfo(data)) {
                                                 var copyFileInfo = data;
-                                                if (copyFileInfo.originalId == fileId && copyFileInfo.newFile.folder.id == toFolderId) {
-                                                    var toFolderList = DocTree.cacheFolderList.get(toCacheKey);
-                                                    if (Validator.validateFolderList(toFolderList)) {
-                                                        var fileData = DocTree.fileToSolrData(copyFileInfo.newFile);
-                                                        toFolderList.children.push(fileData);
-                                                        toFolderList.totalChildren++;
-                                                        DocTree.cacheFolderList.put(toCacheKey, toFolderList);
-                                                        return fileData;
-                                                    }
+                                                var toFolderList = DocTree.cacheFolderList.get(toCacheKey);
+                                                if (Validator.validateFolderList(toFolderList)) {
+                                                    var fileData = DocTree.fileToSolrData(copyFileInfo.newFile);
+                                                    toFolderList.children.push(fileData);
+                                                    toFolderList.totalChildren++;
+                                                    DocTree.cacheFolderList.put(toCacheKey, toFolderList);
+                                                    return fileData;
                                                 }
                                             }
                                         },
