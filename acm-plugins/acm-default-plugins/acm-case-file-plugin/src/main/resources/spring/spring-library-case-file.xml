@@ -36,6 +36,7 @@
         <property name="fileWorkflowBusinessRule" ref="fileWorkflowBusinessRule"/>
         <property name="acmBpmnService" ref="processDefinitionManagementService"/>
         <property name="changeCaseStatusTaskName" ref="changeCaseStatusTaskName"/>
+        <property name="taskService" ref="acmTaskService"/>
     </bean>
 
     <bean id="checkChangeCaseFileState"
