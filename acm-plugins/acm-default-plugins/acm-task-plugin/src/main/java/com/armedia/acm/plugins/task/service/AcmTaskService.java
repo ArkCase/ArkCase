@@ -40,6 +40,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by nebojsha on 22.06.2015.
@@ -239,6 +240,8 @@ public interface AcmTaskService
     void createTaskFolderStructureInParentObject(AcmTask task) throws AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException, LinkAlreadyExistException;
 
     public void setParticipantsToTaskFolderLink(AcmTask task) throws AcmObjectNotFoundException;
+
+    AcmTask startBusinessProcessAndSetContainerAndParticipantsToRootFolder(Map<String, Object> pvars, String processName) throws AcmUserActionFailedException, AcmCreateObjectFailedException;
 
     String getTaskFolderNameInParentObject(AcmTask acmTask);
 

@@ -28,14 +28,16 @@ package com.armedia.acm.plugins.casefile.service;
  */
 
 import com.armedia.acm.activiti.services.AcmBpmnService;
+import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.casefile.model.ChangeCaseFileStatusEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 import com.armedia.acm.plugins.ecm.workflow.EcmFileWorkflowConfiguration;
+import com.armedia.acm.plugins.task.model.AcmTask;
+import com.armedia.acm.plugins.task.service.AcmTaskService;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.ParticipantTypes;
-
-import org.activiti.engine.runtime.ProcessInstance;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationListener;
@@ -52,6 +54,7 @@ public class ChangeCaseStatusWorkflowListener implements ApplicationListener<Cha
     private FileWorkflowBusinessRule fileWorkflowBusinessRule;
     private AcmBpmnService acmBpmnService;
     private String changeCaseStatusTaskName;
+    private AcmTaskService taskService;
 
     @Override
     public void onApplicationEvent(ChangeCaseFileStatusEvent event)
@@ -81,17 +84,22 @@ public class ChangeCaseStatusWorkflowListener implements ApplicationListener<Cha
 
         if (configuration.isStartProcess())
         {
-            startBusinessProcess(event, configuration);
+            try {
+                startBusinessProcess(event, configuration);
+            } catch (AcmUserActionFailedException | AcmCreateObjectFailedException e) {
+                LOG.error(String.format("Error during task creation"));
+            }
         }
     }
 
     private void startBusinessProcess(ChangeCaseFileStatusEvent event, EcmFileWorkflowConfiguration configuration)
+            throws AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         String processName = configuration.getProcessName();
 
         String author = event.getUserId();
         List<String> reviewers = findReviewers(event);
-        List<String> candidateGroups =  findCandidateGroups(event);
+        List<String> candidateGroups = findCandidateGroups(event);
 
         // Default one if "changeCaseStatusTaskName" is null or empty
         String taskName = "Task " + event.getCaseNumber();
@@ -128,9 +136,7 @@ public class ChangeCaseStatusWorkflowListener implements ApplicationListener<Cha
 
         LOG.debug("Starting process: [{}]", processName);
 
-        ProcessInstance pi = getAcmBpmnService().startBusinessProcess(processName, pvars);
-
-        LOG.debug("Process ID: [{}]", pi.getId());
+        AcmTask task = getTaskService().startBusinessProcessAndSetContainerAndParticipantsToRootFolder(pvars, processName);
     }
 
     private List<String> findReviewers(ChangeCaseFileStatusEvent event)
@@ -191,5 +197,15 @@ public class ChangeCaseStatusWorkflowListener implements ApplicationListener<Cha
     public void setChangeCaseStatusTaskName(String changeCaseStatusTaskName)
     {
         this.changeCaseStatusTaskName = changeCaseStatusTaskName;
+    }
+
+    public AcmTaskService getTaskService()
+    {
+        return taskService;
+    }
+
+    public void setTaskService(AcmTaskService taskService)
+    {
+        this.taskService = taskService;
     }
 }
