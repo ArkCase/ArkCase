@@ -615,8 +615,8 @@ angular.module('directives').directive(
                         ,
                         expandAfterRefresh: function(children, nodesStatusBeforeRefresh) {
                             nodesStatusBeforeRefresh.forEach(function(item, index) {
-                                if (angular.isArray(item) && angular.isDefined(children[index])) {
-                                    DocTree.expandNode(children[index]).then(function(data) {
+                                if (angular.isArray(item) && angular.isArray(children) && angular.isDefined(children[index])) {
+                                    DocTree.expandNode(children[index]).then(function (data) {
                                         DocTree.expandAfterRefresh(data.children, nodesStatusBeforeRefresh[index]);
                                     });
                                 }
@@ -5084,9 +5084,7 @@ angular.module('directives').directive(
                             });
 
                             DocTree.scope.$bus.subscribe('object.changed/' + DocTree.getObjType() + '/' + DocTree.getObjId(), function(message) {
-                                if (DocTree.getObjType() === message.parentObjectType && DocTree.getObjId() === message.parentObjectId && message.action === "INSERT" && message.objectType === "FILE") {
-                                    DocTree.refreshTree();
-                                } else if (message.action === 'DELETE' && message.objectType === 'FILE' && DocTree.getObjType() === message.parentObjectType) {
+                                if (message.action === 'DELETE' && message.objectType === 'FILE' && DocTree.getObjType() === message.parentObjectType) {
                                     DocTree.refreshTree();
                                 }
                             });
