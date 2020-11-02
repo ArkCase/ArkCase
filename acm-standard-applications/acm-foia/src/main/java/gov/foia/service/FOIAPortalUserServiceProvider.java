@@ -868,7 +868,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         }
         if (person.getOrganizationAssociations().isEmpty() || !organizationExists)
         {
-            PersonOrganizationAssociation personOrganizationAssociation = addPersonOrganizationAssociation((PortalFOIAPerson) person,
+            PersonOrganizationAssociation personOrganizationAssociation = addPersonOrganizationAssociation(person,
                     organization);
             personOrganizationAssociation.setDefaultOrganization(true);
             person.getOrganizations().add(organization);
@@ -927,7 +927,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         }
     }
 
-    private PersonOrganizationAssociation addPersonOrganizationAssociation(PortalFOIAPerson person, Organization organization)
+    private PersonOrganizationAssociation addPersonOrganizationAssociation(Person person, Organization organization)
     {
         PersonOrganizationAssociation personOrganizationAssociation = new PersonOrganizationAssociation();
         personOrganizationAssociation.setOrganization(organization);
