@@ -104,7 +104,9 @@ public abstract class SimpleStatelessSingleObjectRuleManager<T>
     @JmsListener(destination = "rules.changed", containerFactory = "jmsTopicListenerContainerFactory")
     public void getRulesFromConfiguration(Message message) throws IOException
     {
-        if (message.getPayload().toString().startsWith(FilenameUtils.removeExtension(getRuleSpreadsheetFilename())))
+        String fileName = message.getPayload().toString();
+        if (fileName.startsWith(FilenameUtils.removeExtension(getRuleSpreadsheetFilename()))
+                && fileName.endsWith(FilenameUtils.getExtension(getRuleSpreadsheetFilename())))
         {
             updateRulesFromConfiguration();
         }
