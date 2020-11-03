@@ -27,14 +27,14 @@ package com.armedia.acm.plugins.complaint.service;
  * #L%
  */
 
-import com.armedia.acm.activiti.services.AcmBpmnService;
+import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.complaint.model.closeModal.CloseComplaintEvent;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 import com.armedia.acm.plugins.ecm.workflow.EcmFileWorkflowConfiguration;
+import com.armedia.acm.plugins.task.service.AcmTaskService;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.ParticipantTypes;
-
-import org.activiti.engine.runtime.ProcessInstance;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationListener;
@@ -48,8 +48,8 @@ public class CloseComplaintWorkflowListener implements ApplicationListener<Close
 {
     private final Logger log = LogManager.getLogger(getClass());
     private FileWorkflowBusinessRule fileWorkflowBusinessRule;
-    private AcmBpmnService acmBpmnService;
     private String closeComplaintTaskName;
+    private AcmTaskService acmTaskService;
     private PDFCloseComplaintDocumentGenerator pdfCloseComplaintDocumentGenerator;
 
     @Override
@@ -74,12 +74,15 @@ public class CloseComplaintWorkflowListener implements ApplicationListener<Close
 
         if (configuration.isStartProcess())
         {
-            startBusinessProcess(closeComplaintEvent, configuration);
+            try {
+                startBusinessProcess(closeComplaintEvent, configuration);
+            } catch (AcmCreateObjectFailedException | AcmUserActionFailedException e) {
+                log.error(String.format("Error while starting business process"));
+            }
         }
     }
 
-    private void startBusinessProcess(CloseComplaintEvent closeComplaintEvent, EcmFileWorkflowConfiguration configuration)
-    {
+    private void startBusinessProcess(CloseComplaintEvent closeComplaintEvent, EcmFileWorkflowConfiguration configuration) throws AcmCreateObjectFailedException, AcmUserActionFailedException {
 
         String processName = configuration.getProcessName();
 
@@ -122,9 +125,7 @@ public class CloseComplaintWorkflowListener implements ApplicationListener<Close
 
         log.debug("starting process: [{}]", processName);
 
-        ProcessInstance pi = getAcmBpmnService().startBusinessProcess(processName, pvars);
-
-        log.debug("process ID: [{}]", pi.getId());
+        getAcmTaskService().startBusinessProcessAndSetContainerAndParticipantsToRootFolder(pvars, processName);
     }
 
     private List<String> findReviewers(CloseComplaintEvent closeComplaintEvent)
@@ -155,14 +156,12 @@ public class CloseComplaintWorkflowListener implements ApplicationListener<Close
         return candidateGroups;
     }
 
-    public AcmBpmnService getAcmBpmnService()
-    {
-        return acmBpmnService;
+    public AcmTaskService getAcmTaskService() {
+        return acmTaskService;
     }
 
-    public void setAcmBpmnService(AcmBpmnService acmBpmnService)
-    {
-        this.acmBpmnService = acmBpmnService;
+    public void setAcmTaskService(AcmTaskService acmTaskService) {
+        this.acmTaskService = acmTaskService;
     }
 
     public String getCloseComplaintTaskName()

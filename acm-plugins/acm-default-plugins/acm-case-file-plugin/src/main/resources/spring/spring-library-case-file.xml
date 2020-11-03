@@ -34,7 +34,6 @@
     <bean id="changeCaseStatusWorkflowListener123"
         class="com.armedia.acm.plugins.casefile.service.ChangeCaseStatusWorkflowListener">
         <property name="fileWorkflowBusinessRule" ref="fileWorkflowBusinessRule"/>
-        <property name="acmBpmnService" ref="processDefinitionManagementService"/>
         <property name="changeCaseStatusTaskName" ref="changeCaseStatusTaskName"/>
         <property name="taskService" ref="acmTaskService"/>
     </bean>

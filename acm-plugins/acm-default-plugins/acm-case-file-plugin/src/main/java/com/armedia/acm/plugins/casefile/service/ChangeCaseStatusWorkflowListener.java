@@ -27,7 +27,6 @@ package com.armedia.acm.plugins.casefile.service;
  * #L%
  */
 
-import com.armedia.acm.activiti.services.AcmBpmnService;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.casefile.model.ChangeCaseFileStatusEvent;
@@ -52,7 +51,6 @@ public class ChangeCaseStatusWorkflowListener implements ApplicationListener<Cha
 
     private final Logger LOG = LogManager.getLogger(getClass());
     private FileWorkflowBusinessRule fileWorkflowBusinessRule;
-    private AcmBpmnService acmBpmnService;
     private String changeCaseStatusTaskName;
     private AcmTaskService taskService;
 
@@ -177,16 +175,6 @@ public class ChangeCaseStatusWorkflowListener implements ApplicationListener<Cha
     public void setFileWorkflowBusinessRule(FileWorkflowBusinessRule fileWorkflowBusinessRule)
     {
         this.fileWorkflowBusinessRule = fileWorkflowBusinessRule;
-    }
-
-    public AcmBpmnService getAcmBpmnService()
-    {
-        return acmBpmnService;
-    }
-
-    public void setAcmBpmnService(AcmBpmnService acmBpmnService)
-    {
-        this.acmBpmnService = acmBpmnService;
     }
 
     public String getChangeCaseStatusTaskName()

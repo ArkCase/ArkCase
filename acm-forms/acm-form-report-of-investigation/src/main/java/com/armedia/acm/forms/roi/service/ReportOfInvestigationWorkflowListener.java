@@ -30,7 +30,8 @@ package com.armedia.acm.forms.roi.service;
  * #L%
  */
 
-import com.armedia.acm.activiti.services.AcmBpmnService;
+import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.form.config.Item;
 import com.armedia.acm.forms.roi.model.ReportOfInvestigationFormEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
@@ -38,8 +39,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 import com.armedia.acm.plugins.ecm.workflow.EcmFileWorkflowConfiguration;
 import com.armedia.acm.plugins.task.model.TaskConstants;
-
-import org.activiti.engine.runtime.ProcessInstance;
+import com.armedia.acm.plugins.task.service.AcmTaskService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationListener;
@@ -58,7 +58,7 @@ public class ReportOfInvestigationWorkflowListener implements ApplicationListene
 
     private final Logger LOG = LogManager.getLogger(getClass());
     private FileWorkflowBusinessRule fileWorkflowBusinessRule;
-    private AcmBpmnService acmBpmnService;
+    private AcmTaskService acmTaskService;
 
     @Override
     public void onApplicationEvent(ReportOfInvestigationFormEvent event)
@@ -86,11 +86,19 @@ public class ReportOfInvestigationWorkflowListener implements ApplicationListene
 
         if (configuration.isStartProcess())
         {
-            startBusinessProcess(event, configuration);
+            try
+            {
+                startBusinessProcess(event, configuration);
+            }
+            catch (AcmCreateObjectFailedException | AcmUserActionFailedException e)
+            {
+                LOG.error(String.format("Error caused while starting business process"));
+            }
         }
     }
 
     private void startBusinessProcess(ReportOfInvestigationFormEvent event, EcmFileWorkflowConfiguration configuration)
+            throws AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         String processName = configuration.getProcessName();
 
@@ -119,9 +127,7 @@ public class ReportOfInvestigationWorkflowListener implements ApplicationListene
 
         LOG.debug("Starting process: " + processName);
 
-        ProcessInstance pi = getAcmBpmnService().startBusinessProcess(processName, pvars);
-
-        LOG.debug("Process ID: " + pi.getId());
+        getAcmTaskService().startBusinessProcessAndSetContainerAndParticipantsToRootFolder(pvars, processName);
     }
 
     private List<String> findReviewers(ReportOfInvestigationFormEvent event)
@@ -147,14 +153,13 @@ public class ReportOfInvestigationWorkflowListener implements ApplicationListene
         this.fileWorkflowBusinessRule = fileWorkflowBusinessRule;
     }
 
-    public AcmBpmnService getAcmBpmnService()
+    public AcmTaskService getAcmTaskService()
     {
-        return acmBpmnService;
+        return acmTaskService;
     }
 
-    public void setAcmBpmnService(AcmBpmnService acmBpmnService)
+    public void setAcmTaskService(AcmTaskService acmTaskService)
     {
-        this.acmBpmnService = acmBpmnService;
+        this.acmTaskService = acmTaskService;
     }
-
 }

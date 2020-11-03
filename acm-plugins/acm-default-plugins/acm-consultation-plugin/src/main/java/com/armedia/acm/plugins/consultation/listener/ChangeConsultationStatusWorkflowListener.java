@@ -27,15 +27,15 @@ package com.armedia.acm.plugins.consultation.listener;
  * #L%
  */
 
-import com.armedia.acm.activiti.services.AcmBpmnService;
+import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.consultation.model.ChangeConsultationStatusEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 import com.armedia.acm.plugins.ecm.workflow.EcmFileWorkflowConfiguration;
+import com.armedia.acm.plugins.task.service.AcmTaskService;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.ParticipantTypes;
-
-import org.activiti.engine.runtime.ProcessInstance;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationListener;
@@ -53,8 +53,8 @@ public class ChangeConsultationStatusWorkflowListener implements ApplicationList
 
     private final Logger LOG = LogManager.getLogger(getClass());
     private FileWorkflowBusinessRule fileWorkflowBusinessRule;
-    private AcmBpmnService acmBpmnService;
     private String changeConsultationStatusTaskName;
+    private AcmTaskService acmTaskService;
 
     @Override
     public void onApplicationEvent(ChangeConsultationStatusEvent event)
@@ -80,12 +80,15 @@ public class ChangeConsultationStatusWorkflowListener implements ApplicationList
 
         if (configuration.isStartProcess())
         {
-            startBusinessProcess(event, configuration);
+            try {
+                startBusinessProcess(event, configuration);
+            } catch (AcmCreateObjectFailedException | AcmUserActionFailedException e) {
+                LOG.error(String.format("Error caused while setting participants to root folder"));
+            }
         }
     }
 
-    private void startBusinessProcess(ChangeConsultationStatusEvent event, EcmFileWorkflowConfiguration configuration)
-    {
+    private void startBusinessProcess(ChangeConsultationStatusEvent event, EcmFileWorkflowConfiguration configuration) throws AcmCreateObjectFailedException, AcmUserActionFailedException {
         String processName = configuration.getProcessName();
 
         String author = event.getUserId();
@@ -127,9 +130,7 @@ public class ChangeConsultationStatusWorkflowListener implements ApplicationList
 
         LOG.debug("Starting process: [{}]", processName);
 
-        ProcessInstance pi = getAcmBpmnService().startBusinessProcess(processName, pvars);
-
-        LOG.debug("Process ID: [{}]", pi.getId());
+        getAcmTaskService().startBusinessProcessAndSetContainerAndParticipantsToRootFolder(pvars, processName);
     }
 
     private List<String> findReviewers(ChangeConsultationStatusEvent event)
@@ -172,16 +173,6 @@ public class ChangeConsultationStatusWorkflowListener implements ApplicationList
         this.fileWorkflowBusinessRule = fileWorkflowBusinessRule;
     }
 
-    public AcmBpmnService getAcmBpmnService()
-    {
-        return acmBpmnService;
-    }
-
-    public void setAcmBpmnService(AcmBpmnService acmBpmnService)
-    {
-        this.acmBpmnService = acmBpmnService;
-    }
-
     public String getChangeConsultationStatusTaskName()
     {
         return changeConsultationStatusTaskName;
@@ -190,5 +181,13 @@ public class ChangeConsultationStatusWorkflowListener implements ApplicationList
     public void setChangeConsultationStatusTaskName(String changeConsultationStatusTaskName)
     {
         this.changeConsultationStatusTaskName = changeConsultationStatusTaskName;
+    }
+
+    public AcmTaskService getAcmTaskService() {
+        return acmTaskService;
+    }
+
+    public void setAcmTaskService(AcmTaskService acmTaskService) {
+        this.acmTaskService = acmTaskService;
     }
 }
