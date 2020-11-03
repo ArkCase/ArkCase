@@ -27,14 +27,14 @@ package com.armedia.acm.form.closecomplaint.service;
  * #L%
  */
 
-import com.armedia.acm.activiti.services.AcmBpmnService;
+import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.form.closecomplaint.model.CloseComplaintFormEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 import com.armedia.acm.plugins.ecm.workflow.EcmFileWorkflowConfiguration;
+import com.armedia.acm.plugins.task.service.AcmTaskService;
 import com.armedia.acm.services.participants.model.AcmParticipant;
-
-import org.activiti.engine.runtime.ProcessInstance;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationListener;
@@ -51,8 +51,8 @@ public class CloseComplaintWorkflowListener implements ApplicationListener<Close
 {
     private final Logger log = LogManager.getLogger(getClass());
     private FileWorkflowBusinessRule fileWorkflowBusinessRule;
-    private AcmBpmnService acmBpmnService;
     private String closeComplaintTaskName;
+    private AcmTaskService acmTaskService;
 
     @Override
     public void onApplicationEvent(CloseComplaintFormEvent closeComplaintFormEvent)
@@ -81,12 +81,15 @@ public class CloseComplaintWorkflowListener implements ApplicationListener<Close
 
         if (configuration.isStartProcess())
         {
-            startBusinessProcess(closeComplaintFormEvent, configuration);
+            try {
+                startBusinessProcess(closeComplaintFormEvent, configuration);
+            } catch (AcmCreateObjectFailedException | AcmUserActionFailedException e) {
+                log.error(String.format("Error caused while setting participants to root folder"));
+            }
         }
     }
 
-    private void startBusinessProcess(CloseComplaintFormEvent closeComplaintFormEvent, EcmFileWorkflowConfiguration configuration)
-    {
+    private void startBusinessProcess(CloseComplaintFormEvent closeComplaintFormEvent, EcmFileWorkflowConfiguration configuration) throws AcmCreateObjectFailedException, AcmUserActionFailedException {
         String processName = configuration.getProcessName();
 
         String author = closeComplaintFormEvent.getUserId();
@@ -124,9 +127,8 @@ public class CloseComplaintWorkflowListener implements ApplicationListener<Close
 
         log.debug("starting process: [{}]", processName);
 
-        ProcessInstance pi = getAcmBpmnService().startBusinessProcess(processName, pvars);
+        getAcmTaskService().startBusinessProcessAndSetContainerAndParticipantsToRootFolder(pvars, processName);
 
-        log.debug("process ID: [{}]", pi.getId());
     }
 
     private List<String> findReviewers(CloseComplaintFormEvent closeComplaintFormEvent)
@@ -162,13 +164,11 @@ public class CloseComplaintWorkflowListener implements ApplicationListener<Close
         this.closeComplaintTaskName = closeComplaintTaskName;
     }
 
-    public AcmBpmnService getAcmBpmnService()
-    {
-        return acmBpmnService;
+    public AcmTaskService getAcmTaskService() {
+        return acmTaskService;
     }
 
-    public void setAcmBpmnService(AcmBpmnService acmBpmnService)
-    {
-        this.acmBpmnService = acmBpmnService;
+    public void setAcmTaskService(AcmTaskService acmTaskService) {
+        this.acmTaskService = acmTaskService;
     }
 }
