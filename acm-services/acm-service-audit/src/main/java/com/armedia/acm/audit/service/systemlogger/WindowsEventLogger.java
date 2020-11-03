@@ -56,16 +56,17 @@ public class WindowsEventLogger implements ISystemLogger
     @Override
     public void log(String message)
     {
-        String command = "eventcreate "
-                + " /l APPLICATION"
-                + " /so \"" + applicationConfig.getApplicationName() + "\""
-                + " /t " + level
-                + " /id " + auditConfig.getSystemLogWindowsEventLogEventId()
-                + " /d \"" + message + "\"";
-
         try
         {
-            CommandLine commandToBeExecuted = CommandLine.parse(command);
+
+            CommandLine commandToBeExecuted = new CommandLine("eventcreate");
+            commandToBeExecuted.addArgument(" /l APPLICATION", false);
+            commandToBeExecuted.addArgument(" /so ", false);
+            commandToBeExecuted.addArgument(applicationConfig.getApplicationName(), true);
+            commandToBeExecuted.addArgument(" /t " + level, false);
+            commandToBeExecuted.addArgument(" /id " + auditConfig.getSystemLogWindowsEventLogEventId(), false);
+            commandToBeExecuted.addArgument(" /d ", false);
+            commandToBeExecuted.addArgument(message, true);
             DefaultExecutor executor = new DefaultExecutor();
             executor.execute(commandToBeExecuted);
             executor.wait();
