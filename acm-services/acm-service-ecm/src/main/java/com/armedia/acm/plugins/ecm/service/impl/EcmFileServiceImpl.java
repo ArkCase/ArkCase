@@ -1149,9 +1149,10 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         try
         {
             MultipartFile fileToUpload = getMultipartFromEcmFile(ecmFile);
+            AcmMultipartFile acmFileToUpload = new AcmMultipartFile(fileToUpload, true);
 
-            return upload(ecmFile.getFileName(), ecmFile.getFileType(), null, fileToUpload, authentication, folder.getCmisFolderId(),
-                    targetObjectType, targetObjectId);
+            return upload(ecmFile.getFileName(), ecmFile.getFileType(), null, acmFileToUpload, authentication,
+                    folder.getCmisFolderId(), targetObjectType, targetObjectId);
         }
         catch (Exception e)
         {
