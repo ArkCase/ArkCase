@@ -110,31 +110,30 @@ public class PdfServiceImpl implements PdfService
      * Generate PDF file based on XSL-FO stylesheet, XML data source and replacement parameters. NOTE: the caller is
      * responsible for deleting the file afterwards (not to leave mess behind)
      *
-     * @param xslFile
+     * @param xslStream
      *            XSL-FO stylesheet
+     * @param baseURI
+     *            base URI where the FOP engine will be resolving URIs against
      * @param source
      *            XML data source required for XML transformation
      * @return path to the newly generated PDF file (random filename stored in temp folder)
      * @throws PdfServiceException
      *             on PDF creation error
      */
-    @Override
-    public String generatePdf(File xslFile, Source source) throws PdfServiceException
+    public String generatePdf(InputStream xslStream, URI baseURI, Source source) throws PdfServiceException
     {
         // create a temporary file name
         String filename = String.format("%s/acm-%s.pdf", System.getProperty("java.io.tmpdir"), UUID.randomUUID());
         log.debug("PDF creation: using [{}] as temporary file name", filename);
         try
         {
-            // Base URI is where the FOP engine will be resolving URIs against
-            URI baseURI = xslFile.getParentFile().toURI();
             log.debug("Using [{}] as FOP base URI", baseURI);
             FopFactory fopFactory = FopFactory.newInstance(baseURI);
             FOUserAgent foUserAgent = fopFactory.newFOUserAgent();
 
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
 
-            Transformer transformer = transformerFactory.newTransformer(new StreamSource(xslFile));
+            Transformer transformer = transformerFactory.newTransformer(new StreamSource(xslStream));
 
             try (OutputStream os = new BufferedOutputStream(new FileOutputStream(filename)))
             {
@@ -152,29 +151,15 @@ public class PdfServiceImpl implements PdfService
         return filename;
     }
 
-    /**
-     * Generate PDF file based on XSL-FO stylesheet, XML data source and replacement parameters. NOTE: the caller is
-     * responsible for deleting the file afterwards (not to leave mess behind)
-     *
-     * @param xslFile
-     *            XSL-FO stylesheet
-     * @param source
-     *            XML data source required for XML transformation
-     * @param parameters
-     *            a key-value map of parameters to be replaced in the stylesheet
-     * @return path to the newly generated PDF file (random filename stored in temp folder)
-     * @throws PdfServiceException
-     *             on PDF creation error
-     */
     @Override
-    public String generatePdf(File xslFile, Source source, Map<String, String> parameters) throws PdfServiceException
+    public String generatePdf(InputStream xslStream, URI baseURI, Map<String, String> parameters) throws PdfServiceException
     {
         // create a temporary file name
         String filename = String.format("%s/acm-%020d.pdf", System.getProperty("java.io.tmpdir"), Math.abs(random.nextLong()));
         log.debug("PDF creation: using [{}] as temporary file name", filename);
         try (OutputStream os = new BufferedOutputStream(new FileOutputStream(filename)))
         {
-            generatePdf(xslFile, source, os, parameters);
+            generatePdf(xslStream, baseURI, os, parameters);
         }
         catch (IOException e)
         {
@@ -184,79 +169,17 @@ public class PdfServiceImpl implements PdfService
         return filename;
     }
 
-    /**
-     * Generate PDF file based on XSL-FO stylesheet, XML data source and replacement parameters. NOTE: the caller is
-     * responsible for deleting the file afterwards (not to leave mess behind)
-     *
-     * @param xslFilename
-     *            path to XSL-FO stylesheet
-     * @param source
-     *            XML data source required for XML transformation
-     * @param parameters
-     *            a key-value map of parameters to be replaced in the stylesheet
-     * @return path to the newly generated PDF file (random filename stored in temp folder)
-     * @throws PdfServiceException
-     *             on PDF creation error
-     */
     @Override
-    public String generatePdf(String xslFilename, Source source, Map<String, String> parameters) throws PdfServiceException
-    {
-        File xslFile = new File(xslFilename);
-        return generatePdf(xslFile, source, parameters);
-    }
-
-    /**
-     * Generate PDF file based on XSL-FO stylesheet and replacement parameters (no XML data source). NOTE: the caller is
-     * responsible for deleting the file afterwards (not to leave mess behind)
-     *
-     * @param xslFile
-     *            XSL-FO stylesheet
-     * @param parameters
-     *            a key-value map of parameters to be replaced in the stylesheet
-     * @return path to the newly generated PDF file (random filename stored in temp folder)
-     * @throws PdfServiceException
-     *             on PDF creation error
-     */
-    @Override
-    public String generatePdf(File xslFile, Map<String, String> parameters) throws PdfServiceException
-    {
-        Source source = new DOMSource();
-        return generatePdf(xslFile, source, parameters);
-    }
-
-    /**
-     * Generate PDF file based on XSL-FO stylesheet and replacement parameters (no XML data source). NOTE: the caller is
-     * responsible for deleting the file afterwards (not to leave mess behind)
-     *
-     * @param xslFilename
-     *            path to XSL-FO stylesheet
-     * @param parameters
-     *            a key-value map of parameters to be replaced in the stylesheet
-     * @return path to the newly generated PDF file (random filename stored in temp folder)
-     * @throws PdfServiceException
-     *             on PDF creation error
-     */
-    @Override
-    public String generatePdf(String xslFilename, Map<String, String> parameters) throws PdfServiceException
-    {
-        Source source = new DOMSource();
-        return generatePdf(xslFilename, source, parameters);
-    }
-
-    @Override
-    public void generatePdf(File xslFile, Source source, OutputStream targetStream, Map<String, String> parameters)
-            throws PdfServiceException
+    public void generatePdf(InputStream xslStream, URI baseURI, OutputStream targetStream, Map<String, String> parameters) throws PdfServiceException
     {
         try
         {
-            // Base URI is where the FOP engine will be resolving URIs against
-            URI baseURI = xslFile.getParentFile().toURI();
             log.debug("Using [{}] as FOP base URI", baseURI);
             FopFactory fopFactory = FopFactory.newInstance(baseURI);
             FOUserAgent foUserAgent = fopFactory.newFOUserAgent();
 
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            Transformer transformer = transformerFactory.newTransformer(new StreamSource(xslFile));
+            Transformer transformer = transformerFactory.newTransformer(new StreamSource(xslStream));
 
             parameters.forEach((name, value) -> transformer.setParameter(name, value != null ? value : "N/A"));
 

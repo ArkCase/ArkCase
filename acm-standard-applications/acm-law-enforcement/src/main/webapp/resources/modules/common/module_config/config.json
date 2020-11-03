@@ -434,6 +434,12 @@
             "data": {
               "readOnly": true
             }
+          },
+          {
+            "___title": "Copy <kbd>Ctrl+C</kbd>",
+            "titleKey": "common.directive.docTree.menu.copy",
+            "cmd": "copy",
+            "uiIcon": "ui-icon-copy"
           }
         ]
       },
@@ -747,12 +753,6 @@
           },
           {
             "title": "----"
-          },
-          {
-            "___title": "Rename <kbd>[F2]</kbd>",
-            "titleKey": "common.directive.docTree.menu.rename",
-            "cmd": "rename",
-            "uiIcon": "ui-icon-pencil"
           },
           {
             "___title": "Delete <kbd>Ctrl+D</kbd>",

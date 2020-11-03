@@ -3,9 +3,9 @@
 angular.module('cases').controller(
     'Cases.NewRequestController',
     ['$scope', '$sce', '$q', '$modal', '$translate', 'ConfigService', 'FOIA.Data', 'Request.InfoService', 'ObjectService', 'modalParams', 'Object.LookupService', 'Util.DateService', 'MessageService', 'UtilService',
-        'Requests.RequestsService', 'Dialog.BootboxService', 'Organization.InfoService', '$location', '$anchorScroll', 'Admin.ObjectTitleConfigurationService', 'Person.InfoService', 'Admin.PortalConfigurationService',
+        'Requests.RequestsService', 'Dialog.BootboxService', 'Organization.InfoService', '$location', '$anchorScroll', 'Admin.ObjectTitleConfigurationService', 'Person.InfoService', 'Admin.PortalConfigurationService', 'Admin.FoiaConfigService',
         function ($scope, $sce, $q, $modal, $translate, ConfigService, Data, RequestInfoService, ObjectService, modalParams, ObjectLookupService, UtilDateService, MessageService, Util, RequestsService, DialogService, OrganizationInfoService, $location, $anchorScroll,
-                  AdminObjectTitleConfigurationService, PersonInfoService, AdminPortalConfigurationService) {
+                  AdminObjectTitleConfigurationService, PersonInfoService, AdminPortalConfigurationService, AdminFoiaConfigService) {
 
             $scope.modalParams = modalParams;
             $scope.loading = false;
@@ -99,8 +99,9 @@ angular.module('cases').controller(
             var canadaProvinces = ObjectLookupService.getLookupByLookupName('canadaProvinces');
             var japanStates = ObjectLookupService.getLookupByLookupName('japanStates');
             var commonModuleConfig = ConfigService.getModuleConfig("common");
+            var adminFoiaConfig = AdminFoiaConfigService.getFoiaConfig();
 
-            $q.all([requestConfig, componentsAgenciesPromise, organizationTypeLookup, prefixNewRequest, newRequestTypes, deliveryMethodOfResponsesRequest, payFeesRequest, requestCategories, stateRequest, promiseConfigTitle, personTypesLookup, getPortals, getCountries, getAddressTypes, canadaProvinces, japanStates, commonModuleConfig]).then(function (data) {
+            $q.all([requestConfig, componentsAgenciesPromise, organizationTypeLookup, prefixNewRequest, newRequestTypes, deliveryMethodOfResponsesRequest, payFeesRequest, requestCategories, stateRequest, promiseConfigTitle, personTypesLookup, getPortals, getCountries, getAddressTypes, canadaProvinces, japanStates, commonModuleConfig, adminFoiaConfig]).then(function (data) {
 
                 var moduleConfig = data[0];
                 var componentsAgencies = data[1];
@@ -119,6 +120,7 @@ angular.module('cases').controller(
                 var canadaProvinces = data[14];
                 var japanStates = data[15];
                 $scope.commonModuleConfig = data[16];
+                $scope.enableNewPortalUserCreation = data[17].data.createNewPortalUserOptionOnArkcaseRequestForm;
 
                 if (!Util.isEmpty(configTitle)) {
                     $scope.enableTitle = configTitle.data.CASE_FILE.enableTitleField;

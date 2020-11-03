@@ -31,6 +31,8 @@ import org.springframework.core.io.InputStreamResource;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 public interface FileConfigurationService
 {
@@ -40,5 +42,7 @@ public interface FileConfigurationService
     void getFileFromConfiguration(String fileName, String customFilesLocation) throws IOException;
 
     InputStream getInputStreamFromConfiguration(String filePath) throws IOException;
+
+    URI getLocationUriFromConfiguration(String locationPath) throws URISyntaxException;
 
 }

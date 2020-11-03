@@ -35,7 +35,7 @@ public interface CloseComplaintConstants
     String FILE_ID = "FILE_ID";
     String FILE_VERSION = "FILE_VERSION";
 
-    String CLOSE_COMPLAINT_STYLESHEET = System.getProperty("user.home") + "/.arkcase/acm/pdf-stylesheets/close-complaint-document.xsl";
+    String CLOSE_COMPLAINT_STYLESHEET = "close-complaint-document.xsl";
     String CLOSE_COMPLAINT_DOCUMENT = "CLOSE_COMPLAINT";
     String CLOSE_COMPLAINT_FILENAMEFORMAT = "Close Complaint.pdf";
     String CLOSE_COMPLAINT_REQUEST = "CLOSE_COMPLAINT_REQUEST";

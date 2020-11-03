@@ -7,6 +7,7 @@ angular.module('request-info').controller('RequestInfo.NotesController', [ '$sco
             objectType: ObjectService.ObjectTypes.CASE_FILE,
             currentObjectId: $stateParams.id,
             noteType: 'GENERAL',
+            parentTitle: $scope.objectInfo.caseNumber,
             showAllNotes: true
         };
         $scope.config = config;
