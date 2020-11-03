@@ -31,17 +31,12 @@ import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.services.exemption.model.ExemptionStatute;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ExemptionStatuteDao extends AcmAbstractDao<ExemptionStatute>
 {
-
-    @PersistenceContext
-    private EntityManager entityManager;
 
     @Override
     protected Class<ExemptionStatute> getPersistenceClass()
@@ -61,7 +56,7 @@ public class ExemptionStatuteDao extends AcmAbstractDao<ExemptionStatute>
                 "AND file.fileId = :fileId " +
                 "GROUP BY statute.exemptionStatute";
 
-        TypedQuery<ExemptionStatute> query = getEntityManager().createQuery(queryText, ExemptionStatute.class);
+        TypedQuery<ExemptionStatute> query = getEm().createQuery(queryText, ExemptionStatute.class);
         query.setParameter("caseId", caseId);
         query.setParameter("fileId", fileId);
 
@@ -81,15 +76,5 @@ public class ExemptionStatuteDao extends AcmAbstractDao<ExemptionStatute>
         {
             getEm().remove(exemptionStatute);
         }
-    }
-
-    public EntityManager getEntityManager()
-    {
-        return entityManager;
-    }
-
-    public void setEntityManager(EntityManager entityManager)
-    {
-        this.entityManager = entityManager;
     }
 }
