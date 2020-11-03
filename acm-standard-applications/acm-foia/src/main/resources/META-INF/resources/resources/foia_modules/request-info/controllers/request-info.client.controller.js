@@ -56,9 +56,10 @@ angular.module('request-info').controller(
         'Object.LockingService',
         'Util.TimerService',
         'Dialog.BootboxService',
+        'FileEditingEnabled',
         function ($rootScope, $scope, $log, $sce, $q, $state, $timeout, $stateParams, $modal, ConfigService, Authentication, RequestsService, WorkflowsService, GenericRequestsService, LookupService, TicketService, QueuesService, PermissionsService, CaseInfoService, ObjectService,
                   HelperObjectBrowserService, ObjectLookupService, ObjectModelService, CaseLookupService, UtilDateService, QueuesSvc, ObjectSubscriptionService, Util, SnowboundService, EcmService, DocumentPrintingService, NotesService, UserInfoService, MessageService, $translate,
-                  DueDateService, AdminHolidayService, AdminFoiaConfigService, TranscriptionManagementService, $window, ArkCaseCrossWindowMessagingService, ObjectLockingService, UtilTimerService, DialogService) {
+                  DueDateService, AdminHolidayService, AdminFoiaConfigService, TranscriptionManagementService, $window, ArkCaseCrossWindowMessagingService, ObjectLockingService, UtilTimerService, DialogService, FileEditingEnabled) {
 
             if (sessionStorage.getItem("startRow") == null) {
                 sessionStorage.setItem("startRow", 0);
@@ -78,6 +79,11 @@ angular.module('request-info').controller(
             $scope.saveLoadingIcon = "fa fa-floppy-o";
             $scope.viewerOnly = false;
             $scope.loaderOpened = false;
+            $scope.fileEditingEnabled = false;
+
+            FileEditingEnabled.getFileEditingEnabled().then(function (response) {
+                $scope.fileEditingEnabled = response.data;
+            });
 
             $scope.documentExpand = function () {
                 $scope.viewerOnly = true;
@@ -803,7 +809,7 @@ angular.module('request-info').controller(
             });
             $scope.onPlayerReady = function (API) {
                 $scope.videoAPI = API;
-            }
+            };
 
             $scope.enableEditing = function () {
                 ObjectLockingService.lockObject($scope.ecmFile.fileId, ObjectService.ObjectTypes.FILE, ObjectService.LockTypes.WRITE, true).then(function (lockedFile) {
@@ -842,7 +848,7 @@ angular.module('request-info').controller(
                     MessageService.error(errorMessage.data);
                 });
 
-            }
+            };
 
             /**
              * @ngdoc method
@@ -1123,7 +1129,7 @@ angular.module('request-info').controller(
                         });
                     } else {
                         deferred.resolve();
-                    };
+                    }
                 }, function () {
                     deferred.reject();
                     $scope.loading = false;
@@ -1760,7 +1766,7 @@ angular.module('request-info').controller(
                         fileId: data.requestFormId
                     });
                 });
-            }
+            };
             window.addEventListener("beforeunload", function (e) {
                 releaseRequestLock(requestId);
 

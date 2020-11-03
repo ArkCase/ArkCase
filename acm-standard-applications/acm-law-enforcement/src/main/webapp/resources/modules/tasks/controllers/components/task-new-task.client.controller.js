@@ -6,12 +6,14 @@ angular.module('tasks').controller(
                 '$scope',
                 '$state',
                 '$sce',
+                '$translate',
                 '$q',
                 '$modal',
                 'ConfigService',
                 'UtilService',
                 'TicketService',
                 'LookupService',
+                'MessageService',
                 'Frevvo.FormService',
                 'Task.NewTaskService',
                 'Authentication',
@@ -23,7 +25,7 @@ angular.module('tasks').controller(
                 'modalParams',
                 'moment',
                 'Mentions.Service',
-                function($scope, $state, $sce, $q, $modal, ConfigService, Util, TicketService, LookupService, FrevvoFormService, TaskNewTaskService, Authentication, UtilDateService, DialogService, ObjectService, ObjectLookupService, AdminFunctionalAccessControlService, modalParams, moment,
+                function($scope, $state, $sce, $translate, $q, $modal, ConfigService, Util, TicketService, LookupService, MessageService, FrevvoFormService, TaskNewTaskService, Authentication, UtilDateService, DialogService, ObjectService, ObjectLookupService, AdminFunctionalAccessControlService, modalParams, moment,
                         MentionsService) {
 
                     $scope.modalParams = modalParams;
@@ -233,6 +235,8 @@ angular.module('tasks').controller(
                         $scope.loading = false;
                         MentionsService.sendEmailToMentionedUsers($scope.params.emailAddresses, $scope.params.usersMentioned, ObjectService.ObjectTypes.TASK, ObjectService.ObjectTypes.TASK, data.data.taskId, data.data.title);
                         MentionsService.sendEmailToMentionedUsers($scope.paramsSummernote.emailAddresses, $scope.paramsSummernote.usersMentioned, ObjectService.ObjectTypes.TASK, "DETAILS", data.data.taskId, data.data.details);
+                        var taskCreatedMessage = $translate.instant('tasks.newTask.informCreated');
+                        MessageService.info(taskCreatedMessage);
                         $scope.onModalClose();
                     }
 
@@ -251,6 +255,8 @@ angular.module('tasks').controller(
                                 ObjectService.showObject(ObjectService.ObjectTypes.ADHOC_TASK, data.data.taskId);
                             }
                         }
+                        var taskCreatedMessage = $translate.instant('tasks.newTask.informCreated');
+                        MessageService.info(taskCreatedMessage);
                         $scope.onModalClose();
                     }
 

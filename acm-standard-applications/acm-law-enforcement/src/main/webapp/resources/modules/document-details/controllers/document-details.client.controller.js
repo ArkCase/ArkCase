@@ -3,14 +3,21 @@
 angular.module('document-details').controller(
         'DocumentDetailsController',
         [ '$rootScope', '$scope', '$stateParams', '$sce', '$q', '$timeout', '$window', '$modal', 'TicketService', 'ConfigService', 'LookupService', 'SnowboundService', 'Authentication', 'EcmService', 'Helper.LocaleService', 'Admin.TranscriptionManagementService', 'MessageService', 'UtilService', 'Util.TimerService',
-            'Object.LockingService', 'ObjectService', '$log', 'Dialog.BootboxService', '$translate', 'ArkCaseCrossWindowMessagingService', 'Object.LookupService', 'Case.InfoService',
-            function ($rootScope, $scope, $stateParams, $sce, $q, $timeout, $window, $modal, TicketService, ConfigService, LookupService, SnowboundService, Authentication, EcmService, LocaleHelper, TranscriptionManagementService, MessageService, Util, UtilTimerService, ObjectLockingService, ObjectService, $log, DialogService, $translate, ArkCaseCrossWindowMessagingService, ObjectLookupService, CaseInfoService) {
+            'Object.LockingService', 'ObjectService', '$log', 'Dialog.BootboxService', '$translate', 'ArkCaseCrossWindowMessagingService', 'Object.LookupService', 'Case.InfoService', 'FileEditingEnabled',
+            function ($rootScope, $scope, $stateParams, $sce, $q, $timeout, $window, $modal, TicketService, ConfigService, LookupService, SnowboundService, Authentication, EcmService, LocaleHelper, TranscriptionManagementService, MessageService, Util, UtilTimerService, ObjectLockingService, ObjectService, $log, DialogService, $translate, ArkCaseCrossWindowMessagingService, ObjectLookupService, CaseInfoService, FileEditingEnabled) {
 
                     new LocaleHelper.Locale({
                         scope: $scope
                     });
 
-                    $scope.viewerOnly = false;
+                $scope.fileEditingEnabled = false;
+
+                FileEditingEnabled.getFileEditingEnabled().then(function (response) {
+                    $scope.fileEditingEnabled = response.data;
+                });
+
+
+                $scope.viewerOnly = false;
                     var userPrivilegesPromise =  Authentication.getUserPrivileges();
                     $scope.documentExpand = function() {
                         $scope.viewerOnly = true;

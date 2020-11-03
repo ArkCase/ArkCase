@@ -98,10 +98,17 @@
             </div>
         </div>
         <div>
-            <a ng-show="!editingMode" class="btn btn-sm btn-default" ng-click="enableEditing()">
-                <i class="fa fa-edit"></i>
-                <span translate>documentDetails.enableEditing</span>
-            </a>
+            <div ng-if="fileEditingEnabled">
+                <a ng-show="!editingMode" class="btn btn-sm btn-default" ng-click="enableEditing()">
+                    <i class="fa fa-edit"></i>
+                    <span translate>documentDetails.enableEditing</span>
+                </a>
+            </div>
+            <div ng-if="!fileEditingEnabled">
+                <a class="btn btn-sm btn-default">
+                    <span translate>documentDetails.poweredBySnowbound</span>
+                </a>
+            </div>
         </div>
         <div ng-class="viewerOnly? 'content-body well-sm full-docview' : 'content-body well-sm'">
             <div ng-include="'modules/document-details/views/document-viewer.client.view.html'"></div>

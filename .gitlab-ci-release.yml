@@ -51,7 +51,7 @@ variables:
   # HOTFIX_SUPPORT_VERSION: 3.3.2 (2020.01)
   # RELEASE_VERSION: 3.3.2.1      (2020.01.01)
   # RELEASE_ALL: true (Optional: if you want to trigger the release pipeline on all othe projects: configuration, externa-portal-ui, external-portal-backend, configuration server)
-  GIT_URL: 'git@$GITLAB_SEVER:arkcase/ArkCase.git'
+  GIT_URL: 'git@$GITLAB_SERVER:arkcase/ArkCase.git'
 
 
 release_start:
