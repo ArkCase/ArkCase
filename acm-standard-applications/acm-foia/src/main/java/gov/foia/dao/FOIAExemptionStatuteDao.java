@@ -34,7 +34,6 @@ import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.services.exemption.model.ExemptionStatute;
 import gov.foia.model.FOIARequest;
 
-import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.ArrayList;
@@ -45,7 +44,6 @@ public class FOIAExemptionStatuteDao extends AcmAbstractDao<ExemptionStatute>
 {
 
     private AcmFolderService acmFolderService;
-    private EntityManager entityManager;
     private CaseFileDao caseFileDao;
 
     @Override
@@ -142,16 +140,6 @@ public class FOIAExemptionStatuteDao extends AcmAbstractDao<ExemptionStatute>
             exemptionStatuteList = new ArrayList<>();
         }
         return exemptionStatuteList;
-    }
-
-    public EntityManager getEntityManager()
-    {
-        return entityManager;
-    }
-
-    public void setEntityManager(EntityManager entityManager)
-    {
-        this.entityManager = entityManager;
     }
 
     public AcmFolderService getAcmFolderService() {
