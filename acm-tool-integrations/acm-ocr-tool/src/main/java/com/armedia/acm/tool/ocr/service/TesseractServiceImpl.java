@@ -237,11 +237,12 @@ public class TesseractServiceImpl implements OCRIntegrationService
         String destination = mediaEngineDTO.getTempPath() + mediaEngineDTO.getRemoteId()
                 + OCRIntegrationConstants.MAGICK_TMP;
 
-        String command = buildCommand(OCRIntegrationConstants.IMAGE_MAGICK, mediaEngineDTO, source, destination);
+        String[] commandArray = buildCommandArray(OCRIntegrationConstants.IMAGE_MAGICK, mediaEngineDTO, source, destination);
         try
         {
             DefaultExecuteResultHandler resultHandler = new DefaultExecuteResultHandler();
-            CommandLine commandToBeExecuted = CommandLine.parse(command);
+            CommandLine commandToBeExecuted = new CommandLine(OCRIntegrationConstants.IMAGE_MAGICK);
+            commandToBeExecuted.addArguments(commandArray);
             DefaultExecutor executor = new DefaultExecutor();
             executor.setWorkingDirectory(new File(mediaEngineDTO.getTempPath()));
             executor.execute(commandToBeExecuted, resultHandler);
@@ -278,11 +279,12 @@ public class TesseractServiceImpl implements OCRIntegrationService
     {
         String destination = mediaEngineDTO.getTempPath() + mediaEngineDTO.getRemoteId()
                 + OCRIntegrationConstants.TESSERACT_TMP;
-        String command = buildCommand(OCRIntegrationConstants.TESSERACT_COMMAND_PREFIX, mediaEngineDTO, source, destination);
+        String[] commandArray = buildCommandArray(OCRIntegrationConstants.TESSERACT_COMMAND_PREFIX, mediaEngineDTO, source, destination);
         try
         {
             DefaultExecuteResultHandler resultHandler = new DefaultExecuteResultHandler();
-            CommandLine commandToBeExecuted = CommandLine.parse(command);
+            CommandLine commandToBeExecuted = new CommandLine(OCRIntegrationConstants.TESSERACT_COMMAND_PREFIX);
+            commandToBeExecuted.addArguments(commandArray);
             DefaultExecutor executor = new DefaultExecutor();
             executor.setWorkingDirectory(new File(mediaEngineDTO.getTempPath()));
             executor.execute(commandToBeExecuted, resultHandler);
@@ -303,11 +305,12 @@ public class TesseractServiceImpl implements OCRIntegrationService
         String destination = (mediaEngineDTO.getTempPath() + mediaEngineDTO.getRemoteId()
                 + OCRIntegrationConstants.QPDF_TMP
                 + OCRIntegrationConstants.TEMP_FILE_PDF_SUFFIX);
-        String command = buildCommand(OCRIntegrationConstants.QPDF, mediaEngineDTO, source, destination);
+        String[] commandArray = buildCommandArray(OCRIntegrationConstants.QPDF, mediaEngineDTO, source, destination);
         try
         {
             DefaultExecuteResultHandler resultHandler = new DefaultExecuteResultHandler();
-            CommandLine commandToBeExecuted = CommandLine.parse(command);
+            CommandLine commandToBeExecuted = new CommandLine(OCRIntegrationConstants.QPDF);
+            commandToBeExecuted.addArguments(commandArray);
             DefaultExecutor executor = new DefaultExecutor();
             executor.setWorkingDirectory(new File(mediaEngineDTO.getTempPath()));
             executor.execute(commandToBeExecuted, resultHandler);
@@ -324,36 +327,19 @@ public class TesseractServiceImpl implements OCRIntegrationService
         }
     }
 
-    private String buildCommand(String command, MediaEngineDTO mediaEngineDTO, String source, String destination)
+    private String[] buildCommandArray(String command, MediaEngineDTO mediaEngineDTO, String source, String destination)
     {
-        StringJoiner joiner = new StringJoiner(" ");
         switch (command)
         {
-        case OCRIntegrationConstants.IMAGE_MAGICK:
-            joiner.add(command)
-                    .add("-trim")
-                    .add("-density 300")
-                    .add(source)
-                    .add("-quality 100")
-                    .add("-sharpen 0x1.0")
-                    .add(destination + OCRIntegrationConstants.TEMP_FILE_PNG_SUFFIX);
-            break;
-        case OCRIntegrationConstants.TESSERACT_COMMAND_PREFIX:
-            joiner.add(command)
-                    .add(source)
-                    .add(destination)
-                    .add("-l")
-                    .add(mediaEngineDTO.getLanguage())
-                    .add("PDF");
-            break;
-        case OCRIntegrationConstants.QPDF:
-            joiner.add(command)
-                    .add(source)
-                    .add("--linearize")
-                    .add(destination);
-            break;
+            case OCRIntegrationConstants.IMAGE_MAGICK:
+                return new String[] {"-trim", "-density 300", source, "-quality 100", "-sharpen 0x1.0",
+                        destination, OCRIntegrationConstants.TEMP_FILE_PNG_SUFFIX};
+            case OCRIntegrationConstants.TESSERACT_COMMAND_PREFIX:
+                return new String[] {source, destination, "-l", mediaEngineDTO.getLanguage(), "PDF"};
+            case OCRIntegrationConstants.QPDF:
+                return new String[] {source, "--linearize", destination};
         }
-        return joiner.toString();
+        return new String[]{};
     }
 
     public MediaEngineIntegrationEventPublisher getMediaEngineIntegrationEventPublisher()
