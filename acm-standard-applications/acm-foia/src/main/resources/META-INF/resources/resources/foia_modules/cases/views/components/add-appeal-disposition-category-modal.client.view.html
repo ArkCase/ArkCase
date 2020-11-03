@@ -8,9 +8,12 @@
         <div class="row">
             <div class="form-group col-sm-offset-2  col-sm-8">
                 <label class="control-label" translate> cases.comp.main.addAppealDispositionCategory.dispositionCategory</label>
-                <select class="form-control input-md" ng-model="objectInfo.disposition"
+                <select class="form-control input-md"
+                        ng-init="objectInfo.disposition = dispositionCategoriesLookup[0]"
+                        ng-model="objectInfo.disposition"
                         ng-options="dispositionType.key as dispositionType.value | translate for dispositionType in dispositionCategoriesLookup"
                         ng-change="changeDispositionCategory()" ng-required="isDispositionRequired">
+                    <option value="" translate>cases.comp.main.addAppealDispositionCategory.selectDispositionCategory</option>
                 </select>
             </div>
         </div>
@@ -26,25 +29,27 @@
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div class="row" ng-show="showDispositionReasons">
             <div class="form-group col-sm-offset-1 col-sm-10 font-bold text-danger">
                 {{reasonsMessage}}
             </div>
         </div>
-        <div class="row">
+        <div class="row" ng-show="showDispositionReasons">
             <div class="form-group col-sm-6">
                 <label class="control-label" translate> cases.comp.main.addAppealDispositionCategory.otherReason</label>
                 <select ng-model="objectInfo.otherReason"
+                        ng-init="objectInfo.otherReason = otherReasonsLookup[0]"
                         ng-options="otherReason.key as otherReason.value | translate for otherReason in otherReasonsLookup"
-                        class="form-control input-md" ng-change="changeOtherReason()" ng-required="isOtherRequired"
+                        class="form-control input-md" ng-change="changeOtherReason()" ng-required="isOtherRequired && showDispositionReasons"
                         ng-disabled="!isOtherRequired">
+                    <option value="" translate>cases.comp.main.addAppealDispositionCategory.selectOtherReason</option>
                 </select>
             </div>
             <div class="form-group col-sm-6">
                 <label class="control-label" translate> cases.comp.main.addAppealDispositionCategory.custom.label</label>
                 <input type="text" ng-model="customOtherReason" class="input-md form-control" ng-disabled="isCustomDisabled"
                         placeholder="{{ 'cases.comp.main.addAppealDispositionCategory.custom.placeholder'  | translate }}"
-                        ng-required="!isCustomDisabled">
+                        ng-required="!isCustomDisabled && showDispositionReasons">
             </div>
         </div>
     </form>

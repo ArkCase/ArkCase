@@ -234,7 +234,7 @@ public class PortalCreateRequestService
         portalPerson.setContactMethods(contactMethod);
 
         if (portalPersonDTO.getPhone() != null && !portalPersonDTO.getPhone().isEmpty()
-                && isNewContactMethod(existingPerson, portalPersonDTO.getPhone()))
+                && isNewPhoneContactMethod(existingPerson, portalPersonDTO.getPhone()))
         {
             ContactMethod phone = buildContactMethod("phone", portalPersonDTO.getPhone());
             portalPerson.getContactMethods().add(phone);
@@ -257,9 +257,10 @@ public class PortalCreateRequestService
                 || !address1.getState().equals(address2.getState());
     }
 
-    private boolean isNewContactMethod(Person requester, String contactMethodValue)
+    private boolean isNewPhoneContactMethod(Person requester, String contactMethodValue)
     {
-        return requester.getContactMethods().stream().noneMatch(cm -> cm.getValue().equals(contactMethodValue));
+        return requester.getContactMethods().stream().filter(cm -> cm.getType().equalsIgnoreCase("Phone"))
+                .noneMatch(cm -> cm.getValue().equals(contactMethodValue));
     }
 
     private OrganizationAssociation createOrganizationAssociation(SARPersonAssociation personAssociation)
@@ -289,6 +290,7 @@ public class PortalCreateRequestService
         if (addressHasData(address))
         {
             portalPerson.getAddresses().add(address);
+            portalPerson.setDefaultAddress(address);
         }
 
         List<ContactMethod> contactMethod = new ArrayList<>();
@@ -298,6 +300,7 @@ public class PortalCreateRequestService
         {
             ContactMethod phone = buildContactMethod("phone", portalPersonDTO.getPhone());
             portalPerson.getContactMethods().add(phone);
+            portalPerson.setDefaultPhone(phone);
         }
         if (portalPersonDTO.getEmail() != null && !portalPersonDTO.getEmail().isEmpty())
         {
