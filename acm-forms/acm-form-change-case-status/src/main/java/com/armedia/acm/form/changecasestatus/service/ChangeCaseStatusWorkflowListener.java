@@ -36,7 +36,7 @@ import com.armedia.acm.form.changecasestatus.model.ChangeCaseStatusFormEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 import com.armedia.acm.plugins.ecm.workflow.EcmFileWorkflowConfiguration;
-import com.armedia.acm.plugins.task.service.AcmTaskService;
+import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -50,21 +50,34 @@ import java.util.Map;
 /**
  * @author riste.tutureski
  */
-public class ChangeCaseStatusWorkflowListener implements ApplicationListener<ChangeCaseStatusFormEvent> {
+public class ChangeCaseStatusWorkflowListener implements ApplicationListener<ChangeCaseStatusFormEvent>
+{
 
     private final Logger LOG = LogManager.getLogger(getClass());
     private FileWorkflowBusinessRule fileWorkflowBusinessRule;
     private String changeCaseStatusTaskName;
-    private AcmTaskService acmTaskService;
+    private TaskDao taskDao;
 
     @Override
-    public void onApplicationEvent(ChangeCaseStatusFormEvent event) {
-        if (!"edit".equals(event.getMode())) {
-            handleNewCloseCaseRequest(event);
+    public void onApplicationEvent(ChangeCaseStatusFormEvent event)
+    {
+        if (!"edit".equals(event.getMode()))
+        {
+            try
+            {
+                handleNewCloseCaseRequest(event);
+            }
+            catch (AcmCreateObjectFailedException | AcmUserActionFailedException e)
+            {
+                // Nothing we can do at this point, just log the error
+                LOG.error(String.format("Error caused while starting business process"));
+            }
         }
     }
 
-    protected void handleNewCloseCaseRequest(ChangeCaseStatusFormEvent event) {
+    protected void handleNewCloseCaseRequest(ChangeCaseStatusFormEvent event)
+            throws AcmUserActionFailedException, AcmCreateObjectFailedException
+    {
         EcmFile pdfRendition = event.getUploadedFiles().getPdfRendition();
         EcmFileWorkflowConfiguration configuration = new EcmFileWorkflowConfiguration();
 
@@ -73,22 +86,24 @@ public class ChangeCaseStatusWorkflowListener implements ApplicationListener<Cha
         LOG.debug("Calling business rules");
 
         configuration = getFileWorkflowBusinessRule().applyRules(configuration);
-        if (configuration.isBuckslipProcess()) {
+        if (configuration.isBuckslipProcess())
+        {
             // ChangeCaseStatusWorkflowListener is not handling buckslip process
             return;
         }
         LOG.debug("Start process? [{}]", configuration.isStartProcess());
 
-        if (configuration.isStartProcess()) {
-            try {
-                startBusinessProcess(event, configuration);
-            } catch (AcmCreateObjectFailedException | AcmUserActionFailedException e) {
-                LOG.error(String.format("Error caused while starting business process"));
-            }
+        if (configuration.isStartProcess())
+        {
+
+            startBusinessProcess(event, configuration);
+
         }
     }
 
-    private void startBusinessProcess(ChangeCaseStatusFormEvent event, EcmFileWorkflowConfiguration configuration) throws AcmCreateObjectFailedException, AcmUserActionFailedException {
+    private void startBusinessProcess(ChangeCaseStatusFormEvent event, EcmFileWorkflowConfiguration configuration)
+            throws AcmCreateObjectFailedException, AcmUserActionFailedException
+    {
         String processName = configuration.getProcessName();
 
         String author = event.getUserId();
@@ -98,7 +113,8 @@ public class ChangeCaseStatusWorkflowListener implements ApplicationListener<Cha
         String taskName = "Task " + event.getCaseNumber();
 
         // Overwrite "taskName" with "changeCaseStatusTaskName" value
-        if (getChangeCaseStatusTaskName() != null && !getChangeCaseStatusTaskName().isEmpty()) {
+        if (getChangeCaseStatusTaskName() != null && !getChangeCaseStatusTaskName().isEmpty())
+        {
             taskName = String.format(getChangeCaseStatusTaskName(), event.getCaseNumber());
         }
 
@@ -123,14 +139,17 @@ public class ChangeCaseStatusWorkflowListener implements ApplicationListener<Cha
 
         LOG.debug("Starting process: [{}]", processName);
 
-        getAcmTaskService().startBusinessProcessAndSetContainerAndParticipantsToRootFolder(pvars, processName);
+        getTaskDao().startBusinessProcess(pvars, processName);
     }
 
-    private List<String> findReviewers(ChangeCaseStatusFormEvent event) {
+    private List<String> findReviewers(ChangeCaseStatusFormEvent event)
+    {
         List<String> reviewers = new ArrayList<>();
 
-        for (AcmParticipant participant : event.getRequest().getParticipants()) {
-            if ("approver".equals(participant.getParticipantType())) {
+        for (AcmParticipant participant : event.getRequest().getParticipants())
+        {
+            if ("approver".equals(participant.getParticipantType()))
+            {
                 reviewers.add(participant.getParticipantLdapId());
             }
         }
@@ -138,27 +157,33 @@ public class ChangeCaseStatusWorkflowListener implements ApplicationListener<Cha
         return reviewers;
     }
 
-    public FileWorkflowBusinessRule getFileWorkflowBusinessRule() {
+    public FileWorkflowBusinessRule getFileWorkflowBusinessRule()
+    {
         return fileWorkflowBusinessRule;
     }
 
-    public void setFileWorkflowBusinessRule(FileWorkflowBusinessRule fileWorkflowBusinessRule) {
+    public void setFileWorkflowBusinessRule(FileWorkflowBusinessRule fileWorkflowBusinessRule)
+    {
         this.fileWorkflowBusinessRule = fileWorkflowBusinessRule;
     }
 
-    public String getChangeCaseStatusTaskName() {
+    public String getChangeCaseStatusTaskName()
+    {
         return changeCaseStatusTaskName;
     }
 
-    public void setChangeCaseStatusTaskName(String changeCaseStatusTaskName) {
+    public void setChangeCaseStatusTaskName(String changeCaseStatusTaskName)
+    {
         this.changeCaseStatusTaskName = changeCaseStatusTaskName;
     }
 
-    public AcmTaskService getAcmTaskService() {
-        return acmTaskService;
+    public TaskDao getTaskDao()
+    {
+        return taskDao;
     }
 
-    public void setAcmTaskService(AcmTaskService acmTaskService) {
-        this.acmTaskService = acmTaskService;
+    public void setTaskDao(TaskDao taskDao)
+    {
+        this.taskDao = taskDao;
     }
 }

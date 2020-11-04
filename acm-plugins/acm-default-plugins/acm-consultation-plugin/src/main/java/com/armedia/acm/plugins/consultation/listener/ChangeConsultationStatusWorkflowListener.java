@@ -33,7 +33,7 @@ import com.armedia.acm.plugins.consultation.model.ChangeConsultationStatusEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 import com.armedia.acm.plugins.ecm.workflow.EcmFileWorkflowConfiguration;
-import com.armedia.acm.plugins.task.service.AcmTaskService;
+import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.ParticipantTypes;
 import org.apache.logging.log4j.LogManager;
@@ -54,18 +54,27 @@ public class ChangeConsultationStatusWorkflowListener implements ApplicationList
     private final Logger LOG = LogManager.getLogger(getClass());
     private FileWorkflowBusinessRule fileWorkflowBusinessRule;
     private String changeConsultationStatusTaskName;
-    private AcmTaskService acmTaskService;
+    private TaskDao taskDao;
 
     @Override
     public void onApplicationEvent(ChangeConsultationStatusEvent event)
     {
         if (!"edit".equals(event.getMode()))
         {
-            handleNewCloseConsultationRequest(event);
+            try
+            {
+                handleNewCloseConsultationRequest(event);
+            }
+            catch (AcmCreateObjectFailedException | AcmUserActionFailedException e)
+            {
+                // Nothing we can do at this point, just log the error
+                LOG.error(String.format("Error caused while starting business process"));
+            }
         }
     }
 
     protected void handleNewCloseConsultationRequest(ChangeConsultationStatusEvent event)
+            throws AcmUserActionFailedException, AcmCreateObjectFailedException
     {
         EcmFile pdfRendition = event.getUploadedFiles().getPdfRendition();
         EcmFileWorkflowConfiguration configuration = new EcmFileWorkflowConfiguration();
@@ -80,15 +89,14 @@ public class ChangeConsultationStatusWorkflowListener implements ApplicationList
 
         if (configuration.isStartProcess())
         {
-            try {
-                startBusinessProcess(event, configuration);
-            } catch (AcmCreateObjectFailedException | AcmUserActionFailedException e) {
-                LOG.error(String.format("Error caused while setting participants to root folder"));
-            }
+            startBusinessProcess(event, configuration);
         }
+
     }
 
-    private void startBusinessProcess(ChangeConsultationStatusEvent event, EcmFileWorkflowConfiguration configuration) throws AcmCreateObjectFailedException, AcmUserActionFailedException {
+    private void startBusinessProcess(ChangeConsultationStatusEvent event, EcmFileWorkflowConfiguration configuration)
+            throws AcmCreateObjectFailedException, AcmUserActionFailedException
+    {
         String processName = configuration.getProcessName();
 
         String author = event.getUserId();
@@ -130,7 +138,7 @@ public class ChangeConsultationStatusWorkflowListener implements ApplicationList
 
         LOG.debug("Starting process: [{}]", processName);
 
-        getAcmTaskService().startBusinessProcessAndSetContainerAndParticipantsToRootFolder(pvars, processName);
+        getTaskDao().startBusinessProcess(pvars, processName);
     }
 
     private List<String> findReviewers(ChangeConsultationStatusEvent event)
@@ -183,11 +191,11 @@ public class ChangeConsultationStatusWorkflowListener implements ApplicationList
         this.changeConsultationStatusTaskName = changeConsultationStatusTaskName;
     }
 
-    public AcmTaskService getAcmTaskService() {
-        return acmTaskService;
+    public TaskDao getTaskDao() {
+        return taskDao;
     }
 
-    public void setAcmTaskService(AcmTaskService acmTaskService) {
-        this.acmTaskService = acmTaskService;
+    public void setTaskDao(TaskDao taskDao) {
+        this.taskDao = taskDao;
     }
 }

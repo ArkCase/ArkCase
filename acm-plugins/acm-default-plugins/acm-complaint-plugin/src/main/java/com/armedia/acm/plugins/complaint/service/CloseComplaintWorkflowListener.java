@@ -32,9 +32,10 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.complaint.model.closeModal.CloseComplaintEvent;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 import com.armedia.acm.plugins.ecm.workflow.EcmFileWorkflowConfiguration;
-import com.armedia.acm.plugins.task.service.AcmTaskService;
+import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.ParticipantTypes;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationListener;
@@ -49,7 +50,7 @@ public class CloseComplaintWorkflowListener implements ApplicationListener<Close
     private final Logger log = LogManager.getLogger(getClass());
     private FileWorkflowBusinessRule fileWorkflowBusinessRule;
     private String closeComplaintTaskName;
-    private AcmTaskService acmTaskService;
+    private TaskDao taskDao;
     private PDFCloseComplaintDocumentGenerator pdfCloseComplaintDocumentGenerator;
 
     @Override
@@ -57,11 +58,20 @@ public class CloseComplaintWorkflowListener implements ApplicationListener<Close
     {
         if (!"edit".equals(closeComplaintEvent.getMode()))
         {
-            handleNewCloseComplaintRequest(closeComplaintEvent);
+            try
+            {
+                handleNewCloseComplaintRequest(closeComplaintEvent);
+            }
+            catch (AcmCreateObjectFailedException | AcmUserActionFailedException e)
+            {
+                // Nothing we can do at this point, just log the error
+                log.error(String.format("Error while starting business process"));
+            }
         }
     }
 
     private void handleNewCloseComplaintRequest(CloseComplaintEvent closeComplaintEvent)
+            throws AcmUserActionFailedException, AcmCreateObjectFailedException
     {
         EcmFileWorkflowConfiguration configuration = new EcmFileWorkflowConfiguration();
         configuration.setEcmFile(closeComplaintEvent.getUploadedFiles().getPdfRendition());
@@ -74,21 +84,19 @@ public class CloseComplaintWorkflowListener implements ApplicationListener<Close
 
         if (configuration.isStartProcess())
         {
-            try {
-                startBusinessProcess(closeComplaintEvent, configuration);
-            } catch (AcmCreateObjectFailedException | AcmUserActionFailedException e) {
-                log.error(String.format("Error while starting business process"));
-            }
+            startBusinessProcess(closeComplaintEvent, configuration);
         }
     }
 
-    private void startBusinessProcess(CloseComplaintEvent closeComplaintEvent, EcmFileWorkflowConfiguration configuration) throws AcmCreateObjectFailedException, AcmUserActionFailedException {
+    private void startBusinessProcess(CloseComplaintEvent closeComplaintEvent, EcmFileWorkflowConfiguration configuration)
+            throws AcmCreateObjectFailedException, AcmUserActionFailedException
+    {
 
         String processName = configuration.getProcessName();
 
         String author = closeComplaintEvent.getUserId();
         List<String> reviewers = findReviewers(closeComplaintEvent);
-        List<String> candidateGroups =  findCandidateGroups(closeComplaintEvent);
+        List<String> candidateGroups = findCandidateGroups(closeComplaintEvent);
 
         // Default one if "closeComplaintTaskName" is null or empty
         String taskName = "Task " + closeComplaintEvent.getComplaintNumber();
@@ -125,7 +133,7 @@ public class CloseComplaintWorkflowListener implements ApplicationListener<Close
 
         log.debug("starting process: [{}]", processName);
 
-        getAcmTaskService().startBusinessProcessAndSetContainerAndParticipantsToRootFolder(pvars, processName);
+        getTaskDao().startBusinessProcess(pvars, processName);
     }
 
     private List<String> findReviewers(CloseComplaintEvent closeComplaintEvent)
@@ -156,12 +164,14 @@ public class CloseComplaintWorkflowListener implements ApplicationListener<Close
         return candidateGroups;
     }
 
-    public AcmTaskService getAcmTaskService() {
-        return acmTaskService;
+    public TaskDao getTaskDao()
+    {
+        return taskDao;
     }
 
-    public void setAcmTaskService(AcmTaskService acmTaskService) {
-        this.acmTaskService = acmTaskService;
+    public void setTaskDao(TaskDao taskDao)
+    {
+        this.taskDao = taskDao;
     }
 
     public String getCloseComplaintTaskName()
