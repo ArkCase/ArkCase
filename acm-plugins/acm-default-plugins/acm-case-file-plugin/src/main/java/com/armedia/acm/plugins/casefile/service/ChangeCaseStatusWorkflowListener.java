@@ -33,8 +33,7 @@ import com.armedia.acm.plugins.casefile.model.ChangeCaseFileStatusEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 import com.armedia.acm.plugins.ecm.workflow.EcmFileWorkflowConfiguration;
-import com.armedia.acm.plugins.task.model.AcmTask;
-import com.armedia.acm.plugins.task.service.AcmTaskService;
+import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.ParticipantTypes;
 import org.apache.logging.log4j.LogManager;
@@ -52,18 +51,27 @@ public class ChangeCaseStatusWorkflowListener implements ApplicationListener<Cha
     private final Logger LOG = LogManager.getLogger(getClass());
     private FileWorkflowBusinessRule fileWorkflowBusinessRule;
     private String changeCaseStatusTaskName;
-    private AcmTaskService taskService;
+    private TaskDao taskDao;
 
     @Override
     public void onApplicationEvent(ChangeCaseFileStatusEvent event)
     {
         if (!"edit".equals(event.getMode()))
         {
-            handleNewCloseCaseRequest(event);
+            try
+            {
+                handleNewCloseCaseRequest(event);
+            }
+            catch (AcmUserActionFailedException | AcmCreateObjectFailedException e)
+            {
+                // Nothing we can do at this point, just log the error
+                LOG.error(String.format("Error during task creation"));
+            }
         }
     }
 
     protected void handleNewCloseCaseRequest(ChangeCaseFileStatusEvent event)
+            throws AcmUserActionFailedException, AcmCreateObjectFailedException
     {
         EcmFile pdfRendition = event.getUploadedFiles().getPdfRendition();
         EcmFileWorkflowConfiguration configuration = new EcmFileWorkflowConfiguration();
@@ -82,11 +90,7 @@ public class ChangeCaseStatusWorkflowListener implements ApplicationListener<Cha
 
         if (configuration.isStartProcess())
         {
-            try {
-                startBusinessProcess(event, configuration);
-            } catch (AcmUserActionFailedException | AcmCreateObjectFailedException e) {
-                LOG.error(String.format("Error during task creation"));
-            }
+            startBusinessProcess(event, configuration);
         }
     }
 
@@ -134,7 +138,7 @@ public class ChangeCaseStatusWorkflowListener implements ApplicationListener<Cha
 
         LOG.debug("Starting process: [{}]", processName);
 
-        AcmTask task = getTaskService().startBusinessProcessAndSetContainerAndParticipantsToRootFolder(pvars, processName);
+        getTaskDao().startBusinessProcess(pvars, processName);
     }
 
     private List<String> findReviewers(ChangeCaseFileStatusEvent event)
@@ -187,13 +191,11 @@ public class ChangeCaseStatusWorkflowListener implements ApplicationListener<Cha
         this.changeCaseStatusTaskName = changeCaseStatusTaskName;
     }
 
-    public AcmTaskService getTaskService()
-    {
-        return taskService;
+    public TaskDao getTaskDao() {
+        return taskDao;
     }
 
-    public void setTaskService(AcmTaskService taskService)
-    {
-        this.taskService = taskService;
+    public void setTaskDao(TaskDao taskDao) {
+        this.taskDao = taskDao;
     }
 }

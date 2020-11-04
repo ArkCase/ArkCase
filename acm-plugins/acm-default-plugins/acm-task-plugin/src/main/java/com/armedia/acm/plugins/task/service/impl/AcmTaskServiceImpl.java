@@ -619,7 +619,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
                 pVars.put("PARENT_OBJECT_ID", parentObjectId);
                 pVars.put("REQUEST_TYPE", "DOCUMENT_REVIEW");
 
-                AcmTask createdAcmTask = startBusinessProcessAndSetContainerAndParticipantsToRootFolder(pVars, businessProcessName);
+                AcmTask createdAcmTask = getTaskDao().startBusinessProcess(pVars, businessProcessName);
                 createdAcmTasks.add(createdAcmTask);
                 createdAcmTask.setDocumentUnderReview(documentToReview);
                 if (task.getAttachedToObjectId() != null && task.getAttachedToObjectType() != null)
@@ -637,7 +637,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
     @Override
     @Transactional
     public List<AcmTask> startReviewDocumentsWorkflow(AcmTask task, String businessProcessName, Authentication authentication,
-                                                      List<MultipartFile> filesToUpload)
+            List<MultipartFile> filesToUpload)
             throws AcmTaskException, AcmCreateObjectFailedException, AcmUserActionFailedException, LinkAlreadyExistException,
             AcmObjectNotFoundException
     {
@@ -764,7 +764,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
             pvars.put("owningGroup", task.getCandidateGroups());
             pvars.put("dueDate", configuration.getTaskDueDateExpression());
 
-            AcmTask createdAcmTask = startBusinessProcessAndSetContainerAndParticipantsToRootFolder(pvars, processName);
+            AcmTask createdAcmTask = getTaskDao().startBusinessProcess(pvars, processName);
             createdAcmTask.setDocumentsToReview(task.getDocumentsToReview());
 
             createTaskFolderStructureInParentObject(createdAcmTask);
@@ -881,17 +881,6 @@ public class AcmTaskServiceImpl implements AcmTaskService
     }
 
     @Override
-    @Transactional
-    public AcmTask startBusinessProcessAndSetContainerAndParticipantsToRootFolder(Map<String, Object>  pvars, String processName) throws AcmUserActionFailedException, AcmCreateObjectFailedException {
-        AcmTask task = taskDao.startBusinessProcess(pvars, processName);
-        AcmContainer container = getEcmFileService().getOrCreateContainer(task.getObjectType(),
-                task.getTaskId());
-        task.setContainer(container);
-        getFileParticipantService().inheritParticipantsFromAssignedObject(task.getParticipants(), container.getFolder().getParticipants(), container, task.getRestricted());
-        return task;
-    }
-
-    @Override
     public String getTaskFolderNameInParentObject(AcmTask acmTask)
     {
         String taskFolderName = "Task-" + acmTask.getTitle() + "-" + acmTask.getId();
@@ -924,7 +913,8 @@ public class AcmTaskServiceImpl implements AcmTaskService
         this.taskDao = taskDao;
     }
 
-    public TaskDao getTaskDao() {
+    public TaskDao getTaskDao()
+    {
         return taskDao;
     }
 

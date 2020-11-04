@@ -193,10 +193,6 @@ public class AcmTaskServiceImplTest extends EasyMockSupport
 
         expect(mockAuthentication.getName()).andReturn("assignee").atLeastOnce();
         expect(mockTaskDao.startBusinessProcess(pVars, businessProcessName)).andReturn(reviewTask);
-        expect(mockEcmFileService.getOrCreateContainer(reviewTask.getObjectType(),
-                reviewTask.getTaskId())).andReturn(taskContainer);
-        mockEcmFileParticipantService.inheritParticipantsFromAssignedObject(reviewTask.getParticipants(), new ArrayList<>(), taskContainer, false);
-
 
         expect(mockAcmContainer.getFolder()).andReturn(mockAcmParentFolder);
         expect(mockAcmParentFolder.getId()).andReturn(parentFolderId);

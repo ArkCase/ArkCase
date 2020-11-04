@@ -10,7 +10,7 @@
 
     <bean id="closeComplaintWorkflowListener" class="com.armedia.acm.form.closecomplaint.service.CloseComplaintWorkflowListener">
         <property name="fileWorkflowBusinessRule" ref="fileWorkflowBusinessRule"/>
-        <property name="acmBpmnService" ref="processDefinitionManagementService"/>
+        <property name="taskDao" ref="acmTaskDao"/>
         <property name="closeComplaintTaskName" ref="closeComplaintTaskName"/>
     </bean>
 

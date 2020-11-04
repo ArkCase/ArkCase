@@ -27,22 +27,13 @@ package com.armedia.acm.plugins.task.service.impl;
  * #L%
  */
 
-import static org.easymock.EasyMock.capture;
-import static org.easymock.EasyMock.eq;
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
 import com.armedia.acm.activiti.services.AcmBpmnService;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.plugins.ecm.service.impl.EcmFileParticipantService;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
@@ -52,7 +43,6 @@ import com.armedia.acm.plugins.task.service.TaskEventPublisher;
 import com.armedia.acm.services.dataaccess.service.impl.DataAccessPrivilegeListener;
 import com.armedia.acm.services.participants.dao.AcmParticipantDao;
 import com.armedia.acm.services.participants.model.AcmParticipant;
-
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.bpmn.model.FormProperty;
 import org.activiti.bpmn.model.FormValue;
@@ -90,6 +80,16 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Created by armdev on 6/2/14.
@@ -130,6 +130,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
     private AcmContainer mockAcmContainer;
 
     private EcmFileService mockFileService;
+    private EcmFileParticipantService mockFileParticipantService;
     private AcmBpmnService mockAcmBpmnService;
 
     @Before
@@ -166,6 +167,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         mockAcmContainer = createMock(AcmContainer.class);
         mockFileService = createMock(EcmFileService.class);
         mockAcmBpmnService = createMock(AcmBpmnService.class);
+        mockFileParticipantService = createMock(EcmFileParticipantService.class);
         unit = new ActivitiTaskDao();
 
         Map<String, Integer> acmPriorityToActivitiPriority = new HashMap<>();
@@ -183,6 +185,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         unit.setTaskEventPublisher(mockTaskEventPublisher);
         unit.setContainerFolderDao(mockAcmContainerDao);
         unit.setFileService(mockFileService);
+        unit.setFileParticipantService(mockFileParticipantService);
         unit.setAcmBpmnService(mockAcmBpmnService);
         //
     }
@@ -1200,6 +1203,39 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         String title = "Test title";
         Task task = new TaskEntity(taskId.toString());
 
+        AcmTask reviewTask = new AcmTask();
+        reviewTask.setRestricted(false);
+        reviewTask.setParentObjectId(500L);
+        reviewTask.setParentObjectType("CASE_FILE");
+
+        AcmParticipant acmParticipant = new AcmParticipant();
+        acmParticipant.setId(222L);
+        acmParticipant.setObjectType("objectType");
+        acmParticipant.setObjectId(223L);
+        acmParticipant.setParticipantType("participantType");
+        acmParticipant.setParticipantLdapId("ldapType");
+
+        List<AcmParticipant> acmParticipants = new ArrayList<>();
+        acmParticipants.add(acmParticipant);
+        reviewTask.setParticipants(acmParticipants);
+
+        String cmisRepositoryId = "cmisRepositoryId";
+        String cmisFolderId = "cmisFolderId";
+
+        AcmContainer container = new AcmContainer();
+        container.setContainerObjectId(taskId);
+        container.setContainerObjectType("TASK");
+        container.setCmisRepositoryId(cmisRepositoryId);
+
+        AcmFolder newFolder = new AcmFolder();
+        newFolder.setCmisFolderId(cmisFolderId);
+        newFolder.setCmisRepositoryId(cmisRepositoryId);
+        newFolder.setName(EcmFileConstants.CONTAINER_FOLDER_NAME);
+        container.setFolder(newFolder);
+        container.setAttachmentFolder(newFolder);
+
+        reviewTask.setContainer(container);
+
         pVars.put("reviewers", Arrays.asList("jerry", "bob", "mickey"));
         pVars.put("taskName", testTitle);
         pVars.put("documentAuthor", "DOCUMENT_AUTHOR");
@@ -1247,6 +1283,10 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockTaskService.getIdentityLinksForTask(task.getId())).andReturn(new ArrayList<>());
         expect(mockParticipantDao.findParticipantsForObject("TASK", taskId)).andReturn(partList);
         expect(mockAcmContainerDao.findByObjectTypeAndIdOrCreate(objectTypeTask, taskId, null, title)).andReturn(mockAcmContainer);
+
+        expect(mockFileService.getOrCreateContainer("TASK", reviewTask.getTaskId(), "alfresco")).andReturn(container);
+        mockFileParticipantService.inheritParticipantsFromAssignedObject(reviewTask.getParticipants(), new ArrayList<>(), container, false);
+
 
         replayAll();
 
