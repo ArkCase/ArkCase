@@ -65,7 +65,7 @@ public class ChangeCaseStatusWorkflowListener implements ApplicationListener<Cha
             catch (AcmUserActionFailedException | AcmCreateObjectFailedException e)
             {
                 // Nothing we can do at this point, just log the error
-                LOG.error(String.format("Error during task creation"));
+                throw new RuntimeException("Error caused while starting business process", e);
             }
         }
     }

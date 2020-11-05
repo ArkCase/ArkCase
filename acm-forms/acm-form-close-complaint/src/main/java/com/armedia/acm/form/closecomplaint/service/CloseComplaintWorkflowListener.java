@@ -67,7 +67,7 @@ public class CloseComplaintWorkflowListener implements ApplicationListener<Close
             catch (AcmCreateObjectFailedException | AcmUserActionFailedException e)
             {
                 // Nothing we can do at this point, just log the error
-                log.error(String.format("Error caused while starting business process"));
+                throw new RuntimeException("Error caused while starting business process", e);
             }
         }
     }
