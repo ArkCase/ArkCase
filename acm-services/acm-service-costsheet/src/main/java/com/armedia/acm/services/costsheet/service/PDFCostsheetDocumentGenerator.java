@@ -6,22 +6,22 @@ package com.armedia.acm.services.costsheet.service;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
@@ -29,10 +29,13 @@ package com.armedia.acm.services.costsheet.service;
 
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.ecm.service.PDFDocumentGenerator;
+import com.armedia.acm.services.config.lookups.model.StandardLookupEntry;
+import com.armedia.acm.services.config.lookups.service.LookupDao;
 import com.armedia.acm.services.costsheet.model.AcmCost;
 import com.armedia.acm.services.costsheet.model.AcmCostsheet;
 import com.armedia.acm.services.costsheet.model.CostsheetConstants;
 import com.armedia.acm.services.costsheet.pipeline.CostsheetPipelineContext;
+import com.armedia.acm.services.labels.service.TranslationService;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.pipeline.AbstractPipelineContext;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
@@ -52,6 +55,9 @@ import java.util.List;
 public class PDFCostsheetDocumentGenerator<D extends AcmAbstractDao, T extends AcmCostsheet> extends PDFDocumentGenerator
 {
     private D dao;
+    private LookupDao lookupDao;
+    private TranslationService translationService;
+
 
     public void generatePdf(Long costsheetId, CostsheetPipelineContext ctx) throws ParserConfigurationException, PipelineProcessException
     {
@@ -78,11 +84,21 @@ public class PDFCostsheetDocumentGenerator<D extends AcmAbstractDao, T extends A
 
         AcmCostsheet costsheet = (AcmCostsheet) businessObject;
 
+        List<StandardLookupEntry> lookupEntries = (List<StandardLookupEntry>) getLookupDao().getLookupByName("costsheetTypes")
+                .getEntries();
+
+        String labelKey = lookupEntries.stream()
+                .filter(standardLookupEntry -> standardLookupEntry.getKey().equals(costsheet.getParentType()))
+                .findFirst()
+                .map(StandardLookupEntry::getValue)
+                .orElse(null);
+
+        String costsheetLabel = translationService.translate(labelKey);
+
         addElement(document, rootElem, "user", costsheet.getUser().getFullName(), true);
         addElement(document, rootElem, "status", StringUtils.capitalize(costsheet.getStatus().toLowerCase()), true);
-        addElement(document, rootElem, "type", StringUtils.capitalize(costsheet.getParentType().toLowerCase()), true);
+        addElement(document, rootElem, "type", StringUtils.capitalize(costsheetLabel), true);
         addElement(document, rootElem, "code", costsheet.getParentNumber(), true);
-
         addElement(document, rootElem, "details", costsheet.getDetails() != null ? Jsoup.parse(costsheet.getDetails()).text() : "N/A", false);
 
         if (!costsheet.getCosts().isEmpty())
@@ -145,5 +161,21 @@ public class PDFCostsheetDocumentGenerator<D extends AcmAbstractDao, T extends A
     public void setDao(D dao)
     {
         this.dao = dao;
+    }
+
+    public LookupDao getLookupDao() {
+        return lookupDao;
+    }
+
+    public void setLookupDao(LookupDao lookupDao) {
+        this.lookupDao = lookupDao;
+    }
+
+    public TranslationService getTranslationService() {
+        return translationService;
+    }
+
+    public void setTranslationService(TranslationService translationService) {
+        this.translationService = translationService;
     }
 }
