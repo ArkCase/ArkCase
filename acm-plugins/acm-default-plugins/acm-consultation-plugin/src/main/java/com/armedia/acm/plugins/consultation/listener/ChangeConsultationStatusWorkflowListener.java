@@ -68,7 +68,7 @@ public class ChangeConsultationStatusWorkflowListener implements ApplicationList
             catch (AcmCreateObjectFailedException | AcmUserActionFailedException e)
             {
                 // Nothing we can do at this point, just log the error
-                LOG.error(String.format("Error caused while starting business process"));
+                throw new RuntimeException("Error caused while starting business process", e);
             }
         }
     }
