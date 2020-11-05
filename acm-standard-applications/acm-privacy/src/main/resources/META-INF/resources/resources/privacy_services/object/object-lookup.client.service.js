@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/object/object-lookup.client.service.js services/object/object-lookup.client.service.js}
+ * {@link /acm-standard-applications/arkcase/src/main/webapp/resources/services/object/object-lookup.client.service.js services/object/object-lookup.client.service.js}
 
  * LookupService contains functions to lookup data (typically static data).
  */

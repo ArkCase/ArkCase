@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/cases/services/case-info.client.service.js modules/cases/services/case-info.client.service.js}
+ * {@link /acm-standard-applications/arkcase/src/main/webapp/resources/modules/cases/services/case-info.client.service.js modules/cases/services/case-info.client.service.js}
  *
  * Case.InfoService provides functions for Case database data
  */
