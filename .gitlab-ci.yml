@@ -49,7 +49,7 @@ stages:
     - echo '</settings>' >> /root/.m2/settings.xml
     - export MAVEN_OPTS="-Xmx2048M -Xss256M -XX:MetaspaceSize=2048M -XX:+CMSClassUnloadingEnabled"
     - mvn -DskipITs -T 4 -B deploy "-DaltDeploymentRepository=arkcase.snapshot::default::$NEXUS_URL/repository/arkcase.snapshot/"
-    - sshpass -e sftp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $SFTP_USER@$SFTP_SERVER <<< $'put acm-standard-applications/acm-law-enforcement/target/*.war /from-arkcase/arkcase.war' 
+    - sshpass -e sftp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $SFTP_USER@$SFTP_SERVER <<< $'put acm-standard-applications/arkcase/target/*.war /from-arkcase/arkcase.war' 
  
 .build_artifact:
   stage: build
@@ -137,11 +137,11 @@ start_security_scan:
     - echo "veracode_api_key_id = $VERACODE_API_KEY" >> credentials
     - echo "veracode_api_key_secret = $VERACODE_API_SECRET" >> credentials
     # get arkcase.war version from Nexus
-    - mvn -B dependency:get -DremoteRepositories=$NEXUS_URL/repository/$ARKCASE_REPOSITORY -DgroupId=com.armedia.acm.acm-standard-applications -DartifactId=acm-law-enforcement -Dversion=$ARKCASE_VERSION -Dpackaging=war -Dtransitive=false
+    - mvn -B dependency:get -DremoteRepositories=$NEXUS_URL/repository/$ARKCASE_REPOSITORY -DgroupId=com.armedia.acm.acm-standard-applications -DartifactId=arkcase -Dversion=$ARKCASE_VERSION -Dpackaging=war -Dtransitive=false
     - find ~/.m2/repository/com/armedia/acm -name _remote.repositories -exec rm -v {} \;
-    - mvn -B dependency:copy -Dartifact=com.armedia.acm.acm-standard-applications:acm-law-enforcement:$ARKCASE_VERSION:war -DoutputDirectory=.
+    - mvn -B dependency:copy -Dartifact=com.armedia.acm.acm-standard-applications:arkcase:$ARKCASE_VERSION:war -DoutputDirectory=.
     # Upload war
-    - 'curl -k --compressed -H "Authorization: $(./vcodeHMAC-CLI_linux -credsFile credentials -url https://analysiscenter.veracode.com/api/5.0/uploadfile.do -method POST)" https://analysiscenter.veracode.com/api/5.0/uploadfile.do -F "app_id=529559" -F "file=@acm-law-enforcement-$ARKCASE_VERSION.war"'
+    - 'curl -k --compressed -H "Authorization: $(./vcodeHMAC-CLI_linux -credsFile credentials -url https://analysiscenter.veracode.com/api/5.0/uploadfile.do -method POST)" https://analysiscenter.veracode.com/api/5.0/uploadfile.do -F "app_id=529559" -F "file=@arkcase-$ARKCASE_VERSION.war"'
     # Begin static scan
     - 'curl -k --compressed -H "Authorization: $(./vcodeHMAC-CLI_linux -credsFile credentials -url https://analysiscenter.veracode.com/api/5.0/beginprescan.do -method POST)" https://analysiscenter.veracode.com/api/5.0/beginprescan.do -F "app_id=529559"'
     # Start Software Composition Analysis
