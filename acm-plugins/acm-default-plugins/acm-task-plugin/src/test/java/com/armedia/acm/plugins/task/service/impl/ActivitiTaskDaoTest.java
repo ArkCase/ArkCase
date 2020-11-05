@@ -184,7 +184,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         unit.setRequiredFieldsPerOutcomeMap(new HashMap<>());
         unit.setTaskEventPublisher(mockTaskEventPublisher);
         unit.setContainerFolderDao(mockAcmContainerDao);
-        unit.setFileService(mockFileService);
+        unit.setEcmFileService(mockFileService);
         unit.setFileParticipantService(mockFileParticipantService);
         unit.setAcmBpmnService(mockAcmBpmnService);
         //
@@ -1204,20 +1204,11 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         Task task = new TaskEntity(taskId.toString());
 
         AcmTask reviewTask = new AcmTask();
+        reviewTask.setTaskId(taskId);
         reviewTask.setRestricted(false);
         reviewTask.setParentObjectId(500L);
         reviewTask.setParentObjectType("CASE_FILE");
-
-        AcmParticipant acmParticipant = new AcmParticipant();
-        acmParticipant.setId(222L);
-        acmParticipant.setObjectType("objectType");
-        acmParticipant.setObjectId(223L);
-        acmParticipant.setParticipantType("participantType");
-        acmParticipant.setParticipantLdapId("ldapType");
-
-        List<AcmParticipant> acmParticipants = new ArrayList<>();
-        acmParticipants.add(acmParticipant);
-        reviewTask.setParticipants(acmParticipants);
+        reviewTask.setParticipants(partList);
 
         String cmisRepositoryId = "cmisRepositoryId";
         String cmisFolderId = "cmisFolderId";
@@ -1230,6 +1221,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         AcmFolder newFolder = new AcmFolder();
         newFolder.setCmisFolderId(cmisFolderId);
         newFolder.setCmisRepositoryId(cmisRepositoryId);
+        newFolder.setParticipants(partList);
         newFolder.setName(EcmFileConstants.CONTAINER_FOLDER_NAME);
         container.setFolder(newFolder);
         container.setAttachmentFolder(newFolder);
@@ -1284,8 +1276,8 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockParticipantDao.findParticipantsForObject("TASK", taskId)).andReturn(partList);
         expect(mockAcmContainerDao.findByObjectTypeAndIdOrCreate(objectTypeTask, taskId, null, title)).andReturn(mockAcmContainer);
 
-        expect(mockFileService.getOrCreateContainer("TASK", reviewTask.getTaskId(), "alfresco")).andReturn(container);
-        mockFileParticipantService.inheritParticipantsFromAssignedObject(reviewTask.getParticipants(), new ArrayList<>(), container, false);
+        expect(mockFileService.getOrCreateContainer("TASK", reviewTask.getTaskId())).andReturn(container);
+        mockFileParticipantService.inheritParticipantsFromAssignedObject(reviewTask.getParticipants(), newFolder.getParticipants(), container, false);
 
 
         replayAll();
