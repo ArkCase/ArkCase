@@ -390,8 +390,41 @@
         ],
         "folder": [
           {
+            "___title": "New Folder <kbd>Ctrl+N</kbd>",
+            "titleKey": "common.directive.docTree.menu.newFolder",
+            "cmd": "newFolder",
+            "uiIcon": "ui-icon-plus"
+          },
+          {
+            "titleKey": "common.directive.docTree.menu.newDocument",
+            "cmd": "subMenuFileTypes"
+          },
+          {
+            "titleKey": "common.directive.docTree.menu.newCorrespondence",
+            "cmd": "subMenuCorrespondenceForms"
+          },
+          {
+            "title": "----"
+          },
+          {
             "title": "Participants",
             "cmd": "showParticipants"
+          },
+          {
+            "title": "----"
+          },
+          {
+            "___title": "Paste <kbd>Ctrl+V</kbd>",
+            "titleKey": "common.directive.docTree.menu.paste",
+            "cmd": "paste",
+            "uiIcon": "ui-icon-clipboard",
+            "disabled": true
+          },
+          {
+            "titleKey": "common.directive.docTree.menu.pasteAsLink",
+            "cmd": "pasteAsLink",
+            "uiIcon": "ui-icon-link",
+            "disabled": true
           },
           {
             "title": "----"

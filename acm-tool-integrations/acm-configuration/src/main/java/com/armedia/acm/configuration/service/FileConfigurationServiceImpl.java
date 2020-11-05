@@ -65,6 +65,8 @@ public class FileConfigurationServiceImpl implements FileConfigurationService
 
     private static final String RULES_EXTENSION = "xlsx";
 
+    private static final String STYLESHEET_EXTENSION = "xsl";
+
     private static final Logger log = LogManager.getLogger(FileConfigurationServiceImpl.class);
 
     @Override
@@ -109,12 +111,18 @@ public class FileConfigurationServiceImpl implements FileConfigurationService
     @JmsListener(destination = "VirtualTopic.ConfigFileUpdated", containerFactory = "jmsTopicListenerContainerFactory")
     public void downloadFileFromConfiguration(Message message) throws IOException
     {
-        if (message.getPayload().toString().toLowerCase().contains("." + RULES_EXTENSION))
+        String fileName = message.getPayload().toString();
+        if (fileName.contains("." + RULES_EXTENSION))
         {
             // Rules files are not copied.
             return;
         }
-        getFileFromConfiguration(message.getPayload().toString(), customFilesLocation);
+        if (fileName.contains("." + STYLESHEET_EXTENSION))
+        {
+            // PDF stylesheet files are not copied.
+            return;
+        }
+        getFileFromConfiguration(fileName, customFilesLocation);
     }
 
     @Override

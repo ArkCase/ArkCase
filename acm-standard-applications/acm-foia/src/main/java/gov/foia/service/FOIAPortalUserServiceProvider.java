@@ -55,7 +55,9 @@ import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
+import com.armedia.acm.services.users.model.ldap.MapperUtils;
 import com.armedia.acm.services.users.model.ldap.UserDTO;
 import com.armedia.acm.services.users.service.AcmUserEventPublisher;
 import com.armedia.acm.services.users.service.ldap.LdapAuthenticateService;
@@ -168,7 +170,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     public UserRegistrationResponse requestRegistration(String portalId, UserRegistrationRequest registrationRequest)
             throws PortalUserServiceException
     {
-        if (getPortalAcmUser(registrationRequest.getEmailAddress()) != null)
+        if (getPortalAcmUser(registrationRequest.getEmailAddress()) != null && isAcmUserValid(registrationRequest.getEmailAddress()))
         {
             return UserRegistrationResponse.exists();
         }
@@ -180,7 +182,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         {
             return UserRegistrationResponse.rejected();
         }
-        else if (registeredPerson.isPresent() && registeredPerson.get().getPortalRoles().containsKey(portalId))
+        else if (registeredPerson.isPresent() && registeredPerson.get().getPortalRoles().containsKey(portalId) && isAcmUserValid(registrationRequest.getEmailAddress()))
         {
             return UserRegistrationResponse.exists();
         }
@@ -273,6 +275,12 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         return registrationTime + REGISTRATION_EXPIRATION > System.currentTimeMillis();
     }
 
+    private boolean isAcmUserValid(String emailAddress)
+    {
+        Optional<AcmUser>acmUser = userDao.findByEmailAddress(emailAddress).stream().findFirst();
+        return acmUser.isPresent() && acmUser.get().getUserState() == AcmUserState.VALID;
+    }
+
     /*
      * (non-Javadoc)
      * @see com.armedia.acm.portalgateway.service.PortalUserServiceProvider#registerUser(java.lang.String,
@@ -284,7 +292,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
             throws PortalUserServiceException
     {
         String key = user.getEmail();
-        if (getPortalAcmUser(key) != null)
+        if (getPortalAcmUser(key) != null && isAcmUserValid(key))
         {
             return UserRegistrationResponse.exists();
         }
@@ -295,7 +303,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         {
             return UserRegistrationResponse.rejected();
         }
-        else if (registeredPerson.isPresent() && registeredPerson.get().getPortalRoles().containsKey(portalId))
+        else if (registeredPerson.isPresent() && registeredPerson.get().getPortalRoles().containsKey(portalId) && isAcmUserValid(key))
         {
             return UserRegistrationResponse.exists();
         }
@@ -422,17 +430,38 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         return resetRequest;
     }
 
+    private static String stripPrefixAndSuffix(String userId)
+    {
+        String stripedUserId = StringUtils.substringAfter(userId, ".");
+        stripedUserId = StringUtils.substringBeforeLast(stripedUserId, "@");
+        return stripedUserId;
+    }
+
     public void createPortalUser(String portalId, PortalUser user, PortalFOIAPerson person, String password)
             throws PortalUserServiceException
     {
         try
         {
             PortalInfo portalInfo = portalInfoDAO.findByPortalId(portalId);
+            AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directoryName);
             UserDTO userDto = userDTOFromPortalUser(user,
                     password != null ? new String(Base64Utils.decodeFromString(password), Charset.forName("UTF-8")) : null,
                     portalInfo.getGroup().getName());
             portalPersonDao.save(person);
-            AcmUser acmUser = ldapUserService.createLdapUser(userDto, directoryName);
+            Optional<AcmUser> foundAcmUser = userDao.findByEmailAddress(user.getEmail()).stream().findFirst();
+            AcmUser acmUser;
+            if (foundAcmUser.isPresent() && foundAcmUser.get().getUserState() == AcmUserState.INVALID)
+            {
+                userDto.setUserId(stripPrefixAndSuffix(foundAcmUser.get().getUserId()));
+            }
+            else
+            {
+                if (ldapSyncConfig.isAutoGenerateUserId())
+                {
+                    userDto.setUserId(MapperUtils.generateAutoUsername(ldapSyncConfig.getUserPrefix()));
+                }
+            }
+            acmUser = ldapUserService.createLdapUser(userDto, directoryName);
             getRequestAssignmentService().addPortalUserAsParticipantToExistingRequests(acmUser, person);
             acmUserEventPublisher.getApplicationEventPublisher().publishEvent(new AcmLdapSyncEvent(acmUser.getUserId()));
         }
