@@ -60,13 +60,16 @@ public class WindowsEventLogger implements ISystemLogger
         {
 
             CommandLine commandToBeExecuted = new CommandLine("eventcreate");
-            commandToBeExecuted.addArgument(" /l APPLICATION", false);
-            commandToBeExecuted.addArgument(" /so ", false);
-            commandToBeExecuted.addArgument(applicationConfig.getApplicationName(), true);
-            commandToBeExecuted.addArgument(" /t " + level, false);
-            commandToBeExecuted.addArgument(" /id " + auditConfig.getSystemLogWindowsEventLogEventId(), false);
-            commandToBeExecuted.addArgument(" /d ", false);
-            commandToBeExecuted.addArgument(message, true);
+            commandToBeExecuted.addArgument(" /l ");
+            commandToBeExecuted.addArgument(" APPLICATION");
+            commandToBeExecuted.addArgument(" /so ");
+            commandToBeExecuted.addArgument(applicationConfig.getApplicationName());
+            commandToBeExecuted.addArgument(" /t ");
+            commandToBeExecuted.addArgument(level);
+            commandToBeExecuted.addArgument(" /id ");
+            commandToBeExecuted.addArgument(auditConfig.getSystemLogWindowsEventLogEventId().toString());
+            commandToBeExecuted.addArgument(" /d ");
+            commandToBeExecuted.addArgument(message);
             DefaultExecutor executor = new DefaultExecutor();
             executor.execute(commandToBeExecuted);
             executor.wait();
