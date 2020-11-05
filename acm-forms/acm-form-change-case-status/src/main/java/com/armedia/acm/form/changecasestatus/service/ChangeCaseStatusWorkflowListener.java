@@ -69,8 +69,8 @@ public class ChangeCaseStatusWorkflowListener implements ApplicationListener<Cha
             }
             catch (AcmCreateObjectFailedException | AcmUserActionFailedException e)
             {
-                // Nothing we can do at this point, just log the error
-                throw new RuntimeException("Error caused while starting business process", e);
+                // Nothing we can do at this point, just rethrow error
+                throw new RuntimeException("Error caused while starting business process ChangeCaseStatus", e);
             }
         }
     }
