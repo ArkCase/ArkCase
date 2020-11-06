@@ -130,6 +130,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
     private AcmContainer mockAcmContainer;
 
     private EcmFileService mockFileService;
+    private EcmFileService mockEcmFileService;
     private EcmFileParticipantService mockFileParticipantService;
     private AcmBpmnService mockAcmBpmnService;
 
@@ -166,6 +167,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         mockAcmContainerDao = createMock(AcmContainerDao.class);
         mockAcmContainer = createMock(AcmContainer.class);
         mockFileService = createMock(EcmFileService.class);
+        mockEcmFileService = createMock(EcmFileService.class);
         mockAcmBpmnService = createMock(AcmBpmnService.class);
         mockFileParticipantService = createMock(EcmFileParticipantService.class);
         unit = new ActivitiTaskDao();
@@ -184,7 +186,8 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         unit.setRequiredFieldsPerOutcomeMap(new HashMap<>());
         unit.setTaskEventPublisher(mockTaskEventPublisher);
         unit.setContainerFolderDao(mockAcmContainerDao);
-        unit.setEcmFileService(mockFileService);
+        unit.setFileService(mockFileService);
+        unit.setEcmFileService(mockEcmFileService);
         unit.setFileParticipantService(mockFileParticipantService);
         unit.setAcmBpmnService(mockAcmBpmnService);
         //
@@ -1276,7 +1279,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockParticipantDao.findParticipantsForObject("TASK", taskId)).andReturn(partList);
         expect(mockAcmContainerDao.findByObjectTypeAndIdOrCreate(objectTypeTask, taskId, null, title)).andReturn(mockAcmContainer);
 
-        expect(mockFileService.getOrCreateContainer("TASK", reviewTask.getTaskId())).andReturn(container);
+        expect(mockEcmFileService.getOrCreateContainer("TASK", reviewTask.getTaskId())).andReturn(container);
         mockFileParticipantService.inheritParticipantsFromAssignedObject(reviewTask.getParticipants(), newFolder.getParticipants(), container, false);
 
 
