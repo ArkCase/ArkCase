@@ -27,10 +27,6 @@ package com.armedia.acm.plugins.task.service.impl;
  * #L%
  */
 
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.data.service.AcmDataService;
@@ -40,10 +36,11 @@ import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.plugins.ecm.service.impl.EcmFileParticipantService;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.service.TaskDao;
-
+import com.armedia.acm.services.participants.model.AcmParticipant;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -56,6 +53,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by vladimir.radeski on 11/22/2017.
@@ -73,6 +74,7 @@ public class AcmTaskServiceImplTest extends EasyMockSupport
     private AcmFolder mockAcmFolder;
     private AcmFolderService mockAcmFolderService;
     private AcmFolder mockAcmDocUnderReviewFolder;
+    private EcmFileParticipantService mockEcmFileParticipantService;
 
 
     @Autowired
@@ -92,11 +94,13 @@ public class AcmTaskServiceImplTest extends EasyMockSupport
         mockAcmFolder = createMock(AcmFolder.class);
         mockAcmFolderService = createMock(AcmFolderService.class);
         mockAcmDocUnderReviewFolder = createMock(AcmFolder.class);
+        mockEcmFileParticipantService = createMock(EcmFileParticipantService.class);
 
         acmTaskService.setTaskDao(mockTaskDao);
         acmTaskService.setEcmFileService(mockEcmFileService);
         acmTaskService.setAcmDataService(mockAcmDataService);
         acmTaskService.setAcmFolderService(mockAcmFolderService);
+        acmTaskService.setFileParticipantService(mockEcmFileParticipantService);
 
     }
 
@@ -137,11 +141,23 @@ public class AcmTaskServiceImplTest extends EasyMockSupport
         reviewTask.setDetails("Details");
         reviewTask.setParentObjectType("COMPLAINT");
         reviewTask.setParentObjectId(500L);
+        reviewTask.setRestricted(false);
         String taskFolderName = "Task-" + reviewTask.getTitle() + "-" + reviewTask.getId();
 
         Long parentFolderId = 100L;
         Long destinationFolderId = 1500L;
         Long docUnderReviewFolderId = 2000L;
+
+        AcmParticipant acmParticipant = new AcmParticipant();
+        acmParticipant.setId(222L);
+        acmParticipant.setObjectType("objectType");
+        acmParticipant.setObjectId(223L);
+        acmParticipant.setParticipantType("participantType");
+        acmParticipant.setParticipantLdapId("ldapType");
+
+        List<AcmParticipant> acmParticipants = new ArrayList<>();
+        acmParticipants.add(acmParticipant);
+        reviewTask.setParticipants(acmParticipants);
 
         AcmFolder originalFolder = new AcmFolder();
         originalFolder.setId(1000L);
@@ -175,11 +191,8 @@ public class AcmTaskServiceImplTest extends EasyMockSupport
 
         String documentsUnderReviewFolderName = "Documents Under Review";
 
-
         expect(mockAuthentication.getName()).andReturn("assignee").atLeastOnce();
         expect(mockTaskDao.startBusinessProcess(pVars, businessProcessName)).andReturn(reviewTask);
-        expect(mockEcmFileService.getOrCreateContainer(reviewTask.getObjectType(),
-                reviewTask.getTaskId())).andReturn(taskContainer);
 
         expect(mockAcmContainer.getFolder()).andReturn(mockAcmParentFolder);
         expect(mockAcmParentFolder.getId()).andReturn(parentFolderId);
