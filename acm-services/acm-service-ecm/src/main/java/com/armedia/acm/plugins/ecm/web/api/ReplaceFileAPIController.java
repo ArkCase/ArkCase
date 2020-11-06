@@ -93,6 +93,13 @@ public class ReplaceFileAPIController
             throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_REPLACE_FILE, EcmFileConstants.OBJECT_FILE_TYPE,
                     fileToBeReplacedId, "File not found.", null);
         }
+        else if (fileToBeReplaced.getStatus().equals(EcmFileConstants.RECORD))
+        {
+            log.debug("File, fileId: {} is a record and cannot be replaced", fileToBeReplacedId);
+            getFileEventPublisher().publishFileReplacedEvent(fileToBeReplaced, null, authentication, ipAddress, false);
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_REPLACE_FILE, EcmFileConstants.OBJECT_FILE_TYPE,
+                    fileToBeReplacedId, "File is record.", null);
+        }
 
         EcmFileVersion fileToBeReplacedVersion = getFolderAndFilesUtils().getVersion(fileToBeReplaced,
                 fileToBeReplaced.getActiveVersionTag());
