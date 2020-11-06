@@ -80,6 +80,11 @@ public class FirstAssigneeOwningGroupNotify implements ApplicationListener<CaseE
                         emailAddresses.remove(assigneeId);
                     }
                 }
+                else
+                {
+                    assigneeId = owningGroupId;
+                }
+
 
                 Notification notification = notificationService.getNotificationBuilder()
                         .newNotification("requestAssigned", NotificationConstants.REQUEST_ASSIGNED, event.getObjectType(),
