@@ -30,14 +30,14 @@ package com.armedia.acm.form.changecasestatus.service;
  * #L%
  */
 
-import com.armedia.acm.activiti.services.AcmBpmnService;
+import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.form.changecasestatus.model.ChangeCaseStatusFormEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 import com.armedia.acm.plugins.ecm.workflow.EcmFileWorkflowConfiguration;
+import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.services.participants.model.AcmParticipant;
-
-import org.activiti.engine.runtime.ProcessInstance;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationListener;
@@ -56,18 +56,27 @@ public class ChangeCaseStatusWorkflowListener implements ApplicationListener<Cha
     private final Logger LOG = LogManager.getLogger(getClass());
     private FileWorkflowBusinessRule fileWorkflowBusinessRule;
     private String changeCaseStatusTaskName;
-    private AcmBpmnService acmBpmnService;
+    private TaskDao taskDao;
 
     @Override
     public void onApplicationEvent(ChangeCaseStatusFormEvent event)
     {
         if (!"edit".equals(event.getMode()))
         {
-            handleNewCloseCaseRequest(event);
+            try
+            {
+                handleNewCloseCaseRequest(event);
+            }
+            catch (AcmCreateObjectFailedException | AcmUserActionFailedException e)
+            {
+                // Nothing we can do at this point, just rethrow error
+                throw new RuntimeException("Error caused while starting business process ChangeCaseStatus", e);
+            }
         }
     }
 
     protected void handleNewCloseCaseRequest(ChangeCaseStatusFormEvent event)
+            throws AcmUserActionFailedException, AcmCreateObjectFailedException
     {
         EcmFile pdfRendition = event.getUploadedFiles().getPdfRendition();
         EcmFileWorkflowConfiguration configuration = new EcmFileWorkflowConfiguration();
@@ -86,11 +95,14 @@ public class ChangeCaseStatusWorkflowListener implements ApplicationListener<Cha
 
         if (configuration.isStartProcess())
         {
+
             startBusinessProcess(event, configuration);
+
         }
     }
 
     private void startBusinessProcess(ChangeCaseStatusFormEvent event, EcmFileWorkflowConfiguration configuration)
+            throws AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         String processName = configuration.getProcessName();
 
@@ -127,9 +139,7 @@ public class ChangeCaseStatusWorkflowListener implements ApplicationListener<Cha
 
         LOG.debug("Starting process: [{}]", processName);
 
-        ProcessInstance pi = getAcmBpmnService().startBusinessProcess(processName, pvars);
-
-        LOG.debug("Process ID: [{}]", pi.getId());
+        getTaskDao().startBusinessProcess(pvars, processName);
     }
 
     private List<String> findReviewers(ChangeCaseStatusFormEvent event)
@@ -167,13 +177,13 @@ public class ChangeCaseStatusWorkflowListener implements ApplicationListener<Cha
         this.changeCaseStatusTaskName = changeCaseStatusTaskName;
     }
 
-    public AcmBpmnService getAcmBpmnService()
+    public TaskDao getTaskDao()
     {
-        return acmBpmnService;
+        return taskDao;
     }
 
-    public void setAcmBpmnService(AcmBpmnService acmBpmnService)
+    public void setTaskDao(TaskDao taskDao)
     {
-        this.acmBpmnService = acmBpmnService;
+        this.taskDao = taskDao;
     }
 }

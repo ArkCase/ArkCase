@@ -354,6 +354,9 @@ angular.module('directives').directive(
                                         if (DocTree.readOnly) {
                                             return false;
                                         }
+                                        if ("RECORD" === Util.goodValue(node.data.status)) {
+                                            return false;
+                                        }
                                         if (DocTree.isTopNode(data.node) || DocTree.isSpecialNode(data.node)) {
                                             return false;
                                         }
