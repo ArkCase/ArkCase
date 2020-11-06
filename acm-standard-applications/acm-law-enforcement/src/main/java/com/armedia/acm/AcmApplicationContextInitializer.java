@@ -61,7 +61,12 @@ public class AcmApplicationContextInitializer implements
         System.setProperty("application.profile", properties.getProperty("application.profile"));
         System.setProperty("application.profile.reversed",
                 AuditPatternsSubstitution.getProfilesReversed(properties.getProperty("application.profile")));
-        System.setProperty("configuration.client.rules.path", properties.getProperty("configuration.client.rules.path"));
+        System.setProperty("configuration.client.branding.path", properties.getProperty("configuration.client.branding.path"));
+        System.setProperty("configuration.client.labels.path", properties.getProperty("configuration.client.labels.path"));
+        System.setProperty("configuration.client.ldap.path", properties.getProperty("configuration.client.ldap.path"));
+        System.setProperty("configuration.client.lookups.path", properties.getProperty("configuration.client.lookups.path"));
         System.setProperty("configuration.client.stylesheets.path", properties.getProperty("configuration.client.stylesheets.path"));
+        System.setProperty("configuration.client.rules.path", properties.getProperty("configuration.client.rules.path"));
+        System.setProperty("configuration.client.spring.path", properties.getProperty("configuration.client.spring.path"));
     }
 }
