@@ -1165,7 +1165,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
     private MultipartFile getMultipartFromEcmFile(EcmFile ecmFile) throws Exception
     {
-        Document cmisDoc = (Document) findObjectById(ecmFile.getCmisRepositoryId(), ecmFile.getVersionSeriesId());
+        String activeVersionSeriesId = ecmFile.getVersionSeriesId() + ";" + ecmFile.getActiveVersionTag();
+        Document cmisDoc = (Document) findObjectById(ecmFile.getCmisRepositoryId(), activeVersionSeriesId);
 
         InputStream inputStream = cmisDoc.getContentStream().getStream();
         byte[] content = IOUtils.toByteArray(inputStream);
