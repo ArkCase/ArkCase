@@ -135,7 +135,7 @@ public class DeleteFolderAPIController
             log.debug("Folder with id: [{}] not found in the DB", folderId);
             return prepareResult(AcmFolderConstants.SUCCESS_FOLDER_DELETE_MSG, folderId);
         }
-        catch (AcmUserActionFailedException | AcmFolderException | AcmCreateObjectFailedException e)
+        catch (AcmFolderException | AcmCreateObjectFailedException e)
         {
             getRecycleBinItemEventPublisher().publishFolderMovedToRecycleBinEvent(source, authentication, ipAddress, false);
             log.error("Exception occurred while trying to move folder with id: [{}] to recycle bin, Reason [{}]", folderId,

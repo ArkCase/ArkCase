@@ -6,9 +6,9 @@ angular.module('document-details').controller(
             'Object.LockingService', 'ObjectService', '$log', 'Dialog.BootboxService', '$translate', 'ArkCaseCrossWindowMessagingService', 'Object.LookupService', 'Case.InfoService', 'FileEditingEnabled',
             function ($rootScope, $scope, $stateParams, $sce, $q, $timeout, $window, $modal, TicketService, ConfigService, LookupService, SnowboundService, Authentication, EcmService, LocaleHelper, TranscriptionManagementService, MessageService, Util, UtilTimerService, ObjectLockingService, ObjectService, $log, DialogService, $translate, ArkCaseCrossWindowMessagingService, ObjectLookupService, CaseInfoService, FileEditingEnabled) {
 
-                    new LocaleHelper.Locale({
-                        scope: $scope
-                    });
+                new LocaleHelper.Locale({
+                    scope: $scope
+                });
 
                 $scope.fileEditingEnabled = false;
 
@@ -16,82 +16,85 @@ angular.module('document-details').controller(
                     $scope.fileEditingEnabled = response.data;
                 });
 
+                $scope.showEditingButton = function () {
+                    return $scope.fileInfo.status !== 'RECORD' && !$scope.editingMode && $scope.fileEditingEnabled;
+                };
 
                 $scope.viewerOnly = false;
-                    var userPrivilegesPromise =  Authentication.getUserPrivileges();
-                    $scope.documentExpand = function() {
-                        $scope.viewerOnly = true;
-                    };
-                    $scope.documentCompress = function() {
+                var userPrivilegesPromise = Authentication.getUserPrivileges();
+                $scope.documentExpand = function () {
+                    $scope.viewerOnly = true;
+                };
+                $scope.documentCompress = function () {
+                    $scope.viewerOnly = false;
+                };
+                $scope.checkEscape = function (event) {
+                    if (27 == event.keyCode) { // 27 is Escape key code
                         $scope.viewerOnly = false;
-                    };
-                    $scope.checkEscape = function(event) {
-                        if (27 == event.keyCode) { // 27 is Escape key code
-                            $scope.viewerOnly = false;
-                        }
-                    };
-
-                    $scope.videoAPI = null;
-
-                    $scope.videoExpand = function() {
-                        if (!Util.isEmpty($scope.videoAPI)) {
-                            $scope.videoAPI.toggleFullScreen();
-                        }
-                    };
-
-                    $scope.showFailureMessage = function showFailureMessage() {
-                        DialogService.alert($scope.transcribeObjectModel.failureReason.split(".", 1));
                     }
+                };
 
-                     function onShowLoader() {
-                         var loaderModal = $modal.open({
-                             animation: true,
-                             templateUrl: 'modules/common/views/object.modal.loading-spinner.html',
-                             size: 'sm',
-                             backdrop: 'static'
-                         });
-                         $scope.loaderModal = loaderModal;
-                         $scope.loaderOpened = true;
-                     }
+                $scope.videoAPI = null;
 
-                    function onHideLoader() {
-                        $scope.loaderModal.close();
-                        $scope.loaderOpened = false;
+                $scope.videoExpand = function () {
+                    if (!Util.isEmpty($scope.videoAPI)) {
+                        $scope.videoAPI.toggleFullScreen();
                     }
+                };
 
-                    $scope.iframeLoaded = function() {
-                        ArkCaseCrossWindowMessagingService.addHandler('show-loader', onShowLoader);
-                        ArkCaseCrossWindowMessagingService.addHandler('hide-loader', onHideLoader);
+                $scope.showFailureMessage = function showFailureMessage() {
+                    DialogService.alert($scope.transcribeObjectModel.failureReason.split(".", 1));
+                }
 
-                        ObjectLookupService.getLookupByLookupName("annotationTags").then(function (allAnnotationTags) {
-                            $scope.allAnnotationTags = allAnnotationTags;
-                            ArkCaseCrossWindowMessagingService.addHandler('select-annotation-tags', onSelectAnnotationTags);
-                            ArkCaseCrossWindowMessagingService.start('snowbound', $scope.ecmFileProperties['ecm.viewer.snowbound']);
-                        });
-                        onHideLoader();
-                    };
+                function onShowLoader() {
+                    var loaderModal = $modal.open({
+                        animation: true,
+                        templateUrl: 'modules/common/views/object.modal.loading-spinner.html',
+                        size: 'sm',
+                        backdrop: 'static'
+                    });
+                    $scope.loaderModal = loaderModal;
+                    $scope.loaderOpened = true;
+                }
 
-                    function onSelectAnnotationTags(data) {
-                        var params = $scope.allAnnotationTags;
-                        // from Snowbound v5.2 we have data.selectedAnnotations
-                        if (data.selectedAnnotations) {
-                            params.annotationTags = $scope.allAnnotationTags;
-                            params.existingAnnotationTags = data.selectedAnnotations;
-                        }
-                        var modalInstance = $modal.open({
-                            animation: true,
-                            templateUrl: 'modules/document-details/views/components/annotation-tags-modal.client.view.html',
-                            controller: 'Document.AnnotationTagsModalController',
-                            backdrop: 'static',
-                            resolve: {
-                                params: function () {
-                                    return params;
-                                }
+                function onHideLoader() {
+                    $scope.loaderModal.close();
+                    $scope.loaderOpened = false;
+                }
+
+                $scope.iframeLoaded = function () {
+                    ArkCaseCrossWindowMessagingService.addHandler('show-loader', onShowLoader);
+                    ArkCaseCrossWindowMessagingService.addHandler('hide-loader', onHideLoader);
+
+                    ObjectLookupService.getLookupByLookupName("annotationTags").then(function (allAnnotationTags) {
+                        $scope.allAnnotationTags = allAnnotationTags;
+                        ArkCaseCrossWindowMessagingService.addHandler('select-annotation-tags', onSelectAnnotationTags);
+                        ArkCaseCrossWindowMessagingService.start('snowbound', $scope.ecmFileProperties['ecm.viewer.snowbound']);
+                    });
+                    onHideLoader();
+                };
+
+                function onSelectAnnotationTags(data) {
+                    var params = $scope.allAnnotationTags;
+                    // from Snowbound v5.2 we have data.selectedAnnotations
+                    if (data.selectedAnnotations) {
+                        params.annotationTags = $scope.allAnnotationTags;
+                        params.existingAnnotationTags = data.selectedAnnotations;
+                    }
+                    var modalInstance = $modal.open({
+                        animation: true,
+                        templateUrl: 'modules/document-details/views/components/annotation-tags-modal.client.view.html',
+                        controller: 'Document.AnnotationTagsModalController',
+                        backdrop: 'static',
+                        resolve: {
+                            params: function () {
+                                return params;
                             }
-                        });
+                        }
+                    });
 
-                        modalInstance.result.then(function(result) {
-                            var message = {
+                    modalInstance.result.then(function (result) {
+                        var message = {
                                 source: 'arkcase',
                                 action: 'add-annotation-tags',
                                 data: {
@@ -120,7 +123,8 @@ angular.module('document-details').controller(
                         containerId: $stateParams['containerId'],
                         containerType: $stateParams['containerType'],
                         name: $stateParams['name'],
-                        selectedIds: $stateParams['selectedIds']
+                        selectedIds: $stateParams['selectedIds'],
+                        status: $stateParams['documentStatus']
                     };
                 $scope.showVideoPlayer = false;
                 $scope.showPdfJs = false;
