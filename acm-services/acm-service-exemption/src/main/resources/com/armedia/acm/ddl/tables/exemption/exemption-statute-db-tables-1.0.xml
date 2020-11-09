@@ -17,9 +17,6 @@
             <column name="cm_exemption_creator" type="VARCHAR(1024)"></column>
             <column name="cm_file_id" type="${idType}"></column>
             <column name="cm_file_version" type="VARCHAR(10)" defaultValue="0.0"></column>
-            <column name="cm_manually_flag" type="BOOLEAN" defaultValueBoolean="false">
-                <constraints nullable="false"/>
-            </column>
             <column name="cm_exemption_modified" type="${timestampType}"></column>
             <column name="cm_exemption_modifier" type="VARCHAR(1024)"></column>
         </createTable>
@@ -40,9 +37,6 @@
             <column name="cm_exemption_creator" type="TEXT"></column>
             <column name="cm_file_id" type="${idType}"></column>
             <column name="cm_file_version" type="TEXT" defaultValue="0.0"></column>
-            <column name="cm_manually_flag" type="BOOLEAN" defaultValueBoolean="false">
-                <constraints nullable="false"/>
-            </column>
             <column name="cm_exemption_modified" type="${timestampType}"></column>
             <column name="cm_exemption_modifier" type="TEXT"></column>
         </createTable>

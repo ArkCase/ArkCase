@@ -1,4 +1,4 @@
-package com.armedia.acm.services.exemption.model;
+package gov.foia.exception;
 
 /*-
  * #%L
@@ -27,17 +27,12 @@ package com.armedia.acm.services.exemption.model;
  * #L%
  */
 
-public class ExemptionStatuteDeletedEvent extends ExemptionStatuteEvent
+public class ExemptionStatuteException extends Exception
 {
+    private static final long serialVersionUID = -3129580857333913841L;
 
-    public ExemptionStatuteDeletedEvent(ExemptionStatute source)
+    public ExemptionStatuteException(String message, Throwable cause)
     {
-        super(source);
-    }
-
-    @Override
-    public String getEventType()
-    {
-        return ExemptionConstants.EXEMPTION_STATUTE_DELETED_EVENT;
+        super(message, cause);
     }
 }

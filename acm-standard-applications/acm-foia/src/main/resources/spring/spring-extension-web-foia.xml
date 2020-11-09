@@ -9,7 +9,7 @@
         </beans:bean>
 
         <beans:bean id="foiaExemptionStatuteAPIController" class="gov.foia.web.api.FOIAExemptionStatuteAPIController">
-            <beans:property name="foiaExemptionService" ref="foiaExemptionService"/>
+            <beans:property name="foiaExemptionStatuteService" ref="foiaExemptionStatuteService"/>
         </beans:bean>
 
         <beans:bean id="printDocumentsAPIController" class="gov.foia.web.api.PrintDocumentsAPIController">

@@ -52,7 +52,7 @@ public class EcmFileCopiedExemptionCodeListener implements ApplicationListener<E
             if (original != null && original.getExemptionCodes().size() > 0)
             {
                 log.info("File with exemption codes has been copied to another folder");
-                getFoiaExemptionService().copyFileWithExemptionCodesOrStatutes(original, copy);
+                getFoiaExemptionService().copyFileWithExemptionCodesAndStatutes(original, copy);
             }
 
         }

@@ -183,8 +183,8 @@ angular.module('cases').controller('Cases.ExemptionController',
                 modalInstance.result.then(function(data) {
                     $scope.exemptionData.exemptionStatute = data.exemptionStatute;
                     CaseExemptionService.saveExemptionStatute($scope.exemptionData).then(function (value) {
-                        $scope.statuteGridOptions.data.push(value);
                         MessageService.succsessAction();
+                        retrieveStatuteGridData()
                     }, function () {
                         MessageService.errorAction();
                     });
@@ -200,7 +200,6 @@ angular.module('cases').controller('Cases.ExemptionController',
                     $scope.statuteGridOptions = $scope.statuteGridOptions || {};
                     $scope.statuteGridOptions.data = $scope.statutes.data;
                     $scope.statuteGridOptions.totalItems = $scope.statutes.data.length;
-
                 });
             }
         } ]);

@@ -29,12 +29,11 @@ package gov.foia.service;
 
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.services.exemption.exception.GetExemptionCodeException;
-import com.armedia.acm.services.exemption.exception.GetExemptionStatuteException;
 import com.armedia.acm.services.exemption.model.ExemptionCode;
 import com.armedia.acm.services.exemption.model.ExemptionConstants;
-import com.armedia.acm.services.exemption.model.ExemptionStatute;
 import gov.foia.dao.FOIAExemptionCodeDao;
 import gov.foia.dao.FOIAExemptionStatuteDao;
+import gov.foia.model.ExemptionStatute;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.transaction.annotation.Transactional;
@@ -83,7 +82,7 @@ public class FOIAExemptionService
     }
 
     @Transactional
-    public void copyFileWithExemptionCodesOrStatutes(EcmFile originalFile, EcmFile copiedFile)
+    public void copyFileWithExemptionCodesAndStatutes(EcmFile originalFile, EcmFile copiedFile)
     {
         Long copiedFileId = copiedFile.getFileId();
         List<ExemptionCode> exemptionCodeList = getFoiaExemptionCodeDao().findExemptionCodesByFileId(originalFile.getFileId());
@@ -109,7 +108,6 @@ public class FOIAExemptionService
             exStatuteObj.setExemptionStatus(exemptionStatute.getExemptionStatus());
             exStatuteObj.setFileId(copiedFileId);
             exStatuteObj.setFileVersion(exemptionStatute.getFileVersion());
-            exStatuteObj.setManuallyFlag(exemptionStatute.getManuallyFlag());
             getFoiaExemptionStatuteDao().save(exStatuteObj);
         }
     }
@@ -157,27 +155,6 @@ public class FOIAExemptionService
         resultList.sort(Comparator.comparing(ExemptionCode::getExemptionCode));
 
         return resultList;
-    }
-
-    public List<ExemptionStatute> getExemptionStatutes(Long parentObjectId, String parentObjectType) throws GetExemptionStatuteException {
-        log.info("Finding  exemption statutes for objectId: {}", parentObjectId);
-        try
-        {
-            List<ExemptionStatute> combineResult = new ArrayList<>();
-            List<ExemptionStatute> listStatutesOnDocument = getFoiaExemptionStatuteDao()
-                    .getExemptionStatutesByParentObjectIdAndType(parentObjectId, parentObjectType);
-            combineResult.addAll(listStatutesOnDocument);
-
-            List<ExemptionStatute> listStatutesOnRequest = getFoiaExemptionStatuteDao()
-                    .getManuallyAddedStatuteOnRequestLevel(parentObjectId, parentObjectType);
-            combineResult.addAll(listStatutesOnRequest);
-            return combineResult;
-        }
-        catch (Exception e)
-        {
-            log.error("Finding  exemption statutes for objectId: {} failed", parentObjectId);
-            throw new GetExemptionStatuteException("Unable to get exemption statutes for objectId: {}" + parentObjectId, e);
-        }
     }
 
     public boolean hasExemptionOnAnyDocumentsOnRequest(Long objectId, String objectType)

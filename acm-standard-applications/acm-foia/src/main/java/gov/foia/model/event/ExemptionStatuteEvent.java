@@ -1,4 +1,4 @@
-package com.armedia.acm.services.exemption.model;
+package gov.foia.model.event;
 
 /*-
  * #%L
@@ -27,16 +27,21 @@ package com.armedia.acm.services.exemption.model;
  * #L%
  */
 
-public class ExemptionStatuteCreatedEvent extends ExemptionStatuteEvent
+import com.armedia.acm.core.model.AcmEvent;
+import gov.foia.model.ExemptionStatute;
+
+import java.util.Date;
+
+public class ExemptionStatuteEvent extends AcmEvent
 {
-    public ExemptionStatuteCreatedEvent(ExemptionStatute source)
+
+    private static final long serialVersionUID = -2520075988463723949L;
+
+    public ExemptionStatuteEvent(ExemptionStatute source)
     {
         super(source);
-    }
-
-    @Override
-    public String getEventType()
-    {
-        return ExemptionConstants.EXEMPTION_STATUTE_CREATED_EVENT;
+        setEventDate(new Date());
+        setObjectId(source.getId());
+        setObjectType(source.getParentObjectType());
     }
 }

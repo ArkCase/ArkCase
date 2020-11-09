@@ -11,8 +11,4 @@
         <property name="documentExemptionService" ref="documentExemptionService"/>
         <property name="userTrackerService" ref="userTrackerService"/>
     </bean>
-
-    <bean id="exemptionStatuteAPIController" class="com.armedia.acm.services.exemption.web.api.ExemptionStatuteAPIController">
-        <property name="exemptionStatuteService" ref="exemptionStatuteService"/>
-    </bean>
 </beans>

@@ -1,4 +1,4 @@
-package com.armedia.acm.services.exemption.model;
+package gov.foia.model;
 
 /*-
  * #%L
@@ -28,6 +28,10 @@ package com.armedia.acm.services.exemption.model;
  */
 
 import com.armedia.acm.auth.AuthenticationUtils;
+
+import gov.foia.model.ExemptionStatute;
+import gov.foia.model.event.ExemptionStatuteCreatedEvent;
+import gov.foia.model.event.ExemptionStatuteDeletedEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 

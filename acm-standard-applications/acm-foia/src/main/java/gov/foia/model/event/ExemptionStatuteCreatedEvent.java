@@ -1,4 +1,4 @@
-package com.armedia.acm.services.exemption.service;
+package gov.foia.model.event;
 
 /*-
  * #%L
@@ -27,25 +27,20 @@ package com.armedia.acm.services.exemption.service;
  * #L%
  */
 
-import com.armedia.acm.services.exemption.exception.DeleteExemptionStatuteException;
-import com.armedia.acm.services.exemption.exception.GetExemptionStatuteException;
-import com.armedia.acm.services.exemption.exception.SaveExemptionStatuteException;
-import com.armedia.acm.services.exemption.model.ExemptionStatute;
-import org.springframework.transaction.annotation.Transactional;
+import com.armedia.acm.services.exemption.model.ExemptionConstants;
+import gov.foia.model.ExemptionStatute;
+import gov.foia.model.ExemptionStatuteConstants;
 
-import java.util.List;
-
-public interface ExemptionStatuteService
+public class ExemptionStatuteCreatedEvent extends ExemptionStatuteEvent
 {
+    public ExemptionStatuteCreatedEvent(ExemptionStatute source)
+    {
+        super(source);
+    }
 
-    ExemptionStatute saveExemptionStatute(ExemptionStatute exemptionStatute, String user) throws SaveExemptionStatuteException;
-
-    @Transactional
-    List<ExemptionStatute> getExemptionStatutesOnDocument(Long caseId, Long fileId) throws GetExemptionStatuteException;
-
-    @Transactional
-    void saveExemptionStatutesOnDocument(Long fileId, List<String> exemptionStatutes, String user)
-            throws SaveExemptionStatuteException;
-
-    void deleteExemptionStatute(Long statuteId) throws DeleteExemptionStatuteException;
+    @Override
+    public String getEventType()
+    {
+        return ExemptionStatuteConstants.EXEMPTION_STATUTE_CREATED_EVENT;
+    }
 }
