@@ -31,14 +31,15 @@ import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.sync.EcmEvent;
 import com.armedia.acm.plugins.ecm.model.sync.EcmEventType;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationListener;
 
 import javax.persistence.PersistenceException;
@@ -80,6 +81,10 @@ public class EcmNodeDeletedEventHandler implements ApplicationListener<EcmEvent>
         else
         {
             AcmFolder deleteFolder = getFolderAndFilesUtils().lookupArkCaseFolder(ecmEvent.getNodeId());
+            if (deleteFolder != null && deleteFolder.getStatus().equals(EcmFileConstants.RECORD))
+            {
+                log.error("Record folders cannot be deleted, folder ID {}", deleteFolder.getId());
+            }
             if (deleteFolder != null)
             {
                 String message = String.format(DELETE_MESSAGE, deleteFolder.getObjectType().toLowerCase());

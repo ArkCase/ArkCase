@@ -1812,6 +1812,12 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         {
             throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, objectId, "File not found", null);
         }
+        else if (file.getStatus().equals(EcmFileConstants.RECORD))
+        {
+            log.error("Could not delete file with ID {} ", file.getFileId());
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_DELETE_FILE, EcmFileConstants.OBJECT_FILE_TYPE,
+                    file.getId(), "File records cannot be deleted", null);
+        }
 
         boolean removeFileFromDatabase = allVersions || file.getVersions().size() < 2;
         String versionToRemoveFromEcm = removeFileFromDatabase ? file.getVersionSeriesId()
@@ -1895,10 +1901,18 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         {
             throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, objectId, "File not found", null);
         }
+
         try
         {
             if (!file.isLink())
             {
+                if (file.getStatus().equals(EcmFileConstants.RECORD))
+                {
+                    log.error("Could not move file with ID {} to Recycle Bin", file.getFileId());
+                    throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_DELETE_FILE, EcmFileConstants.OBJECT_FILE_TYPE,
+                            file.getId(), "File records cannot be deleted", null);
+                }
+
                 recycleBinItem = getRecycleBinItemService().putFileIntoRecycleBin(file, authentication, session);
                 log.info("File {} successfully moved into recycle bin by user: {}", objectId, file.getModifier());
 
@@ -1941,6 +1955,13 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, fileId, "File not found", null);
         }
 
+        if (file.getStatus().equals(EcmFileConstants.RECORD))
+        {
+            log.error("Could not move file with ID {} to Recycle Bin", file.getFileId());
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_DELETE_FILE, EcmFileConstants.OBJECT_FILE_TYPE,
+                    file.getId(), "File records cannot be deleted", null);
+        }
+
         Map<String, Object> props = new HashMap<>();
         props.put(EcmFileConstants.CMIS_DOCUMENT_ID, file.getVersionSeriesId());
         String cmisRepositoryId = file.getCmisRepositoryId();
@@ -1976,6 +1997,12 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         if (file == null)
         {
             throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, objectId, "File not found", null);
+        }
+        else if (file.getStatus().equals(EcmFileConstants.RECORD))
+        {
+            log.error("Could not delete file with ID {} ", file.getFileId());
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_DELETE_FILE, EcmFileConstants.OBJECT_FILE_TYPE,
+                    file.getId(), "File records cannot be deleted", null);
         }
 
         Map<String, Object> props = new HashMap<>();
@@ -2016,6 +2043,12 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         if (file == null)
         {
             throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, file.getId(), "File not found", null);
+        }
+        else if (file.getStatus().equals(EcmFileConstants.RECORD))
+        {
+            log.error("Could not delete file with ID {} ", file.getFileId());
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_DELETE_FILE, EcmFileConstants.OBJECT_FILE_TYPE,
+                    file.getId(), "File records cannot be deleted", null);
         }
 
         try
