@@ -97,9 +97,10 @@
                 </div>
             </div>
         </div>
+
         <div>
-            <div ng-if="fileEditingEnabled">
-                <a ng-show="!editingMode" class="btn btn-sm btn-default" ng-click="enableEditing()">
+            <div>
+                <a ng-show="showEditingButton()" class="btn btn-sm btn-default" ng-click="enableEditing()">
                     <i class="fa fa-edit"></i>
                     <span translate>documentDetails.enableEditing</span>
                 </a>
@@ -110,6 +111,7 @@
                 </a>
             </div>
         </div>
+
         <div ng-class="viewerOnly? 'content-body well-sm full-docview' : 'content-body well-sm'">
             <div ng-include="'modules/document-details/views/document-viewer.client.view.html'"></div>
         </div>

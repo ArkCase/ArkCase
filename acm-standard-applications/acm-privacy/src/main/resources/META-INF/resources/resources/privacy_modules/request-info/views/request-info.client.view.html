@@ -98,8 +98,8 @@
             </div>
         </div>
         <div>
-            <div ng-if="fileEditingEnabled">
-                <a ng-show="!editingMode" class="btn btn-sm btn-default" ng-click="enableEditing()">
+            <div>
+                <a ng-show="showEditingButton()" class="btn btn-sm btn-default" ng-click="enableEditing()">
                     <i class="fa fa-edit"></i>
                     <span translate>documentDetails.enableEditing</span>
                 </a>

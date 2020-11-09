@@ -85,6 +85,16 @@ angular.module('request-info').controller(
                 $scope.fileEditingEnabled = response.data;
             });
 
+            $scope.showEditingButton = function () {
+                return !isAnyFileRecord() && !$scope.editingMode && $scope.fileEditingEnabled;
+            };
+
+            function isAnyFileRecord() {
+                return _.some($scope.openOtherDocuments, function (value) {
+                    return value.status === 'RECORD';
+                });
+            }
+
             $scope.documentExpand = function () {
                 $scope.viewerOnly = true;
             };
@@ -720,7 +730,7 @@ angular.module('request-info').controller(
             $scope.enableEditing = function () {
                 ObjectLockingService.lockObject($scope.ecmFile.fileId, ObjectService.ObjectTypes.FILE, ObjectService.LockTypes.WRITE, true).then(function (lockedFile) {
                     $scope.editingMode = true;
-                    $scope.openSnowboundViewer();
+                    openViewerMultiple();
 
                     // count user idle time. When user is idle for more then 1 minute, don't acquire lock
                     $scope._idleSecondsCounter = 0;
@@ -796,7 +806,9 @@ angular.module('request-info').controller(
                 // Generates and loads a url that will open the selected documents in the viewer
                 if ($scope.openOtherDocuments.length > 0) {
                     registerFileChangeEvents();
-                    var snowUrl = buildViewerUrlMultiple($scope.ecmFileProperties, $scope.acmTicket, $scope.userId, $scope.userFullName, $scope.openOtherDocuments, !$scope.editingMode, $scope.requestInfo.caseNumber);
+                    let readonly = isAnyFileRecord() || !$scope.editingMode;
+                    $scope.editingMode = !readonly;
+                    var snowUrl = buildViewerUrlMultiple($scope.ecmFileProperties, $scope.acmTicket, $scope.userId, $scope.userFullName, $scope.openOtherDocuments, readonly, $scope.requestInfo.caseNumber);
                     if (snowUrl) {
                         $scope.loadViewerIframe(snowUrl);
                     }
@@ -918,6 +930,7 @@ angular.module('request-info').controller(
 
             $scope.$bus.subscribe('remove-from-opened-documents-list', function (data) {
                 removeFromOpenedDocumentsList(Number(data.id) * 1, data.version);
+                $scope.$apply();
             });
 
             function removeFromOpenedDocumentsList(id, version) {
@@ -1432,6 +1445,7 @@ angular.module('request-info').controller(
                     id: file.fileId + ':' + file.activeVersionTag,
                     containerId: containerId,
                     containerType: 'CASE_FILE',
+                    status: file.status,
                     name: file.fileName,
                     mimeType: file.fileActiveVersionMimeType,
                     selectedIds: file.fileId + ':' + file.activeVersionTag,
