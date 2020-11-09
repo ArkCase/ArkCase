@@ -806,7 +806,7 @@ angular.module('request-info').controller(
                 // Generates and loads a url that will open the selected documents in the viewer
                 if ($scope.openOtherDocuments.length > 0) {
                     registerFileChangeEvents();
-                    let readonly = isAnyFileRecord() || !$scope.editingMode;
+                    var readonly = isAnyFileRecord() || !$scope.editingMode;
                     $scope.editingMode = !readonly;
                     var snowUrl = buildViewerUrlMultiple($scope.ecmFileProperties, $scope.acmTicket, $scope.userId, $scope.userFullName, $scope.openOtherDocuments, readonly, $scope.requestInfo.caseNumber);
                     if (snowUrl) {
