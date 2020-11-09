@@ -31,8 +31,9 @@ import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
-import com.armedia.acm.services.exemption.model.ExemptionStatute;
+import gov.foia.model.ExemptionStatute;
 import gov.foia.model.FOIARequest;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
@@ -52,7 +53,7 @@ public class FOIAExemptionStatuteDao extends AcmAbstractDao<ExemptionStatute>
         return ExemptionStatute.class;
     }
 
-    public List<ExemptionStatute> getExemptionStatutesByParentObjectIdAndType(Long parentObjectId, String parentObjectType) {
+    public List<ExemptionStatute> getExemptionStatutesForFilesInResponseFolder(Long parentObjectId, String parentObjectType) {
 
         FOIARequest request = (FOIARequest) caseFileDao.find(parentObjectId);
         List<ExemptionStatute> listStatutesOnDocuments = new ArrayList<>();
@@ -81,7 +82,7 @@ public class FOIAExemptionStatuteDao extends AcmAbstractDao<ExemptionStatute>
                         .collect(Collectors.toList());
 
                 for (Long fileId : fileIds) {
-                    listStatutesOnDocuments.addAll(getApprovedAndManualExemptionStatutesByFileId(fileId));
+                    listStatutesOnDocuments.addAll(findExemptionStatutesByFileId(fileId));
                 }
             }
         }
@@ -89,35 +90,17 @@ public class FOIAExemptionStatuteDao extends AcmAbstractDao<ExemptionStatute>
 
     }
 
-    public List<ExemptionStatute> getApprovedAndManualExemptionStatutesByFileId(Long fileId)
-    {
-        String queryText = "SELECT statute FROM ExemptionStatute statute WHERE statute.fileId = :fileId " +
-                "AND statute.exemptionStatus <> 'DRAFT' " +
-                "GROUP BY statute.exemptionStatute, statute.exemptionStatus";
-        TypedQuery<ExemptionStatute> query = getEm().createQuery(queryText, ExemptionStatute.class);
-        query.setParameter("fileId", fileId);
-
-        List<ExemptionStatute> exemptionStatuteList = query.getResultList();
-        if (exemptionStatuteList == null)
-        {
-            exemptionStatuteList = new ArrayList<>();
-        }
-        return exemptionStatuteList;
-    }
-
-    public List<ExemptionStatute> getManuallyAddedStatuteOnRequestLevel(Long parentObjectId, String parentObjectType)
+    public List<ExemptionStatute> getExemptionStatutesOnRequestLevel(Long parentObjectId)
     {
         String queryText = "SELECT exemptionStatute " +
                 "FROM ExemptionStatute exemptionStatute " +
                 "JOIN FOIARequest request ON request.id = exemptionStatute.parentObjectId " +
-                "WHERE exemptionStatute.parentObjectType = :parentObjectType " +
-                "AND exemptionStatute.parentObjectId = :parentObjectId " +
+                "WHERE exemptionStatute.parentObjectId = :parentObjectId " +
                 "ORDER BY exemptionStatute.exemptionStatute";
 
         TypedQuery<ExemptionStatute> exemptionStatuteTypedQuery = getEm().createQuery(queryText,
                 ExemptionStatute.class);
 
-        exemptionStatuteTypedQuery.setParameter("parentObjectType", parentObjectType.toUpperCase());
         exemptionStatuteTypedQuery.setParameter("parentObjectId", parentObjectId);
         List<ExemptionStatute> exemptionStatuteList = exemptionStatuteTypedQuery.getResultList();
         if (null == exemptionStatuteList)
@@ -140,6 +123,16 @@ public class FOIAExemptionStatuteDao extends AcmAbstractDao<ExemptionStatute>
             exemptionStatuteList = new ArrayList<>();
         }
         return exemptionStatuteList;
+    }
+
+    @Transactional
+    public void deleteExemptionStatute(Long id)
+    {
+        ExemptionStatute exemptionStatute = getEm().find(ExemptionStatute.class, id);
+        if (exemptionStatute != null)
+        {
+            getEm().remove(exemptionStatute);
+        }
     }
 
     public AcmFolderService getAcmFolderService() {

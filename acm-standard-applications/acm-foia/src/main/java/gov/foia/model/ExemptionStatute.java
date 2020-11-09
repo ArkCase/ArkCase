@@ -1,4 +1,4 @@
-package com.armedia.acm.services.exemption.model;
+package gov.foia.model;
 
 /*-
  * #%L
@@ -39,6 +39,7 @@ import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -87,9 +88,6 @@ public class ExemptionStatute implements Serializable, AcmEntity
 
     @Column(name = "cm_file_version")
     private String fileVersion;
-
-    @Column(name = "cm_manually_flag")
-    private Boolean manuallyFlag;
 
     @Transient
     private List<String> exemptionStatutes;
@@ -211,16 +209,6 @@ public class ExemptionStatute implements Serializable, AcmEntity
     public void setFileVersion(String fileVersion)
     {
         this.fileVersion = fileVersion;
-    }
-
-    public Boolean getManuallyFlag()
-    {
-        return manuallyFlag;
-    }
-
-    public void setManuallyFlag(Boolean manuallyFlag)
-    {
-        this.manuallyFlag = manuallyFlag;
     }
 
     public List<String> getExemptionStatutes()

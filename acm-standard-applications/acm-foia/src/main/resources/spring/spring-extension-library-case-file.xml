@@ -99,6 +99,12 @@
             <beans:property name="foiaExemptionStatuteDao" ref="foiaExemptionStatuteDao"/>
         </beans:bean>
 
+        <beans:bean id="foiaExemptionStatuteService" class="gov.foia.service.FOIAExemptionStatuteService">
+            <beans:property name="foiaExemptionStatuteDao" ref="foiaExemptionStatuteDao"/>
+            <beans:property name="ecmFileDao" ref="ecmFileDao"/>
+            <beans:property name="exemptionStatuteEventPublisher" ref="exemptionStatuteEventPublisher"/>
+        </beans:bean>
+
         <bean id="acmDispositionReasonDao" class="gov.foia.dao.DispositionReasonDao"/>
 
         <beans:bean id="foiaRequesterAssociationToSolrTransformer" class="gov.foia.transformer.FOIARequesterAssociationToSolrTransformer"
@@ -256,6 +262,8 @@
         </beans:bean>
 
         <bean id="foiaRequestEventUtility" class="gov.foia.service.FOIARequestEventUtility"/>
+
+        <bean id="exemptionStatuteEventPublisher" class="gov.foia.model.ExemptionStatuteEventPublisher"/>
 
         <beans:bean id="foiaRequestEventListener" class="gov.foia.service.FOIARequestEventListener">
             <beans:property name="acmObjectHistoryService" ref="acmObjectHistoryService"/>

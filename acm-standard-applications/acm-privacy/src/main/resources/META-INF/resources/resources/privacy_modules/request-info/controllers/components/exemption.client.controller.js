@@ -131,7 +131,7 @@ angular.module('request-info').controller('RequestInfo.ExemptionController',
                 // reload the exemption code table without reloading the page
                 $state.transitionTo("request-info", { id: data.id, fileId: data.fileId }, {notify: false});
                 retrieveGridData(data.id, data.fileId);
-                retrieveStatuteGridData(data.id, data.fileId);
+                retrieveStatuteGridData(data.fileId);
             });
 
             $scope.checkCodesDescription = function(){
@@ -160,11 +160,11 @@ angular.module('request-info').controller('RequestInfo.ExemptionController',
                 };
                 gridHelper.setUserNameFilterToConfig(promiseUsers, compConfig);
                 gridHelper.addButton(compConfig, "delete", null, null, "isDeleteDisabled");
-                retrieveStatuteGridData($stateParams.id, $stateParams.fileId);
+                retrieveStatuteGridData($stateParams.fileId);
             });
 
             $scope.refreshStatute = function() {
-                retrieveStatuteGridData($stateParams.id, $stateParams.fileId);
+                retrieveStatuteGridData($stateParams.fileId);
             };
 
             $scope.addNewStatute = function() {
@@ -184,21 +184,18 @@ angular.module('request-info').controller('RequestInfo.ExemptionController',
                     }
                 });
                 modalInstance.result.then(function(data) {
-                    $scope.exemptionData = data.exemptionStatute;
-                    CaseExemptionService.saveDocumentExemptionStatute($stateParams.fileId, $scope.exemptionData).then(function (value) {
-                        $scope.statuteGridOptions.data.push(value);
+                    $scope.exemptionStatute = data.exemptionStatute;
+                    ExemptionService.saveDocumentExemptionStatute($stateParams.fileId, $scope.exemptionStatute).then(function () {
                         MessageService.succsessAction();
+                        retrieveStatuteGridData($stateParams.fileId)
                     }, function () {
                         MessageService.errorAction();
                     });
                 });
             };
 
-            function retrieveStatuteGridData(caseId, fileId) {
-                var params = {};
-                params.caseId = caseId;
-                params.fileId = fileId;
-                var promiseQueryStatutes = ExemptionService.getDocumentExemptionStatutes(params.caseId, params.fileId);
+            function retrieveStatuteGridData(fileId) {
+                var promiseQueryStatutes = ExemptionService.getDocumentExemptionStatutes(fileId);
                 $q.all([ promiseQueryStatutes ]).then(function(data) {
                     $scope.statutes = data[0];
                     $scope.statuteGridOptions = $scope.statuteGridOptions || {};

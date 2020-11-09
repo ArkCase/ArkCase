@@ -1,4 +1,4 @@
-package com.armedia.acm.services.exemption.model;
+package gov.foia.model.event;
 
 /*-
  * #%L
@@ -27,20 +27,21 @@ package com.armedia.acm.services.exemption.model;
  * #L%
  */
 
-import com.armedia.acm.core.model.AcmEvent;
+import com.armedia.acm.services.exemption.model.ExemptionConstants;
+import gov.foia.model.ExemptionStatute;
+import gov.foia.model.ExemptionStatuteConstants;
 
-import java.util.Date;
-
-public class ExemptionStatuteEvent extends AcmEvent
+public class ExemptionStatuteDeletedEvent extends ExemptionStatuteEvent
 {
 
-    private static final long serialVersionUID = -2520075988463723949L;
-
-    public ExemptionStatuteEvent(ExemptionStatute source)
+    public ExemptionStatuteDeletedEvent(ExemptionStatute source)
     {
         super(source);
-        setEventDate(new Date());
-        setObjectId(source.getId());
-        setObjectType(source.getParentObjectType());
+    }
+
+    @Override
+    public String getEventType()
+    {
+        return ExemptionStatuteConstants.EXEMPTION_STATUTE_DELETED_EVENT;
     }
 }

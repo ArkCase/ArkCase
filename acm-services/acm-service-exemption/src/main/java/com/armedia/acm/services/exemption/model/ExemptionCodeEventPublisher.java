@@ -74,28 +74,6 @@ public class ExemptionCodeEventPublisher implements ApplicationEventPublisherAwa
 
     }
 
-    public void publishExemptionStatuteCreatedEvent(ExemptionStatute source)
-    {
-        ExemptionStatuteCreatedEvent exemptionStatuteCreatedEvent = new ExemptionStatuteCreatedEvent(source);
-        exemptionStatuteCreatedEvent.setUserId(AuthenticationUtils.getUsername());
-        exemptionStatuteCreatedEvent.setIpAddress(AuthenticationUtils.getUserIpAddress());
-        exemptionStatuteCreatedEvent.setParentObjectId(source.getParentObjectId());
-        exemptionStatuteCreatedEvent.setParentObjectType(source.getParentObjectType());
-        exemptionStatuteCreatedEvent.setSucceeded(true);
-        getApplicationEventPublisher().publishEvent(exemptionStatuteCreatedEvent);
-    }
-
-    public void publishExemptionStatuteDeletedEvent(ExemptionStatute source)
-    {
-        ExemptionStatuteDeletedEvent exemptionStatuteDeletedEvent = new ExemptionStatuteDeletedEvent(source);
-        exemptionStatuteDeletedEvent.setUserId(AuthenticationUtils.getUsername());
-        exemptionStatuteDeletedEvent.setIpAddress(AuthenticationUtils.getUserIpAddress());
-        exemptionStatuteDeletedEvent.setParentObjectId(source.getParentObjectId());
-        exemptionStatuteDeletedEvent.setParentObjectType(source.getParentObjectType());
-        exemptionStatuteDeletedEvent.setSucceeded(true);
-        getApplicationEventPublisher().publishEvent(exemptionStatuteDeletedEvent);
-    }
-
     public ApplicationEventPublisher getApplicationEventPublisher()
     {
         return applicationEventPublisher;

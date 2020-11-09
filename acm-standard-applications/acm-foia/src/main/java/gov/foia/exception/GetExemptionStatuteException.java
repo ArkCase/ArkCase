@@ -1,4 +1,4 @@
-package com.armedia.acm.services.exemption.exception;
+package gov.foia.exception;
 
 /*-
  * #%L
@@ -27,10 +27,7 @@ package com.armedia.acm.services.exemption.exception;
  * #L%
  */
 
-public class SaveExemptionStatuteException extends ExemptionStatuteException
-{
-    public SaveExemptionStatuteException(String message, Throwable cause)
-    {
-        super(message, cause);
-    }
+public class GetExemptionStatuteException extends ExemptionStatuteException {
+
+    public GetExemptionStatuteException(String message, Throwable cause) { super(message, cause);}
 }
