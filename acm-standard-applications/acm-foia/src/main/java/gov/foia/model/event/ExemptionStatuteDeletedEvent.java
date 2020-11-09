@@ -1,4 +1,4 @@
-package com.armedia.acm.services.exemption.service;
+package gov.foia.model.event;
 
 /*-
  * #%L
@@ -27,17 +27,21 @@ package com.armedia.acm.services.exemption.service;
  * #L%
  */
 
-import com.armedia.acm.services.exemption.exception.DeleteExemptionCodeException;
-import com.armedia.acm.services.exemption.exception.SaveExemptionCodeException;
-import com.armedia.acm.services.exemption.model.ExemptionCode;
+import com.armedia.acm.services.exemption.model.ExemptionConstants;
+import gov.foia.model.ExemptionStatute;
+import gov.foia.model.ExemptionStatuteConstants;
 
-import java.util.List;
-
-public interface ExemptionService
+public class ExemptionStatuteDeletedEvent extends ExemptionStatuteEvent
 {
 
-    List<ExemptionCode> saveExemptionCodes(ExemptionCode exemptionCodes, String user) throws SaveExemptionCodeException;
+    public ExemptionStatuteDeletedEvent(ExemptionStatute source)
+    {
+        super(source);
+    }
 
-    void deleteExemptionCode(Long tagId) throws DeleteExemptionCodeException;
-
+    @Override
+    public String getEventType()
+    {
+        return ExemptionStatuteConstants.EXEMPTION_STATUTE_DELETED_EVENT;
+    }
 }

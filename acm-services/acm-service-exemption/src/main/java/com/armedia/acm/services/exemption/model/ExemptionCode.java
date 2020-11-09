@@ -27,6 +27,8 @@ package com.armedia.acm.services.exemption.model;
  * #L%
  */
 
+import com.armedia.acm.data.AcmEntity;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -48,7 +50,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "acm_exemption_code")
-public class ExemptionCode implements Serializable
+public class ExemptionCode implements Serializable, AcmEntity
 {
     private static final long serialVersionUID = -5341895983727433857L;
 
@@ -77,9 +79,6 @@ public class ExemptionCode implements Serializable
     @Column(name = "cm_exemption_creator", nullable = false, updatable = false)
     private String creator;
 
-    @Column(name = "cm_exemption_statute")
-    private String exemptionStatute;
-
     @Column(name = "cm_file_id")
     private Long fileId;
 
@@ -88,6 +87,13 @@ public class ExemptionCode implements Serializable
 
     @Column(name = "cm_manually_flag")
     private Boolean manuallyFlag;
+
+    @Column(name = "cm_exemption_modified", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date modified;
+
+    @Column(name = "cm_exemption_modifier")
+    private String modifier;
 
     @Transient
     private List<String> exemptionCodes;
@@ -142,34 +148,28 @@ public class ExemptionCode implements Serializable
         this.exemptionStatus = exemptionStatus;
     }
 
+    @Override
     public Date getCreated()
     {
         return created;
     }
 
+    @Override
     public void setCreated(Date created)
     {
         this.created = created;
     }
 
+    @Override
     public String getCreator()
     {
         return creator;
     }
 
+    @Override
     public void setCreator(String creator)
     {
         this.creator = creator;
-    }
-
-    public String getExemptionStatute()
-    {
-        return exemptionStatute;
-    }
-
-    public void setExemptionStatute(String exemptionStatute)
-    {
-        this.exemptionStatute = exemptionStatute;
     }
 
     public Long getFileId()
@@ -211,4 +211,29 @@ public class ExemptionCode implements Serializable
     {
         this.exemptionCodes = exemptionCodes;
     }
+
+    @Override
+    public String getModifier()
+    {
+        return modifier;
+    }
+
+    @Override
+    public void setModifier(String modifier)
+    {
+        this.modifier = modifier;
+    }
+
+    @Override
+    public Date getModified()
+    {
+        return modified;
+    }
+
+    @Override
+    public void setModified(Date modified)
+    {
+        this.modified = modified;
+    }
+
 }
