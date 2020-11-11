@@ -5,7 +5,7 @@
                 http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
 
     <import
-        resource="${configuration.server.url}/${application.name.default}/${application.profile.reversed}/default/spring/hazelcast-config.xml"/>
+        resource="${configuration.server.url}/${application.name.default}/${application.profile.reversed}/default/${configuration.client.spring.path}/hazelcast-config.xml"/>
 
     <bean id="cacheManager" class="com.hazelcast.spring.cache.HazelcastCacheManager">
         <constructor-arg ref="acmHazelcastInstance"/>
