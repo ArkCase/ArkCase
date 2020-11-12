@@ -75,6 +75,7 @@ public class UpdateDocumentRoute extends ArkCaseAbstractRoute
                     exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_OBJECT_ID, routeProperties.get("cmisDocumentId"));
                     exchange.getIn().getHeaders().put("cmis:checkinComment", routeProperties.get("checkinComment"));
                     exchange.getIn().getHeaders().put("cmis:contentStreamMimeType", routeProperties.get("mimeType"));
+                    exchange.getIn().getHeaders().put(CamelCMISConstants.VERSIONING_STATE, routeProperties.get("versioningState"));
                     exchange.getIn().setBody(routeProperties.get("inputStream"));
                     exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_ACTION, CamelCMISActions.CHECK_IN);
                     MDC.put(HttpInvokerUtil.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY,

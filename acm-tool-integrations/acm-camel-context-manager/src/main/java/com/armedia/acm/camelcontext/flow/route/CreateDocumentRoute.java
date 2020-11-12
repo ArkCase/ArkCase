@@ -68,6 +68,7 @@ public class CreateDocumentRoute extends ArkCaseAbstractRoute
                     exchange.getIn().getHeaders().put(PropertyIds.CONTENT_STREAM_MIME_TYPE,
                             routeProperties.get(PropertyIds.CONTENT_STREAM_MIME_TYPE));
                     exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_ACTION, CamelCMISActions.CREATE);
+                    exchange.getIn().getHeaders().put(CamelCMISConstants.VERSIONING_STATE, routeProperties.get("versioningState"));
                     exchange.getIn().setBody(routeProperties.get("inputStream"));
                     MDC.put(HttpInvokerUtil.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY,
                             String.valueOf(routeProperties.get(HttpInvokerUtil.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY)));

@@ -67,6 +67,7 @@ public class CopyDocumentRoute extends ArkCaseAbstractRoute
                     exchange.getIn().getHeaders().put(PropertyIds.NAME, routeProperties.get(PropertyIds.NAME));
                     exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_DESTIONATION_FOLDER_ID, routeProperties.get("dstFolderId"));
                     exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_ACTION, CamelCMISActions.COPY_DOCUMENT);
+                    exchange.getIn().getHeaders().put(CamelCMISConstants.VERSIONING_STATE, routeProperties.get("versioningState"));
                     MDC.put(HttpInvokerUtil.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY,
                             String.valueOf(routeProperties.get(HttpInvokerUtil.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY)));
 
