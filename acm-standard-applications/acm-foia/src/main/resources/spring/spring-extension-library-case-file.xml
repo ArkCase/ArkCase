@@ -325,6 +325,14 @@
             <beans:property name="objectAssociationDao" ref="objectAssociationDao"/>
         </beans:bean>
 
+        <beans:bean id="foiaDeterminationLetterModelProvider" class="gov.foia.model.provider.FOIADeterminationLetterModelProvider">
+            <beans:property name="foiaExemptionService" ref="foiaExemptionService" />
+            <beans:property name="userDao" ref="userJpaDao" />
+            <beans:property name="billingService" ref="billingService" />
+            <beans:property name="lookupDao" ref="lookupDao" />
+            <beans:property name="translationService" ref="translationService" />
+        </beans:bean>
+
         <beans:bean id="holdQueuePurgerJobDescriptor" class="gov.foia.service.HoldQueuePurgerJobDescriptor" parent="acmJobDescriptor">
             <beans:property name="holdQueuePurger" ref="scheduledHoldQueuePurger"/>
         </beans:bean>
