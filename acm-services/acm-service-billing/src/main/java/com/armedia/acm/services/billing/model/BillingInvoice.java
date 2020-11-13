@@ -341,4 +341,10 @@ public class BillingInvoice implements Serializable, AcmObject, AcmEntity, AcmPa
         this.billingItems = billingItems;
     }
 
+    @JsonIgnore
+    public double getBillingInvoiceAmount()
+    {
+        return billingItems.stream().map(BillingItem::getItemAmount).mapToDouble(Double::doubleValue).sum();
+    }
+
 }
