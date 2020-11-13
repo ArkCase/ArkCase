@@ -1758,14 +1758,16 @@ angular.module('request-info').controller(
                     fileId: $scope.ecmFile.fileId
                 });
                 ecmFile.$promise.then(function (file) {
-                    $scope.ecmFile = file;
-                    $scope.fileId = file.fileId;
-                    $scope.fileInfo.id = file.fileId + ':' + file.activeVersionTag;
-                    $scope.fileInfo.selectedIds = file.fileId + ':' + file.activeVersionTag;
-                    $scope.fileInfo.versionTag = file.activeVersionTag;
-                    DialogService.alert($translate.instant("documentDetails.fileChangedAlert")).then(function () {
-                        $scope.openSnowboundViewer();
-                    });
+                    if ($scope.fileInfo.id !== file.fileId + ':' + file.activeVersionTag) {
+                        $scope.ecmFile = file;
+                        $scope.fileId = file.fileId;
+                        $scope.fileInfo.id = file.fileId + ':' + file.activeVersionTag;
+                        $scope.fileInfo.selectedIds = file.fileId + ':' + file.activeVersionTag;
+                        $scope.fileInfo.versionTag = file.activeVersionTag;
+                        DialogService.alert($translate.instant("documentDetails.fileChangedAlert")).then(function () {
+                            $scope.openSnowboundViewer();
+                        });
+                    }
                     onHideLoader();
                 });
             });
