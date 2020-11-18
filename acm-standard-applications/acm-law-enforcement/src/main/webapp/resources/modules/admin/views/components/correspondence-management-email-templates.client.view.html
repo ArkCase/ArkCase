@@ -9,6 +9,14 @@
     </div>
     <div class="pull-right well">
         <div class="btn-group">
+            <button class="btn btn-xs btn-link" ng-click="previewTemplate()" ng-disabled="selectedRows.length != 1">
+                <i class="glyphicon glyphicon-search"></i>
+                <span translate>admin.correspondenceManagement.templates.previewTemplate</span>
+            </button>
+        </div>
+    </div>
+    <div class="pull-right well">
+        <div class="btn-group">
             <button class="btn btn-xs btn-link" ng-click="versionTemplate()" ng-disabled="selectedRows.length != 1">
                 <i class="glyphicon glyphicon-info-sign"></i>
                 <span translate>admin.correspondenceManagement.templates.versionTemplate</span>
@@ -27,4 +35,5 @@
         <div ui-grid="gridOptions" ui-grid-resize-columns adjust-table-height="gridOptions.data.length" ui-grid-auto-resize
                 ui-grid-pagination ui-grid-selection class="grid"></div>
     </panel-view>
+
 </div>

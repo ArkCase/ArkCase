@@ -5,7 +5,7 @@
     <div class="pull-right">
         <label for="templates" translate> common.directive.docTree.emailDialog.emailTemplates.label </label>
         <span class="required-asterisk">*</span>
-        <select id="templates" class="form-control" ng-model="template" required="required">
+        <select id="templates" class="form-control" ng-model="template" ng-change="loadContent()" required="required">
             <option ng-repeat="option in emailTemplates" value="{{option.templateFilename}}">
                 {{option.label}}
             </option>
@@ -45,6 +45,9 @@
                 </label>
             </fieldset>
         </div>
+    </div>
+    <div class="row">
+        <div style="border: 1px solid #ccc; margin: 15px;" ng-if="template != 'plainEmail.html'" id="content"></div>
     </div>
 </div>
 <div class="modal-footer">

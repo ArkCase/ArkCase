@@ -29,7 +29,8 @@ angular.module('admin').service('Admin.CMTemplatesService', [ '$http', 'Upload',
         deleteTemplate: deleteTemplate,
         deleteTemplateByIdAndVersion: deleteTemplateByIdAndVersion,
         listAllProperties: listAllProperties,
-        listTemplateModelProviders: listTemplateModelProviders
+        listTemplateModelProviders: listTemplateModelProviders,
+        retrieveTemplateContent: retrieveTemplateContent
     });
 
     /**
@@ -318,6 +319,14 @@ angular.module('admin').service('Admin.CMTemplatesService', [ '$http', 'Upload',
             headers: {
                 "Content-Type": "application/json"
             }
+        });
+    };
+
+    function retrieveTemplateContent(templateName) {
+        return $http({
+            method: "GET",
+            url: 'api/latest/plugin/admin/templateContent/' + templateName,
+            cache: false
         });
     };
 
