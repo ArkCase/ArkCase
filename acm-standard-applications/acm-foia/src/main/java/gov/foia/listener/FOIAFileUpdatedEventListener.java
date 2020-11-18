@@ -73,6 +73,14 @@ public class FOIAFileUpdatedEventListener implements ApplicationListener<EcmFile
     private PortalAdminService portalAdminService;
     private ArkcasePortalConfigurationService arkcasePortalConfigurationService;
 
+    public ArkcasePortalConfigurationService getArkcasePortalConfigurationService() {
+        return arkcasePortalConfigurationService;
+    }
+
+    public void setArkcasePortalConfigurationService(ArkcasePortalConfigurationService arkcasePortalConfigurationService) {
+        this.arkcasePortalConfigurationService = arkcasePortalConfigurationService;
+    }
+
     @Override
     public void onApplicationEvent(EcmFileUpdatedEvent ecmFileUpdatedEvent)
     {

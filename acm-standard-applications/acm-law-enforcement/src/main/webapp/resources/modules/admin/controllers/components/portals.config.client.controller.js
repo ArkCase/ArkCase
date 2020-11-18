@@ -8,17 +8,17 @@ angular.module('admin').controller(
                     $scope.portalConfigDataModel = {};
                     $scope.portalAuthenticatedMode = {};
 
-                    var getAuthenticatedMode = function () {
-                        AdminPortalConfigurationService.getAuthenticatedMode().then(function (response) {
+                    var getPortalConfig = function () {
+                        AdminPortalConfigurationService.getPortalConfig().then(function (response) {
                             if (!Util.isEmpty(response.data)) {
                                 $scope.portalAuthenticatedMode["portal.authenticatedMode"] = response.data["portal.authenticatedMode"];
                             }
                         });
                     };
-                    getAuthenticatedMode();
+                    getPortalConfig();
 
-                    var getPortalConfig = function () {
-                        AdminPortalConfigurationService.getPortalConfig().then(function (response) {
+                    var getArkcasePortalConfig = function () {
+                        AdminPortalConfigurationService.getArkcasePortalConfig().then(function (response) {
                             if (!Util.isEmpty(response.data)) {
                                 $scope.portalConfigDataModel["portal.url"] = response.data["portal.url"];
                                 $scope.portalConfigDataModel["portal.groupName"] = response.data["portal.groupName"];
@@ -29,7 +29,7 @@ angular.module('admin').controller(
                             }
                         });
                     };
-                    getPortalConfig();
+                    getArkcasePortalConfig();
 
                     ConfigService.getModuleConfig("admin").then(function(moduleConfig) {
                         $scope.configUser = _.find(moduleConfig.components, {
@@ -103,7 +103,7 @@ angular.module('admin').controller(
                     };
 
                     $scope.savePortalConfig = function () {
-                        AdminPortalConfigurationService.saveAuthenticatedMode($scope.portalAuthenticatedMode).then(function () {
+                        AdminPortalConfigurationService.savePortalConfig($scope.portalAuthenticatedMode).then(function () {
                             MessageService.succsessAction();
                         }, function () {
                             MessageService.errorAction();
@@ -111,7 +111,7 @@ angular.module('admin').controller(
                     };
 
                     $scope.onClickOk = function () {
-                        AdminPortalConfigurationService.savePortalConfig($scope.portalConfigDataModel).then(function () {
+                        AdminPortalConfigurationService.saveArkcasePortalConfig($scope.portalConfigDataModel).then(function () {
                             MessageService.succsessAction();
                         }, function () {
                             MessageService.errorAction();

@@ -69,7 +69,7 @@ public class ArkCasePortalAdminAPIController extends SecureLdapController
     @Value("${portal.serviceProvider.directory.name}")
     private String directoryName;
 
-    @RequestMapping(value = "/portals/config", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/arkcase/portal/config", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ArkcasePortalConfig getArkcasePortalConfiguration(Authentication auth)
     {
@@ -77,7 +77,7 @@ public class ArkCasePortalAdminAPIController extends SecureLdapController
         return getArkcasePortalConfigurationService().getPortalConfiguration();
     }
 
-    @RequestMapping(value = "/portals/config", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/arkcase/portal/config", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public void saveArkcasePortalConfiguration(Authentication auth, @RequestBody ArkcasePortalConfig properties)
     {
@@ -85,7 +85,7 @@ public class ArkCasePortalAdminAPIController extends SecureLdapController
         getArkcasePortalConfigurationService().writeConfiguration(properties);
     }
 
-    @RequestMapping(value = "/portals/authenticatedMode", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/portal/config", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public PortalConfig getPortalConfiguration(Authentication auth)
     {
@@ -93,7 +93,7 @@ public class ArkCasePortalAdminAPIController extends SecureLdapController
         return getPortalConfigurationService().getPortalConfiguration();
     }
 
-    @RequestMapping(value = "/portals/authenticatedMode", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/portal/config", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public void savePortalConfiguration(Authentication auth, @RequestBody PortalConfig properties)
     {
