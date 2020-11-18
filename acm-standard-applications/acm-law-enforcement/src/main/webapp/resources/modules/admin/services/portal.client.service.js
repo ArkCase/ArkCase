@@ -2,45 +2,17 @@
 
 angular.module('admin').factory('Admin.PortalConfigurationService', [ '$http', function($http) {
 
-    var getPortals = function () {
+    var getPortalConfig = function () {
         return $http({
             method: 'GET',
-            url: 'api/latest/service/portalgateway/admin/portals'
+            url: 'api/latest/service/portalgateway/admin/portals/config'
         });
     };
 
-    var savePortal = function (portal) {
-        return $http({
-            method: 'POST',
-            url: 'api/latest/service/portalgateway/admin/portals',
-            data: portal,
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
-    };
-
-    var updatePortal = function (portal) {
+    var savePortalConfig = function (portal) {
         return $http({
             method: 'PUT',
-            url: 'api/latest/service/portalgateway/admin/portals',
-            data: portal,
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
-    };
-    var deletePortal = function (portalId) {
-        return $http({
-            method: 'DELETE',
-            url: 'api/latest/service/portalgateway/admin/portals/' + portalId
-        })
-    };
-
-    var revertPortal = function (portal) {
-        return $http({
-            method: 'PUT',
-            url: 'api/latest/service/portalgateway/admin/portals/revert',
+            url: 'api/latest/service/portalgateway/admin/portals/config',
             data: portal,
             headers: {
                 "Content-Type": "application/json"
@@ -51,29 +23,26 @@ angular.module('admin').factory('Admin.PortalConfigurationService', [ '$http', f
     var getAuthenticatedMode = function () {
         return $http({
             method: 'GET',
-            url: 'api/latest/service/portalgateway/admin/portals/config'
+            url: 'api/latest/service/portalgateway/admin/portals/authenticatedMode'
         });
     };
 
     var saveAuthenticatedMode = function (portal) {
         return $http({
             method: 'PUT',
-            url: 'api/latest/service/portalgateway/admin/portals/config',
+            url: 'api/latest/service/portalgateway/admin/portals/authenticatedMode',
             data: portal,
             headers: {
                 "Content-Type": "application/json"
             }
         });
-    }
+    };
 
     return {
-        getPortals: getPortals,
-        savePortal: savePortal,
-        updatePortal: updatePortal,
-        deletePortal: deletePortal,
-        revertPortal: revertPortal,
         getAuthenticatedMode: getAuthenticatedMode,
-        saveAuthenticatedMode: saveAuthenticatedMode
+        saveAuthenticatedMode: saveAuthenticatedMode,
+        getPortalConfig: getPortalConfig,
+        savePortalConfig: savePortalConfig
     };
 
 } ]);

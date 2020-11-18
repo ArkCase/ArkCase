@@ -35,14 +35,13 @@ import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonOrganizationAssociation;
-import com.armedia.acm.portalgateway.model.PortalInfo;
 import com.armedia.acm.portalgateway.model.PortalUser;
 import com.armedia.acm.portalgateway.model.PortalUserCredentials;
 import com.armedia.acm.portalgateway.model.UserRegistrationRequest;
 import com.armedia.acm.portalgateway.model.UserRegistrationResponse;
 import com.armedia.acm.portalgateway.model.UserResetRequest;
 import com.armedia.acm.portalgateway.model.UserResetResponse;
-import com.armedia.acm.portalgateway.service.PortalInfoDAO;
+import com.armedia.acm.portalgateway.service.ArkcasePortalConfigurationService;
 import com.armedia.acm.portalgateway.service.PortalUserServiceException;
 import com.armedia.acm.portalgateway.service.PortalUserServiceProvider;
 import com.armedia.acm.services.email.model.EmailBodyBuilder;
@@ -116,8 +115,6 @@ public class SARPortalUserServiceProvider implements PortalUserServiceProvider
 
     private LdapUserService ldapUserService;
 
-    private PortalInfoDAO portalInfoDAO;
-
     private PersonDao personDao;
 
     private RequestAssignmentService requestAssignmentService;
@@ -136,6 +133,8 @@ public class SARPortalUserServiceProvider implements PortalUserServiceProvider
     private AcmUserEventPublisher acmUserEventPublisher;
 
     private OrganizationDao organizationDao;
+
+    private ArkcasePortalConfigurationService arkcasePortalConfigurationService;
 
     /*
      * (non-Javadoc)
@@ -256,9 +255,8 @@ public class SARPortalUserServiceProvider implements PortalUserServiceProvider
 
     private void regenerateRegistration(String portalId, UserRegistrationRequestRecord registrationRecord)
     {
-        PortalInfo portal = portalInfoDAO.findByPortalId(portalId);
         String portalRegistrationUrl = Base64Utils
-                .encodeToString((portal.getPortalUrl() + "/portal/login/register").getBytes());
+                .encodeToString((arkcasePortalConfigurationService.getPortalConfiguration().getUrl() + "/portal/login/register").getBytes());
 
         UserRegistrationRequest newRegistrationRequest = new UserRegistrationRequest();
         newRegistrationRequest.setEmailAddress(registrationRecord.getEmailAddress());
@@ -415,9 +413,8 @@ public class SARPortalUserServiceProvider implements PortalUserServiceProvider
     {
         UserResetRequest resetRequest = new UserResetRequest();
         resetRequest.setEmailAddress(user.getEmail());
-        PortalInfo portal = portalInfoDAO.findByPortalId(portalId);
         String baseUrl = Base64Utils
-                .encodeToString((new String(portal.getPortalUrl() + "/portal/login/reset")).getBytes());
+                .encodeToString((new String(arkcasePortalConfigurationService.getPortalConfiguration().getUrl() + "/portal/login/reset")).getBytes());
         resetRequest.setResetUrl(baseUrl);
         return resetRequest;
     }
@@ -427,10 +424,9 @@ public class SARPortalUserServiceProvider implements PortalUserServiceProvider
     {
         try
         {
-            PortalInfo portalInfo = portalInfoDAO.findByPortalId(portalId);
             UserDTO userDto = userDTOFromPortalUser(user,
                     password != null ? new String(Base64Utils.decodeFromString(password), Charset.forName("UTF-8")) : null,
-                    portalInfo.getGroup().getName());
+                    arkcasePortalConfigurationService.getPortalConfiguration().getGroupName());
             portalPersonDao.save(person);
             AcmUser acmUser = ldapUserService.createLdapUser(userDto, directoryName);
             getRequestAssignmentService().addPortalUserAsParticipantToExistingRequests(acmUser, person);
@@ -1224,15 +1220,6 @@ public class SARPortalUserServiceProvider implements PortalUserServiceProvider
     public void setLdapUserService(LdapUserService ldapUserService)
     {
         this.ldapUserService = ldapUserService;
-    }
-
-    /**
-     * @param portalInfoDAO
-     *            the portalInfoDAO to set
-     */
-    public void setPortalInfoDAO(PortalInfoDAO portalInfoDAO)
-    {
-        this.portalInfoDAO = portalInfoDAO;
     }
 
     /**
