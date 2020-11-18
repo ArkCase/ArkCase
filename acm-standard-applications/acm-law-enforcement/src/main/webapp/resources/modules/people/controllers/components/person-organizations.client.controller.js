@@ -222,6 +222,7 @@ angular.module('people').controller(
                             if (defaultAssociation) {
                                 defaultAssociation.defaultOrganization = false;
                             }
+                            $scope.objectInfo.defaultOrganization = association;
                         }
                         association.defaultOrganization = data.isDefault;
 
