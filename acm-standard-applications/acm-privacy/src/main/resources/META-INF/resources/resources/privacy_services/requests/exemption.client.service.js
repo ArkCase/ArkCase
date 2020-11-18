@@ -35,10 +35,22 @@ angular.module('services').factory('ExemptionService', [ '$http', function($http
                     tags: exemptionData
                 }
             });
+        },
+
+        getDocumentExemptionStatutes: function (fileId) {
+            return $http({
+                url: '/api/latest/service/exemption-statute/file/' + fileId,
+                method: 'GET',
+                isArray: true,
+                cache: false
+            });
+        },
+
+        saveDocumentExemptionStatute: function (fileId, statute) {
+            return $http({
+                url: '/api/latest/service/exemption-statute/file' + fileId + '/statute/' + statute,
+                method: 'POST',
+            });
         }
-
     }
-
-
-
 } ]);

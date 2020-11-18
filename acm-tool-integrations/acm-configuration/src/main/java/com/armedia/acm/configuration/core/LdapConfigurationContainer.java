@@ -31,6 +31,7 @@ import com.armedia.acm.configuration.api.ConfigurationFacade;
 import com.armedia.acm.configuration.client.ConfigurationServiceBootClient;
 import com.armedia.acm.configuration.core.propertysource.AcmLdapBeanSyncEventPublisher;
 import com.armedia.acm.configuration.model.AcmLdapBeanSyncEvent;
+import com.armedia.acm.configuration.model.ConfigurationClientConfig;
 import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
 import com.armedia.acm.crypto.properties.AcmEncryptablePropertyUtils;
 
@@ -62,6 +63,9 @@ public class LdapConfigurationContainer implements ConfigurationFacade
     private ConfigurationServiceBootClient configurationServiceBootClient;
 
     @Autowired
+    private ConfigurationClientConfig configurationClientConfig;
+
+    @Autowired
     private AcmEncryptablePropertyUtils encryptablePropertyUtils;
 
     @Autowired
@@ -90,7 +94,7 @@ public class LdapConfigurationContainer implements ConfigurationFacade
 
     private synchronized void initializeLdapMap()
     {
-        Map<String, Object> configurationMap = this.configurationServiceBootClient.loadLdapConfiguration("ldap", new HashMap<>(), null);
+        Map<String, Object> configurationMap = this.configurationServiceBootClient.loadLdapConfiguration(configurationClientConfig.getLdapPath(), new HashMap<>(), null);
 
         ldapDefaultMap = configurationMap.entrySet()
                 .stream()

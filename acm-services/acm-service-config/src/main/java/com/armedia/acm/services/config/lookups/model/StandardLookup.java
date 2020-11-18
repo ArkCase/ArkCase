@@ -92,7 +92,7 @@ public class StandardLookup extends AcmLookup<StandardLookupEntry>
 
         standardLookupEntries.forEach(entry -> {
             Map<String, Object> lookupEntry = new HashMap<>();
-            lookupEntry.put("key", entry.getKey());
+            lookupEntry.put("key", entry.getKey().replace(".", "__"));
             lookupEntry.put("value", entry.getValue());
             lookupEntry.put("readonly", entry.isReadonly());
             lookupEntry.put("primary", entry.isPrimary());

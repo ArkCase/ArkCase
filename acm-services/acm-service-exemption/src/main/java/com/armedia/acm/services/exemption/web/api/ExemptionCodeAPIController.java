@@ -27,8 +27,10 @@ package com.armedia.acm.services.exemption.web.api;
  * #L%
  */
 
-import java.util.List;
-
+import com.armedia.acm.services.exemption.exception.DeleteExemptionCodeException;
+import com.armedia.acm.services.exemption.exception.SaveExemptionCodeException;
+import com.armedia.acm.services.exemption.model.ExemptionCode;
+import com.armedia.acm.services.exemption.service.ExemptionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -40,11 +42,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.armedia.acm.services.exemption.exception.DeleteExemptionCodeException;
-import com.armedia.acm.services.exemption.exception.SaveExemptionCodeException;
-import com.armedia.acm.services.exemption.exception.UpdateExemptionStatuteException;
-import com.armedia.acm.services.exemption.model.ExemptionCode;
-import com.armedia.acm.services.exemption.service.ExemptionService;
+import java.util.List;
 
 /**
  * Created by ana.serafimoska
@@ -72,13 +70,6 @@ public class ExemptionCodeAPIController
     {
         exemptionService.deleteExemptionCode(tagId);
         return new ResponseEntity(HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/statute", method = RequestMethod.PUT)
-    @ResponseBody
-    public void updateExemptionStatute(@RequestBody ExemptionCode exemptionData) throws UpdateExemptionStatuteException
-    {
-        exemptionService.updateExemptionStatute(exemptionData);
     }
 
     public ExemptionService getExemptionService()

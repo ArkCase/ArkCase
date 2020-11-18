@@ -54,7 +54,6 @@
             <beans:property name="registrationDao" ref="userRegistrationRequestDao"/>
             <beans:property name="resetDao" ref="userResetRequestDao"/>
             <beans:property name="portalPersonDao" ref="portalSARPersonDao"/>
-            <beans:property name="portalInfoDAO" ref="portalInfoDAO"/>
             <beans:property name="ldapUserService" ref="ldapUserService"/>
             <beans:property name="personDao" ref="acmPersonDao"/>
             <beans:property name="notificationDao" ref="notificationDao"/>
@@ -64,6 +63,7 @@
             <beans:property name="acmUserEventPublisher" ref="acmUserEventPublisher"/>
             <beans:property name="organizationDao" ref="acmOrganizationDao"/>
             <beans:property name="requestAssignmentService" ref="requestAssignmentService"/>
+            <beans:property name="arkcasePortalConfigurationService" ref="arkcasePortalConfigurationService"/>
         </beans:bean>
 
         <beans:bean id="portalCreateRequestService" class="gov.privacy.service.PortalCreateRequestService">

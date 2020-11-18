@@ -755,8 +755,14 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
      *
      * @returns {Object} An array returned by $resource
      */
-    Service.getTimesheetTypes = function () {
-        return Service.getLookupByLookupName("timesheetTypes");
+    Service.getTimesheetTypes = function() {
+        var selectEntry = {key: null, value: "core.lookups.timesheet.types.select_type"};
+        var timesheetTypes = [];
+        return Service.getLookupByLookupName("timesheetTypes").then(function (types) {
+            timesheetTypes = types;
+            timesheetTypes.unshift(selectEntry);
+            return timesheetTypes;
+        });
     };
 
     /**
