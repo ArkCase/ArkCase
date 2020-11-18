@@ -30,7 +30,6 @@ package com.armedia.acm.portalgateway.service;
  * #L%
  */
 
-import com.armedia.acm.portalgateway.model.PortalInfo;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
@@ -43,7 +42,9 @@ public class DefaultPortalCheckUserAssignementService implements PortalCheckUser
 {
     private transient final Logger log = LogManager.getLogger(getClass());
 
-    private PortalInfoDAO portalInfoDao;
+    private ArkcasePortalConfigurationService arkcasePortalConfigurationService;
+
+    private PortalConfigurationService portalConfigurationService;
 
     /*
      * (non-Javadoc)
@@ -54,22 +55,12 @@ public class DefaultPortalCheckUserAssignementService implements PortalCheckUser
     public void isUserAssigned(String userId, String portalId) throws PortalUserAssignementException
     {
         log.debug("Checking if user with ID [{}] is assigned to portal with [{}] ID.", userId, portalId);
-        PortalInfo portalInfo = portalInfoDao.findByPortalId(portalId);
-        if (!portalInfo.getUser().getUserId().equals(userId))
+        if (!arkcasePortalConfigurationService.getPortalConfiguration().getUserId().equals(userId))
         {
             log.debug("User with ID [{}] is not assigned to portal with [{}] ID.", userId, portalId);
             throw new PortalUserAssignementException(
                     String.format("User with ID [%s] is not assigned to portal with [%s] ID.", userId, portalId));
         }
-    }
-
-    /**
-     * @param portalInfoDao
-     *            the portalInfoDao to set
-     */
-    public void setPortalInfoDao(PortalInfoDAO portalInfoDao)
-    {
-        this.portalInfoDao = portalInfoDao;
     }
 
 }

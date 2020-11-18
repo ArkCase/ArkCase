@@ -9,10 +9,7 @@
 
     <!-- <cache:annotation-driven/> -->
 
-    <bean id="portalInfoDAO" class="com.armedia.acm.portalgateway.service.PortalInfoDAO"/>
-
     <bean id="portalAdminService" class="com.armedia.acm.portalgateway.service.DefaultPortalAdminService">
-        <property name="portalInfoDao" ref="portalInfoDAO"/>
         <property name="userDao" ref="userJpaDao"/>
         <property name="groupDao" ref="groupDao"/>
         <property name="ldapUserService" ref="ldapUserService"/>
@@ -28,16 +25,24 @@
     </bean>
 
     <bean id="checkPortalUserService" class="com.armedia.acm.portalgateway.service.DefaultPortalCheckUserAssignementService">
-        <property name="portalInfoDao" ref="portalInfoDAO"/>
     </bean>
 
     <bean id="checkPortalUserAssignementAspect" class="com.armedia.acm.portalgateway.service.CheckPortalUserAssignementAspect">
         <property name="checkUserAssignementService" ref="checkPortalUserService"/>
     </bean>
 
+    <bean id="arkcasePortalConfigurationService" class="com.armedia.acm.portalgateway.service.ArkcasePortalConfigurationServiceImpl">
+        <property name="arkcasePortalConfig" ref="arkcasePortalConfig"/>
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
+    </bean>
+
     <bean id="portalConfigurationService" class="com.armedia.acm.portalgateway.service.PortalConfigurationServiceImpl">
         <property name="portalConfig" ref="portalConfig"/>
         <property name="configurationPropertyService" ref="configurationPropertyService"/>
+    </bean>
+
+    <bean id="arkcasePortalConfig" class="com.armedia.acm.portalgateway.model.ArkcasePortalConfig" scope="refresh">
+        <aop:scoped-proxy/>
     </bean>
 
     <bean id="portalConfig" class="com.armedia.acm.portalgateway.model.PortalConfig" scope="refresh">

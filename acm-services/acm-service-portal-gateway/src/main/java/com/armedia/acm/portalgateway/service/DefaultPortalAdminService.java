@@ -31,12 +31,8 @@ package com.armedia.acm.portalgateway.service;
  */
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
-import com.armedia.acm.portalgateway.model.PortalInfo;
-import com.armedia.acm.portalgateway.web.api.PortalInfoDTO;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
-import com.armedia.acm.services.users.model.AcmUser;
-import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
 import com.armedia.acm.services.users.service.ldap.LdapUserService;
 
@@ -47,14 +43,9 @@ import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.Authentication;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.NoResultException;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -65,8 +56,6 @@ import java.util.UUID;
 public class DefaultPortalAdminService implements PortalAdminService
 {
     private transient final Logger log = LogManager.getLogger(getClass());
-
-    private PortalInfoDAO portalInfoDao;
 
     private UserDao userDao;
 
@@ -89,112 +78,6 @@ public class DefaultPortalAdminService implements PortalAdminService
 
     /*
      * (non-Javadoc)
-     * @see com.armedia.acm.portalgateway.service.PortalAdminService#listRegisteredPortals()
-     */
-    @Override
-    public List<PortalInfo> listRegisteredPortals()
-    {
-        log.debug("Listing registered portals.");
-        return portalInfoDao.findAll();
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see com.armedia.acm.portalgateway.service.PortalAdminService#getPortalInfo(java.lang.String)
-     */
-    @Override
-    public PortalInfo getPortalInfo(String portalId) throws PortalAdminServiceException
-    {
-        log.debug("Retrieving portal info for portal with [{}] ID.", portalId);
-        try
-        {
-            return portalInfoDao.findByPortalId(portalId);
-        }
-        catch (NoResultException e)
-        {
-            log.warn("Can't find portal info for portal ID [{}].", portalId);
-            throw new PortalAdminServiceException(String.format("Can't find portal info for portal ID [%s].", portalId), e,
-                    GET_INFO_METHOD);
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see com.armedia.acm.portalgateway.service.PortalAdminService#registerPortal(com.armedia.acm.portalgateway.model.
-     * PortalInfo, java.lang.String, java.lang.String)
-     */
-    @Override
-    public PortalInfo registerPortal(PortalInfo portalInfo, String userId, String groupName)
-    {
-        AcmUser user = userDao.findByUserId(userId);
-        AcmGroup group = groupDao.findByName(groupName);
-        portalInfo.setPortalId(generateId());
-        portalInfo.setUser(user);
-        portalInfo.setGroup(group);
-        log.debug("Registering portal for [{}] URL with portal ID [{}].", portalInfo.getPortalUrl(), portalInfo.getPortalId());
-        return portalInfoDao.save(portalInfo);
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see com.armedia.acm.portalgateway.service.PortalAdminService#updatePortal(com.armedia.acm.portalgateway.model.
-     * PortalInfo, java.lang.String)
-     */
-    @Override
-    public PortalInfo updatePortal(PortalInfo portalInfo, String userId) throws PortalAdminServiceException
-    {
-        log.debug("Updating portal for [{}] URL with portal ID [{}].", portalInfo.getPortalUrl(), portalInfo.getPortalId());
-        try
-        {
-            AcmUser user = Optional.ofNullable(userDao.findByUserId(userId)).orElseThrow(() -> {
-                PortalAdminServiceException ex = new PortalAdminServiceException(
-                        String.format("Can't find user for user ID [%s].", userId), UPDATE_METHOD_USER);
-                return ex;
-            });
-            PortalInfo existing = portalInfoDao.findByPortalId(portalInfo.getPortalId());
-
-            existing.setPortalDescription(portalInfo.getPortalDescription());
-            existing.setPortalUrl(portalInfo.getPortalUrl());
-            existing.setUser(user);
-            existing.setGroup(portalInfo.getGroup());
-            existing.setPortalAuthenticationFlag(portalInfo.getPortalAuthenticationFlag());
-
-            return portalInfoDao.save(existing);
-        }
-        catch (NoResultException e)
-        {
-            log.warn("Can't find portal info for portal ID [{}].", portalInfo.getPortalId());
-            throw new PortalAdminServiceException(String.format("Can't find portal info for portal ID [%s].", portalInfo.getPortalId()), e,
-                    UPDATE_METHOD_PORTAL);
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see com.armedia.acm.portalgateway.service.PortalAdminService#unregisterPortal(java.lang.String)
-     */
-    @Override
-    @Transactional(rollbackFor = PortalAdminServiceException.class)
-    public PortalInfo unregisterPortal(String portalId) throws PortalAdminServiceException
-    {
-        log.debug("Unregistering portal with portal ID [{}].", portalId);
-        try
-        {
-            PortalInfo portalInfo = portalInfoDao.findByPortalId(portalId);
-            portalInfoDao.getEm().remove(portalInfo);
-            return portalInfo;
-        }
-        catch (NoResultException e)
-        {
-            log.warn("Can't find portal info for portal ID [{}].", portalId);
-            throw new PortalAdminServiceException(String.format("Can't find portal info for portal ID [%s].", portalId), e,
-                    UNREGISTER_METHOD);
-        }
-
-    }
-
-    /*
-     * (non-Javadoc)
      * @see
      * com.armedia.acm.portalgateway.service.PortalAdminService#getExceptionMapper(com.armedia.acm.portalgateway.service
      * .PortalServiceException)
@@ -206,22 +89,12 @@ public class DefaultPortalAdminService implements PortalAdminService
     }
 
     @Override
-    public void updatePortalInfo(PortalInfo portalInfo, PortalInfoDTO portalInfoDTO)
-    {
-        AcmGroup group = groupDao.findByName(portalInfoDTO.getGroupName());
-        portalInfo.setGroup(group);
-        portalInfo.setPortalDescription(portalInfoDTO.getPortalDescription());
-        portalInfo.setPortalUrl(portalInfoDTO.getPortalUrl());
-        portalInfo.setPortalAuthenticationFlag(portalInfoDTO.getPortalAuthenticationFlag());
-    }
-
-    @Override
     @Async
-    public void moveExistingLdapUsersToGroup(String newAcmGroup, PortalInfo previousPortalInfo, String directoryName, Authentication auth)
+    public void moveExistingLdapUsersToGroup(String newAcmGroup, ArkcasePortalConfigurationService previousPortalInfo, String directoryName, Authentication auth)
     {
         try
         {
-            ldapUserService.moveExistingLdapUsersToGroup(newAcmGroup, previousPortalInfo.getGroup().getName(), directoryName);
+            ldapUserService.moveExistingLdapUsersToGroup(newAcmGroup, previousPortalInfo.getPortalConfiguration().getGroupName(), directoryName);
             send(true, auth, previousPortalInfo);
         }
         catch (AcmLdapActionFailedException | AcmObjectNotFoundException e)
@@ -231,29 +104,19 @@ public class DefaultPortalAdminService implements PortalAdminService
         }
     }
 
-    private void send(Boolean action, Authentication auth, PortalInfo portalInfo)
+    private void send(Boolean action, Authentication auth, ArkcasePortalConfigurationService arkcasePortalConfigurationService)
     {
         log.debug("Send progress for moving portal users to another group");
 
         Map<String, Object> message = new HashMap<>();
         message.put("action", action);
         message.put("user", auth.getName());
-        message.put("previousPortalInfo", portalInfo);
+        message.put("previousPortalInfo", arkcasePortalConfigurationService.getPortalConfiguration());
         message.put("eventType", "portalUserProgress");
         Message<Map<String, Object>> progressMessage = MessageBuilder.withPayload(message).build();
 
         genericMessagesChannel.send(progressMessage);
     }
-
-    /**
-     * @param portalInfoDao
-     *            the portalInfoDao to set
-     */
-    public void setPortalInfoDao(PortalInfoDAO portalInfoDao)
-    {
-        this.portalInfoDao = portalInfoDao;
-    }
-
     /**
      * @param userDao
      *            the userDao to set

@@ -27,8 +27,7 @@ package gov.foia.service.dataupdate;
  * #L%
  */
 
-import com.armedia.acm.portalgateway.model.PortalInfo;
-import com.armedia.acm.portalgateway.service.PortalInfoDAO;
+import com.armedia.acm.portalgateway.service.ArkcasePortalConfigurationService;
 import com.armedia.acm.services.dataupdate.service.AcmDataUpdateExecutor;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -62,7 +61,7 @@ public class FoiaPortalRegistrationCleanupExecutor implements AcmDataUpdateExecu
 
     private UserRegistrationRequestDao registrationDao;
 
-    private PortalInfoDAO portalInfoDAO;
+    private ArkcasePortalConfigurationService arkcasePortalConfigurationService;
 
     @Override
     public String getUpdateId()
@@ -73,15 +72,12 @@ public class FoiaPortalRegistrationCleanupExecutor implements AcmDataUpdateExecu
     @Override
     public void execute()
     {
-        List<PortalInfo> portalInfoList = portalInfoDAO.findAll();
-        if (portalInfoList.size() > 0)
-        {
             AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class)
                     .get(String.format("%s_sync", directoryName));
             if (ldapSyncConfig != null && ldapSyncConfig.getUserPrefix() != null)
             {
                 List<AcmUser> acmUsers = userDao.findByPrefix(ldapSyncConfig.getUserPrefix());
-                String portalId = portalInfoList.get(0).getPortalId();
+                String portalId = arkcasePortalConfigurationService.getPortalConfiguration().getId();
                 acmUsers.forEach(user -> {
                     Optional<UserRegistrationRequestRecord> registrationRequestRecord = registrationDao.findByEmail(user.getMail(),
                             portalId);
@@ -91,7 +87,6 @@ public class FoiaPortalRegistrationCleanupExecutor implements AcmDataUpdateExecu
                     }
                 });
             }
-        }
     }
 
     public void setAcmContextHolder(SpringContextHolder acmContextHolder)
@@ -112,10 +107,5 @@ public class FoiaPortalRegistrationCleanupExecutor implements AcmDataUpdateExecu
     public void setRegistrationDao(UserRegistrationRequestDao registrationDao)
     {
         this.registrationDao = registrationDao;
-    }
-
-    public void setPortalInfoDAO(PortalInfoDAO portalInfoDAO)
-    {
-        this.portalInfoDAO = portalInfoDAO;
     }
 }

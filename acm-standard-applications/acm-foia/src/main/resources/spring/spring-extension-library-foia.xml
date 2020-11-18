@@ -54,7 +54,6 @@
             <beans:property name="registrationDao" ref="userRegistrationRequestDao"/>
             <beans:property name="resetDao" ref="userResetRequestDao"/>
             <beans:property name="portalPersonDao" ref="portalFOIAPersonDao"/>
-            <beans:property name="portalInfoDAO" ref="portalInfoDAO"/>
             <beans:property name="ldapUserService" ref="ldapUserService"/>
             <beans:property name="personDao" ref="acmPersonDao"/>
             <beans:property name="notificationDao" ref="notificationDao"/>
@@ -192,7 +191,6 @@
             <beans:property name="acmContextHolder" ref="acmContextHolder"/>
             <beans:property name="userDao" ref="userJpaDao"/>
             <beans:property name="registrationDao" ref="userRegistrationRequestDao"/>
-            <beans:property name="portalInfoDAO" ref="portalInfoDAO"/>
         </beans:bean>
 
         <beans:bean id="solrReindexAcmUserExecutor" class="gov.foia.service.dataupdate.SolrReindexAcmUserExecutor">
