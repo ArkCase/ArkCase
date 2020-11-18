@@ -35,14 +35,13 @@ import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonOrganizationAssociation;
-import com.armedia.acm.portalgateway.model.PortalInfo;
 import com.armedia.acm.portalgateway.model.PortalUser;
 import com.armedia.acm.portalgateway.model.PortalUserCredentials;
 import com.armedia.acm.portalgateway.model.UserRegistrationRequest;
 import com.armedia.acm.portalgateway.model.UserRegistrationResponse;
 import com.armedia.acm.portalgateway.model.UserResetRequest;
 import com.armedia.acm.portalgateway.model.UserResetResponse;
-import com.armedia.acm.portalgateway.service.PortalInfoDAO;
+import com.armedia.acm.portalgateway.service.ArkcasePortalConfigurationService;
 import com.armedia.acm.portalgateway.service.PortalUserServiceException;
 import com.armedia.acm.portalgateway.service.PortalUserServiceProvider;
 import com.armedia.acm.services.email.model.EmailBodyBuilder;
@@ -118,8 +117,6 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
 
     private LdapUserService ldapUserService;
 
-    private PortalInfoDAO portalInfoDAO;
-
     private PersonDao personDao;
 
     private RequestAssignmentService requestAssignmentService;
@@ -138,6 +135,8 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     private AcmUserEventPublisher acmUserEventPublisher;
 
     private OrganizationDao organizationDao;
+
+    private ArkcasePortalConfigurationService arkcasePortalConfigurationService;
 
     /*
      * (non-Javadoc)
@@ -258,9 +257,8 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
 
     private void regenerateRegistration(String portalId, UserRegistrationRequestRecord registrationRecord)
     {
-        PortalInfo portal = portalInfoDAO.findByPortalId(portalId);
         String portalRegistrationUrl = Base64Utils
-                .encodeToString((portal.getPortalUrl() + "/portal/login/register").getBytes());
+                .encodeToString((arkcasePortalConfigurationService.getPortalConfiguration().getUrl() + "/portal/login/register").getBytes());
 
         UserRegistrationRequest newRegistrationRequest = new UserRegistrationRequest();
         newRegistrationRequest.setEmailAddress(registrationRecord.getEmailAddress());
@@ -423,9 +421,8 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     {
         UserResetRequest resetRequest = new UserResetRequest();
         resetRequest.setEmailAddress(user.getEmail());
-        PortalInfo portal = portalInfoDAO.findByPortalId(portalId);
         String baseUrl = Base64Utils
-                .encodeToString((new String(portal.getPortalUrl() + "/portal/login/reset")).getBytes());
+                .encodeToString((new String(arkcasePortalConfigurationService.getPortalConfiguration().getUrl() + "/portal/login/reset")).getBytes());
         resetRequest.setResetUrl(baseUrl);
         return resetRequest;
     }
@@ -442,11 +439,10 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     {
         try
         {
-            PortalInfo portalInfo = portalInfoDAO.findByPortalId(portalId);
             AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directoryName);
             UserDTO userDto = userDTOFromPortalUser(user,
                     password != null ? new String(Base64Utils.decodeFromString(password), Charset.forName("UTF-8")) : null,
-                    portalInfo.getGroup().getName());
+                    arkcasePortalConfigurationService.getPortalConfiguration().getGroupName());
             portalPersonDao.save(person);
             Optional<AcmUser> foundAcmUser = userDao.findByEmailAddress(user.getEmail()).stream().findFirst();
             AcmUser acmUser;
@@ -1260,15 +1256,6 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     }
 
     /**
-     * @param portalInfoDAO
-     *            the portalInfoDAO to set
-     */
-    public void setPortalInfoDAO(PortalInfoDAO portalInfoDAO)
-    {
-        this.portalInfoDAO = portalInfoDAO;
-    }
-
-    /**
      * @param directoryName
      *            the directoryName to set
      */
@@ -1348,5 +1335,13 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     public void setRequestAssignmentService(RequestAssignmentService requestAssignmentService)
     {
         this.requestAssignmentService = requestAssignmentService;
+    }
+
+    public ArkcasePortalConfigurationService getArkcasePortalConfigurationService() {
+        return arkcasePortalConfigurationService;
+    }
+
+    public void setArkcasePortalConfigurationService(ArkcasePortalConfigurationService arkcasePortalConfigurationService) {
+        this.arkcasePortalConfigurationService = arkcasePortalConfigurationService;
     }
 }
