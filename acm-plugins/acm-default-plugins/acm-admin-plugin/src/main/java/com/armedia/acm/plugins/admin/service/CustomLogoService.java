@@ -27,6 +27,7 @@ package com.armedia.acm.plugins.admin.service;
  * #L%
  */
 
+import com.armedia.acm.configuration.model.ConfigurationClientConfig;
 import com.armedia.acm.configuration.service.FileConfigurationService;
 import com.armedia.acm.plugins.admin.exception.AcmCustomLogoException;
 
@@ -51,6 +52,7 @@ public class CustomLogoService
     private String emailLogoFile;
 
     private FileConfigurationService fileConfigurationService;
+    private ConfigurationClientConfig configurationClientConfig;
 
     /**
      * Return Header logo
@@ -133,7 +135,8 @@ public class CustomLogoService
     private void updateFile(InputStreamResource logoFileSource, String fileName) throws IOException
     {
         log.debug("Trying to update the file with file name {} in the configuration.", fileName);
-        fileConfigurationService.moveFileToConfiguration(logoFileSource, "branding/" + fileName);
+        fileConfigurationService.moveFileToConfiguration(logoFileSource,
+                configurationClientConfig.getBrandingPath() + "/" + fileName);
     }
 
     public void setBrandingFilesLocation(String brandingFilesLocation)
@@ -164,5 +167,10 @@ public class CustomLogoService
     public void setFileConfigurationService(FileConfigurationService fileConfigurationService)
     {
         this.fileConfigurationService = fileConfigurationService;
+    }
+
+    public void setConfigurationClientConfig(ConfigurationClientConfig configurationClientConfig)
+    {
+        this.configurationClientConfig = configurationClientConfig;
     }
 }

@@ -71,6 +71,7 @@
         <property name="taskEventPublisher" ref="taskEventPublisher"/>
         <property name="objectConverter" ref="objectConverter"/>
         <property name="fileParticipantService" ref="fileParticipantService"/>
+        <property name="ecmFileService" ref="ecmFileService"/>
         <property name="requiredFieldsPerOutcomeMap">
             <map>
                 <entry key="APPROVE">

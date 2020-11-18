@@ -209,13 +209,50 @@
                     "headerCellFilter": "translate",
                     "enableCellEdit": false,
                     "lookup": "userFullNames"
-                },
+                }
+            ]
+        }
+    },
+    {
+        "op": "add",
+        "path": "/components/-",
+        "value": {
+            "id": "exemptionStatute",
+            "title": "cases.comp.statute.title",
+            "icon": "fa fa-code",
+            "enabled": true,
+            "type": "grid",
+            "enableFiltering": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 5,
+            "columnDefs": [
                 {
                     "name": "exemptionStatute",
-                    "displayName": "cases.comp.exemption.table.columns.statute",
+                    "displayName": "cases.comp.statute.table.columns.exemptionStatute",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "exemptionStatus",
+                    "displayName": "cases.comp.statute.table.columns.exemptionStatus",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "created",
+                    "displayName": "cases.comp.statute.table.columns.created",
+                    "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "creator",
+                    "displayName": "cases.comp.statute.table.columns.creator",
                     "headerCellFilter": "translate",
                     "enableCellEdit": false,
-                    "cellTemplate": "<div class='ui-grid-cell-contents' title='{{grid.appScope.utils.getLookupValue(grid.appScope.exemptionStatutes, row.entity.exemptionStatute) | translate }}'>{{ grid.appScope.utils.getLookupValue(grid.appScope.exemptionStatutes, row.entity.exemptionStatute) | translate }}</div>"
+                    "lookup": "userFullNames"
                 }
             ]
         }
