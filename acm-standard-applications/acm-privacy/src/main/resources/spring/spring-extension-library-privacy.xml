@@ -63,6 +63,7 @@
             <beans:property name="acmUserEventPublisher" ref="acmUserEventPublisher"/>
             <beans:property name="organizationDao" ref="acmOrganizationDao"/>
             <beans:property name="requestAssignmentService" ref="requestAssignmentService"/>
+            <beans:property name="arkcasePortalConfigurationService" ref="arkcasePortalConfigurationService"/>
         </beans:bean>
 
         <beans:bean id="portalCreateRequestService" class="gov.privacy.service.PortalCreateRequestService">
