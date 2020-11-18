@@ -354,6 +354,9 @@ angular.module('directives').directive(
                                         if (DocTree.readOnly) {
                                             return false;
                                         }
+                                        if ("RECORD" === Util.goodValue(node.data.status)) {
+                                            return false;
+                                        }
                                         if (DocTree.isTopNode(data.node) || DocTree.isSpecialNode(data.node)) {
                                             return false;
                                         }
@@ -1704,7 +1707,7 @@ angular.module('directives').directive(
                                             var root = DocTree.getTopNode();
                                             parentNode = root.data;
                                         }
-                                        var urlArgs = node.data.objectId + "/" + parentNode.containerObjectId + "/" + parentNode.containerObjectType + "/" + encodeURIComponent(node.data.name) + "/" + selectedIdsList;
+                                        var urlArgs = node.data.objectId + "/" + parentNode.containerObjectId + "/" + parentNode.containerObjectType + "/" + encodeURIComponent(node.data.name) + "/" + selectedIdsList + "/" + node.data.status;
                                         window.open(baseUrl + '!/viewer/' + urlArgs);
                                     }
                                 }, {

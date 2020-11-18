@@ -27,14 +27,15 @@ package com.armedia.acm.form.closecomplaint.service;
  * #L%
  */
 
-import com.armedia.acm.activiti.services.AcmBpmnService;
+import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.form.closecomplaint.model.CloseComplaintFormEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 import com.armedia.acm.plugins.ecm.workflow.EcmFileWorkflowConfiguration;
+import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 
-import org.activiti.engine.runtime.ProcessInstance;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationListener;
@@ -51,19 +52,28 @@ public class CloseComplaintWorkflowListener implements ApplicationListener<Close
 {
     private final Logger log = LogManager.getLogger(getClass());
     private FileWorkflowBusinessRule fileWorkflowBusinessRule;
-    private AcmBpmnService acmBpmnService;
     private String closeComplaintTaskName;
+    private TaskDao taskDao;
 
     @Override
     public void onApplicationEvent(CloseComplaintFormEvent closeComplaintFormEvent)
     {
         if (!"edit".equals(closeComplaintFormEvent.getMode()))
         {
-            handleNewCloseComplaintRequest(closeComplaintFormEvent);
+            try
+            {
+                handleNewCloseComplaintRequest(closeComplaintFormEvent);
+            }
+            catch (AcmCreateObjectFailedException | AcmUserActionFailedException e)
+            {
+                // Nothing we can do at this point, just rethrow error
+                throw new RuntimeException("Error caused while starting business process, CloseComplaint", e);
+            }
         }
     }
 
     protected void handleNewCloseComplaintRequest(CloseComplaintFormEvent closeComplaintFormEvent)
+            throws AcmUserActionFailedException, AcmCreateObjectFailedException
     {
         EcmFile pdfRendition = closeComplaintFormEvent.getUploadedFiles().getPdfRendition();
         EcmFileWorkflowConfiguration configuration = new EcmFileWorkflowConfiguration();
@@ -86,6 +96,7 @@ public class CloseComplaintWorkflowListener implements ApplicationListener<Close
     }
 
     private void startBusinessProcess(CloseComplaintFormEvent closeComplaintFormEvent, EcmFileWorkflowConfiguration configuration)
+            throws AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         String processName = configuration.getProcessName();
 
@@ -124,9 +135,8 @@ public class CloseComplaintWorkflowListener implements ApplicationListener<Close
 
         log.debug("starting process: [{}]", processName);
 
-        ProcessInstance pi = getAcmBpmnService().startBusinessProcess(processName, pvars);
+        getTaskDao().startBusinessProcess(pvars, processName);
 
-        log.debug("process ID: [{}]", pi.getId());
     }
 
     private List<String> findReviewers(CloseComplaintFormEvent closeComplaintFormEvent)
@@ -162,13 +172,13 @@ public class CloseComplaintWorkflowListener implements ApplicationListener<Close
         this.closeComplaintTaskName = closeComplaintTaskName;
     }
 
-    public AcmBpmnService getAcmBpmnService()
+    public TaskDao getTaskDao()
     {
-        return acmBpmnService;
+        return taskDao;
     }
 
-    public void setAcmBpmnService(AcmBpmnService acmBpmnService)
+    public void setTaskDao(TaskDao taskDao)
     {
-        this.acmBpmnService = acmBpmnService;
+        this.taskDao = taskDao;
     }
 }

@@ -267,7 +267,10 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                         // run.getCharacterSpacing() throws NullPointerException. Maybe in future version of the library
                         // this will be fixed.
                         // newRun.setCharacterSpacing(run.getCharacterSpacing());
-                        newRun.setColor(run.getColor());
+                        if (run.getColor() != null)
+                        {
+                            newRun.setColor(run.getColor());
+                        }
                         newRun.setDoubleStrikethrough(run.isDoubleStrikeThrough());
                         newRun.setEmbossed(run.isEmbossed());
                         newRun.setFontFamily(run.getFontFamily());
@@ -369,7 +372,10 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                         // run.getCharacterSpacing() throws NullPointerException. Maybe in future version of the library
                         // this will be fixed.
                         // newRun.setCharacterSpacing(run.getCharacterSpacing());
-                        newRun.setColor(run.getColor());
+                        if (run.getColor() != null)
+                        {
+                            newRun.setColor(run.getColor());
+                        }
                         newRun.setDoubleStrikethrough(run.isDoubleStrikeThrough());
                         newRun.setEmbossed(run.isEmbossed());
                         newRun.setFontFamily(run.getFontFamily());
