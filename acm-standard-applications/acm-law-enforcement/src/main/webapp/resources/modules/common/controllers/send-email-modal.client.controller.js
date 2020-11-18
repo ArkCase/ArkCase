@@ -63,7 +63,18 @@ angular.module('common').controller('Common.SendEmailModalController', [ '$scope
             $scope.recipientsStr = buildRecipientsStr(recipients);
         });
     };
-    
+
+    $scope.loadContent = function () {
+
+        var getTemplateContentPromise = correspondenceService.retrieveTemplateContent($scope.template);
+
+        getTemplateContentPromise.then(function (response) {
+            $scope.templateContent = response.data.templateContent.replace("${baseURL}", window.location.href.split('/home.html#!')[0]);
+            document.getElementById("content").innerHTML=$scope.templateContent;
+        });
+
+    };
+
     $scope.onClickCancel = function() {
         $modalInstance.dismiss();
     };

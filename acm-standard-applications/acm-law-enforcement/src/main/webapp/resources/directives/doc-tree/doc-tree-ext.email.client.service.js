@@ -122,7 +122,8 @@ angular.module('services').factory('DocTreeExt.Email',
                             nodes: nodes,
                             emailSendConfiguration: DocTree.treeConfig.emailSendConfiguration,
                             DocTree: DocTree,
-                            emailOfOriginator: emailOfOriginator
+                            emailOfOriginator: emailOfOriginator,
+                            emailSubject: DocTree.scope.objectType === 'CASE_FILE' ? "Case " + DocTree.scope.objectInfo.acmObjectNumber : DocTree.scope.objectType.charAt(0) + DocTree.scope.objectType.substring(1).toLowerCase() + " " + DocTree.scope.objectInfo.acmObjectNumber
                         };
 
                         modalInstance = $modal.open({
@@ -189,6 +190,7 @@ angular.module('directives').controller('directives.DocTreeEmailDialogController
     });
     $scope.emailDataModel = {};
     $scope.emailDataModel.selectedFilesToEmail = DocTreeExtEmail._extractFileIds($scope.nodes);
+    $scope.emailDataModel.subject = params.emailSubject;
 
     var templatesPromise = correspondenceService.retrieveActiveVersionTemplatesList('emailTemplate');
     templatesPromise.then(function(templates) {
@@ -254,6 +256,17 @@ angular.module('directives').controller('directives.DocTreeEmailDialogController
         } else {
             $scope.emailDataModel.selectedFilesToEmail.push(fileId);
         }
+    };
+
+    $scope.loadContent = function () {
+
+        var getTemplateContentPromise = correspondenceService.retrieveTemplateContent($scope.template);
+
+        getTemplateContentPromise.then(function (response) {
+            $scope.templateContent = response.data.templateContent.replace("${baseURL}", window.location.href.split('/home.html#!')[0]);
+            document.getElementById("content").innerHTML=$scope.templateContent;
+        });
+
     };
 
     $scope.onClickCancel = function() {

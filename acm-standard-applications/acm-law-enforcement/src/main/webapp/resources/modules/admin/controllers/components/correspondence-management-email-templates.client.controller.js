@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('admin').controller('Admin.CMEmailTemplatesController',
-    [ '$scope', '$modal', 'Admin.CMTemplatesService', 'Helper.UiGridService', 'MessageService', 'LookupService', 'Acm.StoreService', 'Object.LookupService', 'Admin.CMMergeFieldsService', '$translate',
-        function($scope, $modal, correspondenceService, HelperUiGridService, messageService, LookupService, Store, ObjectLookupService, correspondenceMergeFieldsService, $translate) {
+    [ '$rootScope', '$scope', '$modal', 'Admin.CMTemplatesService', 'Helper.UiGridService', 'MessageService', 'LookupService', 'Acm.StoreService', 'Object.LookupService', 'Admin.CMMergeFieldsService', '$translate',
+        function($rootScope, $scope, $modal, correspondenceService, HelperUiGridService, messageService, LookupService, Store, ObjectLookupService, correspondenceMergeFieldsService, $translate) {
 
             var gridHelper = new HelperUiGridService.Grid({
                 scope: $scope
@@ -150,6 +150,44 @@ angular.module('admin').controller('Admin.CMEmailTemplatesController',
                 });
 
             };
+
+            $scope.previewTemplate = function() {
+
+                var getTemplateContentPromise = correspondenceService.retrieveTemplateContent($scope.selectedRows[0].templateFilename);
+
+                getTemplateContentPromise.then(function (response) {
+                    $scope.templateContent = response.data.templateContent;
+                    var params = {
+                      templateContent: $scope.templateContent
+                    };
+                    var modalInstance = $modal.open({
+                        templateUrl: 'modules/admin/views/components/correspondence-management-email-template-preview-modal.client.view.html',
+                        controller: 'Admin.CMEmailTemplatePreviewModalController',
+                        animation: true,
+                        size: 'lg',
+                        backdrop: 'static',
+                        resolve: {
+                            params: function() {
+                                return params;
+                            }
+                        }
+                    });
+
+                    setTimeout(function () {
+                        $rootScope.$broadcast('add-template-content');
+                    },500);
+
+                    modalInstance.result.then(function (value) {
+
+                    });
+
+                });
+
+
+            };
+
+
+
 
             $scope.activate = function(rowEntity) {
                 var template = angular.copy(rowEntity);
