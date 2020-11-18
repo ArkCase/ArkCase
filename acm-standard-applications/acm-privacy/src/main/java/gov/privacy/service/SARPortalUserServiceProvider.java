@@ -1303,4 +1303,12 @@ public class SARPortalUserServiceProvider implements PortalUserServiceProvider
     {
         this.requestAssignmentService = requestAssignmentService;
     }
+
+    public ArkcasePortalConfigurationService getArkcasePortalConfigurationService() {
+        return arkcasePortalConfigurationService;
+    }
+
+    public void setArkcasePortalConfigurationService(ArkcasePortalConfigurationService arkcasePortalConfigurationService) {
+        this.arkcasePortalConfigurationService = arkcasePortalConfigurationService;
+    }
 }

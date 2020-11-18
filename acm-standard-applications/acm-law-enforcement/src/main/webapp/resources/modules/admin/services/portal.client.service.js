@@ -2,17 +2,17 @@
 
 angular.module('admin').factory('Admin.PortalConfigurationService', [ '$http', function($http) {
 
-    var getPortalConfig = function () {
+    var getArkcasePortalConfig = function () {
         return $http({
             method: 'GET',
-            url: 'api/latest/service/portalgateway/admin/portals/config'
+            url: 'api/latest/service/portalgateway/admin/arkcase/portal/config'
         });
     };
 
-    var savePortalConfig = function (portal) {
+    var saveArkcasePortalConfig = function (portal) {
         return $http({
             method: 'PUT',
-            url: 'api/latest/service/portalgateway/admin/portals/config',
+            url: 'api/latest/service/portalgateway/admin/arkcase/portal/config',
             data: portal,
             headers: {
                 "Content-Type": "application/json"
@@ -20,17 +20,17 @@ angular.module('admin').factory('Admin.PortalConfigurationService', [ '$http', f
         });
     };
 
-    var getAuthenticatedMode = function () {
+    var getPortalConfig = function () {
         return $http({
             method: 'GET',
-            url: 'api/latest/service/portalgateway/admin/portals/authenticatedMode'
+            url: 'api/latest/service/portalgateway/admin/portal/config'
         });
     };
 
-    var saveAuthenticatedMode = function (portal) {
+    var savePortalConfig = function (portal) {
         return $http({
             method: 'PUT',
-            url: 'api/latest/service/portalgateway/admin/portals/authenticatedMode',
+            url: 'api/latest/service/portalgateway/admin/portal/config',
             data: portal,
             headers: {
                 "Content-Type": "application/json"
@@ -39,10 +39,10 @@ angular.module('admin').factory('Admin.PortalConfigurationService', [ '$http', f
     };
 
     return {
-        getAuthenticatedMode: getAuthenticatedMode,
-        saveAuthenticatedMode: saveAuthenticatedMode,
         getPortalConfig: getPortalConfig,
-        savePortalConfig: savePortalConfig
+        savePortalConfig: savePortalConfig,
+        getArkcasePortalConfig: getArkcasePortalConfig,
+        saveArkcasePortalConfig: saveArkcasePortalConfig
     };
 
 } ]);

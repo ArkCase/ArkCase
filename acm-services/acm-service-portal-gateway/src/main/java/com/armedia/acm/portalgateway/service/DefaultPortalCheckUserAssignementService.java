@@ -44,8 +44,6 @@ public class DefaultPortalCheckUserAssignementService implements PortalCheckUser
 
     private ArkcasePortalConfigurationService arkcasePortalConfigurationService;
 
-    private PortalConfigurationService portalConfigurationService;
-
     /*
      * (non-Javadoc)
      * @see com.armedia.acm.portalgateway.service.PortalCheckUserAssignementService#isUserAssigned(java.lang.String,
@@ -63,4 +61,11 @@ public class DefaultPortalCheckUserAssignementService implements PortalCheckUser
         }
     }
 
+    public ArkcasePortalConfigurationService getArkcasePortalConfigurationService() {
+        return arkcasePortalConfigurationService;
+    }
+
+    public void setArkcasePortalConfigurationService(ArkcasePortalConfigurationService arkcasePortalConfigurationService) {
+        this.arkcasePortalConfigurationService = arkcasePortalConfigurationService;
+    }
 }

@@ -25,6 +25,7 @@
     </bean>
 
     <bean id="checkPortalUserService" class="com.armedia.acm.portalgateway.service.DefaultPortalCheckUserAssignementService">
+        <property name="arkcasePortalConfigurationService" ref="arkcasePortalConfigurationService"/>
     </bean>
 
     <bean id="checkPortalUserAssignementAspect" class="com.armedia.acm.portalgateway.service.CheckPortalUserAssignementAspect">

@@ -108,4 +108,12 @@ public class FoiaPortalRegistrationCleanupExecutor implements AcmDataUpdateExecu
     {
         this.registrationDao = registrationDao;
     }
+
+    public ArkcasePortalConfigurationService getArkcasePortalConfigurationService() {
+        return arkcasePortalConfigurationService;
+    }
+
+    public void setArkcasePortalConfigurationService(ArkcasePortalConfigurationService arkcasePortalConfigurationService) {
+        this.arkcasePortalConfigurationService = arkcasePortalConfigurationService;
+    }
 }

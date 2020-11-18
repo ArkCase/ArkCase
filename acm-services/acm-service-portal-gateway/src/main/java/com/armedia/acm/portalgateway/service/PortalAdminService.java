@@ -52,10 +52,6 @@ public interface PortalAdminService
      */
     String generateId();
 
-    /**
-     * @return
-     */
-//    List<ArkcasePortalConfigurationService> listRegisteredPortals();
 
     /**
      * @param se
