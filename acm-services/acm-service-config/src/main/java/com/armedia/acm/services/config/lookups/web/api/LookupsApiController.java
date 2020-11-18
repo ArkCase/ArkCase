@@ -137,8 +137,7 @@ public class LookupsApiController
     {
         log.debug("Update lookup definition for lookupType: {}, lookupName: {}, lookupAsJson: {}, readonly: {}",
                 lookupDefinition.getLookupType(),
-                lookupDefinition.getName(), lookupDefinition.getReadonly(), lookupDefinition.getLookupEntriesAsJson(),
-                lookupDefinition.getReadonly());
+                lookupDefinition.getName(), lookupDefinition.getLookupEntriesAsJson(), lookupDefinition.getReadonly());
         return lookupDao.saveLookup(lookupDefinition);
     }
 
