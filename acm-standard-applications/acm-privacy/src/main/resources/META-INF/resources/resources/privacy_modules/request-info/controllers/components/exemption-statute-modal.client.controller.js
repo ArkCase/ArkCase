@@ -2,10 +2,6 @@
 
 angular.module('request-info').controller('RequestInfo.ExemptionStatuteModalController', ['$scope', '$modal', '$modalInstance', 'Object.LookupService', 'params', 'ConfigService', function ($scope, $modal, $modalInstance, ObjectLookupService, params, ConfigService) {
 
-    if (params.item.exemptionStatute) {
-        $scope.statute = params.item.exemptionStatute
-    }
-
     $scope.exemptionStatutes = params.exemptionStatutes;
 
     ConfigService.getModuleConfig('request-info').then(function (moduleConfig) {

@@ -27,6 +27,7 @@ package com.armedia.acm.camelcontext.flow.route;
  * #L%
  */
 
+import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
 import com.armedia.acm.camelcontext.basic.auth.HttpInvokerUtil;
 import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
 
@@ -63,9 +64,12 @@ public class MoveDocumentRoute extends ArkCaseAbstractRoute
                 .process(exchange -> {
                     routeProperties = (Map<String, Object>) exchange.getIn().getBody();
                     exchange.getIn().getHeaders().put(PropertyIds.OBJECT_TYPE_ID, CamelCMISConstants.CMIS_DOCUMENT);
-                    exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_OBJECT_ID, routeProperties.get("cmisObjectId"));
-                    exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_SOURCE_FOLDER_ID, routeProperties.get("srcFolderId"));
-                    exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_DESTIONATION_FOLDER_ID, routeProperties.get("dstFolderId"));
+                    exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_OBJECT_ID,
+                            routeProperties.get(ArkCaseCMISConstants.CMIS_OBJECT_ID));
+                    exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_SOURCE_FOLDER_ID,
+                            routeProperties.get(ArkCaseCMISConstants.SOURCE_FOLDER_ID));
+                    exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_DESTIONATION_FOLDER_ID,
+                            routeProperties.get(ArkCaseCMISConstants.DESTINATION_FOLDER_ID));
                     exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_ACTION, CamelCMISActions.MOVE_DOCUMENT);
                     MDC.put(HttpInvokerUtil.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY,
                             String.valueOf(routeProperties.get(HttpInvokerUtil.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY)));

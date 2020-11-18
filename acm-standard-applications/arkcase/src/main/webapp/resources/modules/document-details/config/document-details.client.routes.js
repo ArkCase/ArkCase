@@ -23,10 +23,10 @@ angular.module('services').config([ '$provide', function($provide) {
 
 angular.module('document-details').config([ '$stateProvider', function($stateProvider) {
     $stateProvider.state('viewer', {
-        url: '/viewer/:id/:containerId/:containerType/:name/:selectedIds',
+        url: '/viewer/:id/:containerId/:containerType/:name/:selectedIds/:documentStatus',
         templateUrl: 'modules/document-details/views/document-details.client.view.html',
         resolve: {
-            translatePartialLoader: [ '$translate', '$translatePartialLoader', function($translate, $translatePartialLoader) {
+            translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
                 $translatePartialLoader.addPart('document-details');
                 $translatePartialLoader.addPart('common');
                 $translatePartialLoader.addPart('tasks');

@@ -13,4 +13,11 @@
         <dropColumn tableName="acm_complaint" columnName="cm_complaint_ecm_folder_id"/>
     </changeSet>
 
+    <changeSet  id="complaint-db-drops-01-drop-acm_portal_info_foreign_keys" author="aleksandar.pavleski">
+        <dropForeignKeyConstraint baseTableName="acm_portal_info" constraintName="fk_user_id"/>
+        <dropForeignKeyConstraint baseTableName="acm_portal_info" constraintName="fk_pi_group_name"/>
+        <dropTable  tableName="acm_portal_info" cascadeConstraints="true"/>
+        <dropTable  tableName="acm_portal_info_id" cascadeConstraints="true"/>
+    </changeSet>
+
 </databaseChangeLog>

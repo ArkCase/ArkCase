@@ -27,22 +27,20 @@ package com.armedia.acm.services.exemption.service.impl;
  * #L%
  */
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.armedia.acm.services.exemption.dao.ExemptionCodeDao;
 import com.armedia.acm.services.exemption.exception.DeleteExemptionCodeException;
 import com.armedia.acm.services.exemption.exception.SaveExemptionCodeException;
-import com.armedia.acm.services.exemption.exception.UpdateExemptionStatuteException;
 import com.armedia.acm.services.exemption.model.ExemptionCode;
 import com.armedia.acm.services.exemption.model.ExemptionCodeEventPublisher;
 import com.armedia.acm.services.exemption.model.ExemptionConstants;
 import com.armedia.acm.services.exemption.service.ExemptionService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by ana.serafimoska
@@ -67,8 +65,6 @@ public class ExemptionServiceImpl implements ExemptionService
             {
                 ExemptionCode exemptionCodeObj = new ExemptionCode();
                 exemptionCodeObj.setExemptionCode(code);
-                exemptionCodeObj.setCreated(created);
-                exemptionCodeObj.setCreator(user);
                 exemptionCodeObj.setExemptionStatus(ExemptionConstants.EXEMPTION_STATUS_MANUAL);
                 exemptionCodeObj.setManuallyFlag(true);
                 exemptionCodeObj.setParentObjectId(exemptionCodes.getParentObjectId());
@@ -101,26 +97,6 @@ public class ExemptionServiceImpl implements ExemptionService
             log.error("Delete failed for exemption code with id: {}", tagId);
             throw new DeleteExemptionCodeException("Unable to delete exemption code with id: {}" + tagId, e);
         }
-    }
-
-    @Override
-    @Transactional
-    public void updateExemptionStatute(ExemptionCode exemptionData) throws UpdateExemptionStatuteException
-    {
-        log.info("Updating exemption statute for the code with id: {}", exemptionData.getId());
-        try
-        {
-            getExemptionCodeDao().save(exemptionData);
-            getExemptionCodeEventPublisher().publishExemptionCodeUpdatedEvent(exemptionData);
-        }
-        catch (Exception e)
-        {
-            log.error("Update failed for exemption code with id: {}", exemptionData.getId());
-            throw new UpdateExemptionStatuteException(
-                    "Unable to update exemption statute to exemption code with id: {}" + exemptionData.getId(), e);
-
-        }
-
     }
 
     public ExemptionCodeDao getExemptionCodeDao()

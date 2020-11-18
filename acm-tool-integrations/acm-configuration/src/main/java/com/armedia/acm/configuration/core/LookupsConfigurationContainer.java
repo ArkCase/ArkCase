@@ -30,6 +30,7 @@ package com.armedia.acm.configuration.core;
 import com.armedia.acm.configuration.api.ConfigurationFacade;
 import com.armedia.acm.configuration.api.environment.Environment;
 import com.armedia.acm.configuration.client.ConfigurationServiceBootClient;
+import com.armedia.acm.configuration.model.ConfigurationClientConfig;
 import com.armedia.acm.configuration.model.LookupsUpdatedEvent;
 import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
 import com.armedia.acm.crypto.properties.AcmEncryptablePropertyUtils;
@@ -66,6 +67,9 @@ public class LookupsConfigurationContainer implements ConfigurationFacade, Appli
     private ConfigurationServiceBootClient configurationServiceBootClient;
 
     @Autowired
+    private ConfigurationClientConfig configurationClientConfig;
+
+    @Autowired
     private AcmEncryptablePropertyUtils encryptablePropertyUtils;
 
     private ApplicationEventPublisher applicationEventPublisher;
@@ -95,10 +99,12 @@ public class LookupsConfigurationContainer implements ConfigurationFacade, Appli
 
     private synchronized void initializeLookupsMap()
     {
-        List<Environment> environments = configurationServiceBootClient
-                .getRemoteEnvironment(configurationServiceBootClient.configRestTemplate(), "lookups", null);
+        String lookupsPath = configurationClientConfig.getLookupsPath();
 
-        Map<String, Object> configurationMap = this.configurationServiceBootClient.loadConfiguration("lookups", null);
+        List<Environment> environments = configurationServiceBootClient
+                .getRemoteEnvironment(configurationServiceBootClient.configRestTemplate(), lookupsPath, null);
+
+        Map<String, Object> configurationMap = this.configurationServiceBootClient.loadConfiguration(lookupsPath, null);
         this.runtimeConfigurationMap = this.configurationServiceBootClient.loadRuntimeConfigurationMap(environments);
 
         lookupsDefaultMap = configurationMap.entrySet()

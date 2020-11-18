@@ -61,8 +61,6 @@ public class FileConfigurationServiceImpl implements FileConfigurationService
 
     private String customFilesLocation;
 
-    private static final String BRANDING_LOCATION = "branding";
-
     private static final String RULES_EXTENSION = "xlsx";
 
     private static final String STYLESHEET_EXTENSION = "xsl";
@@ -98,11 +96,11 @@ public class FileConfigurationServiceImpl implements FileConfigurationService
 
         ResponseEntity<Resource> exchange = configRestTemplate.exchange(
                 configurationClientConfig.getConfigurationUrl() + "/" + configurationClientConfig.getDefaultApplicationName() + "/"
-                        + configurationClientConfig.getActiveProfileReversed() + "/*/" + BRANDING_LOCATION + "/" + fileName,
+                        + configurationClientConfig.getActiveProfileReversed() + "/*/" + configurationClientConfig.getBrandingPath() + "/" + fileName,
                 HttpMethod.GET, entity,
                 Resource.class);
 
-        File logoFile = new File(customFilesLocation + "/" + BRANDING_LOCATION + "/" + fileName);
+        File logoFile = new File(customFilesLocation + "/" + configurationClientConfig.getBrandingPath() + "/" + fileName);
 
         FileUtils.copyInputStreamToFile(exchange.getBody().getInputStream(), logoFile);
 

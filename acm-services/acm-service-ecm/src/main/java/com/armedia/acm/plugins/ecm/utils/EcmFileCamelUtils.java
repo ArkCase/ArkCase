@@ -174,6 +174,8 @@ public class EcmFileCamelUtils
         messageProps.put("inputStream", fileInputStream);
         messageProps.put("checkinComment", "");
         messageProps.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+        messageProps.put(EcmFileConstants.VERSIONING_STATE,
+                getCmisConfigUtils().getVersioningState(ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID));
         messageProps.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
 
         return (Document) getCamelContextManager().send(ArkCaseCMISActions.UPDATE_DOCUMENT, messageProps);

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('core').controller('PageController',
-        [ '$scope', '$modal', '$sce', '$q', '$location', 'UtilService', 'Acm.LoginService', 'LoginWarningService', 'Authentication', 'ConfigService', function($scope, $modal, $sce, $q, $location, Util, AcmLoginService, LoginWarningService, Authentication, ConfigService) {
+        [ '$scope', '$modal', '$sce', '$q', '$location', 'UtilService', 'Acm.LoginService', 'LoginWarningService', 'Authentication', 'ConfigService', 'Admin.PortalConfigurationService', function($scope, $modal, $sce, $q, $location, Util, AcmLoginService, LoginWarningService, Authentication, ConfigService, AdminPortalConfigurationService) {
 
             $scope.fullScreenMode = false;
             $scope.isLeftMenuCollapsed = false;
