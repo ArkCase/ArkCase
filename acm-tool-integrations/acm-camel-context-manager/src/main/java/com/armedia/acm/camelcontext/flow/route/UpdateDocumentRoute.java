@@ -27,6 +27,7 @@ package com.armedia.acm.camelcontext.flow.route;
  * #L%
  */
 
+import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
 import com.armedia.acm.camelcontext.basic.auth.HttpInvokerUtil;
 import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
 
@@ -63,7 +64,8 @@ public class UpdateDocumentRoute extends ArkCaseAbstractRoute
                 .process(exchange -> {
                     routeProperties = (Map<String, Object>) exchange.getIn().getBody();
                     exchange.getIn().getHeaders().put(PropertyIds.OBJECT_TYPE_ID, CamelCMISConstants.CMIS_DOCUMENT);
-                    exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_OBJECT_ID, routeProperties.get("cmisDocumentId"));
+                    exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_OBJECT_ID,
+                            routeProperties.get(ArkCaseCMISConstants.CMIS_DOC_ID));
                     exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_ACTION, CamelCMISActions.CHECK_OUT);
                     MDC.put(HttpInvokerUtil.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY,
                             String.valueOf(routeProperties.get(HttpInvokerUtil.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY)));
@@ -72,10 +74,15 @@ public class UpdateDocumentRoute extends ArkCaseAbstractRoute
                 .recipientList().method(this, "createUrl")
                 .process(exchange -> {
                     exchange.getIn().getHeaders().put(PropertyIds.OBJECT_TYPE_ID, CamelCMISConstants.CMIS_DOCUMENT);
-                    exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_OBJECT_ID, routeProperties.get("cmisDocumentId"));
-                    exchange.getIn().getHeaders().put("cmis:checkinComment", routeProperties.get("checkinComment"));
-                    exchange.getIn().getHeaders().put("cmis:contentStreamMimeType", routeProperties.get("mimeType"));
-                    exchange.getIn().setBody(routeProperties.get("inputStream"));
+                    exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_OBJECT_ID,
+                            routeProperties.get(ArkCaseCMISConstants.CMIS_DOC_ID));
+                    exchange.getIn().getHeaders().put("cmis:checkinComment",
+                            routeProperties.get(ArkCaseCMISConstants.CHECKIN_COMMENT));
+                    exchange.getIn().getHeaders().put("cmis:contentStreamMimeType",
+                            routeProperties.get(ArkCaseCMISConstants.MIME_TYPE));
+                    exchange.getIn().getHeaders().put(CamelCMISConstants.VERSIONING_STATE,
+                            routeProperties.get(ArkCaseCMISConstants.VERSIONING_STATE));
+                    exchange.getIn().setBody(routeProperties.get(ArkCaseCMISConstants.INPUT_STREAM));
                     exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_ACTION, CamelCMISActions.CHECK_IN);
                     MDC.put(HttpInvokerUtil.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY,
                             String.valueOf(routeProperties.get(HttpInvokerUtil.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY)));
@@ -83,7 +90,8 @@ public class UpdateDocumentRoute extends ArkCaseAbstractRoute
                 .recipientList().method(this, "createUrl")
                 .process(exchange -> {
                     exchange.getIn().getHeaders().put(PropertyIds.OBJECT_TYPE_ID, CamelCMISConstants.CMIS_DOCUMENT);
-                    exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_OBJECT_ID, routeProperties.get("cmisDocumentId"));
+                    exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_OBJECT_ID,
+                            routeProperties.get(ArkCaseCMISConstants.CMIS_DOC_ID));
                     exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_ACTION, CamelCMISActions.FIND_OBJECT_BY_ID);
                     MDC.put(HttpInvokerUtil.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY,
                             String.valueOf(routeProperties.get(HttpInvokerUtil.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY)));
