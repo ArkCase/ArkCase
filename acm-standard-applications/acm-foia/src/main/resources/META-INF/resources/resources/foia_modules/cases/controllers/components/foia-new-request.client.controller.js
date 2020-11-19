@@ -93,7 +93,7 @@ angular.module('cases').controller(
             var organizationTypeLookup = ObjectLookupService.getPersonOrganizationRelationTypes();
             var promiseConfigTitle = AdminObjectTitleConfigurationService.getObjectTitleConfiguration();
             var personTypesLookup = ObjectLookupService.getPersonTypes(ObjectService.ObjectTypes.CASE_FILE, true);
-            var getPortals = AdminPortalConfigurationService.getPortals();
+            var getPortal = AdminPortalConfigurationService.getArkcasePortalConfig();
             var getCountries = ObjectLookupService.getCountries();
             var getAddressTypes = ObjectLookupService.getAddressTypes();
             var canadaProvinces = ObjectLookupService.getLookupByLookupName('canadaProvinces');
@@ -101,7 +101,7 @@ angular.module('cases').controller(
             var commonModuleConfig = ConfigService.getModuleConfig("common");
             var adminFoiaConfig = AdminFoiaConfigService.getFoiaConfig();
 
-            $q.all([requestConfig, componentsAgenciesPromise, organizationTypeLookup, prefixNewRequest, newRequestTypes, deliveryMethodOfResponsesRequest, payFeesRequest, requestCategories, stateRequest, promiseConfigTitle, personTypesLookup, getPortals, getCountries, getAddressTypes, canadaProvinces, japanStates, commonModuleConfig, adminFoiaConfig]).then(function (data) {
+            $q.all([requestConfig, componentsAgenciesPromise, organizationTypeLookup, prefixNewRequest, newRequestTypes, deliveryMethodOfResponsesRequest, payFeesRequest, requestCategories, stateRequest, promiseConfigTitle, personTypesLookup, getPortal, getCountries, getAddressTypes, canadaProvinces, japanStates, commonModuleConfig, adminFoiaConfig]).then(function (data) {
 
                 var moduleConfig = data[0];
                 var componentsAgencies = data[1];
