@@ -368,21 +368,12 @@
                                 cases.newRequest.zip.validation.errorInvalid</span>
                         </div>
                     </div>
-                    <div class="row form-group" ng-if="enableNewPortalUserCreation && portals.length !==0 && isNewRequestType()">
+                    <div class="row form-group" ng-if="enableNewPortalUserCreation && isNewRequestType()">
                         <div class="row">
                             <div class="col-sm-6">
-                                <label for="portals">
-                                    <input type="checkbox" ng-model="config.data.createNewPortalUser">
-                                    <span translate>cases.newRequest.portalUser.label</span>
-                                </label>
+                                <input type="checkbox" ng-model="config.data.createNewPortalUser">
+                                <span translate>cases.newRequest.portalUser.label</span>
                             </div>
-                            <div class="col-sm-6">
-                                <select id="portals" ng-if="config.data.createNewPortalUser && portals.length > 1"
-                                        ng-model="config.chosenPortal" ng-options="portal as portal.portalUrl for portal in portals"
-                                        class="form-control input-md">
-                                </select>
-                            </div>
-
                         </div>
                     </div>
                 </div>
