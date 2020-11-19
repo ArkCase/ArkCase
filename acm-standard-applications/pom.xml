@@ -11,9 +11,9 @@
     <artifactId>acm-standard-applications</artifactId>
     <packaging>pom</packaging>
     <name>ACM Standard Applications</name>
-    <description>Collection of war files (law enforcement, inspector general...)</description>
+    <description>Collection of war and jar files (arkcase, foia, privacy)</description>
     <modules>
-        <module>acm-law-enforcement</module>
+        <module>arkcase</module>
         <module>acm-foia</module>
         <module>acm-privacy</module>
     </modules>

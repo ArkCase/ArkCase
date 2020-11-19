@@ -7,7 +7,7 @@
  *
  * @description
  *
- * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/core-people/core-people.client.directive.js directives/core-people/core-people.client.directive.js}
+ * {@link /acm-standard-applications/arkcase/src/main/webapp/resources/directives/core-people/core-people.client.directive.js directives/core-people/core-people.client.directive.js}
  *
  * The "Core-People" directive add people grid functionality
  *

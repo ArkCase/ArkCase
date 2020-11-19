@@ -130,7 +130,7 @@ To shutdown Tomcat: `$TOMCAT_HOME/bin/shutdown.sh -force`.
 
 ### Deploy the ArkCase war file
 
-The result of the command `mvn -DskipITs clean install` (described above) is the war file `acm-standard-applications/acm-law-enforcement/target/acm-law-enforcement-(version).war`, where `(version)` is the Maven version string.
+The result of the command `mvn -DskipITs clean install` (described above) is the war file `acm-standard-applications/arkcase/target/arkcase-(version).war`, where `(version)` is the Maven version string.
 
 Copy this file to `$TOMCAT_HOME`, rename it to `arkcase.war`, and move the `arkcase.war` to `$TOMCAT_HOME/webapps`.  Then, watch the Tomcat log file (`$TOMCAT_HOME/logs/catalina.out`).  The first startup will take 5 - 10 minutes. 
 

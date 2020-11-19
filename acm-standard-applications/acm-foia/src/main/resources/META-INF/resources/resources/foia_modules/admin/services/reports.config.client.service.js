@@ -10,7 +10,7 @@
  *
  * @description
  *
- * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/admin/services/reports.config.client.service.js modules/admin/services/reports.config.client.service.js}
+ * {@link /acm-standard-applications/arkcase/src/main/webapp/resources/modules/admin/services/reports.config.client.service.js modules/admin/services/reports.config.client.service.js}
  *
  * The Admin.ReportsConfigService provides Reports Config REST calls functionality
  */

@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/requests/exemption.client.service.js services/requests/exemption.client.service.js}
+ * {@link /acm-standard-applications/arkcase/src/main/webapp/resources/services/requests/exemption.client.service.js services/requests/exemption.client.service.js}
 
  * ExemptionService contains function to get exemption codes
  */
