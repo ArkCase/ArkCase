@@ -100,7 +100,7 @@ angular.module('cases').controller(
                 var states = data[8];
                 var configTitle = data[9];
                 var personTypes = data[10];
-                var portals = data[11];
+                var portal = data[11];
                 var countries = data[12];
                 var addressTypes = data[13];
                 var canadaProvinces = data[14];
@@ -175,8 +175,7 @@ angular.module('cases').controller(
                 }
                 $scope.config.data.payFee = $scope.payFees[0].key;
 
-                $scope.portals = portals.data;
-                $scope.config.chosenPortal = $scope.portals[0];
+                $scope.config.portal = $scope.portal;
 
                 $scope.states = "";
                 $scope.config.data.originator.person.addresses[0].country = countries[0].key;
@@ -597,7 +596,7 @@ angular.module('cases').controller(
 
             function createNewPortalUser(personId) {
 
-                RequestInfoService.saveNewPortalUser(personId, $scope.config.chosenPortal.portalId).then(function (response) {
+                RequestInfoService.saveNewPortalUser(personId, $scope.config.portal.portalId).then(function (response) {
                     if (response.registrationStatus === "REGISTRATION_EXISTS") {
                         MessageService.error($translate.instant('cases.newRequest.portalUser.message.error.exists'));
                     } else if (response.registrationStatus === "REGISTRATION_REJECTED") {
