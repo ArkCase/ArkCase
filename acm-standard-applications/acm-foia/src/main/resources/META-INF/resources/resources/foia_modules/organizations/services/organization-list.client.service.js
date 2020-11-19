@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link /acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/organizations/services/organization-info.client.service.js modules/organizations/services/organization-info.client.service.js}
+ * {@link /acm-standard-applications/arkcase/src/main/webapp/resources/modules/organizations/services/organization-info.client.service.js modules/organizations/services/organization-info.client.service.js}
  *
  * Organization.ListService provides functions for Organization database data
  */
