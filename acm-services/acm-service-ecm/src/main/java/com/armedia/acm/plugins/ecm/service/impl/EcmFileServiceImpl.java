@@ -113,6 +113,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpSession;
+import javax.validation.ValidationException;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -1581,6 +1582,17 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         boolean fileDeleted = false;
         String tmpDirectory = FileUtils.getTempDirectoryPath();
         File file = new File(tmpDirectory + File.separator + uniqueFileName);
+        try{
+            String absolutePath = file.getCanonicalPath();
+            if (!absolutePath.startsWith(tmpDirectory)){
+                log.error("The unique file name {} does not validate in current directory.", uniqueFileName);
+                throw new ValidationException("Invalid path constructed!");
+            }
+        }catch (IOException e)
+        {
+            log.error("Error while reading contents of {} email template.", uniqueFileName, e);
+            throw new ValidationException("Invalid path constructed!");
+        }
         if (file.exists())
         {
             fileDeleted = FileUtils.deleteQuietly(file);

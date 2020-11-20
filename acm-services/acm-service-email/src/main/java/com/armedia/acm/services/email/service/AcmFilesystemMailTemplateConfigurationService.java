@@ -41,6 +41,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.ValidationException;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -343,6 +344,18 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
     {
         File templateFolder = getTemplateFolder();
         File templateFile = new File(templateFolder, templateName);
+        try{
+            String absolutePath = templateFile.getCanonicalPath();
+            if (!absolutePath.startsWith(templateFolder.getCanonicalPath())){
+                log.error("Template name {} does not validate.", templateName);
+                throw new ValidationException("Invalid path constructed!");
+            }
+        }catch (IOException e)
+        {
+            log.error("Error while reading contents of {} email template.", templateName, e);
+            throw new ValidationException("Invalid path constructed!");
+        }
+
         Lock readLock = lock.readLock();
         try
         {
@@ -378,6 +391,17 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
         {
             File templateFolder = getTemplateFolder();
             File templateFile = new File(templateFolder, templateName);
+            try{
+                String absolutePath = templateFile.getCanonicalPath();
+                if (!absolutePath.startsWith(templateFolder.getCanonicalPath())){
+                    log.error("Template name {} does not validate.", templateName);
+                    throw new ValidationException("Invalid path constructed!");
+                }
+            }catch (IOException e)
+            {
+                log.error("Error while reading contents of {} email template.", templateName, e);
+                throw new ValidationException("Invalid path constructed!");
+            }
             Lock writeLock = lock.writeLock();
             writeLock.lock();
             try (OutputStream os = getTemplateResourceOutputStream())
