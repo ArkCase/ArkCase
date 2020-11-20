@@ -51,6 +51,6 @@ public class ArkCaseCMISConstants
 
     public static final String ACM_FOLDER_ID = "acmFolderId";
     public static final String DESTINATION_FOLDER_ID = "dstFolderId";
-    public static final String PARENT_FOLDER_ID = "acmFolderId";
+    public static final String PARENT_FOLDER_ID = "parentFolderId";
     public static final String SOURCE_FOLDER_ID = "srcFolderId";
 }
