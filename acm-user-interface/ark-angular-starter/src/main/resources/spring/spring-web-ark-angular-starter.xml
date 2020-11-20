@@ -80,6 +80,7 @@
                 <value>config.js</value>
                 <value>Gruntfile.js</value>
                 <value>package.json</value>
+                <value>yarn.lock</value>
             </list>
         </property>
         <property name="assembledFilesToCopyToDeployment">
