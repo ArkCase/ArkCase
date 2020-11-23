@@ -77,7 +77,8 @@ public class AuditPatternsSubstitution
         StringSubstitutor sub = new StringSubstitutor();
         String serverUrlAndName = sub.replace(PROPERTIES_FOR_SUBSTITUTION, properties);
 
-        String patternsFileUrl = String.format("%s%s%s", serverUrlAndName, profilesReversed, PATTERNS_PATH);
+        String auditPatternUrl = sub.replace(PATTERNS_PATH, properties);
+        String patternsFileUrl = String.format("%s%s%s", serverUrlAndName, profilesReversed, auditPatternUrl);
 
         try (InputStream inputStream = new URL(patternsFileUrl).openStream())
         {
