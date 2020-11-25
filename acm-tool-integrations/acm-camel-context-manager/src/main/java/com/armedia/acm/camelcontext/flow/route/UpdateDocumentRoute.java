@@ -65,7 +65,7 @@ public class UpdateDocumentRoute extends ArkCaseAbstractRoute
                     routeProperties = (Map<String, Object>) exchange.getIn().getBody();
                     exchange.getIn().getHeaders().put(PropertyIds.OBJECT_TYPE_ID, CamelCMISConstants.CMIS_DOCUMENT);
                     exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_OBJECT_ID,
-                            routeProperties.get(ArkCaseCMISConstants.CMIS_DOC_ID));
+                            routeProperties.get(ArkCaseCMISConstants.CMIS_DOCUMENT_ID));
                     exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_ACTION, CamelCMISActions.CHECK_OUT);
                     MDC.put(HttpInvokerUtil.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY,
                             String.valueOf(routeProperties.get(HttpInvokerUtil.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY)));
@@ -75,7 +75,7 @@ public class UpdateDocumentRoute extends ArkCaseAbstractRoute
                 .process(exchange -> {
                     exchange.getIn().getHeaders().put(PropertyIds.OBJECT_TYPE_ID, CamelCMISConstants.CMIS_DOCUMENT);
                     exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_OBJECT_ID,
-                            routeProperties.get(ArkCaseCMISConstants.CMIS_DOC_ID));
+                            routeProperties.get(ArkCaseCMISConstants.CMIS_DOCUMENT_ID));
                     exchange.getIn().getHeaders().put("cmis:checkinComment",
                             routeProperties.get(ArkCaseCMISConstants.CHECKIN_COMMENT));
                     exchange.getIn().getHeaders().put("cmis:contentStreamMimeType",
@@ -91,7 +91,7 @@ public class UpdateDocumentRoute extends ArkCaseAbstractRoute
                 .process(exchange -> {
                     exchange.getIn().getHeaders().put(PropertyIds.OBJECT_TYPE_ID, CamelCMISConstants.CMIS_DOCUMENT);
                     exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_OBJECT_ID,
-                            routeProperties.get(ArkCaseCMISConstants.CMIS_DOC_ID));
+                            routeProperties.get(ArkCaseCMISConstants.CMIS_DOCUMENT_ID));
                     exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_ACTION, CamelCMISActions.FIND_OBJECT_BY_ID);
                     MDC.put(HttpInvokerUtil.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY,
                             String.valueOf(routeProperties.get(HttpInvokerUtil.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY)));

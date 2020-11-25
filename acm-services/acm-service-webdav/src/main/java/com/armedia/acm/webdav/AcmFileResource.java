@@ -35,6 +35,7 @@ import java.util.Map;
  */
 
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISActions;
+import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
 import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
@@ -145,14 +146,14 @@ public class AcmFileResource extends AcmFileSystemResource implements PropFindab
         try
         {
             Map<String, Object> messageProps = new HashMap<>();
-            messageProps.put(EcmFileConstants.CMIS_REPOSITORY_ID, acmFile.getCmisRepositoryId() == null ? EcmFileConstants.DEFAULT_CMIS_REPOSITORY_ID : acmFile.getCmisRepositoryId());
+            messageProps.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, acmFile.getCmisRepositoryId() == null ? ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID : acmFile.getCmisRepositoryId());
             messageProps.put(CamelCMISConstants.CMIS_OBJECT_ID, getResourceFactory().getCmisFileId(acmFile));
             messageProps.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, MDC.get(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY));
             
             LOGGER.info("User {} is sending object id {} in repository {}", 
                 messageProps.get(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY),
                 messageProps.get(CamelCMISConstants.CMIS_OBJECT_ID),
-                messageProps.get(EcmFileConstants.CMIS_REPOSITORY_ID));
+                messageProps.get(ArkCaseCMISConstants.CMIS_REPOSITORY_ID));
             Object result = getResourceFactory().getCamelContextManager().send(ArkCaseCMISActions.DOWNLOAD_DOCUMENT, messageProps);
 
             if (result instanceof ContentStream)
