@@ -64,10 +64,10 @@ public class DeleteDocumentRoute extends ArkCaseAbstractRoute
                 .process(exchange -> {
                     routeProperties = (Map<String, Object>) exchange.getIn().getBody();
                     log.debug("Sending delete request to camel for documentID={}",
-                            routeProperties.get(ArkCaseCMISConstants.CMIS_DOC_ID));
+                            routeProperties.get(ArkCaseCMISConstants.CMIS_DOCUMENT_ID));
                     exchange.getIn().getHeaders().put(PropertyIds.OBJECT_TYPE_ID, CamelCMISConstants.CMIS_DOCUMENT);
                     exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_OBJECT_ID,
-                            routeProperties.get(ArkCaseCMISConstants.CMIS_DOC_ID));
+                            routeProperties.get(ArkCaseCMISConstants.CMIS_DOCUMENT_ID));
                     exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_ACTION, CamelCMISActions.DELETE_DOCUMENT);
                     MDC.put(HttpInvokerUtil.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY,
                             String.valueOf(routeProperties.get(HttpInvokerUtil.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY)));

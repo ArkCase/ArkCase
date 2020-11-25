@@ -27,6 +27,7 @@ package com.armedia.acm.plugins.ecm.model;
  * #L%
  */
 
+import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -122,7 +123,7 @@ public class AcmContainer implements AcmEntity, Serializable, AcmObject
     {
         if (getCmisRepositoryId() == null)
         {
-            setCmisRepositoryId(EcmFileConstants.DEFAULT_CMIS_REPOSITORY_ID);
+            setCmisRepositoryId(ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
         }
 
         if (isCalendarFolderRecreated() == null)
