@@ -243,14 +243,19 @@ angular.module('document-details').controller(
                     };
 
                     $scope.$bus.subscribe('update-viewer-opened-versions', function(openedVersions) {
-                        $scope.fileInfo.selectedIds = openedVersions.map(function(openedVersion, index) {
-                            if (index == 0) {
-                                $scope.fileInfo.id = $stateParams['selectedIds'] + ":" + openedVersion.versionTag;
-                            }
-                            return $stateParams['selectedIds'] + ":" + openedVersion.versionTag;
-                        }).join(',');
 
-                        $scope.openSnowboundViewer();
+                        if (!_.find(openedVersions, {versionTag: $scope.fileInfo.versionTag})) {
+                            $scope.fileInfo.selectedIds = openedVersions.map(function (openedVersion, index) {
+                                if (index == 0) {
+                                    $scope.fileInfo.id = $stateParams['selectedIds'] + ":" + openedVersion.versionTag;
+                                }
+                                return $stateParams['selectedIds'] + ":" + openedVersion.versionTag;
+                            }).join(',');
+
+                            $scope.openSnowboundViewer();
+                        } else {
+                            onHideLoader();
+                        }
                     });
 
                     // Obtains authentication token for ArkCase
@@ -425,12 +430,24 @@ angular.module('document-details').controller(
                     });
 
                     $rootScope.$bus.subscribe("object.changed/FILE/" + $stateParams.id, function () {
-                        DialogService.alert($translate.instant("documentDetails.fileChangedAlert")).then(function() {
-                            $scope.openSnowboundViewer();
-                            $scope.$broadcast('refresh-ocr');
-                            $scope.$broadcast('refresh-medical-comprehend');
+                        var ecmFile = EcmService.getFile({
+                            fileId: $scope.ecmFile.fileId
                         });
-                        onHideLoader();
+                        ecmFile.$promise.then(function (file) {
+                            if ($scope.fileInfo.id !== file.fileId + ':' + file.activeVersionTag) {
+                                $scope.ecmFile = file;
+                                $scope.fileId = file.fileId;
+                                $scope.fileInfo.id = file.fileId + ':' + file.activeVersionTag;
+                                $scope.fileInfo.selectedIds = file.fileId + ':' + file.activeVersionTag;
+                                $scope.fileInfo.versionTag = file.activeVersionTag;
+                                DialogService.alert($translate.instant("documentDetails.fileChangedAlert")).then(function () {
+                                    $scope.openSnowboundViewer();
+                                    $scope.$broadcast('refresh-ocr');
+                                    $scope.$broadcast('refresh-medical-comprehend');
+                                });
+                            }
+                            onHideLoader();
+                        });
                     });
 
                     $scope.$bus.subscribe('sync-progress', function(data) {
