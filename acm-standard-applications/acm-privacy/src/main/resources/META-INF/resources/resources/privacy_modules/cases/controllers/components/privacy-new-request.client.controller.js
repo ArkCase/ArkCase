@@ -2,10 +2,13 @@
 
 angular.module('cases').controller(
     'Cases.NewRequestController',
-    ['$scope', '$sce', '$q', '$modal', '$translate', 'ConfigService', 'SAR.Data', 'Request.InfoService', 'ObjectService', 'modalParams', 'Object.LookupService', 'Util.DateService', 'MessageService', 'UtilService',
-        'Requests.RequestsService', 'Dialog.BootboxService', 'Organization.InfoService', '$location', '$anchorScroll', 'Admin.ObjectTitleConfigurationService', 'Person.InfoService', 'Admin.PortalConfigurationService',
-        function ($scope, $sce, $q, $modal, $translate, ConfigService, Data, RequestInfoService, ObjectService, modalParams, ObjectLookupService, UtilDateService, MessageService, Util, RequestsService, DialogService, OrganizationInfoService, $location, $anchorScroll,
-                  AdminObjectTitleConfigurationService, PersonInfoService, AdminPortalConfigurationService) {
+    ['$scope', '$sce', '$q', '$modal', '$translate', 'ConfigService', 'SAR.Data', 'Request.InfoService', 'ObjectService', 'modalParams',
+        'Object.LookupService', 'Util.DateService', 'MessageService', 'UtilService', 'Requests.RequestsService', 'Dialog.BootboxService',
+        'Organization.InfoService', '$location', '$anchorScroll', 'Admin.ObjectTitleConfigurationService', 'Person.InfoService',
+        'Admin.PortalConfigurationService',
+        function ($scope, $sce, $q, $modal, $translate, ConfigService, Data, RequestInfoService, ObjectService, modalParams,
+                  ObjectLookupService, UtilDateService, MessageService, Util, RequestsService, DialogService, OrganizationInfoService,
+                  $location, $anchorScroll, AdminObjectTitleConfigurationService, PersonInfoService, AdminPortalConfigurationService) {
 
             $scope.modalParams = modalParams;
             $scope.loading = false;
@@ -80,14 +83,16 @@ angular.module('cases').controller(
             var organizationTypeLookup = ObjectLookupService.getPersonOrganizationRelationTypes();
             var promiseConfigTitle = AdminObjectTitleConfigurationService.getObjectTitleConfiguration();
             var personTypesLookup = ObjectLookupService.getPersonTypes(ObjectService.ObjectTypes.CASE_FILE, true);
-            var getPortal = AdminPortalConfigurationService.getArkcasePortalConfig();
+            var getPortal = AdminPortalConfigurationService.getPortalConfig();
             var getCountries = ObjectLookupService.getCountries();
             var getAddressTypes = ObjectLookupService.getAddressTypes();
             var canadaProvinces = ObjectLookupService.getLookupByLookupName('canadaProvinces');
             var japanStates = ObjectLookupService.getLookupByLookupName('japanStates');
             var commonModuleConfig = ConfigService.getModuleConfig("common");
 
-            $q.all([requestConfig, componentsAgenciesPromise, organizationTypeLookup, prefixNewRequest, newRequestTypes, deliveryMethodOfResponsesRequest, payFeesRequest, requestCategories, stateRequest, promiseConfigTitle, personTypesLookup, getPortal, getCountries, getAddressTypes, canadaProvinces, japanStates, commonModuleConfig]).then(function (data) {
+            $q.all([requestConfig, componentsAgenciesPromise, organizationTypeLookup, prefixNewRequest, newRequestTypes,
+                deliveryMethodOfResponsesRequest, payFeesRequest, requestCategories, stateRequest, promiseConfigTitle, personTypesLookup,
+                getPortal, getCountries, getAddressTypes, canadaProvinces, japanStates, commonModuleConfig]).then(function (data) {
 
                 var moduleConfig = data[0];
                 var componentsAgencies = data[1];
@@ -100,7 +105,7 @@ angular.module('cases').controller(
                 var states = data[8];
                 var configTitle = data[9];
                 var personTypes = data[10];
-                var portal = data[11];
+                var portalConfig = data[11].data;
                 var countries = data[12];
                 var addressTypes = data[13];
                 var canadaProvinces = data[14];
@@ -175,7 +180,7 @@ angular.module('cases').controller(
                 }
                 $scope.config.data.payFee = $scope.payFees[0].key;
 
-                $scope.config.portal = $scope.portal;
+                $scope.config.portal = { portalId: portalConfig['portal.id'] };
 
                 $scope.states = "";
                 $scope.config.data.originator.person.addresses[0].country = countries[0].key;

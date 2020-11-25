@@ -42,7 +42,7 @@ public class DefaultPortalCheckUserAssignementService implements PortalCheckUser
 {
     private transient final Logger log = LogManager.getLogger(getClass());
 
-    private ArkcasePortalConfigurationService arkcasePortalConfigurationService;
+    private PortalConfigurationService portalConfigurationService;
 
     /*
      * (non-Javadoc)
@@ -53,7 +53,7 @@ public class DefaultPortalCheckUserAssignementService implements PortalCheckUser
     public void isUserAssigned(String userId, String portalId) throws PortalUserAssignementException
     {
         log.debug("Checking if user with ID [{}] is assigned to portal with [{}] ID.", userId, portalId);
-        if (!arkcasePortalConfigurationService.getPortalConfiguration().getUserId().equals(userId))
+        if (!portalConfigurationService.getPortalConfiguration().getUserId().equals(userId))
         {
             log.debug("User with ID [{}] is not assigned to portal with [{}] ID.", userId, portalId);
             throw new PortalUserAssignementException(
@@ -61,11 +61,13 @@ public class DefaultPortalCheckUserAssignementService implements PortalCheckUser
         }
     }
 
-    public ArkcasePortalConfigurationService getArkcasePortalConfigurationService() {
-        return arkcasePortalConfigurationService;
+    public PortalConfigurationService getPortalConfigurationService()
+    {
+        return portalConfigurationService;
     }
 
-    public void setArkcasePortalConfigurationService(ArkcasePortalConfigurationService arkcasePortalConfigurationService) {
-        this.arkcasePortalConfigurationService = arkcasePortalConfigurationService;
+    public void setPortalConfigurationService(PortalConfigurationService portalConfigurationService)
+    {
+        this.portalConfigurationService = portalConfigurationService;
     }
 }
