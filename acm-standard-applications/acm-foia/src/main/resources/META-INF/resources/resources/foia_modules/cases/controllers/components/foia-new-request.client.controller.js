@@ -93,7 +93,7 @@ angular.module('cases').controller(
             var organizationTypeLookup = ObjectLookupService.getPersonOrganizationRelationTypes();
             var promiseConfigTitle = AdminObjectTitleConfigurationService.getObjectTitleConfiguration();
             var personTypesLookup = ObjectLookupService.getPersonTypes(ObjectService.ObjectTypes.CASE_FILE, true);
-            var getPortal = AdminPortalConfigurationService.getArkcasePortalConfig();
+            var getPortal = AdminPortalConfigurationService.getPortalConfig();
             var getCountries = ObjectLookupService.getCountries();
             var getAddressTypes = ObjectLookupService.getAddressTypes();
             var canadaProvinces = ObjectLookupService.getLookupByLookupName('canadaProvinces');
@@ -114,7 +114,7 @@ angular.module('cases').controller(
                 var states = data[8];
                 var configTitle = data[9];
                 var personTypes = data[10];
-                var portal = data[11];
+                var portalConfig = data[11].data;
                 var countries = data[12];
                 var addressTypes = data[13];
                 var canadaProvinces = data[14];
@@ -192,7 +192,7 @@ angular.module('cases').controller(
                 }
                 $scope.config.data.payFee = $scope.payFees[0].key;
 
-                $scope.config.portal = $scope.portal;
+                $scope.config.portal = { portalId: portalConfig['portal.id'] };
 
                 $scope.states = "";
                 $scope.config.data.originator.person.addresses[0].country = defaultCountry ? defaultCountry.key : countries[0].key;

@@ -39,13 +39,13 @@ import org.springframework.security.core.Authentication;
 public interface PortalAdminService
 {
 
-    public static final String GET_INFO_METHOD = "GET_PORTAL_INFO_PORTAL_NOT_FOUND";
+    String GET_INFO_METHOD = "GET_PORTAL_INFO_PORTAL_NOT_FOUND";
 
-    public static final String UNREGISTER_METHOD = "UNREGISTER_PORTAL_PORTAL_NOT_FOUND";
+    String UNREGISTER_METHOD = "UNREGISTER_PORTAL_PORTAL_NOT_FOUND";
 
-    public static final String UPDATE_METHOD_USER = "UPDATE_PORTAL_USER_NOT_FOUND";
+    String UPDATE_METHOD_USER = "UPDATE_PORTAL_USER_NOT_FOUND";
 
-    public static final String UPDATE_METHOD_PORTAL = "UPDATE_PORTAL_PORTAL_NOT_FOUND";
+    String UPDATE_METHOD_PORTAL = "UPDATE_PORTAL_PORTAL_NOT_FOUND";
 
     /**
      * @return
@@ -59,6 +59,6 @@ public interface PortalAdminService
      */
     PortalServiceExceptionMapper getExceptionMapper(PortalAdminServiceException se);
 
-    void moveExistingLdapUsersToGroup(String groupName, ArkcasePortalConfigurationService arkcasePortalConfigurationService, String directoryName, Authentication auth)
+    void moveExistingLdapUsersToGroup(String groupName, PortalConfigurationService portalConfigurationService, String directoryName, Authentication auth)
             throws AcmLdapActionFailedException, AcmObjectNotFoundException;
 }

@@ -2,24 +2,6 @@
 
 angular.module('admin').factory('Admin.PortalConfigurationService', [ '$http', function($http) {
 
-    var getArkcasePortalConfig = function () {
-        return $http({
-            method: 'GET',
-            url: 'api/latest/service/portalgateway/admin/arkcase/portal/config'
-        });
-    };
-
-    var saveArkcasePortalConfig = function (portal) {
-        return $http({
-            method: 'PUT',
-            url: 'api/latest/service/portalgateway/admin/arkcase/portal/config',
-            data: portal,
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
-    };
-
     var getPortalConfig = function () {
         return $http({
             method: 'GET',
@@ -40,9 +22,7 @@ angular.module('admin').factory('Admin.PortalConfigurationService', [ '$http', f
 
     return {
         getPortalConfig: getPortalConfig,
-        savePortalConfig: savePortalConfig,
-        getArkcasePortalConfig: getArkcasePortalConfig,
-        saveArkcasePortalConfig: saveArkcasePortalConfig
+        savePortalConfig: savePortalConfig
     };
 
 } ]);

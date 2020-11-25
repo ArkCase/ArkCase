@@ -27,19 +27,16 @@ package com.armedia.acm.portalgateway.web.api;
  * #L%
  */
 
-import com.armedia.acm.portalgateway.model.ArkcasePortalConfig;
 import com.armedia.acm.portalgateway.model.PortalConfig;
-import com.armedia.acm.portalgateway.service.ArkcasePortalConfigurationService;
-import com.armedia.acm.portalgateway.service.PortalConfigurationService;
 import com.armedia.acm.portalgateway.service.PortalAdminService;
 import com.armedia.acm.portalgateway.service.PortalAdminServiceException;
+import com.armedia.acm.portalgateway.service.PortalConfigurationService;
 import com.armedia.acm.portalgateway.service.PortalServiceExceptionMapper;
 import com.armedia.acm.services.users.web.api.SecureLdapController;
 import com.armedia.acm.spring.SpringContextHolder;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -62,28 +59,7 @@ public class ArkCasePortalAdminAPIController extends SecureLdapController
 
     private PortalAdminService portalAdminService;
 
-    private ArkcasePortalConfigurationService arkcasePortalConfigurationService;
-
     private PortalConfigurationService portalConfigurationService;
-
-    @Value("${portal.serviceProvider.directory.name}")
-    private String directoryName;
-
-    @RequestMapping(value = "/arkcase/portal/config", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public ArkcasePortalConfig getArkcasePortalConfiguration(Authentication auth)
-    {
-        log.debug("User [{}] is retrieving a portal configuration.", auth.getName());
-        return getArkcasePortalConfigurationService().getPortalConfiguration();
-    }
-
-    @RequestMapping(value = "/arkcase/portal/config", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public void saveArkcasePortalConfiguration(Authentication auth, @RequestBody ArkcasePortalConfig properties)
-    {
-        log.debug("User [{}] is updating a portal configuration.", auth.getName());
-        getArkcasePortalConfigurationService().writeConfiguration(properties);
-    }
 
     @RequestMapping(value = "/portal/config", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -130,16 +106,6 @@ public class ArkCasePortalAdminAPIController extends SecureLdapController
     public void setAcmContextHolder(SpringContextHolder acmContextHolder)
     {
         this.acmContextHolder = acmContextHolder;
-    }
-
-    public ArkcasePortalConfigurationService getArkcasePortalConfigurationService()
-    {
-        return arkcasePortalConfigurationService;
-    }
-
-    public void setArkcasePortalConfigurationService(ArkcasePortalConfigurationService arkcasePortalConfigurationService)
-    {
-        this.arkcasePortalConfigurationService = arkcasePortalConfigurationService;
     }
 
     public PortalConfigurationService getPortalConfigurationService()
