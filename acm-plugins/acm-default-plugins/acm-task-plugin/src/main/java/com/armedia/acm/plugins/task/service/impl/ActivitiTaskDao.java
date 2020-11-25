@@ -28,6 +28,7 @@ package com.armedia.acm.plugins.task.service.impl;
  */
 
 import com.armedia.acm.activiti.services.AcmBpmnService;
+import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
 import com.armedia.acm.core.AcmNotifiableEntity;
 import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
@@ -398,7 +399,7 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
             try
             {
                 container = fileService.getOrCreateContainer(TaskConstants.OBJECT_TYPE, in.getId(),
-                        EcmFileConstants.DEFAULT_CMIS_REPOSITORY_ID);
+                        ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
                 if (container.getAttachmentFolder().getParticipants().isEmpty())
                 {
                     container.getAttachmentFolder()

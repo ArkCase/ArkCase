@@ -39,7 +39,6 @@ import com.armedia.acm.plugins.ecm.model.AcmAallowedUploadFileTypesConfig;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConfig;
-import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.FileUploadStage;
 import com.armedia.acm.plugins.ecm.model.ProgressbarDetails;
 import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
@@ -750,7 +749,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         try
         {
             Map<String, Object> messageProps = new HashMap<>();
-            messageProps.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+            messageProps.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
             messageProps.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
             messageProps.put(CamelCMISConstants.CMIS_OBJECT_ID, ecmFile.getVersionSeriesId());
 
@@ -793,7 +792,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
                     : getFolderAndFilesUtils().getVersionCmisId(ecmFile, fileVersion);
 
             Map<String, Object> messageProps = new HashMap<>();
-            messageProps.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+            messageProps.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
             messageProps.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, alfrescoUser);
             messageProps.put(CamelCMISConstants.CMIS_OBJECT_ID, cmisId);
 

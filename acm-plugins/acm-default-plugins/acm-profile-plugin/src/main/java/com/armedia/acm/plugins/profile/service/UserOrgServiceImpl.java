@@ -146,7 +146,7 @@ public class UserOrgServiceImpl implements UserOrgService
         {
             Map<String, Object> messageProps = new HashMap<>();
             messageProps.put(PropertyIds.PATH, userOrgInfo.getEcmFolderPath());
-            messageProps.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+            messageProps.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
             messageProps.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
 
             Folder folder = (Folder) getCamelContextManager().send(ArkCaseCMISActions.GET_OR_CREATE_FOLDER_BY_PATH, messageProps);

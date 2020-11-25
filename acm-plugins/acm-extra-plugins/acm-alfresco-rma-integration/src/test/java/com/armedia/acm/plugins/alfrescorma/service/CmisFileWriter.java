@@ -65,7 +65,7 @@ public class CmisFileWriter
 
         // create a file that we can then declare as a record and set metadata on it
         Map<String, Object> properties = new HashMap<>();
-        properties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+        properties.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
         properties.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "");
         properties.put(PropertyIds.PATH, testPath);
 
@@ -81,11 +81,11 @@ public class CmisFileWriter
         ecmFile.setFileName("spring-alfresco-records-service-test.xml-" + System.currentTimeMillis());
 
         Map<String, Object> messageProperties = new HashMap<>();
-        messageProperties.put("cmisFolderId", folderId);
-        messageProperties.put("inputStream", is);
-        messageProperties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
-        messageProperties.put(EcmFileConstants.VERSIONING_STATE,
-                cmisConfigUtils.getVersioningState(ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID));
+        messageProperties.put(ArkCaseCMISConstants.CMIS_FOLDER_ID, folderId);
+        messageProperties.put(ArkCaseCMISConstants.INPUT_STREAM, is);
+        messageProperties.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
+        messageProperties.put(ArkCaseCMISConstants.VERSIONING_STATE,
+                cmisConfigUtils.getVersioningState(ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID));
         messageProperties.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
         messageProperties.put(PropertyIds.NAME, ecmFile.getFileName());
         messageProperties.put(PropertyIds.CONTENT_STREAM_MIME_TYPE, "text/plain");

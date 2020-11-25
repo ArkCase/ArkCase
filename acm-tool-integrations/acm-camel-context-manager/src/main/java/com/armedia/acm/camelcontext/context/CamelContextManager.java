@@ -246,14 +246,14 @@ public class CamelContextManager implements ApplicationContextAware
     public Object send(ArkCaseCMISActions action, Map<String, Object> props) throws ArkCaseFileRepositoryException
     {
         log.debug("Sending message on queue={} with cmisObjectId={}", action.getQueueName(),
-                props.get(ArkCaseCMISConstants.CMIS_DOC_ID) != null ? props.get(ArkCaseCMISConstants.CMIS_DOC_ID)
+                props.get(ArkCaseCMISConstants.CMIS_DOCUMENT_ID) != null ? props.get(ArkCaseCMISConstants.CMIS_DOCUMENT_ID)
                         : props.get(ArkCaseCMISConstants.CMIS_OBJECT_ID));
         try
         {
             String cmisRepositoryId = String.valueOf(props.get(ArkCaseCMISConstants.CMIS_REPOSITORY_ID));
             if (cmisRepositoryId == null || cmisRepositoryId.isEmpty())
             {
-                cmisRepositoryId = ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID;
+                cmisRepositoryId = ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID;
             }
             ArkCaseCMISConfig config = repositoryConfigs.get(cmisRepositoryId);
             props.put(ArkCaseCMISConstants.CMIS_API_URL, config.getBaseUrl());
@@ -267,14 +267,14 @@ public class CamelContextManager implements ApplicationContextAware
         catch (AcmEncryptionException e)
         {
             log.error("Error sending message on queue={} with cmisObjectId={}", action.getQueueName(),
-                    props.get(ArkCaseCMISConstants.CMIS_DOC_ID) != null ? props.get(ArkCaseCMISConstants.CMIS_DOC_ID)
+                    props.get(ArkCaseCMISConstants.CMIS_DOCUMENT_ID) != null ? props.get(ArkCaseCMISConstants.CMIS_DOCUMENT_ID)
                             : props.get(ArkCaseCMISConstants.CMIS_OBJECT_ID));
             throw new ArkCaseFileRepositoryException(e);
         }
         catch (ArkCaseFileRepositoryException e)
         {
             log.error("Error sending message on queue={} with cmisObjectId={}", action.getQueueName(),
-                    props.get(ArkCaseCMISConstants.CMIS_DOC_ID) != null ? props.get(ArkCaseCMISConstants.CMIS_DOC_ID)
+                    props.get(ArkCaseCMISConstants.CMIS_DOCUMENT_ID) != null ? props.get(ArkCaseCMISConstants.CMIS_DOCUMENT_ID)
                             : props.get(ArkCaseCMISConstants.CMIS_OBJECT_ID));
             throw e;
         }
