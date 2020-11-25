@@ -27,8 +27,8 @@ package com.armedia.acm.services.dataupdate.service;
  * #L%
  */
 
+import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
-import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.RecycleBinConstants;
 import com.armedia.acm.plugins.ecm.service.RecycleBinItemService;
 
@@ -52,7 +52,7 @@ public class CmisRepositoryRecycleBinContainerExecutor implements AcmDataUpdateE
         try
         {
             getRecycleBinItemService().getOrCreateContainerForRecycleBin(RecycleBinConstants.OBJECT_TYPE,
-                    EcmFileConstants.DEFAULT_CMIS_REPOSITORY_ID);
+                    ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
         }
         catch (AcmCreateObjectFailedException e)
         {

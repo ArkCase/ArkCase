@@ -100,8 +100,8 @@ public class EcmFileCamelUtils
     {
         // This is the request payload for camel including the unique cmis id for the document to delete
         Map<String, Object> messageProps = new HashMap<>();
-        messageProps.put(EcmFileConstants.CMIS_DOCUMENT_ID, cmisFileId);
-        messageProps.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+        messageProps.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, cmisFileId);
+        messageProps.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
         messageProps.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
 
         // Invokes the camel route to delete the file contents from the repository
@@ -129,11 +129,11 @@ public class EcmFileCamelUtils
         newEcmFile.setFileName(newEcmFile.getFileName().trim());
         // Camel upload request payload setup (specifies the folder in which to upload the supplied content stream)
         Map<String, Object> messageProps = new HashMap<>();
-        messageProps.put("cmisFolderId", cmisFolderId);
-        messageProps.put("inputStream", fileInputStream);
-        messageProps.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
-        messageProps.put(EcmFileConstants.VERSIONING_STATE,
-                getCmisConfigUtils().getVersioningState(ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID));
+        messageProps.put(ArkCaseCMISConstants.CMIS_FOLDER_ID, cmisFolderId);
+        messageProps.put(ArkCaseCMISConstants.INPUT_STREAM, fileInputStream);
+        messageProps.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
+        messageProps.put(ArkCaseCMISConstants.VERSIONING_STATE,
+                getCmisConfigUtils().getVersioningState(ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID));
         messageProps.put(PropertyIds.NAME, newEcmFile.getFileName());
         messageProps.put(PropertyIds.CONTENT_STREAM_MIME_TYPE, newEcmFile.getFileActiveVersionMimeType());
 
@@ -169,13 +169,13 @@ public class EcmFileCamelUtils
     public Document updateFile(EcmFile newEcmFile, EcmFile originalFile, InputStream fileInputStream) throws ArkCaseFileRepositoryException
     {
         Map<String, Object> messageProps = new HashMap<>();
-        messageProps.put(EcmFileConstants.CMIS_DOCUMENT_ID, originalFile.getVersionSeriesId());
-        messageProps.put("mimeType", originalFile.getFileActiveVersionMimeType());
-        messageProps.put("inputStream", fileInputStream);
-        messageProps.put("checkinComment", "");
-        messageProps.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
-        messageProps.put(EcmFileConstants.VERSIONING_STATE,
-                getCmisConfigUtils().getVersioningState(ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID));
+        messageProps.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, originalFile.getVersionSeriesId());
+        messageProps.put(ArkCaseCMISConstants.MIME_TYPE, originalFile.getFileActiveVersionMimeType());
+        messageProps.put(ArkCaseCMISConstants.INPUT_STREAM, fileInputStream);
+        messageProps.put(ArkCaseCMISConstants.CHECKIN_COMMENT, "");
+        messageProps.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
+        messageProps.put(ArkCaseCMISConstants.VERSIONING_STATE,
+                getCmisConfigUtils().getVersioningState(ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID));
         messageProps.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
 
         return (Document) getCamelContextManager().send(ArkCaseCMISActions.UPDATE_DOCUMENT, messageProps);
@@ -197,7 +197,7 @@ public class EcmFileCamelUtils
         {
             log.debug("downloading document using download document route");
             Map<String, Object> messageProps = new HashMap<>();
-            messageProps.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+            messageProps.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
             messageProps.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
             messageProps.put(CamelCMISConstants.CMIS_OBJECT_ID, cmisDocumentId);
             ContentStream result = (ContentStream) getCamelContextManager().send(ArkCaseCMISActions.DOWNLOAD_DOCUMENT, messageProps);
