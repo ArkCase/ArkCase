@@ -49,7 +49,9 @@ public class TimesheetEcmFolderHandler implements PipelineHandler<AcmTimesheet, 
         log.trace("Timesheet with id [{}] and title [{}] entering TimesheetEcmFolderHandler", entity.getId(), entity.getTitle());
         if (entity.getEcmFolderPath() != null) {
             try {
-                String folderId = ecmFileService.createFolder(entity.getEcmFolderPath());
+                // Create root folder on alfresco, according to selected sequence generator
+                String rootFolderPath = entity.getEcmFolderPath() + entity.getTimesheetNumber();
+                String folderId = ecmFileService.createFolder(rootFolderPath);
                 entity.getContainer().getFolder().setCmisFolderId(folderId);
             } catch (AcmCreateObjectFailedException e) {
                 throw new PipelineProcessException(e);
