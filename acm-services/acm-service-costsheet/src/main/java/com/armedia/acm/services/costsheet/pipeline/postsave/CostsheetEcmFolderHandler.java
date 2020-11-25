@@ -53,7 +53,9 @@ public class CostsheetEcmFolderHandler implements PipelineHandler<AcmCostsheet, 
         {
             try
             {
-                String folderId = ecmFileService.createFolder(entity.getEcmFolderPath());
+                // Create root folder on alfresco, according to selected sequence generator
+                String rootFolderPath = entity.getEcmFolderPath() + entity.getCostsheetNumber();
+                String folderId = ecmFileService.createFolder(rootFolderPath);
                 entity.getContainer().getFolder().setCmisFolderId(folderId);
             }
             catch (AcmCreateObjectFailedException e)
