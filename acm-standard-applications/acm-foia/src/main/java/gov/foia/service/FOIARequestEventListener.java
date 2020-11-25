@@ -126,8 +126,7 @@ public class FOIARequestEventListener implements ApplicationListener<AcmObjectHi
                                     && isStatusChangedToClosed(existing, updatedCaseFile))
                             {
                                 if (updatedCaseFile.getDisposition() != null
-                                        && (updatedCaseFile.getDisposition().equals("partially-affirmed")
-                                                || updatedCaseFile.getDisposition().equals("completely-reversed")))
+                                        && updatedCaseFile.getDisposition().equals("completely-reversed"))
                                 {
                                     if (!updatedCaseFile.getChildObjects().isEmpty())
                                     {
