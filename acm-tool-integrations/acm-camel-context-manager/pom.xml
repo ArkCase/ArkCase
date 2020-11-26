@@ -133,13 +133,13 @@
         <dependency>
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
             <artifactId>acm-files-property-file-manager</artifactId>
-            <version>2020.17</version>
+            <version>${acm.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
             <artifactId>acm-object-converter</artifactId>
-            <version>2020.17</version>
+            <version>${acm.version}</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

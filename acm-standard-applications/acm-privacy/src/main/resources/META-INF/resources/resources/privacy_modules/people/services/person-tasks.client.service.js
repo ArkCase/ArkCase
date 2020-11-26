@@ -15,7 +15,7 @@ angular.module('services').factory('Person.TaskService', [ '$resource', '$transl
 
         _findTasks: {
             method: 'GET',
-            url: 'api/latest/plugin/task/forPerson/:personId',
+            url: 'api/latest/plugin/person/forPerson/:personId',
             cache: false,
             isArray: true
         }

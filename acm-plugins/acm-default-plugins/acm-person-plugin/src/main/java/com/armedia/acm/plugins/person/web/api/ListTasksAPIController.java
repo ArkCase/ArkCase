@@ -1,4 +1,4 @@
-package com.armedia.acm.plugins.task.web.api;
+package com.armedia.acm.plugins.person.web.api;
 
 /*-
  * #%L
@@ -29,7 +29,6 @@ package com.armedia.acm.plugins.task.web.api;
 
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.plugins.person.dao.PersonAssociationDao;
-import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.service.TaskDao;
@@ -52,7 +51,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@RequestMapping({ "/api/v1/plugin/task", "/api/latest/plugin/task" })
+@RequestMapping({ "/api/v1/plugin/person", "/api/latest/plugin/person" })
 public class ListTasksAPIController
 {
     private TaskDao taskDao;
