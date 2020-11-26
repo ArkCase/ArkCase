@@ -31,7 +31,10 @@ package com.armedia.acm.services.costsheet.service;
  */
 
 import com.armedia.acm.activiti.services.AcmBpmnService;
+import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
+import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.services.costsheet.model.AcmCostsheet;
 import com.armedia.acm.services.costsheet.model.AcmCostsheetEvent;
 import com.armedia.acm.services.costsheet.model.CostsheetConfig;
@@ -60,7 +63,7 @@ public class CostsheetWorkflowListener implements ApplicationListener<AcmCostshe
     private final Logger LOG = LogManager.getLogger(getClass());
 
     private FileWorkflowBusinessRule fileWorkflowBusinessRule;
-    private AcmBpmnService acmBpmnService;
+    private TaskDao taskDao;
     private CostsheetConfig costsheetConfig;
 
     @Override
@@ -68,12 +71,16 @@ public class CostsheetWorkflowListener implements ApplicationListener<AcmCostshe
     {
         if (event != null && event.isStartWorkflow() && costsheetConfig.getUseApprovalWorkflow())
         {
-            startWorkflow(event);
+            try {
+                startWorkflow(event);
+            } catch (AcmCreateObjectFailedException | AcmUserActionFailedException e) {
+                // Nothing we can do at this point, just rethrow error
+                throw new RuntimeException("Error caused while starting business process Costsheet Workflow", e);
+            }
         }
     }
 
-    protected void startWorkflow(AcmCostsheetEvent event)
-    {
+    protected void startWorkflow(AcmCostsheetEvent event) throws AcmCreateObjectFailedException, AcmUserActionFailedException {
         AcmCostsheet costsheet = (AcmCostsheet) event.getSource();
         String processName = costsheetConfig.getWorkflowProcessName();
 
@@ -102,9 +109,7 @@ public class CostsheetWorkflowListener implements ApplicationListener<AcmCostshe
 
         LOG.debug("Starting process: " + processName);
 
-        ProcessInstance pi = getAcmBpmnService().startBusinessProcess(processName, pvars);
-
-        LOG.debug("process ID: " + pi.getId());
+        getTaskDao().startBusinessProcess(pvars, processName);
     }
 
     private List<String> findReviewers(AcmCostsheetEvent event)
@@ -156,16 +161,6 @@ public class CostsheetWorkflowListener implements ApplicationListener<AcmCostshe
         this.fileWorkflowBusinessRule = fileWorkflowBusinessRule;
     }
 
-    public AcmBpmnService getAcmBpmnService()
-    {
-        return acmBpmnService;
-    }
-
-    public void setAcmBpmnService(AcmBpmnService acmBpmnService)
-    {
-        this.acmBpmnService = acmBpmnService;
-    }
-
     public CostsheetConfig getCostsheetConfig()
     {
         return costsheetConfig;
@@ -174,5 +169,13 @@ public class CostsheetWorkflowListener implements ApplicationListener<AcmCostshe
     public void setCostsheetConfig(CostsheetConfig costsheetConfig)
     {
         this.costsheetConfig = costsheetConfig;
+    }
+
+    public TaskDao getTaskDao() {
+        return taskDao;
+    }
+
+    public void setTaskDao(TaskDao taskDao) {
+        this.taskDao = taskDao;
     }
 }
