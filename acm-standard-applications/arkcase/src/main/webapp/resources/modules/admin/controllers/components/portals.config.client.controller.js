@@ -2,42 +2,27 @@
 
 angular.module('admin').controller(
         'Admin.PortalsController',
-        [ '$scope', 'Helper.UiGridService', 'Admin.TimesheetConfigurationService', 'MessageService', 'UtilService', 'Object.LookupService', 'Admin.PortalConfigurationService', '$translate', 'ConfigService', '$modal',
-            function($scope, HelperUiGridService, TimesheetConfigurationService, MessageService, Util, ObjectLookupService, AdminPortalConfigurationService, $translate, ConfigService, $modal) {
+        [ '$scope', 'Helper.UiGridService', 'Admin.TimesheetConfigurationService', 'MessageService', 'UtilService', 'Object.LookupService',
+            'Admin.PortalConfigurationService', '$translate', 'ConfigService', '$modal',
+            function($scope, HelperUiGridService, TimesheetConfigurationService, MessageService, Util, ObjectLookupService,
+                     AdminPortalConfigurationService, $translate, ConfigService, $modal) {
 
                     $scope.portalConfigDataModel = {};
-                    $scope.portalAuthenticatedMode = {};
 
                     var getPortalConfig = function () {
                         AdminPortalConfigurationService.getPortalConfig().then(function (response) {
                             if (!Util.isEmpty(response.data)) {
-                                $scope.portalAuthenticatedMode["portal.authenticatedMode"] = response.data["portal.authenticatedMode"];
+                                $scope.portalConfigDataModel = response.data;
                             }
                         });
                     };
-                    getPortalConfig();
 
-                    var getArkcasePortalConfig = function () {
-                        AdminPortalConfigurationService.getArkcasePortalConfig().then(function (response) {
-                            if (!Util.isEmpty(response.data)) {
-                                $scope.portalConfigDataModel["portal.url"] = response.data["portal.url"];
-                                $scope.portalConfigDataModel["portal.groupName"] = response.data["portal.groupName"];
-                                $scope.portalConfigDataModel["portal.description"] = response.data["portal.description"];
-                                $scope.portalConfigDataModel["portal.id"] = response.data["portal.id"];
-                                $scope.portalConfigDataModel["portal.fullName"] = response.data["portal.fullName"];
-                                $scope.portalConfigDataModel["portal.userId"] = response.data["portal.userId"];
-                            }
-                        });
-                    };
-                    getArkcasePortalConfig();
+                    getPortalConfig();
 
                     ConfigService.getModuleConfig("admin").then(function(moduleConfig) {
                         $scope.configUser = _.find(moduleConfig.components, {
                             id: "userSearch"
                         });
-
-                    });
-                    ConfigService.getModuleConfig("admin").then(function(moduleConfig) {
                         $scope.configGroup = _.find(moduleConfig.components, {
                             id: "groupSearch"
                         });
@@ -103,19 +88,11 @@ angular.module('admin').controller(
                     };
 
                     $scope.savePortalConfig = function () {
-                        AdminPortalConfigurationService.savePortalConfig($scope.portalAuthenticatedMode).then(function () {
+                        AdminPortalConfigurationService.savePortalConfig($scope.portalConfigDataModel).then(function () {
                             MessageService.succsessAction();
                         }, function () {
                             MessageService.errorAction();
                         });
                     };
 
-                    $scope.onClickOk = function () {
-                        AdminPortalConfigurationService.saveArkcasePortalConfig($scope.portalConfigDataModel).then(function () {
-                            MessageService.succsessAction();
-                        }, function () {
-                            MessageService.errorAction();
-                        });
-                    };
-
-                } ]);
+                }]);

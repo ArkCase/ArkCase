@@ -37,7 +37,7 @@
                                           placeholder="{{'admin.portals.portalsConfiguration.placeholder.portalDescription' | translate}}"></textarea>
                             </div>
                         </div>
-                        <button type="button" class="btn btn-primary" ng-click="onClickOk()" ng-disabled="portalForm.$invalid">
+                        <button type="button" class="btn btn-primary" ng-click="savePortalConfig()" ng-disabled="portalForm.$invalid">
                             <span translate>admin.portals.portalsConfiguration.save</span>
                         </button>
                     </form>
@@ -51,7 +51,7 @@
                 <form>
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" ng-model="portalAuthenticatedMode['portal.authenticatedMode']">
+                            <input type="checkbox" ng-model="portalConfigDataModel['portal.authenticatedMode']">
                             <span translate>admin.portals.portalSettings.authenticatedMode</span>
                         </label>
                     </div>

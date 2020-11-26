@@ -32,15 +32,84 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import org.springframework.beans.factory.annotation.Value;
 
-/**
- * Created by aleksandar.pavleski
- */
 @JsonSerialize(as = PortalConfig.class)
 public class PortalConfig
 {
+    @JsonProperty("portal.id")
+    @Value("${portal.id}")
+    private String id;
+
+    @JsonProperty("portal.url")
+    @Value("${portal.url}")
+    private String url;
+
+    @JsonProperty("portal.description")
+    @Value("${portal.description}")
+    private String description;
+
+    @JsonProperty("portal.fullName")
+    @Value("${portal.fullName}")
+    private String fullName;
+
+    @JsonProperty("portal.groupName")
+    @Value("${portal.groupName}")
+    private String groupName;
+
+    @JsonProperty("portal.userId")
+    @Value("${portal.userId}")
+    private String userId;
+
     @JsonProperty("portal.authenticatedMode")
     @Value("${portal.authenticatedMode}")
     private Boolean authenticatedMode;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     public Boolean getAuthenticatedMode()
     {
@@ -51,6 +120,4 @@ public class PortalConfig
     {
         this.authenticatedMode = authenticatedMode;
     }
-
-
 }
