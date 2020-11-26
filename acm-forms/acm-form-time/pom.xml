@@ -78,7 +78,8 @@
         <dependency>
             <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
             <artifactId>acm-admin-plugin</artifactId>
-            <version>2020.17</version>
+            <version>${acm.version}</version>
+            <scope>compile</scope>
         </dependency>
 
     </dependencies>

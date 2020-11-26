@@ -15,11 +15,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
-            <artifactId>acm-person-plugin</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
             <artifactId>acm-spring-data-source</artifactId>
             <version>${acm.version}</version>
@@ -60,11 +55,6 @@
             <version>${acm.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.armedia.acm.acm-services</groupId>
-            <artifactId>acm-service-ecm</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.armedia.acm</groupId>
             <artifactId>acm-web</artifactId>
             <version>${acm.version}</version>
@@ -87,21 +77,6 @@
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-data</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.acm-services</groupId>
-            <artifactId>acm-service-timesheet</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.acm-services</groupId>
-            <artifactId>acm-service-costsheet</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.acm-services</groupId>
-            <artifactId>acm-service-note</artifactId>
             <version>${acm.version}</version>
         </dependency>
         <dependency>
@@ -225,11 +200,22 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-form-configuration</artifactId>
+            <version>${acm.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-note</artifactId>
+            <version>${acm.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
             <artifactId>acm-business-process-plugin</artifactId>
             <version>${acm.version}</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
-
 </project>
