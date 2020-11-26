@@ -41,7 +41,7 @@ import com.armedia.acm.portalgateway.model.UserRegistrationRequest;
 import com.armedia.acm.portalgateway.model.UserRegistrationResponse;
 import com.armedia.acm.portalgateway.model.UserResetRequest;
 import com.armedia.acm.portalgateway.model.UserResetResponse;
-import com.armedia.acm.portalgateway.service.ArkcasePortalConfigurationService;
+import com.armedia.acm.portalgateway.service.PortalConfigurationService;
 import com.armedia.acm.portalgateway.service.PortalUserServiceException;
 import com.armedia.acm.portalgateway.service.PortalUserServiceProvider;
 import com.armedia.acm.services.email.model.EmailBodyBuilder;
@@ -74,6 +74,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Base64Utils;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -99,15 +100,9 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     public static final long DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000; // 1 day in milliseconds
     public static final long REGISTRATION_EXPIRATION = 90L * DAY_IN_MILLISECONDS; // 90 days in milliseconds
 
-    private Logger log = LogManager.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     private AcmEmailSenderService emailSenderService;
-
-    @Value("${portal.serviceProvider.registrationRequest.template}")
-    private String registrationRequestEmailTemplate;
-
-    @Value("${portal.serviceProvider.passwordResetRequest.template}")
-    private String passwordResetRequestEmailTemplate;
 
     private UserRegistrationRequestDao registrationDao;
 
@@ -136,7 +131,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
 
     private OrganizationDao organizationDao;
 
-    private ArkcasePortalConfigurationService arkcasePortalConfigurationService;
+    private PortalConfigurationService portalConfigurationService;
 
     /*
      * (non-Javadoc)
@@ -205,7 +200,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         String registrationKey = UUID.randomUUID().toString();
         createRegistrationRecord(registrationKey, registrationRequest.getEmailAddress(), System.currentTimeMillis(), portalId);
         String registrationLink = new String(Base64Utils.decodeFromString(registrationRequest.getRegistrationUrl()),
-                Charset.forName("UTF-8")) + "/" + registrationKey + "/" + registrationRequest.getEmailAddress();
+                StandardCharsets.UTF_8) + "/" + registrationKey + "/" + registrationRequest.getEmailAddress();
 
         Notification notification = new Notification();
         notification.setTemplateModelName("portalRequestRegistrationLink");
@@ -258,7 +253,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     private void regenerateRegistration(String portalId, UserRegistrationRequestRecord registrationRecord)
     {
         String portalRegistrationUrl = Base64Utils
-                .encodeToString((arkcasePortalConfigurationService.getPortalConfiguration().getUrl() + "/portal/login/register").getBytes());
+                .encodeToString((portalConfigurationService.getPortalConfiguration().getUrl() + "/portal/login/register").getBytes());
 
         UserRegistrationRequest newRegistrationRequest = new UserRegistrationRequest();
         newRegistrationRequest.setEmailAddress(registrationRecord.getEmailAddress());
@@ -422,7 +417,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         UserResetRequest resetRequest = new UserResetRequest();
         resetRequest.setEmailAddress(user.getEmail());
         String baseUrl = Base64Utils
-                .encodeToString((new String(arkcasePortalConfigurationService.getPortalConfiguration().getUrl() + "/portal/login/reset")).getBytes());
+                .encodeToString((new String(portalConfigurationService.getPortalConfiguration().getUrl() + "/portal/login/reset")).getBytes());
         resetRequest.setResetUrl(baseUrl);
         return resetRequest;
     }
@@ -441,8 +436,8 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         {
             AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directoryName);
             UserDTO userDto = userDTOFromPortalUser(user,
-                    password != null ? new String(Base64Utils.decodeFromString(password), Charset.forName("UTF-8")) : null,
-                    arkcasePortalConfigurationService.getPortalConfiguration().getGroupName());
+                    password != null ? new String(Base64Utils.decodeFromString(password), StandardCharsets.UTF_8) : null,
+                    portalConfigurationService.getPortalConfiguration().getGroupName());
             portalPersonDao.save(person);
             Optional<AcmUser> foundAcmUser = userDao.findByEmailAddress(user.getEmail()).stream().findFirst();
             AcmUser acmUser;
@@ -508,12 +503,11 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
             if (foiaLdapAuthenticationService == null)
             {
                 log.debug("LDAP authentication service problem");
-                throw new PortalUserServiceException(
-                        String.format("LDAP authentication service problem!"));
+                throw new PortalUserServiceException("LDAP authentication service problem!");
             }
             if (!foiaLdapAuthenticationService.authenticate(ldapUserId, password))
             {
-                log.debug("User %s provided wrong password!", portalAcmUser.getMail());
+                log.debug("User with email [{}] provided wrong password!", portalAcmUser.getMail());
                 throw new PortalUserServiceException(
                         String.format("User %s provided wrong password!", portalAcmUser.getMail()));
             }
@@ -648,7 +642,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
 
                 resetDao.save(record);
 
-                String resetLink = new String(Base64Utils.decodeFromString(resetRequest.getResetUrl()), Charset.forName("UTF-8")) + "/"
+                String resetLink = new String(Base64Utils.decodeFromString(resetRequest.getResetUrl()), StandardCharsets.UTF_8) + "/"
                         + resetKey;
 
                 Notification notification = new Notification();
@@ -726,8 +720,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
                 if (foiaLdapAuthenticationService == null)
                 {
                     log.debug("LDAP authentication service problem");
-                    throw new PortalUserServiceException(
-                            String.format("LDAP authentication service problem!"));
+                    throw new PortalUserServiceException("LDAP authentication service problem!");
                 }
                 try
                 {
@@ -735,7 +728,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
                 }
                 catch (AcmUserActionFailedException e)
                 {
-                    log.debug("Couldn't update password for LDAP user %s.", acmPortalUser.getMail());
+                    log.debug("Couldn't update password for LDAP user with email [{}].", acmPortalUser.getMail());
                     throw new PortalUserServiceException(
                             String.format("Couldn't update password for LDAP user %s.", acmPortalUser.getMail()), e);
                 }
@@ -759,8 +752,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         if (foiaLdapAuthenticationService == null)
         {
             log.debug("LDAP authentication service problem");
-            throw new PortalUserServiceException(
-                    String.format("LDAP authentication service problem!"));
+            throw new PortalUserServiceException("LDAP authentication service problem!");
         }
         try
         {
@@ -1131,7 +1123,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     {
         EmailBuilder<String> emailBuilder = getEmailBuilder(subject);
         EmailBodyBuilder<String> emailBodyBuilder = getEmailBodyBuilder(template,
-                new String(Base64Utils.decodeFromString(requestUrl), Charset.forName("UTF-8")),
+                new String(Base64Utils.decodeFromString(requestUrl), StandardCharsets.UTF_8),
                 requestKey);
         sendEmail(email, emailBuilder, emailBodyBuilder);
     }
@@ -1199,24 +1191,6 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     public void setEmailSenderService(AcmEmailSenderService emailSenderService)
     {
         this.emailSenderService = emailSenderService;
-    }
-
-    /**
-     * @param registrationRequestEmailTemplate
-     *            the registrationRequestEmailTemplate to set
-     */
-    public void setRegistrationRequestEmailTemplate(String registrationRequestEmailTemplate)
-    {
-        this.registrationRequestEmailTemplate = registrationRequestEmailTemplate;
-    }
-
-    /**
-     * @param passwordResetRequestEmailTemplate
-     *            the passwordResetRequestEmailTemplate to set
-     */
-    public void setPasswordResetRequestEmailTemplate(String passwordResetRequestEmailTemplate)
-    {
-        this.passwordResetRequestEmailTemplate = passwordResetRequestEmailTemplate;
     }
 
     /**
@@ -1337,11 +1311,13 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         this.requestAssignmentService = requestAssignmentService;
     }
 
-    public ArkcasePortalConfigurationService getArkcasePortalConfigurationService() {
-        return arkcasePortalConfigurationService;
+    public PortalConfigurationService getPortalConfigurationService()
+    {
+        return portalConfigurationService;
     }
 
-    public void setArkcasePortalConfigurationService(ArkcasePortalConfigurationService arkcasePortalConfigurationService) {
-        this.arkcasePortalConfigurationService = arkcasePortalConfigurationService;
+    public void setPortalConfigurationService(PortalConfigurationService portalConfigurationService)
+    {
+        this.portalConfigurationService = portalConfigurationService;
     }
 }

@@ -51,11 +51,6 @@ public class PortalConfigurationServiceImpl implements PortalConfigurationServic
         return portalConfig;
     }
 
-    public PortalConfig getPortalConfig()
-    {
-        return portalConfig;
-    }
-
     public void setPortalConfig(PortalConfig portalConfig)
     {
         this.portalConfig = portalConfig;

@@ -31,8 +31,6 @@ package com.armedia.acm.portalgateway.service;
  */
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
-import com.armedia.acm.services.users.dao.UserDao;
-import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
 import com.armedia.acm.services.users.service.ldap.LdapUserService;
 
@@ -56,10 +54,6 @@ import java.util.UUID;
 public class DefaultPortalAdminService implements PortalAdminService
 {
     private transient final Logger log = LogManager.getLogger(getClass());
-
-    private UserDao userDao;
-
-    private AcmGroupDao groupDao;
 
     private LdapUserService ldapUserService;
 
@@ -90,49 +84,34 @@ public class DefaultPortalAdminService implements PortalAdminService
 
     @Override
     @Async
-    public void moveExistingLdapUsersToGroup(String newAcmGroup, ArkcasePortalConfigurationService previousPortalInfo, String directoryName, Authentication auth)
+    public void moveExistingLdapUsersToGroup(String newAcmGroup, PortalConfigurationService portalConfigurationService,
+            String directoryName, Authentication auth)
     {
         try
         {
-            ldapUserService.moveExistingLdapUsersToGroup(newAcmGroup, previousPortalInfo.getPortalConfiguration().getGroupName(), directoryName);
-            send(true, auth, previousPortalInfo);
+            ldapUserService.moveExistingLdapUsersToGroup(newAcmGroup, portalConfigurationService.getPortalConfiguration().getGroupName(),
+                    directoryName);
+            send(true, auth, portalConfigurationService);
         }
         catch (AcmLdapActionFailedException | AcmObjectNotFoundException e)
         {
             log.warn("Failed to move portal users to another configured group");
-            send(false, auth, previousPortalInfo);
+            send(false, auth, portalConfigurationService);
         }
     }
 
-    private void send(Boolean action, Authentication auth, ArkcasePortalConfigurationService arkcasePortalConfigurationService)
+    private void send(Boolean action, Authentication auth, PortalConfigurationService portalConfigurationService)
     {
         log.debug("Send progress for moving portal users to another group");
 
         Map<String, Object> message = new HashMap<>();
         message.put("action", action);
         message.put("user", auth.getName());
-        message.put("previousPortalInfo", arkcasePortalConfigurationService.getPortalConfiguration());
+        message.put("previousPortalInfo", portalConfigurationService.getPortalConfiguration());
         message.put("eventType", "portalUserProgress");
         Message<Map<String, Object>> progressMessage = MessageBuilder.withPayload(message).build();
 
         genericMessagesChannel.send(progressMessage);
-    }
-    /**
-     * @param userDao
-     *            the userDao to set
-     */
-    public void setUserDao(UserDao userDao)
-    {
-        this.userDao = userDao;
-    }
-
-    /**
-     * @param groupDao
-     *            the groupDao to set
-     */
-    public void setGroupDao(AcmGroupDao groupDao)
-    {
-        this.groupDao = groupDao;
     }
 
     public LdapUserService getLdapUserService()
