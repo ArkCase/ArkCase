@@ -27,61 +27,29 @@ package com.armedia.acm.services.holiday.service;
  * #L%
  */
 
-import com.armedia.acm.objectonverter.ObjectConverter;
+import com.armedia.acm.configuration.service.ConfigurationPropertyService;
 import com.armedia.acm.services.holiday.model.HolidayConfiguration;
+import com.armedia.acm.services.holiday.model.HolidayConfigurationHolder;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.core.io.Resource;
-
-import java.io.IOException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
-import java.util.Objects;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class HolidayConfigurationService
 {
-    private Logger log = LogManager.getLogger(getClass());
-    private Resource holidayFile;
-    private ObjectConverter objectConverter;
-    private ReadWriteLock lock = new ReentrantReadWriteLock();
-    private HolidayConfiguration holidayConfiguration;
+    private HolidayConfigurationHolder holidayConfigurationHolder;
+    private ConfigurationPropertyService configurationPropertyService;
 
     public void saveHolidayConfig(HolidayConfiguration holidayConfiguration)
     {
-        String holidayConfigJson = Objects.nonNull(holidayConfiguration)
-                ? getObjectConverter().getIndentedJsonMarshaller().marshal(holidayConfiguration)
-                : "{}";
-
-        try
-        {
-            log.info("Trying to write to config file: {}", getHolidayFile().getFile().getAbsolutePath());
-            lock.writeLock().lock();
-            FileUtils.writeStringToFile(getHolidayFile().getFile(), holidayConfigJson);
-        }
-        catch (IOException e)
-        {
-            log.error(e.getMessage());
-        }
-        finally
-        {
-            lock.writeLock().unlock();
-            setHolidayConfigurationFromFile();
-        }
+        holidayConfigurationHolder.setHolidayConfiguration(holidayConfiguration);
+        configurationPropertyService.updateProperties(holidayConfigurationHolder);
     }
 
     public HolidayConfiguration getHolidayConfiguration()
     {
-        if (holidayConfiguration == null)
-        {
-            setHolidayConfigurationFromFile();
-        }
-        return holidayConfiguration;
+        return holidayConfigurationHolder.getHolidayConfiguration();
     }
 
     public LocalDate addWorkingDaysToDate(LocalDate date, int workingDays)
@@ -160,45 +128,23 @@ public class HolidayConfigurationService
         return count;
     }
 
-    private void setHolidayConfigurationFromFile()
+    public HolidayConfigurationHolder getHolidayConfigurationHolder()
     {
-        holidayConfiguration = new HolidayConfiguration();
-
-        try
-        {
-            log.info("Trying to read from config file: {}", getHolidayFile().getFile().getAbsolutePath());
-
-            lock.readLock().lock();
-            String holidayConfigJson = FileUtils.readFileToString(getHolidayFile().getFile());
-            holidayConfiguration = getObjectConverter().getJsonUnmarshaller().unmarshall(holidayConfigJson, HolidayConfiguration.class);
-        }
-        catch (IOException e)
-        {
-            log.error(e.getMessage());
-        }
-        finally
-        {
-            lock.readLock().unlock();
-        }
+        return holidayConfigurationHolder;
     }
 
-    public Resource getHolidayFile()
+    public void setHolidayConfigurationHolder(HolidayConfigurationHolder holidayConfigurationHolder)
     {
-        return holidayFile;
+        this.holidayConfigurationHolder = holidayConfigurationHolder;
     }
 
-    public void setHolidayFile(Resource holidayFile)
+    public ConfigurationPropertyService getConfigurationPropertyService()
     {
-        this.holidayFile = holidayFile;
+        return configurationPropertyService;
     }
 
-    public ObjectConverter getObjectConverter()
+    public void setConfigurationPropertyService(ConfigurationPropertyService configurationPropertyService)
     {
-        return objectConverter;
-    }
-
-    public void setObjectConverter(ObjectConverter objectConverter)
-    {
-        this.objectConverter = objectConverter;
+        this.configurationPropertyService = configurationPropertyService;
     }
 }
