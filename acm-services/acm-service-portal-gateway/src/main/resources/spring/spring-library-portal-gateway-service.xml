@@ -10,8 +10,6 @@
     <!-- <cache:annotation-driven/> -->
 
     <bean id="portalAdminService" class="com.armedia.acm.portalgateway.service.DefaultPortalAdminService">
-        <property name="userDao" ref="userJpaDao"/>
-        <property name="groupDao" ref="groupDao"/>
         <property name="ldapUserService" ref="ldapUserService"/>
         <property name="genericMessagesChannel" ref="genericMessagesChannel"/>
     </bean>
@@ -25,28 +23,19 @@
     </bean>
 
     <bean id="checkPortalUserService" class="com.armedia.acm.portalgateway.service.DefaultPortalCheckUserAssignementService">
-        <property name="arkcasePortalConfigurationService" ref="arkcasePortalConfigurationService"/>
+        <property name="portalConfigurationService" ref="portalConfigurationService"/>
     </bean>
 
     <bean id="checkPortalUserAssignementAspect" class="com.armedia.acm.portalgateway.service.CheckPortalUserAssignementAspect">
         <property name="checkUserAssignementService" ref="checkPortalUserService"/>
     </bean>
 
-    <bean id="arkcasePortalConfigurationService" class="com.armedia.acm.portalgateway.service.ArkcasePortalConfigurationServiceImpl">
-        <property name="arkcasePortalConfig" ref="arkcasePortalConfig"/>
-        <property name="configurationPropertyService" ref="configurationPropertyService"/>
-    </bean>
-
     <bean id="portalConfigurationService" class="com.armedia.acm.portalgateway.service.PortalConfigurationServiceImpl">
-        <property name="portalConfig" ref="portalConfig"/>
+        <property name="portalConfig" ref="arkcasePortalConfig"/>
         <property name="configurationPropertyService" ref="configurationPropertyService"/>
     </bean>
 
-    <bean id="arkcasePortalConfig" class="com.armedia.acm.portalgateway.model.ArkcasePortalConfig" scope="refresh">
-        <aop:scoped-proxy/>
-    </bean>
-
-    <bean id="portalConfig" class="com.armedia.acm.portalgateway.model.PortalConfig" scope="refresh">
+    <bean id="arkcasePortalConfig" class="com.armedia.acm.portalgateway.model.PortalConfig" scope="refresh">
         <aop:scoped-proxy/>
     </bean>
 

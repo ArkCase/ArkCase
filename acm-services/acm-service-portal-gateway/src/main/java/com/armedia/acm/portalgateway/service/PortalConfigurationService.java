@@ -34,7 +34,7 @@ import com.armedia.acm.portalgateway.model.PortalConfig;
  */
 public interface PortalConfigurationService
 {
-    void writeConfiguration(PortalConfig properties);
+    void writeConfiguration(PortalConfig portalConfig);
 
     PortalConfig getPortalConfiguration();
 
