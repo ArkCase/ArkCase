@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns="http://www.springframework.org/schema/beans"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
+       xmlns="http://www.springframework.org/schema/beans" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <bean id="holidayConfigurationService" class="com.armedia.acm.services.holiday.service.HolidayConfigurationService">
-        <property name="holidayFile" value="file:${user.home}/.arkcase/acm/holidayFile.json"/>
-        <property name="objectConverter" ref="objectConverter"/>
+        <property name="holidayConfigurationHolder" ref="holidayConfigurationHolder"/>
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
     </bean>
-    
+
+    <bean id="holidayConfigurationHolder" class="com.armedia.acm.services.holiday.model.HolidayConfigurationHolder" scope="refresh">
+        <property name="jsonUnmarshaller" ref="jsonUnmarshaller"/>
+        <aop:scoped-proxy/>
+    </bean>
+
 </beans>

@@ -29,15 +29,17 @@ package com.armedia.acm.services.holiday.service;
 
 import static org.junit.Assert.assertEquals;
 
-import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.objectonverter.json.JSONUnmarshaller;
+import com.armedia.acm.services.holiday.model.HolidayConfigurationHolder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.apache.commons.io.FileUtils;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.core.io.FileSystemResource;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -52,21 +54,27 @@ public class HolidayConfigurationServiceTest extends EasyMockSupport {
     @Before
     public void setUp(){
 
-        ObjectConverter objectConverter = new ObjectConverter();
         JSONUnmarshaller jsonUnmarshaller = new JSONUnmarshaller();
-
         jsonUnmarshaller.setMapper(new ObjectMapper());
-        objectConverter.setJsonUnmarshaller(jsonUnmarshaller);
 
-        holidayConfigurationService.setObjectConverter(objectConverter);
+        HolidayConfigurationHolder holidayConfigurationHolder = new HolidayConfigurationHolder();
+        holidayConfigurationHolder.setJsonUnmarshaller(jsonUnmarshaller);
+
+        holidayConfigurationService.setHolidayConfigurationHolder(holidayConfigurationHolder);
+    }
+
+    private void setHolidayFile(String relativePath) throws IOException
+    {
+        String holidayConfigurationFilePath = getClass().getClassLoader().getResource(relativePath).getPath();
+        String holidayJsonConfiguration = FileUtils.readFileToString(new File(holidayConfigurationFilePath));
+        holidayConfigurationService.getHolidayConfigurationHolder().setHolidayJsonConfiguration(holidayJsonConfiguration);
+        holidayConfigurationService.getHolidayConfigurationHolder().afterPropertiesSet();
     }
 
     @Test
-    public void testAddWorkingDaysToDateWithoutWeekendsAndHolidaysIncluded(){
+    public void testAddWorkingDaysToDateWithoutWeekendsAndHolidaysIncluded() throws IOException {
 
-        String holidayConfigurationFilePath = getClass().getClassLoader().getResource("test/holidayFile.json").getPath();
-        holidayConfigurationService.setHolidayFile(new FileSystemResource(holidayConfigurationFilePath));
-
+        setHolidayFile("test/holidayFile.json");
 
         LocalDate actualResult = holidayConfigurationService.addWorkingDaysToDate(LocalDate.parse("20181010", DateTimeFormatter.BASIC_ISO_DATE),
                 6);
@@ -77,12 +85,10 @@ public class HolidayConfigurationServiceTest extends EasyMockSupport {
     }
 
     @Test
-    public void testAddWorkingDaysToDateWithoutWeekendsIncluded(){
+    public void testAddWorkingDaysToDateWithoutWeekendsIncluded() throws IOException {
 
         //included "Thanksgiving Day": "2018-11-22"
-        String holidayConfigurationFilePath = getClass().getClassLoader().getResource("test/holidayFile.json").getPath();
-        holidayConfigurationService.setHolidayFile(new FileSystemResource(holidayConfigurationFilePath));
-
+        setHolidayFile("test/holidayFile.json");
 
         LocalDate actualResult = holidayConfigurationService.addWorkingDaysToDate(LocalDate.parse("20181122", DateTimeFormatter.BASIC_ISO_DATE),
                 6);
@@ -93,11 +99,10 @@ public class HolidayConfigurationServiceTest extends EasyMockSupport {
     }
 
     @Test
-    public void testAddWorkingDaysToDateWithWeekendsIncluded(){
+    public void testAddWorkingDaysToDateWithWeekendsIncluded() throws IOException
+    {
 
-        String holidayConfigurationFilePath = getClass().getClassLoader().getResource("test/holidayFileIncludeWeekends.json").getPath();
-        holidayConfigurationService.setHolidayFile(new FileSystemResource(holidayConfigurationFilePath));
-
+        setHolidayFile("test/holidayFileIncludeWeekends.json");
 
         LocalDate actualResult = holidayConfigurationService.addWorkingDaysToDate(LocalDate.parse("20181009", DateTimeFormatter.BASIC_ISO_DATE),
                 6);
@@ -108,12 +113,11 @@ public class HolidayConfigurationServiceTest extends EasyMockSupport {
     }
 
     @Test
-    public void testAddWorkingDaysToDateWithWeekendsAndHolidayIncluded(){
+    public void testAddWorkingDaysToDateWithWeekendsAndHolidayIncluded() throws IOException
+    {
 
         //included "Christmas Day": "2018-12-25"
-        String holidayConfigurationFilePath = getClass().getClassLoader().getResource("test/holidayFileIncludeWeekends.json").getPath();
-        holidayConfigurationService.setHolidayFile(new FileSystemResource(holidayConfigurationFilePath));
-
+        setHolidayFile("test/holidayFileIncludeWeekends.json");
 
         LocalDate actualResult = holidayConfigurationService.addWorkingDaysToDate(LocalDate.parse("20181224", DateTimeFormatter.BASIC_ISO_DATE),
                 6);
@@ -124,10 +128,10 @@ public class HolidayConfigurationServiceTest extends EasyMockSupport {
     }
 
     @Test
-    public void testFindNextWorkingDayWhenCurrentDayIsHoliday()
+    public void testFindNextWorkingDayWhenCurrentDayIsHoliday() throws IOException
     {
-        String holidayConfigurationFilePath = getClass().getClassLoader().getResource("test/holidayFile.json").getPath();
-        holidayConfigurationService.setHolidayFile(new FileSystemResource(holidayConfigurationFilePath));
+        setHolidayFile("test/holidayFile.json");
+
         // memorials day 2018-05-28
         LocalDate testDate = LocalDate.parse("20180528", DateTimeFormatter.BASIC_ISO_DATE);
         LocalDate actualResult = holidayConfigurationService.getFirstWorkingDay(testDate);
@@ -137,10 +141,9 @@ public class HolidayConfigurationServiceTest extends EasyMockSupport {
     }
 
     @Test
-    public void testFindNextWorkingDayWhenCurrentDayIsNonWorkingWeekend()
+    public void testFindNextWorkingDayWhenCurrentDayIsNonWorkingWeekend() throws IOException
     {
-        String holidayConfigurationFilePath = getClass().getClassLoader().getResource("test/holidayFile.json").getPath();
-        holidayConfigurationService.setHolidayFile(new FileSystemResource(holidayConfigurationFilePath));
+        setHolidayFile("test/holidayFile.json");
 
         LocalDate currentDate = LocalDate.parse("20181222", DateTimeFormatter.BASIC_ISO_DATE);
         LocalDate actualResult = holidayConfigurationService.getFirstWorkingDay(currentDate);
@@ -151,10 +154,9 @@ public class HolidayConfigurationServiceTest extends EasyMockSupport {
     }
 
     @Test
-    public void testFindNextWorkingDayWhenCurrentDayIsWorkingWeekend()
+    public void testFindNextWorkingDayWhenCurrentDayIsWorkingWeekend() throws IOException
     {
-        String holidayConfigurationFilePath = getClass().getClassLoader().getResource("test/holidayFileIncludeWeekends.json").getPath();
-        holidayConfigurationService.setHolidayFile(new FileSystemResource(holidayConfigurationFilePath));
+        setHolidayFile("test/holidayFileIncludeWeekends.json");
 
         LocalDate currentDate = LocalDate.parse("20181222", DateTimeFormatter.BASIC_ISO_DATE);
         LocalDate actualResult = holidayConfigurationService.getFirstWorkingDay(currentDate);
@@ -165,10 +167,9 @@ public class HolidayConfigurationServiceTest extends EasyMockSupport {
     }
 
     @Test
-    public void testCalculateDueDateNoWorkingWeekend()
+    public void testCalculateDueDateNoWorkingWeekend() throws IOException
     {
-        String holidayConfigurationFilePath = getClass().getClassLoader().getResource("test/holidayFile.json").getPath();
-        holidayConfigurationService.setHolidayFile(new FileSystemResource(holidayConfigurationFilePath));
+        setHolidayFile("test/holidayFile.json");
 
         LocalDate currentDate = LocalDate.parse("20200425", DateTimeFormatter.BASIC_ISO_DATE);
         LocalDate actualResult = holidayConfigurationService.getFirstWorkingDay(currentDate);
@@ -183,10 +184,9 @@ public class HolidayConfigurationServiceTest extends EasyMockSupport {
     }
 
     @Test
-    public void calculateDateSubtractBy()
+    public void calculateDateSubtractBy() throws IOException
     {
-        String holidayConfigurationFilePath = getClass().getClassLoader().getResource("test/holidayFile.json").getPath();
-        holidayConfigurationService.setHolidayFile(new FileSystemResource(holidayConfigurationFilePath));
+        setHolidayFile("test/holidayFile.json");
 
         LocalDate currentDate = LocalDate.parse("20200525", DateTimeFormatter.BASIC_ISO_DATE);
 
