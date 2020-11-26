@@ -593,7 +593,7 @@
                 <div class="row">
                     <div class="col-sm-12 form-group">
                         <select id="requestType" ng-model="config.data.requestType"
-                                ng-options="requestType.key as requestType.value for requestType in requestTypes"
+                                ng-options="requestType.key as requestType.value | translate for requestType in requestTypes"
                                 class="form-control input-md">
                         </select>
                     </div>
