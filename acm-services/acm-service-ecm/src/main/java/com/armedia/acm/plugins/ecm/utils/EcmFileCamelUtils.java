@@ -100,7 +100,7 @@ public class EcmFileCamelUtils
     {
         // This is the request payload for camel including the unique cmis id for the document to delete
         Map<String, Object> messageProps = new HashMap<>();
-        messageProps.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, cmisFileId);
+        messageProps.put(ArkCaseCMISConstants.CMIS_DOCUMENT_ID, cmisFileId);
         messageProps.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
         messageProps.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
 
@@ -169,7 +169,7 @@ public class EcmFileCamelUtils
     public Document updateFile(EcmFile newEcmFile, EcmFile originalFile, InputStream fileInputStream) throws ArkCaseFileRepositoryException
     {
         Map<String, Object> messageProps = new HashMap<>();
-        messageProps.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, originalFile.getVersionSeriesId());
+        messageProps.put(ArkCaseCMISConstants.CMIS_DOCUMENT_ID, originalFile.getVersionSeriesId());
         messageProps.put(ArkCaseCMISConstants.MIME_TYPE, originalFile.getFileActiveVersionMimeType());
         messageProps.put(ArkCaseCMISConstants.INPUT_STREAM, fileInputStream);
         messageProps.put(ArkCaseCMISConstants.CHECKIN_COMMENT, "");
