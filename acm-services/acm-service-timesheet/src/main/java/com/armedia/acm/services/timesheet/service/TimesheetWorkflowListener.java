@@ -31,8 +31,11 @@ package com.armedia.acm.services.timesheet.service;
  */
 
 import com.armedia.acm.activiti.services.AcmBpmnService;
+import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
+import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.ParticipantTypes;
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
@@ -62,7 +65,7 @@ public class TimesheetWorkflowListener implements ApplicationListener<AcmTimeshe
     private final Logger LOG = LogManager.getLogger(getClass());
 
     private FileWorkflowBusinessRule fileWorkflowBusinessRule;
-    private AcmBpmnService acmBpmnService;
+    private TaskDao taskDao;
     private TimesheetConfig timesheetConfig;
 
     @Override
@@ -70,12 +73,16 @@ public class TimesheetWorkflowListener implements ApplicationListener<AcmTimeshe
     {
         if (event != null && event.isStartWorkflow() && timesheetConfig.getUseApprovalWorkflow())
         {
-            startWorkflow(event);
+            try {
+                startWorkflow(event);
+            } catch (AcmCreateObjectFailedException | AcmUserActionFailedException e) {
+                // Nothing we can do at this point, just rethrow error
+                throw new RuntimeException("Error caused while starting business process Timesheet Workflow", e);
+            }
         }
     }
 
-    protected void startWorkflow(AcmTimesheetEvent event)
-    {
+    protected void startWorkflow(AcmTimesheetEvent event) throws AcmCreateObjectFailedException, AcmUserActionFailedException {
         AcmTimesheet timesheet = (AcmTimesheet) event.getSource();
         String processName = timesheetConfig.getWorkflowProcessName();
 
@@ -104,9 +111,7 @@ public class TimesheetWorkflowListener implements ApplicationListener<AcmTimeshe
 
         LOG.debug("Starting process: " + processName);
 
-        ProcessInstance pi = getAcmBpmnService().startBusinessProcess(processName, pvars);
-
-        LOG.debug("process ID: " + pi.getId());
+        getTaskDao().startBusinessProcess(pvars, processName);
     }
 
     private List<String> findReviewers(AcmTimesheetEvent event)
@@ -161,16 +166,6 @@ public class TimesheetWorkflowListener implements ApplicationListener<AcmTimeshe
         this.fileWorkflowBusinessRule = fileWorkflowBusinessRule;
     }
 
-    public AcmBpmnService getAcmBpmnService()
-    {
-        return acmBpmnService;
-    }
-
-    public void setAcmBpmnService(AcmBpmnService acmBpmnService)
-    {
-        this.acmBpmnService = acmBpmnService;
-    }
-
     public TimesheetConfig getTimesheetConfig()
     {
         return timesheetConfig;
@@ -179,5 +174,13 @@ public class TimesheetWorkflowListener implements ApplicationListener<AcmTimeshe
     public void setTimesheetConfig(TimesheetConfig timesheetConfig)
     {
         this.timesheetConfig = timesheetConfig;
+    }
+
+    public TaskDao getTaskDao() {
+        return taskDao;
+    }
+
+    public void setTaskDao(TaskDao taskDao) {
+        this.taskDao = taskDao;
     }
 }
