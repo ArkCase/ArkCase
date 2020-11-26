@@ -95,7 +95,7 @@ public class FileCreatedBuckslipWorkflowHandler implements ApplicationListener<E
                 startBusinessProcess(event, configuration);
             } catch (AcmCreateObjectFailedException | AcmUserActionFailedException e) {
                 // Nothing we can do at this point, just rethrow error
-                throw new RuntimeException("Error caused while starting business process, CloseComplaint", e);
+                throw new RuntimeException("Error caused while starting business process, FileCreatedBuckslip", e);
             }
         }
     }
