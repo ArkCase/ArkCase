@@ -159,7 +159,7 @@ public class EcmFileServiceImplTest extends EasyMockSupport
         toBeDeleted.getVersions().add(second);
 
         Map<String, Object> props = new HashMap<>();
-        props.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, second.getVersionTag());
+        props.put(ArkCaseCMISConstants.CMIS_DOCUMENT_ID, second.getVersionTag());
         props.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
         props.put(ArkCaseCMISConstants.ALL_VERSIONS, false);
         props.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
@@ -210,7 +210,7 @@ public class EcmFileServiceImplTest extends EasyMockSupport
         toBeDeleted.getVersions().add(second);
 
         Map<String, Object> props = new HashMap<>();
-        props.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, toBeDeleted.getVersionSeriesId());
+        props.put(ArkCaseCMISConstants.CMIS_DOCUMENT_ID, toBeDeleted.getVersionSeriesId());
         props.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
         props.put(ArkCaseCMISConstants.ALL_VERSIONS, true);
         props.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
@@ -250,7 +250,7 @@ public class EcmFileServiceImplTest extends EasyMockSupport
         toBeDeleted.getVersions().add(second);
 
         Map<String, Object> props = new HashMap<>();
-        props.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, toBeDeleted.getVersionSeriesId());
+        props.put(ArkCaseCMISConstants.CMIS_DOCUMENT_ID, toBeDeleted.getVersionSeriesId());
         props.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
         props.put(ArkCaseCMISConstants.ALL_VERSIONS, true);
         props.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
@@ -281,7 +281,7 @@ public class EcmFileServiceImplTest extends EasyMockSupport
         toBeDeleted.getVersions().add(only);
 
         Map<String, Object> props = new HashMap<>();
-        props.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, toBeDeleted.getVersionSeriesId());
+        props.put(ArkCaseCMISConstants.CMIS_DOCUMENT_ID, toBeDeleted.getVersionSeriesId());
         props.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
         props.put(ArkCaseCMISConstants.ALL_VERSIONS, true);
         props.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");

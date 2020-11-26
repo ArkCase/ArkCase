@@ -1207,7 +1207,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
         String internalFileName = getFolderAndFilesUtils().createUniqueIdentificator(file.getFileName());
         Map<String, Object> props = new HashMap<>();
-        props.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, getFolderAndFilesUtils().getActiveVersionCmisId(file));
+        props.put(ArkCaseCMISConstants.CMIS_DOCUMENT_ID, getFolderAndFilesUtils().getActiveVersionCmisId(file));
         props.put(ArkCaseCMISConstants.DESTINATION_FOLDER_ID, targetFolder.getCmisFolderId());
         props.put(PropertyIds.NAME, internalFileName);
         props.put(EcmFileConstants.FILE_MIME_TYPE, file.getFileActiveVersionMimeType());
@@ -1824,7 +1824,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                 : file.getVersions().get(file.getVersions().size() - 1).getVersionTag();
 
         Map<String, Object> props = new HashMap<>();
-        props.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, versionToRemoveFromEcm);
+        props.put(ArkCaseCMISConstants.CMIS_DOCUMENT_ID, versionToRemoveFromEcm);
         String cmisRepositoryId = file.getCmisRepositoryId();
         if (cmisRepositoryId == null)
         {
@@ -1868,7 +1868,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     public void deleteCmisObject(CmisObject cmisObject, String cmisRepositoryId) throws Exception
     {
         Map<String, Object> props = new HashMap<>();
-        props.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, cmisObject.getProperty("cmis:versionSeriesId").getFirstValue());
+        props.put(ArkCaseCMISConstants.CMIS_DOCUMENT_ID, cmisObject.getProperty("cmis:versionSeriesId").getFirstValue());
         if (cmisRepositoryId == null)
         {
             cmisRepositoryId = ecmFileConfig.getDefaultCmisId();
@@ -1963,7 +1963,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
 
         Map<String, Object> props = new HashMap<>();
-        props.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, file.getVersionSeriesId());
+        props.put(ArkCaseCMISConstants.CMIS_DOCUMENT_ID, file.getVersionSeriesId());
         String cmisRepositoryId = file.getCmisRepositoryId();
         if (cmisRepositoryId == null)
         {
@@ -2006,7 +2006,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
 
         Map<String, Object> props = new HashMap<>();
-        props.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, file.getVersionSeriesId());
+        props.put(ArkCaseCMISConstants.CMIS_DOCUMENT_ID, file.getVersionSeriesId());
         String cmisRepositoryId = file.getCmisRepositoryId();
         if (cmisRepositoryId == null)
         {
@@ -2077,7 +2077,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, fileId, "File not found", null);
         }
         Map<String, Object> props = new HashMap<>();
-        props.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, file.getVersionSeriesId());
+        props.put(ArkCaseCMISConstants.CMIS_DOCUMENT_ID, file.getVersionSeriesId());
         props.put(ArkCaseCMISConstants.NEW_FILE_NAME, uniqueIdentificator);
         String cmisRepositoryId = file.getCmisRepositoryId();
         if (cmisRepositoryId == null)
