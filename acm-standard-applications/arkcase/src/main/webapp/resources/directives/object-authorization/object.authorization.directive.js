@@ -83,7 +83,8 @@ angular.module('directives').directive('objectAuthorization', [ 'Menus', 'Messag
             selectedObject: "=?",
             member: "=?",
             objectType: '@',
-            showTooltip: "=?"
+            showTooltip: "=?",
+            isFromExemptionCode : "=?"
         },
         templateUrl: 'directives/object-authorization/object.authorization.html',
         link: function(scope) {
