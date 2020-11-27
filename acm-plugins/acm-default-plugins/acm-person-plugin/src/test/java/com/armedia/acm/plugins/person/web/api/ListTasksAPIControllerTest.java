@@ -123,7 +123,7 @@ public class ListTasksAPIControllerTest extends EasyMockSupport
         replayAll();
 
         MvcResult result = mockMvc.perform(
-                get("/api/v1/plugin/task/forUser/{user}", user)
+                get("/api/v1/plugin/person/forUser/{user}", user)
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                         .principal(mockAuthentication)
                         .session(mockHttpSession))
@@ -165,8 +165,9 @@ public class ListTasksAPIControllerTest extends EasyMockSupport
 
         replayAll();
 
+        
         mockMvc.perform(
-                get("/api/v1/plugin/task/forUser/{user}", user)
+                get("/api/v1/plugin/person/forUser/{user}", user)
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                         .principal(mockAuthentication)
                         .session(mockHttpSession))
