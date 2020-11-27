@@ -104,6 +104,7 @@ angular.module('cases').controller('Cases.ExemptionController',
                     templateUrl: 'modules/document-details/views/components/annotation-tags-modal.client.view.html',
                     controller: 'Case.AnnotationTagsModalController',
                     backdrop: 'static',
+                    windowClass: 'modal-width-80',
                     resolve: {
                         params: function () {
                             return params;
@@ -135,6 +136,7 @@ angular.module('cases').controller('Cases.ExemptionController',
                     size: 'lg',
                     templateUrl: 'modules/cases/views/components/case-exemption-codes-description-modal.client.view.html',
                     controller: 'Cases.ExemptionCodesDescriptionModalController',
+                    windowClass: 'modal-width-80',
                     backdrop: 'static'
                 })
             };
