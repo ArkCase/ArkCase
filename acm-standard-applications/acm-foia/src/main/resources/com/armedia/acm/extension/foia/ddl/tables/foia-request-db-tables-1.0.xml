@@ -814,5 +814,52 @@ LANGUAGE plpgsql;
             <column name="fo_feeWaived_date" type="${timestampType}"></column>
         </addColumn>
     </changeSet>
+
+    <changeSet id="48-add-response-installment-table" author="stefan.sanevski" dbms="oracle,postgresql,mssql">
+        <createTable tableName="acm_response_installment">
+            <column name="cm_response_installment_id" type="${idType}">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_response_installment"/>
+            </column>
+            <column name="cm_due_date" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_max_download_attempts" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_parent_number" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_num_download_attempts" type="INTEGER"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="48-add-response-installment-table" author="stefan.sanevski" dbms="mysql">
+        <createTable tableName="acm_response_installment">
+            <column name="cm_response_installment_id" type="${idType}">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_response_installment"/>
+            </column>
+            <column name="cm_due_date" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_max_download_attempts" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_parent_number" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_num_download_attempts" type="INTEGER"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="49-add-response-installment-table-id" author="stefan.sanevski">
+        <createTable tableName="acm_response_installment_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_response_installment_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_response_installment"></column>
+        </insert>
+    </changeSet>
 </databaseChangeLog>
 

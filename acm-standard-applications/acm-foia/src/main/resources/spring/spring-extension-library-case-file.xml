@@ -310,11 +310,17 @@
             <beans:property name="timesheetService" ref="timesheetService"/>
         </beans:bean>
 
+        <bean id="responseInstallmentDao" class="gov.foia.dao.ResponseInstallmentDao"/>
+
         <beans:bean id="requestResponseFolderService" class="gov.foia.service.RequestResponseFolderService">
             <beans:property name="responseFolderConverterService" ref="responseFolderConverterService"/>
             <beans:property name="responseFolderCompressorService" ref="responseFolderCompressorService"/>
             <beans:property name="foiaRequestFileBrokerClient" ref="foiaRequestFileBrokerClient"/>
             <beans:property name="responseFolderNotifyService" ref="responseFolderNotifyService"/>
+            <beans:property name="responseInstallmentDao" ref="responseInstallmentDao"/>
+            <beans:property name="caseFileDao" ref="caseFileDao"/>
+            <beans:property name="portalConfig" ref="arkcasePortalConfig"/>
+            <beans:property name="holidayConfigurationService" ref="holidayConfigurationService"/>
         </beans:bean>
 
         <beans:bean id="billingQueuePurgerJobDescriptor" class="gov.foia.service.BillingQueuePurgerJobDescriptor" parent="acmJobDescriptor">
