@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('cases').controller('Cases.AddAppealDispositionCategoriesModalController',
-    ['$scope', '$modal', '$modalInstance', 'params', '$q', 'UtilService', 'Object.LookupService', 'Case.ExemptionService', '$translate',
-        function ($scope, $modal, $modalInstance, params, $q, Util, ObjectLookupService, CaseExemptionService, $translate) {
+    ['$scope', '$modal', '$modalInstance', 'params', '$q', 'UtilService', 'Object.LookupService', 'Case.ExemptionService', '$translate', 'MessageService',
+        function ($scope, $modal, $modalInstance, params, $q, Util, ObjectLookupService, CaseExemptionService, $translate, MessageService) {
 
             $scope.isDispositionRequired = params.isDispositionRequired;
             $scope.caseId = params.caseId;
@@ -165,6 +165,13 @@ angular.module('cases').controller('Cases.AddAppealDispositionCategoriesModalCon
                 var disposition = _.find($scope.dispositionCategoriesLookup, {
                     key: $scope.objectInfo.disposition
                 });
+
+                if ($scope.objectInfo.disposition === 'affirmed' || $scope.objectInfo.disposition === 'partially-affirmed') {
+                    if (Util.isArrayEmpty($scope.objectInfo.dispositionReasons) && !$scope.hasExemptionCodes) {
+                        MessageService.info($translate.instant("core.lookups.info.validationInfo"));
+                        $modalInstance.dismiss();
+                    }
+                }
 
                 // Removes reasons if saving a disposition other than closed (UI label is "Closed for Other Reasons")
                 if ($scope.objectInfo.disposition !== 'closed') {
