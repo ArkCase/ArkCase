@@ -30,8 +30,8 @@ package com.armedia.acm.services.dataupdate.service;
 import com.armedia.acm.services.dataupdate.model.AcmDataUpdateExecutorLog;
 import com.armedia.acm.services.search.service.IJpaBatchUpdatePrerequisite;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
@@ -60,6 +60,10 @@ public class AcmDataUpdateManager implements ApplicationListener<ContextRefreshe
         dataUpdateService.save(service.getUpdateId());
     };
     private List<AcmDataUpdateExecutor> dataUpdateExecutors;
+
+    @Autowired(required = false)
+    private CoreExtensionDataUpdateExecutors coreExtensionDataUpdateExecutors;
+
     @Autowired(required = false)
     private ExtensionDataUpdateExecutors extensionDataUpdateExecutors;
 
@@ -82,6 +86,16 @@ public class AcmDataUpdateManager implements ApplicationListener<ContextRefreshe
             dataUpdateExecutors.stream()
                     .filter(updatesNotExecuted)
                     .forEach(dataUpdateExecutor);
+
+            if (coreExtensionDataUpdateExecutors != null && coreExtensionDataUpdateExecutors.getExecutors() != null)
+            {
+                log.info("Starting [{}] core extension data update executors...",
+                        coreExtensionDataUpdateExecutors.getExecutors().size());
+
+                coreExtensionDataUpdateExecutors.getExecutors().stream()
+                        .filter(updatesNotExecuted)
+                        .forEach(dataUpdateExecutor);
+            }
 
             if (extensionDataUpdateExecutors != null && extensionDataUpdateExecutors.getExecutors() != null)
             {
