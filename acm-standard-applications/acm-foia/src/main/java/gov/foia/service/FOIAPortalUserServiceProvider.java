@@ -528,6 +528,8 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
                 }
                 PortalUser portalUserAuthenticated = portaluserFromPortalPerson(portalId, portalUser.get());
                 portalUserAuthenticated.setAcmUserId(portalAcmUser.getUserId());
+                log.debug("Authenticated portal user is [{}] with email [{}] and role [{}] for portal with id [{}]",
+                        portalUserAuthenticated.getAcmUserId(), portalUserAuthenticated.getEmail(), portalUserAuthenticated.getRole(), portalId);
                 return portalUserAuthenticated;
             }
         }
