@@ -63,6 +63,15 @@ public class PortalConfig
     @Value("${portal.authenticatedMode}")
     private Boolean authenticatedMode;
 
+    @JsonProperty("portal.responseInstallment.numOfAvailableDays")
+    @Value("${portal.responseInstallment.numOfAvailableDays}")
+    private Integer numOfAvailableDays;
+
+    @JsonProperty("portal.responseInstallment.maxDownloadAttempts")
+    @Value("${portal.responseInstallment.maxDownloadAttempts}")
+    private Integer maxDownloadAttempts;
+
+
     public String getId() {
         return id;
     }
@@ -119,5 +128,25 @@ public class PortalConfig
     public void setAuthenticatedMode(Boolean authenticatedMode)
     {
         this.authenticatedMode = authenticatedMode;
+    }
+
+    public Integer getNumOfAvailableDays()
+    {
+        return numOfAvailableDays;
+    }
+
+    public void setNumOfAvailableDays(Integer numOfAvailableDays)
+    {
+        this.numOfAvailableDays = numOfAvailableDays;
+    }
+
+    public Integer getMaxDownloadAttempts()
+    {
+        return maxDownloadAttempts;
+    }
+
+    public void setMaxDownloadAttempts(Integer maxDownloadAttempts)
+    {
+        this.maxDownloadAttempts = maxDownloadAttempts;
     }
 }
