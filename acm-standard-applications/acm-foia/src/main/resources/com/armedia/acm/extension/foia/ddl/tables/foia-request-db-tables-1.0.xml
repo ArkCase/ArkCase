@@ -861,5 +861,14 @@ LANGUAGE plpgsql;
             <column name="cm_seq_name" value="acm_response_installment"></column>
         </insert>
     </changeSet>
+
+    <changeSet id="50-update-person-associations-for-requests" author="aleksandar.acevski"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <update tableName="acm_person_assoc">
+            <column name="cm_person_assoc_parent_type" value="CASE_FILE"/>
+            <where>cm_person_assoc_parent_type = 'REQUEST'</where>
+        </update>
+    </changeSet>
+
 </databaseChangeLog>
 
