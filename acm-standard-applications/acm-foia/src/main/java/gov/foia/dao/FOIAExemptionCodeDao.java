@@ -62,9 +62,7 @@ public class FOIAExemptionCodeDao extends AcmAbstractDao<ExemptionCode>
         FOIARequest request = (FOIARequest) caseFileDao.find(parentObjectId);
         List<ExemptionCode> listCodesOnDocuments = new ArrayList<>();
 
-        if (request.getQueue().getName().equals("Release")
-                || (request.getGeneratedZipFlag() != null && request.getGeneratedZipFlag() == true)
-                || request.getDispositionClosedDate() != null)
+        if (request != null)
         {
 
             String queryText = "SELECT af.id " +
