@@ -1291,11 +1291,11 @@
                 },
                 {
                     "name": "id",
-                    "field": "parent_object.object_id_s",
+                    "field": "parent_object.name",
                     "displayName": "organizations.comp.cases.table.columns.id",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.parent_object.object_id_s})\">{{COL_FIELD}}<\/a>",
-                    "width": 130
+                    "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.parent_object.name})\">{{COL_FIELD}}<\/a>",
+                    "width": 160
                 },
                 {
                     "name": "title",
