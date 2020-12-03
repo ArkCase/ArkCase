@@ -250,6 +250,9 @@ public class FOIARequest extends CaseFile implements FOIAObject
     @Transient
     private String dispositionValue;
 
+    @Column(name = "fo_difficulty_rating")
+    private String difficultyRating;
+
     /**
      * @return the receivedDate
      */
@@ -910,20 +913,34 @@ public class FOIARequest extends CaseFile implements FOIAObject
         this.redirectedDate = redirectedDate;
     }
 
-    public LocalDateTime getExpediteDate() {
+    public LocalDateTime getExpediteDate()
+    {
         return expediteDate;
     }
 
-    public void setExpediteDate(LocalDateTime expediteDate) {
+    public void setExpediteDate(LocalDateTime expediteDate)
+    {
         this.expediteDate = expediteDate;
     }
 
-    public LocalDateTime getFeeWaivedDate() {
+    public LocalDateTime getFeeWaivedDate()
+    {
         return feeWaivedDate;
     }
 
-    public void setFeeWaivedDate(LocalDateTime feeWaivedDate) {
+    public void setFeeWaivedDate(LocalDateTime feeWaivedDate)
+    {
         this.feeWaivedDate = feeWaivedDate;
+    }
+
+    public String getDifficultyRating()
+    {
+        return difficultyRating;
+    }
+
+    public void setDifficultyRating(String difficultyRating)
+    {
+        this.difficultyRating = difficultyRating;
     }
 
     /*
@@ -946,7 +963,7 @@ public class FOIARequest extends CaseFile implements FOIAObject
                 + ", requestAmendmentDetails=" + requestAmendmentDetails + ", dispositionClosedDate=" + dispositionClosedDate
                 + ", tollingFlag=" + tollingFlag + ", limitedDeliveryFlag=" + limitedDeliveryFlag + ", generatedZipFlag=" + generatedZipFlag
                 + ", perfectedDate=" + perfectedDate + ", timeToComplete=" + ttcOnLastRedirection + ", redirectedDate=" + redirectedDate
-                + ", expediteDate=" + expediteDate + ", feeWaivedDate=" + feeWaivedDate + "} "
+                + ", expediteDate=" + expediteDate + ", feeWaivedDate=" + feeWaivedDate + ", difficultyRating=" + difficultyRating + "} "
                 + super.toString();
     }
 }
