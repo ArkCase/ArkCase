@@ -70,7 +70,10 @@ angular.module('cases').controller(
             });
             $scope.foiaConfig = {};
 
-
+            ObjectLookupService.getLookupByLookupName("difficultyRating").then(function (difficultyRatings) {
+                $scope.difficultyRatings = difficultyRatings;
+                return difficultyRatings;
+            });
 
             var onObjectInfoRetrieved = function (data) {
                 AdminHolidayService.getHolidays().then(function (response) {

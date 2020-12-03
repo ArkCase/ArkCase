@@ -870,5 +870,19 @@ LANGUAGE plpgsql;
         </update>
     </changeSet>
 
+    <changeSet id="51-01-acm_case_file-add-difficulty-rating" author="ana.serafimoska" dbms="oracle,mssql,postgres"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_case_file">
+            <column name="fo_difficulty_rating" type="VARCHAR(512)"></column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="51-02-acm_case_file-add-difficulty-rating" author="ana.serafimoska" dbms="mysql"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_case_file">
+            <column name="fo_difficulty_rating" type="TEXT"></column>
+        </addColumn>
+    </changeSet>
+    
 </databaseChangeLog>
 
