@@ -495,7 +495,7 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
                 Part part = parts.getPart(rel);
 
                 Relationship newRel = target.getMainDocumentPart().addTargetPart(part,
-                        RelationshipsPart.AddPartBehaviour.RENAME_IF_NAME_EXISTS);
+                        RelationshipsPart.AddPartBehaviour.REUSE_EXISTING);
                 blip.setEmbed(newRel.getId());
                 target.getMainDocumentPart()
                         .addTargetPart(appendDocument.getParts().getParts().get(new PartName("/word/" + rel.getTarget())));
