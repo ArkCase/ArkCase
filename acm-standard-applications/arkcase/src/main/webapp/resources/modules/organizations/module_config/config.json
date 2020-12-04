@@ -1292,7 +1292,7 @@
                 {
                     "name": "id",
                     "field": "parent_object.name",
-                    "displayName": "organizations.comp.cases.table.columns.id",
+                    "displayName": "organizations.comp.cases.table.columns.caseNumber",
                     "headerCellFilter": "translate",
                     "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.parent_object.name})\">{{COL_FIELD}}<\/a>",
                     "width": 160
