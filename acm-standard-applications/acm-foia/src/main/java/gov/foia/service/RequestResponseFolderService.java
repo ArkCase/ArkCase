@@ -30,12 +30,20 @@ package gov.foia.service;
 import com.armedia.acm.convertfolder.ConversionException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 
+import com.armedia.acm.portalgateway.model.PortalConfig;
+import com.armedia.acm.services.holiday.service.HolidayConfigurationService;
+import gov.foia.dao.ResponseInstallmentDao;
+import gov.foia.model.FOIARequest;
+import gov.foia.model.ResponseInstallment;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import gov.foia.broker.FOIARequestFileBrokerClient;
+
+import java.util.Date;
 
 public class RequestResponseFolderService
 {
@@ -45,6 +53,10 @@ public class RequestResponseFolderService
     private ResponseFolderCompressorService responseFolderCompressorService;
     private FOIARequestFileBrokerClient foiaRequestFileBrokerClient;
     private ResponseFolderNotifyService responseFolderNotifyService;
+    private CaseFileDao caseFileDao;
+    private PortalConfig portalConfig;
+    private HolidayConfigurationService holidayConfigurationService;
+    private ResponseInstallmentDao responseInstallmentDao;
 
     public void compressAndSendResponseFolderToPortal(Long requestId, String userName) throws ConversionException, AcmUserActionFailedException, AcmFolderException, AcmObjectNotFoundException
     {
@@ -60,6 +72,24 @@ public class RequestResponseFolderService
         log.debug("Sending Email notification Response folder zip completed for the request [{}]", requestId);
         getResponseFolderNotifyService().sendEmailResponseCompressNotification(requestId);
 
+        log.debug("Saving Response Installment details for the request [{}]", requestId);
+        saveResponseInstallmentDetails(requestId);
+    }
+
+    private void saveResponseInstallmentDetails(Long requestId)
+    {
+        FOIARequest request = (FOIARequest) caseFileDao.find(requestId);
+
+        Date today = new Date();
+        Date dueDate = getHolidayConfigurationService().addWorkingDaysToDate(today, getPortalConfig().getNumOfAvailableDays());
+
+        ResponseInstallment responseInstallment = new ResponseInstallment();
+
+        responseInstallment.setDueDate(dueDate);
+        responseInstallment.setMaxDownloadAttempts(getPortalConfig().getMaxDownloadAttempts());
+        responseInstallment.setParentNumber(request.getCaseNumber());
+
+        getResponseInstallmentDao().save(responseInstallment);
     }
 
     public ResponseFolderConverterService getResponseFolderConverterService()
@@ -100,5 +130,45 @@ public class RequestResponseFolderService
     public void setResponseFolderNotifyService(ResponseFolderNotifyService responseFolderNotifyService)
     {
         this.responseFolderNotifyService = responseFolderNotifyService;
+    }
+
+    public ResponseInstallmentDao getResponseInstallmentDao()
+    {
+        return responseInstallmentDao;
+    }
+
+    public void setResponseInstallmentDao(ResponseInstallmentDao responseInstallmentDao)
+    {
+        this.responseInstallmentDao = responseInstallmentDao;
+    }
+
+    public CaseFileDao getCaseFileDao()
+    {
+        return caseFileDao;
+    }
+
+    public void setCaseFileDao(CaseFileDao caseFileDao)
+    {
+        this.caseFileDao = caseFileDao;
+    }
+
+    public PortalConfig getPortalConfig()
+    {
+        return portalConfig;
+    }
+
+    public void setPortalConfig(PortalConfig portalConfig)
+    {
+        this.portalConfig = portalConfig;
+    }
+
+    public HolidayConfigurationService getHolidayConfigurationService()
+    {
+        return holidayConfigurationService;
+    }
+
+    public void setHolidayConfigurationService(HolidayConfigurationService holidayConfigurationService)
+    {
+        this.holidayConfigurationService = holidayConfigurationService;
     }
 }

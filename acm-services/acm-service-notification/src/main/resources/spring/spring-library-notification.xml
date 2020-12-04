@@ -178,7 +178,7 @@
 
     <bean id="notificationFormatter" class="com.armedia.acm.services.notification.service.NotificationFormatter">
         <property name="translationService" ref="translationService"/>
-        <property name="objectLabelConfig" ref="objectLabelConfig"/>
+        <property name="objectLabelConfig" ref="objectLabelConfig" />
     </bean>
 
     <bean id="notificationConfig" class="com.armedia.acm.services.notification.model.NotificationConfig" scope="refresh">

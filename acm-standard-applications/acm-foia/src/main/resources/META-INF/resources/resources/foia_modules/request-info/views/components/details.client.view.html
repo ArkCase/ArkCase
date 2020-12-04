@@ -6,7 +6,7 @@
                     <label class="control-label"><span translate> requests.comp.details.requestType.label</span> <span
                             ng-if="requiredFields['requestType']" class="required-asterisk">*</span></label> <select
                         ng-model="requestInfo.requestType" ng-required="requiredFields['requestType']"
-                        ng-options="requestType.id as requestType.name for requestType in requestTypes" ng-disabled="true"
+                        ng-options="requestType.key as requestType.value | translate for requestType in requestTypes" ng-disabled="true"
                         class="form-control input-md">
                 </select>
 

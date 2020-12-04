@@ -60,7 +60,7 @@ public interface CostsheetConstants
     String NEW_FILE = "NEW_FILE";
     String FILE_ID = "FILE_ID";
 
-    String COSTSHEET_STYLESHEET = System.getProperty("user.home") + "/.arkcase/acm/pdf-stylesheets/costsheet-document.xsl";
+    String COSTSHEET_STYLESHEET = "costsheet-document.xsl";
     String COSTSHEET_DOCUMENT = "Costsheet";
     String COSTSHEET_FILENAMEFORMAT = "Costsheet.pdf";
 }

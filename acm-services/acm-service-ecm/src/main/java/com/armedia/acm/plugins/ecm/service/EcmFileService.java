@@ -360,6 +360,26 @@ public interface EcmFileService
 
     EcmFile setFilesActiveVersion(Long fileId, String versionTag) throws PersistenceException;
 
+    /**
+     * Get the record from the cmis repository and re-upload it as a new file in the specified folder
+     * 
+     * @param fileId
+     *            original record ID
+     * @param folderId
+     *            destination folder ID
+     * @param targetObjectType
+     *            container type
+     * @param targetObjectId
+     *            container ID
+     * @param authentication
+     *            authenticaton object
+     * @return
+     * @throws AcmObjectNotFoundException
+     * @throws AcmUserActionFailedException
+     */
+    EcmFile copyRecord(Long fileId, Long folderId, String targetObjectType, Long targetObjectId, Authentication authentication)
+            throws AcmObjectNotFoundException, AcmUserActionFailedException;
+
     EcmFile copyFile(Long documentId, AcmFolder targetFolder, AcmContainer targetContainer)
             throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
@@ -434,4 +454,5 @@ public interface EcmFileService
     List<EcmFile> findFilesByFolder(Long folderId);
 
     List<EcmFile> getFileDuplicates(Long fileId) throws AcmObjectNotFoundException;
+
 }

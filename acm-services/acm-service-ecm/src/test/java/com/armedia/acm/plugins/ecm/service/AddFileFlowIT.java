@@ -34,7 +34,6 @@ import static org.junit.Assert.assertTrue;
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISActions;
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
 import com.armedia.acm.camelcontext.context.CamelContextManager;
-import com.armedia.acm.plugins.ecm.model.AcmFolderConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.utils.EcmFileCamelUtils;
@@ -90,6 +89,7 @@ public class AddFileFlowIT
         System.setProperty("configuration.server.url", "http://localhost:9999");
         System.setProperty("javax.net.ssl.trustStore", userHomePath + "/.arkcase/acm/private/arkcase.ts");
         System.setProperty("javax.net.ssl.trustStorePassword", "password");
+        System.setProperty("application.profile.reversed", "runtime");
     }
 
     private static final String testPath = "/Sites/acm/documentLibrary/test";
@@ -109,7 +109,7 @@ public class AddFileFlowIT
 
         Map<String, Object> messageProperties = new HashMap<>();
 
-        messageProperties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+        messageProperties.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
         messageProperties.put(PropertyIds.PATH, testPath);
         messageProperties.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
 
@@ -125,10 +125,10 @@ public class AddFileFlowIT
     {
         Map<String, Object> messageProperties = new HashMap<>();
 
-        messageProperties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+        messageProperties.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
         messageProperties.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
-        messageProperties.put(AcmFolderConstants.ACM_FOLDER_ID, testFolderId);
-        messageProperties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+        messageProperties.put(ArkCaseCMISConstants.ACM_FOLDER_ID, testFolderId);
+        messageProperties.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
 
         camelContextManager.send(ArkCaseCMISActions.DELETE_FOLDER, messageProperties);
     }
@@ -151,9 +151,9 @@ public class AddFileFlowIT
         Map<String, Object> messageProperties = new HashMap<>();
         messageProperties.put("cmisFolderId", testFolderId);
 
-        messageProperties.put("inputStream", is);
+        messageProperties.put(ArkCaseCMISConstants.INPUT_STREAM, is);
 
-        messageProperties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+        messageProperties.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
         messageProperties.put("versioningState", "MAJOR");
         messageProperties.put(PropertyIds.NAME, ecmFile.getFileName());
         messageProperties.put(PropertyIds.CONTENT_STREAM_MIME_TYPE, "text/plain");
@@ -191,7 +191,7 @@ public class AddFileFlowIT
     {
         String testPath = "/acm/test/folder";
         Map<String, Object> messageProperties = new HashMap<>();
-        messageProperties.put(EcmFileConstants.CMIS_REPOSITORY_ID, "opencmis");
+        messageProperties.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, "opencmis");
         messageProperties.put(PropertyIds.PATH, testPath);
 
         // TODO : Get or create folder by path
@@ -214,9 +214,9 @@ public class AddFileFlowIT
         messageProperties = new HashMap<>();
 
         messageProperties.put("cmisFolderId", testFolderId);
-        messageProperties.put("inputStream", is);
+        messageProperties.put(ArkCaseCMISConstants.INPUT_STREAM, is);
 
-        messageProperties.put(EcmFileConstants.CMIS_REPOSITORY_ID, "opencmis");
+        messageProperties.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, "opencmis");
         messageProperties.put("versioningState", "NONE");
         messageProperties.put(PropertyIds.NAME, ecmFile.getFileName());
         messageProperties.put(PropertyIds.CONTENT_STREAM_MIME_TYPE, "text/plain");

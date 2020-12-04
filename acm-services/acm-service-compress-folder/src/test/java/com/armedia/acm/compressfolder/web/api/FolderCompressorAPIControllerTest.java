@@ -214,7 +214,7 @@ public class FolderCompressorAPIControllerTest extends EasyMockSupport
 
         expect(mockedFolderCompressor.compressFolder(isA(CompressNode.class), isA(Authentication.class))).andReturn(fileName);
 
-        expect(mockAuthentication.getName()).andReturn("***REMOVED***");
+        expect(mockAuthentication.getName()).andReturn("ann-acm@arkcase.org");
         replayAll();
 
         MvcResult response = mockMvc.perform(

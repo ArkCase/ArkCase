@@ -30,9 +30,28 @@ package com.armedia.acm.camelcontext.arkcase.cmis;
 /**
  * Created by Vladimir Cherepnalkovski <vladimir.cherepnalkovski@armedia.com> on Sep, 2019
  */
-public class ArkCaseCMISConstants
+public interface ArkCaseCMISConstants
 {
-    public static final String CMIS_API_URL = "cmisApiURL";
-    public static final String ARKCASE_CMIS_COMPONENT = "arkcase-cmis://";
-    public static final String CAMEL_CMIS_DEFAULT_REPO_ID = "alfresco";
+    String CMIS_API_URL = "cmisApiURL";
+    // This is endpoint for Apache cmis component
+    String ARKCASE_CMIS_COMPONENT = "arkcase-cmis://";
+    String DEFAULT_CMIS_REPOSITORY_ID = "alfresco";
+
+    String CMIS_OBJECT_ID = "cmisObjectId";
+    String CMIS_DOCUMENT_ID = "cmisDocumentId";
+    String CMIS_FOLDER_ID = "cmisFolderId";
+    String CMIS_REPOSITORY_ID = "cmisRepositoryId";
+    String ALL_VERSIONS = "allVersions";
+
+    String VERSIONING_STATE = "versioningState";
+    String MIME_TYPE = "mimeType";
+    String CHECKIN_COMMENT = "checkinComment";
+    String INPUT_STREAM = "inputStream";
+    String NEW_FILE_NAME = "newFileName";
+    String NEW_FOLDER_NAME = "newFolderName";
+
+    String ACM_FOLDER_ID = "acmFolderId";
+    String DESTINATION_FOLDER_ID = "dstFolderId";
+    String PARENT_FOLDER_ID = "parentFolderId";
+    String SOURCE_FOLDER_ID = "srcFolderId";
 }

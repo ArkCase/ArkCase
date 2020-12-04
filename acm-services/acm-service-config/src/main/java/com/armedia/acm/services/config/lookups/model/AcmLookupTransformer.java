@@ -66,7 +66,7 @@ public class AcmLookupTransformer
 
         Map<String, Object> updatedEntry = new HashMap<>();
 
-        updatedEntry.put("key", standardEntryKey);
+        updatedEntry.put("key", standardEntryKey.replace("__", "."));
         updatedEntry.put("value", entry.get("value"));
         updatedEntry.put("readonly", entry.get("readonly"));
         updatedEntry.put("primary", entry.get("primary"));

@@ -39,6 +39,7 @@ import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
 import com.armedia.acm.camelcontext.configuration.ArkCaseCMISConfig;
 import com.armedia.acm.camelcontext.context.CamelContextManager;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
@@ -142,6 +143,7 @@ public class EcmFileServiceImplTest extends EasyMockSupport
     {
         EcmFile toBeDeleted = new EcmFile();
         toBeDeleted.setFileId(500L);
+        toBeDeleted.setStatus(EcmFileConstants.ACTIVE);
         toBeDeleted.setVersionSeriesId(UUID.randomUUID().toString());
         toBeDeleted.setCmisRepositoryId("Grateful Dead");
 
@@ -157,9 +159,9 @@ public class EcmFileServiceImplTest extends EasyMockSupport
         toBeDeleted.getVersions().add(second);
 
         Map<String, Object> props = new HashMap<>();
-        props.put(EcmFileConstants.CMIS_DOCUMENT_ID, second.getVersionTag());
-        props.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
-        props.put(EcmFileConstants.ALL_VERSIONS, false);
+        props.put(ArkCaseCMISConstants.CMIS_DOCUMENT_ID, second.getVersionTag());
+        props.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
+        props.put(ArkCaseCMISConstants.ALL_VERSIONS, false);
         props.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
 
         expect(mockEcmFileDao.find(toBeDeleted.getFileId())).andReturn(toBeDeleted);
@@ -196,6 +198,7 @@ public class EcmFileServiceImplTest extends EasyMockSupport
 
         EcmFile toBeDeleted = new EcmFile();
         toBeDeleted.setFileId(500L);
+        toBeDeleted.setStatus(EcmFileConstants.ACTIVE);
         toBeDeleted.setVersionSeriesId(UUID.randomUUID().toString());
         toBeDeleted.setCmisRepositoryId("Grateful Dead");
 
@@ -207,9 +210,9 @@ public class EcmFileServiceImplTest extends EasyMockSupport
         toBeDeleted.getVersions().add(second);
 
         Map<String, Object> props = new HashMap<>();
-        props.put(EcmFileConstants.CMIS_DOCUMENT_ID, toBeDeleted.getVersionSeriesId());
-        props.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
-        props.put(EcmFileConstants.ALL_VERSIONS, true);
+        props.put(ArkCaseCMISConstants.CMIS_DOCUMENT_ID, toBeDeleted.getVersionSeriesId());
+        props.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
+        props.put(ArkCaseCMISConstants.ALL_VERSIONS, true);
         props.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
 
         expect(mockEcmFileDao.find(toBeDeleted.getFileId())).andReturn(toBeDeleted);
@@ -230,12 +233,46 @@ public class EcmFileServiceImplTest extends EasyMockSupport
 
     }
 
+    @Test(expected = AcmUserActionFailedException.class)
+    public void deleteFile_Record_shouldThrow() throws Exception
+    {
+        EcmFile toBeDeleted = new EcmFile();
+        toBeDeleted.setFileId(500L);
+        toBeDeleted.setStatus(EcmFileConstants.RECORD);
+        toBeDeleted.setVersionSeriesId(UUID.randomUUID().toString());
+        toBeDeleted.setCmisRepositoryId("Grateful Dead");
+
+        EcmFileVersion first = new EcmFileVersion();
+        first.setVersionTag(UUID.randomUUID().toString());
+        EcmFileVersion second = new EcmFileVersion();
+        second.setVersionTag(UUID.randomUUID().toString());
+        toBeDeleted.getVersions().add(first);
+        toBeDeleted.getVersions().add(second);
+
+        Map<String, Object> props = new HashMap<>();
+        props.put(ArkCaseCMISConstants.CMIS_DOCUMENT_ID, toBeDeleted.getVersionSeriesId());
+        props.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
+        props.put(ArkCaseCMISConstants.ALL_VERSIONS, true);
+        props.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
+
+        expect(mockEcmFileDao.find(toBeDeleted.getFileId())).andReturn(toBeDeleted);
+
+        mockEcmFileDao.deleteFile(toBeDeleted.getFileId());
+
+        replayAll();
+
+        unit.deleteFile(toBeDeleted.getFileId(), true);
+
+        verifyAll();
+    }
+
     @Test
     public void deleteFile_oneVersion_butFileOnlyHasOneVersion_shouldDeleteFile() throws Exception
     {
 
         EcmFile toBeDeleted = new EcmFile();
         toBeDeleted.setFileId(500L);
+        toBeDeleted.setStatus(EcmFileConstants.ACTIVE);
         toBeDeleted.setVersionSeriesId(UUID.randomUUID().toString());
         toBeDeleted.setCmisRepositoryId("Grateful Dead");
 
@@ -244,9 +281,9 @@ public class EcmFileServiceImplTest extends EasyMockSupport
         toBeDeleted.getVersions().add(only);
 
         Map<String, Object> props = new HashMap<>();
-        props.put(EcmFileConstants.CMIS_DOCUMENT_ID, toBeDeleted.getVersionSeriesId());
-        props.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
-        props.put(EcmFileConstants.ALL_VERSIONS, true);
+        props.put(ArkCaseCMISConstants.CMIS_DOCUMENT_ID, toBeDeleted.getVersionSeriesId());
+        props.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
+        props.put(ArkCaseCMISConstants.ALL_VERSIONS, true);
         props.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
 
         expect(mockEcmFileDao.find(toBeDeleted.getFileId())).andReturn(toBeDeleted);
@@ -285,23 +322,23 @@ public class EcmFileServiceImplTest extends EasyMockSupport
         AcmContainer targetContainer = new AcmContainer();
 
         Map<String, Object> props = new HashMap<>();
-        props.put(EcmFileConstants.CMIS_OBJECT_ID, toMove.getVersionSeriesId());
-        props.put(EcmFileConstants.DST_FOLDER_ID, targetFolder.getCmisFolderId());
-        props.put(EcmFileConstants.SRC_FOLDER_ID, toMove.getFolder().getCmisFolderId());
-        props.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
-        props.put(EcmFileConstants.VERSIONING_STATE, "versioningState");
+        props.put(ArkCaseCMISConstants.CMIS_OBJECT_ID, toMove.getVersionSeriesId());
+        props.put(ArkCaseCMISConstants.DESTINATION_FOLDER_ID, targetFolder.getCmisFolderId());
+        props.put(ArkCaseCMISConstants.SOURCE_FOLDER_ID, toMove.getFolder().getCmisFolderId());
+        props.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
+        props.put(ArkCaseCMISConstants.VERSIONING_STATE, "versioningState");
         props.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
 
         Document cmisDocument = createMock(Document.class);
 
         Map<String, ArkCaseCMISConfig> configMap = new HashMap<>();
         ArkCaseCMISConfig config = new ArkCaseCMISConfig();
-        config.setRepositoryId(ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+        config.setRepositoryId(ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
         config.setCmisVersioningState("versioningState");
-        configMap.put(ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID, config);
+        configMap.put(ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID, config);
 
         expect(mockEcmFileDao.find(fileId)).andReturn(toMove);
-        expect(mockCmisConfigUtils.getVersioningState(ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID)).andReturn("versioningState");
+        expect(mockCmisConfigUtils.getVersioningState(ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID)).andReturn("versioningState");
         expect(mockContainerDao.findFolderByObjectTypeIdAndRepositoryId(targetObjectType, targetObjectId,
                 targetFolder.getCmisRepositoryId())).andReturn(targetContainer);
         expect(camelContextManager.send(ArkCaseCMISActions.MOVE_DOCUMENT, props)).andReturn(cmisDocument);
@@ -385,7 +422,7 @@ public class EcmFileServiceImplTest extends EasyMockSupport
     {
         Map<String, Object> messageProps = new HashMap<>();
         messageProps.put(PropertyIds.PATH, path);
-        messageProps.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+        messageProps.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
         messageProps.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
         return messageProps;
     }

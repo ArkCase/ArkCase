@@ -7,7 +7,7 @@
                         <h4>
                             <a ng-if="objectInfo.title !== null && objectInfo.title != ''"  href="#" editable-text="objectInfo.title" onaftersave="savePerson()" permission="editCase"
                                     permission-properties="objectInfo" permission-action="disable" e-required>
-                                {{objectInfo.title || 'common.value.unknown' | translate}}</a>
+                                {{personTitle.value || 'common.value.unknown' | translate}}</a>
                             <a href="#" editable-text="objectInfo.givenName" onaftersave="savePerson()" permission="editCase"
                                     permission-properties="objectInfo" permission-action="disable" e-required>
                                 {{objectInfo.givenName || 'common.value.unknown' | translate}}</a>

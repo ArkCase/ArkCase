@@ -27,6 +27,7 @@ package com.armedia.acm.camelcontext.flow.queue;
  * #L%
  */
 
+import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
 import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
 
 import org.apache.camel.ProducerTemplate;
@@ -59,7 +60,7 @@ public class DeleteDocumentQueue implements ArkCaseCMISQueue
         producerTemplate.setDefaultEndpointUri(queueName);
         try
         {
-            log.debug("Trying to delete document with ID={}", props.get("cmisDocumentId"));
+            log.debug("Trying to delete document with ID={}", props.get(ArkCaseCMISConstants.CMIS_DOCUMENT_ID));
             return producerTemplate.requestBody(props);
         }
         catch (Exception e)

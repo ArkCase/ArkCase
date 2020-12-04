@@ -46,11 +46,8 @@ angular.module('cases').controller(
 
             };
 
-            ConfigService.getModuleConfig("cases").then(function (moduleConfig) {
-                var config = _.find(moduleConfig.components, {
-                    id: "requests"
-                });
-                $scope.requestTypes = config.requestTypes;
+            ObjectLookupService.getRequestTypes().then(function (requestTypes) {
+                $scope.requestTypes = requestTypes;
             });
 
             AdminHolidayService.getHolidays().then(function (response) {

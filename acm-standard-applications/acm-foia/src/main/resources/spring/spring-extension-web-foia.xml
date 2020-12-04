@@ -8,6 +8,10 @@
             <beans:property name="foiaExemptionService" ref="foiaExemptionService"/>
         </beans:bean>
 
+        <beans:bean id="foiaExemptionStatuteAPIController" class="gov.foia.web.api.FOIAExemptionStatuteAPIController">
+            <beans:property name="foiaExemptionStatuteService" ref="foiaExemptionStatuteService"/>
+        </beans:bean>
+
         <beans:bean id="printDocumentsAPIController" class="gov.foia.web.api.PrintDocumentsAPIController">
             <beans:property name="documentPrintingService" ref="foiaDocumentPrintService"/>
         </beans:bean>
@@ -21,6 +25,7 @@
         <beans:bean id="portalRequestAPIController" class="gov.foia.web.api.PortalRequestAPIController">
             <beans:property name="portalRequestService" ref="portalRequestService"/>
             <beans:property name="personService" ref="personService"/>
+            <beans:property name="responseInstallmentDao" ref="responseInstallmentDao"/>
         </beans:bean>
 
         <beans:bean id="saveFOIARequestAPIController" class="gov.foia.web.api.SaveFOIARequestAPIController">

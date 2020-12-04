@@ -1,0 +1,12 @@
+<form class="form-horizontal" ng-submit="filterObjects()">
+    <div class="input-group pull-right col-xs-12">
+        <input type="text" class="form-control ng-pristine ng-valid ng-touched" ng-model="data.filterWord"
+                ng-change="onChangeFilterWord()" placeholder="{{'common.directive.objectAuthorizationRolesFilter.search.placeHolder' | translate}}" pattern=".{2,}"
+                title="{{'common.directive.objectAuthorizationRolesFilter.pattern.title' | translate}}">
+        <div class="input-group-btn">
+            <button class="btn btn-primary" type="submit" ng-disabled="isSearchValid">
+                <i class="fa fa-search"></i>
+            </button>
+        </div>
+    </div>
+</form>

@@ -50,6 +50,27 @@ public class ConfigurationClientConfig
     @Value("${configuration.server.url}")
     private String configurationUrl;
 
+    @Value("${configuration.client.branding.path}")
+    private String brandingPath;
+
+    @Value("${configuration.client.labels.path}")
+    private String labelsPath;
+
+    @Value("${configuration.client.ldap.path}")
+    private String ldapPath;
+
+    @Value("${configuration.client.lookups.path}")
+    private String lookupsPath;
+
+    @Value("${configuration.client.stylesheets.path}")
+    private String stylesheetsPath;
+
+    @Value("${configuration.client.rules.path}")
+    private String rulesPath;
+
+    @Value("${configuration.client.spring.path}")
+    private String springPath;
+
     private String updatePropertiesEndpoint;
 
     public String getDefaultApplicationName()
@@ -115,5 +136,75 @@ public class ConfigurationClientConfig
     public void setActiveProfileReversed(String activeProfileReversed)
     {
         this.activeProfileReversed = activeProfileReversed;
+    }
+
+    public String getBrandingPath()
+    {
+        return brandingPath;
+    }
+
+    public void setBrandingPath(String brandingPath)
+    {
+        this.brandingPath = brandingPath;
+    }
+
+    public String getLabelsPath()
+    {
+        return labelsPath;
+    }
+
+    public void setLabelsPath(String labelsPath)
+    {
+        this.labelsPath = labelsPath;
+    }
+
+    public String getLdapPath()
+    {
+        return ldapPath;
+    }
+
+    public void setLdapPath(String ldapPath)
+    {
+        this.ldapPath = ldapPath;
+    }
+
+    public String getLookupsPath()
+    {
+        return lookupsPath;
+    }
+
+    public void setLookupsPath(String lookupsPath)
+    {
+        this.lookupsPath = lookupsPath;
+    }
+
+    public String getStylesheetsPath()
+    {
+        return stylesheetsPath;
+    }
+
+    public void setStylesheetsPath(String stylesheetsPath)
+    {
+        this.stylesheetsPath = stylesheetsPath;
+    }
+
+    public String getRulesPath()
+    {
+        return rulesPath;
+    }
+
+    public void setRulesPath(String rulesPath)
+    {
+        this.rulesPath = rulesPath;
+    }
+
+    public String getSpringPath()
+    {
+        return springPath;
+    }
+
+    public void setSpringPath(String springPath)
+    {
+        this.springPath = springPath;
     }
 }

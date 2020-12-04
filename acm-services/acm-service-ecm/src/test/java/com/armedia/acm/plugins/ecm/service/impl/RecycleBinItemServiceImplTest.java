@@ -27,6 +27,7 @@ package com.armedia.acm.plugins.ecm.service.impl;
  * #L%
  */
 
+import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.dao.RecycleBinItemDao;
@@ -111,7 +112,7 @@ public class RecycleBinItemServiceImplTest extends EasyMockSupport
         toBeDeleted.setFolder(sourceFolder);
         sourceFolder.setCmisFolderId("sourceCmisFolderId");
         toBeDeleted.setVersionSeriesId("versionSeriesId");
-        toBeDeleted.setCmisRepositoryId(EcmFileConstants.DEFAULT_CMIS_REPOSITORY_ID);
+        toBeDeleted.setCmisRepositoryId(ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
         AcmContainer sourceContainer = new AcmContainer();
 
         AcmFolder targetFolder = new AcmFolder();
@@ -132,19 +133,19 @@ public class RecycleBinItemServiceImplTest extends EasyMockSupport
         recycleBinItem.setId(recycleBinItemId);
         recycleBinItem.setSourceObjectId(destinationContainerId);
         recycleBinItem.setSourceFolderId(folderId);
-        recycleBinItem.setSourceCmisRepositoryId(EcmFileConstants.DEFAULT_CMIS_REPOSITORY_ID);
+        recycleBinItem.setSourceCmisRepositoryId(ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
 
         AcmContainer destinationContainer = new AcmContainer();
         destinationContainer.setId(destinationContainerId);
         destinationContainer.setContainerObjectType(RecycleBinConstants.OBJECT_TYPE);
-        destinationContainer.setCmisRepositoryId(EcmFileConstants.DEFAULT_CMIS_REPOSITORY_ID);
+        destinationContainer.setCmisRepositoryId(ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
         destinationContainer.setFolder(targetFolder);
 
         mockSession.setAttribute("acm_ip_address", "ipAddress");
 
         expect(mockAuthentication.getName()).andReturn("user").anyTimes();
 
-        expect(mockRecycleBinItemDao.getContainerForRecycleBin(RecycleBinConstants.OBJECT_TYPE, EcmFileConstants.DEFAULT_CMIS_REPOSITORY_ID)).andReturn(destinationContainer);
+        expect(mockRecycleBinItemDao.getContainerForRecycleBin(RecycleBinConstants.OBJECT_TYPE, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID)).andReturn(destinationContainer);
 
         expect(mockAcmFolderService.findContainerByFolderIdTransactionIndependent(sourceFolderId)).andReturn(sourceContainer);
 
@@ -162,7 +163,7 @@ public class RecycleBinItemServiceImplTest extends EasyMockSupport
         verifyAll();
 
         assertEquals(sourceFolderId, deletedFile.getSourceFolderId());
-        assertEquals(EcmFileConstants.DEFAULT_CMIS_REPOSITORY_ID, deletedFile.getSourceCmisRepositoryId());
+        assertEquals(ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID, deletedFile.getSourceCmisRepositoryId());
     }
 
     @Test
@@ -183,9 +184,9 @@ public class RecycleBinItemServiceImplTest extends EasyMockSupport
         folderToDelete.setId(sourceFolderId);
         toBeDeleted.setFolder(folderToDelete);
         folderToDelete.setCmisFolderId("sourceCmisFolderId");
-        folderToDelete.setCmisRepositoryId(EcmFileConstants.DEFAULT_CMIS_REPOSITORY_ID);
+        folderToDelete.setCmisRepositoryId(ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
         toBeDeleted.setVersionSeriesId("versionSeriesId");
-        toBeDeleted.setCmisRepositoryId(EcmFileConstants.DEFAULT_CMIS_REPOSITORY_ID);
+        toBeDeleted.setCmisRepositoryId(ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
         AcmContainer sourceContainer = new AcmContainer();
 
         AcmFolder parentFolder = new AcmFolder();
@@ -211,16 +212,16 @@ public class RecycleBinItemServiceImplTest extends EasyMockSupport
         recycleBinItem.setId(recycleBinItemId);
         recycleBinItem.setSourceObjectId(destinationContainerId);
         recycleBinItem.setSourceFolderId(folderId);
-        recycleBinItem.setSourceCmisRepositoryId(EcmFileConstants.DEFAULT_CMIS_REPOSITORY_ID);
+        recycleBinItem.setSourceCmisRepositoryId(ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
 
         AcmContainer destinationContainer = new AcmContainer();
         destinationContainer.setId(destinationContainerId);
         destinationContainer.setContainerObjectType(RecycleBinConstants.OBJECT_TYPE);
-        destinationContainer.setCmisRepositoryId(EcmFileConstants.DEFAULT_CMIS_REPOSITORY_ID);
+        destinationContainer.setCmisRepositoryId(ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
         destinationContainer.setFolder(targetFolder);
 
         expect(mockRecycleBinItemDao.getContainerForRecycleBin(RecycleBinConstants.OBJECT_TYPE,
-                EcmFileConstants.DEFAULT_CMIS_REPOSITORY_ID)).andReturn(destinationContainer);
+                ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID)).andReturn(destinationContainer);
 
         expect(mockAcmFolderService.findContainerByFolderIdTransactionIndependent(sourceFolderId)).andReturn(sourceContainer);
 
@@ -237,7 +238,7 @@ public class RecycleBinItemServiceImplTest extends EasyMockSupport
         verifyAll();
 
         assertEquals(folderToDelete.getId(), deletedFolder.getSourceObjectId());
-        assertEquals(EcmFileConstants.DEFAULT_CMIS_REPOSITORY_ID, deletedFolder.getSourceCmisRepositoryId());
+        assertEquals(ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID, deletedFolder.getSourceCmisRepositoryId());
     }
 
     @Test

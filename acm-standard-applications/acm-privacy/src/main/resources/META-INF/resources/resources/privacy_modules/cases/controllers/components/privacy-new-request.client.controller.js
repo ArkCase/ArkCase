@@ -2,10 +2,13 @@
 
 angular.module('cases').controller(
     'Cases.NewRequestController',
-    ['$scope', '$sce', '$q', '$modal', '$translate', 'ConfigService', 'SAR.Data', 'Request.InfoService', 'ObjectService', 'modalParams', 'Object.LookupService', 'Util.DateService', 'MessageService', 'UtilService',
-        'Requests.RequestsService', 'Dialog.BootboxService', 'Organization.InfoService', '$location', '$anchorScroll', 'Admin.ObjectTitleConfigurationService', 'Person.InfoService', 'Admin.PortalConfigurationService',
-        function ($scope, $sce, $q, $modal, $translate, ConfigService, Data, RequestInfoService, ObjectService, modalParams, ObjectLookupService, UtilDateService, MessageService, Util, RequestsService, DialogService, OrganizationInfoService, $location, $anchorScroll,
-                  AdminObjectTitleConfigurationService, PersonInfoService, AdminPortalConfigurationService) {
+    ['$scope', '$sce', '$q', '$modal', '$translate', 'ConfigService', 'SAR.Data', 'Request.InfoService', 'ObjectService', 'modalParams',
+        'Object.LookupService', 'Util.DateService', 'MessageService', 'UtilService', 'Requests.RequestsService', 'Dialog.BootboxService',
+        'Organization.InfoService', '$location', '$anchorScroll', 'Admin.ObjectTitleConfigurationService', 'Person.InfoService',
+        'Admin.PortalConfigurationService',
+        function ($scope, $sce, $q, $modal, $translate, ConfigService, Data, RequestInfoService, ObjectService, modalParams,
+                  ObjectLookupService, UtilDateService, MessageService, Util, RequestsService, DialogService, OrganizationInfoService,
+                  $location, $anchorScroll, AdminObjectTitleConfigurationService, PersonInfoService, AdminPortalConfigurationService) {
 
             $scope.modalParams = modalParams;
             $scope.loading = false;
@@ -80,14 +83,16 @@ angular.module('cases').controller(
             var organizationTypeLookup = ObjectLookupService.getPersonOrganizationRelationTypes();
             var promiseConfigTitle = AdminObjectTitleConfigurationService.getObjectTitleConfiguration();
             var personTypesLookup = ObjectLookupService.getPersonTypes(ObjectService.ObjectTypes.CASE_FILE, true);
-            var getPortals = AdminPortalConfigurationService.getPortals();
+            var getPortal = AdminPortalConfigurationService.getPortalConfig();
             var getCountries = ObjectLookupService.getCountries();
             var getAddressTypes = ObjectLookupService.getAddressTypes();
             var canadaProvinces = ObjectLookupService.getLookupByLookupName('canadaProvinces');
             var japanStates = ObjectLookupService.getLookupByLookupName('japanStates');
             var commonModuleConfig = ConfigService.getModuleConfig("common");
 
-            $q.all([requestConfig, componentsAgenciesPromise, organizationTypeLookup, prefixNewRequest, newRequestTypes, deliveryMethodOfResponsesRequest, payFeesRequest, requestCategories, stateRequest, promiseConfigTitle, personTypesLookup, getPortals, getCountries, getAddressTypes, canadaProvinces, japanStates, commonModuleConfig]).then(function (data) {
+            $q.all([requestConfig, componentsAgenciesPromise, organizationTypeLookup, prefixNewRequest, newRequestTypes,
+                deliveryMethodOfResponsesRequest, payFeesRequest, requestCategories, stateRequest, promiseConfigTitle, personTypesLookup,
+                getPortal, getCountries, getAddressTypes, canadaProvinces, japanStates, commonModuleConfig]).then(function (data) {
 
                 var moduleConfig = data[0];
                 var componentsAgencies = data[1];
@@ -100,7 +105,7 @@ angular.module('cases').controller(
                 var states = data[8];
                 var configTitle = data[9];
                 var personTypes = data[10];
-                var portals = data[11];
+                var portalConfig = data[11].data;
                 var countries = data[12];
                 var addressTypes = data[13];
                 var canadaProvinces = data[14];
@@ -146,34 +151,50 @@ angular.module('cases').controller(
                 //get json data for new Subject Access Request
                 angular.copy(Data.getData(), $scope.config.data);
 
-                $scope.config.data.organizationAssociations = [];
-                $scope.config.data.requestType = $scope.requestTypes[0].key;
-                $scope.config.data.requestCategory = $scope.categories[0].key;
-
-                var defaultComponentAgencyFound = _.find($scope.componentsAgencies, function (value) {
-                    return value.primary === true;
-                });
+                var defaultRequestType = ObjectLookupService.getPrimaryLookup($scope.requestTypes);
+                var defaultRequestCategory = ObjectLookupService.getPrimaryLookup($scope.categories);
+                var defaultComponentAgencyFound = ObjectLookupService.getPrimaryLookup($scope.componentsAgencies);
+                var defaultAddressType = ObjectLookupService.getPrimaryLookup($scope.addressTypes);
+                var defaultCountry = ObjectLookupService.getPrimaryLookup($scope.countries);
+                var defaultDeliveryMethod = ObjectLookupService.getPrimaryLookup($scope.deliveryMethodOfResponses);
 
                 if (!Util.isEmpty(defaultComponentAgencyFound)) {
                     $scope.config.data.componentAgency = defaultComponentAgencyFound.key;
                 } else {
                     $scope.config.data.componentAgency = $scope.componentsAgencies[0].key;
                 }
-                $scope.config.data.deliveryMethodOfResponse = $scope.deliveryMethodOfResponses[0].key;
+                if (!Util.isEmpty(defaultRequestType)) {
+                    $scope.config.data.requestType = defaultRequestType.key;
+                } else {
+                    $scope.config.data.requestType = $scope.requestTypes[0].key;
+                }
+                if (!Util.isEmpty(defaultRequestCategory)) {
+                    $scope.config.data.requestCategory = defaultRequestCategory.key;
+                } else {
+                    $scope.config.data.requestCategory = $scope.categories[0].key;
+                }
+                if (!Util.isEmpty(defaultDeliveryMethod)) {
+                    $scope.config.data.deliveryMethodOfResponse = defaultDeliveryMethod.key;
+                } else {
+                    $scope.config.data.deliveryMethodOfResponse = $scope.deliveryMethodOfResponses[0].key;
+                }
                 $scope.config.data.payFee = $scope.payFees[0].key;
 
-                $scope.portals = portals.data;
-                $scope.config.chosenPortal = $scope.portals[0];
+                $scope.config.portal = { portalId: portalConfig['portal.id'] };
 
                 $scope.states = "";
                 $scope.config.data.originator.person.addresses[0].country = countries[0].key;
-                $scope.config.data.originator.person.addresses[0].type = addressTypes[0].key;
-                $scope.config.data.subject.person.addresses[0].country = countries[0].key;
-                $scope.config.data.subject.person.addresses[0].type = addressTypes[0].key;
+                $scope.config.data.originator.person.addresses[0].type = defaultAddressType ? defaultAddressType.key : addressTypes[0].key;
+                $scope.config.data.subject.person.addresses[0].country = defaultCountry ? defaultCountry.key : countries[0].key;
+                $scope.config.data.subject.person.addresses[0].type = defaultAddressType ? defaultAddressType.key : addressTypes[0].key;
                 $scope.config.data.receivedDate = moment.utc().format("YYYY-MM-DDTHH:mm:ss.sss");
                 $scope.config.data.subject.person.dateOfBirth = moment.utc().format("YYYY-MM-DD");
 
                 $scope.blankPerson = angular.copy($scope.config.data.originator.person);
+
+                if ($scope.config.data.originator.person.addresses[0] && !Util.isEmpty($scope.config.data.originator.person.addresses[0].country)) {
+                    $scope.changeStates($scope.config.data.originator.person.addresses[0].country);
+                }
             });
 
             $scope.isEmailDaliveryMethod = false;
@@ -584,7 +605,7 @@ angular.module('cases').controller(
 
             function createNewPortalUser(personId) {
 
-                RequestInfoService.saveNewPortalUser(personId, $scope.config.chosenPortal.portalId).then(function (response) {
+                RequestInfoService.saveNewPortalUser(personId, $scope.config.portal.portalId).then(function (response) {
                     if (response.registrationStatus === "REGISTRATION_EXISTS") {
                         MessageService.error($translate.instant('cases.newRequest.portalUser.message.error.exists'));
                     } else if (response.registrationStatus === "REGISTRATION_REJECTED") {

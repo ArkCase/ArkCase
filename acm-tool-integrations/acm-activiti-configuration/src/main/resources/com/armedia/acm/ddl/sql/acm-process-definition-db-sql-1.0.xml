@@ -1,0 +1,9 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="01-acm_process_definition-update-creator" author="ana.serafimoska">
+        <sql>UPDATE acm_process_definition SET cm_pd_creator = 'SYSTEM_USER' WHERE cm_pd_creator IS NULL</sql>
+    </changeSet>
+</databaseChangeLog>
+

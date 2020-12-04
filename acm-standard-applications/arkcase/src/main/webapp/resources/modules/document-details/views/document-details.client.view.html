@@ -1,0 +1,156 @@
+<section ng-controller="DocumentDetailsController">
+    <div class="module-content" tabindex="1" ng-keydown="checkEscape($event)">
+        <div class="module-header" ng-if="!viewerOnly">
+            <div class="well-sm clearfix">
+                <div class="row">
+                    <div class="col-sm-6 col-md-12">
+                        <div class="pull-right">
+                            <div class="col-xs-12">
+                                <a class="btn btn-default" href="" ng-click="showVideoPlayer ? videoExpand() : documentExpand()">
+                                    <i class="fa fa-expand"></i>
+                                </a>
+                                <a class="btn btn-default" href="javascript:window.close();">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="h4 font-bold">{{ecmFile.fileName || 'common.value.unknown' | translate}}</div>
+                        <!--<small class="text-muted" translate>documentDetails.name</small>-->
+                    </div>
+                    <div class="col-sm-6 col-md-2">
+                        <div class="h4 font-bold">{{::ecmFile.creator | mapKeyValue: userList:'object_id_s':'name' || 'common.value.unknown'
+                            | translate}}
+                        </div>
+                        <small class="text-muted" translate>documentDetails.creator</small>
+                    </div>
+                    <div class="col-sm-6 col-md-2">
+                        <div class="h4 font-bold">{{::ecmFile.created | date : locale.DATETIME_FORMATS.shortDate}}</div>
+                        <small class="text-muted" translate>documentDetails.created</small>
+                    </div>
+                    <div class="col-sm-6 col-md-2">
+                        <div class="h4 font-bold">{{fileType || 'common.value.unknown' | translate}}</div>
+                        <small class="text-muted" translate>documentDetails.name</small>
+                    </div>
+                    <div class="col-sm-6 col-md-2">
+                        <div class="h4 font-bold">{{ecmFile.status || 'common.value.unknown' | translate}}</div>
+                        <small class="text-muted" translate>documentDetails.status</small>
+                    </div>
+                    <div class="col-sm-6 col-md-2" ng-show="comprehendMedicalEnabled">
+                        <div ng-controller="Document.MedicalComprehendController">
+                            <div class="h4 font-bold" ng-style="{'color': colorComprehendMedicalStatus}">
+                                {{comprehendMedicalObj.status || 'documentDetails.comp.comprehendMedical.readyStatus' | translate}}
+                            </div>
+                            <small class="text-muted" translate>documentDetails.comp.comprehendMedical.status</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" ng-if="transcribeEnabled && showVideoPlayer">
+                    <div class="col-sm-6 col-md-2">
+                        <div class="h4 font-bold">{{transcribeObjectModel.language || 'common.value.unknown' | translate}}</div>
+                        <small class="text-muted" translate>documentDetails.comp.transcription.mediaViewer.language</small>
+                    </div>
+
+                    <div class="col-sm-6 col-md-2">
+                        <div class="h4 font-bold">{{transcribeObjectModel.wordCount || 0}}</div>
+                        <small class="text-muted" translate>documentDetails.comp.transcription.mediaViewer.wordCount</small>
+                    </div>
+                    <div class="col-sm-6 col-md-2">
+                        <div class="h4 font-bold">{{transcribeObjectModel.confidence || 0}}%</div>
+                        <small class="text-muted" translate>documentDetails.comp.transcription.mediaViewer.confidence</small>
+                    </div>
+                    <div class="col-sm-6 col-md-2">
+                        <div class="h4 font-bold" ng-style="{'color': colorTranscribeStatus}">{{transcribeObjectModel.status ||
+                            'documentDetails.comp.transcription.mediaViewer.readyForTranscription' | translate}}
+
+                            <a ng-show="transcribeObjectModel.status == 'FAILED' " class="fa fa-info-circle"
+                                    ng-click="showFailureMessage()">
+                            </a>
+                        </div>
+                        <small class="text-muted" translate>documentDetails.comp.transcription.mediaViewer.transcriptStatus</small>
+
+                    </div>
+                </div>
+                <div class="row align-items-end" ng-show="ocrInfoActive">
+                    <div class="col-sm-6 col-sm-offset-6 col-md-2" ng-controller="Document.OCRController">
+                        <div class="h4 font-bold" ng-style="{'color': colorOcrStatus}">{{ocrObjectModel.status
+                            || 'documentDetails.comp.ocr.readyForOCR' | translate}}
+                        </div>
+                        <small class="text-muted" translate>documentDetails.comp.ocr.ocrStatus</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="module-header" ng-if="viewerOnly">
+            <div class="row">
+                <div class="col-sm-6 col-md-12">
+                    <div class="pull-right">
+                        <div class="col-xs-12">
+                            <a class="btn btn-default" href="" ng-click="documentCompress()">
+                                <i class="fa fa-compress"></i>
+                            </a>
+                            <a class="btn btn-default" href="javascript:window.close();">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div>
+                <a ng-show="showEditingButton()" class="btn btn-sm btn-default" ng-click="enableEditing()">
+                    <i class="fa fa-edit"></i>
+                    <span translate>documentDetails.enableEditing</span>
+                </a>
+            </div>
+            <div ng-if="!fileEditingEnabled">
+                <a class="btn btn-sm btn-default">
+                    <span translate>documentDetails.poweredBySnowbound</span>
+                </a>
+            </div>
+        </div>
+
+        <div ng-class="viewerOnly? 'content-body well-sm full-docview' : 'content-body well-sm'">
+            <div ng-include="'modules/document-details/views/document-viewer.client.view.html'"></div>
+        </div>
+
+        <div class="right-sidebar well-sm documentDetails" ng-if="!viewerOnly"
+                ng-style="showVideoPlayer && transcribeEnabled ? {'top': '205px'} : {'top': '172px'}">
+            <ng-form name="docDetails" novalidate>
+                <tabset>
+                    <tab heading="{{'documentDetails.comp.details.title' | translate}}">
+                        <div ng-include="'modules/document-details/views/components/details.client.view.html'"></div>
+                    </tab>
+                    <tab heading="{{'documentDetails.comp.versionHistory.title' | translate}}">
+                        <div ng-include="'modules/document-details/views/components/version-history.client.view.html'"></div>
+                    </tab>
+
+                    <tab heading="{{'documentDetails.comp.eventHistory.title' | translate}}">
+                        <div ng-include="'modules/document-details/views/components/event-history.client.view.html'"></div>
+                    </tab>
+
+                    <tab heading="{{'documentDetails.comp.notes.title' | translate}}">
+                        <div ng-include="'modules/document-details/views/components/notes.client.view.html'"></div>
+                    </tab>
+                    <tab heading="{{'documentDetails.comp.participants.title' | translate}}">
+                        <div ng-include="'modules/document-details/views/components/participants.client.view.html'"></div>
+                    </tab>
+                    <tab heading="{{'documentDetails.comp.tags.title' | translate}}">
+                        <div ng-include="'modules/document-details/views/components/tags.client.view.html'"></div>
+                    </tab>
+                    <tab active="transcriptionTabActive" ng-show="transcriptionTabViewEnabled"
+                         heading="{{'documentDetails.comp.transcription.title' | translate}}">
+                        <div ng-include="'modules/document-details/views/components/transcription.client.view.html'"
+                             ng-if="transcriptionTabViewEnabled"></div>
+                    </tab>
+                    <tab heading="{{'documentDetails.comp.billing.title' | translate}}" ng-if="billingPrivilege">
+                        <div ng-include="'modules/document-details/views/components/billing.client.view.html'"></div>
+                    </tab>
+
+                </tabset>
+            </ng-form>
+        </div>
+    </div>
+</section>

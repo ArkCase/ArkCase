@@ -27,14 +27,14 @@ package com.armedia.acm.services.notification.service;
  * #L%
  */
 
-import com.armedia.acm.core.ObjectLabelConfig;
+import com.armedia.acm.services.labels.service.ObjectLabelConfig;
 import com.armedia.acm.services.labels.service.TranslationService;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 
 public class NotificationFormatter
 {
-    private ObjectLabelConfig objectLabelConfig;
     private TranslationService translationService;
+    private ObjectLabelConfig objectLabelConfig;
 
     public String buildTitle(String title, String parentName, String parentType, String userId)
     {
@@ -67,23 +67,13 @@ public class NotificationFormatter
     }
     private String replaceObjectTypeLabel(String withPlaceholder, String placeholder, String parentType)
     {
-        String objectTypeLabel = objectLabelConfig.getLabelForObjectType(parentType);
+        String objectTypeLabel = translationService.translate(objectLabelConfig.getTypeLabel().get(parentType));
         return withPlaceholder.replace(placeholder, objectTypeLabel);
     }
 
     private String replacePlaceholderLabel(String withPlaceholder, String placeholder, String value)
     {
         return withPlaceholder.replace(placeholder, value);
-    }
-
-    public ObjectLabelConfig getObjectLabelConfig()
-    {
-        return objectLabelConfig;
-    }
-
-    public void setObjectLabelConfig(ObjectLabelConfig objectLabelConfig)
-    {
-        this.objectLabelConfig = objectLabelConfig;
     }
 
     public TranslationService getTranslationService()
@@ -94,5 +84,15 @@ public class NotificationFormatter
     public void setTranslationService(TranslationService translationService)
     {
         this.translationService = translationService;
+    }
+
+    public ObjectLabelConfig getObjectLabelConfig()
+    {
+        return objectLabelConfig;
+    }
+
+    public void setObjectLabelConfig(ObjectLabelConfig objectLabelConfig)
+    {
+        this.objectLabelConfig = objectLabelConfig;
     }
 }

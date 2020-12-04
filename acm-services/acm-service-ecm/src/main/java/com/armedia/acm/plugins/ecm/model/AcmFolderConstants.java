@@ -52,23 +52,6 @@ public interface AcmFolderConstants
     String EVENT_TYPE_FOLDER_COPIED = "com.armedia.acm.folder.copied";
     String EVENT_TYPE_FOLDER_COPIED_AS_LINK = "com.armedia.acm.folder.copiedAsLink";
 
-    String PARENT_FOLDER_ID = "parentFolderId";
-    String ACM_FOLDER_ID = "acmFolderId";
-    String NEW_FOLDER_NAME = "newFolderName";
-    String DESTINATION_FOLDER_ID = "dstFolderId";
-    String FOLDER_PATH = "folderPath";
-
-    String ADD_NEW_FOLDER_EXCEPTION_INBOUND_PROPERTY = "addNewFolderException";
-    String DELETE_FOLDER_EXCEPTION_INBOUND_PROPERTY = "deleteFolderException";
-    String DELETE_FOLDER_TREE_EXCEPTION_INBOUND_PROPERTY = "deleteFolderTreeException";
-    String LIST_FOLDER_EXCEPTION_INBOUND_PROPERTY = "listFolderException";
-    String MOVE_FOLDER_EXCEPTION_INBOUND_PROPERTY = "moveFolderException";
-    String IS_FOLDER_NOT_EMPTY_INBOUND_PROPERTY = "isFolderNotEmpty";
-    String IS_FOLDER_EMPTY_INBOUND_PROPERTY = "isFolderEmpty";
-    String COPY_FOLDER_EXCEPTION_INBOUND_PROPERTY = "copyFolderException";
-    String GET_FOLDER_EXCEPTION_INBOUND_PROPERTY = "getFolderException";
-    String CREATE_FOLDER_BY_PATH_EXCEPTION_INBOUND_PROPERTY = "createFolderByPathException";
-
     int ZERO = 0;
 
     String SUCCESS_FOLDER_DELETE_MSG = "Folder deleted successfully";
@@ -81,9 +64,6 @@ public interface AcmFolderConstants
     String FOLDER_STRUCTURE_KEY_NAME = "name";
     String FOLDER_STRUCTURE_KEY_CHILDREN = "children";
     String FOLDER_STRUCTURE_KEY_ATTACHMENT = "attachment";
-
-    String PROPERTY_KEY_DEFAULT_FOLDER_BASE_PATH = "ecm.defaultBasePath";
-    String PROPERTY_PREFIX_FOLDER_PATH_BY_TYPE = "ecm.defaultPath.";
 
     // Multiple CMIS configurations constants
     String CONFIGURATION_REFERENCE = "configRef";

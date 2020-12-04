@@ -5,11 +5,11 @@
 
 # This script finds '*.js', '*.css', '*.json' and '*.html' files in Arkcase core/foia project that are overriden by an extension and have changed after some date.
 # To check for updated extension files in core files from the last checked date, from your extension project execute (second line needed if it's foia extension):
-#   $ ./check-ui-updates.sh $pathToArkcaseCode/acm-standard-applications/acm-law-enforcement 2020-04-28
+#   $ ./check-ui-updates.sh $pathToArkcaseCode/acm-standard-applications/arkcase 2020-04-28
 #   $ ./check-ui-updates.sh $pathToArkcaseCode/acm-standard-applications/acm-foia 2020-04-28
 
 # The script can be also used to check foia extension against core code. From Arkcase/acm-standard-application/acm-foia directory execute:
-#   $ ./check-ui-updates.sh ../acm-law-enforcement 2020-04-28
+#   $ ./check-ui-updates.sh ../arkcase 2020-04-28
 
 comparePath=$1
 lastSyncDate=$(date -d $2 +%s)

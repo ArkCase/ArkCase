@@ -35,14 +35,13 @@ import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonOrganizationAssociation;
-import com.armedia.acm.portalgateway.model.PortalInfo;
 import com.armedia.acm.portalgateway.model.PortalUser;
 import com.armedia.acm.portalgateway.model.PortalUserCredentials;
 import com.armedia.acm.portalgateway.model.UserRegistrationRequest;
 import com.armedia.acm.portalgateway.model.UserRegistrationResponse;
 import com.armedia.acm.portalgateway.model.UserResetRequest;
 import com.armedia.acm.portalgateway.model.UserResetResponse;
-import com.armedia.acm.portalgateway.service.PortalInfoDAO;
+import com.armedia.acm.portalgateway.service.PortalConfigurationService;
 import com.armedia.acm.portalgateway.service.PortalUserServiceException;
 import com.armedia.acm.portalgateway.service.PortalUserServiceProvider;
 import com.armedia.acm.services.email.model.EmailBodyBuilder;
@@ -73,6 +72,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Base64Utils;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -98,15 +98,9 @@ public class SARPortalUserServiceProvider implements PortalUserServiceProvider
     public static final long DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000; // 1 day in milliseconds
     public static final long REGISTRATION_EXPIRATION = 90L * DAY_IN_MILLISECONDS; // 90 days in milliseconds
 
-    private Logger log = LogManager.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     private AcmEmailSenderService emailSenderService;
-
-    @Value("${portal.serviceProvider.registrationRequest.template}")
-    private String registrationRequestEmailTemplate;
-
-    @Value("${portal.serviceProvider.passwordResetRequest.template}")
-    private String passwordResetRequestEmailTemplate;
 
     private UserRegistrationRequestDao registrationDao;
 
@@ -115,8 +109,6 @@ public class SARPortalUserServiceProvider implements PortalUserServiceProvider
     private PortalSARPersonDao portalPersonDao;
 
     private LdapUserService ldapUserService;
-
-    private PortalInfoDAO portalInfoDAO;
 
     private PersonDao personDao;
 
@@ -136,6 +128,8 @@ public class SARPortalUserServiceProvider implements PortalUserServiceProvider
     private AcmUserEventPublisher acmUserEventPublisher;
 
     private OrganizationDao organizationDao;
+
+    private PortalConfigurationService portalConfigurationService;
 
     /*
      * (non-Javadoc)
@@ -256,9 +250,8 @@ public class SARPortalUserServiceProvider implements PortalUserServiceProvider
 
     private void regenerateRegistration(String portalId, UserRegistrationRequestRecord registrationRecord)
     {
-        PortalInfo portal = portalInfoDAO.findByPortalId(portalId);
         String portalRegistrationUrl = Base64Utils
-                .encodeToString((portal.getPortalUrl() + "/portal/login/register").getBytes());
+                .encodeToString((portalConfigurationService.getPortalConfiguration().getUrl() + "/portal/login/register").getBytes());
 
         UserRegistrationRequest newRegistrationRequest = new UserRegistrationRequest();
         newRegistrationRequest.setEmailAddress(registrationRecord.getEmailAddress());
@@ -415,9 +408,8 @@ public class SARPortalUserServiceProvider implements PortalUserServiceProvider
     {
         UserResetRequest resetRequest = new UserResetRequest();
         resetRequest.setEmailAddress(user.getEmail());
-        PortalInfo portal = portalInfoDAO.findByPortalId(portalId);
         String baseUrl = Base64Utils
-                .encodeToString((new String(portal.getPortalUrl() + "/portal/login/reset")).getBytes());
+                .encodeToString((new String(portalConfigurationService.getPortalConfiguration().getUrl() + "/portal/login/reset")).getBytes());
         resetRequest.setResetUrl(baseUrl);
         return resetRequest;
     }
@@ -427,10 +419,9 @@ public class SARPortalUserServiceProvider implements PortalUserServiceProvider
     {
         try
         {
-            PortalInfo portalInfo = portalInfoDAO.findByPortalId(portalId);
             UserDTO userDto = userDTOFromPortalUser(user,
-                    password != null ? new String(Base64Utils.decodeFromString(password), Charset.forName("UTF-8")) : null,
-                    portalInfo.getGroup().getName());
+                    password != null ? new String(Base64Utils.decodeFromString(password), StandardCharsets.UTF_8) : null,
+                    portalConfigurationService.getPortalConfiguration().getGroupName());
             portalPersonDao.save(person);
             AcmUser acmUser = ldapUserService.createLdapUser(userDto, directoryName);
             getRequestAssignmentService().addPortalUserAsParticipantToExistingRequests(acmUser, person);
@@ -870,6 +861,7 @@ public class SARPortalUserServiceProvider implements PortalUserServiceProvider
             personOrganizationAssociation.setDefaultOrganization(true);
             person.getOrganizations().add(organization);
             person.getOrganizationAssociations().add(personOrganizationAssociation);
+            person.setDefaultOrganization(personOrganizationAssociation);
         }
         else
         {
@@ -879,6 +871,7 @@ public class SARPortalUserServiceProvider implements PortalUserServiceProvider
                 if (poa.getOrganization().getOrganizationValue().equalsIgnoreCase(organization.getOrganizationValue()))
                 {
                     poa.setDefaultOrganization(true);
+                    person.setDefaultOrganization(poa);
                     break;
                 }
             }
@@ -957,16 +950,6 @@ public class SARPortalUserServiceProvider implements PortalUserServiceProvider
         userDTO.setGroupNames(Arrays.asList(group));
 
         return userDTO;
-    }
-
-    /**
-     * @param emailAddress
-     * @return
-     */
-    private boolean isRegisteredUser(String emailAddress)
-    {
-        Optional<PortalSARPerson> registeredPerson = portalPersonDao.findByEmail(emailAddress);
-        return registeredPerson.isPresent();
     }
 
     /**
@@ -1171,24 +1154,6 @@ public class SARPortalUserServiceProvider implements PortalUserServiceProvider
     }
 
     /**
-     * @param registrationRequestEmailTemplate
-     *            the registrationRequestEmailTemplate to set
-     */
-    public void setRegistrationRequestEmailTemplate(String registrationRequestEmailTemplate)
-    {
-        this.registrationRequestEmailTemplate = registrationRequestEmailTemplate;
-    }
-
-    /**
-     * @param passwordResetRequestEmailTemplate
-     *            the passwordResetRequestEmailTemplate to set
-     */
-    public void setPasswordResetRequestEmailTemplate(String passwordResetRequestEmailTemplate)
-    {
-        this.passwordResetRequestEmailTemplate = passwordResetRequestEmailTemplate;
-    }
-
-    /**
      * @param registrationDao
      *            the registrationDao to set
      */
@@ -1222,15 +1187,6 @@ public class SARPortalUserServiceProvider implements PortalUserServiceProvider
     public void setLdapUserService(LdapUserService ldapUserService)
     {
         this.ldapUserService = ldapUserService;
-    }
-
-    /**
-     * @param portalInfoDAO
-     *            the portalInfoDAO to set
-     */
-    public void setPortalInfoDAO(PortalInfoDAO portalInfoDAO)
-    {
-        this.portalInfoDAO = portalInfoDAO;
     }
 
     /**
@@ -1313,5 +1269,15 @@ public class SARPortalUserServiceProvider implements PortalUserServiceProvider
     public void setRequestAssignmentService(RequestAssignmentService requestAssignmentService)
     {
         this.requestAssignmentService = requestAssignmentService;
+    }
+
+    public PortalConfigurationService getPortalConfigurationService()
+    {
+        return portalConfigurationService;
+    }
+
+    public void setPortalConfigurationService(PortalConfigurationService portalConfigurationService)
+    {
+        this.portalConfigurationService = portalConfigurationService;
     }
 }

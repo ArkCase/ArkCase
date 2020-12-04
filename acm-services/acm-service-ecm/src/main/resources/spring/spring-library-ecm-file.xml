@@ -334,14 +334,6 @@
 
     <bean id="pageCountService" class="com.armedia.acm.plugins.ecm.service.impl.PageCountServiceImpl"/>
 
-    <bean id="fileCreatedWorkflowHandler"
-        class="com.armedia.acm.plugins.ecm.handler.FileCreatedBuckslipWorkflowHandler">
-        <property name="fileWorkflowBusinessRule" ref="fileWorkflowBusinessRule"/>
-        <property name="acmBpmnService" ref="processDefinitionManagementService"/>
-        <property name="objectConverter" ref="objectConverter"/>
-        <property name="userDao" ref="userJpaDao"/>
-    </bean>
-
     <bean id="cmisConfigUtils" class="com.armedia.acm.plugins.ecm.utils.CmisConfigUtils">
         <property name="camelContextManager" ref="camelContextManager"/>
     </bean>
@@ -362,6 +354,8 @@
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="pdfService" ref="pdfService"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
+        <property name="fileConfigurationService" ref="fileConfigurationServiceImpl"/>
+        <property name="configurationClientConfig" ref="configurationClientConfig"/>
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
     </bean>
 
@@ -467,5 +461,9 @@
 
     <bean id="ecmFIleMovedToRecycleBinDuplicationListener" class="com.armedia.acm.plugins.ecm.service.EcmFIleMovedToRecycleBinDuplicationListener">
         <property name="ecmFileService" ref="ecmFileService"/>
+    </bean>
+
+    <bean id="ecmFileEditingEnabledConfig" class="com.armedia.acm.plugins.ecm.model.EcmFileEditingEnabledConfig" scope="refresh">
+        <aop:scoped-proxy/>
     </bean>
 </beans>

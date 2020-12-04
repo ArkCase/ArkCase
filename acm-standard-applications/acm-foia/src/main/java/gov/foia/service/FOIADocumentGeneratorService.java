@@ -41,7 +41,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import gov.foia.model.FOIAConstants;
 import gov.foia.model.FOIADocumentDescriptor;
 import gov.foia.model.FOIAObject;
 import gov.foia.model.FOIAPerson;
@@ -87,7 +86,7 @@ public class FOIADocumentGeneratorService
 
         parameters.put("subject", request.getTitle());
 
-        if (request.getRequestType().equals(FOIAConstants.NEW_REQUEST_TYPE))
+        if (request.getOriginalRequestNumber() == null)
         {
 
             parameters.put("recordDateFrom",

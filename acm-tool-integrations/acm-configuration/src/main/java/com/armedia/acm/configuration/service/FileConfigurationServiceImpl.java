@@ -48,6 +48,8 @@ import org.springframework.web.client.RestTemplate;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Collections;
 
 public class FileConfigurationServiceImpl implements FileConfigurationService
@@ -59,9 +61,9 @@ public class FileConfigurationServiceImpl implements FileConfigurationService
 
     private String customFilesLocation;
 
-    private static final String BRANDING_LOCATION = "branding";
-
     private static final String RULES_EXTENSION = "xlsx";
+
+    private static final String STYLESHEET_EXTENSION = "xsl";
 
     private static final Logger log = LogManager.getLogger(FileConfigurationServiceImpl.class);
 
@@ -94,11 +96,11 @@ public class FileConfigurationServiceImpl implements FileConfigurationService
 
         ResponseEntity<Resource> exchange = configRestTemplate.exchange(
                 configurationClientConfig.getConfigurationUrl() + "/" + configurationClientConfig.getDefaultApplicationName() + "/"
-                        + configurationClientConfig.getActiveProfileReversed() + "/*/" + BRANDING_LOCATION + "/" + fileName,
+                        + configurationClientConfig.getActiveProfileReversed() + "/*/" + configurationClientConfig.getBrandingPath() + "/" + fileName,
                 HttpMethod.GET, entity,
                 Resource.class);
 
-        File logoFile = new File(customFilesLocation + "/" + BRANDING_LOCATION + "/" + fileName);
+        File logoFile = new File(customFilesLocation + "/" + configurationClientConfig.getBrandingPath() + "/" + fileName);
 
         FileUtils.copyInputStreamToFile(exchange.getBody().getInputStream(), logoFile);
 
@@ -107,12 +109,18 @@ public class FileConfigurationServiceImpl implements FileConfigurationService
     @JmsListener(destination = "VirtualTopic.ConfigFileUpdated", containerFactory = "jmsTopicListenerContainerFactory")
     public void downloadFileFromConfiguration(Message message) throws IOException
     {
-        if (message.getPayload().toString().toLowerCase().contains("." + RULES_EXTENSION))
+        String fileName = message.getPayload().toString();
+        if (fileName.contains("." + RULES_EXTENSION))
         {
             // Rules files are not copied.
             return;
         }
-        getFileFromConfiguration(message.getPayload().toString(), customFilesLocation);
+        if (fileName.contains("." + STYLESHEET_EXTENSION))
+        {
+            // PDF stylesheet files are not copied.
+            return;
+        }
+        getFileFromConfiguration(fileName, customFilesLocation);
     }
 
     @Override
@@ -130,6 +138,12 @@ public class FileConfigurationServiceImpl implements FileConfigurationService
                 Resource.class);
 
         return exchange.getBody().getInputStream();
+    }
+
+    public URI getLocationUriFromConfiguration(String locationPath) throws URISyntaxException
+    {
+        return new URI(configurationClientConfig.getConfigurationUrl() + "/" + configurationClientConfig.getDefaultApplicationName() + "/"
+                + configurationClientConfig.getActiveProfileReversed() + "/*/" + locationPath);
     }
 
     private HttpEntity<LinkedMultiValueMap<String, Object>> prepareFileProperties(InputStreamResource file, String fileName)

@@ -76,6 +76,13 @@ public class AcmEntityTemplateNoUserPrefixModelProvider implements TemplateModel
             assigneeEmail = getUserInfoHelper().getUserEmail(assigneeLdapId);
 
         }
+        else if (acmObject instanceof AcmAssignee && ((AcmAssignee) acmObject).getAssigneeGroupId() != null)
+        {
+            AcmAssignee acmAssignee = (AcmAssignee) acmObject;
+
+            String assigneeLdapGroupId = acmAssignee.getAssigneeGroupId();
+            baseAssigneeGroupId = getUserInfoHelper().removeGroupPrefix(assigneeLdapGroupId);
+        }
 
         AcmEntityTemplateModel acmEntityTemplateModel = new AcmEntityTemplateModel();
         acmEntityTemplateModel.caseFileObject = acmObject;

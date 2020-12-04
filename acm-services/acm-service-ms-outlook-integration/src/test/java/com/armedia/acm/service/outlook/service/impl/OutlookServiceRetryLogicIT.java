@@ -97,12 +97,13 @@ public class OutlookServiceRetryLogicIT extends EasyMockSupport
         String userHomePath = System.getProperty("user.home");
         System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
         System.setProperty("configuration.server.url", "http://localhost:9999");
+        System.setProperty("application.profile.reversed", "runtime");
     }
 
     private transient final Logger log = LogManager.getLogger(getClass());
     @Autowired
     private OutlookService outlookService;
-    private String validUser = "***REMOVED***";
+    private String validUser = "ann-acm@arkcase.org";
     private String validPassword = "AcMd3v$";
 
     private AcmOutlookUser user = new AcmOutlookUser("ann-acm", validUser, validPassword);

@@ -28,11 +28,11 @@ package gov.foia.service.dataupdate;
  */
 
 import com.armedia.acm.services.dataupdate.service.AcmDataUpdateExecutor;
-import com.armedia.acm.services.dataupdate.service.ExtensionDataUpdateExecutors;
+import com.armedia.acm.services.dataupdate.service.CoreExtensionDataUpdateExecutors;
 
 import java.util.List;
 
-public class FoiaExtensionDataUpdateExecutor implements ExtensionDataUpdateExecutors
+public class FoiaExtensionDataUpdateExecutor implements CoreExtensionDataUpdateExecutors
 {
 
     private List<AcmDataUpdateExecutor> foiaDataUpdateExecutors;

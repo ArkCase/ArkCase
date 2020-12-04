@@ -103,34 +103,20 @@ public interface EcmFileConstants
     String EVENT_TYPE_ACTIVE_VERSION_SET = "com.armedia.acm.file.version.set";
     String EVENT_TYPE_FILE_EMAILED = "com.armedia.acm.ecm.file.emailed";
 
-    String CMIS_OBJECT_ID = "cmisObjectId";
-    String SRC_FOLDER_ID = "srcFolderId";
-    String DST_FOLDER_ID = "dstFolderId";
     String ECM_FILE_ID = "ecmFileId";
-    String NEW_FILE_NAME = "newFileName";
     String FILE_NAME = "fileName";
-    String INPUT_STREAM = "inputStream";
     String RECORD = "RECORD";
-    String CMIS_DOCUMENT_ID = "cmisDocumentId";
     String REPOSITORY_VERSION_ID = "alfcmis:nodeRef";
+    String MIME_TYPE = "mimeType";
 
     String IP_ADDRESS_ATTRIBUTE = "acm_ip_address";
 
     String FILE = "file";
 
-    String COPY_FILE_EXCEPTION_INBOUND_PROPERTY = "copyFileException";
-
     String ACTIVE = "ACTIVE";
 
     String FIND_CONTAINER_BY_CALENDAR_FOLDER_QUERY = "SELECT c FROM AcmContainer c WHERE c.calendarFolderId = :folderId";
     String FILE_MIME_TYPE = "fileMimeType";
-
-    // Multiple CMIS configurations constants
-    String CONFIGURATION_REFERENCE = "configRef";
-    String VERSIONING_STATE = "versioningState";
-    String DEFAULT_CMIS_REPOSITORY_ID = "alfresco";
-    String ALL_VERSIONS = "allVersions";
-    String CMIS_REPOSITORY_ID = "cmisRepositoryId";
 
     String ECM_SYNC_NODE_TYPE_FOLDER = "folder";
     String ECM_SYNC_NODE_TYPE_DOCUMENT = "document";

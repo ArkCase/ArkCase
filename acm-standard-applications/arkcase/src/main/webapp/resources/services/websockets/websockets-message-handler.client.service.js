@@ -1,0 +1,252 @@
+'use strict';
+
+angular.module('services').factory('Websockets.MessageHandler', ['$q', '$rootScope', 'Acm.StoreService', 'Object.AuditService', 'TimeTracking.InfoService', 'ObjectService', 'UtilService', 'DocTreeExt.DownloadSelectedAsZip', 'FileSaver', 'Blob', '$filter', 'Admin.BrandingLogoService', function ($q, $rootScope, Store, ObjectAuditService, TimeTrackingInfoService, ObjectService, Util, DownloadSelectedAsZip, FileSaver, Blob, $filter, brandingLogoService) {
+    var Service = {};
+
+    Service.handleMessage = handleMessage;
+
+    Service.handleGenericMessage = handleGenericMessage;
+
+    Service.handleConfigurationUpdatedMessage = handleConfigurationUpdatedMessage;
+
+    Service.handleZipGenerationMessage = handleZipGenerationMessage;
+
+    Service.handleScheduledJobStatusMessage = handleScheduledJobStatusMessage;
+
+    return Service;
+
+    function handleMessage(message) {
+
+        //we need to filter messages for objects that we are not interested
+        //until we find out what to do with them
+        if (message.className.indexOf('AcmObjectHistory') === -1 && message.className.indexOf('AcmAssignment') === -1 && message.className.indexOf('AcmSubscriptionEvent') === -1) {
+            //we will remove object from cache
+            handleCache(message);
+            //we will publish message for objecttype with action
+            publishMessage(message);
+        }
+    }
+
+    function handleGenericMessage(message) {
+        if (!Util.isEmpty(message.progressbar)) {
+            if (message.success === false || message.currentProgress === 100) {
+                $rootScope.$bus.publish('progressbar-current-progress-finished', message);
+            } else {
+                $rootScope.$bus.publish('progressbar-current-progress-updated', message);
+            }
+        }
+        if (message.eventType === "portalUserProgress") {
+            $rootScope.$bus.publish('move-portal-users-finished', message);
+            return;
+        }
+        var eventName = message.eventType;
+        $rootScope.$bus.publish(eventName, message);
+    }
+
+    function handleConfigurationUpdatedMessage(message) {
+        var eventName = message.eventType;
+        $rootScope.$bus.publish(eventName, message);
+    }
+
+    function handleScheduledJobStatusMessage(message) {
+        $rootScope.$bus.publish("scheduled-jobs-status-update", message);
+    }
+
+    function handleZipGenerationMessage(message) {
+        DownloadSelectedAsZip.downloadZipFile(message).then(function (result) {
+            var dateStr = $filter('date')(new Date(), 'HH:mm:ss');
+            var data = new Blob([result.data], {
+                type: 'application/octet-stream'
+            });
+            FileSaver.saveAs(data, 'acm-documents-' + dateStr + '.zip');
+        });
+    }
+
+    function handleCache(message) {
+        // remove this object from cache
+        if (message.action == 'UPDATE' || message.action == 'DELETE') {
+            handleCacheObject(message.objectType, message.objectId);
+        }
+        handleCacheLists(message.objectType, message.objectId);
+        // remove this object's parent from cache, if any
+        if (message.parentObjectType != null && message.parentObjectId != null) {
+            handleCacheObject(message.parentObjectType, message.parentObjectId);
+            handleCacheLists(message.parentObjectType, message.parentObjectId);
+            handleSubCacheLists(message.parentObjectType, message.parentObjectId);
+        }
+        // A timesheet does not have parent id/type field, but could have multiple complaint/case "parent" objects
+        if (message.objectType == 'TIMESHEET' || message.parentObjectType == 'TIMESHEET') {
+            var timesheetId = message.objectType == 'TIMESHEET' ? message.objectId : message.parentObjectId;
+            TimeTrackingInfoService.getTimesheetParentObjectsTypeId(timesheetId).then(function(parentObjectsTypeId) {
+                angular.forEach(parentObjectsTypeId, function(data) {
+                    handleCacheObject(data.type, data.objectId);
+                    handleCacheLists(data.type, data.objectId);
+                    handleSubCacheLists(data.type, data.objectId);
+                });
+            });
+        }
+    }
+
+    function publishMessage(message) {
+        var eventName;
+        // publish event for this object
+        if (message.action == 'INSERT') {
+            eventName = "object.inserted";
+        } else if (message.action == 'DELETE') {
+            eventName = "object.deleted";
+        } else {
+            eventName = "object.changed/" + message.objectType + "/" + message.objectId;
+        }
+        $rootScope.$bus.publish(eventName, message);
+        // publish event for this object's parent, if any
+        if (message.parentObjectType != null && message.parentObjectId != null) {
+            eventName = "object.changed/" + message.parentObjectType + "/" + message.parentObjectId;
+            $rootScope.$bus.publish(eventName, message);
+        }
+    }
+
+    function handleCacheLists(objectType, objectId) {
+        var cacheListStoreName = getCacheListName(objectType);
+        if (cacheListStoreName !== '') {
+            //find the case lists and reset them
+            var cacheList = new Store.CacheFifo(cacheListStoreName);
+            if (cacheList != null) {
+                cacheList.reset();
+            }
+        }
+    }
+
+    function handleSubCacheLists(objectType, objectId) {
+        // invalidate audit cache
+        var cacheKey = objectType + '.' + objectId;
+        var cacheStore = new Store.CacheFifo(ObjectAuditService.CacheNames.AUDIT_DATA);
+        var cacheKeys = cacheStore.keys();
+        _.each(cacheKeys, function(key) {
+            if (key == null) {
+                return;
+            }
+            if (key.indexOf(cacheKey) == 0) {
+                cacheStore.remove(key);
+            }
+        });
+    }
+
+    function handleCacheObject(objectType, objectId) {
+
+        var cacheInfoStoreName = getCacheInfoName(objectType);
+
+        if (cacheInfoStoreName !== '') {
+            //find the objectId in cacheCaseInfo and remove it
+            var cacheInfo = new Store.CacheFifo(cacheInfoStoreName);
+            var item = cacheInfo.get(objectId);
+            if (item != null) {
+                cacheInfo.remove(objectId);
+            }
+        }
+
+        //handle child items data
+        handleChildItemsData(objectType, objectId);
+
+    }
+
+    function removeFromCache(subKey, childCacheName) {
+        var cacheChildData = new Store.CacheFifo(childCacheName);
+        var keys = cacheChildData.keys();
+        var objectKeys = [];
+        //we will go through all keys to find keys connected with this objecttype and objectid
+        angular.forEach(keys, function(key) {
+            if (key != null && key.indexOf(subKey) > -1) {
+                objectKeys.push(key);
+            }
+        });
+        //we will go through all keys that we found and remove them from cache
+        angular.forEach(objectKeys, function(key) {
+            var item = cacheChildData.get(key);
+            if (item != null) {
+                cacheChildData.remove(key);
+            }
+        });
+    }
+
+    function handleChildItemsData(objectType, objectId) {
+        //for casefile and complaint we have ChildTaskData, CostSheets and TimeSheets
+
+        if (objectType === 'CASE_FILE' || objectType === 'COMPLAINT' || objectType === ObjectService.ObjectTypes.TIMESHEET || objectType === ObjectService.ObjectTypes.COSTSHEET) {
+            //subKey is objecttype.objectid and some other things like sorting
+            var subKey = objectType + "." + objectId;
+            removeFromCache(subKey, 'ChildTaskData');
+            removeFromCache(subKey, 'CostSheets');
+            removeFromCache(subKey, 'TimeSheets');
+        }
+
+        if (objectType === 'TASK') {
+            var cacheInfo = new Store.CacheFifo('TaskDiagram');
+            var item = cacheInfo.get(objectId);
+            if (item != null) {
+                cacheInfo.remove(objectId);
+            }
+        }
+    }
+
+    function getCacheInfoName(objectType) {
+
+        //all strings are hardcoded
+        //we can create const service and use it here and in all places where items are stored in cache
+
+        var cacheInfoStoreName = '';
+        if (objectType == 'CASE_FILE') {
+            cacheInfoStoreName = 'CaseInfo';
+        }
+        if (objectType == 'COMPLAINT') {
+            cacheInfoStoreName = 'ComplaintInfo';
+        }
+        if (objectType == 'DOC_REPO') {
+            cacheInfoStoreName = 'DocumentRepositoryInfo';
+        }
+        if (objectType == 'TASK') {
+            cacheInfoStoreName = 'TaskInfo';
+        }
+        if (objectType == 'COSTSHEET') {
+            cacheInfoStoreName = 'CostsheetInfo';
+        }
+        if (objectType == 'TIMESHEET') {
+            cacheInfoStoreName = 'TimesheetInfo';
+        }
+        if (objectType == 'PERSON') {
+            cacheInfoStoreName = 'PersonInfo';
+        }
+        if (objectType == 'ORGANIZATION') {
+            cacheInfoStoreName = 'OrganizationInfo';
+        }
+        return cacheInfoStoreName;
+    }
+
+    function getCacheListName(objectType) {
+        var cacheListStoreName = '';
+        if (objectType == 'CASE_FILE') {
+            cacheListStoreName = 'CaseList';
+        }
+        if (objectType == 'COMPLAINT') {
+            cacheListStoreName = 'ComplaintList';
+        }
+        if (objectType == 'DOC_REPO') {
+            cacheListStoreName = 'DocumentRepositoryList';
+        }
+        if (objectType == 'TASK') {
+            cacheListStoreName = 'TaskList';
+        }
+        if (objectType == 'COSTSHEET') {
+            cacheListStoreName = 'CostsheetList';
+        }
+        if (objectType == 'TIMESHEET') {
+            cacheListStoreName = 'TimesheetList';
+        }
+        if (objectType == 'PERSON') {
+            cacheListStoreName = 'PersonList';
+        }
+        if (objectType == 'ORGANIZATION') {
+            cacheListStoreName = 'OrganizationList';
+        }
+        return cacheListStoreName;
+    }
+} ]);
