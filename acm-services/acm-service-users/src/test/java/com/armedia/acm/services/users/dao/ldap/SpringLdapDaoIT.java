@@ -77,6 +77,7 @@ public class SpringLdapDaoIT
         System.setProperty("javax.net.ssl.trustStore", userHomePath + "/.arkcase/acm/private/arkcase.ts");
         System.setProperty("javax.net.ssl.trustStorePassword", "password");
         System.setProperty("application.name.default", "arkcase,ldap");
+        System.setProperty("application.profile.reversed", "runtime");
     }
 
     static final Logger log = LogManager.getLogger(SpringLdapDaoIT.class);

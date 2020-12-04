@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/object/object-lookup.client.service.js services/object/object-lookup.client.service.js}
+ * {@link /acm-standard-applications/arkcase/src/main/webapp/resources/services/object/object-lookup.client.service.js services/object/object-lookup.client.service.js}
 
  * LookupService contains functions to lookup data (typically static data).
  */
@@ -759,8 +759,14 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
      *
      * @returns {Object} An array returned by $resource
      */
-    Service.getTimesheetTypes = function () {
-        return Service.getLookupByLookupName("timesheetTypes");
+    Service.getTimesheetTypes = function() {
+        var selectEntry = {key: null, value: "core.lookups.timesheet.types.select_type"};
+        var timesheetTypes = [];
+        return Service.getLookupByLookupName("timesheetTypes").then(function (types) {
+            timesheetTypes = types;
+            timesheetTypes.unshift(selectEntry);
+            return timesheetTypes;
+        });
     };
 
     /**
@@ -1125,6 +1131,24 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
             }
             // return a deep copy of the lookup not to allow clients to change the original object
             return _.cloneDeep(lookup);
+        });
+    };
+
+    /**
+     * @ngdoc method
+     * @name getPrimaryLookup
+     * @methodOf services:Object.LookupService
+     *
+     * @description
+     * Returns primary lookup
+     *
+     * @param {array} name    The lookup name
+     *
+     * @returns {Object} Promise returning the lookup entries as array
+     */
+    Service.getPrimaryLookup = function (lookupEntries) {
+        return _.find(lookupEntries, {
+            primary: true
         });
     };
 

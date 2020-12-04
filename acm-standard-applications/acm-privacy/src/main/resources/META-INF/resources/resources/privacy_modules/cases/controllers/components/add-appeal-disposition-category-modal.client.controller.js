@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('cases').controller('Cases.AddAppealDispositionCategoriesModalController',
-    ['$scope', '$modal', '$modalInstance', 'params', '$q', 'UtilService', 'Object.LookupService', 'Case.ExemptionService', '$translate',
-        function ($scope, $modal, $modalInstance, params, $q, Util, ObjectLookupService, CaseExemptionService, $translate) {
+    ['$scope', '$modal', '$modalInstance', 'params', '$q', 'UtilService', 'Object.LookupService', 'Case.ExemptionService', '$translate', 'MessageService',
+        function ($scope, $modal, $modalInstance, params, $q, Util, ObjectLookupService, CaseExemptionService, $translate, MessageService) {
 
             $scope.isDispositionRequired = params.isDispositionRequired;
             $scope.caseId = params.caseId;
@@ -14,18 +14,13 @@ angular.module('cases').controller('Cases.AddAppealDispositionCategoriesModalCon
             ObjectLookupService.getLookupByLookupName('appealDispositionType').then(function (appealDispositionType) {
                 $scope.dispositionCategoriesLookup = appealDispositionType;
                 if (!Util.isEmpty(params.disposition)) {
-                    //Shouldn't be able to select any reasons
-                    if (params.disposition === 'completely-reversed') {
-                        $scope.showDispositionReasons = false;
-                    } else {
-                        $scope.showDispositionReasons = true;
-                    }
-
                     $scope.objectInfo.disposition = params.disposition;
                 } else {
                     $scope.objectInfo.disposition = $scope.dispositionCategoriesLookup[0].key;
-                    $scope.showDispositionReasons = true;
                 }
+
+                // Can only select reasons when the disposition is closed (UI label is "Closed for Other Reasons")
+                $scope.showDispositionReasons = (params.disposition === 'closed');
             });
 
             ObjectLookupService.getAppealDispositionReasons().then(function (appealDispositionReasons) {
@@ -58,7 +53,7 @@ angular.module('cases').controller('Cases.AddAppealDispositionCategoriesModalCon
             });
 
             if (!Util.isArrayEmpty(params.dispositionReasons)) {
-                $scope.objectInfo.dispositionReasons = params.dispositionReasons;
+                $scope.objectInfo.dispositionReasons = angular.copy(params.dispositionReasons);
             } else {
                 $scope.objectInfo.dispositionReasons = [];
             }
@@ -79,29 +74,10 @@ angular.module('cases').controller('Cases.AddAppealDispositionCategoriesModalCon
             });
 
             $scope.changeDispositionCategory = function () {
-                var currentDispositionReasons = $scope.objectInfo.dispositionReasons;
-                if ($scope.objectInfo.disposition === 'completely-reversed') {
-                    if (!Util.isArrayEmpty($scope.objectInfo.dispositionReasons)) {
-                        $scope.objectInfo.dispositionReasons = [];
-                    }
 
-                    $scope.showDispositionReasons = false;
-                    $scope.isReasonRequired = false;
-                } else if ($scope.objectInfo.disposition === 'closed') {
-                    $scope.objectInfo.dispositionReasons = currentDispositionReasons;
-
-                    $scope.isReasonRequired = Util.isArrayEmpty($scope.objectInfo.dispositionReasons);
-                    $scope.showDispositionReasons = true;
-
-                } else if (Util.isEmpty($scope.objectInfo.disposition)) {
-                    $scope.showDispositionReasons = true;
-                    $scope.isReasonRequired = false;
-                } else {
-                    $scope.objectInfo.dispositionReasons = currentDispositionReasons;
-
-                    $scope.isReasonRequired = !$scope.hasExemptionCodes && Util.isArrayEmpty($scope.objectInfo.dispositionReasons);
-                    $scope.showDispositionReasons = true;
-                }
+                // Can only select reasons when the disposition is closed (UI label is "Closed for Other Reasons")
+                $scope.showDispositionReasons = ($scope.objectInfo.disposition === 'closed');
+                $scope.isReasonRequired = $scope.showDispositionReasons && Util.isArrayEmpty($scope.objectInfo.dispositionReasons);
 
                 if ($scope.isReasonRequired) {
                     $scope.reasonsMessage = "Enter at least one reason";
@@ -190,6 +166,21 @@ angular.module('cases').controller('Cases.AddAppealDispositionCategoriesModalCon
                     key: $scope.objectInfo.disposition
                 });
 
+                if ($scope.objectInfo.disposition === 'affirmed' || $scope.objectInfo.disposition === 'partially-affirmed') {
+                    if (Util.isArrayEmpty($scope.objectInfo.dispositionReasons) && !$scope.hasExemptionCodes) {
+                        MessageService.info($translate.instant("core.lookups.info.validationInfo"));
+                        $modalInstance.dismiss();
+                    }
+                }
+
+                // Removes reasons if saving a disposition other than closed (UI label is "Closed for Other Reasons")
+                if ($scope.objectInfo.disposition !== 'closed') {
+                    if (!Util.isArrayEmpty($scope.objectInfo.dispositionReasons)) {
+                        $scope.objectInfo.dispositionReasons = [];
+                    }
+                    $scope.objectInfo.otherReason = null;
+                }
+
                 var data = {
                     disposition: $scope.objectInfo.disposition,
                     dispositionValue: $translate.instant(disposition.value),
@@ -206,11 +197,6 @@ angular.module('cases').controller('Cases.AddAppealDispositionCategoriesModalCon
             };
 
             $scope.onClickCancel = function () {
-                _.forEach($scope.objectInfo.dispositionReasons, function (reason, i) {
-                    if (!reason.hasOwnProperty("id")) {
-                        $scope.objectInfo.dispositionReasons.splice(i, 1);
-                    }
-                });
                 $modalInstance.dismiss('Cancel');
             };
         }]);

@@ -6,7 +6,7 @@
  *
  * @description
  *
- *{@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/search-modal/search-modal.client.directive.js directives/search-modal/search-modal.client.directive.js}
+ *{@link /acm-standard-applications/arkcase/src/main/webapp/resources/directives/search-modal/search-modal.client.directive.js directives/search-modal/search-modal.client.directive.js}
  *
  * The "Search" modal with faceted search functionality
  *

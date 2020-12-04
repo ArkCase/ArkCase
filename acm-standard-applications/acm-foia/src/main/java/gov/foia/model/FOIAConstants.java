@@ -38,8 +38,10 @@ public interface FOIAConstants
 
     String NEW_REQUEST_TYPE = "New Request";
     String APPEAL_REQUEST_TYPE = "Appeal";
+    String REQUEST_SUB_TYPE = "FOIA";
 
     String SIMPLE_REQUEST_TRACK = "simple";
+    String EXPEDITE_REQUEST_TRACK = "expedite";
 
     String REQ = "REQ";
     String ACK = "ACK";
@@ -70,4 +72,9 @@ public interface FOIAConstants
 
     String FULFILL_QUEUE = "Fulfill";
     String INTAKE_QUEUE = "Intake";
+    String REQUEST_CATEGORY_MAIL_SERVICE = "All Others";
+    String DEFAULT_DELIVERY_METHOD_OF_RESPONSE = "Web Portal";
+    String FILES_DESCRIPTION_DOCUMENTS = "Description Document";
+    String FILES_CONSENT_DOCUMENTS = "Consent";
+    String FILES_PROOF_OF_IDENTITY = "Proof of Identity";
 }

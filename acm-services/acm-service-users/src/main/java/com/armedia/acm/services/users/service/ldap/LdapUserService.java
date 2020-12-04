@@ -124,7 +124,6 @@ public class LdapUserService implements ApplicationEventPublisherAware
         }
 
         String userId = MapperUtils.buildUserId(userDto.getUserId(), ldapSyncConfig);
-
         AcmUser user = checkExistingUser(userId);
 
         if (user == null)

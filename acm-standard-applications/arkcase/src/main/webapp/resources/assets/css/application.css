@@ -1,0 +1,1971 @@
+/* @override 
+	http://localhost:8080/arkcase/assets/css/application.css
+	https://pds.arkcase.com/arkcase/assets/css/application.css
+	https://core.arkcase.dev.armedia.com/arkcase/assets/css/application.css */
+
+/* Typography */
+
+h1 {
+    color: #000000;
+    font-size: 36px;
+}
+
+h2 {
+    color: #000000;
+    font-size: 32px;
+}
+
+h3 {
+    color: #000000;
+    font-size: 21px;
+    color: rgba(0, 0, 0, 0.7);
+    margin: 0px;
+    line-height: 32px;
+}
+
+h4 {
+    color: #000000;
+    font-size: 18px;
+    color: rgba(0, 0, 0, 0.7);
+}
+
+.h4.font-bold {
+    font-weight: bold !important;
+}
+
+h5 {
+    color: #000000;
+    font-size: 16px;
+}
+
+h6 {
+    color: #000000;
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.7);
+}
+
+/* Overrides */
+
+.no-border {
+    border-color: transparent;
+    border-width: 0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.required-asterisk {
+    color: #dd1144;
+}
+
+.form-control {
+    border-radius: 0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.pull-right.well {
+    margin-bottom: 0px;
+}
+
+.well {
+    background: 0px;
+    border: 0px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    padding: 0px;
+}
+
+iframe {
+    border: 0px;
+}
+
+.label-info {
+    background-color: #177bbb;
+}
+
+.fancytree-node {
+    white-space: nowrap;
+}
+
+.ui-fancytree.fancytree-container {
+    background: none;
+    border: 0px;
+    outline: 0px;
+    padding: 0px;
+    margin: 0px;
+    overflow: hidden !important;
+    width: 100%;
+}
+
+/*span.fancytree-title {
+	width: 100%;
+	padding-right: 30px;
+	overflow: hidden;
+	-ms-text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+	text-overflow: ellipsis;
+}*/
+
+span.fancytree-title {
+    margin-left: 0px !important;
+    padding-right: 0px !important;
+    display:inline-block;
+    white-space: nowrap;
+    overflow:hidden !important;
+    text-overflow: ellipsis;
+    width:200px;
+}
+
+.fancytree-container {
+    font-size: 13px;
+}
+
+/*.fancytree-node {*/
+    /*margin-left: 0px !important;*/
+/*}*/
+
+.fancytree-folder .fancytree-node {
+    white-space: inherit !important;
+}
+
+.form-group.well-sm {
+    margin: 0px;
+}
+
+.form-group.required label:after {
+    color: #d00;
+    content: "*";
+    position: absolute;
+    margin-left: 8px;
+}
+
+.img-circle.img-responsive {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+}
+
+.editable.editable-click {
+    color: #177bbb;
+}
+
+.cg-notify-close {
+    color: white;
+    opacity: .7;
+}
+
+.cg-notify-close:hover {
+    color: white;
+    opacity: 1;
+}
+
+.cg-notify-message.ng-scope.cg-notify-message-right {
+    background-color: #232a31;
+    color: white;
+    box-shadow: none;
+    border: none;
+    padding: 20px;
+}
+
+/* Buttons */
+
+.btn {
+    border-radius: 2px;
+    background-image: none;
+}
+
+.btn-default {
+    background-color: #fcfcfd;
+    background-image: none;
+    border: 1px solid #d2dae1;
+    border-bottom: 1px solid #cbd5dd;
+    box-shadow: 0 1px 1px rgba(90, 90, 90, 0.1);
+    color: #788288;
+    webkit-box-shadow: 0 1px 1px rgba(90, 90, 90, 0.1);
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #177bbb;
+    border-color: #177bbb;
+}
+
+.btn-default:hover {
+    background-color: #ebeef4;
+    border: 1px solid #b9c6d0;
+}
+
+.panel-heading .btn.btn-default {
+    background-color: transparent;
+    border: 0px;
+    color: white;
+    text-shadow: none;
+    text-decoration: underline;
+}
+
+.panel-heading .btn.btn-default:hover {
+    background-color: #167abb;
+    border: 0px;
+    color: white;
+    text-shadow: none;
+    text-decoration: underline;
+}
+
+/* Panels */
+
+.panel {
+    border-radius: 2px;
+}
+
+.panel-success {
+    border: 1px solid #eaeef1;
+}
+
+.panel-success > .panel-heading {
+    background-color: #2e353e;
+    background-image: none;
+    border: none;
+    color: #fff;
+    font-weight: 700;
+}
+
+.panel-title {
+    font-size: inherit;
+}
+
+.panel .panel-heading .collapse-icon {
+    color: #ffffff;
+    font-size: 9px;
+    padding: 0 0 0 7px;
+}
+
+.panel .panel-heading select {
+    color: #696d71;
+}
+
+.panel-grid > .panel-body {
+    padding: 0;
+}
+
+/* Navigation List (Pills) */
+
+.nav-pills > li a {
+    color: #696d71;
+}
+
+.nav-pills > li.active > a,
+.nav-pills > li.active > a:hover,
+.nav-pills > li.active > a:focus {
+    background-image: -webkit-linear-gradient(top, #126ca6 0%, #177bbb 100%);
+    background-image: -o-linear-gradient(top, #126ca6 0%, #177bbb 100%);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#126ca6), to(#177bbb));
+    background-image: linear-gradient(to bottom, #126ca6 0%, #177bbb 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#126ca6', endColorstr='#177bbb', GradientType=0);
+    border-radius: 2px;
+}
+
+/* Dashboard Widgets */
+
+.dashboard .panel-heading {
+    background-color: #2e353e;
+    background-image: none;
+    border: none;
+    color: #fff;
+    font-weight: 700;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.dashboard .panel-heading a.ng-scope {
+    color: white;
+}
+
+.dashboard .panel-default .panel-body {
+    padding: 0px;
+    overflow-x: hidden;
+}
+
+.dashboard .panel-default .panel-body .highcharts-container {
+    margin-top: 20px;
+}
+
+.dashboard .alert {
+    margin: 10px;
+}
+
+.dashboard adf-widget-content h4 {
+    margin-left: 10px;
+}
+
+.dashboard adf-widget-content ul {
+    margin-right: 10px;
+}
+
+.container-fluid {
+    margin: 0px;
+    padding: 0px;
+}
+
+/* Navigation List (Grouped)  */
+
+.list-group-item-inactive-icon {
+    color: orange;
+}
+
+.list-group-item {
+    cursor: pointer;
+    cursor: hand;
+    background-color: #f3f4f3;
+}
+
+.list-group-item.active,
+.list-group-item.active:hover,
+.list-group-item.active:focus {
+    text-shadow: 0 -1px 0 #286090;
+    background-image: -webkit-linear-gradient(top, #126ca6 0%, #177bbb 100%);
+    background-image: -o-linear-gradient(top, #126ca6 0%, #177bbb 100%);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#126ca6), to(#177bbb));
+    background-image: linear-gradient(to bottom, #126ca6 0%, #177bbb 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#126ca6', endColorstr='#177bbb', GradientType=0);
+    background-repeat: repeat-x;
+    border-color: #2b669a;
+}
+
+/* Search Facets */
+
+.left-sidebar ul.list-unstyled li div {
+    margin: 0px;
+}
+
+.left-sidebar ul.list-unstyled li {
+    margin: 10px;
+}
+
+.left-sidebar ul.list-unstyled li ul li {
+    margin: 0px;
+}
+
+.left-sidebar ul.list-unstyled li ul.list-unstyled li label {
+    width: 100%;
+}
+
+/* User Profile */
+
+.content-body .well-sm-nopadding {
+    padding: 0px;
+    margin-top: 15px;
+}
+
+.content-body .well-sm-nopadding .col-xs-6 .well {
+    background: white;
+    border-radius: 0px;
+    padding: 10px;
+    border: 1px solid #eaeef1;
+}
+
+/* Module Header */
+
+.module-header {
+    background-color: #ecedec;
+    padding-left: 20px;
+    padding-bottom: 13px;
+    padding-top: 20px;
+    min-height: 71px;
+    border-bottom: 1px solid #e1e6ef;
+    border-left: 0px;
+    border-right: 0px;
+    position: relative;
+}
+
+.ui-contextmenu {
+    z-index: 3001;
+}
+
+.docTreeMenu {
+    font-size: 100%;
+    top: 40% !important;
+}
+
+.docTreeMenu ul {
+    width: 240px;
+    top: 0 !important;
+}
+
+.docTreeMenu ul li {
+    /* white-space: nowrap; */
+}
+
+.docTreeMenu kbd {
+    float: right;
+}
+
+.module-header .btn-group {
+    margin-right: 15px;
+}
+
+.module-header div.well-sm .col-sm-8 .col-sm-2,
+.module-header div.well-sm .col-sm-8 .col-sm-3,
+.module-header div.well-sm .col-sm-8 .col-sm-4 {
+    padding-right: 0px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.module-header div.well-sm .col-sm-8 label {
+    font-size: 12px;
+    color: #2d353e;
+}
+
+.module-header div.well-sm {
+    padding: 0px;
+}
+
+.module-header div.well-sm .col-sm-8 {
+    padding: 0px;
+    margin: 0px;
+    position: relative;
+    line-height: 13px;
+}
+
+.module-header div.input-group {
+    position: relative;
+    left: -10px;
+    padding-right: 5px;
+    margin-left: 7px;
+    margin-right: 2px;
+}
+
+.module-header div.input-group input {
+    border: 0px;
+    border-radius: 2px;
+}
+
+.module-header div.input-group button.btn.btn-md.btn-default {
+    border-radius: 0px 2px -px 2px;
+    border: 0px;
+    height: 33px;
+    box-shadow: none;
+    text-shadow: none;
+    color: white;
+    background-color: #177bbb;
+}
+
+.module-header .well-sm.pull-right input {
+    width: 200px;
+    border: 0px;
+    border-radius: 2px;
+}
+
+.module-content .left-sidebar header.header,
+.module-content .left-sidebar-sm header.header,
+.module-content .left-sidebar-lg header.header {
+    background-color: #ecedec;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+
+    border-bottom: 1px solid #e1e6ef;
+    width: 100%;
+    z-index: 1000;
+}
+
+.module-content .left-sidebar header.header .btn-group.select.pull-right {
+    position: relative;
+    top: -107px;
+
+}
+
+/* Content Body */
+
+.module-content .content-body.well-sm {
+    padding-left: 10px;
+    padding-right: 500px;
+    padding-bottom: 170px;
+}
+
+.module-content .content-body .well-sm {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* FIX: THis is bad style. It breaks vertical alignment for all btn-group elements. */
+.module-content .content-body .well-sm .btn-group {
+    padding-top: 10px;
+}
+
+.dropdown-menu .btn-group {
+    padding-top: 0px !important;
+}
+
+/* This style fixes incorrect vertical alignment for btn-group  elements located int navbar */
+.module-content .content-body .well-sm .navbar .btn-group {
+    padding-top: 0px;
+}
+
+/* Right Sidebar */
+.module-content .right-sidebar.well-sm ul.nav.nav-tabs {
+    background-color: #ebeceb;
+}
+
+.module-content .right-sidebar.well-sm ul.nav.nav-tabs li a {
+    padding: 10px;
+}
+
+.module-content .right-sidebar .tab-pane.active .panel {
+    margin: 0 10px 10px 10px;
+}
+
+.module-content .right-sidebar.well-sm .tab-pane.active {
+    background-color: #feffff;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    padding-top: 10px;
+    margin-bottom: 10px;
+}
+
+.module-content .right-sidebar .tab-pane .panel-body.in {
+    padding: 0px 0px 10px 0px;
+}
+
+.module-content .right-sidebar .tab-pane .panel-body.in .col-xs-2 {
+    padding: 10px 0px 0 0px;
+}
+
+.module-content .right-sidebar .tab-pane .panel-body.in .col-xs-4 {
+    padding: 10px 0px 0 7px;
+}
+
+.module-content .right-sidebar .tab-pane .panel-body.in .col-xs-5 {
+    padding: 10px 10px 0 10px;
+}
+
+.module-content .right-sidebar .tab-pane .panel-body.in .col-xs-6 {
+    padding: 10px 10px 0 10px;
+}
+
+.module-content .right-sidebar .tab-pane .panel-body.in .col-xs-8 {
+    padding: 10px 10px 0 10px;
+}
+
+.module-content .right-sidebar .tab-pane .panel-body.in p {
+    padding: 10px 10px 0px 10px;
+    margin: 0px;
+}
+
+.module-content .right-sidebar .tab-pane .panel-body.in p.text-center {
+    padding-bottom: 10px;
+}
+
+.module-content .right-sidebar .tab-pane .panel-body.in h4 {
+    padding: 0px 10px 0 10px;
+    margin: 0px;
+}
+
+.module-content .right-sidebar .tab-pane .panel-body.in .radio {
+    margin: 5px 0px 5px 0px;
+}
+
+.module-content .right-sidebar .tab-pane .ui-grid {
+    border-left: none;
+    border-right: none;
+}
+
+.module-content .right-sidebar .tab-pane label {
+    width: 100%;
+    margin: 0px;
+}
+
+.module-content .right-sidebar .tab-pane .ui-grid-header-cell-row {
+    border: none;
+}
+
+/* Tables */
+.ui-grid-viewport {
+    height: auto !important;
+    overflow: auto !important;
+}
+
+.ui-grid {
+    height: auto !important;
+}
+
+/* Fix ui-grids to resize based on content. (Source: alangumer on https://github.com/angular-ui/ui-grid/issues/3239) */
+/* Hey guys, let's not override the default styles of these grids. I realize they look like innocent changes on the forums, but this has been causing a lot of havoc.
+
+[ui-grid-row] {
+    display: table-row;
+}
+
+.ui-grid-row, .ui-grid-cell {
+    height: auto !important;
+}
+
+.ui-grid-cell {
+    float: none;
+    display: table-cell;
+}*/
+
+/*.ui-grid-header-cell, .ui-grid-cell-contents {
+    white-space: normal;
+    padding: 2px;
+}*/
+
+.ui-grid-top-panel {
+    width: 100%;
+}
+
+/* End of ui-grid fix. */
+
+.ui-grid-header-cell-row .ui-grid-cell-contents {
+    color: #686d71;
+    font-size: 13px;
+}
+
+.ui-grid-header-cell-row .ui-grid-filter-container {
+    padding: 0px 5px 5px 5px;
+    color: #686d71;
+    font-weight: normal;
+    font-style: normal;
+}
+
+.ui-grid-header-cell-row .ui-grid-filter-container input {
+    padding-left: 5px;
+}
+
+.ui-grid-header-cell-row .ui-grid-filter-container i.ui-grid-icon-cancel {
+    position: relative;
+    bottom: 5px;
+    right: 2px;
+}
+
+.ui-grid-pager-panel {
+    background-color: #efefef;
+    position: relative;
+    padding-top: 6px;
+    height: 40px;
+    overflow: hidden;
+}
+
+.ui-grid-pager-panel button {
+    background-color: transparent !important;
+    border: 0px;
+}
+
+.ui-grid-pager-panel select {
+    background-color: transparent;
+    position: relative;
+    top: 1px;
+}
+
+.ui-grid-pager-panel span.ui-grid-pager-row-count-label {
+    position: relative;
+    top: 2px;
+    left: 5px;
+    font-style: italic !important;
+}
+
+.ui-grid-pager-panel .ui-grid-pager-count {
+    font-style: italic !important;
+}
+
+.ui-grid-pager-panel abbr {
+    border: 0px;
+}
+
+.ui-grid-pager-panel .ui-grid-pager-max-pages-number {
+    position: relative;
+    left: 7px;
+    bottom: 2px;
+}
+
+.ui-grid-pager-panel .ui-grid-pager-max-pages-number abbr {
+    position: absolute;
+    top: -2px;
+    left: -7px;
+}
+
+.ui-grid-pager-panel input.ui-grid-pager-control-input {
+    border: 0px;
+    box-shadow: none;
+    background-color: #ddd;
+}
+
+.div-mt {
+    margin-top: 20px;
+}
+
+.expandableRow .panel-body {
+    padding: 0px;
+}
+
+.expandableRow {
+    height: auto !important;
+}
+
+.ui-grid-canvas {
+    height: auto !important;
+}
+
+.ui-grid-canvas .panel.panel-success {
+    margin: 0px !important;
+}
+
+thead {
+    background: #f3f3f3;
+    background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #eeeeee), color-stop(1, #ffffff));
+    background: -ms-linear-gradient(bottom, #eeeeee, #ffffff);
+    background: -moz-linear-gradient(center bottom, #eeeeee 0%, #ffffff 100%);
+    background: -o-linear-gradient(#ffffff, #eeeeee);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#eeeeee', GradientType=0);
+    color: #686d71;
+    font-size: 13px;
+}
+
+/* Hyperlinks Padding/Wrap Issues */
+
+.ui-grid a {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    white-space: nowrap;
+    -ms-text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    position: relative;
+    display: inherit;
+}
+
+.ui-grid a.btn {
+    display: inline;
+}
+
+/* Dates Padding Issues */
+
+.ui-grid .ui-grid-cell {
+    -ms-text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+}
+
+.ui-grid .ui-grid-cell a.btn.btn-xs {
+    padding: 5px 5px 5px 5px;
+    border-radius: 0px;
+    border-left: 0px;
+    position: relative;
+    top: -1px;
+}
+
+.ui-grid .ui-grid-cell div {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    white-space: nowrap;
+    -ms-text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    position: relative;
+}
+
+.ui-grid-cell-anchor {
+    display: inline;
+}
+
+/*.ui-grid .ui-grid-cell div:hover {
+	white-space: normal;
+	overflow: normal;
+}*/
+
+.widget .ui-grid-cell:hover {
+    white-space: normal;
+    overflow: normal;
+}
+
+.widget .ui-grid-cell a:hover {
+    white-space: normal;
+    overflow: normal;
+}
+
+/* Highlight error grid's cell */
+
+.ui-grid .ui-grid-cell.error-cell {
+    background-color: #ff7373;
+    color: #fff;
+}
+
+.ui-grid-cell div {
+    padding: 5px;
+}
+
+.ui-grid-cell a {
+    padding: 5px;
+}
+
+.ui-grid-cell div a {
+    padding: 0px;
+}
+
+.ui-grid-cell div.ui-grid-icon-ok {
+    padding: 0px;
+    left: -5px;
+    top: -5px;
+    display: initial;
+}
+
+/* Modal Window Columns */
+
+.modal-search {
+    width: 100%;
+}
+
+.modal-search:after {
+    content: '';
+    display: block;
+    clear: both;
+}
+
+.modal-search .modal-search-header {
+    width: 100%;
+    background-color: #ecedec;
+    padding: 10px;
+}
+
+.modal-search .modal-columns {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.modal-search .modal-columns .modal-left {
+    float: left;
+    width: 200px;
+    height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 10px 10px 0px 10px;
+}
+
+.modal-search .modal-columns .modal-left label {
+    width: 100%;
+}
+
+.modal-search .modal-columns .modal-right {
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    min-height: 270px;
+}
+
+.modal-backdrop {
+    z-index: -1;
+}
+
+/* Overriding of .form-inline class for the needs of the x-editable popup form. */
+/* This will only affect the element with class .form-inline which is immediately after element with class .editable. */
+/* In this way we localize this override only for x-editable.*/
+
+.editable + .form-inline {
+    position: absolute;
+    margin-top: 10px;
+    background-color: #ebeceb;
+    border: 1px solid #AAA;
+    border-radius: 5px;
+    padding: 7px;
+    width: auto;
+    display: block;
+    z-index: 2000;
+}
+
+.editable + .form-inline:before {
+    content: "";
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid #AAA;
+    position: absolute;
+    top: -10px;
+    left: 10%;
+}
+
+.editable + .form-inline:after {
+    content: "";
+    width: 0;
+    height: 0;
+    border-left: 9px solid transparent;
+    border-right: 9px solid transparent;
+    border-bottom: 9px solid #ebeceb;
+    position: absolute;
+    top: -9px;
+    margin-left: 1px;
+    left: 10%;
+
+}
+
+a.editable.editable-click {
+    display: inline-block !important;
+}
+
+/* User Profile */
+
+.module-content .left-sidebar-lg .row.profile {
+    background-image: -webkit-gradient(linear, left 0, left 100%, from(rgba(40, 50, 60, 0)), to(rgba(40, 50, 60, 0.05)));
+    background-image: -webkit-linear-gradient(top, rgba(40, 50, 60, 0), 0, rgba(40, 50, 60, 0.05), 100%);
+    background-image: -moz-linear-gradient(top, rgba(40, 50, 60, 0) 0, rgba(40, 50, 60, 0.05) 100%);
+    background-image: linear-gradient(to bottom, rgba(40, 50, 60, 0) 0, rgba(40, 50, 60, 0.05) 100%);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0028323c', endColorstr='#0c28323c', GradientType=0);
+    filter: none;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.module-content .content-body .well-sm section.well {
+    background: white;
+    padding: 10px;
+    border-radius: 0px;
+    border: 1px solid #eaeef1;
+}
+
+/* Cases Module - Header */
+
+.module-header .col-xs-12.col-md-4 .h4.font-bold {
+    font-size: 15px;
+    margin: 0px;
+}
+
+.module-header .col-xs-6.text-right h4 {
+    margin-right: 20px;
+}
+
+/* Cases Module - Summernote Editor */
+
+.note-editor.panel.panel-default {
+    margin: 0px;
+    border: 0px;
+    border-radius: 0;
+    overflow: visible;
+}
+
+.note-toolbar.panel-heading {
+    background: #f3f3f3;
+    background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #eeeeee), color-stop(1, #ffffff));
+    background: -ms-linear-gradient(bottom, #eeeeee, #ffffff);
+    background: -moz-linear-gradient(center bottom, #eeeeee 0%, #ffffff 100%);
+    background: -o-linear-gradient(#ffffff, #eeeeee);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#eeeeee', GradientType=0);
+    color: #686d71;
+    font-size: 13px;
+    padding-top: 5px;
+}
+
+.note-toolbar.panel-heading .btn-group {
+    margin: 0px !important;
+    padding: 0px 0px 0px 5px !important;
+}
+
+.note-toolbar.panel-heading .btn-group .btn {
+    background-color: white;
+    color: black;
+}
+
+.note-toolbar.panel-heading .btn-group .btn.active {
+    background: none;
+    background-color: #333;
+    color: #fff;
+}
+
+.note-editable.panel-body {
+    min-height: 100px;
+}
+
+/* Cases Module - FancyTree Table */
+
+.fancytree-container.fancytree-ext-table.fancytree-ext-gridnav.fancytree-ext-edit.ui-draggable-handle {
+    margin: 0px;
+    width: 99.99%;
+}
+
+.fancytree-container .fancytree-checkbox {
+    margin: 2px 0px 0px 0px !important;
+}
+
+.fancytree-container input {
+    margin: 0px 0px 0px 2px !important;
+}
+
+/* Snowbound Viewer */
+
+.snowbound-iframe-div {
+    min-height: 650px;
+    max-width: 600px;
+    width: 100%;
+    height: 100%;
+}
+
+.snowbound-iframe {
+    min-height: 650px;
+    width: 100%;
+    height: 100%;
+}
+
+.detail-content .snowbound-iframe {
+    min-height: auto;
+    position: fixed;
+    padding-top: 0px;
+    padding-right: 510px;
+    padding-bottom: 145px;
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+.detail-content .full-docview .snowbound-iframe {
+    min-height: auto;
+    position: absolute;
+    padding-top: 0px;
+    padding-right: 0px;
+    padding-bottom: 115px;
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+.snowbound-open-document {
+    cursor: pointer;
+}
+
+.full-docview {
+    background-color: #f4f5f4;
+}
+
+.full-docview .snowbound-iframe {
+    position: absolute;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+@media only screen and (min-height: 900px) {
+
+    .snowbound-iframe-div {
+        min-height: 800px;
+        max-width: 750px;
+        width: 100%;
+        height: 100%;
+    }
+
+    .snowbound-iframe {
+        min-height: 800px;
+        width: 100%;
+        height: 100%;
+    }
+
+}
+
+.case-snowbound-iframe {
+    width: 100%;
+    height: 700px;
+}
+
+.case-frevvo-iframe {
+    position: absolute;
+    top: 0;
+    left: 200px;
+    width: 100%;
+    height: 100%;
+    overflow-x: scroll;
+    padding-top: 60px;
+    padding-right: 200px;
+}
+
+.new-iframe {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    padding-bottom: 60px;
+    padding-right: 200px;
+}
+
+.new-iframe-frevvo {
+    width: 100%;
+    height: 100%;
+    overflow-x: scroll;
+    overflow-y: hidden;
+}
+
+.reports-iframe, .audit-iframe {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    padding-bottom: 60px;
+    padding-right: 500px;
+
+}
+
+.analytics-iframe {
+    width: 100%;
+    height: 100%;
+    padding-bottom: 60px;
+}
+
+.module-content .left-sidebar-lg .ui-grid-pinned-container .ui-grid-header-canvas {
+    height: auto !important;
+}
+
+/*Case Overview */
+
+/* Style of invalid fields */
+input.ng-invalid, textarea.ng-invalid, select.ng-invalid {
+    border-color: #fdadad;
+}
+
+/* Dropdowns in the left sidebar (ie. datepicker) */
+
+.left-sidebar label ul.dropdown-menu {
+    border-radius: 0px;
+    margin: -2px 0px 0px 0px;
+    padding: 5px;
+}
+
+.left-sidebar label ul.dropdown-menu button {
+    border: 0px;
+    border-radius: 0px;
+}
+
+.ace_editor {
+    height: 500px;
+    border: 1px solid #cbd5dd;
+}
+
+.tabbed-footer {
+    position: fixed;
+    bottom: 0px;
+    background-color: white;
+    height: 40px;
+    right: 0px;
+    border-radius: 5px 0px 0px 0px;
+    border-top: 1px solid #ddd;
+    border-left: 1px solid #ddd;
+    border-bottom: 0px;
+    border-right: 0px;
+    z-index: 2000;
+}
+
+div.tabbed-footer a.collapsed-button {
+    float: left;
+    height: 40px;
+    width: 30px;
+}
+
+div.tabbed-footer a.collapsed-button:hover {
+    background-color: #2d343e;
+    color: white;
+    border-radius: 5px 0px 0px 0px;
+}
+
+div.tabbed-footer a.collapsed-button i {
+    margin-top: 10px;
+    margin-left: 12px;
+    font-size: 20px;
+
+}
+
+div.tabbed-footer .overview-tabs {
+    float: left;
+}
+
+div.tabbed-footer .overview-tabs li {
+    width: auto;
+    height: auto;
+    text-align: center;
+    cursor: pointer;
+    cursor: hand;
+    border-radius: 0px;
+    border: 0px;
+    font-size: 18px;
+}
+
+div.tabbed-footer .overview-tabs li span {
+    display: none;
+    clear: none;
+}
+
+div.tabbed-footer .overview-tabs li i.fa {
+    position: relative;
+    top: -4px;
+}
+
+div.tabbed-footer .overview-tabs li.active a {
+    background-color: #efefef;
+    color: #2d343e;
+    border-radius: 0px;
+    border: 0px;
+}
+
+div.tabbed-footer .overview-tabs li:hover a {
+    background-color: #2d343e;
+    color: white;
+    border-radius: 0px;
+    border: 0px;
+}
+
+div.tabbed-footer .overview-tabs li:hover span {
+    position: fixed;
+    display: block;
+    bottom: 50px;
+    font-weight: bold;
+    color: #2d343e;
+    margin-left: -20px;
+    font-size: 12px;
+}
+
+div.tabbed-footer .overview-tabs li:hover:last-child span {
+    margin-left: -60px;
+}
+
+div.tabbed-footer .overview-tabs li:hover span:before {
+    content: "";
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid #2d343e;
+    position: absolute;
+    top: 20px;
+    left: 15px;
+}
+
+div.tabbed-footer .overview-tabs li:hover:last-child span:before {
+    left: 58px;
+}
+
+tags-input .host {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+tags-input .tags {
+    box-shadow: none;
+    padding-top: 1px;
+    padding-bottom: 2px;
+}
+
+.module-header tags-input .tags {
+    border: none;
+    box-shadow: none;
+    padding-top: 1px;
+    padding-bottom: 3px;
+}
+
+.left-sidebar ul.tag-list li {
+    width: 240px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.left-sidebar ul.tag-list .remove-button {
+    position: absolute;
+    right: 15px;
+    margin-top: 3px;
+}
+
+.modal-header {
+    background-color: #232931;
+    border-radius: 4px 4px 0px 0px;
+    color: #fff;
+}
+
+.modal-header h3, .modal-header h4 {
+    color: #fff;
+}
+
+.modal-footer {
+    background-color: #2d343e;
+    color: #fff;
+}
+
+.modal-footer .btn-secondary {
+    background-color: transparent;
+    color: #fff;
+}
+
+.modal-title {
+    color: #fff;
+}
+
+.modal-body {
+    color: #000000;
+    color: rgba(0, 0, 0, 0.7);
+}
+
+.hidden-button {
+    display: none;
+}
+
+.pull-right.well select {
+    position: relative;
+    top: 4px !important;
+}
+
+.pull-right.well .btn-group .btn-link {
+    color: white;
+}
+
+.pull-right.well .btn-group .btn-link:hover {
+    color: #ccc;
+}
+
+/* fixing padding for rows inside of panels */
+
+.panel-body .row {
+    margin-right: 0px;
+    margin-left: 0px;
+}
+
+.panel-body .row:first-child {
+    margin-top: 10px;
+    margin-right: 0px;
+    margin-left: 0px;
+}
+
+.panel-body .row:last-child {
+    margin-bottom: 10px;
+    margin-right: 0px;
+    margin-left: 0px;
+}
+
+.module-header .col-xs-12.col-md-3 .h4.font-bold {
+    font-size: 15px;
+    margin: 0px;
+}
+
+.module-header .col-xs-12.col-md-2 .h4.font-bold {
+    font-size: 15px;
+    margin: 0px;
+}
+
+.module-header .col-sm-6.col-md-3 .h4.font-bold {
+    font-size: 15px;
+    margin: 0px;
+}
+
+.module-header .col-sm-6.col-md-3 .h4.font-bold {
+    font-size: 15px;
+    margin: 0px;
+}
+
+.module-header .col-xs-12.col-md-4 .h4.font-bold {
+    font-size: 15px;
+    margin: 0px;
+}
+
+.module-header .col-xs-12.col-md-5 .h4.font-bold {
+    font-size: 15px;
+    margin: 0px;
+}
+
+.right-sidebar.well-sm.documentDetails {
+    top: 172px;
+}
+
+/* Right Sidebar Summernote Editor */
+.right-sidebar.well-sm .note-toolbar .btn {
+    padding: 2px 5px 2px 5px;
+}
+
+.right-sidebar.well-sm .note-toolbar .btn-group {
+    margin: 0px !important;
+    padding: 0px !important;
+}
+
+.right-sidebar.well-sm .note-toolbar .note-help.btn-group {
+    display: none;
+}
+
+.right-sidebar.well-sm .note-toolbar .note-view.btn-group {
+    display: none;
+}
+
+/* Fixing Full Screen Summernote Editor */
+.note-editor.panel.panel-default.fullscreen {
+    z-index: 1000 !important;
+    position: absolute !important;
+    margin-top: 60px;
+}
+
+/* Fixing Note Editor Padding for File Upload in Firefox */
+.note-image-input.form-control {
+    padding: 0px 0px 0px 10px;
+}
+
+/* tasks styles*/
+.tooltip.tooltip-overdue .tooltip-inner {
+    background-color: red;
+}
+
+.tooltip.tooltip-due-soon .tooltip-inner {
+    background-color: darkorange;
+}
+
+.icon-overdue {
+    color: red;
+}
+
+.icon-due-soon {
+    color: darkorange;
+}
+
+/* Making normal link work like xeditable link by removing outline */
+a.no-outline:hover, a.no-outline:focus {
+    outline: none;
+}
+
+/* Fix selection
+.ui-grid-pinned-container .ui-grid-cell .ui-grid-cell-contents,
+.ui-grid-pinned-container .ui-grid-cell .ui-grid-cell-contents .ui-grid-selection-row-header-buttons {
+    padding: 0;
+} */
+
+.ui-grid-cell.ui-grid-disable-selection.ui-grid-row-header-cell {
+    pointer-events: all !important;
+}
+
+.no-margin {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    font-size: 15px;
+}
+
+/* In the results table from a Search all NOTE and TAG rows returned show have
+   Links disabled under the Name column
+*/
+.no-link {
+    text-decoration: none;
+    color: #788288;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+a.no-link:hover, a.no-link:focus, a.no-link:visited {
+    color: #788288;
+    text-decoration: none;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/*Custom style for user picker read only input*/
+.user-picker-input {
+    background-color: white !important;
+    cursor: pointer;
+}
+
+.input-xs {
+    height: 22px;
+    padding: 2px 5px;
+    font-size: 12px;
+    line-height: 1.5;
+    border-radius: 3px;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+/* Loader */
+.loader {
+    border: 5px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 5px solid #555;
+    width: 50px;
+    height: 50px;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+    margin-left: 45%
+}
+
+@-webkit-keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.modal-width-80 > .modal-dialog {
+    width: 80%;
+}
+
+.modal-width-80 .img-responsive {
+    margin: 0 auto;
+}
+
+/* Tooltip - For displaying password rule text with question bubble */
+
+.help-tip {
+    float: right;
+    display: inline-block;
+    position: relative;
+    text-align: center;
+    background-color: #177bbb;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    font-size: 14px;
+    line-height: 26px;
+    cursor: default;
+}
+
+.help-tip:before {
+    content: '?';
+    font-weight: bold;
+    color: #fff;
+}
+
+.help-tip:hover p {
+    display: block;
+    transform-origin: 100% 0%;
+    left: 50px;
+
+    -webkit-animation: fadeIn 0.3s ease-in-out;
+    animation: fadeIn 0.3s ease-in-out;
+
+}
+
+.help-tip p { /* The tooltip */
+    display: none;
+    text-align: left;
+    background-color: #1E2021;
+    padding: 20px;
+    width: 300px;
+    position: absolute;
+    border-radius: 3px;
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+    right: -4px;
+    color: #FFF;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.help-tip p:before { /* The pointer of the tooltip */
+    position: absolute;
+    content: '';
+    width: 0;
+    height: 0;
+    border: 6px solid transparent;
+    border-bottom-color: #1E2021;
+}
+
+.help-tip p:after { /* Prevents the tooltip from being hidden */
+    width: 100%;
+    height: 40px;
+    content: '';
+    position: absolute;
+}
+
+/* CSS animation */
+
+@-webkit-keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.6);
+    }
+
+    100% {
+        opacity: 100%;
+        transform: scale(1);
+    }
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 100%;
+    }
+}
+
+/* For [Primary] on grid cell*/
+a.primary {
+    display: inline;
+}
+
+.table > thead > tr > th {
+    vertical-align: top !important;
+}
+
+/*For drag and drop on ui-grid */
+.ui-grid-draggable-row {
+    height: 30px;
+    opacity: 1 !important;
+}
+
+/*Scroll on transcription details tab */
+.scroll-body-transcript {
+    overflow: auto;
+    height: 500px;
+}
+
+/*Correction of checkbox position in transcription details tab */
+.transcript-cb-corrected {
+    position: relative;
+    bottom: 2px;
+    left: 4px;
+}
+
+.transcript-table-margin {
+    margin-bottom: 0;
+}
+
+.transcript-btn-delete {
+    margin-right: -5px;
+}
+
+.transcript-input-size {
+    width: 20px;
+    height: 18px;
+}
+
+.transcript-warning-sign {
+    position: relative;
+    bottom: 2px;
+    left: 4px;
+}
+
+.lower-transcribe-confidence {
+    background-color: #ea6764;
+    color: #000000;
+}
+
+/*Css style for scrolling issue on modal*/
+.pdfjs .toolbar {
+    z-index: 1048 !important;
+}
+
+.pdfjs .findbar, .pdfjs .secondaryToolbar {
+    z-index: 1049 !important;
+}
+
+.pdfjs #thumbnailView {
+    width: inherit !important;
+}
+
+.thumbnailSelectionRing {
+    padding: 0px !important;
+}
+
+/*billing item amount field css*/
+.invalid-billing-amount {
+    border-color: #fdadad;
+}
+
+.module-header .h4.font-bold {
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+@media (min-width: 768px) {
+    .seven-cols .col-md-1,
+    .seven-cols .col-sm-1,
+    .seven-cols .col-lg-1 {
+        width: 100%;
+    }
+}
+
+@media (min-width: 992px) {
+    .seven-cols .col-md-1,
+    .seven-cols .col-sm-1,
+    .seven-cols .col-lg-1 {
+        width: 14.285714285714285714285714285714%;
+    }
+}
+
+@media (min-width: 1200px) {
+    .seven-cols .col-md-1,
+    .seven-cols .col-sm-1,
+    .seven-cols .col-lg-1 {
+        width: 14.285714285714285714285714285714%;
+    }
+}
+
+.date-picker-popover {
+    position: absolute;
+    margin-top: 10px;
+    background-color: #ebeceb;
+    border: 1px solid #AAA;
+    border-radius: 5px;
+    padding: 7px;
+    width: auto;
+    display: block;
+    z-index: 3000;
+    white-space: nowrap;
+    right: 2.5%;
+}
+
+.date-picker-popover:before {
+    content: "";
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid #AAA;
+    position: absolute;
+    top: -10px;
+    right: 2.5%;
+}
+
+.arkcase-snackbar {
+     bottom: 0px;
+     position: fixed;
+     background-color: #2d343e;
+     color: #fff;
+     margin: 0 auto;
+     border-radius: 5px 5px 5px 5px;
+     border-top: 1px solid #ddd;
+     border-left: 1px solid #ddd;
+     border-bottom: 1px solid #ddd;
+     border-right: 1px solid #ddd;
+     z-index: 2000;
+}
+
+.popup-move-on-left > .editable + .form-inline{
+    right: 20%;
+}
+
+.popup-move-on-left > .editable + .form-inline:before {
+    left: 50%;
+}
+
+.popup-move-on-left > .editable + .form-inline:after {
+    left: 50%;
+}
+
+.disabledLink {
+    color: #788288 !important;
+    cursor: auto;
+    border-bottom: none !important;
+}
+
+.timesheetModalselectedWeekLabel {
+    text-align: center;
+    padding-top: 15px;
+}
+
+.timesheetModalprevNextWeekButton {
+    background-color: #fcfcfd;
+    border: 1px solid #d2dae1;
+    width: 100%;
+}
+
+.chargeCodeDetailsGrid {
+    padding: 0px 15px;
+}
+
+.timeSheetModalCodeDetailsBorder {
+    border: 1px solid #ccc;
+    border-radius: 9px;
+    padding: 10px 0px 0px 10px;
+    margin-bottom: 7px;
+}
+
+.timeTrackingPanel {
+    padding-right: 0px;
+}
+
+.timeTrackingExpandableRow {
+    padding: 0px;
+}
+
+.newTimeSheetSelectType {
+    padding: 7px 12px;
+    font-size: 14px;
+    margin: 0px 15px;
+}
+
+/* wrap large text in ui grid cell template*/
+.ui-grid-cell-wrap {
+    white-space: normal !important;
+}
+
+.remove-margin-bottom-from-summernote > .panel {
+    margin-bottom: 0px;
+}
+
+/* Wrapping required asterisk for confirm email label */
+.required-asterisk-delivery-method {
+    color: #dd1144;
+    position:absolute;
+    bottom:5px;
+    right:105px
+}
+
+/* Wrapping required asterisk for delivery method of response label */
+.required-asterisk-confirm-email {
+    color: #dd1144;
+    position:absolute;
+    top:0;
+    right:5px
+}
+
+/* Wrapping required asterisk for state label in forms */
+.required-asterisk-state-label {
+    color: #dd1144;
+    position: absolute;
+    right: 5px;
+}
+
+/* Wrapping required asterisk for state label in modals */
+.required-asterisk-state-label-modals {
+    color: #dd1144;
+    position: absolute;
+}
+
+/* Wrapping required asterisk for proof of identity label */
+.required-asterisk-proof-identity-label {
+    color: #dd1144;
+    position: absolute;
+    bottom: 5px;
+    left: 76px;
+}
+
+
+
+.ui-grid .ui-grid-render-container-body .ui-grid-viewport {
+    overflow-x: auto !important;
+}
+
+/* Upload snackbar properties*/
+.uploadingSnackbarStatus {
+    margin: 34px;
+}
+
+.btn .btn-secondary .custom-color {
+    color: #000000
+}
+
+
+.enableEditing {
+	position: absolute;
+	left: 592px;
+	margin-top: 35px;
+	z-index: 1001;
+}
+.overdue .ui-grid-cell{
+    background-color: #ed1c24 !important;
+    color:white;
+}
+
+.overdue a{
+    color: white;
+}
+
+.overdue i{
+    color: white;
+}
+
+.deadline .ui-grid-cell{
+    background-color: #ff7f27 !important;
+    color:white;
+}
+
+.deadline a{
+    color: white;
+}
+
+.deadline i{
+    color: white;
+}
+
+.loadingSpinner {
+    font-size: 16px;
+    margin-left: 80px;
+}
+
+.marginTop {
+    margin-top: 5px
+}
+
+/* Allow only vertical resize on textarea element */
+textarea {
+    resize: vertical;
+}
+.editable-margin-left form {
+    margin-left: -36px;
+}
+
+.exemption-description {
+    color: white;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+
+
+/* Adjust IFRAME padding when user collapses left navigation */
+.page-wrapper.collapsed .new-iframe, .page-wrapper.collapsed .reports-iframe, .page-wrapper.collapsed .audit-iframe {
+    padding-right: 15px;
+}
+
+
+.page-wrapper.collapsed .analytics-iframe { 
+	padding-right: 65px;
+}
+
+#adhoc-reports-iframe {
+    padding-right: 225px
+}
+
+.page-wrapper.collapsed #adhoc-reports-iframe {
+    padding-right: 65px
+}
+
+/* Workaround for multi-select boxes that need horizontal scrolling.  */
+select[multiple]:hover, select[size]:hover {
+    width:auto;
+    position: relative;
+    z-index: 1000;
+}
+
+/* Created custom CSS for the busy indicator */
+.busy-indicator-container.waitPopup {
+	bottom: 0;
+	display: block;
+	left: 0;
+	position: absolute;
+	right: 0;
+	top: calc(50% - 58px);
+}
+
+.busy-indicator-container .waitPopup_title {
+    padding-top: 30px;
+    text-align: center;
+}
+
+.busy-indicator-container .waitPopup_msg {
+    text-align: center;
+}

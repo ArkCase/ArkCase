@@ -27,32 +27,25 @@ package com.armedia.acm.portalgateway.web.api;
  * #L%
  */
 
-import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
-import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
-import com.armedia.acm.portalgateway.model.PortalInfo;
+import com.armedia.acm.portalgateway.model.PortalConfig;
 import com.armedia.acm.portalgateway.service.PortalAdminService;
 import com.armedia.acm.portalgateway.service.PortalAdminServiceException;
+import com.armedia.acm.portalgateway.service.PortalConfigurationService;
 import com.armedia.acm.portalgateway.service.PortalServiceExceptionMapper;
-import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
 import com.armedia.acm.services.users.web.api.SecureLdapController;
 import com.armedia.acm.spring.SpringContextHolder;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity May 28, 2018
@@ -66,82 +59,22 @@ public class ArkCasePortalAdminAPIController extends SecureLdapController
 
     private PortalAdminService portalAdminService;
 
-    @Value("${portal.serviceProvider.directory.name}")
-    private String directoryName;
+    private PortalConfigurationService portalConfigurationService;
 
-    @RequestMapping(value = "/portals", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE,
-            MediaType.TEXT_PLAIN_VALUE })
+    @RequestMapping(value = "/portal/config", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<PortalInfoDTO> listRegisteredPortals(Authentication auth)
+    public PortalConfig getPortalConfiguration(Authentication auth)
     {
-        log.debug("User [{}] is listing registered portals.", auth.getName());
-        return portalAdminService.listRegisteredPortals().stream().map(pi -> new PortalInfoDTO(pi)).collect(Collectors.toList());
+        log.debug("User [{}] is retrieving a portal configuration.", auth.getName());
+        return getPortalConfigurationService().getPortalConfiguration();
     }
 
-    @RequestMapping(value = "/portals/{portalId}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE,
-            MediaType.TEXT_PLAIN_VALUE })
+    @RequestMapping(value = "/portal/config", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public PortalInfoDTO getPortalInfo(Authentication auth, @PathVariable(value = "portalId") String portalId)
-            throws PortalAdminServiceException
+    public void savePortalConfiguration(Authentication auth, @RequestBody PortalConfig properties)
     {
-        log.debug("User [{}] is retrieving portal info for portal with [{}] ID.", auth.getName(), portalId);
-        return new PortalInfoDTO(portalAdminService.getPortalInfo(portalId));
-    }
-
-    @RequestMapping(value = "/portals", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE,
-            MediaType.TEXT_PLAIN_VALUE })
-    @ResponseBody
-    public PortalInfoDTO registerPortal(Authentication auth, @RequestBody PortalInfoDTO portalInfoDTO)
-    {
-        log.debug("User [{}] is regitering portal for [{}] URL with [{}] user.", auth.getName(), portalInfoDTO.getPortalUrl(),
-                portalInfoDTO.getFullName());
-        PortalInfo portalInfo = new PortalInfo();
-        portalAdminService.updatePortalInfo(portalInfo, portalInfoDTO);
-        return new PortalInfoDTO(portalAdminService.registerPortal(portalInfo, portalInfoDTO.getUserId(), portalInfoDTO.getGroupName()));
-    }
-
-    @RequestMapping(value = "/portals", method = RequestMethod.PUT, produces = { MediaType.APPLICATION_JSON_VALUE,
-            MediaType.TEXT_PLAIN_VALUE })
-    @ResponseBody
-    public PortalInfoDTO updatePortal(Authentication auth, @RequestBody PortalInfoDTO portalInfoDTO)
-            throws PortalAdminServiceException, AcmAppErrorJsonMsg, AcmLdapActionFailedException, AcmObjectNotFoundException
-    {
-        log.debug("User [{}] is updating portal for [{}] URL with [{}] user.", auth.getName(), portalInfoDTO.getPortalUrl(),
-                portalInfoDTO.getFullName());
-        PortalInfo portalInfo = portalAdminService.getPortalInfo(portalInfoDTO.getPortalId());
-        PortalInfo oldPortalInfo = new PortalInfo();
-        oldPortalInfo.setId(portalInfo.getId());
-        oldPortalInfo.setPortalId(portalInfo.getPortalId());
-        oldPortalInfo.setPortalDescription(portalInfo.getPortalDescription());
-        oldPortalInfo.setPortalUrl(portalInfo.getPortalUrl());
-        oldPortalInfo.setUser(portalInfo.getUser());
-        oldPortalInfo.setGroup(portalInfo.getGroup());
-        oldPortalInfo.setPortalAuthenticationFlag(portalInfo.getPortalAuthenticationFlag());
-
-        checkIfLdapManagementIsAllowed(directoryName);
-        portalAdminService.moveExistingLdapUsersToGroup(portalInfoDTO.getGroupName(), oldPortalInfo, directoryName, auth);
-        portalAdminService.updatePortalInfo(portalInfo, portalInfoDTO);
-        return new PortalInfoDTO(portalAdminService.updatePortal(portalInfo, portalInfoDTO.getUserId()));
-    }
-
-    @RequestMapping(value = "/portals/revert", method = RequestMethod.PUT, produces = { MediaType.APPLICATION_JSON_VALUE,
-            MediaType.TEXT_PLAIN_VALUE })
-    @ResponseBody
-    public PortalInfoDTO revertPortalConfiguration(Authentication auth, @RequestBody PortalInfo portalInfo)
-            throws PortalAdminServiceException
-    {
-        log.debug("User [{}] is reverting old portal info [{}] configuration.", auth.getName(), portalInfo);
-        return new PortalInfoDTO(portalAdminService.updatePortal(portalInfo, portalInfo.getUser().getUserId()));
-    }
-
-    @RequestMapping(value = "/portals/{portalId}", method = RequestMethod.DELETE, produces = { MediaType.APPLICATION_JSON_VALUE,
-            MediaType.TEXT_PLAIN_VALUE })
-    @ResponseBody
-    public PortalInfoDTO unregisterPortal(Authentication auth, @PathVariable(value = "portalId") String portalId)
-            throws PortalAdminServiceException
-    {
-        log.debug("User [{}] is unregistering portal info for portal with [{}] ID.", auth.getName(), portalId);
-        return new PortalInfoDTO(portalAdminService.unregisterPortal(portalId));
+        log.debug("User [{}] is updating a portal configuration.", auth.getName());
+        getPortalConfigurationService().writeConfiguration(properties);
     }
 
     @ExceptionHandler(PortalAdminServiceException.class)
@@ -173,6 +106,16 @@ public class ArkCasePortalAdminAPIController extends SecureLdapController
     public void setAcmContextHolder(SpringContextHolder acmContextHolder)
     {
         this.acmContextHolder = acmContextHolder;
+    }
+
+    public PortalConfigurationService getPortalConfigurationService()
+    {
+        return portalConfigurationService;
+    }
+
+    public void setPortalConfigurationService(PortalConfigurationService portalConfigurationService)
+    {
+        this.portalConfigurationService = portalConfigurationService;
     }
 
 }

@@ -7,7 +7,7 @@
  *
  * @description
  *
- * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/doc-tree/doc-tree.client.directive.js directives/doc-tree/doc-tree.client.directive.js}
+ * {@link /acm-standard-applications/arkcase/src/main/webapp/resources/directives/doc-tree/doc-tree.client.directive.js directives/doc-tree/doc-tree.client.directive.js}
  *
  * The docTree directive renders a FancyTree to browse ArkCase objects with support of paging, filter and sort
  *
@@ -416,6 +416,9 @@ angular
                                     if (DocTree.isTopNode(data.node) || DocTree.isSpecialNode(data.node)) {
                                         return false;
                                     }
+                                    if ("RECORD" === Util.goodValue(node.data.status)) {
+                                        return false;
+                                    }
                                     if (DocTree.editSetting.isEditing) {
                                         return false;
                                     }
@@ -732,7 +735,7 @@ angular
                     ,
                     expandAfterRefresh: function (children, nodesStatusBeforeRefresh) {
                         nodesStatusBeforeRefresh.forEach(function (item, index) {
-                            if (angular.isArray(item) && angular.isDefined(children[index])) {
+                            if (angular.isArray(item) && angular.isArray(children) && angular.isDefined(children[index])) {
                                 DocTree.expandNode(children[index]).then(function (data) {
                                     DocTree.expandAfterRefresh(data.children, nodesStatusBeforeRefresh[index]);
                                 });
@@ -2981,27 +2984,24 @@ angular
                                         onSuccess: function (data) {
                                             if (Validator.validateCopyFolderInfo(data)) {
                                                 var copyFolderInfo = data;
-                                                if (copyFolderInfo.originalFolderId == subFolderId
-                                                    && copyFolderInfo.newFolder.parentFolder.id == toFolderId) {
-                                                    var frFolderList = DocTree.cacheFolderList.get(frCacheKey);
-                                                    var toFolderList = DocTree.cacheFolderList.get(toCacheKey);
-                                                    if (Validator.validateFolderList(frFolderList)
-                                                        && Validator.validateFolderList(toFolderList)) {
-                                                        var idx = DocTree.findFolderItemIdx(subFolderId, frFolderList);
-                                                        if (0 <= idx) {
-                                                            var folderData = DocTree
-                                                                .folderToSolrData(frFolderList.children[idx]);
-                                                            folderData.objectId = copyFolderInfo.newFolder.id;
-                                                            folderData.folderId = copyFolderInfo.newFolder.parentFolder.id;
-                                                            folderData.modified = Util
-                                                                .goodValue(copyFolderInfo.newFolder.modified);
-                                                            folderData.modifier = Util
-                                                                .goodValue(copyFolderInfo.newFolder.modifier);
-                                                            toFolderList.children.push(folderData);
-                                                            toFolderList.totalChildren++;
-                                                            DocTree.cacheFolderList.put(toCacheKey, toFolderList);
-                                                            return folderData;
-                                                        }
+                                                var frFolderList = DocTree.cacheFolderList.get(frCacheKey);
+                                                var toFolderList = DocTree.cacheFolderList.get(toCacheKey);
+                                                if (Validator.validateFolderList(frFolderList)
+                                                    && Validator.validateFolderList(toFolderList)) {
+                                                    var idx = DocTree.findFolderItemIdx(subFolderId, frFolderList);
+                                                    if (0 <= idx) {
+                                                        var folderData = DocTree
+                                                            .folderToSolrData(frFolderList.children[idx]);
+                                                        folderData.objectId = copyFolderInfo.newFolder.id;
+                                                        folderData.folderId = copyFolderInfo.newFolder.parentFolder.id;
+                                                        folderData.modified = Util
+                                                            .goodValue(copyFolderInfo.newFolder.modified);
+                                                        folderData.modifier = Util
+                                                            .goodValue(copyFolderInfo.newFolder.modifier);
+                                                        toFolderList.children.push(folderData);
+                                                        toFolderList.totalChildren++;
+                                                        DocTree.cacheFolderList.put(toCacheKey, toFolderList);
+                                                        return folderData;
                                                     }
                                                 }
                                             }
@@ -3077,16 +3077,13 @@ angular
                                         onSuccess: function (data) {
                                             if (Validator.validateCopyFileInfo(data)) {
                                                 var copyFileInfo = data;
-                                                if (copyFileInfo.originalId == fileId
-                                                    && copyFileInfo.newFile.folder.id == toFolderId) {
-                                                    var toFolderList = DocTree.cacheFolderList.get(toCacheKey);
-                                                    if (Validator.validateFolderList(toFolderList)) {
-                                                        var fileData = DocTree.fileToSolrData(copyFileInfo.newFile);
-                                                        toFolderList.children.push(fileData);
-                                                        toFolderList.totalChildren++;
-                                                        DocTree.cacheFolderList.put(toCacheKey, toFolderList);
-                                                        return fileData;
-                                                    }
+                                                var toFolderList = DocTree.cacheFolderList.get(toCacheKey);
+                                                if (Validator.validateFolderList(toFolderList)) {
+                                                    var fileData = DocTree.fileToSolrData(copyFileInfo.newFile);
+                                                    toFolderList.children.push(fileData);
+                                                    toFolderList.totalChildren++;
+                                                    DocTree.cacheFolderList.put(toCacheKey, toFolderList);
+                                                    return fileData;
                                                 }
                                             }
                                         },
@@ -3129,23 +3126,26 @@ angular
                                     frNodesToCopy.push(find);
                                 }
 
-                                var requests = [];
-                                for (var i = 0; i < srcNodesToCopy.length; i++) {
-                                    if (DocTree.isFolderNode(srcNodesToCopy[i])) {
-                                        requests.push(DocTree.Op.copyFolder(srcNodesToCopy[i], frNodesToCopy[i], toNode, mode, actionName));
-                                    } else if (DocTree.isFileNode(srcNodesToCopy[i])) {
-                                        requests.push(DocTree.Op.copyFile(srcNodesToCopy[i], frNodesToCopy[i], toNode, mode, actionName));
-                                    }
-                                }
+                                // This is a workaround for the destination folder locking when multiple calls are made in parallel
+                                // TODO: Implement endpoints for batch actions and rework UI for proper handling of multinode actions
+                                srcNodesToCopy.reduce(function (previousPromise, copyNode, index) {
+                                    return previousPromise.then(function () {
+                                        // Nest all move promises in sync
+                                        if (DocTree.isFolderNode(copyNode)) {
+                                            return DocTree.Op.copyFolder(copyNode, frNodesToCopy[index], toNode, mode, actionName);
+                                        } else if (DocTree.isFileNode(copyNode)) {
+                                            return DocTree.Op.copyFile(copyNode, frNodesToCopy[index], toNode, mode, actionName);
+                                        }
 
-                                $q.all(requests).then(function (data) {
-                                    if (DocTree.CLIPBOARD && DocTree.CLIPBOARD.src && DocTree.CLIPBOARD.batch) {
-                                        DocTree.checkNodes(DocTree.CLIPBOARD.src, true);
-                                    }
-                                    dfd.resolve();
-                                }, function (data) {
-                                    dfd.reject();
-                                });
+                                    });
+                                }, Promise.resolve())
+                                    .then(function () {
+                                        if (DocTree.CLIPBOARD && DocTree.CLIPBOARD.src && DocTree.CLIPBOARD.batch) {
+                                            DocTree.checkNodes(DocTree.CLIPBOARD.src, true);
+                                        }
+                                        dfd.resolve();
+                                    });
+
                             }
                             return dfd.promise();
                         },
@@ -3312,23 +3312,26 @@ angular
 
                             } else {
                                 var moveNodes = DocTree.getTopMostNodes(frNodes);
-                                var requests = [];
-                                for (var i = 0; i < moveNodes.length; i++) {
-                                    if (DocTree.isFolderNode(moveNodes[i])) {
-                                        requests.push(DocTree.Op.moveFolder(moveNodes[i], toNode, mode));
-                                    } else if (DocTree.isFileNode(moveNodes[i])) {
-                                        requests.push(DocTree.Op.moveFile(moveNodes[i], toNode, mode));
-                                    }
-                                }
 
-                                $q.all(requests).then(function () {
-                                    if (DocTree.CLIPBOARD && DocTree.CLIPBOARD.data && DocTree.CLIPBOARD.batch) {
-                                        DocTree.checkNodes(DocTree.CLIPBOARD.data, true);
-                                    }
-                                    dfd.resolve();
-                                }, function () {
-                                    dfd.reject();
-                                });
+                                // This is a workaround for the destination folder locking when multiple calls are made in parallel
+                                // TODO: Implement endpoints for batch actions and rework UI for proper handling of multinode actions
+                                moveNodes.reduce(function (previousPromise, moveNode) {
+                                    return previousPromise.then(function () {
+                                        // Nest all move promises in sync
+                                        if (DocTree.isFolderNode(moveNode)) {
+                                            return DocTree.Op.moveFolder(moveNode, toNode, mode);
+                                        } else if (DocTree.isFileNode(moveNode)) {
+                                            return DocTree.Op.moveFile(moveNode, toNode, mode);
+                                        }
+
+                                    });
+                                }, Promise.resolve())
+                                    .then(function () {
+                                        if (DocTree.CLIPBOARD && DocTree.CLIPBOARD.data && DocTree.CLIPBOARD.batch) {
+                                            DocTree.checkNodes(DocTree.CLIPBOARD.data, true);
+                                        }
+                                        dfd.resolve();
+                                    });
                             }
                             return dfd.promise();
                         },
@@ -3412,7 +3415,7 @@ angular
                                         data: response
                                     };
                                     var modalInstance = $modal.open({
-                                        templateUrl: "modules/common/views/showDuplicates-modal.client.view.html",
+                                        templateUrl: "modules/common/views/show-duplicates-modal.client.view.html",
                                         controller: "Common.ShowDuplicates",
                                         animation: true,
                                         windowClass: 'modal-width-80',
@@ -3536,20 +3539,25 @@ angular
 
                             } else {
                                 var removeNodes = DocTree.getTopMostNodes(nodes);
-                                var requests = [];
-                                for (var i = 0; i < removeNodes.length; i++) {
-                                    if (DocTree.isFolderNode(removeNodes[i])) {
-                                        requests.push(DocTree.Op.deleteFolder(removeNodes[i]));
-                                    } else if (DocTree.isFileNode(removeNodes[i])) {
-                                        requests.push(DocTree.Op.deleteFile(removeNodes[i]));
-                                    }
-                                }
 
-                                $q.all(requests).then(function () {
-                                    dfd.resolve();
-                                }, function () {
-                                    dfd.reject();
-                                });
+                                // This is a workaround for the destination folder locking when multiple calls are made in parallel
+                                // TODO: Implement endpoints for batch actions and rework UI for proper handling of multinode actions
+                                removeNodes.reduce(function (previousPromise, removeNode) {
+                                    return previousPromise.then(function () {
+                                        // Nest all move promises in sync
+                                        if (DocTree.isFolderNode(removeNode)) {
+                                            return DocTree.Op.deleteFolder(removeNode);
+                                        } else if (DocTree.isFileNode(removeNode)) {
+                                            return DocTree.Op.deleteFile(removeNode);
+                                        }
+
+                                    });
+                                }, Promise.resolve())
+                                    .then(function () {
+                                        dfd.resolve();
+                                        DocTree.refreshTree();
+                                    });
+
                             }
                             return dfd.promise();
                         },
@@ -5450,9 +5458,7 @@ angular
                         });
 
                         DocTree.scope.$bus.subscribe('object.changed/' + DocTree.getObjType() + '/' + DocTree.getObjId(), function (message) {
-                            if (DocTree.getObjType() === message.parentObjectType && DocTree.getObjId() === message.parentObjectId && message.action === "INSERT" && message.objectType === "FILE") {
-                                DocTree.refreshTree();
-                            } else if (message.action === 'DELETE' && message.objectType === 'FILE' && DocTree.getObjType() === message.parentObjectType) {
+                            if (message.action === 'DELETE' && message.objectType === 'FILE' && DocTree.getObjType() === message.parentObjectType) {
                                 DocTree.refreshTree();
                             }
                         });

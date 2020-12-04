@@ -40,6 +40,7 @@ public class FoiaConfiguration extends SystemConfiguration
     private Boolean dashboardBannerEnabled;
     private Boolean notificationGroupsEnabled;
     private Boolean requestExtensionWorkingDaysEnabled;
+    private Boolean complexRequestTrackOptionEnabled;
     private Boolean expediteWorkingDaysEnabled;
     private Integer expediteWorkingDays;
     private Boolean purgeRequestWhenInHoldEnabled;
@@ -54,6 +55,7 @@ public class FoiaConfiguration extends SystemConfiguration
     private Boolean feeWaivedAppealsEnabled;
     private Boolean litigationRequestsEnabled;
     private Boolean litigationAppealsEnabled;
+    private Boolean createNewPortalUserOptionOnArkcaseRequestForm;
     private Boolean automaticCreationOfRequestWhenAppealIsRemandedEnabled;
     private Map<String, String> dojYearlyReports;
 
@@ -125,6 +127,16 @@ public class FoiaConfiguration extends SystemConfiguration
     public void setRequestExtensionWorkingDaysEnabled(Boolean requestExtensionWorkingDaysEnabled)
     {
         this.requestExtensionWorkingDaysEnabled = requestExtensionWorkingDaysEnabled;
+    }
+
+    public Boolean getComplexRequestTrackOptionEnabled()
+    {
+        return complexRequestTrackOptionEnabled;
+    }
+
+    public void setComplexRequestTrackOptionEnabled(Boolean complexRequestTrackOptionEnabled)
+    {
+        this.complexRequestTrackOptionEnabled = complexRequestTrackOptionEnabled;
     }
 
     public Boolean getExpediteWorkingDaysEnabled()
@@ -282,6 +294,16 @@ public class FoiaConfiguration extends SystemConfiguration
     public void setAutomaticCreationOfRequestWhenAppealIsRemandedEnabled(Boolean automaticCreationOfRequestWhenAppealIsRemandedEnabled)
     {
         this.automaticCreationOfRequestWhenAppealIsRemandedEnabled = automaticCreationOfRequestWhenAppealIsRemandedEnabled;
+    }
+
+    public Boolean getCreateNewPortalUserOptionOnArkcaseRequestForm()
+    {
+        return createNewPortalUserOptionOnArkcaseRequestForm;
+    }
+
+    public void setCreateNewPortalUserOptionOnArkcaseRequestForm(Boolean createNewPortalUserOptionOnArkcaseRequestForm)
+    {
+        this.createNewPortalUserOptionOnArkcaseRequestForm = createNewPortalUserOptionOnArkcaseRequestForm;
     }
 
     public Map<String, String> getDojYearlyReports()

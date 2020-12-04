@@ -7,7 +7,7 @@
  *
  * @description
  *
- * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/core-people/core-people.client.directive.js directives/core-people/core-people.client.directive.js}
+ * {@link /acm-standard-applications/arkcase/src/main/webapp/resources/directives/core-people/core-people.client.directive.js directives/core-people/core-people.client.directive.js}
  *
  * The "Core-People" directive add people grid functionality
  *
@@ -105,10 +105,12 @@ angular.module('directives').directive(
                             });
                             var promiseOrganizationTypes = ObjectLookupService.getOrganizationTypes().then(function(organizationTypes) {
                                 scope.organizationTypes = organizationTypes;
+                                scope.defaultOrganizationType = ObjectLookupService.getPrimaryLookup(scope.organizationTypes);
                                 return organizationTypes;
                             });
                             var promiseAddressTypes = ObjectLookupService.getAddressTypes().then(function(addressTypes) {
                                 scope.addressTypes = addressTypes;
+                                scope.defaultAddressType = ObjectLookupService.getPrimaryLookup(scope.addressTypes);
                                 return addressTypes;
                             });
                             var promiseAliasTypes = ObjectLookupService.getAliasTypes().then(function(aliasTypes) {
@@ -351,7 +353,7 @@ angular.module('directives').directive(
                                 var item = {
                                     id: '',
                                     parentId: rowParent.entity.id,
-                                    organizationType: '',
+                                    organizationType: scope.defaultOrganizationType ? scope.defaultOrganizationType.key : '',
                                     organizationValue: '',
                                     organizationTypes: scope.organizationTypes
                                 };
@@ -397,7 +399,7 @@ angular.module('directives').directive(
                                 var item = {
                                     id: '',
                                     parentId: rowParent.entity.id,
-                                    addressType: '',
+                                    addressType: scope.defaultAddressType ? scope.defaultAddressType : '',
                                     addressTypes: scope.addressTypes,
                                     streetAddress: '',
                                     city: '',

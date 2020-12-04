@@ -33,15 +33,13 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.services.exemption.dao.ExemptionCodeDao;
 import com.armedia.acm.services.exemption.model.ExemptionCode;
+import gov.foia.model.FOIARequest;
 
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import gov.foia.model.FOIARequest;
 
 /**
  * Created by ana.serafimoska
@@ -64,9 +62,7 @@ public class FOIAExemptionCodeDao extends AcmAbstractDao<ExemptionCode>
         FOIARequest request = (FOIARequest) caseFileDao.find(parentObjectId);
         List<ExemptionCode> listCodesOnDocuments = new ArrayList<>();
 
-        if (request.getQueue().getName().equals("Release")
-                || (request.getGeneratedZipFlag() != null && request.getGeneratedZipFlag() == true)
-                || request.getDispositionClosedDate() != null)
+        if (request != null)
         {
 
             String queryText = "SELECT af.id " +
@@ -154,7 +150,7 @@ public class FOIAExemptionCodeDao extends AcmAbstractDao<ExemptionCode>
 
     public Query queryExistingCodes()
     {
-        String queryExistingCodesText = "SELECT fo_exemption_code, fo_exemption_status, fo_code_creator, fo_code_created, fo_exemption_statute, ecm_file_id, ecm_file_version, fo_exemption_code_manually_flag "
+        String queryExistingCodesText = "SELECT fo_exemption_code, fo_exemption_status, fo_code_creator, fo_code_created, ecm_file_id, ecm_file_version, fo_exemption_code_manually_flag "
                 +
                 " FROM foia_file_exemption_code";
 

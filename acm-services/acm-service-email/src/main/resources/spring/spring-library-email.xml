@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <bean id="processMailService" class="com.armedia.acm.services.email.service.AcmProcessMailServiceImpl">
         <property name="acmFolderService" ref="acmFolderService"/>
@@ -41,9 +42,31 @@
         <property name="templatingEngine" ref="templatingEngine"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="objectLabelConfig" ref="objectLabelConfig"/>
+        <property name="translationService" ref="translationService"/>
+    </bean>
+
+    <bean id="objectLabelConfig" class="com.armedia.acm.services.labels.service.ObjectLabelConfig" scope="refresh">
+        <aop:scoped-proxy/>
     </bean>
 
     <bean id="templatingEngine" class="com.armedia.acm.services.email.service.TemplatingEngine">
         <property name="applicationConfig" ref="applicationProperties"/>
     </bean>
+
+    <bean id="forwardedAsAttachmentEmailExtractor" class="com.armedia.acm.services.email.service.ForwardedAsAttachmentEmailExtractor"/>
+
+    <bean id="emailBodyContentEmailExtractor" class="com.armedia.acm.services.email.service.EmailBodyContentEmailExtractor"/>
+
+    <bean id="defaultOriginalEmailExtractor" class="com.armedia.acm.services.email.service.DefaultOriginalEmailExtractor"/>
+
+    <bean id="originalEmailExtractor" class="com.armedia.acm.services.email.service.OriginalEmailExtractor">
+        <property name="originalEmailExtractorStrategies">
+            <list value-type="com.armedia.acm.services.email.service.OriginalEmailExtractorStrategy">
+                <ref bean="forwardedAsAttachmentEmailExtractor"/>
+                <ref bean="emailBodyContentEmailExtractor"/>
+                <ref bean="defaultOriginalEmailExtractor"/>
+            </list>
+        </property>
+    </bean>
+
 </beans>

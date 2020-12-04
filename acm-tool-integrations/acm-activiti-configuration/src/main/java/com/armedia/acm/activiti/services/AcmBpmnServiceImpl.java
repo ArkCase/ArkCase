@@ -45,6 +45,8 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
@@ -183,6 +185,12 @@ public class AcmBpmnServiceImpl implements AcmBpmnService
             acmProcessDefinition.setFileName(fileName);
             acmProcessDefinition.setSha256Hash(digest);
 
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            if (auth == null)
+            {
+                acmProcessDefinition.setCreator("SYSTEM_USER");
+            }
+
             acmProcessDefinition = acmBpmnDao.save(acmProcessDefinition);
             if (makeActive)
             {
@@ -295,6 +303,12 @@ public class AcmBpmnServiceImpl implements AcmBpmnService
                     String.format("No process definition is deployed with the given name [%s]", processName), null);
         }
         return pi;
+    }
+
+    @Override
+    public void resetWorkflows()
+    {
+        acmBpmnDao.activateLatestVersionBySystemUser();
     }
 
     @Override

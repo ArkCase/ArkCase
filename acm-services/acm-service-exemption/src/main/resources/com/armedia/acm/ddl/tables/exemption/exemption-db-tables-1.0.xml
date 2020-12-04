@@ -57,4 +57,22 @@
         </insert>
     </changeSet>
 
+    <changeSet id="03-add-modified-and-modifier-column" author="martin.jovanovski" dbms="oracle,mssql,postgres">
+        <addColumn tableName="acm_exemption_code">
+            <column name="cm_exemption_modifier" type="VARCHAR(1024)"/>
+        </addColumn>
+        <addColumn tableName="acm_exemption_code">
+            <column name="cm_exemption_modified" type="${timestampType}"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="03-add-modified-and-modifier-column" author="martin.jovanovski" dbms="mysql">
+        <addColumn tableName="acm_exemption_code">
+            <column name="cm_exemption_modifier" type="TEXT"/>
+        </addColumn>
+        <addColumn tableName="acm_exemption_code">
+            <column name="cm_exemption_modified" type="${timestampType}"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

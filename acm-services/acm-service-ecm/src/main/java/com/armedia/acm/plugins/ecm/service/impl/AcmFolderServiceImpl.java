@@ -30,42 +30,6 @@ package com.armedia.acm.plugins.ecm.service.impl;
 import static com.armedia.acm.plugins.ecm.model.EcmFileConstants.OBJECT_FILE_TYPE;
 import static com.armedia.acm.plugins.ecm.model.EcmFileConstants.OBJECT_FOLDER_TYPE;
 
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceException;
-
-import org.apache.camel.component.cmis.CamelCMISConstants;
-import org.apache.chemistry.opencmis.client.api.CmisObject;
-import org.apache.chemistry.opencmis.client.api.Document;
-import org.apache.chemistry.opencmis.client.api.FileableCmisObject;
-import org.apache.chemistry.opencmis.client.api.Folder;
-import org.apache.chemistry.opencmis.client.api.ItemIterable;
-import org.apache.chemistry.opencmis.commons.PropertyIds;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.exception.ExceptionUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.ApplicationEventPublisherAware;
-import org.springframework.messaging.MessageChannel;
-import org.springframework.messaging.support.MessageBuilder;
-import org.springframework.security.core.Authentication;
-import org.springframework.transaction.TransactionSystemException;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISActions;
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
 import com.armedia.acm.camelcontext.context.CamelContextManager;
@@ -99,6 +63,42 @@ import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.web.api.MDCConstants;
+
+import org.apache.camel.component.cmis.CamelCMISConstants;
+import org.apache.chemistry.opencmis.client.api.CmisObject;
+import org.apache.chemistry.opencmis.client.api.Document;
+import org.apache.chemistry.opencmis.client.api.FileableCmisObject;
+import org.apache.chemistry.opencmis.client.api.Folder;
+import org.apache.chemistry.opencmis.client.api.ItemIterable;
+import org.apache.chemistry.opencmis.commons.PropertyIds;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
+import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.support.MessageBuilder;
+import org.springframework.security.core.Authentication;
+import org.springframework.transaction.TransactionSystemException;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceException;
+
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Created by marjan.stefanoski on 03.04.2015.
@@ -163,12 +163,12 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         String safeName = getFolderAndFilesUtils().buildSafeFolderName(newFolderName);
         String uniqueFolderName = getFolderAndFilesUtils().createUniqueFolderName(safeName);
         Map<String, Object> properties = new HashMap<>();
-        properties.put(AcmFolderConstants.PARENT_FOLDER_ID, parentFolder.getCmisFolderId());
-        properties.put(AcmFolderConstants.NEW_FOLDER_NAME, uniqueFolderName);
+        properties.put(ArkCaseCMISConstants.PARENT_FOLDER_ID, parentFolder.getCmisFolderId());
+        properties.put(ArkCaseCMISConstants.NEW_FOLDER_NAME, uniqueFolderName);
 
         String cmisRepositoryId = getCmisRepositoryId(parentFolder);
 
-        properties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+        properties.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
         properties.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
         String cmisFolderId = null;
         try
@@ -280,17 +280,17 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     public String findFolderPath(String cmisFolderObjectId) throws AcmUserActionFailedException
     {
         Map<String, Object> findFolderProperties = new HashMap<>();
-        findFolderProperties.put(EcmFileConstants.CMIS_OBJECT_ID, cmisFolderObjectId);
+        findFolderProperties.put(ArkCaseCMISConstants.CMIS_OBJECT_ID, cmisFolderObjectId);
 
         AcmFolder acmFolder = folderDao.findByCmisFolderId(cmisFolderObjectId);
         if (acmFolder != null && acmFolder.getCmisRepositoryId() != null)
         {
-            findFolderProperties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+            findFolderProperties.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
         }
         else
         {
             String defaultCmisId = ecmFileConfig.getDefaultCmisId();
-            findFolderProperties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+            findFolderProperties.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
         }
         findFolderProperties.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
         Folder findFolder = null;
@@ -434,12 +434,12 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         else
         {
             Map<String, Object> properties = new HashMap<>();
-            properties.put(AcmFolderConstants.ACM_FOLDER_ID, folderForMoving.getCmisFolderId());
-            properties.put(AcmFolderConstants.DESTINATION_FOLDER_ID, dstFolder.getCmisFolderId());
+            properties.put(ArkCaseCMISConstants.ACM_FOLDER_ID, folderForMoving.getCmisFolderId());
+            properties.put(ArkCaseCMISConstants.DESTINATION_FOLDER_ID, dstFolder.getCmisFolderId());
 
             String cmisRepositoryId = getCmisRepositoryId(folderForMoving);
 
-            properties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+            properties.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
             properties.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
 
             try
@@ -526,12 +526,12 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         }
 
         Map<String, Object> properties = new HashMap<>();
-        properties.put(AcmFolderConstants.ACM_FOLDER_ID, folderForMoving.getCmisFolderId());
-        properties.put(AcmFolderConstants.DESTINATION_FOLDER_ID, dstFolder.getCmisFolderId());
+        properties.put(ArkCaseCMISConstants.ACM_FOLDER_ID, folderForMoving.getCmisFolderId());
+        properties.put(ArkCaseCMISConstants.DESTINATION_FOLDER_ID, dstFolder.getCmisFolderId());
 
         String cmisRepositoryId = getCmisRepositoryId(folderForMoving);
 
-        properties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+        properties.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
         properties.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
 
         try
@@ -616,9 +616,9 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     {
         Folder result;
         Map<String, Object> folderProperties = new HashMap<>();
-        folderProperties.put(AcmFolderConstants.PARENT_FOLDER_ID, folder.getCmisFolderId());
-        folderProperties.put(EcmFileConstants.CMIS_OBJECT_ID, folder.getCmisFolderId());
-        folderProperties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+        folderProperties.put(ArkCaseCMISConstants.PARENT_FOLDER_ID, folder.getCmisFolderId());
+        folderProperties.put(ArkCaseCMISConstants.CMIS_OBJECT_ID, folder.getCmisFolderId());
+        folderProperties.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
         folderProperties.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
         folderProperties.put(PropertyIds.OBJECT_TYPE_ID, CamelCMISConstants.CMIS_FOLDER);
         try
@@ -642,9 +642,9 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         String uniqueFolderName = getFolderAndFilesUtils().createUniqueFolderName(toBeCopied.getName());
         String parentFolderId = cmisFolderParent.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID);
 
-        newFolderProperties.put(AcmFolderConstants.PARENT_FOLDER_ID, parentFolderId);
-        newFolderProperties.put(AcmFolderConstants.NEW_FOLDER_NAME, uniqueFolderName);
-        newFolderProperties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+        newFolderProperties.put(ArkCaseCMISConstants.PARENT_FOLDER_ID, parentFolderId);
+        newFolderProperties.put(ArkCaseCMISConstants.NEW_FOLDER_NAME, uniqueFolderName);
+        newFolderProperties.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
         newFolderProperties.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
 
         Folder newFolder;
@@ -653,7 +653,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         {
             newFolder = (Folder) getCamelContextManager().send(ArkCaseCMISActions.CREATE_FOLDER, newFolderProperties);
             String newFolderCmisId = newFolder.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID);
-            copiedFolder = prepareFolder(dstFolder, newFolderCmisId, toBeCopied.getName(), ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+            copiedFolder = prepareFolder(dstFolder, newFolderCmisId, toBeCopied.getName(), ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
         }
         catch (PersistenceException | ArkCaseFileRepositoryException | AcmFolderException e)
         {
@@ -781,6 +781,13 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         {
             throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE, folderId, "Folder not found", null);
         }
+        else if (folder.getStatus().equals(EcmFileConstants.RECORD))
+        {
+            log.error("Record folders cannot be deleted, folder ID {}", folder.getId());
+            throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_DELETE_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
+                    folder.getId(), "Record folders cannot be deleted", null);
+        }
+
         deleteFolderContent(folder, authentication.getName());
         deleteAlfrescoFolderTree(folder);
     }
@@ -816,10 +823,10 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         }
 
         Map<String, Object> properties = new HashMap<>();
-        properties.put(AcmFolderConstants.ACM_FOLDER_ID, folder.getCmisFolderId());
+        properties.put(ArkCaseCMISConstants.ACM_FOLDER_ID, folder.getCmisFolderId());
 
         String cmisRepositoryId = getCmisRepositoryId(folder);
-        properties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+        properties.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
         properties.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
         try
         {
@@ -851,6 +858,12 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     {
         AcmContainer container = containerDao.find(containerId);
         AcmFolder rootFolder = container.getFolder();
+        if (rootFolder.getStatus().equals(EcmFileConstants.RECORD))
+        {
+            log.error("Record folders cannot be deleted, folder ID {}", rootFolder.getId());
+            throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_DELETE_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
+                    rootFolder.getId(), "Record folders cannot be deleted", null);
+        }
         deleteContainerAndContent(container, authentication.getName());
         deleteAlfrescoFolderTree(rootFolder);
     }
@@ -1056,9 +1069,9 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         }
         ItemIterable<CmisObject> cmisObjects;
         Map<String, Object> properties = new HashMap<>();
-        properties.put(EcmFileConstants.CMIS_OBJECT_ID, folder.getCmisFolderId());
+        properties.put(ArkCaseCMISConstants.CMIS_OBJECT_ID, folder.getCmisFolderId());
         String cmisRepositoryId = getCmisRepositoryId(folder);
-        properties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+        properties.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
         properties.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
 
         try
@@ -1587,13 +1600,20 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     public void putFolderIntoRecycleBin(Long folderId)
             throws AcmObjectNotFoundException, AcmUserActionFailedException, AcmFolderException, AcmCreateObjectFailedException
     {
-        AcmFolder source = findById(folderId);
+        AcmFolder folder = findById(folderId);
 
-        if (!source.isLink())
+        if (!folder.isLink())
         {
-            removeLinksFromFilesInFolder(source);
-            deleteFolderLinks(source);
-            getRecycleBinItemService().putFolderIntoRecycleBin(source);
+            if (folder.getStatus().equals(EcmFileConstants.RECORD))
+            {
+                log.error("Record folders cannot be deleted, folder ID {}", folder.getId());
+                throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_DELETE_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
+                        folder.getId(), "Record folders cannot be deleted", null);
+            }
+
+            removeLinksFromFilesInFolder(folder);
+            deleteFolderLinks(folder);
+            getRecycleBinItemService().putFolderIntoRecycleBin(folder);
         }
         else
         {

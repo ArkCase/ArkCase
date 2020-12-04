@@ -30,6 +30,8 @@ package com.armedia.acm.configuration.core;
 import com.armedia.acm.configuration.api.ConfigurationFacade;
 import com.armedia.acm.configuration.api.environment.Environment;
 import com.armedia.acm.configuration.client.ConfigurationServiceBootClient;
+import com.armedia.acm.configuration.model.ConfigurationClientConfig;
+import com.armedia.acm.configuration.model.LookupsUpdatedEvent;
 import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
 import com.armedia.acm.crypto.properties.AcmEncryptablePropertyUtils;
 
@@ -37,6 +39,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bouncycastle.crypto.RuntimeCryptoException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jmx.export.annotation.ManagedResource;
@@ -52,7 +56,7 @@ import java.util.stream.Collectors;
  */
 @Configuration
 @ManagedResource(objectName = "configuration:name=lookups-service,type=com.armedia.acm.configuration.ConfigurationService,artifactId=lookups-service")
-public class LookupsConfigurationContainer implements ConfigurationFacade
+public class LookupsConfigurationContainer implements ConfigurationFacade, ApplicationEventPublisherAware
 {
 
     private static final Logger log = LogManager.getLogger(LookupsConfigurationContainer.class);
@@ -63,7 +67,12 @@ public class LookupsConfigurationContainer implements ConfigurationFacade
     private ConfigurationServiceBootClient configurationServiceBootClient;
 
     @Autowired
+    private ConfigurationClientConfig configurationClientConfig;
+
+    @Autowired
     private AcmEncryptablePropertyUtils encryptablePropertyUtils;
+
+    private ApplicationEventPublisher applicationEventPublisher;
 
     private Map<String, Object> lookupsDefaultMap = new HashMap<>();
 
@@ -90,10 +99,12 @@ public class LookupsConfigurationContainer implements ConfigurationFacade
 
     private synchronized void initializeLookupsMap()
     {
-        List<Environment> environments = configurationServiceBootClient
-                .getRemoteEnvironment(configurationServiceBootClient.configRestTemplate(), "lookups", null);
+        String lookupsPath = configurationClientConfig.getLookupsPath();
 
-        Map<String, Object> configurationMap = this.configurationServiceBootClient.loadConfiguration("lookups", null);
+        List<Environment> environments = configurationServiceBootClient
+                .getRemoteEnvironment(configurationServiceBootClient.configRestTemplate(), lookupsPath, null);
+
+        Map<String, Object> configurationMap = this.configurationServiceBootClient.loadConfiguration(lookupsPath, null);
         this.runtimeConfigurationMap = this.configurationServiceBootClient.loadRuntimeConfigurationMap(environments);
 
         lookupsDefaultMap = configurationMap.entrySet()
@@ -144,6 +155,14 @@ public class LookupsConfigurationContainer implements ConfigurationFacade
     public void refresh()
     {
         initializeLookupsMap();
+
+        LookupsUpdatedEvent event = new LookupsUpdatedEvent(getLookupsDefaultMap());
+        applicationEventPublisher.publishEvent(event);
     }
 
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
+    {
+        this.applicationEventPublisher = applicationEventPublisher;
+    }
 }

@@ -27,6 +27,8 @@ package com.armedia.acm.plugins.billing.service;
  * #L%
  */
 
+import com.armedia.acm.configuration.model.ConfigurationClientConfig;
+import com.armedia.acm.configuration.service.FileConfigurationService;
 import com.armedia.acm.core.AcmObjectNumber;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
@@ -64,6 +66,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
@@ -87,6 +91,10 @@ public class BillingInvoiceDocumentGenerator<T extends AcmContainerEntity & AcmO
 
     private PdfService pdfService;
 
+    private FileConfigurationService fileConfigurationService;
+
+    private ConfigurationClientConfig configurationClientConfig;
+
     private Logger log = LogManager.getLogger(getClass());
 
     public void generatePdf(String objectType, Long requestId)
@@ -102,7 +110,10 @@ public class BillingInvoiceDocumentGenerator<T extends AcmContainerEntity & AcmO
                 Document document = buildDocument(parentObject, billingInvoice);
                 Source source = new DOMSource(document);
 
-                filename = getPdfService().generatePdf(new File(BillingConstants.INVOICE_DOCUMENT_STYLESHEET), source);
+                String pdfStylesheetsLocation = configurationClientConfig.getStylesheetsPath();
+                InputStream xslStream = fileConfigurationService.getInputStreamFromConfiguration(pdfStylesheetsLocation + "/" + BillingConstants.INVOICE_DOCUMENT_STYLESHEET);
+                URI baseURI = fileConfigurationService.getLocationUriFromConfiguration(pdfStylesheetsLocation);
+                filename = getPdfService().generatePdf(xslStream, baseURI, source);
                 log.debug("Created {} document [{}]", BillingConstants.INVOICE_DOCUMENT_TYPE, filename);
 
                 String arkcaseFilename = billingInvoice.getInvoiceNumber();
@@ -134,7 +145,7 @@ public class BillingInvoiceDocumentGenerator<T extends AcmContainerEntity & AcmO
                 }
             }
             catch (PdfServiceException | AcmCreateObjectFailedException | AcmUserActionFailedException | IOException
-                    | ParserConfigurationException | GetBillingInvoiceException e)
+                    | URISyntaxException | ParserConfigurationException | GetBillingInvoiceException e)
             {
                 log.error("Unable to create {} document for request [{}]",
                         BillingConstants.INVOICE_DOCUMENT_TYPE, requestId, e);
@@ -299,6 +310,38 @@ public class BillingInvoiceDocumentGenerator<T extends AcmContainerEntity & AcmO
         this.pdfService = pdfService;
     }
 
+    /**
+     * @return the fileConfigurationService
+     */
+    public FileConfigurationService getFileConfigurationService()
+    {
+        return fileConfigurationService;
+    }
 
+    /**
+     * @param fileConfigurationService
+     *            the fileConfigurationService to set
+     */
+    public void setFileConfigurationService(FileConfigurationService fileConfigurationService)
+    {
+        this.fileConfigurationService = fileConfigurationService;
+    }
+
+    /**
+     * @return the configurationClientConfig
+     */
+    public ConfigurationClientConfig getConfigurationClientConfig()
+    {
+        return configurationClientConfig;
+    }
+
+    /**
+     * @param configurationClientConfig
+     *            the configurationClientConfig to set
+     */
+    public void setConfigurationClientConfig(ConfigurationClientConfig configurationClientConfig)
+    {
+        this.configurationClientConfig = configurationClientConfig;
+    }
 
 }

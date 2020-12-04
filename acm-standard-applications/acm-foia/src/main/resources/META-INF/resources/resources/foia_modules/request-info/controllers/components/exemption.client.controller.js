@@ -1,10 +1,11 @@
 'use strict';
 
 angular.module('request-info').controller('RequestInfo.ExemptionController',
-    ['$scope', '$stateParams', '$q', 'Case.InfoService', 'Profile.UserInfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'ExemptionService', '$modal', 'Object.LookupService', '$state', 'Case.ExemptionService', 'UtilService', 'MessageService',
-        function ($scope, $stateParams, $q, CaseInfoService, UserInfoService, HelperUiGridService, HelperObjectBrowserService, ExemptionService, $modal, ObjectLookupService, $state, CaseExemptionService, Util, MessageService) {
+    ['$scope', '$stateParams', '$q', 'Case.InfoService', 'Profile.UserInfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'ConfigService', 'ExemptionService', '$modal', 'Object.LookupService', '$state', 'Case.ExemptionService', 'UtilService', 'MessageService',
+        function ($scope, $stateParams, $q, CaseInfoService, UserInfoService, HelperUiGridService, HelperObjectBrowserService, ConfigService, ExemptionService, $modal, ObjectLookupService, $state, CaseExemptionService, Util, MessageService) {
 
             $scope.isDisabled = false;
+            $scope.statuteGridOptions = {};
 
             var componentHelper = new HelperObjectBrowserService.Component({
                 scope: $scope,
@@ -31,7 +32,6 @@ angular.module('request-info').controller('RequestInfo.ExemptionController',
                 gridHelper.setBasicOptions(config);
                 gridHelper.disableGridScrolling(config);
                 gridHelper.setUserNameFilterToConfig(promiseUsers);
-                gridHelper.addButton(config, "edit", null, null, "isEditDisabled");
                 gridHelper.addButton(config, "delete", null, null, "isDeleteDisabled");
                 retrieveGridData($stateParams.id, $stateParams.fileId);
             };
@@ -40,16 +40,6 @@ angular.module('request-info').controller('RequestInfo.ExemptionController',
                 $scope.objectInfo = objectInfo;
                 if (!Util.isEmpty($scope.objectInfo.dispositionClosedDate)) {
                     $scope.isDisabled = true;
-                }
-            };
-
-            $scope.isEditDisabled = function (rowEntity) {
-                if ($scope.isDisabled) {
-                    return true;
-                } else {
-                    if (rowEntity.exemptionCode != 'Ex3') {
-                        return true;
-                    }
                 }
             };
 
@@ -66,15 +56,25 @@ angular.module('request-info').controller('RequestInfo.ExemptionController',
             $scope.deleteRow = function (rowEntity) {
                 var id = Util.goodMapValue(rowEntity, "id", 0);
                 if (0 < id) { //do not need to call service when deleting a new row with id==0
-                    CaseExemptionService.deleteExemptionCode(id).then(function () {
-                        //remove it from the grid immediately
-                        _.remove($scope.gridOptions.data, function (row) {
-                            return row === rowEntity;
+                    if (rowEntity.exemptionCode) {
+                        CaseExemptionService.deleteExemptionCode(id).then(function () {
+                            _.remove($scope.gridOptions.data, function (row) {
+                                return row === rowEntity;
+                            });
+                            MessageService.succsessAction();
+                        }, function () {
+                            MessageService.errorAction();
                         });
-                        MessageService.succsessAction();
-                    }, function () {
-                        MessageService.errorAction();
-                    });
+                    } else {
+                        CaseExemptionService.deleteExemptionStatute(id).then(function () {
+                            _.remove($scope.statuteGridOptions.data, function (row) {
+                                return row === rowEntity;
+                            });
+                            MessageService.succsessAction();
+                        }, function () {
+                            MessageService.errorAction();
+                        });
+                    }
                 }
             };
 
@@ -85,46 +85,6 @@ angular.module('request-info').controller('RequestInfo.ExemptionController',
             ObjectLookupService.getAnnotationTags().then(function(annotationTags) {
                 $scope.annotationTags = annotationTags;
             });
-
-            $scope.editRow = function(rowEntity) {
-                $scope.entry = rowEntity;
-                var item = {
-                  exemptionStatute: rowEntity.exemptionStatute
-                  };
-                showModal(item);
-            };
-
-            function showModal(item) {
-                var params = {};
-                params.item = item || {};
-                params.config = $scope.config;
-                params.exemptionStatutes = $scope.exemptionStatutes;
-                var modalInstance = $modal.open({
-                animation: true,
-                size: 'md',
-                backdrop: 'static',
-                templateUrl: 'modules/request-info/views/components/exemption-statute-modal.client.view.html',
-                controller: 'RequestInfo.ExemptionStatuteModalController',
-                resolve: {
-                  params: function() {
-                      return params;
-                    }
-                 }
-                });
-                modalInstance.result.then(function(data) {
-                     $scope.entry.exemptionStatute = data.exemptionStatute;
-                     saveExemptionRule();
-                });
-            }
-
-            function saveExemptionRule() {
-                var exemptionData = $scope.entry;
-                CaseExemptionService.saveExemptionStatute(exemptionData).then(function () {
-                    MessageService.succsessAction();
-                }, function () {
-                    MessageService.errorAction();
-                });
-            }
 
             $scope.refresh = function() {
                     retrieveGridData($stateParams.id, $stateParams.fileId);
@@ -138,6 +98,7 @@ angular.module('request-info').controller('RequestInfo.ExemptionController',
                     animation: true,
                     templateUrl: 'modules/document-details/views/components/annotation-tags-modal.client.view.html',
                     controller: 'RequestInfo.AnnotationTagsManuallyModalController',
+                    windowClass: 'modal-width-80',
                     backdrop: 'static',
                     resolve: {
                         params: function () {
@@ -161,34 +122,17 @@ angular.module('request-info').controller('RequestInfo.ExemptionController',
                  var promiseQueryCodes = ExemptionService.getDocumentExemptionCodes(params.caseId, params.fileId);
                 $q.all([ promiseQueryCodes ]).then(function(data) {
                     $scope.codes = data[0];
-
-                    var userInfoPromises = [];
-                    for(var i = 0; i<$scope.codes.data.length; i++) {
-                        userInfoPromises.push(UserInfoService.getUserInfoById($scope.codes.data[i].creator));
-                    }
-
-                    $q.all(userInfoPromises).then(function (userInfo) {
-                        for(var j = 0; j < $scope.codes.data.length; j++) {
-                            for(var k = 0; k< userInfo.length; k++) {
-                                if($scope.codes.data[j].creator === userInfo[k].userId) {
-                                    //change creator user id with the user full name
-                                    $scope.codes.data[j].creator = userInfo[k].fullName;
-                                    break;
-                                }
-                            }
-                        }
-
-                        $scope.gridOptions = $scope.gridOptions || {};
-                        $scope.gridOptions.data = $scope.codes.data;
-                        $scope.gridOptions.totalItems = $scope.codes.data.length;
-                    });
+                    $scope.gridOptions = $scope.gridOptions || {};
+                    $scope.gridOptions.data = $scope.codes.data;
+                    $scope.gridOptions.totalItems = $scope.codes.data.length;
                 });
             }
 
             $scope.$bus.subscribe('reload-exemption-code-grid', function(data) {
                 // reload the exemption code table without reloading the page
                 $state.transitionTo("request-info", { id: data.id, fileId: data.fileId }, {notify: false});
-                retrieveGridData(data.id, data.fileId)
+                retrieveGridData(data.id, data.fileId);
+                retrieveStatuteGridData(data.id, data.fileId);
             });
 
             $scope.checkCodesDescription = function(){
@@ -196,7 +140,75 @@ angular.module('request-info').controller('RequestInfo.ExemptionController',
                     size: 'lg',
                     templateUrl: 'modules/cases/views/components/case-exemption-codes-description-modal.client.view.html',
                     controller: 'Cases.ExemptionCodesDescriptionModalController',
+                    windowClass: 'modal-width-80',
                     backdrop: 'static'
                 })
+            };
+
+            // Exemption statutes
+
+            $scope.exemptionData = {
+                exemptionStatute : {},
+                parentObjectType : "FILE"
+            };
+
+            ConfigService.getComponentConfig("request-info", "exemptionStatute").then(function(compConfig) {
+                $scope.statuteConfig = compConfig;
+                $scope.statuteGridOptions = {
+                    columnDefs: $scope.statuteConfig.columnDefs,
+                    enableColumnResizing: true,
+                    enableRowSelection: true,
+                    multiSelect: false,
+                    noUnselect: false,
+                    paginationPageSizes: $scope.statuteConfig.paginationPageSizes,
+                    paginationPageSize: $scope.statuteConfig.paginationPageSize,
+                    totalItems: 0,
+                    data: []
+                };
+                gridHelper.setUserNameFilterToConfig(promiseUsers, compConfig);
+                gridHelper.addButton(compConfig, "delete", null, null, "isDeleteDisabled");
+                retrieveStatuteGridData($stateParams.fileId);
+            });
+
+            $scope.refreshStatute = function() {
+                retrieveStatuteGridData($stateParams.fileId);
+            };
+
+            $scope.addNewStatute = function() {
+                var params = {};
+                params.config = $scope.config;
+                params.exemptionStatutes = $scope.exemptionStatutes;
+                var modalInstance = $modal.open({
+                    animation: true,
+                    size: 'md',
+                    backdrop: 'static',
+                    templateUrl: 'modules/request-info/views/components/exemption-statute-modal.client.view.html',
+                    controller: 'RequestInfo.ExemptionStatuteModalController',
+                    resolve: {
+                        params: function() {
+                            return params;
+                        }
+                    }
+                });
+                modalInstance.result.then(function(data) {
+                    $scope.exemptionData.exemptionStatute = data.exemptionStatute;
+                    ExemptionService.saveDocumentExemptionStatute($stateParams.fileId, $scope.exemptionData).then(function (value) {
+                        MessageService.succsessAction();
+                        retrieveStatuteGridData($stateParams.fileId)
+                    }, function () {
+                        MessageService.errorAction();
+                    });
+                });
+            };
+
+            function retrieveStatuteGridData(fileId) {
+                var promiseQueryStatutes = ExemptionService.getDocumentExemptionStatutes(fileId);
+                $q.all([ promiseQueryStatutes ]).then(function(data) {
+                    $scope.statutes = data[0];
+                    $scope.statuteGridOptions = $scope.statuteGridOptions || {};
+                    $scope.statuteGridOptions.data = $scope.statutes.data;
+                    $scope.statuteGridOptions.totalItems = $scope.statutes.data.length;
+                });
             }
+
         } ]);

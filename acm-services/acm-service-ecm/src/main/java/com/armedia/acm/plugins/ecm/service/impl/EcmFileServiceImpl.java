@@ -89,7 +89,10 @@ import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.client.api.Folder;
 import org.apache.chemistry.opencmis.commons.PropertyIds;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -106,14 +109,20 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpSession;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -188,7 +197,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         Map<String, Object> properties = new HashMap<>();
         String cmisRepositoryId = ecmFileConfig.getDefaultCmisId();
         properties.put(PropertyIds.PATH, path);
-        properties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+        properties.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
         properties.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
 
         return (CmisObject) getCamelContextManager().send(ArkCaseCMISActions.GET_OBJECT_BY_PATH, properties);
@@ -198,9 +207,9 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     public CmisObject findObjectById(String cmisRepositoryId, String cmisId) throws Exception
     {
         Map<String, Object> properties = new HashMap<>();
-        properties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+        properties.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
         properties.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
-        properties.put(EcmFileConstants.CMIS_OBJECT_ID, cmisId);
+        properties.put(ArkCaseCMISConstants.CMIS_OBJECT_ID, cmisId);
 
         return (CmisObject) getCamelContextManager().send(ArkCaseCMISActions.GET_OBJECT_BY_ID, properties);
     }
@@ -566,7 +575,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         {
             Map<String, Object> properties = new HashMap<>();
             properties.put(PropertyIds.PATH, folderPath);
-            properties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+            properties.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
             properties.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
 
             Folder result = (Folder) getCamelContextManager().send(ArkCaseCMISActions.GET_OR_CREATE_FOLDER_BY_PATH, properties);
@@ -1125,6 +1134,62 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     @Override
     @Transactional(rollbackFor = Exception.class)
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "READ")
+    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 1, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
+    public EcmFile copyRecord(Long fileId, Long folderId, String targetObjectType, Long targetObjectId, Authentication authentication)
+            throws AcmObjectNotFoundException, AcmUserActionFailedException
+    {
+        AcmFolder folder = getFolderDao().find(folderId);
+        EcmFile ecmFile = getEcmFileDao().find(fileId);
+
+        if (ecmFile == null || folder == null)
+        {
+            throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, fileId, "File or Destination folder not found", null);
+        }
+
+        try
+        {
+            MultipartFile fileToUpload = getMultipartFromEcmFile(ecmFile);
+            AcmMultipartFile acmFileToUpload = new AcmMultipartFile(fileToUpload, false);
+
+            return upload(ecmFile.getFileName(), ecmFile.getFileType(), null, acmFileToUpload, authentication,
+                    folder.getCmisFolderId(), targetObjectType, targetObjectId);
+        }
+        catch (Exception e)
+        {
+            log.error("Could not copy record {} ", e.getMessage(), e);
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_COPY_FILE, EcmFileConstants.OBJECT_FILE_TYPE,
+                    ecmFile.getId(),
+                    "Could not copy record", e);
+        }
+    }
+
+    private MultipartFile getMultipartFromEcmFile(EcmFile ecmFile) throws Exception
+    {
+        String activeVersionSeriesId = ecmFile.getVersionSeriesId() + ";" + ecmFile.getActiveVersionTag();
+        Document cmisDoc = (Document) findObjectById(ecmFile.getCmisRepositoryId(), activeVersionSeriesId);
+
+        InputStream inputStream = cmisDoc.getContentStream().getStream();
+        byte[] content = IOUtils.toByteArray(inputStream);
+
+        File file = new File(ecmFile.getFileName());
+        Path path = Paths.get(file.getAbsolutePath());
+        Files.write(path, content);
+
+        FileItem fileItem = new DiskFileItem("", null, false, file.getName(), (int) file.length(),
+                file.getParentFile());
+
+        try (InputStream input = new FileInputStream(file))
+        {
+            OutputStream os = fileItem.getOutputStream();
+            IOUtils.copy(input, os);
+        }
+
+        return new CommonsMultipartFile(fileItem);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "READ")
     @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 1, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
     public EcmFile copyFile(Long fileId, AcmFolder targetFolder, AcmContainer targetContainer)
             throws AcmUserActionFailedException, AcmObjectNotFoundException
@@ -1142,8 +1207,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
         String internalFileName = getFolderAndFilesUtils().createUniqueIdentificator(file.getFileName());
         Map<String, Object> props = new HashMap<>();
-        props.put(EcmFileConstants.CMIS_DOCUMENT_ID, getFolderAndFilesUtils().getActiveVersionCmisId(file));
-        props.put(EcmFileConstants.DST_FOLDER_ID, targetFolder.getCmisFolderId());
+        props.put(ArkCaseCMISConstants.CMIS_DOCUMENT_ID, getFolderAndFilesUtils().getActiveVersionCmisId(file));
+        props.put(ArkCaseCMISConstants.DESTINATION_FOLDER_ID, targetFolder.getCmisFolderId());
         props.put(PropertyIds.NAME, internalFileName);
         props.put(EcmFileConstants.FILE_MIME_TYPE, file.getFileActiveVersionMimeType());
         String cmisRepositoryId = targetFolder.getCmisRepositoryId();
@@ -1151,9 +1216,9 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         {
             cmisRepositoryId = ecmFileConfig.getDefaultCmisId();
         }
-        props.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
-        props.put(EcmFileConstants.VERSIONING_STATE,
-                getCmisConfigUtils().getVersioningState(ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID));
+        props.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
+        props.put(ArkCaseCMISConstants.VERSIONING_STATE,
+                getCmisConfigUtils().getVersioningState(ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID));
         props.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
 
         try
@@ -1636,16 +1701,16 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
 
         Map<String, Object> props = new HashMap<>();
-        props.put(EcmFileConstants.CMIS_OBJECT_ID, file.getVersionSeriesId());
-        props.put(EcmFileConstants.DST_FOLDER_ID, folder.getCmisFolderId());
-        props.put(EcmFileConstants.SRC_FOLDER_ID, file.getFolder().getCmisFolderId());
+        props.put(ArkCaseCMISConstants.CMIS_OBJECT_ID, file.getVersionSeriesId());
+        props.put(ArkCaseCMISConstants.DESTINATION_FOLDER_ID, folder.getCmisFolderId());
+        props.put(ArkCaseCMISConstants.SOURCE_FOLDER_ID, file.getFolder().getCmisFolderId());
         String cmisRepositoryId = folder.getCmisRepositoryId();
         if (cmisRepositoryId == null)
         {
             cmisRepositoryId = ecmFileConfig.getDefaultCmisId();
         }
-        props.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
-        props.put(EcmFileConstants.VERSIONING_STATE, cmisConfigUtils.getVersioningState(ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID));
+        props.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
+        props.put(ArkCaseCMISConstants.VERSIONING_STATE, cmisConfigUtils.getVersioningState(ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID));
         props.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
 
         AcmContainer container = getOrCreateContainer(targetObjectType, targetObjectId, cmisRepositoryId);
@@ -1747,13 +1812,19 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         {
             throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, objectId, "File not found", null);
         }
+        else if (file.getStatus().equals(EcmFileConstants.RECORD))
+        {
+            log.error("Could not delete file with ID {} ", file.getFileId());
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_DELETE_FILE, EcmFileConstants.OBJECT_FILE_TYPE,
+                    file.getId(), "File records cannot be deleted", null);
+        }
 
         boolean removeFileFromDatabase = allVersions || file.getVersions().size() < 2;
         String versionToRemoveFromEcm = removeFileFromDatabase ? file.getVersionSeriesId()
                 : file.getVersions().get(file.getVersions().size() - 1).getVersionTag();
 
         Map<String, Object> props = new HashMap<>();
-        props.put(EcmFileConstants.CMIS_DOCUMENT_ID, versionToRemoveFromEcm);
+        props.put(ArkCaseCMISConstants.CMIS_DOCUMENT_ID, versionToRemoveFromEcm);
         String cmisRepositoryId = file.getCmisRepositoryId();
         if (cmisRepositoryId == null)
         {
@@ -1762,8 +1833,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         // TODO: This is hardcoded because we need camel configuration only for delete file. Should be replaced after
         // completion of all routes. After that mule-config-alfresco-cmis.properties should be deleted from
         // .arkcase/acm/cmis
-        props.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
-        props.put(EcmFileConstants.ALL_VERSIONS, allVersions);
+        props.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
+        props.put(ArkCaseCMISConstants.ALL_VERSIONS, allVersions);
 
         props.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
 
@@ -1797,7 +1868,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     public void deleteCmisObject(CmisObject cmisObject, String cmisRepositoryId) throws Exception
     {
         Map<String, Object> props = new HashMap<>();
-        props.put(EcmFileConstants.CMIS_DOCUMENT_ID, cmisObject.getProperty("cmis:versionSeriesId").getFirstValue());
+        props.put(ArkCaseCMISConstants.CMIS_DOCUMENT_ID, cmisObject.getProperty("cmis:versionSeriesId").getFirstValue());
         if (cmisRepositoryId == null)
         {
             cmisRepositoryId = ecmFileConfig.getDefaultCmisId();
@@ -1805,8 +1876,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         // TODO: This is hardcoded because we need camel configuration only for delete file. Should be replaced after
         // completion of all routes. After that mule-config-alfresco-cmis.properties should be deleted from
         // .arkcase/acm/cmis
-        props.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
-        props.put(EcmFileConstants.ALL_VERSIONS, false);
+        props.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
+        props.put(ArkCaseCMISConstants.ALL_VERSIONS, false);
         props.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
 
         List<EcmFile> listFiles = getEcmFileDao()
@@ -1830,10 +1901,18 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         {
             throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, objectId, "File not found", null);
         }
+
         try
         {
             if (!file.isLink())
             {
+                if (file.getStatus().equals(EcmFileConstants.RECORD))
+                {
+                    log.error("Could not move file with ID {} to Recycle Bin", file.getFileId());
+                    throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_DELETE_FILE, EcmFileConstants.OBJECT_FILE_TYPE,
+                            file.getId(), "File records cannot be deleted", null);
+                }
+
                 recycleBinItem = getRecycleBinItemService().putFileIntoRecycleBin(file, authentication, session);
                 log.info("File {} successfully moved into recycle bin by user: {}", objectId, file.getModifier());
 
@@ -1876,16 +1955,23 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, fileId, "File not found", null);
         }
 
+        if (file.getStatus().equals(EcmFileConstants.RECORD))
+        {
+            log.error("Could not move file with ID {} to Recycle Bin", file.getFileId());
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_DELETE_FILE, EcmFileConstants.OBJECT_FILE_TYPE,
+                    file.getId(), "File records cannot be deleted", null);
+        }
+
         Map<String, Object> props = new HashMap<>();
-        props.put(EcmFileConstants.CMIS_DOCUMENT_ID, file.getVersionSeriesId());
+        props.put(ArkCaseCMISConstants.CMIS_DOCUMENT_ID, file.getVersionSeriesId());
         String cmisRepositoryId = file.getCmisRepositoryId();
         if (cmisRepositoryId == null)
         {
             cmisRepositoryId = ecmFileConfig.getDefaultCmisId();
         }
-        props.put(EcmFileConstants.CMIS_REPOSITORY_ID, cmisRepositoryId);
+        props.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, cmisRepositoryId);
         props.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
-        props.put(EcmFileConstants.ALL_VERSIONS, true);
+        props.put(ArkCaseCMISConstants.ALL_VERSIONS, true);
         try
         {
             deleteAuthenticationTokens(file.getId());
@@ -1912,9 +1998,15 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         {
             throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, objectId, "File not found", null);
         }
+        else if (file.getStatus().equals(EcmFileConstants.RECORD))
+        {
+            log.error("Could not delete file with ID {} ", file.getFileId());
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_DELETE_FILE, EcmFileConstants.OBJECT_FILE_TYPE,
+                    file.getId(), "File records cannot be deleted", null);
+        }
 
         Map<String, Object> props = new HashMap<>();
-        props.put(EcmFileConstants.CMIS_DOCUMENT_ID, file.getVersionSeriesId());
+        props.put(ArkCaseCMISConstants.CMIS_DOCUMENT_ID, file.getVersionSeriesId());
         String cmisRepositoryId = file.getCmisRepositoryId();
         if (cmisRepositoryId == null)
         {
@@ -1924,9 +2016,9 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         // TODO: This is hardcoded because we need camel configuration only for delete file. Should be replaced after
         // completion of all routes. After that mule-config-alfresco-cmis.properties should be deleted from
         // .arkcase/acm/cmis
-        props.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+        props.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
         props.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
-        props.put(EcmFileConstants.ALL_VERSIONS, true);
+        props.put(ArkCaseCMISConstants.ALL_VERSIONS, true);
 
         try
         {
@@ -1952,6 +2044,12 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         {
             throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, file.getId(), "File not found", null);
         }
+        else if (file.getStatus().equals(EcmFileConstants.RECORD))
+        {
+            log.error("Could not delete file with ID {} ", file.getFileId());
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_DELETE_FILE, EcmFileConstants.OBJECT_FILE_TYPE,
+                    file.getId(), "File records cannot be deleted", null);
+        }
 
         try
         {
@@ -1971,7 +2069,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "DELETE")
     public EcmFile renameFile(Long fileId, String newFileName) throws AcmUserActionFailedException, AcmObjectNotFoundException
     {
-        newFileName = getFolderAndFilesUtils().getBaseFileName(newFileName);
+        String uniqueIdentificator = getFolderAndFilesUtils().createUniqueIdentificator(newFileName);
         EcmFile file = getEcmFileDao().find(fileId);
 
         if (file == null)
@@ -1979,14 +2077,14 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, fileId, "File not found", null);
         }
         Map<String, Object> props = new HashMap<>();
-        props.put(EcmFileConstants.CMIS_DOCUMENT_ID, file.getVersionSeriesId());
-        props.put(EcmFileConstants.NEW_FILE_NAME, newFileName);
+        props.put(ArkCaseCMISConstants.CMIS_DOCUMENT_ID, file.getVersionSeriesId());
+        props.put(ArkCaseCMISConstants.NEW_FILE_NAME, uniqueIdentificator);
         String cmisRepositoryId = file.getCmisRepositoryId();
         if (cmisRepositoryId == null)
         {
             cmisRepositoryId = ecmFileConfig.getDefaultCmisId();
         }
-        props.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+        props.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
         props.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
 
         EcmFile renamedFile;
@@ -2240,7 +2338,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                 {
                     for (final MultipartFile attachment : attachmentsList)
                     {
-                        AcmMultipartFile acmMultipartFile = new AcmMultipartFile(attachment, true);
+                        AcmMultipartFile acmMultipartFile = new AcmMultipartFile(attachment, false);
 
                         EcmFile metadata = new EcmFile();
                         metadata.setFileType(fileType);
@@ -2348,7 +2446,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             {
                 for (EcmFile ef : efList)
                 {
-                    if (!ef.isDuplicate()) {
+                    if (!ef.isDuplicate())
+                    {
                         ef.setDuplicate(true);
                         getEcmFileDao().save(ef);
                     }
@@ -2623,11 +2722,13 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         this.camelContextManager = camelContextManager;
     }
 
-    public FileEventPublisher getFileEventPublisher() {
+    public FileEventPublisher getFileEventPublisher()
+    {
         return fileEventPublisher;
     }
 
-    public void setFileEventPublisher(FileEventPublisher fileEventPublisher) {
+    public void setFileEventPublisher(FileEventPublisher fileEventPublisher)
+    {
         this.fileEventPublisher = fileEventPublisher;
     }
 }

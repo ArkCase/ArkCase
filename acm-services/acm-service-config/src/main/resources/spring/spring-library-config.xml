@@ -19,6 +19,11 @@
         <property name="propertiesConfigurationService" ref="collectionPropertiesConfigurationService"/>
     </bean>
 
+    <bean id="lookupsUpdatedListener" class="com.armedia.acm.services.config.lookups.service.LookupsUpdatedListener">
+        <property name="lookupDao" ref="lookupDao"/>
+        <property name="configurationUpdatedChannel" ref="configurationUpdatedChannel"/>
+    </bean>
+
     <bean id="objectTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
         <constructor-arg type="java.io.InputStream">
             <bean class="java.io.FileInputStream" destroy-method="close">

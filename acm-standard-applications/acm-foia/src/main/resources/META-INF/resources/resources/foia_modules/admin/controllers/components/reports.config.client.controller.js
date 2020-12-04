@@ -126,7 +126,7 @@ angular.module('admin').controller('Admin.ReportsConfigController', ['$scope', '
 
                 $scope.reportsRoles = payload[2].data;
 
-                var url = $scope.reportsConfig['report.plugin.PENTAHO_SERVER_URL'] + '/pentaho';
+                var url = $scope.reportsConfig['report.plugin.PENTAHO_SERVER_URL'] + $scope.reportsConfig['report.plugin.PENTAHO_DESIGNER_CONTEXT'];
                 $scope.reportDesignerUrl = $sce.trustAsResourceUrl(url);
                 $scope.onObjSelect($scope.reportsData.chooseObject[0]);
 
@@ -282,6 +282,12 @@ angular.module('admin').controller('Admin.ReportsConfigController', ['$scope', '
         function fillExportTypes() {
             ObjectLookupService.getLookupByLookupName("reportExportTypes").then(function (data) {
                 $scope.exportTypes = data;
+                var defaultExportType = ObjectLookupService.getPrimaryLookup($scope.exportTypes);
+
+                if (defaultExportType) {
+                    $scope.exportType = defaultExportType.key;
+                }
+
             });
         }
 

@@ -10,7 +10,7 @@
  *
  * @description
  *
- * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/admin/services/reports.config.client.service.js modules/admin/services/reports.config.client.service.js}
+ * {@link /acm-standard-applications/arkcase/src/main/webapp/resources/modules/admin/services/reports.config.client.service.js modules/admin/services/reports.config.client.service.js}
  *
  * The Admin.ReportsConfigService provides Reports Config REST calls functionality
  */
@@ -141,7 +141,7 @@ angular.module('admin').service('Admin.ReportsConfigService', function ($http) {
     function getRolesForReport(data) {
         return $http({
             method: "GET",
-            url: "api/latest/plugin/report/" + data.report.key + "/roles",
+            url: "api/latest/plugin/report/" + encodeURIComponent(data.report.key) + "/roles",
             cache: false,
             params: {
                 authorized: data.isAuthorized,
@@ -170,7 +170,7 @@ angular.module('admin').service('Admin.ReportsConfigService', function ($http) {
     function getRolesForReportByName(data) {
         return $http({
             method: "GET",
-            url: "api/latest/plugin/report/" + data.report.key + "/roles",
+            url: "api/latest/plugin/report/" + encodeURIComponent(data.report.key) + "/roles",
             cache: false,
             params: {
                 authorized: data.isAuthorized,
@@ -283,7 +283,7 @@ angular.module('admin').service('Admin.ReportsConfigService', function ($http) {
     function addRolesToReport(privilegeName, roles) {
         return $http({
             method: 'PUT',
-            url: 'api/latest/plugin/report/' + privilegeName + '/roles',
+            url: 'api/latest/plugin/report/' + encodeURIComponent(privilegeName) + '/roles',
             data: roles,
             cache: false,
             headers: {
@@ -308,7 +308,7 @@ angular.module('admin').service('Admin.ReportsConfigService', function ($http) {
     function removeRolesFromReport(privilegeName, roles) {
         return $http({
             method: 'DELETE',
-            url: 'api/latest/plugin/report/' + privilegeName + '/roles',
+            url: 'api/latest/plugin/report/' + encodeURIComponent(privilegeName) + '/roles',
             data: roles,
             cache: false,
             headers: {

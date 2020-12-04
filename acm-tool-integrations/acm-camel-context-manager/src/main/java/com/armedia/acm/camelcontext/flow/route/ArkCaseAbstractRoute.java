@@ -38,10 +38,9 @@ import java.util.Map;
 
 /**
  * Created by Vladimir Cherepnalkovski <vladimir.cherepnalkovski@armedia.com> on Nov, 2019
- * 
- * Currently not in use.
- * This class will be parent class on all routes. All mutual methods will be placed here.
- * All classes that are instance of ArkCaseAbstract.class will be added as routes on camelContext.
+ *
+ * This class must be parent class on all routes. All mutual methods will be placed here.
+ * All classes that are instance of ArkCaseAbstract.class will be added as routes on camelContext using Reflection.
  */
 public abstract class ArkCaseAbstractRoute extends RouteBuilder
 {

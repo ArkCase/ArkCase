@@ -6,8 +6,8 @@
                 <div class="form-group col-sm-12">
                     <label class="control-label" translate> cases.comp.main.requestType.label </label>
                     <select ng-model="objectInfo.requestType"
-                            ng-options="requestType.id as requestType.name for requestType in requestTypes" class="form-control input-md"
-                            ng-disabled="true">
+                            ng-options="requestType.key as requestType.value | translate for requestType in requestTypes"
+                            class="form-control input-md" ng-disabled="true">
                     </select>
 
                 </div>

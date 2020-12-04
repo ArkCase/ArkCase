@@ -27,6 +27,7 @@ package com.armedia.acm.plugins.ecm.model;
  * #L%
  */
 
+import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.AcmParentObjectInfo;
 import com.armedia.acm.core.AcmStatefulEntity;
@@ -274,7 +275,7 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     {
         if (getCmisRepositoryId() == null)
         {
-            setCmisRepositoryId(EcmFileConstants.DEFAULT_CMIS_REPOSITORY_ID);
+            setCmisRepositoryId(ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
         }
     }
 

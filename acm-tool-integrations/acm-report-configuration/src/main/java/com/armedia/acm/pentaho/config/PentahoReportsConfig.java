@@ -43,6 +43,10 @@ public class PentahoReportsConfig
     @Value("${report.plugin.PENTAHO_SERVER_URL}")
     private String serverUrl;
 
+    @JsonProperty("report.plugin.PENTAHO_DESIGNER_CONTEXT")
+    @Value("${report.plugin.PENTAHO_DESIGNER_CONTEXT}")
+    private String pentahoDesignerContext;
+
     @JsonProperty("report.plugin.PENTAHO_SERVER_PORT")
     @Value("${report.plugin.PENTAHO_SERVER_PORT}")
     private Integer serverPort;
@@ -428,5 +432,13 @@ public class PentahoReportsConfig
     public void setReportUrl(String reportUrl)
     {
         this.reportUrl = reportUrl;
+    }
+
+    public String getPentahoDesignerContext() {
+        return pentahoDesignerContext;
+    }
+
+    public void setPentahoDesignerContext(String pentahoDesignerContext) {
+        this.pentahoDesignerContext = pentahoDesignerContext;
     }
 }
