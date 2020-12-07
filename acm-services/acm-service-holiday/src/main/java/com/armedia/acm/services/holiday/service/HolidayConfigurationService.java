@@ -27,7 +27,9 @@ package com.armedia.acm.services.holiday.service;
  * #L%
  */
 
+import com.armedia.acm.core.model.ApplicationConfig;
 import com.armedia.acm.objectonverter.ObjectConverter;
+import com.armedia.acm.services.holiday.model.BusinessHoursConfig;
 import com.armedia.acm.services.holiday.model.HolidayConfiguration;
 
 import org.apache.commons.io.FileUtils;
@@ -38,6 +40,7 @@ import org.springframework.core.io.Resource;
 import java.io.IOException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.Objects;
@@ -51,6 +54,8 @@ public class HolidayConfigurationService
     private ObjectConverter objectConverter;
     private ReadWriteLock lock = new ReentrantReadWriteLock();
     private HolidayConfiguration holidayConfiguration;
+    private BusinessHoursConfig businessHoursConfig;
+    private ApplicationConfig applicationConfig;
 
     public void saveHolidayConfig(HolidayConfiguration holidayConfiguration)
     {
@@ -117,6 +122,32 @@ public class HolidayConfigurationService
         LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         localDate = addWorkingDaysToDate(localDate, workingDays);
         return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+    }
+
+    public Date addWorkingDaysToDateWithBusinessHours(Date date, int workingDays)
+    {
+        LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+        if (getBusinessHoursConfig().getEndOfBusinessDayEnabled() && isTimeAfterBusinessHours(date))
+        {
+            localDate = addWorkingDaysToDate(localDate, workingDays + 1);
+        }
+        else
+        {
+            localDate = addWorkingDaysToDate(localDate, workingDays);
+        }
+
+        return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+    }
+
+    public boolean isTimeAfterBusinessHours(Date date)
+    {
+        ZoneId defaultClientTimezone = ZoneId.of(getApplicationConfig().getDefaultTimezone());
+
+        LocalTime localTimeInSetTimezone = date.toInstant().atZone(defaultClientTimezone).toLocalTime();
+        LocalTime endOfBusinessDayTime = LocalTime.parse(getBusinessHoursConfig().getEndOfBusinessDayTime());
+
+        return localTimeInSetTimezone.isAfter(endOfBusinessDayTime);
     }
 
     public boolean isWeekendNonWorkingDay(LocalDate date)
@@ -200,5 +231,25 @@ public class HolidayConfigurationService
     public void setObjectConverter(ObjectConverter objectConverter)
     {
         this.objectConverter = objectConverter;
+    }
+
+    public BusinessHoursConfig getBusinessHoursConfig()
+    {
+        return businessHoursConfig;
+    }
+
+    public void setBusinessHoursConfig(BusinessHoursConfig businessHoursConfig)
+    {
+        this.businessHoursConfig = businessHoursConfig;
+    }
+
+    public ApplicationConfig getApplicationConfig()
+    {
+        return applicationConfig;
+    }
+
+    public void setApplicationConfig(ApplicationConfig applicationConfig)
+    {
+        this.applicationConfig = applicationConfig;
     }
 }
