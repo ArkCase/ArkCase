@@ -34,7 +34,6 @@ import com.armedia.acm.services.users.service.ldap.LdapAuthenticateService;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.ldap.AuthenticationException;
 import org.springframework.ldap.core.LdapTemplate;
 
 /**
@@ -89,7 +88,6 @@ public class FOIALdapAuthenticationService
 
     public void resetPortalUserPassword(String userName, String password) throws AcmUserActionFailedException
     {
-        // TODO change the search for user, external portal has a different reset mechanism.
         AcmUser acmUser = ldapAuthenticateService.getUserDao().findByUserId(userName);
         if (acmUser == null)
         {
@@ -106,18 +104,18 @@ public class FOIALdapAuthenticationService
         }
         catch (AcmLdapActionFailedException e)
         {
-            log.debug(e.getMessage(), e);
+            log.debug("Changing password failed for user [{}]. {}", acmUser.getUserId(), e.getMessage(), e);
             throw new AcmUserActionFailedException("reset password", "USER", null, "Change password action failed!", e);
         }
         try
         {
             ldapAuthenticateService.savePasswordExpirationDate(acmUser, ldapTemplate);
-            ldapAuthenticateService.invalidateToken(acmUser);
         }
-        catch (AuthenticationException e)
+        catch (Exception e)
         {
             log.warn("Password expiration date was not set for user [{}]", acmUser.getUserId(), e);
         }
+        ldapAuthenticateService.invalidateToken(acmUser);
     }
 
     public LdapAuthenticateService getLdapAuthenticateService()
