@@ -31,8 +31,8 @@ import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.services.holiday.service.HolidayConfigurationService;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
@@ -110,10 +110,10 @@ public class QueuesTimeToCompleteService
         switch (requestType)
         {
         case FOIAConstants.NEW_REQUEST_TYPE:
-            return getHolidayConfigurationService().addWorkingDaysToDate(date,
+            return getHolidayConfigurationService().addWorkingDaysToDateWithBusinessHours(date,
                     getTimeToComplete().getRequest().getTotalTimeToComplete());
         case FOIAConstants.APPEAL_REQUEST_TYPE:
-            return getHolidayConfigurationService().addWorkingDaysToDate(date,
+            return getHolidayConfigurationService().addWorkingDaysToDateWithBusinessHours(date,
                     getTimeToComplete().getAppeal().getTotalTimeToComplete());
         default:
             throw new RuntimeException("Unknown FOIA request type: " + requestType);
