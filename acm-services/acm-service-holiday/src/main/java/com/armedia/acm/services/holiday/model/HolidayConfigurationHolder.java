@@ -41,49 +41,49 @@ import java.util.Objects;
 @JsonSerialize(as = HolidayConfigurationHolder.class)
 public class HolidayConfigurationHolder implements InitializingBean
 {
-	@JsonProperty("holidayJsonConfiguration")
-	@Value("${holidayJsonConfiguration}")
-	private String holidayJsonConfiguration;
+    @JsonProperty("holidayJsonConfiguration")
+    @Value("${holidayJsonConfiguration}")
+    private String holidayJsonConfiguration;
 
-	private JSONUnmarshaller jsonUnmarshaller;
+    private JSONUnmarshaller jsonUnmarshaller;
 
-	private HolidayConfiguration holidayConfiguration;
+    private HolidayConfiguration holidayConfiguration;
 
-	@Override
-	public void afterPropertiesSet()
-	{
-		holidayConfiguration = jsonUnmarshaller.unmarshall(holidayJsonConfiguration, HolidayConfiguration.class);
-	}
+    @Override
+    public void afterPropertiesSet()
+    {
+        holidayConfiguration = jsonUnmarshaller.unmarshall(holidayJsonConfiguration, HolidayConfiguration.class);
+    }
 
-	public String getHolidayJsonConfiguration()
-	{
-		return Objects.nonNull(holidayConfiguration) ? new JSONObject(holidayConfiguration).toString() : "{}";
-	}
+    public String getHolidayJsonConfiguration()
+    {
+        return Objects.nonNull(holidayConfiguration) ? new JSONObject(holidayConfiguration).toString() : "{}";
+    }
 
-	public void setHolidayJsonConfiguration(String holidayJsonConfiguration)
-	{
-		this.holidayJsonConfiguration = holidayJsonConfiguration;
-	}
+    public void setHolidayJsonConfiguration(String holidayJsonConfiguration)
+    {
+        this.holidayJsonConfiguration = holidayJsonConfiguration;
+    }
 
-	@JsonIgnore
-	public JSONUnmarshaller getJsonUnmarshaller()
-	{
-		return jsonUnmarshaller;
-	}
+    @JsonIgnore
+    public JSONUnmarshaller getJsonUnmarshaller()
+    {
+        return jsonUnmarshaller;
+    }
 
-	public void setJsonUnmarshaller(JSONUnmarshaller jsonUnmarshaller)
-	{
-		this.jsonUnmarshaller = jsonUnmarshaller;
-	}
+    public void setJsonUnmarshaller(JSONUnmarshaller jsonUnmarshaller)
+    {
+        this.jsonUnmarshaller = jsonUnmarshaller;
+    }
 
-	@JsonIgnore
-	public HolidayConfiguration getHolidayConfiguration()
-	{
-		return holidayConfiguration;
-	}
+    @JsonIgnore
+    public HolidayConfiguration getHolidayConfiguration()
+    {
+        return holidayConfiguration;
+    }
 
-	public void setHolidayConfiguration(HolidayConfiguration holidayConfiguration)
-	{
-		this.holidayConfiguration = holidayConfiguration;
-	}
+    public void setHolidayConfiguration(HolidayConfiguration holidayConfiguration)
+    {
+        this.holidayConfiguration = holidayConfiguration;
+    }
 }
