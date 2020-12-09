@@ -619,8 +619,8 @@
         <button type="button" class="btn btn-secondary btn-sm" data-toggle="tooltip" data-title="Cancel" ng-click="cancelModal()">
             <span translate>cases.newRequest.cancel</span>
         </button>
-        <button type="button" class="btn btn-primary btn-sm" data-toggle="tooltip" ng-click="validateForm(requestForm)" title="Submit"
-                id="saveButton">
+        <button type="button" class="btn btn-primary btn-sm" data-toggle="tooltip" ng-click="validateForm(requestForm)"
+                ng-disabled="loading" title="Submit" id="saveButton">
             <i class="{{loadingIcon}}"></i>
             <span translate>cases.newRequest.save.button</span>
         </button>
