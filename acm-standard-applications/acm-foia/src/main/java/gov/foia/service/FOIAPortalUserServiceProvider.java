@@ -272,7 +272,6 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
      * java.lang.String, com.armedia.acm.portalgateway.model.PortalUser, java.lang.String)
      */
     @Override
-    @Transactional
     public UserRegistrationResponse registerUser(String portalId, String registrationId, PortalUser user, String password)
             throws PortalUserServiceException
     {
@@ -285,8 +284,9 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         }
 
         Optional<UserRegistrationRequestRecord> registrationRecord = registrationDao.findByRegistrationId(registrationId);
-        Optional<PortalFOIAPerson> registeredPerson = portalPersonDao.findByEmail(userEmail);
-        if (isUserRejectedForPortal(portalId, registeredPerson))
+        Optional<PortalFOIAPerson> registeredPortalPerson = portalPersonDao.findByEmail(userEmail);
+        Optional<Person> registeredFoiaPerson = getPersonDao().findByEmail(userEmail);
+        if (isUserRejectedForPortal(portalId, registeredPortalPerson))
         {
             return UserRegistrationResponse.rejected();
         }
@@ -302,9 +302,17 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         {
             return UserRegistrationResponse.invalid();
         }
+        else if (registeredFoiaPerson.isPresent())
+        {
+            PortalFOIAPerson person = changePersonIntoPortalFOIAPerson(portalId, registeredFoiaPerson.get());
+            person = getPortalFOIAPerson(portalId, user, Optional.of(person));
+            createPortalUser(portalId, user, person, password);
+            registrationDao.delete(registrationRecord.get());
+            return UserRegistrationResponse.accepted();
+        }
         else
         {
-            PortalFOIAPerson person = getPortalFOIAPerson(portalId, user, registeredPerson);
+            PortalFOIAPerson person = getPortalFOIAPerson(portalId, user, registeredPortalPerson);
             createPortalUser(portalId, user, person, password);
             registrationDao.delete(registrationRecord.get());
             return UserRegistrationResponse.accepted();
@@ -420,6 +428,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         return stripedUserId;
     }
 
+    @Transactional
     public void createPortalUser(String portalId, PortalUser user, PortalFOIAPerson person, String password)
             throws PortalUserServiceException
     {
