@@ -168,4 +168,10 @@ public interface NotificationConstants
      * sending messages with current template
      */
     String STATE_DISABLED = "DISABLED";
+
+
+    /**
+     * Email Notification Template Type
+     */
+    String EMAIL_NOTIFICATION_TEMPLATE_TYPE = "emailTemplate";
 }

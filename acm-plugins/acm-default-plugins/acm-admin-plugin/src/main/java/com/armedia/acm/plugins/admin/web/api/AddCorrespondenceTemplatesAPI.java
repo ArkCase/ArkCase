@@ -29,6 +29,7 @@ package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.plugins.admin.model.TemplateUpload;
 
+import com.armedia.acm.services.notification.model.NotificationConstants;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
@@ -119,7 +120,7 @@ public class AddCorrespondenceTemplatesAPI
 
         List<Object> templateUploadList = new ArrayList<>();
         String userHome = System.getProperty("user.home");
-        String pathName = templateType.equals("emailTemplate") ? userHome + "/.arkcase/acm/templates" : userHome + "/.arkcase/acm/correspondenceTemplates";
+        String pathName = templateType.equals(NotificationConstants.EMAIL_NOTIFICATION_TEMPLATE_TYPE) ? userHome + "/.arkcase/acm/templates" : userHome + "/.arkcase/acm/correspondenceTemplates";
         try
         {
             // save files to disk

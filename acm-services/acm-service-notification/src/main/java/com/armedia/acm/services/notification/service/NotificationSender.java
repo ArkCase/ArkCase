@@ -234,7 +234,7 @@ public abstract class NotificationSender
             }
 
             List<Template> templateConfigurations = getObjectConverter().getJsonUnmarshaller()
-                    .unmarshallCollection(resource, List.class, Template.class);
+                    .unmarshallCollection(FileUtils.readFileToString(templatesConfiguration.getFile()), List.class, Template.class);
 
             return templateConfigurations.stream()
                     .filter(t -> t.getTemplateFilename().equals(notification.getTemplateModelName() + ".html") && t.isEnabled())
@@ -243,7 +243,7 @@ public abstract class NotificationSender
         }
         catch (IOException ioe)
         {
-            throw new IllegalStateException(ioe);
+            throw new IllegalStateException("Error while checking if notification can be send with template " + notification.getTemplateModelName(), ioe);
         }
     }
 

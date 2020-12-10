@@ -147,7 +147,7 @@ public class NotificationServiceImpl implements NotificationService
     }
     
     @Override
-    public String setNotificationTitleForManulNotification(String templateName)
+    public String setNotificationTitleForManualNotification(String templateName)
     {
         String title = "";
         switch (templateName)
