@@ -51,7 +51,6 @@ import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.impl.EcmFileParticipantService;
@@ -81,7 +80,6 @@ import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.web.api.MDCConstants;
 import com.google.common.collect.ImmutableMap;
-
 import org.activiti.engine.ActivitiException;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -726,6 +724,9 @@ public class AcmTaskServiceImpl implements AcmTaskService
         source.setFileType("file");
         configuration.setEcmFile(source);
 
+        Long parentObjectId = task.getAttachedToObjectId();
+        String parentObjectType = (StringUtils.isNotBlank(task.getAttachedToObjectType())) ? task.getAttachedToObjectType() : null;
+
         configuration = getFileWorkflowBusinessRule().applyRules(configuration);
         if (!configuration.isBuckslipProcess())
         {
@@ -745,8 +746,8 @@ public class AcmTaskServiceImpl implements AcmTaskService
             pvars.put("approvers", approversCsv);
             pvars.put("taskName", task.getTitle());
 
-            pvars.put("PARENT_OBJECT_TYPE", task.getParentObjectType());
-            pvars.put("PARENT_OBJECT_ID", task.getParentObjectId());
+            pvars.put("PARENT_OBJECT_TYPE", parentObjectType);
+            pvars.put("PARENT_OBJECT_ID", parentObjectId);
             String documentsToReviewIds = task.getDocumentsToReview()
                     .stream()
                     .map(file -> String.valueOf(file.getFileId()))
