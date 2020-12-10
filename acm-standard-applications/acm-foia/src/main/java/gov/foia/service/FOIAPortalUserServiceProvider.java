@@ -943,8 +943,8 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         personOrganizationAssociation.setOrganization(organization);
         personOrganizationAssociation.setDefaultOrganization(false);
         personOrganizationAssociation.setPerson(person);
-        personOrganizationAssociation.setPersonToOrganizationAssociationType("owner");
-        personOrganizationAssociation.setOrganizationToPersonAssociationType("owned");
+        personOrganizationAssociation.setPersonToOrganizationAssociationType("unknown");
+        personOrganizationAssociation.setOrganizationToPersonAssociationType("unknown");
         if (person.getOrganizationAssociations().isEmpty())
         {
             personOrganizationAssociation.setDefaultOrganization(true);
