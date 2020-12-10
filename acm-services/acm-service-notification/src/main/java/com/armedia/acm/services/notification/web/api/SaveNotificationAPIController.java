@@ -34,8 +34,6 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.services.email.model.EmailMentionsDTO;
 import com.armedia.acm.services.email.model.EmailWithAttachmentsAndLinksDTO;
-import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksDTO;
-import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksResultDTO;
 import com.armedia.acm.services.email.service.AcmEmailServiceException;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.ApplicationNotificationEvent;
@@ -170,7 +168,7 @@ public class SaveNotificationAPIController
         // the user is stored in the session during login.
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
         
-        String title = notificationService.setNotificationTitleForManulNotification(emailDTO.getModelReferenceName());
+        String title = notificationService.setNotificationTitleForManualNotification(emailDTO.getModelReferenceName());
 
         List<EcmFileVersion> notificationFiles = new ArrayList<>();
         if(emailDTO.getAttachmentIds() != null)

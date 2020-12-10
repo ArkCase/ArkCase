@@ -42,5 +42,5 @@ public interface NotificationService
 
     Notification saveNotification(Notification notification);
     
-    String setNotificationTitleForManulNotification(String templateName);
+    String setNotificationTitleForManualNotification(String templateName);
 }
