@@ -4,7 +4,7 @@ package gov.foia.service.dataupdate;
  * #%L
  * ACM Standard Application: Freedom of Information Act
  * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
+ * Copyright (C) 2014 - 2020 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 
@@ -27,24 +27,39 @@ package gov.foia.service.dataupdate;
  * #L%
  */
 
+import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.services.dataupdate.service.AcmDataUpdateExecutor;
-import com.armedia.acm.services.dataupdate.service.CoreExtensionDataUpdateExecutors;
+import com.armedia.acm.services.dataupdate.service.SolrReindexService;
 
-import java.util.List;
+import java.util.Arrays;
 
-public class FoiaExtensionDataUpdateExecutor implements CoreExtensionDataUpdateExecutors
+/**
+ * Created by Aleksandar Acevski <aleksandar.acevski@armedia.com> on December, 2020
+ */
+public class SolrReindexPersonAssociationsExecutor implements AcmDataUpdateExecutor
 {
 
-    private List<AcmDataUpdateExecutor> foiaDataUpdateExecutors;
+    private SolrReindexService solrReindexService;
 
     @Override
-    public List<AcmDataUpdateExecutor> getExecutors()
+    public String getUpdateId()
     {
-        return foiaDataUpdateExecutors;
+        return "solr-person-associations-reindex-v1";
     }
 
-    public void setFoiaDataUpdateExecutors(List<AcmDataUpdateExecutor> foiaDataUpdateExecutors)
+    @Override
+    public void execute()
     {
-        this.foiaDataUpdateExecutors = foiaDataUpdateExecutors;
+        solrReindexService.reindex(Arrays.asList(PersonAssociation.class));
+    }
+
+    public SolrReindexService getSolrReindexService()
+    {
+        return solrReindexService;
+    }
+
+    public void setSolrReindexService(SolrReindexService solrReindexService)
+    {
+        this.solrReindexService = solrReindexService;
     }
 }

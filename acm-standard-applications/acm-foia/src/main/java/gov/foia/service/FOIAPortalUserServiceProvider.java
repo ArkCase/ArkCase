@@ -73,7 +73,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Base64Utils;
 
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -164,10 +163,13 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     public UserRegistrationResponse requestRegistration(String portalId, UserRegistrationRequest registrationRequest)
             throws PortalUserServiceException
     {
-        if (getPortalAcmUser(registrationRequest.getEmailAddress()) != null && isAcmUserValid(registrationRequest.getEmailAddress()))
+        AcmUser user = getPortalAcmUser(registrationRequest.getEmailAddress());
+
+        if (user != null && user.getUserState() == AcmUserState.VALID)
         {
             return UserRegistrationResponse.exists();
         }
+
         Optional<UserRegistrationRequestRecord> registrationRecord = registrationDao.findByEmail(registrationRequest.getEmailAddress(),
                 portalId);
         Optional<PortalFOIAPerson> registeredPerson = portalPersonDao.findByEmail(registrationRequest.getEmailAddress());
@@ -175,10 +177,6 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         if (isUserRejectedForPortal(portalId, registeredPerson))
         {
             return UserRegistrationResponse.rejected();
-        }
-        else if (registeredPerson.isPresent() && registeredPerson.get().getPortalRoles().containsKey(portalId) && isAcmUserValid(registrationRequest.getEmailAddress()))
-        {
-            return UserRegistrationResponse.exists();
         }
         else if (registrationRecord.isPresent() && isRegistrationRecordActive(registrationRecord.get().getRegistrationTime()))
         {
@@ -268,37 +266,29 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         return registrationTime + REGISTRATION_EXPIRATION > System.currentTimeMillis();
     }
 
-    private boolean isAcmUserValid(String emailAddress)
-    {
-        Optional<AcmUser>acmUser = userDao.findByEmailAddress(emailAddress).stream().findFirst();
-        return acmUser.isPresent() && acmUser.get().getUserState() == AcmUserState.VALID;
-    }
-
     /*
      * (non-Javadoc)
      * @see com.armedia.acm.portalgateway.service.PortalUserServiceProvider#registerUser(java.lang.String,
      * java.lang.String, com.armedia.acm.portalgateway.model.PortalUser, java.lang.String)
      */
     @Override
-    @Transactional
     public UserRegistrationResponse registerUser(String portalId, String registrationId, PortalUser user, String password)
             throws PortalUserServiceException
     {
-        String key = user.getEmail();
-        if (getPortalAcmUser(key) != null && isAcmUserValid(key))
+        String userEmail = user.getEmail();
+        AcmUser portalUser = getPortalAcmUser(userEmail);
+
+        if (portalUser != null && portalUser.getUserState() == AcmUserState.VALID)
         {
             return UserRegistrationResponse.exists();
         }
-        Optional<UserRegistrationRequestRecord> registrationRecord = registrationDao.findByRegistrationId(registrationId);
-        Optional<PortalFOIAPerson> registeredPerson = portalPersonDao.findByEmail(key);
 
-        if (isUserRejectedForPortal(portalId, registeredPerson))
+        Optional<UserRegistrationRequestRecord> registrationRecord = registrationDao.findByRegistrationId(registrationId);
+        Optional<PortalFOIAPerson> registeredPortalPerson = portalPersonDao.findByEmail(userEmail);
+        Optional<Person> registeredFoiaPerson = getPersonDao().findByEmail(userEmail);
+        if (isUserRejectedForPortal(portalId, registeredPortalPerson))
         {
             return UserRegistrationResponse.rejected();
-        }
-        else if (registeredPerson.isPresent() && registeredPerson.get().getPortalRoles().containsKey(portalId) && isAcmUserValid(key))
-        {
-            return UserRegistrationResponse.exists();
         }
         else if (!registrationRecord.isPresent())
         {
@@ -312,9 +302,17 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         {
             return UserRegistrationResponse.invalid();
         }
+        else if (registeredFoiaPerson.isPresent())
+        {
+            PortalFOIAPerson person = changePersonIntoPortalFOIAPerson(portalId, registeredFoiaPerson.get());
+            person = getPortalFOIAPerson(portalId, user, Optional.of(person));
+            createPortalUser(portalId, user, person, password);
+            registrationDao.delete(registrationRecord.get());
+            return UserRegistrationResponse.accepted();
+        }
         else
         {
-            PortalFOIAPerson person = getPortalFOIAPerson(portalId, user, registeredPerson);
+            PortalFOIAPerson person = getPortalFOIAPerson(portalId, user, registeredPortalPerson);
             createPortalUser(portalId, user, person, password);
             registrationDao.delete(registrationRecord.get());
             return UserRegistrationResponse.accepted();
@@ -331,14 +329,14 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     public PortalFOIAPerson getPortalFOIAPerson(String portalId, PortalUser user, Optional<PortalFOIAPerson> registeredPerson)
     {
         PortalFOIAPerson person;
+        user.setRole(PortalUser.PENDING_USER);
         if (registeredPerson.isPresent())
         {
             person = registeredPerson.get();
-            person.getPortalRoles().put(portalId, PortalUser.PENDING_USER);
+            updatePortalPersonFromPortalUser(portalId, registeredPerson.get(), user);
         }
         else
         {
-            user.setRole(PortalUser.PENDING_USER);
             person = portalPersonFromPortalUser(portalId, user);
         }
         return person;
@@ -417,7 +415,8 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         UserResetRequest resetRequest = new UserResetRequest();
         resetRequest.setEmailAddress(user.getEmail());
         String baseUrl = Base64Utils
-                .encodeToString((new String(portalConfigurationService.getPortalConfiguration().getUrl() + "/portal/login/reset")).getBytes());
+                .encodeToString(
+                        (new String(portalConfigurationService.getPortalConfiguration().getUrl() + "/portal/login/reset")).getBytes());
         resetRequest.setResetUrl(baseUrl);
         return resetRequest;
     }
@@ -429,6 +428,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         return stripedUserId;
     }
 
+    @Transactional
     public void createPortalUser(String portalId, PortalUser user, PortalFOIAPerson person, String password)
             throws PortalUserServiceException
     {
@@ -439,11 +439,11 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
                     password != null ? new String(Base64Utils.decodeFromString(password), StandardCharsets.UTF_8) : null,
                     portalConfigurationService.getPortalConfiguration().getGroupName());
             portalPersonDao.save(person);
-            Optional<AcmUser> foundAcmUser = userDao.findByEmailAddress(user.getEmail()).stream().findFirst();
-            AcmUser acmUser;
-            if (foundAcmUser.isPresent() && foundAcmUser.get().getUserState() == AcmUserState.INVALID)
+
+            AcmUser existingUser = getPortalAcmUser(user.getEmail());
+            if (existingUser != null && existingUser.getUserState() != AcmUserState.VALID)
             {
-                userDto.setUserId(stripPrefixAndSuffix(foundAcmUser.get().getUserId()));
+                userDto.setUserId(stripPrefixAndSuffix(existingUser.getUserId()));
             }
             else
             {
@@ -452,7 +452,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
                     userDto.setUserId(MapperUtils.generateAutoUsername(ldapSyncConfig.getUserPrefix()));
                 }
             }
-            acmUser = ldapUserService.createLdapUser(userDto, directoryName);
+            AcmUser acmUser = ldapUserService.createLdapUser(userDto, directoryName);
             getRequestAssignmentService().addPortalUserAsParticipantToExistingRequests(acmUser, person);
             acmUserEventPublisher.getApplicationEventPublisher().publishEvent(new AcmLdapSyncEvent(acmUser.getUserId()));
         }
@@ -471,14 +471,13 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     @Override
     public PortalUser authenticateUser(String portalId, String credentials) throws PortalUserServiceException
     {
-        // TODO Auto-generated method stubPortalUser user = new PortalUser();
-        String[] usernamePassword = new String(Base64Utils.decodeFromString(credentials), Charset.forName("UTF-8")).split(":");
+        String[] usernamePassword = new String(Base64Utils.decodeFromString(credentials), StandardCharsets.UTF_8).split(":");
         String username = usernamePassword[0];
         String password = usernamePassword[1];
 
         AcmUser portalAcmUser = getPortalAcmUser(username);
 
-        if (portalAcmUser == null)
+        if (portalAcmUser == null || portalAcmUser.getUserState() != AcmUserState.VALID)
         {
             throw new PortalUserServiceException(String.format("User %s doesn't exist!", username));
         }
@@ -528,6 +527,9 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
                 }
                 PortalUser portalUserAuthenticated = portaluserFromPortalPerson(portalId, portalUser.get());
                 portalUserAuthenticated.setAcmUserId(portalAcmUser.getUserId());
+                log.debug("Authenticated portal user is [{}] with email [{}] and role [{}] for portal with id [{}]",
+                        portalUserAuthenticated.getAcmUserId(), portalUserAuthenticated.getEmail(), portalUserAuthenticated.getRole(),
+                        portalId);
                 return portalUserAuthenticated;
             }
         }
@@ -950,8 +952,8 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         personOrganizationAssociation.setOrganization(organization);
         personOrganizationAssociation.setDefaultOrganization(false);
         personOrganizationAssociation.setPerson(person);
-        personOrganizationAssociation.setPersonToOrganizationAssociationType("owner");
-        personOrganizationAssociation.setOrganizationToPersonAssociationType("owned");
+        personOrganizationAssociation.setPersonToOrganizationAssociationType("unknown");
+        personOrganizationAssociation.setOrganizationToPersonAssociationType("unknown");
         if (person.getOrganizationAssociations().isEmpty())
         {
             personOrganizationAssociation.setDefaultOrganization(true);
@@ -1108,6 +1110,46 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         person.getPortalRoles().put(portalId, user.getRole());
 
         return person;
+    }
+
+    private void updatePortalPersonFromPortalUser(String portalId, PortalFOIAPerson existingPerson, PortalUser user)
+    {
+        existingPerson.setGivenName(user.getFirstName());
+        existingPerson.setMiddleName(user.getMiddleName());
+        existingPerson.setFamilyName(user.getLastName());
+        existingPerson.setTitle(user.getPrefix());
+        existingPerson.setPosition(user.getPosition());
+
+        PostalAddress address = existingPerson.getDefaultAddress();
+        if (address != null)
+        {
+            address.setCity(user.getCity());
+            address.setCountry(user.getCountry());
+            address.setState(user.getState());
+            address.setStreetAddress(user.getAddress1());
+            address.setStreetAddress2(user.getAddress2());
+            address.setZip(user.getZipCode());
+            address.setType(user.getAddressType());
+        }
+
+        ContactMethod contactMethodPhone = existingPerson.getDefaultPhone();
+        if (contactMethodPhone != null)
+        {
+            contactMethodPhone.setValue(user.getPhoneNumber());
+        }
+
+        ContactMethod contactMethodEmail = existingPerson.getDefaultEmail();
+        if (contactMethodEmail !=null)
+        {
+            contactMethodEmail.setValue(user.getEmail());
+        }
+
+        if (user.getOrganization() != null)
+        {
+            findOrCreateOrganizationAndPersonOrganizationAssociation(existingPerson, user.getOrganization());
+        }
+
+        existingPerson.getPortalRoles().put(portalId, user.getRole());
     }
 
     private ContactMethod buildContactMethod(String type, String value)

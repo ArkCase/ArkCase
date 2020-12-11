@@ -27,8 +27,10 @@ package com.armedia.acm.correspondence.web.api;
  * #L%
  */
 
+import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.correspondence.exception.CorrespondenceTemplateMissingAssigneeException;
 import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
 import com.armedia.acm.correspondence.service.CorrespondenceService;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
@@ -67,8 +69,7 @@ public class GenerateCorrespondenceAPIController
             @RequestParam("parentObjectId") Long parentObjectId,
             @RequestParam("folderId") Long folderId,
             Authentication authentication)
-            throws AcmCreateObjectFailedException, AcmUserActionFailedException
-    {
+            throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmAppErrorJsonMsg {
         log.debug("User '{}' is generating template '{}'", authentication.getName(), templateName);
 
         try
@@ -89,6 +90,12 @@ public class GenerateCorrespondenceAPIController
         {
             log.error("Could not add correspondence: {}", e.getMessage(), e);
             throw new AcmCreateObjectFailedException("correspondence", e.getMessage(), e);
+        }
+
+        catch (CorrespondenceTemplateMissingAssigneeException e)
+        {
+            log.error("Could not add correspondence due to missing assignee: {}", e.getMessage(), e);
+            throw new AcmAppErrorJsonMsg(e.getMessage(), "correspondence", e);
         }
     }
 

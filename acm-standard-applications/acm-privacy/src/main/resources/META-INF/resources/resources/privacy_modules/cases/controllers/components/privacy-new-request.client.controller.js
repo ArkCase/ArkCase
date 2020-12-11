@@ -191,6 +191,10 @@ angular.module('cases').controller(
                 $scope.config.data.subject.person.dateOfBirth = moment.utc().format("YYYY-MM-DD");
 
                 $scope.blankPerson = angular.copy($scope.config.data.originator.person);
+
+                if ($scope.config.data.originator.person.addresses[0] && !Util.isEmpty($scope.config.data.originator.person.addresses[0].country)) {
+                    $scope.changeStates($scope.config.data.originator.person.addresses[0].country);
+                }
             });
 
             $scope.isEmailDaliveryMethod = false;

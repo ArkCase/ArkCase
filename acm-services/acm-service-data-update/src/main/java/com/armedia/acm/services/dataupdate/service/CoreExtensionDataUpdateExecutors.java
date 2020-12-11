@@ -1,8 +1,8 @@
-package gov.foia.service.dataupdate;
+package com.armedia.acm.services.dataupdate.service;
 
 /*-
  * #%L
- * ACM Standard Application: Freedom of Information Act
+ * ACM Service: Data Update Service
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
@@ -27,24 +27,19 @@ package gov.foia.service.dataupdate;
  * #L%
  */
 
-import com.armedia.acm.services.dataupdate.service.AcmDataUpdateExecutor;
-import com.armedia.acm.services.dataupdate.service.CoreExtensionDataUpdateExecutors;
-
 import java.util.List;
 
-public class FoiaExtensionDataUpdateExecutor implements CoreExtensionDataUpdateExecutors
+/**
+ * Interface to be implemented by the core extension if custom {@link AcmDataUpdateExecutor} implementations are to be
+ * provided. These implementations are automatically searched in the Spring context and executed in
+ * {@link AcmDataUpdateManager}.
+ */
+public interface CoreExtensionDataUpdateExecutors
 {
-
-    private List<AcmDataUpdateExecutor> foiaDataUpdateExecutors;
-
-    @Override
-    public List<AcmDataUpdateExecutor> getExecutors()
-    {
-        return foiaDataUpdateExecutors;
-    }
-
-    public void setFoiaDataUpdateExecutors(List<AcmDataUpdateExecutor> foiaDataUpdateExecutors)
-    {
-        this.foiaDataUpdateExecutors = foiaDataUpdateExecutors;
-    }
+    /**
+     * Returns list of executors.
+     *
+     * @return List<AcmDataUpdateExecutor>
+     */
+    List<AcmDataUpdateExecutor> getExecutors();
 }

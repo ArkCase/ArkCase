@@ -34,8 +34,10 @@ import com.lowagie.text.pdf.RandomAccessFileOrArray;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hwpf.HWPFDocument;
 import org.apache.poi.xslf.usermodel.XMLSlideShow;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 import java.io.File;
@@ -50,6 +52,8 @@ public class PageCountServiceImpl implements PageCountService
     private final static String MIME_TYPE_DOC = "application/msword";
     private final static String MIME_TYPE_DOCX = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
     private final static String MIME_TYPE_PPTX = "application/vnd.openxmlformats-officedocument.presentationml.presentation";
+    private final static String MIME_TYPE_XLS = "application/vnd.ms-excel";
+    private final static String MIME_TYPE_XLSX = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
     private final static int DEFAULT_NUMBER_OF_PAGES = 1;
 
@@ -101,6 +105,10 @@ public class PageCountServiceImpl implements PageCountService
             return getNumberOfPagesDocFile(file);
         case MIME_TYPE_PPTX:
             return getNumberOfPagesPptxFile(file);
+        case MIME_TYPE_XLS:
+            return getNumberOfPagesXlsFile(file);
+        case MIME_TYPE_XLSX:
+            return getNumberOfPagesXlsxFile(file);
         default:
             log.warn("Still don't know how to retrieve the page count for [{}] mime type", mimeType);
             return DEFAULT_NUMBER_OF_PAGES;
@@ -136,6 +144,22 @@ public class PageCountServiceImpl implements PageCountService
         XMLSlideShow pptxSlideShow = new XMLSlideShow(new FileInputStream(file));
         int numberOfPages = pptxSlideShow.getSlides().size();
         pptxSlideShow.close();
+        return numberOfPages;
+    }
+
+    private int getNumberOfPagesXlsFile(File file) throws IOException
+    {
+        HSSFWorkbook xlsDoc = new HSSFWorkbook(new FileInputStream(file));
+        int numberOfPages = xlsDoc.getNumberOfSheets();
+        xlsDoc.close();
+        return numberOfPages;
+    }
+
+    private int getNumberOfPagesXlsxFile(File file) throws IOException
+    {
+        XSSFWorkbook xlsxDoc = new XSSFWorkbook(new FileInputStream(file));
+        int numberOfPages = xlsxDoc.getNumberOfSheets();
+        xlsxDoc.close();
         return numberOfPages;
     }
 

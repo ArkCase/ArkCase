@@ -411,7 +411,7 @@ angular.module('services').factory('Util.DateService', [ '$translate', 'UtilServ
 
         fixStartAndEndDirectiveDates: function(start, end, oldValue, newValue, convertToDateFormat){
             var todayDate = new Date();
-            var oldDate = moment(oldValue).format("DD/MM/YYYY/hh:mm:ss");
+            var oldDate = moment(oldValue).format("DD/MM/YYYY hh:mm:ss");
             var newDate = moment(newValue).format("DD/MM/YYYY hh:mm:ss");
 
             var startDate = typeof(start) === "object" ? start : new Date(start);
