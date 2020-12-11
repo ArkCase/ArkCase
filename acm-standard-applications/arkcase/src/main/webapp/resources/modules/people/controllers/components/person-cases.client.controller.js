@@ -126,7 +126,6 @@ angular.module('people').controller(
                         if (!rowEntity) {
                             association.person = $scope.objectInfo;
                             association.parentId = data.solrDocument.object_id_s;
-                            association.parentType = data.solrDocument.object_type_s;
                         }
                         association.personType = data.type;
                         association.personDescription = data.description;
@@ -154,7 +153,7 @@ angular.module('people').controller(
                             id: null,
                             personType: "",
                             parentId: $scope.objectInfo.id,
-                            parentType: $scope.objectInfo.objectType,
+                            parentType: "CASE_FILE",
                             parentTitle: $scope.objectInfo.caseNumber,
                             personDescription: "",
                             notes: "",

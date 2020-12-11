@@ -180,6 +180,7 @@ angular.module('request-info').controller(
                     animation: true,
                     templateUrl: 'modules/document-details/views/components/annotation-tags-modal.client.view.html',
                     controller: 'Document.AnnotationTagsModalController',
+                    windowClass: 'modal-width-80',
                     backdrop: 'static',
                     resolve: {
                         params: function () {
@@ -349,8 +350,12 @@ angular.module('request-info').controller(
                     id: "requests"
                 });
                 $scope.categories = reqConfig.categories;
-                $scope.requestTypes = reqConfig.requestTypes;
             });
+
+            ObjectLookupService.getRequestTypes().then(function (requestTypes) {
+                $scope.requestTypes = requestTypes;
+            });
+
 
             ObjectLookupService.getPriorities().then(function (priorities) {
                 var options = [];

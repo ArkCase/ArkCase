@@ -356,7 +356,7 @@
                     "name": "key",
                     "displayName": "cases.comp.exemption.table.columns.exemptionCode",
                     "headerCellFilter": "translate",
-                    "width": 150
+                    "width": 500
                 },
                 {
                     "name": "value",

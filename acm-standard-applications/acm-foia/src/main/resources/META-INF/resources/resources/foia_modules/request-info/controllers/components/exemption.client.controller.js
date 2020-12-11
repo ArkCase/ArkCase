@@ -98,6 +98,7 @@ angular.module('request-info').controller('RequestInfo.ExemptionController',
                     animation: true,
                     templateUrl: 'modules/document-details/views/components/annotation-tags-modal.client.view.html',
                     controller: 'RequestInfo.AnnotationTagsManuallyModalController',
+                    windowClass: 'modal-width-80',
                     backdrop: 'static',
                     resolve: {
                         params: function () {
@@ -139,6 +140,7 @@ angular.module('request-info').controller('RequestInfo.ExemptionController',
                     size: 'lg',
                     templateUrl: 'modules/cases/views/components/case-exemption-codes-description-modal.client.view.html',
                     controller: 'Cases.ExemptionCodesDescriptionModalController',
+                    windowClass: 'modal-width-80',
                     backdrop: 'static'
                 })
             };

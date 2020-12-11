@@ -10,8 +10,8 @@
                 </div>
                 <div class="col-sm-4 form-group">
                     <select id="requestType" ng-model="config.data.requestType"
-                            ng-options="requestType.key as requestType.value for requestType in requestTypes" class="form-control input-md"
-                            ng-change="setPerson(blankPerson); config.data.originalRequestNumber = null">
+                            ng-options="requestType.key as requestType.value | translate for requestType in requestTypes"
+                            class="form-control input-md" ng-change="setPerson(blankPerson); config.data.originalRequestNumber = null">
                     </select>
                 </div>
                 <div class="col-sm-2 form-group">
@@ -49,8 +49,8 @@
                         </div>
                         <div class="col-sm-5 form-group">
                             <select name="requesterCategory" id="requesterCategory" ng-model="config.data.requestCategory"
-                                    ng-options="category.key as category.value for category in categories" class="form-control input-md"
-                                    required="required">
+                                    ng-options="category.key as category.value | translate for category in categories"
+                                    class="form-control input-md" required="required">
                             </select>
                             <span class="text-danger" ng-if="!config.data.requestCategory && formInvalid" translate>cases.newRequest.requestCategory.validation.error</span>
                         </div>
@@ -548,8 +548,8 @@
         <button type="button" class="btn btn-secondary btn-sm" data-toggle="tooltip" data-title="Cancel" ng-click="cancelModal()">
             <span translate>cases.newRequest.cancel</span>
         </button>
-        <button type="button" class="btn btn-primary btn-sm" data-toggle="tooltip" ng-click="validateForm(requestForm)" title="Submit"
-                id="saveButton">
+        <button type="button" class="btn btn-primary btn-sm" data-toggle="tooltip" ng-click="validateForm(requestForm)"
+                ng-disabled="loading" title="Submit" id="saveButton">
             <i class="{{loadingIcon}}"></i>
             <span translate>cases.newRequest.save.button</span>
         </button>

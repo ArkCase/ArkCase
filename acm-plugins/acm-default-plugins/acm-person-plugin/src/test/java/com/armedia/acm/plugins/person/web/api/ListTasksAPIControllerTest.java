@@ -1,4 +1,4 @@
-package com.armedia.acm.plugins.task.web.api;
+package com.armedia.acm.plugins.person.web.api;
 
 /*-
  * #%L
@@ -68,7 +68,7 @@ import java.util.List;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
         "classpath:/spring/spring-web-acm-web.xml",
-        "classpath:/spring/spring-library-task-plugin-unit-test.xml"
+        "classpath:/spring/spring-library-person-plugin-api-test.xml"
 })
 public class ListTasksAPIControllerTest extends EasyMockSupport
 {
@@ -123,7 +123,7 @@ public class ListTasksAPIControllerTest extends EasyMockSupport
         replayAll();
 
         MvcResult result = mockMvc.perform(
-                get("/api/v1/plugin/task/forUser/{user}", user)
+                get("/api/v1/plugin/person/forUser/{user}", user)
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                         .principal(mockAuthentication)
                         .session(mockHttpSession))
@@ -165,8 +165,9 @@ public class ListTasksAPIControllerTest extends EasyMockSupport
 
         replayAll();
 
+        
         mockMvc.perform(
-                get("/api/v1/plugin/task/forUser/{user}", user)
+                get("/api/v1/plugin/person/forUser/{user}", user)
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                         .principal(mockAuthentication)
                         .session(mockHttpSession))

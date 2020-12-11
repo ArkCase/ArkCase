@@ -109,7 +109,7 @@ deploy_backend_foia_dev:
     # Dev Foia repository ID on tower is 45
     - 'curl -H "Content-Type: application/json" -X POST -s -u gitlabci:$GITLABCI_TOWER_PASSWORD -d ''{ "inventory": 45, "job_tags": "core,foia", "extra_vars": "{\"arkcase_version\": \"\", \"arkcase_configuration_version\":\"\", \"arkcase_config_server_version\":\"\", \"snowbound_arkcase_version\":\"\"}"}'' -k $TOWER_URL/api/v2/job_templates/129/launch/'
 
-deploy_backend_privacy_dev:
+.deploy_backend_privacy_dev:
   stage: deploy
   only:
     - develop

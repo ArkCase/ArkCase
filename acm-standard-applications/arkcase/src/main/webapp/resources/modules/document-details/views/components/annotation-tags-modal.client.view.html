@@ -7,10 +7,12 @@
 
 <div class="modal-body">
     <div class="container-fluid">
-        <div class="row">
-            <object-authorization data="data" object-display-name="name" on-object-selected="init" role-display-name="name"
+        <div id="navbar" class="navbar-collapse collapse">
+            <div class="row">
+                <object-authorization data="data" object-display-name="name" on-object-selected="init" role-display-name="name"
                     on-auth-role-change="onChange" object-title="{{'admin.security.functionalAccessControl.applicationRole' | translate}}"
-                    object-type="!role" show-tooltip="true"/>
+                    object-type="!role" show-tooltip="true" is-from-exemption-code="true"/>
+            </div>
         </div>
         <br>
     </div>

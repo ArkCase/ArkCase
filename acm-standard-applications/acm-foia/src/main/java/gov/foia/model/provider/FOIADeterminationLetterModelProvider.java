@@ -39,6 +39,7 @@ import com.armedia.acm.services.labels.service.TranslationService;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.correspondence.exception.CorrespondenceTemplateMissingAssigneeException;
 import gov.foia.model.FOIADeterminationLetterCorrespondence;
 import gov.foia.model.FOIARequest;
 import gov.foia.service.FOIAExemptionService;
@@ -90,6 +91,9 @@ public class FOIADeterminationLetterModelProvider implements TemplateModelProvid
         determinationLetterCorrespondence.setExemptionCodesAndDescription(exemptionCodesAndDescription);
 
         String requestAssignee = ParticipantUtils.getAssigneeIdFromParticipants(request.getParticipants());
+        if (requestAssignee == null) {
+            throw new CorrespondenceTemplateMissingAssigneeException("Assignee is Required");
+        }
         AcmUser acmUser = userDao.findByUserId(requestAssignee);
         String requestAssigneeName = null;
         String requestAssigneeTitle = null;

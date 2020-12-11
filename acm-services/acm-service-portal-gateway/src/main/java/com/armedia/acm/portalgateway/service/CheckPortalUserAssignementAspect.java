@@ -88,10 +88,10 @@ public class CheckPortalUserAssignementAspect
         else
         {
             log.warn(
-                    "Probably not a proper way of using [{}] annotation. One argument has to be of [{}] type, and another [{}] anotated with [{}].",
+                    "Probably not a proper way of using [{}] annotation. One argument has to be of [{}] type, and another annotated with [{}].",
                     CheckPortalUserAssignement.class.getName(), String.class.getName(), PortalId.class.getName());
             throw new PortalUserAssignementException(String.format(
-                    "Probably not a proper way of using [%s] annotation. One argument has to be of [%s] type, and another [%s] anotated with [%s].",
+                    "Probably not a proper way of using [%s] annotation. One argument has to be of [%s] type, and another annotated with [%s].",
                     CheckPortalUserAssignement.class.getName(), String.class.getName(), PortalId.class.getName()));
         }
 

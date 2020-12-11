@@ -139,9 +139,8 @@ public class ArkCasePortalGatewayUserAPIController
     public ResponseEntity<?> authenticateUser(Authentication auth, @PortalId @PathVariable(value = "portalId") String portalId,
             @RequestBody String credentials) throws PortalUserServiceException
     {
-        PortalUser portalUser = new PortalUser();
         log.debug("Requesting user authentication for user at portal with [{}] ID.", portalId);
-        portalUser = portalUserService.authenticateUser(portalId, credentials);
+        PortalUser portalUser = portalUserService.authenticateUser(portalId, credentials);
         return new ResponseEntity<>(portalUser, HttpStatus.OK);
     }
 

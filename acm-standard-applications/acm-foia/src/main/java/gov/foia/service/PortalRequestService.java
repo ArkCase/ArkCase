@@ -410,8 +410,10 @@ public class PortalRequestService
     {
         AcmTask requestWithdrawalTask = new AcmTask();
 
-        String requestTitle = String.format("%s %s: %s", WITHDRAW_REQUEST_TITLE, withdrawRequestDetails.getOriginalRequestNumber(),
-                withdrawRequestDetails.getSubject());
+        String requestTitle = withdrawRequestDetails.getSubject() != null ?
+                String.format("%s %s: %s", WITHDRAW_REQUEST_TITLE, withdrawRequestDetails.getOriginalRequestNumber(),
+                withdrawRequestDetails.getSubject()) :
+                String.format("%s %s", WITHDRAW_REQUEST_TITLE, withdrawRequestDetails.getOriginalRequestNumber());
         requestWithdrawalTask.setTitle(requestTitle);
         requestWithdrawalTask.setType("web-portal-withdrawal");
         requestWithdrawalTask.setDetails(withdrawRequestDetails.getDescription());
