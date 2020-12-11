@@ -27,6 +27,7 @@ package com.armedia.acm.plugins.task.service.impl;
  * #L%
  */
 
+import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
 import com.armedia.acm.auth.AcmAuthentication;
 import com.armedia.acm.auth.AcmAuthenticationManager;
 import com.armedia.acm.core.AcmNotifiableEntity;
@@ -643,7 +644,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
         businessProcess.setStatus("DRAFT");
         businessProcess = saveBusinessProcess.save(businessProcess);
         AcmContainer container = ecmFileService.createContainerFolder(businessProcess.getObjectType(), businessProcess.getId(),
-                EcmFileConstants.DEFAULT_CMIS_REPOSITORY_ID);
+                 ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
         getAcmContainerDao().getEm().flush();
         businessProcess.setContainer(container);
         AcmFolder folder = container.getAttachmentFolder();
