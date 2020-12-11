@@ -168,14 +168,16 @@
                                 <label for="country" translate>consultations.newConsultation.country.label</label>
                             </div>
                             <div class="col-sm-4">
-                                <select id="country" class="form-control" ng-model="config.data.originator.person.addresses[0].country"
-                                        ng-disabled="isExistingPerson && existingPerson.addresses[0].country"
-                                        ng-change="changeStates(config.data.originator.person.addresses[0].country)">
+                                <select id="country" class="form-control"
+                                        ng-model="config.data.originator.person.addresses[primaryAddressIndex].country"
+                                        ng-disabled="isExistingPerson && existingPerson.addresses[primaryAddressIndex].country"
+                                        ng-change="changeStates(config.data.originator.person.addresses[primaryAddressIndex].country)">
                                     <option ng-repeat="option in countries" value="{{option.key}}">
                                         {{option.value | translate}}
                                     </option>
                                 </select>
-                                <span class="text-danger" ng-if="!config.data.originator.person.addresses[0].country && formInvalid"
+                                <span class="text-danger"
+                                        ng-if="!config.data.originator.person.addresses[primaryAddressIndex].country && formInvalid"
                                         translate>
                             consultations.newConsultation.country.validation.error</span>
                             </div>
@@ -183,15 +185,15 @@
                                 <label for="addressType" translate>consultations.newConsultation.address.type.label</label>
                             </div>
                             <div class="col-sm-4">
-                                <select id="addressType" class="form-control" ng-model="config.data.originator.person.addresses[0].type"
-                                        ng-disabled="isExistingPerson && existingPerson.addresses[0].type && existingPerson.addresses[0].streetAddress">
+                                <select id="addressType" class="form-control"
+                                        ng-model="config.data.originator.person.addresses[primaryAddressIndex].type"
+                                        ng-disabled="isExistingPerson && existingPerson.addresses[primaryAddressIndex].type && existingPerson.addresses[primaryAddressIndex].streetAddress">
                                     <option ng-repeat="option in addressTypes" value="{{option.key}}">
                                         {{option.value | translate}}
                                     </option>
                                 </select>
                                 <span class="text-danger"
-                                        ng-if="!config.data.originator.person.addresses[0].type && formInvalid"
-                                        translate>
+                                        ng-if="!config.data.originator.person.addresses[primaryAddressIndex].type && formInvalid" translate>
                             consultations.newConsultation.address.type.validation.error</span>
                             </div>
                         </div>
@@ -201,11 +203,11 @@
                             </div>
                             <div class="col-sm-4">
                                 <input type="text" class="form-control" id="address1"
-                                        ng-model="config.data.originator.person.addresses[0].streetAddress"
+                                        ng-model="config.data.originator.person.addresses[primaryAddressIndex].streetAddress"
                                         placeholder="{{'consultations.newConsultation.address.placeholder' | translate}}" name="address1"
-                                        ng-disabled="isExistingPerson && existingPerson.addresses[0].streetAddress">
+                                        ng-disabled="isExistingPerson && existingPerson.addresses[primaryAddressIndex].streetAddress">
                                 <span class="text-danger"
-                                        ng-if="!config.data.originator.person.addresses[0].streetAddress && formInvalid"
+                                        ng-if="!config.data.originator.person.addresses[primaryAddressIndex].streetAddress && formInvalid"
                                         translate>
                                 consultations.newConsultation.address.validation.error</span>
                             </div>
@@ -214,9 +216,10 @@
                             </div>
                             <div class="col-sm-4">
                                 <input type="text" class="form-control" id="address2"
-                                        ng-model="config.data.originator.person.addresses[0].streetAddress2"
-                                        placeholder="{{'consultations.newConsultation.address2.placeholder' | translate}}" name="address2" ng-disabled="isExistingPerson &&
-                                    (existingPerson.addresses[0].streetAddress || existingPerson.addresses[0].streetAddress2)">
+                                        ng-model="config.data.originator.person.addresses[primaryAddressIndex].streetAddress2"
+                                        placeholder="{{'consultations.newConsultation.address2.placeholder' | translate}}" name="address2"
+                                        ng-disabled="isExistingPerson &&
+                                    (existingPerson.addresses[primaryAddressIndex].streetAddress || existingPerson.addresses[primaryAddressIndex].streetAddress2)">
                             </div>
                         </div>
                         <div class="row form-group">
@@ -224,26 +227,31 @@
                                 <label for="city" translate>consultations.newConsultation.city.label</label>
                             </div>
                             <div class="col-sm-4">
-                                <input type="text" class="form-control" id="city" ng-model="config.data.originator.person.addresses[0].city"
+                                <input type="text" class="form-control" id="city"
+                                        ng-model="config.data.originator.person.addresses[primaryAddressIndex].city"
                                         placeholder="{{'consultations.newConsultation.city.placeholder' | translate}}" name="city"
-                                        ng-disabled="isExistingPerson && existingPerson.addresses[0].city">
+                                        ng-disabled="isExistingPerson && existingPerson.addresses[primaryAddressIndex].city">
                             </div>
                             <div class="col-sm-2">
                                 <label for="state" translate>consultations.newConsultation.state.label</label>
                             </div>
                             <div class="col-sm-4">
-                                <div ng-if="config.data.originator.person.addresses[0].country == 'US'
-                            || config.data.originator.person.addresses[0].country == 'CA'
-                            || config.data.originator.person.addresses[0].country == 'JP'">
-                                    <select id="state" name="state" ng-model="config.data.originator.person.addresses[0].state"
-                                            ng-options="state.key as state.value | translate for state in states" class="form-control input-md"
-                                            ng-disabled="isExistingPerson && existingPerson.addresses[0].state">
+                                <div ng-if="config.data.originator.person.addresses[primaryAddressIndex].country == 'US'
+                            || config.data.originator.person.addresses[primaryAddressIndex].country == 'CA'
+                            || config.data.originator.person.addresses[primaryAddressIndex].country == 'JP'">
+                                    <select id="state" name="state"
+                                            ng-model="config.data.originator.person.addresses[primaryAddressIndex].state"
+                                            ng-options="state.key as state.value | translate for state in states"
+                                            class="form-control input-md"
+                                            ng-disabled="isExistingPerson && existingPerson.addresses[primaryAddressIndex].state">
                                     </select>
                                 </div>
-                                <div ng-if="config.data.originator.person.addresses[0].country != 'US' && config.data.originator.person.addresses[0].country != 'CA' && config.data.originator.person.addresses[0].country != 'JP'">
-                                    <input id="txtState" type="text" ng-model="config.data.originator.person.addresses[0].state"
-                                            class="input-md form-control" placeholder="{{ 'consultations.newConsultation.state.placeholder' | translate }}"
-                                            ng-disabled="isExistingPerson && existingPerson.addresses[0].state">
+                                <div ng-if="config.data.originator.person.addresses[primaryAddressIndex].country != 'US' && config.data.originator.person.addresses[primaryAddressIndex].country != 'CA' && config.data.originator.person.addresses[primaryAddressIndex].country != 'JP'">
+                                    <input id="txtState" type="text"
+                                            ng-model="config.data.originator.person.addresses[primaryAddressIndex].state"
+                                            class="input-md form-control"
+                                            placeholder="{{ 'consultations.newConsultation.state.placeholder' | translate }}"
+                                            ng-disabled="isExistingPerson && existingPerson.addresses[primaryAddressIndex].state">
                                 </div>
                             </div>
                         </div>
@@ -253,9 +261,9 @@
                             </div>
                             <div class="col-sm-4">
                                 <input type="text" class="form-control" id="zip" name="zip"
-                                        ng-model="config.data.originator.person.addresses[0].zip"
+                                        ng-model="config.data.originator.person.addresses[primaryAddressIndex].zip"
                                         placeholder="{{'consultations.newConsultation.zip.placeholder' | translate}}"
-                                        ng-disabled="isExistingPerson && existingPerson.addresses[0].zip">
+                                        ng-disabled="isExistingPerson && existingPerson.addresses[primaryAddressIndex].zip">
                             </div>
                         </div>
                     </div>
