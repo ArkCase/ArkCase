@@ -1149,9 +1149,10 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         try
         {
             MultipartFile fileToUpload = getMultipartFromEcmFile(ecmFile);
+            AcmMultipartFile acmFileToUpload = new AcmMultipartFile(fileToUpload, false);
 
-            return upload(ecmFile.getFileName(), ecmFile.getFileType(), null, fileToUpload, authentication, folder.getCmisFolderId(),
-                    targetObjectType, targetObjectId);
+            return upload(ecmFile.getFileName(), ecmFile.getFileType(), null, acmFileToUpload, authentication,
+                    folder.getCmisFolderId(), targetObjectType, targetObjectId);
         }
         catch (Exception e)
         {
@@ -1164,7 +1165,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
     private MultipartFile getMultipartFromEcmFile(EcmFile ecmFile) throws Exception
     {
-        Document cmisDoc = (Document) findObjectById(ecmFile.getCmisRepositoryId(), ecmFile.getVersionSeriesId());
+        String activeVersionSeriesId = ecmFile.getVersionSeriesId() + ";" + ecmFile.getActiveVersionTag();
+        Document cmisDoc = (Document) findObjectById(ecmFile.getCmisRepositoryId(), activeVersionSeriesId);
 
         InputStream inputStream = cmisDoc.getContentStream().getStream();
         byte[] content = IOUtils.toByteArray(inputStream);
@@ -1810,6 +1812,12 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         {
             throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, objectId, "File not found", null);
         }
+        else if (file.getStatus().equals(EcmFileConstants.RECORD))
+        {
+            log.error("Could not delete file with ID {} ", file.getFileId());
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_DELETE_FILE, EcmFileConstants.OBJECT_FILE_TYPE,
+                    file.getId(), "File records cannot be deleted", null);
+        }
 
         boolean removeFileFromDatabase = allVersions || file.getVersions().size() < 2;
         String versionToRemoveFromEcm = removeFileFromDatabase ? file.getVersionSeriesId()
@@ -1893,10 +1901,18 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         {
             throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, objectId, "File not found", null);
         }
+
         try
         {
             if (!file.isLink())
             {
+                if (file.getStatus().equals(EcmFileConstants.RECORD))
+                {
+                    log.error("Could not move file with ID {} to Recycle Bin", file.getFileId());
+                    throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_DELETE_FILE, EcmFileConstants.OBJECT_FILE_TYPE,
+                            file.getId(), "File records cannot be deleted", null);
+                }
+
                 recycleBinItem = getRecycleBinItemService().putFileIntoRecycleBin(file, authentication, session);
                 log.info("File {} successfully moved into recycle bin by user: {}", objectId, file.getModifier());
 
@@ -1939,6 +1955,13 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, fileId, "File not found", null);
         }
 
+        if (file.getStatus().equals(EcmFileConstants.RECORD))
+        {
+            log.error("Could not move file with ID {} to Recycle Bin", file.getFileId());
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_DELETE_FILE, EcmFileConstants.OBJECT_FILE_TYPE,
+                    file.getId(), "File records cannot be deleted", null);
+        }
+
         Map<String, Object> props = new HashMap<>();
         props.put(EcmFileConstants.CMIS_DOCUMENT_ID, file.getVersionSeriesId());
         String cmisRepositoryId = file.getCmisRepositoryId();
@@ -1974,6 +1997,12 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         if (file == null)
         {
             throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, objectId, "File not found", null);
+        }
+        else if (file.getStatus().equals(EcmFileConstants.RECORD))
+        {
+            log.error("Could not delete file with ID {} ", file.getFileId());
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_DELETE_FILE, EcmFileConstants.OBJECT_FILE_TYPE,
+                    file.getId(), "File records cannot be deleted", null);
         }
 
         Map<String, Object> props = new HashMap<>();
@@ -2015,6 +2044,12 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         {
             throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, file.getId(), "File not found", null);
         }
+        else if (file.getStatus().equals(EcmFileConstants.RECORD))
+        {
+            log.error("Could not delete file with ID {} ", file.getFileId());
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_DELETE_FILE, EcmFileConstants.OBJECT_FILE_TYPE,
+                    file.getId(), "File records cannot be deleted", null);
+        }
 
         try
         {
@@ -2034,7 +2069,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "DELETE")
     public EcmFile renameFile(Long fileId, String newFileName) throws AcmUserActionFailedException, AcmObjectNotFoundException
     {
-        newFileName = getFolderAndFilesUtils().getBaseFileName(newFileName);
+        String uniqueIdentificator = getFolderAndFilesUtils().createUniqueIdentificator(newFileName);
         EcmFile file = getEcmFileDao().find(fileId);
 
         if (file == null)
@@ -2043,7 +2078,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
         Map<String, Object> props = new HashMap<>();
         props.put(EcmFileConstants.CMIS_DOCUMENT_ID, file.getVersionSeriesId());
-        props.put(EcmFileConstants.NEW_FILE_NAME, newFileName);
+        props.put(EcmFileConstants.NEW_FILE_NAME, uniqueIdentificator);
         String cmisRepositoryId = file.getCmisRepositoryId();
         if (cmisRepositoryId == null)
         {
@@ -2303,7 +2338,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                 {
                     for (final MultipartFile attachment : attachmentsList)
                     {
-                        AcmMultipartFile acmMultipartFile = new AcmMultipartFile(attachment, true);
+                        AcmMultipartFile acmMultipartFile = new AcmMultipartFile(attachment, false);
 
                         EcmFile metadata = new EcmFile();
                         metadata.setFileType(fileType);

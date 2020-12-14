@@ -127,6 +127,7 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private TaskEventPublisher taskEventPublisher;
     private EcmFileParticipantService fileParticipantService;
+    private EcmFileService ecmFileService;
 
     private ObjectConverter objectConverter;
     private AcmBpmnService acmBpmnService;
@@ -398,9 +399,10 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
             {
                 container = fileService.getOrCreateContainer(TaskConstants.OBJECT_TYPE, in.getId(),
                         EcmFileConstants.DEFAULT_CMIS_REPOSITORY_ID);
-                if(container.getAttachmentFolder().getParticipants().isEmpty()) 
+                if (container.getAttachmentFolder().getParticipants().isEmpty())
                 {
-                    container.getAttachmentFolder().setParticipants(getFileParticipantService().getFolderParticipantsFromAssignedObject(in.getParticipants()));
+                    container.getAttachmentFolder()
+                            .setParticipants(getFileParticipantService().getFolderParticipantsFromAssignedObject(in.getParticipants()));
                 }
             }
             catch (AcmCreateObjectFailedException | AcmUserActionFailedException e)
@@ -408,7 +410,6 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
                 log.error("Can not create container folder for TASK with ID: [{}]", in.getId());
             }
             in.setContainer(container);
-            
 
             return in;
         }
@@ -1618,14 +1619,19 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
     }
 
     @Override
-    public AcmTask startBusinessProcess(Map<String, Object> pVars, String businessProcessName) throws AcmTaskException
-    {
+    public AcmTask startBusinessProcess(Map<String, Object> pVars, String businessProcessName) throws AcmTaskException, AcmUserActionFailedException, AcmCreateObjectFailedException {
         ProcessInstance pi = getAcmBpmnService().startBusinessProcess(businessProcessName, pVars);
         Task activitiTask = getActivitiTaskService().createTaskQuery().processInstanceId(pi.getProcessInstanceId()).singleResult();
         AcmTask createdAcmTask = acmTaskFromActivitiTask(activitiTask, activitiTask.getProcessVariables(),
                 activitiTask.getTaskLocalVariables());
         createdAcmTask.setParentObjectId((Long) pVars.get("PARENT_OBJECT_ID"));
         createdAcmTask.setParentObjectType((String) pVars.get("PARENT_OBJECT_TYPE"));
+
+        AcmContainer container = getEcmFileService().getOrCreateContainer(createdAcmTask.getObjectType(),
+                createdAcmTask.getTaskId());
+        createdAcmTask.setContainer(container);
+        getFileParticipantService().inheritParticipantsFromAssignedObject(createdAcmTask.getParticipants(), container.getFolder().getParticipants(),
+                container, createdAcmTask.getRestricted());
 
         return createdAcmTask;
     }
@@ -1938,6 +1944,14 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
     public void setAcmBpmnService(AcmBpmnService acmBpmnService)
     {
         this.acmBpmnService = acmBpmnService;
+    }
+
+    public EcmFileService getEcmFileService() {
+        return ecmFileService;
+    }
+
+    public void setEcmFileService(EcmFileService ecmFileService) {
+        this.ecmFileService = ecmFileService;
     }
 
     @Override

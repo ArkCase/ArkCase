@@ -60,7 +60,9 @@ public class CaseFileEcmFolderHandler implements PipelineHandler<CaseFile, CaseF
         {
             try
             {
-                String folderId = ecmFileService.createFolder(entity.getEcmFolderPath());
+                // Create root folder on alfresco, according to selected sequence generator
+                String rootFolderPath = entity.getEcmFolderPath() + entity.getCaseNumber();
+                String folderId = ecmFileService.createFolder(rootFolderPath);
                 entity.getContainer().getFolder().setCmisFolderId(folderId);
             }
             catch (AcmCreateObjectFailedException e)

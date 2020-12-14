@@ -27,8 +27,7 @@ package gov.foia.service.dataupdate;
  * #L%
  */
 
-import com.armedia.acm.portalgateway.model.PortalInfo;
-import com.armedia.acm.portalgateway.service.PortalInfoDAO;
+import com.armedia.acm.portalgateway.service.PortalConfigurationService;
 import com.armedia.acm.services.dataupdate.service.AcmDataUpdateExecutor;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -62,7 +61,7 @@ public class FoiaPortalRegistrationCleanupExecutor implements AcmDataUpdateExecu
 
     private UserRegistrationRequestDao registrationDao;
 
-    private PortalInfoDAO portalInfoDAO;
+    private PortalConfigurationService portalConfigurationService;
 
     @Override
     public String getUpdateId()
@@ -73,24 +72,18 @@ public class FoiaPortalRegistrationCleanupExecutor implements AcmDataUpdateExecu
     @Override
     public void execute()
     {
-        List<PortalInfo> portalInfoList = portalInfoDAO.findAll();
-        if (portalInfoList.size() > 0)
+        AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class)
+                .get(String.format("%s_sync", directoryName));
+        if (ldapSyncConfig != null && ldapSyncConfig.getUserPrefix() != null)
         {
-            AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class)
-                    .get(String.format("%s_sync", directoryName));
-            if (ldapSyncConfig != null && ldapSyncConfig.getUserPrefix() != null)
-            {
-                List<AcmUser> acmUsers = userDao.findByPrefix(ldapSyncConfig.getUserPrefix());
-                String portalId = portalInfoList.get(0).getPortalId();
-                acmUsers.forEach(user -> {
-                    Optional<UserRegistrationRequestRecord> registrationRequestRecord = registrationDao.findByEmail(user.getMail(),
-                            portalId);
-                    if (registrationRequestRecord.isPresent())
-                    {
-                        registrationDao.delete(registrationRequestRecord.get());
-                    }
-                });
-            }
+            List<AcmUser> acmUsers = userDao.findByPrefix(ldapSyncConfig.getUserPrefix());
+            String portalId = portalConfigurationService.getPortalConfiguration().getId();
+            acmUsers.forEach(user -> {
+                Optional<UserRegistrationRequestRecord> registrationRequestRecord = registrationDao.findByEmail(user.getMail(),
+                        portalId);
+                registrationRequestRecord
+                        .ifPresent(userRegistrationRequestRecord -> registrationDao.delete(userRegistrationRequestRecord));
+            });
         }
     }
 
@@ -114,8 +107,13 @@ public class FoiaPortalRegistrationCleanupExecutor implements AcmDataUpdateExecu
         this.registrationDao = registrationDao;
     }
 
-    public void setPortalInfoDAO(PortalInfoDAO portalInfoDAO)
+    public PortalConfigurationService getPortalConfigurationService()
     {
-        this.portalInfoDAO = portalInfoDAO;
+        return portalConfigurationService;
+    }
+
+    public void setPortalConfigurationService(PortalConfigurationService portalConfigurationService)
+    {
+        this.portalConfigurationService = portalConfigurationService;
     }
 }

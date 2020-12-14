@@ -35,10 +35,10 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileUpdatedEvent;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.portalgateway.service.PortalAdminService;
+import com.armedia.acm.portalgateway.service.PortalConfigurationService;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.ParticipantTypes;
 import com.armedia.acm.services.participants.service.AcmParticipantService;
-import com.armedia.acm.services.users.model.AcmUser;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -71,6 +71,7 @@ public class FOIAFileUpdatedEventListener implements ApplicationListener<EcmFile
     private AcmParticipantService acmParticipantService;
     private CaseFileDao caseFileDao;
     private PortalAdminService portalAdminService;
+    private PortalConfigurationService portalConfigurationService;
 
     @Override
     public void onApplicationEvent(EcmFileUpdatedEvent ecmFileUpdatedEvent)
@@ -136,12 +137,6 @@ public class FOIAFileUpdatedEventListener implements ApplicationListener<EcmFile
 
     private void addPortalUserAsReader(EcmFile ecmFile)
     {
-
-        if (getPortalAdminService().listRegisteredPortals() != null && !getPortalAdminService().listRegisteredPortals().isEmpty())
-        {
-            AcmUser portalUser = getPortalAdminService().listRegisteredPortals().get(0).getUser();
-            if (portalUser != null)
-            {
                 CaseFile caseFile = getCaseFileDao().find(ecmFile.getParentObjectId());
                 try
                 {
@@ -150,11 +145,11 @@ public class FOIAFileUpdatedEventListener implements ApplicationListener<EcmFile
                         boolean isPortalUserParticipant = caseFile.getParticipants().stream()
                                 .anyMatch(
                                         p -> ParticipantTypes.READER.equals(p.getParticipantType())
-                                                && p.getParticipantLdapId().equals(portalUser.getUserId()));
+                                                && p.getParticipantLdapId().equals(portalConfigurationService.getPortalConfiguration().getUserId()));
 
                         if (!isPortalUserParticipant)
                         {
-                            AcmParticipant readerParticipant = getAcmParticipantService().saveParticipant(portalUser.getUserId(),
+                            AcmParticipant readerParticipant = getAcmParticipantService().saveParticipant(portalConfigurationService.getPortalConfiguration().getUserId(),
                                     ParticipantTypes.READER, caseFile.getId(), caseFile.getObjectType());
                             caseFile.getParticipants().add(readerParticipant);
                             log.debug("Successfully set portal user as participant for case file: [{}]", caseFile.getId());
@@ -165,8 +160,6 @@ public class FOIAFileUpdatedEventListener implements ApplicationListener<EcmFile
                 {
                     log.error("Unable to set portal user as participant for case file: [{}]", caseFile.getId());
                 }
-            }
-        }
     }
 
     public FOIARequestFileBrokerClient getFoiaRequestFileBrokerClient()
@@ -217,5 +210,15 @@ public class FOIAFileUpdatedEventListener implements ApplicationListener<EcmFile
     public void setPortalAdminService(PortalAdminService portalAdminService)
     {
         this.portalAdminService = portalAdminService;
+    }
+
+    public PortalConfigurationService getPortalConfigurationService()
+    {
+        return portalConfigurationService;
+    }
+
+    public void setPortalConfigurationService(PortalConfigurationService portalConfigurationService)
+    {
+        this.portalConfigurationService = portalConfigurationService;
     }
 }

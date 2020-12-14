@@ -21,4 +21,24 @@
                     adjust-table-height="gridOptions.data.length" class="grid"></div>
         </div>
     </div>
+    <div class="panel panel-success panel-grid">
+        <div class="panel-heading">
+            <div class="panel-title">
+                <span translate>cases.comp.statute.title</span>
+                <div class="pull-right">
+                    <button type="button" class="btn btn-default btn-xs" ng-click="refreshStatute()">
+                        <i class="fa fa-lg fa-refresh"></i>
+                    </button>
+                    <button type="button" class="btn btn-default btn-xs" ng-click="addNewStatute()"
+                            ng-disabled="isDisabled">
+                        <i class="fa fa-lg fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div ui-grid="statuteGridOptions" ui-grid-resize-columns ui-grid-auto-resize ui-grid-pagination
+                 adjust-table-height="statuteGridOptions.data.length" class="grid"></div>
+        </div>
+    </div>
 </div>

@@ -64,32 +64,35 @@ public class FOIARequestPortalUserParticipantsHandler implements PipelineHandler
         if (entity.getId() != null && requester instanceof PortalFOIAPerson)
         {
 
-            List<AcmUser> portalUsers = getUserDao().findByEmailAddress(requester.getDefaultEmail().getValue());
-
-            if (portalUsers.size() > 0)
+            if (requester.getDefaultAddress() != null)
             {
-                AcmUser portalUser = portalUsers.get(0);
+                List<AcmUser> portalUsers = getUserDao().findByEmailAddress(requester.getDefaultEmail().getValue());
 
-                boolean isPortalUserParticipant = entity.getParticipants().stream()
-                        .anyMatch(
-                                p -> ParticipantTypes.READER.equals(p.getParticipantType())
-                                        && p.getParticipantLdapId().equals(portalUser.getUserId()));
-
-                if (!isPortalUserParticipant)
+                if (portalUsers.size() > 0)
                 {
-                    AcmParticipant addedParticipant = null;
-                    try
-                    {
-                        addedParticipant = getAcmParticipantService().saveParticipant(portalUser.getUserId(),
-                                ParticipantTypes.READER, entity.getId(), entity.getObjectType());
+                    AcmUser portalUser = portalUsers.get(0);
 
-                        entity.getParticipants().add(addedParticipant);
+                    boolean isPortalUserParticipant = entity.getParticipants().stream()
+                            .anyMatch(
+                                    p -> ParticipantTypes.READER.equals(p.getParticipantType())
+                                            && p.getParticipantLdapId().equals(portalUser.getUserId()));
 
-                        log.debug("Successfully set portal user as participant for case file: [{}]", entity.getId());
-                    }
-                    catch (AcmAccessControlException e)
+                    if (!isPortalUserParticipant)
                     {
-                        log.error("Unable to set portal user as participant for case file: [{}]", entity.getId());
+                        AcmParticipant addedParticipant = null;
+                        try
+                        {
+                            addedParticipant = getAcmParticipantService().saveParticipant(portalUser.getUserId(),
+                                    ParticipantTypes.READER, entity.getId(), entity.getObjectType());
+
+                            entity.getParticipants().add(addedParticipant);
+
+                            log.debug("Successfully set portal user as participant for case file: [{}]", entity.getId());
+                        }
+                        catch (AcmAccessControlException e)
+                        {
+                            log.error("Unable to set portal user as participant for case file: [{}]", entity.getId());
+                        }
                     }
                 }
             }

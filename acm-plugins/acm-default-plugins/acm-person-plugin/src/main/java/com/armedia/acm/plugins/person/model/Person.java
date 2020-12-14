@@ -36,6 +36,9 @@ import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.services.config.lookups.model.StandardLookupEntry;
+import com.armedia.acm.services.config.lookups.service.LookupDao;
+import com.armedia.acm.services.labels.service.TranslationService;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -70,6 +73,7 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
+import javax.persistence.Transient;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -238,6 +242,22 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
     @Convert(converter = BooleanToStringConverter.class)
     private Boolean restricted = Boolean.FALSE;
 
+    @Transient
+    private static LookupDao lookupDao;
+
+    @Transient
+    private static TranslationService translationService;
+
+    public static void setLookupDao(LookupDao lookupDao)
+    {
+        Person.lookupDao = lookupDao;
+    }
+
+    public static void setTranslationService(TranslationService translationService)
+    {
+        Person.translationService = translationService;
+    }
+
     @PrePersist
     protected void beforeInsert()
     {
@@ -341,7 +361,15 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
         StringBuilder sb = new StringBuilder();
         if (getTitle() != null)
         {
-            sb.append(getTitle()).append(" ");
+            String translatedTitle = null;
+            List<StandardLookupEntry> lookupEntries = (List<StandardLookupEntry>) lookupDao.getLookupByName("personTitles").getEntries();
+            String labelKey = lookupEntries.stream()
+                    .filter(standardLookupEntry -> standardLookupEntry.getKey().equals(getTitle()))
+                    .findFirst()
+                    .map(StandardLookupEntry::getValue)
+                    .orElse(getTitle());
+            translatedTitle = translationService.translate(labelKey);
+            sb.append(translatedTitle).append(" ");
         }
         if (getGivenName() != null)
         {

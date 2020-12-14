@@ -56,9 +56,10 @@ angular.module('request-info').controller(
         'Object.LockingService',
         'Util.TimerService',
         'Dialog.BootboxService',
+        'FileEditingEnabled',
         function ($rootScope, $scope, $log, $sce, $q, $state, $timeout, $stateParams, $modal, ConfigService, Authentication, RequestsService, WorkflowsService, GenericRequestsService, LookupService, TicketService, QueuesService, PermissionsService, CaseInfoService, ObjectService,
                   HelperObjectBrowserService, ObjectLookupService, ObjectModelService, CaseLookupService, UtilDateService, QueuesSvc, ObjectSubscriptionService, Util, SnowboundService, EcmService, DocumentPrintingService, NotesService, UserInfoService, MessageService, $translate,
-                  DueDateService, AdminHolidayService, AdminPrivacyConfigService, TranscriptionManagementService, $window, ArkCaseCrossWindowMessagingService, ObjectLockingService, UtilTimerService, DialogService) {
+                  DueDateService, AdminHolidayService, AdminPrivacyConfigService, TranscriptionManagementService, $window, ArkCaseCrossWindowMessagingService, ObjectLockingService, UtilTimerService, DialogService, FileEditingEnabled) {
 
             if (sessionStorage.getItem("startRow") == null) {
                 sessionStorage.setItem("startRow", 0);
@@ -78,6 +79,21 @@ angular.module('request-info').controller(
             $scope.saveLoadingIcon = "fa fa-floppy-o";
             $scope.viewerOnly = false;
             $scope.loaderOpened = false;
+            $scope.fileEditingEnabled = false;
+
+            FileEditingEnabled.getFileEditingEnabled().then(function (response) {
+                $scope.fileEditingEnabled = response.data;
+            });
+
+            $scope.showEditingButton = function () {
+                return !isAnyFileRecord() && !$scope.editingMode && $scope.fileEditingEnabled;
+            };
+
+            function isAnyFileRecord() {
+                return _.some($scope.openOtherDocuments, function (value) {
+                    return value.status === 'RECORD';
+                });
+            }
 
             $scope.documentExpand = function () {
                 $scope.viewerOnly = true;
@@ -714,7 +730,7 @@ angular.module('request-info').controller(
             $scope.enableEditing = function () {
                 ObjectLockingService.lockObject($scope.ecmFile.fileId, ObjectService.ObjectTypes.FILE, ObjectService.LockTypes.WRITE, true).then(function (lockedFile) {
                     $scope.editingMode = true;
-                    $scope.openSnowboundViewer();
+                    openViewerMultiple();
 
                     // count user idle time. When user is idle for more then 1 minute, don't acquire lock
                     $scope._idleSecondsCounter = 0;
@@ -790,7 +806,9 @@ angular.module('request-info').controller(
                 // Generates and loads a url that will open the selected documents in the viewer
                 if ($scope.openOtherDocuments.length > 0) {
                     registerFileChangeEvents();
-                    var snowUrl = buildViewerUrlMultiple($scope.ecmFileProperties, $scope.acmTicket, $scope.userId, $scope.userFullName, $scope.openOtherDocuments, !$scope.editingMode, $scope.requestInfo.caseNumber);
+                    var readonly = isAnyFileRecord() || !$scope.editingMode;
+                    $scope.editingMode = !readonly;
+                    var snowUrl = buildViewerUrlMultiple($scope.ecmFileProperties, $scope.acmTicket, $scope.userId, $scope.userFullName, $scope.openOtherDocuments, readonly, $scope.requestInfo.caseNumber);
                     if (snowUrl) {
                         $scope.loadViewerIframe(snowUrl);
                     }
@@ -912,6 +930,7 @@ angular.module('request-info').controller(
 
             $scope.$bus.subscribe('remove-from-opened-documents-list', function (data) {
                 removeFromOpenedDocumentsList(Number(data.id) * 1, data.version);
+                $scope.$apply();
             });
 
             function removeFromOpenedDocumentsList(id, version) {
@@ -1426,6 +1445,7 @@ angular.module('request-info').controller(
                     id: file.fileId + ':' + file.activeVersionTag,
                     containerId: containerId,
                     containerType: 'CASE_FILE',
+                    status: file.status,
                     name: file.fileName,
                     mimeType: file.fileActiveVersionMimeType,
                     selectedIds: file.fileId + ':' + file.activeVersionTag,
@@ -1558,14 +1578,16 @@ angular.module('request-info').controller(
                     fileId: $scope.ecmFile.fileId
                 });
                 ecmFile.$promise.then(function (file) {
-                    $scope.ecmFile = file;
-                    $scope.fileId = file.fileId;
-                    $scope.fileInfo.id = file.fileId + ':' + file.activeVersionTag;
-                    $scope.fileInfo.selectedIds = file.fileId + ':' + file.activeVersionTag;
-                    $scope.fileInfo.versionTag = file.activeVersionTag;
-                    DialogService.alert($translate.instant("documentDetails.fileChangedAlert")).then(function () {
-                        $scope.openSnowboundViewer();
-                    });
+                    if ($scope.fileInfo.id !== file.fileId + ':' + file.activeVersionTag) {
+                        $scope.ecmFile = file;
+                        $scope.fileId = file.fileId;
+                        $scope.fileInfo.id = file.fileId + ':' + file.activeVersionTag;
+                        $scope.fileInfo.selectedIds = file.fileId + ':' + file.activeVersionTag;
+                        $scope.fileInfo.versionTag = file.activeVersionTag;
+                        DialogService.alert($translate.instant("documentDetails.fileChangedAlert")).then(function () {
+                            $scope.openSnowboundViewer();
+                        });
+                    }
                     onHideLoader();
                 });
             });

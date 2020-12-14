@@ -27,6 +27,7 @@ package com.armedia.acm.plugins.admin.service;
  * #L%
  */
 
+import com.armedia.acm.configuration.model.ConfigurationClientConfig;
 import com.armedia.acm.configuration.service.FileConfigurationService;
 import com.armedia.acm.plugins.admin.exception.AcmCustomCssException;
 
@@ -53,6 +54,8 @@ public class CustomCssService
 
     private FileConfigurationService fileConfigurationService;
 
+    private ConfigurationClientConfig configurationClientConfig;
+
     public String getFile()
     {
         String fileContent = "";
@@ -77,7 +80,8 @@ public class CustomCssService
         {
             InputStreamResource file = setInputStreamResource(cssText);
 
-            fileConfigurationService.moveFileToConfiguration(file, "branding/" + customCssFileName);
+            fileConfigurationService.moveFileToConfiguration(file, configurationClientConfig.getBrandingPath()
+                    + "/" + customCssFileName);
 
         }
         catch (Exception e)
@@ -99,13 +103,18 @@ public class CustomCssService
         this.customCssFile = customCssFile;
     }
 
+    public void setCustomCssFileName(String customCssFileName)
+    {
+        this.customCssFileName = customCssFileName;
+    }
+
     public void setFileConfigurationService(FileConfigurationService fileConfigurationService)
     {
         this.fileConfigurationService = fileConfigurationService;
     }
 
-    public void setCustomCssFileName(String customCssFileName)
+    public void setConfigurationClientConfig(ConfigurationClientConfig configurationClientConfig)
     {
-        this.customCssFileName = customCssFileName;
+        this.configurationClientConfig = configurationClientConfig;
     }
 }

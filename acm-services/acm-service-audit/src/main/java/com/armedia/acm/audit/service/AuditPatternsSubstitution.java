@@ -61,7 +61,7 @@ public class AuditPatternsSubstitution
     private static List<Pattern> PATTERNS = new ArrayList<>();
     private static String SUBSTITUTION = "$1*****$3";
     private static String PROPERTIES_FOR_SUBSTITUTION = "${configuration.server.url}/${application.name.default}/";
-    private static String PATTERNS_PATH = "/default/spring/auditPatterns.properties";
+    private static String PATTERNS_PATH = "/default/${configuration.client.spring.path}/auditPatterns.properties";
 
     static
     {
@@ -77,7 +77,8 @@ public class AuditPatternsSubstitution
         StringSubstitutor sub = new StringSubstitutor();
         String serverUrlAndName = sub.replace(PROPERTIES_FOR_SUBSTITUTION, properties);
 
-        String patternsFileUrl = String.format("%s%s%s", serverUrlAndName, profilesReversed, PATTERNS_PATH);
+        String auditPatternUrl = sub.replace(PATTERNS_PATH, properties);
+        String patternsFileUrl = String.format("%s%s%s", serverUrlAndName, profilesReversed, auditPatternUrl);
 
         try (InputStream inputStream = new URL(patternsFileUrl).openStream())
         {

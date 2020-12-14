@@ -27,6 +27,7 @@ package com.armedia.acm.plugins.task.service.impl;
  * #L%
  */
 
+import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
 import com.armedia.acm.auth.AcmAuthentication;
 import com.armedia.acm.auth.AcmAuthenticationManager;
 import com.armedia.acm.core.AcmNotifiableEntity;
@@ -50,7 +51,6 @@ import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.impl.EcmFileParticipantService;
@@ -80,7 +80,6 @@ import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.web.api.MDCConstants;
 import com.google.common.collect.ImmutableMap;
-
 import org.activiti.engine.ActivitiException;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -581,6 +580,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
     }
 
     @Override
+    @Transactional
     public List<AcmTask> startReviewDocumentsWorkflow(AcmTask task, String businessProcessName, Authentication authentication)
             throws AcmTaskException, AcmCreateObjectFailedException, AcmUserActionFailedException, LinkAlreadyExistException,
             AcmObjectNotFoundException
@@ -618,12 +618,9 @@ public class AcmTaskServiceImpl implements AcmTaskService
                 pVars.put("PARENT_OBJECT_ID", task.getParentObjectId());
                 pVars.put("REQUEST_TYPE", "DOCUMENT_REVIEW");
 
-                AcmTask createdAcmTask = taskDao.startBusinessProcess(pVars, businessProcessName);
-                createdAcmTask.setDocumentUnderReview(documentToReview);
-                AcmContainer container = getEcmFileService().getOrCreateContainer(createdAcmTask.getObjectType(),
-                        createdAcmTask.getTaskId());
-                createdAcmTask.setContainer(container);
+                AcmTask createdAcmTask = getTaskDao().startBusinessProcess(pVars, businessProcessName);
                 createdAcmTasks.add(createdAcmTask);
+                createdAcmTask.setDocumentUnderReview(documentToReview);
                 if (task.getAttachedToObjectId() != null && task.getAttachedToObjectType() != null)
                 {
                     createdAcmTask.setAttachedToObjectId(task.getAttachedToObjectId());
@@ -639,7 +636,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
     @Override
     @Transactional
     public List<AcmTask> startReviewDocumentsWorkflow(AcmTask task, String businessProcessName, Authentication authentication,
-                                                      List<MultipartFile> filesToUpload)
+            List<MultipartFile> filesToUpload)
             throws AcmTaskException, AcmCreateObjectFailedException, AcmUserActionFailedException, LinkAlreadyExistException,
             AcmObjectNotFoundException
     {
@@ -647,10 +644,9 @@ public class AcmTaskServiceImpl implements AcmTaskService
         businessProcess.setStatus("DRAFT");
         businessProcess = saveBusinessProcess.save(businessProcess);
         AcmContainer container = ecmFileService.createContainerFolder(businessProcess.getObjectType(), businessProcess.getId(),
-                EcmFileConstants.DEFAULT_CMIS_REPOSITORY_ID);
+                 ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
         getAcmContainerDao().getEm().flush();
         businessProcess.setContainer(container);
-
         AcmFolder folder = container.getAttachmentFolder();
 
         List<EcmFile> uploadedFiles = new ArrayList<>();
@@ -716,6 +712,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
     }
 
     @Override
+    @Transactional
     public List<AcmTask> startAcmDocumentSingleTaskWorkflow(AcmTask task)
             throws AcmCreateObjectFailedException, AcmUserActionFailedException, LinkAlreadyExistException, AcmObjectNotFoundException
     {
@@ -726,6 +723,9 @@ public class AcmTaskServiceImpl implements AcmTaskService
         EcmFileWorkflowConfiguration configuration = new EcmFileWorkflowConfiguration();
         source.setFileType("file");
         configuration.setEcmFile(source);
+
+        Long parentObjectId = task.getAttachedToObjectId();
+        String parentObjectType = (StringUtils.isNotBlank(task.getAttachedToObjectType())) ? task.getAttachedToObjectType() : null;
 
         configuration = getFileWorkflowBusinessRule().applyRules(configuration);
         if (!configuration.isBuckslipProcess())
@@ -746,8 +746,8 @@ public class AcmTaskServiceImpl implements AcmTaskService
             pvars.put("approvers", approversCsv);
             pvars.put("taskName", task.getTitle());
 
-            pvars.put("PARENT_OBJECT_TYPE", task.getParentObjectType());
-            pvars.put("PARENT_OBJECT_ID", task.getParentObjectId());
+            pvars.put("PARENT_OBJECT_TYPE", parentObjectType);
+            pvars.put("PARENT_OBJECT_ID", parentObjectId);
             String documentsToReviewIds = task.getDocumentsToReview()
                     .stream()
                     .map(file -> String.valueOf(file.getFileId()))
@@ -766,10 +766,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
             pvars.put("owningGroup", task.getCandidateGroups());
             pvars.put("dueDate", configuration.getTaskDueDateExpression());
 
-            AcmTask createdAcmTask = taskDao.startBusinessProcess(pvars, processName);
-            AcmContainer container = getEcmFileService().getOrCreateContainer(createdAcmTask.getObjectType(),
-                    createdAcmTask.getTaskId());
-            createdAcmTask.setContainer(container);
+            AcmTask createdAcmTask = getTaskDao().startBusinessProcess(pvars, processName);
             createdAcmTask.setDocumentsToReview(task.getDocumentsToReview());
 
             createTaskFolderStructureInParentObject(createdAcmTask);
@@ -916,6 +913,11 @@ public class AcmTaskServiceImpl implements AcmTaskService
     public void setTaskDao(TaskDao taskDao)
     {
         this.taskDao = taskDao;
+    }
+
+    public TaskDao getTaskDao()
+    {
+        return taskDao;
     }
 
     public AcmContainerDao getAcmContainerDao()
