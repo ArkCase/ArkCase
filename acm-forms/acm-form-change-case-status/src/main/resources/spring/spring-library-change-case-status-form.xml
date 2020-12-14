@@ -12,6 +12,6 @@
         class="com.armedia.acm.form.changecasestatus.service.ChangeCaseStatusWorkflowListener">
         <property name="fileWorkflowBusinessRule" ref="fileWorkflowBusinessRule"/>
         <property name="changeCaseStatusTaskName" ref="changeCaseStatusTaskName"/>
-        <property name="acmBpmnService" ref="processDefinitionManagementService"/>
+        <property name="taskDao" ref="acmTaskDao"/>
     </bean>
 </beans>

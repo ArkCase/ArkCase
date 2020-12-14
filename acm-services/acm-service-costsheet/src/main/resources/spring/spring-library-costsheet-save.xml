@@ -45,5 +45,7 @@
 
     <bean id="pdfCostsheetDocumentGenerator" class="com.armedia.acm.services.costsheet.service.PDFCostsheetDocumentGenerator"
         parent="pdfDocumentGenerator">
+        <property name="lookupDao" ref="lookupDao"/>
+        <property name="translationService" ref="translationService"/>
     </bean>
 </beans>

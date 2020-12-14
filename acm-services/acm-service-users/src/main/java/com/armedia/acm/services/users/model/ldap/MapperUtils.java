@@ -192,6 +192,12 @@ public class MapperUtils
                 .toLowerCase();
     }
 
+    public static String generateAutoUsername(String userPrefix)
+    {
+            return String.format("%s%s", prefixTrailingDot(userPrefix),
+                    RandomStringUtils.randomAlphanumeric(20 - userPrefix.length()));
+    }
+
     public static String buildUserId(String userId, AcmLdapSyncConfig ldapSyncConfig)
     {
         String userPrefix = ldapSyncConfig.getUserPrefix();
@@ -203,11 +209,6 @@ public class MapperUtils
 
         if (ldapSyncConfig.getUserIdAttributeName().equalsIgnoreCase("samaccountname"))
         {
-            if (ldapSyncConfig.isAutoGenerateUserId())
-            {
-                userId = String.format("%s%s", prefixTrailingDot(userPrefix),
-                        RandomStringUtils.randomAlphanumeric(20 - userPrefix.length()));
-            }
             userId = StringUtils.left(userId, 20);
         }
         return buildUserId(userId, ldapSyncConfig.getUserDomain());

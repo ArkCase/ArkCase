@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/common/services/object-association.client.service.js modules/common/services/object-association.client.service.js}
+ * {@link /acm-standard-applications/arkcase/src/main/webapp/resources/modules/common/services/object-association.client.service.js modules/common/services/object-association.client.service.js}
  *
  * ObjectAssociation.Service provides functions for Object database data
  */

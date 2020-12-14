@@ -13,6 +13,7 @@ angular.module('cases').controller(
             $scope.formInvalid = false;
             $scope.enableTitle = false;
             $scope.isPickExistingPerson = false;
+            $scope.primaryAddressIndex = 0;
 
             $scope.receivedDate = new Date();
 
@@ -93,7 +94,7 @@ angular.module('cases').controller(
             var organizationTypeLookup = ObjectLookupService.getPersonOrganizationRelationTypes();
             var promiseConfigTitle = AdminObjectTitleConfigurationService.getObjectTitleConfiguration();
             var personTypesLookup = ObjectLookupService.getPersonTypes(ObjectService.ObjectTypes.CASE_FILE, true);
-            var getPortals = AdminPortalConfigurationService.getPortals();
+            var getPortal = AdminPortalConfigurationService.getPortalConfig();
             var getCountries = ObjectLookupService.getCountries();
             var getAddressTypes = ObjectLookupService.getAddressTypes();
             var canadaProvinces = ObjectLookupService.getLookupByLookupName('canadaProvinces');
@@ -101,7 +102,7 @@ angular.module('cases').controller(
             var commonModuleConfig = ConfigService.getModuleConfig("common");
             var adminFoiaConfig = AdminFoiaConfigService.getFoiaConfig();
 
-            $q.all([requestConfig, componentsAgenciesPromise, organizationTypeLookup, prefixNewRequest, newRequestTypes, deliveryMethodOfResponsesRequest, payFeesRequest, requestCategories, stateRequest, promiseConfigTitle, personTypesLookup, getPortals, getCountries, getAddressTypes, canadaProvinces, japanStates, commonModuleConfig, adminFoiaConfig]).then(function (data) {
+            $q.all([requestConfig, componentsAgenciesPromise, organizationTypeLookup, prefixNewRequest, newRequestTypes, deliveryMethodOfResponsesRequest, payFeesRequest, requestCategories, stateRequest, promiseConfigTitle, personTypesLookup, getPortal, getCountries, getAddressTypes, canadaProvinces, japanStates, commonModuleConfig, adminFoiaConfig]).then(function (data) {
 
                 var moduleConfig = data[0];
                 var componentsAgencies = data[1];
@@ -114,7 +115,7 @@ angular.module('cases').controller(
                 var states = data[8];
                 var configTitle = data[9];
                 var personTypes = data[10];
-                var portals = data[11];
+                var portalConfig = data[11].data;
                 var countries = data[12];
                 var addressTypes = data[13];
                 var canadaProvinces = data[14];
@@ -192,8 +193,7 @@ angular.module('cases').controller(
                 }
                 $scope.config.data.payFee = $scope.payFees[0].key;
 
-                $scope.portals = portals.data;
-                $scope.config.chosenPortal = $scope.portals[0];
+                $scope.config.portal = { portalId: portalConfig['portal.id'] };
 
                 $scope.states = "";
                 $scope.config.data.originator.person.addresses[0].country = defaultCountry ? defaultCountry.key : countries[0].key;
@@ -532,7 +532,7 @@ angular.module('cases').controller(
 
             function createNewPortalUser(personId) {
 
-                RequestInfoService.saveNewPortalUser(personId, $scope.config.chosenPortal.portalId).then(function (response) {
+                RequestInfoService.saveNewPortalUser(personId, $scope.config.portal.portalId).then(function (response) {
                     if (response.registrationStatus === "REGISTRATION_EXISTS") {
                         MessageService.error($translate.instant('cases.newRequest.portalUser.message.error.exists'));
                     } else if (response.registrationStatus === "REGISTRATION_REJECTED") {
@@ -607,8 +607,14 @@ angular.module('cases').controller(
                         $scope.config.data.originator.person.defaultEmail = email;
                     }
 
-                    if (person.addresses[0] && !Util.isEmpty(person.addresses[0].country) && !Util.isEmpty(person.addresses[0].state)) {
-                        $scope.changeStates(person.addresses[0].country);
+                    if (!Util.isArrayEmpty(person.addresses) && person.defaultAddress) {
+                        $scope.primaryAddressIndex = person.addresses.indexOf(person.defaultAddress);
+                    } else {
+                        $scope.primaryAddressIndex = 0;
+                    }
+
+                    if (person.addresses[$scope.primaryAddressIndex] && !Util.isEmpty(person.addresses[$scope.primaryAddressIndex].country) && !Util.isEmpty(person.addresses[$scope.primaryAddressIndex].state)) {
+                        $scope.changeStates(person.addresses[$scope.primaryAddressIndex].country);
                     }
 
                     $scope.isExistingPerson = typeof $scope.config.data.originator.person.id !== 'undefined';

@@ -54,7 +54,7 @@
             <beans:property name="registrationDao" ref="userRegistrationRequestDao"/>
             <beans:property name="resetDao" ref="userResetRequestDao"/>
             <beans:property name="portalPersonDao" ref="portalFOIAPersonDao"/>
-            <beans:property name="portalInfoDAO" ref="portalInfoDAO"/>
+            <beans:property name="portalConfigurationService" ref="portalConfigurationService"/>
             <beans:property name="ldapUserService" ref="ldapUserService"/>
             <beans:property name="personDao" ref="acmPersonDao"/>
             <beans:property name="notificationDao" ref="notificationDao"/>
@@ -175,6 +175,7 @@
                     <beans:ref bean="solrReindexFOIAPortalPersonExecutor"/>
                     <beans:ref bean="foiaPortalRegistrationCleanupExecutor"/>
                     <beans:ref bean="solrReindexAcmUserExecutor"/>
+                    <beans:ref bean="solrReindexPersonAssociationsExecutor"/>
                 </beans:list>
             </beans:property>
 
@@ -192,10 +193,14 @@
             <beans:property name="acmContextHolder" ref="acmContextHolder"/>
             <beans:property name="userDao" ref="userJpaDao"/>
             <beans:property name="registrationDao" ref="userRegistrationRequestDao"/>
-            <beans:property name="portalInfoDAO" ref="portalInfoDAO"/>
+            <beans:property name="portalConfigurationService" ref="portalConfigurationService"/>
         </beans:bean>
 
         <beans:bean id="solrReindexAcmUserExecutor" class="gov.foia.service.dataupdate.SolrReindexAcmUserExecutor">
+            <beans:property name="solrReindexService" ref="solrReindexService"/>
+        </beans:bean>
+
+        <beans:bean id="solrReindexPersonAssociationsExecutor" class="gov.foia.service.dataupdate.SolrReindexPersonAssociationsExecutor">
             <beans:property name="solrReindexService" ref="solrReindexService"/>
         </beans:bean>
 
@@ -235,6 +240,7 @@
             <beans:property name="acmParticipantService" ref="acmParticipantService"/>
             <beans:property name="caseFileDao" ref="caseFileDao"/>
             <beans:property name="portalAdminService" ref="portalAdminService"/>
+            <beans:property name="portalConfigurationService" ref="portalConfigurationService"/>
         </beans:bean>
 
         <beans:bean id="foiaQueuedEventListener" class="gov.foia.listener.FOIAQueuedEventListener">

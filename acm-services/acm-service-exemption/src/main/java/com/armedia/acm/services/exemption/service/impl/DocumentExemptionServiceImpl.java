@@ -27,16 +27,6 @@ package com.armedia.acm.services.exemption.service.impl;
  * #L%
  */
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.services.exemption.dao.ExemptionCodeDao;
@@ -46,6 +36,15 @@ import com.armedia.acm.services.exemption.model.DocumentRedactionEventPublisher;
 import com.armedia.acm.services.exemption.model.ExemptionCode;
 import com.armedia.acm.services.exemption.model.ExemptionConstants;
 import com.armedia.acm.services.exemption.service.DocumentExemptionService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Created by ana.serafimoska
@@ -91,8 +90,6 @@ public class DocumentExemptionServiceImpl implements DocumentExemptionService
                     exemptionCodeObject.setFileId(fileId);
                     exemptionCodeObject.setFileVersion(ecmFile.getActiveVersionTag());
                     exemptionCodeObject.setExemptionCode(exemptionCode);
-                    exemptionCodeObject.setCreator(user);
-                    exemptionCodeObject.setCreated(created);
                     exemptionCodeObject.setExemptionStatus(ExemptionConstants.EXEMPTION_STATUS_DRAFT);
                     exemptionCodeObject.setParentObjectType("DOCUMENT");
                     exemptionCodeObject.setManuallyFlag(false);
@@ -163,8 +160,6 @@ public class DocumentExemptionServiceImpl implements DocumentExemptionService
                     exemptionCodeObject.setFileId(fileId);
                     exemptionCodeObject.setFileVersion(ecmFile.getActiveVersionTag());
                     exemptionCodeObject.setExemptionCode(exemptionCode);
-                    exemptionCodeObject.setCreator(user);
-                    exemptionCodeObject.setCreated(created);
                     exemptionCodeObject.setExemptionStatus(ExemptionConstants.EXEMPTION_STATUS_MANUAL);
                     exemptionCodeObject.setParentObjectType("DOCUMENT");
                     exemptionCodeObject.setManuallyFlag(true);

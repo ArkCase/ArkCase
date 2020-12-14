@@ -10,5 +10,13 @@
                                  referencedColumnNames="cm_file_id" deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
+    <changeSet id="02-acm-exemption-statute-foreign-key" author="martin.jovanovski"
+               logicalFilePath="/ddl/constraints/foia-request-constraints-1.0.xml">
+        <addForeignKeyConstraint baseTableName="acm_exemption_statute" baseColumnNames="cm_file_id"
+                                 constraintName="fk_exemption_statute_file_id"
+                                 referencedTableName="acm_file"
+                                 referencedColumnNames="cm_file_id" deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
+    </changeSet>
+
 </databaseChangeLog>
 

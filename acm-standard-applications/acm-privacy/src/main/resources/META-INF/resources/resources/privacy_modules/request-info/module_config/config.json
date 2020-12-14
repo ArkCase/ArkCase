@@ -1153,13 +1153,6 @@
                     "headerCellFilter": "translate"
                 },
                 {
-                    "name": "exemptionStatute",
-                    "displayName": "requests.comp.exemption.table.columns.statute",
-                    "headerCellFilter": "translate",
-                    "enableCellEdit": false,
-                    "cellTemplate": "<div class='ui-grid-cell-contents' title='{{grid.appScope.utils.getLookupValue(grid.appScope.exemptionStatutes, row.entity.exemptionStatute) | translate }}'>{{ grid.appScope.utils.getLookupValue(grid.appScope.exemptionStatutes, row.entity.exemptionStatute) | translate }}</div>"
-                },
-                {
                     "name": "created",
                     "displayName": "requests.comp.exemption.table.columns.dateCreated",
                     "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
@@ -1168,6 +1161,46 @@
                 {
                     "name": "creator",
                     "displayName": "requests.comp.exemption.table.columns.creator",
+                    "headerCellFilter": "translate",
+                    "enableCellEdit": false,
+                    "lookup": "userFullNames"
+                }
+            ]
+        },
+        {
+            "id": "exemptionStatute",
+            "title": "Exemption Statutes",
+            "icon": "fa fa-code",
+            "enabled": true,
+            "type": "grid",
+            "enableFiltering": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 5,
+            "columnDefs": [
+                {
+                    "name": "exemptionStatute",
+                    "displayName": "requests.comp.exemptionStatute.table.columns.exemptionStatute",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "exemptionStatus",
+                    "displayName": "requests.comp.exemptionStatute.table.columns.status",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "created",
+                    "displayName": "requests.comp.exemptionStatute.table.columns.dateCreated",
+                    "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "creator",
+                    "displayName": "requests.comp.exemptionStatute.table.columns.creator",
                     "headerCellFilter": "translate",
                     "enableCellEdit": false,
                     "lookup": "userFullNames"

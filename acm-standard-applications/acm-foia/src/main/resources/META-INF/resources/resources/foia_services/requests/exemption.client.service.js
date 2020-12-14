@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/requests/exemption.client.service.js services/requests/exemption.client.service.js}
+ * {@link /acm-standard-applications/arkcase/src/main/webapp/resources/services/requests/exemption.client.service.js services/requests/exemption.client.service.js}
 
  * ExemptionService contains function to get exemption codes
  */
@@ -35,10 +35,27 @@ angular.module('services').factory('ExemptionService', [ '$http', function($http
                     tags: exemptionData
                 }
             });
+        },
+
+        getDocumentExemptionStatutes: function (fileId) {
+            return $http({
+                url: 'api/latest/service/exemption-statute/file/' + fileId,
+                method: 'GET',
+                isArray: true,
+                cache: false
+            });
+        },
+
+        saveDocumentExemptionStatute: function (fileId, data) {
+            return $http({
+                url: 'api/latest/service/exemption-statute/file/' + fileId,
+                method: 'POST',
+                data: data,
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
         }
-
     }
-
-
 
 } ]);

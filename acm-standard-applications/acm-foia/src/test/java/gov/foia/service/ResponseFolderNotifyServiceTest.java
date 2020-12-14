@@ -1,5 +1,9 @@
 package gov.foia.service;
 
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+
 /*-
  * #%L
  * ACM Standard Application: Freedom of Information Act
@@ -38,8 +42,7 @@ import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.service.NotificationSender;
 import com.armedia.acm.services.users.dao.UserDao;
-import gov.foia.model.FOIAConstants;
-import gov.foia.model.FOIARequest;
+
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -48,9 +51,8 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.easymock.EasyMock.capture;
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
+import gov.foia.model.FOIAConstants;
+import gov.foia.model.FOIARequest;
 
 /**
  * Created by teng.wang on 3/31/2017.
@@ -61,9 +63,9 @@ public class ResponseFolderNotifyServiceTest extends EasyMockSupport
     static final String objectType = "CASE_FILE";
     static final long requestId = 101l;
     static final String emailType = "email";
-    static final String emailAddress = "teng.wang@armedia.com";
+    static final String emailAddress = "teng.wang@arkcase.org";
     static final String caseNumber = "20170331-101";
-    static final String userId = "ann-acm@armedia.com";
+    static final String userId = "ann-acm@arkcase.org";
     static final String filePath = "C:\\apache-tomcat-8.0.36\\temp\\temp.zip";
     static final String requestType = "New Request";
     static final String baseUrl = "https://acm-arkcase/arkcase";
@@ -98,7 +100,7 @@ public class ResponseFolderNotifyServiceTest extends EasyMockSupport
         mockedResponseFolderService = createMock(ResponseFolderService.class);
         mockedAcmApplication = createMock(AcmApplication.class);
         mockNotificationDao = createMock(NotificationDao.class);
-        
+
         responseFolderNotifyService.setCaseFileDao(mockedCaseFileDao);
         responseFolderNotifyService.setUserDao(mockedUserDao);
         responseFolderNotifyService.setResponseFolderService(mockedResponseFolderService);
@@ -126,7 +128,6 @@ public class ResponseFolderNotifyServiceTest extends EasyMockSupport
         expect(mockedRequest.getObjectType()).andReturn(objectType).anyTimes();
         expect(mockedRequest.getId()).andReturn(requestId).anyTimes();
 
-        
         Capture<Notification> captureReleaseNotifier = Capture.newInstance();
         expect(mockNotificationDao.save(capture(captureReleaseNotifier))).andReturn(new Notification());
 
@@ -156,7 +157,6 @@ public class ResponseFolderNotifyServiceTest extends EasyMockSupport
         expect(mockedRequest.getObjectType()).andReturn(objectType).anyTimes();
         expect(mockedRequest.getId()).andReturn(requestId).anyTimes();
 
-        
         Capture<Notification> captureReleaseNotifier = Capture.newInstance();
         expect(mockNotificationDao.save(capture(captureReleaseNotifier))).andReturn(new Notification());
         replayAll();

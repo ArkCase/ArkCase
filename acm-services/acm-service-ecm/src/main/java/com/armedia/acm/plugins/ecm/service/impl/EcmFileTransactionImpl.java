@@ -158,7 +158,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             if (activeVersionMimeType != null && detectedMetadata != null
                     && ((detectedMetadata.getContentType().equals(activeVersionMimeType)) ||
                             (getAllAllowedUploadFileTypes(allowedUploadFileTypes.getAllowedUploadFileTypes(), activeVersionMimeType)
-                                    .contains(detectedMetadata.getContentType()))))
+                                    .contains(detectedMetadata.getContentType().replaceAll("\\.", "-dot-")))))
             {
 
                 Pair<String, String> mimeTypeAndExtension = buildMimeTypeAndExtension(detectedMetadata, ecmUniqueFilename,
@@ -335,7 +335,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
                 String finalMimeType = mimeTypeAndExtension.getLeft();
                 String finalExtension = mimeTypeAndExtension.getRight();
 
-                ecmUniqueFilename = getFolderAndFilesUtils().getBaseFileName(ecmUniqueFilename, finalExtension);
+                ecmUniqueFilename = getFolderAndFilesUtils().createUniqueIdentificator(ecmUniqueFilename);
 
                 EcmFileTransactionPipelineContext pipelineContext = buildEcmFileTransactionPipelineContext(authentication,
                         tempFileContents, targetCmisFolderId, container, metadata.getFileName(), existingCmisDocument,
