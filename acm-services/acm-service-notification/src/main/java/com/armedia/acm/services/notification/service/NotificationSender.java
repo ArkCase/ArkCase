@@ -3,6 +3,8 @@ package com.armedia.acm.services.notification.service;
 import com.armedia.acm.correspondence.model.Template;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.data.service.AcmDataService;
+import com.armedia.acm.files.AbstractConfigurationFileEvent;
+import com.armedia.acm.files.ConfigurationFileChangedEvent;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
@@ -28,6 +30,9 @@ import com.armedia.acm.services.users.model.AcmUser;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.context.ApplicationEvent;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.io.Resource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -73,7 +78,7 @@ import freemarker.template.TemplateException;
 /**
  * @author riste.tutureski
  */
-public abstract class NotificationSender
+public abstract class NotificationSender implements ApplicationListener<ApplicationEvent>
 {
     private final Logger LOG = LogManager.getLogger(getClass());
 
@@ -91,6 +96,7 @@ public abstract class NotificationSender
     private NotificationConfig notificationConfig;
     private Resource templatesConfiguration;
     private ObjectConverter objectConverter;
+    private List<Template> templateConfigurations = new ArrayList<>();
 
     /**
      * Sends the notification to user's email. If successful, sets the notification state to
@@ -219,31 +225,50 @@ public abstract class NotificationSender
     
     private Boolean isEnabledSendingEmails(Notification notification)
     {
-        try
+        return templateConfigurations.stream()
+                .filter(t -> t.getTemplateFilename().equals(notification.getTemplateModelName() + ".html") && t.isEnabled())
+                .findAny().isPresent();
+
+    }
+
+    @Override
+    public void onApplicationEvent(ApplicationEvent event)
+    {
+        if (event instanceof ConfigurationFileChangedEvent && (((ConfigurationFileChangedEvent) event).getConfigFile().equals("templates-configuration.json")))
         {
-            File file = templatesConfiguration.getFile();
-            if (!file.exists())
+            try
             {
-                file.createNewFile();
+                templateConfigurations = getObjectConverter().getJsonUnmarshaller()
+                        .unmarshallCollection(FileUtils.readFileToString(templatesConfiguration.getFile()), List.class, Template.class);
             }
-
-            String resource = FileUtils.readFileToString(file);
-            if (resource.isEmpty())
+            catch (Exception e)
             {
-                resource = "[]";
+                LOG.error("Error while reading from config file [{}]", e.getMessage(), e);
             }
-
-            List<Template> templateConfigurations = getObjectConverter().getJsonUnmarshaller()
-                    .unmarshallCollection(FileUtils.readFileToString(templatesConfiguration.getFile()), List.class, Template.class);
-
-            return templateConfigurations.stream()
-                    .filter(t -> t.getTemplateFilename().equals(notification.getTemplateModelName() + ".html") && t.isEnabled())
-                    .findAny().isPresent();
-                    
         }
-        catch (IOException ioe)
+        else if (event instanceof ContextRefreshedEvent)
         {
-            throw new IllegalStateException("Error while checking if notification can be send with template " + notification.getTemplateModelName(), ioe);
+            try
+            {
+                File file = templatesConfiguration.getFile();
+                if (!file.exists())
+                {
+                    file.createNewFile();
+                }
+
+                String resource = FileUtils.readFileToString(file);
+                if (resource.isEmpty())
+                {
+                    resource = "[]";
+                }
+
+                templateConfigurations = getObjectConverter().getJsonUnmarshaller()
+                        .unmarshallCollection(FileUtils.readFileToString(templatesConfiguration.getFile()), List.class, Template.class);
+            }
+            catch (IOException ioe)
+            {
+                throw new IllegalStateException("Error while reading from config file [{}]",ioe);
+            }
         }
     }
 
