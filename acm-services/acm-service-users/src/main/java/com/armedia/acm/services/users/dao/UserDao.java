@@ -112,9 +112,10 @@ public class UserDao extends AcmAbstractDao<AcmUser>
 
     public AcmUser findByUserId(String userId)
     {
-        if(userId != null) {
+        if(userId != null)
+        {
             userId = userId.toLowerCase();
-        return getEntityManager().find(AcmUser.class, userId);
+            return getEntityManager().find(AcmUser.class, userId);
         }
         return null;
     }
