@@ -356,5 +356,16 @@
             <beans:property name="originalEmailExtractor" ref="originalEmailExtractor"/>
         </beans:bean>
 
+        <beans:bean id="splitCaseService" class="gov.foia.service.SplitRequestServiceImpl">
+            <beans:property name="saveCaseService" ref="saveCaseService"/>
+            <beans:property name="caseFileDao" ref="caseFileDao"/>
+            <beans:property name="acmTaskService" ref="acmTaskService"/>
+            <beans:property name="acmFolderService" ref="acmFolderService"/>
+            <beans:property name="typesToCopy" value="#{caseConfig.splitTypesToCopy}"/>
+            <beans:property name="splitCaseFileBusinessRule" ref="splitCaseFileBusinessRule"/>
+            <beans:property name="foiaRequestDao" ref="foiaRequestDao"/>
+        </beans:bean>
+
+
     </beans:beans>
 </beans:beans>

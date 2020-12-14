@@ -298,7 +298,6 @@
                             </div>
                             <div class="col-sm-4">
                                 <input type="text" class="form-control" id="subjectZip" name="subjectZip"
-                                       pattern="[0-9]{5}"
                                        ng-model="config.data.subject.person.addresses[0].zip"
                                        placeholder="{{'cases.newRequest.zip.placeholder' | translate}}"
                                        ng-disabled="isExistingSubject && (existingSubject.addresses[0].zip ||
@@ -619,8 +618,8 @@
         <button type="button" class="btn btn-secondary btn-sm" data-toggle="tooltip" data-title="Cancel" ng-click="cancelModal()">
             <span translate>cases.newRequest.cancel</span>
         </button>
-        <button type="button" class="btn btn-primary btn-sm" data-toggle="tooltip" ng-click="validateForm(requestForm)" title="Submit"
-                id="saveButton">
+        <button type="button" class="btn btn-primary btn-sm" data-toggle="tooltip" ng-click="validateForm(requestForm)"
+                ng-disabled="loading" title="Submit" id="saveButton">
             <i class="{{loadingIcon}}"></i>
             <span translate>cases.newRequest.save.button</span>
         </button>

@@ -31,10 +31,14 @@ package com.armedia.acm.plugins.person.dao;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.person.model.Person;
 
+import com.armedia.acm.services.config.lookups.service.LookupDao;
+import com.armedia.acm.services.labels.service.TranslationService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -51,6 +55,10 @@ public class PersonDao extends AcmAbstractDao<Person>
 {
 
     private Logger LOG = LogManager.getLogger(getClass());
+    @Autowired
+    private TranslationService translationService;
+    @Autowired
+    private LookupDao lookupDao;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -140,6 +148,13 @@ public class PersonDao extends AcmAbstractDao<Person>
         {
             return Optional.of(resultList.get(0));
         }
+    }
+
+    @PostConstruct
+    public void postConstruct ()
+    {
+        Person.setLookupDao(lookupDao);
+        Person.setTranslationService(translationService);
     }
 
     public EntityManager getEntityManager()

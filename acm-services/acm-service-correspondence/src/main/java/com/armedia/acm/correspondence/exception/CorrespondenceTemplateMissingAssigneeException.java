@@ -1,8 +1,8 @@
-package com.armedia.acm.services.dataupdate.service;
+package com.armedia.acm.correspondence.exception;
 
 /*-
  * #%L
- * ACM Standard Application: Freedom of Information Act
+ * ACM Service: Correspondence Library
  * %%
  * Copyright (C) 2014 - 2020 ArkCase LLC
  * %%
@@ -27,33 +27,11 @@ package com.armedia.acm.services.dataupdate.service;
  * #L%
  */
 
-import com.armedia.acm.plugins.person.model.Person;
-
-import java.util.Arrays;
-
-public class SolrReindexPersonExecutor implements AcmDataUpdateExecutor
+public class CorrespondenceTemplateMissingAssigneeException extends RuntimeException
 {
-    private SolrReindexService solrReindexService;
 
-    @Override
-    public String getUpdateId()
+    public CorrespondenceTemplateMissingAssigneeException(String message)
     {
-        return "solr-person-reindex-v3";
-    }
-
-    @Override
-    public void execute()
-    {
-        solrReindexService.reindex(Arrays.asList(Person.class));
-    }
-
-    public SolrReindexService getSolrReindexService()
-    {
-        return solrReindexService;
-    }
-
-    public void setSolrReindexService(SolrReindexService solrReindexService)
-    {
-        this.solrReindexService = solrReindexService;
+        super(message);
     }
 }

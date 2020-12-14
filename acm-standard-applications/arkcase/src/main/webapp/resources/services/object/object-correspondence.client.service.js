@@ -10,7 +10,7 @@
 
  * Object.CorrespondenceService includes group of REST calls related to correspondence.
  */
-angular.module('services').factory('Object.CorrespondenceService', [ '$resource', 'Acm.StoreService', 'UtilService', function($resource, Store, Util) {
+angular.module('services').factory('Object.CorrespondenceService', [ '$resource', 'Acm.StoreService', 'UtilService', 'MessageService', function($resource, Store, Util, MessageService) {
     var Service = $resource('api/latest/plugin', {}, {
         /**
          * @ngdoc method
@@ -147,6 +147,9 @@ angular.module('services').factory('Object.CorrespondenceService', [ '$resource'
                     //add new correspondence to cache
                     return data;
                 }
+            },
+            onError: function (error) {
+                MessageService.error(error.data.message);
             }
         });
     };

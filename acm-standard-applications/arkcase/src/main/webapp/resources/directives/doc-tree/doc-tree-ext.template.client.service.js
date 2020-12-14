@@ -88,6 +88,8 @@ angular.module('services').factory('DocTreeExt.Template', [ '$q', 'UtilService',
                                             }
                                         }
                                     }
+                                }, function () {
+                                    DocTree.refreshTree();
                                 })
                             });
                         }

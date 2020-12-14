@@ -139,7 +139,7 @@ public class AddCorrespondenceTemplatesAPI
                         for (final MultipartFile attachment : attachmentsList)
                         {
                             log.info("Adding new template : {}", attachment.getOriginalFilename());
-                            String fileName = templateType.equals("emailTemplate") ? attachment.getOriginalFilename() : createTimestampFileName(attachment.getOriginalFilename());
+                            String fileName = templateType.equals(NotificationConstants.EMAIL_NOTIFICATION_TEMPLATE_TYPE) ? attachment.getOriginalFilename() : createTimestampFileName(attachment.getOriginalFilename());
                             saveMultipartToDisk(attachment, pathName, fileName);
                             retrieveTemplateDetails(authentication, pathName, fileName, templateUploadList);
                         }
