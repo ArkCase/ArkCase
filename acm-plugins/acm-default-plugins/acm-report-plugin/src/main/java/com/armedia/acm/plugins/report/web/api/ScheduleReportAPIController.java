@@ -37,6 +37,8 @@ import com.armedia.acm.plugins.report.service.ScheduleReportService;
 import org.json.JSONObject;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.owasp.html.PolicyFactory;
+import org.owasp.html.Sanitizers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -132,7 +134,9 @@ public class ScheduleReportAPIController
 
         String response = getScheduleReportService().deleteSchedule(scheduleId);
         LOGGER.debug("Delete result: [{}]", response);
-        return response;
+        PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
+        String safeString = policy.sanitize(response);
+        return safeString;
     }
 
     public ScheduleReportService getScheduleReportService()

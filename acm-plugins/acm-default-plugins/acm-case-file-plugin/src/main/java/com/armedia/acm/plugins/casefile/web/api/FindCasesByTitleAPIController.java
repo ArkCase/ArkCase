@@ -56,18 +56,18 @@ public class FindCasesByTitleAPIController
 
     @RequestMapping(method = RequestMethod.GET, value = "/byTitle/{title}", produces = { MediaType.APPLICATION_JSON_VALUE })
     @ResponseBody
-    public ResponseEntity<List<CaseFile>> findCasesByTitle(
+    public List<CaseFile> findCasesByTitle(
             @PathVariable(value = "title") String title,
             Authentication auth) throws AcmObjectNotFoundException
     {
         log.info("Trying to fetch Case Files by Title {}", title);
         try
         {
-            return new ResponseEntity<>(getCaseFileDao().findByTitle(title), HttpStatus.OK);
+            return getCaseFileDao().findByTitle(title);
         }
         catch (AcmObjectNotFoundException e)
         {
-            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+            return new ArrayList<>();
         }
     }
 

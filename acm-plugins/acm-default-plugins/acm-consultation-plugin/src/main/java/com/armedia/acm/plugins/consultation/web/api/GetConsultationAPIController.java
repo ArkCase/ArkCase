@@ -137,18 +137,18 @@ public class GetConsultationAPIController
 
     @RequestMapping(method = RequestMethod.GET, value = "/byTitle/{title}", produces = { MediaType.APPLICATION_JSON_VALUE })
     @ResponseBody
-    public ResponseEntity<List<Consultation>> findConsultationsByTitle(
+    public List<Consultation> findConsultationsByTitle(
             @PathVariable(value = "title") String title,
             Authentication auth) throws AcmObjectNotFoundException
     {
         log.info("Trying to fetch Consultations by Title {}", title);
         try
         {
-            return new ResponseEntity<>(getConsultationService().getConsultationsByTitle(title), HttpStatus.OK);
+            return getConsultationService().getConsultationsByTitle(title);
         }
         catch (AcmObjectNotFoundException e)
         {
-            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+            return new ArrayList<>();
         }
     }
 
