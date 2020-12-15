@@ -350,6 +350,7 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
     }
 
     @Transient
+    @JsonIgnore
     private String requesterPositionTranslated;
     public String getRequesterPositionTranslated()
     {
@@ -358,6 +359,7 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
     }
 
     @Transient
+    @JsonIgnore
     private String requesterTitleTranslated;
     public String getRequesterTitleTranslated()
     {
