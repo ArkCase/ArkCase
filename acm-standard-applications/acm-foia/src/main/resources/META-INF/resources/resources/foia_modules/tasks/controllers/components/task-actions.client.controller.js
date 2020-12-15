@@ -3,7 +3,7 @@
 angular.module('tasks').controller(
     'Tasks.ActionsController',
     ['$rootScope', '$scope', '$state', '$stateParams', '$modal', '$translate', 'UtilService', 'ConfigService', 'Authentication', 'Object.SignatureService', 'ObjectService', 'Task.InfoService', 'Task.WorkflowService', 'Object.SubscriptionService', 'Helper.ObjectBrowserService',
-        'MessageService', function ($rootScope, $scope, $state, $stateParams, $modal, $translate, Util, ConfigService, Authentication, ObjectSignatureService, ObjectService, TaskInfoService, TaskWorkflowService, ObjectSubscriptionService, HelperObjectBrowserService, MessageService) {
+        'MessageService', 'Ecm.EmailService', function ($rootScope, $scope, $state, $stateParams, $modal, $translate, Util, ConfigService, Authentication, ObjectSignatureService, ObjectService, TaskInfoService, TaskWorkflowService, ObjectSubscriptionService, HelperObjectBrowserService, MessageService, EcmEmailService) {
         new HelperObjectBrowserService.Component({
             scope: $scope,
             stateParams: $stateParams,
@@ -294,6 +294,44 @@ angular.module('tasks').controller(
                 }
             });
         }
+
+        $scope.sendEmail = function () {
+            var params = {
+                objectId: $scope.objectInfo.taskId,
+                objectType: ObjectService.ObjectTypes.TASK,
+                emailSubject: 'Task ' + $scope.objectInfo.taskId
+            };
+            var modalInstance = $modal.open({
+                templateUrl: 'modules/common/views/send-email-modal.client.view.html',
+                controller: 'Common.SendEmailModalController',
+                animation: true,
+                size: 'lg',
+                backdrop: 'static',
+                resolve: {
+                    params: function() {
+                        return params;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function(res) {
+                var emailData = {};
+                emailData.subject = res.subject;
+                emailData.body = res.body;
+                emailData.footer = '\n\n' + res.footer;
+                emailData.emailAddresses = res.recipients;
+                emailData.objectId = $scope.objectInfo.taskId;
+                emailData.objectType = ObjectService.ObjectTypes.TASK;
+                emailData.modelReferenceName = res.template;
+
+                if(emailData.modelReferenceName != 'plainEmail') {
+                    EcmEmailService.sendManualEmail(emailData);
+                } else {
+                    EcmEmailService.sendPlainEmail(emailData, ObjectService.ObjectTypes.TASK);
+                }
+
+            });
+        };
     }]);
 angular.module('tasks').controller('Tasks.ActionsErrorDialogController', ['$scope', '$modalInstance', 'errorMessage', function ($scope, $modalInstance, errorMessage) {
     $scope.errorMessage = errorMessage;
