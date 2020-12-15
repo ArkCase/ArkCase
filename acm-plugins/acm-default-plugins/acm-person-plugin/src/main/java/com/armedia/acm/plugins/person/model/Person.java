@@ -349,6 +349,33 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
         this.familyName = familyName;
     }
 
+    @Transient
+    private String requesterPositionTranslated;
+    public String getRequesterPositionTranslated()
+    {
+        requesterPositionTranslated = translatedPersonTitle();
+        return requesterPositionTranslated;
+    }
+
+    @Transient
+    private String requesterTitleTranslated;
+    public String getRequesterTitleTranslated()
+    {
+        requesterTitleTranslated = translatedPersonTitle();
+        return requesterTitleTranslated;
+    }
+
+    public String translatedPersonTitle()
+    {
+        List<StandardLookupEntry> lookupEntries = (List<StandardLookupEntry>) lookupDao.getLookupByName("personTitles").getEntries();
+        String labelKey = lookupEntries.stream()
+                .filter(standardLookupEntry -> standardLookupEntry.getKey().equals(getTitle()))
+                .findFirst()
+                .map(StandardLookupEntry::getValue)
+                .orElse(getTitle());
+        return translationService.translate(labelKey);
+    }
+
     /**
      * Get full person name
      *
@@ -361,14 +388,7 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
         StringBuilder sb = new StringBuilder();
         if (getTitle() != null)
         {
-            String translatedTitle = null;
-            List<StandardLookupEntry> lookupEntries = (List<StandardLookupEntry>) lookupDao.getLookupByName("personTitles").getEntries();
-            String labelKey = lookupEntries.stream()
-                    .filter(standardLookupEntry -> standardLookupEntry.getKey().equals(getTitle()))
-                    .findFirst()
-                    .map(StandardLookupEntry::getValue)
-                    .orElse(getTitle());
-            translatedTitle = translationService.translate(labelKey);
+            String translatedTitle = translatedPersonTitle();
             sb.append(translatedTitle).append(" ");
         }
         if (getGivenName() != null)

@@ -678,6 +678,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
 
             }
         }
+
         return generatedExpression;
     }
 
