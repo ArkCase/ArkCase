@@ -71,6 +71,10 @@ public class ApplicationConfig
     @Value("${application.properties.helpUrl}")
     private String helpUrl;
 
+    @JsonProperty("application.properties.defaultTimezone")
+    @Value("${application.properties.defaultTimezone}")
+    private String defaultTimezone;
+
     /*
      * alfrescoUserIdLdapAttribute controls the user id that is sent to Alfresco in the
      * X-Alfresco-Remote-User header, so that Alfresco knows who the real user is. In
@@ -218,5 +222,15 @@ public class ApplicationConfig
 
     public void setLogoutUrl(String logoutUrl) {
         this.logoutUrl = logoutUrl;
+    }
+
+    public String getDefaultTimezone()
+    {
+        return defaultTimezone;
+    }
+
+    public void setDefaultTimezone(String defaultTimezone)
+    {
+        this.defaultTimezone = defaultTimezone;
     }
 }
