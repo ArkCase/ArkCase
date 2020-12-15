@@ -35,6 +35,8 @@ import com.armedia.acm.services.users.service.AcmUserService;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.owasp.html.PolicyFactory;
+import org.owasp.html.Sanitizers;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -113,7 +115,9 @@ public class UserInfoAPIController
         user.setLang(lang);
         session.setAttribute("acm_user", user);
 
-        return lang;
+        PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
+        String safeString = policy.sanitize(lang);
+        return safeString;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/userPrivileges", produces = MediaType.APPLICATION_JSON_VALUE)

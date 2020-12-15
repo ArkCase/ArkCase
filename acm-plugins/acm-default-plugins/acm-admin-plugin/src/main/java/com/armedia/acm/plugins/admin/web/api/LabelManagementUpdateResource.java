@@ -34,6 +34,8 @@ import com.armedia.acm.services.labels.service.LabelManagementService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
+import org.owasp.html.PolicyFactory;
+import org.owasp.html.Sanitizers;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -75,7 +77,9 @@ public class LabelManagementUpdateResource
             try
             {
                 String applicationName = String.format("%s-%s", ns, lang);
-                return new JSONObject(labelManagementService.updateResource(resource, applicationName)).toString();
+                PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
+                String safeString = policy.sanitize(new JSONObject(labelManagementService.updateResource(resource, applicationName)).toString());
+                return safeString;
             }
             catch (Exception e)
             {
