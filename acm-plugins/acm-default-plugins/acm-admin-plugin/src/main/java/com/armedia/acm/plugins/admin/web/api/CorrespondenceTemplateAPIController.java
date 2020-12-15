@@ -45,8 +45,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import javax.validation.ValidationException;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -123,6 +125,11 @@ public class CorrespondenceTemplateAPIController
         for (CorrespondenceTemplate template : templates)
         {
             File templateFile = new File(getCorrespondenceFolderName(), template.getTemplateFilename());
+            String absolutePath = templateFile.getCanonicalPath();
+            String tempFolder = Paths.get(getCorrespondenceFolderName()).toString();
+            if (!absolutePath.startsWith(tempFolder)){
+                throw new ValidationException("Invalid path constructed!");
+            }
             if (FileUtils.deleteQuietly(templateFile))
             {
                 deleteResponse.add(mapTemplateToResponse(
@@ -157,6 +164,10 @@ public class CorrespondenceTemplateAPIController
 
         File templateFile = new File(templatesDir,
                 childDirectoryName);
+        String absolutePath = templateFile.getCanonicalPath();
+        if (!absolutePath.startsWith(templatesDir.getCanonicalPath())){
+            throw new ValidationException("Invalid path constructed!");
+        }
         if (FileUtils.deleteQuietly(templateFile))
         {
             return mapTemplateToResponse(correspondenceService.deleteTemplateByIdAndVersion(templateId, templateVersion));
