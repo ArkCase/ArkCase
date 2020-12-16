@@ -27,63 +27,40 @@ package com.armedia.acm.services.holiday.model;
  * #L%
  */
 
-import com.armedia.acm.objectonverter.json.JSONUnmarshaller;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.armedia.acm.configuration.annotations.MapValue;
 
-import org.json.JSONObject;
-import org.springframework.beans.factory.InitializingBean;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.beans.factory.annotation.Value;
 
-import java.util.Objects;
+import java.util.Map;
 
-@JsonSerialize(as = HolidayConfigurationHolder.class)
-public class HolidayConfigurationHolder implements InitializingBean
+public class HolidayPropsHolder
 {
-    @JsonProperty("holidayJsonConfiguration")
-    @Value("${holidayJsonConfiguration}")
-    private String holidayJsonConfiguration;
+    @JsonProperty("holidayConfiguration.includeWeekends")
+    @Value("${holidayConfiguration.includeWeekends}")
+    private Boolean includeWeekends;
 
-    private JSONUnmarshaller jsonUnmarshaller;
-
-    private HolidayConfiguration holidayConfiguration;
-
-    @Override
-    public void afterPropertiesSet()
+    public Boolean getIncludeWeekends()
     {
-        holidayConfiguration = jsonUnmarshaller.unmarshall(holidayJsonConfiguration, HolidayConfiguration.class);
+        return includeWeekends;
     }
 
-    public String getHolidayJsonConfiguration()
+    public void setIncludeWeekends(Boolean includeWeekends)
     {
-        return Objects.nonNull(holidayConfiguration) ? new JSONObject(holidayConfiguration).toString() : "{}";
+        this.includeWeekends = includeWeekends;
     }
 
-    public void setHolidayJsonConfiguration(String holidayJsonConfiguration)
+    @JsonProperty("holidayConfiguration.holidays")
+    private Map<String, String> holidays;
+
+    @MapValue(value = "holidayConfiguration.holidays")
+    public Map<String, String> getHolidays()
     {
-        this.holidayJsonConfiguration = holidayJsonConfiguration;
+        return holidays;
     }
 
-    @JsonIgnore
-    public JSONUnmarshaller getJsonUnmarshaller()
+    public void setHolidays(Map<String, String> holidays)
     {
-        return jsonUnmarshaller;
-    }
-
-    public void setJsonUnmarshaller(JSONUnmarshaller jsonUnmarshaller)
-    {
-        this.jsonUnmarshaller = jsonUnmarshaller;
-    }
-
-    @JsonIgnore
-    public HolidayConfiguration getHolidayConfiguration()
-    {
-        return holidayConfiguration;
-    }
-
-    public void setHolidayConfiguration(HolidayConfiguration holidayConfiguration)
-    {
-        this.holidayConfiguration = holidayConfiguration;
+        this.holidays = holidays;
     }
 }
