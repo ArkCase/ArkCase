@@ -42,12 +42,11 @@ import com.armedia.acm.plugins.ecm.utils.EcmFileCamelUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.web.api.MDCConstants;
 
+import com.google.json.JsonSanitizer;
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.commons.collections.map.HashedMap;
-import org.owasp.html.PolicyFactory;
-import org.owasp.html.Sanitizers;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -317,8 +316,7 @@ public class StreamServiceImpl implements StreamService
                 // Cast back to ServletOutputStream to get the easy println methods.
                 ServletOutputStream sos = (ServletOutputStream) output;
 
-                PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
-                String safeContentType = policy.sanitize(contentType);
+                String safeContentType = JsonSanitizer.sanitize(contentType);
 
                 // Copy multi part range.
                 for (Range range : ranges)

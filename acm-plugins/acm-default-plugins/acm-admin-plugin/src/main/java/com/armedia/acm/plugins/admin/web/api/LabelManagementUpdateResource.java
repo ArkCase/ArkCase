@@ -31,11 +31,10 @@ import com.armedia.acm.plugins.admin.exception.AcmLabelConfigurationException;
 import com.armedia.acm.services.labels.exception.AcmLabelManagementException;
 import com.armedia.acm.services.labels.service.LabelManagementService;
 
+import com.google.json.JsonSanitizer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
-import org.owasp.html.PolicyFactory;
-import org.owasp.html.Sanitizers;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -77,9 +76,8 @@ public class LabelManagementUpdateResource
             try
             {
                 String applicationName = String.format("%s-%s", ns, lang);
-                PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
-                String safeString = policy.sanitize(new JSONObject(labelManagementService.updateResource(resource, applicationName)).toString());
-                return safeString;
+                String wellFormedJson = JsonSanitizer.sanitize(new JSONObject(labelManagementService.updateResource(resource, applicationName)).toString());
+                return wellFormedJson;
             }
             catch (Exception e)
             {
