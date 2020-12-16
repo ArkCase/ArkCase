@@ -567,7 +567,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
             orgAddress.setType("Business");
             Organization organization = new Organization();
             organization.setOrganizationValue(acmUser.getCompany());
-            organization.setOrganizationType("Corporation");
+            organization.setOrganizationType("Unknown");
             organization.getAddresses().add(orgAddress);
             person.getOrganizations().add(organization);
         }
@@ -918,7 +918,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         {
             Organization newOrganization = new Organization();
             newOrganization.setOrganizationValue(organizationName);
-            newOrganization.setOrganizationType("Corporation");
+            newOrganization.setOrganizationType("Unknown");
             return newOrganization;
         }
         else if (organizationList.size() == 1)
@@ -940,7 +940,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
             }
             Organization newOrganization = new Organization();
             newOrganization.setOrganizationValue(organizationName);
-            newOrganization.setOrganizationType("Corporation");
+            newOrganization.setOrganizationType("Unknown");
             return newOrganization;
 
         }

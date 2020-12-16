@@ -13,6 +13,7 @@ angular.module('cases').controller(
             $scope.formInvalid = false;
             $scope.enableTitle = false;
             $scope.isPickExistingPerson = false;
+            $scope.primaryAddressIndex = 0;
 
             $scope.receivedDate = new Date();
 
@@ -606,8 +607,14 @@ angular.module('cases').controller(
                         $scope.config.data.originator.person.defaultEmail = email;
                     }
 
-                    if (person.addresses[0] && !Util.isEmpty(person.addresses[0].country) && !Util.isEmpty(person.addresses[0].state)) {
-                        $scope.changeStates(person.addresses[0].country);
+                    if (!Util.isArrayEmpty(person.addresses) && person.defaultAddress) {
+                        $scope.primaryAddressIndex = person.addresses.indexOf(person.defaultAddress);
+                    } else {
+                        $scope.primaryAddressIndex = 0;
+                    }
+
+                    if (person.addresses[$scope.primaryAddressIndex] && !Util.isEmpty(person.addresses[$scope.primaryAddressIndex].country) && !Util.isEmpty(person.addresses[$scope.primaryAddressIndex].state)) {
+                        $scope.changeStates(person.addresses[$scope.primaryAddressIndex].country);
                     }
 
                     $scope.isExistingPerson = typeof $scope.config.data.originator.person.id !== 'undefined';

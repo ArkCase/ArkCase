@@ -47,8 +47,8 @@ import com.armedia.acm.services.participants.model.ParticipantTypes;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -74,6 +74,9 @@ public class SplitCaseServiceImpl implements SplitCaseService
     private AcmTaskService acmTaskService;
     private SplitCaseFileBusinessRule splitCaseFileBusinessRule;
 
+    public static final String ASSOCIATION_CATEGORY_COPY_FROM = "COPY_FROM";
+    public static final String ASSOCIATION_CATEGORY_COPY_TO = "COPY_TO";
+
     @Override
     @Transactional
     public CaseFile splitCase(Authentication auth,
@@ -98,35 +101,29 @@ public class SplitCaseServiceImpl implements SplitCaseService
         participant.setParticipantType(ParticipantTypes.ASSIGNEE);
 
         if (copyCaseFile.getParticipants() != null)
+        {
             copyCaseFile.setParticipants(new ArrayList<>());
+        }
         copyCaseFile.getParticipants().add(participant);
 
         if (typesToCopy.contains("participants"))
+        {
             copyParticipants(original, copyCaseFile, auth);
-
-        ObjectAssociation childObjectCopy = new ObjectAssociation();
-        childObjectCopy.setAssociationType("REFERENCE");
-        childObjectCopy.setCategory("COPY_FROM");
-        childObjectCopy.setTargetId(original.getId());
-        childObjectCopy.setTargetType(original.getObjectType());
-        childObjectCopy.setTargetTitle(original.getTitle());
-        childObjectCopy.setTargetName(original.getCaseNumber());
-        copyCaseFile.addChildObject(childObjectCopy);
-
+        }
         if (typesToCopy.contains("people"))
+        {
             copyPeople(original, copyCaseFile);
+        }
+
+        ObjectAssociation childObjectCopy = createObjectAssociation(original, ASSOCIATION_CATEGORY_COPY_FROM);
+        copyCaseFile.addChildObject(childObjectCopy);
 
         copyCaseFile.getParticipants().forEach(copyCaseFileParticipant -> copyCaseFileParticipant.setReplaceChildrenParticipant(true));
         copyCaseFile = saveCaseService.saveCase(copyCaseFile, auth, ipAddress);
 
-        ObjectAssociation childObjectOriginal = new ObjectAssociation();
-        childObjectOriginal.setAssociationType("REFERENCE");
-        childObjectOriginal.setCategory("COPY_TO");
-        childObjectOriginal.setTargetId(copyCaseFile.getId());
-        childObjectOriginal.setTargetType(copyCaseFile.getObjectType());
-        childObjectOriginal.setTargetTitle(copyCaseFile.getTitle());
-        childObjectOriginal.setTargetName(copyCaseFile.getCaseNumber());
+        ObjectAssociation childObjectOriginal = createObjectAssociation(copyCaseFile, ASSOCIATION_CATEGORY_COPY_TO);
         original.addChildObject(childObjectOriginal);
+
         saveCaseService.saveCase(original, auth, ipAddress);
 
         if (typesToCopy.contains("tasks"))
@@ -144,7 +141,19 @@ public class SplitCaseServiceImpl implements SplitCaseService
         return copyCaseFile;
     }
 
-    private void copyParticipants(CaseFile original, CaseFile copyCaseFile, Authentication auth)
+    protected ObjectAssociation createObjectAssociation(CaseFile request, String category)
+    {
+        ObjectAssociation childObjectCopy = new ObjectAssociation();
+        childObjectCopy.setAssociationType("REFERENCE");
+        childObjectCopy.setCategory(category);
+        childObjectCopy.setTargetId(request.getId());
+        childObjectCopy.setTargetType(request.getObjectType());
+        childObjectCopy.setTargetTitle(request.getTitle());
+        childObjectCopy.setTargetName(request.getCaseNumber());
+        return childObjectCopy;
+    }
+
+    protected void copyParticipants(CaseFile original, CaseFile copyCaseFile, Authentication auth)
     {
         // all participants are copied and assigned as followers, except current user is exist is not copied
         if (original.getParticipants() == null || original.getParticipants().isEmpty())
@@ -167,7 +176,7 @@ public class SplitCaseServiceImpl implements SplitCaseService
         }
     }
 
-    private void copyPeople(CaseFile original, CaseFile copyCaseFile)
+    protected void copyPeople(CaseFile original, CaseFile copyCaseFile)
     {
         if (original.getPersonAssociations() == null || original.getPersonAssociations().isEmpty())
             return;
@@ -185,7 +194,7 @@ public class SplitCaseServiceImpl implements SplitCaseService
         }
     }
 
-    private void copyDocumentsAndFolders(CaseFile saved, SplitCaseOptions options)
+    protected void copyDocumentsAndFolders(CaseFile saved, SplitCaseOptions options)
             throws AcmObjectNotFoundException, AcmUserActionFailedException, AcmFolderException, AcmCreateObjectFailedException
     {
         for (SplitCaseOptions.AttachmentDTO attachmentDTO : options.getAttachments())
@@ -207,7 +216,7 @@ public class SplitCaseServiceImpl implements SplitCaseService
         }
     }
 
-    private void copyTasks(CaseFile original, CaseFile copyCaseFile, Authentication auth, String ipAddress) throws AcmTaskException,
+    protected void copyTasks(CaseFile original, CaseFile copyCaseFile, Authentication auth, String ipAddress) throws AcmTaskException,
             AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException, AcmFolderException
     {
         acmTaskService.copyTasks(original.getId(), original.getObjectType(), copyCaseFile.getId(), copyCaseFile.getObjectType(),
@@ -219,6 +228,11 @@ public class SplitCaseServiceImpl implements SplitCaseService
         this.saveCaseService = saveCaseService;
     }
 
+    public SaveCaseService getSaveCaseService()
+    {
+        return saveCaseService;
+    }
+
     public void setCaseFileDao(CaseFileDao caseFileDao)
     {
         this.caseFileDao = caseFileDao;
@@ -227,6 +241,11 @@ public class SplitCaseServiceImpl implements SplitCaseService
     public void setAcmFolderService(AcmFolderService acmFolderService)
     {
         this.acmFolderService = acmFolderService;
+    }
+
+    public Set<String> getTypesToCopy()
+    {
+        return typesToCopy;
     }
 
     public void setTypesToCopy(String typesToCopyStr)

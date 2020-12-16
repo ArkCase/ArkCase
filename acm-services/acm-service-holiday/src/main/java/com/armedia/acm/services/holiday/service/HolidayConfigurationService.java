@@ -27,29 +27,66 @@ package com.armedia.acm.services.holiday.service;
  * #L%
  */
 
-import com.armedia.acm.configuration.service.ConfigurationPropertyService;
+import com.armedia.acm.core.model.ApplicationConfig;
+import com.armedia.acm.objectonverter.ObjectConverter;
+import com.armedia.acm.services.holiday.model.BusinessHoursConfig;
 import com.armedia.acm.services.holiday.model.HolidayConfiguration;
-import com.armedia.acm.services.holiday.model.HolidayConfigurationHolder;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.core.io.Resource;
+
+import java.io.IOException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.Objects;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class HolidayConfigurationService
 {
-    private HolidayConfigurationHolder holidayConfigurationHolder;
-    private ConfigurationPropertyService configurationPropertyService;
+    private Logger log = LogManager.getLogger(getClass());
+    private Resource holidayFile;
+    private ObjectConverter objectConverter;
+    private ReadWriteLock lock = new ReentrantReadWriteLock();
+    private HolidayConfiguration holidayConfiguration;
+    private BusinessHoursConfig businessHoursConfig;
+    private ApplicationConfig applicationConfig;
 
     public void saveHolidayConfig(HolidayConfiguration holidayConfiguration)
     {
-        holidayConfigurationHolder.setHolidayConfiguration(holidayConfiguration);
-        configurationPropertyService.updateProperties(holidayConfigurationHolder);
+        String holidayConfigJson = Objects.nonNull(holidayConfiguration)
+                ? getObjectConverter().getIndentedJsonMarshaller().marshal(holidayConfiguration)
+                : "{}";
+
+        try
+        {
+            log.info("Trying to write to config file: {}", getHolidayFile().getFile().getAbsolutePath());
+            lock.writeLock().lock();
+            FileUtils.writeStringToFile(getHolidayFile().getFile(), holidayConfigJson);
+        }
+        catch (IOException e)
+        {
+            log.error(e.getMessage());
+        }
+        finally
+        {
+            lock.writeLock().unlock();
+            setHolidayConfigurationFromFile();
+        }
     }
 
     public HolidayConfiguration getHolidayConfiguration()
     {
-        return holidayConfigurationHolder.getHolidayConfiguration();
+        if (holidayConfiguration == null)
+        {
+            setHolidayConfigurationFromFile();
+        }
+        return holidayConfiguration;
     }
 
     public LocalDate addWorkingDaysToDate(LocalDate date, int workingDays)
@@ -85,6 +122,32 @@ public class HolidayConfigurationService
         LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         localDate = addWorkingDaysToDate(localDate, workingDays);
         return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+    }
+
+    public Date addWorkingDaysToDateWithBusinessHours(Date date, int workingDays)
+    {
+        LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+        if (getBusinessHoursConfig().getEndOfBusinessDayEnabled() && isTimeAfterBusinessHours(date))
+        {
+            localDate = addWorkingDaysToDate(localDate, workingDays + 1);
+        }
+        else
+        {
+            localDate = addWorkingDaysToDate(localDate, workingDays);
+        }
+
+        return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+    }
+
+    public boolean isTimeAfterBusinessHours(Date date)
+    {
+        ZoneId defaultClientTimezone = ZoneId.of(getApplicationConfig().getDefaultTimezone());
+
+        LocalTime localTimeInSetTimezone = date.toInstant().atZone(defaultClientTimezone).toLocalTime();
+        LocalTime endOfBusinessDayTime = LocalTime.parse(getBusinessHoursConfig().getEndOfBusinessDayTime());
+
+        return localTimeInSetTimezone.isAfter(endOfBusinessDayTime);
     }
 
     public boolean isWeekendNonWorkingDay(LocalDate date)
@@ -128,23 +191,65 @@ public class HolidayConfigurationService
         return count;
     }
 
-    public HolidayConfigurationHolder getHolidayConfigurationHolder()
+    private void setHolidayConfigurationFromFile()
     {
-        return holidayConfigurationHolder;
+        holidayConfiguration = new HolidayConfiguration();
+
+        try
+        {
+            log.info("Trying to read from config file: {}", getHolidayFile().getFile().getAbsolutePath());
+
+            lock.readLock().lock();
+            String holidayConfigJson = FileUtils.readFileToString(getHolidayFile().getFile());
+            holidayConfiguration = getObjectConverter().getJsonUnmarshaller().unmarshall(holidayConfigJson, HolidayConfiguration.class);
+        }
+        catch (IOException e)
+        {
+            log.error(e.getMessage());
+        }
+        finally
+        {
+            lock.readLock().unlock();
+        }
     }
 
-    public void setHolidayConfigurationHolder(HolidayConfigurationHolder holidayConfigurationHolder)
+    public Resource getHolidayFile()
     {
-        this.holidayConfigurationHolder = holidayConfigurationHolder;
+        return holidayFile;
     }
 
-    public ConfigurationPropertyService getConfigurationPropertyService()
+    public void setHolidayFile(Resource holidayFile)
     {
-        return configurationPropertyService;
+        this.holidayFile = holidayFile;
     }
 
-    public void setConfigurationPropertyService(ConfigurationPropertyService configurationPropertyService)
+    public ObjectConverter getObjectConverter()
     {
-        this.configurationPropertyService = configurationPropertyService;
+        return objectConverter;
+    }
+
+    public void setObjectConverter(ObjectConverter objectConverter)
+    {
+        this.objectConverter = objectConverter;
+    }
+
+    public BusinessHoursConfig getBusinessHoursConfig()
+    {
+        return businessHoursConfig;
+    }
+
+    public void setBusinessHoursConfig(BusinessHoursConfig businessHoursConfig)
+    {
+        this.businessHoursConfig = businessHoursConfig;
+    }
+
+    public ApplicationConfig getApplicationConfig()
+    {
+        return applicationConfig;
+    }
+
+    public void setApplicationConfig(ApplicationConfig applicationConfig)
+    {
+        this.applicationConfig = applicationConfig;
     }
 }
