@@ -1548,6 +1548,13 @@
                 "components": []
             },
             {
+                "type": "p/application/applicationConfiguration",
+                "label": "admin.application.applicationConfiguration.title",
+                "components": [
+                    "application.application-configuration.config"
+                ]
+            },
+            {
                 "type": "p/application/applicationVersion",
                 "label": "admin.application.version.config.title",
                 "components": [
