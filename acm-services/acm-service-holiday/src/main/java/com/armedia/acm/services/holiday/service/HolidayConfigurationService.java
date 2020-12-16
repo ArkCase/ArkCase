@@ -27,66 +27,36 @@ package com.armedia.acm.services.holiday.service;
  * #L%
  */
 
+import com.armedia.acm.configuration.service.ConfigurationPropertyService;
 import com.armedia.acm.core.model.ApplicationConfig;
-import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.services.holiday.model.BusinessHoursConfig;
 import com.armedia.acm.services.holiday.model.HolidayConfiguration;
+import com.armedia.acm.services.holiday.model.HolidayItem;
+import com.armedia.acm.services.holiday.model.HolidayPropsHolder;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.core.io.Resource;
-
-import java.io.IOException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
-import java.util.Date;
-import java.util.Objects;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 public class HolidayConfigurationService
 {
-    private Logger log = LogManager.getLogger(getClass());
-    private Resource holidayFile;
-    private ObjectConverter objectConverter;
-    private ReadWriteLock lock = new ReentrantReadWriteLock();
-    private HolidayConfiguration holidayConfiguration;
+    private HolidayPropsHolder holidayPropsHolder;
+    private ConfigurationPropertyService configurationPropertyService;
     private BusinessHoursConfig businessHoursConfig;
     private ApplicationConfig applicationConfig;
 
     public void saveHolidayConfig(HolidayConfiguration holidayConfiguration)
     {
-        String holidayConfigJson = Objects.nonNull(holidayConfiguration)
-                ? getObjectConverter().getIndentedJsonMarshaller().marshal(holidayConfiguration)
-                : "{}";
-
-        try
-        {
-            log.info("Trying to write to config file: {}", getHolidayFile().getFile().getAbsolutePath());
-            lock.writeLock().lock();
-            FileUtils.writeStringToFile(getHolidayFile().getFile(), holidayConfigJson);
-        }
-        catch (IOException e)
-        {
-            log.error(e.getMessage());
-        }
-        finally
-        {
-            lock.writeLock().unlock();
-            setHolidayConfigurationFromFile();
-        }
+        HolidayPropsHolder holidayPropsHolder = getPropsFromHolidayConfiguration(holidayConfiguration);
+        configurationPropertyService.updateProperties(holidayPropsHolder);
     }
 
     public HolidayConfiguration getHolidayConfiguration()
     {
-        if (holidayConfiguration == null)
-        {
-            setHolidayConfigurationFromFile();
-        }
-        return holidayConfiguration;
+        return getHolidayConfigurationFromProps(holidayPropsHolder);
     }
 
     public LocalDate addWorkingDaysToDate(LocalDate date, int workingDays)
@@ -191,46 +161,54 @@ public class HolidayConfigurationService
         return count;
     }
 
-    private void setHolidayConfigurationFromFile()
+    private HolidayConfiguration getHolidayConfigurationFromProps(HolidayPropsHolder holidayPropsHolder)
     {
-        holidayConfiguration = new HolidayConfiguration();
-
-        try
+        HolidayConfiguration holidayConfiguration = new HolidayConfiguration();
+        holidayConfiguration.setIncludeWeekends(holidayPropsHolder.getIncludeWeekends());
+        List<HolidayItem> holidays = new ArrayList<>();
+        for (Map.Entry<String, String> entry : holidayPropsHolder.getHolidays().entrySet())
         {
-            log.info("Trying to read from config file: {}", getHolidayFile().getFile().getAbsolutePath());
-
-            lock.readLock().lock();
-            String holidayConfigJson = FileUtils.readFileToString(getHolidayFile().getFile());
-            holidayConfiguration = getObjectConverter().getJsonUnmarshaller().unmarshall(holidayConfigJson, HolidayConfiguration.class);
+            HolidayItem holiday = new HolidayItem();
+            holiday.setHolidayName(entry.getValue());
+            holiday.setHolidayDate(LocalDate.parse(entry.getKey(), DateTimeFormatter.ISO_LOCAL_DATE));
+            holidays.add(holiday);
         }
-        catch (IOException e)
+        holidays.sort(Comparator.comparing(HolidayItem::getHolidayDate));
+        holidayConfiguration.setHolidays(holidays);
+        return holidayConfiguration;
+    }
+
+    private HolidayPropsHolder getPropsFromHolidayConfiguration(HolidayConfiguration holidayConfiguration)
+    {
+        HolidayPropsHolder holidayPropsHolder = new HolidayPropsHolder();
+        holidayPropsHolder.setIncludeWeekends(holidayConfiguration.getIncludeWeekends());
+        Map<String, String> holidays = new LinkedHashMap<>();
+        for (HolidayItem holiday : holidayConfiguration.getHolidays())
         {
-            log.error(e.getMessage());
+            holidays.put(holiday.getHolidayDate().format(DateTimeFormatter.ISO_LOCAL_DATE), holiday.getHolidayName());
         }
-        finally
-        {
-            lock.readLock().unlock();
-        }
+        holidayPropsHolder.setHolidays(holidays);
+        return holidayPropsHolder;
     }
 
-    public Resource getHolidayFile()
+    public HolidayPropsHolder getHolidayPropsHolder()
     {
-        return holidayFile;
+        return holidayPropsHolder;
     }
 
-    public void setHolidayFile(Resource holidayFile)
+    public void setHolidayPropsHolder(HolidayPropsHolder holidayPropsHolder)
     {
-        this.holidayFile = holidayFile;
+        this.holidayPropsHolder = holidayPropsHolder;
     }
 
-    public ObjectConverter getObjectConverter()
+    public ConfigurationPropertyService getConfigurationPropertyService()
     {
-        return objectConverter;
+        return configurationPropertyService;
     }
 
-    public void setObjectConverter(ObjectConverter objectConverter)
+    public void setConfigurationPropertyService(ConfigurationPropertyService configurationPropertyService)
     {
-        this.objectConverter = objectConverter;
+        this.configurationPropertyService = configurationPropertyService;
     }
 
     public BusinessHoursConfig getBusinessHoursConfig()

@@ -1,34 +1,13 @@
-{
-    "includeWeekends" : true,
-    "holidays" : [ {
-        "holidayName" : "New Year' Day",
-        "holidayDate" : "2018-01-01"
-    }, {
-        "holidayName" : "Birthday of Martin Luther King, Jr.",
-        "holidayDate" : "2018-01-15"
-    }, {
-        "holidayName" : "Washington's Birthday",
-        "holidayDate" : "2018-02-19"
-    }, {
-        "holidayName" : "Memorial Day",
-        "holidayDate" : "2018-05-28"
-    }, {
-        "holidayName" : "Independence Day",
-        "holidayDate" : "2018-07-04"
-    }, {
-        "holidayName" : "Labor Day",
-        "holidayDate" : "2018-09-03"
-    }, {
-        "holidayName" : "Columbus Day",
-        "holidayDate" : "2018-10-08"
-    }, {
-        "holidayName" : "Veterans Day",
-        "holidayDate" : "2018-11-12"
-    }, {
-        "holidayName" : "Thanksgiving Day",
-        "holidayDate" : "2018-11-22"
-    }, {
-        "holidayName" : "Christmas Day",
-        "holidayDate" : "2018-12-25"
-    } ]
-}
+holidayConfiguration:
+  includeWeekends: true
+  holidays:
+    "2018-01-01": "New Year' Day"
+    "2018-01-15": "Birthday of Martin Luther King, Jr."
+    "2018-02-19": "Washington's Birthday"
+    "2018-05-28": "Memorial Day"
+    "2018-07-04": "Independence Day"
+    "2018-09-03": "Labor Day"
+    "2018-10-08": "Columbus Day"
+    "2018-11-12": "Veterans Day"
+    "2018-11-22": "Thanksgiving Day"
+    "2018-12-25": "Christmas Day"
