@@ -1,0 +1,29 @@
+<panel-view header="{{'admin.application.applicationConfiguration.title' | translate}}" collapsible="false">
+
+    <div data-ng-controller="Admin.ApplicationConfigurationController" class="well-sm">
+        <form>
+            <div class="row">
+
+                <div class="col-lg-6">
+                    <label class="control-label" for="defaultTimezone">
+                        <span translate>admin.application.applicationConfiguration.defaultTimezone.label</span>
+                    </label>
+                </div>
+                <div class="col-lg-6">
+                    <input ng-model="defaultTimezone" class="form-control input-sm" type="text" id="defaultTimezone"
+                            ng-blur="validateTimezone(defaultTimezone)" />
+                    <span class="text-danger" ng-if="!isTimezoneValid" translate>
+                                admin.application.applicationConfiguration.defaultTimezone.error</span>
+
+                </div>
+            </div>
+            <br />
+            <div class="row form-group">
+                <button ng-click="applyChanges()" class="btn btn-sm btn-primary" ng-disabled="!isTimezoneValid" translate>
+                    admin.application.applicationConfiguration.apply.label
+                </button>
+            </div>
+
+        </form>
+    </div>
+</panel-view>
