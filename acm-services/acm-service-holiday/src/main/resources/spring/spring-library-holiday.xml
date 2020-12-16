@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns="http://www.springframework.org/schema/beans" xmlns:aop="http://www.springframework.org/schema/aop"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
-       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns="http://www.springframework.org/schema/beans" xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="holidayConfigurationService" class="com.armedia.acm.services.holiday.service.HolidayConfigurationService">
-        <property name="holidayConfigurationHolder" ref="holidayConfigurationHolder"/>
-        <property name="configurationPropertyService" ref="configurationPropertyService"/>
+        <property name="holidayFile" value="file:${user.home}/.arkcase/acm/holidayFile.json"/>
+        <property name="objectConverter" ref="objectConverter"/>
+        <property name="businessHoursConfig" ref="businessHoursConfig"/>
+        <property name="applicationConfig" ref="applicationProperties"/>
     </bean>
 
-    <bean id="holidayConfigurationHolder" class="com.armedia.acm.services.holiday.model.HolidayConfigurationHolder" scope="refresh">
-        <property name="jsonUnmarshaller" ref="jsonUnmarshaller"/>
+    <bean id="businessHoursConfig" class="com.armedia.acm.services.holiday.model.BusinessHoursConfig" scope="refresh">
         <aop:scoped-proxy/>
     </bean>
+
 
 </beans>

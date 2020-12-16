@@ -3,10 +3,9 @@
         <div class="modal-header">
             <span translate>cases.comp.split.title</span>
         </div>
-        <div class="panel-body">
-            <doc-tree object-type="objectType" object-id="objectId" tree-control="treeControl" tree-config="treeConfig"></doc-tree>
-            <!--<doc-tree object-type="objectType" object-id="objectId" tree-control="treeControl" file-types="fileTypes">-->
-            <!--</doc-tree>-->
+        <div class="panel-body ui-grid-viewport ui-grid-render-container-body">
+            <doc-tree read-only="true" object-type="objectType" object-id="objectId" tree-control="treeControl"
+                    tree-config="treeConfig"></doc-tree>
         </div>
     </div>
     <div class="modal-footer">
