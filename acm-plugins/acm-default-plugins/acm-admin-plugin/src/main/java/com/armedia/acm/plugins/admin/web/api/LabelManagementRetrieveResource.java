@@ -30,12 +30,11 @@ package com.armedia.acm.plugins.admin.web.api;
 import com.armedia.acm.services.labels.exception.AcmLabelManagementException;
 import com.armedia.acm.services.labels.service.LabelManagementService;
 
+import com.google.json.JsonSanitizer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.owasp.html.PolicyFactory;
-import org.owasp.html.Sanitizers;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -85,9 +84,8 @@ public class LabelManagementRetrieveResource
             jsonObject.put("res", retrieveResourceJson(lang, ns[i]));
             jsonArray.put(jsonObject);
         }
-        PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
-        String safeString = policy.sanitize(jsonArray.toString());
-        return safeString;
+        String wellFormedJson = JsonSanitizer.sanitize(jsonArray.toString());
+        return wellFormedJson;
     }
 
     private JSONObject retrieveResourceJson(String lang, String ns) throws AcmLabelManagementException
