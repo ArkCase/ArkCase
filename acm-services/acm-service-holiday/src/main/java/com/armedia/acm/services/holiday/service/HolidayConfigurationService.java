@@ -2,9 +2,9 @@ package com.armedia.acm.services.holiday.service;
 
 /*-
  * #%L
- * ACM Default Plugin: admin
+ * ACM Service: Holiday
  * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
+ * Copyright (C) 2014 - 2020 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 
@@ -32,31 +32,34 @@ import com.armedia.acm.core.model.ApplicationConfig;
 import com.armedia.acm.services.holiday.model.BusinessHoursConfig;
 import com.armedia.acm.services.holiday.model.HolidayConfiguration;
 import com.armedia.acm.services.holiday.model.HolidayItem;
-import com.armedia.acm.services.holiday.model.HolidayPropsHolder;
+import com.armedia.acm.services.holiday.model.HolidayConfigurationProps;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.stream.Collectors;
 
 public class HolidayConfigurationService
 {
-    private HolidayPropsHolder holidayPropsHolder;
+    private HolidayConfigurationProps holidayConfigurationProps;
     private ConfigurationPropertyService configurationPropertyService;
     private BusinessHoursConfig businessHoursConfig;
     private ApplicationConfig applicationConfig;
 
-    public void saveHolidayConfig(HolidayConfiguration holidayConfiguration)
+    public void saveHolidayConfig(HolidayConfiguration config)
     {
-        HolidayPropsHolder holidayPropsHolder = getPropsFromHolidayConfiguration(holidayConfiguration);
-        configurationPropertyService.updateProperties(holidayPropsHolder);
+        HolidayConfigurationProps props = getPropsFromHolidayConfiguration(config);
+        configurationPropertyService.updateProperties(props);
     }
 
     public HolidayConfiguration getHolidayConfiguration()
     {
-        return getHolidayConfigurationFromProps(holidayPropsHolder);
+        return getHolidayConfigurationFromProps(holidayConfigurationProps);
     }
 
     public LocalDate addWorkingDaysToDate(LocalDate date, int workingDays)
@@ -161,44 +164,39 @@ public class HolidayConfigurationService
         return count;
     }
 
-    private HolidayConfiguration getHolidayConfigurationFromProps(HolidayPropsHolder holidayPropsHolder)
+    private static HolidayConfiguration getHolidayConfigurationFromProps(HolidayConfigurationProps props)
     {
-        HolidayConfiguration holidayConfiguration = new HolidayConfiguration();
-        holidayConfiguration.setIncludeWeekends(holidayPropsHolder.getIncludeWeekends());
-        List<HolidayItem> holidays = new ArrayList<>();
-        for (Map.Entry<String, String> entry : holidayPropsHolder.getHolidays().entrySet())
-        {
+        HolidayConfiguration config = new HolidayConfiguration();
+        config.setIncludeWeekends(props.getIncludeWeekends());
+        config.setHolidays(props.getHolidays().entrySet().stream().map(entry -> {
             HolidayItem holiday = new HolidayItem();
             holiday.setHolidayName(entry.getValue());
             holiday.setHolidayDate(LocalDate.parse(entry.getKey(), DateTimeFormatter.ISO_LOCAL_DATE));
-            holidays.add(holiday);
-        }
-        holidays.sort(Comparator.comparing(HolidayItem::getHolidayDate));
-        holidayConfiguration.setHolidays(holidays);
-        return holidayConfiguration;
+            return holiday;
+        }).sorted(Comparator.comparing(HolidayItem::getHolidayDate)).collect(Collectors.toList()));
+        return config;
     }
 
-    private HolidayPropsHolder getPropsFromHolidayConfiguration(HolidayConfiguration holidayConfiguration)
+    private static HolidayConfigurationProps getPropsFromHolidayConfiguration(HolidayConfiguration config)
     {
-        HolidayPropsHolder holidayPropsHolder = new HolidayPropsHolder();
-        holidayPropsHolder.setIncludeWeekends(holidayConfiguration.getIncludeWeekends());
-        Map<String, String> holidays = new LinkedHashMap<>();
-        for (HolidayItem holiday : holidayConfiguration.getHolidays())
-        {
-            holidays.put(holiday.getHolidayDate().format(DateTimeFormatter.ISO_LOCAL_DATE), holiday.getHolidayName());
-        }
-        holidayPropsHolder.setHolidays(holidays);
-        return holidayPropsHolder;
+        HolidayConfigurationProps props = new HolidayConfigurationProps();
+        props.setIncludeWeekends(config.getIncludeWeekends());
+        props.setHolidays(config.getHolidays().stream().collect(Collectors.toMap(
+                holiday -> holiday.getHolidayDate().format(DateTimeFormatter.ISO_LOCAL_DATE),
+                HolidayItem::getHolidayName,
+                (oldValue, newValue) -> newValue,
+                LinkedHashMap::new)));
+        return props;
     }
 
-    public HolidayPropsHolder getHolidayPropsHolder()
+    public HolidayConfigurationProps getHolidayConfigurationProps()
     {
-        return holidayPropsHolder;
+        return holidayConfigurationProps;
     }
 
-    public void setHolidayPropsHolder(HolidayPropsHolder holidayPropsHolder)
+    public void setHolidayConfigurationProps(HolidayConfigurationProps holidayConfigurationProps)
     {
-        this.holidayPropsHolder = holidayPropsHolder;
+        this.holidayConfigurationProps = holidayConfigurationProps;
     }
 
     public ConfigurationPropertyService getConfigurationPropertyService()

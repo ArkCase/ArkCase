@@ -29,7 +29,7 @@ package com.armedia.acm.services.holiday.service;
 
 import static org.junit.Assert.assertEquals;
 
-import com.armedia.acm.services.holiday.model.HolidayPropsHolder;
+import com.armedia.acm.services.holiday.model.HolidayConfigurationProps;
 
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -59,10 +59,10 @@ public class HolidayConfigurationServiceTest extends EasyMockSupport {
     {
         InputStream inputStream = getClass().getClassLoader().getResourceAsStream(relativePath);
         Map holidayPropsMap = (Map) yaml.load(inputStream);
-        HolidayPropsHolder holidayPropsHolder = new HolidayPropsHolder();
-        holidayPropsHolder.setIncludeWeekends((Boolean) ((Map) holidayPropsMap.get("holidayConfiguration")).get("includeWeekends"));
-        holidayPropsHolder.setHolidays((Map<String, String>) ((Map) holidayPropsMap.get("holidayConfiguration")).get("holidays"));
-        holidayConfigurationService.setHolidayPropsHolder(holidayPropsHolder);
+        HolidayConfigurationProps props = new HolidayConfigurationProps();
+        props.setIncludeWeekends((Boolean) ((Map) holidayPropsMap.get("holidayConfiguration")).get("includeWeekends"));
+        props.setHolidays((Map<String, String>) ((Map) holidayPropsMap.get("holidayConfiguration")).get("holidays"));
+        holidayConfigurationService.setHolidayConfigurationProps(props);
     }
 
     @Test

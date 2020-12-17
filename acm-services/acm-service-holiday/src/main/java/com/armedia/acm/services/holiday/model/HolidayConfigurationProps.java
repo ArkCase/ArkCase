@@ -34,7 +34,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 import java.util.Map;
 
-public class HolidayPropsHolder
+public class HolidayConfigurationProps
 {
     @JsonProperty("holidayConfiguration.includeWeekends")
     @Value("${holidayConfiguration.includeWeekends}")
