@@ -112,7 +112,7 @@ public class ApplicationConfig
     private String organizationAddress1;
 
     @JsonProperty("application.properties.organizationAddress2")
-    @Value("${application.properties.organizationAddress1}")
+    @Value("${application.properties.organizationAddress2}")
     private String organizationAddress2;
 
     @JsonProperty("application.properties.organizationCity")
