@@ -33,6 +33,7 @@ import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserInfoDTO;
 import com.armedia.acm.services.users.service.AcmUserService;
 
+import com.google.json.JsonSanitizer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
@@ -113,7 +114,8 @@ public class UserInfoAPIController
         user.setLang(lang);
         session.setAttribute("acm_user", user);
 
-        return lang;
+        String wellFormedJson = JsonSanitizer.sanitize(lang);
+        return wellFormedJson;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/userPrivileges", produces = MediaType.APPLICATION_JSON_VALUE)
