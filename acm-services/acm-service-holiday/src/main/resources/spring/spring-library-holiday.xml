@@ -5,7 +5,7 @@
        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <bean id="holidayConfigurationService" class="com.armedia.acm.services.holiday.service.HolidayConfigurationService">
-        <property name="holidayPropsHolder" ref="holidayPropsHolder"/>
+        <property name="holidayConfigurationProps" ref="holidayConfigurationProps"/>
         <property name="configurationPropertyService" ref="configurationPropertyService"/>
         <property name="businessHoursConfig" ref="businessHoursConfig"/>
         <property name="applicationConfig" ref="applicationProperties"/>
@@ -15,7 +15,7 @@
         <aop:scoped-proxy/>
     </bean>
 
-    <bean id="holidayPropsHolder" class="com.armedia.acm.services.holiday.model.HolidayPropsHolder" scope="refresh">
+    <bean id="holidayConfigurationProps" class="com.armedia.acm.services.holiday.model.HolidayConfigurationProps" scope="refresh">
        <aop:scoped-proxy/>
     </bean>
 
