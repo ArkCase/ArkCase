@@ -15,6 +15,7 @@ angular.module('admin').factory('Admin.ApplicationSettingsService', [ '$http', f
         PROPERTIES: {
             DISPLAY_USERNAME: 'application.properties.displayUserName',
             IDLE_LIMIT: 'application.properties.idleLimit',
+            DEFAULT_TIMEZONE: 'application.properties.defaultTimezone',
             IDLE_PULL: 'application.properties.idlePull',
             IDLE_CONFIRM: 'application.properties.idleConfirm',
             HISTORY_DAYS: 'application.properties.historyDays'
