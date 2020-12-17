@@ -1,0 +1,35 @@
+<panel-view header="{{'admin.application.businessHours.title' | translate}}" collapsible="false">
+    <div data-ng-controller="Admin.BusinessHoursController" class="well-sm">
+        <form name="businessHoursConfigForm">
+            <div class="row">
+                <div class="col-lg-4"></div>
+                <div class="col-lg-4">
+                    <label translate>admin.application.businessHours.config.labels.endOfBusinessDayTime</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" ng-model="endOfBusinessDayEnabled">
+                            <span translate>
+                                    admin.application.businessHours.config.labels.endOfBusinessDayEnabled
+                                </span>
+                        </label>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <input type="text" pattern="^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$" ng-model="endOfBusinessDayTime"
+                            ng-disabled="!endOfBusinessDayEnabled" class="form-control">
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <button ng-click="applyChanges()" class="btn btn-sm btn-primary" ng-disabled="businessHoursConfigForm.$invalid" translate>
+                    admin.application.applicationConfiguration.apply.label
+                </button>
+            </div>
+        </form>
+    </div>
+</panel-view>
+
