@@ -72,6 +72,14 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
     public static final String CURRENT_DATE = "currentDate";
     public static final String BASE_URL = "baseUrl";
     public static final String FILES = "files";
+    public static final String ORGANIZATION_NAME = "OrganizationName";
+    public static final String ORGANIZATION_ADDRESS1 = "OrganizationAddress1";
+    public static final String ORGANIZATION_ADDRESS2 = "OrganizationAddress2";
+    public static final String ORGANIZATION_CITY = "OrganizationCity";
+    public static final String ORGANIZATION_STATE = "OrganizationState";
+    public static final String ORGANIZATION_ZIP = "OrganizationZip";
+    public static final String ORGANIZATION_PHONE = "OrganizationPhone";
+    public static final String ORGANIZATION_FAX = "OrganizationFax";
 
     public static final String SUBSTITUTION_PREFIX = "${";
     public static final String SUBSTITUTION_SUFFIX = "}";
@@ -613,7 +621,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
         else
         {
 
-            // check if the expression is currentDate, files or baseURL
+            // check if the expression is currentDate, files, baseURL, organizationName, etc.
             if (CURRENT_DATE.equalsIgnoreCase(spelExpression))
             {
                 generatedExpression = formatter.format(new Date());
@@ -634,6 +642,38 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                     joiner.add(file.getFileName());
                 }
                 generatedExpression = joiner.toString();
+            }
+            else if (ORGANIZATION_NAME.equalsIgnoreCase(spelExpression))
+            {
+                generatedExpression = appConfig.getOrganizationName();
+            }
+            else if (ORGANIZATION_ADDRESS1.equalsIgnoreCase(spelExpression))
+            {
+                generatedExpression = appConfig.getOrganizationAddress1();
+            }
+            else if (ORGANIZATION_ADDRESS2.equalsIgnoreCase(spelExpression))
+            {
+                generatedExpression = appConfig.getOrganizationAddress2();
+            }
+            else if (ORGANIZATION_CITY.equalsIgnoreCase(spelExpression))
+            {
+                generatedExpression = appConfig.getOrganizationCity();
+            }
+            else if (ORGANIZATION_STATE.equalsIgnoreCase(spelExpression))
+            {
+                generatedExpression = appConfig.getOrganizationState();
+            }
+            else if (ORGANIZATION_ZIP.equalsIgnoreCase(spelExpression))
+            {
+                generatedExpression = appConfig.getOrganizationZip();
+            }
+            else if (ORGANIZATION_PHONE.equalsIgnoreCase(spelExpression))
+            {
+                generatedExpression = appConfig.getOrganizationPhone();
+            }
+            else if (ORGANIZATION_FAX.equalsIgnoreCase(spelExpression))
+            {
+                generatedExpression = appConfig.getOrganizationFax();
             }
             else
             {
