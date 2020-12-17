@@ -103,6 +103,38 @@ public class ApplicationConfig
     @Value("${application.properties.logoutUrl}")
     private String logoutUrl;
 
+    @JsonProperty("application.properties.organizationName")
+    @Value("${application.properties.organizationName}")
+    private String organizationName;
+
+    @JsonProperty("application.properties.organizationAddress1")
+    @Value("${application.properties.organizationAddress1}")
+    private String organizationAddress1;
+
+    @JsonProperty("application.properties.organizationAddress2")
+    @Value("${application.properties.organizationAddress1}")
+    private String organizationAddress2;
+
+    @JsonProperty("application.properties.organizationCity")
+    @Value("${application.properties.organizationCity}")
+    private String organizationCity;
+
+    @JsonProperty("application.properties.organizationState")
+    @Value("${application.properties.organizationState}")
+    private String organizationState;
+
+    @JsonProperty("application.properties.organizationZip")
+    @Value("${application.properties.organizationZip}")
+    private String organizationZip;
+
+    @JsonProperty("application.properties.organizationPhone")
+    @Value("${application.properties.organizationPhone}")
+    private String organizationPhone;
+
+    @JsonProperty("application.properties.organizationFax")
+    @Value("${application.properties.organizationFax}")
+    private String organizationFax;
+
 
     private HashMap<Object, String> roles;
 
@@ -232,5 +264,85 @@ public class ApplicationConfig
     public void setDefaultTimezone(String defaultTimezone)
     {
         this.defaultTimezone = defaultTimezone;
+    }
+
+    public String getOrganizationName()
+    {
+        return organizationName;
+    }
+
+    public void setOrganizationName(String organizationName)
+    {
+        this.organizationName = organizationName;
+    }
+
+    public String getOrganizationAddress1()
+    {
+        return organizationAddress1;
+    }
+
+    public void setOrganizationAddress1(String organizationAddress1)
+    {
+        this.organizationAddress1 = organizationAddress1;
+    }
+
+    public String getOrganizationAddress2()
+    {
+        return organizationAddress2;
+    }
+
+    public void setOrganizationAddress2(String organizationAddress2)
+    {
+        this.organizationAddress2 = organizationAddress2;
+    }
+
+    public String getOrganizationCity()
+    {
+        return organizationCity;
+    }
+
+    public void setOrganizationCity(String organizationCity)
+    {
+        this.organizationCity = organizationCity;
+    }
+
+    public String getOrganizationState()
+    {
+        return organizationState;
+    }
+
+    public void setOrganizationState(String organizationState)
+    {
+        this.organizationState = organizationState;
+    }
+
+    public String getOrganizationZip()
+    {
+        return organizationZip;
+    }
+
+    public void setOrganizationZip(String organizationZip)
+    {
+        this.organizationZip = organizationZip;
+    }
+
+    public String getOrganizationPhone()
+    {
+        return organizationPhone;
+    }
+
+    public void setOrganizationPhone(String organizationPhone)
+    {
+        this.organizationPhone = organizationPhone;
+    }
+
+    public String getOrganizationFax()
+    {
+        return organizationFax;
+    }
+
+    public void setOrganizationFax(String organizationFax)
+    {
+        this.organizationFax = organizationFax;
     }
 }
