@@ -18,7 +18,15 @@ angular.module('admin').factory('Admin.ApplicationSettingsService', [ '$http', f
             DEFAULT_TIMEZONE: 'application.properties.defaultTimezone',
             IDLE_PULL: 'application.properties.idlePull',
             IDLE_CONFIRM: 'application.properties.idleConfirm',
-            HISTORY_DAYS: 'application.properties.historyDays'
+            HISTORY_DAYS: 'application.properties.historyDays',
+            ORGANIZATION_ADDRESS1: 'application.properties.organizationAddress1',
+            ORGANIZATION_ADDRESS2: 'application.properties.organizationAddress2',
+            ORGANIZATION_CITY: 'application.properties.organizationCity',
+            ORGANIZATION_FAX: 'application.properties.organizationFax',
+            ORGANIZATION_NAME: 'application.properties.organizationName',
+            ORGANIZATION_PHONE: 'application.properties.organizationPhone',
+            ORGANIZATION_STATE: 'application.properties.organizationState',
+            ORGANIZATION_ZIP: 'application.properties.organizationZip'
         },
 
         /**
