@@ -42,6 +42,7 @@ import com.armedia.acm.plugins.ecm.utils.EcmFileCamelUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.web.api.MDCConstants;
 
+import com.google.json.JsonSanitizer;
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
@@ -315,13 +316,15 @@ public class StreamServiceImpl implements StreamService
                 // Cast back to ServletOutputStream to get the easy println methods.
                 ServletOutputStream sos = (ServletOutputStream) output;
 
+                String safeContentType = JsonSanitizer.sanitize(contentType);
+
                 // Copy multi part range.
                 for (Range range : ranges)
                 {
                     // Add multipart boundary and header fields for every range.
                     sos.println();
                     sos.println("--" + MULTIPART_BOUNDARY);
-                    sos.println("Content-Type: " + contentType);
+                    sos.println("Content-Type: " + safeContentType);
                     sos.println("Content-Range: bytes " + range.getStart() + "-" + range.getEnd() + "/" + range.getTotal());
 
                     // Copy single part range of multi part range.
