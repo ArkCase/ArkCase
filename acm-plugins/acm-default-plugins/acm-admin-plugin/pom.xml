@@ -234,7 +234,6 @@
         <dependency>
             <groupId>com.mikesamuel</groupId>
             <artifactId>json-sanitizer</artifactId>
-            <version>[1.0,)</version>
         </dependency>
     </dependencies>
 </project>
