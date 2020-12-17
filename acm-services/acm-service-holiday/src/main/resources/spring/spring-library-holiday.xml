@@ -14,5 +14,10 @@
         <aop:scoped-proxy/>
     </bean>
 
+    <bean id="businessHoursConfigurationService" class="com.armedia.acm.services.holiday.service.BusinessHoursConfigurationService">
+        <property name="businessHoursConfig" ref="businessHoursConfig"/>
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
+    </bean>
+
 
 </beans>
