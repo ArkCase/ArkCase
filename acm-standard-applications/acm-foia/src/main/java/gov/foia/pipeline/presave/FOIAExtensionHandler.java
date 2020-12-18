@@ -26,23 +26,24 @@ package gov.foia.pipeline.presave;
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
+
 import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
 import com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator;
 import com.armedia.acm.services.holiday.service.HolidayConfigurationService;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 
-import gov.foia.service.QueuesTimeToCompleteService;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.time.ZoneId;
+import java.util.Date;
 
 import gov.foia.dao.FOIARequestDao;
 import gov.foia.model.FOIAConstants;
 import gov.foia.model.FOIARequest;
 import gov.foia.model.FoiaConfig;
-
-import java.time.ZoneId;
-import java.util.Date;
+import gov.foia.service.QueuesTimeToCompleteService;
 
 public class FOIAExtensionHandler implements PipelineHandler<FOIARequest, CaseFilePipelineContext>
 {
@@ -91,7 +92,8 @@ public class FOIAExtensionHandler implements PipelineHandler<FOIARequest, CaseFi
                                 foiaConfig.getRequestExtensionWorkingDays()));
                     } else
                     {
-                        entity.setDueDate(getHolidayConfigurationService().addWorkingDaysToDate(originalRequest.getDueDate(),
+                        entity.setDueDate(
+                                getHolidayConfigurationService().addWorkingDaysToDateWithBusinessHours(originalRequest.getDueDate(),
                                 foiaConfig.getRequestExtensionWorkingDays()));
                     }
 

@@ -63,7 +63,7 @@ public class FOIARequestPerfectedDateHandler implements PipelineHandler<FOIARequ
 
             Integer TTC = queuesTimeToCompleteService.getTimeToComplete().getRequest().getTotalTimeToComplete();
             entity.setDueDate(holidayConfigurationService
-                    .addWorkingDaysToDate(Date.from(entity.getPerfectedDate().atZone(ZoneId.systemDefault()).toInstant()), TTC));
+                    .addWorkingDaysToDateWithBusinessHours(Date.from(entity.getPerfectedDate().atZone(ZoneId.systemDefault()).toInstant()), TTC));
             entity.setTtcOnLastRedirection(TTC);
 
             log.debug("Updated FOIARequest perfectedDate to : [{}] and DueDate to : [{}]", entity.getPerfectedDate(),
