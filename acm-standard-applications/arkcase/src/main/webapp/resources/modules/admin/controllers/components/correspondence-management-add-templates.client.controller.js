@@ -7,6 +7,7 @@ angular.module('admin').controller('Admin.AddCMTemplateController', [ '$scope', 
         $scope.selectedFiles = [];
         $scope.template = {};
         $scope.selectedRow = params['selectedRow'];
+        $scope.templateType = params['templateType'];
         $scope.isEdit = $scope.selectedRow !== undefined;
         $scope.objec = '';
 
@@ -24,7 +25,7 @@ angular.module('admin').controller('Admin.AddCMTemplateController', [ '$scope', 
         }
 
         function reloadGrid() {
-            var templatesPromise = correspondenceService.retrieveActiveVersionTemplatesList();
+            var templatesPromise = correspondenceService.retrieveActiveVersionTemplatesList($scope.templateType);
             templatesPromise.then(function(templates) {
                 angular.forEach(templates.data, function(row, index) {
                     row.downloadFileName = correspondenceService.downloadByFilename(row.templateFilename);
@@ -38,7 +39,7 @@ angular.module('admin').controller('Admin.AddCMTemplateController', [ '$scope', 
             $scope.selectedFiles = files;
         };
         $scope.onClickOk = function(files) {
-            correspondenceService.uploadTemplateWithTimestamp(files).then(function(result) {
+            correspondenceService.uploadTemplateWithTimestamp(files, $scope.templateType).then(function(result) {
                 correspondenceService.getTemplateData($scope.selectedRows.length > 0 ? $scope.selectedRows[0].templateId : $scope.selectedRows.length, result.data[0].name).then(function(template) {
                     $scope.template.templateId = template.data.templateId;
                     $scope.template.templateVersion = template.data.templateVersion;
@@ -49,6 +50,8 @@ angular.module('admin').controller('Admin.AddCMTemplateController', [ '$scope', 
                     $scope.template.numberFormatString = template.data.numberFormatString;
                     //we will activate it by default
                     $scope.template.activated = true;
+                    $scope.template.enabled = true;
+                    $scope.template.templateType = $scope.templateType;
 
                     var template = $scope.template;
                     correspondenceService.saveTemplateData(template).then(function() {

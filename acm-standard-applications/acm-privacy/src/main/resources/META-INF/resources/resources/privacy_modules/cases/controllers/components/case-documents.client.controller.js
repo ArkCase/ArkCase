@@ -27,22 +27,18 @@ angular.module('cases').controller(
                 'DocTreeExt.Email',
                 'EcmService',
                 'MessageService',
-                'Admin.EmailSenderConfigurationService',
                 'MultiCorrespondence.Service',
                 'ModalDialogService',
                 'Websockets.MessageHandler',
                 'Case.FolderStructureService',
                 function ($scope, $state, $stateParams, $modal, $q, $timeout, $translate, Util, LocaleService, ConfigService, ObjectService, ObjectLookupService, CaseInfoService, DocTreeService, HelperObjectBrowserService, Authentication, PermissionsService, ObjectModelService, DocTreeExtWebDAV,
-                          DocTreeExtCheckin, CorrespondenceService, DocTreeExtEmail, EcmService, MessageService, EmailSenderConfigurationService, MultiCorrespondenceService, ModalDialogService, messageHandler, CaseFolderStructureService) {
+                          DocTreeExtCheckin, CorrespondenceService, DocTreeExtEmail, EcmService, MessageService, MultiCorrespondenceService, ModalDialogService, messageHandler, CaseFolderStructureService) {
 
                     Authentication.queryUserInfo().then(function(userInfo) {
                         $scope.user = userInfo.userId;
                         return userInfo;
                     });
 
-                    EmailSenderConfigurationService.isEmailSenderAllowDocuments().then(function(emailData) {
-                        $scope.sendEmailEnabled = emailData.data;
-                    });
 
                     var componentHelper = new HelperObjectBrowserService.Component({
                         scope: $scope,
@@ -133,11 +129,6 @@ angular.module('cases').controller(
                         $scope.treeControl.refreshTree();
                     };
 
-                    $scope.sendEmail = function() {
-                        var nodes = $scope.treeControl.getSelectedNodes();
-                        var DocTree = $scope.treeControl.getDocTreeObject();
-                        DocTreeExtEmail.openModal(DocTree, nodes);
-                    };
 
                     $scope.createNewTask = function() {
                         var modalMetadata = {

@@ -31,7 +31,8 @@ angular.module('services').factory('ObjectService', [ '$state', '$window', '$log
             ASSOCIATED_TAG: "ASSOCIATED_TAG",
             BUSINESS_PROCESS: "BUSINESS_PROCESS",
             NOTIFICATION: "NOTIFICATION",
-            CONSULTATION: "CONSULTATION"
+            CONSULTATION: "CONSULTATION",
+            CORRESPONDENCE_TEMPLATE: "correspondenceTemplate"
         }
 
         ,

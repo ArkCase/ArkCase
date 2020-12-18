@@ -40,6 +40,7 @@ import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.data.service.AcmDataService;
 import com.armedia.acm.email.model.EmailSenderConfig;
+import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
@@ -62,6 +63,9 @@ import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -87,6 +91,7 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
     private AcmMailTemplateConfigurationService templateService;
     private AcmDataService acmDataService;
     private TemplatingEngine templatingEngine;
+    private Resource templateConfigurations;
 
     @Before
     public void setUp()
@@ -109,6 +114,7 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         templateService = createMock(AcmMailTemplateConfigurationService.class);
         acmDataService = createMock(AcmDataService.class);
         templatingEngine = createMock(TemplatingEngine.class);
+        templateConfigurations = new ClassPathResource("templates-configuration.json");
 
         smtpNotificationSender.setEmailSenderService(mockSmtpService);
         smtpNotificationSender.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
@@ -123,6 +129,8 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         NotificationConfig notificationConfig = new NotificationConfig();
         notificationConfig.setBaseUrl(BASE_URL);
         smtpNotificationSender.setNotificationConfig(notificationConfig);
+        smtpNotificationSender.setTemplatesConfiguration(templateConfigurations);
+        smtpNotificationSender.setObjectConverter(ObjectConverter.createObjectConverterForTests());
     }
 
     @Test
@@ -134,6 +142,7 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         notification.setNote("the_note");
         notification.setParentType("PARENT");
         notification.setParentId(0L);
+        notification.setTemplateModelName("modelName");
 
         expect(templateService.getTemplate(anyString())).andThrow(new AcmEmailConfigurationIOException("No such template"));
         expect(mockNotificationUtils.buildNotificationLink(notification.getParentType(), notification.getParentId(),

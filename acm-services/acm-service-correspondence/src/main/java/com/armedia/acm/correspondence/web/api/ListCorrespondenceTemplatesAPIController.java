@@ -27,7 +27,7 @@ package com.armedia.acm.correspondence.web.api;
  * #L%
  */
 
-import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
+import com.armedia.acm.correspondence.model.Template;
 import com.armedia.acm.correspondence.service.CorrespondenceService;
 import com.armedia.acm.spring.SpringContextHolder;
 import org.slf4j.Logger;
@@ -60,11 +60,11 @@ public class ListCorrespondenceTemplatesAPIController
             Authentication auth,
             HttpSession session)
     {
-        Collection<CorrespondenceTemplate> templates = getContextHolder().getAllBeansOfType(CorrespondenceTemplate.class).values();
+        Collection<Template> templates = getContextHolder().getAllBeansOfType(Template.class).values();
 
         List<String> retval = new ArrayList<>();
 
-        for (CorrespondenceTemplate template : templates)
+        for (Template template : templates)
         {
             retval.add(template.getTemplateFilename());
         }

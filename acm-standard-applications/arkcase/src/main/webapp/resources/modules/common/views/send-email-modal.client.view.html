@@ -5,7 +5,7 @@
     <div class="pull-right">
         <label for="templates" translate> common.directive.docTree.emailDialog.emailTemplates.label </label>
         <span class="required-asterisk">*</span>
-        <select id="templates" class="form-control" ng-model="template" ng-change="loadContent()" required="required">
+        <select id="templates" class="form-control" ng-model="template" required="required" ng-change="loadContent()">
             <option ng-repeat="option in emailTemplates" value="{{option.templateFilename}}">
                 {{option.label}}
             </option>
@@ -30,20 +30,6 @@
         </div>
         <div class="col-sm-12 form-group" ng-form="emailBodyForm" ng-show="template === 'plainEmail.html'">
             <summernote config="summernoteOptions" name="emailBody" ng-model="emailDataModel.body"></summernote>
-        </div>
-        <div class="col-sm-12 form-group" ng-if="emailSendConfiguration.allowDocuments">
-            <label for="attachments">
-                <span translate>common.directive.docTree.emailDialog.attachments.label</span>
-            </label>
-            <fieldset id="attachments" class="well-sm">
-                <label ng-repeat="node in nodes" class="checkbox-inline">
-                    <input type="checkbox" value="{{node.data.objectId}}" ng-click="onSelectFile(node.data.objectId)"
-                            ng-checked="emailDataModel.selectedFilesToEmail.indexOf(node.data.objectId) > -1">
-                    <span>
-                        {{node.data.name + '' + node.data.ext}}
-                    </span>
-                </label>
-            </fieldset>
         </div>
     </div>
     <div class="row">

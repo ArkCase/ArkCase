@@ -20,6 +20,8 @@
         <property name="notificationDao" ref="notificationDao"/>
         <property name="notificationEventPublisher" ref="notificationEventPublisher"/>
         <property name="acmEmailMentionsService" ref="acmEmailMentionsService"/>
+        <property name="notificationService" ref="notificationService"/>
+        <property name="fileService" ref="ecmFileService"/>
     </bean>
 
     <bean id="sendEmailWithAttachmentsAPIController"
