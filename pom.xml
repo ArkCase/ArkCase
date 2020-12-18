@@ -1566,6 +1566,13 @@
                 </exclusions>
             </dependency>
 
+            <!-- CWE-80 Basic XSS -->
+            <dependency>
+                <groupId>com.mikesamuel</groupId>
+                <artifactId>json-sanitizer</artifactId>
+                <version>1.2.1</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
     <dependencies>

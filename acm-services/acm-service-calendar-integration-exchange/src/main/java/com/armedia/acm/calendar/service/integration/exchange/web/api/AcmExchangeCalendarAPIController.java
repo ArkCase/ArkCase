@@ -50,12 +50,12 @@ public class AcmExchangeCalendarAPIController
     private OutlookRecreateableCalendarService recreatableCalendarService;
 
     @RequestMapping(path = "/folders/recreated", method = RequestMethod.PUT)
-    public ResponseEntity<AcmContainer> clearFolderRecreatedFlag(@RequestBody RecreatedEntity recreatedEntity)
+    public AcmContainer clearFolderRecreatedFlag(@RequestBody RecreatedEntity recreatedEntity)
             throws AcmObjectNotFoundException
     {
         AcmContainer container = recreatableCalendarService.clearFolderRecreatedFlag(recreatedEntity.getObjectType(),
                 recreatedEntity.getObjectId());
-        return ResponseEntity.status(HttpStatus.OK).body(container);
+        return container;
     }
 
     /**

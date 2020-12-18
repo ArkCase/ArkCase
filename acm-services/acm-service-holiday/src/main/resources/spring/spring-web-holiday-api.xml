@@ -7,4 +7,9 @@
         <property name="holidayConfigurationService" ref="holidayConfigurationService"/>
     </bean>
 
+    <bean id="businessHoursConfigurationAPIController"
+          class="com.armedia.acm.services.holiday.service.web.api.BusinessHoursConfigurationAPIController">
+        <property name="businessHoursConfigurationService" ref="businessHoursConfigurationService"/>
+    </bean>
+
 </beans>

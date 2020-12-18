@@ -230,5 +230,10 @@
             <groupId>org.apache.activemq</groupId>
             <artifactId>activemq-client</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.mikesamuel</groupId>
+            <artifactId>json-sanitizer</artifactId>
+        </dependency>
     </dependencies>
 </project>
