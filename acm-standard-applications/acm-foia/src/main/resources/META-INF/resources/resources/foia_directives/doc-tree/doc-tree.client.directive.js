@@ -112,8 +112,9 @@ angular
             '$timeout',
             'Websockets.MessageHandler',
             'Admin.FoiaConfigService',
+            'ObjectService',
             function ($q, $translate, $modal, $filter, $log, $injector, Store, Util, UtilDateService, ConfigService,
-                      PluginService, UserInfoService, Ecm, EmailSenderConfigurationService, DeDuplicationConfigurationService, LocaleHelper, PublicFlagService, RequestResponseFolderService, LookupService, MessageService, ObjectLookupService, $timeout, MessageHandler, AdminFoiaConfigService) {
+                      PluginService, UserInfoService, Ecm, EmailSenderConfigurationService, DeDuplicationConfigurationService, LocaleHelper, PublicFlagService, RequestResponseFolderService, LookupService, MessageService, ObjectLookupService, $timeout, MessageHandler, AdminFoiaConfigService, ObjectService) {
                 var cacheTree = new Store.CacheFifo();
                 var cacheFolderList = new Store.CacheFifo();
 
@@ -2339,7 +2340,9 @@ angular
                                 if (_.isEmpty(DocTree.correspondenceForms) && menuCorrespondenceForms) {
                                     menuCorrespondenceForms.invisible = true;
                                 } else if (menuCorrespondenceForms) {
-                                    menuCorrespondenceForms.children = this.makeSubMenu(DocTree.correspondenceForms);
+                                    menuCorrespondenceForms.children = this.makeSubMenu(_.filter(DocTree.correspondenceForms, function(ct) {
+                                        return ct.templateType ==  ObjectService.ObjectTypes.CORRESPONDENCE_TEMPLATE;
+                                    }));
                                 }
                                 // On active search disable Cut & Copy
                                 var cutMenu = _.find(menu, {

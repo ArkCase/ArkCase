@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('admin').controller('Admin.CMTemplatesController',
-        [ '$scope', '$modal', 'Admin.CMTemplatesService', 'Helper.UiGridService', 'MessageService', 'LookupService', 'Acm.StoreService', 'Object.LookupService', 'Admin.CMMergeFieldsService', '$translate',
-            function($scope, $modal, correspondenceService, HelperUiGridService, messageService, LookupService, Store, ObjectLookupService, correspondenceMergeFieldsService, $translate) {
+angular.module('admin').controller('Admin.CMEmailTemplatesController',
+    [ '$rootScope', '$scope', '$modal', 'Admin.CMTemplatesService', 'Helper.UiGridService', 'MessageService', 'LookupService', 'Acm.StoreService', 'Object.LookupService', 'Admin.CMMergeFieldsService', '$translate',
+        function($rootScope, $scope, $modal, correspondenceService, HelperUiGridService, messageService, LookupService, Store, ObjectLookupService, correspondenceMergeFieldsService, $translate) {
 
             var gridHelper = new HelperUiGridService.Grid({
                 scope: $scope
@@ -15,8 +15,8 @@ angular.module('admin').controller('Admin.CMTemplatesController',
             $scope.myTree = {};
 
             var copyVariablePath = $translate.instant('contextMenu.options.copyVariablePath');
-            $scope.templateType = 'correspondenceTemplate';
-
+            $scope.templateType = 'emailTemplate';
+            
             $scope.navigationTreeMilestones = [];
 
             $scope.gridOptions = {
@@ -40,10 +40,10 @@ angular.module('admin').controller('Admin.CMTemplatesController',
             //get config and init grid settings
             $scope.config.$promise.then(function(config) {
                 var configVersions = _.find(config.components, {
-                    id: 'correspondenceManagementTemplateVersions'
+                    id: 'correspondenceManagementEmailTemplateVersions'
                 });
                 var config = _.find(config.components, {
-                    id: 'correspondenceManagementTemplates'
+                    id: 'correspondenceManagementEmailTemplates'
                 });
 
                 correspondenceService.listTemplateModelProviders().then(function(templateModelProviders) {
@@ -151,6 +151,44 @@ angular.module('admin').controller('Admin.CMTemplatesController',
 
             };
 
+            $scope.previewTemplate = function() {
+
+                var getTemplateContentPromise = correspondenceService.retrieveTemplateContent($scope.selectedRows[0].templateFilename);
+
+                getTemplateContentPromise.then(function (response) {
+                    $scope.templateContent = response.data.templateContent;
+                    var params = {
+                      templateContent: $scope.templateContent
+                    };
+                    var modalInstance = $modal.open({
+                        templateUrl: 'modules/admin/views/components/correspondence-management-email-template-preview-modal.client.view.html',
+                        controller: 'Admin.CMEmailTemplatePreviewModalController',
+                        animation: true,
+                        size: 'lg',
+                        backdrop: 'static',
+                        resolve: {
+                            params: function() {
+                                return params;
+                            }
+                        }
+                    });
+
+                    setTimeout(function () {
+                        $rootScope.$broadcast('add-template-content');
+                    },500);
+
+                    modalInstance.result.then(function (value) {
+
+                    });
+
+                });
+
+
+            };
+
+
+
+
             $scope.activate = function(rowEntity) {
                 var template = angular.copy(rowEntity);
                 template.activated = !rowEntity.activated;
@@ -162,18 +200,18 @@ angular.module('admin').controller('Admin.CMTemplatesController',
                     messageService.errorAction();
                 });
             };
-
-                $scope.enable = function (rowEntity) {
-                    var template = angular.copy(rowEntity);
-                    template.enabled = !rowEntity.enabled;
-                    correspondenceService.saveTemplateData(template).then(function() {
-                        clearCachedForms(template);
-                        messageService.succsessAction();
-                        reloadGrid();
-                    }, function() {
-                        messageService.errorAction();
-                    });
-                };
+            
+            $scope.enable = function (rowEntity) {
+                var template = angular.copy(rowEntity);
+                template.enabled = !rowEntity.enabled;
+                correspondenceService.saveTemplateData(template).then(function() {
+                    clearCachedForms(template);
+                    messageService.succsessAction();
+                    reloadGrid();
+                }, function() {
+                    messageService.errorAction();
+                });
+            };
 
             function clearCachedForms(template) {
                 var cacheConfigMap = new Store.SessionData(LookupService.SessionCacheNames.CONFIG_MAP);
@@ -195,15 +233,8 @@ angular.module('admin').controller('Admin.CMTemplatesController',
                     $scope.selectedRows = [];
                 });
 
-                ObjectLookupService.getCorrespondenceObjectTypes().then(function(correspondenceObject) {
-                    $scope.correspondenceObjectTypes = correspondenceObject;
-                    $scope.mergingType = ObjectLookupService.getPrimaryLookup($scope.objectTypes);
-                    if ($scope.mergingType) {
-                        $scope.mergingType = $scope.correspondenceObjectTypes[0].key;
-                    }
-                    correspondenceMergeFieldsService.retrieveActiveMergeFieldsByType($scope.mergingType).then(function (mergeFields) {
-                        $scope.mergeFieldsByType = mergeFields.data;
-                    });
+                ObjectLookupService.getLookupByLookupName('emailTemplatesObjectTypes').then(function(emailTemplatesObjectTypes) {
+                    $scope.correspondenceObjectTypes = emailTemplatesObjectTypes;
                 });
             }
 

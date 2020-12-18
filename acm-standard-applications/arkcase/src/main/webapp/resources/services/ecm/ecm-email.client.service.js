@@ -81,6 +81,22 @@ angular.module('services').factory('Ecm.EmailService', [ '$resource', '$translat
             method: 'POST',
             url: 'api/latest/plugin/notification/mentions'
         }
+
+        /**
+         * @ngdoc method
+         * @name _sendManualEmail
+         * @methodOf services:Ecm.EmailService
+         *
+         * @description
+         * Send manual email 
+         *
+         * @returns {Object} Object returned by $resource
+         */
+        ,
+        _sendManualEmail: {
+            method: 'POST',
+            url: 'api/latest/plugin/notification/manualEmail'
+        }
     });
 
     /**
@@ -248,6 +264,25 @@ angular.module('services').factory('Ecm.EmailService', [ '$resource', '$translat
     Service.sendMentionsEmail = function(emailData) {
         return Util.serviceCall({
             service: Service._sendMentionsEmail,
+            data: emailData,
+            onSuccess: function(data) {
+                MessageService.info($translate.instant("common.directive.docTree.email.successMessage"));
+                if (Service.validateSentEmail(data)) {
+                    return data;
+                }
+            },
+            onInvalid: function(data) {
+                MessageService.error($translate.instant("common.directive.docTree.email.unsuccessMessage"));
+                return data;
+            }
+        });
+    };
+    
+    
+    
+    Service.sendManualEmail = function(emailData) {
+        return Util.serviceCall({
+            service: Service._sendManualEmail,
             data: emailData,
             onSuccess: function(data) {
                 MessageService.info($translate.instant("common.directive.docTree.email.successMessage"));
