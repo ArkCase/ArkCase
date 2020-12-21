@@ -36,6 +36,7 @@ import static org.easymock.EasyMock.expectLastCall;
 import static org.junit.Assert.assertEquals;
 
 import com.armedia.acm.core.provider.TemplateModelProvider;
+import com.armedia.acm.correspondence.model.Template;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.email.model.EmailSenderConfig;
 import com.armedia.acm.objectonverter.ObjectConverter;
@@ -53,6 +54,7 @@ import com.armedia.acm.services.notification.model.NotificationRule;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.spring.SpringContextHolder;
 
+import org.apache.commons.io.FileUtils;
 import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
@@ -81,7 +83,8 @@ public class NotificationServiceTest extends EasyMockSupport
     private TemplatingEngine mockTemplatingEngine;
     private UserDao mockUserDao;
     private AcmEmailSenderService mockEmailSenderService;
-    private Resource templateConfigurations;
+    private Resource templateConfiguration;
+    private List<Template> templateConfigurations = new ArrayList<>();
 
     @Before
     public void setUp() throws Exception
@@ -97,7 +100,7 @@ public class NotificationServiceTest extends EasyMockSupport
         mockTemplatingEngine = createMock(TemplatingEngine.class);
         mockUserDao = createMock(UserDao.class);
         mockEmailSenderService = createMock(AcmEmailSenderService.class);
-        templateConfigurations = new ClassPathResource("templates-configuration.json");
+        templateConfiguration = new ClassPathResource("templates-configuration.json");
 
         sendExecutor = new SendExecutor();
         sendExecutor.setSpringContextHolder(mockSpringContextHolder);
@@ -220,8 +223,11 @@ public class NotificationServiceTest extends EasyMockSupport
         smtpNotificationServer.setTemplatingEngine(mockTemplatingEngine);
         smtpNotificationServer.setUserDao(mockUserDao);
         smtpNotificationServer.setEmailSenderService(mockEmailSenderService);
-        smtpNotificationServer.setTemplatesConfiguration(templateConfigurations);
+        smtpNotificationServer.setTemplatesConfiguration(templateConfiguration);
         smtpNotificationServer.setObjectConverter(ObjectConverter.createObjectConverterForTests());
+        templateConfigurations = smtpNotificationServer.getObjectConverter().getJsonUnmarshaller()
+                .unmarshallCollection(FileUtils.readFileToString(templateConfiguration.getFile()), List.class, Template.class);
+        smtpNotificationServer.setTemplateConfigurations(templateConfigurations);
 
         expect(mockTemplateService.getTemplate("modelName.html")).andReturn(template).times(2);
 
