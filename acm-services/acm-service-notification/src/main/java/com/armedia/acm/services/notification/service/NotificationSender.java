@@ -420,4 +420,14 @@ public abstract class NotificationSender implements ApplicationListener<Applicat
     {
         this.objectConverter = objectConverter;
     }
+
+    public List<Template> getTemplateConfigurations()
+    {
+        return templateConfigurations;
+    }
+
+    public void setTemplateConfigurations(List<Template> templateConfigurations)
+    {
+        this.templateConfigurations = templateConfigurations;
+    }
 }
