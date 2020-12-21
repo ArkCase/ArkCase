@@ -154,4 +154,24 @@ public interface NotificationConstants
     String CALENDAR_EVENT_ADDED = "notifications.calendar.event.added";
     String NOTE_ADDED = "notifications.note.added";
     String STATUS_COMPREHEND_MEDICAL = "notifications.status.comprehendMedical";
+
+    /**
+     * Notification type AUTOMATED
+     */
+    String TYPE_AUTOMATED = "AUTOMATED";
+    /**
+     * Notification type MANUAL
+     */
+    String TYPE_MANUAL = "MANUAL";
+    /**
+     * Notification message state when the message is not sent to the user because of manually disabled 
+     * sending messages with current template
+     */
+    String STATE_DISABLED = "DISABLED";
+
+
+    /**
+     * Email Notification Template Type
+     */
+    String EMAIL_NOTIFICATION_TEMPLATE_TYPE = "emailTemplate";
 }

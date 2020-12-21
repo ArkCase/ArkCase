@@ -25,20 +25,16 @@ angular.module('cases').controller(
                 'Admin.CMTemplatesService',
                 'DocTreeExt.Email',
                 'ModalDialogService',
-                'Admin.EmailSenderConfigurationService',
                 'MultiCorrespondence.Service',
                 'EcmService',
                 'Websockets.MessageHandler',
                 function($scope, $stateParams, $modal, $q, $timeout, $translate, Util, LocaleService, ConfigService, ObjectService, ObjectLookupService, CaseInfoService, DocTreeService, HelperObjectBrowserService, Authentication, PermissionsService, ObjectModelService, DocTreeExtWebDAV,
-                         DocTreeExtCheckin, CorrespondenceService, DocTreeExtEmail, ModalDialogService, EmailSenderConfigurationService, MultiCorrespondenceService, Ecm, messageHandler) {
+                         DocTreeExtCheckin, CorrespondenceService, DocTreeExtEmail, ModalDialogService, MultiCorrespondenceService, Ecm, messageHandler) {
                     Authentication.queryUserInfo().then(function(userInfo) {
                         $scope.user = userInfo.userId;
                         return userInfo;
                     });
 
-                    EmailSenderConfigurationService.isEmailSenderAllowDocuments().then(function(emailData) {
-                        $scope.sendEmailEnabled = emailData.data;
-                    });
 
                     var componentHelper = new HelperObjectBrowserService.Component({
                         scope: $scope,
@@ -168,11 +164,6 @@ angular.module('cases').controller(
                         $scope.treeControl.refreshTree();
                     };
 
-                    $scope.sendEmail = function() {
-                        var nodes = $scope.treeControl.getSelectedNodes();
-                        var DocTree = $scope.treeControl.getDocTreeObject();
-                        DocTreeExtEmail.openModal(DocTree, nodes);
-                    };
 
                     $scope.createNewTask = function() {
                         var modalMetadata = {

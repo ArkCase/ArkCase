@@ -28,7 +28,7 @@ package com.armedia.acm.correspondence.service;
  */
 
 import com.armedia.acm.correspondence.model.CorrespondenceMergeField;
-import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
+import com.armedia.acm.correspondence.model.Template;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jan 30, 2017
@@ -37,9 +37,9 @@ import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
 public class CorrespondenceMapper
 {
 
-    public static CorrespondenceTemplate mapTemplateFromConfiguration(CorrespondenceTemplate configuration)
+    public static Template mapTemplateFromConfiguration(Template configuration)
     {
-        CorrespondenceTemplate template = new CorrespondenceTemplate();
+        Template template = new Template();
 
         template.setTemplateId(configuration.getTemplateId());
         template.setTemplateVersion(configuration.getTemplateVersion());
@@ -54,6 +54,8 @@ public class CorrespondenceMapper
         template.setModifier(configuration.getModifier());
         template.setModified(configuration.getModified());
         template.setTemplateModelProvider(configuration.getTemplateModelProvider());
+        template.setTemplateType(configuration.getTemplateType());
+        template.setEnabled(configuration.isEnabled());
 
         return template;
     }

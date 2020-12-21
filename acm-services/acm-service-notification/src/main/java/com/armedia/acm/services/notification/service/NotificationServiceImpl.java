@@ -30,6 +30,7 @@ package com.armedia.acm.services.notification.service;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.ApplicationNotificationEvent;
+import com.armedia.acm.services.notification.model.BasicNotificationRule;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConfig;
 import com.armedia.acm.services.notification.model.NotificationConstants;
@@ -143,6 +144,61 @@ public class NotificationServiceImpl implements NotificationService
                 notification.getEmailAddresses());
 
         return saved;
+    }
+    
+    @Override
+    public String setNotificationTitleForManualNotification(String templateName)
+    {
+        String title = "";
+        switch (templateName)
+        {
+            case "casePriorityChanged":
+                title = NotificationConstants.CASE_PRIORITY_CHANGED;
+                break;
+            case "caseStatusChanged":
+                title = NotificationConstants.CASE_STATUS_CHANGED;
+                break;
+            case "complaintPriorityChanged":
+                title = NotificationConstants.COMPLAINT_PRIORITY_CHANGED;
+                break;
+            case "complaintStatusChanged":
+                title = NotificationConstants.COMPLAINT_STATUS_CHANGED;
+                break;
+            case "mentions":
+                title = NotificationConstants.EMAIL_MENTIONS;
+                break;
+            case "noteAdded":
+                title = NotificationConstants.NOTE_ADDED;
+                break;
+            case "objectAssigned":
+                title = NotificationConstants.OBJECT_ASSIGNED;
+                break;
+            case "objectUnassigned":
+                title = NotificationConstants.OBJECT_UNASSIGNED;
+                break;
+            case "participantsAdded":
+                title = NotificationConstants.PARTICIPANTS_ADDED;
+                break;
+            case "participantsDeleted":
+                title = NotificationConstants.PARTICIPANTS_DELETED;
+                break;
+            case "taskOverdue":
+                title = NotificationConstants.TASK_OVERDUE;
+                break;
+            case "taskPriorityChanged":
+                title = NotificationConstants.TASK_PRIORITY_CHANGED;
+                break;
+            case "taskStatusChanged":
+                title = NotificationConstants.TASK_STATUS_CHANGED;
+                break;
+            case "taskUpcoming":
+                title = NotificationConstants.TASK_UPCOMING;
+                break;
+            case "concurNonConcur":
+                title = NotificationConstants.TASK_CONCUR_NONCONCUR;
+                break;
+        }
+        return title;
     }
 
     /**
