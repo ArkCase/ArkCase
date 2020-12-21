@@ -39,6 +39,7 @@ import static org.junit.Assert.assertTrue;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.data.service.AcmDataService;
 import com.armedia.acm.email.model.EmailSenderConfig;
+import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.service.outlook.model.OutlookDTO;
 import com.armedia.acm.service.outlook.service.OutlookService;
@@ -59,6 +60,8 @@ import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -81,6 +84,7 @@ public class MicrosoftExchangeNotificationSenderTest extends EasyMockSupport
     private AcmMailTemplateConfigurationService templateService;
     private AcmDataService acmDataService;
     private TemplatingEngine templatingEngine;
+    private Resource templateConfigurations;
 
     @Before
     public void setUp()
@@ -98,6 +102,7 @@ public class MicrosoftExchangeNotificationSenderTest extends EasyMockSupport
         templateService = createMock(AcmMailTemplateConfigurationService.class);
         acmDataService = createMock(AcmDataService.class);
         templatingEngine = createMock(TemplatingEngine.class);
+        templateConfigurations = new ClassPathResource("templates-configuration.json");
 
         microsoftExchangeNotificationSender.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
         microsoftExchangeNotificationSender.setEcmFileService(mockEcmFileService);
@@ -114,6 +119,8 @@ public class MicrosoftExchangeNotificationSenderTest extends EasyMockSupport
         NotificationConfig notificationConfig = new NotificationConfig();
         notificationConfig.setBaseUrl(BASE_URL);
         microsoftExchangeNotificationSender.setNotificationConfig(notificationConfig);
+        microsoftExchangeNotificationSender.setTemplatesConfiguration(templateConfigurations);
+        microsoftExchangeNotificationSender.setObjectConverter(ObjectConverter.createObjectConverterForTests());
     }
 
     @Test
@@ -126,6 +133,7 @@ public class MicrosoftExchangeNotificationSenderTest extends EasyMockSupport
         notification.setTitle("title");
         notification.setNote("the_note");
         notification.setParentId(0L);
+        notification.setTemplateModelName("modelName");
 
         expect(templateService.getTemplate(anyString())).andThrow(new AcmEmailConfigurationIOException("No such template"));
         expect(mockNotificationUtils.buildNotificationLink(notification.getParentType(), notification.getParentId(),

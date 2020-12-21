@@ -233,4 +233,15 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="21-add-column-subject" author="stefan.sanevski">
+        <addColumn tableName="acm_notification">
+            <column name="cm_subject" type="CLOB"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="22-add-column-notification-type" author="stefan.sanevski">
+        <addColumn tableName="acm_notification">
+            <column name="cm_type" type="CLOB"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

@@ -1,10 +1,10 @@
-package com.armedia.acm.services.notification.service;
+package com.armedia.acm.services.notification.service.provider.model;
 
 /*-
  * #%L
  * ACM Service: Notification
  * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
+ * Copyright (C) 2014 - 2020 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 
@@ -27,20 +27,40 @@ package com.armedia.acm.services.notification.service;
  * #L%
  */
 
-import com.armedia.acm.services.notification.model.Notification;
-import com.armedia.acm.services.notification.model.NotificationRule;
+import java.util.List;
 
-import java.util.Date;
-
-public interface NotificationService
+public class DocumentLinkedModel
 {
-    void run(Date lastRun);
+    private final List<String> links;
+    private final List<String> fileNames;
+    private final String objectType;
+    private final String objectNumber;
 
-    void runRule(Date lastRun, NotificationRule rule);
+    public DocumentLinkedModel(List<String> links, List<String> fileNames, String objectType, String objectNumber)
+    {
+        this.links = links;
+        this.fileNames = fileNames;
+        this.objectType = objectType;
+        this.objectNumber = objectNumber;
+    }
 
-    NotificationBuilder getNotificationBuilder();
+    public List<String> getLinks() 
+    {
+        return links;
+    }
 
-    Notification saveNotification(Notification notification);
-    
-    String setNotificationTitleForManualNotification(String templateName);
+    public List<String> getFileNames() 
+    {
+        return fileNames;
+    }
+
+    public String getObjectType() 
+    {
+        return objectType;
+    }
+
+    public String getObjectNumber() 
+    {
+        return objectNumber;
+    }
 }

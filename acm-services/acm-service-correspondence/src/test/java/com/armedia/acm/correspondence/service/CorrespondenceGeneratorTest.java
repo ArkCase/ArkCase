@@ -34,7 +34,7 @@ import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
 
 import com.armedia.acm.correspondence.model.CorrespondenceMergeField;
-import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
+import com.armedia.acm.correspondence.model.Template;
 import com.armedia.acm.correspondence.utils.ParagraphRunPoiWordGenerator;
 import com.armedia.acm.correspondence.utils.SpELWordEvaluator;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
@@ -72,7 +72,7 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
 {
     private CorrespondenceGenerator unit;
 
-    private CorrespondenceTemplate correspondenceTemplate;
+    private Template correspondenceTemplate;
     private EcmFile ecmFile;
 
     private EntityManager mockEntityManager;
@@ -202,7 +202,7 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
         substitutionVars.put(key3, var3);
         substitutionVars.put(key4, var4);
 
-        correspondenceTemplate = new CorrespondenceTemplate();
+        correspondenceTemplate = new Template();
         correspondenceTemplate.setDocumentType(doctype);
         correspondenceTemplate.setTemplateFilename(templateName);
         correspondenceTemplate.setObjectType("CASE_FILE");

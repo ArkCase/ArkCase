@@ -161,6 +161,12 @@ public class Notification implements Serializable, AcmObject, AcmEntity
     @Transient
     private String objectLink;
 
+    @Column(name = "cm_subject")
+    private String subject;
+   
+    @Column (name = "cm_type")
+    private String notificationType = NotificationConstants.TYPE_AUTOMATED;
+
     @Override
     public Long getId()
     {
@@ -459,5 +465,25 @@ public class Notification implements Serializable, AcmObject, AcmEntity
     public void setEmailGroup(String emailGroup)
     {
         this.emailGroup = emailGroup;
+    }
+
+    public String getSubject() 
+    {
+        return subject;
+    }
+
+    public void setSubject(String subject) 
+    {
+        this.subject = subject;
+    }
+
+    public String getNotificationType() 
+    {
+        return notificationType;
+    }
+
+    public void setNotificationType(String notificationType)
+    {
+        this.notificationType = notificationType;
     }
 }
