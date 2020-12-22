@@ -21,18 +21,13 @@ angular.module('tasks').controller(
                 'DocTreeExt.WebDAV',
                 'DocTreeExt.Checkin',
                 'DocTreeExt.Email',
-                'Admin.EmailSenderConfigurationService',
-                function($scope, $stateParams, $q, $modal, $translate, Util, LocaleService, ConfigService, ObjectService, ObjectLookupService, TaskInfoService, HelperObjectBrowserService, Authentication, DocTreeService, PermissionsService, DocTreeExtWebDAV, DocTreeExtCheckin, DocTreeExtEmail,
-                        EmailSenderConfigurationService) {
+                function($scope, $stateParams, $q, $modal, $translate, Util, LocaleService, ConfigService, ObjectService, ObjectLookupService, TaskInfoService, HelperObjectBrowserService, Authentication, DocTreeService, PermissionsService, DocTreeExtWebDAV, DocTreeExtCheckin, DocTreeExtEmail) {
 
                     Authentication.queryUserInfo().then(function(userInfo) {
                         $scope.user = userInfo.userId;
                         return userInfo;
                     });
 
-                    EmailSenderConfigurationService.isEmailSenderAllowDocuments().then(function(emailData) {
-                        $scope.sendEmailEnabled = emailData.data;
-                    });
 
                     var componentHelper = new HelperObjectBrowserService.Component({
                         moduleId: "tasks",
@@ -108,11 +103,6 @@ angular.module('tasks').controller(
                         $scope.treeControl.refreshTree();
                     };
 
-                    $scope.sendEmail = function() {
-                        var nodes = $scope.treeControl.getSelectedNodes();
-                        var DocTree = $scope.treeControl.getDocTreeObject();
-                        DocTreeExtEmail.openModal(DocTree, nodes);
-                    };
 
                     $scope.correspondenceForms = {};
 

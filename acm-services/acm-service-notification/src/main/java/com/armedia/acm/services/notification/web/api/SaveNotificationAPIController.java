@@ -28,7 +28,12 @@ package com.armedia.acm.services.notification.web.api;
  */
 
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
+import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.services.email.model.EmailMentionsDTO;
+import com.armedia.acm.services.email.model.EmailWithAttachmentsAndLinksDTO;
 import com.armedia.acm.services.email.service.AcmEmailServiceException;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.ApplicationNotificationEvent;
@@ -37,6 +42,7 @@ import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.notification.service.AcmEmailMentionsService;
 import com.armedia.acm.services.notification.service.NotificationEventPublisher;
 
+import com.armedia.acm.services.notification.service.NotificationService;
 import com.armedia.acm.services.users.model.AcmUser;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
@@ -49,6 +55,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping({ "/api/v1/plugin/notification", "/api/latest/plugin/notification" })
@@ -58,6 +67,9 @@ public class SaveNotificationAPIController
     private NotificationDao notificationDao;
     private NotificationEventPublisher notificationEventPublisher;
     private AcmEmailMentionsService acmEmailMentionsService;
+    private NotificationService notificationService;
+    private EcmFileService fileService;
+    private AuthenticationTokenService authenticationTokenService;
 
     private Logger log = LogManager.getLogger(getClass());
 
@@ -148,6 +160,42 @@ public class SaveNotificationAPIController
         return in;
     }
 
+    @RequestMapping(value = "/manualEmail", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public void sendManulEmailAsNotification(@RequestBody EmailWithAttachmentsAndLinksDTO emailDTO, Authentication authentication,
+                                             HttpSession session)
+    {
+        // the user is stored in the session during login.
+        AcmUser user = (AcmUser) session.getAttribute("acm_user");
+        
+        String title = notificationService.setNotificationTitleForManualNotification(emailDTO.getModelReferenceName());
+
+        List<EcmFileVersion> notificationFiles = new ArrayList<>();
+        if(emailDTO.getAttachmentIds() != null)
+        {
+            EcmFile file;
+            for (Long fileId : emailDTO.getAttachmentIds())
+            {
+                file = getFileService().findById(fileId);
+                notificationFiles.add(file.getVersions().get(file.getVersions().size() - 1));
+            }
+        }
+        
+        Notification notification = notificationService.getNotificationBuilder()
+                .newNotification(emailDTO.getModelReferenceName(), title, emailDTO.getObjectType(),
+                        Long.parseLong(emailDTO.getObjectId()), user.getUserId())
+                .withSubject(emailDTO.getSubject())
+                .withNotificationType(NotificationConstants.TYPE_MANUAL)
+                .withEmailAddresses(emailDTO.getEmailAddresses().stream().collect(Collectors.joining(",")))
+                .forRelatedObjectWithNumber(emailDTO.getObjectNumber())
+                .forRelatedObjectTypeAndId(emailDTO.getObjectType(), Long.parseLong(emailDTO.getObjectId()))
+                .withFiles(notificationFiles)
+                .build(user.getUserId());
+
+        notificationService.saveNotification(notification);
+        
+    }
+
     protected void publishNotificationEvent(
             HttpSession httpSession,
             Notification notification,
@@ -185,5 +233,25 @@ public class SaveNotificationAPIController
 
     public void setAcmEmailMentionsService(AcmEmailMentionsService acmEmailMentionsService) {
         this.acmEmailMentionsService = acmEmailMentionsService;
+    }
+
+    public NotificationService getNotificationService() 
+    {
+        return notificationService;
+    }
+
+    public void setNotificationService(NotificationService notificationService) 
+    {
+        this.notificationService = notificationService;
+    }
+
+    public EcmFileService getFileService() 
+    {
+        return fileService;
+    }
+
+    public void setFileService(EcmFileService fileService) 
+    {
+        this.fileService = fileService;
     }
 }

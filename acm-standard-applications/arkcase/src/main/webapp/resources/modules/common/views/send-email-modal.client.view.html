@@ -1,0 +1,47 @@
+<div class="modal-header">
+    <h3 translate>common.directive.docTree.emailDialog.title</h3>
+</div>
+<div class="modal-body">
+    <div class="pull-right">
+        <label for="templates" translate> common.directive.docTree.emailDialog.emailTemplates.label </label>
+        <span class="required-asterisk">*</span>
+        <select id="templates" class="form-control" ng-model="template" required="required" ng-change="loadContent()">
+            <option ng-repeat="option in emailTemplates" value="{{option.templateFilename}}">
+                {{option.label}}
+            </option>
+        </select>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 form-group">
+            <label for="recipients">
+                <span translate>common.directive.docTree.emailDialog.recipients.label</span>
+                <span class="required-asterisk">*</span>
+            </label>
+            <textarea name="textarea" id="recipients" ng-model="recipientsStr" class="user-picker-input input-md form-control"
+                    placeholder="{{ 'common.directive.docTree.emailDialog.recipients.placeholder' | translate }}"
+                    ng-click="chooseRecipients()" readonly required></textarea>
+        </div>
+        <div class="col-sm-12 form-group">
+            <label for="subject">
+                <span translate>common.directive.docTree.emailDialog.subject.label</span>
+            </label>
+            <input id="subject" name="subject" type="text" class="form-control" ng-model="emailDataModel.subject"
+                    placeholder="{{'common.directive.docTree.emailDialog.subject.placeholder' | translate}}">
+        </div>
+        <div class="col-sm-12 form-group" ng-form="emailBodyForm" ng-show="template === 'plainEmail.html'">
+            <summernote config="summernoteOptions" name="emailBody" ng-model="emailDataModel.body"></summernote>
+        </div>
+    </div>
+    <div class="row">
+        <div style="border: 1px solid #ccc; margin: 15px;" ng-if="template != 'plainEmail.html'" id="content"></div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" ng-click="onClickCancel()" translate>
+        common.directive.docTree.emailDialog.btnCancel.text
+    </button>
+    <button type="button" class="btn btn-primary" ng-click="onClickOk()" ng-disabled="disableOk()" translate>
+        common.directive.docTree.emailDialog.btnOk.text
+    </button>
+</div>
+

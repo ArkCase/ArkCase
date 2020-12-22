@@ -34,6 +34,7 @@ import com.armedia.acm.plugins.report.model.PentahoScheduleRequest;
 import com.armedia.acm.plugins.report.model.ScheduleReportException;
 import com.armedia.acm.plugins.report.service.ScheduleReportService;
 
+import com.google.json.JsonSanitizer;
 import org.json.JSONObject;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
@@ -132,7 +133,8 @@ public class ScheduleReportAPIController
 
         String response = getScheduleReportService().deleteSchedule(scheduleId);
         LOGGER.debug("Delete result: [{}]", response);
-        return response;
+        String wellFormedJson = JsonSanitizer.sanitize(response);
+        return wellFormedJson;
     }
 
     public ScheduleReportService getScheduleReportService()

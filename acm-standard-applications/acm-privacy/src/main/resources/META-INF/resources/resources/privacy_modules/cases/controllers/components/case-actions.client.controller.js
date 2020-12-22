@@ -3,8 +3,8 @@
 angular.module('cases').controller(
         'Cases.ActionsController',
         [ '$scope', '$state', '$stateParams', '$q', '$modal', 'UtilService', 'ConfigService', 'ObjectService', 'Authentication', 'Object.LookupService', 'Case.LookupService', 'Object.SubscriptionService', 'Object.ModelService', 'Case.InfoService', 'Case.MergeSplitService',
-                'Helper.ObjectBrowserService', 'Profile.UserInfoService',
-                function($scope, $state, $stateParams, $q, $modal, Util, ConfigService, ObjectService, Authentication, ObjectLookupService, CaseLookupService, ObjectSubscriptionService, ObjectModelService, CaseInfoService, MergeSplitService, HelperObjectBrowserService, UserInfoService) {
+                'Helper.ObjectBrowserService', 'Profile.UserInfoService', 'Ecm.EmailService',
+                function($scope, $state, $stateParams, $q, $modal, Util, ConfigService, ObjectService, Authentication, ObjectLookupService, CaseLookupService, ObjectSubscriptionService, ObjectModelService, CaseInfoService, MergeSplitService, HelperObjectBrowserService, UserInfoService, EcmEmailService) {
 
                     new HelperObjectBrowserService.Component({
                         scope: $scope,
@@ -125,6 +125,47 @@ angular.module('cases').controller(
                         $scope.availableChildOutcomes = outcomes;
                         $scope.showBtnChildOutcomes = true;
                     });
+
+                    $scope.sendEmail = function () {
+                        var params = {
+                            objectId: $scope.objectInfo.id,
+                            objectType: ObjectService.ObjectTypes.CASE_FILE,
+                            objectNumber: $scope.objectInfo.caseNumber,
+                            emailSubject: 'Case ' + $scope.objectInfo.caseNumber
+                        };
+                        var modalInstance = $modal.open({
+                            templateUrl: 'modules/common/views/send-email-modal.client.view.html',
+                            controller: 'Common.SendEmailModalController',
+                            animation: true,
+                            size: 'lg',
+                            backdrop: 'static',
+                            resolve: {
+                                params: function() {
+                                    return params;
+                                }
+                            }
+                        });
+
+                        modalInstance.result.then(function(res) {
+                            var emailData = {};
+                            emailData.subject = res.subject;
+                            emailData.body = res.body;
+                            emailData.footer = '\n\n' + res.footer;
+                            emailData.emailAddresses = res.recipients;
+                            emailData.objectId = $scope.objectInfo.id;
+                            emailData.objectType = ObjectService.ObjectTypes.CASE_FILE;
+                            emailData.objectNumber = $scope.objectInfo.caseNumber;
+                            emailData.modelReferenceName = res.template;
+
+                            if(emailData.modelReferenceName != 'plainEmail') {
+                                EcmEmailService.sendManualEmail(emailData);
+                            } else {
+                                EcmEmailService.sendPlainEmail(emailData, ObjectService.ObjectTypes.CASE_FILE);
+                            }
+
+                        });
+                    };
+
 
                 }
 

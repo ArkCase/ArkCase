@@ -30,7 +30,7 @@ package com.armedia.acm.correspondence.service;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.correspondence.model.CorrespondenceMergeField;
-import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
+import com.armedia.acm.correspondence.model.Template;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
@@ -75,9 +75,9 @@ public interface CorrespondenceService
      * @return EcmFile
      * @throws Exception
      */
-    EcmFile generateMultiTemplate(Authentication authentication, List<CorrespondenceTemplate> templates, String parentObjectType,
-            Long parentObjectId,
-            String targetCmisFolderId, String documentName) throws Exception;
+    EcmFile generateMultiTemplate(Authentication authentication, List<Template> templates, String parentObjectType,
+                                  Long parentObjectId,
+                                  String targetCmisFolderId, String documentName) throws Exception;
 
     /**
      * For use from MVC controllers and any other client with an Authentication object.
@@ -86,7 +86,7 @@ public interface CorrespondenceService
      * @return EcmFile
      * @throws Exception
      */
-    CorrespondenceTemplate findTemplate(String templateName);
+    Template findTemplate(String templateName);
 
     /**
      * Helper method for use from Activiti and other clients with no direct access to an Authentication, but in the call
@@ -95,30 +95,32 @@ public interface CorrespondenceService
     EcmFile generate(String templateName, String parentObjectType, Long parentObjectId, String targetCmisFolderId)
             throws IOException, IllegalArgumentException, AcmCreateObjectFailedException, AcmUserActionFailedException;
 
-    List<CorrespondenceTemplate> getAllTemplates();
+    List<Template> getAllTemplates();
 
-    List<CorrespondenceTemplate> getActiveVersionTemplates();
+    List<Template> getActiveVersionTemplates();
 
-    List<CorrespondenceTemplate> getActivatedActiveVersionTemplatesByObjectType(String objectType);
+    List<Template> getActivatedActiveVersionTemplatesByObjectType(String objectType);
 
-    /**
-     * @param templateId
-     * @return
-     */
-    List<CorrespondenceTemplate> getTemplateVersionsById(String templateId);
+    List<Template> getActiveVersionTemplatesByTemplateType(String objectType);
 
     /**
      * @param templateId
      * @return
      */
-    Optional<CorrespondenceTemplate> getActiveTemplateById(String templateId);
+    List<Template> getTemplateVersionsById(String templateId);
+
+    /**
+     * @param templateId
+     * @return
+     */
+    Optional<Template> getActiveTemplateById(String templateId);
 
     /**
      * @param templateId
      * @param templateVersion
      * @return
      */
-    Optional<CorrespondenceTemplate> getTemplateByIdAndVersion(String templateId, String templateVersion);
+    Optional<Template> getTemplateByIdAndVersion(String templateId, String templateVersion);
 
     /**
      * @param templateId
@@ -126,7 +128,7 @@ public interface CorrespondenceService
      * @return
      */
 
-    Optional<CorrespondenceTemplate> getTemplateByIdAndFilename(String templateId, String templateFilename);
+    Optional<Template> getTemplateByIdAndFilename(String templateId, String templateFilename);
 
     /**
      * @param templateId
@@ -134,7 +136,7 @@ public interface CorrespondenceService
      * @return
      * @throws IOException
      */
-    Optional<CorrespondenceTemplate> deleteTemplateByIdAndVersion(String templateId, String templateVersion) throws IOException;
+    Optional<Template> deleteTemplateByIdAndVersion(String templateId, String templateVersion) throws IOException;
 
     List<CorrespondenceMergeField> getMergeFields();
 
@@ -177,7 +179,7 @@ public interface CorrespondenceService
      * @param template
      * @throws IOException
      */
-    Optional<CorrespondenceTemplate> updateTemplate(CorrespondenceTemplate template) throws IOException;
+    Optional<Template> updateTemplate(Template template) throws IOException;
 
     /**
      * Generating Dao objects depending from the object type
