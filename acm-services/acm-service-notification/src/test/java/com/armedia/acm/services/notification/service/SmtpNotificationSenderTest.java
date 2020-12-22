@@ -36,10 +36,12 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
+import com.armedia.acm.correspondence.model.Template;
 import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.data.service.AcmDataService;
 import com.armedia.acm.email.model.EmailSenderConfig;
+import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
@@ -57,14 +59,19 @@ import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
+import org.apache.commons.io.FileUtils;
 import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -87,10 +94,11 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
     private AcmMailTemplateConfigurationService templateService;
     private AcmDataService acmDataService;
     private TemplatingEngine templatingEngine;
+    private Resource templateConfiguration;
+    private List<Template> templateConfigurations = new ArrayList<>();
 
     @Before
-    public void setUp()
-    {
+    public void setUp() throws IOException {
         smtpNotificationSender = new SmtpNotificationSender();
         EmailSenderConfig senderConfig = new EmailSenderConfig();
         senderConfig.setUsername("email_user_value");
@@ -109,6 +117,7 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         templateService = createMock(AcmMailTemplateConfigurationService.class);
         acmDataService = createMock(AcmDataService.class);
         templatingEngine = createMock(TemplatingEngine.class);
+        templateConfiguration = new ClassPathResource("templates-configuration.json");
 
         smtpNotificationSender.setEmailSenderService(mockSmtpService);
         smtpNotificationSender.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
@@ -123,6 +132,12 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         NotificationConfig notificationConfig = new NotificationConfig();
         notificationConfig.setBaseUrl(BASE_URL);
         smtpNotificationSender.setNotificationConfig(notificationConfig);
+        smtpNotificationSender.setTemplatesConfiguration(templateConfiguration);
+        smtpNotificationSender.setObjectConverter(ObjectConverter.createObjectConverterForTests());
+
+        templateConfigurations = smtpNotificationSender.getObjectConverter().getJsonUnmarshaller()
+                .unmarshallCollection(FileUtils.readFileToString(templateConfiguration.getFile()), List.class, Template.class);
+        smtpNotificationSender.setTemplateConfigurations(templateConfigurations);
     }
 
     @Test
@@ -134,6 +149,7 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         notification.setNote("the_note");
         notification.setParentType("PARENT");
         notification.setParentId(0L);
+        notification.setTemplateModelName("modelName");
 
         expect(templateService.getTemplate(anyString())).andThrow(new AcmEmailConfigurationIOException("No such template"));
         expect(mockNotificationUtils.buildNotificationLink(notification.getParentType(), notification.getParentId(),

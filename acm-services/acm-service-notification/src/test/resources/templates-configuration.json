@@ -1,0 +1,18 @@
+[ {
+  "@id" : "1",
+  "templateId" : "1",
+  "templateVersion" : "1.0",
+  "templateVersionActive" : true,
+  "label" : "Template Name",
+  "documentType" : "document type",
+  "templateFilename" : "modelName.html",
+  "objectType" : "OBJECT_TYPE",
+  "templateModelProvider" : "com.armedia.acm.services.notification.service.provider.TemplateModelProvider",
+  "templateType" : "emailTemplate",
+  "enabled" : true,
+  "dateFormatString" : "MM/dd/yyyy",
+  "numberFormatString" : "###,###,###",
+  "activated" : true,
+  "modifier" : "arkcase-admin@arkcase.org",
+  "modified" : "2020-10-13T12:06:34.629Z"
+} ]

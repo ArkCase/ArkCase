@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.armedia</groupId>
     <artifactId>acm</artifactId>
-    <version>2020.18-SNAPSHOT</version>
+    <version>2021.01-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>ArkCase Case Management System</name>
     <description>Cloud-based case management system with a very nice UI</description>
@@ -1564,6 +1564,13 @@
                         <artifactId>xercesImpl</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+
+            <!-- CWE-80 Basic XSS -->
+            <dependency>
+                <groupId>com.mikesamuel</groupId>
+                <artifactId>json-sanitizer</artifactId>
+                <version>1.2.1</version>
             </dependency>
 
         </dependencies>

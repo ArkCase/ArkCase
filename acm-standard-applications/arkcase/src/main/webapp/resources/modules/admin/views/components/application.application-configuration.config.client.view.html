@@ -2,19 +2,75 @@
 
     <div data-ng-controller="Admin.ApplicationConfigurationController" class="well-sm">
         <form>
+
             <div class="row">
-
-                <div class="col-lg-6">
-                    <label class="control-label" for="defaultTimezone">
-                        <span translate>admin.application.applicationConfiguration.defaultTimezone.label</span>
-                    </label>
+                <div class="row">
+                    <div class="col-lg-6 form-group">
+                        <label class="control-label" for="organizationName">
+                            <span translate>admin.application.applicationConfiguration.organizationName.label</span>
+                        </label>
+                        <input ng-model="organizationName" class="form-control input-sm" type="text" id="organizationName"/>
+                    </div>
+                    <div class="col-lg-6 form-group">
+                        <label class="control-label" for="organizationAddress1">
+                            <span translate>admin.application.applicationConfiguration.organizationAddress1.label</span>
+                        </label>
+                        <input ng-model="organizationAddress1" class="form-control input-sm" type="text" id="organizationAddress1"/>
+                    </div>
                 </div>
-                <div class="col-lg-6">
-                    <input ng-model="defaultTimezone" class="form-control input-sm" type="text" id="defaultTimezone"
-                            ng-blur="validateTimezone(defaultTimezone)" />
-                    <span class="text-danger" ng-if="!isTimezoneValid" translate>
-                                admin.application.applicationConfiguration.defaultTimezone.error</span>
+                <div class="row">
+                    <div class="col-lg-6 form-group">
+                        <label class="control-label" for="organizationCity">
+                            <span translate>admin.application.applicationConfiguration.organizationCity.label</span>
+                        </label>
+                        <input ng-model="organizationCity" class="form-control input-sm" type="text" id="organizationCity"/>
+                    </div>
+                    <div class="col-lg-6 form-group">
+                        <label class="control-label" for="organizationAddress2">
+                            <span translate>admin.application.applicationConfiguration.organizationAddress2.label</span>
+                        </label>
+                        <input ng-model="organizationAddress2" class="form-control input-sm" type="text" id="organizationAddress2"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 form-group">
+                        <label class="control-label" for="organizationState">
+                            <span translate>admin.application.applicationConfiguration.organizationState.label</span>
+                        </label>
+                        <input ng-model="organizationState" class="form-control input-sm" type="text" id="organizationState"/>
+                    </div>
+                    <div class="col-lg-6 form-group">
+                        <label class="control-label" for="organizationZip">
+                            <span translate>admin.application.applicationConfiguration.organizationZip.label</span>
+                        </label>
+                        <input ng-model="organizationZip" class="form-control input-sm" type="text" id="organizationZip"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 form-group">
+                        <label class="control-label" for="organizationPhone">
+                            <span translate>admin.application.applicationConfiguration.organizationPhone.label</span>
+                        </label>
+                        <input ng-model="organizationPhone" class="form-control input-sm" type="text" id="organizationPhone"/>
+                    </div>
+                    <div class="col-lg-6 form-group">
+                        <label class="control-label" for="organizationFax">
+                            <span translate>admin.application.applicationConfiguration.organizationFax.label</span>
+                        </label>
+                        <input ng-model="organizationFax" class="form-control input-sm" type="text" id="organizationFax"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 form-group">
+                        <label class="control-label" for="defaultTimezone">
+                            <span translate>admin.application.applicationConfiguration.defaultTimezone.label</span>
+                        </label>
+                        <input ng-model="defaultTimezone" class="form-control input-sm" type="text" id="defaultTimezone"
+                                ng-blur="validateTimezone(defaultTimezone)" />
+                        <span class="text-danger" ng-if="!isTimezoneValid" translate>
+                                    admin.application.applicationConfiguration.defaultTimezone.error</span>
 
+                    </div>
                 </div>
             </div>
             <br />

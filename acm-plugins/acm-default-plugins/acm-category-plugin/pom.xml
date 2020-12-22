@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.armedia.acm.acm-plugins</groupId>
         <artifactId>acm-default-plugins</artifactId>
-        <version>2020.18-SNAPSHOT</version>
+        <version>2021.01-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 

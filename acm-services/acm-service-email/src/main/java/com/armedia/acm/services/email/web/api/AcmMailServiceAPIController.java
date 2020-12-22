@@ -84,15 +84,12 @@ public class AcmMailServiceAPIController
         try
         {
             List<String> emailAddresses = in.getEmailAddresses();
-            String emailAddress = String.join(",", in.getEmailAddresses());
-            List<String> templates = loadTemplates(objectType, emailAddress, Arrays.asList("sendAsAttachments"));
-            for (String template : templates)
-            {
-                String body = contentService.generateEmailBody(in, template);
-                in.setBody(body);
-                in.setEmailAddresses(emailAddresses);
-                emailSenderService.sendEmailWithAttachments(in, authentication, user);
-            }
+            String templateName = String.format("%s.html", in.getModelReferenceName());
+            String template = templateService.getTemplate(templateName);
+            String body = contentService.generateEmailBody(in, template);
+            in.setBody(body);
+            in.setEmailAddresses(emailAddresses);
+            emailSenderService.sendEmailWithAttachments(in, authentication, user);
         }
         catch (Exception e)
         {
@@ -123,14 +120,13 @@ public class AcmMailServiceAPIController
         {
             List<EmailWithEmbeddedLinksResultDTO> result = new ArrayList<>();
             List<String> emailAddresses = in.getEmailAddresses();
-            String emailAddress = String.join(",", in.getEmailAddresses());
-            List<String> templates = loadTemplates(objectType, emailAddress, Arrays.asList("sendAsLinks"));
-            for (String template : templates)
-            {
-                in.setTemplate(template);
-                in.setEmailAddresses(emailAddresses);
-                result.addAll(emailSenderService.sendEmailWithEmbeddedLinks(in, authentication, user));
-            }
+            String templateName = String.format("%s.html", in.getModelReferenceName());
+            String template = templateService.getTemplate(templateName);
+            
+            in.setTemplate(template);
+            in.setEmailAddresses(emailAddresses);
+            result.addAll(emailSenderService.sendEmailWithEmbeddedLinks(in, authentication, user));
+            
             return result;
         }
         catch (Exception e)
@@ -159,14 +155,12 @@ public class AcmMailServiceAPIController
         try
         {
             List<String> emailAddresses = in.getEmailAddresses();
-            String emailAddress = String.join(",", in.getEmailAddresses());
-            List<String> templates = loadTemplates(objectType, emailAddress, Arrays.asList("sendAsAttachmentsAndLinks"));
-            for (String template : templates)
-            {
-                in.setTemplate(template);
-                in.setEmailAddresses(emailAddresses);
-                emailSenderService.sendEmailWithAttachmentsAndLinks(in, authentication, user);
-            }
+            String templateName = String.format("%s.html", in.getModelReferenceName());
+            String template = templateService.getTemplate(templateName);
+
+            in.setTemplate(template);
+            in.setEmailAddresses(emailAddresses);
+            emailSenderService.sendEmailWithAttachmentsAndLinks(in, authentication, user);
 
         }
         catch (Exception e)

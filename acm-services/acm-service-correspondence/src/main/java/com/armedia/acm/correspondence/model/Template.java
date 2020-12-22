@@ -1,8 +1,8 @@
-package com.armedia.acm.plugins.admin.model;
+package com.armedia.acm.correspondence.model;
 
 /*-
  * #%L
- * ACM Default Plugin: admin
+ * ACM Service: Correspondence Library
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
@@ -33,30 +33,69 @@ import com.voodoodyne.jackson.jsog.JSOGGenerator;
 import java.util.Date;
 
 /**
- * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jan 27, 2017
- *
+ * This POJO stores the parameters to generate a new Word document based on a Word template.
  */
 
 @JsonIdentityInfo(generator = JSOGGenerator.class)
-public class CorrespondenceTemplateRequestResponse
+public class Template
 {
 
+    /**
+     * The template id of the generated correspondence
+     */
     private String templateId;
 
+    /**
+     * The template version of the generated correspondence
+     */
     private String templateVersion;
 
+    /**
+     * The active version flag of the generated correspondence
+     */
     private boolean templateVersionActive;
-
+    /**
+     * The label for the template, by default should be set to the value of <code>documentType</code>.
+     */
     private String label;
 
+    /**
+     * The document type of the generated correspondence, e.g. &quot;Report of Investigation&quot;
+     */
     private String documentType;
 
+    /**
+     * Must match a filename in the $HOME/.acm/correspondenceTemplates folder. This file must be a Microsoft Word .docx
+     * file, in the Office XML file format first introduced by Word 2007.
+     */
     private String templateFilename;
 
+    /**
+     * The type of the template for generated correspondence, CASE_FILE, COMPLAINT etc.
+     */
     private String objectType;
 
+    /**
+     * The class type for generated object that will be used as a model into the template
+     */
+    private String templateModelProvider;
+    /**
+     * The type of the template, Correspondence Template or Email Template
+     */
+    private String templateType;
+
+    private boolean enabled;
+
+    /**
+     * The date format that should be applied to any date. All date columns will be displayed in the generated
+     * correspondence in this format. Must be a valid date format according to Java DateFormat rules.
+     */
     private String dateFormatString;
 
+    /**
+     * The number format that should be applied to any number. All number columns will be displayed in the generated
+     * correspondence in this format. Must be a valid number format according to Java NumberFormat rules.
+     */
     private String numberFormatString;
 
     private boolean activated;
@@ -65,9 +104,6 @@ public class CorrespondenceTemplateRequestResponse
 
     private Date modified;
 
-    private String downloadFileName;
-
-    private String templateModelProvider;
     /**
      * @return the templateId
      */
@@ -273,23 +309,6 @@ public class CorrespondenceTemplateRequestResponse
     }
 
     /**
-     * @return the downloadFileName
-     */
-    public String getDownloadFileName()
-    {
-        return downloadFileName;
-    }
-
-    /**
-     * @param downloadFileName
-     *            the downloadFileName to set
-     */
-    public void setDownloadFileName(String downloadFileName)
-    {
-        this.downloadFileName = downloadFileName;
-    }
-
-    /**
      * @return the templateModelProvider
      */
     public String getTemplateModelProvider()
@@ -299,10 +318,42 @@ public class CorrespondenceTemplateRequestResponse
 
     /**
      * @param templateModelProvider
-     *            the templateModelProvider to set
+     *            the modified to set
      */
     public void setTemplateModelProvider(String templateModelProvider)
     {
         this.templateModelProvider = templateModelProvider;
+    }
+    /**
+     * @return the templateType
+     */
+    public String getTemplateType() 
+    {
+        return templateType;
+    }
+    /**
+     * @param templateType
+     *            the templateType to set
+     */
+    public void setTemplateType(String templateType) 
+    {
+        this.templateType = templateType;
+    }
+
+    /**
+     * @return the enabled
+     */
+    public boolean isEnabled() 
+    {
+        return enabled;
+    }
+
+    /**
+     * @param enabled
+     *          the enabled to set
+     */
+    public void setEnabled(boolean enabled) 
+    {
+        this.enabled = enabled;
     }
 }
