@@ -29,7 +29,7 @@ package gov.foia.service;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
+import com.armedia.acm.correspondence.model.Template;
 import com.armedia.acm.correspondence.service.CorrespondenceService;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import gov.foia.model.FOIADocumentDescriptor;
@@ -52,13 +52,13 @@ public class CorrespondenceDocumentGenerator implements DocumentGenerator
     {
         try
         {        
-            Collection<CorrespondenceTemplate> templates = getCorrespondenceService().getActiveVersionTemplates();
-            Optional<CorrespondenceTemplate> optionalCorrespondenceTemplate = templates.stream()
+            Collection<Template> templates = getCorrespondenceService().getActiveVersionTemplates();
+            Optional<Template> optionalCorrespondenceTemplate = templates.stream()
                     .filter(t -> t.getLabel().equals(documentDescriptor.getTemplate())).findFirst();
             if (optionalCorrespondenceTemplate.isPresent())
             {
 
-                CorrespondenceTemplate template = optionalCorrespondenceTemplate.get();
+                Template template = optionalCorrespondenceTemplate.get();
                 return getCorrespondenceService().generate(template.getTemplateFilename(), acmObject.getObjectType(),
                         acmObject.getId(),
                         targetCmisFolderId);

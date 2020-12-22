@@ -31,6 +31,7 @@ import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.provider.TemplateModelProvider;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.data.service.AcmDataService;
+import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksDTO;
 import com.armedia.acm.services.notification.model.Notification;
 
 public class AcmEntityTemplateModelProvider implements TemplateModelProvider<AcmObject>
