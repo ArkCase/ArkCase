@@ -40,7 +40,7 @@ public class FOIADeterminationLetterCorrespondence
     private String exemptionCodeSummary;
     private String exemptionCodesAndDescription;
     private String requestAssigneeName;
-    private String requestAssigneeTitle;
+    private String assigneeTitle;
     private String requestAssigneeEmail;
     private double invoiceAmount;
     private String caseNumber;
@@ -87,14 +87,14 @@ public class FOIADeterminationLetterCorrespondence
         this.requestAssigneeName = requestAssigneeName;
     }
 
-    public String getRequestAssigneeTitle()
+    public String getAssigneeTitle()
     {
-        return requestAssigneeTitle;
+        return assigneeTitle;
     }
 
-    public void setRequestAssigneeTitle(String requestAssigneeTitle)
+    public void setAssigneeTitle(String assigneeTitle)
     {
-        this.requestAssigneeTitle = requestAssigneeTitle;
+        this.assigneeTitle = assigneeTitle;
     }
 
     public String getRequestAssigneeEmail()
@@ -107,7 +107,8 @@ public class FOIADeterminationLetterCorrespondence
         this.requestAssigneeEmail = requestAssigneeEmail;
     }
 
-    public double getInvoiceAmount() {
+    public double getInvoiceAmount()
+    {
         return invoiceAmount;
     }
 
@@ -116,7 +117,8 @@ public class FOIADeterminationLetterCorrespondence
         this.invoiceAmount = invoiceAmount;
     }
 
-    public String getCaseNumber() {
+    public String getCaseNumber()
+    {
         return caseNumber;
     }
 
