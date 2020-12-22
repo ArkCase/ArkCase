@@ -27,14 +27,19 @@ package com.armedia.acm.plugins.admin.web.api;
  * #L%
  */
 
-import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
+import com.armedia.acm.correspondence.model.Template;
 import com.armedia.acm.correspondence.service.CorrespondenceService;
 import com.armedia.acm.plugins.admin.exception.CorrespondenceTemplateNotFoundException;
-import com.armedia.acm.plugins.admin.model.CorrespondenceTemplateRequestResponse;
+import com.armedia.acm.plugins.admin.model.TemplateRequestResponse;
 
+import com.armedia.acm.services.email.service.AcmEmailConfigurationIOException;
 import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -45,10 +50,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import javax.validation.ValidationException;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Paths;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -65,26 +67,28 @@ public class CorrespondenceTemplateAPIController
 
     private CorrespondenceService correspondenceService;
     private String correspondenceFolderName;
+    private String emailTemplatesFolderName;
+    private Logger log = LogManager.getLogger(getClass());
 
     @RequestMapping(value = "/templates", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<CorrespondenceTemplateRequestResponse> getAllTemplates()
+    public List<TemplateRequestResponse> getAllTemplates()
     {
         return correspondenceService.getAllTemplates().stream().map(t -> mapTemplateToResponse(Optional.of(t)))
                 .collect(Collectors.toList());
     }
 
-    @RequestMapping(value = "/templates/active", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/templates/active/{templateType}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<CorrespondenceTemplateRequestResponse> getActiveVersionTemplates()
+    public List<TemplateRequestResponse> getActiveVersionTemplates(@PathVariable(value = "templateType") String templateType)
     {
-        return correspondenceService.getActiveVersionTemplates().stream().map(t -> mapTemplateToResponse(Optional.of(t)))
+        return correspondenceService.getActiveVersionTemplatesByTemplateType(templateType).stream().map(template -> mapTemplateToResponse(Optional.of(template)))
                 .collect(Collectors.toList());
     }
 
     @RequestMapping(value = "/templates/activated/{objectType}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<CorrespondenceTemplateRequestResponse> getActivatedActiveVersionTemplatesByObjectType(
+    public List<TemplateRequestResponse> getActivatedActiveVersionTemplatesByObjectType(
             @PathVariable(value = "objectType") String objectType)
     {
         return correspondenceService.getActivatedActiveVersionTemplatesByObjectType(objectType).stream()
@@ -93,22 +97,22 @@ public class CorrespondenceTemplateAPIController
 
     @RequestMapping(value = "/template/{templateId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public CorrespondenceTemplateRequestResponse getTemplate(@PathVariable(value = "templateId") String templateId)
+    public TemplateRequestResponse getTemplate(@PathVariable(value = "templateId") String templateId)
     {
         return mapTemplateToResponse(correspondenceService.getActiveTemplateById(templateId));
     }
 
     @RequestMapping(value = "/template/{templateId}/{templateFilename:.+}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public CorrespondenceTemplateRequestResponse getTemplateByIdAndFilename(@PathVariable(value = "templateId") String templateId,
-            @PathVariable(value = "templateFilename") String templateFilename)
+    public TemplateRequestResponse getTemplateByIdAndFilename(@PathVariable(value = "templateId") String templateId,
+                                                              @PathVariable(value = "templateFilename") String templateFilename)
     {
         return mapTemplateToResponse(correspondenceService.getTemplateByIdAndFilename(templateId, templateFilename));
     }
 
     @RequestMapping(value = "/template/versions/{templateId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<CorrespondenceTemplateRequestResponse> getTemplateVersionsById(@PathVariable(value = "templateId") String templateId)
+    public List<TemplateRequestResponse> getTemplateVersionsById(@PathVariable(value = "templateId") String templateId)
     {
         return correspondenceService.getTemplateVersionsById(templateId).stream().map(t -> mapTemplateToResponse(Optional.of(t)))
                 .collect(Collectors.toList());
@@ -116,20 +120,15 @@ public class CorrespondenceTemplateAPIController
 
     @RequestMapping(value = "/template/{templateId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<CorrespondenceTemplateRequestResponse> deleteTemplate(@PathVariable(value = "templateId") String templateId)
+    public List<TemplateRequestResponse> deleteTemplate(@PathVariable(value = "templateId") String templateId)
             throws IOException
     {
-        List<CorrespondenceTemplateRequestResponse> deleteResponse = new ArrayList<>();
-        List<CorrespondenceTemplate> templates = correspondenceService.getTemplateVersionsById(templateId);
+        List<TemplateRequestResponse> deleteResponse = new ArrayList<>();
+        List<Template> templates = correspondenceService.getTemplateVersionsById(templateId);
         String msg = "";
-        for (CorrespondenceTemplate template : templates)
+        for (Template template : templates)
         {
-            File templateFile = new File(getCorrespondenceFolderName(), template.getTemplateFilename());
-            String absolutePath = templateFile.getCanonicalPath();
-            String tempFolder = Paths.get(getCorrespondenceFolderName()).toString();
-            if (!absolutePath.startsWith(tempFolder)){
-                throw new ValidationException("Invalid path constructed!");
-            }
+            File templateFile = new File(template.getTemplateType().equals("emailTemplate") ? getEmailTemplatesFolderName() : getCorrespondenceFolderName(), template.getTemplateFilename());
             if (FileUtils.deleteQuietly(templateFile))
             {
                 deleteResponse.add(mapTemplateToResponse(
@@ -153,21 +152,17 @@ public class CorrespondenceTemplateAPIController
 
     @RequestMapping(value = "/template/{templateId}/{templateVersion:.+}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public CorrespondenceTemplateRequestResponse deleteTemplateByIdAndVersion(@PathVariable(value = "templateId") String templateId,
-            @PathVariable(value = "templateVersion") String templateVersion) throws IOException, CorrespondenceTemplateNotFoundException
+    public TemplateRequestResponse deleteTemplateByIdAndVersion(@PathVariable(value = "templateId") String templateId,
+                                                                @PathVariable(value = "templateVersion") String templateVersion) throws IOException, CorrespondenceTemplateNotFoundException
     {
         File templatesDir = new File(System.getProperty("user.home") + "/.arkcase/acm/correspondenceTemplates");
-        Optional<CorrespondenceTemplate> optionalChildDirectory = correspondenceService.getTemplateByIdAndVersion(templateId,
+        Optional<Template> optionalChildDirectory = correspondenceService.getTemplateByIdAndVersion(templateId,
                 templateVersion);
         String childDirectoryName = optionalChildDirectory.map(correspondenceTemplate -> correspondenceTemplate.getTemplateFilename())
                 .orElseThrow(CorrespondenceTemplateNotFoundException::new);
 
         File templateFile = new File(templatesDir,
                 childDirectoryName);
-        String absolutePath = templateFile.getCanonicalPath();
-        if (!absolutePath.startsWith(templatesDir.getCanonicalPath())){
-            throw new ValidationException("Invalid path constructed!");
-        }
         if (FileUtils.deleteQuietly(templateFile))
         {
             return mapTemplateToResponse(correspondenceService.deleteTemplateByIdAndVersion(templateId, templateVersion));
@@ -180,11 +175,42 @@ public class CorrespondenceTemplateAPIController
 
     @RequestMapping(value = "/template", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public CorrespondenceTemplateRequestResponse updateTemplate(@RequestBody CorrespondenceTemplateRequestResponse request,
-            Authentication auth) throws IOException
+    public TemplateRequestResponse updateTemplate(@RequestBody TemplateRequestResponse request,
+                                                  Authentication auth) throws IOException
     {
         return mapTemplateToResponse(correspondenceService.updateTemplate(mapRequestToTemplate(request, auth)));
     }
+
+    @RequestMapping(value = "/templateContent/{templateName:.+}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<String> getTemplateContent(@PathVariable(value = "templateName") String templateName) throws AcmEmailConfigurationIOException
+    {
+
+        JSONObject retval = new JSONObject();
+        String userHome = System.getProperty("user.home");
+        String filePathName = userHome + "/.arkcase/acm/templates/" + templateName;
+
+        try (FileReader fileReader = new FileReader(filePathName);
+             BufferedReader bufferedReader = new BufferedReader(fileReader))
+        {
+            String s;
+            StringBuilder content=new StringBuilder(1024);
+            while((s=bufferedReader.readLine())!=null)
+            {
+
+                content.append(s);
+
+            }
+            retval.put("templateContent", content.toString());
+            return new ResponseEntity<>(retval.toString(), HttpStatus.OK);
+        }
+        catch(Exception ex)
+        {
+            log.warn("Email template {} does not exist." + templateName);
+            throw new AcmEmailConfigurationIOException(String.format("Email template %s does not exist.", templateName));
+        }
+    }
+
 
     @ExceptionHandler(CorrespondenceTemplateNotFoundException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Error while retreiving correspondence template.")
@@ -196,11 +222,11 @@ public class CorrespondenceTemplateAPIController
      * @param templateHolder
      * @return
      */
-    private CorrespondenceTemplateRequestResponse mapTemplateToResponse(Optional<CorrespondenceTemplate> templateHolder)
+    private TemplateRequestResponse mapTemplateToResponse(Optional<Template> templateHolder)
     {
-        CorrespondenceTemplate template = templateHolder.orElseThrow(CorrespondenceTemplateNotFoundException::new);
+        Template template = templateHolder.orElseThrow(CorrespondenceTemplateNotFoundException::new);
 
-        CorrespondenceTemplateRequestResponse response = new CorrespondenceTemplateRequestResponse();
+        TemplateRequestResponse response = new TemplateRequestResponse();
 
         response.setTemplateId(template.getTemplateId());
         response.setTemplateVersion(template.getTemplateVersion());
@@ -215,6 +241,8 @@ public class CorrespondenceTemplateAPIController
         response.setModifier(template.getModifier());
         response.setModified(template.getModified());
         response.setTemplateModelProvider(template.getTemplateModelProvider());
+        response.setTemplateType(template.getTemplateType());
+        response.setEnabled(template.isEnabled());
 
         return response;
     }
@@ -223,9 +251,9 @@ public class CorrespondenceTemplateAPIController
      * @param request
      * @return
      */
-    private CorrespondenceTemplate mapRequestToTemplate(CorrespondenceTemplateRequestResponse request, Authentication auth)
+    private Template mapRequestToTemplate(TemplateRequestResponse request, Authentication auth)
     {
-        CorrespondenceTemplate template = new CorrespondenceTemplate();
+        Template template = new Template();
 
         template.setTemplateId(request.getTemplateId());
         template.setTemplateVersion(request.getTemplateVersion());
@@ -240,6 +268,8 @@ public class CorrespondenceTemplateAPIController
         template.setModifier(auth.getName());
         template.setModified(new Date());
         template.setTemplateModelProvider(request.getTemplateModelProvider());
+        template.setTemplateType(request.getTemplateType());
+        template.setEnabled(request.isEnabled());
 
         return template;
     }
@@ -263,4 +293,13 @@ public class CorrespondenceTemplateAPIController
         this.correspondenceFolderName = correspondenceFolderName;
     }
 
+    public String getEmailTemplatesFolderName() 
+    {
+        return emailTemplatesFolderName;
+    }
+
+    public void setEmailTemplatesFolderName(String emailTemplatesFolderName) 
+    {
+        this.emailTemplatesFolderName = emailTemplatesFolderName;
+    }
 }

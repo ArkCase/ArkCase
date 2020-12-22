@@ -2115,7 +2115,9 @@ angular.module('directives').directive(
                                     if (_.isEmpty(DocTree.correspondenceForms) && menuCorrespondenceForms) {
                                         menuCorrespondenceForms.invisible = true;
                                     } else if (menuCorrespondenceForms) {
-                                        menuCorrespondenceForms.children = this.makeSubMenu(DocTree.correspondenceForms);
+                                        menuCorrespondenceForms.children = this.makeSubMenu(_.filter(DocTree.correspondenceForms, function(ct) {
+                                            return ct.templateType ==  ObjectService.ObjectTypes.CORRESPONDENCE_TEMPLATE;
+                                        }));
                                     }
                                     // On active search disable Cut & Copy
                                     var cutMenu = _.find(menu, {
