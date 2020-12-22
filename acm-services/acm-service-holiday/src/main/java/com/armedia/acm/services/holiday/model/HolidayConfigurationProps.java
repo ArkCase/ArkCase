@@ -32,6 +32,7 @@ import com.armedia.acm.configuration.annotations.MapValue;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.beans.factory.annotation.Value;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class HolidayConfigurationProps
@@ -51,7 +52,7 @@ public class HolidayConfigurationProps
     }
 
     @JsonProperty("holidayConfiguration.holidays")
-    private Map<String, String> holidays;
+    private Map<String, String> holidays = new HashMap<>();
 
     @MapValue(value = "holidayConfiguration.holidays")
     public Map<String, String> getHolidays()
