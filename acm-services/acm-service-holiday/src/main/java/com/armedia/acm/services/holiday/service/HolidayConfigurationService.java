@@ -2,9 +2,9 @@ package com.armedia.acm.services.holiday.service;
 
 /*-
  * #%L
- * ACM Default Plugin: admin
+ * ACM Service: Holiday
  * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
+ * Copyright (C) 2014 - 2020 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 
@@ -27,66 +27,39 @@ package com.armedia.acm.services.holiday.service;
  * #L%
  */
 
+import com.armedia.acm.configuration.service.ConfigurationPropertyService;
 import com.armedia.acm.core.model.ApplicationConfig;
-import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.services.holiday.model.BusinessHoursConfig;
 import com.armedia.acm.services.holiday.model.HolidayConfiguration;
+import com.armedia.acm.services.holiday.model.HolidayItem;
+import com.armedia.acm.services.holiday.model.HolidayConfigurationProps;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.core.io.Resource;
-
-import java.io.IOException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.Date;
-import java.util.Objects;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.LinkedHashMap;
+import java.util.stream.Collectors;
 
 public class HolidayConfigurationService
 {
-    private Logger log = LogManager.getLogger(getClass());
-    private Resource holidayFile;
-    private ObjectConverter objectConverter;
-    private ReadWriteLock lock = new ReentrantReadWriteLock();
-    private HolidayConfiguration holidayConfiguration;
+    private HolidayConfigurationProps holidayConfigurationProps;
+    private ConfigurationPropertyService configurationPropertyService;
     private BusinessHoursConfig businessHoursConfig;
     private ApplicationConfig applicationConfig;
 
-    public void saveHolidayConfig(HolidayConfiguration holidayConfiguration)
+    public void saveHolidayConfig(HolidayConfiguration config)
     {
-        String holidayConfigJson = Objects.nonNull(holidayConfiguration)
-                ? getObjectConverter().getIndentedJsonMarshaller().marshal(holidayConfiguration)
-                : "{}";
-
-        try
-        {
-            log.info("Trying to write to config file: {}", getHolidayFile().getFile().getAbsolutePath());
-            lock.writeLock().lock();
-            FileUtils.writeStringToFile(getHolidayFile().getFile(), holidayConfigJson);
-        }
-        catch (IOException e)
-        {
-            log.error(e.getMessage());
-        }
-        finally
-        {
-            lock.writeLock().unlock();
-            setHolidayConfigurationFromFile();
-        }
+        HolidayConfigurationProps props = getPropsFromHolidayConfiguration(config);
+        configurationPropertyService.updateProperties(props);
     }
 
     public HolidayConfiguration getHolidayConfiguration()
     {
-        if (holidayConfiguration == null)
-        {
-            setHolidayConfigurationFromFile();
-        }
-        return holidayConfiguration;
+        return getHolidayConfigurationFromProps(holidayConfigurationProps);
     }
 
     public LocalDate addWorkingDaysToDate(LocalDate date, int workingDays)
@@ -191,46 +164,49 @@ public class HolidayConfigurationService
         return count;
     }
 
-    private void setHolidayConfigurationFromFile()
+    private static HolidayConfiguration getHolidayConfigurationFromProps(HolidayConfigurationProps props)
     {
-        holidayConfiguration = new HolidayConfiguration();
-
-        try
-        {
-            log.info("Trying to read from config file: {}", getHolidayFile().getFile().getAbsolutePath());
-
-            lock.readLock().lock();
-            String holidayConfigJson = FileUtils.readFileToString(getHolidayFile().getFile());
-            holidayConfiguration = getObjectConverter().getJsonUnmarshaller().unmarshall(holidayConfigJson, HolidayConfiguration.class);
-        }
-        catch (IOException e)
-        {
-            log.error(e.getMessage());
-        }
-        finally
-        {
-            lock.readLock().unlock();
-        }
+        HolidayConfiguration config = new HolidayConfiguration();
+        config.setIncludeWeekends(props.getIncludeWeekends());
+        config.setHolidays(props.getHolidays().entrySet().stream().map(entry -> {
+            HolidayItem holiday = new HolidayItem();
+            holiday.setHolidayName(entry.getValue());
+            holiday.setHolidayDate(LocalDate.parse(entry.getKey(), DateTimeFormatter.ISO_LOCAL_DATE));
+            return holiday;
+        }).sorted(Comparator.comparing(HolidayItem::getHolidayDate)).collect(Collectors.toList()));
+        return config;
     }
 
-    public Resource getHolidayFile()
+    private static HolidayConfigurationProps getPropsFromHolidayConfiguration(HolidayConfiguration config)
     {
-        return holidayFile;
+        HolidayConfigurationProps props = new HolidayConfigurationProps();
+        props.setIncludeWeekends(config.getIncludeWeekends());
+        props.setHolidays(config.getHolidays().stream().collect(Collectors.toMap(
+                holiday -> holiday.getHolidayDate().format(DateTimeFormatter.ISO_LOCAL_DATE),
+                HolidayItem::getHolidayName,
+                (oldValue, newValue) -> newValue,
+                LinkedHashMap::new)));
+        return props;
     }
 
-    public void setHolidayFile(Resource holidayFile)
+    public HolidayConfigurationProps getHolidayConfigurationProps()
     {
-        this.holidayFile = holidayFile;
+        return holidayConfigurationProps;
     }
 
-    public ObjectConverter getObjectConverter()
+    public void setHolidayConfigurationProps(HolidayConfigurationProps holidayConfigurationProps)
     {
-        return objectConverter;
+        this.holidayConfigurationProps = holidayConfigurationProps;
     }
 
-    public void setObjectConverter(ObjectConverter objectConverter)
+    public ConfigurationPropertyService getConfigurationPropertyService()
     {
-        this.objectConverter = objectConverter;
+        return configurationPropertyService;
+    }
+
+    public void setConfigurationPropertyService(ConfigurationPropertyService configurationPropertyService)
+    {
+        this.configurationPropertyService = configurationPropertyService;
     }
 
     public BusinessHoursConfig getBusinessHoursConfig()
