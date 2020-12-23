@@ -421,9 +421,9 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         return resetRequest;
     }
 
-    private static String stripPrefixAndSuffix(String userId)
+    private static String stripPrefixAndSuffix(String userId, String userPrefix)
     {
-        String stripedUserId = StringUtils.substringAfter(userId, ".");
+        String stripedUserId = StringUtils.substringAfter(userId, MapperUtils.prefixTrailingDot(userPrefix));
         stripedUserId = StringUtils.substringBeforeLast(stripedUserId, "@");
         return stripedUserId;
     }
@@ -443,7 +443,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
             AcmUser existingUser = getPortalAcmUser(user.getEmail());
             if (existingUser != null && existingUser.getUserState() != AcmUserState.VALID)
             {
-                userDto.setUserId(stripPrefixAndSuffix(existingUser.getUserId()));
+                userDto.setUserId(stripPrefixAndSuffix(existingUser.getUserId(), ldapSyncConfig.getUserPrefix()));
             }
             else
             {
