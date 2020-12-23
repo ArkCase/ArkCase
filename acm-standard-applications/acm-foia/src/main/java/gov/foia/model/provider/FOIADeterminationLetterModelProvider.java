@@ -105,7 +105,7 @@ public class FOIADeterminationLetterModelProvider implements TemplateModelProvid
             requestAssigneeEmail = acmUser.getMail();
         }
         determinationLetterCorrespondence.setRequestAssigneeName(requestAssigneeName);
-        determinationLetterCorrespondence.setRequestAssigneeTitle(requestAssigneeTitle);
+        determinationLetterCorrespondence.setAssigneeTitle(requestAssigneeTitle);
         determinationLetterCorrespondence.setRequestAssigneeEmail(requestAssigneeEmail);
 
         determinationLetterCorrespondence.setCaseNumber(request.getCaseNumber());
