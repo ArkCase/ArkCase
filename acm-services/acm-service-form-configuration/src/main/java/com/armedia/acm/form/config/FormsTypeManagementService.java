@@ -4,7 +4,7 @@ package com.armedia.acm.form.config;
  * #%L
  * ACM Service: Form Configuration
  * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
+ * Copyright (C) 2014 - 2020 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 
@@ -27,18 +27,21 @@ package com.armedia.acm.form.config;
  * #L%
  */
 
-import org.apache.commons.io.FileUtils;
+import com.armedia.acm.configuration.service.ConfigurationPropertyService;
+import com.armedia.acm.objectonverter.ObjectConverter;
 import org.json.JSONObject;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
-import java.io.File;
 import java.util.Iterator;
+import java.util.Map;
 
 public class FormsTypeManagementService
 {
     private Logger log = LogManager.getLogger(getClass());
-    private String propertiesFileLocation;
+    private FormsTypeConfig formsTypeConfig;
+    private ObjectConverter objectConverter;
+    private ConfigurationPropertyService configurationPropertyService;
 
     /**
      * Get property value
@@ -50,7 +53,7 @@ public class FormsTypeManagementService
     public JSONObject getProperty(String propertyName) throws FormsTypeManagementException
     {
         JSONObject result = new JSONObject();
-        JSONObject props = loadPropertiesFile();
+        JSONObject props = loadPropertiesConfig();
         if (props != null && props.has(propertyName))
         {
             result.put(propertyName, props.get(propertyName));
@@ -66,7 +69,7 @@ public class FormsTypeManagementService
      */
     public JSONObject getProperties() throws FormsTypeManagementException
     {
-        JSONObject props = loadPropertiesFile();
+        JSONObject props = loadPropertiesConfig();
         if (props == null)
         {
             props = new JSONObject();
@@ -87,7 +90,7 @@ public class FormsTypeManagementService
         {
             throw new FormsTypeManagementException("Can't store null into properties file");
         }
-        JSONObject props = loadPropertiesFile();
+        JSONObject props = loadPropertiesConfig();
         if (props == null)
         {
             props = newProps;
@@ -102,56 +105,64 @@ public class FormsTypeManagementService
             }
         }
 
-        updatePropertiesFile(props);
+        updatePropertiesConfig(props);
         return props;
-
     }
 
     /**
-     * Load application properties file
+     * Load application properties
      *
      * @return
      * @throws FormsTypeManagementException
      */
-    private JSONObject loadPropertiesFile() throws FormsTypeManagementException
+    private JSONObject loadPropertiesConfig() throws FormsTypeManagementException
     {
         try
         {
-            File file = FileUtils.getFile(propertiesFileLocation);
-            String resource = FileUtils.readFileToString(file, "UTF-8");
+            String resource = objectConverter.getJsonMarshaller().marshal(formsTypeConfig.getFormsTypeProps());
             return new JSONObject(resource);
-
         }
         catch (Exception e)
         {
-            log.warn(String.format("Can't read application properties file %s", propertiesFileLocation));
+            log.warn(String.format("Can't read application properties [%s]", "formsTypeConfiguration"));
             return null;
         }
     }
 
     /**
-     * Update application properties file
+     * Update application properties
      *
-     * @param newProps
+     * @param props
      * @return
      */
-    private JSONObject updatePropertiesFile(JSONObject newProps) throws FormsTypeManagementException
+    private JSONObject updatePropertiesConfig(JSONObject props) throws FormsTypeManagementException
     {
         try
         {
-            File file = FileUtils.getFile(propertiesFileLocation);
-            FileUtils.writeStringToFile(file, newProps.toString(), "UTF-8");
+            FormsTypeConfig config = new FormsTypeConfig();
+            config.setFormsTypeProps(objectConverter.getJsonUnmarshaller().unmarshall(props.toString(), Map.class));
+            configurationPropertyService.updateProperties(config);
         }
         catch (Exception e)
         {
-            log.error(String.format("Can't update properties file %s", propertiesFileLocation));
-            throw new FormsTypeManagementException("Can't update properties file", e);
+            log.error(String.format("Can't update application properties [%s]", "formsTypeConfiguration"));
+            throw new FormsTypeManagementException("Can't update application properties", e);
         }
-        return newProps;
+        return props;
     }
 
-    public void setPropertiesFileLocation(String propertiesFileLocation)
+    public void setFormsTypeConfig(FormsTypeConfig formsTypeConfig)
     {
-        this.propertiesFileLocation = propertiesFileLocation;
+        this.formsTypeConfig = formsTypeConfig;
+    }
+
+    public void setObjectConverter(ObjectConverter objectConverter)
+    {
+        this.objectConverter = objectConverter;
+    }
+
+    public void setConfigurationPropertyService(ConfigurationPropertyService configurationPropertyService)
+    {
+        this.configurationPropertyService = configurationPropertyService;
     }
 }
