@@ -115,29 +115,32 @@ public class SearchObjectByTypeAPIController
         else
         {
             f = filters.split(",");
-            List<String> testFilters;
-            if (f != null)
+            List<String> testFilters = findFilters(objectType, f);
+            StringBuilder paramsBuilder = new StringBuilder();
+            for (int i = 0; i < testFilters.size(); i++)
             {
-                testFilters = findFilters(objectType, f);
-                StringBuilder stringBuilder = new StringBuilder();
-                int i = 0;
-                for (String filter : testFilters)
+                String filter = testFilters.get(i);
+
+                if (filter.contains(SearchConstants.USER) && filter.contains(SearchConstants.PROPERTY_CREATOR))
                 {
-                    if (filter.contains(SearchConstants.USER))
-                        filter = filter.replace(SearchConstants.USER, user);
-                    if (i > 0)
-                    {
-                        stringBuilder.append(SearchConstants.AND_SPLITTER);
-                        stringBuilder.append(filter);
-                    }
-                    else
-                    {
-                        stringBuilder.append(filter);
-                    }
-                    i++;
+                    filter = filter.replace(SearchConstants.USER, "\"" + user + "\"");
                 }
-                params = stringBuilder.toString();
+                else if (filter.contains(SearchConstants.USER))
+                {
+                    filter = filter.replace(SearchConstants.USER, user);
+                }
+
+                if (i > 0)
+                {
+                    paramsBuilder.append(SearchConstants.AND_SPLITTER);
+                    paramsBuilder.append(filter);
+                }
+                else
+                {
+                    paramsBuilder.append(filter);
+                }
             }
+            params = paramsBuilder.toString();
         }
 
         if (!StringUtils.isBlank(sort))
