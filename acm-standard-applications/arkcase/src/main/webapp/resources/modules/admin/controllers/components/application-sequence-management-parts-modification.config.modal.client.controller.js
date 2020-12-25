@@ -11,6 +11,7 @@ angular.module('admin').controller('Admin.SequenceManagementPartsModalConfigCont
         if ($scope.isEdit) {
             $scope.sequencePart = params.selectedSequencePart;
             $scope.sequencePart.sequencePartName = params.selectedSequencePart.sequencePartName;
+            $scope.sequencePart.sequenceObjectPropertyName = params.selectedSequencePart.sequenceObjectPropertyName;
         }
         $scope.selectedItem = {};
 
@@ -36,11 +37,6 @@ angular.module('admin').controller('Admin.SequenceManagementPartsModalConfigCont
                 });
             }
             $scope.sequencePartsCurrentlySelected[$scope.selectedItem.key] = true;
-        });
-
-        ObjectLookupService.getSequenceObjectProperty().then(function(sequenceObjectProperty){
-            $scope.sequenceObjectProperties = sequenceObjectProperty;
-            $scope.sequencePart.sequenceObjectPropertyName = ObjectLookupService.getPrimaryLookup($scope.sequenceObjectProperties);
         });
 
         $scope.onClickOk = function () {
