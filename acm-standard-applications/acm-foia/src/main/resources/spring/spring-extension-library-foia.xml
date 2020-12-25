@@ -176,6 +176,7 @@
                     <beans:ref bean="foiaPortalRegistrationCleanupExecutor"/>
                     <beans:ref bean="solrReindexAcmUserExecutor"/>
                     <beans:ref bean="solrReindexPersonAssociationsExecutor"/>
+                    <beans:ref bean="foiaRequestDataUpdateExecutor" />
                 </beans:list>
             </beans:property>
 
@@ -202,6 +203,10 @@
 
         <beans:bean id="solrReindexPersonAssociationsExecutor" class="gov.foia.service.dataupdate.SolrReindexPersonAssociationsExecutor">
             <beans:property name="solrReindexService" ref="solrReindexService"/>
+        </beans:bean>
+
+        <beans:bean id="foiaRequestDataUpdateExecutor" class="gov.foia.service.dataupdate.FoiaRequestDataUpdateExecutor">
+            <beans:property name="solrReindexService" ref="solrReindexService" />
         </beans:bean>
 
         <beans:bean id="queuesTimeToCompleteService" class="gov.foia.service.QueuesTimeToCompleteService">
