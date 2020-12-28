@@ -224,6 +224,10 @@
         <property name="overdueTasksNotifier" ref="overdueTasksNotifier"/>
     </bean>
 
+    <bean id="taskTemplateModelProvider" class="com.armedia.acm.plugins.task.model.provider.TaskTemplateModelProvider">
+        <property name="springContextHolder" ref="acmContextHolder"/>
+    </bean>
+
     <bean id="createAdHocTaskService" class="com.armedia.acm.plugins.task.service.impl.CreateAdHocTaskService">
         <property name="taskDao" ref="acmTaskDao"/>
         <property name="taskEventPublisher" ref="taskEventPublisher"/>
