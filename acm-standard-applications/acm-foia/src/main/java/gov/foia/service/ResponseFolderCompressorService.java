@@ -66,10 +66,14 @@ public class ResponseFolderCompressorService implements ApplicationEventPublishe
 
     private FoiaConfig foiaConfig;
 
+    private RequestResponseFolderService requestResponseFolderService;
+
     public String compressResponseFolder(Long requestId)
             throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmFolderException
     {
         FOIARequest request = (FOIARequest) caseFileDao.find(requestId);
+
+        requestResponseFolderService.saveResponseInstallmentDetails(requestId);
 
         Long responseFolderId = getResponseFolderService().getResponseFolder(request).getId();
 
@@ -210,4 +214,8 @@ public class ResponseFolderCompressorService implements ApplicationEventPublishe
         this.foiaConfig = foiaConfig;
     }
 
+    public void setRequestResponseFolderService(RequestResponseFolderService requestResponseFolderService)
+    {
+        this.requestResponseFolderService = requestResponseFolderService;
+    }
 }
