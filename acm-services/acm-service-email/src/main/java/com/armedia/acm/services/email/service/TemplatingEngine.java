@@ -59,6 +59,7 @@ public class TemplatingEngine
         templatingModel.put("formatDateTime", new FormatDateTimeMethodModel());
         // set the application base URL as a variable, to be used in any templates
         templatingModel.put("baseURL", applicationConfig.getBaseUrl());
+        templatingModel.put("basePortalURL", applicationConfig.getBasePortalUrl());
 
         Template t = new Template("templateName", new StringReader(emailBodyTemplate), cfg);
 
