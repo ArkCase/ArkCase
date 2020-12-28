@@ -331,6 +331,10 @@
             <beans:property name="objectAssociationDao" ref="objectAssociationDao"/>
         </beans:bean>
 
+        <beans:bean id="foiaTaskRequestTemplateModelProvider" class="gov.foia.model.provider.FOIATaskRequestTemplateModelProvider">
+            <beans:property name="foiaRequestDao" ref="foiaRequestDao"/>
+        </beans:bean>
+
         <beans:bean id="foiaDeterminationLetterModelProvider" class="gov.foia.model.provider.FOIADeterminationLetterModelProvider">
             <beans:property name="foiaExemptionService" ref="foiaExemptionService" />
             <beans:property name="userDao" ref="userJpaDao" />
