@@ -46,6 +46,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -62,6 +63,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -80,8 +82,14 @@ public class ArkCasePortalGatewayRequestAPIController
 
     private FacetedSearchService facetedSearchService;
 
+    private UserDao userDao;
+
+    @Value("${portal.serviceProvider.directory.name}")
+    private String directoryName;
+
     @CheckPortalUserAssignement
-    @RequestMapping(value = "/{portalId}/requests", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE })
+    @RequestMapping(value = "/{portalId}/requests", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE,
+            MediaType.TEXT_PLAIN_VALUE })
     @ResponseBody
     public PortalResponse submitRequest(Authentication auth, @PortalId @PathVariable(value = "portalId") String portalId,
             @RequestBody PortalRequest request) throws PortalRequestServiceException
@@ -145,30 +153,28 @@ public class ArkCasePortalGatewayRequestAPIController
             Authentication authentication) throws SolrException
     {
         String filterQueries = "";
-        List<AcmUser> users = getUserDao().findByEmailAddress(emailAddress);
+        Optional<AcmUser> optionalUser = getUserDao().findByEmailAddressAndDirectoryName(emailAddress, directoryName);
+
+        AcmAuthentication acmAuthentication = new AcmAuthentication(new ArrayList<>(), optionalUser.get().getUserId(), optionalUser.get().getUserId(), true,
+                optionalUser.get().getUserId(), optionalUser.get().getIdentifier());
+        String[] filter = new String[] { "object_type_s:CASE_FILE" };
+        filterQueries = Arrays.asList(filter).stream().map(f -> getFacetedSearchService().buildSolrQuery(f))
+                .collect(Collectors.joining(""));
+        filterQueries += filterQueries.trim().length() > 0 ? "&fq=hidden_b:false" : "fq=hidden_b:false";
+
+        query = String.format("name:%s*", query);
+        String results = getExecuteSolrQuery().getResultsByPredefinedQuery(acmAuthentication, SolrCore.QUICK_SEARCH, query, 0,
+                10, "",
+                filterQueries);
+
         List<String> caseNames = new ArrayList<>();
-        if (users != null && !users.isEmpty())
+        SearchResults searchResults = new SearchResults();
+        JSONArray docFiles = searchResults.getDocuments(results);
+
+        for (int i = 0; i < docFiles.length(); i++)
         {
-            AcmUser user = users.get(0);
-            AcmAuthentication acmAuthentication = new AcmAuthentication(new ArrayList<>(), user.getUserId(), user.getUserId(), true, user.getUserId(), user.getIdentifier());
-            String[] filter = new String[] { "object_type_s:CASE_FILE" };
-            filterQueries = Arrays.asList(filter).stream().map(f -> getFacetedSearchService().buildSolrQuery(f))
-                    .collect(Collectors.joining(""));
-            filterQueries += filterQueries.trim().length() > 0 ? "&fq=hidden_b:false" : "fq=hidden_b:false";
-
-            query = String.format("name:%s*", query);
-            String results = getExecuteSolrQuery().getResultsByPredefinedQuery(acmAuthentication, SolrCore.QUICK_SEARCH, query, 0,
-                    10, "",
-                    filterQueries);
-
-            SearchResults searchResults = new SearchResults();
-            JSONArray docFiles = searchResults.getDocuments(results);
-
-            for (int i = 0; i < docFiles.length(); i++)
-            {
-                JSONObject docFile = docFiles.getJSONObject(i);
-                caseNames.add(docFile.getString("name"));
-            }
+            JSONObject docFile = docFiles.getJSONObject(i);
+            caseNames.add(docFile.getString("name"));
         }
         return caseNames;
     }
