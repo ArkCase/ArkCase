@@ -16,6 +16,7 @@
         <property name="portalRequestService" ref="portalGatewayRequestService"/>
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
         <property name="facetedSearchService" ref="facetedSearchService"/>
+        <property name="userDao" ref="userJpaDao"/>
     </bean>
 
 </beans>
