@@ -1,4 +1,4 @@
-package com.armedia.acm.services.notification.service.provider;
+package com.armedia.acm.plugins.profile.model.provider;
 
 /*-
  * #%L
