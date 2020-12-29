@@ -32,15 +32,35 @@
                     <label for="associateNumber" translate> tasks.newTask.associateNumber.label </label>
                     <input type="text" id="associateNumber" ng-required="isAssocType" ng-model="config.data.attachedToObjectName"
                             class="input-md form-control" placeholder="{{ 'tasks.newTask.associateNumber.placeholder' | translate }}"
-                            id="complaintId" ng-disabled="config.data.attachedToObjectType==='' || modalParams.parentObject" ng-click="objectSearch()">
+                            id="complaintId" ng-disabled="config.data.attachedToObjectType==='' || modalParams.parentObject"
+                            ng-click="objectSearch()">
                 </div>
+
+                <div class="col-sm-6 form-group" ng-if="config.data.attachedToObjectType=='CASE_FILE'">
+                    <label for="contactPersonAssociation" translate> tasks.newTask.contactPersonAssociation.label </label>
+                    <span class="required-asterisk">*</span>
+                    <input type="text" id="contactPersonAssociation" ng-model="contactPersonName"
+                            placeholder="{{ 'tasks.newTask.contactPersonAssociation.placeholder' | translate }}"
+                            ng-required="config.data.attachedToObjectType=='CASE_FILE'" class="input-md form-control"
+                            id="contactAssociation" ng-click="addPerson()">
+                </div>
+
             </div>
             <div class="row">
-                <div class="col-sm-12 form-group">
+                <div class="col-sm-8 form-group">
                     <label translate> tasks.newTask.subject.label </label>
                     <span class="required-asterisk">*</span>
                     <mention-input ng-model="config.data.title" params="params"
                             placeholder="{{ 'tasks.newTask.subject.label' | translate }}"></mention-input>
+                </div>
+                <div class="form-group col-sm-4" ng-if="config.data.attachedToObjectType=='CASE_FILE'">
+                    <label class="control-label">{{ 'tasks.newTask.caseTaskType.label' | translate }}</label>
+                    <span class="required-asterisk">*</span>
+                    <select ng-model="config.data.type" ng-required="config.data.attachedToObjectType=='CASE_FILE'"
+                            ng-options="caseTaskType.key as caseTaskType.value | translate for caseTaskType in caseTaskTypes"
+                            ng-change="updateDetailsFromTaskType()" class="form-control input-md">
+                        <option value="" translate>tasks.newTask.caseTaskType.placeholder</option>
+                    </select>
                 </div>
             </div>
 
@@ -65,9 +85,9 @@
                     <label class="control-label">{{ 'tasks.newTask.priority.label' | translate }}
                     </label>
                     <div style="margin-top: 10px;">
-                    <select ng-model="config.data.priority" ng-options="priority.id as priority.name for priority in config.priority"
-                            class="form-control input-md">
-                    </select>
+                        <select ng-model="config.data.priority" ng-options="priority.id as priority.name for priority in config.priority"
+                                class="form-control input-md">
+                        </select>
                     </div>
                 </div>
             </div>
@@ -102,18 +122,20 @@
                             </label>
                         </fieldset>
                     </div>
-                        <fieldset id="uploadDocs_docsToReview">
-                            <a href="#" ngf-select="onFileUpload($files)" multiple>
-                                <span translate>tasks.newTask.documentsToReview.uploadDocuments</span>
-                            </a>
-                            <label ng-repeat="file in filesToUpload">
-                                <ul>
-                                    <li><input type="checkbox" value="{{file.name}}" ng-click="onSelectAttachment(file)"
-                                               ng-checked="true" ng-model="opened.isFileAllowed">{{filesToUpload[$index].name}}</li>
-                                </ul>
-                            </label>
-                        </fieldset>
-                        <span ng-if="(!documentsToReviewIds || documentsToReviewIds.length === 0) && filesToUpload.length === 0 && selectedBusinessProcessType != 'notDefinedWorkflow'" class="text-danger" translate>
+                    <fieldset id="uploadDocs_docsToReview">
+                        <a href="#" ngf-select="onFileUpload($files)" multiple>
+                            <span translate>tasks.newTask.documentsToReview.uploadDocuments</span>
+                        </a>
+                        <label ng-repeat="file in filesToUpload">
+                            <ul>
+                                <li><input type="checkbox" value="{{file.name}}" ng-click="onSelectAttachment(file)" ng-checked="true"
+                                        ng-model="opened.isFileAllowed">{{filesToUpload[$index].name}}
+                                </li>
+                            </ul>
+                        </label>
+                    </fieldset>
+                    <span ng-if="(!documentsToReviewIds || documentsToReviewIds.length === 0) && filesToUpload.length === 0 && selectedBusinessProcessType != 'notDefinedWorkflow'"
+                            class="text-danger" translate>
                           tasks.newTask.noSelectedReviewDocsErrorMsg
                         </span>
                 </div>
