@@ -32,18 +32,18 @@ import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
-
 import com.armedia.acm.portalgateway.model.PortalConfig;
 import com.armedia.acm.services.holiday.service.HolidayConfigurationService;
-import gov.foia.dao.ResponseInstallmentDao;
-import gov.foia.model.FOIARequest;
-import gov.foia.model.ResponseInstallment;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import gov.foia.broker.FOIARequestFileBrokerClient;
-
 import java.util.Date;
+
+import gov.foia.broker.FOIARequestFileBrokerClient;
+import gov.foia.dao.ResponseInstallmentDao;
+import gov.foia.model.FOIARequest;
+import gov.foia.model.ResponseInstallment;
 
 public class RequestResponseFolderService
 {
@@ -58,7 +58,8 @@ public class RequestResponseFolderService
     private HolidayConfigurationService holidayConfigurationService;
     private ResponseInstallmentDao responseInstallmentDao;
 
-    public void compressAndSendResponseFolderToPortal(Long requestId, String userName) throws ConversionException, AcmUserActionFailedException, AcmFolderException, AcmObjectNotFoundException
+    public void compressAndSendResponseFolderToPortal(Long requestId, String userName)
+            throws ConversionException, AcmUserActionFailedException, AcmFolderException, AcmObjectNotFoundException
     {
         log.debug("Converting the Response folder for the request [{}]", requestId);
         getResponseFolderConverterService().convertResponseFolder(requestId, userName);
@@ -76,7 +77,7 @@ public class RequestResponseFolderService
         saveResponseInstallmentDetails(requestId);
     }
 
-    private void saveResponseInstallmentDetails(Long requestId)
+    public void saveResponseInstallmentDetails(Long requestId)
     {
         FOIARequest request = (FOIARequest) caseFileDao.find(requestId);
 

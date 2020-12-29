@@ -190,6 +190,7 @@
             <beans:property name="responseFolderService" ref="responseFolderService"/>
             <beans:property name="acmFolderService" ref="acmFolderService"/>
             <beans:property name="foiaConfig" ref="foiaConfig"/>
+            <beans:property name="requestResponseFolderService" ref="requestResponseFolderService"/>
         </beans:bean>
 
         <beans:bean id="responseFolderNotifyService" class="gov.foia.service.ResponseFolderNotifyService">
@@ -329,6 +330,13 @@
 
         <beans:bean id="foiaRequestTemplateModelProvider" class="gov.foia.model.provider.FOIARequestTemplateModelProvider">
             <beans:property name="objectAssociationDao" ref="objectAssociationDao"/>
+            <beans:property name="applicationConfig" ref="applicationProperties"/>
+            <beans:property name="userDao" ref="userJpaDao"/>
+            <beans:property name="userOrgService" ref="acmUserOrgService"/>
+        </beans:bean>
+
+        <beans:bean id="foiaTaskRequestTemplateModelProvider" class="gov.foia.model.provider.FOIATaskRequestTemplateModelProvider">
+            <beans:property name="foiaRequestDao" ref="foiaRequestDao"/>
         </beans:bean>
 
         <beans:bean id="foiaDeterminationLetterModelProvider" class="gov.foia.model.provider.FOIADeterminationLetterModelProvider">

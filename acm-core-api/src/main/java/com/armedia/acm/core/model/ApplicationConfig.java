@@ -63,6 +63,10 @@ public class ApplicationConfig
     @Value("${application.properties.baseUrl}")
     private String baseUrl;
 
+    @JsonProperty("application.properties.basePortalUrl")
+    @Value("${application.properties.basePortalUrl}")
+    private String basePortalUrl;
+
     @JsonProperty("application.properties.applicationName")
     @Value("${application.properties.applicationName}")
     private String applicationName;
@@ -97,7 +101,6 @@ public class ApplicationConfig
     @JsonProperty("application.properties.issueCollectorFlag")
     @Value("${application.properties.issueCollectorFlag}")
     private Boolean issueCollectorFlag;
-
 
     @JsonProperty("application.properties.logoutUrl")
     @Value("${application.properties.logoutUrl}")
@@ -134,7 +137,6 @@ public class ApplicationConfig
     @JsonProperty("application.properties.organizationFax")
     @Value("${application.properties.organizationFax}")
     private String organizationFax;
-
 
     private HashMap<Object, String> roles;
 
@@ -198,6 +200,16 @@ public class ApplicationConfig
         this.baseUrl = baseUrl;
     }
 
+    public String getBasePortalUrl()
+    {
+        return basePortalUrl;
+    }
+
+    public void setBasePortalUrl(String basePortalUrl)
+    {
+        this.basePortalUrl = basePortalUrl;
+    }
+
     public String getApplicationName()
     {
         return applicationName;
@@ -248,11 +260,13 @@ public class ApplicationConfig
         this.roles = roles;
     }
 
-    public String getLogoutUrl() {
+    public String getLogoutUrl()
+    {
         return logoutUrl;
     }
 
-    public void setLogoutUrl(String logoutUrl) {
+    public void setLogoutUrl(String logoutUrl)
+    {
         this.logoutUrl = logoutUrl;
     }
 

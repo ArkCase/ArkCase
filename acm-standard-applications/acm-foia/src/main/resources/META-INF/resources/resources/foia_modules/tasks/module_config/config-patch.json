@@ -127,8 +127,8 @@
                     "lookup": "personTypes"
                 },
                 {
-                    "name": "fulName",
-                    "field": "creator_full_name_lcs",
+                    "name": "fullName",
+                    "field": "name",
                     "displayName": "tasks.comp.people.table.columns.fullName",
                     "headerCellFilter": "translate",
                     "cellTemplate": "<a data-ui-sref=\"people.main({id: row.entity.child_id_s})\">{{COL_FIELD}}</a>"

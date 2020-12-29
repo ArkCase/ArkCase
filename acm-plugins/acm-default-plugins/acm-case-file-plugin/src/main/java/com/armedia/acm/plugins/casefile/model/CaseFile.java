@@ -32,6 +32,7 @@ import com.armedia.acm.core.AcmNotificationReceiver;
 import com.armedia.acm.core.AcmObjectNumber;
 import com.armedia.acm.core.AcmStatefulEntity;
 import com.armedia.acm.core.AcmTitleEntity;
+import com.armedia.acm.core.model.ApplicationConfig;
 import com.armedia.acm.data.AcmAssignee;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.AcmLegacySystemEntity;
@@ -51,6 +52,7 @@ import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.sequence.annotation.AcmSequence;
+import com.armedia.acm.services.users.model.AcmUser;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -289,6 +291,15 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
     @Column(name = "cm_case_denied_flag")
     @Convert(converter = BooleanToStringConverter.class)
     private Boolean deniedFlag = Boolean.FALSE;
+
+    @Transient
+    private ApplicationConfig applicationConfig;
+
+    @Transient
+    private String assigneeTitle;
+
+    @Transient
+    private  String assigneeFullName;
 
     @PrePersist
     protected void beforeInsert()
@@ -881,6 +892,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
                 .findFirst().map(p -> p.getParticipantLdapId()).orElse(null);
     }
 
+
     @Override
     @JsonIgnore
     public String getAssigneeGroupId()
@@ -956,5 +968,31 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
     public void setHasAnyAssociatedTimesheets(boolean hasAnyAssociatedTimesheets)
     {
         this.hasAnyAssociatedTimesheets = hasAnyAssociatedTimesheets;
+    }
+
+    @JsonIgnore
+    public ApplicationConfig getApplicationConfig() {
+        return applicationConfig;
+    }
+
+    public void setApplicationConfig(ApplicationConfig applicationConfig) {
+        this.applicationConfig = applicationConfig;
+    }
+
+    @JsonIgnore
+    public String getAssigneeTitle() {
+        return assigneeTitle;
+    }
+
+    public void setAssigneeTitle(String assigneeTitle) {
+        this.assigneeTitle = assigneeTitle;
+    }
+
+    public String getAssigneeFullName() {
+        return assigneeFullName;
+    }
+
+    public void setAssigneeFullName(String assigneeFullName) {
+        this.assigneeFullName = assigneeFullName;
     }
 }
