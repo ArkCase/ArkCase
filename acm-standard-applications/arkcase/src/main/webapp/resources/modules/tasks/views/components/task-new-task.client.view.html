@@ -58,7 +58,7 @@
                     <span class="required-asterisk">*</span>
                     <select ng-model="config.data.type" ng-required="config.data.attachedToObjectType=='CASE_FILE'"
                             ng-options="caseTaskType.key as caseTaskType.value | translate for caseTaskType in caseTaskTypes"
-                            class="form-control input-md">
+                            ng-change="updateDetailsFromTaskType()" class="form-control input-md">
                         <option value="" translate>tasks.newTask.caseTaskType.placeholder</option>
                     </select>
                 </div>

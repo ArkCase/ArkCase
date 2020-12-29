@@ -465,6 +465,18 @@ angular.module('tasks').controller(
                 PersonAssociationService.savePersonAssociation(association);
             }
 
+            $scope.updateDetailsFromTaskType = function () {
+                var caseTaskType = _.find($scope.caseTaskTypes, function (caseTaskType) {
+                    return caseTaskType.key === $scope.config.data.type;
+                });
+
+                if (caseTaskType && caseTaskType.description) {
+                    $scope.config.data.details = caseTaskType.description;
+                } else {
+                    $scope.config.data.details = '';
+                }
+            };
+
             $scope.objectSearch = function () {
                 var modalInstance = $modal.open({
                     animation: $scope.animationsEnabled,
