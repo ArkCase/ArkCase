@@ -41,13 +41,6 @@
         <property name="dataService" ref="acmDataService"/>
     </bean>
 
-    <bean id="acmEntityTemplateNoUserPrefixModelProvider"
-          class="com.armedia.acm.services.notification.service.provider.AcmEntityTemplateNoUserPrefixModelProvider">
-        <property name="dataService" ref="acmDataService"/>
-        <property name="userInfoHelper" ref="userInfoHelper"/>
-        <property name="objectTitleConfigurationService" ref="objectTitleConfigurationService"/>
-    </bean>
-
     <bean id="acmUserTemplateModelProvider" class="com.armedia.acm.services.notification.service.provider.AcmUserTemplateModelProvider">
         <property name="userDao" ref="userJpaDao"/>
     </bean>

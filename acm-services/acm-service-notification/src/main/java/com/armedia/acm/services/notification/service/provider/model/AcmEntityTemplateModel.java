@@ -38,6 +38,8 @@ public class AcmEntityTemplateModel
     public String titleEnabled;
     public String modifierEmail;
     public String assigneeEmail;
+    public String assigneeTitle;
+    public String assigneeFullName;
 
     public AcmObject getCaseFileObject()
     {
@@ -121,5 +123,21 @@ public class AcmEntityTemplateModel
     public void setAssigneeEmail(String assigneeEmail)
     {
         this.assigneeEmail = assigneeEmail;
+    }
+
+    public String getAssigneeTitle() {
+        return assigneeTitle;
+    }
+
+    public void setAssigneeTitle(String assigneeTitle) {
+        this.assigneeTitle = assigneeTitle;
+    }
+
+    public String getAssigneeFullName() {
+        return assigneeFullName;
+    }
+
+    public void setAssigneeFullName(String assigneeFullName) {
+        this.assigneeFullName = assigneeFullName;
     }
 }
