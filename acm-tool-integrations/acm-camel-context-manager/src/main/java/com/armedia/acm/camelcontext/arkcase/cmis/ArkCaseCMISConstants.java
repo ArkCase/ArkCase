@@ -34,7 +34,7 @@ public interface ArkCaseCMISConstants
 {
     String CMIS_API_URL = "cmisApiURL";
     // This is endpoint for Apache cmis component
-    String ARKCASE_CMIS_COMPONENT = "arkcase-cmis://";
+    String ARKCASE_CMIS_COMPONENT = "cmis://";
     String DEFAULT_CMIS_REPOSITORY_ID = "alfresco";
 
     String CMIS_OBJECT_ID = "cmisObjectId";
