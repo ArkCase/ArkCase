@@ -20,7 +20,7 @@ angular.module('reports').controller('Reports.DatepickersController', [ '$scope'
 
     // Retrieve the json data from acm-reports-parameters.json file
     LookupService.getConfig("reportsParameters").then(function(payload) {
-        $scope.reportsParameters = payload['reports-parameters'];    
+        $scope.reportsParameters = payload['dateSearchTypes'];    
     });
 
     $scope.$watchCollection('data.reportSelected', onReportSelected);
@@ -31,18 +31,16 @@ angular.module('reports').controller('Reports.DatepickersController', [ '$scope'
             return;
         }
         
-        var reportParameters = _.find($scope.reportsParameters, {
-            "reportName": $scope.data.reportSelected
-        });
+        var dateSearchTypeValue = _.get($scope.reportsParameters, $scope.data.reportSelected);
         
         // reset start and end date
         $scope.data.startDate = new Date();
         $scope.data.endDate = new Date();
         
-        if (!reportParameters) {
+        if (Util.isEmpty(dateSearchTypeValue)) {
             $scope.data.dateSearchType = 'DATE_RANGE'; // by default DATE_RANGE is used
         } else {
-            $scope.data.dateSearchType = reportParameters.dateSearchType;
+            $scope.data.dateSearchType = dateSearchTypeValue;
         }
     };
 } ]);
