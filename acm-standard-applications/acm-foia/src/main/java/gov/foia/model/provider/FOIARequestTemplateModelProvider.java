@@ -27,9 +27,13 @@ package gov.foia.model.provider;
  * #L%
  */
 
+import com.armedia.acm.core.model.ApplicationConfig;
 import com.armedia.acm.core.provider.TemplateModelProvider;
 import com.armedia.acm.plugins.objectassociation.dao.ObjectAssociationDao;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
+import com.armedia.acm.plugins.profile.service.UserOrgService;
+import com.armedia.acm.services.users.dao.UserDao;
+import com.armedia.acm.services.users.model.AcmUser;
 import gov.foia.model.FOIARequest;
 
 import java.util.List;
@@ -41,6 +45,9 @@ public class FOIARequestTemplateModelProvider implements TemplateModelProvider<F
 {
     
     private ObjectAssociationDao objectAssociationDao;
+    private ApplicationConfig applicationConfig;
+    private UserDao userDao;
+    private UserOrgService userOrgService;
     
     @Override
     public FOIARequest getModel(Object foiaRequest)
@@ -50,6 +57,15 @@ public class FOIARequestTemplateModelProvider implements TemplateModelProvider<F
         {
             List<ObjectAssociation> objectAssociations = objectAssociationDao.findByParentTypeAndId(request.getObjectType(), request.getId());
             request.setOriginalRequestNumber(objectAssociations.get(0).getTargetName());
+        }
+        request.setApplicationConfig(applicationConfig);
+        String assigneeLdapID = request.getAssigneeLdapId();
+        AcmUser assignee = null;
+        if(assigneeLdapID != null)
+        {
+            assignee = userDao.findByUserId(assigneeLdapID);
+            request.setAssigneeTitle(userOrgService.getUserOrgForUserId(assigneeLdapID).getTitle());
+            request.setAssigneeFullName(assignee.getFirstName() + " " + assignee.getLastName());
         }
         return request;
     }
@@ -69,4 +85,29 @@ public class FOIARequestTemplateModelProvider implements TemplateModelProvider<F
     {
         this.objectAssociationDao = objectAssociationDao;
     }
+
+    public ApplicationConfig getApplicationConfig() {
+        return applicationConfig;
+    }
+
+    public void setApplicationConfig(ApplicationConfig applicationConfig) {
+        this.applicationConfig = applicationConfig;
+    }
+
+    public UserDao getUserDao() {
+        return userDao;
+    }
+
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
+    }
+
+    public UserOrgService getUserOrgService() {
+        return userOrgService;
+    }
+
+    public void setUserOrgService(UserOrgService userOrgService) {
+        this.userOrgService = userOrgService;
+    }
+
 }
