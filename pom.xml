@@ -135,13 +135,13 @@
         <quartz.version>2.3.2</quartz.version>
         <jaudiotagger.version>2.0.3</jaudiotagger.version>
         <reflections.version>0.9.9</reflections.version>
-        <camel.spring.version>3.6.0</camel.spring.version>
-        <camel.core.engine.version>3.6.0</camel.core.engine.version>
-        <camel.spi.version>3.6.0</camel.spi.version>
-        <camel.core.version>3.6.0</camel.core.version>
-        <camel.cmis.version>3.7.0-rc1</camel.cmis.version>
-        <camel.support.version>3.6.0</camel.support.version>
-        <camel.api.version>3.6.0</camel.api.version>
+        <camel.spring.version>3.7.0</camel.spring.version>
+        <camel.core.engine.version>3.7.0</camel.core.engine.version>
+        <camel.spi.version>3.7.0</camel.spi.version>
+        <camel.core.version>3.7.0</camel.core.version>
+        <camel.cmis.version>3.7.0</camel.cmis.version>
+        <camel.support.version>3.7.0</camel.support.version>
+        <camel.api.version>3.7.0</camel.api.version>
         <kryo.version>5.0.0-RC4</kryo.version>
         <subzero.version>0.9</subzero.version>
         <xsync-version>1.2</xsync-version>
@@ -902,18 +902,11 @@
                 <version>${camel.support.version}</version>
             </dependency>
 
-            <!--<dependency>
+            <dependency>
                 <groupId>org.apache.camel</groupId>
                 <artifactId>camel-cmis</artifactId>
                 <version>${camel.cmis.version}</version>
-            </dependency>-->
-
-            <dependency>
-                <groupId>org.apache.camel</groupId>
-                <artifactId>camel-cmis-arkcase</artifactId>
-                <version>${camel.cmis.version}</version>
             </dependency>
-
 
             <!-- apache libraries -->
             <dependency>
