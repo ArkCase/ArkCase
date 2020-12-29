@@ -37,16 +37,8 @@
     </bean>
 
     <!-- Executors -->
-    <bean id="acmEntityTemplateModelProvider" class="com.armedia.acm.plugins.profile.model.AcmEntityTemplateModelProvider">
+    <bean id="acmEntityTemplateModelProvider" class="com.armedia.acm.services.notification.service.provider.AcmEntityTemplateModelProvider">
         <property name="dataService" ref="acmDataService"/>
-    </bean>
-
-    <bean id="acmEntityTemplateNoUserPrefixModelProvider"
-          class="com.armedia.acm.services.notification.service.provider.AcmEntityTemplateNoUserPrefixModelProvider">
-        <property name="dataService" ref="acmDataService"/>
-        <property name="userInfoHelper" ref="userInfoHelper"/>
-        <property name="objectTitleConfigurationService" ref="objectTitleConfigurationService"/>
-        <property name="userDao" ref="userJpaDao"/>
     </bean>
 
     <bean id="acmUserTemplateModelProvider" class="com.armedia.acm.services.notification.service.provider.AcmUserTemplateModelProvider">

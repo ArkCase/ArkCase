@@ -39,6 +39,7 @@ import com.armedia.acm.services.objecttitle.model.TitleConfiguration;
 import com.armedia.acm.services.objecttitle.service.ObjectTitleConfigurationService;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.plugins.profile.service.UserOrgService;
 
 import java.util.Map;
 
@@ -48,8 +49,7 @@ public class AcmEntityTemplateNoUserPrefixModelProvider implements TemplateModel
     private UserInfoHelper userInfoHelper;
     private ObjectTitleConfigurationService objectTitleConfigurationService;
     private UserDao userDao;
-
-
+    private UserOrgService userOrgService;
 
     @Override
     public AcmEntityTemplateModel getModel(Object object)
@@ -74,7 +74,7 @@ public class AcmEntityTemplateNoUserPrefixModelProvider implements TemplateModel
             if(assigneeLdapId != null)
             {
                 AcmUser assignee = userDao.findByUserId(assigneeLdapId);
-                assigneeTitle = assignee.getTitle();
+                assigneeTitle = userOrgService.getUserOrgForUserId(acmAssignee.getAssigneeLdapId()).getTitle();
                 assigneeFullName = assignee.getFullName();
             }
             String modifier = acmAssignee.getModifier();
@@ -92,13 +92,6 @@ public class AcmEntityTemplateNoUserPrefixModelProvider implements TemplateModel
         else if (acmObject instanceof AcmAssignee && ((AcmAssignee) acmObject).getAssigneeGroupId() != null)
         {
             AcmAssignee acmAssignee = (AcmAssignee) acmObject;
-            if(acmAssignee.getAssigneeLdapId() != null)
-            {
-                AcmUser assignee = userDao.findByUserId(acmAssignee.getAssigneeLdapId());
-                assigneeTitle = assignee.getTitle();
-                assigneeFullName = assignee.getFullName();
-            }
-
             String assigneeLdapGroupId = acmAssignee.getAssigneeGroupId();
             baseAssigneeGroupId = getUserInfoHelper().removeGroupPrefix(assigneeLdapGroupId);
         }
@@ -170,5 +163,13 @@ public class AcmEntityTemplateNoUserPrefixModelProvider implements TemplateModel
 
     public void setUserDao(UserDao userDao) {
         this.userDao = userDao;
+    }
+
+    public UserOrgService getUserOrgService() {
+        return userOrgService;
+    }
+
+    public void setUserOrgService(UserOrgService userOrgService) {
+        this.userOrgService = userOrgService;
     }
 }
