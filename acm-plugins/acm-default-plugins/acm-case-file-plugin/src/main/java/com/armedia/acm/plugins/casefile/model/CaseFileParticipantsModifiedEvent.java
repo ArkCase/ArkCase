@@ -39,10 +39,12 @@ public class CaseFileParticipantsModifiedEvent extends AcmEvent
     private static final long serialVersionUID = 2601901328541042900L;
     private static final String EVENT_TYPE = "com.armedia.acm.casefile.participant";
     private String eventStatus;
+    private String participantLdapId;
 
     public CaseFileParticipantsModifiedEvent(AcmParticipant source)
     {
         super(source);
+        setParticipantLdapId(source.getParticipantLdapId());
         setObjectType(ParticipantConstants.OBJECT_TYPE);
         setObjectId(source.getId());
         setEventDate(new Date());
@@ -58,5 +60,15 @@ public class CaseFileParticipantsModifiedEvent extends AcmEvent
     public void setEventStatus(String eventStatus)
     {
         this.eventStatus = eventStatus;
+    }
+
+    public String getParticipantLdapId()
+    {
+        return participantLdapId;
+    }
+
+    public void setParticipantLdapId(String participantLdapId)
+    {
+        this.participantLdapId = participantLdapId;
     }
 }
