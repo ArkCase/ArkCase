@@ -65,7 +65,7 @@
 
         <dependency>
             <groupId>org.apache.camel</groupId>
-            <artifactId>camel-cmis-arkcase</artifactId>
+            <artifactId>camel-cmis</artifactId>
         </dependency>
 
         <dependency>
