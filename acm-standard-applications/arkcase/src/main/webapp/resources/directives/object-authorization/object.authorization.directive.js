@@ -127,7 +127,24 @@ angular.module('directives').directive('objectAuthorization', [ 'Menus', 'Messag
                         return obj.key + " " + obj.name;
                     }).indexOf(sel.key + " " + sel.name);
                     data.selectedAuthorized.splice(indexOf, 1);
-                    data.selectedNotAuthorized.push(sel);
+
+                    if(data.selectedNotAuthorized.length === 0) {
+                        data.selectedNotAuthorized.splice(0,0,sel);
+                    }
+                    else if(sel.name < data.selectedNotAuthorized[0]["key"]){
+                        data.selectedNotAuthorized.splice(0, 0, sel);
+                    }
+                    else if(sel.name > data.selectedNotAuthorized[data.selectedNotAuthorized.length-1]["key"]){
+                        data.selectedNotAuthorized.splice(data.selectedNotAuthorized.length, 0, sel);
+                    }
+                    else {
+                        for (var m=0; m < data.selectedNotAuthorized.length; m++){
+                            if((sel.name > data.selectedNotAuthorized[m]["key"]) && (sel.name < data.selectedNotAuthorized[m+1]["key"])){
+                                data.selectedNotAuthorized.splice(m+1, 0, sel);
+                                break;
+                            }
+                        }
+                    }
                 });
             };
 
@@ -137,7 +154,24 @@ angular.module('directives').directive('objectAuthorization', [ 'Menus', 'Messag
                         return obj.key + " " + obj.name;
                     }).indexOf(sel.key + " " + sel.name);
                     data.selectedNotAuthorized.splice(indexOf, 1);
-                    data.selectedAuthorized.push(sel);
+                    
+                    if(data.selectedAuthorized.length === 0) {
+                        data.selectedAuthorized.splice(0,0,sel);
+                    }
+                    else if(sel.name < data.selectedAuthorized[0]["key"]){
+                        data.selectedAuthorized.splice(0, 0, sel);
+                    }
+                    else if(sel.name > data.selectedAuthorized[data.selectedAuthorized.length-1]["key"]){
+                        data.selectedAuthorized.splice(data.selectedAuthorized.length, 0, sel);
+                    }
+                    else {
+                        for (var m=0; m < data.selectedAuthorized.length; m++){
+                            if((sel.name > data.selectedAuthorized[m]["key"]) && (sel.name < data.selectedAuthorized[m+1]["key"])){
+                                data.selectedAuthorized.splice(m+1, 0, sel);
+                                break;
+                            }
+                        }
+                    }
                 });
             };
 
