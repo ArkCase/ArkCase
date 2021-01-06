@@ -121,30 +121,33 @@ angular.module('directives').directive('objectAuthorization', [ 'Menus', 'Messag
                }
             };
 
+            function selectionInsertion(insertionArray, sel) {
+                if (insertionArray.length === 0) {
+                    insertionArray.splice(0, 0, sel);
+                }
+                else if (sel.name < insertionArray[0]["key"]) {
+                    insertionArray.splice(0, 0, sel);
+                }
+                else if (sel.name > insertionArray[insertionArray.length - 1]["key"]) {
+                    insertionArray.splice(insertionArray.length, 0, sel);
+                }
+                else {
+                    for (var m = 0; m < insertionArray.length; m++) {
+                        if ((sel.name > insertionArray[m]["key"]) && (sel.name < insertionArray[m + 1]["key"])) {
+                            insertionArray.splice(m + 1, 0, sel);
+                            break;
+                        }
+                    }
+                }
+            }
+
             var _unAuthorize = function(toRemove, data) {
                 angular.forEach(toRemove, function(sel) {
                     var indexOf = data.selectedAuthorized.map(function(obj) {
                         return obj.key + " " + obj.name;
                     }).indexOf(sel.key + " " + sel.name);
                     data.selectedAuthorized.splice(indexOf, 1);
-
-                    if(data.selectedNotAuthorized.length === 0) {
-                        data.selectedNotAuthorized.splice(0,0,sel);
-                    }
-                    else if(sel.name < data.selectedNotAuthorized[0]["key"]){
-                        data.selectedNotAuthorized.splice(0, 0, sel);
-                    }
-                    else if(sel.name > data.selectedNotAuthorized[data.selectedNotAuthorized.length-1]["key"]){
-                        data.selectedNotAuthorized.splice(data.selectedNotAuthorized.length, 0, sel);
-                    }
-                    else {
-                        for (var m=0; m < data.selectedNotAuthorized.length; m++){
-                            if((sel.name > data.selectedNotAuthorized[m]["key"]) && (sel.name < data.selectedNotAuthorized[m+1]["key"])){
-                                data.selectedNotAuthorized.splice(m+1, 0, sel);
-                                break;
-                            }
-                        }
-                    }
+                    selectionInsertion(data.selectedNotAuthorized, sel);
                 });
             };
 
@@ -154,24 +157,7 @@ angular.module('directives').directive('objectAuthorization', [ 'Menus', 'Messag
                         return obj.key + " " + obj.name;
                     }).indexOf(sel.key + " " + sel.name);
                     data.selectedNotAuthorized.splice(indexOf, 1);
-                    
-                    if(data.selectedAuthorized.length === 0) {
-                        data.selectedAuthorized.splice(0,0,sel);
-                    }
-                    else if(sel.name < data.selectedAuthorized[0]["key"]){
-                        data.selectedAuthorized.splice(0, 0, sel);
-                    }
-                    else if(sel.name > data.selectedAuthorized[data.selectedAuthorized.length-1]["key"]){
-                        data.selectedAuthorized.splice(data.selectedAuthorized.length, 0, sel);
-                    }
-                    else {
-                        for (var m=0; m < data.selectedAuthorized.length; m++){
-                            if((sel.name > data.selectedAuthorized[m]["key"]) && (sel.name < data.selectedAuthorized[m+1]["key"])){
-                                data.selectedAuthorized.splice(m+1, 0, sel);
-                                break;
-                            }
-                        }
-                    }
+                    selectionInsertion(data.selectedAuthorized, sel);
                 });
             };
 
