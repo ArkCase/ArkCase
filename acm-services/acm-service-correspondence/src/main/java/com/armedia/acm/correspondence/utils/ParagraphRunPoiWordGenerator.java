@@ -403,7 +403,6 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                 {
                     paragraph.removeRun(i);
                 }
-                paragraph.getRuns().get(runNum).setBold(false);
             }
         }
     }
