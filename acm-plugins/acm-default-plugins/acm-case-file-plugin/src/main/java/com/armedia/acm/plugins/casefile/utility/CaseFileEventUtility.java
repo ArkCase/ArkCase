@@ -34,12 +34,10 @@ import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
 import com.armedia.acm.plugins.casefile.model.CaseFileModifiedEvent;
 import com.armedia.acm.plugins.casefile.model.CaseFileParticipantsModifiedEvent;
-import com.armedia.acm.plugins.casefile.model.DueDateChangedEvent;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociationAddEvent;
 import com.armedia.acm.plugins.person.model.PersonAssociationDeletedEvent;
 import com.armedia.acm.services.participants.model.AcmParticipant;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -190,14 +188,6 @@ public class CaseFileEventUtility implements ApplicationEventPublisherAware
 
         CaseEvent event = new CaseEvent(source, ipAddress, authentication.getName(), CaseFileConstants.EVENT_TYPE_VIEWED, new Date(), true,
                 authentication);
-        applicationEventPublisher.publishEvent(event);
-    }
-
-    public void raiseDueDateChangedEvent(CaseFile newCaseFile, Date oldDueDate, Date eventDate, String ipAddress, String userId, Authentication auth)
-    {
-        eventDate = eventDate == null ? new Date() : eventDate;
-        DueDateChangedEvent event = new DueDateChangedEvent(newCaseFile, oldDueDate, ipAddress, userId, eventDate, true, auth);
-
         applicationEventPublisher.publishEvent(event);
     }
 
