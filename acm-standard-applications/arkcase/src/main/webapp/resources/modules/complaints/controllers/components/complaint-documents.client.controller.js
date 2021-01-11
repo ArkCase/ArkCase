@@ -25,21 +25,17 @@ angular.module('complaints').controller(
                 'Admin.CMTemplatesService',
                 'DocTreeExt.Email',
                 'ModalDialogService',
-                'Admin.EmailSenderConfigurationService',
                 'MultiCorrespondence.Service',
                 'EcmService',
 
                 function($scope, $stateParams, $modal, $q, $timeout, $translate, Util, LocaleService, ConfigService, ObjectService, ObjectLookupService, ComplaintInfoService, HelperObjectBrowserService, DocTreeService, Authentication, PermissionsService, ObjectModelService, DocTreeExtWebDAV,
-                        DocTreeExtCheckin, CorrespondenceService, DocTreeExtEmail, ModalDialogService, EmailSenderConfigurationService, MultiCorrespondenceService, Ecm) {
+                        DocTreeExtCheckin, CorrespondenceService, DocTreeExtEmail, ModalDialogService, MultiCorrespondenceService, Ecm) {
 
                     Authentication.queryUserInfo().then(function(userInfo) {
                         $scope.user = userInfo.userId;
                         return userInfo;
                     });
 
-                    EmailSenderConfigurationService.isEmailSenderAllowDocuments().then(function(emailData) {
-                        $scope.sendEmailEnabled = emailData.data;
-                    });
 
                     $scope.uploadForm = function(type, folderId, onCloseForm) {
                         var fileTypes = Util.goodArray($scope.treeConfig.fileTypes);
@@ -147,11 +143,6 @@ angular.module('complaints').controller(
                         $scope.treeControl.refreshTree();
                     };
 
-                    $scope.sendEmail = function() {
-                        var nodes = $scope.treeControl.getSelectedNodes();
-                        var DocTree = $scope.treeControl.getDocTreeObject();
-                        DocTreeExtEmail.openModal(DocTree, nodes);
-                    };
 
                     $scope.createNewTask = function() {
                         var modalMetadata = {

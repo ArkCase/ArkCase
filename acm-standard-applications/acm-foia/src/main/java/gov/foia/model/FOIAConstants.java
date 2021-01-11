@@ -73,7 +73,7 @@ public interface FOIAConstants
     String FULFILL_QUEUE = "Fulfill";
     String INTAKE_QUEUE = "Intake";
     String REQUEST_CATEGORY_MAIL_SERVICE = "All Others";
-    String DEFAULT_DELIVERY_METHOD_OF_RESPONSE = "Web Portal";
+    String DEFAULT_DELIVERY_METHOD_OF_RESPONSE = "Email";
     String FILES_DESCRIPTION_DOCUMENTS = "Description Document";
     String FILES_CONSENT_DOCUMENTS = "Consent";
     String FILES_PROOF_OF_IDENTITY = "Proof of Identity";

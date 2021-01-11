@@ -15,6 +15,7 @@ angular.module('admin').controller('Admin.CMTemplatesController',
             $scope.myTree = {};
 
             var copyVariablePath = $translate.instant('contextMenu.options.copyVariablePath');
+            $scope.templateType = 'correspondenceTemplate';
 
             $scope.navigationTreeMilestones = [];
 
@@ -68,6 +69,7 @@ angular.module('admin').controller('Admin.CMTemplatesController',
                 var modalScope = $scope.$new();
                 modalScope.config = $scope.config;
                 $scope.myData = [];
+                params.templateType = $scope.templateType;
                 var modalInstance = $modal.open({
                     scope: modalScope,
                     animation: true,
@@ -161,6 +163,18 @@ angular.module('admin').controller('Admin.CMTemplatesController',
                 });
             };
 
+                $scope.enable = function (rowEntity) {
+                    var template = angular.copy(rowEntity);
+                    template.enabled = !rowEntity.enabled;
+                    correspondenceService.saveTemplateData(template).then(function() {
+                        clearCachedForms(template);
+                        messageService.succsessAction();
+                        reloadGrid();
+                    }, function() {
+                        messageService.errorAction();
+                    });
+                };
+
             function clearCachedForms(template) {
                 var cacheConfigMap = new Store.SessionData(LookupService.SessionCacheNames.CONFIG_MAP);
                 var configMap = cacheConfigMap.get();
@@ -172,7 +186,7 @@ angular.module('admin').controller('Admin.CMTemplatesController',
                 cacheConfigMap.set(configMap);
             }
             function reloadGrid() {
-                var templatesPromise = correspondenceService.retrieveActiveVersionTemplatesList();
+                var templatesPromise = correspondenceService.retrieveActiveVersionTemplatesList($scope.templateType);
                 templatesPromise.then(function(templates) {
                     angular.forEach(templates.data, function(row, index) {
                         row.downloadFileName = correspondenceService.downloadByFilename(row.templateFilename);

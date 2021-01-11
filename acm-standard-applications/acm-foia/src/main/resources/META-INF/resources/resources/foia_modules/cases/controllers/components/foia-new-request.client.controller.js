@@ -193,7 +193,7 @@ angular.module('cases').controller(
                 }
                 $scope.config.data.payFee = $scope.payFees[0].key;
 
-                $scope.config.portal = { portalId: portalConfig['portal.id'] };
+                $scope.config.portal = {portalId: portalConfig['portal.id']};
 
                 $scope.states = "";
                 $scope.config.data.originator.person.addresses[0].country = defaultCountry ? defaultCountry.key : countries[0].key;
@@ -201,6 +201,10 @@ angular.module('cases').controller(
                 $scope.config.data.receivedDate = moment.utc().format("YYYY-MM-DDTHH:mm:ss.sss");
 
                 $scope.blankPerson = angular.copy($scope.config.data.originator.person);
+
+                if ($scope.config.data.originator.person.addresses[0] && !Util.isEmpty($scope.config.data.originator.person.addresses[0].country)) {
+                    $scope.changeStates($scope.config.data.originator.person.addresses[0].country);
+                }
             });
 
             $scope.isEmailDaliveryMethod = false;

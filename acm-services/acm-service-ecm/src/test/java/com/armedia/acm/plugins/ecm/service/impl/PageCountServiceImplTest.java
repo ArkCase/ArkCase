@@ -97,6 +97,28 @@ public class PageCountServiceImplTest
         assertEquals(numberOfPagesExpected, numberOfPagesActual);
     }
 
+    @Test
+    public void findPageCountForXlsFile() throws Exception
+    {
+        Resource classPathResource = new ClassPathResource("office/excel_1.xls");
+        String MIME_TYPE_PPTX = "application/vnd.ms-excel";
+        int numberOfSheetsExpected = 3;
+        int numberOfSheetsActual = findNumberOfPagesAndLogTime(classPathResource, MIME_TYPE_PPTX);
+
+        assertEquals(numberOfSheetsExpected, numberOfSheetsActual);
+    }
+
+    @Test
+    public void findPageCountForXlsxFile() throws Exception
+    {
+        Resource classPathResource = new ClassPathResource("office/excel_4.xlsx");
+        String MIME_TYPE_PPTX = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        int numberOfSheetsExpected = 3;
+        int numberOfSheetsActual = findNumberOfPagesAndLogTime(classPathResource, MIME_TYPE_PPTX);
+
+        assertEquals(numberOfSheetsExpected, numberOfSheetsActual);
+    }
+
     private int findNumberOfPagesAndLogTime(Resource classPathResource, String mimeType) throws IOException
     {
         StopWatch stopWatch = new StopWatch();

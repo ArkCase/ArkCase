@@ -21,8 +21,9 @@ angular.module('consultations').controller(
         '$timeout',
         'FormsType.Service',
         'Admin.FormWorkflowsLinkService',
+        'Ecm.EmailService',
         function($scope, $state, $stateParams, $translate, $q, $modal, Util, ConfigService, ObjectService, Authentication, ObjectSubscriptionService, ObjectModelService, ConsultationInfoService, HelperObjectBrowserService, UserInfoService, $timeout,
-                 FormsTypeService, AdminFormWorkflowsLinkService) {
+                 FormsTypeService, AdminFormWorkflowsLinkService, EcmEmailService) {
 
             new HelperObjectBrowserService.Component({
                 scope: $scope,
@@ -229,4 +230,45 @@ angular.module('consultations').controller(
                 $scope.availableChildOutcomes = outcomes;
                 $scope.showBtnChildOutcomes = true;
             });
+
+            $scope.sendEmail = function () {
+                var params = {
+                    objectId: $scope.objectInfo.id,
+                    objectType: ObjectService.ObjectTypes.CONSULTATION,
+                    objectNumber: $scope.objectInfo.consultationNumber,
+                    emailSubject: 'Consultation ' + $scope.objectInfo.consultationNumber
+                };
+                var modalInstance = $modal.open({
+                    templateUrl: 'modules/common/views/send-email-modal.client.view.html',
+                    controller: 'Common.SendEmailModalController',
+                    animation: true,
+                    size: 'lg',
+                    backdrop: 'static',
+                    resolve: {
+                        params: function() {
+                            return params;
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function(res) {
+                    var emailData = {};
+                    emailData.subject = res.subject;
+                    emailData.body = res.body;
+                    emailData.footer = '\n\n' + res.footer;
+                    emailData.emailAddresses = res.recipients;
+                    emailData.objectId = $scope.objectInfo.id;
+                    emailData.objectType = ObjectService.ObjectTypes.CONSULTATION;
+                    emailData.objectNumber = $scope.objectInfo.consultationNumber;
+                    emailData.modelReferenceName = res.template;
+
+                    if(emailData.modelReferenceName != 'plainEmail') {
+                        EcmEmailService.sendManualEmail(emailData);
+                    } else {
+                        EcmEmailService.sendPlainEmail(emailData, ObjectService.ObjectTypes.CONSULTATION);
+                    }
+
+                });
+            };
+            
         } ]);

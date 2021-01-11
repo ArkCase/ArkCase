@@ -60,7 +60,7 @@ public class DeleteDocumentQueue implements ArkCaseCMISQueue
         producerTemplate.setDefaultEndpointUri(queueName);
         try
         {
-            log.debug("Trying to delete document with ID={}", props.get(ArkCaseCMISConstants.CMIS_DOC_ID));
+            log.debug("Trying to delete document with ID={}", props.get(ArkCaseCMISConstants.CMIS_DOCUMENT_ID));
             return producerTemplate.requestBody(props);
         }
         catch (Exception e)

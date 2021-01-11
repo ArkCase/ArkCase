@@ -36,9 +36,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import com.armedia.acm.correspondence.model.Template;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.data.service.AcmDataService;
 import com.armedia.acm.email.model.EmailSenderConfig;
+import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.service.outlook.model.OutlookDTO;
 import com.armedia.acm.service.outlook.service.OutlookService;
@@ -54,14 +56,18 @@ import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
+import org.apache.commons.io.FileUtils;
 import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,10 +87,11 @@ public class MicrosoftExchangeNotificationSenderTest extends EasyMockSupport
     private AcmMailTemplateConfigurationService templateService;
     private AcmDataService acmDataService;
     private TemplatingEngine templatingEngine;
+    private Resource templateConfiguration;
+    private List<Template> templateConfigurations = new ArrayList<>();
 
     @Before
-    public void setUp()
-    {
+    public void setUp() throws IOException {
         microsoftExchangeNotificationSender = new MicrosoftExchangeNotificationSender();
         mockAuditPropertyEntityAdapter = createMock(AuditPropertyEntityAdapter.class);
         mockAuthentication = createMock(Authentication.class);
@@ -98,6 +105,7 @@ public class MicrosoftExchangeNotificationSenderTest extends EasyMockSupport
         templateService = createMock(AcmMailTemplateConfigurationService.class);
         acmDataService = createMock(AcmDataService.class);
         templatingEngine = createMock(TemplatingEngine.class);
+        templateConfiguration = new ClassPathResource("templates-configuration.json");
 
         microsoftExchangeNotificationSender.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
         microsoftExchangeNotificationSender.setEcmFileService(mockEcmFileService);
@@ -114,6 +122,11 @@ public class MicrosoftExchangeNotificationSenderTest extends EasyMockSupport
         NotificationConfig notificationConfig = new NotificationConfig();
         notificationConfig.setBaseUrl(BASE_URL);
         microsoftExchangeNotificationSender.setNotificationConfig(notificationConfig);
+        microsoftExchangeNotificationSender.setTemplatesConfiguration(templateConfiguration);
+        microsoftExchangeNotificationSender.setObjectConverter(ObjectConverter.createObjectConverterForTests());
+        templateConfigurations = microsoftExchangeNotificationSender.getObjectConverter().getJsonUnmarshaller()
+                .unmarshallCollection(FileUtils.readFileToString(templateConfiguration.getFile()), List.class, Template.class);
+        microsoftExchangeNotificationSender.setTemplateConfigurations(templateConfigurations);
     }
 
     @Test
@@ -126,6 +139,7 @@ public class MicrosoftExchangeNotificationSenderTest extends EasyMockSupport
         notification.setTitle("title");
         notification.setNote("the_note");
         notification.setParentId(0L);
+        notification.setTemplateModelName("modelName");
 
         expect(templateService.getTemplate(anyString())).andThrow(new AcmEmailConfigurationIOException("No such template"));
         expect(mockNotificationUtils.buildNotificationLink(notification.getParentType(), notification.getParentId(),

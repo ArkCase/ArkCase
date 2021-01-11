@@ -32,6 +32,7 @@ import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.services.labels.exception.AcmLabelManagementException;
 import com.armedia.acm.services.labels.service.LabelManagementService;
 
+import com.google.json.JsonSanitizer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
@@ -66,7 +67,8 @@ public class LabelManagementUpdateSettings
             LanguageSettingsConfig languageSettings = getObjectConverter().getJsonUnmarshaller().unmarshall(settings,
                     LanguageSettingsConfig.class);
             LanguageSettingsConfig updatedSettingsObj = labelManagementService.updateLanguageSettings(languageSettings);
-            return updatedSettingsObj.toString();
+            String wellFormedJson = JsonSanitizer.sanitize(updatedSettingsObj.toString());
+            return wellFormedJson;
         }
         catch (Exception e)
         {

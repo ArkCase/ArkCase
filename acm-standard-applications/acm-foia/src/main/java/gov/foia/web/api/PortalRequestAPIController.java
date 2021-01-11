@@ -39,6 +39,8 @@ import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.search.exception.SolrException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import gov.foia.dao.ResponseInstallmentDao;
+import gov.foia.model.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONException;
@@ -62,10 +64,6 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
 
-import gov.foia.model.PortalFOIAReadingRoom;
-import gov.foia.model.PortalFOIARequest;
-import gov.foia.model.PortalFOIARequestStatus;
-import gov.foia.model.WithdrawRequest;
 import gov.foia.service.PortalRequestService;
 
 /**
@@ -80,6 +78,7 @@ public class PortalRequestAPIController
 
     private PortalRequestService portalRequestService;
     private PersonService personService;
+    private ResponseInstallmentDao responseInstallmentDao;
 
     @RequestMapping(value = "/external/status", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -171,6 +170,18 @@ public class PortalRequestAPIController
         }
     }
 
+    @RequestMapping(value = "/external/responseInstallment/{requestNumber}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity getResponseInstallmentDetails(@PathVariable("requestNumber") String requestNumber) throws Exception
+    {
+        if(getResponseInstallmentDao().checkIfInstallmentIsAvailableForDwonload(requestNumber))
+        {
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+
+        throw new Exception("You cannot download the installment because of 15 days expiry or limited download attempts. Please contact your administrator.");
+    }
+
     /**
      * @return the portalRequestService
      */
@@ -196,5 +207,15 @@ public class PortalRequestAPIController
     public void setPersonService(PersonService personService)
     {
         this.personService = personService;
+    }
+
+    public ResponseInstallmentDao getResponseInstallmentDao()
+    {
+        return responseInstallmentDao;
+    }
+
+    public void setResponseInstallmentDao(ResponseInstallmentDao responseInstallmentDao)
+    {
+        this.responseInstallmentDao = responseInstallmentDao;
     }
 }
