@@ -41,4 +41,6 @@ public interface NotificationService
     NotificationBuilder getNotificationBuilder();
 
     Notification saveNotification(Notification notification);
+    
+    String setNotificationTitleForManualNotification(String templateName);
 }

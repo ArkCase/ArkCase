@@ -30,27 +30,28 @@ package com.armedia.acm.camelcontext.arkcase.cmis;
 /**
  * Created by Vladimir Cherepnalkovski <vladimir.cherepnalkovski@armedia.com> on Sep, 2019
  */
-public class ArkCaseCMISConstants
+public interface ArkCaseCMISConstants
 {
-    public static final String CMIS_API_URL = "cmisApiURL";
+    String CMIS_API_URL = "cmisApiURL";
     // This is endpoint for Apache cmis component
-    public static final String ARKCASE_CMIS_COMPONENT = "arkcase-cmis://";
-    public static final String CAMEL_CMIS_DEFAULT_REPO_ID = "alfresco";
+    String ARKCASE_CMIS_COMPONENT = "arkcase-cmis://";
+    String DEFAULT_CMIS_REPOSITORY_ID = "alfresco";
 
-    public static final String CMIS_OBJECT_ID = "cmisObjectId";
-    public static final String CMIS_DOC_ID = "cmisDocumentId";
-    public static final String CMIS_FOLDER_ID = "cmisFolderId";
-    public static final String CMIS_REPOSITORY_ID = "cmisRepositoryId";
+    String CMIS_OBJECT_ID = "cmisObjectId";
+    String CMIS_DOCUMENT_ID = "cmisDocumentId";
+    String CMIS_FOLDER_ID = "cmisFolderId";
+    String CMIS_REPOSITORY_ID = "cmisRepositoryId";
+    String ALL_VERSIONS = "allVersions";
 
-    public static final String VERSIONING_STATE = "versioningState";
-    public static final String MIME_TYPE = "mimeType";
-    public static final String CHECKIN_COMMENT = "checkinComment";
-    public static final String INPUT_STREAM = "inputStream";
-    public static final String NEW_FILE_NAME = "newFileName";
-    public static final String NEW_FOLDER_NAME = "newFolderName";
+    String VERSIONING_STATE = "versioningState";
+    String MIME_TYPE = "mimeType";
+    String CHECKIN_COMMENT = "checkinComment";
+    String INPUT_STREAM = "inputStream";
+    String NEW_FILE_NAME = "newFileName";
+    String NEW_FOLDER_NAME = "newFolderName";
 
-    public static final String ACM_FOLDER_ID = "acmFolderId";
-    public static final String DESTINATION_FOLDER_ID = "dstFolderId";
-    public static final String PARENT_FOLDER_ID = "parentFolderId";
-    public static final String SOURCE_FOLDER_ID = "srcFolderId";
+    String ACM_FOLDER_ID = "acmFolderId";
+    String DESTINATION_FOLDER_ID = "dstFolderId";
+    String PARENT_FOLDER_ID = "parentFolderId";
+    String SOURCE_FOLDER_ID = "srcFolderId";
 }

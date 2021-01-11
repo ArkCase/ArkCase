@@ -40,8 +40,8 @@
 
     <bean id="correspondenceTemplateManager" class="com.armedia.acm.correspondence.service.CorrespondenceTemplateManager">
         <property name="springContextHolder" ref="acmContextHolder"/>
-        <property name="correspondenceTemplatesConfiguration"
-                  value="file:${user.home}/.arkcase/acm/correspondence-templates-configuration.json"/>
+        <property name="templatesConfiguration"
+                  value="file:${user.home}/.arkcase/acm/templates-configuration.json"/>
         <property name="objectConverter" ref="objectConverter"/>
     </bean>
 

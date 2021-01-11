@@ -33,7 +33,6 @@ import com.armedia.acm.camelcontext.context.CamelContextManager;
 import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.model.Range;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
@@ -43,6 +42,7 @@ import com.armedia.acm.plugins.ecm.utils.EcmFileCamelUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.web.api.MDCConstants;
 
+import com.google.json.JsonSanitizer;
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
@@ -109,9 +109,9 @@ public class StreamServiceImpl implements StreamService
 
         String cmisFileId = getFolderAndFilesUtils().getVersionCmisId(file, version);
         Map<String, Object> messageProps = new HashedMap();
-        messageProps.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+        messageProps.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
         messageProps.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
-        messageProps.put(EcmFileConstants.CMIS_OBJECT_ID, cmisFileId);
+        messageProps.put(ArkCaseCMISConstants.CMIS_OBJECT_ID, cmisFileId);
 
         CmisObject downloadedFile = null;
         try
@@ -316,13 +316,15 @@ public class StreamServiceImpl implements StreamService
                 // Cast back to ServletOutputStream to get the easy println methods.
                 ServletOutputStream sos = (ServletOutputStream) output;
 
+                String safeContentType = JsonSanitizer.sanitize(contentType);
+
                 // Copy multi part range.
                 for (Range range : ranges)
                 {
                     // Add multipart boundary and header fields for every range.
                     sos.println();
                     sos.println("--" + MULTIPART_BOUNDARY);
-                    sos.println("Content-Type: " + contentType);
+                    sos.println("Content-Type: " + safeContentType);
                     sos.println("Content-Range: bytes " + range.getStart() + "-" + range.getEnd() + "/" + range.getTotal());
 
                     // Copy single part range of multi part range.

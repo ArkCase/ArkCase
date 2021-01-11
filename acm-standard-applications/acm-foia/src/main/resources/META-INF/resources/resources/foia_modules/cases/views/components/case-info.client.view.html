@@ -133,11 +133,6 @@
                 </div>
                 <small class="text-muted"><span translate>cases.comp.info.modified</span></small>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-12 col-md-10">
-
-            </div>
             <div class="col-xs-12 col-md-2">
                 <div class="h4 font-bold editable-margin-left">
                     <a href="#" editable-text="objectInfo.externalIdentifier"
@@ -145,6 +140,18 @@
                         objectInfo.externalIdentifier || ('common.value.unknown' | translate) }}</a>
                 </div>
                 <small class="text-muted"><span translate>cases.comp.info.externalIdentifier.label</span></small>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-md-2">
+                <div class="h4 font-bold">
+                    <a href="#" editable-select="objectInfo.difficultyRating" onaftersave="saveCase()" permission="editCase"
+                       permission-object-type="CASE_FILE" permission-properties="objectInfo" permission-action="disable"
+                       e-ng-options="g.key as (g.value | translate) for g in difficultyRatings">
+                        {{ objectInfo.difficultyRating || 'common.value.unknown' | translate }}
+                    </a>
+                </div>
+                <small class="text-muted"><span translate>cases.comp.info.difficultyRating.label</span></small>
             </div>
         </div>
     </div>

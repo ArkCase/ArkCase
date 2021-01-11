@@ -31,6 +31,7 @@ import com.armedia.acm.core.LanguageSettingsConfig;
 import com.armedia.acm.services.labels.exception.AcmLabelManagementException;
 import com.armedia.acm.services.labels.service.LabelManagementService;
 
+import com.google.json.JsonSanitizer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
@@ -64,8 +65,8 @@ public class LabelManagementRetrieveSettings
         {
             // Get Settings. Create default settings if missed
             LanguageSettingsConfig languageSettings = labelManagementService.getSettings(true);
-
-            return languageSettings.toString();
+            String wellFormedJson = JsonSanitizer.sanitize(languageSettings.toString());
+            return wellFormedJson;
         }
         catch (Exception e)
         {

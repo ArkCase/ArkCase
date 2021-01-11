@@ -36,8 +36,10 @@ import static org.easymock.EasyMock.expectLastCall;
 import static org.junit.Assert.assertEquals;
 
 import com.armedia.acm.core.provider.TemplateModelProvider;
+import com.armedia.acm.correspondence.model.Template;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.email.model.EmailSenderConfig;
+import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.services.email.service.AcmEmailSenderService;
 import com.armedia.acm.services.email.service.AcmMailTemplateConfigurationService;
@@ -52,11 +54,14 @@ import com.armedia.acm.services.notification.model.NotificationRule;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.spring.SpringContextHolder;
 
+import org.apache.commons.io.FileUtils;
 import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -78,6 +83,8 @@ public class NotificationServiceTest extends EasyMockSupport
     private TemplatingEngine mockTemplatingEngine;
     private UserDao mockUserDao;
     private AcmEmailSenderService mockEmailSenderService;
+    private Resource templateConfiguration;
+    private List<Template> templateConfigurations = new ArrayList<>();
 
     @Before
     public void setUp() throws Exception
@@ -93,6 +100,7 @@ public class NotificationServiceTest extends EasyMockSupport
         mockTemplatingEngine = createMock(TemplatingEngine.class);
         mockUserDao = createMock(UserDao.class);
         mockEmailSenderService = createMock(AcmEmailSenderService.class);
+        templateConfiguration = new ClassPathResource("templates-configuration.json");
 
         sendExecutor = new SendExecutor();
         sendExecutor.setSpringContextHolder(mockSpringContextHolder);
@@ -138,7 +146,7 @@ public class NotificationServiceTest extends EasyMockSupport
         notification1.setAction("action");
         notification1.setData("data");
         notification1.setState("state");
-        notification1.setTemplateModelName("test");
+        notification1.setTemplateModelName("modelName");
         notification1.setEmailAddresses("user email");
 
         Notification notification2 = new Notification();
@@ -154,7 +162,7 @@ public class NotificationServiceTest extends EasyMockSupport
         notification2.setAction("action");
         notification2.setData("data");
         notification2.setState("state");
-        notification2.setTemplateModelName("test");
+        notification2.setTemplateModelName("modelName");
         notification2.setEmailAddresses("user email");
 
         notifications.add(notification1);
@@ -215,8 +223,13 @@ public class NotificationServiceTest extends EasyMockSupport
         smtpNotificationServer.setTemplatingEngine(mockTemplatingEngine);
         smtpNotificationServer.setUserDao(mockUserDao);
         smtpNotificationServer.setEmailSenderService(mockEmailSenderService);
+        smtpNotificationServer.setTemplatesConfiguration(templateConfiguration);
+        smtpNotificationServer.setObjectConverter(ObjectConverter.createObjectConverterForTests());
+        templateConfigurations = smtpNotificationServer.getObjectConverter().getJsonUnmarshaller()
+                .unmarshallCollection(FileUtils.readFileToString(templateConfiguration.getFile()), List.class, Template.class);
+        smtpNotificationServer.setTemplateConfigurations(templateConfigurations);
 
-        expect(mockTemplateService.getTemplate("test.html")).andReturn(template).times(2);
+        expect(mockTemplateService.getTemplate("modelName.html")).andReturn(template).times(2);
 
         for (Notification notification : notifications)
         {

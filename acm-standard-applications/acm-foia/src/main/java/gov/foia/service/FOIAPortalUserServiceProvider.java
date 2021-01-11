@@ -421,9 +421,9 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         return resetRequest;
     }
 
-    private static String stripPrefixAndSuffix(String userId)
+    private static String stripPrefixAndSuffix(String userId, String userPrefix)
     {
-        String stripedUserId = StringUtils.substringAfter(userId, ".");
+        String stripedUserId = StringUtils.substringAfter(userId, MapperUtils.prefixTrailingDot(userPrefix));
         stripedUserId = StringUtils.substringBeforeLast(stripedUserId, "@");
         return stripedUserId;
     }
@@ -443,7 +443,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
             AcmUser existingUser = getPortalAcmUser(user.getEmail());
             if (existingUser != null && existingUser.getUserState() != AcmUserState.VALID)
             {
-                userDto.setUserId(stripPrefixAndSuffix(existingUser.getUserId()));
+                userDto.setUserId(stripPrefixAndSuffix(existingUser.getUserId(), ldapSyncConfig.getUserPrefix()));
             }
             else
             {
@@ -567,7 +567,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
             orgAddress.setType("Business");
             Organization organization = new Organization();
             organization.setOrganizationValue(acmUser.getCompany());
-            organization.setOrganizationType("Corporation");
+            organization.setOrganizationType("Unknown");
             organization.getAddresses().add(orgAddress);
             person.getOrganizations().add(organization);
         }
@@ -918,7 +918,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         {
             Organization newOrganization = new Organization();
             newOrganization.setOrganizationValue(organizationName);
-            newOrganization.setOrganizationType("Corporation");
+            newOrganization.setOrganizationType("Unknown");
             return newOrganization;
         }
         else if (organizationList.size() == 1)
@@ -940,7 +940,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
             }
             Organization newOrganization = new Organization();
             newOrganization.setOrganizationValue(organizationName);
-            newOrganization.setOrganizationType("Corporation");
+            newOrganization.setOrganizationType("Unknown");
             return newOrganization;
 
         }

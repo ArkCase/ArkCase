@@ -27,6 +27,7 @@ package com.armedia.acm.plugins.ecm.model;
  * #L%
  */
 
+import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.converter.BooleanToStringConverter;
@@ -158,7 +159,7 @@ public class AcmFolder implements AcmEntity, Serializable, AcmObject, AcmAssigne
     {
         if (getCmisRepositoryId() == null)
         {
-            setCmisRepositoryId(EcmFileConstants.DEFAULT_CMIS_REPOSITORY_ID);
+            setCmisRepositoryId(ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
         }
     }
 

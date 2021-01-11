@@ -146,8 +146,10 @@ angular.module('tasks').controller(
 
                     $scope.startDateChanged = function() {
                         var todayDate = moment.utc().format("YYYY-MM-DDTHH:mm:ss.sss");
-                        if (Util.isEmpty($scope.config.data.taskStartDate) || moment($scope.config.data.taskStartDate).isBefore(todayDate) || moment($scope.config.data.taskStartDate).isAfter($scope.config.data.dueDate)) {
+                        if (Util.isEmpty($scope.config.data.taskStartDate) || moment($scope.config.data.taskStartDate).isBefore(todayDate)) {
                             $scope.config.data.taskStartDate = todayDate;
+                        } else if (moment($scope.config.data.taskStartDate).isAfter($scope.config.data.dueDate)){
+                            $scope.config.data.dueDate = $scope.config.data.taskStartDate;
                         } else {
                             $scope.config.data.taskStartDate = $scope.config.data.taskStartDate;
                         }
@@ -157,8 +159,10 @@ angular.module('tasks').controller(
                     $scope.dueDateChanged = function() {
                         var todayDate = moment.utc().format("YYYY-MM-DDTHH:mm:ss.sss");
                         if (Util.isEmpty($scope.config.data.dueDate) || moment($scope.config.data.dueDate).isBefore($scope.config.data.taskStartDate)) {
+                            $scope.config.data.dueDate = $scope.config.data.taskStartDate;
+                        } else if(moment($scope.config.data.dueDate).isBefore(todayDate)){
                             $scope.config.data.dueDate = todayDate;
-                        } else {
+                        }else{
                             $scope.config.data.dueDate = $scope.config.data.dueDate;
                         }
 

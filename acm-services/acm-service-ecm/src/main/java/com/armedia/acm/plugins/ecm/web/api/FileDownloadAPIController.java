@@ -121,7 +121,7 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
     {
 
         Map<String, Object> messageProps = new HashMap<>();
-        messageProps.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+        messageProps.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
         messageProps.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
         messageProps.put(CamelCMISConstants.CMIS_OBJECT_ID, fileId);
 

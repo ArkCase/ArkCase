@@ -104,7 +104,7 @@ public class SaveFOIARequestService
         return saved;
     }
 
-    private void raiseCaseEvent(boolean isNew, CaseFile saved, String dispositionValue, Authentication auth, String ipAddress,
+    public void raiseCaseEvent(boolean isNew, CaseFile saved, String dispositionValue, Authentication auth, String ipAddress,
             CaseFile oldCaseFile)
     {
         if (isNew)
