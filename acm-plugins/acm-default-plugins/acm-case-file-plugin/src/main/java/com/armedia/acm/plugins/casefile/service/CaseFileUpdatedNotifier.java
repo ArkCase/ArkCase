@@ -95,7 +95,7 @@ public class CaseFileUpdatedNotifier implements ApplicationListener<AcmEvent>
                 CaseFile caseFile = caseFileDao.find(caseId);
                 if (caseFile != null)
                 {
-                    logger.debug("On 'Case participants added' event create notification for participants.");
+                    logger.debug("On 'Case participants added' event create notification for participants and user.");
 
                     Notification notification = notificationService.getNotificationBuilder()
                             .newNotification("participantsAdded", NotificationConstants.PARTICIPANTS_ADDED, event.getObjectType(),
@@ -106,6 +106,16 @@ public class CaseFileUpdatedNotifier implements ApplicationListener<AcmEvent>
                             .build();
 
                     notificationService.saveNotification(notification);
+
+                    Notification notificationForUser = notificationService.getNotificationBuilder()
+                            .newNotification("participantsAdded", NotificationConstants.PARTICIPANTS_USER_ADDED, event.getObjectType(),
+                                    event.getObjectId(), event.getUserId())
+                            .forRelatedObjectTypeAndId(caseFile.getObjectType(), caseFile.getId())
+                            .forRelatedObjectWithNumber(caseFile.getCaseNumber())
+                            .withEmailAddressForUser(((CaseFileParticipantsModifiedEvent) event).getParticipantLdapId())
+                            .build();
+
+                    notificationService.saveNotification(notificationForUser);
                 }
 
             }

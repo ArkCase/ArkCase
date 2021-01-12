@@ -142,6 +142,7 @@ public interface NotificationConstants
     String CONSULTATION_PRIORITY_CHANGED = "notifications.consultation.priority.changed";
     String PARTICIPANTS_ADDED = "notifications.participants.added";
     String PARTICIPANTS_DELETED = "notifications.participants.deleted";
+    String PARTICIPANTS_USER_ADDED = "notifications.participants.user.added";
     String OBJECT_UNASSIGNED = "notifications.object.unassigned";
     String OBJECT_ASSIGNED = "notifications.object.assigned";
     String SINGLE_TASK_WORKFLOW = "notifications.acmdocumentsingletask.workflow";
