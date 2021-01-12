@@ -146,7 +146,7 @@ body {
     z-index: 1;
     top: 60px;
     -webkit-overflow-scrolling: touch;
-    /*padding-bottom: 100px;*/
+    padding-bottom: 25px;
 }
 
 .leftnav-menu .user-info {
