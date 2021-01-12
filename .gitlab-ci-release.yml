@@ -63,7 +63,7 @@ release_start:
     - git config --global user.name "$GIT_USERNAME"
     - git config --global user.email "$GIT_USERMAIL"
     - git remote set-url origin "$GIT_URL"
-    - mvn -B gitflow:release-start -DpushRemote=true -DreleaseVersion=$RELEASE_VERSION -DcommitDevelopmentVersionAtStart=true -DdevelopmentVersion=$DEVELOP_NEW_VERSION
+    - mvn -B gitflow:release-start -DpushRemote=true -DreleaseVersion=$RELEASE_VERSION -DcommitDevelopmentVersionAtStart=true -DdevelopmentVersion=$DEVELOP_NEW_VERSION -Dmaven.wagon.http.ssl.insecure=true
     # Deploy on test servers
     
 release_candidate_X:
@@ -91,7 +91,7 @@ release_candidate_X:
     - curl --silent --create-dirs -o /usr/share/maven/lib/ext/pom-manipulation-ext-3.8.1.jar https://repo1.maven.org/maven2/org/commonjava/maven/ext/pom-manipulation-ext/3.8.1/pom-manipulation-ext-3.8.1.jar
     - git checkout release/$RELEASE_VERSION
     - git push origin HEAD:refs/tags/$RELEASE_VERSION-$RELEASE_CANDIDATE_SUFFIX
-    - mvn -DskipTests -T 4 -B clean deploy "-DaltDeploymentRepository=arkcase.release::default::$NEXUS_URL/repository/arkcase.release/" -DversionOverride=$RELEASE_VERSION-$RELEASE_CANDIDATE_SUFFIX -DversionOsgi=false
+    - mvn -DskipTests -T 4 -B clean deploy "-DaltDeploymentRepository=arkcase.release::default::$NEXUS_URL/repository/arkcase.release/" -DversionOverride=$RELEASE_VERSION-$RELEASE_CANDIDATE_SUFFIX -DversionOsgi=false -Dmaven.wagon.http.ssl.insecure=true
     - sshpass -e sftp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $SFTP_USER@$SFTP_SERVER <<< $'put acm-standard-applications/arkcase/target/*.war /from-arkcase/arkcase-'$RELEASE_VERSION-$RELEASE_CANDIDATE_SUFFIX'.war' 
     # Deploy on test servers
 
@@ -118,9 +118,9 @@ release:
     - apt-get install -y zip sshpass
     - export SSHPASS=$SSHPASS_ARKCASE
     - git checkout release/$RELEASE_VERSION
-    - mvn -B gitflow:release-finish -DskipTestProject=true -DcommitDevelopmentVersionAtStart=true
+    - mvn -B gitflow:release-finish -DskipTestProject=true -DcommitDevelopmentVersionAtStart=true -Dmaven.wagon.http.ssl.insecure=true
     - git checkout master
-    - mvn -DskipTests -T 4 -B clean deploy "-DaltDeploymentRepository=arkcase.release::default::$NEXUS_URL/repository/arkcase.release/"
+    - mvn -DskipTests -T 4 -B clean deploy "-DaltDeploymentRepository=arkcase.release::default::$NEXUS_URL/repository/arkcase.release/" -Dmaven.wagon.http.ssl.insecure=true
     - sshpass -e sftp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $SFTP_USER@$SFTP_SERVER <<< $'put acm-standard-applications/arkcase/target/*.war /from-arkcase/arkcase-'$RELEASE_VERSION'.war' 
     # Deploy on test servers
     
@@ -133,7 +133,7 @@ start_support_branch:
     - git config --global user.name "$GIT_USERNAME"
     - git config --global user.email "$GIT_USERMAIL"
     - git remote set-url origin "$GIT_URL"
-    - mvn -B gitflow:support-start -DpushRemote=true -DtagName=$RELEASE_TAG
+    - mvn -B gitflow:support-start -DpushRemote=true -DtagName=$RELEASE_TAG -Dmaven.wagon.http.ssl.insecure=true
 
 start_hotfix:
   stage: release
@@ -145,7 +145,7 @@ start_hotfix:
     - git config --global user.email "$GIT_USERMAIL"
     - git remote set-url origin "$GIT_URL"
     - git checkout support/$HOTFIX_SUPPORT_VERSION
-    - mvn -B gitflow:hotfix-start -DpushRemote=true -DhotfixVersion=$RELEASE_VERSION -DfromBranch=support/$HOTFIX_SUPPORT_VERSION
+    - mvn -B gitflow:hotfix-start -DpushRemote=true -DhotfixVersion=$RELEASE_VERSION -DfromBranch=support/$HOTFIX_SUPPORT_VERSION -Dmaven.wagon.http.ssl.insecure=true
 
 release_hotfix:
   stage: release
