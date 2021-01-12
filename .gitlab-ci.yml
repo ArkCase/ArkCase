@@ -48,7 +48,7 @@ stages:
     - echo '  </servers>' >> /root/.m2/settings.xml
     - echo '</settings>' >> /root/.m2/settings.xml
     - export MAVEN_OPTS="-Xmx2048M -Xss256M -XX:MetaspaceSize=2048M -XX:+CMSClassUnloadingEnabled"
-    - mvn -DskipITs -T 4 -B deploy "-DaltDeploymentRepository=arkcase.snapshot::default::$NEXUS_URL/repository/arkcase.snapshot/" -Dmaven.wagon.http.ssl.insecure=true
+    - mvn -DskipITs -T 4 -B deploy "-DaltDeploymentRepository=arkcase.snapshot::default::$NEXUS_URL/repository/arkcase.snapshot/"
     - sshpass -e sftp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $SFTP_USER@$SFTP_SERVER <<< $'put acm-standard-applications/arkcase/target/*.war /from-arkcase/arkcase.war' 
  
 .build_artifact:
