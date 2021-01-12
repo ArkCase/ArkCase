@@ -2,17 +2,10 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
 
-    <bean id="acmDiffBeanConfiguration" class="org.apache.commons.io.IOUtils" factory-method="toString">
-        <constructor-arg type="java.io.InputStream">
-            <bean class="java.io.FileInputStream" destroy-method="close">
-                <constructor-arg type="java.io.File" value="${user.home}/.arkcase/acm/acmObjectDiffSettings.json"/>
-            </bean>
-        </constructor-arg>
-        <constructor-arg value="UTF-8"/>
-    </bean>
+    <bean id="acmDiffConfig" class="com.armedia.acm.objectdiff.model.AcmDiffConfig"/>
 
     <bean id="acmDiffService" class="com.armedia.acm.objectdiff.service.AcmDiffService" init-method="initConfigurationMap">
-        <property name="jsonConfiguration" ref="acmDiffBeanConfiguration"/>
+        <property name="diffConfig" ref="acmDiffConfig"/>
         <property name="objectConverter" ref="objectConverter"/>
     </bean>
 

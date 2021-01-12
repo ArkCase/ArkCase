@@ -74,5 +74,10 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-configuration</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
     </dependencies>
 </project>

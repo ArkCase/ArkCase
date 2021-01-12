@@ -36,6 +36,7 @@ import com.armedia.acm.objectdiff.model.AcmCollectionElementModified;
 import com.armedia.acm.objectdiff.model.AcmCollectionElementRemoved;
 import com.armedia.acm.objectdiff.model.AcmDiff;
 import com.armedia.acm.objectdiff.model.AcmDiffBeanConfiguration;
+import com.armedia.acm.objectdiff.model.AcmDiffConfig;
 import com.armedia.acm.objectdiff.model.AcmObjectChange;
 import com.armedia.acm.objectdiff.model.AcmObjectDiff;
 import com.armedia.acm.objectdiff.model.AcmObjectModified;
@@ -77,17 +78,22 @@ public class AcmDiffService
     private Map<String, AcmDiffBeanConfiguration> configurationMap = new HashMap<>();
     private ExpressionParser expressionParser = new SpelExpressionParser();
     private ObjectConverter objectConverter;
-    private String jsonConfiguration;
+    private AcmDiffConfig diffConfig;
 
     public void initConfigurationMap()
     {
         // objects are stored in map for more efficient access
         Map<String, AcmDiffBeanConfiguration> configurationMap = new HashMap<>();
-        List<AcmDiffBeanConfiguration> myObjects = getObjectConverter().getJsonUnmarshaller().unmarshallCollection(getJsonConfiguration(),
-                List.class, AcmDiffBeanConfiguration.class);
-
-        for (AcmDiffBeanConfiguration cfg : myObjects)
+        for (Map.Entry<String, Map<String, Object>> entry : getDiffConfig().getObjectDiffSettings().entrySet())
         {
+            AcmDiffBeanConfiguration cfg = new AcmDiffBeanConfiguration();
+            cfg.setClassName((String) entry.getValue().get("className"));
+            cfg.setName((String) entry.getValue().get("name"));
+            cfg.setDisplayExpression((String) entry.getValue().get("displayExpression"));
+            cfg.setIncludeFields((List<String>) entry.getValue().get("includeFields"));
+            cfg.setSkipFields((List<String>) entry.getValue().get("skipFields"));
+            cfg.setId((List<String>) entry.getValue().get("id"));
+            log.debug("Initialize object diff settings for class: [{}]", cfg.getClassName());
             configurationMap.put(cfg.getClassName(), cfg);
         }
         this.configurationMap = configurationMap;
@@ -729,13 +735,13 @@ public class AcmDiffService
         this.objectConverter = objectConverter;
     }
 
-    public String getJsonConfiguration()
+    public AcmDiffConfig getDiffConfig()
     {
-        return jsonConfiguration;
+        return diffConfig;
     }
 
-    public void setJsonConfiguration(String jsonConfiguration)
+    public void setDiffConfig(AcmDiffConfig diffConfig)
     {
-        this.jsonConfiguration = jsonConfiguration;
+        this.diffConfig = diffConfig;
     }
 }
