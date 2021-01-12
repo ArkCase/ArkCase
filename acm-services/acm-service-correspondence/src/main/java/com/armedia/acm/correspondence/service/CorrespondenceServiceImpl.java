@@ -118,28 +118,34 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
     {
         Template template = findTemplate(templateName);
 
-        File file = File.createTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX);
-
-        try (FileInputStream fisForUploadToEcm = new FileInputStream(file);
-                FileOutputStream fosToWriteFile = new FileOutputStream(file))
+        if(template.isEnabled())
         {
+            File file = File.createTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX);
 
-            log.debug("writing correspondence to file: " + file.getCanonicalPath());
+            try (FileInputStream fisForUploadToEcm = new FileInputStream(file);
+                    FileOutputStream fosToWriteFile = new FileOutputStream(file))
+            {
 
-            EcmFile retval = getCorrespondenceGenerator().generateCorrespondence(authentication, parentObjectType, parentObjectId,
-                    targetCmisFolderId, template, new Object[] { parentObjectId }, fosToWriteFile, fisForUploadToEcm);
+                log.debug("writing correspondence to file: " + file.getCanonicalPath());
 
-            log.debug("Correspondence CMIS ID: " + retval.getVersionSeriesId());
+                EcmFile retval = getCorrespondenceGenerator().generateCorrespondence(authentication, parentObjectType, parentObjectId,
+                        targetCmisFolderId, template, new Object[] { parentObjectId }, fosToWriteFile, fisForUploadToEcm);
 
-            getEventPublisher().publishCorrespondenceAdded(retval, authentication, true);
+                log.debug("Correspondence CMIS ID: " + retval.getVersionSeriesId());
 
-            return retval;
+                getEventPublisher().publishCorrespondenceAdded(retval, authentication, true);
+
+                return retval;
+            }
+            finally
+            {
+                FileUtils.deleteQuietly(file);
+            }
         }
-        finally
+        else
         {
-            FileUtils.deleteQuietly(file);
+            throw new IOException("Failed to generate correspondence document for template with name: [" + templateName + "]");
         }
-
     }
 
     @Override
