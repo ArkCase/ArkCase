@@ -48,6 +48,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -99,7 +100,7 @@ public class SaveCaseServiceImpl implements SaveCaseService
 
         if (!isNewCase)
         {
-           checkIfDueDateIsChanged(caseFile, ipAddress, authentication);
+           checkIfDueDateIsChangedAndRaiseEvent(caseFile, ipAddress, authentication);
         }
 
         if (files != null && !files.isEmpty())
@@ -142,7 +143,7 @@ public class SaveCaseServiceImpl implements SaveCaseService
 
         if (!isNewCase)
         {
-            checkIfDueDateIsChanged(caseFile, ipAddress, authentication);
+            checkIfDueDateIsChangedAndRaiseEvent(caseFile, ipAddress, authentication);
         }
 
         if (Objects.nonNull(filesMap))
@@ -200,13 +201,19 @@ public class SaveCaseServiceImpl implements SaveCaseService
         });
     }
 
-    private void checkIfDueDateIsChanged(CaseFile caseFile, String ipAddress, Authentication authentication) {
+    private void checkIfDueDateIsChangedAndRaiseEvent(CaseFile caseFile, String ipAddress, Authentication authentication) {
 
         CaseFile notUpdatedCaseFile = caseFileDao.find(caseFile.getId());
-        Date oldDate = notUpdatedCaseFile.getDueDate();
-        if (!oldDate.equals(caseFile.getDueDate()))
+        SimpleDateFormat datePattern = new SimpleDateFormat("MM/dd/yyyy");
+        String oldDate = datePattern.format(notUpdatedCaseFile.getDueDate());
+        String newDate = datePattern.format(caseFile.getDueDate());
+        String eventDescription = "- Due Date Changed from " + oldDate + " to " + newDate;
+
+        String caseState = "dueDateChanged";
+
+        if (!oldDate.equals(newDate))
         {
-            getCaseFileEventUtility().raiseDueDateChangedEvent(caseFile, oldDate, new Date(), ipAddress, authentication.getName(), authentication);
+            getCaseFileEventUtility().raiseCustomEvent(caseFile, caseState, eventDescription, new Date(), ipAddress, authentication.getName(), authentication);
         }
 
     }
