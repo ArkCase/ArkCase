@@ -1,0 +1,24 @@
+objectDiffConfiguration:
+  com-armedia-acm-objectdiff-model-TestPerson:
+    className: com.armedia.acm.objectdiff.model.TestPerson
+    name: person
+    displayExpression: name + ' ' + lastName
+    id:
+      - id
+    includeFields:
+      - name
+      - lastName
+      - defaultAttribute
+      - attributeList
+      - dateOfBirth
+      - employmentDate
+      - completed
+      - alarmTime
+  com-armedia-acm-objectdiff-model-TestAttribute:
+    className: com.armedia.acm.objectdiff.model.TestAttribute
+    name: attribute
+    displayExpression: value
+    id:
+      - id
+    includeFields:
+      - value

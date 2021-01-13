@@ -30,6 +30,7 @@ package com.armedia.acm.plugins.person.service;
 import static org.junit.Assert.assertEquals;
 
 import com.armedia.acm.objectdiff.model.AcmDiff;
+import com.armedia.acm.objectdiff.model.AcmDiffConfig;
 import com.armedia.acm.objectdiff.service.AcmDiffService;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
@@ -44,10 +45,13 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.yaml.snakeyaml.Yaml;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -69,6 +73,14 @@ public class PersonDiffTest
     @Before
     public void setUp()
     {
+
+        Yaml yaml = new Yaml();
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream("config/acmObjectDiffSettings.yaml");
+        Map map = (Map) yaml.load(inputStream);
+        AcmDiffConfig config = new AcmDiffConfig();
+        config.setObjectDiffSettings((Map<String, Map<String, Object>>) map.get("objectDiffConfiguration"));
+        acmDiffService.setDiffConfig(config);
+        acmDiffService.initConfigurationMap();
 
         defaultUrl = new ContactMethod();
         defaultUrl.setId(1l);
