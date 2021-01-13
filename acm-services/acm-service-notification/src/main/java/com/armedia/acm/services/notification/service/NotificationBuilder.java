@@ -129,6 +129,14 @@ public class NotificationBuilder
             return this;
         }
 
+        public Builder withEmailAddressesForNonPortalParticipants(List<AcmParticipant> participants)
+        {
+            List<AcmParticipant> nonPortalParticipants = notificationUtils.getNonPortalParticipants(participants);
+            String emailAddress = notificationUtils.getEmailsCommaSeparatedForParticipants(nonPortalParticipants);
+            this.notification.setEmailAddresses(emailAddress);
+            return this;
+        }
+
         public Builder withEmailAddressesForParticipant(String participantType, String participantLdapId)
         {
             Set<String> emailAddresses = notificationUtils.getEmailAddressForParticipant(participantType, participantLdapId);
@@ -139,6 +147,13 @@ public class NotificationBuilder
         public Builder withEmailAddressesForParticipantsForObject(String objectType, Long objectId)
         {
             String emailAddress = notificationUtils.getEmailsCommaSeparatedForParticipantsForObject(objectId, objectType);
+            this.notification.setEmailAddresses(emailAddress);
+            return this;
+        }
+
+        public Builder withEmailAddressesForNonPortalParticipantsForObject(String objectType, Long objectId)
+        {
+            String emailAddress = notificationUtils.getEmailsCommaSeparatedForNonPortalParticipantsForObject(objectId, objectType);
             this.notification.setEmailAddresses(emailAddress);
             return this;
         }

@@ -65,7 +65,7 @@ public class ConsultationUpdatedNotifier implements ApplicationListener<AcmEvent
                                 consultation.getId(), event.getUserId())
                         .forObjectWithNumber(consultation.getConsultationNumber())
                         .forObjectWithTitle(consultation.getTitle())
-                        .withEmailAddressesForParticipants(consultation.getParticipants())
+                        .withEmailAddressesForNonPortalParticipants(consultation.getParticipants())
                         .build();
 
                 notificationService.saveNotification(notification);
@@ -79,7 +79,7 @@ public class ConsultationUpdatedNotifier implements ApplicationListener<AcmEvent
                                 consultation.getId(), event.getUserId())
                         .forObjectWithNumber(consultation.getConsultationNumber())
                         .forObjectWithTitle(consultation.getTitle())
-                        .withEmailAddressesForParticipants(consultation.getParticipants())
+                        .withEmailAddressesForNonPortalParticipants(consultation.getParticipants())
                         .build();
 
                 notificationService.saveNotification(notification);
@@ -102,7 +102,7 @@ public class ConsultationUpdatedNotifier implements ApplicationListener<AcmEvent
                                     event.getObjectId(), event.getUserId())
                             .forRelatedObjectTypeAndId(consultation.getObjectType(), consultation.getId())
                             .forRelatedObjectWithNumber(consultation.getConsultationNumber())
-                            .withEmailAddressesForParticipants(consultation.getParticipants())
+                            .withEmailAddressesForNonPortalParticipants(consultation.getParticipants())
                             .build();
 
                     notificationService.saveNotification(notification);
@@ -121,7 +121,7 @@ public class ConsultationUpdatedNotifier implements ApplicationListener<AcmEvent
                                     event.getObjectId(), event.getUserId())
                             .forRelatedObjectTypeAndId(consultation.getObjectType(), consultation.getId())
                             .forRelatedObjectWithNumber(consultation.getConsultationNumber())
-                            .withEmailAddressesForParticipants(consultation.getParticipants())
+                            .withEmailAddressesForNonPortalParticipants(consultation.getParticipants())
                             .build();
 
                     notificationService.saveNotification(notification);

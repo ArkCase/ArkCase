@@ -69,7 +69,7 @@ public class TaskUpdatedNotifier implements ApplicationListener<AcmApplicationTa
             Notification notification = notificationService.getNotificationBuilder()
                     .newNotification("taskStatusChanged", NotificationConstants.TASK_STATUS_CHANGED, acmTask.getObjectType(),
                             acmTask.getId(), event.getUserId())
-                    .withEmailAddressesForParticipants(acmTask.getParticipants())
+                    .withEmailAddressesForNonPortalParticipants(acmTask.getParticipants())
                     .forObjectWithNumber(String.format("%s-%s", acmTask.getObjectType(), acmTask.getId()))
                     .forObjectWithTitle(acmTask.getTitle())
                     .build();
@@ -83,7 +83,7 @@ public class TaskUpdatedNotifier implements ApplicationListener<AcmApplicationTa
             Notification notification = notificationService.getNotificationBuilder()
                     .newNotification("taskPriorityChanged", NotificationConstants.TASK_PRIORITY_CHANGED, acmTask.getObjectType(),
                             acmTask.getId(), event.getUserId())
-                    .withEmailAddressesForParticipants(acmTask.getParticipants())
+                    .withEmailAddressesForNonPortalParticipants(acmTask.getParticipants())
                     .forObjectWithNumber(String.format("%s-%s", acmTask.getObjectType(), acmTask.getId()))
                     .forObjectWithTitle(acmTask.getTitle())
                     .build();
