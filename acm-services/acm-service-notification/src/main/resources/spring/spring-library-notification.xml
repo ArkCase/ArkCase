@@ -167,6 +167,7 @@
         <property name="acmDataService" ref="acmDataService"/>
         <property name="userDao" ref="userJpaDao"/>
         <property name="groupDao" ref="groupDao"/>
+        <property name="portalConfig" ref="arkcasePortalConfig"/>
     </bean>
 
     <bean id="notificationFormatter" class="com.armedia.acm.services.notification.service.NotificationFormatter">
