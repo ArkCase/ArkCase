@@ -45,6 +45,7 @@ import com.armedia.acm.objectdiff.model.AcmValueChanged;
 import com.armedia.acm.objectdiff.model.interfaces.AcmChangeDisplayable;
 import com.armedia.acm.objectonverter.ObjectConverter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -70,7 +71,7 @@ import java.util.Map;
 
 /**
  * Util class for comparing two objects for changes. Produces diff tree of all changes that are found Only primitive
- * with their wrappers, Classes defined in the acmObjectDiffSettings.json are supported
+ * with their wrappers, Classes defined in the objectDiffConfiguration properties are supported
  */
 public class AcmDiffService
 {
@@ -84,15 +85,10 @@ public class AcmDiffService
     {
         // objects are stored in map for more efficient access
         Map<String, AcmDiffBeanConfiguration> configurationMap = new HashMap<>();
+        ObjectMapper mapper = new ObjectMapper();
         for (Map.Entry<String, Map<String, Object>> entry : getDiffConfig().getObjectDiffSettings().entrySet())
         {
-            AcmDiffBeanConfiguration cfg = new AcmDiffBeanConfiguration();
-            cfg.setClassName((String) entry.getValue().get("className"));
-            cfg.setName((String) entry.getValue().get("name"));
-            cfg.setDisplayExpression((String) entry.getValue().get("displayExpression"));
-            cfg.setIncludeFields((List<String>) entry.getValue().get("includeFields"));
-            cfg.setSkipFields((List<String>) entry.getValue().get("skipFields"));
-            cfg.setId((List<String>) entry.getValue().get("id"));
+            AcmDiffBeanConfiguration cfg = mapper.convertValue(entry.getValue(), AcmDiffBeanConfiguration.class);
             log.debug("Initialize object diff settings for class: [{}]", cfg.getClassName());
             configurationMap.put(cfg.getClassName(), cfg);
         }
@@ -100,7 +96,7 @@ public class AcmDiffService
     }
 
     /**
-     * checks for two objects which are defined in acmObjectDiffSettings.json, if their ID's matches or not
+     * checks for two objects which are defined in objectDiffConfiguration properties, if their ID's matches or not
      *
      * @param oldObj
      *            Old Object
