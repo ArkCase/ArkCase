@@ -54,7 +54,7 @@ stages:
 .build_artifact:
   stage: build
   script:
-    - mvn -DskipITs clean install
+    - mvn -DskipITs clean install -Dmaven.wagon.http.ssl.insecure=true
   artifacts:
     paths:
       - target/*.war
@@ -128,7 +128,7 @@ start_security_scan:
     variables:
       - $START_SECURITY_SCAN
   script:
-    - export ARKCASE_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+    - export ARKCASE_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout -Dmaven.wagon.http.ssl.insecure=true)
     - echo $ARKCASE_VERSION
     - wget https://github.com/brian1917/vcodeHMAC-CLI/releases/download/v1.0/vcodeHMAC-CLI_linux
     - chmod 755 vcodeHMAC-CLI_linux
@@ -137,9 +137,9 @@ start_security_scan:
     - echo "veracode_api_key_id = $VERACODE_API_KEY" >> credentials
     - echo "veracode_api_key_secret = $VERACODE_API_SECRET" >> credentials
     # get arkcase.war version from Nexus
-    - mvn -B dependency:get -DremoteRepositories=$NEXUS_URL/repository/$ARKCASE_REPOSITORY -DgroupId=com.armedia.acm.acm-standard-applications -DartifactId=arkcase -Dversion=$ARKCASE_VERSION -Dpackaging=war -Dtransitive=false
+    - mvn -B dependency:get -DremoteRepositories=$NEXUS_URL/repository/$ARKCASE_REPOSITORY -DgroupId=com.armedia.acm.acm-standard-applications -DartifactId=arkcase -Dversion=$ARKCASE_VERSION -Dpackaging=war -Dtransitive=false -Dmaven.wagon.http.ssl.insecure=true
     - find ~/.m2/repository/com/armedia/acm -name _remote.repositories -exec rm -v {} \;
-    - mvn -B dependency:copy -Dartifact=com.armedia.acm.acm-standard-applications:arkcase:$ARKCASE_VERSION:war -DoutputDirectory=.
+    - mvn -B dependency:copy -Dartifact=com.armedia.acm.acm-standard-applications:arkcase:$ARKCASE_VERSION:war -DoutputDirectory=. -Dmaven.wagon.http.ssl.insecure=true
     # Upload war
     - 'curl -k --compressed -H "Authorization: $(./vcodeHMAC-CLI_linux -credsFile credentials -url https://analysiscenter.veracode.com/api/5.0/uploadfile.do -method POST)" https://analysiscenter.veracode.com/api/5.0/uploadfile.do -F "app_id=529559" -F "file=@arkcase-$ARKCASE_VERSION.war"'
     # Begin static scan
