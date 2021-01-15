@@ -65,7 +65,7 @@ public class ComplaintUpdatedNotifier implements ApplicationListener<AcmEvent>
                                 complaint.getObjectType(), complaint.getId(), event.getUserId())
                         .forObjectWithNumber(complaint.getComplaintNumber())
                         .forObjectWithTitle(complaint.getTitle())
-                        .withEmailAddressesForParticipants(complaint.getParticipants())
+                        .withEmailAddressesForNonPortalParticipants(complaint.getParticipants())
                         .build();
 
                 notificationService.saveNotification(notification);
@@ -79,7 +79,7 @@ public class ComplaintUpdatedNotifier implements ApplicationListener<AcmEvent>
                                 complaint.getObjectType(), complaint.getId(), event.getUserId())
                         .forObjectWithNumber(complaint.getComplaintNumber())
                         .forObjectWithTitle(complaint.getTitle())
-                        .withEmailAddressesForParticipants(complaint.getParticipants())
+                        .withEmailAddressesForNonPortalParticipants(complaint.getParticipants())
                         .build();
 
                 notificationService.saveNotification(notification);
@@ -101,7 +101,7 @@ public class ComplaintUpdatedNotifier implements ApplicationListener<AcmEvent>
                                     event.getObjectId(), event.getUserId())
                             .forRelatedObjectTypeAndId(complaint.getObjectType(), complaint.getId())
                             .forRelatedObjectWithNumber(complaint.getComplaintNumber())
-                            .withEmailAddressesForParticipants(complaint.getParticipants())
+                            .withEmailAddressesForNonPortalParticipants(complaint.getParticipants())
                             .build();
 
                     notificationService.saveNotification(notification);
@@ -119,7 +119,7 @@ public class ComplaintUpdatedNotifier implements ApplicationListener<AcmEvent>
                                     event.getObjectId(), event.getUserId())
                             .forRelatedObjectTypeAndId(complaint.getObjectType(), complaint.getId())
                             .forRelatedObjectWithNumber(complaint.getComplaintNumber())
-                            .withEmailAddressesForParticipants(complaint.getParticipants())
+                            .withEmailAddressesForNonPortalParticipants(complaint.getParticipants())
                             .build();
 
                     notificationService.saveNotification(notification);
