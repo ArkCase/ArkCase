@@ -65,7 +65,7 @@ public class CaseFileUpdatedNotifier implements ApplicationListener<AcmEvent>
                                 caseFile.getId(), event.getUserId())
                         .forObjectWithNumber(caseFile.getCaseNumber())
                         .forObjectWithTitle(caseFile.getTitle())
-                        .withEmailAddressesForParticipants(caseFile.getParticipants())
+                        .withEmailAddressesForNonPortalParticipants(caseFile.getParticipants())
                         .build();
 
                 notificationService.saveNotification(notification);
@@ -79,7 +79,7 @@ public class CaseFileUpdatedNotifier implements ApplicationListener<AcmEvent>
                                 caseFile.getId(), event.getUserId())
                         .forObjectWithNumber(caseFile.getCaseNumber())
                         .forObjectWithTitle(caseFile.getTitle())
-                        .withEmailAddressesForParticipants(caseFile.getParticipants())
+                        .withEmailAddressesForNonPortalParticipants(caseFile.getParticipants())
                         .build();
 
                 notificationService.saveNotification(notification);
@@ -102,7 +102,7 @@ public class CaseFileUpdatedNotifier implements ApplicationListener<AcmEvent>
                                     event.getObjectId(), event.getUserId())
                             .forRelatedObjectTypeAndId(caseFile.getObjectType(), caseFile.getId())
                             .forRelatedObjectWithNumber(caseFile.getCaseNumber())
-                            .withEmailAddressesForParticipants(caseFile.getParticipants())
+                            .withEmailAddressesForNonPortalParticipants(caseFile.getParticipants())
                             .build();
 
                     notificationService.saveNotification(notification);
@@ -131,7 +131,7 @@ public class CaseFileUpdatedNotifier implements ApplicationListener<AcmEvent>
                                     event.getObjectId(), event.getUserId())
                             .forRelatedObjectTypeAndId(caseFile.getObjectType(), caseFile.getId())
                             .forRelatedObjectWithNumber(caseFile.getCaseNumber())
-                            .withEmailAddressesForParticipants(caseFile.getParticipants())
+                            .withEmailAddressesForNonPortalParticipants(caseFile.getParticipants())
                             .build();
 
                     notificationService.saveNotification(notification);
