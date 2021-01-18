@@ -429,8 +429,9 @@ public class PortalRequestService
         //Setting the request owning group as the request withdrawal task owning group
         List<AcmParticipant> owningGroup = request.getParticipants().stream()
                 .filter(part -> part.getParticipantType().equals("owning group")).collect(Collectors.toList());
-
+        requestWithdrawalTask.setParticipants(owningGroup);
         requestWithdrawalTask.setCandidateGroups(Arrays.asList(owningGroup.get(0).getParticipantLdapId()));
+
 
         if (request != null)
         {
