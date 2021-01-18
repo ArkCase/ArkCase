@@ -110,10 +110,10 @@ public class QueuesTimeToCompleteService
         switch (requestType)
         {
         case FOIAConstants.NEW_REQUEST_TYPE:
-            return getHolidayConfigurationService().addWorkingDaysToDateWithBusinessHours(date,
+            return getHolidayConfigurationService().addWorkingDaysToDate(date,
                     getTimeToComplete().getRequest().getTotalTimeToComplete());
         case FOIAConstants.APPEAL_REQUEST_TYPE:
-            return getHolidayConfigurationService().addWorkingDaysToDateWithBusinessHours(date,
+            return getHolidayConfigurationService().addWorkingDaysToDate(date,
                     getTimeToComplete().getAppeal().getTotalTimeToComplete());
         default:
             throw new RuntimeException("Unknown FOIA request type: " + requestType);

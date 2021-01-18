@@ -61,6 +61,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
@@ -137,9 +138,19 @@ public class FOIARequestService
                 // Appeals are not following misdirect functionality.
                 if (foiaRequest.getId() == null && foiaRequest.getRequestType().equals(FOIAConstants.APPEAL_REQUEST_TYPE))
                 {
-                    foiaRequest.setPerfectedDate(getQueuesTimeToCompleteService().getHolidayConfigurationService()
-                            .getFirstWorkingDay(foiaRequest.getReceivedDate().toLocalDate())
-                            .atTime(foiaRequest.getReceivedDate().toLocalTime()));
+                    LocalDateTime perfectedDate;
+                    LocalDate firstWorkingDay = getQueuesTimeToCompleteService().getHolidayConfigurationService()
+                            .getFirstWorkingDayWithBusinessHoursCalculation(foiaRequest.getReceivedDate());
+
+                    if (firstWorkingDay.isEqual(foiaRequest.getReceivedDate().toLocalDate()))
+                    {
+                        perfectedDate = firstWorkingDay.atTime(foiaRequest.getReceivedDate().toLocalTime());
+                    }
+                    else
+                    {
+                        perfectedDate = firstWorkingDay.atStartOfDay();
+                    }
+                    foiaRequest.setPerfectedDate(perfectedDate);
                     foiaRequest.setDueDate(getQueuesTimeToCompleteService().addWorkingDaysToDate(
                             Date.from(foiaRequest.getPerfectedDate().atZone(ZoneId.systemDefault()).toInstant()),
                             foiaRequest.getRequestType()));
