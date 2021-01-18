@@ -118,11 +118,18 @@
                     "headerCellFilter": "translate"
                 },
                 {
-                    "name": "fieldValue",
-                    "displayName": "admin.correspondenceManagement.mergefields.grid.fieldValue",
+                    "name": "correspondenceFieldValue",
+                    "displayName": "admin.correspondenceManagement.mergefields.grid.correspondenceFieldValue",
                     "visible": true,
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<a href='#' editable-text='row.entity.fieldValue'>{{ row.entity.fieldValue}}</a>"
+                    "cellTemplate": "<a href='#' editable-text='row.entity.fieldValue'>{{ row.entity.correspondenceFieldValue}}</a>"
+                },
+                {
+                    "name": "emailFieldValue",
+                    "displayName": "admin.correspondenceManagement.mergefields.grid.emailFieldValue",
+                    "visible": true,
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<a href='#' editable-text='row.entity.fieldValue'>{{ row.entity.emailFieldValue}}</a>"
                 },
                 {
                     "name": "fieldDescription",
