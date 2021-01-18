@@ -35,7 +35,6 @@ import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
@@ -58,18 +57,9 @@ public class FOIARequestPerfectedDateHandler implements PipelineHandler<FOIARequ
 
         if (entity.getId() != null && pipelineContext.isNewCase() && entity.getRequestType().equals(FOIAConstants.NEW_REQUEST_TYPE))
         {
-            LocalDateTime perfectedDate;
-            LocalDate firstWorkingDay = holidayConfigurationService
-                    .getFirstWorkingDayWithBusinessHoursCalculation(entity.getReceivedDate());
+            LocalDateTime perfectedDate = holidayConfigurationService
+                    .getFirstWorkingDateWithBusinessHoursCalculation(entity.getReceivedDate());
 
-            if (firstWorkingDay.isEqual(entity.getReceivedDate().toLocalDate()))
-            {
-                perfectedDate = firstWorkingDay.atTime(entity.getReceivedDate().toLocalTime());
-            }
-            else
-            {
-                perfectedDate = firstWorkingDay.atStartOfDay();
-            }
             entity.setPerfectedDate(perfectedDate);
             entity.setRedirectedDate(perfectedDate);
 

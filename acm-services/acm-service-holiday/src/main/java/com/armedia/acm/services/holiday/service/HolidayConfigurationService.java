@@ -151,22 +151,29 @@ public class HolidayConfigurationService
         return resultDate;
     }
 
-    public LocalDate getFirstWorkingDayWithBusinessHoursCalculation(LocalDateTime date)
+    public LocalDateTime getFirstWorkingDateWithBusinessHoursCalculation(LocalDateTime date)
     {
-        LocalDate resultDate = date.toLocalDate();
+        LocalDateTime resultDate = date;
 
-        if (getBusinessHoursConfig().getEndOfBusinessDayEnabled() && isWorkingDay(resultDate)
+        if (getBusinessHoursConfig().getEndOfBusinessDayEnabled() && isWorkingDay(resultDate.toLocalDate())
                 && isTimeAfterBusinessHours(Date.from(date.atZone(ZoneId.systemDefault()).toInstant())))
         {
             resultDate = resultDate.plusDays(1);
         }
 
-        while (!isWorkingDay(resultDate))
+        while (!isWorkingDay(resultDate.toLocalDate()))
         {
             resultDate = resultDate.plusDays(1);
         }
 
-        return resultDate;
+        if (resultDate.isEqual(date))
+        {
+            return resultDate;
+        }
+        else
+        {
+            return resultDate.toLocalDate().atStartOfDay();
+        }
     }
 
     public int countWorkingDates(LocalDate from, LocalDate to)
