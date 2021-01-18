@@ -577,7 +577,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
         {
             if (mergeField.getFieldObjectType().equalsIgnoreCase(objectType) && mergeField.getFieldId().equalsIgnoreCase(spelExpression))
             {
-                spelExpression = mergeField.getFieldValue();
+                spelExpression = mergeField.getCorrespondenceFieldValue();
                 isExistingMergeField = true;
             }
         }
