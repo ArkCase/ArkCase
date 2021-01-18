@@ -39,6 +39,7 @@ import com.armedia.acm.services.labels.service.TranslationService;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.notification.service.NotificationService;
+import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
@@ -46,7 +47,17 @@ import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.service.group.GroupService;
-
+import gov.foia.dao.FOIARequestDao;
+import gov.foia.dao.PortalFOIAPersonDao;
+import gov.foia.model.FOIAPerson;
+import gov.foia.model.FOIARequest;
+import gov.foia.model.FOIARequesterAssociation;
+import gov.foia.model.PortalFOIAPerson;
+import gov.foia.model.PortalFOIAReadingRoom;
+import gov.foia.model.PortalFOIARequest;
+import gov.foia.model.PortalFOIARequestFile;
+import gov.foia.model.PortalFOIARequestStatus;
+import gov.foia.model.WithdrawRequest;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.io.IOUtils;
@@ -75,6 +86,7 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashSet;
 import java.util.List;
@@ -82,18 +94,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import gov.foia.dao.FOIARequestDao;
-import gov.foia.dao.PortalFOIAPersonDao;
-import gov.foia.model.FOIAPerson;
-import gov.foia.model.FOIARequest;
-import gov.foia.model.FOIARequesterAssociation;
-import gov.foia.model.PortalFOIAPerson;
-import gov.foia.model.PortalFOIAReadingRoom;
-import gov.foia.model.PortalFOIARequest;
-import gov.foia.model.PortalFOIARequestFile;
-import gov.foia.model.PortalFOIARequestStatus;
-import gov.foia.model.WithdrawRequest;
 
 /**
  * @author sasko.tanaskoski
@@ -424,6 +424,13 @@ public class PortalRequestService
         requestWithdrawalTask.setAdhocTask(true);
         requestWithdrawalTask.setCompleted(false);
         requestWithdrawalTask.setPriority("High");
+
+
+        //Setting the request owning group as the request withdrawal task owning group
+        List<AcmParticipant> owningGroup = request.getParticipants().stream()
+                .filter(part -> part.getParticipantType().equals("owning group")).collect(Collectors.toList());
+
+        requestWithdrawalTask.setCandidateGroups(Arrays.asList(owningGroup.get(0).getParticipantLdapId()));
 
         if (request != null)
         {
