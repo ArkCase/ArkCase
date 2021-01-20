@@ -41,18 +41,17 @@ import com.armedia.acm.services.email.service.EmailSource;
 import com.armedia.acm.services.email.service.EmailTemplateConfiguration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -60,10 +59,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.request.RequestPostProcessor;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -173,22 +172,18 @@ public class AcmMailTemplateConfigurationServiceAPIControllerTest
         ObjectMapper objectMapper = new ObjectMapper();
         String content = objectMapper.writeValueAsString(configuration);
         MockMultipartFile templateConfiguration = new MockMultipartFile("data", "", MediaType.APPLICATION_JSON_VALUE,
-                content.getBytes("UTF-8"));
-        MockMultipartFile template = new MockMultipartFile("file", "", MediaType.TEXT_PLAIN_VALUE, "template".getBytes("UTF-8"));
+                content.getBytes(StandardCharsets.UTF_8));
+        MockMultipartFile template = new MockMultipartFile("file", "template",
+                MediaType.TEXT_PLAIN_VALUE, "template".getBytes(StandardCharsets.UTF_8));
 
         // when
-        MockMultipartHttpServletRequestBuilder builder = MockMvcRequestBuilders.fileUpload(CONTROLLER_PATH);
-        builder.with(new RequestPostProcessor()
-        {
-            @Override
-            public MockHttpServletRequest postProcessRequest(MockHttpServletRequest request)
-            {
-                request.setMethod("PUT");
-                return request;
-            }
+        MockMultipartHttpServletRequestBuilder builder = MockMvcRequestBuilders.multipart(CONTROLLER_PATH);
+        builder.with(request -> {
+            request.setMethod("PUT");
+            return request;
         });
 
-        MvcResult result = mockMvc.perform(builder.file(templateConfiguration).file(template)).andReturn();
+        MvcResult result = mockMvc.perform(builder.file(template).file(templateConfiguration)).andReturn();
 
         // then
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());

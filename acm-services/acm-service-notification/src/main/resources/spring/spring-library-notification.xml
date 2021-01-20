@@ -72,6 +72,14 @@
     <bean id="requestDownloadedModelProvider" class="com.armedia.acm.services.notification.service.provider.RequestDownloadedModelProvider">
     </bean>
 
+    <bean id="acmEntityTemplateNoUserPrefixModelProvider"
+          class="com.armedia.acm.services.notification.service.provider.AcmEntityTemplateNoUserPrefixModelProvider">
+        <property name="dataService" ref="acmDataService"/>
+        <property name="userInfoHelper" ref="userInfoHelper"/>
+        <property name="objectTitleConfigurationService" ref="objectTitleConfigurationService"/>
+        <property name="userDao" ref="userJpaDao"/>
+    </bean>
+
     <bean id="acmEntitySendExecutor" class="com.armedia.acm.services.notification.service.SendExecutor">
         <property name="springContextHolder" ref="acmContextHolder"/>
         <property name="templateModelProvider" ref="acmEntityTemplateModelProvider"/>
