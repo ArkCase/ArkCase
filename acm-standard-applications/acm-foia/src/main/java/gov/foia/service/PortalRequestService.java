@@ -35,6 +35,7 @@ import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.service.impl.CreateAdHocTaskService;
 import com.armedia.acm.services.config.lookups.model.StandardLookupEntry;
 import com.armedia.acm.services.config.lookups.service.LookupDao;
+import com.armedia.acm.services.holiday.service.HolidayConfigurationService;
 import com.armedia.acm.services.labels.service.TranslationService;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
@@ -88,6 +89,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -130,6 +132,8 @@ public class PortalRequestService
     private TranslationService translationService;
 
     private CreateAdHocTaskService createAdHocTaskService;
+
+    private HolidayConfigurationService holidayConfigurationService;
 
     private final String WITHDRAW_REQUEST_TITLE = "Withdraw Request";
 
@@ -432,6 +436,9 @@ public class PortalRequestService
         requestWithdrawalTask.setParticipants(owningGroup);
         requestWithdrawalTask.setCandidateGroups(Arrays.asList(owningGroup.get(0).getParticipantLdapId()));
 
+        //Setting task due date
+        requestWithdrawalTask.setDueDate(getHolidayConfigurationService().addWorkingDaysToDateWithBusinessHours(new Date(), 3));
+
 
         if (request != null)
         {
@@ -633,5 +640,13 @@ public class PortalRequestService
     public void setPersonAssociationDao(PersonAssociationDao personAssociationDao)
     {
         this.personAssociationDao = personAssociationDao;
+    }
+
+    public HolidayConfigurationService getHolidayConfigurationService() {
+        return holidayConfigurationService;
+    }
+
+    public void setHolidayConfigurationService(HolidayConfigurationService holidayConfigurationService) {
+        this.holidayConfigurationService = holidayConfigurationService;
     }
 }
