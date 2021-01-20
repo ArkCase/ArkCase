@@ -59,7 +59,6 @@ import org.springframework.transaction.annotation.Transactional;
         "/spring/spring-library-ms-outlook-integration.xml",
         "/spring/spring-library-notification.xml",
         "/spring/spring-library-particpants.xml",
-       // "/spring/spring-library-profile.xml",
         "/spring/spring-library-property-file-manager.xml",
         "/spring/spring-library-search.xml",
         "/spring/spring-library-service-data.xml",
