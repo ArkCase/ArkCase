@@ -35,13 +35,14 @@ import com.armedia.acm.plugins.profile.service.UserOrgService;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import gov.foia.model.FOIARequest;
+import gov.foia.model.FOIARequestModel;
 
 import java.util.List;
 
 /**
  * @author darko.dimitrievski
  */
-public class FOIARequestTemplateModelProvider implements TemplateModelProvider<FOIARequest>
+public class FOIARequestTemplateModelProvider implements TemplateModelProvider<FOIARequestModel>
 {
     
     private ObjectAssociationDao objectAssociationDao;
@@ -50,7 +51,7 @@ public class FOIARequestTemplateModelProvider implements TemplateModelProvider<F
     private UserOrgService userOrgService;
     
     @Override
-    public FOIARequest getModel(Object foiaRequest)
+    public FOIARequestModel getModel(Object foiaRequest)
     {
         FOIARequest request = (FOIARequest) foiaRequest;
         if(request.getRequestType().equals("Appeal"))
@@ -67,13 +68,15 @@ public class FOIARequestTemplateModelProvider implements TemplateModelProvider<F
             request.setAssigneeTitle(userOrgService.getUserOrgForUserId(assigneeLdapID).getTitle());
             request.setAssigneeFullName(assignee.getFirstName() + " " + assignee.getLastName());
         }
-        return request;
+        FOIARequestModel requestModel = new FOIARequestModel();
+        requestModel.setRequest(request);
+        return requestModel;
     }
 
     @Override
-    public Class<FOIARequest> getType()
+    public Class<FOIARequestModel> getType()
     {
-        return FOIARequest.class;
+        return FOIARequestModel.class;
     }
 
     public ObjectAssociationDao getObjectAssociationDao() 

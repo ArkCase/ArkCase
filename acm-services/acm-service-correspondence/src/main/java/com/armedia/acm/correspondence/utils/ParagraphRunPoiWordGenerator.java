@@ -631,7 +631,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
             }
             else if (FILES.equalsIgnoreCase(spelExpression))
             {
-                String spelExpressionForContainerId = "container.id";
+                String spelExpressionForContainerId = object.getClass().getName().contains("foia") ? "request.container.id" : "container.id";
                 Long containerId = Long.valueOf(String.valueOf(parser.parseRaw(spelExpressionForContainerId).getValue(stContext)));
 
                 List<EcmFile> allFiles = getEcmFileDao().findForContainer(containerId);
