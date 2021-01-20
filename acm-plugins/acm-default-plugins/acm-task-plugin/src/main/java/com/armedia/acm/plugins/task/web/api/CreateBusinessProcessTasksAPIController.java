@@ -38,8 +38,8 @@ import com.armedia.acm.plugins.task.model.TaskConstants;
 import com.armedia.acm.plugins.task.service.AcmTaskService;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -101,8 +101,8 @@ public class CreateBusinessProcessTasksAPIController
     @RequestMapping(value = "/newdocuments/review", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseBody
     public List<AcmTask> reviewNewDocuments(@RequestPart(name = "task") AcmTask task,
-            @RequestParam(name = "businessProcessName") String businessProcessName,
-            @RequestPart(name = "files") List<MultipartFile> filesToUpload,
+            @RequestParam(name = "businessProcessName") String businessProcessType,
+            @RequestPart(name = "files", required = false) List<MultipartFile> filesToUpload,
             Authentication authentication, HttpSession httpSession)
             throws AcmCreateObjectFailedException, AcmUserActionFailedException, LinkAlreadyExistException,
             AcmObjectNotFoundException

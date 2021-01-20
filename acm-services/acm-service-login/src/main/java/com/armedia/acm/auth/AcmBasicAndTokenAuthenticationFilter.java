@@ -53,8 +53,6 @@ import org.springframework.web.bind.ServletRequestUtils;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -97,11 +95,9 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
     }
 
     @Override
-    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+            throws IOException, ServletException
     {
-        final HttpServletRequest request = (HttpServletRequest) req;
-        final HttpServletResponse response = (HttpServletResponse) res;
-
         AuthRequestType authRequestType = detectAuthRequestType(request);
         switch (authRequestType)
         {

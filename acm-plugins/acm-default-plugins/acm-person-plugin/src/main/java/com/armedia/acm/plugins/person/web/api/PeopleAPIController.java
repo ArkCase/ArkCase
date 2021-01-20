@@ -62,6 +62,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.persistence.PersistenceException;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -69,10 +70,9 @@ import java.util.List;
 public class PeopleAPIController
 {
 
-    private Logger log = LogManager.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
     private PersonService personService;
     private ExecuteSolrQuery executeSolrQuery;
-    private String facetedSearchPath;
 
     @PreAuthorize("#in.id == null or hasPermission(#in.id, 'PERSON', 'editPerson')")
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -96,9 +96,13 @@ public class PeopleAPIController
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseBody
     public Person insertPersonMultipart(@RequestPart(name = "person") Person in,
-            @RequestPart(name = "pictures") List<MultipartFile> pictures, Authentication auth)
+            @RequestPart(name = "pictures", required = false) List<MultipartFile> pictures, Authentication auth)
             throws AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException
     {
+        if (pictures == null)
+        {
+            pictures = new ArrayList<>();
+        }
         try
         {
             log.debug("Persist a Person: [{}];", in);
@@ -240,8 +244,11 @@ public class PeopleAPIController
     @PreAuthorize("hasPermission(#personId, 'PERSON', 'editObject')")
     @RequestMapping(value = "/{personId}/images/changeImageDescription/{imageId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public EcmFile changeImageDescription(@PathVariable("personId") Long personId, @PathVariable("imageId") Long imageId, @RequestBody UploadImageRequest data, Authentication auth)
-            throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmUpdateObjectFailedException, PipelineProcessException, AcmCreateObjectFailedException {
+    public EcmFile changeImageDescription(@PathVariable("personId") Long personId, @PathVariable("imageId") Long imageId,
+            @RequestBody UploadImageRequest data, Authentication auth)
+            throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmUpdateObjectFailedException, PipelineProcessException,
+            AcmCreateObjectFailedException
+    {
         log.debug("Changing description for Image with id: [{}];", imageId);
         return personService.changeDescriptionForImage(personId, imageId, data.isDefault(), data.getDescription(), auth);
     }
@@ -250,7 +257,7 @@ public class PeopleAPIController
     @RequestMapping(value = "/{personId}/images/{imageId}", method = RequestMethod.DELETE)
     @ResponseBody
     public ResponseEntity deleteImage(@PathVariable("personId") Long personId, @PathVariable("imageId") Long imageId, Authentication auth)
-            throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException
+            throws AcmUserActionFailedException, AcmObjectNotFoundException
     {
 
         log.debug("Delete Image for a Person: [{}];", personId);
@@ -277,7 +284,7 @@ public class PeopleAPIController
         {
             log.error("Error while executing Solr query: {}", query, e);
             throw new AcmObjectNotFoundException("Person", null,
-                    String.format("Could not retrieve %s for person id[%s]", objectType, personId).toString(), e);
+                    String.format("Could not retrieve %s for person id[%s]", objectType, personId), e);
         }
     }
 
@@ -290,14 +297,4 @@ public class PeopleAPIController
     {
         this.executeSolrQuery = executeSolrQuery;
     }
-
-    /**
-     * @param facetedSearchPath
-     *            the facetedSearchPath to set
-     */
-    public void setFacetedSearchPath(String facetedSearchPath)
-    {
-        this.facetedSearchPath = facetedSearchPath;
-    }
-
 }
