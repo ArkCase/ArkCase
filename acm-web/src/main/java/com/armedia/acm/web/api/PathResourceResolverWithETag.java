@@ -30,7 +30,6 @@ package com.armedia.acm.web.api;
 import org.springframework.core.io.Resource;
 import org.springframework.web.servlet.resource.PathResourceResolver;
 import org.springframework.web.servlet.resource.ResourceResolverChain;
-import org.springframework.web.servlet.resource.VersionedResource;
 
 import javax.servlet.http.HttpServletRequest;
 

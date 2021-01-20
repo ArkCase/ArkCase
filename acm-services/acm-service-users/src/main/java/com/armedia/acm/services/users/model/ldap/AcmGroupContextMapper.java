@@ -83,8 +83,9 @@ public class AcmGroupContextMapper implements ContextMapper
                             .anyMatch(id -> id.contains("range=")))
             {
                 // Incrementally retrieve all members from large groups
-                List<String> members = DefaultIncrementalAttributesMapper.lookupAttributeValues(template, adapter.getDn(), "member");
+                List<Object> members = DefaultIncrementalAttributesMapper.lookupAttributeValues(template, adapter.getDn(), "member");
                 return members.stream()
+                        .map(Object::toString)
                         .map(DistinguishedName::new)
                         .map(DistinguishedName::toString)
                         .collect(Collectors.toSet());

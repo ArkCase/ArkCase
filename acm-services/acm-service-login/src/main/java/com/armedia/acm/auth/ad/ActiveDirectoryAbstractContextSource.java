@@ -31,7 +31,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.support.MessageSourceAccessor;
-import org.springframework.core.JdkVersion;
 import org.springframework.ldap.core.AuthenticationSource;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.support.BaseLdapPathContextSource;
@@ -46,6 +45,7 @@ import javax.naming.Context;
 import javax.naming.NamingException;
 import javax.naming.OperationNotSupportedException;
 import javax.naming.directory.DirContext;
+import javax.naming.ldap.LdapName;
 
 import java.util.Hashtable;
 import java.util.Map;
@@ -252,6 +252,12 @@ public abstract class ActiveDirectoryAbstractContextSource implements BaseLdapPa
     public void setBase(String base)
     {
         this.base = new DistinguishedName(base);
+    }
+
+    @Override
+    public LdapName getBaseLdapName()
+    {
+        return (LdapName)this.base.clone();
     }
 
     /*
@@ -548,7 +554,7 @@ public abstract class ActiveDirectoryAbstractContextSource implements BaseLdapPa
 
     String getJdkVersion()
     {
-        return JdkVersion.getJavaVersion();
+        return System.getProperty("java.version");
     }
 
     protected Hashtable getAnonymousEnv()
