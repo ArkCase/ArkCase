@@ -41,7 +41,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -60,6 +59,7 @@ import org.springframework.transaction.annotation.Transactional;
         "/spring/spring-library-ms-outlook-integration.xml",
         "/spring/spring-library-notification.xml",
         "/spring/spring-library-particpants.xml",
+       // "/spring/spring-library-profile.xml",
         "/spring/spring-library-property-file-manager.xml",
         "/spring/spring-library-search.xml",
         "/spring/spring-library-service-data.xml",
@@ -93,6 +93,7 @@ public class NotificationIT
         System.setProperty("configuration.server.url", "http://localhost:9999");
         System.setProperty("application.name.default", "arkcase,ldap");
         System.setProperty("application.profile.reversed", "runtime");
+        System.setProperty("configuration.client.spring.path", "spring");
     }
 
     @Autowired

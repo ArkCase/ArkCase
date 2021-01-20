@@ -92,13 +92,13 @@ public class FindParticipantTypesForObjectTypeNameAPIControllerTest
         unit.setAcmApplication(app);
 
         MvcResult result = mockMvc.perform(get("/api/latest/users/participantTypesForObjectTypeName/{objectTypeName}", objectTypeName)
-                .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
 
         String jsonString = result.getResponse().getContentAsString();
-        log.debug("Got JSON: " + jsonString);
+        log.debug("Got JSON: [{}]", jsonString);
 
         ObjectMapper om = new ObjectMapper();
         JavaType javaType = om.getTypeFactory().constructParametricType(List.class, AcmParticipantType.class);

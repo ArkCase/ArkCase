@@ -37,6 +37,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -106,14 +107,14 @@ public class SearchUsersAPIControllerTest extends EasyMockSupport
                 get("/api/v1/plugin/search/usersSearch?start=0&n=10&sortDirection=ASC&searchKeyword=&exclude=")
                         .principal(mockAuthentication))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json;charset=ISO-8859-1"))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
 
         verifyAll();
 
         String jsonString = result.getResponse().getContentAsString();
 
-        log.debug("Got JSON: " + jsonString);
+        log.debug("Got JSON: [{}]", jsonString);
 
         JSONObject response = new JSONObject(jsonString);
 
@@ -143,14 +144,14 @@ public class SearchUsersAPIControllerTest extends EasyMockSupport
                 get("/api/v1/plugin/search/usersSearch?start=0&n=10&sortDirection=ASC&searchKeyword=keyword&exclude=")
                         .principal(mockAuthentication))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json;charset=ISO-8859-1"))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
 
         verifyAll();
 
         String jsonString = result.getResponse().getContentAsString();
 
-        log.debug("Got JSON: " + jsonString);
+        log.debug("Got JSON: [{}]", jsonString);
 
         JSONObject response = new JSONObject(jsonString);
 
@@ -186,14 +187,14 @@ public class SearchUsersAPIControllerTest extends EasyMockSupport
                 get("/api/v1/plugin/search/usersSearch?start=0&n=10&sortDirection=DESC&searchKeyword=&exclude=task-owner")
                         .principal(mockAuthentication))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json;charset=ISO-8859-1"))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
 
         verifyAll();
 
         String jsonString = result.getResponse().getContentAsString();
 
-        log.debug("Got JSON: " + jsonString);
+        log.debug("Got JSON: [{}]", jsonString);
 
         JSONObject response = new JSONObject(jsonString);
 
@@ -229,14 +230,14 @@ public class SearchUsersAPIControllerTest extends EasyMockSupport
                 get("/api/v1/plugin/search/usersSearch?start=0&n=10&sortDirection=DESC&searchKeyword=keyword&exclude=task-owner")
                         .principal(mockAuthentication))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json;charset=ISO-8859-1"))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
 
         verifyAll();
 
         String jsonString = result.getResponse().getContentAsString();
 
-        log.debug("Got JSON: " + jsonString);
+        log.debug("Got JSON: [{}]", jsonString);
 
         JSONObject response = new JSONObject(jsonString);
 
@@ -272,14 +273,14 @@ public class SearchUsersAPIControllerTest extends EasyMockSupport
                 get("/api/v1/plugin/search/usersSearch?start=0&n=10&sortDirection=DESC&searchKeyword=keyword&exclude=task-owner&userId=test-user")
                         .principal(mockAuthentication))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json;charset=ISO-8859-1"))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
 
         verifyAll();
 
         String jsonString = result.getResponse().getContentAsString();
 
-        log.debug("Got JSON: " + jsonString);
+        log.debug("Got JSON: [{}]", jsonString);
 
         JSONObject response = new JSONObject(jsonString);
 
