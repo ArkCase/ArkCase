@@ -99,6 +99,7 @@
             <beans:property name="searchResults" ref="searchResults"/>
             <beans:property name="translationService" ref="translationService"/>
             <beans:property name="createAdHocTaskService" ref="createAdHocTaskService"/>
+            <beans:property name="holidayConfigurationService" ref="holidayConfigurationService"/>
         </beans:bean>
 
         <beans:bean id="holdedAndAppealedRequestsDueDateUpdate" class="gov.foia.service.HoldedAndAppealedRequestsDueDateUpdate">
