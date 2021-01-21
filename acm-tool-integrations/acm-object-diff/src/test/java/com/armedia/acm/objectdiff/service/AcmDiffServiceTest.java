@@ -35,6 +35,7 @@ import com.armedia.acm.objectdiff.model.AcmChange;
 import com.armedia.acm.objectdiff.model.AcmCollectionElementAdded;
 import com.armedia.acm.objectdiff.model.AcmCollectionElementRemoved;
 import com.armedia.acm.objectdiff.model.AcmDiff;
+import com.armedia.acm.objectdiff.model.AcmDiffConfig;
 import com.armedia.acm.objectdiff.model.AcmObjectReplaced;
 import com.armedia.acm.objectdiff.model.AcmValueChanged;
 import com.armedia.acm.objectdiff.model.TestAttribute;
@@ -48,7 +49,9 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.yaml.snakeyaml.Yaml;
 
+import java.io.InputStream;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -56,6 +59,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -80,6 +84,14 @@ public class AcmDiffServiceTest
     public void setUp()
     {
         assertNotNull(diffService);
+
+        Yaml yaml = new Yaml();
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream("config/acmObjectDiffSettings.yaml");
+        Map map = (Map) yaml.load(inputStream);
+        AcmDiffConfig config = new AcmDiffConfig();
+        config.setObjectDiffSettings((Map<String, Map<String, Object>>) map.get("objectDiffConfiguration"));
+        diffService.setDiffConfig(config);
+        diffService.initConfigurationMap();
 
         oldPerson = new TestPerson();
 
