@@ -36,6 +36,7 @@ import com.armedia.acm.objectdiff.model.AcmCollectionElementModified;
 import com.armedia.acm.objectdiff.model.AcmCollectionElementRemoved;
 import com.armedia.acm.objectdiff.model.AcmDiff;
 import com.armedia.acm.objectdiff.model.AcmDiffBeanConfiguration;
+import com.armedia.acm.objectdiff.model.AcmDiffConfig;
 import com.armedia.acm.objectdiff.model.AcmObjectChange;
 import com.armedia.acm.objectdiff.model.AcmObjectDiff;
 import com.armedia.acm.objectdiff.model.AcmObjectModified;
@@ -44,6 +45,7 @@ import com.armedia.acm.objectdiff.model.AcmValueChanged;
 import com.armedia.acm.objectdiff.model.interfaces.AcmChangeDisplayable;
 import com.armedia.acm.objectonverter.ObjectConverter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -69,7 +71,7 @@ import java.util.Map;
 
 /**
  * Util class for comparing two objects for changes. Produces diff tree of all changes that are found Only primitive
- * with their wrappers, Classes defined in the acmObjectDiffSettings.json are supported
+ * with their wrappers, Classes defined in the objectDiffConfiguration properties are supported
  */
 public class AcmDiffService
 {
@@ -77,24 +79,24 @@ public class AcmDiffService
     private Map<String, AcmDiffBeanConfiguration> configurationMap = new HashMap<>();
     private ExpressionParser expressionParser = new SpelExpressionParser();
     private ObjectConverter objectConverter;
-    private String jsonConfiguration;
+    private AcmDiffConfig diffConfig;
 
     public void initConfigurationMap()
     {
         // objects are stored in map for more efficient access
         Map<String, AcmDiffBeanConfiguration> configurationMap = new HashMap<>();
-        List<AcmDiffBeanConfiguration> myObjects = getObjectConverter().getJsonUnmarshaller().unmarshallCollection(getJsonConfiguration(),
-                List.class, AcmDiffBeanConfiguration.class);
-
-        for (AcmDiffBeanConfiguration cfg : myObjects)
+        ObjectMapper mapper = new ObjectMapper();
+        for (Map.Entry<String, Map<String, Object>> entry : getDiffConfig().getObjectDiffSettings().entrySet())
         {
+            AcmDiffBeanConfiguration cfg = mapper.convertValue(entry.getValue(), AcmDiffBeanConfiguration.class);
+            log.debug("Initialize object diff settings for class: [{}]", cfg.getClassName());
             configurationMap.put(cfg.getClassName(), cfg);
         }
         this.configurationMap = configurationMap;
     }
 
     /**
-     * checks for two objects which are defined in acmObjectDiffSettings.json, if their ID's matches or not
+     * checks for two objects which are defined in objectDiffConfiguration properties, if their ID's matches or not
      *
      * @param oldObj
      *            Old Object
@@ -729,13 +731,13 @@ public class AcmDiffService
         this.objectConverter = objectConverter;
     }
 
-    public String getJsonConfiguration()
+    public AcmDiffConfig getDiffConfig()
     {
-        return jsonConfiguration;
+        return diffConfig;
     }
 
-    public void setJsonConfiguration(String jsonConfiguration)
+    public void setDiffConfig(AcmDiffConfig diffConfig)
     {
-        this.jsonConfiguration = jsonConfiguration;
+        this.diffConfig = diffConfig;
     }
 }
