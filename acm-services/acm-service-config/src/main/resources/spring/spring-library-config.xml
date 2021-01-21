@@ -148,10 +148,11 @@
                     <property name="jsonMarshaller" ref="jsonMarshaller"/>
                     <aop:scoped-proxy/>
                 </bean>
-                <bean class="com.armedia.acm.services.config.model.JsonConfig">
+                <bean class="com.armedia.acm.services.config.model.ConfigBean">
                     <property name="configName" value="reportsParameters"/>
-                    <property name="configDescription" value="Reports parameters"/>
-                    <property name="json" ref="reportsParametersJsonConfig"/>
+                    <property name="description" value="Reports parameters"/>
+                    <property name="config" ref="reportsParametersConfig"/>
+                    <property name="jsonMarshaller" ref="jsonMarshaller"/>
                 </bean>
                 <bean class="com.armedia.acm.services.config.model.ConfigBean">
                     <property name="configName" value="acm-reports-server-config"/>
