@@ -65,7 +65,8 @@ public class CorrespondenceMapper
         CorrespondenceMergeField mergeField = new CorrespondenceMergeField();
 
         mergeField.setFieldId(configuration.getFieldId());
-        mergeField.setFieldValue(configuration.getFieldValue());
+        mergeField.setCorrespondenceFieldValue(configuration.getCorrespondenceFieldValue());
+        mergeField.setEmailFieldValue(configuration.getEmailFieldValue());
         mergeField.setFieldDescription(configuration.getFieldDescription());
         mergeField.setFieldObjectType(configuration.getFieldObjectType());
 

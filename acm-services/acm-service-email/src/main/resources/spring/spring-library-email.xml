@@ -51,6 +51,7 @@
 
     <bean id="templatingEngine" class="com.armedia.acm.services.email.service.TemplatingEngine">
         <property name="applicationConfig" ref="applicationProperties"/>
+        <property name="mergeFieldManager" ref="correspondenceMergeFieldManager"/>
     </bean>
 
     <bean id="forwardedAsAttachmentEmailExtractor" class="com.armedia.acm.services.email.service.ForwardedAsAttachmentEmailExtractor"/>

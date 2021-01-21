@@ -44,7 +44,9 @@ public class CorrespondenceMergeField
 
     private String fieldId;
 
-    private String fieldValue;
+    private String correspondenceFieldValue;
+
+    private String emailFieldValue;
 
     private String fieldDescription;
 
@@ -68,20 +70,20 @@ public class CorrespondenceMergeField
     }
 
     /**
-     * @return the fieldValue
+     * @return the correspondenceFieldValue
      */
-    public String getFieldValue()
+    public String getCorrespondenceFieldValue()
     {
-        return fieldValue;
+        return correspondenceFieldValue;
     }
 
     /**
-     * @param fieldValue
-     *            the fieldValue to set
+     * @param correspondenceFieldValue
+     *            the correspondenceFieldValue to set
      */
-    public void setFieldValue(String fieldValue)
+    public void setCorrespondenceFieldValue(String correspondenceFieldValue)
     {
-        this.fieldValue = fieldValue;
+        this.correspondenceFieldValue = correspondenceFieldValue;
     }
 
     /**
@@ -116,5 +118,22 @@ public class CorrespondenceMergeField
     public void setFieldObjectType(String fieldObjectType)
     {
         this.fieldObjectType = fieldObjectType;
+    }
+
+    /**
+     * @return the emailFieldValue
+     */
+    public String getEmailFieldValue()
+    {
+        return emailFieldValue;
+    }
+
+    /**
+     * @param emailFieldValue
+     *            the emailFieldValue to set
+     */
+    public void setEmailFieldValue(String emailFieldValue)
+    {
+        this.emailFieldValue = emailFieldValue;
     }
 }

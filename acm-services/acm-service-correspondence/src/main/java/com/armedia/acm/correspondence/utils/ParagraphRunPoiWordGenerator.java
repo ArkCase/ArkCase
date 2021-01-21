@@ -577,7 +577,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
         {
             if (mergeField.getFieldObjectType().equalsIgnoreCase(objectType) && mergeField.getFieldId().equalsIgnoreCase(spelExpression))
             {
-                spelExpression = mergeField.getFieldValue();
+                spelExpression = mergeField.getCorrespondenceFieldValue();
                 isExistingMergeField = true;
             }
         }
@@ -631,7 +631,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
             }
             else if (FILES.equalsIgnoreCase(spelExpression))
             {
-                String spelExpressionForContainerId = "container.id";
+                String spelExpressionForContainerId = object.getClass().getName().contains("foia") ? "request.container.id" : "container.id";
                 Long containerId = Long.valueOf(String.valueOf(parser.parseRaw(spelExpressionForContainerId).getValue(stContext)));
 
                 List<EcmFile> allFiles = getEcmFileDao().findForContainer(containerId);
