@@ -196,28 +196,6 @@ angular.module('services').factory('Consultation.InfoService', [ '$resource', '$
 
     /**
      * @ngdoc method
-     * @name saveConsultationInfo
-     * @methodOf services:Consultation.InfoService
-     *
-     * @description
-     * Save consultation data
-     *
-     * @param {Object} consultationInfo  Consultation data
-     *
-     * @returns {Object} Promise
-     */
-    Service.saveConsultationInfo = function(consultationInfo) {
-        
-        return Util.serviceCall({
-            service: Service.save,
-            data: JSOG.encode(consultationInfo),
-            onSuccess: function(data) {
-                return data;
-            }
-        })
-    };
-    /**
-     * @ngdoc method
      * @name saveConsultationWithFiles
      * @methodOf services:Consultation.InfoService
      *
