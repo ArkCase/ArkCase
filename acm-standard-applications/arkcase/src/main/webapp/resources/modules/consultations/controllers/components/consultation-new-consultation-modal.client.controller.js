@@ -398,11 +398,8 @@ angular.module('consultations').controller(
                     _.forEach($scope.uploadFiles, function (attachment) {
                         formdata.append('file', attachment);
                     });
-                    saveConsultation(formdata);
-                } else {
-                    saveConsultationInfo($scope.config.data);
                 }
-                
+                saveConsultation(formdata);
             };
 
             function setInitiatorPersonAssociation(association, person) {
@@ -414,28 +411,6 @@ angular.module('consultations').controller(
                 $scope.config.data.personAssociations.push(association)
                 
             }
-
-            var saveConsultationInfo = function (consultation) {
-                ConsultationInfoService.saveConsultationInfo(consultation).then(function (response) {
-                    $scope.onModalClose();
-                    $scope.loading = false;
-                    $scope.loadingIcon = "fa fa-floppy-o";
-                    ObjectService.showObject(ObjectService.ObjectTypes.CONSULTATION, response.id);
-                }, function (error) {
-                    $scope.loading = false;
-                    $scope.loadingIcon = "fa fa-floppy-o";
-                    $scope.$emit("report-object-update-failed", error);
-                    if (error.data && error.data.message) {
-                        if (error.data.field == "duplicateName") {
-                            MessageService.error($translate.instant("consultations.newConsultations.duplicateFilesName.error"));
-                        } else {
-                            MessageService.error(error.data.message);
-                        }
-                    } else {
-                        MessageService.error(error);
-                    }
-                });
-            };
 
             var saveConsultation = function (consultation) {
                 ConsultationInfoService.saveConsultationWithFiles(consultation).then(function (response) {
