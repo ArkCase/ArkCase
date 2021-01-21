@@ -138,8 +138,7 @@ public class FOIARequestService
                 if (foiaRequest.getId() == null && foiaRequest.getRequestType().equals(FOIAConstants.APPEAL_REQUEST_TYPE))
                 {
                     foiaRequest.setPerfectedDate(getQueuesTimeToCompleteService().getHolidayConfigurationService()
-                            .getFirstWorkingDay(foiaRequest.getReceivedDate().toLocalDate())
-                            .atTime(foiaRequest.getReceivedDate().toLocalTime()));
+                            .getFirstWorkingDateWithBusinessHoursCalculation(foiaRequest.getReceivedDate()));
                     foiaRequest.setDueDate(getQueuesTimeToCompleteService().addWorkingDaysToDate(
                             Date.from(foiaRequest.getPerfectedDate().atZone(ZoneId.systemDefault()).toInstant()),
                             foiaRequest.getRequestType()));
