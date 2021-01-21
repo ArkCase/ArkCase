@@ -93,7 +93,7 @@ public class FOIAExtensionHandler implements PipelineHandler<FOIARequest, CaseFi
                     } else
                     {
                         entity.setDueDate(
-                                getHolidayConfigurationService().addWorkingDaysToDateWithBusinessHours(originalRequest.getDueDate(),
+                                getHolidayConfigurationService().addWorkingDaysToDate(originalRequest.getDueDate(),
                                 foiaConfig.getRequestExtensionWorkingDays()));
                     }
 

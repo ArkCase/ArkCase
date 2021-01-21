@@ -31,11 +31,12 @@ import com.armedia.acm.configuration.service.ConfigurationPropertyService;
 import com.armedia.acm.core.model.ApplicationConfig;
 import com.armedia.acm.services.holiday.model.BusinessHoursConfig;
 import com.armedia.acm.services.holiday.model.HolidayConfiguration;
-import com.armedia.acm.services.holiday.model.HolidayItem;
 import com.armedia.acm.services.holiday.model.HolidayConfigurationProps;
+import com.armedia.acm.services.holiday.model.HolidayItem;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -148,6 +149,31 @@ public class HolidayConfigurationService
         }
 
         return resultDate;
+    }
+
+    public LocalDateTime getFirstWorkingDateWithBusinessHoursCalculation(LocalDateTime date)
+    {
+        LocalDateTime resultDate = date;
+
+        if (getBusinessHoursConfig().getEndOfBusinessDayEnabled() && isWorkingDay(resultDate.toLocalDate())
+                && isTimeAfterBusinessHours(Date.from(date.atZone(ZoneId.systemDefault()).toInstant())))
+        {
+            resultDate = resultDate.plusDays(1);
+        }
+
+        while (!isWorkingDay(resultDate.toLocalDate()))
+        {
+            resultDate = resultDate.plusDays(1);
+        }
+
+        if (resultDate.isEqual(date))
+        {
+            return resultDate;
+        }
+        else
+        {
+            return resultDate.toLocalDate().atStartOfDay();
+        }
     }
 
     public int countWorkingDates(LocalDate from, LocalDate to)
