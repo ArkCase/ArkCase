@@ -1,0 +1,9 @@
+[
+  {
+    "fieldId": "test",
+    "correspondenceFieldValue" : "test",
+    "emailFieldValue" : null,
+    "fieldDescription": "Test",
+    "fieldObjectType": "CASE_FILE"
+  }
+]
