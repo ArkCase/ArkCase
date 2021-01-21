@@ -100,7 +100,8 @@ angular.module('admin').controller('Admin.CMMergeFieldsController',
 
                             var mergeField = {
                                 "fieldId" : $scope.fieldId,
-                                "fieldValue" : $scope.fieldValue,
+                                "correspondenceFieldValue" : $scope.correspondenceFieldValue,
+                                "emailFieldValue": $scope.emailFieldValue,
                                 "fieldDescription" : $scope.fieldDescription,
                                 "fieldObjectType" : $scope.fieldObjectType
                             };
