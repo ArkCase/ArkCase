@@ -9,10 +9,15 @@
                     placeholder="{{ 'admin.correspondenceManagement.mergefields.addModal.placeHolders.fieldId' | translate }}" ng-readonly="isEdit">
         </div>
         <div class="form-group">
-            <label for="fieldValue" translate>admin.correspondenceManagement.mergefields.addModal.fieldValue</label><span class="required-asterisk">*</span>
-            <input ng-model="fieldValue" id="fieldValue" type="text" class="input-md form-control" required="required"
+            <label for="correspondenceFieldValue" translate>admin.correspondenceManagement.mergefields.addModal.correspondenceFieldValue</label><span class="required-asterisk">*</span>
+            <input ng-model="correspondenceFieldValue" id="correspondenceFieldValue" type="text" class="input-md form-control" required="required"
                     placeholder="{{ 'admin.correspondenceManagement.mergefields.addModal.placeHolders.fieldValue' | translate }}">
         </div>
+       <div class="form-group">
+           <label for="emailFieldValue" translate>admin.correspondenceManagement.mergefields.addModal.emailFieldValue</label><span class="required-asterisk">*</span>
+           <input ng-model="emailFieldValue" id="emailFieldValue" type="text" class="input-md form-control" required="required"
+                  placeholder="{{ 'admin.correspondenceManagement.mergefields.addModal.placeHolders.fieldValue' | translate }}">
+       </div>
         <div class="form-group">
             <label for="fieldDescription" translate>admin.correspondenceManagement.mergefields.addModal.fieldDescription</label><span class="required-asterisk">*</span>
             <input ng-model="fieldDescription" id="fieldDescription" type="text" class="input-md form-control" required="required"
