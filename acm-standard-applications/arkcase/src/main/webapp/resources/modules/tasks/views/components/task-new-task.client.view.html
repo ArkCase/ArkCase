@@ -53,6 +53,7 @@
                 </div>
                 <div class="form-group col-sm-4" ng-if="config.data.attachedToObjectType=='CASE_FILE'">
                     <label class="control-label">{{ 'tasks.newTask.caseTaskType.label' | translate }}</label>
+                    <span class="required-asterisk">*</span>
                     <select ng-model="config.data.type"
                             ng-options="caseTaskType.key as caseTaskType.value | translate for caseTaskType in caseTaskTypes"
                             ng-change="updateDetailsFromTaskType()" class="form-control input-md">
