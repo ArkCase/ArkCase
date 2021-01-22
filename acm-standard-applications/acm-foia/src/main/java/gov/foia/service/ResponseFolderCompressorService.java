@@ -27,13 +27,6 @@ package gov.foia.service;
  * #L%
  */
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.ApplicationEventPublisherAware;
-
 import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.compressfolder.FolderCompressor;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
@@ -43,6 +36,13 @@ import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
+
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 import gov.foia.model.FOIARequest;
 import gov.foia.model.FoiaConfig;
@@ -66,14 +66,10 @@ public class ResponseFolderCompressorService implements ApplicationEventPublishe
 
     private FoiaConfig foiaConfig;
 
-    private RequestResponseFolderService requestResponseFolderService;
-
     public String compressResponseFolder(Long requestId)
             throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmFolderException
     {
         FOIARequest request = (FOIARequest) caseFileDao.find(requestId);
-
-        requestResponseFolderService.saveResponseInstallmentDetails(requestId);
 
         Long responseFolderId = getResponseFolderService().getResponseFolder(request).getId();
 
@@ -214,8 +210,4 @@ public class ResponseFolderCompressorService implements ApplicationEventPublishe
         this.foiaConfig = foiaConfig;
     }
 
-    public void setRequestResponseFolderService(RequestResponseFolderService requestResponseFolderService)
-    {
-        this.requestResponseFolderService = requestResponseFolderService;
-    }
 }

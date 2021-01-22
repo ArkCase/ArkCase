@@ -883,6 +883,21 @@ LANGUAGE plpgsql;
             <column name="fo_difficulty_rating" type="TEXT"></column>
         </addColumn>
     </changeSet>
-    
+
+    <changeSet id="52-add-modified-date-column-response-instalments" author="aleksandar.acevski" dbms="oracle,mssql,postgres,mysql">
+        <addColumn tableName="acm_response_installment">
+            <column name="cm_modified" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="53-change-on-update-trigger-to-modified-column-response-instalments" author="aleksandar.acevski"
+               dbms="oracle,mssql,postgres,mysql">
+        <sql>ALTER TABLE acm_response_installment MODIFY cm_modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP</sql>
+        <sql>ALTER TABLE acm_response_installment MODIFY cm_due_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP</sql>
+    </changeSet>
+
+
 </databaseChangeLog>
 
