@@ -898,11 +898,6 @@ LANGUAGE plpgsql;
         <sql>ALTER TABLE acm_response_installment MODIFY cm_due_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP</sql>
     </changeSet>
 
-    <changeSet id="54-add-person-portal-role" author="ncuculova">
-        <addColumn tableName="acm_person">
-            <column name="fo_portal_role" type="VARCHAR(20)"/>
-        </addColumn>
-    </changeSet>
 
 </databaseChangeLog>
 
