@@ -38,11 +38,9 @@
 
                 <div class="col-sm-6 form-group" ng-if="config.data.attachedToObjectType=='CASE_FILE'">
                     <label for="contactPersonAssociation" translate> tasks.newTask.contactPersonAssociation.label </label>
-                    <span class="required-asterisk">*</span>
                     <input type="text" id="contactPersonAssociation" ng-model="contactPersonName"
                             placeholder="{{ 'tasks.newTask.contactPersonAssociation.placeholder' | translate }}"
-                            ng-required="config.data.attachedToObjectType=='CASE_FILE'" class="input-md form-control"
-                            id="contactAssociation" ng-click="addPerson()">
+                            class="input-md form-control" id="contactAssociation" ng-click="addPerson()">
                 </div>
 
             </div>
@@ -55,8 +53,7 @@
                 </div>
                 <div class="form-group col-sm-4" ng-if="config.data.attachedToObjectType=='CASE_FILE'">
                     <label class="control-label">{{ 'tasks.newTask.caseTaskType.label' | translate }}</label>
-                    <span class="required-asterisk">*</span>
-                    <select ng-model="config.data.type" ng-required="config.data.attachedToObjectType=='CASE_FILE'"
+                    <select ng-model="config.data.type"
                             ng-options="caseTaskType.key as caseTaskType.value | translate for caseTaskType in caseTaskTypes"
                             ng-change="updateDetailsFromTaskType()" class="form-control input-md">
                         <option value="" translate>tasks.newTask.caseTaskType.placeholder</option>
