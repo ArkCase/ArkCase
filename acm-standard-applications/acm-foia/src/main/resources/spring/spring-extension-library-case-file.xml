@@ -190,7 +190,6 @@
             <beans:property name="responseFolderService" ref="responseFolderService"/>
             <beans:property name="acmFolderService" ref="acmFolderService"/>
             <beans:property name="foiaConfig" ref="foiaConfig"/>
-            <beans:property name="requestResponseFolderService" ref="requestResponseFolderService"/>
         </beans:bean>
 
         <beans:bean id="responseFolderNotifyService" class="gov.foia.service.ResponseFolderNotifyService">
