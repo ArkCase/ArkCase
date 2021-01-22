@@ -35,6 +35,7 @@
             <beans:property name="fileUploadUrl" value="#{foiaRequestBrokerConfig.fileUploadUrl}"/>
             <beans:property name="caseFileDao" ref="caseFileDao"/>
             <beans:property name="responseFolderCompressorService" ref="responseFolderCompressorService"/>
+            <beans:property name="requestResponseFolderService" ref="requestResponseFolderService"/>
         </beans:bean>
 
         <!-- FOIA Request Update Notifier -->

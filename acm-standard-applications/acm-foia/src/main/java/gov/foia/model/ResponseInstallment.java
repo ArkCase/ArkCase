@@ -31,7 +31,16 @@ package gov.foia.model;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -47,9 +56,13 @@ public class ResponseInstallment implements Serializable
     @Column(name = "cm_response_installment_id")
     Long id;
 
-    @Column(name = "cm_due_date")
+    @Column(name = "cm_due_date", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date dueDate;
+
+    @Column(name = "cm_modified", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date modified;
 
     @Column(name = "cm_max_download_attempts")
     private Integer maxDownloadAttempts;
@@ -74,6 +87,16 @@ public class ResponseInstallment implements Serializable
     public Date getDueDate()
     {
         return dueDate;
+    }
+
+    public Date getModified()
+    {
+        return modified;
+    }
+
+    public void setModified(Date modified)
+    {
+        this.modified = modified;
     }
 
     public void setDueDate(Date dueDate)
