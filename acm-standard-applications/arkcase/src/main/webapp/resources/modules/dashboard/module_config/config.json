@@ -43,7 +43,7 @@
                 },
                 {
                     "name": "name",
-                    "displayName": "dashboard.widgets.myCases.table.header.caseId",
+                    "displayName": "dashboard.widgets.myCases.table.header.caseNumber",
                     "headerCellFilter": "translate",
                     "enableSorting": true,
                     "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>"
@@ -111,7 +111,7 @@
                 },
                 {
                     "name": "name",
-                    "displayName": "dashboard.widgets.activeCaseFiles.table.header.caseId",
+                    "displayName": "dashboard.widgets.activeCaseFiles.table.header.caseNumber",
                     "headerCellFilter": "translate",
                     "enableSorting": true,
                     "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>"
@@ -179,7 +179,7 @@
                 },
                 {
                     "name": "name",
-                    "displayName": "dashboard.widgets.myConsultations.table.header.consultationId",
+                    "displayName": "dashboard.widgets.myConsultations.table.header.consultationNumber",
                     "headerCellFilter": "translate",
                     "enableSorting": true,
                     "cellTemplate": "<a data-ui-sref=\"consultations.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>"

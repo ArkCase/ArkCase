@@ -13,8 +13,8 @@
         "op": "replace",
         "path": "/components/?@.id=='myCases'/columnDefs/?@.name=='name'",
         "value": {
-            "name": "object_id_s",
-            "displayName": "dashboard.widgets.myCases.table.header.caseId",
+            "name": "name",
+            "displayName": "dashboard.widgets.myCases.table.header.requestNumber",
             "headerCellFilter": "translate",
             "enableSorting": true,
             "type": "number",
@@ -215,10 +215,10 @@
                     "enableSorting": true
                 },
                 {
-                    "name": "object_id_s",
+                    "name": "name",
                     "type": "number",
-                    "displayName": "dashboard.widgets.myOverdueRequests.uniqueId",
-                    "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.object_id_s})\">{{row.entity.object_id_s}}</a>",
+                    "displayName": "dashboard.widgets.myOverdueRequests.requestNumber",
+                    "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.object_id_s})\">{{COL_FIELD}}</a>",
                     "headerCellFilter": "translate",
                     "enableSorting": true
                 },
