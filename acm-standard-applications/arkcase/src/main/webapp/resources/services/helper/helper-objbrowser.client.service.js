@@ -426,7 +426,11 @@ angular.module('services').factory(
                                         if (!objectTypeString) {
                                             objectTypeString = objectType;
                                         }
-                                        MessageService.info(objectTypeString + " with ID " + objectId + " was updated.");
+                                        if (data.objectNumber) {
+                                            MessageService.info(objectTypeString + " with number " + data.objectNumber + " was updated.");
+                                        } else {
+                                            MessageService.info(objectTypeString + " with ID " + objectId + " was updated.");
+                                        }
 
                                         var frevvoRequest = null;
                                         switch (objectType) {

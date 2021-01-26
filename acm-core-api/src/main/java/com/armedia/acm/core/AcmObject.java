@@ -47,4 +47,5 @@ public interface AcmObject
     String getObjectType();
 
     Long getId();
+
 }
