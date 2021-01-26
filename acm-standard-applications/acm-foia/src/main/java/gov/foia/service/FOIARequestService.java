@@ -44,7 +44,6 @@ import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.objectassociation.service.ObjectAssociationService;
@@ -325,9 +324,6 @@ public class FOIARequestService
         AcmFolder originalRootFolder = container.getFolder();
         originalRootFolder.setParentFolder(containerCaseFile.getFolder());
         originalRootFolder.setName(originalrequestFolderName);
-        originalRootFolder.setStatus(EcmFileConstants.RECORD);
-
-        setSubfoldersAsRecords(originalRootFolder);
 
         if (files != null && files.getChildren() != null)
         {
@@ -335,20 +331,11 @@ public class FOIARequestService
             {
                 EcmFile ecmFile = getEcmFileService().findById(file.getObjectId());
                 ecmFile.setContainer(containerCaseFile);
-                ecmFile.setStatus(EcmFileConstants.RECORD);
 
                 getEcmFileDao().save(ecmFile);
             }
         }
 
-    }
-
-    private void setSubfoldersAsRecords(AcmFolder folder)
-    {
-        folder.getChildrenFolders().forEach(subfolder -> {
-            subfolder.setStatus(EcmFileConstants.RECORD);
-            setSubfoldersAsRecords(subfolder);
-        });
     }
 
     /**
