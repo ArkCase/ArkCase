@@ -59,8 +59,8 @@
                     "width": 60
                 },
                 {
-                    "name": "object_id_s",
-                    "displayName": "queues.table.header.id",
+                    "name": "name",
+                    "displayName": "queues.table.header.requestNumber",
                     "headerCellFilter": "translate",
                     "headerTooltip": "queues.table.headerTooltip.requestId",
                     "cellTemplate": "<div ng-click='grid.appScope.rowClick(row);' style='cursor:pointer;'  class='ui-grid-cell-contents'>{{COL_FIELD CUSTOM_FILTERS}}</div>",
