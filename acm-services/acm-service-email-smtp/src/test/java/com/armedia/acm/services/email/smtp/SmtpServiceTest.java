@@ -39,7 +39,6 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 import com.armedia.acm.email.model.EmailSenderConfig;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
@@ -49,7 +48,6 @@ import com.armedia.acm.services.email.model.EmailWithAttachmentsAndLinksDTO;
 import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksDTO;
 import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksResultDTO;
-import com.armedia.acm.services.email.sender.service.EmailSenderConfigurationServiceImpl;
 import com.armedia.acm.services.email.service.AcmEmailContentGeneratorService;
 import com.armedia.acm.services.users.model.AcmUser;
 
@@ -59,14 +57,12 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.security.core.Authentication;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -99,15 +95,6 @@ public class SmtpServiceTest
 
     @Mock
     private EcmFile mockEcmFile;
-
-    @Mock
-    private File mockFile;
-
-    @Mock
-    private FileInputStream mockFileInputStream;
-
-    @Mock
-    private EmailSenderConfigurationServiceImpl mockEmailSenderConfigurationService;
 
     @Mock
     private ApplicationEventPublisher mockApplicationEventPublisher;
@@ -158,14 +145,11 @@ public class SmtpServiceTest
         inputDTO.setFileIds(fileIds);
         inputDTO.setFooter(footer);
         inputDTO.setModelReferenceName("someEmail");
+        inputDTO.setSubject("subject");
 
         senderConfig.setEncryption("off");
 
         when(mockAcmEmailContentGeneratorService.generateEmailBody(inputDTO, email, mockAuthentication)).thenReturn(note);
-
-        when(mockAcmUser.getUserId()).thenReturn("ann-acm");
-
-        when(mockEcmFileService.findById(fileIds.get(0))).thenReturn(mockEcmFile);
 
         // when
         List<EmailWithEmbeddedLinksResultDTO> results = service.sendEmailWithEmbeddedLinks(inputDTO, mockAuthentication, mockAcmUser);
@@ -176,7 +160,7 @@ public class SmtpServiceTest
         EmailWithEmbeddedLinksResultDTO resultDTO = results.get(0);
         assertThat(resultDTO.isState(), is(true));
         assertThat(resultDTO.getEmailAddress(), is(email));
-        verify(mockMailSender, times(1)).sendEmail(eq(email), anyString(), eq(note), anyString(), anyString());
+        verify(mockMailSender, times(1)).sendEmail(eq(email), anyString(), eq(note), eq(null), eq(null));
 
     }
 
@@ -197,6 +181,7 @@ public class SmtpServiceTest
         inputDTO.setHeader(header);
         inputDTO.setBody(note);
         inputDTO.setFooter(footer);
+        inputDTO.setSubject("subject");
 
         senderConfig.setEncryption("off");
 
@@ -211,10 +196,8 @@ public class SmtpServiceTest
 
         ArgumentCaptor<String> capturedNote = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<ArrayList<InputStreamDataSource>> capturedAttachments = ArgumentCaptor.forClass((Class) ArrayList.class);
-        when(mockEmailSenderConfigurationService.readConfiguration()).thenReturn(senderConfig);
 
         ArgumentCaptor<byte[]> read = ArgumentCaptor.forClass(byte[].class);
-        when(mockEcmFileService.downloadAsInputStream(attachmentIds.get(0))).thenReturn(mockInputStream);
         when(mockEcmFileService.downloadAsInputStream(attachmentIds.get(0), null)).thenReturn(mockInputStream);
         when(mockEcmFileService.findById(attachmentIds.get(0))).thenReturn(mockEcmFile);
         when(mockInputStream.read(read.capture(), eq(0), eq(16384))).thenReturn(-1);
@@ -232,17 +215,12 @@ public class SmtpServiceTest
         when(mockEcmFile.getId()).thenReturn(attachmentIds.get(0));
         when(mockEcmFile.getObjectType()).thenReturn(EcmFileConstants.OBJECT_FILE_TYPE);
 
-        whenNew(File.class).withArguments(filePaths.get(0)).thenReturn(mockFile);
-        whenNew(FileInputStream.class).withArguments(mockFile).thenReturn(mockFileInputStream);
-        when(mockFile.getName()).thenReturn("temp.zip");
-
-        inputDTO.setObjectType("ObjectType");
         // when
         service.sendEmailWithAttachments(inputDTO, mockAuthentication, mockAcmUser);
 
         // then
-        verify(mockMailSender).sendMultipartEmail(eq(email), anyString(), anyString(), capturedNote.capture(),
-                capturedAttachments.capture(), anyString(), anyString());
+        verify(mockMailSender).sendMultipartEmail(eq(email), eq(null), anyString(), capturedNote.capture(),
+                capturedAttachments.capture(), eq(null), eq(null));
         assertThat(note.equals(capturedNote.getValue()), is(true));
         assertThat(capturedAttachments.getValue(), notNullValue());
         assertThat(capturedAttachments.getValue().size(), is(2));
@@ -291,11 +269,9 @@ public class SmtpServiceTest
         ArgumentCaptor<String> capturedNote = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<ArrayList<InputStreamDataSource>> capturedAttachments = ArgumentCaptor.forClass((Class) ArrayList.class);
 
-        when(mockEmailSenderConfigurationService.readConfiguration()).thenReturn(senderConfig);
         when(mockAcmEmailContentGeneratorService.generateEmailBody(inputDTO, email, mockAuthentication)).thenReturn(note);
 
         ArgumentCaptor<byte[]> read = ArgumentCaptor.forClass(byte[].class);
-        when(mockEcmFileService.downloadAsInputStream(attachmentIds.get(0))).thenReturn(mockInputStream);
         when(mockEcmFileService.downloadAsInputStream(attachmentIds.get(0), null)).thenReturn(mockInputStream);
         when(mockEcmFileService.findById(attachmentIds.get(0))).thenReturn(mockEcmFile);
         when(mockEcmFileService.findById(fileId)).thenReturn(mockEcmFile);
@@ -314,16 +290,12 @@ public class SmtpServiceTest
         when(mockEcmFile.getId()).thenReturn(attachmentIds.get(0));
         when(mockEcmFile.getObjectType()).thenReturn(EcmFileConstants.OBJECT_FILE_TYPE);
 
-        whenNew(File.class).withArguments(filePaths.get(0)).thenReturn(mockFile);
-        whenNew(FileInputStream.class).withArguments(mockFile).thenReturn(mockFileInputStream);
-        when(mockFile.getName()).thenReturn("temp.zip");
-
         // when
         service.sendEmailWithAttachmentsAndLinks(inputDTO, mockAuthentication, mockAcmUser);
 
         // then
-        verify(mockMailSender).sendMultipartEmail(eq(email), anyString(), capturedNote.capture(), capturedAttachments.capture(),
-                anyString(), anyString());
+        verify(mockMailSender).sendMultipartEmail(eq(email), eq(null), capturedNote.capture(), capturedAttachments.capture(),
+                eq(null), eq(null));
         assertEquals(note, capturedNote.getValue());
         assertThat(capturedAttachments.getValue(), notNullValue());
         assertThat(capturedAttachments.getValue().size(), is(2));
