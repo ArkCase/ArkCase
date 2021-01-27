@@ -42,6 +42,7 @@ public class AcmObjectEvent
     private Long parentObjectId;
     private String parentObjectType;
     private Date date;
+    private String objectNumber;
 
     public AcmObjectEvent(String action)
     {
@@ -128,9 +129,16 @@ public class AcmObjectEvent
         this.date = date;
     }
 
+    public String getObjectNumber() {
+        return objectNumber;
+    }
+
+    public void setObjectNumber(String objectNumber) {
+        this.objectNumber = objectNumber;
+    }
+
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "AcmObjectEvent{" +
                 "objectType='" + objectType + '\'' +
                 ", objectId=" + objectId +
@@ -140,6 +148,7 @@ public class AcmObjectEvent
                 ", parentObjectId=" + parentObjectId +
                 ", parentObjectType='" + parentObjectType + '\'' +
                 ", date=" + date +
+                ", objectNumber='" + objectNumber + '\'' +
                 '}';
     }
 }

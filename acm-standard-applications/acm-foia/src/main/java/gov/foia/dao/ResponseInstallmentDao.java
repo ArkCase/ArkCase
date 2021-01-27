@@ -28,15 +28,15 @@ package gov.foia.dao;
  */
 
 import com.armedia.acm.data.AcmAbstractDao;
-import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
-import gov.foia.model.FOIARequest;
-import gov.foia.model.ResponseInstallment;
+
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+
 import java.util.Date;
 import java.util.List;
+
+import gov.foia.model.ResponseInstallment;
 
 public class ResponseInstallmentDao extends AcmAbstractDao<ResponseInstallment>
 {
@@ -69,24 +69,16 @@ public class ResponseInstallmentDao extends AcmAbstractDao<ResponseInstallment>
                 && responseInstallment.getDueDate().after(new Date()))
         {
             downloadAttempts += 1;
-            updateResponseInstallment(requestNumber, downloadAttempts);
+
+            responseInstallment.setNumDownloadAttempts(downloadAttempts);
+            this.save(responseInstallment);
+
             return true;
         }
         else
         {
             return false;
         }
-    }
-
-
-    private int updateResponseInstallment(String requestNumber, Integer downloadAttempts)
-    {
-        Query update = getEm().createQuery("UPDATE ResponseInstallment ri"
-                + " SET ri.numDownloadAttempts = :downloadAttempts"
-                + " WHERE ri.parentNumber = :requestNumber");
-        update.setParameter("downloadAttempts", downloadAttempts);
-        update.setParameter("requestNumber", requestNumber);
-        return update.executeUpdate();
     }
 
 }

@@ -1,8 +1,8 @@
-package gov.foia.model;
+package com.armedia.acm.web.api;
 
 /*-
  * #%L
- * ACM Standard Application: Freedom of Information Act
+ * ACM Shared Web Artifacts
  * %%
  * Copyright (C) 2014 - 2021 ArkCase LLC
  * %%
@@ -27,17 +27,10 @@ package gov.foia.model;
  * #L%
  */
 
-public class FOIARequestModel
+import org.springframework.core.io.InputStreamSource;
+import org.springframework.core.io.Resource;
+
+public interface VersionedResource extends Resource, InputStreamSource
 {
-    private FOIARequest request;
-
-    public FOIARequest getRequest()
-    {
-        return request;
-    }
-
-    public void setRequest(FOIARequest request)
-    {
-        this.request = request;
-    }
+    String getVersion();
 }

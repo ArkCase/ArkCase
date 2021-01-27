@@ -60,103 +60,103 @@ public class AcmAuthenticationManager implements AuthenticationManager
     private AcmGrantedAuthoritiesMapper authoritiesMapper;
     private DefaultAuthenticationEventPublisher authenticationEventPublisher;
     private UserDao userDao;
-    private Logger log = LogManager.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException
     {
         Exception lastException = null;
 
-            String principal = authentication.getName();
+        String principal = authentication.getName();
 
-            Map<String, AuthenticationProvider> providerMap = getSpringContextHolder().getAllBeansOfType(AuthenticationProvider.class);
-            Authentication providerAuthentication = null;
-            for (Map.Entry<String, AuthenticationProvider> providerEntry : providerMap.entrySet())
+        Map<String, AuthenticationProvider> providerMap = getSpringContextHolder().getAllBeansOfType(AuthenticationProvider.class);
+        Authentication providerAuthentication = null;
+        for (Map.Entry<String, AuthenticationProvider> providerEntry : providerMap.entrySet())
+        {
+            try
             {
-                try
+                if (providerEntry.getValue() instanceof AcmLdapAuthenticationProvider)
                 {
-                    if (providerEntry.getValue() instanceof AcmLdapAuthenticationProvider)
+                    if (principal.isEmpty())
                     {
-                        if (principal.isEmpty())
-                        {
-                            throw new BadCredentialsException("Empty Username");
-                        }
-                        AcmLdapAuthenticationProvider provider = (AcmLdapAuthenticationProvider) providerEntry.getValue();
+                        throw new BadCredentialsException("Empty Username");
+                    }
+                    AcmLdapAuthenticationProvider provider = (AcmLdapAuthenticationProvider) providerEntry.getValue();
                     String userDomain = provider.getAcmLdapSyncConfig().getUserDomain();
                     if (principal.endsWith(userDomain))
-                        {
-                            providerAuthentication = provider.authenticate(authentication);
-                        }
-                    }
-                    else if (providerEntry.getValue() instanceof AcmActiveDirectoryAuthenticationProvider)
                     {
-                        if (principal.isEmpty())
-                        {
-                            throw new BadCredentialsException("Empty Username");
-                        }
-                        AcmActiveDirectoryAuthenticationProvider provider = (AcmActiveDirectoryAuthenticationProvider) providerEntry
-                                .getValue();
+                        providerAuthentication = provider.authenticate(authentication);
+                    }
+                }
+                else if (providerEntry.getValue() instanceof AcmActiveDirectoryAuthenticationProvider)
+                {
+                    if (principal.isEmpty())
+                    {
+                        throw new BadCredentialsException("Empty Username");
+                    }
+                    AcmActiveDirectoryAuthenticationProvider provider = (AcmActiveDirectoryAuthenticationProvider) providerEntry
+                            .getValue();
                     String userDomain = provider.getAcmLdapSyncConfig().getUserDomain();
                     if (principal.endsWith(userDomain))
-                        {
-                            providerAuthentication = provider.authenticate(authentication);
-                        }
-
-                    }
-                    else
                     {
-                        providerAuthentication = providerEntry.getValue().authenticate(authentication);
+                        providerAuthentication = provider.authenticate(authentication);
                     }
 
-                    if (providerAuthentication != null)
-                    {
-                        break;
-                    }
                 }
-                catch (Exception ae)
+                else
                 {
-                    lastException = ae;
+                    providerAuthentication = providerEntry.getValue().authenticate(authentication);
+                }
+
+                if (providerAuthentication != null)
+                {
+                    break;
                 }
             }
-
-            if (providerAuthentication != null)
+            catch (Exception ae)
             {
-                // Spring Security publishes an authentication success event all by itself, so we do not have to raise
-                // one here.
-                log.debug("Processed authentication request for user: {}", providerAuthentication.getName());
-                return getAcmAuthentication(providerAuthentication);
+                lastException = ae;
             }
-            if (lastException != null)
+        }
+
+        if (providerAuthentication != null)
+        {
+            // Spring Security publishes an authentication success event all by itself, so we do not have to raise
+            // one here.
+            log.debug("Processed authentication request for user: {}", providerAuthentication.getName());
+            return getAcmAuthentication(providerAuthentication);
+        }
+        if (lastException != null)
+        {
+            AuthenticationException ae;
+            if (lastException instanceof ProviderNotFoundException)
             {
-                AuthenticationException ae;
-                if (lastException instanceof ProviderNotFoundException)
+                log.error("No authentication provider found for [{}]", authentication);
+                ae = new NoProviderFoundException("Authentication problem. Please contact your administrator.");
+            }
+            else if (lastException instanceof AuthenticationException && lastException.getCause() != null
+                    && lastException.getCause() instanceof AcmActiveDirectoryAuthenticationException)
+            {
+                log.error("Authentication [{}] failed to authenticate: [{}]", authentication, lastException.getMessage());
+                ae = (AuthenticationException) lastException;
+            }
+
+            else if (lastException instanceof BadCredentialsException)
+            {
+                if (getUserDao().isUserPasswordExpired(authentication.getName()))
                 {
-                    log.error("No authentication provider found for [{}]", authentication);
-                    ae = new NoProviderFoundException("Authentication problem. Please contact your administrator.");
+                    ae = new AuthenticationServiceException(
+                            "Your password has expired! An email with reset password link was sent to you.", lastException);
                 }
-                else if (lastException instanceof AuthenticationException && lastException.getCause() != null
-                        && lastException.getCause() instanceof AcmActiveDirectoryAuthenticationException)
+                else
                 {
-                    log.error("Authentication [{}] failed to authenticate: [{}]", authentication, lastException.getMessage());
-                    ae = (AuthenticationException) lastException;
+                    ae = new AuthenticationServiceException(ExceptionUtils.getRootCauseMessage(lastException), lastException);
                 }
 
-                else if (lastException instanceof BadCredentialsException)
-                {
-                    if (getUserDao().isUserPasswordExpired(authentication.getName()))
-                    {
-                        ae = new AuthenticationServiceException(
-                                "Your password has expired! An email with reset password link was sent to you.", lastException);
-                    }
-                    else
-                    {
-                        ae = new AuthenticationServiceException(ExceptionUtils.getRootCauseMessage(lastException), lastException);
-                    }
-
-                }
+            }
 
             else if (ExceptionUtils.getRootCauseMessage(lastException).contains("UnknownHostException"))
-                {
+            {
                 ae = new AuthenticationServiceException(
                         "There was an unknown error in connecting with the authentication services!", lastException);
             }
@@ -169,10 +169,10 @@ public class AcmAuthenticationManager implements AuthenticationManager
                 ae = new AuthenticationServiceException(ExceptionUtils.getRootCauseMessage(lastException),
                         lastException);
             }
-                getAuthenticationEventPublisher().publishAuthenticationFailure(ae, authentication);
-                log.debug("Detailed exception: ", lastException);
-                throw ae;
-            }
+            getAuthenticationEventPublisher().publishAuthenticationFailure(ae, authentication);
+            log.debug("Detailed exception: ", lastException);
+            throw ae;
+        }
         // didn't get an exception, or an authentication either, so we can throw a provider not found exception,
         // since
         // either there are no providers, or no providers can handle the incoming authentication

@@ -65,10 +65,10 @@ public class WebSocketConfig
     private Integer stompBrokerRelayPort;
 
     @Value("${acm.websockets.stomp_broker_relay.heartbeat_send_interval}")
-    private Integer stompBrokerRelayHeartbeatSendInterval;
+    private long stompBrokerRelayHeartbeatSendInterval;
 
     @Value("${acm.websockets.stomp_broker_relay.heartbeat_receive_interval}")
-    private Integer stompBrokerRelayHeartbeatReceiveInterval;
+    private long stompBrokerRelayHeartbeatReceiveInterval;
 
     @Value("${acm.websockets.stomp_broker_relay.client_login}")
     private String stompBrokerRelayClientLogin;
@@ -185,17 +185,17 @@ public class WebSocketConfig
         this.stompBrokerRelayHost = stompBrokerRelayHost;
     }
 
-    public Integer getStompBrokerRelayPort()
+    public int getStompBrokerRelayPort()
     {
         return stompBrokerRelayPort;
     }
 
-    public void setStompBrokerRelayPort(Integer stompBrokerRelayPort)
+    public void setStompBrokerRelayPort(int stompBrokerRelayPort)
     {
         this.stompBrokerRelayPort = stompBrokerRelayPort;
     }
 
-    public Integer getStompBrokerRelayHeartbeatSendInterval()
+    public long getStompBrokerRelayHeartbeatSendInterval()
     {
         return stompBrokerRelayHeartbeatSendInterval;
     }
@@ -205,12 +205,12 @@ public class WebSocketConfig
         this.stompBrokerRelayHeartbeatSendInterval = stompBrokerRelayHeartbeatSendInterval;
     }
 
-    public Integer getStompBrokerRelayHeartbeatReceiveInterval()
+    public long getStompBrokerRelayHeartbeatReceiveInterval()
     {
         return stompBrokerRelayHeartbeatReceiveInterval;
     }
 
-    public void setStompBrokerRelayHeartbeatReceiveInterval(Integer stompBrokerRelayHeartbeatReceiveInterval)
+    public void setStompBrokerRelayHeartbeatReceiveInterval(int stompBrokerRelayHeartbeatReceiveInterval)
     {
         this.stompBrokerRelayHeartbeatReceiveInterval = stompBrokerRelayHeartbeatReceiveInterval;
     }
