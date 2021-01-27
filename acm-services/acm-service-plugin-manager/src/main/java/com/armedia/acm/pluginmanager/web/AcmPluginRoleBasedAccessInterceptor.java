@@ -31,12 +31,11 @@ import com.armedia.acm.core.exceptions.AcmNotAuthorizedException;
 import com.armedia.acm.pluginmanager.model.AcmPluginPrivilege;
 import com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege;
 import com.armedia.acm.pluginmanager.model.ApplicationPluginPrivilegesConfig;
-import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpMethod;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import org.springframework.web.servlet.AsyncHandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -49,12 +48,11 @@ import java.util.Map;
  * Ensure the user has the required privilege to execute a plugin URL. Only URLs in the /plugin namespace are handled by
  * this interceptor.
  */
-public class AcmPluginRoleBasedAccessInterceptor extends HandlerInterceptorAdapter
+public class AcmPluginRoleBasedAccessInterceptor implements AsyncHandlerInterceptor
 {
-    private AcmPluginManager acmPluginManager;
     private ApplicationPluginPrivilegesConfig pluginPrivilegesConfig;
 
-    private Logger log = LogManager.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws AcmNotAuthorizedException
@@ -139,11 +137,6 @@ public class AcmPluginRoleBasedAccessInterceptor extends HandlerInterceptorAdapt
         urlPrivilege.setRequiredPrivilege(plgPrivilege);
 
         return urlPrivilege;
-    }
-
-    public void setAcmPluginManager(AcmPluginManager acmPluginManager)
-    {
-        this.acmPluginManager = acmPluginManager;
     }
 
     public void setPluginPrivilegesConfig(ApplicationPluginPrivilegesConfig pluginPrivilegesConfig)

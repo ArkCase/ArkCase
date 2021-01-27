@@ -2,7 +2,7 @@
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:websocket="http://www.springframework.org/schema/websocket"
        xmlns:context="http://www.springframework.org/schema/context" xmlns:int="http://www.springframework.org/schema/integration"
        xmlns="http://www.springframework.org/schema/beans" xsi:schemaLocation="http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+        http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/websocket
         http://www.springframework.org/schema/websocket/spring-websocket.xsd
         http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
@@ -19,14 +19,7 @@
             -->
             <websocket:sockjs websocket-enabled="true" client-library-url="../node_modules/@bower_components/sockjs-client/dist/sockjs.min.js"></websocket:sockjs>
         </websocket:stomp-endpoint>
-        <websocket:stomp-broker-relay prefix="/topic,/queue" relay-host="#{socketsConfig.stompBrokerRelayHost}"
-            relay-port="#{socketsConfig.stompBrokerRelayPort}"
-            heartbeat-send-interval="#{socketsConfig.stompBrokerRelayHeartbeatSendInterval}"
-            heartbeat-receive-interval="#{socketsConfig.stompBrokerRelayHeartbeatReceiveInterval}"
-            client-login="#{socketsConfig.stompBrokerRelayClientLogin}"
-            client-passcode="#{socketsConfig.stompBrokerRelayClientPasscode}"
-            system-login="#{socketsConfig.stompBrokerRelaySystemLogin}"
-            system-passcode="#{socketsConfig.stompBrokerRelaySystemPasscode}"/>
+        <websocket:stomp-broker-relay prefix="/topic,/queue"/>
         <websocket:client-inbound-channel>
             <websocket:interceptors>
                 <bean class="com.armedia.acm.websockets.AcmWebSocketChannelInterceptor"></bean>
@@ -35,14 +28,7 @@
     </websocket:message-broker>
 
     <bean class="com.armedia.acm.websockets.configuration.StompBrokerRelayMessageHandlerBeanPostProcessor">
-        <property name="relayProtocol" value="#{socketsConfig.stompBrokerRelayProtocol}"/>
-        <property name="keyStore" value="#{socketsConfig.stompBrokerRelayKeystore}"/>
-        <property name="keyStorePass" value="#{socketsConfig.stompBrokerRelayKeystorePassword}"/>
-        <property name="trustStore" value="#{socketsConfig.stompBrokerRelayTruststore}"/>
-        <property name="trustStorePass" value="#{socketsConfig.stompBrokerRelayTruststorePass}"/>
-        <property name="trustStoreType" value="#{socketsConfig.stompBrokerRelayTruststoreType}"/>
-        <property name="host" value="#{socketsConfig.stompBrokerRelayHost}"/>
-        <property name="port" value="#{socketsConfig.stompBrokerRelayPort}"/>
+        <property name="socketConfig" ref="socketsConfig"/>
     </bean>
 
     <bean id="messageReceiver" class="com.armedia.acm.websockets.MessageReceiver"/>

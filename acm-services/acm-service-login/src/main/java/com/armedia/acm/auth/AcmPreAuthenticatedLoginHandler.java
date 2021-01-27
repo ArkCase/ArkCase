@@ -32,8 +32,10 @@ import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.preauth.RequestHeaderAuthenticationFilter;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * The ArkCase external authentication uses this filter class to call the AcmLoginSuccessOperations class after
@@ -48,6 +50,7 @@ public class AcmPreAuthenticatedLoginHandler extends RequestHeaderAuthentication
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, Authentication authResult)
+            throws IOException, ServletException
     {
         LOG.debug("Preauthenticated login successful, user {}", authResult.getName());
 

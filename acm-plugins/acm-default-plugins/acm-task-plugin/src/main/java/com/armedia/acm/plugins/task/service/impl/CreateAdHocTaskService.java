@@ -121,19 +121,22 @@ public class CreateAdHocTaskService
 
             AcmTask adHocTask = getTaskDao().createAdHocTask(in);
             AcmFolder folder = adHocTask.getContainer().getAttachmentFolder();
-            for (MultipartFile file : filesToUpload)
+            if (filesToUpload != null)
             {
+                for (MultipartFile file : filesToUpload)
+                {
 
-                ecmFileService.upload(file.getOriginalFilename(), "Other", file, authentication,
-                        folder.getCmisFolderId(),
-                        adHocTask.getObjectType(),
-                        adHocTask.getTaskId());
+                    ecmFileService.upload(file.getOriginalFilename(), "Other", file, authentication,
+                            folder.getCmisFolderId(),
+                            adHocTask.getObjectType(),
+                            adHocTask.getTaskId());
+                }
             }
 
             if (adHocTask.getParentObjectId() != null)
             {
                 if ((adHocTask.getDocumentsToReview() != null && !adHocTask.getDocumentsToReview().isEmpty())
-                        || !filesToUpload.isEmpty())
+                        || (filesToUpload != null && !filesToUpload.isEmpty()))
                 {
                     getAcmTaskService().createTaskFolderStructureInParentObject(adHocTask);
                 }

@@ -1,4 +1,4 @@
-package com.armedia.acm.plugins.profile.model.provider;
+package com.armedia.acm.services.notification.service.provider;
 
 /*-
  * #%L
@@ -39,7 +39,6 @@ import com.armedia.acm.services.objecttitle.model.TitleConfiguration;
 import com.armedia.acm.services.objecttitle.service.ObjectTitleConfigurationService;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-import com.armedia.acm.plugins.profile.service.UserOrgService;
 
 import java.util.Map;
 
@@ -49,7 +48,6 @@ public class AcmEntityTemplateNoUserPrefixModelProvider implements TemplateModel
     private UserInfoHelper userInfoHelper;
     private ObjectTitleConfigurationService objectTitleConfigurationService;
     private UserDao userDao;
-    private UserOrgService userOrgService;
 
     @Override
     public AcmEntityTemplateModel getModel(Object object)
@@ -71,10 +69,10 @@ public class AcmEntityTemplateNoUserPrefixModelProvider implements TemplateModel
             AcmAssignee acmAssignee = (AcmAssignee) acmObject;
 
             String assigneeLdapId = acmAssignee.getAssigneeLdapId();
-            if(assigneeLdapId != null)
+            if (assigneeLdapId != null)
             {
                 AcmUser assignee = userDao.findByUserId(assigneeLdapId);
-                assigneeTitle = userOrgService.getUserOrgForUserId(acmAssignee.getAssigneeLdapId()).getTitle();
+                 assigneeTitle = assignee.getTitle();
                 assigneeFullName = assignee.getFullName();
             }
             String modifier = acmAssignee.getModifier();
@@ -113,7 +111,7 @@ public class AcmEntityTemplateNoUserPrefixModelProvider implements TemplateModel
             isTitleEnabled = value.getEnableTitleField();
 
         }
-        if(isTitleEnabled)
+        if (isTitleEnabled)
         {
             acmEntityTemplateModel.setTitleEnabled("Title enabled");
         }
@@ -157,19 +155,13 @@ public class AcmEntityTemplateNoUserPrefixModelProvider implements TemplateModel
         this.objectTitleConfigurationService = objectTitleConfigurationService;
     }
 
-    public UserDao getUserDao() {
+    public UserDao getUserDao()
+    {
         return userDao;
     }
 
-    public void setUserDao(UserDao userDao) {
+    public void setUserDao(UserDao userDao)
+    {
         this.userDao = userDao;
-    }
-
-    public UserOrgService getUserOrgService() {
-        return userOrgService;
-    }
-
-    public void setUserOrgService(UserOrgService userOrgService) {
-        this.userOrgService = userOrgService;
     }
 }

@@ -177,7 +177,7 @@ public class TemplatingEngineTest
         Model model = new Model();
         model.setDate(new Date());
         model.setDateTime(LocalDateTime.now());
-        model.setId(1111l);
+        model.setId(1111L);
         model.setStringList(Arrays.asList("string1", "string2"));
 
         String template = "dateAsDateTime: ${model.date?datetime}\n" +

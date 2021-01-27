@@ -51,7 +51,7 @@ public class LoginController
 {
     private LoginWarningMessageService loginWarningMessageService;
     private AcmSpringActiveProfile acmSpringActiveProfile;
-    private Logger log = LogManager.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     @RequestMapping(value = { "/login", "/login.html" }, method = RequestMethod.GET)
     public String getLogin(Model model, HttpSession httpSession)
@@ -76,7 +76,7 @@ public class LoginController
      *
      * @return login warning configuration
      */
-    @RequestMapping(value = "/warning", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/warning", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Map<String, Object> getWarning()
     {
