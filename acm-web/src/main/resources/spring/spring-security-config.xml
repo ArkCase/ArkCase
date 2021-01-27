@@ -34,11 +34,19 @@
         <http security="none" pattern="/forgot-password"/>
     </beans:beans>
 
+    <beans:beans profile="oidc">
+        <http security="none" pattern="/oauth-login"/>
+        <http security="none" pattern="/views/oauth-login.jsp"/>
+        <http security="none" pattern="/oauth/loggedout"/>
+        <http security="none" pattern="/views/oauth-loggedout.jsp"/>
+    </beans:beans>
+
     <!-- no need to protect the Login page in SSO SAML-based authentication -->
     <beans:beans profile="ssoSaml,externalSaml">
         <http security="none" pattern="/views/saml_login.jsp"/>
         <http security="none" pattern="/sso/loggedout"/>
         <http security="none" pattern="/samllogin"/>
     </beans:beans>
+
     <!-- filter chains and other authentication related beans are loaded from acm/spring-security/spring-security-config-*.xml and acm/spring/spring-config-*-ldap-auth.xml configuration files -->
 </beans:beans>
