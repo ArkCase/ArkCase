@@ -348,7 +348,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     public List<AcmObject> getFolderChildren(Long folderId)
     {
         AcmFolder folder = getFolderDao().find(folderId);
-        if (folder.isLink())
+        if (folder != null && folder.isLink())
         {
             folder = getFolderLinkTarget(folder);
             folderId = folder.getId();
