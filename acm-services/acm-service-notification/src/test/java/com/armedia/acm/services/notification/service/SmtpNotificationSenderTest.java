@@ -37,7 +37,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 import com.armedia.acm.correspondence.model.Template;
-import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.data.service.AcmDataService;
 import com.armedia.acm.email.model.EmailSenderConfig;
@@ -65,7 +64,6 @@ import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.security.core.Authentication;

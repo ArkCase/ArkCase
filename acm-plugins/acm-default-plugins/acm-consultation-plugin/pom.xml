@@ -217,7 +217,6 @@
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-api-easymock</artifactId>
-            <version>${powermock.version2}</version>
         </dependency>
 
         <dependency>

@@ -89,7 +89,7 @@
         <xalan.version>2.7.2</xalan.version>
         <gitflow-maven-plugin.version>1.14.0</gitflow-maven-plugin.version>
         <milton.version>2.7.3.5</milton.version>
-        <mockito.version>1.10.19</mockito.version>
+        <mockito.core.version>3.7.7</mockito.core.version>
         <mysql.version>5.1.35</mysql.version>
         <!-- by default spring.security.saml2.core uses opensaml version 2.6.1, which uses bouncycastle version 1.46, but we require version
             1.54 -->
@@ -101,7 +101,7 @@
         <org.mvel.version>2.4.7.Final</org.mvel.version>
         <pdfbox.version>2.0.11</pdfbox.version>
         <postgresql.version>9.3-1100-jdbc41</postgresql.version>
-        <powermock.version>1.7.0</powermock.version>
+        <powermock.version>2.0.9</powermock.version>
         <puppycrawl.version>6.8.1</puppycrawl.version>
         <reactor-netty.version>1.0.3</reactor-netty.version>
         <rome.version>1.0</rome.version>
@@ -128,8 +128,6 @@
         <snakeyaml.version>1.27</snakeyaml.version>
         <commons-configuration.version>1.10</commons-configuration.version>
         <cdi-api.version>1.0</cdi-api.version>
-        <mockito.core.version>2.20.0</mockito.core.version>
-        <powermock.version2>2.0.0</powermock.version2>
         <hazelcast.version>3.11.2</hazelcast.version>
         <quartz.version>2.3.2</quartz.version>
         <jaudiotagger.version>2.0.3</jaudiotagger.version>
@@ -1298,8 +1296,8 @@
             </dependency>
             <dependency>
                 <groupId>org.mockito</groupId>
-                <artifactId>mockito-all</artifactId>
-                <version>${mockito.version}</version>
+                <artifactId>mockito-core</artifactId>
+                <version>${mockito.core.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -1323,7 +1321,7 @@
             </dependency>
             <dependency>
                 <groupId>org.powermock</groupId>
-                <artifactId>powermock-api-mockito</artifactId>
+                <artifactId>powermock-api-mockito2</artifactId>
                 <version>${powermock.version}</version>
                 <scope>test</scope>
                 <exclusions>
@@ -1345,6 +1343,12 @@
                         <artifactId>cglib-nodep</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.powermock</groupId>
+                <artifactId>powermock-core</artifactId>
+                <version>${powermock.version}</version>
+                <scope>test</scope>
             </dependency>
             <!-- end of testing -->
             <dependency>
