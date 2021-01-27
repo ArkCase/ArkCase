@@ -1,4 +1,4 @@
-package com.armedia.acm.web.api;
+package com.armedia.acm.auth.web;
 
 /*-
  * #%L
@@ -27,33 +27,40 @@ package com.armedia.acm.web.api;
  * #L%
  */
 
+import com.armedia.acm.auth.oidc.OAuth2ClientRegistrationConfig;
 import com.armedia.acm.core.AcmSpringActiveProfile;
 import com.armedia.acm.web.api.service.LoginWarningMessageService;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
-import org.springframework.http.MediaType;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 
 import java.util.Map;
 
-/**
- * Created by dragan.simonovski on 05/11/2016.
- */
+
 @Controller
 public class LoginController
 {
-    private LoginWarningMessageService loginWarningMessageService;
-    private AcmSpringActiveProfile acmSpringActiveProfile;
+    private final LoginWarningMessageService loginWarningMessageService;
+    private final AcmSpringActiveProfile acmSpringActiveProfile;
+    private final OAuth2ClientRegistrationConfig oAuth2ClientRegistrationConfig;
     private final Logger log = LogManager.getLogger(getClass());
 
-    @RequestMapping(value = { "/login", "/login.html" }, method = RequestMethod.GET)
+    public LoginController(LoginWarningMessageService loginWarningMessageService,
+                           AcmSpringActiveProfile acmSpringActiveProfile,
+                           OAuth2ClientRegistrationConfig oAuth2ClientRegistrationConfig)
+    {
+        this.loginWarningMessageService = loginWarningMessageService;
+        this.acmSpringActiveProfile = acmSpringActiveProfile;
+        this.oAuth2ClientRegistrationConfig = oAuth2ClientRegistrationConfig;
+    }
+
+    @GetMapping(value = { "/login", "/login.html" })
     public String getLogin(Model model, HttpSession httpSession)
     {
         Object loggedUser = httpSession.getAttribute("acm_username");
@@ -76,25 +83,18 @@ public class LoginController
      *
      * @return login warning configuration
      */
-    @RequestMapping(value = "/warning", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/warning")
     @ResponseBody
     public Map<String, Object> getWarning()
     {
         return loginWarningMessageService.getWarning();
     }
 
-    public void setLoginWarningMessageService(LoginWarningMessageService loginWarningMessageService)
-    {
-        this.loginWarningMessageService = loginWarningMessageService;
-    }
 
-    public AcmSpringActiveProfile getAcmSpringActiveProfile()
+    @GetMapping(value = "/oauth-login")
+    public String getOAuth2Login(Model model)
     {
-        return acmSpringActiveProfile;
-    }
-
-    public void setAcmSpringActiveProfile(AcmSpringActiveProfile acmSpringActiveProfile)
-    {
-        this.acmSpringActiveProfile = acmSpringActiveProfile;
+        model.addAttribute("oidcRegistration", oAuth2ClientRegistrationConfig.getRegistrationId());
+        return "oauth-login";
     }
 }

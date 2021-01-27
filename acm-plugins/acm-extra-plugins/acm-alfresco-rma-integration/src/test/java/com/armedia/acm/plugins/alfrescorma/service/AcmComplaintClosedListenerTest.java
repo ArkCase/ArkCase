@@ -32,7 +32,7 @@ import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
 
 import com.armedia.acm.auth.AcmAuthentication;
-import com.armedia.acm.auth.AcmAuthenticationManager;
+import com.armedia.acm.auth.AcmAuthenticationMapper;
 import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaConfig;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.model.ComplaintClosedEvent;
@@ -49,7 +49,7 @@ public class AcmComplaintClosedListenerTest extends EasyMockSupport
 {
     private AcmComplaintClosedListener unit;
     private AlfrescoRecordsService mockService;
-    private AcmAuthenticationManager mockAuthenticationManager;
+    private AcmAuthenticationMapper mockAuthenticationMapper;
     private AlfrescoRmaConfig rmaConfig;
     private String ipAddress = "ipAddress";
 
@@ -58,10 +58,10 @@ public class AcmComplaintClosedListenerTest extends EasyMockSupport
     {
         unit = new AcmComplaintClosedListener();
         mockService = createMock(AlfrescoRecordsService.class);
-        mockAuthenticationManager = createMock(AcmAuthenticationManager.class);
+        mockAuthenticationMapper = createMock(AcmAuthenticationMapper.class);
 
         unit.setAlfrescoRecordsService(mockService);
-        unit.setAuthenticationManager(mockAuthenticationManager);
+        unit.setAuthenticationMapper(mockAuthenticationMapper);
         rmaConfig = new AlfrescoRmaConfig();
         rmaConfig.setIntegrationEnabled(true);
     }
@@ -90,7 +90,7 @@ public class AcmComplaintClosedListenerTest extends EasyMockSupport
 
         rmaConfig.setDeclareRecordsOnComplaintClose(true);
         expect(mockService.getRmaConfig()).andReturn(rmaConfig);
-        expect(mockAuthenticationManager.getAcmAuthentication(anyObject()))
+        expect(mockAuthenticationMapper.getAcmAuthentication(anyObject()))
                 .andReturn(new AcmAuthentication(null, "", "", true, ""));
         mockService.declareAllContainerFilesAsRecords(
                 anyObject(Authentication.class),

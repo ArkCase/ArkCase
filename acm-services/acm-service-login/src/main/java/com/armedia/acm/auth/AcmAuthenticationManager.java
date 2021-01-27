@@ -27,9 +27,7 @@ package com.armedia.acm.auth;
  * #L%
  */
 
-import com.armedia.acm.auth.okta.model.OktaAPIConstants;
 import com.armedia.acm.services.users.dao.UserDao;
-import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.service.ldap.AcmActiveDirectoryAuthenticationException;
 import com.armedia.acm.services.users.service.ldap.AcmActiveDirectoryAuthenticationProvider;
 import com.armedia.acm.services.users.service.ldap.AcmLdapAuthenticationProvider;
@@ -48,7 +46,6 @@ import org.springframework.security.authentication.ProviderNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 
-import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -58,6 +55,7 @@ public class AcmAuthenticationManager implements AuthenticationManager
 {
     private SpringContextHolder springContextHolder;
     private AcmGrantedAuthoritiesMapper authoritiesMapper;
+    private AcmAuthenticationMapper authenticationMapper;
     private DefaultAuthenticationEventPublisher authenticationEventPublisher;
     private UserDao userDao;
     private final Logger log = LogManager.getLogger(getClass());
@@ -101,7 +99,6 @@ public class AcmAuthenticationManager implements AuthenticationManager
                     {
                         providerAuthentication = provider.authenticate(authentication);
                     }
-
                 }
                 else
                 {
@@ -124,7 +121,7 @@ public class AcmAuthenticationManager implements AuthenticationManager
             // Spring Security publishes an authentication success event all by itself, so we do not have to raise
             // one here.
             log.debug("Processed authentication request for user: {}", providerAuthentication.getName());
-            return getAcmAuthentication(providerAuthentication);
+            return authenticationMapper.getAcmAuthentication(providerAuthentication);
         }
         if (lastException != null)
         {
@@ -179,35 +176,6 @@ public class AcmAuthenticationManager implements AuthenticationManager
         throw new NoProviderFoundException("Authentication problem. Please contact your administrator.");
     }
 
-    public AcmAuthentication getAcmAuthentication(Authentication providerAuthentication)
-    {
-        log.info("Checking the authenticated user: [{}] in system", providerAuthentication.getName());
-        AcmUser user = getUserDao().findByUserId(providerAuthentication.getName());
-
-        if (user == null)
-        {
-            throw new AuthenticationServiceException("Provided credentials are not valid");
-        }
-
-        Collection<AcmGrantedAuthority> acmAuths = getAuthoritiesMapper().mapAuthorities(providerAuthentication.getAuthorities());
-
-        // Collection with LDAP and ADHOC authority groups that the user belongs to
-        Collection<AcmGrantedAuthority> acmAuthsGroups = getAuthoritiesMapper().getAuthorityGroups(user);
-
-        // Collection with application roles for LDAP and ADHOC groups/subgroups that the user belongs to
-        Collection<AcmGrantedAuthority> acmAuthsRoles = getAuthoritiesMapper().mapAuthorities(acmAuthsGroups);
-
-        // Add to all
-        acmAuths.addAll(acmAuthsGroups);
-        acmAuths.addAll(acmAuthsRoles);
-
-        log.debug("Granting [{}] role 'ROLE_PRE_AUTHENTICATED'", providerAuthentication.getName());
-        acmAuths.add(new AcmGrantedAuthority(OktaAPIConstants.ROLE_PRE_AUTHENTICATED));
-
-        return new AcmAuthentication(acmAuths, providerAuthentication.getCredentials(), providerAuthentication.getDetails(),
-                providerAuthentication.isAuthenticated(), user.getUserId(), user.getIdentifier());
-    }
-
     public SpringContextHolder getSpringContextHolder()
     {
         return springContextHolder;
@@ -248,4 +216,13 @@ public class AcmAuthenticationManager implements AuthenticationManager
         this.userDao = userDao;
     }
 
+    public AcmAuthenticationMapper getAuthenticationMapper()
+    {
+        return authenticationMapper;
+    }
+
+    public void setAuthenticationMapper(AcmAuthenticationMapper authenticationMapper)
+    {
+        this.authenticationMapper = authenticationMapper;
+    }
 }

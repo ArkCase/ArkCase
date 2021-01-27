@@ -49,6 +49,16 @@ public class AcmSpringActiveProfile
                 .anyMatch(isSamlProfile.or(isExternalSamlProfile));
     }
 
+    public boolean isLdapEnabledEnvironment()
+    {
+        String[] activeProfiles = getActiveProfiles();
+        Predicate<String> isLdapProfile = it -> it.equals("ldap");
+        Predicate<String> isExternalAuthProfile = it -> it.equals("externalAuth");
+
+        return Arrays.stream(activeProfiles)
+                .anyMatch(isLdapProfile.or(isExternalAuthProfile));
+    }
+
     public String[] getActiveProfiles()
     {
         if (environment.getActiveProfiles().length > 0)

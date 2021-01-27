@@ -273,7 +273,7 @@
             <beans:property name="lookupDao" ref="lookupDao"/>
             <beans:property name="translationService" ref="translationService"/>
             <beans:property name="foiaConfig" ref="foiaConfig"/>
-            <beans:property name="authenticationManager" ref="acmAuthenticationManager"/>
+            <beans:property name="authenticationMapper" ref="acmAuthenticationMapper"/>
             <beans:property name="saveFOIARequestService" ref="saveFOIARequestService"/>
         </beans:bean>
 
