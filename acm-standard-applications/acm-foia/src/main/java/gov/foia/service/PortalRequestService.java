@@ -428,6 +428,7 @@ public class PortalRequestService
         requestWithdrawalTask.setAdhocTask(true);
         requestWithdrawalTask.setCompleted(false);
         requestWithdrawalTask.setPriority("High");
+        requestWithdrawalTask.setAssignee(request.getAssigneeLdapId());
 
 
         //Setting the request owning group as the request withdrawal task owning group
