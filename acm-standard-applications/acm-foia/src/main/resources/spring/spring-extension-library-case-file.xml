@@ -260,6 +260,7 @@
             <beans:property name="foiaConfigurationService" ref="foiaConfigurationService"/>
             <beans:property name="executeSolrQuery" ref="executeSolrQuery"/>
             <beans:property name="foiaConfig" ref="foiaConfig"/>
+            <beans:property name="objectAssociationService" ref="objectAssociationService"/>
         </beans:bean>
 
         <bean id="foiaRequestEventUtility" class="gov.foia.service.FOIARequestEventUtility"/>
