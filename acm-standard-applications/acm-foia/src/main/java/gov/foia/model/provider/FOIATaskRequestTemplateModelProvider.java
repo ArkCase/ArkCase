@@ -27,16 +27,29 @@ package gov.foia.model.provider;
  * #L%
  */
 
+import com.armedia.acm.core.model.ApplicationConfig;
 import com.armedia.acm.core.provider.TemplateModelProvider;
+import com.armedia.acm.plugins.person.service.PersonAssociationService;
+import com.armedia.acm.plugins.profile.service.UserOrgService;
 import com.armedia.acm.plugins.task.model.AcmTask;
+import com.armedia.acm.services.note.dao.NoteDao;
+import com.armedia.acm.services.users.dao.UserDao;
+import com.armedia.acm.services.users.model.AcmUser;
 import gov.foia.dao.FOIARequestDao;
 import gov.foia.model.FOIARequest;
 import gov.foia.model.FOIATaskRequestModel;
+
+import java.util.stream.Collectors;
 
 public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvider<FOIATaskRequestModel>
 {
 
     private FOIARequestDao foiaRequestDao;
+    private ApplicationConfig applicationConfig;
+    private UserDao userDao;
+    private UserOrgService userOrgService;
+    private PersonAssociationService personAssociationService;
+    private NoteDao noteDao;
 
     @Override
     public FOIATaskRequestModel getModel(Object object)
@@ -49,11 +62,23 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
             FOIARequest request = foiaRequestDao.find(task.getParentObjectId());
             if(request != null)
             {
+                request.setApplicationConfig(applicationConfig);
+                String assigneeLdapID = request.getAssigneeLdapId();
+                AcmUser assignee = null;
+                if(assigneeLdapID != null)
+                {
+                    assignee = userDao.findByUserId(assigneeLdapID);
+                    request.setAssigneeTitle(userOrgService.getUserOrgForUserId(assigneeLdapID).getTitle());
+                    request.setAssigneeFullName(assignee.getFirstName() + " " + assignee.getLastName());
+                    request.setAssigneePhone(userOrgService.getUserOrgForUserId(assigneeLdapID).getOfficePhoneNumber());
+                }
                 model.setRequest(request);
             }
         }
 
+        task.setTaskNotes(noteDao.listNotes("GENERAL", task.getId(), task.getObjectType()).stream().map(note -> note.getNote()).collect(Collectors.joining("\n\n")));
         model.setTask(task);
+        model.setTaskContact(getPersonAssociationService().getPersonsInAssociatonsByPersonType("TASK", task.getId(), "Contact Person").stream().findFirst().orElse(null));
 
         return model;
     }
@@ -73,4 +98,46 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
     {
         this.foiaRequestDao = foiaRequestDao;
     }
+
+    public ApplicationConfig getApplicationConfig() {
+        return applicationConfig;
+    }
+
+    public void setApplicationConfig(ApplicationConfig applicationConfig) {
+        this.applicationConfig = applicationConfig;
+    }
+
+    public UserDao getUserDao() {
+        return userDao;
+    }
+
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
+    }
+
+    public UserOrgService getUserOrgService() {
+        return userOrgService;
+    }
+
+    public void setUserOrgService(UserOrgService userOrgService) {
+        this.userOrgService = userOrgService;
+    }
+
+    public PersonAssociationService getPersonAssociationService() {
+        return personAssociationService;
+    }
+
+    public void setPersonAssociationService(PersonAssociationService personAssociationService) {
+        this.personAssociationService = personAssociationService;
+    }
+
+    public NoteDao getNoteDao() {
+        return noteDao;
+    }
+
+    public void setNoteDao(NoteDao noteDao) {
+        this.noteDao = noteDao;
+    }
+
 }
+

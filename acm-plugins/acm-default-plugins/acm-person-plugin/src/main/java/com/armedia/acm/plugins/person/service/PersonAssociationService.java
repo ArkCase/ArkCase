@@ -29,14 +29,19 @@ package com.armedia.acm.plugins.person.service;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
+import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 
 import org.springframework.security.core.Authentication;
+
+import java.util.List;
 
 public interface PersonAssociationService
 {
     PersonAssociation savePersonAssociation(PersonAssociation personAssociation, Authentication authentication)
             throws AcmCreateObjectFailedException;
+
+    List<Person> getPersonsInAssociatonsByPersonType(String parentType, Long parentId, String personType);
 
     /**
      * get associations for person including solr documents for parent
