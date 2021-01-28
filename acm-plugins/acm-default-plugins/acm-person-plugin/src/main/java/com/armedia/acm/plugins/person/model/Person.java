@@ -361,11 +361,11 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
 
     @Transient
     @JsonIgnore
-    private String requesterTitleTranslated;
-    public String getRequesterTitleTranslated()
+    private String titleTranslated;
+    public String getTitleTranslated()
     {
-        requesterTitleTranslated = translatedPersonTitle();
-        return requesterTitleTranslated;
+        titleTranslated = translatedPersonTitle();
+        return titleTranslated;
     }
 
     public String translatedPersonTitle()

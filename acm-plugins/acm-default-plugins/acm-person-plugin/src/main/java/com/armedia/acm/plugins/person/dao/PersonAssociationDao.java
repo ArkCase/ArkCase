@@ -161,4 +161,25 @@ public class PersonAssociationDao extends AcmAbstractDao<PersonAssociation>
         return retrival;
 
     }
+
+    public List<Person> findPersonByParentIdAndParentTypeAndPersonType(String parentType, Long parentId, String personType)
+    {
+
+        Query personInAssociation = getEntityManager().createQuery(
+                "SELECT person " + "FROM PersonAssociation personAssociation, " + "Person person " +
+                        "WHERE personAssociation.parentType = :parentType " +
+                        "AND personAssociation.parentId = :parentId " +
+                        "AND personAssociation.personType = :personType " +
+                        "AND personAssociation.person.id = person.id");
+
+        personInAssociation.setParameter("parentType", parentType.toUpperCase());
+        personInAssociation.setParameter("parentId", parentId);
+        personInAssociation.setParameter("personType", personType);
+
+        List<Person> retrival = personInAssociation.getResultList();
+
+        return retrival;
+
+    }
+
 }

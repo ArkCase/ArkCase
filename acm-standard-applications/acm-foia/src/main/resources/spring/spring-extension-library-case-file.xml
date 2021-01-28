@@ -337,6 +337,11 @@
 
         <beans:bean id="foiaTaskRequestTemplateModelProvider" class="gov.foia.model.provider.FOIATaskRequestTemplateModelProvider">
             <beans:property name="foiaRequestDao" ref="foiaRequestDao"/>
+            <beans:property name="applicationConfig" ref="applicationProperties"/>
+            <beans:property name="userDao" ref="userJpaDao"/>
+            <beans:property name="userOrgService" ref="acmUserOrgService"/>
+            <beans:property name="personAssociationService" ref="personAssociationService"/>
+            <beans:property name="noteDao" ref="noteDao"/>
         </beans:bean>
 
         <beans:bean id="foiaDeterminationLetterModelProvider" class="gov.foia.model.provider.FOIADeterminationLetterModelProvider">
