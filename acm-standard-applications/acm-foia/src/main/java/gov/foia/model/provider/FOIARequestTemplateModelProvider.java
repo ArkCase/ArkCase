@@ -67,6 +67,7 @@ public class FOIARequestTemplateModelProvider implements TemplateModelProvider<F
             assignee = userDao.findByUserId(assigneeLdapID);
             request.setAssigneeTitle(userOrgService.getUserOrgForUserId(assigneeLdapID).getTitle());
             request.setAssigneeFullName(assignee.getFirstName() + " " + assignee.getLastName());
+            request.setAssigneePhone(userOrgService.getUserOrgForUserId(assigneeLdapID).getOfficePhoneNumber());
         }
         FOIARequestModel requestModel = new FOIARequestModel();
         requestModel.setRequest(request);

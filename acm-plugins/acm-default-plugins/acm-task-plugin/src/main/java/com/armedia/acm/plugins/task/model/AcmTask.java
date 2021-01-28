@@ -114,6 +114,7 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
     private String parentObjectType;
     private String parentObjectTitle;
     private String parentObjectName;
+    private transient String taskNotes;
 
     /**
      * Names of the groups whose members can claim this task. If the task has candidate group, but does not have an
@@ -695,5 +696,14 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
     public void setRestricted(Boolean restricted)
     {
         this.restricted = restricted;
+    }
+
+    @JsonIgnore
+    public String getTaskNotes() {
+        return taskNotes;
+    }
+
+    public void setTaskNotes(String taskNotes) {
+        this.taskNotes = taskNotes;
     }
 }
