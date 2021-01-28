@@ -93,13 +93,14 @@ angular.module('tasks').controller(
 
                         var parentObjectType = $scope.objectInfo.parentObjectType;
                         var parentObjectId = $scope.objectInfo.parentObjectId;
+                        var parentObjectName = $scope.objectInfo.parentObjectName;
                         var eventName = "object.changed/" + parentObjectType + "/" + parentObjectId;
                         var objectTypeString = $translate.instant('common.objectTypes.' + parentObjectType);
                         if (!objectTypeString) {
                             objectTypeString = parentObjectType;
                         }
                         $scope.$bus.subscribe(eventName, function(data) {
-                            MessageService.info(objectTypeString + " with ID " + parentObjectId + " was updated.");
+                            MessageService.info(objectTypeString + " with number " + parentObjectName + " was updated.");
                             $scope.$emit('report-object-refreshed', $stateParams.id);
                         });
                     };

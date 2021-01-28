@@ -39,7 +39,6 @@ import com.armedia.acm.services.transcribe.model.TranscribeConfiguration;
 import com.armedia.acm.services.transcribe.service.ArkCaseTranscribeService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -61,7 +60,7 @@ import java.math.BigDecimal;
  * Created by Riste Tutureski <riste.tutureski@armedia.com> on 02/28/2018
  */
 @RunWith(MockitoJUnitRunner.class)
-public class GetTranscribeConfigurationAPIControllerTest extends EasyMockSupport
+public class GetTranscribeConfigurationAPIControllerTest
 {
     private Logger LOG = LogManager.getLogger(getClass());
 

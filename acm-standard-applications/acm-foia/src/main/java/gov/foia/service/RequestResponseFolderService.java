@@ -72,9 +72,6 @@ public class RequestResponseFolderService
 
         log.debug("Sending Email notification Response folder zip completed for the request [{}]", requestId);
         getResponseFolderNotifyService().sendEmailResponseCompressNotification(requestId);
-
-        log.debug("Saving Response Installment details for the request [{}]", requestId);
-        saveResponseInstallmentDetails(requestId);
     }
 
     public void saveResponseInstallmentDetails(Long requestId)

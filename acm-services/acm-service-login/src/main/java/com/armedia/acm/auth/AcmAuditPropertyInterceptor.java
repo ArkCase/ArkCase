@@ -29,9 +29,9 @@ package com.armedia.acm.auth;
 
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import org.apache.logging.log4j.Logger;
+import org.springframework.web.servlet.AsyncHandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -40,18 +40,15 @@ import javax.servlet.http.HttpSession;
 /**
  * Created by armdev on 11/5/14.
  */
-public class AcmAuditPropertyInterceptor extends HandlerInterceptorAdapter
+public class AcmAuditPropertyInterceptor implements AsyncHandlerInterceptor
 {
-    private Logger log = LogManager.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
     private AuditPropertyEntityAdapter entityAdapter;
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
     {
-        if (log.isTraceEnabled())
-        {
-            log.trace("Setting user id for MVC request");
-        }
+        log.trace("Setting user id for MVC request");
 
         HttpSession session = request.getSession(false);
 

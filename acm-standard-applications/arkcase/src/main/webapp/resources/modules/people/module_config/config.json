@@ -1307,7 +1307,7 @@
                     "field": "parent_object.name",
                     "displayName": "people.comp.cases.table.columns.caseNumber",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.parent_object.name})\">{{COL_FIELD}}<\/a>",
+                    "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.parent_object.object_id_i})\">{{COL_FIELD}}<\/a>",
                     "width": 160
                 },
                 {

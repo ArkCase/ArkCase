@@ -25,7 +25,6 @@
 
     <bean id="loggingHandlerCaseFile" class="org.springframework.integration.handler.LoggingHandler">
         <constructor-arg value="ERROR"/>
-        <property name="expression" value="payload.message"/>
     </bean>
 
     <int:chain input-channel="mailErrorChannelCaseFile">
@@ -50,7 +49,6 @@
 
     <bean id="loggingHandlerComplaint" class="org.springframework.integration.handler.LoggingHandler">
         <constructor-arg value="ERROR"/>
-        <property name="expression" value="payload.message"/>
     </bean>
 
     <int:chain input-channel="mailErrorChannelComplaint">

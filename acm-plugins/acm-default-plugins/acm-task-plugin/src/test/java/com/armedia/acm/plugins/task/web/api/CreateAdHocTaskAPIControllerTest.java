@@ -28,6 +28,7 @@ package com.armedia.acm.plugins.task.web.api;
  */
 
 import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -79,6 +80,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExc
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -177,46 +179,42 @@ public class CreateAdHocTaskAPIControllerTest extends EasyMockSupport
         expect(mockTaskDao.createAdHocTask(capture(taskSentToDao))).andReturn(found);
         expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, query, 0, 10, ""))
                 .andReturn(solrResponse).atLeastOnce();
-        
-        expect(mockEcmFileService.upload(files.get(0).getOriginalFilename(), "Other", files.get(0), mockAuthentication,
-                folder.getCmisFolderId(),
-                found.getObjectType(),
-                found.getTaskId())).andReturn(new EcmFile());
 
-        expect(mockEcmFileService.upload(files.get(1).getOriginalFilename(), "Other", files.get(1), mockAuthentication,
-                folder.getCmisFolderId(),
-                found.getObjectType(),
-                found.getTaskId())).andReturn(new EcmFile());
-        
+        Capture<MultipartFile>  captureFile1 = Capture.newInstance();
+        expect(mockEcmFileService.upload(eq(files.get(0).getOriginalFilename()), eq("Other"), capture(captureFile1), eq(mockAuthentication),
+                eq(folder.getCmisFolderId()),
+                eq(found.getObjectType()),
+                eq(found.getTaskId()))).andReturn(new EcmFile());
+
+        Capture<MultipartFile>  captureFile2 = Capture.newInstance();
+        expect(mockEcmFileService.upload(eq(files.get(1).getOriginalFilename()), eq("Other"), capture(captureFile2), eq(mockAuthentication),
+                eq(folder.getCmisFolderId()),
+                eq(found.getObjectType()),
+                eq(found.getTaskId()))).andReturn(new EcmFile());
 
         mockTaskEventPublisher.publishTaskEvent(capture(capturedEvent));
 
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
         
-        MockMultipartFile templateConfiguration = new MockMultipartFile("task", "", MediaType.APPLICATION_JSON_VALUE,
-                inJson.getBytes("UTF-8"));
+        MockMultipartFile task = new MockMultipartFile("task", "", MediaType.APPLICATION_JSON_VALUE,
+                inJson.getBytes(StandardCharsets.UTF_8));
 
-        MockMultipartHttpServletRequestBuilder builder = MockMvcRequestBuilders.fileUpload("/api/v1/plugin/task/adHocTask");
-        builder.with(new RequestPostProcessor()
-        {
-            @Override
-            public MockHttpServletRequest postProcessRequest(MockHttpServletRequest request)
-            {
-                request.setMethod("POST");
-                return request;
-            }
+        MockMultipartHttpServletRequestBuilder builder = MockMvcRequestBuilders.multipart("/api/v1/plugin/task/adHocTask");
+        builder.with(request -> {
+            request.setMethod("POST");
+            return request;
         });
 
         files.forEach(f -> builder.file((MockMultipartFile) f));
 
         replayAll();
 
-        MvcResult result = mockMvc.perform(builder.file(templateConfiguration).session(mockHttpSession)
+        MvcResult result = mockMvc.perform(builder.file(task).session(mockHttpSession)
                 .principal(mockAuthentication)).andReturn();
 
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
-        assertTrue(result.getResponse().getContentType().startsWith(MediaType.APPLICATION_JSON_VALUE));
+        assertTrue(Objects.requireNonNull(result.getResponse().getContentType()).startsWith(MediaType.APPLICATION_JSON_VALUE));
 
         AcmTask sentToDao = taskSentToDao.getValue();
         assertNull(sentToDao.getTaskId());
@@ -224,7 +222,7 @@ public class CreateAdHocTaskAPIControllerTest extends EasyMockSupport
 
         String returned = result.getResponse().getContentAsString();
 
-        log.info("results: " + returned);
+        log.info("results: [{}]", returned);
 
         AcmTask newTask = objectMapper.readValue(returned, AcmTask.class);
 
@@ -235,6 +233,8 @@ public class CreateAdHocTaskAPIControllerTest extends EasyMockSupport
         assertEquals(taskId, event.getObjectId());
         assertEquals("TASK", event.getObjectType());
         assertTrue(event.isSucceeded());
+        assertEquals(new String(files.get(0).getBytes()), new String(captureFile1.getValue().getBytes()));
+        assertEquals(new String(files.get(1).getBytes()), new String(captureFile2.getValue().getBytes()));
     }
 
     @Test
@@ -277,23 +277,20 @@ public class CreateAdHocTaskAPIControllerTest extends EasyMockSupport
         {
 
             MockMultipartFile templateConfiguration = new MockMultipartFile("task", "", MediaType.APPLICATION_JSON_VALUE,
-                    inJson.getBytes("UTF-8"));
+                    inJson.getBytes(StandardCharsets.UTF_8));
 
-            MockMultipartHttpServletRequestBuilder builder = MockMvcRequestBuilders.fileUpload("/api/v1/plugin/task/adHocTask");
-            builder.with(new RequestPostProcessor()
-            {
-                @Override
-                public MockHttpServletRequest postProcessRequest(MockHttpServletRequest request)
-                {
-                    request.setMethod("POST");
-                    return request;
-                }
+            MockMultipartHttpServletRequestBuilder builder = MockMvcRequestBuilders.multipart("/api/v1/plugin/task/adHocTask");
+            builder.with(request -> {
+                request.setMethod("POST");
+                return request;
             });
 
             files.forEach(f -> builder.file((MockMultipartFile) f));
             
             mockMvc.perform(builder.file(templateConfiguration).session(mockHttpSession)
-                    .principal(mockAuthentication)).andExpect(status().isBadRequest()).andExpect(content().contentType(MediaType.TEXT_PLAIN));
+                    .principal(mockAuthentication))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(content().contentType(MediaType.TEXT_PLAIN));
         }
         catch (Exception e)
         {

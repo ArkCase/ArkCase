@@ -32,6 +32,7 @@ import static com.armedia.acm.data.AcmObjectEventConstants.ACTION_INSERT;
 import static com.armedia.acm.data.AcmObjectEventConstants.ACTION_UPDATE;
 
 import com.armedia.acm.core.AcmObject;
+import com.armedia.acm.core.AcmObjectNumber;
 import com.armedia.acm.core.AcmParentObjectInfo;
 
 import org.apache.logging.log4j.Logger;
@@ -103,6 +104,10 @@ public class AcmObjectChangedNotifier implements ApplicationListener<AcmDatabase
         objectChangedEvent.setObjectId(acmObject.getId());
         objectChangedEvent.setObjectType(acmObject.getObjectType());
         objectChangedEvent.setClassName(object.getClass().getName());
+        if (acmObject instanceof AcmObjectNumber)
+        {
+            objectChangedEvent.setObjectNumber(((AcmObjectNumber) acmObject).getAcmObjectNumber());
+        }
     }
 
     /**

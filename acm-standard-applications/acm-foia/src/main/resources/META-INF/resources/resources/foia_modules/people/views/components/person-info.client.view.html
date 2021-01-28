@@ -5,8 +5,9 @@
                 <div class="row">
                     <div class="col-xs-6">
                         <h4>
-                            <a ng-if="objectInfo.title !== null && objectInfo.title != ''"  href="#" editable-text="objectInfo.title" onaftersave="savePerson()" permission="editCase"
-                                    permission-properties="objectInfo" permission-action="disable" e-required>
+                            <a ng-if="objectInfo.title !== null && objectInfo.title != ''" href="#" editable-select="objectInfo.title" onaftersave="savePerson()" permission="editCase"
+                               permission-properties="objectInfo" permission-action="disable" e-required
+                               e-ng-options="g.key as (g.value | translate) for g in prefixes">
                                 {{personTitle.value || 'common.value.unknown' | translate}}</a>
                             <a href="#" editable-text="objectInfo.givenName" onaftersave="savePerson()" permission="editCase"
                                     permission-properties="objectInfo" permission-action="disable" e-required>

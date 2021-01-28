@@ -49,6 +49,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import gov.foia.service.RequestResponseFolderService;
 import gov.foia.service.ResponseFolderCompressorService;
 
 /**
@@ -63,6 +64,7 @@ public class FOIARequestFileBrokerClient extends AcmFileBrokerClient
 
     private ResponseFolderCompressorService responseFolderCompressorService;
     private CaseFileDao caseFileDao;
+    private RequestResponseFolderService requestResponseFolderService;
 
     public FOIARequestFileBrokerClient(ActiveMQConnectionFactory connectionFactory, String outboundQueue, String inboundQueue)
     {
@@ -138,6 +140,9 @@ public class FOIARequestFileBrokerClient extends AcmFileBrokerClient
         {
             LOG.debug("Sending FOIA request release file " + file + " with properties " + properties);
             sendFile(file, properties);
+
+            LOG.debug("Saving Response Installment details for the request [{}]", request.getId());
+            requestResponseFolderService.saveResponseInstallmentDetails(request.getId());
         }
         catch (JMSException | IOException e)
         {
@@ -148,6 +153,11 @@ public class FOIARequestFileBrokerClient extends AcmFileBrokerClient
     public void setResponseFolderCompressorService(ResponseFolderCompressorService responseFolderCompressorService)
     {
         this.responseFolderCompressorService = responseFolderCompressorService;
+    }
+
+    public void setRequestResponseFolderService(RequestResponseFolderService requestResponseFolderService)
+    {
+        this.requestResponseFolderService = requestResponseFolderService;
     }
 
     public void setCaseFileDao(CaseFileDao caseFileDao)

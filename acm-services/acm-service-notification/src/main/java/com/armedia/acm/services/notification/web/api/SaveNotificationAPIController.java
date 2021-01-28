@@ -31,7 +31,6 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
-import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.services.email.model.EmailMentionsDTO;
 import com.armedia.acm.services.email.model.EmailWithAttachmentsAndLinksDTO;
 import com.armedia.acm.services.email.service.AcmEmailServiceException;
@@ -41,11 +40,11 @@ import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.notification.service.AcmEmailMentionsService;
 import com.armedia.acm.services.notification.service.NotificationEventPublisher;
-
 import com.armedia.acm.services.notification.service.NotificationService;
 import com.armedia.acm.services.users.model.AcmUser;
-import org.apache.logging.log4j.Logger;
+
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -55,6 +54,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -69,28 +69,21 @@ public class SaveNotificationAPIController
     private AcmEmailMentionsService acmEmailMentionsService;
     private NotificationService notificationService;
     private EcmFileService fileService;
-    private AuthenticationTokenService authenticationTokenService;
-
-    private Logger log = LogManager.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Notification addNotification(
-            @RequestBody Notification notification,
-            HttpSession httpSession) throws AcmUserActionFailedException
+    public Notification addNotification(@RequestBody Notification notification, HttpSession httpSession)
+            throws AcmUserActionFailedException
     {
-        if (log.isInfoEnabled())
+        if (notification != null)
         {
-
-            if (notification != null)
-            {
-                log.info("Notification ID : " + notification.getId());
-            }
-            else
-            {
-                throw new AcmUserActionFailedException("addNote", NotificationConstants.OBJECT_TYPE, null,
-                        "Could not save note, missing parent type and ID", new NullPointerException());
-            }
+            log.info("Notification ID: [{}]", notification.getId());
+        }
+        else
+        {
+            throw new AcmUserActionFailedException("addNote", NotificationConstants.OBJECT_TYPE, null,
+                    "Could not save note, missing parent type and ID", new NullPointerException());
         }
 
         try
@@ -121,10 +114,6 @@ public class SaveNotificationAPIController
             // gen up a fake notification so we can audit the failure
             Notification fakeNotification = new Notification();
             fakeNotification.setId(notification.getId());
-            log.info("fake id : " + fakeNotification.getId());
-            log.info("fake id 2: " + notification.getId());
-
-            fakeNotification.setId(notification.getId());
             fakeNotification.setCreated(notification.getCreated());
             fakeNotification.setCreator(notification.getCreator());
             fakeNotification.setStatus(notification.getStatus());
@@ -141,11 +130,11 @@ public class SaveNotificationAPIController
                     e.getMessage(), e);
         }
     }
-    
+
     @RequestMapping(value = "/mentions", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public EmailMentionsDTO createPlainEmail(@RequestBody EmailMentionsDTO in,
-                                             Authentication authentication, HttpSession session)
+            Authentication authentication, HttpSession session)
             throws AcmEmailServiceException
     {
         if (null == in)
@@ -162,16 +151,16 @@ public class SaveNotificationAPIController
 
     @RequestMapping(value = "/manualEmail", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public void sendManulEmailAsNotification(@RequestBody EmailWithAttachmentsAndLinksDTO emailDTO, Authentication authentication,
-                                             HttpSession session)
+    public void sendManualEmailAsNotification(@RequestBody EmailWithAttachmentsAndLinksDTO emailDTO, Authentication authentication,
+            HttpSession session)
     {
         // the user is stored in the session during login.
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
-        
+
         String title = notificationService.setNotificationTitleForManualNotification(emailDTO.getModelReferenceName());
 
         List<EcmFileVersion> notificationFiles = new ArrayList<>();
-        if(emailDTO.getAttachmentIds() != null)
+        if (emailDTO.getAttachmentIds() != null)
         {
             EcmFile file;
             for (Long fileId : emailDTO.getAttachmentIds())
@@ -180,20 +169,20 @@ public class SaveNotificationAPIController
                 notificationFiles.add(file.getVersions().get(file.getVersions().size() - 1));
             }
         }
-        
+
         Notification notification = notificationService.getNotificationBuilder()
                 .newNotification(emailDTO.getModelReferenceName(), title, emailDTO.getObjectType(),
                         Long.parseLong(emailDTO.getObjectId()), user.getUserId())
                 .withSubject(emailDTO.getSubject())
                 .withNotificationType(NotificationConstants.TYPE_MANUAL)
-                .withEmailAddresses(emailDTO.getEmailAddresses().stream().collect(Collectors.joining(",")))
+                .withEmailAddresses(String.join(",", emailDTO.getEmailAddresses()))
                 .forRelatedObjectWithNumber(emailDTO.getObjectNumber())
                 .forRelatedObjectTypeAndId(emailDTO.getObjectType(), Long.parseLong(emailDTO.getObjectId()))
                 .withFiles(notificationFiles)
                 .build(user.getUserId());
 
         notificationService.saveNotification(notification);
-        
+
     }
 
     protected void publishNotificationEvent(
@@ -227,30 +216,32 @@ public class SaveNotificationAPIController
         this.notificationDao = notificationDao;
     }
 
-    public AcmEmailMentionsService getAcmEmailMentionsService() {
+    public AcmEmailMentionsService getAcmEmailMentionsService()
+    {
         return acmEmailMentionsService;
     }
 
-    public void setAcmEmailMentionsService(AcmEmailMentionsService acmEmailMentionsService) {
+    public void setAcmEmailMentionsService(AcmEmailMentionsService acmEmailMentionsService)
+    {
         this.acmEmailMentionsService = acmEmailMentionsService;
     }
 
-    public NotificationService getNotificationService() 
+    public NotificationService getNotificationService()
     {
         return notificationService;
     }
 
-    public void setNotificationService(NotificationService notificationService) 
+    public void setNotificationService(NotificationService notificationService)
     {
         this.notificationService = notificationService;
     }
 
-    public EcmFileService getFileService() 
+    public EcmFileService getFileService()
     {
         return fileService;
     }
 
-    public void setFileService(EcmFileService fileService) 
+    public void setFileService(EcmFileService fileService)
     {
         this.fileService = fileService;
     }

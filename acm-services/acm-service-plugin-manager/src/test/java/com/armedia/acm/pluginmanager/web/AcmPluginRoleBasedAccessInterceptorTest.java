@@ -63,7 +63,6 @@ public class AcmPluginRoleBasedAccessInterceptorTest extends EasyMockSupport
     private HttpSession mockSession;
 
     private AcmPluginRoleBasedAccessInterceptor unit;
-    private AcmPluginManager acmPluginManager;
     private ApplicationPluginPrivilegesConfig pluginPrivilegesConfig;
 
     @Before
@@ -74,11 +73,7 @@ public class AcmPluginRoleBasedAccessInterceptorTest extends EasyMockSupport
         mockSession = createMock(HttpSession.class);
 
         unit = new AcmPluginRoleBasedAccessInterceptor();
-
-        acmPluginManager = new AcmPluginManager();
         pluginPrivilegesConfig = new ApplicationPluginPrivilegesConfig();
-
-        unit.setAcmPluginManager(acmPluginManager);
     }
 
     @Test

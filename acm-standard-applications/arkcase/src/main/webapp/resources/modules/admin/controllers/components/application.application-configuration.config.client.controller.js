@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('admin').controller('Admin.ApplicationConfigurationController',
-    ['$scope', 'Admin.ApplicationSettingsService', function ($scope, ApplicationSettingsService) {
+    ['$scope', 'Admin.ApplicationSettingsService', 'Object.LookupService', function ($scope, ApplicationSettingsService, ObjectLookupService) {
 
         $scope.isTimezoneValid = true;
 
@@ -16,6 +16,10 @@ angular.module('admin').controller('Admin.ApplicationConfigurationController',
             $scope.organizationPhone = response.data[ApplicationSettingsService.PROPERTIES.ORGANIZATION_PHONE];
             $scope.organizationFax = response.data[ApplicationSettingsService.PROPERTIES.ORGANIZATION_FAX];
             $scope.configDataModel = response.data;
+        });
+
+        ObjectLookupService.getTimeZones().then(function (timeZones) {
+            $scope.timeZones = timeZones;
         });
 
         $scope.validateTimezone = function () {
