@@ -32,6 +32,7 @@ import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.objectonverter.AcmMarshaller;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.person.dao.PersonAssociationDao;
+import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.plugins.person.model.PersonOrganizationConstants;
 import com.armedia.acm.services.search.service.SolrJoinDocumentsServiceImpl;
@@ -40,6 +41,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.TransactionException;
+
+import java.util.List;
 
 public class PersonAssociationServiceImpl implements PersonAssociationService
 {
@@ -78,6 +81,12 @@ public class PersonAssociationServiceImpl implements PersonAssociationService
             getPersonAssociationEventPublisher().publishPersonAssociationEvent(personAssociationHistory, personAssociation, false);
             throw new AcmCreateObjectFailedException("personAssociation", e.getMessage(), e);
         }
+    }
+
+    @Override
+    public List<Person> getPersonsInAssociatonsByPersonType(String parentType, Long parentId, String personType) {
+        return getPersonAssociationDao().findPersonByParentIdAndParentTypeAndPersonType(parentType, parentId, personType);
+
     }
 
     @Override

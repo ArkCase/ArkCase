@@ -27,12 +27,14 @@ package gov.foia.model;
  * #L%
  */
 
+import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.task.model.AcmTask;
 
 public class FOIATaskRequestModel
 {
     private AcmTask task;
     private FOIARequest request;
+    private Person taskContact;
 
     public FOIARequest getRequest()
     {
@@ -52,5 +54,13 @@ public class FOIATaskRequestModel
     public void setTask(AcmTask task)
     {
         this.task = task;
+    }
+
+    public Person getTaskContact() {
+        return taskContact;
+    }
+
+    public void setTaskContact(Person taskContact) {
+        this.taskContact = taskContact;
     }
 }
