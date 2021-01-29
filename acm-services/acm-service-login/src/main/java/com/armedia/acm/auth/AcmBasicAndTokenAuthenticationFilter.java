@@ -265,7 +265,7 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
     {
         log.trace("Starting basic authentication");
         // let Spring Security's native basic authentication do the work.
-        super.doFilter(request, response, chain);
+        super.doFilterInternal(request, response, chain);
     }
 
     /**
