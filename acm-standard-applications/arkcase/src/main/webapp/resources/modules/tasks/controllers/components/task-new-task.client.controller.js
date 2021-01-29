@@ -446,11 +446,19 @@ angular.module('tasks').controller(
                 });
 
                 modalInstance.result.then(function (data) {
-                    PersonInfoService.getPersonInfo(data.personId).then(function (person) {
-                        data['person'] = person;
-                        $scope.contactPerson = data;
-                        $scope.contactPersonName = person.givenName + ' ' + person.familyName;
-                    });
+                    if (!data.personId) {
+                        PersonInfoService.savePersonInfoWithPictures(data.person, data.personImages).then(function (response) {
+                            data['person'] = response.data;
+                            $scope.contactPerson = data;
+                            $scope.contactPersonName = response.data.givenName + ' ' + response.data.familyName;
+                        });
+                    } else {
+                        PersonInfoService.getPersonInfo(data.personId).then(function (person) {
+                            data['person'] = person;
+                            $scope.contactPerson = data;
+                            $scope.contactPersonName = person.givenName + ' ' + person.familyName;
+                        });
+                    }
                 });
             };
 
