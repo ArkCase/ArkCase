@@ -46,6 +46,7 @@ import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
+import com.armedia.acm.plugins.objectassociation.service.ObjectAssociationService;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.services.notification.service.NotificationSender;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
@@ -94,6 +95,8 @@ public class FOIARequestService
     private FoiaConfigurationService foiaConfigurationService;
     private ExecuteSolrQuery executeSolrQuery;
     private FoiaConfig foiaConfig;
+    private ObjectAssociationService objectAssociationService;
+
 
     @Transactional
     public CaseFile saveRequest(CaseFile in, Map<String, List<MultipartFile>> filesMap, Authentication auth, String ipAddress)
@@ -170,6 +173,7 @@ public class FOIARequestService
                         in = createReference(in, originalRequest);
                         saved = getSaveCaseService().saveCase(in, filesMap, auth, ipAddress);
                         copyOriginalRequestFiles(saved, originalRequest, auth);
+                        createLoopReference(saved, originalRequest);
                     }
                 }
                 else
@@ -286,6 +290,22 @@ public class FOIARequestService
         in.addChildObject(oa);
 
         return in;
+    }
+
+    public void createLoopReference(CaseFile saved, CaseFile originalRequest)
+    {
+        ObjectAssociation oa = new ObjectAssociation();
+        oa.setTargetId(saved.getId());
+        oa.setTargetName(saved.getCaseNumber());
+        oa.setTargetType(saved.getObjectType());
+        oa.setTargetTitle(saved.getTitle());
+        oa.setAssociationType("REFERENCE");
+        oa.setStatus("ACTIVE");
+        oa.setParentId(originalRequest.getId());
+        oa.setParentName(originalRequest.getCaseNumber());
+        oa.setParentType(originalRequest.getObjectType());
+
+        objectAssociationService.saveObjectAssociation(oa);
     }
 
     private void copyOriginalRequestFiles(CaseFile saved, CaseFile originalRequest, Authentication auth)
@@ -526,5 +546,13 @@ public class FOIARequestService
     public void setFoiaConfig(FoiaConfig foiaConfig)
     {
         this.foiaConfig = foiaConfig;
+    }
+
+    public ObjectAssociationService getObjectAssociationService() {
+        return objectAssociationService;
+    }
+
+    public void setObjectAssociationService(ObjectAssociationService objectAssociationService) {
+        this.objectAssociationService = objectAssociationService;
     }
 }
