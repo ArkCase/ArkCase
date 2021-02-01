@@ -43,8 +43,6 @@ import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.UnsatisfiedDependencyException;
 
 import java.util.Collections;
@@ -199,7 +197,6 @@ public class NotificationUtils
         }
         catch (UnsatisfiedDependencyException e)
         {
-            LOG.warn("Portal configuration does not exist");
             return true;
         }
 
