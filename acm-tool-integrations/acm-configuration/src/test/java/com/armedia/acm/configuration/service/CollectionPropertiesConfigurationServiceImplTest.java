@@ -1,4 +1,4 @@
-package com.armedia.acm.acm_services.acm_configuration;
+package com.armedia.acm.configuration.service;
 
 /*-
  * #%L
@@ -36,7 +36,6 @@ import static org.hamcrest.core.Every.everyItem;
 
 import com.armedia.acm.configuration.api.environment.PropertySource;
 import com.armedia.acm.configuration.core.ConfigurationContainer;
-import com.armedia.acm.configuration.service.CollectionPropertiesConfigurationServiceImpl;
 import com.armedia.acm.configuration.util.MergeFlags;
 import com.armedia.acm.configuration.util.MergePropertiesUtil;
 
