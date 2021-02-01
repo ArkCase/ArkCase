@@ -43,6 +43,7 @@ import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.UnsatisfiedDependencyException;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -187,7 +188,15 @@ public class NotificationUtils
 
     private boolean isNonPortalParticipant(String participantType, String participantLdapId)
     {
-        String portalGroupName = getPortalConfig().getGroupName();
+        String portalGroupName;
+        try
+        {
+            portalGroupName = getPortalConfig().getGroupName();
+        }
+        catch (UnsatisfiedDependencyException e)
+        {
+            return true;
+        }
 
         if (participantType.equals(NotificationConstants.PARTICIPANT_TYPE_GROUP)
                 && participantLdapId.equals(portalGroupName))
