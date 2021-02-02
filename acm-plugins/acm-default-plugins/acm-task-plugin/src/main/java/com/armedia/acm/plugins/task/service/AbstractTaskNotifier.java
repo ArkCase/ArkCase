@@ -103,31 +103,38 @@ public abstract class AbstractTaskNotifier
                 String parentType = task.getObjectType();
                 Long parentId = task.getId();
 
-                MDC.put(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY, user.getUserId());
-
-                if (task.getDueDate().compareTo(now) > 0)
+                if (user != null)
                 {
-                    Notification notification = notificationService.getNotificationBuilder()
-                            .newNotification("taskUpcoming", NotificationConstants.TASK_UPCOMING, parentType, parentId,
-                                    user.getUserId())
-                            .forObjectWithNumber(String.format("%s-%s", parentType, parentId))
-                            .forObjectWithTitle(task.getTitle())
-                            .withEmailAddresses(user.getMail())
-                            .build();
+                    MDC.put(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY, user.getUserId());
 
-                    notificationService.saveNotification(notification);
+                    if (task.getDueDate().compareTo(now) > 0)
+                    {
+                        Notification notification = notificationService.getNotificationBuilder()
+                                .newNotification("taskUpcoming", NotificationConstants.TASK_UPCOMING, parentType, parentId,
+                                        user.getUserId())
+                                .forObjectWithNumber(String.format("%s-%s", parentType, parentId))
+                                .forObjectWithTitle(task.getTitle())
+                                .withEmailAddresses(user.getMail())
+                                .build();
+
+                        notificationService.saveNotification(notification);
+                    }
+                    else
+                    {
+                        Notification notification = notificationService.getNotificationBuilder()
+                                .newNotification("taskOverdue", NotificationConstants.TASK_OVERDUE, parentType, parentId,
+                                        user.getUserId())
+                                .forObjectWithNumber(String.format("%s-%s", parentType, parentId))
+                                .forObjectWithTitle(task.getTitle())
+                                .withEmailAddresses(user.getMail())
+                                .build();
+
+                        notificationService.saveNotification(notification);
+                    }
                 }
                 else
                 {
-                    Notification notification = notificationService.getNotificationBuilder()
-                            .newNotification("taskOverdue", NotificationConstants.TASK_OVERDUE, parentType, parentId,
-                                    user.getUserId())
-                            .forObjectWithNumber(String.format("%s-%s", parentType, parentId))
-                            .forObjectWithTitle(task.getTitle())
-                            .withEmailAddresses(user.getMail())
-                            .build();
-
-                    notificationService.saveNotification(notification);
+                    MDC.put(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY, NotificationConstants.SYSTEM_USER);
                 }
             }
         }
