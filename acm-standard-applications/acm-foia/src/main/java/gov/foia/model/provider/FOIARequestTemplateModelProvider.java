@@ -31,6 +31,7 @@ import com.armedia.acm.core.model.ApplicationConfig;
 import com.armedia.acm.core.provider.TemplateModelProvider;
 import com.armedia.acm.plugins.objectassociation.dao.ObjectAssociationDao;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
+import com.armedia.acm.plugins.profile.model.UserOrg;
 import com.armedia.acm.plugins.profile.service.UserOrgService;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -65,9 +66,13 @@ public class FOIARequestTemplateModelProvider implements TemplateModelProvider<F
         if(assigneeLdapID != null)
         {
             assignee = userDao.findByUserId(assigneeLdapID);
-            request.setAssigneeTitle(userOrgService.getUserOrgForUserId(assigneeLdapID).getTitle());
+            UserOrg userOrg = userOrgService.getUserOrgForUserId(assigneeLdapID);
+            if (userOrg != null)
+            {
+                request.setAssigneeTitle(userOrg.getTitle());
+                request.setAssigneePhone(userOrg.getOfficePhoneNumber());
+            }
             request.setAssigneeFullName(assignee.getFirstName() + " " + assignee.getLastName());
-            request.setAssigneePhone(userOrgService.getUserOrgForUserId(assigneeLdapID).getOfficePhoneNumber());
         }
         FOIARequestModel requestModel = new FOIARequestModel();
         requestModel.setRequest(request);

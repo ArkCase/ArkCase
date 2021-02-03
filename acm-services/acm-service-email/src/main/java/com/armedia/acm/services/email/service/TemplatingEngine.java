@@ -72,7 +72,7 @@ public class TemplatingEngine
         templatingModel.put("baseURL", applicationConfig.getBaseUrl());
         templatingModel.put("basePortalURL", applicationConfig.getBasePortalUrl());
 
-        checkIfTemplateBodyContainsMergeTerms(emailBodyTemplate, model);
+        emailBodyTemplate = checkIfTemplateBodyContainsMergeTerms(emailBodyTemplate, model);
 
         Template t = new Template("templateName", new StringReader(emailBodyTemplate), cfg);
 
@@ -82,7 +82,7 @@ public class TemplatingEngine
         return out.toString();
     }
 
-    private void checkIfTemplateBodyContainsMergeTerms(String emailBodyTemplate, Object model)
+    private String checkIfTemplateBodyContainsMergeTerms(String emailBodyTemplate, Object model)
     {
         List<String> spelExpressions = getSpelExpressions(emailBodyTemplate);
         if(spelExpressions != null)
@@ -113,6 +113,7 @@ public class TemplatingEngine
                 emailBodyTemplate = emailBodyTemplate.replace(replaceSpelExpression, expressionsToEvaluate.get(spelEx));
             }
         }
+        return emailBodyTemplate;
     }
 
     private List<String> getSpelExpressions(String emailBodyTemplate)

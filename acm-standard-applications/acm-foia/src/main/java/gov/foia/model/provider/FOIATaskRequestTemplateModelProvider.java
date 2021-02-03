@@ -30,9 +30,12 @@ package gov.foia.model.provider;
 import com.armedia.acm.core.model.ApplicationConfig;
 import com.armedia.acm.core.provider.TemplateModelProvider;
 import com.armedia.acm.plugins.person.service.PersonAssociationService;
+import com.armedia.acm.plugins.profile.model.UserOrg;
 import com.armedia.acm.plugins.profile.service.UserOrgService;
 import com.armedia.acm.plugins.task.model.AcmTask;
+import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.services.note.dao.NoteDao;
+import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import gov.foia.dao.FOIARequestDao;
@@ -50,11 +53,20 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
     private UserOrgService userOrgService;
     private PersonAssociationService personAssociationService;
     private NoteDao noteDao;
+    private TaskDao taskDao;
 
     @Override
     public FOIATaskRequestModel getModel(Object object)
     {
-        AcmTask task = (AcmTask) object;
+        AcmTask task = null;
+        if(object instanceof Notification)
+        {
+            task = getTaskDao().findById(((Notification) object).getParentId());
+        }
+        else
+        {
+            task = (AcmTask) object;
+        }
         FOIATaskRequestModel model = new FOIATaskRequestModel();
 
         if(task.getParentObjectId() != null)
@@ -68,9 +80,13 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
                 if(assigneeLdapID != null)
                 {
                     assignee = userDao.findByUserId(assigneeLdapID);
-                    request.setAssigneeTitle(userOrgService.getUserOrgForUserId(assigneeLdapID).getTitle());
+                    UserOrg userOrg = userOrgService.getUserOrgForUserId(assigneeLdapID);
+                    if (userOrg != null)
+                    {
+                        request.setAssigneeTitle(userOrg.getTitle());
+                        request.setAssigneePhone(userOrg.getOfficePhoneNumber());
+                    }
                     request.setAssigneeFullName(assignee.getFirstName() + " " + assignee.getLastName());
-                    request.setAssigneePhone(userOrgService.getUserOrgForUserId(assigneeLdapID).getOfficePhoneNumber());
                 }
                 model.setRequest(request);
             }
@@ -139,5 +155,14 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
         this.noteDao = noteDao;
     }
 
+    public TaskDao getTaskDao()
+    {
+        return taskDao;
+    }
+
+    public void setTaskDao(TaskDao taskDao)
+    {
+        this.taskDao = taskDao;
+    }
 }
 

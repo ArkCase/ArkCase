@@ -342,6 +342,7 @@
             <beans:property name="userOrgService" ref="acmUserOrgService"/>
             <beans:property name="personAssociationService" ref="personAssociationService"/>
             <beans:property name="noteDao" ref="noteDao"/>
+            <beans:property name="taskDao" ref="acmTaskDao"/>
         </beans:bean>
 
         <beans:bean id="foiaDeterminationLetterModelProvider" class="gov.foia.model.provider.FOIADeterminationLetterModelProvider">
