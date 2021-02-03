@@ -651,10 +651,6 @@
     },
     {
         "op": "remove",
-        "path": "/components/?@.id=='participants'/columnDefs/?@.name=='participantType'/cellTemplate"
-    },
-    {
-        "op": "remove",
         "path": "/components/?@.id=='notes'/configurable"
     },
     {
