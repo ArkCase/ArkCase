@@ -356,8 +356,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                     continue;
                 }
                 // if the text contains more paragraphs, every empty line between the paragraphs should be removed
-                if (texts.length > 1)
-                {
+                if (texts.length > 1) {
                     texts = Arrays.stream(texts)
                             .filter(value -> value != null && !value.isEmpty())
                             .toArray(size -> new String[size]);
