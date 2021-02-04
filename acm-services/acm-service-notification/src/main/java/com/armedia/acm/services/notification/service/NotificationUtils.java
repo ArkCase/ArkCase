@@ -43,6 +43,9 @@ import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.UnsatisfiedDependencyException;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -54,6 +57,8 @@ import java.util.stream.Collectors;
 
 public class NotificationUtils
 {
+    private final Logger LOG = LogManager.getLogger(getClass());
+
     private AcmApplication acmAppConfiguration;
     private AcmDataService acmDataService;
     private UserDao userDao;
@@ -187,7 +192,16 @@ public class NotificationUtils
 
     private boolean isNonPortalParticipant(String participantType, String participantLdapId)
     {
-        String portalGroupName = getPortalConfig().getGroupName();
+        String portalGroupName;
+        try
+        {
+            portalGroupName = getPortalConfig().getGroupName();
+        }
+        catch (UnsatisfiedDependencyException e)
+        {
+            LOG.warn("Portal configuration does not exist");
+            return true;
+        }
 
         if (participantType.equals(NotificationConstants.PARTICIPANT_TYPE_GROUP)
                 && participantLdapId.equals(portalGroupName))
