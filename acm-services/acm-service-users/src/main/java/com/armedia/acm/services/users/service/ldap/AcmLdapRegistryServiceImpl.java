@@ -162,6 +162,10 @@ public class AcmLdapRegistryServiceImpl
                 {
                     syncOpenLdapAuthenticationProviderBean(directory, dirProperties);
                 }
+            }
+
+            if (acmSpringActiveProfile.isExternalAuthEnabledEnvironment())
+            {
                 syncPreAuthenticatedAuthenticationProviderBean(directory);
             }
 
