@@ -51,6 +51,9 @@ public class OAuth2ClientRegistrationConfig
     @Value("${oidc.tokenUri}")
     private String tokenUri;
 
+    @Value("${oidc.jwkSetUri}")
+    private String jwkSetUri;
+
     @Value("${oidc.issuerUri}")
     private String issuerUri;
 
@@ -138,6 +141,16 @@ public class OAuth2ClientRegistrationConfig
     public void setUserInfoUri(String userInfoUri)
     {
         this.userInfoUri = userInfoUri;
+    }
+
+    public String getJwkSetUri()
+    {
+        return jwkSetUri;
+    }
+
+    public void setJwkSetUri(String jwkSetUri)
+    {
+        this.jwkSetUri = jwkSetUri;
     }
 
     public String getScope()

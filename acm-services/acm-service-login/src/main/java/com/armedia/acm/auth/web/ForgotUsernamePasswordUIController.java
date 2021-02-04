@@ -48,7 +48,7 @@ import java.util.stream.Collectors;
 @RestController
 public class ForgotUsernamePasswordUIController implements ApplicationEventPublisherAware
 {
-    private UserDao userDao;
+    private final UserDao userDao;
     private ApplicationEventPublisher eventPublisher;
 
     public ForgotUsernamePasswordUIController(UserDao userDao)

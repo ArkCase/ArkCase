@@ -75,6 +75,7 @@ public class OAuth2LoginConfiguration
                 .issuerUri(clientRegistrationConfig.getIssuerUri())
                 .userInfoUri(clientRegistrationConfig.getUserInfoUri())
                 .userNameAttributeName(IdTokenClaimNames.SUB)
+                .jwkSetUri(clientRegistrationConfig.getJwkSetUri())
                 .scope(clientRegistrationConfig.getScope())
                 .build();
 

@@ -31,17 +31,18 @@ import com.armedia.acm.auth.AcmAuthentication;
 import com.armedia.acm.auth.AcmAuthenticationMapper;
 import com.armedia.acm.auth.AcmLoginSuccessHandler;
 import com.armedia.acm.auth.AcmLoginSuccessOperations;
-
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
-import org.springframework.security.oauth2.core.oidc.IdTokenClaimNames;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 import org.springframework.stereotype.Component;
@@ -53,6 +54,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Component
@@ -60,15 +62,20 @@ public class AcmOAuth2LoginSuccessHandler extends AcmLoginSuccessHandler
 {
     private final AcmAuthenticationMapper acmAuthenticationMapper;
     private final UserDao userDao;
+    private final OAuth2ClientRegistrationConfig oAuth2ClientRegistrationConfig;
+
+    private static final Logger logger = LogManager.getLogger(AcmOAuth2LoginSuccessHandler.class);
 
     public AcmOAuth2LoginSuccessHandler(AcmAuthenticationMapper acmAuthenticationMapper,
-                                        AcmLoginSuccessOperations loginSuccessOperations,
-                                        SessionRegistry sessionRegistry,
-                                        UserDao userDao,
-                                        @Qualifier("concurrentSessionControlAuthenticationStrategy") SessionAuthenticationStrategy sessionAuthenticationStrategy)
+            AcmLoginSuccessOperations loginSuccessOperations,
+            SessionRegistry sessionRegistry,
+            UserDao userDao,
+            OAuth2ClientRegistrationConfig oAuth2ClientRegistrationConfig,
+            @Qualifier("concurrentSessionControlAuthenticationStrategy") SessionAuthenticationStrategy sessionAuthenticationStrategy)
     {
         this.acmAuthenticationMapper = acmAuthenticationMapper;
         this.userDao = userDao;
+        this.oAuth2ClientRegistrationConfig = oAuth2ClientRegistrationConfig;
         List<String> ignoreSavedUrls = Arrays
                 .asList("/stomp", "/api", "/views/loggedout.jsp", "/VirtualViewerJavaHTML5", "/pentaho", "/frevvo",
                         "/modules/core/img/brand/favicon.png");
@@ -86,15 +93,22 @@ public class AcmOAuth2LoginSuccessHandler extends AcmLoginSuccessHandler
         OAuth2AuthenticationToken oAuth2LoginAuthenticationToken = (OAuth2AuthenticationToken) authentication;
         OAuth2User oAuth2User = oAuth2LoginAuthenticationToken.getPrincipal();
 
-        String username = (String) oAuth2User.getAttributes().get(IdTokenClaimNames.SUB);
-        AcmUser acmUser = userDao.findByUserId(username);
-        if (acmUser == null)
+        String userEmail = (String) oAuth2User.getAttributes().get("email");
+        logger.debug("User with email [{}] has successfully authenticated", userEmail);
+
+        Optional<AcmUser> acmUserOptional = userDao.findByEmailAddressAndDirectoryName(userEmail,
+                oAuth2ClientRegistrationConfig.getRegistrationId());
+        if (!acmUserOptional.isPresent())
         {
-            throw new UsernameNotFoundException(String.format("User %s not found in system",username));
+            throw new UsernameNotFoundException(String.format("User with email address %s not found in system", userEmail));
         }
-        Set<AcmGroup> acmUserAuthorities =  acmUser.getLdapGroups();
-        String [] authoritiesNames = acmUserAuthorities.stream().map(AcmGroup::getName).toArray(String[]::new);
-        AcmOAuth2User acmOAuth2User = new AcmOAuth2User(oAuth2User, username, authoritiesNames);
+
+        AcmUser acmUser = acmUserOptional.get();
+        Set<AcmGroup> acmUserAuthorities = acmUser.getLdapGroups();
+        String[] authoritiesNames = acmUserAuthorities.stream()
+                .map(AcmGroup::getName)
+                .toArray(String[]::new);
+        AcmOAuth2User acmOAuth2User = new AcmOAuth2User(oAuth2User, acmUser.getUserId(), authoritiesNames);
         OAuth2AuthenticationToken updatedToken = new OAuth2AuthenticationToken(acmOAuth2User, acmOAuth2User.getAuthorities(),
                 oAuth2LoginAuthenticationToken.getAuthorizedClientRegistrationId());
 
