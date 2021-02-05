@@ -91,11 +91,6 @@ angular.module('document-repository').controller(
                         $scope.treeControl.refreshTree();
                     };
 
-                    $scope.sendEmail = function() {
-                        var nodes = $scope.treeControl.getSelectedNodes();
-                        var DocTree = $scope.treeControl.getDocTreeObject();
-                        DocTreeExtEmail.openModal(DocTree, nodes);
-                    };
 
                     $scope.createNewTask = function() {
                         var modalMetadata = {
