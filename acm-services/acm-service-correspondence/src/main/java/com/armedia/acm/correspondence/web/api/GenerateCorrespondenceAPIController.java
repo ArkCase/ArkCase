@@ -72,13 +72,15 @@ public class GenerateCorrespondenceAPIController
             throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmAppErrorJsonMsg {
         log.debug("User '{}' is generating template '{}'", authentication.getName(), templateName);
 
+        Boolean isManual = true;
         try
         {
             AcmFolder folder = getAcmFolderService().findById(folderId);
             String targetCmisFolderId = folder.getCmisFolderId();
 
+
             EcmFile retval = getCorrespondenceService().generate(authentication, templateName, parentObjectType, parentObjectId,
-                    targetCmisFolderId);
+                    targetCmisFolderId, isManual);
             return retval;
         }
         catch (AcmCreateObjectFailedException e)
