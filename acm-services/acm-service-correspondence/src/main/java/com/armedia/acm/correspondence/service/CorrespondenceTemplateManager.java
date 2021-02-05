@@ -219,6 +219,7 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
         }
         else
         {
+            template.setDocumentType(template.getLabel());
             templates.put(template.getTemplateId(), getVersionToTemplateMap(template));
         }
 
