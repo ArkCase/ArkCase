@@ -118,7 +118,7 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
         Template template = findTemplate(templateName);
         if(template.isEnabled())
         {
-            return generateCorrespondence(authentication, templateName, parentObjectType, parentObjectId, targetCmisFolderId);        }
+            return generateCorrespondence(authentication, templateName, parentObjectType, parentObjectId, targetCmisFolderId, false);        }
         else
         {
             throw new IOException("Failed to generate correspondence document for template with name: [" + templateName + "]");
@@ -132,7 +132,7 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
     {
         if(isManual)
         {
-            return generateCorrespondence(authentication, templateName, parentObjectType, parentObjectId, targetCmisFolderId);
+            return generateCorrespondence(authentication, templateName, parentObjectType, parentObjectId, targetCmisFolderId, isManual);
         }
         else
         {
@@ -141,7 +141,7 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
     }
 
     private EcmFile generateCorrespondence(Authentication authentication, String templateName, String parentObjectType, Long parentObjectId,
-                                           String targetCmisFolderId)
+                                           String targetCmisFolderId, Boolean isManual)
             throws IOException, IllegalArgumentException, AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         Template template = findTemplate(templateName);
