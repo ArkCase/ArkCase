@@ -50,6 +50,12 @@
 
     <header class="text-center">
         <c:choose>
+            <c:when test="${'4'.equals(param.login_error)}">
+                <div class="alert alert-danger">
+                    User not found.
+                </div>
+                <div><a href="<%= request.getContextPath()%>/oauth-login">Proceed to login</a></div>
+            </c:when>
             <c:when test="${'3'.equals(param.login_error)}">
                 <div class="alert alert-danger">
                    Invalid credentials.
