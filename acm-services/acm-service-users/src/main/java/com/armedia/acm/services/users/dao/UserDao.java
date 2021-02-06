@@ -442,9 +442,20 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         query.setParameter("email", email.toLowerCase());
         query.setParameter("directoryName", directoryName);
 
-        Optional<AcmUser> optionalUser = Optional.of(query.getSingleResult());
-
-        return optionalUser;
+        try
+        {
+            return Optional.of(query.getSingleResult());
+        }
+         catch (NoResultException e)
+        {
+            log.warn("User with email [{}] from directory [{}] not found!", email, directoryName);
+            return Optional.empty();
+        }
+        catch (NonUniqueResultException e)
+        {
+            log.warn("There is more than one user with email [{}] from directory [{}].", email, directoryName);
+            return Optional.empty();
+        }
     }
 
     public EntityManager getEntityManager()
