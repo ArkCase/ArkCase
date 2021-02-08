@@ -21,6 +21,16 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+/**
+ * <p>
+ * The interface to be implemented by classes which hold configuration properties and also include properties which are changed in runtime.
+ * </p>
+ *
+ * <p>
+ * Instances of DynamicApplicationConfig are checked for any properties annotated with <code>{@link UnmodifiableConfigProperty}</code>.
+ * Such properties are not allowed to be changed in runtime and are filtered to not be stored in runtime configuration file.
+ * </p>
+ */
 public interface DynamicApplicationConfig
 {
     Logger logger = LogManager.getLogger(DynamicApplicationConfig.class);
