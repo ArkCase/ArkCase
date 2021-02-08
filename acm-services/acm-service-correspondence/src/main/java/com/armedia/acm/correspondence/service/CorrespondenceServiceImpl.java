@@ -113,34 +113,26 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
      */
     @Override
     public EcmFile generate(Authentication authentication, String templateName, String parentObjectType, Long parentObjectId,
-            String targetCmisFolderId)
-            throws IOException, IllegalArgumentException, AcmCreateObjectFailedException, AcmUserActionFailedException
-    {
-        Template template = findTemplate(templateName);
+            String targetCmisFolderId) throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException {
 
+        Template template = findTemplate(templateName);
         if(template.isEnabled())
         {
-            File file = File.createTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX);
+            return generateCorrespondence(authentication, templateName, parentObjectType, parentObjectId, targetCmisFolderId);        }
+        else
+        {
+            throw new IOException("Failed to generate correspondence document for template with name: [" + templateName + "]");
+        }
+    }
 
-            try (FileInputStream fisForUploadToEcm = new FileInputStream(file);
-                    FileOutputStream fosToWriteFile = new FileOutputStream(file))
-            {
-
-                log.debug("writing correspondence to file: " + file.getCanonicalPath());
-
-                EcmFile retval = getCorrespondenceGenerator().generateCorrespondence(authentication, parentObjectType, parentObjectId,
-                        targetCmisFolderId, template, new Object[] { parentObjectId }, fosToWriteFile, fisForUploadToEcm);
-
-                log.debug("Correspondence CMIS ID: " + retval.getVersionSeriesId());
-
-                getEventPublisher().publishCorrespondenceAdded(retval, authentication, true);
-
-                return retval;
-            }
-            finally
-            {
-                FileUtils.deleteQuietly(file);
-            }
+    @Override
+    public EcmFile generate(Authentication authentication, String templateName, String parentObjectType, Long parentObjectId,
+                            String targetCmisFolderId, Boolean isManual)
+            throws IOException, IllegalArgumentException, AcmCreateObjectFailedException, AcmUserActionFailedException
+    {
+        if(isManual)
+        {
+            return generateCorrespondence(authentication, templateName, parentObjectType, parentObjectId, targetCmisFolderId);
         }
         else
         {
@@ -148,6 +140,33 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
         }
     }
 
+    private EcmFile generateCorrespondence(Authentication authentication, String templateName, String parentObjectType, Long parentObjectId,
+                                           String targetCmisFolderId)
+            throws IOException, IllegalArgumentException, AcmCreateObjectFailedException, AcmUserActionFailedException
+    {
+        Template template = findTemplate(templateName);
+        File file = File.createTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX);
+
+        try (FileInputStream fisForUploadToEcm = new FileInputStream(file);
+             FileOutputStream fosToWriteFile = new FileOutputStream(file))
+        {
+
+            log.debug("writing correspondence to file: " + file.getCanonicalPath());
+
+            EcmFile retval = getCorrespondenceGenerator().generateCorrespondence(authentication, parentObjectType, parentObjectId,
+                    targetCmisFolderId, template, new Object[] { parentObjectId }, fosToWriteFile, fisForUploadToEcm);
+
+            log.debug("Correspondence CMIS ID: " + retval.getVersionSeriesId());
+
+            getEventPublisher().publishCorrespondenceAdded(retval, authentication, true);
+
+            return retval;
+        }
+        finally
+        {
+            FileUtils.deleteQuietly(file);
+        }
+    }
     @Override
     public EcmFile generateMultiTemplate(Authentication authentication, List<Template> templates, String parentObjectType,
                                          Long parentObjectId, String targetCmisFolderId, String documentName) throws Exception
