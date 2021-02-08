@@ -63,6 +63,10 @@ public interface CorrespondenceService
             String targetCmisFolderId)
             throws IOException, IllegalArgumentException, AcmCreateObjectFailedException, AcmUserActionFailedException;
 
+    EcmFile generate(Authentication authentication, String templateName, String parentObjectType, Long parentObjectId,
+                     String targetCmisFolderId, Boolean isManual)
+            throws IOException, IllegalArgumentException, AcmCreateObjectFailedException, AcmUserActionFailedException;
+
     /**
      * For use from MVC controllers and any other client with an Authentication object.
      *
@@ -94,6 +98,7 @@ public interface CorrespondenceService
      */
     EcmFile generate(String templateName, String parentObjectType, Long parentObjectId, String targetCmisFolderId)
             throws IOException, IllegalArgumentException, AcmCreateObjectFailedException, AcmUserActionFailedException;
+
 
     List<Template> getAllTemplates();
 
