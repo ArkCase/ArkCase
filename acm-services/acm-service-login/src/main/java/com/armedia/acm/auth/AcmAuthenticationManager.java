@@ -54,7 +54,6 @@ import java.util.Map;
 public class AcmAuthenticationManager implements AuthenticationManager
 {
     private SpringContextHolder springContextHolder;
-    private AcmGrantedAuthoritiesMapper authoritiesMapper;
     private AcmAuthenticationMapper authenticationMapper;
     private DefaultAuthenticationEventPublisher authenticationEventPublisher;
     private UserDao userDao;
@@ -184,16 +183,6 @@ public class AcmAuthenticationManager implements AuthenticationManager
     public void setSpringContextHolder(SpringContextHolder springContextHolder)
     {
         this.springContextHolder = springContextHolder;
-    }
-
-    public AcmGrantedAuthoritiesMapper getAuthoritiesMapper()
-    {
-        return authoritiesMapper;
-    }
-
-    public void setAuthoritiesMapper(AcmGrantedAuthoritiesMapper authoritiesMapper)
-    {
-        this.authoritiesMapper = authoritiesMapper;
     }
 
     public DefaultAuthenticationEventPublisher getAuthenticationEventPublisher()
