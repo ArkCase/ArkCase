@@ -15,7 +15,6 @@
 
     <bean id="acmAuthenticationManager" class="com.armedia.acm.auth.AcmAuthenticationManager">
         <property name="springContextHolder" ref="acmContextHolder"/>
-        <property name="authoritiesMapper" ref="acmAuthoritiesMapper"/>
         <property name="authenticationEventPublisher" ref="ssAuthenticationEventPublisher"/>
         <property name="userDao" ref="userJpaDao"/>
         <property name="authenticationMapper" ref="acmAuthenticationMapper"/>
