@@ -34,7 +34,7 @@ import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
 
 import com.armedia.acm.auth.AcmAuthentication;
-import com.armedia.acm.auth.AcmAuthenticationManager;
+import com.armedia.acm.auth.AcmAuthenticationMapper;
 import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaConfig;
 import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaPluginConstants;
 import com.armedia.acm.plugins.casefile.model.CaseEvent;
@@ -56,7 +56,7 @@ public class AcmCaseFileClosedListenerTest extends EasyMockSupport
     private AcmCaseFileClosedListener unit;
     private AlfrescoRecordsService mockService;
     private Authentication mockAuthentication;
-    private AcmAuthenticationManager mockAuthenticationManager;
+    private AcmAuthenticationMapper mockAuthenticationMapper;
     private AlfrescoRmaConfig rmaConfig;
 
     @Before
@@ -65,10 +65,10 @@ public class AcmCaseFileClosedListenerTest extends EasyMockSupport
         unit = new AcmCaseFileClosedListener();
         mockService = createMock(AlfrescoRecordsService.class);
         mockAuthentication = createMock(Authentication.class);
-        mockAuthenticationManager = createMock(AcmAuthenticationManager.class);
+        mockAuthenticationMapper = createMock(AcmAuthenticationMapper.class);
 
         unit.setAlfrescoRecordsService(mockService);
-        unit.setAuthenticationManager(mockAuthenticationManager);
+        unit.setAuthenticationMapper(mockAuthenticationMapper);
         rmaConfig = new AlfrescoRmaConfig();
         rmaConfig.setIntegrationEnabled(true);
     }
@@ -117,7 +117,7 @@ public class AcmCaseFileClosedListenerTest extends EasyMockSupport
 
         rmaConfig.setDeclareRecordsOnCaseClose(true);
         expect(mockService.getRmaConfig()).andReturn(rmaConfig);
-        expect(mockAuthenticationManager.getAcmAuthentication(new UsernamePasswordAuthenticationToken(user, user)))
+        expect(mockAuthenticationMapper.getAcmAuthentication(new UsernamePasswordAuthenticationToken(user, user)))
                 .andReturn(new AcmAuthentication(Collections.emptySet(), user, "", true, user));
 
         CaseEvent caseEvent = new CaseEvent(caseFile, "ipAddress", user,

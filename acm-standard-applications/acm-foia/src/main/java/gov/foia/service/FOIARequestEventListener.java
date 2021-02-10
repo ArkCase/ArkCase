@@ -27,7 +27,7 @@ package gov.foia.service;
  */
 
 import com.armedia.acm.auth.AcmAuthentication;
-import com.armedia.acm.auth.AcmAuthenticationManager;
+import com.armedia.acm.auth.AcmAuthenticationMapper;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.objectonverter.AcmUnmarshaller;
 import com.armedia.acm.objectonverter.ObjectConverter;
@@ -73,80 +73,77 @@ public class FOIARequestEventListener implements ApplicationListener<AcmObjectHi
     private LookupDao lookupDao;
     private TranslationService translationService;
     private FoiaConfig foiaConfig;
-    private AcmAuthenticationManager authenticationManager;
+    private AcmAuthenticationMapper authenticationMapper;
     private SaveFOIARequestService saveFOIARequestService;
 
     @Override
     public void onApplicationEvent(AcmObjectHistoryEvent event)
     {
-        if (event != null)
+        AcmObjectHistory acmObjectHistory = (AcmObjectHistory) event.getSource();
+
+        String principal = event.getUserId();
+        AcmAuthentication authentication;
+        try
         {
-            AcmObjectHistory acmObjectHistory = (AcmObjectHistory) event.getSource();
+            authentication = authenticationMapper.getAcmAuthentication(
+                    new UsernamePasswordAuthenticationToken(principal, principal));
+        }
+        catch (AuthenticationServiceException e)
+        {
+            authentication = new AcmAuthentication(Collections.emptySet(), principal, "",
+                    true, principal);
+        }
 
-            String principal = event.getUserId();
-            AcmAuthentication authentication;
-            try
+        boolean isCaseFile = checkExecution(acmObjectHistory.getObjectType());
+
+        if (isCaseFile)
+        {
+            // Converter for JSON string to Object
+            AcmUnmarshaller converter = getObjectConverter().getJsonUnmarshaller();
+
+            String jsonUpdatedCaseFile = acmObjectHistory.getObjectString();
+            FOIARequest updatedCaseFile = converter.unmarshall(jsonUpdatedCaseFile, FOIARequest.class);
+
+            if (updatedCaseFile.getRequestType().equals(FOIAConstants.APPEAL_REQUEST_TYPE))
             {
-                authentication = authenticationManager.getAcmAuthentication(
-                        new UsernamePasswordAuthenticationToken(principal, principal));
-            }
-            catch (AuthenticationServiceException e)
-            {
-                authentication = new AcmAuthentication(Collections.emptySet(), principal, "",
-                        true, principal);
-            }
 
-            boolean isCaseFile = checkExecution(acmObjectHistory.getObjectType());
+                AcmObjectHistory acmObjectHistoryExisting = getAcmObjectHistoryService().getAcmObjectHistory(updatedCaseFile.getId(),
+                        CaseFileConstants.OBJECT_TYPE);
 
-            if (isCaseFile)
-            {
-                // Converter for JSON string to Object
-                AcmUnmarshaller converter = getObjectConverter().getJsonUnmarshaller();
-
-                String jsonUpdatedCaseFile = acmObjectHistory.getObjectString();
-                FOIARequest updatedCaseFile = converter.unmarshall(jsonUpdatedCaseFile, FOIARequest.class);
-
-                if (updatedCaseFile.getRequestType().equals(FOIAConstants.APPEAL_REQUEST_TYPE))
+                if (acmObjectHistoryExisting != null)
                 {
 
-                    AcmObjectHistory acmObjectHistoryExisting = getAcmObjectHistoryService().getAcmObjectHistory(updatedCaseFile.getId(),
-                            CaseFileConstants.OBJECT_TYPE);
+                    String json = acmObjectHistoryExisting.getObjectString();
+                    FOIARequest existing = converter.unmarshall(json, FOIARequest.class);
 
-                    if (acmObjectHistoryExisting != null)
+                    if (existing != null)
                     {
+                        checkDispositionReasons(existing, updatedCaseFile, event.getIpAddress());
 
-                        String json = acmObjectHistoryExisting.getObjectString();
-                        FOIARequest existing = converter.unmarshall(json, FOIARequest.class);
-
-                        if (existing != null)
+                        if (foiaConfig.getAutomaticCreationOfRequestWhenAppealIsRemandedEnabled()
+                                && isStatusChangedToClosed(existing, updatedCaseFile))
                         {
-                            checkDispositionReasons(existing, updatedCaseFile, event.getIpAddress());
-
-                            if (foiaConfig.getAutomaticCreationOfRequestWhenAppealIsRemandedEnabled()
-                                    && isStatusChangedToClosed(existing, updatedCaseFile))
+                            if (updatedCaseFile.getDisposition() != null
+                                    && updatedCaseFile.getDisposition().equals("completely-reversed"))
                             {
-                                if (updatedCaseFile.getDisposition() != null
-                                        && updatedCaseFile.getDisposition().equals("completely-reversed"))
+                                if (!updatedCaseFile.getChildObjects().isEmpty())
                                 {
-                                    if (!updatedCaseFile.getChildObjects().isEmpty())
+                                    Long initialRequestId = updatedCaseFile.getChildObjects().stream().findFirst().get().getTargetId();
+                                    FOIARequest initialRequest = (FOIARequest) getSaveFOIARequestService().getFoiaRequestService()
+                                            .getCaseFileDao().find(initialRequestId);
+                                    FOIARequest newRequest = populateRequest(initialRequest, updatedCaseFile);
+                                    FOIARequest saved = null;
+                                    try
                                     {
-                                        Long initialRequestId = updatedCaseFile.getChildObjects().stream().findFirst().get().getTargetId();
-                                        FOIARequest initialRequest = (FOIARequest) getSaveFOIARequestService().getFoiaRequestService()
-                                                .getCaseFileDao().find(initialRequestId);
-                                        FOIARequest newRequest = populateRequest(initialRequest, updatedCaseFile);
-                                        FOIARequest saved = null;
-                                        try
-                                        {
-                                            saved = (FOIARequest) getSaveFOIARequestService()
-                                                    .saveFOIARequest(newRequest, null, authentication, event.getIpAddress());
-                                        }
-                                        catch (AcmCreateObjectFailedException e)
-                                        {
-                                            log.error("Can't save Remanded Foia Request for Request with id [{}]", initialRequestId, e);
-                                        }
-
-                                        log.debug("Remanded FOIA Request: {}", saved);
+                                        saved = (FOIARequest) getSaveFOIARequestService()
+                                                .saveFOIARequest(newRequest, null, authentication, event.getIpAddress());
                                     }
+                                    catch (AcmCreateObjectFailedException e)
+                                    {
+                                        log.error("Can't save Remanded Foia Request for Request with id [{}]", initialRequestId, e);
+                                    }
+
+                                    log.debug("Remanded FOIA Request: {}", saved);
                                 }
                             }
                         }
@@ -334,14 +331,14 @@ public class FOIARequestEventListener implements ApplicationListener<AcmObjectHi
         this.foiaConfig = foiaConfig;
     }
 
-    public AcmAuthenticationManager getAuthenticationManager()
+    public AcmAuthenticationMapper getAuthenticationMapper()
     {
-        return authenticationManager;
+        return authenticationMapper;
     }
 
-    public void setAuthenticationManager(AcmAuthenticationManager authenticationManager)
+    public void setAuthenticationMapper(AcmAuthenticationMapper authenticationMapper)
     {
-        this.authenticationManager = authenticationManager;
+        this.authenticationMapper = authenticationMapper;
     }
 
     public SaveFOIARequestService getSaveFOIARequestService()

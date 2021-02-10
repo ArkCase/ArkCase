@@ -10,6 +10,7 @@
         <property name="configurationPropertyService" ref="configurationPropertyService"/>
         <property name="acmLdapConfig" ref="acmSpringLdapConfig"/>
         <property name="collectionPropertiesConfigurationService" ref="collectionPropertiesConfigurationService"/>
+        <property name="acmSpringActiveProfile" ref="acmSpringActiveProfile"/>
     </bean>
 
 </beans>

@@ -142,7 +142,7 @@
         <kryo.version>5.0.0-RC4</kryo.version>
         <subzero.version>0.9</subzero.version>
         <xsync-version>1.2</xsync-version>
-        <nimbusds.version>5.8</nimbusds.version>
+        <nimbusds.version>9.5</nimbusds.version>
         <openpdf.version>1.2.10</openpdf.version>
         <javax-jms.version>1.1</javax-jms.version>
     </properties>
@@ -667,6 +667,16 @@
             <dependency>
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-config</artifactId>
+                <version>${spring.security.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-oauth2-client</artifactId>
+                <version>${spring.security.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-oauth2-jose</artifactId>
                 <version>${spring.security.version}</version>
             </dependency>
             <dependency>

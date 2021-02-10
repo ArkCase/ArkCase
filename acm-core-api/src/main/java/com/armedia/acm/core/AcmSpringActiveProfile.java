@@ -41,12 +41,29 @@ public class AcmSpringActiveProfile
 
     public boolean isSAMLEnabledEnvironment()
     {
-        String[] activeProfiles = getActiveProfiles();
         Predicate<String> isSamlProfile = it -> it.equals("externalSaml");
         Predicate<String> isExternalSamlProfile = it -> it.equals("ssoSaml");
+        return isProfileActivated(isSamlProfile.or(isExternalSamlProfile));
+    }
 
+    public boolean isLdapEnabledEnvironment()
+    {
+        Predicate<String> isLdapProfile = it -> it.equals("ldap");
+        Predicate<String> isExternalAuthProfile = it -> it.equals("externalAuth");
+        return isProfileActivated(isLdapProfile.or(isExternalAuthProfile));
+    }
+
+    public boolean isExternalAuthEnabledEnvironment()
+    {
+        Predicate<String> isExternalAuthProfile = it -> it.equals("externalAuth");
+        return isProfileActivated(isExternalAuthProfile);
+    }
+
+    private boolean isProfileActivated(Predicate<String> matchProfile)
+    {
+        String[] activeProfiles = getActiveProfiles();
         return Arrays.stream(activeProfiles)
-                .anyMatch(isSamlProfile.or(isExternalSamlProfile));
+                .anyMatch(matchProfile);
     }
 
     public String[] getActiveProfiles()

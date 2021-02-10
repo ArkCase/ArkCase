@@ -147,7 +147,7 @@
         <property name="objectAssociationService" ref="objectAssociationService"/>
         <property name="acmParticipantDao" ref="acmParticipantDao"/>
         <property name="objectConverter" ref="objectConverter"/>
-        <property name="authenticationManager" ref="acmAuthenticationManager"/>
+        <property name="authenticationMapper" ref="acmAuthenticationMapper"/>
         <property name="saveBusinessProcess" ref="saveBusinessProcess"/>
         <property name="notificationDao" ref="notificationDao"/>
         <property name="acmDataService" ref="acmDataService"/>

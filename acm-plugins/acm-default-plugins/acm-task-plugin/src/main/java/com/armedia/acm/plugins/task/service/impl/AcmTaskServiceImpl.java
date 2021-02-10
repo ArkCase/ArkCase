@@ -28,7 +28,7 @@ package com.armedia.acm.plugins.task.service.impl;
  */
 
 import com.armedia.acm.auth.AcmAuthentication;
-import com.armedia.acm.auth.AcmAuthenticationManager;
+import com.armedia.acm.auth.AcmAuthenticationMapper;
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
 import com.armedia.acm.core.AcmNotifiableEntity;
 import com.armedia.acm.core.AcmObject;
@@ -80,6 +80,7 @@ import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.web.api.MDCConstants;
 import com.google.common.collect.ImmutableMap;
+
 import org.activiti.engine.ActivitiException;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -131,7 +132,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
     private AcmParticipantDao acmParticipantDao;
     private ObjectAssociationService objectAssociationService;
     private ObjectConverter objectConverter;
-    private AcmAuthenticationManager authenticationManager;
+    private AcmAuthenticationMapper authenticationMapper;
     private SaveBusinessProcess saveBusinessProcess;
     private NotificationDao notificationDao;
     private AcmDataService acmDataService;
@@ -503,7 +504,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
                 AcmAuthentication authentication;
                 try
                 {
-                    authentication = authenticationManager.getAcmAuthentication(
+                    authentication = authenticationMapper.getAcmAuthentication(
                             new UsernamePasswordAuthenticationToken(principal, principal));
                 }
                 catch (AuthenticationServiceException e)
@@ -985,14 +986,14 @@ public class AcmTaskServiceImpl implements AcmTaskService
         this.objectConverter = objectConverter;
     }
 
-    public AcmAuthenticationManager getAuthenticationManager()
+    public AcmAuthenticationMapper getAuthenticationMapper()
     {
-        return authenticationManager;
+        return authenticationMapper;
     }
 
-    public void setAuthenticationManager(AcmAuthenticationManager authenticationManager)
+    public void setAuthenticationMapper(AcmAuthenticationMapper authenticationMapper)
     {
-        this.authenticationManager = authenticationManager;
+        this.authenticationMapper = authenticationMapper;
     }
 
     public void setSaveBusinessProcess(SaveBusinessProcess saveBusinessProcess)

@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?><!--suppress SpringSecurityFiltersConfiguredInspection -->
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
-    xmlns:aop="http://www.springframework.org/schema/aop"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:annotation-config/>
+    <context:component-scan base-package="com.armedia.acm.auth.oidc"/>
 
     <bean id="acmAuthoritiesMapper" class="com.armedia.acm.auth.AcmGrantedAuthoritiesMapper" init-method="initBean">
         <property name="roleToGroupMapping" ref="acmRoleToGroupConfig"/>
@@ -13,6 +18,12 @@
         <property name="authoritiesMapper" ref="acmAuthoritiesMapper"/>
         <property name="authenticationEventPublisher" ref="ssAuthenticationEventPublisher"/>
         <property name="userDao" ref="userJpaDao"/>
+        <property name="authenticationMapper" ref="acmAuthenticationMapper"/>
+    </bean>
+
+    <bean id="acmAuthenticationMapper" class="com.armedia.acm.auth.AcmAuthenticationMapper">
+        <property name="userDao" ref="userJpaDao"/>
+        <property name="authoritiesMapper" ref="acmAuthoritiesMapper"/>
     </bean>
 
     <bean id="acmAuthenticationDetailsFactory" class="com.armedia.acm.auth.AcmAuthenticationDetailsFactory"/>
@@ -119,6 +130,14 @@
         <bean id="acmLogoutSuccessHandler" class="com.armedia.acm.auth.AcmLogoutSuccessHandler">
             <property name="authenticationDetailsFactory" ref="acmAuthenticationDetailsFactory"/>
             <property name="defaultTargetUrl" value="/login?logout"/>
+            <property name="alwaysUseDefaultTargetUrl" value="false"/>
+        </bean>
+    </beans>
+
+    <beans profile="oidc">
+        <bean id="acmLogoutSuccessHandler" class="com.armedia.acm.auth.AcmLogoutSuccessHandler">
+            <property name="authenticationDetailsFactory" ref="acmAuthenticationDetailsFactory"/>
+            <property name="defaultTargetUrl" value="/oauth/loggedout"/>
             <property name="alwaysUseDefaultTargetUrl" value="false"/>
         </bean>
     </beans>

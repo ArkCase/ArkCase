@@ -30,6 +30,7 @@ package com.armedia.acm.services.users.service.ldap;
 import com.armedia.acm.configuration.service.CollectionPropertiesConfigurationService;
 import com.armedia.acm.configuration.service.ConfigurationPropertyService;
 import com.armedia.acm.configuration.util.MergeFlags;
+import com.armedia.acm.core.AcmSpringActiveProfile;
 import com.armedia.acm.services.users.model.event.LdapDirectoryAdded;
 import com.armedia.acm.services.users.model.event.LdapDirectoryReplaced;
 import com.armedia.acm.services.users.model.ldap.AcmLdapAuthenticateConfig;
@@ -84,6 +85,8 @@ public class AcmLdapRegistryServiceImpl
     private BeanDefinitionRegistry beanDefinitionRegistry;
 
     private ConfigurationPropertyService configurationPropertyService;
+
+    private AcmSpringActiveProfile acmSpringActiveProfile;
 
     @Autowired
     private SpringContextHolder contextHolder;
@@ -146,21 +149,27 @@ public class AcmLdapRegistryServiceImpl
             syncLdapAuthenticationServiceBean(directory);
             syncFilterBasedLdapUserSearchBean(directory, dirProperties);
 
-            if (dirType.equals("activedirectory"))
+            if (acmSpringActiveProfile.isLdapEnabledEnvironment())
             {
-                // TODO replace the open ldap bean with active directory when problem with autchentication is fixed
-                // syncActiveDirectoryAuthenticationProviderBean(directory, dirProperties);
-                syncOpenLdapAuthenticationProviderBean(directory, dirProperties);
-                syncActiveDirectoryLdapSearchConfigBean(directory, dirProperties);
+                if (dirType.equals("activedirectory"))
+                {
+                    // TODO replace the open ldap bean with active directory when problem with autchentication is fixed
+                    // syncActiveDirectoryAuthenticationProviderBean(directory, dirProperties);
+                    syncOpenLdapAuthenticationProviderBean(directory, dirProperties);
+                    syncActiveDirectoryLdapSearchConfigBean(directory, dirProperties);
+                }
+                else
+                {
+                    syncOpenLdapAuthenticationProviderBean(directory, dirProperties);
+                }
             }
-            else
+
+            if (acmSpringActiveProfile.isExternalAuthEnabledEnvironment())
             {
-                syncOpenLdapAuthenticationProviderBean(directory, dirProperties);
+                syncPreAuthenticatedAuthenticationProviderBean(directory);
             }
 
             syncUserDetailsServiceBean(directory, dirProperties);
-            syncPreAuthenticatedAuthenticationProviderBean(directory);
-
             syncLdapSyncJobBean(directory);
             syncLdapPartialSyncJobBean(directory);
             syncLdapSyncJobDescriptorBean(directory);
@@ -460,7 +469,6 @@ public class AcmLdapRegistryServiceImpl
                 directory + "_userDetailsServiceWrapper");
         beanDefinitionRegistry.registerBeanDefinition(directory + "_externalAuthProvider",
                 preAuthenticatedAuthenticationProviderBuilder.getBeanDefinition());
-
     }
 
     private void syncLdapSyncJobBean(String directory)
@@ -616,4 +624,8 @@ public class AcmLdapRegistryServiceImpl
         this.applicationEventPublisher = applicationEventPublisher;
     }
 
+    public void setAcmSpringActiveProfile(AcmSpringActiveProfile acmSpringActiveProfile)
+    {
+        this.acmSpringActiveProfile = acmSpringActiveProfile;
+    }
 }
