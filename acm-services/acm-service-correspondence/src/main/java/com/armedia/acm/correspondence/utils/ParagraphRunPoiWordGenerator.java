@@ -678,7 +678,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
             {
                 try
                 {
-                    if (String.valueOf(expression.getValue(stContext)) != null)
+                    if (expression.getValue(stContext) != null)
                     {
                         if (expression.getValue(stContext).getClass().getSimpleName().equalsIgnoreCase(DATE_TYPE))
                         {
