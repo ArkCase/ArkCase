@@ -900,7 +900,7 @@ LANGUAGE plpgsql;
 
     <changeSet id="54-add-person-portal-role" author="ncuculova">
         <addColumn tableName="acm_person">
-            <column name="fo_portal_role" type="VARCHAR(128)"/>
+            <column name="fo_portal_role" type="VARCHAR(20)"/>
         </addColumn>
     </changeSet>
 
