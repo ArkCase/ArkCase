@@ -83,6 +83,12 @@
             (SELECT cm_person_id FROM acm_foia_person_portal_roles WHERE cm_user_role='REJECTED_USER');
         </sql>
     </changeSet>
+    <changeSet id="12-set-role-where-null-for-portal-person" author="ncuculova">
+        <sql>
+            UPDATE acm_person SET fo_portal_role='PENDING_USER' WHERE cm_class_name='gov.foia.model.PortalFOIAPerson'
+            AND fo_portal_role IS NULL;
+        </sql>
+    </changeSet>
 
 </databaseChangeLog>
 
