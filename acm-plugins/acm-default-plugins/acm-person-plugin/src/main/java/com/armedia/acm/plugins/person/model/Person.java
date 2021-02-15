@@ -74,8 +74,8 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
-import javax.persistence.Transient;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -377,7 +377,7 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
                 .findFirst()
                 .map(StandardLookupEntry::getValue)
                 .orElse(getTitle());
-        return translationService.translate(labelKey);
+        return labelKey != null ? translationService.translate(labelKey) : "";
     }
 
     /**
