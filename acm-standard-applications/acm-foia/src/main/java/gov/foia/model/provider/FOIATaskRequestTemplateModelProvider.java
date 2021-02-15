@@ -34,14 +34,20 @@ import com.armedia.acm.plugins.profile.model.UserOrg;
 import com.armedia.acm.plugins.profile.service.UserOrgService;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.service.TaskDao;
+import com.armedia.acm.services.exemption.exception.GetExemptionCodeException;
+import com.armedia.acm.services.exemption.model.ExemptionCode;
 import com.armedia.acm.services.note.dao.NoteDao;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+import gov.foia.dao.FOIAExemptionCodeDao;
 import gov.foia.dao.FOIARequestDao;
 import gov.foia.model.FOIARequest;
 import gov.foia.model.FOIATaskRequestModel;
+import gov.foia.service.FOIAExemptionService;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvider<FOIATaskRequestModel>
@@ -54,6 +60,7 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
     private PersonAssociationService personAssociationService;
     private NoteDao noteDao;
     private TaskDao taskDao;
+    private FOIAExemptionService foiaExemptionService;
 
     @Override
     public FOIATaskRequestModel getModel(Object object)
@@ -68,7 +75,7 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
             task = (AcmTask) object;
         }
         FOIATaskRequestModel model = new FOIATaskRequestModel();
-
+        List<String> exemptionCodesAndDescription = new ArrayList<>();
         if(task.getParentObjectId() != null)
         {
             FOIARequest request = foiaRequestDao.find(task.getParentObjectId());
@@ -89,12 +96,31 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
                     request.setAssigneeFullName(assignee.getFirstName() + " " + assignee.getLastName());
                 }
                 model.setRequest(request);
+
+                List<ExemptionCode> exemptionCodes = null;
+                try
+                {
+                    exemptionCodes = foiaExemptionService.getExemptionCodes(request.getId(), request.getObjectType());
+                    if(exemptionCodes != null)
+                    {
+                        for (ExemptionCode exCode : exemptionCodes)
+                        {
+                            exemptionCodesAndDescription.add(exCode.getExemptionCode());
+                        }
+                    }
+                }
+                catch (GetExemptionCodeException e)
+                {
+                    e.printStackTrace();
+                }
+
             }
         }
 
         task.setTaskNotes(noteDao.listNotes("GENERAL", task.getId(), task.getObjectType()).stream().map(note -> note.getNote()).collect(Collectors.joining("\n\n")));
         model.setTask(task);
         model.setTaskContact(getPersonAssociationService().getPersonsInAssociatonsByPersonType("TASK", task.getId(), "Contact Person").stream().findFirst().orElse(null));
+        model.setExemptionCodesAndDescription(exemptionCodesAndDescription);
 
         return model;
     }
@@ -163,6 +189,16 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
     public void setTaskDao(TaskDao taskDao)
     {
         this.taskDao = taskDao;
+    }
+
+    public FOIAExemptionService getFoiaExemptionService()
+    {
+        return foiaExemptionService;
+    }
+
+    public void setFoiaExemptionService(FOIAExemptionService foiaExemptionService)
+    {
+        this.foiaExemptionService = foiaExemptionService;
     }
 }
 
