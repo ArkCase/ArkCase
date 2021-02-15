@@ -29,12 +29,14 @@ package gov.foia.model;
 
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.task.model.AcmTask;
+import java.util.List;
 
 public class FOIATaskRequestModel
 {
     private AcmTask task;
     private FOIARequest request;
     private Person taskContact;
+    private List<String> exemptionCodesAndDescription;
 
     public FOIARequest getRequest()
     {
@@ -62,5 +64,15 @@ public class FOIATaskRequestModel
 
     public void setTaskContact(Person taskContact) {
         this.taskContact = taskContact;
+    }
+
+    public List<String> getExemptionCodesAndDescription()
+    {
+        return exemptionCodesAndDescription;
+    }
+
+    public void setExemptionCodesAndDescription(List<String> exemptionCodesAndDescription)
+    {
+        this.exemptionCodesAndDescription = exemptionCodesAndDescription;
     }
 }
