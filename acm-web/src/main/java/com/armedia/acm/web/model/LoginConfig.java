@@ -27,7 +27,10 @@ package com.armedia.acm.web.model;
  * #L%
  */
 
+import com.armedia.acm.configuration.annotations.ListValue;
 import org.springframework.beans.factory.annotation.Value;
+
+import java.util.List;
 
 public class LoginConfig
 {
@@ -36,6 +39,22 @@ public class LoginConfig
 
     @Value("${login.warning.enabled}")
     private boolean warningEnabled;
+
+    @Value("${login.defaultTargetUrl}")
+    private String defaultTargetUrl;
+
+    private List<String> ignoredSavedUrls;
+
+    @ListValue(value = "login.ignoredSavedUrls")
+    public List<String> getIgnoredSavedUrls()
+    {
+        return ignoredSavedUrls;
+    }
+
+    public void setIgnoredSavedUrls(List<String> ignoredSavedUrls)
+    {
+        this.ignoredSavedUrls = ignoredSavedUrls;
+    }
 
     public String getWarningMessage()
     {
@@ -55,5 +74,15 @@ public class LoginConfig
     public void setWarningEnabled(boolean warningEnabled)
     {
         this.warningEnabled = warningEnabled;
+    }
+
+    public String getDefaultTargetUrl()
+    {
+        return defaultTargetUrl;
+    }
+
+    public void setDefaultTargetUrl(String defaultTargetUrl)
+    {
+        this.defaultTargetUrl = defaultTargetUrl;
     }
 }

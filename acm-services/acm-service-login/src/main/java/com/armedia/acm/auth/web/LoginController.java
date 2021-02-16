@@ -27,7 +27,7 @@ package com.armedia.acm.auth.web;
  * #L%
  */
 
-import com.armedia.acm.auth.oidc.OAuth2ClientRegistrationConfig;
+import com.armedia.acm.services.users.model.OAuth2ClientRegistrationConfig;
 import com.armedia.acm.core.AcmSpringActiveProfile;
 import com.armedia.acm.web.api.service.LoginWarningMessageService;
 

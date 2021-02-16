@@ -33,11 +33,18 @@ import com.armedia.acm.auth.AcmLoginSuccessHandler;
 import com.armedia.acm.auth.AcmLoginSuccessOperations;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.OAuth2ClientRegistrationConfig;
 import com.armedia.acm.services.users.model.group.AcmGroup;
+import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
+import com.armedia.acm.services.users.model.ldap.MapperUtils;
+import com.armedia.acm.spring.SpringContextHolder;
+import com.armedia.acm.web.model.LoginConfig;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.session.SessionRegistry;
@@ -52,17 +59,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @Component
+@Profile("oidc")
 public class AcmOAuth2LoginSuccessHandler extends AcmLoginSuccessHandler
 {
     private final AcmAuthenticationMapper acmAuthenticationMapper;
     private final UserDao userDao;
     private final OAuth2ClientRegistrationConfig oAuth2ClientRegistrationConfig;
+    private final SpringContextHolder springContextHolder;
 
     private static final Logger logger = LogManager.getLogger(AcmOAuth2LoginSuccessHandler.class);
 
@@ -71,19 +77,20 @@ public class AcmOAuth2LoginSuccessHandler extends AcmLoginSuccessHandler
             SessionRegistry sessionRegistry,
             UserDao userDao,
             OAuth2ClientRegistrationConfig oAuth2ClientRegistrationConfig,
-            @Qualifier("concurrentSessionControlAuthenticationStrategy") SessionAuthenticationStrategy sessionAuthenticationStrategy)
+            @Qualifier("concurrentSessionControlAuthenticationStrategy") SessionAuthenticationStrategy sessionAuthenticationStrategy,
+            LoginConfig loginConfig,
+            SpringContextHolder springContextHolder)
     {
         this.acmAuthenticationMapper = acmAuthenticationMapper;
         this.userDao = userDao;
         this.oAuth2ClientRegistrationConfig = oAuth2ClientRegistrationConfig;
-        List<String> ignoreSavedUrls = Arrays
-                .asList("/stomp", "/api", "/views/loggedout.jsp", "/VirtualViewerJavaHTML5", "/pentaho", "/frevvo",
-                        "/modules/core/img/brand/favicon.png");
+        this.springContextHolder = springContextHolder;
 
         setLoginSuccessOperations(loginSuccessOperations);
         setSessionRegistry(sessionRegistry);
         setSessionAuthenticationStrategy(sessionAuthenticationStrategy);
-        setIgnoreSavedUrls(ignoreSavedUrls);
+        setLoginConfig(loginConfig);
+        setDefaultTargetUrl(loginConfig.getDefaultTargetUrl());
     }
 
     @Override
@@ -93,17 +100,32 @@ public class AcmOAuth2LoginSuccessHandler extends AcmLoginSuccessHandler
         OAuth2AuthenticationToken oAuth2LoginAuthenticationToken = (OAuth2AuthenticationToken) authentication;
         OAuth2User oAuth2User = oAuth2LoginAuthenticationToken.getPrincipal();
 
-        String userEmail = (String) oAuth2User.getAttributes().get("email");
-        logger.debug("User with email [{}] has successfully authenticated", userEmail);
-
-        Optional<AcmUser> acmUserOptional = userDao.findByEmailAddressAndDirectoryName(userEmail,
-                oAuth2ClientRegistrationConfig.getRegistrationId());
-        if (!acmUserOptional.isPresent())
+        String username = (String) oAuth2User.getAttributes().get(oAuth2ClientRegistrationConfig.getUsernameAttribute());
+        if (username == null)
         {
-            throw new UsernameNotFoundException(String.format("User with email address %s not found in system", userEmail));
+            throw new UsernameNotFoundException(String.format("Attribute %s is not part of the OAuth2 token payload",
+                    oAuth2ClientRegistrationConfig.getUsernameAttribute()));
+        }
+        logger.debug("User [{}] has successfully authenticated", username);
+
+        AcmLdapSyncConfig ldapSyncConfig = springContextHolder.getBeanByName(String.format("%s_sync",
+                oAuth2ClientRegistrationConfig.getUsersDirectory()), AcmLdapSyncConfig.class);
+
+        String acmPrincipal = MapperUtils.buildPrincipalName(StringUtils.substringBeforeLast(username, "@"),
+                ldapSyncConfig.getUserPrefix(), ldapSyncConfig.getUserDomain());
+
+        if (!acmPrincipal.equals(username))
+        {
+            logger.info("Authenticated principal with configured prefix [{}] and domain [{}] is [{}]", ldapSyncConfig.getUserPrefix(),
+                    ldapSyncConfig.getUserDomain(), acmPrincipal);
         }
 
-        AcmUser acmUser = acmUserOptional.get();
+        AcmUser acmUser = userDao.findByUserId(acmPrincipal);
+        if (acmUser == null)
+        {
+            throw new UsernameNotFoundException(String.format("User with email address %s not found in system", username));
+        }
+
         Set<AcmGroup> acmUserAuthorities = acmUser.getLdapGroups();
         String[] authoritiesNames = acmUserAuthorities.stream()
                 .map(AcmGroup::getName)

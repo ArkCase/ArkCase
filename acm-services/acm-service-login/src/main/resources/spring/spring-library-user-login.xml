@@ -70,21 +70,10 @@
 
     <bean id="acmLoginSuccessHandler" class="com.armedia.acm.auth.AcmLoginSuccessHandler">
         <property name="loginSuccessOperations" ref="acmLoginSuccessOperations"/>
-        <property name="defaultTargetUrl" value="/home.html#!/welcome"/>
-        <property name="alwaysUseDefaultTargetUrl" value="false"/>
+        <property name="defaultTargetUrl" value="#{loginConfig.defaultTargetUrl}"/>
         <property name="sessionRegistry" ref="sessionRegistry"/>
         <property name="sessionAuthenticationStrategy" ref="concurrentSessionControlAuthenticationStrategy"/>
-        <property name="ignoreSavedUrls">
-            <list value-type="java.lang.String">
-                <value>/stomp</value>
-                <value>/api</value>
-                <value>/views/loggedout.jsp</value>
-                <value>/VirtualViewerJavaHTML5</value>
-                <value>/pentaho</value>
-                <value>/frevvo</value>
-                <value>/modules/core/img/brand/favicon.png</value>
-            </list>
-        </property>
+        <property name="loginConfig" ref="loginConfig"/>
     </bean>
 
     <bean id="acmRedirectStrategy" class="com.armedia.acm.auth.AcmRedirectStrategy"/>
