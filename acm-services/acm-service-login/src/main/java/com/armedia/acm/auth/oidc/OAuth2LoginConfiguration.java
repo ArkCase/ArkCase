@@ -27,6 +27,7 @@ package com.armedia.acm.auth.oidc;
  * #L%
  */
 
+import com.armedia.acm.services.users.model.OAuth2ClientRegistrationConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -76,7 +77,7 @@ public class OAuth2LoginConfiguration
                 .userInfoUri(clientRegistrationConfig.getUserInfoUri())
                 .userNameAttributeName(IdTokenClaimNames.SUB)
                 .jwkSetUri(clientRegistrationConfig.getJwkSetUri())
-                .scope(clientRegistrationConfig.getScope())
+                .scope(clientRegistrationConfig.getScopes())
                 .build();
 
         return new InMemoryClientRegistrationRepository(Collections.singletonList(clientRegistration));

@@ -1,4 +1,4 @@
-package com.armedia.acm.auth.oidc;
+package com.armedia.acm.services.users.model;
 
 /*-
  * #%L
@@ -28,9 +28,7 @@ package com.armedia.acm.auth.oidc;
  */
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
 
-@Configuration
 public class OAuth2ClientRegistrationConfig
 {
     @Value("${oidc.registrationId}")
@@ -60,8 +58,20 @@ public class OAuth2ClientRegistrationConfig
     @Value("${oidc.userInfoUri}")
     private String userInfoUri;
 
-    @Value("${oidc.scope}")
-    private String scope;
+    @Value("${oidc.usernameAttribute}")
+    private String usernameAttribute;
+
+    @Value("#{'${oidc.scope}'.split(',')}")
+    private String[] scopes;
+
+    @Value("${oidc.systemUserEmail}")
+    private String systemUserEmail;
+
+    @Value("${oidc.systemUserPassword}")
+    private String systemUserPassword;
+
+    @Value("${oidc.usersDirectory}")
+    private String usersDirectory;
 
     public String getRegistrationId()
     {
@@ -143,6 +153,16 @@ public class OAuth2ClientRegistrationConfig
         this.userInfoUri = userInfoUri;
     }
 
+    public String getUsernameAttribute()
+    {
+        return usernameAttribute;
+    }
+
+    public void setUsernameAttribute(String usernameAttribute)
+    {
+        this.usernameAttribute = usernameAttribute;
+    }
+
     public String getJwkSetUri()
     {
         return jwkSetUri;
@@ -153,13 +173,43 @@ public class OAuth2ClientRegistrationConfig
         this.jwkSetUri = jwkSetUri;
     }
 
-    public String getScope()
+    public String[] getScopes()
     {
-        return scope;
+        return scopes;
     }
 
-    public void setScope(String scope)
+    public void setScopes(String[] scopes)
     {
-        this.scope = scope;
+        this.scopes = scopes;
+    }
+
+    public String getSystemUserEmail()
+    {
+        return systemUserEmail;
+    }
+
+    public void setSystemUserEmail(String systemUserEmail)
+    {
+        this.systemUserEmail = systemUserEmail;
+    }
+
+    public String getSystemUserPassword()
+    {
+        return systemUserPassword;
+    }
+
+    public void setSystemUserPassword(String systemUserPassword)
+    {
+        this.systemUserPassword = systemUserPassword;
+    }
+
+    public String getUsersDirectory()
+    {
+        return usersDirectory;
+    }
+
+    public void setUsersDirectory(String usersDirectory)
+    {
+        this.usersDirectory = usersDirectory;
     }
 }
