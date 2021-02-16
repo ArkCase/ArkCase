@@ -29,7 +29,6 @@ package gov.foia.model;
 
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.task.model.AcmTask;
-import java.util.List;
 
 public class FOIATaskRequestModel
 {
