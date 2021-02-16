@@ -36,7 +36,7 @@ public class FOIATaskRequestModel
     private AcmTask task;
     private FOIARequest request;
     private Person taskContact;
-    private List<String> exemptionCodesAndDescription;
+    private String exemptionCodesAndDescription;
 
     public FOIARequest getRequest()
     {
@@ -66,12 +66,12 @@ public class FOIATaskRequestModel
         this.taskContact = taskContact;
     }
 
-    public List<String> getExemptionCodesAndDescription()
+    public String getExemptionCodesAndDescription()
     {
         return exemptionCodesAndDescription;
     }
 
-    public void setExemptionCodesAndDescription(List<String> exemptionCodesAndDescription)
+    public void setExemptionCodesAndDescription(String exemptionCodesAndDescription)
     {
         this.exemptionCodesAndDescription = exemptionCodesAndDescription;
     }
