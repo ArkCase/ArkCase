@@ -40,11 +40,12 @@ import com.armedia.acm.services.note.dao.NoteDao;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-import gov.foia.dao.FOIAExemptionCodeDao;
 import gov.foia.dao.FOIARequestDao;
 import gov.foia.model.FOIARequest;
 import gov.foia.model.FOIATaskRequestModel;
 import gov.foia.service.FOIAExemptionService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +62,8 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
     private NoteDao noteDao;
     private TaskDao taskDao;
     private FOIAExemptionService foiaExemptionService;
+
+    private final Logger log = LoggerFactory.getLogger(getClass().getName());
 
     @Override
     public FOIATaskRequestModel getModel(Object object)
@@ -110,6 +113,7 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
                 }
                 catch (GetExemptionCodeException e)
                 {
+                    log.error("Unable to get exemption codes for objectId: {}" + request.getId(), e);
                     e.printStackTrace();
                 }
 
