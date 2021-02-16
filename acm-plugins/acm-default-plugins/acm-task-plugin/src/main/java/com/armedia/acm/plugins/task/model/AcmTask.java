@@ -114,8 +114,6 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
     private String parentObjectType;
     private String parentObjectTitle;
     private String parentObjectName;
-    private Date parentCreatedDate;
-    private Date parentDueDate;
     private transient String taskNotes;
 
     /**
@@ -566,26 +564,6 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
     public void setParentObjectName(String parentObjectName)
     {
         this.parentObjectName = parentObjectName;
-    }
-
-    public Date getParentCreatedDate()
-    {
-        return parentCreatedDate;
-    }
-
-    public void setParentCreatedDate(Date parentCreatedDate)
-    {
-        this.parentCreatedDate = parentCreatedDate;
-    }
-
-    public Date getParentDueDate()
-    {
-        return parentDueDate;
-    }
-
-    public void setParentDueDate(Date parentDueDate)
-    {
-        this.parentDueDate = parentDueDate;
     }
 
     public String getNextAssignee()
