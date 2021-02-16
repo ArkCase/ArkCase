@@ -260,7 +260,7 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
 
     }
 
-    private AcmTask updateExistingActivitiTask(AcmTask in, Task activitiTask) throws AcmTaskException
+    public AcmTask updateExistingActivitiTask(AcmTask in, Task activitiTask) throws AcmTaskException
     {
         activitiTask.setAssignee(in.getAssignee());
         activitiTask.setOwner(in.getOwner());
@@ -1336,7 +1336,7 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
 
     }
 
-    private void extractTaskLocalVariables(AcmTask acmTask, Map<String, Object> taskLocal)
+    public void extractTaskLocalVariables(AcmTask acmTask, Map<String, Object> taskLocal)
     {
         if (acmTask.getAttachedToObjectId() == null)
         {
