@@ -219,4 +219,18 @@
         <property name="ldapSyncProcessor" ref="ldapSyncProcessor"/>
         <property name="schedulerService" ref="acmSchedulerService"/>
     </bean>
+
+    <bean id="userAccessTokenDao"
+          class="com.armedia.acm.services.users.dao.UserAccessTokenDao"/>
+
+    <bean id="acmOAuth2AccessTokenService" class="com.armedia.acm.services.users.service.AcmOAuth2AccessTokenService">
+        <property name="userAccessTokenDao" ref="userAccessTokenDao"/>
+        <property name="clientRegistrationConfig" ref="oAuth2ClientRegistrationConfig"/>
+        <property name="acmRestTemplate" ref="acmRestTemplate"/>
+    </bean>
+
+    <bean id="oAuth2ClientRegistrationConfig"
+          class="com.armedia.acm.services.users.model.OAuth2ClientRegistrationConfig"/>
+
+    <bean id="acmRestTemplate" class="org.springframework.web.client.RestTemplate"/>
 </beans>
