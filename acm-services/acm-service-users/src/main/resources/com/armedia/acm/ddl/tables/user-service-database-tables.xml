@@ -635,4 +635,69 @@
         </sql>
     </changeSet>
 
+    <changeSet id="40-create-acm_user_access_token-table" author="ncuculova" dbms="mysql">
+        <createTable tableName="acm_user_access_token">
+            <column name="cm_id" type="${idType}">
+                <constraints primaryKey="true" primaryKeyName="pk_access_token"/>
+            </column>
+            <column name="cm_value" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_user_email" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_expiration_in_sec" type="LONG">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_provider" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_created_date_time" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addUniqueConstraint tableName="acm_user_access_token" columnNames="cm_user_email,cm_provider"/>
+    </changeSet>
+
+    <changeSet id="02-create-acm_user_access_token-table" author="ncuculova" dbms="oracle,postgresql,mssql">
+        <createTable tableName="acm_user_access_token">
+            <column name="cm_id" type="${idType}">
+                <constraints primaryKey="true" primaryKeyName="pk_access_token"/>
+            </column>
+            <column name="cm_value" type="VARCHAR(2560)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_user_email" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_expiration_in_sex" type="LONG">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_provider" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_created_date_time" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addUniqueConstraint tableName="acm_user_access_token" columnNames="cm_user_email,cm_provider"/>
+    </changeSet>
+
+    <changeSet id="03-create-acm_user_access_token-index" author="ncuculova">
+        <createIndex tableName="acm_user_access_token" indexName="idx_access_token_value">
+            <column name="cm_value"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="04-create-acm_user_access_token-seq" author="ncuculova">
+        <createTable tableName="acm_user_access_token_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_user_access_token_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_user_access_token"></column>
+        </insert>
+    </changeSet>
+
 </databaseChangeLog>
