@@ -341,7 +341,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                     }
                 }
                 String spelExpressionToBeEvaluted = sb.toString();
-                if (spelExpressionToBeEvaluted != null)
+                if (spelExpressionToBeEvaluted != null && !spelExpressionToBeEvaluted.isEmpty())
                 {
                     texts = evaluateSpelExpression(object, spelExpressionToBeEvaluted, objectType).split("\n");
                 }
@@ -582,7 +582,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
 
         for (CorrespondenceMergeField mergeField : getMergeFieldManager().getMergeFields())
         {
-            if (mergeField.getFieldObjectType().equalsIgnoreCase(objectType) && mergeField.getFieldId().equalsIgnoreCase(spelExpression))
+            if (mergeField.getFieldId().equalsIgnoreCase(spelExpression))
             {
                 spelExpression = mergeField.getCorrespondenceFieldValue();
                 isExistingMergeField = true;

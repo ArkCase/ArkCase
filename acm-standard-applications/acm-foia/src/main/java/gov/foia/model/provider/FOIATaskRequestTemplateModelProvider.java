@@ -123,7 +123,7 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
         task.setTaskNotes(noteDao.listNotes("GENERAL", task.getId(), task.getObjectType()).stream().map(note -> note.getNote()).collect(Collectors.joining("\n\n")));
         model.setTask(task);
         model.setTaskContact(getPersonAssociationService().getPersonsInAssociatonsByPersonType("TASK", task.getId(), "Contact Person").stream().findFirst().orElse(null));
-        model.setExemptionCodesAndDescription(exemptionCodesAndDescription.stream().collect(Collectors.joining("\n")));
+        model.setExemptionCodesAndDescription(exemptionCodesAndDescription.stream().collect(Collectors.joining(",")));
 
         return model;
     }
