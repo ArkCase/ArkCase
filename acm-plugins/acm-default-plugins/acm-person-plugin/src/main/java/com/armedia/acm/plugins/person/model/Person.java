@@ -375,7 +375,7 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
                 .findFirst()
                 .map(StandardLookupEntry::getValue)
                 .orElse(getTitle());
-        return labelKey != null ? translationService.translate(labelKey) : "";
+        return translationService.translate(labelKey);
     }
 
     /**
