@@ -171,8 +171,11 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
                         tempFileContents, targetCmisFolderId, container, metadata.getFileName(), existingCmisDocument,
                         detectedMetadata, ecmUniqueFilename);
 
-                String fileHash = DigestUtils.md5Hex(FileUtils.openInputStream(tempFileContents));
-                pipelineContext.setFileHash(fileHash);
+                try (InputStream is = FileUtils.openInputStream(tempFileContents))
+                {
+                    String fileHash = DigestUtils.md5Hex(is);
+                    pipelineContext.setFileHash(fileHash);
+                }
 
                 boolean searchablePDF = false;
                 if (ecmFileConfig.getSnowboundEnableOcr())
@@ -340,8 +343,11 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
                         tempFileContents, targetCmisFolderId, container, metadata.getFileName(), existingCmisDocument,
                         detectedMetadata, ecmUniqueFilename);
 
-                String fileHash = DigestUtils.md5Hex(FileUtils.openInputStream(tempFileContents));
-                pipelineContext.setFileHash(fileHash);
+                try (InputStream is = FileUtils.openInputStream(tempFileContents))
+                {
+                    String fileHash = DigestUtils.md5Hex(is);
+                    pipelineContext.setFileHash(fileHash);
+                }
 
                 boolean searchablePDF = false;
                 log.debug("SNOWBOUND ENABLED OCR = [{}]", ecmFileConfig.getSnowboundEnableOcr());
@@ -570,8 +576,11 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             FileUtils.copyInputStreamToFile(fileInputStream, file);
             pipelineContext.setFileContents(file);
 
-            String fileHash = DigestUtils.md5Hex(FileUtils.openInputStream(file));
-            pipelineContext.setFileHash(fileHash);
+            try (InputStream is = FileUtils.openInputStream(file))
+            {
+                String fileHash = DigestUtils.md5Hex(is);
+                pipelineContext.setFileHash(fileHash);
+            }
 
             EcmTikaFile ecmTikaFile = new EcmTikaFile();
 
@@ -644,8 +653,11 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             FileUtils.copyInputStreamToFile(fileInputStream, file);
             pipelineContext.setFileContents(file);
 
-            String fileHash = DigestUtils.md5Hex(FileUtils.openInputStream(file));
-            pipelineContext.setFileHash(fileHash);
+            try (InputStream is = FileUtils.openInputStream(file))
+            {
+                String fileHash = DigestUtils.md5Hex(is);
+                pipelineContext.setFileHash(fileHash);
+            }
 
             EcmTikaFile ecmTikaFile = new EcmTikaFile();
 
