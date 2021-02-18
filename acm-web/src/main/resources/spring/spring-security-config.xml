@@ -34,7 +34,7 @@
         <http security="none" pattern="/forgot-password"/>
     </beans:beans>
 
-    <beans:beans profile="oidc">
+    <beans:beans profile="oidc,externalOidc">
         <http security="none" pattern="/oauth-login"/>
         <http security="none" pattern="/views/oauth-login.jsp"/>
         <http security="none" pattern="/oauth/loggedout"/>
