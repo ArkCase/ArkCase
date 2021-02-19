@@ -60,6 +60,14 @@ public class EmailReceiverConfig
     @Value("${email.create.complaint.enabled}")
     private Boolean createComplaintEnabled;
 
+    @JsonProperty("email.TASK.user")
+    @Value("${email.TASK.user}")
+    private String taskUser;
+
+    @JsonProperty("email.TASK.password")
+    @Value("${email.TASK.password}")
+    private String taskPassword;
+
     @Value("${email.protocol}")
     private String protocol;
 
@@ -152,6 +160,26 @@ public class EmailReceiverConfig
     public void setCreateComplaintEnabled(Boolean createComplaintEnabled)
     {
         this.createComplaintEnabled = createComplaintEnabled;
+    }
+
+    public String getTaskUser()
+    {
+        return taskUser;
+    }
+
+    public void setTaskUser(String taskUser)
+    {
+        this.taskUser = taskUser;
+    }
+
+    public String getTaskPassword()
+    {
+        return taskPassword;
+    }
+
+    public void setTaskPassword(String taskPassword)
+    {
+        this.taskPassword = taskPassword;
     }
 
     @JsonIgnore
