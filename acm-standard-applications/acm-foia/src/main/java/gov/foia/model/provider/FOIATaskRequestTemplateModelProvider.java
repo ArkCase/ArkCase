@@ -27,6 +27,7 @@ package gov.foia.model.provider;
  * #L%
  */
 
+import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.model.ApplicationConfig;
 import com.armedia.acm.core.provider.TemplateModelProvider;
 import com.armedia.acm.plugins.person.service.PersonAssociationService;
@@ -68,64 +69,92 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
     @Override
     public FOIATaskRequestModel getModel(Object object)
     {
+        FOIARequest request = null;
         AcmTask task = null;
         if(object instanceof Notification)
         {
-            task = getTaskDao().findById(((Notification) object).getParentId());
+            if(((Notification) object).getParentType().equals("TASK"))
+            {
+                task = getTaskDao().findById(((Notification) object).getParentId());
+            }
+            else
+            {
+                request = getFoiaRequestDao().find(((Notification) object).getParentId());
+            }
+
         }
         else
         {
-            task = (AcmTask) object;
+            if(object instanceof AcmTask)
+            {
+                task = (AcmTask) object;
+            }
+            else
+            {
+                request = (FOIARequest) object;
+            }
+
         }
         FOIATaskRequestModel model = new FOIATaskRequestModel();
         List<String> exemptionCodesAndDescription = new ArrayList<>();
-        if(task.getParentObjectId() != null)
+        if(task != null)
         {
-            FOIARequest request = foiaRequestDao.find(task.getParentObjectId());
-            if(request != null)
+            task.setTaskNotes(noteDao.listNotes("GENERAL", task.getId(), task.getObjectType()).stream().map(note -> note.getNote()).collect(Collectors.joining("\n\n")));
+            model.setTaskContact(getPersonAssociationService().getPersonsInAssociatonsByPersonType("TASK", task.getId(), "Contact Person").stream().findFirst().orElse(null));
+            if(task.getParentObjectId() != null)
             {
-                request.setApplicationConfig(applicationConfig);
-                String assigneeLdapID = request.getAssigneeLdapId();
-                AcmUser assignee = null;
-                if(assigneeLdapID != null)
+                request = foiaRequestDao.find(task.getParentObjectId());
+                if(request != null)
                 {
-                    assignee = userDao.findByUserId(assigneeLdapID);
-                    UserOrg userOrg = userOrgService.getUserOrgForUserId(assigneeLdapID);
-                    if (userOrg != null)
-                    {
-                        request.setAssigneeTitle(userOrg.getTitle());
-                        request.setAssigneePhone(userOrg.getOfficePhoneNumber());
-                    }
-                    request.setAssigneeFullName(assignee.getFirstName() + " " + assignee.getLastName());
+                    setRequestFieldsAndExemptionCodes(request, exemptionCodesAndDescription);
                 }
-                model.setRequest(request);
-
-                try
-                {
-                    List<ExemptionCode> exemptionCodes = foiaExemptionService.getExemptionCodes(request.getId(), request.getObjectType());
-                    if(exemptionCodes != null)
-                    {
-                        for (ExemptionCode exCode : exemptionCodes)
-                        {
-                            exemptionCodesAndDescription.add(exCode.getExemptionCode());
-                        }
-                    }
-                }
-                catch (GetExemptionCodeException e)
-                {
-                    log.error("Unable to get exemption codes for objectId: {}" + request.getId(), e);
-                    e.printStackTrace();
-                }
-
             }
         }
+        else
+        {
+            setRequestFieldsAndExemptionCodes(request, exemptionCodesAndDescription);
+        }
 
-        task.setTaskNotes(noteDao.listNotes("GENERAL", task.getId(), task.getObjectType()).stream().map(note -> note.getNote()).collect(Collectors.joining("\n\n")));
         model.setTask(task);
-        model.setTaskContact(getPersonAssociationService().getPersonsInAssociatonsByPersonType("TASK", task.getId(), "Contact Person").stream().findFirst().orElse(null));
+        model.setRequest(request);
         model.setExemptionCodesAndDescription(exemptionCodesAndDescription.stream().collect(Collectors.joining(",")));
 
         return model;
+    }
+
+    private void setRequestFieldsAndExemptionCodes(FOIARequest request, List<String> exemptionCodesAndDescription)
+    {
+        request.setApplicationConfig(applicationConfig);
+        String assigneeLdapID = request.getAssigneeLdapId();
+        AcmUser assignee = null;
+        if(assigneeLdapID != null)
+        {
+            assignee = userDao.findByUserId(assigneeLdapID);
+            UserOrg userOrg = userOrgService.getUserOrgForUserId(assigneeLdapID);
+            if (userOrg != null)
+            {
+                request.setAssigneeTitle(userOrg.getTitle());
+                request.setAssigneePhone(userOrg.getOfficePhoneNumber());
+            }
+            request.setAssigneeFullName(assignee.getFirstName() + " " + assignee.getLastName());
+        }
+
+        try
+        {
+            List<ExemptionCode> exemptionCodes = foiaExemptionService.getExemptionCodes(request.getId(), request.getObjectType());
+            if(exemptionCodes != null)
+            {
+                for (ExemptionCode exCode : exemptionCodes)
+                {
+                    exemptionCodesAndDescription.add(exCode.getExemptionCode());
+                }
+            }
+        }
+        catch (GetExemptionCodeException e)
+        {
+            log.error("Unable to get exemption codes for objectId: {}" + request.getId(), e);
+            e.printStackTrace();
+        }
     }
 
     @Override
