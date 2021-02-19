@@ -56,6 +56,7 @@ public class TemplateDownloadControllerAPI
 {
     private Logger log = LogManager.getLogger(getClass());
     private String correspondenceFolderName;
+    private String emailTemplateFolderName;
 
     @RequestMapping(value = "/template", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE,
             MediaType.TEXT_PLAIN_VALUE })
@@ -65,7 +66,7 @@ public class TemplateDownloadControllerAPI
             throws IOException, AcmObjectNotFoundException
     {
 
-        Resource templateFile = new FileSystemResource(getCorrespondenceFolderName() + File.separator + fileName);
+        Resource templateFile = new FileSystemResource( fileName.contains(".html") ? getEmailTemplateFolderName() + File.separator + fileName : getCorrespondenceFolderName() + File.separator + fileName);
 
         Path path = Paths.get(templateFile.getURI());
         String mimeType = Files.probeContentType(path);
@@ -131,5 +132,15 @@ public class TemplateDownloadControllerAPI
     public void setCorrespondenceFolderName(String correspondenceFolderName)
     {
         this.correspondenceFolderName = correspondenceFolderName;
+    }
+
+    public String getEmailTemplateFolderName()
+    {
+        return emailTemplateFolderName;
+    }
+
+    public void setEmailTemplateFolderName(String emailTemplateFolderName)
+    {
+        this.emailTemplateFolderName = emailTemplateFolderName;
     }
 }
