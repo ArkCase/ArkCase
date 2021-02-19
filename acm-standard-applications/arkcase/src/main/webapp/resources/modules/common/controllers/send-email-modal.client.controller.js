@@ -28,6 +28,11 @@ angular.module('common').controller('Common.SendEmailModalController', [ '$scope
         $scope.template = found ? found.templateFilename : '';
     });
 
+    if (!Util.isEmpty(params.emailOfOriginator)) {
+        $scope.recipients.push(params.emailOfOriginator);
+        $scope.recipientsStr = params.emailOfOriginator;
+    }
+
     var buildRecipientsStr = function(recipients) {
         var recipientsStr = '';
         _.forEach(recipients, function(recipient, index) {
