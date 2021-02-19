@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:int="http://www.springframework.org/schema/integration"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/integration https://www.springframework.org/schema/integration/spring-integration.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <int:channel id="taskFilteredMailChannel"/>
+
+    <bean id="taskMailFilter" class="com.armedia.acm.services.email.filter.AcmObjectPatternMailFilter" scope="refresh">
+        <constructor-arg index="0" value="#{taskConfig.emailRegexTaskId}"/>
+        <constructor-arg index="1" value="#{taskConfig.emailRegexObjectType}"/>
+        <aop:scoped-proxy/>
+    </bean>
+
+    <bean id="taskMailHandler" class="com.armedia.acm.services.email.handler.AcmObjectMailHandler">
+        <constructor-arg index="0" ref="acmTaskDao"/>
+        <property name="mailDirectory" value="#{taskConfig.emailFolderRelativePath}"/>
+        <property name="enabled" value="#{taskConfig.emailHandlerEnabled}"/>
+        <property name="objectIdRegexPattern" value="#{taskConfig.emailRegexTaskId}"/>
+        <property name="acmFolderService" ref="acmFolderService"/>
+        <property name="ecmFileService" ref="ecmFileService"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="ecmFileDao" ref="ecmFileDao"/>
+        <property name="emailReceiverConfig" ref="emailReceiverConfig"/>
+    </bean>
+
+    <int:service-activator input-channel="taskFilteredMailChannel" ref="taskMailHandler" method="handle"/>
+
+    <int:chain input-channel="mailChannelTask" output-channel="taskFilteredMailChannel">
+        <int:filter ref="taskMailFilter" throw-exception-on-rejection="false" method="accept"/>
+    </int:chain>
+
+</beans>

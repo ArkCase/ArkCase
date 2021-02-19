@@ -45,6 +45,7 @@ public class AcmEmailReceiverAdapter
     private EmailReceiverConfig emailReceiverConfig;
     private Properties javaMailPropertiesCaseFile;
     private Properties javaMailPropertiesComplaint;
+    private Properties javaMailPropertiesTask;
 
     @Bean
     @InboundChannelAdapter(channel = "mailChannelCaseFile", poller = @Poller(fixedRate = "${email.fixed-rate}", maxMessagesPerPoll = "${email.max-messages-per-poll}", errorChannel = "mailErrorChannelCaseFile"))
@@ -66,6 +67,17 @@ public class AcmEmailReceiverAdapter
         complaintImapMailReceiver.setJavaMailProperties(getJavaMailPropertiesComplaint());
         complaintImapMailReceiver.setMaxFetchSize(1);
         return new MailReceivingMessageSource(complaintImapMailReceiver);
+    }
+
+    @Bean
+    @InboundChannelAdapter(channel = "mailChannelTask", poller = @Poller(fixedRate = "${email.fixed-rate}", maxMessagesPerPoll = "${email.max-messages-per-poll}", errorChannel = "mailErrorChannelTask"))
+    public MessageSource taskMailMessageSource(ImapMailReceiver taskImapMailReceiver)
+    {
+        taskImapMailReceiver.setShouldDeleteMessages(emailReceiverConfig.getShouldDeleteMessages());
+        taskImapMailReceiver.setShouldMarkMessagesAsRead(emailReceiverConfig.getShouldMarkMessagesAsRead());
+        taskImapMailReceiver.setJavaMailProperties(getJavaMailPropertiesTask());
+        taskImapMailReceiver.setMaxFetchSize(1);
+        return new MailReceivingMessageSource(taskImapMailReceiver);
     }
 
     public EmailReceiverConfig getEmailReceiverConfig()
@@ -92,5 +104,15 @@ public class AcmEmailReceiverAdapter
 
     public void setJavaMailPropertiesComplaint(Properties javaMailPropertiesComplaint) {
         this.javaMailPropertiesComplaint = javaMailPropertiesComplaint;
+    }
+
+    public Properties getJavaMailPropertiesTask()
+    {
+        return javaMailPropertiesTask;
+    }
+
+    public void setJavaMailPropertiesTask(Properties javaMailPropertiesTask)
+    {
+        this.javaMailPropertiesTask = javaMailPropertiesTask;
     }
 }
