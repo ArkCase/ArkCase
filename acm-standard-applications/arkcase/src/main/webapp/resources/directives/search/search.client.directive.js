@@ -71,6 +71,7 @@ angular.module('directives').directive(
                             header: '@', //@ : text binding (read-only and only strings)
                             searchBtn: '@',
                             exportBtn: '@',
+                            exportPdfBtn: '@',
                             compressBtn: '@',
                             searchQuery: '@',
                             searchPlaceholder: '@',
@@ -270,6 +271,32 @@ angular.module('directives').directive(
                                 var baseHref = $browser.baseHref();
                                 var appUrl = absUrl.substring(0, absUrl.indexOf(baseHref) + baseHref.length);
                                 $window.location.href = appUrl + SearchService.exportUrl(scope.query, 'csv', scope.config.reportFileName, fields, titles);
+                            };
+
+                            scope.exportSearchPDF = function() {
+                                if (Util.isEmpty(scope.query)) {
+                                    return;
+                                }
+
+                                var fields = [];
+                                var titles = [];
+                                var columns = scope.config.columnDefs;
+                                _.forEach(columns, function(value) {
+                                    if ('visible' in value) {
+                                        if (value.visible) {
+                                            fields.push(value.name);
+                                            titles.push($translate.instant(value.displayName));
+                                        }
+                                    } else {
+                                        fields.push(value.name);
+                                        titles.push($translate.instant(value.displayName));
+                                    }
+                                });
+
+                                var absUrl = $location.absUrl();
+                                var baseHref = $browser.baseHref();
+                                var appUrl = absUrl.substring(0, absUrl.indexOf(baseHref) + baseHref.length);
+                                $window.location.href = appUrl + SearchService.exportUrl(scope.query, 'pdf', scope.config.reportFileName, fields, titles);
                             };
 
                             scope.$bus.subscribe("zip_completed", function (data) {
