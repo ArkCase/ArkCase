@@ -27,7 +27,6 @@ package gov.foia.model.provider;
  * #L%
  */
 
-import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.model.ApplicationConfig;
 import com.armedia.acm.core.provider.TemplateModelProvider;
 import com.armedia.acm.plugins.person.service.PersonAssociationService;
