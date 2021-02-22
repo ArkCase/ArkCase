@@ -60,8 +60,7 @@ public class CaseFileUpdatedNotifier implements ApplicationListener<AcmEvent>
             {
                 logger.debug("On 'Case status changed' event create notification for participants.");
                 Notification notification;
-                if (caseFile.getQueue() != null && caseFile.getQueue().getName().equals("Release"))
-                {
+                if(caseFile.getQueue().getName().equals("Release")){
                     notification = notificationService.getNotificationBuilder()
                             .newNotification("requestReleased", NotificationConstants.REQUEST_RELEASED, caseFile.getObjectType(),
                                     caseFile.getId(), event.getUserId())
