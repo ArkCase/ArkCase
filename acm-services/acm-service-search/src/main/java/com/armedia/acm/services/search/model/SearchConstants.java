@@ -133,4 +133,6 @@ public interface SearchConstants
 
     String PDFEXPORT_STYLESHEET = "searchexportpdf-document.xsl";
 
+    String SEARCH_RESULTS_PDF_EXPORT = "searchresultspdf";
+
 }

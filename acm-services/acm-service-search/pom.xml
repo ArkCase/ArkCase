@@ -182,10 +182,11 @@
             <groupId>org.apache.solr</groupId>
             <artifactId>solr-solrj</artifactId>
         </dependency>
+
         <dependency>
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
             <artifactId>acm-pdf-utilities</artifactId>
-            <version>2021.02-SNAPSHOT</version>
+            <version>${acm.version}</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

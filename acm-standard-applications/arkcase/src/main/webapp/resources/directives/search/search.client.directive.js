@@ -296,7 +296,7 @@ angular.module('directives').directive(
                                 var absUrl = $location.absUrl();
                                 var baseHref = $browser.baseHref();
                                 var appUrl = absUrl.substring(0, absUrl.indexOf(baseHref) + baseHref.length);
-                                $window.location.href = appUrl + SearchService.exportUrl(scope.query, 'pdf', scope.config.reportFileName, fields, titles);
+                                $window.location.href = appUrl + SearchService.exportUrl(scope.query, 'searchresultspdf', scope.config.reportFileName, fields, titles);
                             };
 
                             scope.$bus.subscribe("zip_completed", function (data) {
