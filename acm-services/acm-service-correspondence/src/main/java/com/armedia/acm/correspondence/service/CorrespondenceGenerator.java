@@ -113,7 +113,7 @@ public class CorrespondenceGenerator
 
         log.debug("Generating correspondence from template '{}'", templateFile.getFile().getAbsolutePath());
 
-        getSpelWordGenerator().generate(templateFile, correspondenceOutputStream, template.getObjectType(), parentObjectId, template.getTemplateModelProvider());
+        getSpelWordGenerator().generate(templateFile, correspondenceOutputStream, parentObjectType, parentObjectId, template.getTemplateModelProvider());
 
         EcmFile retval = null;
 
