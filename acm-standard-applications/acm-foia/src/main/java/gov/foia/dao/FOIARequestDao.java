@@ -73,8 +73,9 @@ public class FOIARequestDao extends AcmAbstractDao<FOIARequest>
 
     public List<FOIARequest> getAllUnassignedRequestsInQueue(Long queueId)
     {
-        String queryText = "SELECT cf FROM CaseFile cf WHERE cf.queue.id = :queueId AND cf.id in (SELECT p.objectId FROM AcmParticipant p WHERE p.objectType = 'CASE_FILE' AND p.participantType = 'assignee' AND p.participantLdapId = '')"
+        String queryText = "SELECT cf FROM CaseFile cf WHERE cf.queue.id = :queueId AND cf.id not in (SELECT p.objectId FROM AcmParticipant p WHERE p.objectType = 'CASE_FILE' AND p.participantType = 'assignee')"
                 + "ORDER BY cf.dueDate ASC";
+
         TypedQuery<FOIARequest> unassignedRequestsInQueue = getEm().createQuery(queryText, FOIARequest.class);
         unassignedRequestsInQueue.setParameter("queueId", queueId);
         return unassignedRequestsInQueue.getResultList();
