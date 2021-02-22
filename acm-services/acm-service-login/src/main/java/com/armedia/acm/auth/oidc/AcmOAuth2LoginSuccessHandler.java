@@ -62,7 +62,7 @@ import java.io.IOException;
 import java.util.Set;
 
 @Component
-@Profile("oidc")
+@Profile(value = {"oidc", "externalOidc"})
 public class AcmOAuth2LoginSuccessHandler extends AcmLoginSuccessHandler
 {
     private final AcmAuthenticationMapper acmAuthenticationMapper;

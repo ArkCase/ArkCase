@@ -52,7 +52,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import java.util.Collections;
 
 @Configuration
-@Profile("oidc")
+@Profile(value = {"oidc", "externalOidc"})
 public class OAuth2LoginConfiguration
 {
     private final OAuth2ClientRegistrationConfig clientRegistrationConfig;
@@ -63,7 +63,7 @@ public class OAuth2LoginConfiguration
     }
 
     @Bean
-    @Profile("oidc")
+    @Profile(value = {"oidc", "externalOidc"})
     public ClientRegistrationRepository clientRegistrationRepository()
     {
         ClientRegistration clientRegistration = ClientRegistration.withRegistrationId(clientRegistrationConfig.getRegistrationId())
@@ -84,28 +84,28 @@ public class OAuth2LoginConfiguration
     }
 
     @Bean
-    @Profile("oidc")
+    @Profile(value = {"oidc", "externalOidc"})
     public OAuth2AuthorizedClientService authorizedClientService()
     {
         return new InMemoryOAuth2AuthorizedClientService(clientRegistrationRepository());
     }
 
     @Bean
-    @Profile("oidc")
+    @Profile(value = {"oidc", "externalOidc"})
     public AuthorizationRequestRepository<OAuth2AuthorizationRequest> authorizationRequestRepository()
     {
         return new HttpSessionOAuth2AuthorizationRequestRepository();
     }
 
     @Bean
-    @Profile("oidc")
+    @Profile(value = {"oidc", "externalOidc"})
     public OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> accessTokenResponseClient()
     {
         return new DefaultAuthorizationCodeTokenResponseClient();
     }
 
     @Bean
-    @Profile("oidc")
+    @Profile(value = {"oidc", "externalOidc"})
     public OAuth2UserService<OAuth2UserRequest, OAuth2User> acmOAuth2UserService()
     {
         return new DefaultOAuth2UserService();
