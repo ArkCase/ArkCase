@@ -183,7 +183,7 @@ public class FacetedSearchAPIControllerV2
                         export.toLowerCase()), ReportGenerator.class);
 
                 // add for UWP-14, export pdf
-                if(export.toLowerCase().equals("pdf")){
+                if(export.toLowerCase().equals(SearchConstants.SEARCH_RESULTS_PDF_EXPORT)){
                     String filePath = generator.generateReport(exportFields, exportTitles, res, timeZoneOffsetinMinutes);
                     File pdfFile = new File(filePath);
                     if (pdfFile.exists())

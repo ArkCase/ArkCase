@@ -60,7 +60,7 @@ import java.util.Date;
 /**
  * PDF Report Generator
  */
-public class PDFReportGenerator extends ReportGenerator
+public class SearchResultsPDFReportGenerator extends ReportGenerator
 {
 
     private PdfService pdfService;
@@ -82,12 +82,25 @@ public class PDFReportGenerator extends ReportGenerator
     private static final DateTimeFormatter SOLR_DATE_TIME_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
     /**
-     * Formatter for formatting dates and times so Excel recognizes them.
+     * Formatter for formatting dates.
      */
-    private static final DateTimeFormatter EXCEL_DATE_TIME_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss a");
+    private static final DateTimeFormatter DATE_TIME_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss a");
 
     private static final String OBJECT_TYPE_CASE_FILE = "CASE_FILE";
 
+    @Override public String generateReport(String[] requestedFields, String[] titles, String jsonData)
+    {
+        return generateReport(requestedFields, titles, jsonData, 0);
+    }
+
+    /**
+     *
+     * @param requestedFields
+     * @param titles
+     * @param jsonData
+     * @param timeZone
+     * @return
+     */
     @Override public String generateReport(String[] requestedFields, String[] titles, String jsonData, int timeZone)
     {
         JSONObject jsonResult = new JSONObject(jsonData);
@@ -121,7 +134,14 @@ public class PDFReportGenerator extends ReportGenerator
         return filename;
     }
 
-
+    /**
+     *
+     * @param jsonDocs
+     * @param requestedFields
+     * @param timeZoneOffsetinMinutes
+     * @return
+     * @throws ParserConfigurationException
+     */
     public Document buildXmlForPdfDocument(JSONArray jsonDocs, String[] requestedFields, int timeZoneOffsetinMinutes) throws ParserConfigurationException
     {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -131,11 +151,6 @@ public class PDFReportGenerator extends ReportGenerator
         // create <timesheet>, the root of the document
         Element rootElem = document.createElement("searchresult");
         document.appendChild(rootElem);
-
-
-//        List<AcmTime> times = timesheet.getTimes();
-//        addElement(document, rootElem, "totalCost", getSumOfCostsForAllTimes(times), false);
-//        addElement(document, rootElem, "totalHours", getSumOfHoursForAllTimes(times), false);
 
         Element resultsElement = document.createElement("results");
         rootElem.appendChild(resultsElement);
@@ -203,10 +218,6 @@ public class PDFReportGenerator extends ReportGenerator
         return document;
     }
 
-    @Override public String generateReport(String[] requestedFields, String[] titles, String jsonData)
-    {
-        return generateReport(requestedFields, titles, jsonData, 0);
-    }
 
     @Override public String generateReportName(String name)
     {
@@ -288,6 +299,6 @@ public class PDFReportGenerator extends ReportGenerator
         int adjTimeZone = ~(timeZoneOffsetinMinutes / 60) + 1;
         LocalDateTime adjDateTime = localDateTime.plusHours(adjTimeZone);
 
-        return adjDateTime.format(EXCEL_DATE_TIME_PATTERN);
+        return adjDateTime.format(DATE_TIME_PATTERN);
     }
 }
