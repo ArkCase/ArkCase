@@ -148,7 +148,7 @@ public class SearchResultsPDFReportGenerator extends ReportGenerator
         DocumentBuilder docBuilder = dbf.newDocumentBuilder();
         Document document = docBuilder.newDocument();
 
-        // create <timesheet>, the root of the document
+        // create <searchresult>, the root of the document
         Element rootElem = document.createElement("searchresult");
         document.appendChild(rootElem);
 
