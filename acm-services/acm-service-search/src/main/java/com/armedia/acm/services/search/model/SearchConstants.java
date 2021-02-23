@@ -130,4 +130,9 @@ public interface SearchConstants
     String PROPERTY_LINK = "link_b";
 
     String PROPERTY_DUPLICATE = "duplicate_b";
+
+    String PDFEXPORT_STYLESHEET = "searchexportpdf-document.xsl";
+
+    String SEARCH_RESULTS_PDF_EXPORT = "searchresultspdf";
+
 }
