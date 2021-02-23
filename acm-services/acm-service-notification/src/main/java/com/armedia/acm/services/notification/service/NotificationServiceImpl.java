@@ -197,6 +197,9 @@ public class NotificationServiceImpl implements NotificationService
             case "concurNonConcur":
                 title = NotificationConstants.TASK_CONCUR_NONCONCUR;
                 break;
+            case "requestReleased":
+                title = NotificationConstants.REQUEST_RELEASED;
+                break;
         }
         return title;
     }
