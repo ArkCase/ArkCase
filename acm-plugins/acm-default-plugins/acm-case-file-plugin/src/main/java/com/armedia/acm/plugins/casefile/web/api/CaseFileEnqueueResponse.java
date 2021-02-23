@@ -92,7 +92,7 @@ public class CaseFileEnqueueResponse
         return caseFile;
     }
 
-    protected void setCaseFile(CaseFile caseFile)
+    public void setCaseFile(CaseFile caseFile)
     {
         this.caseFile = caseFile;
     }
