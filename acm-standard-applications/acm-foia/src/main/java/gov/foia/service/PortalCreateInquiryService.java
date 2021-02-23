@@ -29,6 +29,7 @@ package gov.foia.service;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
@@ -42,8 +43,10 @@ import com.armedia.acm.plugins.task.model.TaskConstants;
 import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
 
+import com.armedia.acm.web.api.MDCConstants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.slf4j.MDC;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
@@ -51,6 +54,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import gov.foia.model.FOIAPerson;
 import gov.foia.model.FOIARequest;
@@ -69,11 +73,18 @@ public class PortalCreateInquiryService
     private PortalRequestService portalRequestService;
     private TaskEventPublisher taskEventPublisher;
 
+    private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
+
     public void createFOIAInquiry(PortalFOIAInquiry inquiry)
     {
         FOIARequesterAssociation personAssociation = new FOIARequesterAssociation();
         Authentication auth = new UsernamePasswordAuthenticationToken(inquiry.getUserId(), "");
-
+        getAuditPropertyEntityAdapter().setUserId(inquiry.getUserId());
+        if (MDC.get(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY) == null)
+        {
+            MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
+            MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
+        }
         try
         {
             AcmTask saved = getTaskDao().createAdHocTask(populateTask(inquiry));
@@ -237,5 +248,15 @@ public class PortalCreateInquiryService
     public void setTaskEventPublisher(TaskEventPublisher taskEventPublisher)
     {
         this.taskEventPublisher = taskEventPublisher;
+    }
+
+    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
+    {
+        this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
+    }
+
+    public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()
+    {
+        return auditPropertyEntityAdapter;
     }
 }
