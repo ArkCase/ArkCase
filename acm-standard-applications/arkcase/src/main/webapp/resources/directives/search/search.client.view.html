@@ -69,6 +69,9 @@
                             <a class="btn btn-xs btn-default" type="button" ng-click="exportSearch()">{{ exportBtn }}</a>
                         </div>
                         <div class="pull-right" ng-if="gridOptions.data.length > 0">
+                            <a class="btn btn-xs btn-default" type="button" ng-click="exportSearchPDF()">{{ exportPdfBtn }}</a>
+                        </div>
+                        <div class="pull-right" ng-if="gridOptions.data.length > 0">
                             <button class="btn btn-xs btn-default" type="button" ng-click="downloadSelectedFiles()"
                                     ng-disabled="disableCompressBtn">{{
                                 compressBtn }}

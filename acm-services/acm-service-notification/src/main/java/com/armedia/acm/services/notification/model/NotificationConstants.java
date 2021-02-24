@@ -149,6 +149,7 @@ public interface NotificationConstants
     String EMAIL_MENTIONS = "notifications.email.mentions";
     String REQUEST_ASSIGNED = "notifications.request.assigned";
     String REQUEST_DOWNLOADED = "notifications.request.downloaded";
+    String REQUEST_RELEASED = "notifications.request.released";
     String PORTAL_REGISTRATION = "notifications.portal.registration";
     String PASSWORD_RESET_REQUEST = "notifications.password.request";
     String NEW_PORTAL_USER_PASSWORD_RESET_REQUEST = "notifications.password.newPortalUser";

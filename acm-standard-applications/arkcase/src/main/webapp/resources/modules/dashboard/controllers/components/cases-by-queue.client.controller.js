@@ -43,6 +43,8 @@ angular.module('dashboard.cases-by-queue').controller('Dashboard.CasesByQueueCon
             function chartClick(bars) {
                 if (config.redirectSettings && bars.length > 0) {
                     var label = bars[0].label;
+                    // in case the queues have / in their names we need to replace them 
+                    label = label.replaceAll("/", "-SLASH-");
                     var redirectObject = config.redirectSettings[label];
                     var dataModules = Menus.getMenu('leftnav');
                     angular.forEach(dataModules.items, function(item, i){
