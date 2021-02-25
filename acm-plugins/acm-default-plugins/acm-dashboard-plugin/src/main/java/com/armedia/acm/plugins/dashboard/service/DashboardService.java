@@ -40,20 +40,17 @@ import com.armedia.acm.plugins.dashboard.model.widget.Widget;
 import com.armedia.acm.plugins.dashboard.model.widget.WidgetRoleName;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmRole;
-import com.armedia.acm.services.users.model.AcmRoleType;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.service.AcmUserRoleService;
-
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 
 import javax.servlet.http.HttpSession;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -188,22 +185,17 @@ public class DashboardService
 
         String dashboardModifiedString = dashboard.getDashboardConfig();
         Set<String> roles = userRoleService.getUserRoles(userId);
-        try
-        {
-            List<Widget> result = onlyUniqueValues(widgetDao.getAllWidgetsByRoles(roles));
-            List<Widget> listOfDashboardWidgetsOnly = dashboardPropertyReader.getDashboardWidgetsOnly();
-            List<Widget> dashboardWidgetsOnly = result.stream()
-                    .filter(listOfDashboardWidgetsOnly::contains)
-                    .collect(Collectors.toList());
 
-            JSONObject dashboardJSONObject = new JSONObject(dashboard.getDashboardConfig());
+        List<Widget> result = onlyUniqueValues(widgetDao.getAllWidgetsByRoles(roles));
+        List<Widget> listOfDashboardWidgetsOnly = dashboardPropertyReader.getDashboardWidgetsOnly();
+        List<Widget> dashboardWidgetsOnly = result.stream()
+                .filter(listOfDashboardWidgetsOnly::contains)
+                .collect(Collectors.toList());
 
-            dashboardModifiedString = removeNotAuthorizedWidgets(dashboardJSONObject, dashboardWidgetsOnly);
-        }
-        catch (AcmObjectNotFoundException e)
-        {
-            log.info("There are no widgets associated with roles of the user: {}", userId);
-        }
+        JSONObject dashboardJSONObject = new JSONObject(dashboard.getDashboardConfig());
+
+        dashboardModifiedString = removeNotAuthorizedWidgets(dashboardJSONObject, dashboardWidgetsOnly);
+
         dashboard.setDashboardConfig(dashboardModifiedString);
         DashboardDto dashboardDto = prepareDashboardDto(dashboard, false, moduleName);
         int retval = setDashboardConfigForUserAndModule(user, dashboardDto, moduleName);
