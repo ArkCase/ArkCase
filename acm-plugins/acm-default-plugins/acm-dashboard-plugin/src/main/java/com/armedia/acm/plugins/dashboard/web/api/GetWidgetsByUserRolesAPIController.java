@@ -27,8 +27,6 @@ package com.armedia.acm.plugins.dashboard.web.api;
  * #L%
  */
 
-import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
-import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.plugins.dashboard.dao.WidgetDao;
 import com.armedia.acm.plugins.dashboard.exception.AcmWidgetException;
 import com.armedia.acm.plugins.dashboard.model.widget.Widget;
@@ -37,9 +35,8 @@ import com.armedia.acm.plugins.dashboard.service.DashboardService;
 import com.armedia.acm.plugins.dashboard.service.WidgetEventPublisher;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.service.AcmUserRoleService;
-
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -48,8 +45,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -74,7 +69,7 @@ public class GetWidgetsByUserRolesAPIController
     @RequestMapping(value = "/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public List<Widget> getWidgetsByUserAndRoles(Authentication authentication, HttpSession session)
-            throws AcmWidgetException, AcmObjectNotFoundException
+            throws AcmWidgetException
     {
 
         String userId = authentication.getName();
@@ -82,10 +77,7 @@ public class GetWidgetsByUserRolesAPIController
         log.info("Finding widgets for user: [{}]  based on the user roles'", userId);
 
         Set<String> roles = userRoleService.getUserRoles(userId);
-        if (roles.isEmpty())
-        {
-            throw new AcmObjectNotFoundException("user", null, "Object not found", null);
-        }
+
         List<Widget> retval = null;
         try
         {
@@ -94,12 +86,6 @@ public class GetWidgetsByUserRolesAPIController
             List<Widget> dashboardWidgetsOnly = dashboardPropertyReader.getDashboardWidgetsOnly();
             return retval.stream()
                     .filter(dashboardWidgetsOnly::contains).collect(Collectors.toList());
-        }
-        catch (AcmObjectNotFoundException e)
-        {
-            log.error("Widgets by roles associated to user: [{}] not found! ", userId, e, e.getMessage());
-            raiseGetEvent(authentication, session, retval, true);
-            return new ArrayList<>();
         }
         catch (Exception e1)
         {

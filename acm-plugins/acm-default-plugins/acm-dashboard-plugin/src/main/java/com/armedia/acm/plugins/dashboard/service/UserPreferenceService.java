@@ -156,23 +156,17 @@ public class UserPreferenceService
         return preferredWidgetsDto;
     }
 
-    private List<Widget> getAllAllowedWidgetsForUser(String userId) throws AcmObjectNotFoundException
+    private List<Widget> getAllAllowedWidgetsForUser(String userId)
     {
         List<Widget> result;
         Set<String> roles = userRoleService.getUserRoles(userId);
-        try
+
+        result = onlyUniqueValues(widgetDao.getAllWidgetsByRoles(roles));
+        if (!result.isEmpty())
         {
-            result = onlyUniqueValues(widgetDao.getAllWidgetsByRoles(roles));
-            if (!result.isEmpty())
-            {
-                log.info("All allowed widgets for the user: [{}] will be returned!", userId);
-            }
+            log.info("All allowed widgets for the user: [{}] will be returned!", userId);
         }
-        catch (AcmObjectNotFoundException e)
-        {
-            log.error("No widgets are allowed for the user: [{}]. Error msg: [{}] ", userId, e.getMessage(), e);
-            throw e;
-        }
+
         return result;
     }
 
