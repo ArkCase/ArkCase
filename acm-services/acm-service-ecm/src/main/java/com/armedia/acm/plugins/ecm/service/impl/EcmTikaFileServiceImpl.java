@@ -53,6 +53,7 @@ import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.joda.time.DateTime;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -291,7 +292,7 @@ public class EcmTikaFileServiceImpl implements EcmTikaFileService
 
             // some movies don't store any dates at all, and then Tika presents the dates from the year 1904 for
             // some reason, usually as "1904-01-01T00:00:00Z". So if the date is before 1950 we will ignore it.
-            if (created.getYear() > 1950)
+            if (created.getYear() > 1950 && created.isBefore(LocalDateTime.now()))
             {
                 Date createdDate = Date.from(created.toInstant(ZoneOffset.UTC));
                 fileMetadata.put("Creation-Date-Local", createdDate);
