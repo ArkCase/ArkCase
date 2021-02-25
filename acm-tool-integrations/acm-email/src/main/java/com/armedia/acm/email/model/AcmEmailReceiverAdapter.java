@@ -54,6 +54,7 @@ public class AcmEmailReceiverAdapter
         caseImapMailReceiver.setShouldMarkMessagesAsRead(emailReceiverConfig.getShouldMarkMessagesAsRead());
         caseImapMailReceiver.setJavaMailProperties(getJavaMailPropertiesCaseFile());
         caseImapMailReceiver.setMaxFetchSize(1);
+        caseImapMailReceiver.setAutoCloseFolder(false);
         return new MailReceivingMessageSource(caseImapMailReceiver);
     }
 

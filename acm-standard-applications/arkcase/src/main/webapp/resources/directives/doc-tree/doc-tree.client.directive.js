@@ -2625,6 +2625,7 @@ angular.module('directives').directive(
                                                 files: uploadedFiles,
                                                 nodes: fileNodes
                                             });
+                                            DocTree.refreshTree();
                                         }
                                     }, function(errorData) {
                                         DocTree.refreshTree();
@@ -3614,6 +3615,7 @@ angular.module('directives').directive(
                             setTimeout(function () {
                                 DocTree.jqFileInput.click();
                             });
+
                         },
                         replaceFile: function() {
                             DocTree.jqFileInput.removeAttr("multiple");
