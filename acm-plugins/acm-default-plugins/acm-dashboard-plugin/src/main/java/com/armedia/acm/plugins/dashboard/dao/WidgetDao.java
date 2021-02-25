@@ -200,13 +200,8 @@ public class WidgetDao extends AcmAbstractDao<Widget>
         }
     }
 
-    public List<Widget> getAllWidgetsByRoles(Set<String> roles) throws AcmObjectNotFoundException
+    public List<Widget> getAllWidgetsByRoles(Set<String> roles)
     {
-        if (roles.isEmpty())
-        {
-            throw new AcmObjectNotFoundException("dashboard", null, "No widgets since roles list is empty.", null);
-        }
-
         TypedQuery<Widget> widgetsByRoles = getEntityManager().createQuery("SELECT widget FROM Widget widget, WidgetRole widgetRole "
                 + "WHERE widget.widgetId = widgetRole.widgetId AND widgetRole.roleName IN :roleNames ", Widget.class);
         widgetsByRoles.setParameter("roleNames", roles);
