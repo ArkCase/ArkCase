@@ -164,7 +164,7 @@ public class SearchResultsPDFReportGenerator extends ReportGenerator
 
             if(data.has("object_type_s")){
                 String typeValue = data.getString("object_type_s");
-                typeValue = stringChangeLine(typeValue,16);
+                typeValue = stringChangeLine(typeValue,14);
                 if (typeValue.equals(OBJECT_TYPE_CASE_FILE) && data.has("object_sub_type_s"))
                 {
                     typeValue = data.getString("object_sub_type_s");
@@ -181,14 +181,14 @@ public class SearchResultsPDFReportGenerator extends ReportGenerator
 
             if(data.has("title_parseable")){
                 String titleValue = data.getString("title_parseable");
-                titleValue = stringChangeLine(titleValue, 18);
+                titleValue = stringChangeLine(titleValue, 17);
 
                 addElement(document, resultElement, "title", titleValue, true);
             }
 
             if(data.has("parent_number_lcs")){
                 String parentValue = data.getString("parent_number_lcs");
-                parentValue = stringChangeLine(parentValue, 16);
+                parentValue = stringChangeLine(parentValue, 14);
                 if(data.has("related_object_number_s")){
                     parentValue = data.getString("related_object_number_s");
                 }
@@ -197,7 +197,7 @@ public class SearchResultsPDFReportGenerator extends ReportGenerator
 
             if(data.has("assignee_full_name_lcs")){
                 String assigneeValue = data.getString("assignee_full_name_lcs");
-                assigneeValue = stringChangeLine(assigneeValue, 14);
+                assigneeValue = stringChangeLine(assigneeValue, 11);
                 addElement(document, resultElement, "assignee", assigneeValue.toString(), true);
             }
 
@@ -315,7 +315,7 @@ public class SearchResultsPDFReportGenerator extends ReportGenerator
      */
     private String stringChangeLine(String value, int size){
         String tempString = "";
-        if(!tempString.contains(" ")){
+        if(!value.isEmpty() && !value.contains(" ")&&value.length() > size){
 
             Integer startSize =0;
             Integer endSize = size;
