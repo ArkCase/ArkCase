@@ -211,10 +211,7 @@ public class WidgetDao extends AcmAbstractDao<Widget>
                 + "WHERE widget.widgetId = widgetRole.widgetId AND widgetRole.roleName IN :roleNames ", Widget.class);
         widgetsByRoles.setParameter("roleNames", roles);
         List<Widget> retval = widgetsByRoles.getResultList();
-        if (retval.isEmpty())
-        {
-            throw new AcmObjectNotFoundException("dashboard", null, "Widgets not found for these roles", null);
-        }
+
         return retval;
     }
 
