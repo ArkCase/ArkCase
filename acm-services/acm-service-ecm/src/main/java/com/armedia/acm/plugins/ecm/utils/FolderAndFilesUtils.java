@@ -455,10 +455,8 @@ public class FolderAndFilesUtils
     {
         if (finalMimeType.startsWith("application/pdf"))
         {
-            PDDocument doc = null;
-            try
+            try (PDDocument doc = PDDocument.load(file))
             {
-                doc = PDDocument.load(file);
                 for (int i = 0; i < doc.getNumberOfPages(); ++i)
                 {
                     PDPage page = doc.getPage(i);
