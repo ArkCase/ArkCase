@@ -39,11 +39,11 @@ public class FOIADeterminationLetterCorrespondence
 
     private String exemptionCodeSummary;
     private String exemptionCodesAndDescription;
-    private String requestAssigneeName;
+    private String assigneeName;
     private String assigneeTitle;
-    private String requestAssigneeEmail;
+    private String assigneeEmail;
     private double invoiceAmount;
-    private String caseNumber;
+    private String requestCaseNumber;
     private LocalDateTime receivedDate;
     private LocalDateTime perfectedDate;
 
@@ -77,14 +77,14 @@ public class FOIADeterminationLetterCorrespondence
         this.exemptionCodesAndDescription = exemptionCodesAndDescription;
     }
 
-    public String getRequestAssigneeName()
+    public String getAssigneeName()
     {
-        return requestAssigneeName;
+        return assigneeName;
     }
 
-    public void setRequestAssigneeName(String requestAssigneeName)
+    public void setAssigneeName(String assigneeName)
     {
-        this.requestAssigneeName = requestAssigneeName;
+        this.assigneeName = assigneeName;
     }
 
     public String getAssigneeTitle()
@@ -97,14 +97,14 @@ public class FOIADeterminationLetterCorrespondence
         this.assigneeTitle = assigneeTitle;
     }
 
-    public String getRequestAssigneeEmail()
+    public String getAssigneeEmail()
     {
-        return requestAssigneeEmail;
+        return assigneeEmail;
     }
 
-    public void setRequestAssigneeEmail(String requestAssigneeEmail)
+    public void setAssigneeEmail(String assigneeEmail)
     {
-        this.requestAssigneeEmail = requestAssigneeEmail;
+        this.assigneeEmail = assigneeEmail;
     }
 
     public double getInvoiceAmount()
@@ -117,14 +117,14 @@ public class FOIADeterminationLetterCorrespondence
         this.invoiceAmount = invoiceAmount;
     }
 
-    public String getCaseNumber()
+    public String getRequestCaseNumber()
     {
-        return caseNumber;
+        return requestCaseNumber;
     }
 
-    public void setCaseNumber(String caseNumber)
+    public void setRequestCaseNumber(String requestCaseNumber)
     {
-        this.caseNumber = caseNumber;
+        this.requestCaseNumber = requestCaseNumber;
     }
 
     public LocalDateTime getReceivedDate()
