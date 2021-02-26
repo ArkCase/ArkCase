@@ -99,7 +99,7 @@
         <net.sf.jtidy.version>r938</net.sf.jtidy.version>
         <org.json.version>20140107</org.json.version>
         <org.mvel.version>2.4.7.Final</org.mvel.version>
-        <pdfbox.version>2.0.11</pdfbox.version>
+        <pdfbox.version>2.0.22</pdfbox.version>
         <postgresql.version>9.3-1100-jdbc41</postgresql.version>
         <powermock.version>1.7.0</powermock.version>
         <puppycrawl.version>6.8.1</puppycrawl.version>
