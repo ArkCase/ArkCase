@@ -317,7 +317,6 @@ angular.module('consultations').controller(
                 $scope.phoneInvalid = false;
                 $scope.emailEmpty = false;
                 $scope.emailInvalid = false;
-                $scope.confirmEmailEmpty = false;
                 $scope.confirmEmailInvalid = false;
                 $scope.zipCodeEmpty = false;
                 $scope.zipCodeInvalid = false;
@@ -335,9 +334,7 @@ angular.module('consultations').controller(
                 } else if (consultationForm.email.$invalid) {
                     $scope.emailInvalid = true;
                 }
-                if (consultationForm.confirmationEmail.$viewValue === undefined || consultationForm.confirmationEmail.$viewValue === '') {
-                    $scope.confirmEmailEmpty = true;
-                } else if (consultationForm.confirmationEmail.$viewValue !== consultationForm.email.$viewValue) {
+                if (consultationForm.confirmationEmail.$viewValue !== consultationForm.email.$viewValue) {
                     $scope.confirmEmailInvalid = true;
                     $scope.formInvalid = true;
                 }
