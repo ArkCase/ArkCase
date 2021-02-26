@@ -87,7 +87,7 @@ public class FOIADeterminationLetterModelProvider implements TemplateModelProvid
         Map<String, String> codeDescriptions = lookupEntries.stream().collect(Collectors.toMap(StandardLookupEntry::getKey, StandardLookupEntry::getValue));
         String exemptionCodesAndDescription = exemptionCodes.stream()
                 .map(code -> String.format("%s: %s.", code.getExemptionCode(), labelValue(codeDescriptions.get(code.getExemptionCode()))))
-                .collect(Collectors.joining("\n"));
+                .collect(Collectors.joining(","));
         determinationLetterCorrespondence.setExemptionCodesAndDescription(exemptionCodesAndDescription);
 
         String requestAssignee = ParticipantUtils.getAssigneeIdFromParticipants(request.getParticipants());
@@ -104,11 +104,11 @@ public class FOIADeterminationLetterModelProvider implements TemplateModelProvid
             requestAssigneeTitle = acmUser.getTitle();
             requestAssigneeEmail = acmUser.getMail();
         }
-        determinationLetterCorrespondence.setRequestAssigneeName(requestAssigneeName);
+        determinationLetterCorrespondence.setAssigneeName(requestAssigneeName);
         determinationLetterCorrespondence.setAssigneeTitle(requestAssigneeTitle);
-        determinationLetterCorrespondence.setRequestAssigneeEmail(requestAssigneeEmail);
+        determinationLetterCorrespondence.setAssigneeEmail(requestAssigneeEmail);
 
-        determinationLetterCorrespondence.setCaseNumber(request.getCaseNumber());
+        determinationLetterCorrespondence.setRequestCaseNumber(request.getCaseNumber());
         determinationLetterCorrespondence.setReceivedDate(request.getReceivedDate());
         determinationLetterCorrespondence.setPerfectedDate(request.getPerfectedDate());
 
