@@ -717,7 +717,7 @@ public class SARPortalUserServiceProvider implements PortalUserServiceProvider
     }
 
     @Override
-    public UserResetResponse changePassword(String portalId, String userId, String acmUserId, PortalUserCredentials portalUserCredentials)
+    public UserResetResponse changePassword(String portalUserEmail, String portalUserId, String acmSystemUserId, PortalUserCredentials portalUserCredentials)
             throws PortalUserServiceException
     {
 
@@ -730,24 +730,24 @@ public class SARPortalUserServiceProvider implements PortalUserServiceProvider
         }
         try
         {
-            SARLdapAuthenticationService.getLdapAuthenticateService().changeUserPassword(acmUserId, portalUserCredentials.getPassword(),
+            SARLdapAuthenticationService.getLdapAuthenticateService().changeUserPassword(portalUserId, portalUserCredentials.getPassword(),
                     portalUserCredentials.getNewPassword());
         }
 
         catch (AcmUserActionFailedException e)
         {
-            log.debug(String.format("Couldn't update password for LDAP user %s %s.", acmUserId, userId));
-            throw new PortalUserServiceException(String.format("Couldn't update password for user %s.", userId), e);
+            log.debug(String.format("Couldn't update password for LDAP user %s. Using configured system user %s.", portalUserId, acmSystemUserId));
+            throw new PortalUserServiceException(String.format("Couldn't update password for user %s.", portalUserEmail), e);
         }
         catch (AuthenticationException e)
         {
-            log.debug(String.format("Failed to authenticate! Wrong password for LDAP user %s %s.", acmUserId, userId));
+            log.debug(String.format("Failed to authenticate! Wrong password for LDAP user %s. Using configured system user %s.", portalUserId, acmSystemUserId));
             return UserResetResponse.invalidCredentials();
         }
         catch (InvalidAttributeValueException e)
         {
-            log.debug(String.format("Password policy error for LDAP user %s %s.", acmUserId, userId));
-            throw new PortalUserServiceException(String.format("Password fails quality checking policy for user %s.", userId), e);
+            log.debug(String.format("Password policy error for LDAP user %s. Using configured system user %s.", portalUserId, acmSystemUserId));
+            throw new PortalUserServiceException(String.format("Password fails quality checking policy for user %s.", portalUserEmail), e);
         }
         catch (Exception e)
         {
