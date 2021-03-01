@@ -200,6 +200,7 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
             Pattern pattern = Pattern.compile(objectIdRegexPattern);
             Matcher matcher = pattern.matcher(subject);
             if (matcher.find())
+            if (matcher.find())
             {
                 result = subject.substring(matcher.start(), matcher.end());
             }
@@ -226,7 +227,6 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
 
                     try (InputStream is = bodyPart.getInputStream())
                     {
-                        bodyPart.setFileName(checkDuplicateFileName(bodyPart.getFileName(), emailReceivedFolder.getId()));
                         Authentication auth = new UsernamePasswordAuthenticationToken(userId, "");
                         getEcmFileService().upload(bodyPart.getFileName(), "attachment", "Document", is, bodyPart.getContentType(),
                                 bodyPart.getFileName(), auth,
@@ -245,23 +245,6 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
                 log.error("Error processing Multipart message. Exception msg: '{}' ", e.getMessage());
             }
         }
-    }
-
-    public String checkDuplicateFileName(String fileName, Long folderId)
-    {
-        int endIndex = fileName.lastIndexOf(".");
-        String newFileName = fileName.substring(0,endIndex);
-        Optional<EcmFile> sameFilesName = getEcmFileDao().findByFolderId(folderId).stream()
-                .filter(obj -> obj.getFileName().equals(fileName.substring(0,endIndex)))
-                .findAny();
-        if(sameFilesName.isPresent())
-        {
-            ZonedDateTime date = ZonedDateTime.now(ZoneOffset.UTC);
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
-            String timestampName = formatter.format(date);
-            newFileName = newFileName + "-" + timestampName;
-        }
-        return newFileName;
     }
     
     public String makeFileOrFolderName(Message message, String emailSender) throws MessagingException
