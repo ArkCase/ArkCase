@@ -165,7 +165,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
                 String finalMimeType = mimeTypeAndExtension.getLeft();
                 String finalExtension = mimeTypeAndExtension.getRight();
 
-                ecmUniqueFilename = getFolderAndFilesUtils().getBaseFileName(ecmUniqueFilename, finalExtension);
+                ecmUniqueFilename = getFolderAndFilesUtils().createUniqueIdentificator(ecmUniqueFilename);
 
                 EcmFileTransactionPipelineContext pipelineContext = buildEcmFileTransactionPipelineContext(authentication,
                         tempFileContents, targetCmisFolderId, container, metadata.getFileName(), existingCmisDocument,
