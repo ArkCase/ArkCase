@@ -71,7 +71,7 @@ angular.module('services').factory(
                             var encryptionPassphrase = ecmFileProperties['ecm.viewer.snowbound.encryptionKey'];
                             // Forces the viewer iframe to be reloaded with the latest version of the document
                             var randomUrlArgToCauseIframeRefresh = (new Date()).getTime();
-                            var parameters = "ecmFileId=" + file.id + "&acm_ticket=" + acmTicket + "&userid=" + userId + "&userFullName=" + userFullName + "&caseNumber=" + caseNumber + "&documentName=" + file.name + "&parentObjectId=" + file.containerId + "&parentObjectType=" + file.containerType + "&selectedIds=" + file.selectedIds;
+                            var parameters = "ecmFileId=" + file.id + "&acm_ticket=" + acmTicket + "&userid=" + userId + "&userFullName=" + userFullName + "&caseNumber=" + caseNumber + "&documentName=" + encodeURIComponent(file.name) + "&parentObjectId=" + file.containerId + "&parentObjectType=" + file.containerType + "&selectedIds=" + file.selectedIds;
 
                             if (ecmFileProperties['ecm.viewer.snowbound.tabHeader']) {
                                 parameters += "&tabHeader=" + ecmFileProperties['ecm.viewer.snowbound.tabHeader'];
