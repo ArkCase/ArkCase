@@ -271,7 +271,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
 
     @Override
     public EcmFile addFileTransaction(Authentication authentication, String ecmUniqueFilename, AcmContainer container,
-            String targetCmisFolderId, EcmFile metadata, Document existingCmisDocument, MultipartFile file)
+            String targetCmisFolderId, EcmFile metadata, Document existingCmisDocument, MultipartFile file) throws ArkCaseFileRepositoryException, IOException
     {
 
         log.debug("Creating ecm file pipeline context");
@@ -380,7 +380,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
                 {
                     log.error("pipeline handler call failed: {}", e.getMessage(), e);
                     if (pipelineContext.isFileNameAlreadyInEcmSystem())
-                    {
+                    {stopProgressBar(metadata);
                         log.debug("File: {} already exists in ecm system", metadata.getFileName());
                         throw new ArkCaseFileNameAlreadyExistsException("fileName already exists");
                     }
@@ -389,35 +389,33 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
                 return pipelineContext.getEcmFile();
             }
             else
-            {
+            {stopProgressBar(metadata);
                 log.error("Uploaded file with name [{}] - MIME type [{}] is not compatible with advertised type [{}]",
                         metadata.getFileName(), metadata.getFileType(), metadata.getFileActiveVersionMimeType());
                 throw new IOException("Uploaded file's " + metadata.getFileName() + " MIME type " + metadata.getFileActiveVersionMimeType()
                         + " is not compatible. " + metadata.getFileType());
             }
         }
-        catch (Exception e)
-        {
-            // stop the progressbar executor
-            ProgressbarExecutor progressbarExecutor = progressIndicatorService.getExecutor(metadata.getUuid());
-            if (StringUtils.isNotEmpty(metadata.getUuid()) && progressbarExecutor != null
-                    && progressbarExecutor.getProgressbarDetails().getStage() == FileUploadStage.UPLOAD_CHUNKS_TO_FILESYSTEM.getValue())
-            {
-                log.debug("Stop progressbar executor in stage 2, for file {} and set file upload success to {}", metadata.getUuid(), false);
-                progressIndicatorService.end(metadata.getUuid(), false);
-            }
-        }
         finally
         {
             FileUtils.deleteQuietly(tempFileContents);
         }
+    }
 
-        return metadata;
+    private void stopProgressBar(EcmFile metadata){
+        // stop the progressbar executor
+        ProgressbarExecutor progressbarExecutor = progressIndicatorService.getExecutor(metadata.getUuid());
+        if (StringUtils.isNotEmpty(metadata.getUuid()) && progressbarExecutor != null
+                && progressbarExecutor.getProgressbarDetails().getStage() == FileUploadStage.UPLOAD_CHUNKS_TO_FILESYSTEM.getValue())
+        {
+            log.debug("Stop progressbar executor in stage 2, for file {} and set file upload success to {}", metadata.getUuid(), false);
+            progressIndicatorService.end(metadata.getUuid(), false);
+        }
     }
 
     @Override
     public EcmFile addFileTransaction(Authentication authentication, String ecmUniqueFilename, AcmContainer container,
-            String targetCmisFolderId, EcmFile metadata, MultipartFile file)
+            String targetCmisFolderId, EcmFile metadata, MultipartFile file) throws ArkCaseFileRepositoryException, IOException
     {
         Document existingCmisDocument = null;
         return addFileTransaction(authentication, ecmUniqueFilename, container, targetCmisFolderId,
