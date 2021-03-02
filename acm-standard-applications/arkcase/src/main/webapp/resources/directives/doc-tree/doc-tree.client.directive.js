@@ -2625,7 +2625,13 @@ angular.module('directives').directive(
                                                 files: uploadedFiles,
                                                 nodes: fileNodes
                                             });
-                                            DocTree.refreshTree();
+                                            function sleep (time) {
+                                                return new Promise((resolve) => setTimeout(resolve, time));
+                                            }
+                                            // sleep 1.5s, in case back-end did not update the data before refreshTree
+                                            sleep(1500).then(() => {
+                                                DocTree.refreshTree();
+                                            });
                                         }
                                     }, function(errorData) {
                                         DocTree.refreshTree();
