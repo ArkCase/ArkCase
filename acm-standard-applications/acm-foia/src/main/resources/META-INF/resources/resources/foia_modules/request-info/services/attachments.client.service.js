@@ -44,7 +44,7 @@ angular.module('request-info').factory(
                             // Forces the viewer iframe to be reloaded with the latest version of the document
                             var randomUrlArgToCauseIframeRefresh = (new Date()).getTime();
 
-                            return viewerBaseUrl + "?documentId=ecmFileId=" + file.fileId + "&acm_ticket=" + acmTicket + "&userid=" + userId + "&userFullName=" + userFullName + "&caseNumber=" + caseNumber + "&refreshCacheTimestamp=" + randomUrlArgToCauseIframeRefresh + "&documentName=" + file.fileName + "&parentObjectId=" + file.container.containerObjectId
+                            return viewerBaseUrl + "?documentId=ecmFileId=" + file.fileId + "&acm_ticket=" + acmTicket + "&userid=" + userId + "&userFullName=" + userFullName + "&caseNumber=" + caseNumber + "&refreshCacheTimestamp=" + randomUrlArgToCauseIframeRefresh + "&documentName=" + encodeURIComponent(file.fileName) + "&parentObjectId=" + file.container.containerObjectId
                                     + "&parentObjectType=" + file.container.containerObjectType + "&selectedIds=";
                         },
                         buildOpenDocumentIdString: function(files) {
