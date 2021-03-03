@@ -2859,13 +2859,8 @@ angular
                                             nodes: fileNodes
                                         });
 
-                                        function sleep (time) {
-                                            return new Promise((resolve) => setTimeout(resolve, time));
-                                        }
-                                        // sleep 1.5s, in case back-end did not update the data before refreshTree
-                                        sleep(1500).then(() => {
-                                            DocTree.refreshTree();
-                                        });
+                                        //sleep for 1.5s, for waiting back-end update record ACFP-515
+                                        setTimeout(DocTree.refreshDocTree, 1500);
                                     }
                                 }, function (errorData) {
                                     DocTree.refreshTree();
