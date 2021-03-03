@@ -70,22 +70,6 @@ public interface CorrespondenceService
     /**
      * For use from MVC controllers and any other client with an Authentication object.
      *
-     * @param authentication
-     * @param templates
-     * @param parentObjectType
-     * @param parentObjectId
-     * @param targetCmisFolderId
-     * @param documentName
-     * @return EcmFile
-     * @throws Exception
-     */
-    EcmFile generateMultiTemplate(Authentication authentication, List<Template> templates, String parentObjectType,
-                                  Long parentObjectId,
-                                  String targetCmisFolderId, String documentName) throws Exception;
-
-    /**
-     * For use from MVC controllers and any other client with an Authentication object.
-     *
      * @param templateName
      * @return EcmFile
      * @throws Exception
