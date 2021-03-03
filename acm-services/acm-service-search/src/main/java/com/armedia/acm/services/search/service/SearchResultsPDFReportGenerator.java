@@ -315,9 +315,9 @@ public class SearchResultsPDFReportGenerator extends ReportGenerator
      */
     private String stringChangeLine(String value, int size){
         String tempString = "";
-        if(!value.isEmpty() && !value.contains(" ")&&value.length() > size){
+        if(value != null && value.length() > size){
 
-            Integer startSize =0;
+            Integer startSize = 0;
             Integer endSize = size;
             for(Integer i = 0;i <= value.length()/size ;i++)
             {
@@ -333,7 +333,6 @@ public class SearchResultsPDFReportGenerator extends ReportGenerator
         }else{
             tempString = value;
         }
-
         return tempString;
     }
 }
