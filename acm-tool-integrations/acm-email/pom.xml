@@ -72,5 +72,10 @@
             <groupId>com.sun.mail</groupId>
             <artifactId>javax.mail</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-configuration</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
     </dependencies>
 </project>
