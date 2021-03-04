@@ -219,6 +219,12 @@ public class NotificationBuilder
             this.notification.setNotificationType(notificationType);
             return this;
         }
+
+        public Builder withEmailContent(String emailContent)
+        {
+            this.notification.setEmailContent(emailContent);
+            return this;
+        }
     }
 
     public void setNotificationUtils(NotificationUtils notificationUtils)
