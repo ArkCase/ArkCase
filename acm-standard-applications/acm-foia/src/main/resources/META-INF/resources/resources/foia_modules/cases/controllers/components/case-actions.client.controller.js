@@ -3,8 +3,8 @@
 angular.module('cases').controller(
     'Cases.ActionsController',
     ['$scope', '$state', '$timeout', '$stateParams', '$q', '$modal', 'UtilService', 'ConfigService', 'ObjectService', 'Authentication', 'Object.LookupService', 'Case.LookupService', 'Object.SubscriptionService', 'Object.ModelService', 'Case.InfoService', 'Case.MergeSplitService',
-        'Helper.ObjectBrowserService', 'Profile.UserInfoService', 'Ecm.EmailService',
-        function ($scope, $state, $timeout, $stateParams, $q, $modal, Util, ConfigService, ObjectService, Authentication, ObjectLookupService, CaseLookupService, ObjectSubscriptionService, ObjectModelService, CaseInfoService, MergeSplitService, HelperObjectBrowserService, UserInfoService, EcmEmailService) {
+        'Helper.ObjectBrowserService', 'Profile.UserInfoService', 'Ecm.EmailService', 'Admin.ZylabIntegrationService', 'Request.ZylabMatterService',
+        function ($scope, $state, $timeout, $stateParams, $q, $modal, Util, ConfigService, ObjectService, Authentication, ObjectLookupService, CaseLookupService, ObjectSubscriptionService, ObjectModelService, CaseInfoService, MergeSplitService, HelperObjectBrowserService, UserInfoService, EcmEmailService, ZylabIntegrationService, RequestZylabMatterService) {
 
             new HelperObjectBrowserService.Component({
                 scope: $scope,
@@ -30,6 +30,12 @@ angular.module('cases').controller(
                     id: "merge"
                 });
             });
+
+            ZylabIntegrationService.getConfiguration().then(function (response) {
+                $scope.documentReviewEnabled = response.data["zylabIntegration.enabled"];
+                $scope.zylabIntegrationConfig = response.data;
+            });
+
 
             var promiseQueryUser = Authentication.queryUserInfo();
             var promiseGetGroups = ObjectLookupService.getGroups();
@@ -102,6 +108,26 @@ angular.module('cases').controller(
                     $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
                     return data;
                 });
+            };
+
+            $scope.createMatter = function (requestInfo) {
+                RequestZylabMatterService.createMatter(requestInfo.id).then(function (data) {
+                    $scope.objectInfo =  data.data;
+                });
+            };
+
+            $scope.openMatter = function (requestInfo) {
+                var openMatterPath = $scope.zylabIntegrationConfig["zylabIntegration.openMatterPath"].replace("{matterId}", requestInfo.externalIdentifier);
+                var openMatterURL = $scope.zylabIntegrationConfig["zylabIntegration.url"] + openMatterPath;
+
+                window.open(openMatterURL, '_blank');
+            };
+
+            $scope.openMatterReports = function (requestInfo) {
+                var openMatterReportsPath = $scope.zylabIntegrationConfig["zylabIntegration.matterReportsPath"].replace("{matterId}", requestInfo.externalIdentifier);
+                var openMatterReportsURL = $scope.zylabIntegrationConfig["zylabIntegration.url"] + openMatterReportsPath;
+
+                window.open(openMatterReportsURL, '_blank');
             };
 
             UserInfoService.getUserInfo().then(function (infoData) {

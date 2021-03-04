@@ -161,5 +161,6 @@ public class FOIARequestToSolrTransformer extends CaseFileToSolrTransformer
         additionalProperties.put("pay_fee_s", requestIn.getPayFee());
         additionalProperties.put("processing_fee_waive_s", Double.toString(requestIn.getProcessingFeeWaive()));
         additionalProperties.put("request_agency_s", requestIn.getComponentAgency());
+        additionalProperties.put("external_identifier_s", requestIn.getExternalIdentifier());
     }
 }
