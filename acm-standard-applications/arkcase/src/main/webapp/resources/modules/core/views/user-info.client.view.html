@@ -21,6 +21,8 @@
                     </a>
                 </li>
 
+                <li ng-if="documentReviewEnabled"><a href="{{documentReviewLink}}" target="_blank" translate>core.userInfo.addedMenu.documentReviewLink</a>
+                </li>
                 <li><a href="{{helpUrl}}" target="_blank" translate>core.userInfo.addedMenu.help</a></li>
                 <li><a href="" ng-click="onClickLogout()" translate>core.userInfo.addedMenu.logout</a></li>
             </ul>
