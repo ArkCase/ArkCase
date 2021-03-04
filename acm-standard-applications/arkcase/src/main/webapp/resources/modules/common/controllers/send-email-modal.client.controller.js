@@ -75,7 +75,8 @@ angular.module('common').controller('Common.SendEmailModalController', [ '$scope
 
         getTemplateContentPromise.then(function (response) {
             $scope.templateContent = response.data.templateContent.replace("${baseURL}", window.location.href.split('/home.html#!')[0]);
-            document.getElementById("content").innerHTML=$scope.templateContent;
+            $scope.templateContent = $scope.templateContent.replace("${requestExtension.title}", $scope.objectTitle);
+            $('#content').summernote('code', $scope.templateContent);
         });
 
     };

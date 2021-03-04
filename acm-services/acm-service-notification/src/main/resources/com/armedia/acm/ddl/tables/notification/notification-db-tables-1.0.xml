@@ -244,4 +244,10 @@
             <column name="cm_type" type="CLOB"/>
         </addColumn>
     </changeSet>
+
+    <changeSet id="23-add-column-email-content" author="viktorija.kostovska">
+        <addColumn tableName="acm_notification">
+            <column name="cm_email_content" type="TEXT"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
