@@ -1,5 +1,32 @@
 package com.armedia.acm.services.users.service;
 
+/*-
+ * #%L
+ * ACM Service: Users
+ * %%
+ * Copyright (C) 2014 - 2021 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.services.users.dao.UserAccessTokenDao;
 import com.armedia.acm.services.users.dao.exception.UserAccessTokenException;
 import com.armedia.acm.services.users.dao.exception.UserRemoteActionException;
@@ -41,8 +68,8 @@ public class AcmOAuth2AccessTokenService
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.put("grant_type", Collections.singletonList("password"));
         params.put("scope", Collections.singletonList("openid"));
-        params.put("client_id", Collections.singletonList(clientRegistrationConfig.getClientId()));
-        params.put("client_secret", Collections.singletonList(clientRegistrationConfig.getClientSecret()));
+        params.put("client_id", Collections.singletonList(clientRegistrationConfig.getTenantId()));
+        params.put("client_secret", Collections.singletonList(clientRegistrationConfig.getTenantSecret()));
         params.put("username", Collections.singletonList(clientRegistrationConfig.getSystemUserEmail()));
         params.put("password", Collections.singletonList(clientRegistrationConfig.getSystemUserPassword()));
         HttpEntity<MultiValueMap<String, String>> nameParam = new HttpEntity<>(params, headers);
@@ -92,7 +119,9 @@ public class AcmOAuth2AccessTokenService
             accessToken.setExpirationInSec(token.getExpiresIn());
             accessToken.setProvider(provider);
             accessToken.setUserEmail(systemUserEmail);
-            accessToken.setValue(token.getAccessToken());
+            // Current implementation requires the use of ID tokens as opposed to access tokens. Might need to be changed
+            // in the future in accordance with the tenant and provider
+            accessToken.setValue(token.getIdToken());
             accessToken.setCreatedDateTime(LocalDateTime.now());
             logger.info("Saving access token [{}]", accessToken);
             return userAccessTokenDao.save(accessToken);
@@ -116,7 +145,11 @@ public class AcmOAuth2AccessTokenService
             // remote action failed due to expired token
             // TODO: To be tested and changed accordingly
             // retry on more specific exception
-            return executeAuthenticatedRemoteAction(remoteAction);
+            String systemUserEmail = clientRegistrationConfig.getSystemUserEmail();
+            String provider = clientRegistrationConfig.getRegistrationId();
+            userAccessTokenDao.deleteAccessTokenForUserAndProvider(systemUserEmail, provider);
+
+            throw new UserRemoteActionException("Failed to execute.", e);
         }
     }
 
