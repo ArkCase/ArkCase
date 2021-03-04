@@ -33,10 +33,13 @@ import com.armedia.acm.portalgateway.model.UserRegistrationRequest;
 import com.armedia.acm.portalgateway.model.UserRegistrationResponse;
 import com.armedia.acm.portalgateway.model.UserResetRequest;
 import com.armedia.acm.portalgateway.model.UserResetResponse;
+import com.armedia.acm.services.users.dao.UserDao;
+import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.spring.SpringContextHolder;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.Map;
 import java.util.Optional;
@@ -50,6 +53,11 @@ public class DefaultPluggablePortalUserService implements PortalUserService
     private transient final Logger log = LogManager.getLogger(getClass());
 
     private SpringContextHolder springContextHolder;
+
+    private UserDao userDao;
+
+    @Value("${portal.serviceProvider.directory.name}")
+    private String directoryName;
 
     /*
      * (non-Javadoc)
@@ -191,7 +199,13 @@ public class DefaultPluggablePortalUserService implements PortalUserService
             throws PortalUserServiceException
     {
         log.debug("Changing password for [{}] [{}] for portal with [{}] ID.", userId, acmUserId, portalId);
-        return getServiceProvider().changePassword(portalId, userId, acmUserId, portalUserCredentials);
+        Optional<AcmUser> acmPortalUser = userDao.findByEmailAddressAndDirectoryName(userId, directoryName);
+        if (!acmPortalUser.isPresent())
+        {
+            log.debug(String.format("User %s does not exist. Using configured system user %s.", userId, acmUserId));
+            throw new PortalUserServiceException(String.format("Couldn't update password for user %s.", userId));
+        }
+        return getServiceProvider().changePassword(userId, acmPortalUser.get().getUserId(), acmUserId, portalUserCredentials);
     }
 
     /*
@@ -229,4 +243,8 @@ public class DefaultPluggablePortalUserService implements PortalUserService
         this.springContextHolder = springContextHolder;
     }
 
+    public void setUserDao(UserDao userDao)
+    {
+        this.userDao = userDao;
+    }
 }

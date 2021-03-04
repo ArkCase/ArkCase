@@ -44,6 +44,7 @@ import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.rometools.utils.Strings;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import javax.persistence.CascadeType;
@@ -369,6 +370,7 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
 
     public String translatedPersonTitle()
     {
+        if(Strings.isNull(getTitle())) return null;
         List<StandardLookupEntry> lookupEntries = (List<StandardLookupEntry>) lookupDao.getLookupByName("personTitles").getEntries();
         String labelKey = lookupEntries.stream()
                 .filter(standardLookupEntry -> standardLookupEntry.getKey().equals(getTitle()))

@@ -2625,7 +2625,8 @@ angular.module('directives').directive(
                                                 files: uploadedFiles,
                                                 nodes: fileNodes
                                             });
-                                            DocTree.refreshTree();
+                                            //sleep for 1.5s, for waiting back-end update record ACFP-515
+                                            setTimeout(DocTree.refreshTree, 1500);
                                         }
                                     }, function(errorData) {
                                         DocTree.refreshTree();
