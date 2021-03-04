@@ -200,7 +200,6 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
             Pattern pattern = Pattern.compile(objectIdRegexPattern);
             Matcher matcher = pattern.matcher(subject);
             if (matcher.find())
-            if (matcher.find())
             {
                 result = subject.substring(matcher.start(), matcher.end());
             }
@@ -246,7 +245,25 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
             }
         }
     }
-    
+
+    public String checkDuplicateFileName(String fileName, Long folderId)
+    {
+        int endIndex = fileName.lastIndexOf(".");
+        String newFileName = fileName.substring(0,endIndex);
+        Optional<EcmFile> sameFilesName = getEcmFileDao().findByFolderId(folderId).stream()
+                .filter(obj -> obj.getFileName().equals(fileName.substring(0,endIndex)))
+                .findAny();
+        if(sameFilesName.isPresent())
+        {
+            ZonedDateTime date = ZonedDateTime.now(ZoneOffset.UTC);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+            String timestampName = formatter.format(date);
+            newFileName = newFileName + "-" + timestampName;
+        }
+        return newFileName;
+    }
+
+
     public String makeFileOrFolderName(Message message, String emailSender) throws MessagingException
     {
         ZonedDateTime date = ZonedDateTime.now(ZoneOffset.UTC);
