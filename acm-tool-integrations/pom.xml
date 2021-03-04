@@ -42,6 +42,7 @@
         <module>acm-quartz-scheduler</module>
         <module>acm-camel-context-manager</module>
         <module>acm-comprehend-medical</module>
+        <module>acm-zylab-integration</module>
     </modules>
 
 </project>

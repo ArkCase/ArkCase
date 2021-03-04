@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <bean id="zylabIntegrationConfig" class="com.armedia.acm.tool.zylab.model.ZylabIntegrationConfig" scope="refresh">
+        <aop:scoped-proxy/>
+    </bean>
+
+    <bean id="zylabRestClient" class="com.armedia.acm.tool.zylab.service.ZylabRestClientImpl">
+        <property name="zylabIntegrationConfig" ref="zylabIntegrationConfig"/>
+        <property name="acmOAuth2AccessTokenService" ref="acmOAuth2AccessTokenService"/>
+        <property name="zylabRestTemplate" ref="zylabRestTemplate"/>
+    </bean>
+
+    <bean id="zylabProductionSubscriber" class="com.armedia.acm.tool.zylab.jms.ZylabProductionSubscriber">
+    </bean>
+
+    <bean id="zylabIntegrationService" class="com.armedia.acm.tool.zylab.service.ZylabIntegrationServiceImpl">
+        <property name="zylabIntegrationConfig" ref="zylabIntegrationConfig"/>
+        <property name="zylabRestClient" ref="zylabRestClient"/>
+    </bean>
+
+    <bean id="zyLABRestTemplateHeaderModifierInterceptor"
+          class="com.armedia.acm.tool.zylab.service.ZyLABRestTemplateHeaderModifierInterceptor">
+        <property name="zylabIntegrationConfig" ref="zylabIntegrationConfig"/>
+        <property name="zylabRestTemplate" ref="zylabRestTemplate"/>
+    </bean>
+
+    <bean id="zylabRestTemplate" class="org.springframework.web.client.RestTemplate">
+        <property name="interceptors">
+            <list>
+                <ref bean="zyLABRestTemplateHeaderModifierInterceptor"/>
+            </list>
+        </property>
+
+    </bean>
+
+
+</beans>
