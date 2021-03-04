@@ -47,8 +47,19 @@ public class ZylabIntegrationConfig
     @Value("${zylabIntegration.defaultMatterTemplateId}")
     private Long defaultMatterTemplateId;
 
+    @JsonProperty("zylabIntegration.host")
+    @Value("${zylabIntegration.host}")
+    private String host;
+
+    @JsonProperty("zylabIntegration.port")
+    @Value("${zylabIntegration.port}")
+    private Integer port;
+
+    @JsonProperty("zylabIntegration.basePath")
+    @Value("${zylabIntegration.basePath}")
+    private String basePath;
+
     @JsonProperty("zylabIntegration.url")
-    @Value("${zylabIntegration.url}")
     private String baseUrl;
 
     @JsonProperty("zylabIntegration.simpleResourcePath")
@@ -107,9 +118,33 @@ public class ZylabIntegrationConfig
         this.defaultMatterTemplateId = defaultMatterTemplateId;
     }
 
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public Integer getPort() {
+        return port;
+    }
+
+    public void setPort(Integer port) {
+        this.port = port;
+    }
+
+    public String getBasePath() {
+        return basePath;
+    }
+
+    public void setBasePath(String basePath) {
+        this.basePath = basePath;
+    }
+
     public String getBaseUrl()
     {
-        return baseUrl;
+        return new StringBuilder().append(host).append(":").append(port).append(basePath).toString();
     }
 
     public void setBaseUrl(String baseUrl)
