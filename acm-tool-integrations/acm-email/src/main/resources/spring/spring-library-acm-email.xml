@@ -15,7 +15,6 @@
         <property name="emailReceiverConfig" ref="emailReceiverConfig"/>
         <property name="javaMailPropertiesCaseFile" ref="javaMailPropertiesCaseFile"/>
         <property name="javaMailPropertiesComplaint" ref="javaMailPropertiesComplaint"/>
-        <property name="javaMailPropertiesTask" ref="javaMailPropertiesTask"/>
     </bean>
 
     <bean id="caseImapMailReceiver" class="org.springframework.integration.mail.ImapMailReceiver" scope="refresh">
@@ -63,23 +62,23 @@
         <prop key="mail.debug">#{emailReceiverConfig.debug}</prop>
     </util:properties>
 
-    <!-- Task mail channel -->
-    <int:publish-subscribe-channel id="mailChannelTask"/>
+    <!-- Sender-Receiver mail channel -->
+    <int:publish-subscribe-channel id="mailChannelReceiver"/>
 
-    <bean id="taskImapMailReceiver" class="org.springframework.integration.mail.ImapMailReceiver" scope="refresh">
+    <bean id="senderImapMailReceiver" class="org.springframework.integration.mail.ImapMailReceiver" scope="refresh">
         <constructor-arg index="0"
-                         value="imaps://#{emailReceiverConfig.taskUser}:#{emailReceiverConfig.taskPassword}@#{emailReceiverConfig.host}:#{emailReceiverConfig.port}/#{emailReceiverConfig.fetchFolder}"/>
+                         value="imaps://#{emailSenderConfig.username}:#{emailSenderConfig.password}@#{emailReceiverConfig.host}:#{emailReceiverConfig.port}/#{emailReceiverConfig.fetchFolder}"/>
         <aop:scoped-proxy/>
     </bean>
 
-    <bean id="loggingHandlerTask" class="org.springframework.integration.handler.LoggingHandler">
+    <bean id="loggingHandlerSender" class="org.springframework.integration.handler.LoggingHandler">
         <constructor-arg value="ERROR"/>
     </bean>
 
-    <int:chain input-channel="mailErrorChannelTask">
-        <int:service-activator ref="loggingHandlerTask" method="handleMessage"/>
+    <int:chain input-channel="mailErrorChannelReceiver">
+        <int:service-activator ref="loggingHandlerSender" method="handleMessage"/>
     </int:chain>
-    <util:properties id="javaMailPropertiesTask">
+    <util:properties id="javaMailPropertiesReceiver">
         <prop key="mail.imap.socketFactory.class">javax.net.ssl.SSLSocketFactory</prop>
         <prop key="mail.imap.socketFactory.fallback">false</prop>
         <prop key="mail.store.protocol">#{emailReceiverConfig.protocol}</prop>

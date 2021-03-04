@@ -27,11 +27,15 @@ package com.armedia.acm.email.model;
  * #L%
  */
 
+import com.armedia.acm.configuration.annotations.MapValue;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import org.springframework.beans.factory.annotation.Value;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @JsonSerialize(as = EmailReceiverConfig.class)
 public class EmailReceiverConfig
@@ -59,14 +63,6 @@ public class EmailReceiverConfig
     @JsonProperty("email.create.complaint.enabled")
     @Value("${email.create.complaint.enabled}")
     private Boolean createComplaintEnabled;
-
-    @JsonProperty("email.TASK.user")
-    @Value("${email.TASK.user}")
-    private String taskUser;
-
-    @JsonProperty("email.TASK.password")
-    @Value("${email.TASK.password}")
-    private String taskPassword;
 
     @Value("${email.protocol}")
     private String protocol;
@@ -101,6 +97,8 @@ public class EmailReceiverConfig
     @JsonProperty("email.enableBurstingAttachments")
     @Value("${email.enableBurstingAttachments}")
     private Boolean enableBurstingAttachments;
+
+    private Map<String, String> replyHandlers = new HashMap<>();
 
     public String getCaseFileUser()
     {
@@ -160,26 +158,6 @@ public class EmailReceiverConfig
     public void setCreateComplaintEnabled(Boolean createComplaintEnabled)
     {
         this.createComplaintEnabled = createComplaintEnabled;
-    }
-
-    public String getTaskUser()
-    {
-        return taskUser;
-    }
-
-    public void setTaskUser(String taskUser)
-    {
-        this.taskUser = taskUser;
-    }
-
-    public String getTaskPassword()
-    {
-        return taskPassword;
-    }
-
-    public void setTaskPassword(String taskPassword)
-    {
-        this.taskPassword = taskPassword;
     }
 
     @JsonIgnore
@@ -300,5 +278,16 @@ public class EmailReceiverConfig
     public void setEnableBurstingAttachments(Boolean enableBurstingAttachments) 
     {
         this.enableBurstingAttachments = enableBurstingAttachments;
+    }
+
+    @MapValue(value = "email.replyHandlers")
+    public Map<String, String> getReplyHandlers()
+    {
+        return replyHandlers;
+    }
+
+    public void setReplyHandlers(Map<String, String> replyHandlers)
+    {
+        this.replyHandlers = replyHandlers;
     }
 }

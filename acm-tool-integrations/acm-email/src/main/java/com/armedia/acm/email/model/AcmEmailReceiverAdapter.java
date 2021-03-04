@@ -45,10 +45,9 @@ public class AcmEmailReceiverAdapter
     private EmailReceiverConfig emailReceiverConfig;
     private Properties javaMailPropertiesCaseFile;
     private Properties javaMailPropertiesComplaint;
-    private Properties javaMailPropertiesTask;
 
     @Bean
-    @InboundChannelAdapter(channel = "mailChannelCaseFile", poller = @Poller(fixedRate = "${email.fixed-rate}", maxMessagesPerPoll = "${email.max-messages-per-poll}", errorChannel = "mailErrorChannelCaseFile"))
+    @InboundChannelAdapter(channel = "mailChannelCaseFile", poller = @Poller(fixedRate = "${email.fixed-rate}", maxMessagesPerPoll = "${email.max-messages-per-poll}", errorChannel = "mailErrorChannelCaseFile"), autoStartup = "${email.create.case.enabled}")
     public MessageSource caseMailMessageSource(ImapMailReceiver caseImapMailReceiver)
     {
         caseImapMailReceiver.setShouldDeleteMessages(emailReceiverConfig.getShouldDeleteMessages());
@@ -60,7 +59,7 @@ public class AcmEmailReceiverAdapter
     }
 
     @Bean
-    @InboundChannelAdapter(channel = "mailChannelComplaint", poller = @Poller(fixedRate = "${email.fixed-rate}", maxMessagesPerPoll = "${email.max-messages-per-poll}", errorChannel = "mailErrorChannelComplaint"))
+    @InboundChannelAdapter(channel = "mailChannelComplaint", poller = @Poller(fixedRate = "${email.fixed-rate}", maxMessagesPerPoll = "${email.max-messages-per-poll}", errorChannel = "mailErrorChannelComplaint"), autoStartup = "${email.create.complaint.enabled}")
     public MessageSource complaintMailMessageSource(ImapMailReceiver complaintImapMailReceiver)
     {
         complaintImapMailReceiver.setShouldDeleteMessages(emailReceiverConfig.getShouldDeleteMessages());
@@ -71,14 +70,15 @@ public class AcmEmailReceiverAdapter
     }
 
     @Bean
-    @InboundChannelAdapter(channel = "mailChannelTask", poller = @Poller(fixedRate = "${email.fixed-rate}", maxMessagesPerPoll = "${email.max-messages-per-poll}", errorChannel = "mailErrorChannelTask"))
-    public MessageSource taskMailMessageSource(ImapMailReceiver taskImapMailReceiver)
+    @InboundChannelAdapter(channel = "mailChannelReceiver", poller = @Poller(fixedRate = "${email.fixed-rate}", maxMessagesPerPoll = "${email.max-messages-per-poll}", errorChannel = "mailErrorChannelReceiver"))
+    public MessageSource senderReceiverMessageSource(ImapMailReceiver senderImapMailReceiver)
     {
-        taskImapMailReceiver.setShouldDeleteMessages(emailReceiverConfig.getShouldDeleteMessages());
-        taskImapMailReceiver.setShouldMarkMessagesAsRead(emailReceiverConfig.getShouldMarkMessagesAsRead());
-        taskImapMailReceiver.setJavaMailProperties(getJavaMailPropertiesTask());
-        taskImapMailReceiver.setMaxFetchSize(1);
-        return new MailReceivingMessageSource(taskImapMailReceiver);
+        senderImapMailReceiver.setShouldDeleteMessages(emailReceiverConfig.getShouldDeleteMessages());
+        senderImapMailReceiver.setShouldMarkMessagesAsRead(emailReceiverConfig.getShouldMarkMessagesAsRead());
+        senderImapMailReceiver.setJavaMailProperties(getJavaMailPropertiesCaseFile());
+        senderImapMailReceiver.setMaxFetchSize(1);
+        senderImapMailReceiver.setAutoCloseFolder(false);
+        return new MailReceivingMessageSource(senderImapMailReceiver);
     }
 
     public EmailReceiverConfig getEmailReceiverConfig()
@@ -105,15 +105,5 @@ public class AcmEmailReceiverAdapter
 
     public void setJavaMailPropertiesComplaint(Properties javaMailPropertiesComplaint) {
         this.javaMailPropertiesComplaint = javaMailPropertiesComplaint;
-    }
-
-    public Properties getJavaMailPropertiesTask()
-    {
-        return javaMailPropertiesTask;
-    }
-
-    public void setJavaMailPropertiesTask(Properties javaMailPropertiesTask)
-    {
-        this.javaMailPropertiesTask = javaMailPropertiesTask;
     }
 }
