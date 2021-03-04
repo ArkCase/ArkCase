@@ -69,5 +69,9 @@
             <beans:property name="niemExportService" ref="niemExportService"/>
         </beans:bean>
 
+        <beans:bean id="createZylabMatterFromRequestAPIController" class="gov.foia.web.api.CreateZylabMatterFromRequestAPIController">
+            <beans:property name="foiaZylabMatterService" ref="foiaZylabMatterService"/>
+        </beans:bean>
+
     </beans:beans>
 </beans:beans>
