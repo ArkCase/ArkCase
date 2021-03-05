@@ -220,6 +220,9 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     @Convert(converter = BooleanToStringConverter.class)
     private Boolean duplicate = Boolean.FALSE;
 
+    @Column(name = "cm_custodian")
+    private String custodian;
+
     @Transient
     private String uuid;
 
@@ -697,5 +700,13 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
 
     public void setDuplicate(Boolean duplicate) {
         this.duplicate = duplicate;
+    }
+
+    public String getCustodian() {
+        return custodian;
+    }
+
+    public void setCustodian(String custodian) {
+        this.custodian = custodian;
     }
 }
