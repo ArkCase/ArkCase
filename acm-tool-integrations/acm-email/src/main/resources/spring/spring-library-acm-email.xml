@@ -67,7 +67,7 @@
 
     <bean id="senderImapMailReceiver" class="org.springframework.integration.mail.ImapMailReceiver" scope="refresh">
         <constructor-arg index="0"
-                         value="imaps://#{emailSenderConfig.username}:#{emailSenderConfig.password}@#{emailReceiverConfig.host}:#{emailReceiverConfig.port}/#{emailReceiverConfig.fetchFolder}"/>
+                         value="imaps://#{emailSenderConfig.getUsernameEncoded}:#{emailSenderConfig.password}@#{emailReceiverConfig.host}:#{emailReceiverConfig.port}/#{emailReceiverConfig.fetchFolder}"/>
         <aop:scoped-proxy/>
     </bean>
 

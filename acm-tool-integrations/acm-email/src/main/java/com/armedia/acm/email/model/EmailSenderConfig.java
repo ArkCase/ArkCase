@@ -32,6 +32,9 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import org.springframework.beans.factory.annotation.Value;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 @JsonSerialize(as = EmailSenderConfig.class)
 public class EmailSenderConfig
 {
@@ -205,4 +208,10 @@ public class EmailSenderConfig
     {
         this.outgoingEmailFolderName = outgoingEmailFolderName;
     }
+
+    public String getUsernameEncoded() throws UnsupportedEncodingException
+    {
+        return URLEncoder.encode(username, "UTF-8");
+    }
+
 }
