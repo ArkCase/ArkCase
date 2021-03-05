@@ -29,6 +29,8 @@ package com.armedia.acm.tool.zylab.model;
 
 import org.springframework.beans.factory.annotation.Value;
 
+import com.armedia.acm.services.users.model.OAuth2Credentials;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -98,6 +100,33 @@ public class ZylabIntegrationConfig
     @Value("${zylabIntegration.viewDocumentPath}")
     private String viewDocumentPath;
 
+    @JsonIgnore
+    @Value("${zylabIntegration.authentication.registrationId}")
+    private String registrationId;
+
+    @JsonIgnore
+    @Value("${zylabIntegration.authentication.clientId}")
+    private String clientId;
+
+    @JsonIgnore
+    @Value("${zylabIntegration.authentication.clientSecret}")
+    private String clientSecret;
+
+    @JsonIgnore
+    @Value("${zylabIntegration.authentication.tokenUri}")
+    private String tokenUri;
+
+    @JsonIgnore
+    @Value("${zylabIntegration.authentication.systemUserEmail}")
+    private String systemUserEmail;
+
+    @JsonIgnore
+    @Value("${zylabIntegration.authentication.systemUserPassword}")
+    private String systemUserPassword;
+
+    @JsonIgnore
+    private OAuth2Credentials oAuth2Credentials = new OAuth2Credentials();
+
     public Boolean isEnabled()
     {
         return enabled;
@@ -118,27 +147,33 @@ public class ZylabIntegrationConfig
         this.defaultMatterTemplateId = defaultMatterTemplateId;
     }
 
-    public String getHost() {
+    public String getHost()
+    {
         return host;
     }
 
-    public void setHost(String host) {
+    public void setHost(String host)
+    {
         this.host = host;
     }
 
-    public Integer getPort() {
+    public Integer getPort()
+    {
         return port;
     }
 
-    public void setPort(Integer port) {
+    public void setPort(Integer port)
+    {
         this.port = port;
     }
 
-    public String getBasePath() {
+    public String getBasePath()
+    {
         return basePath;
     }
 
-    public void setBasePath(String basePath) {
+    public void setBasePath(String basePath)
+    {
         this.basePath = basePath;
     }
 
@@ -240,5 +275,78 @@ public class ZylabIntegrationConfig
     public void setGetMatterTemplatesPath(String getMatterTemplatesPath)
     {
         this.getMatterTemplatesPath = getMatterTemplatesPath;
+    }
+
+    public String getRegistrationId()
+    {
+        return registrationId;
+    }
+
+    public void setRegistrationId(String registrationId)
+    {
+        this.registrationId = registrationId;
+    }
+
+    public String getClientId()
+    {
+        return clientId;
+    }
+
+    public void setClientId(String clientId)
+    {
+        this.clientId = clientId;
+    }
+
+    public String getClientSecret()
+    {
+        return clientSecret;
+    }
+
+    public void setClientSecret(String clientSecret)
+    {
+        this.clientSecret = clientSecret;
+    }
+
+    public String getTokenUri()
+    {
+        return tokenUri;
+    }
+
+    public void setTokenUri(String tokenUri)
+    {
+        this.tokenUri = tokenUri;
+    }
+
+    public String getSystemUserEmail()
+    {
+        return systemUserEmail;
+    }
+
+    public void setSystemUserEmail(String systemUserEmail)
+    {
+        this.systemUserEmail = systemUserEmail;
+    }
+
+    public String getSystemUserPassword()
+    {
+        return systemUserPassword;
+    }
+
+    public void setSystemUserPassword(String systemUserPassword)
+    {
+        this.systemUserPassword = systemUserPassword;
+    }
+
+    @JsonIgnore
+    public OAuth2Credentials getoAuth2Credentials()
+    {
+        oAuth2Credentials.setRegistrationId(registrationId);
+        oAuth2Credentials.setClientId(clientId);
+        oAuth2Credentials.setClientSecret(clientSecret);
+        oAuth2Credentials.setTokenUri(tokenUri);
+        oAuth2Credentials.setSystemUserEmail(systemUserEmail);
+        oAuth2Credentials.setSystemUserPassword(systemUserPassword);
+
+        return oAuth2Credentials;
     }
 }

@@ -72,49 +72,53 @@ public class ZylabRestClientImpl implements ZylabRestClient
             throw new IllegalStateException("Create Matter Data needed");
         }
 
-        return getAcmOAuth2AccessTokenService().executeAuthenticatedRemoteAction(accessToken -> {
-            String createMatterURL = zylabIntegrationConfig.getBaseUrl() + zylabIntegrationConfig.getCreateMatterPath();
-            HttpHeaders headers = createZylabCommonHeaders(accessToken.getValue());
-            ResponseEntity<MatterDTO> response = zylabRestTemplate.exchange(createMatterURL, HttpMethod.POST,
-                    new HttpEntity<>(createMatterRequest, headers), MatterDTO.class);
-            return response.getBody();
-        });
+        return getAcmOAuth2AccessTokenService().executeAuthenticatedRemoteAction(zylabIntegrationConfig.getoAuth2Credentials(),
+                accessToken -> {
+                    String createMatterURL = zylabIntegrationConfig.getBaseUrl() + zylabIntegrationConfig.getCreateMatterPath();
+                    HttpHeaders headers = createZylabCommonHeaders(accessToken.getValue());
+                    ResponseEntity<MatterDTO> response = zylabRestTemplate.exchange(createMatterURL, HttpMethod.POST,
+                            new HttpEntity<>(createMatterRequest, headers), MatterDTO.class);
+                    return response.getBody();
+                });
     }
 
     @Override
     public List<MatterTemplateDTO> getMatterTemplates()
     {
-        return getAcmOAuth2AccessTokenService().executeAuthenticatedRemoteAction(accessToken -> {
-            String getAllMatterTemplatesURL = zylabIntegrationConfig.getBaseUrl() + zylabIntegrationConfig.getGetMatterTemplatesPath();
-            HttpHeaders headers = ZylabRestClientImpl.this.createZylabCommonHeaders(accessToken.getValue());
-            ResponseEntity<MatterTemplateDTO[]> response = zylabRestTemplate.exchange(getAllMatterTemplatesURL, HttpMethod.GET,
-                    new HttpEntity<>(headers), MatterTemplateDTO[].class);
-            return Arrays.asList(response.getBody());
-        });
+        return getAcmOAuth2AccessTokenService().executeAuthenticatedRemoteAction(zylabIntegrationConfig.getoAuth2Credentials(),
+                accessToken -> {
+                    String getAllMatterTemplatesURL = zylabIntegrationConfig.getBaseUrl()
+                            + zylabIntegrationConfig.getGetMatterTemplatesPath();
+                    HttpHeaders headers = ZylabRestClientImpl.this.createZylabCommonHeaders(accessToken.getValue());
+                    ResponseEntity<MatterTemplateDTO[]> response = zylabRestTemplate.exchange(getAllMatterTemplatesURL, HttpMethod.GET,
+                            new HttpEntity<>(headers), MatterTemplateDTO[].class);
+                    return Arrays.asList(response.getBody());
+                });
     }
 
     @Override
     public InputStream getProductionFiles(long matterId, String productionKey)
     {
-        return getAcmOAuth2AccessTokenService().executeAuthenticatedRemoteAction(accessToken -> {
-            String downloadProductionURL = zylabIntegrationConfig.getBaseUrl() + zylabIntegrationConfig.getDownloadProductionPath();
+        return getAcmOAuth2AccessTokenService().executeAuthenticatedRemoteAction(zylabIntegrationConfig.getoAuth2Credentials(),
+                accessToken -> {
+                    String downloadProductionURL = zylabIntegrationConfig.getBaseUrl() + zylabIntegrationConfig.getDownloadProductionPath();
 
-            Map<String, String> uriParameters = new HashMap<>();
-            uriParameters.put("matterId", String.valueOf(matterId));
-            uriParameters.put("productionKey", productionKey);
+                    Map<String, String> uriParameters = new HashMap<>();
+                    uriParameters.put("matterId", String.valueOf(matterId));
+                    uriParameters.put("productionKey", productionKey);
 
-            UriComponents uriComponents = UriComponentsBuilder
-                    .fromUriString(downloadProductionURL)
-                    .build()
-                    .expand(uriParameters);
+                    UriComponents uriComponents = UriComponentsBuilder
+                            .fromUriString(downloadProductionURL)
+                            .build()
+                            .expand(uriParameters);
 
-            HttpHeaders headers = createZylabCommonHeaders(accessToken.getValue());
+                    HttpHeaders headers = createZylabCommonHeaders(accessToken.getValue());
 
-            ResponseEntity<InputStream> response = zylabRestTemplate.exchange(uriComponents.toUriString(), HttpMethod.GET,
-                    new HttpEntity<>(headers), InputStream.class);
+                    ResponseEntity<InputStream> response = zylabRestTemplate.exchange(uriComponents.toUriString(), HttpMethod.GET,
+                            new HttpEntity<>(headers), InputStream.class);
 
-            return response.getBody();
-        });
+                    return response.getBody();
+                });
     }
 
     private HttpHeaders createZylabCommonHeaders(String bearerToken)
