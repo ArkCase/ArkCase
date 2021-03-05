@@ -2,9 +2,9 @@
 
 angular.module('cases').controller(
     'Cases.ActionsController',
-    ['$scope', '$state', '$timeout', '$stateParams', '$q', '$modal', 'UtilService', 'ConfigService', 'ObjectService', 'Authentication', 'Object.LookupService', 'Case.LookupService', 'Object.SubscriptionService', 'Object.ModelService', 'Case.InfoService', 'Case.MergeSplitService',
-        'Helper.ObjectBrowserService', 'Profile.UserInfoService', 'Ecm.EmailService', 'Admin.ZylabIntegrationService', 'Request.ZylabMatterService',
-        function ($scope, $state, $timeout, $stateParams, $q, $modal, Util, ConfigService, ObjectService, Authentication, ObjectLookupService, CaseLookupService, ObjectSubscriptionService, ObjectModelService, CaseInfoService, MergeSplitService, HelperObjectBrowserService, UserInfoService, EcmEmailService, ZylabIntegrationService, RequestZylabMatterService) {
+    ['$scope', '$translate', '$state', '$timeout', '$stateParams', '$q', '$modal', 'UtilService', 'ConfigService', 'ObjectService', 'Authentication', 'Object.LookupService', 'Case.LookupService', 'Object.SubscriptionService', 'Object.ModelService', 'Case.InfoService', 'Case.MergeSplitService',
+        'Helper.ObjectBrowserService', 'Profile.UserInfoService', 'Ecm.EmailService', 'Admin.ZylabIntegrationService', 'Request.ZylabMatterService', 'MessageService',
+        function ($scope, $translate, $state, $timeout, $stateParams, $q, $modal, Util, ConfigService, ObjectService, Authentication, ObjectLookupService, CaseLookupService, ObjectSubscriptionService, ObjectModelService, CaseInfoService, MergeSplitService, HelperObjectBrowserService, UserInfoService, EcmEmailService, ZylabIntegrationService, RequestZylabMatterService, MessageService) {
 
             new HelperObjectBrowserService.Component({
                 scope: $scope,
@@ -19,7 +19,7 @@ angular.module('cases').controller(
             });
 
             $scope.loadingRequestIcon = "fa fa-save";
-
+            $scope.creatingMatterIcon = "fa fa-gavel";
             $scope.showBtnChildOutcomes = false;
             $scope.availableChildOutcomes = [];
             $scope.splitting = false;
@@ -111,12 +111,21 @@ angular.module('cases').controller(
             };
 
             $scope.createMatter = function (requestInfo) {
+                $scope.creatingMatterIcon = "fa fa-circle-o-notch fa-spin";
                 RequestZylabMatterService.createMatter(requestInfo.id).then(function (data) {
                     $scope.objectInfo =  data.data;
+                    MessageService.info($translate.instant("cases.comp.actions.createMatter.sucess"));
+                    $scope.creatingMatterIcon = "fa fa-gavel";
+                    $scope.openMatter();
+                }).catch(function () {
+                    MessageService.error($translate.instant("cases.comp.actions.createMatter.error"));
+                    $scope.creatingMatterIcon = "fa fa-gavel";
                 });
             };
 
-            $scope.openMatter = function (requestInfo) {
+
+
+        $scope.openMatter = function (requestInfo) {
                 var openMatterPath = $scope.zylabIntegrationConfig["zylabIntegration.openMatterPath"].replace("{matterId}", requestInfo.externalIdentifier);
                 var openMatterURL = $scope.zylabIntegrationConfig["zylabIntegration.url"] + openMatterPath;
 
