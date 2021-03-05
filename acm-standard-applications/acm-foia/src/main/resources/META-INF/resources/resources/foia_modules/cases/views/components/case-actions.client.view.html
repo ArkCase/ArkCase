@@ -2,7 +2,7 @@
     <div class="pull-right">
         <div class="btn-group">
             <fieldset permission="editRequestData" permission-object-type="CASE_FILE" permission-properties="objectInfo"
-                    permission-action="disabled">
+                      permission-action="disabled">
                 <button class="btn btn-sm btn-default" ng-click="save(objectInfo)" ng-disabled="clientInfo.$invalid"
                         permission="buttonAction" permission-object-type="CASE_FILE" permission-properties="objectInfo"
                         permission-action="hide">
@@ -49,7 +49,7 @@
                 <button class="btn btn-sm btn-default" ng-if="documentReviewEnabled && !objectInfo.externalIdentifier"
                         ng-click="createMatter(objectInfo)" permission="buttonAction" permission-object-type="CASE_FILE"
                         permission-properties="objectInfo" permission-action="hide">
-                    <i class="fa fa-gavel"></i>
+                    <i class="{{creatingMatterIcon}}"></i>
                     <span translate>cases.comp.actions.createMatter.button</span>
                 </button>
 
