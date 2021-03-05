@@ -153,35 +153,27 @@ public class ArkCasePortalGatewayRequestAPIController
             Authentication authentication) throws SolrException
     {
         String filterQueries = "";
-        Optional<AcmUser> optionalUser = getUserDao().findByEmailAddressAndDirectoryName(emailAddress, directoryName);
+        String[] filter = new String[] { "object_type_s:CASE_FILE", "requester_email_s:" + emailAddress };
+        filterQueries = Arrays.asList(filter).stream().map(f -> getFacetedSearchService().buildSolrQuery(f))
+                .collect(Collectors.joining(""));
+        filterQueries += filterQueries.trim().length() > 0 ? "&fq=hidden_b:false" : "fq=hidden_b:false";
 
-        if (!optionalUser.isPresent()) { return new ArrayList<>();}
-        else
-            {
+        query = String.format("name:%s*", query);
+        String results = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, 0,
+                10, "",
+                filterQueries);
 
-            AcmAuthentication acmAuthentication = new AcmAuthentication(new ArrayList<>(), optionalUser.get().getUserId(), optionalUser.get().getUserId(), true,
-                    optionalUser.get().getUserId(), optionalUser.get().getIdentifier());
-            String[] filter = new String[]{"object_type_s:CASE_FILE"};
-            filterQueries = Arrays.asList(filter).stream().map(f -> getFacetedSearchService().buildSolrQuery(f))
-                    .collect(Collectors.joining(""));
-            filterQueries += filterQueries.trim().length() > 0 ? "&fq=hidden_b:false" : "fq=hidden_b:false";
+        List<String> caseNames = new ArrayList<>();
 
-            query = String.format("name:%s*", query);
-            String results = getExecuteSolrQuery().getResultsByPredefinedQuery(acmAuthentication, SolrCore.QUICK_SEARCH, query, 0,
-                    10, "",
-                    filterQueries);
+        SearchResults searchResults = new SearchResults();
+        JSONArray docFiles = searchResults.getDocuments(results);
 
-            List<String> caseNames = new ArrayList<>();
-            SearchResults searchResults = new SearchResults();
-            JSONArray docFiles = searchResults.getDocuments(results);
-
-            for (int i = 0; i < docFiles.length(); i++)
-            {
-                JSONObject docFile = docFiles.getJSONObject(i);
-                caseNames.add(docFile.getString("name"));
-            }
-            return caseNames;
+        for (int i = 0; i < docFiles.length(); i++)
+        {
+            JSONObject docFile = docFiles.getJSONObject(i);
+            caseNames.add(docFile.getString("name"));
         }
+        return caseNames;
     }
 
     @ExceptionHandler(PortalRequestServiceException.class)
