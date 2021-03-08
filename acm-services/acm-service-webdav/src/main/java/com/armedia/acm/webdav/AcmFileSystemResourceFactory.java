@@ -28,6 +28,7 @@ package com.armedia.acm.webdav;
  */
 
 import com.armedia.acm.camelcontext.context.CamelContextManager;
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
@@ -63,13 +64,14 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
     private String filterMapping;
     private Pattern fileExtensionPattern;
     private AuthenticationTokenService authenticationTokenService;
+    private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
+
     /**
      * A pattern to distinguish between a file URL and the URL that Microsoft Office sends for an OPTIONS request. An
      * ArkCase WebDAV file URL is assumed to end in (someNumber.someExtension), e.g., "134.docx". If a WebDAV URL does
      * not end with this pattern, assume Office is sending an OPTIONS request, and we can reply with an empty (that is,a
      * dummy) resource. We can't send the real file resource, since Office did not send us the whole URL.
      */
-
     private Pattern realDocumentUrl = Pattern.compile("^.*\\/\\d*\\.\\w*$");
     private AcmRootResource acmRootResource;
 
@@ -223,11 +225,19 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
         this.camelContextManager = camelContextManager;
     }
 
+    public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter() 
+    {
+        return auditPropertyEntityAdapter;
+    }
+
+    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter) 
+    {
+        this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
+    }
+
     interface ResourceHandler
     {
-
         AcmFileSystemResource getResource(String host, String path) throws BadRequestException;
-
     }
 
     private class AcmFileResourceHandler implements ResourceHandler
