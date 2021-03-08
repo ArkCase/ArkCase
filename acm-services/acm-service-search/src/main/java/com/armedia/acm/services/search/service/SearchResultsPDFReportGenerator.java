@@ -321,12 +321,21 @@ public class SearchResultsPDFReportGenerator extends ReportGenerator
             Integer endSize = size;
             for(Integer i = 0;i <= value.length()/size ;i++)
             {
+                boolean isAddOne = false;
                 if (endSize >= value.length())
                 {
                     endSize = value.length();
 
                 }
-                tempString = tempString + '\n' + value.substring(startSize, endSize);
+                // if next char of Enter is ',' or '.', it may cause faill to change line in pdf file. Get the next char of those symbol.
+                if( (endSize < value.length()) && (value.charAt(endSize) == ',' || value.charAt(endSize) == '.')){
+                    endSize += 1;
+                    isAddOne = true;
+                }
+                tempString = tempString + System.getProperties().getProperty("line.separator") + value.substring(startSize, endSize);
+                if(isAddOne){
+                    startSize += 1;
+                }
                 startSize = startSize + size;
                 endSize = endSize + size;
             }
