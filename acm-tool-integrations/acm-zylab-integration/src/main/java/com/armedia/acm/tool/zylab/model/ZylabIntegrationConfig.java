@@ -179,7 +179,7 @@ public class ZylabIntegrationConfig
 
     public String getBaseUrl()
     {
-        return new StringBuilder().append(host).append(":").append(port).append(basePath).toString();
+        return new StringBuilder().append("https://").append(host).append(":").append(port).append(basePath).toString();
     }
 
     public void setBaseUrl(String baseUrl)
