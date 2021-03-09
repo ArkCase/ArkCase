@@ -127,7 +127,11 @@ public abstract class NotificationSender implements ApplicationListener<Applicat
             String templateName = String.format("%s.html", notification.getTemplateModelName());
             try
             {
-                String template = templateService.getTemplate(templateName);
+                String template = notification.getEmailContent();
+                if(template == null || template.isEmpty())
+                {
+                    template = templateService.getTemplate(templateName);
+                }
                 String body = getTemplatingEngine().process(template, notification.getTemplateModelName(), object);
                 in.setBody(body);
             }
