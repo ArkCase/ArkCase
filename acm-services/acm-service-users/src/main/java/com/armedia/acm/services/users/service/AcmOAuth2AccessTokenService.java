@@ -160,8 +160,8 @@ public class AcmOAuth2AccessTokenService
             // remote action failed due to expired token
             // TODO: To be tested and changed accordingly
             // retry on more specific exception
-            String systemUserEmail = oAuth2Credentials.getSystemUserEmail();
-            String provider = oAuth2Credentials.getRegistrationId();
+            String systemUserEmail = clientRegistrationConfig.getSystemUserEmail();
+            String provider = clientRegistrationConfig.getRegistrationId();
             userAccessTokenDao.deleteAccessTokenForUserAndProvider(systemUserEmail, provider);
 
             throw new UserRemoteActionException("Failed to execute.", e);
