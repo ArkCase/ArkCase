@@ -229,6 +229,7 @@
                 "components": [
                     "details",
                     "rejcomments",
+                    "people",
                     "documentsunderreview",
                     "parentdocs",
                     "attachments",
@@ -254,6 +255,14 @@
                 "icon": "fa fa-hand-stop-o",
                 "components": [
                     "rejcomments"
+                ]
+            },
+            {
+                "type": "p/ADHOC/people",
+                "label": "tasks.tree.nodeTypes.people.label",
+                "icon": "fa fa-user",
+                "components": [
+                    "people"
                 ]
             },
             {
@@ -392,6 +401,26 @@
                             "displayName": "tasks.comp.reworkdetails.table.columns.modifier",
                             "headerCellFilter": "translate",
                             "lookup": "userFullNames"
+                        }
+                    ]
+                },
+                {
+                    "id": "people",
+                    "type": "component",
+                    "columnDefs": [
+                        {
+                            "name": "personType",
+                            "displayName": "tasks.comp.people.table.columns.type",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.personTypes, row.entity.type_lcs) | translate }}</div>",
+                            "lookup": "personTypes"
+                        },
+                        {
+                            "name": "fullName",
+                            "field": "name",
+                            "displayName": "tasks.comp.people.table.columns.fullName",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<a data-ui-sref=\"people.main({id: row.entity.child_id_s})\">{{COL_FIELD}}</a>"
                         }
                     ]
                 },
@@ -1511,6 +1540,40 @@
                     "displayName": "tasks.comp.pastApprovals.table.columns.approverDecision",
                     "headerCellFilter": "translate",
                     "cellEditableCondition": false
+                }
+            ]
+        },
+        {
+            "id": "people",
+            "title": "tasks.comp.people.title",
+            "icon": "fa fa-user",
+            "className": "com.armedia.acm.plugins.person.model.Person",
+            "personAssociationClassName": "com.armedia.acm.plugins.person.model.PersonAssociation",
+            "enabled": true,
+            "configurable": true,
+            "type": "grid",
+            "enableFiltering": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 5,
+            "columnDefs": [
+                {
+                    "name": "personType",
+                    "displayName": "tasks.comp.people.table.columns.type",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.personTypes, row.entity.type_lcs) | translate }}</div>",
+                    "lookup": "personTypes"
+                },
+                {
+                    "name": "fullName",
+                    "field": "name",
+                    "displayName": "tasks.comp.people.table.columns.fullName",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<a data-ui-sref=\"people.main({id: row.entity.child_id_s})\">{{COL_FIELD}}</a>"
                 }
             ]
         }
