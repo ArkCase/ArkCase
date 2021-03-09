@@ -2,6 +2,7 @@ package com.armedia.acm.portalgateway.model;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /*-
  * #%L
@@ -414,7 +415,8 @@ public class PortalUser
 
     public static String composeUserName(PortalUser user)
     {
-        return Arrays.asList(user.getFirstName(), user.getMiddleName(), user.getLastName()).stream().filter(PortalUser::isEmpty)
+        return Stream.of(user.getFirstName(), user.getMiddleName(), user.getLastName())
+                .filter(PortalUser::isEmpty)
                 .collect(Collectors.joining(" "));
     }
 
