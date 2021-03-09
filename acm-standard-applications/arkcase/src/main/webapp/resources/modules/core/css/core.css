@@ -393,6 +393,11 @@ body {
     padding: 15px 10px 10px 10px;
 }
 
+/* Adding this style to adjust bottom padding for Firefox users   */
+.leftnav-menu .nav.nav-main {
+    margin-bottom: 25px;
+}
+
 /* Content Body (Right Column Alternative) */
 
 .module-content .content-body {
