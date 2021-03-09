@@ -203,7 +203,6 @@ angular.module('cases').controller(
 
             $scope.sendEmail = function () {
                 var params = {
-                    request: $scope.objectInfo,
                     objectId: $scope.objectInfo.id,
                     objectType: ObjectService.ObjectTypes.CASE_FILE,
                     objectNumber: $scope.objectInfo.caseNumber,
