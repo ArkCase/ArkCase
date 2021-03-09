@@ -30,10 +30,12 @@ package com.armedia.acm.plugins.task.service.impl;
 import com.armedia.acm.activiti.services.AcmBpmnService;
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
 import com.armedia.acm.core.AcmNotifiableEntity;
+import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.data.AcmAbstractDao;
+import com.armedia.acm.data.AcmNameDao;
 import com.armedia.acm.data.AcmNotificationDao;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.data.BuckslipFutureTask;
@@ -109,7 +111,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao, AcmNotificationDao
+public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao, AcmNotificationDao, AcmNameDao
 {
     private RuntimeService activitiRuntimeService;
     private TaskService activitiTaskService;
@@ -2025,5 +2027,11 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
     public TypedQuery<AcmTask> getSortedQuery(String sort)
     {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public AcmObject findByName(String name)
+    {
+        return findById(Long.valueOf(name));
     }
 }

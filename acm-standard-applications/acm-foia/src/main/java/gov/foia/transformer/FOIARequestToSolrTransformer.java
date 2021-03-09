@@ -144,11 +144,20 @@ public class FOIARequestToSolrTransformer extends CaseFileToSolrTransformer
 
         if (requestIn.getOriginator() != null && requestIn.getOriginator().getPerson() != null)
         {
-            additionalProperties.put("requester_name_s", requestIn.getOriginator().getPerson().getFullName());
-        }
-        else
-        {
-            additionalProperties.put("requester_name_s", "");
+            if(requestIn.getOriginator().getPerson().getFullName() != null)
+            {
+                additionalProperties.put("requester_name_s", requestIn.getOriginator().getPerson().getFullName());
+            }
+            else {
+                additionalProperties.put("requester_name_s", "");
+            }
+            if(requestIn.getOriginator().getPerson().getDefaultEmail().getValue() != null)
+            {
+                additionalProperties.put("requester_email_s", requestIn.getOriginator().getPerson().getDefaultEmail().getValue());
+            }
+            else {
+                additionalProperties.put("requester_email_s", "");
+            }
         }
 
         additionalProperties.put("queue_enter_date_tdt", requestIn.getQueueEnterDate());
@@ -161,5 +170,7 @@ public class FOIARequestToSolrTransformer extends CaseFileToSolrTransformer
         additionalProperties.put("pay_fee_s", requestIn.getPayFee());
         additionalProperties.put("processing_fee_waive_s", Double.toString(requestIn.getProcessingFeeWaive()));
         additionalProperties.put("request_agency_s", requestIn.getComponentAgency());
+        additionalProperties.put("external_identifier_s", requestIn.getExternalIdentifier());
+        additionalProperties.put("difficulty_rating_s", requestIn.getDifficultyRating());
     }
 }

@@ -764,5 +764,11 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="files-74-add-custodian" author="aleksandar.acevski">
+        <addColumn tableName="acm_file">
+            <column name="cm_custodian" type="VARCHAR(255)" />
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
 

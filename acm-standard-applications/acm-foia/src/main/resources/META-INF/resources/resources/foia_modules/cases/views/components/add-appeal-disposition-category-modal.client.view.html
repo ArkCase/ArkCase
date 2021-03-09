@@ -38,7 +38,7 @@
             <div class="form-group col-sm-6">
                 <label class="control-label" translate> cases.comp.main.addAppealDispositionCategory.otherReason</label>
                 <select ng-model="objectInfo.otherReason"
-                        ng-init="objectInfo.otherReason = otherReasonsLookup[0]"
+                        ng-init="objectInfo.otherReason = otherReasonsLookup[0].key"
                         ng-options="otherReason.key as otherReason.value | translate for otherReason in otherReasonsLookup"
                         class="form-control input-md" ng-change="changeOtherReason()" ng-required="isOtherRequired && showDispositionReasons"
                         ng-disabled="!isOtherRequired">

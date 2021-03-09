@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:beans="http://www.springframework.org/schema/beans"
-    xmlns:aop="http://www.springframework.org/schema/aop"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:aop="http://www.springframework.org/schema/aop"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
               http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <beans:beans profile="extension-foia">
@@ -10,7 +10,7 @@
         <beans:bean id="liquibase" class="liquibase.integration.spring.SpringLiquibase">
             <beans:property name="dataSource" ref="acmDataSource"/>
             <beans:property name="changeLog"
-                value="classpath:/com/armedia/acm/extension/foia/ddl/acm-extension-foia-database-changelog.xml"/>
+                            value="classpath:/com/armedia/acm/extension/foia/ddl/acm-extension-foia-database-changelog.xml"/>
             <beans:property name="shouldRun" value="#{dataSourceConfig.autoUpdate}"/>
         </beans:bean>
 
@@ -24,7 +24,7 @@
 
         <!-- property placeholder for all properties needed for the proxy -->
         <beans:bean id="arkCasePropertyConfigurerFOIA"
-            class="com.armedia.acm.crypto.properties.AcmEncryptablePropertySourcesPlaceholderConfigurer">
+                    class="com.armedia.acm.crypto.properties.AcmEncryptablePropertySourcesPlaceholderConfigurer">
             <beans:property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
             <beans:property name="ignoreResourceNotFound" value="true"/>
             <beans:property name="localOverride" value="false"/>
@@ -60,7 +60,7 @@
             <beans:property name="notificationDao" ref="notificationDao"/>
             <beans:property name="acmContextHolder" ref="acmContextHolder"/>
             <beans:property name="userDao" ref="userJpaDao"/>
-            <beans:property name="translationService" ref="translationService" />
+            <beans:property name="translationService" ref="translationService"/>
             <beans:property name="acmUserEventPublisher" ref="acmUserEventPublisher"/>
             <beans:property name="organizationDao" ref="acmOrganizationDao"/>
             <beans:property name="requestAssignmentService" ref="requestAssignmentService"/>
@@ -103,14 +103,16 @@
             <beans:property name="holidayConfigurationService" ref="holidayConfigurationService"/>
         </beans:bean>
 
-        <beans:bean id="holdedAndAppealedRequestsDueDateUpdate" class="gov.foia.service.HoldedAndAppealedRequestsDueDateUpdate">
+        <beans:bean id="holdedAndAppealedRequestsDueDateUpdate"
+                    class="gov.foia.service.HoldedAndAppealedRequestsDueDateUpdate">
             <beans:property name="requestDao" ref="foiaRequestDao"/>
             <beans:property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
             <beans:property name="foiaConfig" ref="foiaConfig"/>
             <beans:property name="holidayConfigurationService" ref="holidayConfigurationService"/>
         </beans:bean>
 
-        <beans:bean id="dueDateUpdateJobDescriptor" class="gov.foia.service.DueDateUpdateJobDescriptor" parent="acmJobDescriptor">
+        <beans:bean id="dueDateUpdateJobDescriptor" class="gov.foia.service.DueDateUpdateJobDescriptor"
+                    parent="acmJobDescriptor">
             <beans:property name="holdedAndAppealedRequestsDueDateUpdate" ref="holdedAndAppealedRequestsDueDateUpdate"/>
         </beans:bean>
 
@@ -120,7 +122,7 @@
             <property name="holidayConfigurationService" ref="holidayConfigurationService"/>
             <property name="userDao" ref="userJpaDao"/>
             <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
-            <property name="translationService" ref="translationService" />
+            <property name="translationService" ref="translationService"/>
         </beans:bean>
 
         <beans:bean id="dueDateReminderJobDescriptor" class="gov.foia.service.DueDateReminderJobDescriptor">
@@ -155,11 +157,13 @@
             </beans:property> -->
         </beans:bean>
 
-        <beans:bean id="foiaNotificationDataUpdateExecutor" class="gov.foia.service.dataupdate.FoiaNotificationDataUpdateExecutor">
+        <beans:bean id="foiaNotificationDataUpdateExecutor"
+                    class="gov.foia.service.dataupdate.FoiaNotificationDataUpdateExecutor">
             <beans:property name="solrReindexService" ref="solrReindexService"/>
         </beans:bean>
 
-        <beans:bean id="foiaRequestStatusChangeExecutor" class="gov.foia.service.dataupdate.FoiaRequestStatusChangeExecutor">
+        <beans:bean id="foiaRequestStatusChangeExecutor"
+                    class="gov.foia.service.dataupdate.FoiaRequestStatusChangeExecutor">
             <beans:property name="requestDao" ref="foiaRequestDao"/>
         </beans:bean>
 
@@ -167,7 +171,8 @@
             <property name="solrReindexService" ref="solrReindexService"/>
         </beans:bean>
 
-        <beans:bean id="foiaExtensionDataUpdateExecutor" class="gov.foia.service.dataupdate.FoiaExtensionDataUpdateExecutor">
+        <beans:bean id="foiaExtensionDataUpdateExecutor"
+                    class="gov.foia.service.dataupdate.FoiaExtensionDataUpdateExecutor">
             <beans:property name="foiaDataUpdateExecutors">
                 <beans:list>
                     <beans:ref bean="foiaNotificationDataUpdateExecutor"/>
@@ -178,21 +183,24 @@
                     <beans:ref bean="foiaPortalRegistrationCleanupExecutor"/>
                     <beans:ref bean="solrReindexAcmUserExecutor"/>
                     <beans:ref bean="solrReindexPersonAssociationsExecutor"/>
-                    <beans:ref bean="foiaRequestDataUpdateExecutor" />
+                    <beans:ref bean="foiaRequestDataUpdateExecutor"/>
                 </beans:list>
             </beans:property>
 
         </beans:bean>
 
-        <beans:bean id="foiaExemptionCodeMigrationExecutor" class="gov.foia.service.dataupdate.FOIAExemptionCodeMigrationExecutor">
+        <beans:bean id="foiaExemptionCodeMigrationExecutor"
+                    class="gov.foia.service.dataupdate.FOIAExemptionCodeMigrationExecutor">
             <beans:property name="foiaExemptionService" ref="foiaExemptionService"/>
         </beans:bean>
 
-        <beans:bean id="solrReindexFOIAPortalPersonExecutor" class="gov.foia.service.dataupdate.SolrReindexFOIAPortalPersonExecutor">
+        <beans:bean id="solrReindexFOIAPortalPersonExecutor"
+                    class="gov.foia.service.dataupdate.SolrReindexFOIAPortalPersonExecutor">
             <beans:property name="solrReindexService" ref="solrReindexService"/>
         </beans:bean>
 
-        <beans:bean id="foiaPortalRegistrationCleanupExecutor" class="gov.foia.service.dataupdate.FoiaPortalRegistrationCleanupExecutor">
+        <beans:bean id="foiaPortalRegistrationCleanupExecutor"
+                    class="gov.foia.service.dataupdate.FoiaPortalRegistrationCleanupExecutor">
             <beans:property name="acmContextHolder" ref="acmContextHolder"/>
             <beans:property name="userDao" ref="userJpaDao"/>
             <beans:property name="registrationDao" ref="userRegistrationRequestDao"/>
@@ -203,12 +211,14 @@
             <beans:property name="solrReindexService" ref="solrReindexService"/>
         </beans:bean>
 
-        <beans:bean id="solrReindexPersonAssociationsExecutor" class="gov.foia.service.dataupdate.SolrReindexPersonAssociationsExecutor">
+        <beans:bean id="solrReindexPersonAssociationsExecutor"
+                    class="gov.foia.service.dataupdate.SolrReindexPersonAssociationsExecutor">
             <beans:property name="solrReindexService" ref="solrReindexService"/>
         </beans:bean>
 
-        <beans:bean id="foiaRequestDataUpdateExecutor" class="gov.foia.service.dataupdate.FoiaRequestDataUpdateExecutor">
-            <beans:property name="solrReindexService" ref="solrReindexService" />
+        <beans:bean id="foiaRequestDataUpdateExecutor"
+                    class="gov.foia.service.dataupdate.FoiaRequestDataUpdateExecutor">
+            <beans:property name="solrReindexService" ref="solrReindexService"/>
         </beans:bean>
 
         <beans:bean id="queuesTimeToCompleteService" class="gov.foia.service.QueuesTimeToCompleteService">
@@ -229,13 +239,15 @@
             <beans:property name="arkCaseBeanUtils" ref="arkCaseBeanUtils"/>
         </beans:bean>
 
-        <beans:bean id="ecmFileUpdateMetadataHandler" class="gov.foia.pipeline.presave.FOIAEcmFileUpdateMetadataHandler">
+        <beans:bean id="ecmFileUpdateMetadataHandler"
+                    class="gov.foia.pipeline.presave.FOIAEcmFileUpdateMetadataHandler">
             <beans:property name="ecmFileDao" ref="ecmFileDao"/>
             <beans:property name="folderDao" ref="acmFolderDao"/>
             <beans:property name="pageCountService" ref="pageCountService"/>
         </beans:bean>
 
-        <beans:bean id="ecmFileMergedMetadataHandler" class="gov.foia.pipeline.presave.FOIAEcmFileMergedMetadataHandler">
+        <beans:bean id="ecmFileMergedMetadataHandler"
+                    class="gov.foia.pipeline.presave.FOIAEcmFileMergedMetadataHandler">
             <beans:property name="ecmFileDao" ref="ecmFileDao"/>
             <beans:property name="folderDao" ref="acmFolderDao"/>
             <beans:property name="pageCountService" ref="pageCountService"/>
@@ -341,7 +353,8 @@
             <beans:property name="acmFolderService" ref="acmFolderService"/>
         </beans:bean>
 
-        <beans:bean id="notificationGroupEmailSenderService" class="gov.foia.service.NotificationGroupEmailSenderService">
+        <beans:bean id="notificationGroupEmailSenderService"
+                    class="gov.foia.service.NotificationGroupEmailSenderService">
             <beans:property name="caseFileDao" ref="caseFileDao"/>
             <beans:property name="ecmFileDao" ref="ecmFileDao"/>
             <beans:property name="lookupDao" ref="lookupDao"/>
@@ -354,7 +367,8 @@
             <beans:property name="notificationService" ref="notificationService"/>
         </beans:bean>
 
-        <beans:bean id="foiaExecutiveGroupNotificationService" class="gov.foia.service.FOIAExecutiveGroupNotificationService">
+        <beans:bean id="foiaExecutiveGroupNotificationService"
+                    class="gov.foia.service.FOIAExecutiveGroupNotificationService">
             <beans:property name="caseFileDao" ref="caseFileDao"/>
             <beans:property name="notificationGroupEmailSenderService" ref="notificationGroupEmailSenderService"/>
             <beans:property name="userDao" ref="userJpaDao"/>
@@ -416,7 +430,8 @@
             <aop:scoped-proxy/>
         </beans:bean>
 
-        <beans:bean id="ecmFileCopiedExemptionCodeListener" class="gov.foia.listener.EcmFileCopiedExemptionCodeListener">
+        <beans:bean id="ecmFileCopiedExemptionCodeListener"
+                    class="gov.foia.listener.EcmFileCopiedExemptionCodeListener">
             <beans:property name="foiaExemptionService" ref="foiaExemptionService"/>
         </beans:bean>
 
@@ -429,6 +444,12 @@
             <beans:property name="reportsConfig" ref="pentahoReportsConfig"/>
             <beans:property name="reportService" ref="reportService"/>
             <beans:property name="foiaConfig" ref="foiaConfig"/>
+        </beans:bean>
+
+        <beans:bean id="foiaZylabMatterService" class="gov.foia.service.FOIAZylabMatterService">
+            <beans:property name="foiaRequestDao" ref="foiaRequestDao"/>
+            <beans:property name="zylabIntegrationConfig" ref="zylabIntegrationConfig"/>
+            <beans:property name="zylabIntegrationService" ref="zylabIntegrationService"/>
         </beans:bean>
 
     </beans:beans>

@@ -1,9 +1,37 @@
 package com.armedia.acm.services.users.service;
 
+/*-
+ * #%L
+ * ACM Service: Users
+ * %%
+ * Copyright (C) 2014 - 2021 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.services.users.dao.UserAccessTokenDao;
 import com.armedia.acm.services.users.dao.exception.UserAccessTokenException;
 import com.armedia.acm.services.users.dao.exception.UserRemoteActionException;
 import com.armedia.acm.services.users.model.OAuth2ClientRegistrationConfig;
+import com.armedia.acm.services.users.model.OAuth2Credentials;
 import com.armedia.acm.services.users.model.UserAccessToken;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -31,7 +59,7 @@ public class AcmOAuth2AccessTokenService
     private RestTemplate acmRestTemplate;
     private static final Logger logger = LogManager.getLogger(AcmOAuth2AccessTokenService.class);
 
-    private OAuth2Token getOAuth2AccessToken() throws UserAccessTokenException
+    private OAuth2Token getOAuth2AccessToken(OAuth2Credentials oAuth2Credentials) throws UserAccessTokenException
     {
         String tokenEndpoint = clientRegistrationConfig.getTokenUri();
 
@@ -41,16 +69,16 @@ public class AcmOAuth2AccessTokenService
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.put("grant_type", Collections.singletonList("password"));
         params.put("scope", Collections.singletonList("openid"));
-        params.put("client_id", Collections.singletonList(clientRegistrationConfig.getClientId()));
-        params.put("client_secret", Collections.singletonList(clientRegistrationConfig.getClientSecret()));
-        params.put("username", Collections.singletonList(clientRegistrationConfig.getSystemUserEmail()));
-        params.put("password", Collections.singletonList(clientRegistrationConfig.getSystemUserPassword()));
+        params.put("client_id", Collections.singletonList(oAuth2Credentials.getClientId()));
+        params.put("client_secret", Collections.singletonList(oAuth2Credentials.getClientSecret()));
+        params.put("username", Collections.singletonList(oAuth2Credentials.getSystemUserEmail()));
+        params.put("password", Collections.singletonList(oAuth2Credentials.getSystemUserPassword()));
         HttpEntity<MultiValueMap<String, String>> nameParam = new HttpEntity<>(params, headers);
         try
         {
             ResponseEntity<OAuth2Token> response = acmRestTemplate.postForEntity(tokenEndpoint, nameParam, OAuth2Token.class);
             logger.debug("Successfully obtained access token for user [{}] from [{}] provider.",
-                    clientRegistrationConfig.getSystemUserEmail(), clientRegistrationConfig.getRegistrationId());
+                    oAuth2Credentials.getSystemUserEmail(), oAuth2Credentials.getRegistrationId());
             return response.getBody();
         }
         catch (RestClientException e)
@@ -76,8 +104,22 @@ public class AcmOAuth2AccessTokenService
 
     public UserAccessToken getOAuth2AccessTokenForSystemUser() throws UserAccessTokenException
     {
-        String systemUserEmail = clientRegistrationConfig.getSystemUserEmail();
-        String provider = clientRegistrationConfig.getRegistrationId();
+        OAuth2Credentials oAuth2Credentials = new OAuth2Credentials();
+
+        oAuth2Credentials.setRegistrationId(clientRegistrationConfig.getRegistrationId());
+        oAuth2Credentials.setClientId(clientRegistrationConfig.getTenantId());
+        oAuth2Credentials.setClientSecret(clientRegistrationConfig.getTenantSecret());
+        oAuth2Credentials.setTokenUri(clientRegistrationConfig.getTokenUri());
+        oAuth2Credentials.setSystemUserEmail(clientRegistrationConfig.getSystemUserEmail());
+        oAuth2Credentials.setSystemUserPassword(clientRegistrationConfig.getSystemUserPassword());
+
+        return getOAuth2AccessTokenForCredentials(oAuth2Credentials);
+    }
+
+    public UserAccessToken getOAuth2AccessTokenForCredentials(OAuth2Credentials oAuth2Credentials) throws UserAccessTokenException
+    {
+        String systemUserEmail = oAuth2Credentials.getSystemUserEmail();
+        String provider = oAuth2Credentials.getRegistrationId();
 
         UserAccessToken acmAccessToken = userAccessTokenDao.getAccessTokenByUserAndProvider(systemUserEmail, provider);
 
@@ -87,18 +129,43 @@ public class AcmOAuth2AccessTokenService
         }
         if (acmAccessToken == null || acmAccessToken.isExpired())
         {
-            OAuth2Token token = getOAuth2AccessToken();
+            OAuth2Token token = getOAuth2AccessToken(oAuth2Credentials);
             UserAccessToken accessToken = new UserAccessToken();
             accessToken.setExpirationInSec(token.getExpiresIn());
             accessToken.setProvider(provider);
             accessToken.setUserEmail(systemUserEmail);
-            accessToken.setValue(token.getAccessToken());
+            // Current implementation requires the use of ID tokens as opposed to access tokens. Might need to be changed
+            // in the future in accordance with the tenant and provider
+            accessToken.setValue(token.getIdToken());
             accessToken.setCreatedDateTime(LocalDateTime.now());
             logger.info("Saving access token [{}]", accessToken);
             return userAccessTokenDao.save(accessToken);
         }
 
         return acmAccessToken;
+    }
+
+    public <T> T executeAuthenticatedRemoteAction(OAuth2Credentials oAuth2Credentials, Function<UserAccessToken, T> remoteAction)
+    {
+        try
+        {
+            return remoteAction.apply(getOAuth2AccessTokenForCredentials(oAuth2Credentials));
+        }
+        catch (UserAccessTokenException e)
+        {
+            throw new UserRemoteActionException("Failed to obtain token.", e);
+        }
+        catch (HttpClientErrorException e)
+        {
+            // remote action failed due to expired token
+            // TODO: To be tested and changed accordingly
+            // retry on more specific exception
+            String systemUserEmail = clientRegistrationConfig.getSystemUserEmail();
+            String provider = clientRegistrationConfig.getRegistrationId();
+            userAccessTokenDao.deleteAccessTokenForUserAndProvider(systemUserEmail, provider);
+
+            throw new UserRemoteActionException("Failed to execute.", e);
+        }
     }
 
     public <T> T executeAuthenticatedRemoteAction(Function<UserAccessToken, T> remoteAction)
@@ -116,7 +183,11 @@ public class AcmOAuth2AccessTokenService
             // remote action failed due to expired token
             // TODO: To be tested and changed accordingly
             // retry on more specific exception
-            return executeAuthenticatedRemoteAction(remoteAction);
+            String systemUserEmail = clientRegistrationConfig.getSystemUserEmail();
+            String provider = clientRegistrationConfig.getRegistrationId();
+            userAccessTokenDao.deleteAccessTokenForUserAndProvider(systemUserEmail, provider);
+
+            throw new UserRemoteActionException("Failed to execute.", e);
         }
     }
 

@@ -340,6 +340,17 @@ public class FOIARequestDao extends AcmAbstractDao<FOIARequest>
         return requests;
     }
 
+    public FOIARequest findByExternalIdentifier(String externalIdentifier)
+    {
+        String queryText = "SELECT request FROM FOIARequest request "
+                + "WHERE request.externalIdentifier = :externalIdentifier";
+
+        Query findByExternalIdentifier = getEm().createQuery(queryText, FOIARequest.class);
+        findByExternalIdentifier.setParameter("externalIdentifier", externalIdentifier);
+
+        return (FOIARequest) findByExternalIdentifier.getSingleResult();
+    }
+
     public List<FOIARequest> getNextAvailableRequestInQueue(Long queueId, Date createdDate)
     {
         String queryText = "SELECT request FROM CaseFile request "

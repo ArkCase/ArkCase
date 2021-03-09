@@ -38,7 +38,6 @@ import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISActions;
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
 import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.web.api.MDCConstants;
 
 import org.apache.camel.component.cmis.CamelCMISConstants;
@@ -202,6 +201,7 @@ public class AcmFileResource extends AcmFileSystemResource implements PropFindab
             LOGGER.info("Authenticated user {} replacing file content for file {}", 
                 auth.getName(), acmFile.getFileId());
             SecurityContextHolder.getContext().setAuthentication(auth);
+            getResourceFactory().getAuditPropertyEntityAdapter().setUserId(auth.getName());
             getResourceFactory().getEcmFileTransaction().updateFileTransactionEventAware(auth, acmFile, in);
         }
         catch (ArkCaseFileRepositoryException | IOException e)

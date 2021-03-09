@@ -70,6 +70,7 @@
         <module>acm-service-object-title</module>
         <module>acm-service-exemption</module>
         <module>acm-service-comprehend-medical</module>
+        <module>acm-service-zylab-integration</module>
     </modules>
 
 </project>
