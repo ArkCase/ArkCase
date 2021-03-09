@@ -138,13 +138,21 @@ public class SARToSolrTransformer extends CaseFileToSolrTransformer
 
         if (requestIn.getOriginator() != null && requestIn.getOriginator().getPerson() != null)
         {
-            additionalProperties.put("requester_name_s", requestIn.getOriginator().getPerson().getFullName());
+            if(requestIn.getOriginator().getPerson().getFullName() != null)
+            {
+                additionalProperties.put("requester_name_s", requestIn.getOriginator().getPerson().getFullName());
+            }
+            else {
+                additionalProperties.put("requester_name_s", "");
+            }
+            if(requestIn.getOriginator().getPerson().getDefaultEmail().getValue() != null)
+            {
+                additionalProperties.put("requester_email_s", requestIn.getOriginator().getPerson().getDefaultEmail().getValue());
+            }
+            else {
+                additionalProperties.put("requester_email_s", requestIn.getOriginator().getPerson().getDefaultEmail().getValue());
+            }
         }
-        else
-        {
-            additionalProperties.put("requester_name_s", "");
-        }
-
         if (requestIn.getSubject() != null && requestIn.getSubject().getPerson() != null)
         {
             additionalProperties.put("subject_name_s", requestIn.getSubject().getPerson().getFullName());

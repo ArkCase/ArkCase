@@ -195,5 +195,17 @@
             <artifactId>acm-service-exemption</artifactId>
             <version>${acm.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-zylab-integration</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-zylab-integration</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+
     </dependencies>
 </project>

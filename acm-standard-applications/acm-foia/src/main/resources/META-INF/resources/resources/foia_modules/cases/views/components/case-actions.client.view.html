@@ -2,7 +2,7 @@
     <div class="pull-right">
         <div class="btn-group">
             <fieldset permission="editRequestData" permission-object-type="CASE_FILE" permission-properties="objectInfo"
-                    permission-action="disabled">
+                      permission-action="disabled">
                 <button class="btn btn-sm btn-default" ng-click="save(objectInfo)" ng-disabled="clientInfo.$invalid"
                         permission="buttonAction" permission-object-type="CASE_FILE" permission-properties="objectInfo"
                         permission-action="hide">
@@ -45,6 +45,28 @@
                     <i class="fa fa-envelope"></i>
                     <span translate>cases.comp.actions.sendEmail.button</span>
                 </button>
+
+                <button class="btn btn-sm btn-default" ng-if="documentReviewEnabled && !objectInfo.externalIdentifier"
+                        ng-click="createMatter(objectInfo)" permission="buttonAction" permission-object-type="CASE_FILE"
+                        permission-properties="objectInfo" permission-action="hide">
+                    <i class="{{creatingMatterIcon}}"></i>
+                    <span translate>cases.comp.actions.createMatter.button</span>
+                </button>
+
+                <button class="btn btn-sm btn-default" ng-if="documentReviewEnabled && objectInfo.externalIdentifier"
+                        ng-click="openMatter(objectInfo)" permission="buttonAction" permission-object-type="CASE_FILE"
+                        permission-properties="objectInfo" permission-action="hide">
+                    <i class="fa fa-gavel"></i>
+                    <span translate>cases.comp.actions.openMatter.button</span>
+                </button>
+
+                <button class="btn btn-sm btn-default" ng-if="documentReviewEnabled && objectInfo.externalIdentifier"
+                        ng-click="openMatterReports(objectInfo)" permission="buttonAction" permission-object-type="CASE_FILE"
+                        permission-properties="objectInfo" permission-action="hide">
+                    <i class="fa fa-bar-chart"></i>
+                    <span translate>cases.comp.actions.matterReports.button</span>
+                </button>
+
             </fieldset>
         </div>
     </div>
