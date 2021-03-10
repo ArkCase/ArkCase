@@ -55,6 +55,7 @@ import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserState;
+import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.MapperUtils;
 import com.armedia.acm.services.users.model.ldap.UserDTO;
@@ -64,6 +65,7 @@ import com.armedia.acm.services.users.service.ldap.LdapUserService;
 import com.armedia.acm.spring.SpringContextHolder;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.validator.ValidatorException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
@@ -77,6 +79,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
@@ -379,7 +382,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         {
             PortalFOIAPerson portalPerson = changePersonIntoPortalFOIAPerson(person);
 
-            PortalUser portalUser = portaluserFromPortalPerson(portalId, portalPerson);
+            PortalUser portalUser = portaluserFromPortalPerson(portalPerson);
 
             createPortalUser(portalUser, portalPerson, null);
 
@@ -523,7 +526,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
                         portalUser = Optional.of(changePersonIntoPortalFOIAPerson(person.get()));
                     }
                 }
-                PortalUser portalUserAuthenticated = portaluserFromPortalPerson(portalId, portalUser.get());
+                PortalUser portalUserAuthenticated = portaluserFromPortalPerson(portalUser.get());
                 portalUserAuthenticated.setAcmUserId(portalAcmUser.getUserId());
                 log.debug("Authenticated portal user is [{}] with email [{}] and role [{}] for portal with id [{}]",
                         portalUserAuthenticated.getAcmUserId(), portalUserAuthenticated.getEmail(), portalUserAuthenticated.getRole(),
@@ -744,7 +747,8 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     }
 
     @Override
-    public UserResetResponse changePassword(String portalUserEmail, String portalUserId, String acmSystemUserId, PortalUserCredentials portalUserCredentials)
+    public UserResetResponse changePassword(String portalUserEmail, String portalUserId, String acmSystemUserId,
+            PortalUserCredentials portalUserCredentials)
             throws PortalUserServiceException
     {
 
@@ -859,7 +863,25 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
 
         Person saved = personDao.save(person);
 
-        return portaluserFromPortalPerson(portalId, (PortalFOIAPerson) saved);
+        AcmUser existingPortalUser = getPortalAcmUser(user.getEmail());
+        boolean firstNameChanged = !Objects.equals(existingPortalUser.getFirstName(), user.getFirstName());
+        boolean lastNameChanged = !Objects.equals(existingPortalUser.getLastName(), user.getLastName());
+        boolean countryChanged = !Objects.equals(existingPortalUser.getCountry(), user.getCountry());
+        if (firstNameChanged || lastNameChanged || countryChanged)
+        {
+            existingPortalUser.setFirstName(user.getFirstName());
+            existingPortalUser.setLastName(user.getLastName());
+            existingPortalUser.setCountry(user.getCountry());
+            try
+            {
+                ldapUserService.editLdapUser(existingPortalUser, existingPortalUser.getUserId(), existingPortalUser.getUserDirectoryName());
+            }
+            catch (AcmLdapActionFailedException | ValidatorException e)
+            {
+                throw new PortalUserServiceException(String.format("Failed to update user [%s]", existingPortalUser.getUserId()), e);
+            }
+        }
+        return portaluserFromPortalPerson((PortalFOIAPerson) saved);
 
     }
 
@@ -867,7 +889,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     public PortalUser retrieveUser(String portalUserId, String portalId)
     {
         Person person = getPersonDao().find(Long.valueOf(portalUserId));
-        return portaluserFromPortalPerson(portalUserId, (PortalFOIAPerson) person);
+        return portaluserFromPortalPerson((PortalFOIAPerson) person);
     }
 
     public Person findOrCreateOrganizationAndPersonOrganizationAssociation(Person person, String organizationName)
@@ -992,11 +1014,10 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     }
 
     /**
-     * @param portalId
      * @param person
      * @return
      */
-    private PortalUser portaluserFromPortalPerson(String portalId, PortalFOIAPerson person)
+    private PortalUser portaluserFromPortalPerson(PortalFOIAPerson person)
     {
         PortalUser user = new PortalUser();
 
@@ -1050,7 +1071,6 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     }
 
     /**
-     * @param portalId
      * @param user
      * @return
      */
