@@ -27,13 +27,15 @@ package com.armedia.acm.plugins.ecm.service;
  * #L%
  */
 
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
+import com.armedia.acm.plugins.ecm.exception.EcmFileLinkException;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileUpdatedEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationListener;
 
-public class EcmFileUpdatedDuplicationListener implements ApplicationListener<EcmFileUpdatedEvent>
+public class EcmFileUpdatedListener implements ApplicationListener<EcmFileUpdatedEvent>
 {
 
     private final Logger LOG = LogManager.getLogger(getClass());
@@ -42,11 +44,30 @@ public class EcmFileUpdatedDuplicationListener implements ApplicationListener<Ec
     @Override
     public void onApplicationEvent(EcmFileUpdatedEvent event)
     {
-        if (event != null && event.isSucceeded())
+        if (event.isSucceeded())
         {
 
             EcmFile ecmFile = (EcmFile) event.getSource();
             getEcmFileService().checkAndSetDuplicatesByHash(ecmFile);
+            try
+            {
+                getEcmFileService().updateFileLinks(ecmFile);
+            }
+            catch (AcmObjectNotFoundException e)
+            {
+                LOG.error("File links not updated: {}", e.getMessage(), e);
+            }
+            if (ecmFile.isLink())
+            {
+                try
+                {
+                    getEcmFileService().updateLinkTargetFile(ecmFile);
+                }
+                catch (EcmFileLinkException e)
+                {
+                    LOG.error("Link target file not updated: {}", e.getMessage(), e);
+                }
+            }
         }
     }
 

@@ -2435,6 +2435,38 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    public void updateLinkTargetFile(EcmFile file) throws EcmFileLinkException
+    {
+        LinkTargetFileDTO linkTargetFileDTO = getLinkTargetFileInfo(file);
+        EcmFile f = getEcmFileDao().find(linkTargetFileDTO.getOriginalFileId());
+        EcmFileVersion activeFileVersion = file.getVersions()
+                .stream()
+                .filter(ecmFileVersion -> ecmFileVersion.getVersionTag().equals(file.getActiveVersionTag()))
+                .findFirst().orElse(null);
+
+        f.setFileType(file.getFileType());
+        f.setActiveVersionTag(file.getActiveVersionTag());
+        f.setFileName(file.getFileName());
+        f.setContainer(file.getContainer());
+        f.setStatus(file.getStatus());
+        f.setCategory(file.getCategory());
+        f.setFileActiveVersionMimeType(file.getFileActiveVersionMimeType());
+        f.setClassName(file.getClassName());
+        f.setFileActiveVersionNameExtension(file.getFileActiveVersionNameExtension());
+        f.setFileSource(file.getFileSource());
+        f.setLegacySystemId(file.getLegacySystemId());
+        f.setPageCount(file.getPageCount());
+        f.setSecurityField(file.getSecurityField());
+        f.getVersions().get(0).setVersionTag(file.getActiveVersionTag());
+        if (Objects.nonNull(activeFileVersion))
+        {
+            f.getVersions().get(0).setCmisObjectId(activeFileVersion.getCmisObjectId());
+        }
+
+        getEcmFileDao().save(f);
+    }
+
+    @Override
     public LinkTargetFileDTO getLinkTargetFileInfo(EcmFile ecmFile) throws EcmFileLinkException
     {
         log.info("Get target file info for the linked file: {}", ecmFile.getId());
