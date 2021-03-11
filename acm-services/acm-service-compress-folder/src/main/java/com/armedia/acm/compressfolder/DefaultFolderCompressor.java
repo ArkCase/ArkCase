@@ -565,7 +565,8 @@ public class DefaultFolderCompressor implements FolderCompressor, ApplicationEve
 
     private boolean canBeCompressed(EcmFile file, List<AcmObject> files, AcmFolder folder, CompressNode compressNode)
     {
-        if (isConverted(file, files))
+        //TODO : Check isConverted only for Response folder
+        if (folder.getName().equals("03 Response")  && isConverted(file, files) )
         {
             return false;
         }
