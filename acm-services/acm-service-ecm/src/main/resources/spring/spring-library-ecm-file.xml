@@ -447,19 +447,19 @@
     </bean>
 
 
-    <bean id="ecmFileAddedDuplicationListener" class="com.armedia.acm.plugins.ecm.service.EcmFileAddedDuplicationListener">
+    <bean id="ecmFileAddedListener" class="com.armedia.acm.plugins.ecm.service.EcmFileAddedListener">
         <property name="ecmFileService" ref="ecmFileService"/>
     </bean>
 
-    <bean id="ecmFileUpdatedDuplicationListener" class="com.armedia.acm.plugins.ecm.service.EcmFileUpdatedDuplicationListener">
+    <bean id="ecmFileUpdatedListener" class="com.armedia.acm.plugins.ecm.service.EcmFileUpdatedListener">
         <property name="ecmFileService" ref="ecmFileService"/>
     </bean>
 
-    <bean id="ecmFileCopiedDuplicationListener" class="com.armedia.acm.plugins.ecm.service.EcmFileCopiedDuplicationListener">
+    <bean id="ecmFileCopiedListener" class="com.armedia.acm.plugins.ecm.service.EcmFileCopiedListener">
         <property name="ecmFileService" ref="ecmFileService"/>
     </bean>
 
-    <bean id="ecmFIleMovedToRecycleBinDuplicationListener" class="com.armedia.acm.plugins.ecm.service.EcmFIleMovedToRecycleBinDuplicationListener">
+    <bean id="ecmFIleMovedToRecycleBinListener" class="com.armedia.acm.plugins.ecm.service.EcmFIleMovedToRecycleBinListener">
         <property name="ecmFileService" ref="ecmFileService"/>
     </bean>
 

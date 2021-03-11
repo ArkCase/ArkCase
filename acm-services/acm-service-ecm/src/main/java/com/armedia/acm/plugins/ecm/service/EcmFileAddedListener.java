@@ -28,24 +28,24 @@ package com.armedia.acm.plugins.ecm.service;
  */
 
 import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.ecm.model.event.EcmFileCopiedEvent;
+import com.armedia.acm.plugins.ecm.model.EcmFileAddedEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationListener;
 
-
-public class EcmFileCopiedDuplicationListener implements ApplicationListener<EcmFileCopiedEvent>
+public class EcmFileAddedListener implements ApplicationListener<EcmFileAddedEvent>
 {
 
     private final Logger LOG = LogManager.getLogger(getClass());
     private EcmFileService ecmFileService;
 
     @Override
-    public void onApplicationEvent(EcmFileCopiedEvent event)
+    public void onApplicationEvent(EcmFileAddedEvent event)
     {
 
         EcmFile ecmFile = (EcmFile) event.getSource();
         getEcmFileService().checkAndSetDuplicatesByHash(ecmFile);
+
     }
 
     public EcmFileService getEcmFileService() {
