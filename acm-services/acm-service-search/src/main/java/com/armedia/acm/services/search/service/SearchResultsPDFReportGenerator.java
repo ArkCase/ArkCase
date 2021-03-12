@@ -332,7 +332,16 @@ public class SearchResultsPDFReportGenerator extends ReportGenerator
                     endSize += 1;
                     isAddOne = true;
                 }
-                tempString = tempString + System.getProperties().getProperty("line.separator") + value.substring(startSize, endSize);
+
+                //may have exception when substring. If exception happen return original value
+                try{
+                    tempString = tempString + System.getProperties().getProperty("line.separator") + value.substring(startSize, endSize);
+
+                }catch(IndexOutOfBoundsException ex){
+                    log.error("Failed process String "+ value);
+                    return value;
+                }
+
                 if(isAddOne){
                     startSize += 1;
                 }

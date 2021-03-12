@@ -31,7 +31,7 @@
         "path": "/tree/nodeTypes/?@.type=='p/ADHOC/docrev'"
     },
     {
-        "op": "add",
+        "op": "replace",
         "path": "/tree/nodeTypes/17",
         "value": {
             "type": "p/ADHOC/people",
@@ -99,7 +99,7 @@
         ]
     },
     {
-        "op": "add",
+        "op": "replace",
         "path": "/components/-",
         "value": {
             "id": "people",

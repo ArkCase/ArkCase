@@ -65,6 +65,12 @@ public class TranslationService
         String translatedValue = labelKey;
         JSONObject jsonObject = null;
 
+        if (labelKey == null)
+        {
+            log.warn("Null label key passed for translation");
+            return "";
+        }
+
         if (!labelKey.contains("."))
         {
             return translatedValue;
