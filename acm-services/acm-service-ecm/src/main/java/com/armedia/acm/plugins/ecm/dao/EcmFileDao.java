@@ -383,4 +383,18 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
         return linkTargetFileDTO;
     }
 
+    public EcmFile getLinkTargetFile(EcmFile ecmFile)
+    {
+        String queryText = "SELECT ecmFile " +
+                "FROM EcmFile ecmFile JOIN " +
+                "AcmContainer container ON container.id = ecmFile.container.id " +
+                "WHERE ecmFile.versionSeriesId = :versionSeriesId " +
+                "AND ecmFile.link <> TRUE";
+
+        TypedQuery<EcmFile> query = getEm().createQuery(queryText, getPersistenceClass());
+        query.setParameter("versionSeriesId", ecmFile.getVersionSeriesId());
+
+        return query.getSingleResult();
+    }
+
 }

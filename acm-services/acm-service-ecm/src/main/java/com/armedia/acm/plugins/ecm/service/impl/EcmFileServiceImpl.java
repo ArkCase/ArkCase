@@ -2437,8 +2437,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     @Override
     public void updateLinkTargetFile(EcmFile file) throws EcmFileLinkException
     {
-        LinkTargetFileDTO linkTargetFileDTO = getLinkTargetFileInfo(file);
-        EcmFile f = getEcmFileDao().find(linkTargetFileDTO.getOriginalFileId());
+        EcmFile f = getEcmFileDao().getLinkTargetFile(file);
         EcmFileVersion activeFileVersion = file.getVersions()
                 .stream()
                 .filter(ecmFileVersion -> ecmFileVersion.getVersionTag().equals(file.getActiveVersionTag()))
