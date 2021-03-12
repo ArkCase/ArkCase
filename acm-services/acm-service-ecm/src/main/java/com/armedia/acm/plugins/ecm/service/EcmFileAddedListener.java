@@ -44,7 +44,10 @@ public class EcmFileAddedListener implements ApplicationListener<EcmFileAddedEve
     {
 
         EcmFile ecmFile = (EcmFile) event.getSource();
-        getEcmFileService().checkAndSetDuplicatesByHash(ecmFile);
+        if (!ecmFile.isLink())
+        {
+            getEcmFileService().checkAndSetDuplicatesByHash(ecmFile);
+        }
 
     }
 

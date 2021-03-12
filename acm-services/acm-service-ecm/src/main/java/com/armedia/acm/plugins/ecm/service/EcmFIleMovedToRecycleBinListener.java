@@ -44,7 +44,10 @@ public class EcmFIleMovedToRecycleBinListener implements ApplicationListener<Ecm
     {
 
         EcmFile ecmFile = (EcmFile) event.getSource();
-        getEcmFileService().checkAndSetDuplicatesByHash(ecmFile);
+        if (!ecmFile.isLink())
+        {
+            getEcmFileService().checkAndSetDuplicatesByHash(ecmFile);
+        }
     }
 
     public EcmFileService getEcmFileService() {
