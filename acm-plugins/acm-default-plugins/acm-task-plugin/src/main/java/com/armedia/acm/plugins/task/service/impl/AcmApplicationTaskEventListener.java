@@ -168,7 +168,7 @@ public class AcmApplicationTaskEventListener implements ApplicationListener<AcmO
 
         String id = updatedTask.getId().toString();
 
-        return String.format("%s, with a due date of %s", id, dueDate);
+        return String.format("%s with a due date of %s", id, dueDate);
 
     }
 

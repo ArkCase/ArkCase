@@ -63,7 +63,7 @@ import java.util.TimeZone;
 public class AcmApplicationTaskEventListenerTest extends EasyMockSupport
 {
     static final Long OBJECT_ID = 1234L;
-    static final String OBJECT_NAME = String.format("%s, with a due date of %s", OBJECT_ID, getDate());
+    static final String OBJECT_NAME = String.format("%s with a due date of %s", OBJECT_ID, getDate());
     static final String NEW_ASSIGNEE = "new-user";
     static final String OLD_ASSIGNEE = "old-user";
     static final String PRIORITY = "Low";
