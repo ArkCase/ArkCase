@@ -115,7 +115,7 @@ public abstract class AbstractTaskNotifier
                                 .forObjectWithNumber(String.format("%s-%s", parentType, parentId))
                                 .forObjectWithTitle(task.getTitle())
                                 .withEmailAddresses(user.getMail())
-                                .build();
+                                .build(task.getId());
 
                         notificationService.saveNotification(notification);
                     }
@@ -127,7 +127,7 @@ public abstract class AbstractTaskNotifier
                                 .forObjectWithNumber(String.format("%s-%s", parentType, parentId))
                                 .forObjectWithTitle(task.getTitle())
                                 .withEmailAddresses(user.getMail())
-                                .build();
+                                .build(task.getId());
 
                         notificationService.saveNotification(notification);
                     }
