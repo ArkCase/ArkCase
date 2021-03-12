@@ -34,6 +34,7 @@ import com.armedia.acm.correspondence.utils.ParagraphRunPoiWordGenerator;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 
+import com.armedia.acm.services.templateconfiguration.service.CorrespondenceMergeFieldManager;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;

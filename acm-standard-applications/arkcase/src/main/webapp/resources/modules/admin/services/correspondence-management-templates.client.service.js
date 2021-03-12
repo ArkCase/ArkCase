@@ -322,10 +322,10 @@ angular.module('admin').service('Admin.CMTemplatesService', [ '$http', 'Upload',
         });
     };
 
-    function retrieveTemplateContent(templateName) {
+    function retrieveTemplateContent(params) {
         return $http({
             method: "GET",
-            url: 'api/latest/plugin/admin/templateContent/' + templateName,
+            url: 'api/latest/plugin/admin/templateContent/' + params.objectType + '/' + params.objectId + '/' + params.templateName,
             cache: false
         });
     };

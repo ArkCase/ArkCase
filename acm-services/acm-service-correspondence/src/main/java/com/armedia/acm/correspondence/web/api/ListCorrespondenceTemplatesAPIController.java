@@ -27,7 +27,7 @@ package com.armedia.acm.correspondence.web.api;
  * #L%
  */
 
-import com.armedia.acm.correspondence.model.Template;
+import com.armedia.acm.services.templateconfiguration.model.Template;
 import com.armedia.acm.correspondence.service.CorrespondenceService;
 import com.armedia.acm.spring.SpringContextHolder;
 import org.slf4j.Logger;

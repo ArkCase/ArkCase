@@ -1,4 +1,4 @@
-package com.armedia.acm.correspondence.service;
+package com.armedia.acm.services.templateconfiguration.service;
 
 /*-
  * #%L
@@ -27,9 +27,8 @@ package com.armedia.acm.correspondence.service;
  * #L%
  */
 
-import com.armedia.acm.correspondence.model.CorrespondenceMergeField;
-import com.armedia.acm.correspondence.utils.ParagraphRunPoiWordGenerator;
 import com.armedia.acm.objectonverter.ObjectConverter;
+import com.armedia.acm.services.templateconfiguration.model.CorrespondenceMergeField;
 import com.armedia.acm.spring.SpringContextHolder;
 import org.apache.commons.io.FileUtils;
 import org.springframework.context.ApplicationListener;
@@ -44,7 +43,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.armedia.acm.correspondence.service.CorrespondenceMapper.generateCorrespodencenMergeField;
+import static com.armedia.acm.services.templateconfiguration.service.CorrespondenceMapper.generateCorrespodencenMergeField;
 
 /**
  * @author sasko.tanaskoski
@@ -56,7 +55,6 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
     private SpringContextHolder springContextHolder;
     private ObjectConverter objectConverter;
     private List<CorrespondenceMergeField> mergeFields = new ArrayList<>();
-    private ParagraphRunPoiWordGenerator paragraphRunPoiWordGenerator;
 
     /*
      * (non-Javadoc)
@@ -233,11 +231,4 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
         this.objectConverter = objectConverter;
     }
 
-    public ParagraphRunPoiWordGenerator getParagraphRunPoiWordGenerator() {
-        return paragraphRunPoiWordGenerator;
-    }
-
-    public void setParagraphRunPoiWordGenerator(ParagraphRunPoiWordGenerator paragraphRunPoiWordGenerator) {
-        this.paragraphRunPoiWordGenerator = paragraphRunPoiWordGenerator;
-    }
 }

@@ -32,7 +32,7 @@ import static gov.foia.model.FOIARequestUtils.extractRequestorEmailAddress;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
-import com.armedia.acm.services.email.service.TemplatingEngine;
+import com.armedia.acm.services.templateconfiguration.service.TemplatingEngine;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.service.NotificationSender;

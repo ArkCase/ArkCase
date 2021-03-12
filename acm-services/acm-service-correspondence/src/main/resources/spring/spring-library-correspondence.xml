@@ -36,18 +36,14 @@
         <property name="templateManager" ref="correspondenceTemplateManager"/>
         <property name="mergeFieldManager" ref="correspondenceMergeFieldManager"/>
         <property name="contextHolder" ref="acmContextHolder"/>
+        <property name="notificationService" ref="notificationService"/>
+        <property name="templatingEngine" ref="templatingEngine"/>
     </bean>
 
     <bean id="correspondenceTemplateManager" class="com.armedia.acm.correspondence.service.CorrespondenceTemplateManager">
         <property name="springContextHolder" ref="acmContextHolder"/>
         <property name="templatesConfiguration"
                   value="file:${user.home}/.arkcase/acm/templates-configuration.json"/>
-        <property name="objectConverter" ref="objectConverter"/>
-    </bean>
-
-    <bean id="correspondenceMergeFieldManager" class="com.armedia.acm.correspondence.service.CorrespondenceMergeFieldManager">
-        <property name="correspondenceMergeFieldsConfiguration" value="file:${user.home}/.arkcase/acm/correspondence-merge-fields.json"/>
-        <property name="springContextHolder" ref="acmContextHolder"/>
         <property name="objectConverter" ref="objectConverter"/>
     </bean>
 

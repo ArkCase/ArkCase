@@ -30,11 +30,15 @@ package com.armedia.acm.correspondence.service;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.core.provider.TemplateModelProvider;
-import com.armedia.acm.correspondence.model.CorrespondenceMergeField;
-import com.armedia.acm.correspondence.model.Template;
+import com.armedia.acm.services.notification.model.Notification;
+import com.armedia.acm.services.notification.service.NotificationService;
+import com.armedia.acm.services.templateconfiguration.model.CorrespondenceMergeField;
+import com.armedia.acm.services.templateconfiguration.model.Template;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.services.templateconfiguration.service.CorrespondenceMergeFieldManager;
+import com.armedia.acm.services.templateconfiguration.service.TemplatingEngine;
 import com.armedia.acm.spring.SpringContextHolder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -68,6 +72,8 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
     private CorrespondenceTemplateManager templateManager;
     private CorrespondenceMergeFieldManager mergeFieldManager;
     private SpringContextHolder contextHolder;
+    private NotificationService notificationService;
+    private TemplatingEngine templatingEngine;
 
     /**
      * For use from MVC controllers and any other client with an Authentication object.
@@ -385,6 +391,179 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
         return jsonSchemaProperties;
     }
 
+    private void mergeTemplates(List<File> templateFiles, OutputStream dest) throws Docx4JException, JAXBException
+    {
+        WordprocessingMLPackage target = WordprocessingMLPackage.load(templateFiles.get(0));
+        removeHeaderAndFooter(target);
+
+        for (int i = 1; i < templateFiles.size(); i++)
+        {
+            WordprocessingMLPackage appendDocument = WordprocessingMLPackage.load(templateFiles.get(i));
+            mergeDocumentsBodies(target, appendDocument);
+            mergeDocumentsImages(target, appendDocument);
+        }
+        target.save(dest);
+    }
+
+    private void mergeDocumentsBodies(WordprocessingMLPackage target, WordprocessingMLPackage appendDocument)
+            throws JAXBException, XPathBinderAssociationIsPartialException
+    {
+        List body = appendDocument.getMainDocumentPart().getJAXBNodesViaXPath("//w:body", false);
+        for (Object b : body)
+        {
+            List bodyContent = ((org.docx4j.wml.Body) b).getContent();
+            for (Object content : bodyContent)
+            {
+                target.getMainDocumentPart().addObject(content);
+            }
+        }
+    }
+
+    private void mergeDocumentsImages(WordprocessingMLPackage target, WordprocessingMLPackage appendDocument)
+            throws JAXBException, XPathBinderAssociationIsPartialException, InvalidFormatException
+    {
+        List<Object> blips = appendDocument.getMainDocumentPart().getJAXBNodesViaXPath("//a:blip", false);
+        for (Object el : blips)
+        {
+            try
+            {
+                CTBlip blip = (CTBlip) el;
+                RelationshipsPart parts = appendDocument.getMainDocumentPart().getRelationshipsPart();
+                Relationship rel = parts.getRelationshipByID(blip.getEmbed());
+                Part part = parts.getPart(rel);
+
+                Relationship newRel = target.getMainDocumentPart().addTargetPart(part,
+                        RelationshipsPart.AddPartBehaviour.REUSE_EXISTING);
+                blip.setEmbed(newRel.getId());
+                target.getMainDocumentPart()
+                        .addTargetPart(appendDocument.getParts().getParts().get(new PartName("/word/" + rel.getTarget())));
+            }
+            catch (Exception ex)
+            {
+                log.error("Could not merge templates images: {}", ex.getMessage());
+                throw ex;
+            }
+        }
+    }
+
+    private void removeHeaderAndFooter(WordprocessingMLPackage target)
+    {
+        List<SectionWrapper> sectionWrappers = target.getDocumentModel().getSections();
+        HeaderPart headerPart;
+        FooterPart footerPart;
+
+        for (SectionWrapper sectionWrapper : sectionWrappers)
+        {
+            headerPart = sectionWrapper.getHeaderFooterPolicy().getDefaultHeader();
+            footerPart = sectionWrapper.getHeaderFooterPolicy().getDefaultFooter();
+
+            if (Objects.nonNull(headerPart))
+            {
+                target.getMainDocumentPart().getRelationshipsPart().removeRelationship(headerPart.getPartName());
+            }
+
+            if (Objects.nonNull(footerPart))
+            {
+                target.getMainDocumentPart().getRelationshipsPart().removeRelationship(footerPart.getPartName());
+            }
+
+            List<CTRel> rel = sectionWrapper.getSectPr().getEGHdrFtrReferences();
+            List<HeaderReference> headerReferencesToBeRemoved = new ArrayList<>();
+            List<FooterReference> footerReferencesToBeRemoved = new ArrayList<>();
+
+            for (CTRel ctRel : rel)
+            {
+                if (ctRel instanceof HeaderReference)
+                {
+                    HeaderReference hr = (HeaderReference) ctRel;
+                    if (hr.getType().equals(HdrFtrRef.DEFAULT))
+                    {
+                        headerReferencesToBeRemoved.add(hr);
+                    }
+                }
+                else if (ctRel instanceof FooterReference)
+                {
+                    FooterReference fr = (FooterReference) ctRel;
+                    if (fr.getType().equals(HdrFtrRef.DEFAULT))
+                    {
+                        footerReferencesToBeRemoved.add(fr);
+                    }
+                }
+            }
+            if (!headerReferencesToBeRemoved.isEmpty())
+            {
+                for (int i = 0; i < headerReferencesToBeRemoved.size(); i++)
+                {
+                    sectionWrapper.getSectPr().getEGHdrFtrReferences().remove(headerReferencesToBeRemoved.get(i));
+                }
+            }
+            if (!footerReferencesToBeRemoved.isEmpty())
+            {
+                for (int i = 0; i < footerReferencesToBeRemoved.size(); i++)
+                {
+                    sectionWrapper.getSectPr().getEGHdrFtrReferences().remove(footerReferencesToBeRemoved.get(i));
+                }
+            }
+        }
+    }
+
+    @Override
+    public TemplateModelProvider getTemplateModelProvider(Class templateModelProviderClass)
+    {
+        Map<String, TemplateModelProvider> templateModelproviders = contextHolder.getAllBeansOfType(templateModelProviderClass);
+        if (templateModelproviders.size() > 1)
+        {
+            for (TemplateModelProvider provider : templateModelproviders.values())
+            {
+                if (provider.getClass().equals(templateModelProviderClass))
+                {
+                    return provider;
+                }
+            }
+        }
+        return templateModelproviders.values().iterator().next();
+    }
+
+    @Override
+    public String convertMergeTerms(String templateName, String templateContent, String objectType, String objectId){
+        String templateModelName = templateName.substring(0, templateName.indexOf("."));
+
+        Template template = findTemplate(templateName);
+
+        String title = notificationService.setNotificationTitleForManualNotification(templateModelName);
+
+        Notification notification = new Notification();
+        notification.setTemplateModelName(templateModelName);
+        notification.setTitle(title);
+        notification.setParentType(objectType);
+        notification.setParentId(Long.parseLong(objectId));
+        notification.setEmailContent(templateContent);
+        String templateModelProvider = template.getTemplateModelProvider();
+
+        Class templateModelProviderClass = null;
+        try
+        {
+            templateModelProviderClass = Class.forName(templateModelProvider);
+        }
+        catch (Exception e)
+        {
+            log.error("Can not find class for provided classpath {}", e.getMessage());
+        }
+
+        TemplateModelProvider modelProvider = getTemplateModelProvider(templateModelProviderClass);
+        Object object = modelProvider.getModel(notification);
+
+        try {
+            String body = getTemplatingEngine().process(templateContent, templateModelName, object);
+            return body;
+        }
+        catch(Exception ex)
+        {
+            log.error("Failed to process template {}!", templateName, ex);
+        }
+        return templateContent;
+    }
+
     public SpringContextHolder getSpringContextHolder()
     {
         return springContextHolder;
@@ -442,4 +621,24 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
     {
         this.contextHolder = contextHolder;
     }
+
+    public NotificationService getNotificationService()
+    {
+        return notificationService;
+    }
+
+    public void setNotificationService(NotificationService notificationService) {
+        this.notificationService = notificationService;
+    }
+
+    public TemplatingEngine getTemplatingEngine()
+    {
+        return templatingEngine;
+    }
+
+    public void setTemplatingEngine(TemplatingEngine templatingEngine)
+    {
+        this.templatingEngine = templatingEngine;
+    }
+
 }

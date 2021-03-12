@@ -27,7 +27,7 @@ package com.armedia.acm.services.email.model;
  * #L%
  */
 
-import com.armedia.acm.services.email.service.TemplatingEngine;
+import com.armedia.acm.services.templateconfiguration.service.TemplatingEngine;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
