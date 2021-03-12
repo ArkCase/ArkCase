@@ -116,7 +116,7 @@ angular.module('cases').controller(
                     $scope.objectInfo =  data.data;
                     MessageService.info($translate.instant("cases.comp.actions.createMatter.sucess"));
                     $scope.creatingMatterIcon = "fa fa-gavel";
-                    $scope.openMatter();
+                    $scope.openMatter($scope.objectInfo);
                 }).catch(function () {
                     MessageService.error($translate.instant("cases.comp.actions.createMatter.error"));
                     $scope.creatingMatterIcon = "fa fa-gavel";
