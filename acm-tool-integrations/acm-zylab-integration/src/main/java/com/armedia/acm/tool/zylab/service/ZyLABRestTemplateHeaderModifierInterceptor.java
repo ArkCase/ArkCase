@@ -52,7 +52,7 @@ public class ZyLABRestTemplateHeaderModifierInterceptor implements ClientHttpReq
 
     /**
      *
-     * Intercepts all REST requests from Arkcase to ZyLAB and inserts an additional CQRS token for all non GET requests
+     * Intercepts all REST requests from Arkcase to ZyLAB and inserts an additional CSRF token for all non GET requests
      * in order to comply with ZyLAB's APIs. The token is provided by creating a simple GET request to a lightweight
      * resource in ZyLAB's application and the token returned is added both as header and as cookie to the original
      * POST request.
@@ -95,7 +95,7 @@ public class ZyLABRestTemplateHeaderModifierInterceptor implements ClientHttpReq
 
         if (setCookieValue == null)
         {
-            log.error("No SQRS token returned from ZyLAB despite a successful GET request");
+            log.error("No CSRF token returned from ZyLAB despite a successful GET request");
             throw new RestClientException("Unable to gather the obligatory SQRS token for POST requests");
         }
         else
