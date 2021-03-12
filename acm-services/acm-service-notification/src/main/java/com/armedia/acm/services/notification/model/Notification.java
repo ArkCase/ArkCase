@@ -350,6 +350,15 @@ public class Notification implements Serializable, AcmObject, AcmEntity
         this.parentTitle = parentTitle;
     }
 
+    public void setParentTitle(String parentTitle, Long id)
+    {
+        if (parentTitle != null && parentTitle.length() > 1000)
+        {
+            parentTitle = StringUtils.left(parentTitle, 1000) + " " + id;
+        }
+        this.parentTitle = parentTitle + " " + id;
+    }
+
     public Long getRelatedObjectId()
     {
         return relatedObjectId;

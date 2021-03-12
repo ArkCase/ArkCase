@@ -70,7 +70,7 @@ public class NotificationFormatterTest extends EasyMockSupport
 
         // when
         replayAll();
-        String title = notificationFormatter.replaceFormatPlaceholders(inputTitle, null, parentType, null);
+        String title = notificationFormatter.replaceFormatPlaceholders(inputTitle, null, parentType, null, null);
 
         // then
         verifyAll();
