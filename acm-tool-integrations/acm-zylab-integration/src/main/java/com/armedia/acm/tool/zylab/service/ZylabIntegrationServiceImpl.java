@@ -27,10 +27,9 @@ package com.armedia.acm.tool.zylab.service;
  * #L%
  */
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
@@ -105,59 +104,17 @@ public class ZylabIntegrationServiceImpl implements ZylabIntegrationService
     @Override
     public File getZylabProductionFolder(long matterId, String productionKey) throws ZylabProductionSyncException
     {
-        InputStream zylabProductionCompressedFileStream = getZylabRestClient().getProductionFiles(matterId, productionKey);
-
-        String tempFolderName = "Matter_" + matterId + "_Production_" + productionKey;
-
-        return readCompressedFilesToTemporaryFolder(tempFolderName, zylabProductionCompressedFileStream);
-    }
-
-    private File readCompressedFilesToTemporaryFolder(String tempFolderName, InputStream zylabProductionCompressedFileStream)
-            throws ZylabProductionSyncException
-    {
-        File tempFolder = new File(tempFolderName);
-        boolean tempDirectoryCreated = tempFolder.mkdir();
-
-        if (!tempDirectoryCreated)
+        try
         {
-            log.error("Unable to create temporary folder for ZyLAB production files");
-            throw new ZylabProductionSyncException("Unable to create temporary folder for ZyLAB production files");
-        }
-
-        try (BufferedInputStream bis = new BufferedInputStream(zylabProductionCompressedFileStream);
-                ZipInputStream zipStream = new ZipInputStream(bis))
-        {
-            ZipEntry zipEntry;
-
-            while ((zipEntry = zipStream.getNextEntry()) != null)
-            {
-                readUncompressedContentsToFolder(zipStream, tempFolder, zipEntry.getName());
-            }
-
-            log.info("File [{}] successfully uncompressed", tempFolderName);
-            return tempFolder;
+            File zylabProductionFile = getZylabRestClient().getProductionFiles(matterId, productionKey);
+            return ZylabProductionFileExtractor.unzip(zylabProductionFile);
         }
         catch (IOException e)
         {
             log.error("Unable to uncompress ZyLAB production files");
             throw new ZylabProductionSyncException("Unable to uncompress ZyLAB production files", e);
         }
-    }
 
-    private void readUncompressedContentsToFolder(ZipInputStream zipStream, File folder, String fileName) throws IOException
-    {
-        byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
-
-        File file = new File(folder, fileName);
-
-        try (FileOutputStream fos = new FileOutputStream(file))
-        {
-            int readProgress;
-            while ((readProgress = zipStream.read(buffer)) > 0)
-            {
-                fos.write(buffer, 0, readProgress);
-            }
-        }
     }
 
     @Override
