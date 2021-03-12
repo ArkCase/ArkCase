@@ -63,7 +63,7 @@ public class AdHocTaskCompletedListener implements ApplicationListener<AcmApplic
                         .withEmailAddressForUser(taskOwner)
                         .forObjectWithNumber(String.format("%s-%s", acmTask.getObjectType(), acmTask.getId()))
                         .forObjectWithTitle(acmTask.getTitle())
-                        .build(taskOwner);
+                        .build(taskOwner, acmTask.getId());
 
                 notificationService.saveNotification(notification);
             }
