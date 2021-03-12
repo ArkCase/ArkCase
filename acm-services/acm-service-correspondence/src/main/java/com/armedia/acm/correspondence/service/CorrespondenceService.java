@@ -29,8 +29,9 @@ package com.armedia.acm.correspondence.service;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.correspondence.model.CorrespondenceMergeField;
-import com.armedia.acm.correspondence.model.Template;
+import com.armedia.acm.core.provider.TemplateModelProvider;
+import com.armedia.acm.services.templateconfiguration.model.CorrespondenceMergeField;
+import com.armedia.acm.services.templateconfiguration.model.Template;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
@@ -202,4 +203,14 @@ public interface CorrespondenceService
      * Listing all declared fields for given template model provider classpath
      */
     String getTemplateModelProviderDeclaredFields(String classPath);
+
+    /**
+     * Finding templateModelProvider class by name
+     */
+    TemplateModelProvider getTemplateModelProvider(Class templateModelProviderClass);
+
+    /**
+     * Translating merge terms by objectId and objectType
+     */
+    String convertMergeTerms(String templateName, String templateContent, String objectType, String objectId);
 }

@@ -31,8 +31,8 @@ package com.armedia.acm.services.notification.service;
 import static org.junit.Assert.fail;
 
 import com.armedia.acm.core.model.ApplicationConfig;
-import com.armedia.acm.correspondence.service.CorrespondenceMergeFieldManager;
-import com.armedia.acm.services.email.service.TemplatingEngine;
+import com.armedia.acm.services.templateconfiguration.service.CorrespondenceMergeFieldManager;
+import com.armedia.acm.services.templateconfiguration.service.TemplatingEngine;
 
 import org.junit.Before;
 import org.junit.Test;

@@ -36,7 +36,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
-import com.armedia.acm.correspondence.model.Template;
+import com.armedia.acm.services.templateconfiguration.model.Template;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.data.service.AcmDataService;
 import com.armedia.acm.email.model.EmailSenderConfig;
@@ -50,7 +50,8 @@ import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksDTO;
 import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksResultDTO;
 import com.armedia.acm.services.email.service.AcmEmailConfigurationIOException;
 import com.armedia.acm.services.email.service.AcmMailTemplateConfigurationService;
-import com.armedia.acm.services.email.service.TemplatingEngine;
+import com.armedia.acm.services.templateconfiguration.service.TemplateConfigurationManager;
+import com.armedia.acm.services.templateconfiguration.service.TemplatingEngine;
 import com.armedia.acm.services.email.smtp.SmtpService;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConfig;
@@ -92,6 +93,7 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
     private AcmMailTemplateConfigurationService templateService;
     private AcmDataService acmDataService;
     private TemplatingEngine templatingEngine;
+    private TemplateConfigurationManager templateConfigurationManager;
     private Resource templateConfiguration;
     private List<Template> templateConfigurations = new ArrayList<>();
 
@@ -116,6 +118,12 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         acmDataService = createMock(AcmDataService.class);
         templatingEngine = createMock(TemplatingEngine.class);
         templateConfiguration = new ClassPathResource("templates-configuration.json");
+        templateConfigurationManager = createMock(TemplateConfigurationManager.class);
+        templateConfigurationManager.setTemplatesConfiguration(templateConfiguration);
+        templateConfigurationManager.setObjectConverter(ObjectConverter.createObjectConverterForTests());
+        templateConfigurations = templateConfigurationManager.getObjectConverter().getJsonUnmarshaller()
+                .unmarshallCollection(FileUtils.readFileToString(templateConfiguration.getFile()), List.class, Template.class);
+        templateConfigurationManager.setTemplateConfigurations(templateConfigurations);
 
         smtpNotificationSender.setEmailSenderService(mockSmtpService);
         smtpNotificationSender.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
@@ -130,12 +138,8 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         NotificationConfig notificationConfig = new NotificationConfig();
         notificationConfig.setBaseUrl(BASE_URL);
         smtpNotificationSender.setNotificationConfig(notificationConfig);
-        smtpNotificationSender.setTemplatesConfiguration(templateConfiguration);
-        smtpNotificationSender.setObjectConverter(ObjectConverter.createObjectConverterForTests());
+        smtpNotificationSender.setTemplateConfigurationManager(templateConfigurationManager);
 
-        templateConfigurations = smtpNotificationSender.getObjectConverter().getJsonUnmarshaller()
-                .unmarshallCollection(FileUtils.readFileToString(templateConfiguration.getFile()), List.class, Template.class);
-        smtpNotificationSender.setTemplateConfigurations(templateConfigurations);
     }
 
     @Test

@@ -29,8 +29,8 @@ package com.armedia.acm.plugins.casefile.dao;
 
 import static org.easymock.EasyMock.expect;
 
-import com.armedia.acm.correspondence.model.CorrespondenceMergeField;
-import com.armedia.acm.correspondence.service.CorrespondenceMergeFieldManager;
+import com.armedia.acm.services.templateconfiguration.model.CorrespondenceMergeField;
+import com.armedia.acm.services.templateconfiguration.service.CorrespondenceMergeFieldManager;
 import com.armedia.acm.correspondence.utils.ParagraphRunPoiWordGenerator;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 

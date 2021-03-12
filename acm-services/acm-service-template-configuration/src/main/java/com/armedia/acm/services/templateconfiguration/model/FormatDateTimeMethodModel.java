@@ -1,4 +1,4 @@
-package com.armedia.acm.services.email.service;
+package com.armedia.acm.services.templateconfiguration.model;
 
 /*-
  * #%L

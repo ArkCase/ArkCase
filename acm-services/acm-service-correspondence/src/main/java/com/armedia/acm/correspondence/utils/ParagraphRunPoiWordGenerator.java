@@ -29,8 +29,8 @@ package com.armedia.acm.correspondence.utils;
 
 import com.armedia.acm.core.model.ApplicationConfig;
 import com.armedia.acm.core.provider.TemplateModelProvider;
-import com.armedia.acm.correspondence.model.CorrespondenceMergeField;
-import com.armedia.acm.correspondence.service.CorrespondenceMergeFieldManager;
+import com.armedia.acm.services.templateconfiguration.model.CorrespondenceMergeField;
+import com.armedia.acm.services.templateconfiguration.service.CorrespondenceMergeFieldManager;
 import com.armedia.acm.correspondence.service.CorrespondenceService;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.data.AcmEntity;
@@ -113,7 +113,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
             {
                 log.error("Can not find class for provided classpath {}", e.getMessage());
             }
-            TemplateModelProvider modelProvider = getTemplateModelProvider(templateModelProviderClass);
+            TemplateModelProvider modelProvider = getCorrespondenceService().getTemplateModelProvider(templateModelProviderClass);
             correspondenedObject = modelProvider.getModel(correspondenedObject);
             // Update all plain text in the word document who is outside any tables
             updateGraphs(graphs, correspondenedObject, objectType);
@@ -726,22 +726,6 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
         }
 
         return generatedExpression;
-    }
-
-    public TemplateModelProvider getTemplateModelProvider(Class templateModelProviderClass)
-    {
-        Map<String, TemplateModelProvider> templateModelproviders = contextHolder.getAllBeansOfType(templateModelProviderClass);
-        if (templateModelproviders.size() > 1)
-        {
-            for (TemplateModelProvider provider : templateModelproviders.values())
-            {
-                if (provider.getClass().equals(templateModelProviderClass))
-                {
-                    return provider;
-                }
-            }
-        }
-        return templateModelproviders.values().iterator().next();
     }
 
     public void fixParagraphRuns(XWPFParagraph paragraph)

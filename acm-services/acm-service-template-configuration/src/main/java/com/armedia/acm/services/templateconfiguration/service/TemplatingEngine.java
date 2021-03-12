@@ -1,4 +1,4 @@
-package com.armedia.acm.services.email.service;
+package com.armedia.acm.services.templateconfiguration.service;
 
 /*-
  * #%L
@@ -40,8 +40,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.armedia.acm.correspondence.model.CorrespondenceMergeField;
-import com.armedia.acm.correspondence.service.CorrespondenceMergeFieldManager;
+import com.armedia.acm.services.templateconfiguration.model.CorrespondenceMergeField;
+import com.armedia.acm.services.templateconfiguration.model.FormatDateTimeMethodModel;
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;

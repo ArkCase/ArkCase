@@ -30,11 +30,15 @@ package com.armedia.acm.correspondence.service;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.core.provider.TemplateModelProvider;
-import com.armedia.acm.correspondence.model.CorrespondenceMergeField;
-import com.armedia.acm.correspondence.model.Template;
+import com.armedia.acm.services.notification.model.Notification;
+import com.armedia.acm.services.notification.service.NotificationService;
+import com.armedia.acm.services.templateconfiguration.model.CorrespondenceMergeField;
+import com.armedia.acm.services.templateconfiguration.model.Template;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.services.templateconfiguration.service.CorrespondenceMergeFieldManager;
+import com.armedia.acm.services.templateconfiguration.service.TemplatingEngine;
 import com.armedia.acm.spring.SpringContextHolder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -97,6 +101,8 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
     private CorrespondenceTemplateManager templateManager;
     private CorrespondenceMergeFieldManager mergeFieldManager;
     private SpringContextHolder contextHolder;
+    private NotificationService notificationService;
+    private TemplatingEngine templatingEngine;
 
     /**
      * For use from MVC controllers and any other client with an Authentication object.
@@ -600,6 +606,63 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
         }
     }
 
+    @Override
+    public TemplateModelProvider getTemplateModelProvider(Class templateModelProviderClass)
+    {
+        Map<String, TemplateModelProvider> templateModelproviders = contextHolder.getAllBeansOfType(templateModelProviderClass);
+        if (templateModelproviders.size() > 1)
+        {
+            for (TemplateModelProvider provider : templateModelproviders.values())
+            {
+                if (provider.getClass().equals(templateModelProviderClass))
+                {
+                    return provider;
+                }
+            }
+        }
+        return templateModelproviders.values().iterator().next();
+    }
+
+    @Override
+    public String convertMergeTerms(String templateName, String templateContent, String objectType, String objectId){
+        String templateModelName = templateName.substring(0, templateName.indexOf("."));
+
+        Template template = findTemplate(templateName);
+
+        String title = notificationService.setNotificationTitleForManualNotification(templateModelName);
+
+        Notification notification = new Notification();
+        notification.setTemplateModelName(templateModelName);
+        notification.setTitle(title);
+        notification.setParentType(objectType);
+        notification.setParentId(Long.parseLong(objectId));
+        notification.setEmailContent(templateContent);
+        String templateModelProvider = template.getTemplateModelProvider();
+
+        Class templateModelProviderClass = null;
+        try
+        {
+            templateModelProviderClass = Class.forName(templateModelProvider);
+        }
+        catch (Exception e)
+        {
+            log.error("Can not find class for provided classpath {}", e.getMessage());
+        }
+
+        TemplateModelProvider modelProvider = getTemplateModelProvider(templateModelProviderClass);
+        Object object = modelProvider.getModel(notification);
+
+        try {
+            String body = getTemplatingEngine().process(templateContent, templateModelName, object);
+            return body;
+        }
+        catch(Exception ex)
+        {
+            log.error("Failed to process template {}!", templateName, ex);
+        }
+        return templateContent;
+    }
+
     public SpringContextHolder getSpringContextHolder()
     {
         return springContextHolder;
@@ -657,4 +720,24 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
     {
         this.contextHolder = contextHolder;
     }
+
+    public NotificationService getNotificationService()
+    {
+        return notificationService;
+    }
+
+    public void setNotificationService(NotificationService notificationService) {
+        this.notificationService = notificationService;
+    }
+
+    public TemplatingEngine getTemplatingEngine()
+    {
+        return templatingEngine;
+    }
+
+    public void setTemplatingEngine(TemplatingEngine templatingEngine)
+    {
+        this.templatingEngine = templatingEngine;
+    }
+
 }

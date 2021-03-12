@@ -2,7 +2,7 @@ package com.armedia.acm.correspondence.service;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.correspondence.model.Template;
+import com.armedia.acm.services.templateconfiguration.model.Template;
 import com.armedia.acm.correspondence.utils.SpELWordEvaluator;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
@@ -17,7 +17,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import javax.management.Notification;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.File;

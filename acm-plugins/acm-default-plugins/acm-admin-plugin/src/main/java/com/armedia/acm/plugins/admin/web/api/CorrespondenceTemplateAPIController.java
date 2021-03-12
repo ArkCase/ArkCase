@@ -27,7 +27,7 @@ package com.armedia.acm.plugins.admin.web.api;
  * #L%
  */
 
-import com.armedia.acm.correspondence.model.Template;
+import com.armedia.acm.services.templateconfiguration.model.Template;
 import com.armedia.acm.correspondence.service.CorrespondenceService;
 import com.armedia.acm.plugins.admin.exception.CorrespondenceTemplateNotFoundException;
 import com.armedia.acm.plugins.admin.model.TemplateRequestResponse;
@@ -181,9 +181,11 @@ public class CorrespondenceTemplateAPIController
         return mapTemplateToResponse(correspondenceService.updateTemplate(mapRequestToTemplate(request, auth)));
     }
 
-    @RequestMapping(value = "/templateContent/{templateName:.+}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/templateContent/{objectType}/{objectId}/{templateName:.+}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<String> getTemplateContent(@PathVariable(value = "templateName") String templateName) throws AcmEmailConfigurationIOException
+    public ResponseEntity<String> getTemplateContent(@PathVariable(value = "objectType") String objectType,
+                                                     @PathVariable(value = "objectId") String objectId,
+                                                     @PathVariable(value = "templateName") String templateName) throws AcmEmailConfigurationIOException
     {
 
         JSONObject retval = new JSONObject();
@@ -201,7 +203,13 @@ public class CorrespondenceTemplateAPIController
                 content.append(s);
 
             }
-            retval.put("templateContent", content.toString());
+
+            String body = content.toString();
+            if(!templateName.contains("plainEmail"))
+            {
+                body = correspondenceService.convertMergeTerms(templateName, content.toString(), objectType, objectId);
+            }
+            retval.put("templateContent", body);
             return new ResponseEntity<>(retval.toString(), HttpStatus.OK);
         }
         catch(Exception ex)
