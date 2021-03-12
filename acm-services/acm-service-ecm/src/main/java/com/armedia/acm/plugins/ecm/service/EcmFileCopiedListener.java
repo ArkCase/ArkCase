@@ -45,7 +45,10 @@ public class EcmFileCopiedListener implements ApplicationListener<EcmFileCopiedE
     {
 
         EcmFile ecmFile = (EcmFile) event.getSource();
-        getEcmFileService().checkAndSetDuplicatesByHash(ecmFile);
+        if (!ecmFile.isLink())
+        {
+            getEcmFileService().checkAndSetDuplicatesByHash(ecmFile);
+        }
     }
 
     public EcmFileService getEcmFileService() {
