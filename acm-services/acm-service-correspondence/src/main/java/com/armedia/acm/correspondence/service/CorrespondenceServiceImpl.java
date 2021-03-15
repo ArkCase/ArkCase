@@ -6,22 +6,22 @@ package com.armedia.acm.correspondence.service;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
@@ -201,7 +201,7 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
     {
         return templateManager.getActivatedActiveVersionTemplatesByObjectType(objectType);
     }
-    
+
     @Override
     public List<Template> getActiveVersionTemplatesByTemplateType(String templateType)
     {
@@ -389,6 +389,65 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
             log.error("The provided classpath is invalid. Because of: {}", e.getMessage());
         }
         return jsonSchemaProperties;
+    }
+
+    @Override
+    public TemplateModelProvider getTemplateModelProvider(Class templateModelProviderClass)
+    {
+        Map<String, TemplateModelProvider> templateModelproviders = contextHolder.getAllBeansOfType(templateModelProviderClass);
+        if (templateModelproviders.size() > 1)
+        {
+            for (TemplateModelProvider provider : templateModelproviders.values())
+            {
+                if (provider.getClass().equals(templateModelProviderClass))
+                {
+                    return provider;
+                }
+            }
+        }
+        return templateModelproviders.values().iterator().next();
+    }
+
+    @Override
+    public String convertMergeTerms(String templateName, String templateContent, String objectType, String objectId){
+        String templateModelName = templateName.substring(0, templateName.indexOf("."));
+
+        Template template = findTemplate(templateName);
+
+        String title = notificationService.setNotificationTitleForManualNotification(templateModelName);
+
+        Notification notification = new Notification();
+        notification.setTemplateModelName(templateModelName);
+        notification.setTitle(title);
+        notification.setParentType(objectType);
+        notification.setParentId(Long.parseLong(objectId));
+        notification.setEmailContent(templateContent);
+        String templateModelProvider = template.getTemplateModelProvider();
+
+        Class templateModelProviderClass = null;
+        try
+        {
+            templateModelProviderClass = Class.forName(templateModelProvider);
+        }
+        catch (Exception e)
+        {
+            log.error("Can not find class for provided classpath {}", e.getMessage());
+        }
+
+        TemplateModelProvider modelProvider = getTemplateModelProvider(templateModelProviderClass);
+        if (modelProvider != null)
+        {
+            Object object = modelProvider.getModel(notification);
+            try {
+                String body = getTemplatingEngine().process(templateContent, templateModelName, object);
+                return body;
+            }
+            catch(Exception ex)
+            {
+                log.error("Failed to process template {}!", templateName, ex);
+            }
+        }
+        return templateContent;
     }
 
     public SpringContextHolder getSpringContextHolder()
