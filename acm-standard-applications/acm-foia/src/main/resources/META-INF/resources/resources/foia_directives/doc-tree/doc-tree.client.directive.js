@@ -1905,7 +1905,7 @@ angular
                                         }
                                         var urlArgs = node.data.objectId + "/" + parentNode.containerObjectId + "/"
                                             + parentNode.containerObjectType + "/" + encodeURIComponent(node.data.name)
-                                            + "/" + selectedIdsList;
+                                            + "/" + selectedIdsList + "/" + node.data.status;
                                         window.open(baseUrl + '!/viewer/' + urlArgs);
                                     }
                                 }, {

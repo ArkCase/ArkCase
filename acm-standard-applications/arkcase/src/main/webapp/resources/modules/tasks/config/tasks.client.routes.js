@@ -134,6 +134,11 @@ angular.module('tasks').config(
                         url: '/:type/:id/tags',
                         templateUrl: 'modules/tasks/views/components/task-tags.client.view.html'
                     })
+
+                    .state('tasks.people', {
+                        url: '/:type/:id/people',
+                    templateUrl: 'modules/tasks/views/components/task-people.client.view.html'
+                    })
                 } ]).run([ 'Helper.DashboardService', function(DashboardHelper) {
     DashboardHelper.addLocales();
 } ]);

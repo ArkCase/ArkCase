@@ -137,17 +137,6 @@ public class CorrespondenceGenerator
         return retval;
     }
 
-    public OutputStream generateCorrespondenceOutputStream(Template template, Object[] queryArguments,
-                                                           OutputStream correspondenceOutputStream, Long parentObjectId) throws IOException
-    {
-        Resource templateFile = new FileSystemResource(getCorrespondenceFolderName() + File.separator + template.getTemplateFilename());
-
-        log.debug("Generating correspondence from template '{}'", templateFile.getFile().getAbsolutePath());
-        getSpelWordGenerator().generate(templateFile, correspondenceOutputStream, template.getObjectType(), parentObjectId, template.getTemplateModelProvider());
-
-        return correspondenceOutputStream;
-    }
-
     private String generateUniqueFilename(Template template)
     {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMdd-HHmmss-SSS");

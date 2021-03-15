@@ -33,7 +33,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationListener;
 
-public class EcmFileAddedDuplicationListener implements ApplicationListener<EcmFileAddedEvent>
+public class EcmFileAddedListener implements ApplicationListener<EcmFileAddedEvent>
 {
 
     private final Logger LOG = LogManager.getLogger(getClass());
@@ -44,7 +44,10 @@ public class EcmFileAddedDuplicationListener implements ApplicationListener<EcmF
     {
 
         EcmFile ecmFile = (EcmFile) event.getSource();
-        getEcmFileService().checkAndSetDuplicatesByHash(ecmFile);
+        if (!ecmFile.isLink())
+        {
+            getEcmFileService().checkAndSetDuplicatesByHash(ecmFile);
+        }
 
     }
 
