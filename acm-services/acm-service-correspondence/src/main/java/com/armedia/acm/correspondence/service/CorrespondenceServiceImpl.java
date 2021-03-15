@@ -6,22 +6,22 @@ package com.armedia.acm.correspondence.service;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
@@ -201,7 +201,7 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
     {
         return templateManager.getActivatedActiveVersionTemplatesByObjectType(objectType);
     }
-    
+
     @Override
     public List<Template> getActiveVersionTemplatesByTemplateType(String templateType)
     {
@@ -391,122 +391,6 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
         return jsonSchemaProperties;
     }
 
-    private void mergeTemplates(List<File> templateFiles, OutputStream dest) throws Docx4JException, JAXBException
-    {
-        WordprocessingMLPackage target = WordprocessingMLPackage.load(templateFiles.get(0));
-        removeHeaderAndFooter(target);
-
-        for (int i = 1; i < templateFiles.size(); i++)
-        {
-            WordprocessingMLPackage appendDocument = WordprocessingMLPackage.load(templateFiles.get(i));
-            mergeDocumentsBodies(target, appendDocument);
-            mergeDocumentsImages(target, appendDocument);
-        }
-        target.save(dest);
-    }
-
-    private void mergeDocumentsBodies(WordprocessingMLPackage target, WordprocessingMLPackage appendDocument)
-            throws JAXBException, XPathBinderAssociationIsPartialException
-    {
-        List body = appendDocument.getMainDocumentPart().getJAXBNodesViaXPath("//w:body", false);
-        for (Object b : body)
-        {
-            List bodyContent = ((org.docx4j.wml.Body) b).getContent();
-            for (Object content : bodyContent)
-            {
-                target.getMainDocumentPart().addObject(content);
-            }
-        }
-    }
-
-    private void mergeDocumentsImages(WordprocessingMLPackage target, WordprocessingMLPackage appendDocument)
-            throws JAXBException, XPathBinderAssociationIsPartialException, InvalidFormatException
-    {
-        List<Object> blips = appendDocument.getMainDocumentPart().getJAXBNodesViaXPath("//a:blip", false);
-        for (Object el : blips)
-        {
-            try
-            {
-                CTBlip blip = (CTBlip) el;
-                RelationshipsPart parts = appendDocument.getMainDocumentPart().getRelationshipsPart();
-                Relationship rel = parts.getRelationshipByID(blip.getEmbed());
-                Part part = parts.getPart(rel);
-
-                Relationship newRel = target.getMainDocumentPart().addTargetPart(part,
-                        RelationshipsPart.AddPartBehaviour.REUSE_EXISTING);
-                blip.setEmbed(newRel.getId());
-                target.getMainDocumentPart()
-                        .addTargetPart(appendDocument.getParts().getParts().get(new PartName("/word/" + rel.getTarget())));
-            }
-            catch (Exception ex)
-            {
-                log.error("Could not merge templates images: {}", ex.getMessage());
-                throw ex;
-            }
-        }
-    }
-
-    private void removeHeaderAndFooter(WordprocessingMLPackage target)
-    {
-        List<SectionWrapper> sectionWrappers = target.getDocumentModel().getSections();
-        HeaderPart headerPart;
-        FooterPart footerPart;
-
-        for (SectionWrapper sectionWrapper : sectionWrappers)
-        {
-            headerPart = sectionWrapper.getHeaderFooterPolicy().getDefaultHeader();
-            footerPart = sectionWrapper.getHeaderFooterPolicy().getDefaultFooter();
-
-            if (Objects.nonNull(headerPart))
-            {
-                target.getMainDocumentPart().getRelationshipsPart().removeRelationship(headerPart.getPartName());
-            }
-
-            if (Objects.nonNull(footerPart))
-            {
-                target.getMainDocumentPart().getRelationshipsPart().removeRelationship(footerPart.getPartName());
-            }
-
-            List<CTRel> rel = sectionWrapper.getSectPr().getEGHdrFtrReferences();
-            List<HeaderReference> headerReferencesToBeRemoved = new ArrayList<>();
-            List<FooterReference> footerReferencesToBeRemoved = new ArrayList<>();
-
-            for (CTRel ctRel : rel)
-            {
-                if (ctRel instanceof HeaderReference)
-                {
-                    HeaderReference hr = (HeaderReference) ctRel;
-                    if (hr.getType().equals(HdrFtrRef.DEFAULT))
-                    {
-                        headerReferencesToBeRemoved.add(hr);
-                    }
-                }
-                else if (ctRel instanceof FooterReference)
-                {
-                    FooterReference fr = (FooterReference) ctRel;
-                    if (fr.getType().equals(HdrFtrRef.DEFAULT))
-                    {
-                        footerReferencesToBeRemoved.add(fr);
-                    }
-                }
-            }
-            if (!headerReferencesToBeRemoved.isEmpty())
-            {
-                for (int i = 0; i < headerReferencesToBeRemoved.size(); i++)
-                {
-                    sectionWrapper.getSectPr().getEGHdrFtrReferences().remove(headerReferencesToBeRemoved.get(i));
-                }
-            }
-            if (!footerReferencesToBeRemoved.isEmpty())
-            {
-                for (int i = 0; i < footerReferencesToBeRemoved.size(); i++)
-                {
-                    sectionWrapper.getSectPr().getEGHdrFtrReferences().remove(footerReferencesToBeRemoved.get(i));
-                }
-            }
-        }
-    }
-
     @Override
     public TemplateModelProvider getTemplateModelProvider(Class templateModelProviderClass)
     {
@@ -551,15 +435,17 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
         }
 
         TemplateModelProvider modelProvider = getTemplateModelProvider(templateModelProviderClass);
-        Object object = modelProvider.getModel(notification);
-
-        try {
-            String body = getTemplatingEngine().process(templateContent, templateModelName, object);
-            return body;
-        }
-        catch(Exception ex)
+        if (modelProvider != null)
         {
-            log.error("Failed to process template {}!", templateName, ex);
+            Object object = modelProvider.getModel(notification);
+            try {
+                String body = getTemplatingEngine().process(templateContent, templateModelName, object);
+                return body;
+            }
+            catch(Exception ex)
+            {
+                log.error("Failed to process template {}!", templateName, ex);
+            }
         }
         return templateContent;
     }
