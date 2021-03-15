@@ -117,7 +117,6 @@ public class ReplaceFileAPIController
 
             replacedFile = getFileTransaction().updateFileTransactionEventAware(authentication, fileToBeReplaced, replacementStream,
                     fileExtension);
-            getFileService().updateFileLinks(replacedFile);
             getFileEventPublisher().publishFileReplacedEvent(replacedFile, fileToBeReplacedVersion, authentication, ipAddress, true);
         }
         catch (ArkCaseFileRepositoryException | IOException e)
