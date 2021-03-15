@@ -45,7 +45,6 @@ import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
 import org.joda.time.DateTime;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -95,7 +94,6 @@ public class FileLockingProviderTest extends EasyMockSupport
         fail("AcmObjectLockException should have been thrown for unknown lock type!");
     }
 
-    @Ignore
     @Test
     public void acquireLocksWhenNoExistingLockReturnsNewAcquiredLockAndSavesToDb() throws AcmObjectLockException
     {
@@ -132,7 +130,6 @@ public class FileLockingProviderTest extends EasyMockSupport
         }
     }
 
-    @Ignore
     @Test
     public void acquireLocksWhenExistingLocks()
     {
@@ -262,7 +259,6 @@ public class FileLockingProviderTest extends EasyMockSupport
         fail("AcmObjectLockException should have been thrown for unknown lock type!");
     }
 
-    @Ignore
     @Test
     public void releaseLocksWhenNoExistinLocks() throws AcmObjectLockException
     {
@@ -286,7 +282,6 @@ public class FileLockingProviderTest extends EasyMockSupport
         }
     }
 
-    @Ignore
     @Test
     public void releaseLocksWhenExistingLocks()
     {

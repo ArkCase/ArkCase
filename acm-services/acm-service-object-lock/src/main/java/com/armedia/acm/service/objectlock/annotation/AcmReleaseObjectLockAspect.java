@@ -28,15 +28,14 @@ package com.armedia.acm.service.objectlock.annotation;
  */
 
 import com.armedia.acm.core.AcmObject;
-import com.armedia.acm.core.exceptions.AcmObjectLockException;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockingManager;
 import com.armedia.acm.web.api.MDCConstants;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 
@@ -51,13 +50,13 @@ import java.lang.annotation.Annotation;
 @Component
 public class AcmReleaseObjectLockAspect
 {
-    private Logger log = LogManager.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     private AcmObjectLockingManager objectLockingManager;
 
     @Around(value = "@annotation(acmReleaseObjectLocks)")
     public Object aroundReleaseObjectLock(ProceedingJoinPoint pjp, AcmReleaseObjectLock.List acmReleaseObjectLocks)
-            throws Throwable, AcmObjectLockException
+            throws Throwable
     {
         String userId = MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY);
         if (userId == null)
@@ -100,7 +99,7 @@ public class AcmReleaseObjectLockAspect
 
     @Around(value = "@annotation(acmReleaseObjectLock)")
     public Object aroundReleaseObjectLockSingle(ProceedingJoinPoint pjp, AcmReleaseObjectLock acmReleaseObjectLock)
-            throws Throwable, AcmObjectLockException
+            throws Throwable
     {
         AcmReleaseObjectLock.List locks = new AcmReleaseObjectLock.List()
         {
@@ -128,9 +127,10 @@ public class AcmReleaseObjectLockAspect
         {
             if (!(args[releaseObjectLock.objectIdArgIndex()] instanceof Long))
             {
-                throw new RuntimeException(String.format("AcmReleaseObjectLock objectIdArgIndex does not resolve to Long argument in {}.{}",
-                        pjp.getSignature().getDeclaringTypeName(),
-                        pjp.getSignature().getName()));
+                throw new RuntimeException(
+                        String.format("AcmReleaseObjectLock objectIdArgIndex does not resolve to Long argument in %s. %s",
+                                pjp.getSignature().getDeclaringTypeName(),
+                                pjp.getSignature().getName()));
             }
             return (Long) args[releaseObjectLock.objectIdArgIndex()];
         }
@@ -139,7 +139,7 @@ public class AcmReleaseObjectLockAspect
             if (!(args[releaseObjectLock.acmObjectArgIndex()] instanceof AcmObject))
             {
                 throw new RuntimeException(
-                        String.format("AcmReleaseObjectLock acmObjectArgIndex does not resolve to AcmObject argument in {}.{}",
+                        String.format("AcmReleaseObjectLock acmObjectArgIndex does not resolve to AcmObject argument in %s. %s",
                                 pjp.getSignature().getDeclaringTypeName(),
                                 pjp.getSignature().getName()));
             }
