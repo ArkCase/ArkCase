@@ -67,10 +67,7 @@ public class EcmFileUpdatedListener implements ApplicationListener<EcmFileUpdate
                     LOG.error("Link target file not updated: {}", e.getMessage(), e);
                 }
             }
-            if (!ecmFile.isLink())
-            {
-                getEcmFileService().checkAndSetDuplicatesByHash(ecmFile);
-            }
+            getEcmFileService().checkAndSetDuplicatesByHash(ecmFile);
         }
     }
 
