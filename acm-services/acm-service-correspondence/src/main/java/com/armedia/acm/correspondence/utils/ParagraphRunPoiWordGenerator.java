@@ -114,16 +114,17 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                 log.error("Can not find class for provided classpath {}", e.getMessage());
             }
             TemplateModelProvider modelProvider = getCorrespondenceService().getTemplateModelProvider(templateModelProviderClass);
-            correspondenedObject = modelProvider.getModel(correspondenedObject);
-            // Update all plain text in the word document who is outside any tables
-            updateGraphs(graphs, correspondenedObject, objectType);
+            if(modelProvider != null) {
+                correspondenedObject = modelProvider.getModel(correspondenedObject);
+                // Update all plain text in the word document who is outside any tables
+                updateGraphs(graphs, correspondenedObject, objectType);
 
-            // Update all text in the word document who is inside tables/rows/cells
-            updateTables(tables, correspondenedObject, objectType);
+                // Update all text in the word document who is inside tables/rows/cells
+                updateTables(tables, correspondenedObject, objectType);
 
-            //Update all text in the word documents in headers
-            updateHeaders(headers, correspondenedObject, objectType);
-
+                //Update all text in the word documents in headers
+                updateHeaders(headers, correspondenedObject, objectType);
+            }
             log.debug("writing correspondence to stream: " + targetStream);
 
             try
