@@ -27,24 +27,51 @@ package com.armedia.acm.plugins.ecm.service;
  * #L%
  */
 
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
+import com.armedia.acm.plugins.ecm.exception.EcmFileLinkException;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.ecm.model.event.EcmFileMovedEvent;
+import com.armedia.acm.plugins.ecm.model.EcmFileUpdatedEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationListener;
 
-public class EcmFIleMovedToRecycleBinDuplicationListener implements ApplicationListener<EcmFileMovedEvent>
+public class EcmFileUpdatedListener implements ApplicationListener<EcmFileUpdatedEvent>
 {
 
     private final Logger LOG = LogManager.getLogger(getClass());
     private EcmFileService ecmFileService;
 
     @Override
-    public void onApplicationEvent(EcmFileMovedEvent event)
+    public void onApplicationEvent(EcmFileUpdatedEvent event)
     {
+        if (event.isSucceeded())
+        {
 
-        EcmFile ecmFile = (EcmFile) event.getSource();
-        getEcmFileService().checkAndSetDuplicatesByHash(ecmFile);
+            EcmFile ecmFile = (EcmFile) event.getSource();
+            try
+            {
+                getEcmFileService().updateFileLinks(ecmFile);
+            }
+            catch (AcmObjectNotFoundException e)
+            {
+                LOG.error("File links not updated: {}", e.getMessage(), e);
+            }
+            if (ecmFile.isLink())
+            {
+                try
+                {
+                    getEcmFileService().updateLinkTargetFile(ecmFile);
+                }
+                catch (EcmFileLinkException e)
+                {
+                    LOG.error("Link target file not updated: {}", e.getMessage(), e);
+                }
+            }
+            if (!ecmFile.isLink())
+            {
+                getEcmFileService().checkAndSetDuplicatesByHash(ecmFile);
+            }
+        }
     }
 
     public EcmFileService getEcmFileService() {
@@ -55,4 +82,3 @@ public class EcmFIleMovedToRecycleBinDuplicationListener implements ApplicationL
         this.ecmFileService = ecmFileService;
     }
 }
-

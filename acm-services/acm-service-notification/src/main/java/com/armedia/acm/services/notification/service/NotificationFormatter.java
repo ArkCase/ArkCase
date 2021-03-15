@@ -36,13 +36,13 @@ public class NotificationFormatter
     private TranslationService translationService;
     private ObjectLabelConfig objectLabelConfig;
 
-    public String buildTitle(String title, String parentName, String parentType, String userId)
+    public String buildTitle(String title, String parentName, String parentType, String userId, Long objectId)
     {
         String notificationTitle = translationService.translate(title);
-        return replaceFormatPlaceholders(notificationTitle, parentName, parentType, userId);
+        return replaceFormatPlaceholders(notificationTitle, parentName, parentType, userId, String.valueOf(objectId));
     }
 
-    public String replaceFormatPlaceholders(String notificationTitle, String parentName, String parentType, String userId)
+    public String replaceFormatPlaceholders(String notificationTitle, String parentName, String parentType, String userId, String objectId)
     {
         if (notificationTitle != null && notificationTitle.contains(NotificationConstants.NAME_LABEL) && parentName != null)
         {
@@ -57,6 +57,11 @@ public class NotificationFormatter
         if (notificationTitle != null && notificationTitle.contains(NotificationConstants.USER_LABEL) && userId != null)
         {
             notificationTitle = replacePlaceholderLabel(notificationTitle, NotificationConstants.USER_LABEL, userId);
+        }
+
+        if (notificationTitle != null && notificationTitle.contains(NotificationConstants.ID_LABEL) && objectId != null)
+        {
+            notificationTitle = replacePlaceholderLabel(notificationTitle, NotificationConstants.ID_LABEL, objectId);
         }
         return notificationTitle;
     }

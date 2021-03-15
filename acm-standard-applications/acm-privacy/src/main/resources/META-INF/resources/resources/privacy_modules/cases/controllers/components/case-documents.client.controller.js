@@ -27,12 +27,11 @@ angular.module('cases').controller(
                 'DocTreeExt.Email',
                 'EcmService',
                 'MessageService',
-                'MultiCorrespondence.Service',
                 'ModalDialogService',
                 'Websockets.MessageHandler',
                 'Case.FolderStructureService',
                 function ($scope, $state, $stateParams, $modal, $q, $timeout, $translate, Util, LocaleService, ConfigService, ObjectService, ObjectLookupService, CaseInfoService, DocTreeService, HelperObjectBrowserService, Authentication, PermissionsService, ObjectModelService, DocTreeExtWebDAV,
-                          DocTreeExtCheckin, CorrespondenceService, DocTreeExtEmail, EcmService, MessageService, MultiCorrespondenceService, ModalDialogService, messageHandler, CaseFolderStructureService) {
+                          DocTreeExtCheckin, CorrespondenceService, DocTreeExtEmail, EcmService, MessageService, ModalDialogService, messageHandler, CaseFolderStructureService) {
 
                     Authentication.queryUserInfo().then(function(userInfo) {
                         $scope.user = userInfo.userId;
@@ -220,23 +219,5 @@ angular.module('cases').controller(
                             }
                         });
                     }
-
-                    $scope.$bus.subscribe('multi-correspondence-requested', function(payload) {
-                        var requestData = payload;
-                        var names = [ requestData.args.label ];
-                        var template = requestData.args.templateType;
-
-                        var modalInstance = $modal.open({
-                            animation: false,
-                            templateUrl: 'modules/common/views/multi-correspondence.modal.client.view.html',
-                            controller: 'Common.MultiCorrespondenceModalController',
-                            size: 'lg',
-                            backdrop: 'static'
-                        });
-
-                        modalInstance.result.then(function(modalResult) {
-                            MultiCorrespondenceService.createMultiTemplateCorrespondence(requestData, names, template, modalResult.selectedTemplates, modalResult.multiCorrespondenceDocumentName);
-                        });
-                    });
 
                 }]);

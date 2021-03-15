@@ -209,7 +209,6 @@ public class ArkCasePortalGatewayUserAPIController
             @RequestBody PortalUser user)
             throws PortalUserAssignementException, PortalUserServiceException
     {
-        log.debug("Updating [{}] user for portal with [{}] ID.", PortalUser.composeUserName(user), portalId);
         return portalUserService.updateUser(portalId, user);
     }
 

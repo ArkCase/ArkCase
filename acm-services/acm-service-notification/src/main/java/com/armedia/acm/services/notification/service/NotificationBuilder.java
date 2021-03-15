@@ -77,12 +77,12 @@ public class NotificationBuilder
             if (notification.getRelatedObjectId() != null && notification.getRelatedObjectType() != null)
             {
                 notification.setTitle(notificationFormatter.buildTitle(notification.getTitle(), notification.getRelatedObjectNumber(),
-                        notification.getRelatedObjectType(), userInTitle));
+                        notification.getRelatedObjectType(), userInTitle, null));
             }
             else
             {
                 notification.setTitle(notificationFormatter.buildTitle(notification.getTitle(), notification.getParentName(),
-                        notification.getParentType(), userInTitle));
+                        notification.getParentType(), userInTitle, null));
             }
             return notification;
         }
@@ -92,12 +92,42 @@ public class NotificationBuilder
             if (notification.getRelatedObjectId() != null && notification.getRelatedObjectType() != null)
             {
                 notification.setTitle(notificationFormatter.buildTitle(notification.getTitle(), notification.getRelatedObjectNumber(),
-                        notification.getRelatedObjectType(), null));
+                        notification.getRelatedObjectType(), null, null));
             }
             else
             {
                 notification.setTitle(notificationFormatter.buildTitle(notification.getTitle(), notification.getParentName(),
-                        notification.getParentType(), null));
+                        notification.getParentType(), null, null));
+            }
+            return notification;
+        }
+
+        public Notification build(String userInTitle, Long objectId)
+        {
+            if (notification.getRelatedObjectId() != null && notification.getRelatedObjectType() != null)
+            {
+                notification.setTitle(notificationFormatter.buildTitle(notification.getTitle(), notification.getRelatedObjectNumber(),
+                        notification.getRelatedObjectType(), userInTitle, objectId));
+            }
+            else
+            {
+                notification.setTitle(notificationFormatter.buildTitle(notification.getTitle(), notification.getParentName(),
+                        notification.getParentType(), userInTitle, objectId));
+            }
+            return notification;
+        }
+
+        public Notification build(Long objectId)
+        {
+            if (notification.getRelatedObjectId() != null && notification.getRelatedObjectType() != null)
+            {
+                notification.setTitle(notificationFormatter.buildTitle(notification.getTitle(), notification.getRelatedObjectNumber(),
+                        notification.getRelatedObjectType(), null, objectId));
+            }
+            else
+            {
+                notification.setTitle(notificationFormatter.buildTitle(notification.getTitle(), notification.getParentName(),
+                        notification.getParentType(), null, objectId));
             }
             return notification;
         }
