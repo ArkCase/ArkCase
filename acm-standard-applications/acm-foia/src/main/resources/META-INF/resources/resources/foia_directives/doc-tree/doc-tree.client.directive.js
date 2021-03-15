@@ -3103,6 +3103,7 @@ angular
                                     DocTree.markNodeOk(newNode);
                                     newNode.renderTitle();
                                     dfd.resolve(copyFileInfo);
+                                    DocTree.refreshTree();
                                 }, function (errorData) {
                                     DocTree.markNodeError(newNode);
                                     dfd.reject();
