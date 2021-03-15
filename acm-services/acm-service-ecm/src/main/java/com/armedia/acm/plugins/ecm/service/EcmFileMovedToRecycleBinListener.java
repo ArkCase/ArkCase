@@ -33,7 +33,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationListener;
 
-public class EcmFIleMovedToRecycleBinListener implements ApplicationListener<EcmFileMovedEvent>
+public class EcmFileMovedToRecycleBinListener implements ApplicationListener<EcmFileMovedEvent>
 {
 
     private final Logger LOG = LogManager.getLogger(getClass());
