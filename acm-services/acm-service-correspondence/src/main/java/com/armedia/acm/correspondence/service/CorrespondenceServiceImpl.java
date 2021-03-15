@@ -31,6 +31,7 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.core.provider.TemplateModelProvider;
 import com.armedia.acm.services.notification.model.Notification;
+import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.notification.service.NotificationService;
 import com.armedia.acm.services.templateconfiguration.model.CorrespondenceMergeField;
 import com.armedia.acm.services.templateconfiguration.model.Template;
@@ -71,7 +72,6 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
     private CorrespondenceEventPublisher eventPublisher;
     private CorrespondenceTemplateManager templateManager;
     private CorrespondenceMergeFieldManager mergeFieldManager;
-    private SpringContextHolder contextHolder;
     private NotificationService notificationService;
     private TemplatingEngine templatingEngine;
 
@@ -354,7 +354,7 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
 
     @Override
     public Map<String, String> listTemplateModelProviders() {
-        Collection<TemplateModelProvider> templateModelProviders = getContextHolder().getAllBeansOfType(TemplateModelProvider.class).values();
+        Collection<TemplateModelProvider> templateModelProviders = getSpringContextHolder().getAllBeansOfType(TemplateModelProvider.class).values();
 
         Map<String, String> mapTemplateModelProviders = new HashMap<>();
         for (TemplateModelProvider modelProvider : templateModelProviders)
@@ -394,7 +394,7 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
     @Override
     public TemplateModelProvider getTemplateModelProvider(Class templateModelProviderClass)
     {
-        Map<String, TemplateModelProvider> templateModelproviders = contextHolder.getAllBeansOfType(templateModelProviderClass);
+        Map<String, TemplateModelProvider> templateModelproviders = getSpringContextHolder().getAllBeansOfType(templateModelProviderClass);
         if (templateModelproviders.size() > 1)
         {
             for (TemplateModelProvider provider : templateModelproviders.values())
@@ -405,23 +405,23 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
                 }
             }
         }
-        return templateModelproviders.values().iterator().next();
+        return templateModelproviders.values().iterator().hasNext() ? templateModelproviders.values().iterator().next() : null;
     }
 
     @Override
-    public String convertMergeTerms(String templateName, String templateContent, String objectType, String objectId){
+    public String convertMergeTerms(String templateName, String templateContent, String objectType, String objectId)
+    {
         String templateModelName = templateName.substring(0, templateName.indexOf("."));
-
         Template template = findTemplate(templateName);
+        String title = getNotificationService().setNotificationTitleForManualNotification(templateModelName);
 
-        String title = notificationService.setNotificationTitleForManualNotification(templateModelName);
+        Notification notification = getNotificationService().getNotificationBuilder()
+                .newNotification(templateModelName, title, objectType,
+                        Long.parseLong(objectId), null)
+                .withNotificationType(NotificationConstants.TYPE_MANUAL)
+                .withEmailContent(templateContent)
+                .build();
 
-        Notification notification = new Notification();
-        notification.setTemplateModelName(templateModelName);
-        notification.setTitle(title);
-        notification.setParentType(objectType);
-        notification.setParentId(Long.parseLong(objectId));
-        notification.setEmailContent(templateContent);
         String templateModelProvider = template.getTemplateModelProvider();
 
         Class templateModelProviderClass = null;
@@ -496,16 +496,6 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
     public void setMergeFieldManager(CorrespondenceMergeFieldManager mergeFieldManager)
     {
         this.mergeFieldManager = mergeFieldManager;
-    }
-
-    public SpringContextHolder getContextHolder()
-    {
-        return contextHolder;
-    }
-
-    public void setContextHolder(SpringContextHolder contextHolder)
-    {
-        this.contextHolder = contextHolder;
     }
 
     public NotificationService getNotificationService()

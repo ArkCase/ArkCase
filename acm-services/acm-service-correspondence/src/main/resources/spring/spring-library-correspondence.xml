@@ -35,7 +35,6 @@
         <property name="eventPublisher" ref="correspondenceEventPublisher"/>
         <property name="templateManager" ref="correspondenceTemplateManager"/>
         <property name="mergeFieldManager" ref="correspondenceMergeFieldManager"/>
-        <property name="contextHolder" ref="acmContextHolder"/>
         <property name="notificationService" ref="notificationService"/>
         <property name="templatingEngine" ref="templatingEngine"/>
     </bean>
