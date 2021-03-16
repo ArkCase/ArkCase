@@ -144,6 +144,11 @@ public class ApplicationConfig implements DynamicApplicationConfig
     @Value("${application.properties.organizationFax}")
     private String organizationFax;
 
+    @UnmodifiableConfigProperty
+    @JsonProperty("application.properties.templateGuideUrl")
+    @Value("${application.properties.templateGuideUrl}")
+    private String templateGuideUrl;
+
     public Integer getIdleLimit()
     {
         return idleLimit;
@@ -352,5 +357,15 @@ public class ApplicationConfig implements DynamicApplicationConfig
     public void setOrganizationFax(String organizationFax)
     {
         this.organizationFax = organizationFax;
+    }
+
+    public String getTemplateGuideUrl()
+    {
+        return templateGuideUrl;
+    }
+
+    public void setTemplateGuideUrl(String templateGuideUrl)
+    {
+        this.templateGuideUrl = templateGuideUrl;
     }
 }

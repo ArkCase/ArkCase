@@ -58,6 +58,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public class TrackOutgoingEmailService implements ApplicationEventPublisherAware
 {
@@ -89,7 +90,7 @@ public class TrackOutgoingEmailService implements ApplicationEventPublisherAware
         ZonedDateTime date = ZonedDateTime.now(ZoneOffset.UTC);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         String currentDate = formatter.format(date);
-        String messageFileName = "-" + currentDate + "-" + subject.replaceAll(":", "_") + ".eml";
+        String messageFileName = "-" + currentDate + "-" + UUID.randomUUID() + ".eml";
         // email address might be multiple emails concatenated with a comma. Se we cut the email address not to exceed
         // filename limit of 255 characters
         String email = group != null ? group : emailAddress;
