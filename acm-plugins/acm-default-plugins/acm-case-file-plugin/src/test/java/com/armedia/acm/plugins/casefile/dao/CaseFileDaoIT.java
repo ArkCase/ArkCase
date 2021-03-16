@@ -70,6 +70,7 @@ import java.util.UUID;
         "/spring/spring-library-property-file-manager.xml",
         "/spring/spring-library-acm-encryption.xml",
         "/spring/spring-library-object-lock.xml",
+        "/spring/spring-library-pdf-utilities.xml",
         "/spring/spring-library-search.xml",
         "/spring/spring-library-object-converter.xml",
         "/spring/spring-library-ecm-file-lock.xml",
