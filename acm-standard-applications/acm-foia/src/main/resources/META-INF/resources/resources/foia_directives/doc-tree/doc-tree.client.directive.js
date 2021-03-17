@@ -3494,14 +3494,7 @@ angular
                             }
                             return dfd.promise();
                         },
-                        fileRemove: function (dfd, node, parent, fileWithLinks) {
-                            var cacheKey = DocTree.getCacheKeyByNode(parent);
-                            var refNode = node.getNextSibling() || node.getPrevSibling() || node.getParent();
-                            node.remove();
-                            if (refNode) {
-                                refNode.setActive();
-                            }
-
+                        fileRemove: function (dfd, node, parent) {
                             var fileId = node.data.objectId;
                             Util.serviceCall({
                                 service: Ecm.deleteFileTemporary,
@@ -3512,6 +3505,12 @@ angular
                                 onSuccess: function (data) {
                                     if (Validator.validateDeletedFile(data)) {
                                         if (data.deletedFileId == fileId) {
+                                            var cacheKey = DocTree.getCacheKeyByNode(parent);
+                                            var refNode = node.getNextSibling() || node.getPrevSibling() || node.getParent();
+                                            node.remove();
+                                            if (refNode) {
+                                                refNode.setActive();
+                                            }
                                             var folderList = DocTree.cacheFolderList.get(cacheKey);
                                             if (Validator.validateFolderList(folderList)) {
                                                 var deleted = DocTree.findFolderItemIdx(fileId, folderList);
@@ -3524,16 +3523,16 @@ angular
                                             }
                                         }
                                     }
-                                },
-                                onError: function (error) {
-                                    MessageService.error(error.data.message);
-                                    dfd.reject();
                                 }
                             }).then(function (deletedFileId) {
                                 dfd.resolve(deletedFileId);
                             }, function (errorData) {
-                                MessageService.error(errorData.data);
-                                DocTree.markNodeError(node);
+                                if (errorData.data && errorData.data.message)
+                                {
+                                    MessageService.error(errorData.data.message);
+                                } else {
+                                    MessageService.errorAction();
+                                }
                                 dfd.reject();
                             });
                             return dfd.promise();
@@ -3543,6 +3542,12 @@ angular
                             if (Util.isArrayEmpty(nodes)) {
                                 dfd.resolve();
 
+                            } else if (nodes.length === 1) {
+                                if (DocTree.isFolderNode(nodes[0])) {
+                                    return DocTree.Op.deleteFolder(nodes[0]);
+                                } else if (DocTree.isFileNode(nodes[0])) {
+                                    return DocTree.Op.deleteFile(nodes[0]);
+                                }
                             } else {
                                 var removeNodes = DocTree.getTopMostNodes(nodes);
 
