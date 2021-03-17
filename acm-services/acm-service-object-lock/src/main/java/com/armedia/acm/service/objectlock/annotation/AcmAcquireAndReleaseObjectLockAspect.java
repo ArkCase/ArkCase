@@ -28,17 +28,16 @@ package com.armedia.acm.service.objectlock.annotation;
  */
 
 import com.armedia.acm.core.AcmObject;
-import com.armedia.acm.core.exceptions.AcmObjectLockException;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockingManager;
 import com.armedia.acm.web.api.MDCConstants;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 
@@ -55,14 +54,14 @@ import java.util.List;
 @Component
 public class AcmAcquireAndReleaseObjectLockAspect
 {
-    private Logger log = LogManager.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     private AcmObjectLockingManager objectLockingManager;
     private AcmObjectLockService objectLockService;
 
     @Around(value = "@annotation(acmAcquireAndReleaseObjectLocks)")
     public Object aroundAcquireObjectLock(ProceedingJoinPoint pjp, AcmAcquireAndReleaseObjectLock.List acmAcquireAndReleaseObjectLocks)
-            throws Throwable, AcmObjectLockException
+            throws Throwable
     {
         Object[] args = pjp.getArgs();
         String userId = MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY);
@@ -74,69 +73,60 @@ public class AcmAcquireAndReleaseObjectLockAspect
         }
 
         List<AcmAcquireAndReleaseObjectLock> acquiredLocks = new ArrayList<>();
+        for (AcmAcquireAndReleaseObjectLock acmAcquireAndReleaseObjectLock : acmAcquireAndReleaseObjectLocks.value())
+        {
+            String objectType = acmAcquireAndReleaseObjectLock.objectType();
+            Long objectId = getObjectId(pjp, acmAcquireAndReleaseObjectLock, args);
+            String lockType = acmAcquireAndReleaseObjectLock.lockType();
+            boolean lockChildObjects = acmAcquireAndReleaseObjectLock.lockChildObjects();
+
+            AcmObjectLock objectLock;
+
+            // if objectId is null, probably we are trying to lock an object before it is persisted for the first
+            // time, we cannot lock such objects, but we don't raise an error
+            if (objectId != null)
+            {
+                // acquire lock only if the user doesn't have the lock already
+                objectLock = objectLockService.findLock(objectId, objectType);
+
+                if (objectLock == null || !objectLock.getLockType().equals(lockType) || !objectLock.getCreator().equals(userId))
+                {
+                    objectLockingManager.acquireObjectLock(objectId, objectType, lockType, null, lockChildObjects, userId);
+                }
+                acquiredLocks.add(acmAcquireAndReleaseObjectLock);
+            }
+        }
+        Object ret;
         try
+        {
+            ret = pjp.proceed();
+        }
+        finally
         {
             for (AcmAcquireAndReleaseObjectLock acmAcquireAndReleaseObjectLock : acmAcquireAndReleaseObjectLocks.value())
             {
                 String objectType = acmAcquireAndReleaseObjectLock.objectType();
                 Long objectId = getObjectId(pjp, acmAcquireAndReleaseObjectLock, args);
                 String lockType = acmAcquireAndReleaseObjectLock.lockType();
-                boolean lockChildObjects = acmAcquireAndReleaseObjectLock.lockChildObjects();
-
-                AcmObjectLock objectLock = null;
-
-                // if objectId is null, probably we are trying to lock an object before it is persisted for the first
-                // time, we cannot lock such objects, but we don't raise an error
-                if (objectId != null)
+                boolean unlockChildObjects = acmAcquireAndReleaseObjectLock.unlockChildObjects();
+                Long lockId = acmAcquireAndReleaseObjectLock.lockIdArgIndex() != -1
+                        ? (Long) args[acmAcquireAndReleaseObjectLock.lockIdArgIndex()]
+                        : null;
+                // release the lock only if it was acquired previously
+                if (objectId != null && acquiredLocks.contains(acmAcquireAndReleaseObjectLock))
                 {
-                    // acquire lock only if the user doesn't have the lock already
-                    objectLock = objectLockService.findLock(objectId, objectType);
-                    if (objectLock == null
-                            || (objectLock != null && objectLock.getLockType().equals(lockType) && !objectLock.getCreator().equals(userId)))
-                    {
-                        objectLockingManager.acquireObjectLock(objectId, objectType, lockType, null, lockChildObjects, userId);
-                    }
-                    acquiredLocks.add(acmAcquireAndReleaseObjectLock);
+                    objectLockingManager.releaseObjectLock(objectId, objectType, lockType, unlockChildObjects, userId, lockId);
                 }
             }
-            Object ret = null;
-            try
-            {
-                ret = pjp.proceed();
-            }
-            finally
-            {
-                for (AcmAcquireAndReleaseObjectLock acmAcquireAndReleaseObjectLock : acmAcquireAndReleaseObjectLocks.value())
-                {
-                    String objectType = acmAcquireAndReleaseObjectLock.objectType();
-                    Long objectId = getObjectId(pjp, acmAcquireAndReleaseObjectLock, args);
-                    String lockType = acmAcquireAndReleaseObjectLock.lockType();
-                    boolean unlockChildObjects = acmAcquireAndReleaseObjectLock.unlockChildObjects();
-                    Long lockId = acmAcquireAndReleaseObjectLock.lockIdArgIndex() != -1
-                            ? (Long) args[acmAcquireAndReleaseObjectLock.lockIdArgIndex()]
-                            : null;
-                    // release the lock only if it was acquired previously
-                    if (objectId != null && acquiredLocks.contains(acmAcquireAndReleaseObjectLock))
-                    {
-                        objectLockingManager.releaseObjectLock(objectId, objectType, lockType, unlockChildObjects, userId, lockId);
-                    }
-                }
-            }
+        }
 
-            return ret;
-        }
-        catch (Exception e)
-        {
-            // log exception and re-throw
-            log.error(e.getMessage());
-            throw e;
-        }
+        return ret;
     }
 
     @Around(value = "@annotation(acmAcquireAndReleaseObjectLock)")
     public Object aroundAcquireAndReleaseObjectLockSingle(ProceedingJoinPoint pjp,
             AcmAcquireAndReleaseObjectLock acmAcquireAndReleaseObjectLock)
-            throws Throwable, AcmObjectLockException
+            throws Throwable
     {
         AcmAcquireAndReleaseObjectLock.List locks = new AcmAcquireAndReleaseObjectLock.List()
         {
@@ -165,7 +155,7 @@ public class AcmAcquireAndReleaseObjectLockAspect
             if (!(args[acquireAndReleaseObjectLock.objectIdArgIndex()] instanceof Long))
             {
                 throw new RuntimeException(
-                        String.format("AcmAcquireAndReleaseObjectLock objectIdArgIndex does not resolve to Long argument in {}.{}",
+                        String.format("AcmAcquireAndReleaseObjectLock objectIdArgIndex does not resolve to Long argument in %s. %s",
                                 pjp.getSignature().getDeclaringTypeName(),
                                 pjp.getSignature().getName()));
             }
@@ -176,7 +166,7 @@ public class AcmAcquireAndReleaseObjectLockAspect
             if (!(args[acquireAndReleaseObjectLock.acmObjectArgIndex()] instanceof AcmObject))
             {
                 throw new RuntimeException(
-                        String.format("AcmAcquireAndReleaseObjectLock acmObjectArgIndex does not resolve to AcmObject argument in {}.{}",
+                        String.format("AcmAcquireAndReleaseObjectLock acmObjectArgIndex does not resolve to AcmObject argument in %s. %s",
                                 pjp.getSignature().getDeclaringTypeName(),
                                 pjp.getSignature().getName()));
             }
