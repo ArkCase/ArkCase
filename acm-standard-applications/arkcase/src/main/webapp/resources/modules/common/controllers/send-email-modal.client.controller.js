@@ -75,7 +75,7 @@ angular.module('common').controller('Common.SendEmailModalController', [ '$scope
         params.objectId = $scope.objectId;
         params.templateName = $scope.template;
 
-        var getTemplateContentPromise = correspondenceService.retrieveTemplateContent(params);
+        var getTemplateContentPromise = correspondenceService.retrieveConvertedTemplateContent(params);
 
         getTemplateContentPromise.then(function (response) {
             $scope.templateContent = response.data.templateContent.replace("${baseURL}", window.location.href.split('/home.html#!')[0]);

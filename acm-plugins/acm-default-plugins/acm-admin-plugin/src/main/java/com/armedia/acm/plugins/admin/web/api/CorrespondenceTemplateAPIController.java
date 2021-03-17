@@ -181,7 +181,37 @@ public class CorrespondenceTemplateAPIController
         return mapTemplateToResponse(correspondenceService.updateTemplate(mapRequestToTemplate(request, auth)));
     }
 
-    @RequestMapping(value = "/templateContent/{objectType}/{objectId}/{templateName:.+}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/templateContent/{templateName:.+}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<String> getTemplateContent(@PathVariable(value = "templateName") String templateName) throws AcmEmailConfigurationIOException
+    {
+
+        JSONObject retval = new JSONObject();
+        String userHome = System.getProperty("user.home");
+        String filePathName = userHome + "/.arkcase/acm/templates/" + templateName;
+
+        try (FileReader fileReader = new FileReader(filePathName);
+             BufferedReader bufferedReader = new BufferedReader(fileReader))
+        {
+            String s;
+            StringBuilder content=new StringBuilder(1024);
+            while((s=bufferedReader.readLine())!=null)
+            {
+
+                content.append(s);
+
+            }
+            retval.put("templateContent", content.toString());
+            return new ResponseEntity<>(retval.toString(), HttpStatus.OK);
+        }
+        catch(Exception ex)
+        {
+            log.warn("Email template {} does not exist." + templateName);
+            throw new AcmEmailConfigurationIOException(String.format("Email template %s does not exist.", templateName));
+        }
+    }
+
+    @RequestMapping(value = "/convertedTemplateContent/{objectType}/{objectId}/{templateName:.+}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<String> getTemplateContent(@PathVariable(value = "objectType") String objectType,
                                                      @PathVariable(value = "objectId") String objectId,
