@@ -2330,7 +2330,7 @@ angular
                                 if (menuResource === "menu.basic.root" && DocTree.treeConfig.hideMenu) {
                                     return emptyArray;
                                 }
-                                menu = _.clone(menu);
+                                menu = _.cloneDeep(menu);
                                 var menuFileTypes = _.find(menu, {
                                     "cmd": "subMenuFileTypes"
                                 });
@@ -2369,13 +2369,21 @@ angular
                                     newFolderMenu.disabledExpression = disabled || DocTree.readOnly;
                                     newFileMenu.disabledExpression = disabled || DocTree.readOnly;
                                 }
-                                //} else {
-                                //    var menu0 = [Util.goodMapValue(DocTree.treeConfig, "noop")];
-                                //    menu = [{
-                                //        title: $translate.instant("common.directive.docTree.menu.noop"),
-                                //        cmd: "noop",
-                                //        uiIcon: ""
-                                //    }];
+
+                                // disable commands based on locks
+                                var currentNode = nodes[0];
+                                var lock = currentNode.data.lock;
+                                if (lock && lock !== "" && DocTree.treeConfig.disabledFileCommandsOnLock) {
+                                    var disableCommands = DocTree.treeConfig.disabledFileCommandsOnLock[lock.lockType];
+                                    _.each(disableCommands, function(dc) {
+                                        var cmdMenu = _.find(menu, {
+                                            cmd: dc
+                                        });
+                                        if (cmdMenu) {
+                                            cmdMenu.disabledExpression = true;
+                                        }
+                                    });
+                                }
                             }
 
                             //Check to see if there is a global handling, if there is, it would override specific handler
@@ -2395,15 +2403,6 @@ angular
 
                                 } else {
                                     if (item.cmd) {
-                                        if (item.cmd === "cut" || item.cmd === "remove" || item.cmd === "rename") {
-                                            var folderStructure = DocTree.treeConfig.folderStructure;
-                                            if (folderStructure && _.find(folderStructure.data, function (folderName) {
-                                                return folderName === nodes[0].data.name;
-                                            })) {
-                                                item.disabled = true;
-                                                item.disabledExpression = true;
-                                            }
-                                        }
                                         var found = DocTree.Command.findHandler(item.cmd);
                                         var onAllowCmd = Util.goodMapValue(found, "onAllowCmd", null);
                                         if (onAllowCmd) {
