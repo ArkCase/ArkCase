@@ -3102,6 +3102,14 @@ angular
                                     DocTree._fileDataToNodeData(copyFileInfo, newNode);
                                     DocTree.markNodeOk(newNode);
                                     newNode.renderTitle();
+                                    if (actionName === 'pasteAsLink') {
+                                        newNode.data.link = true;
+                                        var newAcmIcon = "<i class='fa fa-link'></i>";
+                                        var newSpan = newNode.span;
+                                        var $newSpanIcon = $(newSpan.children[1]);
+                                        $newSpanIcon.removeClass("fancytree-icon");
+                                        $newSpanIcon.html(newAcmIcon);
+                                    }
                                     dfd.resolve(copyFileInfo);
                                 }, function (errorData) {
                                     DocTree.markNodeError(newNode);
