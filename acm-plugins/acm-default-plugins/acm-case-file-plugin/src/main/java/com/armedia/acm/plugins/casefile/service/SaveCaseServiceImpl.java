@@ -204,9 +204,8 @@ public class SaveCaseServiceImpl implements SaveCaseService
     private void checkIfDueDateIsChangedAndRaiseEvent(CaseFile caseFile, String ipAddress, Authentication authentication) {
 
         CaseFile notUpdatedCaseFile = caseFileDao.find(caseFile.getId());
-        SimpleDateFormat datePattern = new SimpleDateFormat("MM/dd/yyyy");
-        String oldDate = datePattern.format(notUpdatedCaseFile.getDueDate());
-        String newDate = datePattern.format(caseFile.getDueDate());
+        String oldDate = getDateString(notUpdatedCaseFile.getDueDate());
+        String newDate = getDateString(caseFile.getDueDate());
         String eventDescription = "- Due Date Changed from " + oldDate + " to " + newDate;
 
         String caseState = "dueDateChanged";
@@ -216,6 +215,17 @@ public class SaveCaseServiceImpl implements SaveCaseService
             getCaseFileEventUtility().raiseCustomEvent(caseFile, caseState, eventDescription, new Date(), ipAddress, authentication.getName(), authentication);
         }
 
+    }
+
+    private String getDateString(Date date)
+    {
+        if (date != null)
+        {
+            SimpleDateFormat datePattern = new SimpleDateFormat("MM/dd/yyyy");
+            return datePattern.format(date);
+        }
+
+        return "None";
     }
 
     public CaseFileDao getCaseFileDao()
