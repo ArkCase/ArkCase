@@ -27,6 +27,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
@@ -182,6 +183,7 @@ public class AcmSequenceGeneratorIT {
         };
 
         runThreads(runnable);
+        assertEquals(NUM_OF_THREADS, uniqueSequences.size());
     }
 
     @Test
@@ -231,6 +233,7 @@ public class AcmSequenceGeneratorIT {
         };
 
         runThreads(runnable);
+        assertEquals(NUM_OF_THREADS, uniqueSequences.size());
     }
 
     private void runThreads(Runnable runnable) throws InterruptedException {
