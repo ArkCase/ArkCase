@@ -166,7 +166,7 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
         }
         catch (Exception e)
         {
-            log.error("Error processing complaint with number '{}'. Exception msg: '{}' ", entityId, e.getMessage());
+            log.error("Error processing complaint with number '{}'. Exception msg: '{}' ", entityId, e.getMessage(), e);
             exception = e;
         }
 
@@ -235,7 +235,7 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
                     catch (Exception e)
                     {
                         log.error("Error processing attachment with name '{}'. Exception msg: '{}' ", bodyPart.getFileName(),
-                                e.getMessage());
+                                e.getMessage(), e);
                     }
                 }
             }
