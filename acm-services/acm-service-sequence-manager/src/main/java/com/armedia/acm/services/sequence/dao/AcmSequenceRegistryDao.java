@@ -119,7 +119,7 @@ public class AcmSequenceRegistryDao extends AcmAbstractDao<AcmSequenceRegistry>
         }
         catch (NoResultException nre)
         {
-            log.warn("No SequenceRegistry with sequence name [{}], sequence part name [{}]", sequenceName,
+            log.trace("No SequenceRegistry with sequence name [{}], sequence part name [{}]", sequenceName,
                     sequencePartName);
         }
         return sequenceRegistry;
