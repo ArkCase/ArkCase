@@ -27,7 +27,6 @@ package com.armedia.acm.services.sequence.dao;
  * #L%
  */
 
-import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.services.sequence.model.AcmSequenceEntity;
 import com.armedia.acm.services.sequence.model.AcmSequenceEntityId;

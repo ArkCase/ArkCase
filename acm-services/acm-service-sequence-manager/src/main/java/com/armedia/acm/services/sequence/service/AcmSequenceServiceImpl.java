@@ -49,7 +49,10 @@ import org.reflections.scanners.FieldAnnotationsScanner;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import javax.persistence.FlushModeType;
+import javax.persistence.LockModeType;
+import javax.persistence.PersistenceContext;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -218,23 +221,29 @@ public class AcmSequenceServiceImpl implements AcmSequenceService
 
     /*
      * (non-Javadoc)
-     * @see com.armedia.acm.services.sequence.service.AcmSequenceService#getSequenceRegistryList(java.lang.String,
+     * @see com.armedia.acm.services.sequence.service.AcmSequenceService#getAndUpdateSequenceRegistry(java.lang.String,
      * java.lang.String)
      */
     @Override
-    public List<AcmSequenceRegistry> getSequenceRegistryList(String sequenceName, String sequencePartName,
+    @Transactional (propagation = Propagation.REQUIRES_NEW)
+    public AcmSequenceRegistry getAndUpdateSequenceRegistry(String sequenceName, String sequencePartName,
             Boolean sequencePartValueUsedFlag, FlushModeType flushModeType) throws AcmSequenceException
     {
-        log.info("Getting Sequence Registry List for [{}] [{}]", sequenceName, sequencePartName);
+        log.info("Getting Sequence Registry for [{}] [{}]", sequenceName, sequencePartName);
         try
         {
-            return getSequenceRegistryDao().getSequenceRegistryList(sequenceName, sequencePartName, sequencePartValueUsedFlag,
+            AcmSequenceRegistry sequenceRegistry =  getSequenceRegistryDao().getSequenceRegistry(sequenceName, sequencePartName, sequencePartValueUsedFlag,
                     flushModeType);
+            if(sequenceRegistry != null){
+                sequenceRegistry.setSequencePartValueUsedFlag(true);
+                saveSequenceRegistry(sequenceRegistry);
+            }
+            return sequenceRegistry;
         }
         catch (Exception e)
         {
             throw new AcmSequenceException(
-                    String.format("Unable to get Sequence Registry List for [%s] [%s]", sequenceName, sequencePartName), e);
+                    String.format("Unable to get Sequence Registry for [%s] [%s]", sequenceName, sequencePartName), e);
         }
     }
 
@@ -413,7 +422,7 @@ public class AcmSequenceServiceImpl implements AcmSequenceService
      * sequence.model.AcmSequenceRegistry)
      */
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.SUPPORTS)
     public AcmSequenceRegistry saveSequenceRegistry(AcmSequenceRegistry sequenceRegistry) throws AcmSequenceException
     {
         log.info("Saving Sequence Registry for [{}] [{}] [{}]", sequenceRegistry.getSequenceValue(), sequenceRegistry.getSequenceName(),
