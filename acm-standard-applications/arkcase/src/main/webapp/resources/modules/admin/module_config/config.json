@@ -368,7 +368,7 @@
                 },
                 {
                     "name": "activated",
-                    "displayName": "admin.correspondenceManagement.templates.grid.activated",
+                    "displayName": "admin.correspondenceManagement.templates.grid.manualEmails",
                     "visible": true,
                     "headerCellFilter": "translate",
                     "cellTemplate": "<div align='center'><span ng-if='!row.entity.activated' class='label label-warning' ng-click='grid.appScope.activate(row.entity)' translate>admin.correspondenceManagement.templates.grid.statusDeactivated</span><span ng-if='row.entity.activated' class='label label-success' ng-click='grid.appScope.activate(row.entity)' translate>admin.correspondenceManagement.templates.grid.statusActivated</span></div>'",
@@ -377,7 +377,7 @@
                 },
                 {
                     "name": "enabled",
-                    "displayName": "admin.correspondenceManagement.templates.grid.enabled",
+                    "displayName": "admin.correspondenceManagement.templates.grid.automatedEmails",
                     "visible": true,
                     "headerCellFilter": "translate",
                     "cellTemplate": "<div align='center'><span ng-if='!row.entity.enabled' class='label label-danger' ng-click='grid.appScope.enable(row.entity)' translate>admin.correspondenceManagement.templates.grid.statusDisabled</span><span ng-if='row.entity.enabled' class='label label-success' ng-click='grid.appScope.enable(row.entity)' translate>admin.correspondenceManagement.templates.grid.statusEnabled</span></div>'",
