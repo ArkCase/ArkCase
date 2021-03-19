@@ -55,7 +55,7 @@ public class AcmEmailReceiverAdapter
         caseImapMailReceiver.setJavaMailProperties(getJavaMailPropertiesCaseFile());
         caseImapMailReceiver.setMaxFetchSize(1);
         caseImapMailReceiver.setAutoCloseFolder(false);
-        senderImapMailReceiver.setSimpleContent(true);
+        caseImapMailReceiver.setSimpleContent(true);
         return new MailReceivingMessageSource(caseImapMailReceiver);
     }
 
@@ -67,8 +67,8 @@ public class AcmEmailReceiverAdapter
         complaintImapMailReceiver.setShouldMarkMessagesAsRead(emailReceiverConfig.getShouldMarkMessagesAsRead());
         complaintImapMailReceiver.setJavaMailProperties(getJavaMailPropertiesComplaint());
         complaintImapMailReceiver.setMaxFetchSize(1);
-        senderImapMailReceiver.setAutoCloseFolder(false);
-        senderImapMailReceiver.setSimpleContent(true);
+        complaintImapMailReceiver.setAutoCloseFolder(false);
+        complaintImapMailReceiver.setSimpleContent(true);
         return new MailReceivingMessageSource(complaintImapMailReceiver);
     }
 
