@@ -31,6 +31,8 @@ import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.exceptions.AcmObjectLockException;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 
+import java.util.Date;
+
 /**
  * Interface for object locking providers.
  * 
@@ -117,4 +119,16 @@ public interface ObjectLockingProvider
      *
      */
     String getObjectType();
+
+    default AcmObjectLock buildLock(Long objectId, String objectType, String lockType, Long expiry, String userId)
+    {
+        AcmObjectLock lock = new AcmObjectLock();
+        lock.setObjectId(objectId);
+        lock.setObjectType(objectType);
+        lock.setLockType(lockType);
+        lock.setCreated(new Date());
+        lock.setExpiry(new Date(lock.getCreated().getTime() + expiry));
+        lock.setCreator(userId);
+        return lock;
+    }
 }

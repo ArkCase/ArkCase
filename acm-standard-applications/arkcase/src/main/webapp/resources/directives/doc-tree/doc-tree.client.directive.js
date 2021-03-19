@@ -3255,14 +3255,7 @@ angular.module('directives').directive(
                                 }
                                 return dfd.promise();
                             },
-                            fileRemove: function(dfd, node, parent, fileWithLinks) {
-                                var cacheKey = DocTree.getCacheKeyByNode(parent);
-                                var refNode = node.getNextSibling() || node.getPrevSibling() || node.getParent();
-                                node.remove();
-                                if (refNode) {
-                                    refNode.setActive();
-                                }
-
+                            fileRemove: function(dfd, node, parent) {
                                 var fileId = node.data.objectId;
                                 Util.serviceCall({
                                     service: Ecm.deleteFileTemporary,
@@ -3273,6 +3266,12 @@ angular.module('directives').directive(
                                     onSuccess: function (data) {
                                         if (Validator.validateDeletedFile(data)) {
                                             if (data.deletedFileId == fileId) {
+                                                var cacheKey = DocTree.getCacheKeyByNode(parent);
+                                                var refNode = node.getNextSibling() || node.getPrevSibling() || node.getParent();
+                                                node.remove();
+                                                if (refNode) {
+                                                    refNode.setActive();
+                                                }
                                                 var folderList = DocTree.cacheFolderList.get(cacheKey);
                                                 if (Validator.validateFolderList(folderList)) {
                                                     var deleted = DocTree.findFolderItemIdx(fileId, folderList);
@@ -3280,22 +3279,21 @@ angular.module('directives').directive(
                                                         folderList.children.splice(deleted, 1);
                                                         folderList.totalChildren--;
                                                         DocTree.cacheFolderList.put(cacheKey, folderList);
-                                                        DocTree.refreshTree();
                                                         return data.deletedFileId;
                                                     }
                                                 }
                                             }
                                         }
-                                    },
-                                    onError: function(error) {
-                                        MessageService.error(error.data.message);
-                                        dfd.reject();
                                     }
                                 }).then(function(deletedFileId) {
                                     dfd.resolve(deletedFileId);
                                 }, function(errorData) {
-                                    MessageService.error(errorData.data);
-                                    DocTree.markNodeError(node);
+                                    if (errorData.data && errorData.data.message)
+                                    {
+                                        MessageService.error(errorData.data.message);
+                                    } else {
+                                        MessageService.errorAction();
+                                    }
                                     dfd.reject();
                                 });
                                 return dfd.promise();
@@ -3305,7 +3303,14 @@ angular.module('directives').directive(
                                 if (Util.isArrayEmpty(nodes)) {
                                     dfd.resolve();
 
-                                } else {
+                                } else if (nodes.length === 1) {
+                                    if (DocTree.isFolderNode(nodes[0])) {
+                                        return DocTree.Op.deleteFolder(nodes[0]);
+                                    } else if (DocTree.isFileNode(nodes[0])) {
+                                        return DocTree.Op.deleteFile(nodes[0]);
+                                    }
+                                }
+                                else {
                                     var removeNodes = DocTree.getTopMostNodes(nodes);
 
                                     // This is a workaround for the destination folder locking when multiple calls are made in parallel

@@ -2330,7 +2330,7 @@ angular
                                 if (menuResource === "menu.basic.root" && DocTree.treeConfig.hideMenu) {
                                     return emptyArray;
                                 }
-                                menu = _.clone(menu);
+                                menu = _.cloneDeep(menu);
                                 var menuFileTypes = _.find(menu, {
                                     "cmd": "subMenuFileTypes"
                                 });
@@ -2369,13 +2369,21 @@ angular
                                     newFolderMenu.disabledExpression = disabled || DocTree.readOnly;
                                     newFileMenu.disabledExpression = disabled || DocTree.readOnly;
                                 }
-                                //} else {
-                                //    var menu0 = [Util.goodMapValue(DocTree.treeConfig, "noop")];
-                                //    menu = [{
-                                //        title: $translate.instant("common.directive.docTree.menu.noop"),
-                                //        cmd: "noop",
-                                //        uiIcon: ""
-                                //    }];
+
+                                // disable commands based on locks
+                                var currentNode = nodes[0];
+                                var lock = currentNode.data.lock;
+                                if (lock && lock !== "" && DocTree.treeConfig.disabledFileCommandsOnLock) {
+                                    var disableCommands = DocTree.treeConfig.disabledFileCommandsOnLock[lock.lockType];
+                                    _.each(disableCommands, function(dc) {
+                                        var cmdMenu = _.find(menu, {
+                                            cmd: dc
+                                        });
+                                        if (cmdMenu) {
+                                            cmdMenu.disabledExpression = true;
+                                        }
+                                    });
+                                }
                             }
 
                             //Check to see if there is a global handling, if there is, it would override specific handler
@@ -2395,15 +2403,6 @@ angular
 
                                 } else {
                                     if (item.cmd) {
-                                        if (item.cmd === "cut" || item.cmd === "remove" || item.cmd === "rename") {
-                                            var folderStructure = DocTree.treeConfig.folderStructure;
-                                            if (folderStructure && _.find(folderStructure.data, function (folderName) {
-                                                return folderName === nodes[0].data.name;
-                                            })) {
-                                                item.disabled = true;
-                                                item.disabledExpression = true;
-                                            }
-                                        }
                                         var found = DocTree.Command.findHandler(item.cmd);
                                         var onAllowCmd = Util.goodMapValue(found, "onAllowCmd", null);
                                         if (onAllowCmd) {
@@ -3502,14 +3501,7 @@ angular
                             }
                             return dfd.promise();
                         },
-                        fileRemove: function (dfd, node, parent, fileWithLinks) {
-                            var cacheKey = DocTree.getCacheKeyByNode(parent);
-                            var refNode = node.getNextSibling() || node.getPrevSibling() || node.getParent();
-                            node.remove();
-                            if (refNode) {
-                                refNode.setActive();
-                            }
-
+                        fileRemove: function (dfd, node, parent) {
                             var fileId = node.data.objectId;
                             Util.serviceCall({
                                 service: Ecm.deleteFileTemporary,
@@ -3520,6 +3512,12 @@ angular
                                 onSuccess: function (data) {
                                     if (Validator.validateDeletedFile(data)) {
                                         if (data.deletedFileId == fileId) {
+                                            var cacheKey = DocTree.getCacheKeyByNode(parent);
+                                            var refNode = node.getNextSibling() || node.getPrevSibling() || node.getParent();
+                                            node.remove();
+                                            if (refNode) {
+                                                refNode.setActive();
+                                            }
                                             var folderList = DocTree.cacheFolderList.get(cacheKey);
                                             if (Validator.validateFolderList(folderList)) {
                                                 var deleted = DocTree.findFolderItemIdx(fileId, folderList);
@@ -3532,16 +3530,16 @@ angular
                                             }
                                         }
                                     }
-                                },
-                                onError: function (error) {
-                                    MessageService.error(error.data.message);
-                                    dfd.reject();
                                 }
                             }).then(function (deletedFileId) {
                                 dfd.resolve(deletedFileId);
                             }, function (errorData) {
-                                MessageService.error(errorData.data);
-                                DocTree.markNodeError(node);
+                                if (errorData.data && errorData.data.message)
+                                {
+                                    MessageService.error(errorData.data.message);
+                                } else {
+                                    MessageService.errorAction();
+                                }
                                 dfd.reject();
                             });
                             return dfd.promise();
@@ -3551,6 +3549,12 @@ angular
                             if (Util.isArrayEmpty(nodes)) {
                                 dfd.resolve();
 
+                            } else if (nodes.length === 1) {
+                                if (DocTree.isFolderNode(nodes[0])) {
+                                    return DocTree.Op.deleteFolder(nodes[0]);
+                                } else if (DocTree.isFileNode(nodes[0])) {
+                                    return DocTree.Op.deleteFile(nodes[0]);
+                                }
                             } else {
                                 var removeNodes = DocTree.getTopMostNodes(nodes);
 

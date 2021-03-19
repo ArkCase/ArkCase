@@ -28,15 +28,14 @@ package com.armedia.acm.service.objectlock.annotation;
  */
 
 import com.armedia.acm.core.AcmObject;
-import com.armedia.acm.core.exceptions.AcmObjectLockException;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockingManager;
 import com.armedia.acm.web.api.MDCConstants;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 
@@ -51,13 +50,13 @@ import java.lang.annotation.Annotation;
 @Component
 public class AcmAcquireObjectLockAspect
 {
-    private Logger log = LogManager.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     private AcmObjectLockingManager objectLockingManager;
 
     @Around(value = "@annotation(acmAcquireObjectLocks)")
     public Object aroundAcquireObjectLock(ProceedingJoinPoint pjp, AcmAcquireObjectLock.List acmAcquireObjectLocks)
-            throws Throwable, AcmObjectLockException
+            throws Throwable
     {
         Object[] args = pjp.getArgs();
         String userId = MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY);
@@ -99,7 +98,7 @@ public class AcmAcquireObjectLockAspect
 
     @Around(value = "@annotation(acmAcquireObjectLock)")
     public Object aroundAcquireObjectLockSingle(ProceedingJoinPoint pjp, AcmAcquireObjectLock acmAcquireObjectLock)
-            throws Throwable, AcmObjectLockException
+            throws Throwable
     {
         AcmAcquireObjectLock.List locks = new AcmAcquireObjectLock.List()
         {
@@ -127,9 +126,10 @@ public class AcmAcquireObjectLockAspect
         {
             if (!(args[acquireObjectLock.objectIdArgIndex()] instanceof Long))
             {
-                throw new RuntimeException(String.format("AcmAcquireObjectLock objectIdArgIndex does not resolve to Long argument in {}.{}",
-                        pjp.getSignature().getDeclaringTypeName(),
-                        pjp.getSignature().getName()));
+                throw new RuntimeException(
+                        String.format("AcmAcquireObjectLock objectIdArgIndex does not resolve to Long argument in %s. %s",
+                                pjp.getSignature().getDeclaringTypeName(),
+                                pjp.getSignature().getName()));
             }
             return (Long) args[acquireObjectLock.objectIdArgIndex()];
         }
@@ -138,7 +138,7 @@ public class AcmAcquireObjectLockAspect
             if (!(args[acquireObjectLock.acmObjectArgIndex()] instanceof AcmObject))
             {
                 throw new RuntimeException(
-                        String.format("AcmAcquireObjectLock acmObjectArgIndex does not resolve to AcmObject argument in {}.{}",
+                        String.format("AcmAcquireObjectLock acmObjectArgIndex does not resolve to AcmObject argument in %s. %s",
                                 pjp.getSignature().getDeclaringTypeName(),
                                 pjp.getSignature().getName()));
             }
