@@ -225,6 +225,47 @@ public abstract class NotificationSender
 
     }
 
+    @Override
+    public void onApplicationEvent(ApplicationEvent event)
+    {
+        if (event instanceof ConfigurationFileChangedEvent && (((ConfigurationFileChangedEvent) event).getBaseFileName().equals("templates-configuration.json")))
+        {
+            try
+            {
+                templateConfigurations = getObjectConverter().getJsonUnmarshaller()
+                        .unmarshallCollection(FileUtils.readFileToString(templatesConfiguration.getFile()), List.class, Template.class);
+            }
+            catch (Exception e)
+            {
+                LOG.error("Error while reading from config file [{}]", e.getMessage(), e);
+            }
+        }
+        else if (event instanceof ContextRefreshedEvent)
+        {
+            try
+            {
+                File file = templatesConfiguration.getFile();
+                if (!file.exists())
+                {
+                    file.createNewFile();
+                }
+
+                String resource = FileUtils.readFileToString(file);
+                if (resource.isEmpty())
+                {
+                    resource = "[]";
+                }
+
+                templateConfigurations = getObjectConverter().getJsonUnmarshaller()
+                        .unmarshallCollection(FileUtils.readFileToString(templatesConfiguration.getFile()), List.class, Template.class);
+            }
+            catch (IOException ioe)
+            {
+                throw new IllegalStateException("Error while reading from config file [{}]",ioe);
+            }
+        }
+    }
+
     public abstract <T> void sendPlainEmail(Stream<T> emailsDataStream, EmailBuilder<T> emailBuilder, EmailBodyBuilder<T> emailBodyBuilder)
             throws Exception;
 
