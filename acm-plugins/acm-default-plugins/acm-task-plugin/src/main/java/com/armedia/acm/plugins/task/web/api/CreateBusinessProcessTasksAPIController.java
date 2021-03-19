@@ -101,7 +101,7 @@ public class CreateBusinessProcessTasksAPIController
     @RequestMapping(value = "/newdocuments/review", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseBody
     public List<AcmTask> reviewNewDocuments(@RequestPart(name = "task") AcmTask task,
-            @RequestParam(name = "businessProcessName") String businessProcessType,
+            @RequestParam(name = "businessProcessName") String businessProcessName,
             @RequestPart(name = "files", required = false) List<MultipartFile> filesToUpload,
             Authentication authentication, HttpSession httpSession)
             throws AcmCreateObjectFailedException, AcmUserActionFailedException, LinkAlreadyExistException,
@@ -111,7 +111,7 @@ public class CreateBusinessProcessTasksAPIController
         try
         {
 
-            List<AcmTask> acmTasks = getTaskService().startReviewDocumentsWorkflow(task, businessProcessType, authentication,
+            List<AcmTask> acmTasks = getTaskService().startReviewDocumentsWorkflow(task, businessProcessName.split(",")[0], authentication,
                     filesToUpload);
             // Add participant to folder links
             for (AcmTask acmTask : acmTasks)
