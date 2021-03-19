@@ -82,7 +82,7 @@ public interface AcmSequenceService
     // Sequence Registry
     public AcmSequenceRegistry saveSequenceRegistry(AcmSequenceRegistry sequenceRegistry) throws AcmSequenceException;
 
-    public List<AcmSequenceRegistry> getSequenceRegistryList(String sequenceName, String sequencePartName,
+    public AcmSequenceRegistry getAndUpdateSequenceRegistry(String sequenceName, String sequencePartName,
             Boolean sequencePartValueUsedFlag, FlushModeType flushModeType) throws AcmSequenceException;
 
     public List<AcmSequenceRegistry> getSequenceRegistryList() throws AcmSequenceException;

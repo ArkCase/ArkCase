@@ -87,7 +87,7 @@ public class AcmSequenceGeneratorManager implements ApplicationListener<AcmSeque
 
         String sequenceValue = "";
         List<AcmSequencePart> sequenceParts = sequenceMap.get(sequenceName).getSequenceParts();
-        Map<String, Long> autoincrementPartNameToValue = new HashMap<>();
+        AcmSequenceRegistry acmSequenceRegistry = new AcmSequenceRegistry();
         for (AcmSequencePart sequencePart : sequenceParts)
         {
             if (sequencePart.getSequencePartType() != null)
@@ -97,14 +97,14 @@ public class AcmSequenceGeneratorManager implements ApplicationListener<AcmSeque
                 {
                     sequenceValue += generatorsMap.get(sequencePart.getSequencePartType()).generatePartValue(sequenceName, sequencePart,
                             object,
-                            autoincrementPartNameToValue);
+                            acmSequenceRegistry);
                 }
             }
         }
 
-        if (!sequenceValue.isEmpty())
+        if (!sequenceValue.isEmpty() && !acmSequenceRegistry.getSequencePartValueUsedFlag())
         {
-            registerSequence(sequenceValue, sequenceName, autoincrementPartNameToValue);
+            registerSequence(sequenceValue, acmSequenceRegistry);
         }
 
         return sequenceValue;
@@ -116,6 +116,7 @@ public class AcmSequenceGeneratorManager implements ApplicationListener<AcmSeque
         String sequenceValue = "";
         List<AcmSequencePart> sequenceParts = sequenceMap.get(sequenceName).getSequenceParts();
         Map<String, Long> autoincrementPartNameToValue = new HashMap<>();
+        AcmSequenceRegistry acmSequenceRegistry = new AcmSequenceRegistry();
         for (AcmSequencePart sequencePart : sequenceParts)
         {
             if (sequencePart.getSequencePartType() != null)
@@ -124,8 +125,7 @@ public class AcmSequenceGeneratorManager implements ApplicationListener<AcmSeque
                         && evaluateSequencePartCondition(sequencePart.getSequenceCondition(), object)))
                 {
                     sequenceValue += generatorsMap.get(sequencePart.getSequencePartType()).getGeneratePartValue(sequenceName, sequencePart,
-                            object,
-                            autoincrementPartNameToValue, acmSequenceEntity);
+                            object, acmSequenceRegistry, acmSequenceEntity);
                 }
             }
         }
@@ -133,18 +133,13 @@ public class AcmSequenceGeneratorManager implements ApplicationListener<AcmSeque
         return sequenceValue;
     }
 
-    private void registerSequence(String sequenceValue, String sequenceName, Map<String, Long> autoincrementPartNameToValue)
+    private void registerSequence(String sequenceValue, AcmSequenceRegistry acmSequenceRegistry)
             throws AcmSequenceException
     {
-        for (String partName : autoincrementPartNameToValue.keySet())
-        {
-            AcmSequenceRegistry sequenceRegistry = new AcmSequenceRegistry();
-            sequenceRegistry.setSequenceValue(sequenceValue);
-            sequenceRegistry.setSequencePartName(partName);
-            sequenceRegistry.setSequencePartValue(autoincrementPartNameToValue.get(partName));
-            sequenceRegistry.setSequenceName(sequenceName);
-            getSequenceService().saveSequenceRegistry(sequenceRegistry);
-        }
+        acmSequenceRegistry.setSequenceValue(sequenceValue);
+        acmSequenceRegistry.setSequencePartValueUsedFlag(true);
+        getSequenceService().saveSequenceRegistry(acmSequenceRegistry);
+
     }
 
     /**
