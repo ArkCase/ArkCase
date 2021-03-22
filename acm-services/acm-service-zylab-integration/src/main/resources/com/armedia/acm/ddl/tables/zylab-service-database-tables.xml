@@ -1,0 +1,109 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="01-create-acm_zylab_metadata-table" author="aleksandar.acevski" dbms="mysql">
+        <createTable tableName="acm_zylab_metadata">
+            <column name="cm_zylab_metadata_id" type="${idType}">
+                <constraints primaryKey="true" primaryKeyName="pk_zylab_metadata"/>
+            </column>
+            <column name="cm_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_creator" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_modifier" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_class_name" type="TEXT"/>
+            <column name="cm_matter_id" type="LONG"/>
+            <column name="cm_production_key" type="TEXT"/>
+            <column name="cm_zylab_id" type="LONG"/>
+            <column name="cm_beg_bates_number" type="TEXT"/>
+            <column name="cm_end_bates_number" type="TEXT"/>
+            <column name="cm_produced_pages" type="INTEGER"/>
+            <column name="cm_production_create_date" type="${timestampType}"/>
+            <column name="cm_contains_redaction" type="BOOLEAN"/>
+            <column name="cm_redaction_code_1" type="TEXT"/>
+            <column name="cm_redaction_code_2" type="TEXT"/>
+            <column name="cm_redaction_justification" type="TEXT"/>
+            <column name="cm_custodian" type="TEXT"/>
+            <column name="cm_doc_name" type="TEXT"/>
+            <column name="cm_doc_page_count" type="INTEGER"/>
+            <column name="cm_doc_date" type="${timestampType}"/>
+            <column name="cm_doc_ext" type="TEXT"/>
+            <column name="cm_doc_size" type="LONG"/>
+            <column name="cm_has_attachment" type="BOOLEAN"/>
+            <column name="cm_is_attachment" type="BOOLEAN"/>
+            <column name="cm_email_from" type="TEXT"/>
+            <column name="cm_email_recipient" type="TEXT"/>
+            <column name="cm_multimedia_duration_sec" type="INTEGER"/>
+            <column name="cm_multimedia_properties" type="TEXT"/>
+            <column name="cm_reviewed_analysis" type="TEXT"/>
+            <column name="cm_last_reviewed_by" type="TEXT"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="02-create-acm_zylab_metadata-table" author="aleksandar.acevski" dbms="oracle,postgresql,mssql">
+        <createTable tableName="acm_zylab_metadata">
+            <column name="cm_zylab_metadata_id" type="${idType}">
+                <constraints primaryKey="true" primaryKeyName="pk_zylab_metadata"/>
+            </column>
+            <column name="cm_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_class_name" type="VARCHAR(1024)"/>
+            <column name="cm_matter_id" type="LONG"/>
+            <column name="cm_production_key" type="VARCHAR(1024)"/>
+            <column name="cm_zylab_id" type="LONG"/>
+            <column name="cm_beg_bates_number" type="VARCHAR(256)"/>
+            <column name="cm_end_bates_number" type="VARCHAR(256)"/>
+            <column name="cm_produced_pages" type="INTEGER"/>
+            <column name="cm_production_create_date" type="${timestampType}"/>
+            <column name="cm_contains_redaction" type="BOOLEAN"/>
+            <column name="cm_redaction_code_1" type="VARCHAR(4000)"/>
+            <column name="cm_redaction_code_2" type="VARCHAR(4000)"/>
+            <column name="cm_redaction_justification" type="VARCHAR(1024)"/>
+            <column name="cm_custodian" type="VARCHAR(1024)"/>
+            <column name="cm_doc_name" type="VARCHAR(1024)"/>
+            <column name="cm_doc_page_count" type="INTEGER"/>
+            <column name="cm_doc_date" type="${timestampType}"/>
+            <column name="cm_doc_ext" type="VARCHAR(256)"/>
+            <column name="cm_doc_size" type="LONG"/>
+            <column name="cm_has_attachment" type="BOOLEAN"/>
+            <column name="cm_is_attachment" type="BOOLEAN"/>
+            <column name="cm_email_from" type="VARCHAR(4000)"/>
+            <column name="cm_email_recipient" type="VARCHAR(4000)"/>
+            <column name="cm_multimedia_duration_sec" type="INTEGER"/>
+            <column name="cm_multimedia_properties" type="VARCHAR(4000)"/>
+            <column name="cm_reviewed_analysis" type="VARCHAR(1024)"/>
+            <column name="cm_last_reviewed_by" type="VARCHAR(1024)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="03-create-acm_zylab_metadata-seq" author="aleksandar.acevski">
+        <createTable tableName="acm_zylab_metadata_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_zylab_metadata_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_zylab_metadata"></column>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

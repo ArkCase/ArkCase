@@ -2,6 +2,20 @@
     xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <!-- need an empty changelog file here so Liquibase will stop complaining -->
+    <changeSet id="01-add-constraint-zylab-file-metadata-id" author="aleksandar.acevski">
+        <preConditions>
+            <and>
+                <tableExists tableName="acm_zylab_metadata"/>
+                <columnExists tableName="acm_file" columnName="cm_zylab_file_metadata"/>
+            </and>
+        </preConditions>
+        <addForeignKeyConstraint baseTableName="acm_file" baseColumnNames="cm_zylab_file_metadata"
+                                 constraintName="fk_zylab_file_metadata_id"
+                                 referencedTableName="acm_zylab_metadata"
+                                 referencedColumnNames="cm_zylab_metadata_id"
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
+    </changeSet>
+
 </databaseChangeLog>
 
