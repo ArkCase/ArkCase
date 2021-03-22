@@ -72,6 +72,8 @@ public class TemplateRequestResponse
     private String templateType;
     
     private boolean enabled;
+
+    private String parentType;
     /**
      * @return the templateId
      */
@@ -340,5 +342,22 @@ public class TemplateRequestResponse
     public void setEnabled(boolean enabled) 
     {
         this.enabled = enabled;
+    }
+
+    /**
+     * @return the parentType
+     */
+    public String getParentType()
+    {
+        return parentType;
+    }
+
+    /**
+     * @param parentType
+     *            the parentType to set
+     */
+    public void setParentType(String parentType)
+    {
+        this.parentType = parentType;
     }
 }
