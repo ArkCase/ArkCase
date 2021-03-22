@@ -104,19 +104,23 @@ public class OAuth2ClientRegistrationConfig
         return clientSecret;
     }
 
-    public String getTenantId() {
+    public String getTenantId()
+    {
         return tenantId;
     }
 
-    public void setTenantId(String tenantId) {
+    public void setTenantId(String tenantId)
+    {
         this.tenantId = tenantId;
     }
 
-    public String getTenantSecret() {
+    public String getTenantSecret()
+    {
         return tenantSecret;
     }
 
-    public void setTenantSecret(String tenantSecret) {
+    public void setTenantSecret(String tenantSecret)
+    {
         this.tenantSecret = tenantSecret;
     }
 
