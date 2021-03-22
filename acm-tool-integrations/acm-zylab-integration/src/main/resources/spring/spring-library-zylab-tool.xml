@@ -15,6 +15,7 @@
     </bean>
 
     <bean id="zylabProductionSubscriber" class="com.armedia.acm.tool.zylab.jms.ZylabProductionSubscriber">
+        <property name="objectConverter" ref="objectConverter"/>
     </bean>
 
     <bean id="zylabIntegrationService" class="com.armedia.acm.tool.zylab.service.ZylabIntegrationServiceImpl">
