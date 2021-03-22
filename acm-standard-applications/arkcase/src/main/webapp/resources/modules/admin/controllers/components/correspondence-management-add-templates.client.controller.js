@@ -103,7 +103,7 @@ angular.module('admin').controller('Admin.AddCMTemplateController', [ '$scope', 
             });
 
             var currentSelectedParentType = _.find($scope.correspondenceParentTypes, function (parentType) {
-                return parentType.key === $scope.selectedRow.objectType;
+                return parentType.key === $scope.selectedRow.parentType;
             });
 
             $scope.selectedName = currentSelectedObjectType;
