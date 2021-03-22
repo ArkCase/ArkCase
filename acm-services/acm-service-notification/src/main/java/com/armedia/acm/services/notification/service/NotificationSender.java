@@ -234,7 +234,7 @@ public abstract class NotificationSender implements ApplicationListener<Applicat
     @Override
     public void onApplicationEvent(ApplicationEvent event)
     {
-        if (event instanceof ConfigurationFileChangedEvent && (((ConfigurationFileChangedEvent) event).getConfigFile().equals("templates-configuration.json")))
+        if (event instanceof ConfigurationFileChangedEvent && (((ConfigurationFileChangedEvent) event).getBaseFileName().equals("templates-configuration.json")))
         {
             try
             {
