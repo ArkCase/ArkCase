@@ -39,6 +39,7 @@ import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.tag.model.AcmAssociatedTag;
+import com.armedia.acm.services.zylab.model.ZylabFileMetadata;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -222,6 +223,10 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
 
     @Column(name = "cm_custodian")
     private String custodian;
+
+    @OneToOne
+    @JoinColumn(name = "cm_zylab_file_metadata")
+    private ZylabFileMetadata zylabFileMetadata;
 
     @Transient
     private String uuid;
@@ -708,5 +713,13 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
 
     public void setCustodian(String custodian) {
         this.custodian = custodian;
+    }
+
+    public ZylabFileMetadata getZylabFileMetadata() {
+        return zylabFileMetadata;
+    }
+
+    public void setZylabFileMetadata(ZylabFileMetadata zylabFileMetadata) {
+        this.zylabFileMetadata = zylabFileMetadata;
     }
 }
