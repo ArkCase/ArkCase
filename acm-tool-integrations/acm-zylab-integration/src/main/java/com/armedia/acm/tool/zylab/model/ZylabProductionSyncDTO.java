@@ -27,37 +27,32 @@ package com.armedia.acm.tool.zylab.model;
  * #L%
  */
 
-import org.springframework.context.ApplicationEvent;
-
 /**
- * Created by Aleksandar Acevski <aleksandar.acevski@armedia.com> on January, 2021
+ * Created by Aleksandar Acevski <aleksandar.acevski@armedia.com> on March, 2021
  */
-public class ZylabProductionFileIncomingEvent extends ApplicationEvent
+public class ZylabProductionSyncDTO
 {
     Long matterId;
+
     String productionKey;
 
-    public ZylabProductionFileIncomingEvent(Long matterId, String productionKey)
+    public Long getMatterId()
     {
-        super(matterId);
-
-        this.matterId = matterId;
-        this.productionKey = productionKey;
-    }
-
-    public ZylabProductionFileIncomingEvent(ZylabProductionSyncDTO zylabProductionSyncDTO)
-    {
-        super(zylabProductionSyncDTO);
-
-        this.matterId = zylabProductionSyncDTO.getMatterId();
-        this.productionKey = zylabProductionSyncDTO.getProductionKey();
-    }
-
-    public Long getMatterId() {
         return matterId;
     }
 
-    public String getProductionKey() {
+    public void setMatterId(Long matterId)
+    {
+        this.matterId = matterId;
+    }
+
+    public String getProductionKey()
+    {
         return productionKey;
+    }
+
+    public void setProductionKey(String productionKey)
+    {
+        this.productionKey = productionKey;
     }
 }
