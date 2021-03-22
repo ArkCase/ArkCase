@@ -195,7 +195,7 @@ angular.module('directives').controller('directives.DocTreeEmailDialogController
     var templatesPromise = correspondenceService.retrieveActiveVersionTemplatesList('emailTemplate');
     templatesPromise.then(function(templates) {
         $scope.emailTemplates = _.filter(templates.data, function(et) {
-            return et.activated && (et.objectType == 'ALL' || et.objectType == 'FILE' && (et.parentType == $scope.DocTree._objType || Util.isEmpty((et.parentType))));
+            return et.activated && (et.objectType == 'ALL' || (et.objectType == 'FILE' && (et.parentType == $scope.DocTree._objType || Util.isEmpty((et.parentType)))));
         });
         var found = _.find($scope.emailTemplates, {
             templateFilename: 'plainEmail.html'
