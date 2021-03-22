@@ -194,25 +194,11 @@ angular.module('tasks').controller(
                     taskData.parentObjectId = $scope.config.data.attachedToObjectId;
                     taskData.parentObjectType = $scope.config.data.attachedToObjectType;
                 }
-                if ($scope.documentsToReview && $scope.selectedBusinessProcessType == 'acmDocumentTaskWorkflow' && $scope.filesToUpload.length < 1) {
+                if ($scope.documentsToReview && $scope.selectedBusinessProcessType != 'notDefinedWorkflow' && $scope.filesToUpload.length < 1) {
                     taskData.documentsToReview = processDocumentsUnderReview();
                     TaskNewTaskService.reviewDocuments(taskData, $scope.selectedBusinessProcessType).then(reviewDocumentTaskSuccessCallback, errorCallback);
-                } else if (($scope.documentsToReview || $scope.taskType != 'REVIEW_DOCUMENT') && $scope.selectedBusinessProcessType == 'acmDocumentTaskWorkflow' && $scope.filesToUpload) {
-                    taskData.documentsToReview = processDocumentsUnderReview();
-                    var formData = new FormData();
-                    var data = new Blob([angular.toJson(JSOG.encode(Util.omitNg(taskData)))], {
-                        type: 'application/json'
-                    });
-                    formData.append('task', data);
-                    formData.append('businessProcessName', $scope.selectedBusinessProcessType);
-                    angular.forEach($scope.filesToUpload, function (value) {
-                        formData.append('files', value);
-                    });
-                    TaskNewTaskService.reviewNewDocuments(formData, $scope.selectedBusinessProcessType).then(reviewDocumentTaskSuccessCallback, errorCallback);
-                } else if ($scope.documentsToReview && $scope.selectedBusinessProcessType == 'acmDocumentSingleTaskWorkflow' && $scope.filesToUpload.length < 1) {
-                    taskData.documentsToReview = processDocumentsUnderReview();
-                    TaskNewTaskService.reviewDocuments(taskData, $scope.selectedBusinessProcessType).then(reviewDocumentTaskSuccessCallback, errorCallback);
-                } else if (($scope.documentsToReview || $scope.taskType != 'REVIEW_DOCUMENT') && $scope.selectedBusinessProcessType == 'acmDocumentSingleTaskWorkflow' && $scope.filesToUpload) {
+                } else if ($scope.selectedBusinessProcessType != 'notDefinedWorkflow' && $scope.filesToUpload) {
+                    //$scope.documentsToReview.push($scope.filesToUpload);
                     taskData.documentsToReview = processDocumentsUnderReview();
                     var formData = new FormData();
                     var data = new Blob([angular.toJson(JSOG.encode(Util.omitNg(taskData)))], {
@@ -302,6 +288,14 @@ angular.module('tasks').controller(
 
             function processDocumentsUnderReview() {
                 var processedDocuments = [];
+                if($scope.filesToUpload.length>=1 && (!$scope.documentsToReview || $scope.documentsToReview<1))
+                {
+                    $scope.documentsToReview = $scope.filesToUpload;
+                } else {
+                    for (var m = 0; m < $scope.filesToUpload.length; m++) {
+                        $scope.documentsToReview.splice($scope.documentsToReview.length, 0, $scope.filesToUpload[m]);
+                    }
+                }
                 angular.forEach($scope.documentsToReviewIds, function (value) {
                     var doc = _.find($scope.documentsToReview, function (d) {
                         return d.data.objectId === value;

@@ -759,9 +759,6 @@ public class AcmTaskServiceImpl implements AcmTaskService
             pvars.put("taskPriority", configuration.getTaskPriority());
 
             pvars.put("approver1", task.getAssignee());
-            pvars.put("approver2", approvers.get(0));
-            pvars.put("approver3", approvers.get(1));
-            pvars.put("approver4", approvers.get(2));
 
             pvars.put("currentTaskName", task.getTitle());
             pvars.put("owningGroup", task.getCandidateGroups());

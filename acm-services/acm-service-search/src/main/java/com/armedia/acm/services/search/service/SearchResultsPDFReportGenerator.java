@@ -164,7 +164,6 @@ public class SearchResultsPDFReportGenerator extends ReportGenerator
 
             if(data.has("object_type_s")){
                 String typeValue = data.getString("object_type_s");
-                typeValue = stringChangeLine(typeValue,14);
                 if (typeValue.equals(OBJECT_TYPE_CASE_FILE) && data.has("object_sub_type_s"))
                 {
                     typeValue = data.getString("object_sub_type_s");
@@ -174,21 +173,18 @@ public class SearchResultsPDFReportGenerator extends ReportGenerator
             }
             if(data.has("name")){
                 String nameValue = data.getString("name");
-                nameValue = stringChangeLine(nameValue, 20);
 
                 addElement(document, resultElement, "name", nameValue, true);
             }
 
             if(data.has("title_parseable")){
                 String titleValue = data.getString("title_parseable");
-                titleValue = stringChangeLine(titleValue, 17);
 
                 addElement(document, resultElement, "title", titleValue, true);
             }
 
             if(data.has("parent_number_lcs")){
                 String parentValue = data.getString("parent_number_lcs");
-                parentValue = stringChangeLine(parentValue, 14);
                 if(data.has("related_object_number_s")){
                     parentValue = data.getString("related_object_number_s");
                 }
@@ -197,7 +193,6 @@ public class SearchResultsPDFReportGenerator extends ReportGenerator
 
             if(data.has("assignee_full_name_lcs")){
                 String assigneeValue = data.getString("assignee_full_name_lcs");
-                assigneeValue = stringChangeLine(assigneeValue, 11);
                 addElement(document, resultElement, "assignee", assigneeValue.toString(), true);
             }
 
@@ -306,51 +301,5 @@ public class SearchResultsPDFReportGenerator extends ReportGenerator
         LocalDateTime adjDateTime = localDateTime.plusHours(adjTimeZone);
 
         return adjDateTime.format(DATE_TIME_PATTERN);
-    }
-
-    /**
-     * Change Line once string is over length
-     * @param value
-     * @return
-     */
-    private String stringChangeLine(String value, int size){
-        String tempString = "";
-        if(value != null && value.length() > size){
-
-            Integer startSize = 0;
-            Integer endSize = size;
-            for(Integer i = 0;i <= value.length()/size ;i++)
-            {
-                boolean isAddOne = false;
-                if (endSize >= value.length())
-                {
-                    endSize = value.length();
-
-                }
-                // if next char of Enter is ',' or '.', it may cause faill to change line in pdf file. Get the next char of those symbol.
-                if( (endSize < value.length()) && (value.charAt(endSize) == ',' || value.charAt(endSize) == '.')){
-                    endSize += 1;
-                    isAddOne = true;
-                }
-
-                //may have exception when substring. If exception happen return original value
-                try{
-                    tempString = tempString + System.getProperties().getProperty("line.separator") + value.substring(startSize, endSize);
-
-                }catch(IndexOutOfBoundsException ex){
-                    log.error("Failed process String "+ value);
-                    return value;
-                }
-
-                if(isAddOne){
-                    startSize += 1;
-                }
-                startSize = startSize + size;
-                endSize = endSize + size;
-            }
-        }else{
-            tempString = value;
-        }
-        return tempString;
     }
 }

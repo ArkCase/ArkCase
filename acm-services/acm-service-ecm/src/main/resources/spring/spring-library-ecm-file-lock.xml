@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="fileLockingProvider" class="com.armedia.acm.plugins.ecm.service.lock.FileLockingProvider">
+    <bean id="defaultEcmObjectLockingProvider" class="com.armedia.acm.plugins.ecm.service.lock.DefaultEcmObjectLockingProvider">
         <property name="objectLockService" ref="objectLockService"/>
         <property name="expiryTimeInMilliseconds" value="600000"/>
     </bean>
 
-    <bean id="folderLockingProvider" class="com.armedia.acm.plugins.ecm.service.lock.FolderLockingProvider">
-        <property name="objectLockService" ref="objectLockService"/>
+    <bean id="fileLockingProvider" class="com.armedia.acm.plugins.ecm.service.lock.FileLockingProvider"
+          parent="defaultEcmObjectLockingProvider"/>
+
+    <bean id="folderLockingProvider" class="com.armedia.acm.plugins.ecm.service.lock.FolderLockingProvider"
+          parent="defaultEcmObjectLockingProvider">
         <property name="folderService" ref="acmFolderService"/>
         <property name="fileLockingProvider" ref="fileLockingProvider"/>
-        <property name="expiryTimeInMilliseconds" value="600000"/>
     </bean>
 
-    <bean id="containerLockingProvider" class="com.armedia.acm.plugins.ecm.service.lock.ContainerLockingProvider">
-        <property name="objectLockService" ref="objectLockService"/>
+    <bean id="containerLockingProvider" class="com.armedia.acm.plugins.ecm.service.lock.ContainerLockingProvider"
+          parent="defaultEcmObjectLockingProvider">
         <property name="containerDao" ref="acmContainerFolderDao"/>
         <property name="folderLockingProvider" ref="folderLockingProvider"/>
-        <property name="expiryTimeInMilliseconds" value="600000"/>
     </bean>
 </beans>
