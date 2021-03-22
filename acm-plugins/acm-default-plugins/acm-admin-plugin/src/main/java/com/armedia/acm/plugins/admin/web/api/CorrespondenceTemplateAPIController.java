@@ -243,6 +243,7 @@ public class CorrespondenceTemplateAPIController
         response.setTemplateModelProvider(template.getTemplateModelProvider());
         response.setTemplateType(template.getTemplateType());
         response.setEnabled(template.isEnabled());
+        response.setParentType(template.getParentType());
 
         return response;
     }
@@ -270,6 +271,7 @@ public class CorrespondenceTemplateAPIController
         template.setTemplateModelProvider(request.getTemplateModelProvider());
         template.setTemplateType(request.getTemplateType());
         template.setEnabled(request.isEnabled());
+        template.setParentType(request.getParentType());
 
         return template;
     }

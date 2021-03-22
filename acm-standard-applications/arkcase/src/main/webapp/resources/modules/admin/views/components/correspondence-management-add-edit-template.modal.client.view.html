@@ -35,6 +35,17 @@
                     </select>
                 </label>
             </div>
+            <div class="row" ng-if="config.id === 'correspondenceManagementEmailTemplates'">
+                <label class="control-label">{{ 'admin.correspondenceManagement.templates.modal.parentTypes.label' |
+                    translate}}
+                    <select ng-model="selectedParentType"
+                            ng-value="currentSelectedParentType.value"
+                            ng-options="parentType.value | translate for parentType in correspondenceParentTypes"
+                            ng-change="changeParentType(selectedParentType)"
+                            ng-disabled="isEdit" class="form-control input-md">
+                    </select>
+                </label>
+            </div>
             <div class="row">
                 <label class="control-label">{{ 'admin.correspondenceManagement.templates.modal.templateModelProvider.label' |
                     translate}}

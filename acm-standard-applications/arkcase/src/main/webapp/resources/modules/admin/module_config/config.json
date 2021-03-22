@@ -344,6 +344,14 @@
                     "width": 120
                 },
                 {
+                    "name": "parentType",
+                    "displayName": "admin.correspondenceManagement.templates.grid.parentType",
+                    "visible": true,
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.correspondenceParentTypes, row.entity.parentType) | translate }}</div>",
+                    "headerCellFilter": "translate",
+                    "width": 120
+                },
+                {
                     "name": "templateModelProvider",
                     "displayName": "admin.correspondenceManagement.templates.grid.templateModelProvider",
                     "visible": true,
@@ -435,6 +443,13 @@
                 {
                     "name": "objectType",
                     "displayName": "admin.correspondenceManagement.templates.grid.objectType",
+                    "visible": true,
+                    "headerCellFilter": "translate",
+                    "width": 100
+                },
+                {
+                    "name": "parentType",
+                    "displayName": "admin.correspondenceManagement.templates.grid.parentType",
                     "visible": true,
                     "headerCellFilter": "translate",
                     "width": 100
