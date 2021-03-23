@@ -36,6 +36,8 @@ public class ZylabProductionSyncDTO
 
     String productionKey;
 
+    String status;
+
     public Long getMatterId()
     {
         return matterId;
@@ -54,5 +56,13 @@ public class ZylabProductionSyncDTO
     public void setProductionKey(String productionKey)
     {
         this.productionKey = productionKey;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

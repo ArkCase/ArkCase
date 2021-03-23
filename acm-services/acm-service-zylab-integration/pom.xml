@@ -72,6 +72,12 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-login</artifactId>

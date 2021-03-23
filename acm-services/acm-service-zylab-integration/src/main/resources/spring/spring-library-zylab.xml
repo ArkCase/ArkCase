@@ -2,6 +2,10 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+    <bean id="zylabProductionSubscriber" class="com.armedia.acm.services.zylab.jms.ZylabProductionSubscriber">
+        <property name="objectConverter" ref="objectConverter"/>
+    </bean>
+
     <bean id="zylabIntegrationConfigService"
           class="com.armedia.acm.services.zylab.service.ZylabIntegrationConfigService">
         <property name="configurationPropertyService" ref="configurationPropertyService"/>
