@@ -61,24 +61,10 @@ import com.voodoodyne.jackson.jsog.JSOGGenerator;
 public class ZylabFileMetadata
 {
     @Id
-    @TableGenerator(name = "acm_zylab_metadata_gen", table = "acm_zylab_metadata_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_zylab_metadata", initialValue = 100, allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_zylab_metadata_gen")
+    @TableGenerator(name = "acm_zylab_file_metadata_gen", table = "acm_zylab_file_metadata_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_zylab_file_metadata", initialValue = 100, allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_zylab_file_metadata_gen")
     @Column(name = "cm_zylab_metadata_id")
     private Long id;
-
-    @Column(name = "cm_created", nullable = false, updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date created;
-
-    @Column(name = "cm_creator", updatable = false)
-    private String creator;
-
-    @Column(name = "cm_modified", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date modified;
-
-    @Column(name = "cm_modifier")
-    private String modifier;
 
     @Column(name = "cm_class_name")
     private String className = this.getClass().getName();
@@ -160,6 +146,9 @@ public class ZylabFileMetadata
     @Column(name = "cm_last_reviewed_by")
     private String lastReviewedBy;
 
+    @Column(name = "cm_source")
+    private String source;
+
     public Long getId()
     {
         return id;
@@ -168,46 +157,6 @@ public class ZylabFileMetadata
     public void setId(Long id)
     {
         this.id = id;
-    }
-
-    public Date getCreated()
-    {
-        return created;
-    }
-
-    public void setCreated(Date created)
-    {
-        this.created = created;
-    }
-
-    public String getCreator()
-    {
-        return creator;
-    }
-
-    public void setCreator(String creator)
-    {
-        this.creator = creator;
-    }
-
-    public Date getModified()
-    {
-        return modified;
-    }
-
-    public void setModified(Date modified)
-    {
-        this.modified = modified;
-    }
-
-    public String getModifier()
-    {
-        return modifier;
-    }
-
-    public void setModifier(String modifier)
-    {
-        this.modifier = modifier;
     }
 
     public String getClassName()
@@ -468,5 +417,13 @@ public class ZylabFileMetadata
     public void setLastReviewedBy(String lastReviewedBy)
     {
         this.lastReviewedBy = lastReviewedBy;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
     }
 }
