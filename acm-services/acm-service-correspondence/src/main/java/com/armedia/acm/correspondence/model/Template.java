@@ -105,6 +105,11 @@ public class Template
     private Date modified;
 
     /**
+     * The parent type of the template
+     */
+    private String parentType;
+
+    /**
      * @return the templateId
      */
     public String getTemplateId()
@@ -355,5 +360,22 @@ public class Template
     public void setEnabled(boolean enabled) 
     {
         this.enabled = enabled;
+    }
+
+    /**
+     * @return the parentType
+     */
+    public String getParentType()
+    {
+        return parentType;
+    }
+
+    /**
+     * @param parentType
+     *          the parentType to set
+     */
+    public void setParentType(String parentType)
+    {
+        this.parentType = parentType;
     }
 }

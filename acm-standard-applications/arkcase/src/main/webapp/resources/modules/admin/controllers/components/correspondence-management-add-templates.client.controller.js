@@ -75,6 +75,11 @@ angular.module('admin').controller('Admin.AddCMTemplateController', [ '$scope', 
             $scope.template.objectType = $scope.objectType.key;
         };
 
+        $scope.changeParentType = function (selectedParentType) {
+            $scope.parentType = selectedParentType;
+            $scope.template.parentType = $scope.parentType.key;
+        };
+
         $scope.changeTemplateModelProvider = function(templateModelProvider){
             $scope.templateModelProvider = templateModelProvider;
             $scope.template.templateModelProvider = $scope.templateModelProvider;
@@ -96,10 +101,17 @@ angular.module('admin').controller('Admin.AddCMTemplateController', [ '$scope', 
             var currentSelectedObjectType = _.find($scope.correspondenceObjectTypes, function(objectType) {
                 return objectType.key === $scope.selectedRow.objectType;
             });
+
+            var currentSelectedParentType = _.find($scope.correspondenceParentTypes, function (parentType) {
+                return parentType.key === $scope.selectedRow.parentType;
+            });
+
             $scope.selectedName = currentSelectedObjectType;
+            $scope.selectedParentType = currentSelectedParentType;
             $scope.template.label = $scope.selectedRow.label;
             $scope.changeTemplateModelProvider($scope.selectedRow.templateModelProvider);
             $scope.change(currentSelectedObjectType);
+            $scope.changeParentType(currentSelectedParentType);
         }
 
         $scope.getNavBarTree = function(){
