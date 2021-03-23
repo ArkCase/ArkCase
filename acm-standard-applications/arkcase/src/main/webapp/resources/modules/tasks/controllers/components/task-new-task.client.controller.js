@@ -288,9 +288,8 @@ angular.module('tasks').controller(
 
             function processDocumentsUnderReview() {
                 var processedDocuments = [];
-                if($scope.filesToUpload.length>=1 && $scope.documentsToReview<1)
+                if($scope.filesToUpload.length>=1 && (!$scope.documentsToReview || $scope.documentsToReview<1))
                 {
-                    //this should be changed
                     $scope.documentsToReview = $scope.filesToUpload;
                 } else {
                     for (var m = 0; m < $scope.filesToUpload.length; m++) {
