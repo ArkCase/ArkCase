@@ -110,7 +110,7 @@
         <solr-solrj.version>7.6.0</solr-solrj.version>
         <sonar.version>3.5.0.1254</sonar.version>
         <spring.integration.version>4.3.22.RELEASE</spring.integration.version>
-        <spring.ldap.version>1.3.2.RELEASE</spring.ldap.version>
+        <spring.ldap.version>2.3.3.RELEASE</spring.ldap.version>
         <spring.security.kerberos.version>1.0.1.RELEASE</spring.security.kerberos.version>
         <spring.security.saml2.core.version>1.0.2.RELEASE</spring.security.saml2.core.version>
         <spring.security.version>3.2.7.RELEASE</spring.security.version>
