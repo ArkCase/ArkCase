@@ -1,4 +1,4 @@
-package com.armedia.acm.tool.zylab.jms;
+package com.armedia.acm.services.zylab.jms;
 
 /*-
  * #%L
@@ -48,7 +48,13 @@ public class ZylabProductionSubscriber implements ApplicationEventPublisherAware
     private ApplicationEventPublisher applicationEventPublisher;
     private ObjectConverter objectConverter;
 
-    @JmsListener(destination = "arkcase-zylab-integration", containerFactory = "jmsListenerContainerFactory")
+    /**
+     *
+     * Subscribes to messages and publishes a ZylabProductionFileIncoming event to be handled by listeners
+     *
+     * @param message Message from ZyLAB containing matter ID and production key
+     */
+    @JmsListener(destination = "zylab-arkcase-integration", containerFactory = "jmsListenerContainerFactory")
     public void onNewProductionSync(Message message)
     {
         log.info("New ZyLAB production sync message received, [{}]", message.getPayload());
