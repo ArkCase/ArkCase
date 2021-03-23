@@ -1078,6 +1078,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
         object.setDuplicate(getSearchResults().extractBoolean(doc, SearchConstants.PROPERTY_DUPLICATE));
 
+        object.setCustodian(getSearchResults().extractString(doc, SearchConstants.PROPERTY_FILE_CUSTODIAN));
+
         if (object.getObjectType().equals(EcmFileConstants.FILE))
         {
             EcmFile file = getEcmFileDao().find(object.getObjectId());
