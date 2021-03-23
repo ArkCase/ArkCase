@@ -75,4 +75,10 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="04-add-exemption-code-number-column" author="aleksandar.acevski">
+        <addColumn tableName="acm_exemption_code">
+            <column name="cm_exemption_number" type="INTEGER"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
