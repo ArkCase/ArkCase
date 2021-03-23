@@ -131,6 +131,8 @@ public interface SearchConstants
 
     String PROPERTY_DUPLICATE = "duplicate_b";
 
+    String PROPERTY_FILE_CUSTODIAN = "custodian_s";
+
     String PDFEXPORT_STYLESHEET = "searchexportpdf-document.xsl";
 
     String SEARCH_RESULTS_PDF_EXPORT = "searchresultspdf";
