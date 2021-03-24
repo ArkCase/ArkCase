@@ -431,7 +431,7 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
         }
         catch (Exception e)
         {
-            log.error("Can not find class for provided classpath {}", e.getMessage());
+            log.error("Can not find class for provided classpath {}. Error: {}", templateModelProvider, e.getMessage());
         }
 
         TemplateModelProvider modelProvider = getTemplateModelProvider(templateModelProviderClass);
@@ -444,7 +444,7 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
             }
             catch(Exception ex)
             {
-                log.error("Failed to process template {}!", templateName, ex);
+                log.error("Failed to process template {}! Error: {} ", templateName, ex.getMessage());
             }
         }
         return templateContent;
