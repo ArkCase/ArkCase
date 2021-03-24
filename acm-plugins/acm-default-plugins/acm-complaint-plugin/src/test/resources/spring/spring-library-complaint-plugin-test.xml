@@ -86,7 +86,7 @@
         <property name="ecmFileDao" ref="ecmFileDao"/>
     </bean>
 
-    <bean id="templatingEngine" class="com.armedia.acm.acm.services.templateconfiguration.TemplatingEngine">
+    <bean id="templatingEngine" class="com.armedia.acm.services.templateconfiguration.TemplatingEngine">
         <property name="applicationConfig" ref="applicationProperties"/>
     </bean>
 
