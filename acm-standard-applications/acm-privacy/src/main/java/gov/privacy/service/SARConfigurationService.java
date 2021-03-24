@@ -45,7 +45,6 @@ public class SARConfigurationService extends SystemConfigurationService
     public void writeConfiguration(SARConfiguration SARConfiguration)
     {
         SARConfig.setMaxDaysInHoldQueue(SARConfiguration.getMaxDaysInHoldQueue());
-        SARConfig.setDashboardBannerEnabled(SARConfiguration.getDashboardBannerEnabled());
         SARConfig.setPurgeRequestWhenInHoldEnabled(SARConfiguration.getPurgeRequestWhenInHoldEnabled());
         SARConfig.setLimitedDeliveryToSpecificPageCountEnabled(SARConfiguration.getLimitedDeliveryToSpecificPageCountEnabled());
         SARConfig.setLimitedDeliveryToSpecificPageCount(SARConfiguration.getLimitedDeliveryToSpecificPageCount());
@@ -59,7 +58,6 @@ public class SARConfigurationService extends SystemConfigurationService
     {
         SARConfiguration SARConfiguration = new SARConfiguration();
         SARConfiguration.setMaxDaysInHoldQueue(SARConfig.getMaxDaysInHoldQueue());
-        SARConfiguration.setDashboardBannerEnabled(SARConfig.getDashboardBannerEnabled());
         SARConfiguration.setPurgeRequestWhenInHoldEnabled(SARConfig.getPurgeRequestWhenInHoldEnabled());
         SARConfiguration.setLimitedDeliveryToSpecificPageCountEnabled(SARConfig.getLimitedDeliveryToSpecificPageCountEnabled());
         SARConfiguration.setLimitedDeliveryToSpecificPageCount(SARConfig.getLimitedDeliveryToSpecificPageCount());

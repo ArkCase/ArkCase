@@ -149,6 +149,10 @@ public class ApplicationConfig implements DynamicApplicationConfig
     @Value("${application.properties.templateGuideUrl}")
     private String templateGuideUrl;
 
+    @JsonProperty("application.properties.dashboardBannerEnabled")
+    @Value("${application.properties.dashboardBannerEnabled}")
+    private Boolean dashboardBannerEnabled;
+
     public Integer getIdleLimit()
     {
         return idleLimit;
@@ -367,5 +371,15 @@ public class ApplicationConfig implements DynamicApplicationConfig
     public void setTemplateGuideUrl(String templateGuideUrl)
     {
         this.templateGuideUrl = templateGuideUrl;
+    }
+
+    public Boolean getDashboardBannerEnabled()
+    {
+        return dashboardBannerEnabled;
+    }
+
+    public void setDashboardBannerEnabled(Boolean dashboardBannerEnabled)
+    {
+        this.dashboardBannerEnabled = dashboardBannerEnabled;
     }
 }
