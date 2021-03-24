@@ -2,7 +2,7 @@ package com.armedia.acm.services.zylab.jms;
 
 /*-
  * #%L
- * Tool Integrations: Arkcase ZyLAB Integration
+ * ACM Service: Arkcase ZyLAB Integration
  * %%
  * Copyright (C) 2014 - 2021 ArkCase LLC
  * %%
@@ -55,7 +55,7 @@ public class ZylabProductionSubscriber implements ApplicationEventPublisherAware
      * @param message
      *            Message from ZyLAB containing matter ID and production key
      */
-    @JmsListener(destination = "zylab-arkcase-integration", containerFactory = "jmsListenerContainerFactory")
+    @JmsListener(destination = "zylab-arkcase-queue", containerFactory = "jmsListenerContainerFactory")
     public void onNewProductionSync(Message message)
     {
         log.info("New ZyLAB production sync message received, [{}]", message.getPayload());
