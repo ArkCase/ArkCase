@@ -30,6 +30,7 @@ package com.armedia.acm.plugins.ecm.service;
 import java.util.Date;
 import java.util.List;
 
+import com.armedia.acm.service.objectlock.annotation.AcmAcquireAndReleaseObjectLock;
 import org.json.JSONArray;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
@@ -65,6 +66,9 @@ public interface AcmFolderService
 
     AcmFolder renameFolder(Long folderId, String newFolderName)
             throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmFolderException;
+
+    AcmFolder getSubfolderByName(AcmFolder parentFolder, String folderName)
+            throws AcmFolderException;
 
     List<EcmFile> getFilesInFolderAndSubfolders(Long folderId);
 

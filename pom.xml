@@ -32,6 +32,7 @@
         <apache-commons-io.version>2.4</apache-commons-io.version>
         <apache-commons-lang.version>2.6</apache-commons-lang.version>
         <apache-commons-lang3.version>3.5</apache-commons-lang3.version>
+        <apache-commons-csv.version>1.8</apache-commons-csv.version>
         <apache-commons-net.version>3.3</apache-commons-net.version>
         <apache-commons-vfs2.version>2.0</apache-commons-vfs2.version>
         <apache-commons-text.version>1.6</apache-commons-text.version>
@@ -108,7 +109,7 @@
         <slf4j.version>1.7.30</slf4j.version>
         <solr-solrj.version>7.6.0</solr-solrj.version>
         <sonar.version>3.5.0.1254</sonar.version>
-        <spring.integration.version>5.4.2</spring.integration.version>
+        <spring.integration.version>4.3.22.RELEASE</spring.integration.version>
         <spring.ldap.version>2.3.3.RELEASE</spring.ldap.version>
         <spring.security.kerberos.version>1.0.1.RELEASE</spring.security.kerberos.version>
         <spring.security.saml2.core.version>1.0.10.RELEASE</spring.security.saml2.core.version>
@@ -930,6 +931,11 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>${apache-commons-lang3.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-csv</artifactId>
+                <version>${apache-commons-csv.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-beanutils</groupId>

@@ -57,14 +57,6 @@ public class FoiaConfigurationAPIController
     {
         return getFoiaConfigurationService().readConfiguration();
     }
-
-    @RequestMapping(path = "/dashboardBannerConfiguration", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public boolean dashboardBannerConfiguration()
-    {
-        return getFoiaConfigurationService().readConfiguration().getDashboardBannerEnabled();
-    }
-
     public FoiaConfigurationService getFoiaConfigurationService()
     {
         return foiaConfigurationService;

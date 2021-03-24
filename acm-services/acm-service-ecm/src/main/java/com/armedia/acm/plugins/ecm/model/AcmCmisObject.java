@@ -62,6 +62,7 @@ public class AcmCmisObject implements Serializable
     private String redactionStatus;
     private boolean link;
     private boolean duplicate;
+    private String custodian;
 
     public Long getObjectId()
     {
@@ -279,5 +280,13 @@ public class AcmCmisObject implements Serializable
 
     public void setDuplicate(boolean duplicate) {
         this.duplicate = duplicate;
+    }
+
+    public String getCustodian() {
+        return custodian;
+    }
+
+    public void setCustodian(String custodian) {
+        this.custodian = custodian;
     }
 }

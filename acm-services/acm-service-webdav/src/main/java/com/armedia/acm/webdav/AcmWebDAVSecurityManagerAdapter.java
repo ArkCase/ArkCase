@@ -30,14 +30,6 @@ package com.armedia.acm.webdav;
 import com.armedia.acm.auth.AcmAuthenticationDetails;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.web.api.MDCConstants;
-
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
-import org.slf4j.MDC;
-import org.springframework.security.core.Authentication;
-
-import java.util.UUID;
-
 import io.milton.http.Auth;
 import io.milton.http.Request;
 import io.milton.http.Request.Method;
@@ -45,6 +37,12 @@ import io.milton.http.SecurityManager;
 import io.milton.http.fs.NullSecurityManager;
 import io.milton.http.http11.auth.DigestResponse;
 import io.milton.resource.Resource;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.slf4j.MDC;
+import org.springframework.security.core.Authentication;
+
+import java.util.UUID;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity
@@ -95,6 +93,14 @@ public class AcmWebDAVSecurityManagerAdapter implements AcmWebDAVSecurityManager
                     LOG.debug("got CMIS user id from auth: {}", cmisUserId);
                     MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, cmisUserId);
 
+                } else {
+                    // TODO temporary logging solution for future investigation
+                    if (arkcaseAuth.getDetails() == null) {
+                        LOG.warn("Failed to authorize, arkcaseAuth.getDetails() = null");
+                    } else {
+                        LOG.warn("Failed to authorize, arkcaseAuth.getDetails() class = {}", arkcaseAuth.getDetails().getClass().getName());
+                        LOG.warn("Failed to authorize, arkcaseAuth.getDetails(): {}", arkcaseAuth.getDetails().toString());
+                    }
                 }
                 return true;
             }

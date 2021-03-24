@@ -27,13 +27,9 @@ package com.armedia.acm.services.users.service;
  * #L%
  */
 
-import com.armedia.acm.services.users.dao.UserAccessTokenDao;
-import com.armedia.acm.services.users.dao.exception.UserAccessTokenException;
-import com.armedia.acm.services.users.dao.exception.UserRemoteActionException;
-import com.armedia.acm.services.users.model.OAuth2ClientRegistrationConfig;
-import com.armedia.acm.services.users.model.OAuth2Credentials;
-import com.armedia.acm.services.users.model.UserAccessToken;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.function.Function;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -48,9 +44,13 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.function.Function;
+import com.armedia.acm.services.users.dao.UserAccessTokenDao;
+import com.armedia.acm.services.users.dao.exception.UserAccessTokenException;
+import com.armedia.acm.services.users.dao.exception.UserRemoteActionException;
+import com.armedia.acm.services.users.model.OAuth2ClientRegistrationConfig;
+import com.armedia.acm.services.users.model.OAuth2Credentials;
+import com.armedia.acm.services.users.model.UserAccessToken;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class AcmOAuth2AccessTokenService
 {
@@ -134,9 +134,8 @@ public class AcmOAuth2AccessTokenService
             accessToken.setExpirationInSec(token.getExpiresIn());
             accessToken.setProvider(provider);
             accessToken.setUserEmail(systemUserEmail);
-            // Current implementation requires the use of ID tokens as opposed to access tokens. Might need to be changed
-            // in the future in accordance with the tenant and provider
-            accessToken.setValue(token.getIdToken());
+            accessToken.setValue(token.getAccessToken());
+            accessToken.setUserIdToken(token.getIdToken());
             accessToken.setCreatedDateTime(LocalDateTime.now());
             logger.info("Saving access token [{}]", accessToken);
             return userAccessTokenDao.save(accessToken);
@@ -157,9 +156,6 @@ public class AcmOAuth2AccessTokenService
         }
         catch (HttpClientErrorException e)
         {
-            // remote action failed due to expired token
-            // TODO: To be tested and changed accordingly
-            // retry on more specific exception
             String systemUserEmail = oAuth2Credentials.getSystemUserEmail();
             String provider = oAuth2Credentials.getRegistrationId();
             userAccessTokenDao.deleteAccessTokenForUserAndProvider(systemUserEmail, provider);
@@ -180,9 +176,6 @@ public class AcmOAuth2AccessTokenService
         }
         catch (HttpClientErrorException e)
         {
-            // remote action failed due to expired token
-            // TODO: To be tested and changed accordingly
-            // retry on more specific exception
             String systemUserEmail = clientRegistrationConfig.getSystemUserEmail();
             String provider = clientRegistrationConfig.getRegistrationId();
             userAccessTokenDao.deleteAccessTokenForUserAndProvider(systemUserEmail, provider);

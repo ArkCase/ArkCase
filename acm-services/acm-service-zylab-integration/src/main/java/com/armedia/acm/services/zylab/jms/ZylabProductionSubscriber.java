@@ -1,8 +1,8 @@
-package com.armedia.acm.tool.zylab.jms;
+package com.armedia.acm.services.zylab.jms;
 
 /*-
  * #%L
- * Tool Integrations: Arkcase ZyLAB Integration
+ * ACM Service: Arkcase ZyLAB Integration
  * %%
  * Copyright (C) 2014 - 2021 ArkCase LLC
  * %%
@@ -27,9 +27,6 @@ package com.armedia.acm.tool.zylab.jms;
  * #L%
  */
 
-import java.util.Map;
-
-import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationEventPublisher;
@@ -37,7 +34,9 @@ import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.messaging.Message;
 
+import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.tool.zylab.model.ZylabProductionFileIncomingEvent;
+import com.armedia.acm.tool.zylab.model.ZylabProductionSyncDTO;
 
 /**
  * Created by Aleksandar Acevski <aleksandar.acevski@armedia.com> on February, 2021
@@ -47,20 +46,27 @@ public class ZylabProductionSubscriber implements ApplicationEventPublisherAware
     private transient final Logger log = LogManager.getLogger(getClass());
 
     private ApplicationEventPublisher applicationEventPublisher;
+    private ObjectConverter objectConverter;
 
-    @JmsListener(destination = "arkcase-zylab-integration", containerFactory = "jmsTopicListenerContainerFactory")
-    public void onNewProductionSync(Message<Map<String, String>> message)
+    /**
+     *
+     * Subscribes to messages and publishes a ZylabProductionFileIncoming event to be handled by listeners
+     *
+     * @param message
+     *            Message from ZyLAB containing matter ID and production key
+     */
+    @JmsListener(destination = "zylab-arkcase-queue", containerFactory = "jmsListenerContainerFactory")
+    public void onNewProductionSync(Message message)
     {
         log.info("New ZyLAB production sync message received, [{}]", message.getPayload());
 
-        String matterIdString = message.getPayload().get("matterId");
-        String productionKey = message.getPayload().get("productionKey");
+        String messagePayload = message.getPayload().toString();
+        ZylabProductionSyncDTO productionSyncDTO = objectConverter.getJsonUnmarshaller().unmarshall(messagePayload,
+                ZylabProductionSyncDTO.class);
 
-        if (NumberUtils.isParsable(matterIdString))
+        if (productionSyncDTO != null && productionSyncDTO.getMatterId() > 0 && !productionSyncDTO.getProductionKey().isEmpty())
         {
-            Long matterId = Long.getLong(matterIdString);
-
-            ZylabProductionFileIncomingEvent event = new ZylabProductionFileIncomingEvent(matterId, productionKey);
+            ZylabProductionFileIncomingEvent event = new ZylabProductionFileIncomingEvent(productionSyncDTO);
             applicationEventPublisher.publishEvent(event);
         }
         else
@@ -73,5 +79,15 @@ public class ZylabProductionSubscriber implements ApplicationEventPublisherAware
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
     {
         this.applicationEventPublisher = applicationEventPublisher;
+    }
+
+    public ObjectConverter getObjectConverter()
+    {
+        return objectConverter;
+    }
+
+    public void setObjectConverter(ObjectConverter objectConverter)
+    {
+        this.objectConverter = objectConverter;
     }
 }

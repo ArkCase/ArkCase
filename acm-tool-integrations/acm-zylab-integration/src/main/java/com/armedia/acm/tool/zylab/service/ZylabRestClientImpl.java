@@ -27,12 +27,13 @@ package com.armedia.acm.tool.zylab.service;
  * #L%
  */
 
-import java.io.InputStream;
+import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -40,6 +41,8 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RequestCallback;
+import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -75,7 +78,9 @@ public class ZylabRestClientImpl implements ZylabRestClient
         return getAcmOAuth2AccessTokenService().executeAuthenticatedRemoteAction(zylabIntegrationConfig.getoAuth2Credentials(),
                 accessToken -> {
                     String createMatterURL = zylabIntegrationConfig.getBaseUrl() + zylabIntegrationConfig.getCreateMatterPath();
-                    HttpHeaders headers = createZylabCommonHeaders(accessToken.getValue());
+                    // Current implementation requires the use of ID tokens as opposed to access tokens. Might need to be
+                    // changed in the future in accordance with the tenant and provider
+                    HttpHeaders headers = createZylabCommonHeaders(accessToken.getUserIdToken());
                     ResponseEntity<MatterDTO> response = zylabRestTemplate.exchange(createMatterURL, HttpMethod.POST,
                             new HttpEntity<>(createMatterRequest, headers), MatterDTO.class);
                     return response.getBody();
@@ -89,7 +94,9 @@ public class ZylabRestClientImpl implements ZylabRestClient
                 accessToken -> {
                     String getAllMatterTemplatesURL = zylabIntegrationConfig.getBaseUrl()
                             + zylabIntegrationConfig.getGetMatterTemplatesPath();
-                    HttpHeaders headers = ZylabRestClientImpl.this.createZylabCommonHeaders(accessToken.getValue());
+                    // Current implementation requires the use of ID tokens as opposed to access tokens. Might need to be
+                    // changed in the future in accordance with the tenant and provider
+                    HttpHeaders headers = createZylabCommonHeaders(accessToken.getUserIdToken());
                     ResponseEntity<MatterTemplateDTO[]> response = zylabRestTemplate.exchange(getAllMatterTemplatesURL, HttpMethod.GET,
                             new HttpEntity<>(headers), MatterTemplateDTO[].class);
                     return Arrays.asList(response.getBody());
@@ -97,7 +104,7 @@ public class ZylabRestClientImpl implements ZylabRestClient
     }
 
     @Override
-    public InputStream getProductionFiles(long matterId, String productionKey)
+    public File getProductionFiles(long matterId, String productionKey)
     {
         return getAcmOAuth2AccessTokenService().executeAuthenticatedRemoteAction(zylabIntegrationConfig.getoAuth2Credentials(),
                 accessToken -> {
@@ -112,12 +119,21 @@ public class ZylabRestClientImpl implements ZylabRestClient
                             .build()
                             .expand(uriParameters);
 
-                    HttpHeaders headers = createZylabCommonHeaders(accessToken.getValue());
+                    // Current implementation requires the use of ID tokens as opposed to access tokens. Might need to be
+                    // changed in the future in accordance with the tenant and provider
+                    HttpHeaders headers = createZylabCommonHeaders(accessToken.getUserIdToken());
 
-                    ResponseEntity<InputStream> response = zylabRestTemplate.exchange(uriComponents.toUriString(), HttpMethod.GET,
-                            new HttpEntity<>(headers), InputStream.class);
+                    RequestCallback requestCallback = request -> request.getHeaders().addAll(headers);
 
-                    return response.getBody();
+                    ResponseExtractor<File> responseExtractor = clientHttpResponse -> {
+                        String zipFilename = "Matter_" + matterId + "_Production_" + productionKey;
+                        File targetFile = File.createTempFile(zipFilename, ".zip");
+
+                        FileUtils.copyInputStreamToFile(clientHttpResponse.getBody(), targetFile);
+                        return targetFile;
+                    };
+
+                    return zylabRestTemplate.execute(uriComponents.toUriString(), HttpMethod.GET, requestCallback, responseExtractor);
                 });
     }
 

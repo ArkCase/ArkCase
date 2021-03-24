@@ -66,6 +66,9 @@ public class ExemptionCode implements Serializable, AcmEntity
     @Column(name = "cm_parent_object_type")
     private String parentObjectType;
 
+    @Column(name = "cm_exemption_number")
+    private Integer exemptionCodeNumber;
+
     @Column(name = "cm_exemption_code")
     private String exemptionCode;
 
@@ -126,6 +129,14 @@ public class ExemptionCode implements Serializable, AcmEntity
     public void setParentObjectType(String parentObjectType)
     {
         this.parentObjectType = parentObjectType;
+    }
+
+    public Integer getExemptionCodeNumber() {
+        return exemptionCodeNumber;
+    }
+
+    public void setExemptionCodeNumber(Integer exemptionCodeNumber) {
+        this.exemptionCodeNumber = exemptionCodeNumber;
     }
 
     public String getExemptionCode()

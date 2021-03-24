@@ -93,6 +93,7 @@ public class FOIAExemptionService
             ExemptionCode exemptionCodeObj = new ExemptionCode();
             exemptionCodeObj.setParentObjectType(exemptionCode.getParentObjectType());
             exemptionCodeObj.setExemptionCode(exemptionCode.getExemptionCode());
+            exemptionCodeObj.setExemptionCodeNumber(exemptionCode.getExemptionCodeNumber());
             exemptionCodeObj.setExemptionStatus(exemptionCode.getExemptionStatus());
             exemptionCodeObj.setFileId(copiedFileId);
             exemptionCodeObj.setFileVersion(exemptionCode.getFileVersion());

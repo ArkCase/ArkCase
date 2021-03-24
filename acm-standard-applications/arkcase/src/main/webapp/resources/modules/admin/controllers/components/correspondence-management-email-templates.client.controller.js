@@ -236,6 +236,10 @@ angular.module('admin').controller('Admin.CMEmailTemplatesController',
                 ObjectLookupService.getLookupByLookupName('emailTemplatesObjectTypes').then(function(emailTemplatesObjectTypes) {
                     $scope.correspondenceObjectTypes = emailTemplatesObjectTypes;
                 });
+
+                ObjectLookupService.getLookupByLookupName('emailTemplatesParentTypes').then(function(emailTemplatesParentTypes) {
+                    $scope.correspondenceParentTypes = emailTemplatesParentTypes;
+                });
             }
 
             $scope.getNavBarTree = function(templateModelProvider){
