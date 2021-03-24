@@ -54,6 +54,9 @@ public class UserAccessToken
     @Column(name = "cm_value", nullable = false, updatable = false)
     private String value;
 
+    @Column(name = "cm_user_id_token", nullable = false, updatable = false)
+    private String userIdToken;
+
     @Column(name = "cm_user_email", nullable = false, updatable = false)
     private String userEmail;
 
@@ -93,6 +96,14 @@ public class UserAccessToken
     public void setValue(String value)
     {
         this.value = value;
+    }
+
+    public String getUserIdToken() {
+        return userIdToken;
+    }
+
+    public void setUserIdToken(String userIdToken) {
+        this.userIdToken = userIdToken;
     }
 
     public String getUserEmail()
