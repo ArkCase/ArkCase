@@ -69,7 +69,7 @@ import com.armedia.acm.services.exemption.service.DocumentExemptionService;
 import com.armedia.acm.services.zylab.model.ZylabFile;
 import com.armedia.acm.services.zylab.model.ZylabFileMetadata;
 import com.armedia.acm.services.zylab.service.ZylabEventPublisher;
-import com.armedia.acm.services.zylab.service.ZylabProductionSyncService;
+import com.armedia.acm.services.zylab.service.ZylabProductionUtils;
 import com.armedia.acm.tool.zylab.exception.ZylabProductionSyncException;
 import com.armedia.acm.tool.zylab.model.ZylabIntegrationConfig;
 import com.armedia.acm.tool.zylab.model.ZylabProductionFileIncomingEvent;
@@ -95,7 +95,6 @@ public class ZylabProductionFileIncomingListener implements ApplicationListener<
     private EcmFileService ecmFileService;
     private ZylabIntegrationService zylabIntegrationService;
     private ZylabIntegrationConfig zylabIntegrationConfig;
-    private ZylabProductionSyncService zylabProductionSyncService;
     private FOIARequestDao foiaRequestDao;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private String workingFolderName;
@@ -150,9 +149,9 @@ public class ZylabProductionFileIncomingListener implements ApplicationListener<
 
         try
         {
-            List<ZylabFileMetadata> zylabFileMetadataList = zylabProductionSyncService.getFileMetadataFromLoadFile(loadFile, matterId,
+            List<ZylabFileMetadata> zylabFileMetadataList = ZylabProductionUtils.getFileMetadataFromLoadFile(loadFile, matterId,
                     productionKey);
-            List<ZylabFile> zylabFiles = zylabProductionSyncService.linkMetadataToZylabFiles(productionFiles, zylabFileMetadataList);
+            List<ZylabFile> zylabFiles = ZylabProductionUtils.linkMetadataToZylabFiles(productionFiles, zylabFileMetadataList);
 
             List<ZylabFile> responsiveFiles = zylabFiles.stream()
                     .filter(zylabFile -> zylabFile.getFileMetadata().getReviewedAnalysis().equals(RESPONSIVE_FOLDER_NAME))
@@ -380,16 +379,6 @@ public class ZylabProductionFileIncomingListener implements ApplicationListener<
     public void setWorkingFolderName(String workingFolderName)
     {
         this.workingFolderName = workingFolderName;
-    }
-
-    public ZylabProductionSyncService getZylabProductionSyncService()
-    {
-        return zylabProductionSyncService;
-    }
-
-    public void setZylabProductionSyncService(ZylabProductionSyncService zylabProductionSyncService)
-    {
-        this.zylabProductionSyncService = zylabProductionSyncService;
     }
 
     public DocumentExemptionService getDocumentExemptionService()

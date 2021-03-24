@@ -12,10 +12,6 @@
         <property name="zylabIntegrationConfig" ref="zylabIntegrationConfig"/>
     </bean>
 
-    <bean id="zylabProductionSyncService"
-          class="com.armedia.acm.services.zylab.service.ZylabProductionSyncServiceImpl">
-    </bean>
-
     <bean id="zylabProductionSyncStatusToJmsSender"
           class="com.armedia.acm.services.zylab.jms.ZylabProductionSyncStatusToJmsSender">
         <property name="objectConverter" ref="objectConverter"/>

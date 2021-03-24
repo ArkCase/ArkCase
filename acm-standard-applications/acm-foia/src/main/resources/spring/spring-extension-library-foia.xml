@@ -460,7 +460,6 @@
             <beans:property name="foiaRequestDao" ref="foiaRequestDao"/>
             <beans:property name="zylabIntegrationConfig" ref="zylabIntegrationConfig"/>
             <beans:property name="zylabIntegrationService" ref="zylabIntegrationService"/>
-            <beans:property name="zylabProductionSyncService" ref="zylabProductionSyncService"/>
             <beans:property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
             <beans:property name="workingFolderName" value="02 Working"/>
             <beans:property name="documentExemptionService" ref="documentExemptionService"/>
