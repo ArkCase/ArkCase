@@ -37,7 +37,6 @@ public class FoiaConfiguration extends SystemConfiguration
     private Integer maxDaysInHoldQueue;
     private Boolean holdedAndAppealedRequestsDueDateUpdateEnabled;
     private Integer requestExtensionWorkingDays;
-    private Boolean dashboardBannerEnabled;
     private Boolean notificationGroupsEnabled;
     private Boolean requestExtensionWorkingDaysEnabled;
     private Boolean complexRequestTrackOptionEnabled;
@@ -97,16 +96,6 @@ public class FoiaConfiguration extends SystemConfiguration
     public void setRequestExtensionWorkingDays(Integer requestExtensionWorkingDays)
     {
         this.requestExtensionWorkingDays = requestExtensionWorkingDays;
-    }
-
-    public Boolean getDashboardBannerEnabled()
-    {
-        return dashboardBannerEnabled;
-    }
-
-    public void setDashboardBannerEnabled(Boolean dashboardBannerEnabled)
-    {
-        this.dashboardBannerEnabled = dashboardBannerEnabled;
     }
 
     public Boolean getNotificationGroupsEnabled()

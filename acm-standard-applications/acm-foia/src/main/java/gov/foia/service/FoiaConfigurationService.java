@@ -44,7 +44,6 @@ public class FoiaConfigurationService extends SystemConfigurationService
         foiaConfig.setMaxDaysInHoldQueue(foiaConfiguration.getMaxDaysInHoldQueue());
         foiaConfig.setHoldedAndAppealedRequestsDueDateUpdateEnabled(foiaConfiguration.getHoldedAndAppealedRequestsDueDateUpdateEnabled());
         foiaConfig.setRequestExtensionWorkingDays(foiaConfiguration.getRequestExtensionWorkingDays());
-        foiaConfig.setDashboardBannerEnabled(foiaConfiguration.getDashboardBannerEnabled());
         foiaConfig.setNotificationGroupsEnabled(foiaConfiguration.getNotificationGroupsEnabled());
         foiaConfig.setRequestExtensionWorkingDaysEnabled(foiaConfiguration.getRequestExtensionWorkingDaysEnabled());
         foiaConfig.setComplexRequestTrackOptionEnabled(foiaConfiguration.getComplexRequestTrackOptionEnabled());
@@ -77,7 +76,6 @@ public class FoiaConfigurationService extends SystemConfigurationService
         foiaConfiguration.setMaxDaysInHoldQueue(foiaConfig.getMaxDaysInHoldQueue());
         foiaConfiguration.setHoldedAndAppealedRequestsDueDateUpdateEnabled(foiaConfig.getHoldedAndAppealedRequestsDueDateUpdateEnabled());
         foiaConfiguration.setRequestExtensionWorkingDays(foiaConfig.getRequestExtensionWorkingDays());
-        foiaConfiguration.setDashboardBannerEnabled(foiaConfig.getDashboardBannerEnabled());
         foiaConfiguration.setNotificationGroupsEnabled(foiaConfig.getNotificationGroupsEnabled());
         foiaConfiguration.setRequestExtensionWorkingDaysEnabled(foiaConfig.getRequestExtensionWorkingDaysEnabled());
         foiaConfiguration.setComplexRequestTrackOptionEnabled(foiaConfig.getComplexRequestTrackOptionEnabled());

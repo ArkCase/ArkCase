@@ -40,10 +40,6 @@ public class FoiaConfig
     @Value("${maxDaysInHoldQueue}")
     private Integer maxDaysInHoldQueue;
 
-    @JsonProperty("dashboard.banner.enable")
-    @Value("${dashboard.banner.enable}")
-    private Boolean dashboardBannerEnabled;
-
     @JsonProperty("requestExtensionWorkingDaysEnabled")
     @Value("${requestExtensionWorkingDaysEnabled}")
     private Boolean requestExtensionWorkingDaysEnabled;
@@ -150,16 +146,6 @@ public class FoiaConfig
     public void setMaxDaysInHoldQueue(Integer maxDaysInHoldQueue)
     {
         this.maxDaysInHoldQueue = maxDaysInHoldQueue;
-    }
-
-    public Boolean getDashboardBannerEnabled()
-    {
-        return dashboardBannerEnabled;
-    }
-
-    public void setDashboardBannerEnabled(Boolean dashboardBannerEnabled)
-    {
-        this.dashboardBannerEnabled = dashboardBannerEnabled;
     }
 
     public Boolean getRequestExtensionWorkingDaysEnabled()

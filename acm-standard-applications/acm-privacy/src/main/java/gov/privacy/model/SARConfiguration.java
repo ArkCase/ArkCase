@@ -36,7 +36,6 @@ import com.armedia.acm.plugins.businessprocess.model.SystemConfiguration;
 public class SARConfiguration extends SystemConfiguration
 {
     private Integer maxDaysInHoldQueue;
-    private Boolean dashboardBannerEnabled;
     private Boolean purgeRequestWhenInHoldEnabled;
     private Boolean limitedDeliveryToSpecificPageCountEnabled;
     private Integer limitedDeliveryToSpecificPageCount;
@@ -50,16 +49,6 @@ public class SARConfiguration extends SystemConfiguration
     public void setMaxDaysInHoldQueue(Integer maxDaysInHoldQueue)
     {
         this.maxDaysInHoldQueue = maxDaysInHoldQueue;
-    }
-
-    public Boolean getDashboardBannerEnabled()
-    {
-        return dashboardBannerEnabled;
-    }
-
-    public void setDashboardBannerEnabled(Boolean dashboardBannerEnabled)
-    {
-        this.dashboardBannerEnabled = dashboardBannerEnabled;
     }
 
     public Boolean getPurgeRequestWhenInHoldEnabled()
