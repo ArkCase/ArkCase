@@ -224,7 +224,7 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     @Column(name = "cm_custodian")
     private String custodian;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "cm_zylab_file_metadata")
     private ZylabFileMetadata zylabFileMetadata;
 

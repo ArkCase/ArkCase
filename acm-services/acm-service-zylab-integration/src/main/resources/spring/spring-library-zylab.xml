@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <bean id="zylabProductionSubscriber" class="com.armedia.acm.services.zylab.jms.ZylabProductionSubscriber">
@@ -10,6 +10,22 @@
           class="com.armedia.acm.services.zylab.service.ZylabIntegrationConfigService">
         <property name="configurationPropertyService" ref="configurationPropertyService"/>
         <property name="zylabIntegrationConfig" ref="zylabIntegrationConfig"/>
+    </bean>
+
+    <bean id="zylabProductionSyncService"
+          class="com.armedia.acm.services.zylab.service.ZylabProductionSyncServiceImpl">
+    </bean>
+
+    <bean id="zylabProductionSyncStatusToJmsSender"
+          class="com.armedia.acm.services.zylab.jms.ZylabProductionSyncStatusToJmsSender">
+        <property name="objectConverter" ref="objectConverter"/>
+        <property name="jmsConnectionFactory" ref="jmsConnectionFactory"/>
+    </bean>
+
+    <bean id="zylabEventPublisher" class="com.armedia.acm.services.zylab.service.ZylabEventPublisher"/>
+
+    <bean id="zylabProductionSyncListener" class="com.armedia.acm.services.zylab.service.ZylabProductionSyncListener">
+        <property name="zylabProductionSyncStatusToJmsSender" ref="zylabProductionSyncStatusToJmsSender"/>
     </bean>
 
 </beans>

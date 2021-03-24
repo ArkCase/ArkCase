@@ -98,6 +98,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -370,6 +371,29 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
         return objectList;
     }
+
+    @Override
+    public AcmFolder getSubfolderByName(AcmFolder parentFolder, String folderName)
+            throws AcmFolderException
+    {
+        List<AcmObject> rootFolderChildren = getFolderChildren(parentFolder.getId());
+
+        AcmFolder folder = rootFolderChildren.stream()
+                .filter(isFolderWithName(folderName))
+                .map(child -> (AcmFolder) child)
+                .findFirst()
+                .orElseThrow(() -> new AcmFolderException(
+                        String.format("No folder with name %s in folder with id %d was found!", folderName, parentFolder.getId())));
+
+        return folder;
+    }
+
+    public static Predicate<AcmObject> isFolderWithName(String folderName)
+    {
+        return acmObject -> acmObject.getObjectType() != null && OBJECT_FOLDER_TYPE.equals(acmObject.getObjectType())
+                && folderName.equals(((AcmFolder) acmObject).getName());
+    }
+
 
     @Override
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FOLDER", lockType = "READ", lockChildObjects = false, unlockChildObjects = false)

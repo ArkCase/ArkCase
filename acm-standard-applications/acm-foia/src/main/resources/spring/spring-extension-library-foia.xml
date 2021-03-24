@@ -450,6 +450,22 @@
             <beans:property name="foiaRequestDao" ref="foiaRequestDao"/>
             <beans:property name="zylabIntegrationConfig" ref="zylabIntegrationConfig"/>
             <beans:property name="zylabIntegrationService" ref="zylabIntegrationService"/>
+            <beans:property name="zylabEventPublisher" ref="zylabEventPublisher"/>
+        </beans:bean>
+
+        <beans:bean id="zylabProductionFileIncomingListener"
+                    class="gov.foia.listener.ZylabProductionFileIncomingListener">
+            <beans:property name="acmFolderService" ref="acmFolderService"/>
+            <beans:property name="ecmFileService" ref="ecmFileService"/>
+            <beans:property name="foiaRequestDao" ref="foiaRequestDao"/>
+            <beans:property name="zylabIntegrationConfig" ref="zylabIntegrationConfig"/>
+            <beans:property name="zylabIntegrationService" ref="zylabIntegrationService"/>
+            <beans:property name="zylabProductionSyncService" ref="zylabProductionSyncService"/>
+            <beans:property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+            <beans:property name="workingFolderName" value="02 Working"/>
+            <beans:property name="documentExemptionService" ref="documentExemptionService"/>
+            <beans:property name="lookupDao" ref="lookupDao"/>
+            <beans:property name="zylabEventPublisher" ref="zylabEventPublisher"/>
         </beans:bean>
 
     </beans:beans>
