@@ -134,9 +134,8 @@ public class AcmOAuth2AccessTokenService
             accessToken.setExpirationInSec(token.getExpiresIn());
             accessToken.setProvider(provider);
             accessToken.setUserEmail(systemUserEmail);
-            // Current implementation requires the use of ID tokens as opposed to access tokens. Might need to be
-            // changed in the future in accordance with the tenant and provider
-            accessToken.setValue(token.getIdToken());
+            accessToken.setValue(token.getAccessToken());
+            accessToken.setUserIdToken(token.getIdToken());
             accessToken.setCreatedDateTime(LocalDateTime.now());
             logger.info("Saving access token [{}]", accessToken);
             return userAccessTokenDao.save(accessToken);
@@ -157,9 +156,6 @@ public class AcmOAuth2AccessTokenService
         }
         catch (HttpClientErrorException e)
         {
-            // remote action failed due to expired token
-            // TODO: To be tested and changed accordingly
-            // retry on more specific exception
             String systemUserEmail = oAuth2Credentials.getSystemUserEmail();
             String provider = oAuth2Credentials.getRegistrationId();
             userAccessTokenDao.deleteAccessTokenForUserAndProvider(systemUserEmail, provider);
@@ -180,9 +176,6 @@ public class AcmOAuth2AccessTokenService
         }
         catch (HttpClientErrorException e)
         {
-            // remote action failed due to expired token
-            // TODO: To be tested and changed accordingly
-            // retry on more specific exception
             String systemUserEmail = clientRegistrationConfig.getSystemUserEmail();
             String provider = clientRegistrationConfig.getRegistrationId();
             userAccessTokenDao.deleteAccessTokenForUserAndProvider(systemUserEmail, provider);
