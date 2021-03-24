@@ -48,8 +48,7 @@ public class ZylabProductionFileExtractor
 
     public static File unzip(File fileToUnzip) throws IOException
     {
-        String extractedFolderName = fileToUnzip.getName().split("\\.")[0] + "_unzipped";
-        String extractedDirectoryPath = fileToUnzip.getParentFile().getAbsolutePath() + File.separator + extractedFolderName;
+        String extractedDirectoryPath = fileToUnzip.getAbsolutePath().replace(".zip", "_unzipped");
         log.info("Extracting file: " + fileToUnzip.getName());
         ZipFile zipFile = new ZipFile(fileToUnzip);
 
