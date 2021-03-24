@@ -28,7 +28,6 @@ package com.armedia.acm.services.zylab.model;
  */
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -43,8 +42,6 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import com.armedia.acm.data.converter.LocalDateTimeConverter;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -419,11 +416,13 @@ public class ZylabFileMetadata
         this.lastReviewedBy = lastReviewedBy;
     }
 
-    public String getSource() {
+    public String getSource()
+    {
         return source;
     }
 
-    public void setSource(String source) {
+    public void setSource(String source)
+    {
         this.source = source;
     }
 }

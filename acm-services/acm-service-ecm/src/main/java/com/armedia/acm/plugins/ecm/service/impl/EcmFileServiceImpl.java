@@ -27,6 +27,58 @@ package com.armedia.acm.plugins.ecm.service.impl;
  * #L%
  */
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
+
+import javax.persistence.PersistenceException;
+import javax.servlet.http.HttpSession;
+import javax.validation.ValidationException;
+
+import org.apache.chemistry.opencmis.client.api.CmisObject;
+import org.apache.chemistry.opencmis.client.api.Document;
+import org.apache.chemistry.opencmis.client.api.Folder;
+import org.apache.chemistry.opencmis.commons.PropertyIds;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.disk.DiskFileItem;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
+import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.support.MessageBuilder;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
+
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISActions;
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
 import com.armedia.acm.camelcontext.context.CamelContextManager;
@@ -84,58 +136,6 @@ import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.web.api.MDCConstants;
-
-import org.apache.chemistry.opencmis.client.api.CmisObject;
-import org.apache.chemistry.opencmis.client.api.Document;
-import org.apache.chemistry.opencmis.client.api.Folder;
-import org.apache.chemistry.opencmis.commons.PropertyIds;
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.disk.DiskFileItem;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.ApplicationEventPublisherAware;
-import org.springframework.messaging.MessageChannel;
-import org.springframework.messaging.support.MessageBuilder;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
-
-import javax.persistence.PersistenceException;
-import javax.servlet.http.HttpSession;
-import javax.validation.ValidationException;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
 
 /**
  * Created by armdev on 5/1/14.
@@ -1584,13 +1584,16 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         boolean fileDeleted = false;
         String tmpDirectory = FileUtils.getTempDirectoryPath();
         File file = new File(tmpDirectory + File.separator + uniqueFileName);
-        try{
+        try
+        {
             String absolutePath = file.getCanonicalPath();
-            if (!absolutePath.startsWith(tmpDirectory)){
+            if (!absolutePath.startsWith(tmpDirectory))
+            {
                 log.error("The unique file name {} does not validate in current directory.", uniqueFileName);
                 throw new ValidationException("Invalid path constructed!");
             }
-        }catch (IOException e)
+        }
+        catch (IOException e)
         {
             log.error("Error while reading contents of {} email template.", uniqueFileName, e);
             throw new ValidationException("Invalid path constructed!");
@@ -1724,7 +1727,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             cmisRepositoryId = ecmFileConfig.getDefaultCmisId();
         }
         props.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
-        props.put(ArkCaseCMISConstants.VERSIONING_STATE, cmisConfigUtils.getVersioningState(ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID));
+        props.put(ArkCaseCMISConstants.VERSIONING_STATE,
+                cmisConfigUtils.getVersioningState(ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID));
         props.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
 
         AcmContainer container = getOrCreateContainer(targetObjectType, targetObjectId, cmisRepositoryId);
@@ -2371,6 +2375,26 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             }
         }
 
+        return uploadedFiles;
+    }
+
+    @Override
+    @Transactional
+    public List<EcmFile> uploadMultipleFilesWithData(List<MultipartFile> fileList, List<EcmFile> metadataList, String parentObjectType,
+            Long parentObjectId, String folderCmisId, Authentication authentication)
+            throws AcmCreateObjectFailedException, AcmUserActionFailedException
+    {
+        List<EcmFile> uploadedFiles = new ArrayList<>();
+        for (int i = 0, fileListSize = fileList.size(); i < fileListSize; i++)
+        {
+            AcmMultipartFile acmMultipartFile = new AcmMultipartFile(fileList.get(i), false);
+            EcmFile metadata = metadataList.get(i);
+
+            EcmFile temp = upload(authentication, acmMultipartFile, folderCmisId, parentObjectType, parentObjectId, metadata);
+
+            uploadedFiles.add(temp);
+            applicationEventPublisher.publishEvent(new EcmFilePostUploadEvent(temp, authentication.getName()));
+        }
         return uploadedFiles;
     }
 

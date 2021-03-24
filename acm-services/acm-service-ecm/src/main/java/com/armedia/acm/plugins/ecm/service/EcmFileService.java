@@ -27,6 +27,24 @@ package com.armedia.acm.plugins.ecm.service;
  * #L%
  */
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+
+import javax.persistence.PersistenceException;
+import javax.servlet.http.HttpSession;
+
+import org.apache.chemistry.opencmis.client.api.CmisObject;
+import org.apache.chemistry.opencmis.client.api.Document;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
+import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
@@ -39,24 +57,6 @@ import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.LinkTargetFileDTO;
 import com.armedia.acm.plugins.ecm.model.RecycleBinItem;
-
-import org.apache.chemistry.opencmis.client.api.CmisObject;
-import org.apache.chemistry.opencmis.client.api.Document;
-import org.springframework.retry.annotation.Backoff;
-import org.springframework.retry.annotation.Retryable;
-import org.springframework.security.core.Authentication;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-
-import javax.persistence.PersistenceException;
-import javax.servlet.http.HttpSession;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
 
 /**
  * Created by armdev on 5/1/14.
@@ -439,6 +439,10 @@ public interface EcmFileService
     List<EcmFile> uploadFiles(Authentication authentication, String parentObjectType, Long parentObjectId, String fileType,
             String fileLang, String folderCmisId, MultipartHttpServletRequest request, HttpSession session)
             throws AcmUserActionFailedException, AcmCreateObjectFailedException, IOException;
+
+    List<EcmFile> uploadMultipleFilesWithData(List<MultipartFile> fileList, List<EcmFile> metadataList, String parentObjectType,
+            Long parentObjectId, String folderCmisId, Authentication authentication)
+            throws AcmCreateObjectFailedException, AcmUserActionFailedException;
 
     List<EcmFile> getFileLinks(Long fileId) throws AcmObjectNotFoundException;
 

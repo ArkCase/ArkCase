@@ -52,7 +52,8 @@ public class ZylabProductionSubscriber implements ApplicationEventPublisherAware
      *
      * Subscribes to messages and publishes a ZylabProductionFileIncoming event to be handled by listeners
      *
-     * @param message Message from ZyLAB containing matter ID and production key
+     * @param message
+     *            Message from ZyLAB containing matter ID and production key
      */
     @JmsListener(destination = "zylab-arkcase-integration", containerFactory = "jmsListenerContainerFactory")
     public void onNewProductionSync(Message message)

@@ -27,9 +27,6 @@ package com.armedia.acm.services.zylab.web.api;
  * #L%
  */
 
-import com.armedia.acm.services.zylab.service.ZylabIntegrationConfigService;
-import com.armedia.acm.tool.zylab.model.ZylabIntegrationConfig;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
@@ -38,6 +35,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.armedia.acm.services.zylab.service.ZylabIntegrationConfigService;
+import com.armedia.acm.tool.zylab.model.ZylabIntegrationConfig;
 
 /**
  * Created by Aleksandar Acevski <aleksandar.acevski@armedia.com> on February, 2021
