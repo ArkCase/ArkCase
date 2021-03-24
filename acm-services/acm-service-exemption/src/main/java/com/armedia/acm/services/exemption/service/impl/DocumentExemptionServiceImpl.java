@@ -27,6 +27,16 @@ package com.armedia.acm.services.exemption.service.impl;
  * #L%
  */
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.services.exemption.dao.ExemptionCodeDao;
@@ -36,15 +46,6 @@ import com.armedia.acm.services.exemption.model.DocumentRedactionEventPublisher;
 import com.armedia.acm.services.exemption.model.ExemptionCode;
 import com.armedia.acm.services.exemption.model.ExemptionConstants;
 import com.armedia.acm.services.exemption.service.DocumentExemptionService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * Created by ana.serafimoska
@@ -174,7 +175,24 @@ public class DocumentExemptionServiceImpl implements DocumentExemptionService
             throw new SaveExemptionCodeException("Unable to save exemption code [{}] manually" + exemptionCodes, e);
         }
         log.debug("Updated exemption codes [{}] of document [{}]", exemptionCodes, fileId);
+    }
 
+    @Override
+    @Transactional
+    public void saveExemptionCodeAndNumberForFile(EcmFile file, String exemptionCodeValue, Integer exemptionNumber)
+    {
+        ExemptionCode exemptionCode = new ExemptionCode();
+        exemptionCode.setFileId(file.getFileId());
+        exemptionCode.setFileVersion(file.getActiveVersionTag());
+        exemptionCode.setExemptionCodeNumber(exemptionNumber);
+        exemptionCode.setExemptionCode(exemptionCodeValue);
+        exemptionCode.setExemptionStatus(ExemptionConstants.EXEMPTION_STATUS_MANUAL);
+        exemptionCode.setParentObjectType("DOCUMENT");
+        exemptionCode.setManuallyFlag(true);
+
+        getExemptionCodeDao().save(exemptionCode);
+
+        getDocumentRedactionEventPublisher().publishExemptionCodeCreatedEvent(file);
     }
 
     public EcmFileDao getEcmFileDao()
