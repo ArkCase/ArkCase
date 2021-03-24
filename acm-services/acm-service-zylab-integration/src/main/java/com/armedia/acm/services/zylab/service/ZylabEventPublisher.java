@@ -1,4 +1,4 @@
-package com.armedia.acm.tool.zylab.jms;
+package com.armedia.acm.services.zylab.service;
 
 /*-
  * #%L
@@ -27,46 +27,46 @@ package com.armedia.acm.tool.zylab.jms;
  * #L%
  */
 
-import java.util.Map;
-
-import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
-import org.springframework.jms.annotation.JmsListener;
-import org.springframework.messaging.Message;
+import org.springframework.security.core.Authentication;
 
-import com.armedia.acm.tool.zylab.model.ZylabProductionFileIncomingEvent;
+import com.armedia.acm.services.zylab.model.ZylabMatterCreatedEvent;
+import com.armedia.acm.services.zylab.model.ZylabProductionSyncEvent;
 
 /**
  * Created by Aleksandar Acevski <aleksandar.acevski@armedia.com> on February, 2021
  */
-public class ZylabProductionSubscriber implements ApplicationEventPublisherAware
+public class ZylabEventPublisher implements ApplicationEventPublisherAware
 {
     private transient final Logger log = LogManager.getLogger(getClass());
 
     private ApplicationEventPublisher applicationEventPublisher;
 
-    @JmsListener(destination = "arkcase-zylab-integration", containerFactory = "jmsTopicListenerContainerFactory")
-    public void onNewProductionSync(Message<Map<String, String>> message)
+    public void publishMatterCreatedEvent(ZylabMatterCreatedEvent zylabMatterCreatedEvent)
     {
-        log.info("New ZyLAB production sync message received, [{}]", message.getPayload());
+        log.debug("Publishing ZylabMatterCreated event");
+        applicationEventPublisher.publishEvent(zylabMatterCreatedEvent);
+    }
 
-        String matterIdString = message.getPayload().get("matterId");
-        String productionKey = message.getPayload().get("productionKey");
+    public void publishProductionSucceededEvent(Object source, Long objectId, String objectType, Long matterId, String productionKey,
+            Authentication auth)
+    {
+        log.debug("Publishing ZylabProductionSync succeeded event");
+        ZylabProductionSyncEvent zylabProductionSyncEvent = new ZylabProductionSyncEvent(source, objectId, objectType, matterId,
+                productionKey, true, auth);
+        applicationEventPublisher.publishEvent(zylabProductionSyncEvent);
+    }
 
-        if (NumberUtils.isParsable(matterIdString))
-        {
-            Long matterId = Long.getLong(matterIdString);
-
-            ZylabProductionFileIncomingEvent event = new ZylabProductionFileIncomingEvent(matterId, productionKey);
-            applicationEventPublisher.publishEvent(event);
-        }
-        else
-        {
-            log.error("Improper ZyLAB production sync message received, [{}]", message.getPayload());
-        }
+    public void publishProductionFailedEvent(Object source, Long objectId, String objectType, Long matterId, String productionKey,
+            Authentication auth)
+    {
+        log.debug("Publishing ZylabProductionSync failed event");
+        ZylabProductionSyncEvent zylabProductionSyncEvent = new ZylabProductionSyncEvent(source, objectId, objectType, matterId,
+                productionKey, false, auth);
+        applicationEventPublisher.publishEvent(zylabProductionSyncEvent);
     }
 
     @Override
@@ -74,4 +74,5 @@ public class ZylabProductionSubscriber implements ApplicationEventPublisherAware
     {
         this.applicationEventPublisher = applicationEventPublisher;
     }
+
 }

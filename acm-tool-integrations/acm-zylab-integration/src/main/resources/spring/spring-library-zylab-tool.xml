@@ -14,9 +14,6 @@
         <property name="zylabRestTemplate" ref="zylabRestTemplate"/>
     </bean>
 
-    <bean id="zylabProductionSubscriber" class="com.armedia.acm.tool.zylab.jms.ZylabProductionSubscriber">
-    </bean>
-
     <bean id="zylabIntegrationService" class="com.armedia.acm.tool.zylab.service.ZylabIntegrationServiceImpl">
         <property name="zylabIntegrationConfig" ref="zylabIntegrationConfig"/>
         <property name="zylabRestClient" ref="zylabRestClient"/>

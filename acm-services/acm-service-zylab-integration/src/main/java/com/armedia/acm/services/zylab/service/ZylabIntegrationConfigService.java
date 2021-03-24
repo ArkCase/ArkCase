@@ -27,11 +27,11 @@ package com.armedia.acm.services.zylab.service;
  * #L%
  */
 
-import com.armedia.acm.configuration.service.ConfigurationPropertyService;
-import com.armedia.acm.tool.zylab.model.ZylabIntegrationConfig;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.armedia.acm.configuration.service.ConfigurationPropertyService;
+import com.armedia.acm.tool.zylab.model.ZylabIntegrationConfig;
 
 /**
  * Created by Aleksandar Acevski <aleksandar.acevski@armedia.com> on February, 2021

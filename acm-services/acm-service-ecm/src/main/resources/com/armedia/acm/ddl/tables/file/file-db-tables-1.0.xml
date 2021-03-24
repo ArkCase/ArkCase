@@ -770,5 +770,11 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="files-75-add-zylab-file-metadata" author="aleksandar.acevski">
+        <addColumn tableName="acm_file">
+            <column name="cm_zylab_file_metadata" type="${fkIdType}"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
 

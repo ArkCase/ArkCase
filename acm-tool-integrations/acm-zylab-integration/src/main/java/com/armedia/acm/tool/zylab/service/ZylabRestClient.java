@@ -27,7 +27,7 @@ package com.armedia.acm.tool.zylab.service;
  * #L%
  */
 
-import java.io.InputStream;
+import java.io.File;
 import java.util.List;
 
 import com.armedia.acm.tool.zylab.model.CreateMatterRequest;
@@ -59,9 +59,9 @@ public interface ZylabRestClient
      *            The ZyLAB ID of the matter that needs to be accessed
      * @param productionKey
      *            The key of the production in ZyLAB that needs to be downloaded
-     * @return input stream of compressed production
+     * @return Zip file with all production data
      */
-    InputStream getProductionFiles(long matterId, String productionKey);
+    File getProductionFiles(long matterId, String productionKey);
 
     /**
      * 

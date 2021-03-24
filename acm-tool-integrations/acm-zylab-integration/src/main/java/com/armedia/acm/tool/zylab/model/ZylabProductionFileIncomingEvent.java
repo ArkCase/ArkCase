@@ -37,21 +37,27 @@ public class ZylabProductionFileIncomingEvent extends ApplicationEvent
     Long matterId;
     String productionKey;
 
-    public ZylabProductionFileIncomingEvent(Long matterId, String productionId)
+    public ZylabProductionFileIncomingEvent(Long matterId, String productionKey)
     {
         super(matterId);
 
         this.matterId = matterId;
-        this.productionKey = productionId;
+        this.productionKey = productionKey;
     }
 
-    public Long getMatterId()
+    public ZylabProductionFileIncomingEvent(ZylabProductionSyncDTO zylabProductionSyncDTO)
     {
+        super(zylabProductionSyncDTO);
+
+        this.matterId = zylabProductionSyncDTO.getMatterId();
+        this.productionKey = zylabProductionSyncDTO.getProductionKey();
+    }
+
+    public Long getMatterId() {
         return matterId;
     }
 
-    public String getProductionKey()
-    {
+    public String getProductionKey() {
         return productionKey;
     }
 }

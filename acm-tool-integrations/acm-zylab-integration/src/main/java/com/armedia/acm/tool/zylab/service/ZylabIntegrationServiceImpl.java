@@ -27,10 +27,10 @@ package com.armedia.acm.tool.zylab.service;
  * #L%
  */
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
@@ -49,7 +49,6 @@ public class ZylabIntegrationServiceImpl implements ZylabIntegrationService
 {
 
     public static final String DEFAULT_TEMPLATE_IDENTIFIER = "default";
-    public static final int DEFAULT_BUFFER_SIZE = 1024;
     private transient final Logger log = LogManager.getLogger(getClass());
     private ZylabRestClient zylabRestClient;
     private ZylabIntegrationConfig zylabIntegrationConfig;
@@ -105,73 +104,36 @@ public class ZylabIntegrationServiceImpl implements ZylabIntegrationService
     @Override
     public File getZylabProductionFolder(long matterId, String productionKey) throws ZylabProductionSyncException
     {
-        InputStream zylabProductionCompressedFileStream = getZylabRestClient().getProductionFiles(matterId, productionKey);
-
-        String tempFolderName = "Matter_" + matterId + "_Production_" + productionKey;
-
-        return readCompressedFilesToTemporaryFolder(tempFolderName, zylabProductionCompressedFileStream);
-    }
-
-    private File readCompressedFilesToTemporaryFolder(String tempFolderName, InputStream zylabProductionCompressedFileStream)
-            throws ZylabProductionSyncException
-    {
-        File tempFolder = new File(tempFolderName);
-        boolean tempDirectoryCreated = tempFolder.mkdir();
-
-        if (!tempDirectoryCreated)
+        try
         {
-            log.error("Unable to create temporary folder for ZyLAB production files");
-            throw new ZylabProductionSyncException("Unable to create temporary folder for ZyLAB production files");
-        }
-
-        try (BufferedInputStream bis = new BufferedInputStream(zylabProductionCompressedFileStream);
-                ZipInputStream zipStream = new ZipInputStream(bis))
-        {
-            ZipEntry zipEntry;
-
-            while ((zipEntry = zipStream.getNextEntry()) != null)
-            {
-                readUncompressedContentsToFolder(zipStream, tempFolder, zipEntry.getName());
-            }
-
-            log.info("File [{}] successfully uncompressed", tempFolderName);
-            return tempFolder;
+            File zylabProductionFile = getZylabRestClient().getProductionFiles(matterId, productionKey);
+            return ZylabProductionFileExtractor.unzip(zylabProductionFile);
         }
         catch (IOException e)
         {
             log.error("Unable to uncompress ZyLAB production files");
             throw new ZylabProductionSyncException("Unable to uncompress ZyLAB production files", e);
         }
-    }
 
-    private void readUncompressedContentsToFolder(ZipInputStream zipStream, File folder, String fileName) throws IOException
-    {
-        byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
-
-        File file = new File(folder, fileName);
-
-        try (FileOutputStream fos = new FileOutputStream(file))
-        {
-            int readProgress;
-            while ((readProgress = zipStream.read(buffer)) > 0)
-            {
-                fos.write(buffer, 0, readProgress);
-            }
-        }
     }
 
     @Override
-    public void deleteTemporarySyncFolder(File tempFolder) throws ZylabProductionSyncException
+    public void cleanupTemporaryProductionFiles(File tempFolder)
     {
         try
         {
             log.info("Deleting temporary Zylab production folder");
             FileUtils.deleteDirectory(tempFolder);
+
+            String zipFileName = tempFolder.getAbsolutePath().replace("_unzipped", ".zip");
+            File zipFile = new File(zipFileName);
+
+            log.info("Deleting original Zylab production zip file");
+            Files.deleteIfExists(zipFile.toPath());
         }
         catch (IOException e)
         {
-            log.error("Deleting temporary Zylab production folder failed");
-            throw new ZylabProductionSyncException("Deleting temporary Zylab production folder failed", e);
+            log.error("Deleting temporary Zylab production files failed");
         }
     }
 
