@@ -62,13 +62,6 @@ public class SARConfigurationAPIController
         return getSARConfigurationService().readConfiguration();
     }
 
-    @RequestMapping(path = "/dashboardBannerConfiguration", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public boolean dashboardBannerConfiguration()
-    {
-        return getSARConfigurationService().readConfiguration().getDashboardBannerEnabled();
-    }
-
     public SARConfigurationService getSARConfigurationService()
     {
         return SARConfigurationService;

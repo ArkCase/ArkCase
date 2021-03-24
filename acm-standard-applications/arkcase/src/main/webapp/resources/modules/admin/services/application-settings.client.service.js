@@ -26,7 +26,9 @@ angular.module('admin').factory('Admin.ApplicationSettingsService', [ '$http', f
             ORGANIZATION_NAME: 'application.properties.organizationName',
             ORGANIZATION_PHONE: 'application.properties.organizationPhone',
             ORGANIZATION_STATE: 'application.properties.organizationState',
-            ORGANIZATION_ZIP: 'application.properties.organizationZip'
+            ORGANIZATION_ZIP: 'application.properties.organizationZip',
+            DASHBOARD_BANNER: 'application.properties.dashboardBannerEnabled'
+
         },
 
         /**

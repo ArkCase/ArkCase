@@ -15,6 +15,7 @@ angular.module('admin').controller('Admin.ApplicationConfigurationController',
             $scope.organizationZip = response.data[ApplicationSettingsService.PROPERTIES.ORGANIZATION_ZIP];
             $scope.organizationPhone = response.data[ApplicationSettingsService.PROPERTIES.ORGANIZATION_PHONE];
             $scope.organizationFax = response.data[ApplicationSettingsService.PROPERTIES.ORGANIZATION_FAX];
+            $scope.dashboardBannerEnabled = response.data[ApplicationSettingsService.PROPERTIES.DASHBOARD_BANNER];
             $scope.configDataModel = response.data;
         });
 
@@ -59,6 +60,9 @@ angular.module('admin').controller('Admin.ApplicationConfigurationController',
             } else if (data[ApplicationSettingsService.PROPERTIES.ORGANIZATION_FAX] !== $scope.organizationFax) {
                 $scope.mapFieldValuesToConfigDataModel();
                 return true;
+            } else if (data[ApplicationSettingsService.PROPERTIES.DASHBOARD_BANNER] !== $scope.dashboardBannerEnabled) {
+                $scope.mapFieldValuesToConfigDataModel();
+                return true;
             } else {
                 return false;
             }
@@ -74,6 +78,7 @@ angular.module('admin').controller('Admin.ApplicationConfigurationController',
             $scope.configDataModel[ApplicationSettingsService.PROPERTIES.ORGANIZATION_ZIP] = $scope.organizationZip;
             $scope.configDataModel[ApplicationSettingsService.PROPERTIES.ORGANIZATION_PHONE] = $scope.organizationPhone;
             $scope.configDataModel[ApplicationSettingsService.PROPERTIES.ORGANIZATION_FAX] = $scope.organizationFax;
+            $scope.configDataModel[ApplicationSettingsService.PROPERTIES.DASHBOARD_BANNER] = $scope.dashboardBannerEnabled;
         };
 
         $scope.applyChanges = function () {
