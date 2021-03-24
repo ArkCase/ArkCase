@@ -29,6 +29,7 @@ package com.armedia.acm.tool.zylab.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
@@ -48,7 +49,6 @@ public class ZylabIntegrationServiceImpl implements ZylabIntegrationService
 {
 
     public static final String DEFAULT_TEMPLATE_IDENTIFIER = "default";
-    public static final int DEFAULT_BUFFER_SIZE = 1024;
     private transient final Logger log = LogManager.getLogger(getClass());
     private ZylabRestClient zylabRestClient;
     private ZylabIntegrationConfig zylabIntegrationConfig;
@@ -118,17 +118,22 @@ public class ZylabIntegrationServiceImpl implements ZylabIntegrationService
     }
 
     @Override
-    public void deleteTemporarySyncFolder(File tempFolder) throws ZylabProductionSyncException
+    public void cleanupTemporaryProductionFiles(File tempFolder)
     {
         try
         {
             log.info("Deleting temporary Zylab production folder");
             FileUtils.deleteDirectory(tempFolder);
+
+            String zipFileName = tempFolder.getAbsolutePath().replace("_unzipped", ".zip");
+            File zipFile = new File(zipFileName);
+
+            log.info("Deleting original Zylab production zip file");
+            Files.deleteIfExists(zipFile.toPath());
         }
         catch (IOException e)
         {
-            log.error("Deleting temporary Zylab production folder failed");
-            throw new ZylabProductionSyncException("Deleting temporary Zylab production folder failed", e);
+            log.error("Deleting temporary Zylab production files failed");
         }
     }
 

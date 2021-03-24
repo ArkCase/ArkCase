@@ -85,11 +85,10 @@ public interface ZylabIntegrationService
 
     /**
      * 
-     * Deletes the temporary folder that holds uncompressed production files after processing
+     * Deletes the temporary folder that holds uncompressed production files after processing and the original zip file
      * 
      * @param tempFolder
      *            folder to delete
-     * @throws ZylabProductionSyncException
      */
-    void deleteTemporarySyncFolder(File tempFolder) throws ZylabProductionSyncException;
+    void cleanupTemporaryProductionFiles(File tempFolder);
 }
