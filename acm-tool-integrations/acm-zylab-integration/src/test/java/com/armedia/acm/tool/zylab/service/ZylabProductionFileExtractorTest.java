@@ -37,6 +37,7 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.junit.After;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 
@@ -52,6 +53,7 @@ public class ZylabProductionFileExtractorTest
         FileUtils.deleteDirectory(uncompressedFolderResource.getFile());
     }
 
+    @Ignore
     @Test
     public void testUnzip() throws IOException
     {
