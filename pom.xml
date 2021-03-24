@@ -443,6 +443,13 @@
                 <version>${sqlserver.version}</version>
                 <scope>runtime</scope>
             </dependency>
+            
+            <!-- Touchnet -->
+            <dependency>
+                <groupId>com.touchnet</groupId>
+                <artifactId>tlink-client</artifactId>
+                <version>1.0</version>
+            </dependency>
 
             <!-- swagger -->
             <dependency>
