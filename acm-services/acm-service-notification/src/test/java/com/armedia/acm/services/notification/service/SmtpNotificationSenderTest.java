@@ -118,7 +118,7 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         acmDataService = createMock(AcmDataService.class);
         templatingEngine = createMock(TemplatingEngine.class);
         templateConfiguration = new ClassPathResource("templates-configuration.json");
-        templateConfigurationManager = createMock(TemplateConfigurationManager.class);
+        templateConfigurationManager = new TemplateConfigurationManager();
         templateConfigurationManager.setTemplatesConfiguration(templateConfiguration);
         templateConfigurationManager.setObjectConverter(ObjectConverter.createObjectConverterForTests());
         templateConfigurations = templateConfigurationManager.getObjectConverter().getJsonUnmarshaller()
