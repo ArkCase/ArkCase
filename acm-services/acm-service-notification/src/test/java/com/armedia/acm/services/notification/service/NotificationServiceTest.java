@@ -103,7 +103,7 @@ public class NotificationServiceTest extends EasyMockSupport
         mockUserDao = createMock(UserDao.class);
         mockEmailSenderService = createMock(AcmEmailSenderService.class);
         templateConfiguration = new ClassPathResource("templates-configuration.json");
-        templateConfigurationManager = createMock(TemplateConfigurationManager.class);
+        templateConfigurationManager = new TemplateConfigurationManager();
         templateConfigurationManager.setTemplatesConfiguration(templateConfiguration);
         templateConfigurationManager.setObjectConverter(ObjectConverter.createObjectConverterForTests());
         templateConfigurations = templateConfigurationManager.getObjectConverter().getJsonUnmarshaller()
