@@ -2949,7 +2949,6 @@ angular
 
                             var dfd = $.Deferred();
 
-                            //var toFolderNode = DocTree.isFolderNode(toNode)? toNode : toNode.parent;
                             var toFolderNode = toNode;
                             if (DocTree.isFileNode(toNode) || "after" == mode || "before" == mode) {
                                 toFolderNode = toNode.parent;
@@ -2966,16 +2965,9 @@ angular
                                 if (DocTree.isFolderNode(toNode)) {
                                     newNode = toNode.addChildren(frNode);
                                 } else {
-                                    //toNode = node.addNode(frNode, "after")
                                     newNode = toNode.addNode(frNode, mode)
                                 }
                                 newNode.setActive();
-
-                                //todo: copy to same parent, need to rename a "fn" to "fn (n)"
-                                //                if (frNode.parent == toFolderNode) {
-                                //                    //copy to another folder name
-                                //
-                                //                } else {}
 
                                 DocTree.markNodePending(newNode);
                                 var subFolderId = frNode.data.objectId;
@@ -3030,7 +3022,12 @@ angular
                                     newNode.renderTitle();
                                     dfd.resolve(copyFolderInfo);
                                 }, function (errorData) {
-                                    MessageService.error(errorData.data)
+                                    if (errorData.data && errorData.data.message)
+                                    {
+                                        MessageService.error(errorData.data.message);
+                                    } else if (errorData.data) {
+                                        MessageService.error(errorData.data)
+                                    }
                                     DocTree.markNodeError(newNode);
                                     dfd.reject();
                                 });

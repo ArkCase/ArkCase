@@ -599,6 +599,12 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE, null, "Destination folder not found", null);
         }
 
+        if (toBeCopied.getId().equals(dstFolder.getId()))
+        {
+            throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_COPY_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
+                    toBeCopied.getId(), "Destination folder is a subfolder of the source folder", null);
+        }
+
         return copyFolder(toBeCopied, dstFolder, targetObjectId, targetObjectType);
     }
 
@@ -1679,39 +1685,30 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 0, objectType = "FOLDER", lockType = "READ")
     @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 1, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
     public AcmFolder copyFolderAsLink(AcmFolder toBeCopied, AcmFolder dstFolder, Long targetObjectId, String targetObjectType)
-            throws AcmObjectNotFoundException, LinkAlreadyExistException
+            throws AcmObjectNotFoundException, LinkAlreadyExistException, AcmUserActionFailedException
     {
-        if (toBeCopied == null || dstFolder == null)
-        {
-            throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE, null,
-                    "Folder or Destination folder not found", null);
-        }
-
-        AcmFolder folderLink = null;
-
-        folderLink = copyFolderProperties(toBeCopied, dstFolder);
-        folderLink.setLink(true);
-
-        getFileParticipantService().setFolderParticipantsFromParentFolder(folderLink);
-
+        AcmFolder linkFolder;
         try
         {
-            return getFolderDao().save(folderLink);
+            linkFolder = copyFolderAsLink(toBeCopied, dstFolder, targetObjectId, targetObjectType,
+                    dstFolder != null ? toBeCopied.getName() : "");
         }
         catch (TransactionSystemException e)
         {
-            log.error("Folder with id {} already exist in current directory", folderLink.getId());
-            throw new LinkAlreadyExistException("Link for folder " + folderLink.getName() + " already exist " +
+            log.error("Folder with id {} already exist in current directory", toBeCopied.getId());
+            throw new LinkAlreadyExistException("Link for folder " + toBeCopied.getName() + " already exist " +
                     "in current directory");
         }
 
+        getFileParticipantService().setFolderParticipantsFromParentFolder(linkFolder);
+        return linkFolder;
     }
 
     @Override
     @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 0, objectType = "FOLDER", lockType = "READ")
     @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 1, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
     public AcmFolder copyFolderAsLink(AcmFolder toBeCopied, AcmFolder dstFolder, Long targetObjectId, String targetObjectType,
-            String newFolderName) throws AcmObjectNotFoundException
+            String newFolderName) throws AcmObjectNotFoundException, AcmUserActionFailedException
     {
         if (toBeCopied == null || dstFolder == null)
         {
@@ -1719,15 +1716,16 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
                     "Folder or Destination folder not found", null);
         }
 
-        AcmFolder folderLink = null;
+        if (toBeCopied.getId().equals(dstFolder.getId()))
+        {
+            throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_COPY_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
+                    toBeCopied.getId(), "Destination folder is a subfolder of the source folder", null);
+        }
 
-        folderLink = copyFolderProperties(toBeCopied, dstFolder);
+        AcmFolder folderLink = copyFolderProperties(toBeCopied, dstFolder);
         folderLink.setName(newFolderName);
         folderLink.setLink(true);
-
-        AcmFolder folder = getFolderDao().save(folderLink);
-
-        return folder;
+        return getFolderDao().save(folderLink);
     }
 
     private AcmFolder copyFolderProperties(AcmFolder folder, AcmFolder destFolder)
