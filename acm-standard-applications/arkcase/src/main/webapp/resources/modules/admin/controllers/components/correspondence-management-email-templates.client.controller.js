@@ -158,7 +158,9 @@ angular.module('admin').controller('Admin.CMEmailTemplatesController',
                 getTemplateContentPromise.then(function (response) {
                     $scope.templateContent = response.data.templateContent;
                     var params = {
-                      templateContent: $scope.templateContent
+                        templateContent: $scope.templateContent,
+                        templateName: $scope.selectedRows[0].templateFilename,
+                        objectType: $scope.selectedRows[0].objectType
                     };
                     var modalInstance = $modal.open({
                         templateUrl: 'modules/admin/views/components/correspondence-management-email-template-preview-modal.client.view.html',
