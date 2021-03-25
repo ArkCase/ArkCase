@@ -44,6 +44,12 @@
             <artifactId>acm-service-labels</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-template-configuration</artifactId>
+            <version>${acm.version}</version>
+            <scope>compile</scope>
+        </dependency>
 
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -87,12 +93,6 @@
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-all</artifactId>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.acm-services</groupId>
-            <artifactId>acm-service-correspondence</artifactId>
-            <version>${acm.version}</version>
-            <scope>compile</scope>
         </dependency>
 
     </dependencies>

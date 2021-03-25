@@ -70,14 +70,21 @@ angular.module('common').controller('Common.SendEmailModalController', [ '$scope
     };
 
     $scope.loadContent = function () {
+        if($scope.template === "plainEmail.html") {
+            $('#plain').summernote('code', "");
+        } else {
+            var params = {};
+            params.objectType = $scope.objectType;
+            params.objectId = $scope.objectId;
+            params.templateName = $scope.template;
 
-        var getTemplateContentPromise = correspondenceService.retrieveTemplateContent($scope.template);
+            var getTemplateContentPromise = correspondenceService.retrieveConvertedTemplateContent(params);
 
-        getTemplateContentPromise.then(function (response) {
-            $scope.templateContent = response.data.templateContent.replace("${baseURL}", window.location.href.split('/home.html#!')[0]);
-            document.getElementById("content").innerHTML=$scope.templateContent;
-        });
-
+            getTemplateContentPromise.then(function (response) {
+                $scope.templateContent = response.data.templateContent.replace("${baseURL}", window.location.href.split('/home.html#!')[0]);
+                $('#content').summernote('code', $scope.templateContent);
+            });
+        }
     };
 
     $scope.onClickCancel = function() {

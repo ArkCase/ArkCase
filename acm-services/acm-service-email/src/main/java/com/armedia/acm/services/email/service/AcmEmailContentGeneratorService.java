@@ -36,6 +36,7 @@ import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksDTO;
 import com.armedia.acm.services.email.model.MessageBodyFactory;
 import com.armedia.acm.services.labels.service.ObjectLabelConfig;
 import com.armedia.acm.services.labels.service.TranslationService;
+import com.armedia.acm.services.templateconfiguration.service.TemplatingEngine;
 import org.springframework.security.core.Authentication;
 
 /**

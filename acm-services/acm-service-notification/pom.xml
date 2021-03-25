@@ -144,7 +144,7 @@
 
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
-            <artifactId>acm-service-correspondence</artifactId>
+            <artifactId>acm-service-template-configuration</artifactId>
             <version>${acm.version}</version>
         </dependency>
         <!-- bean validation -->

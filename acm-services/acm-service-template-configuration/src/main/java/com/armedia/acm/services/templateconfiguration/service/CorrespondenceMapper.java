@@ -1,4 +1,4 @@
-package com.armedia.acm.correspondence.service;
+package com.armedia.acm.services.templateconfiguration.service;
 
 /*-
  * #%L
@@ -27,8 +27,8 @@ package com.armedia.acm.correspondence.service;
  * #L%
  */
 
-import com.armedia.acm.correspondence.model.CorrespondenceMergeField;
-import com.armedia.acm.correspondence.model.Template;
+import com.armedia.acm.services.templateconfiguration.model.CorrespondenceMergeField;
+import com.armedia.acm.services.templateconfiguration.model.Template;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jan 30, 2017

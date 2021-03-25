@@ -27,7 +27,7 @@ package com.armedia.acm.correspondence.service;
  * #L%
  */
 
-import com.armedia.acm.correspondence.model.Template;
+import com.armedia.acm.services.templateconfiguration.model.Template;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.spring.SpringContextHolder;
 import org.apache.commons.io.FileUtils;
@@ -49,7 +49,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static com.armedia.acm.correspondence.service.CorrespondenceMapper.mapTemplateFromConfiguration;
+import static com.armedia.acm.services.templateconfiguration.service.CorrespondenceMapper.mapTemplateFromConfiguration;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jan 26, 2017

@@ -27,7 +27,7 @@ package com.armedia.acm.plugins.admin.web.api;
  * #L%
  */
 
-import com.armedia.acm.correspondence.model.Template;
+import com.armedia.acm.services.templateconfiguration.model.Template;
 import com.armedia.acm.correspondence.service.CorrespondenceService;
 import com.armedia.acm.plugins.admin.exception.CorrespondenceTemplateNotFoundException;
 import com.armedia.acm.plugins.admin.model.TemplateRequestResponse;
@@ -202,6 +202,44 @@ public class CorrespondenceTemplateAPIController
 
             }
             retval.put("templateContent", content.toString());
+            return new ResponseEntity<>(retval.toString(), HttpStatus.OK);
+        }
+        catch(Exception ex)
+        {
+            log.warn("Email template {} does not exist." + templateName);
+            throw new AcmEmailConfigurationIOException(String.format("Email template %s does not exist.", templateName));
+        }
+    }
+
+    @RequestMapping(value = "/convertedTemplateContent/{objectType}/{objectId}/{templateName:.+}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<String> getTemplateContent(@PathVariable(value = "objectType") String objectType,
+                                                     @PathVariable(value = "objectId") String objectId,
+                                                     @PathVariable(value = "templateName") String templateName) throws AcmEmailConfigurationIOException
+    {
+
+        JSONObject retval = new JSONObject();
+        String userHome = System.getProperty("user.home");
+        String filePathName = userHome + "/.arkcase/acm/templates/" + templateName;
+
+        try (FileReader fileReader = new FileReader(filePathName);
+             BufferedReader bufferedReader = new BufferedReader(fileReader))
+        {
+            String s;
+            StringBuilder content=new StringBuilder(1024);
+            while((s=bufferedReader.readLine())!=null)
+            {
+
+                content.append(s);
+
+            }
+
+            String body = content.toString();
+            if(!templateName.contains("plainEmail"))
+            {
+                body = correspondenceService.convertMergeTerms(templateName, content.toString(), objectType, objectId);
+            }
+            retval.put("templateContent", body);
             return new ResponseEntity<>(retval.toString(), HttpStatus.OK);
         }
         catch(Exception ex)

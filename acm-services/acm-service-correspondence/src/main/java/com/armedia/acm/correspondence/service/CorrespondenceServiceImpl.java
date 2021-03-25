@@ -6,22 +6,22 @@ package com.armedia.acm.correspondence.service;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
@@ -30,11 +30,16 @@ package com.armedia.acm.correspondence.service;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.core.provider.TemplateModelProvider;
-import com.armedia.acm.correspondence.model.CorrespondenceMergeField;
-import com.armedia.acm.correspondence.model.Template;
+import com.armedia.acm.services.notification.model.Notification;
+import com.armedia.acm.services.notification.model.NotificationConstants;
+import com.armedia.acm.services.notification.service.NotificationService;
+import com.armedia.acm.services.templateconfiguration.model.CorrespondenceMergeField;
+import com.armedia.acm.services.templateconfiguration.model.Template;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.services.templateconfiguration.service.CorrespondenceMergeFieldManager;
+import com.armedia.acm.services.templateconfiguration.service.TemplatingEngine;
 import com.armedia.acm.spring.SpringContextHolder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -67,7 +72,8 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
     private CorrespondenceEventPublisher eventPublisher;
     private CorrespondenceTemplateManager templateManager;
     private CorrespondenceMergeFieldManager mergeFieldManager;
-    private SpringContextHolder contextHolder;
+    private NotificationService notificationService;
+    private TemplatingEngine templatingEngine;
 
     /**
      * For use from MVC controllers and any other client with an Authentication object.
@@ -195,7 +201,7 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
     {
         return templateManager.getActivatedActiveVersionTemplatesByObjectType(objectType);
     }
-    
+
     @Override
     public List<Template> getActiveVersionTemplatesByTemplateType(String templateType)
     {
@@ -348,7 +354,7 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
 
     @Override
     public Map<String, String> listTemplateModelProviders() {
-        Collection<TemplateModelProvider> templateModelProviders = getContextHolder().getAllBeansOfType(TemplateModelProvider.class).values();
+        Collection<TemplateModelProvider> templateModelProviders = getSpringContextHolder().getAllBeansOfType(TemplateModelProvider.class).values();
 
         Map<String, String> mapTemplateModelProviders = new HashMap<>();
         for (TemplateModelProvider modelProvider : templateModelProviders)
@@ -383,6 +389,65 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
             log.error("The provided classpath is invalid. Because of: {}", e.getMessage());
         }
         return jsonSchemaProperties;
+    }
+
+    @Override
+    public TemplateModelProvider getTemplateModelProvider(Class templateModelProviderClass)
+    {
+        Map<String, TemplateModelProvider> templateModelproviders = getSpringContextHolder().getAllBeansOfType(templateModelProviderClass);
+        if (templateModelproviders.size() > 1)
+        {
+            for (TemplateModelProvider provider : templateModelproviders.values())
+            {
+                if (provider.getClass().equals(templateModelProviderClass))
+                {
+                    return provider;
+                }
+            }
+        }
+        return templateModelproviders.values().iterator().hasNext() ? templateModelproviders.values().iterator().next() : null;
+    }
+
+    @Override
+    public String convertMergeTerms(String templateName, String templateContent, String objectType, String objectId)
+    {
+        String templateModelName = templateName.substring(0, templateName.indexOf("."));
+        Template template = findTemplate(templateName);
+        String title = getNotificationService().setNotificationTitleForManualNotification(templateModelName);
+
+        Notification notification = getNotificationService().getNotificationBuilder()
+                .newNotification(templateModelName, title, objectType,
+                        Long.parseLong(objectId), null)
+                .withNotificationType(NotificationConstants.TYPE_MANUAL)
+                .withEmailContent(templateContent)
+                .build();
+
+        String templateModelProvider = template.getTemplateModelProvider();
+
+        Class templateModelProviderClass = null;
+        try
+        {
+            templateModelProviderClass = Class.forName(templateModelProvider);
+        }
+        catch (Exception e)
+        {
+            log.error("Can not find class for provided classpath {}. Error: {}", templateModelProvider, e.getMessage());
+        }
+
+        TemplateModelProvider modelProvider = getTemplateModelProvider(templateModelProviderClass);
+        if (modelProvider != null)
+        {
+            Object object = modelProvider.getModel(notification);
+            try {
+                String body = getTemplatingEngine().process(templateContent, templateModelName, object);
+                return body;
+            }
+            catch(Exception ex)
+            {
+                log.error("Failed to process template {}! Error: {} ", templateName, ex.getMessage());
+            }
+        }
+        return templateContent;
     }
 
     public SpringContextHolder getSpringContextHolder()
@@ -433,13 +498,23 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
         this.mergeFieldManager = mergeFieldManager;
     }
 
-    public SpringContextHolder getContextHolder()
+    public NotificationService getNotificationService()
     {
-        return contextHolder;
+        return notificationService;
     }
 
-    public void setContextHolder(SpringContextHolder contextHolder)
-    {
-        this.contextHolder = contextHolder;
+    public void setNotificationService(NotificationService notificationService) {
+        this.notificationService = notificationService;
     }
+
+    public TemplatingEngine getTemplatingEngine()
+    {
+        return templatingEngine;
+    }
+
+    public void setTemplatingEngine(TemplatingEngine templatingEngine)
+    {
+        this.templatingEngine = templatingEngine;
+    }
+
 }

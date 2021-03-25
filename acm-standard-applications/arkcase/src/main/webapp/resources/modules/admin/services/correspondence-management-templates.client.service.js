@@ -30,7 +30,8 @@ angular.module('admin').service('Admin.CMTemplatesService', [ '$http', 'Upload',
         deleteTemplateByIdAndVersion: deleteTemplateByIdAndVersion,
         listAllProperties: listAllProperties,
         listTemplateModelProviders: listTemplateModelProviders,
-        retrieveTemplateContent: retrieveTemplateContent
+        retrieveTemplateContent: retrieveTemplateContent,
+        retrieveConvertedTemplateContent: retrieveConvertedTemplateContent
     });
 
     /**
@@ -326,6 +327,14 @@ angular.module('admin').service('Admin.CMTemplatesService', [ '$http', 'Upload',
         return $http({
             method: "GET",
             url: 'api/latest/plugin/admin/templateContent/' + templateName,
+            cache: false
+        });
+    };
+
+    function retrieveConvertedTemplateContent(params) {
+        return $http({
+            method: "GET",
+            url: 'api/latest/plugin/admin/convertedTemplateContent/' + params.objectType + '/' + params.objectId + '/' + params.templateName,
             cache: false
         });
     };

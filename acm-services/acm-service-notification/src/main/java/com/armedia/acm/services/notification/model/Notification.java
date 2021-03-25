@@ -152,6 +152,9 @@ public class Notification implements Serializable, AcmObject, AcmEntity
     @Column(name = "cm_email_group")
     private String emailGroup;
 
+    @Column(name = "cm_email_content")
+    private String emailContent;
+
     @ManyToMany(cascade = { CascadeType.MERGE, CascadeType.PERSIST })
     @JoinTable(name = "acm_notification_files", joinColumns = {
             @JoinColumn(name = "cm_notification_id", referencedColumnName = "cm_notification_id") }, inverseJoinColumns = {
@@ -495,4 +498,8 @@ public class Notification implements Serializable, AcmObject, AcmEntity
     {
         this.notificationType = notificationType;
     }
+
+    public String getEmailContent() { return emailContent; }
+
+    public void setEmailContent(String emailContent) { this.emailContent = emailContent; }
 }
