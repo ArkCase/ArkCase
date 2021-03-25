@@ -150,10 +150,10 @@ public interface AcmFolderService
     AcmFolder saveFolder(AcmFolder folder);
 
     AcmFolder copyFolderAsLink(AcmFolder toBeCopied, AcmFolder dstFolder, Long targetObjectId, String targetObjectType)
-            throws AcmObjectNotFoundException, LinkAlreadyExistException;
+            throws AcmObjectNotFoundException, LinkAlreadyExistException, AcmUserActionFailedException;
 
     AcmFolder copyFolderAsLink(AcmFolder originalFolder, AcmFolder copyDstFolder, Long targetObjectId, String targetObjectType,
-            String newFolderName) throws AcmObjectNotFoundException;
+            String newFolderName) throws AcmObjectNotFoundException, AcmUserActionFailedException;
 
     @Retryable(maxAttempts = 3, value = Exception.class, backoff = @Backoff(delay = 500))
     AcmFolder createFolder(AcmFolder targetParentFolder, String cmisFolderId, String folderName)
