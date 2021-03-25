@@ -113,8 +113,9 @@ angular
             'Websockets.MessageHandler',
             'Admin.FoiaConfigService',
             'ObjectService',
+            'Admin.ZylabIntegrationService',
             function ($q, $translate, $modal, $filter, $log, $injector, Store, Util, UtilDateService, ConfigService,
-                      PluginService, UserInfoService, Ecm, EmailSenderConfigurationService, DeDuplicationConfigurationService, LocaleHelper, PublicFlagService, RequestResponseFolderService, LookupService, MessageService, ObjectLookupService, $timeout, MessageHandler, AdminFoiaConfigService, ObjectService) {
+                      PluginService, UserInfoService, Ecm, EmailSenderConfigurationService, DeDuplicationConfigurationService, LocaleHelper, PublicFlagService, RequestResponseFolderService, LookupService, MessageService, ObjectLookupService, $timeout, MessageHandler, AdminFoiaConfigService, ObjectService, ZylabIntegrationService) {
                 var cacheTree = new Store.CacheFifo();
                 var cacheFolderList = new Store.CacheFifo();
 
@@ -184,6 +185,10 @@ angular
                         }
                     }
                 }
+
+                ZylabIntegrationService.getConfiguration().then(function (response) {
+                    DocTree.documentReviewEnabled = response.data["zylabIntegration.enabled"];
+                });
 
                 AdminFoiaConfigService.getFoiaConfig().then(function (response) {
                     DocTree.limitedDeliveryToSpecificPageCountEnabled = response.data.limitedDeliveryToSpecificPageCountEnabled;
@@ -1545,6 +1550,11 @@ angular
                                     name: "status",
                                     renderer: function (element, node, columnDef, isReadOnly) {
                                         $(element).text(node.data.status);
+                                    }
+                                }, {
+                                    name: "custodian",
+                                    renderer: function (element, node, columnDef, isReadOnly) {
+                                        $(element).text(node.data.custodian);
                                     }
                                 },
                                 {
@@ -4083,6 +4093,7 @@ angular
                             nodeData.data.modifier = Util.goodValue(fileData.modifier);
                             nodeData.data.link = Util.goodValue(fileData.link);
                             nodeData.data.duplicate = Util.goodValue(fileData.duplicate);
+                            nodeData.data.custodian = Util.goodValue(fileData.custodian);
 
                             for (var versionIndex = 0; versionIndex < fileData.versionList.length; versionIndex++) {
                                 if (fileData.versionList[versionIndex].versionTag === fileData.version) {
@@ -5391,6 +5402,19 @@ angular
                             function (moduleConfig) {
                                 var treeConfig = Util.goodMapValue(moduleConfig, "docTree", {});
                                 DocTree.treeConfig = _.merge(treeConfig, DocTree.treeConfig);
+
+                                if (DocTree.documentReviewEnabled) {
+                                    DocTree.treeConfig.columnDefs.push({
+                                        "name": "custodian",
+                                        "displayName": "common.directive.docTree.table.columns.custodian",
+                                        "headTemplate": "<label id='custodian' class='doc-tree-header' style='cursor: pointer;'></label>",
+                                        "icon": "<i class='fa fa-fw' data-sort='modifier' data-dir='ASC'></i>",
+                                        "enableColumnMenu": false,
+                                        "__todo__cellTemplate": "<div>{{ row.entity.custodian }}</div>",
+                                        "index": DocTree.treeConfig.columnDefs.length,
+                                        "width": "16%",
+                                    });
+                                }
 
                                 var extensions = Util.goodMapValue(treeConfig, "extensions", []);
                                 for (var i = 0; i < extensions.length; i++) {
