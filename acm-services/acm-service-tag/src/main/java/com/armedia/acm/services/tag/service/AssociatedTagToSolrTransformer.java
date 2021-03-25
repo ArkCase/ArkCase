@@ -74,7 +74,7 @@ public class AssociatedTagToSolrTransformer implements AcmObjectToSolrDocTransfo
         solr.setParent_ref_s(Long.toString(in.getParentId()) + "-" + in.getParentType());
         solr.setAdditionalProperty("parent_number_lcs", in.getParentTitle());
 
-        solr.setTag_token_lcs(in.getTag().getTagToken().substring(0, in.getTag().getTagToken().indexOf("-")));
+        solr.setTag_token_lcs(in.getTag().getTagToken().substring(0, in.getTag().getTagToken().lastIndexOf("-")));
 
         /** Additional properties for full names instead of ID's */
         AcmUser creator = getUserDao().quietFindByUserId(in.getCreator());
@@ -118,7 +118,7 @@ public class AssociatedTagToSolrTransformer implements AcmObjectToSolrDocTransfo
 
         solr.setAdditionalProperty("parent_number_lcs", in.getParentTitle());
 
-        solr.setTag_token_lcs(in.getTag().getTagToken().substring(0, in.getTag().getTagToken().indexOf("-")));
+        solr.setTag_token_lcs(in.getTag().getTagToken().substring(0, in.getTag().getTagToken().lastIndexOf("-")));
 
         solr.setAdditionalProperty("title_parseable",
                 in.getTag().getTagText() + " on object of type " + in.getParentType() + " and ID: " + in.getParentId());
