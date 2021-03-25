@@ -118,7 +118,7 @@ public class AssociatedTagToSolrTransformer implements AcmObjectToSolrDocTransfo
 
         solr.setAdditionalProperty("parent_number_lcs", in.getParentTitle());
 
-        solr.setTag_token_lcs(in.getTag().getTagToken());
+        solr.setTag_token_lcs(in.getTag().getTagToken().substring(0, in.getTag().getTagToken().indexOf("-")));
 
         solr.setAdditionalProperty("title_parseable",
                 in.getTag().getTagText() + " on object of type " + in.getParentType() + " and ID: " + in.getParentId());
