@@ -146,6 +146,9 @@ public class ZylabFileMetadata
     @Column(name = "cm_source")
     private String source;
 
+    @Column(name = "cm_exempt_withheld_reason")
+    private String exemptWithheldReason;
+
     public Long getId()
     {
         return id;
@@ -424,5 +427,13 @@ public class ZylabFileMetadata
     public void setSource(String source)
     {
         this.source = source;
+    }
+
+    public String getExemptWithheldReason() {
+        return exemptWithheldReason;
+    }
+
+    public void setExemptWithheldReason(String exemptWithheldReason) {
+        this.exemptWithheldReason = exemptWithheldReason;
     }
 }
