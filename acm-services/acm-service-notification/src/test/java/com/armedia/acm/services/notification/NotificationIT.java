@@ -80,7 +80,8 @@ import org.springframework.transaction.annotation.Transactional;
         "/spring/spring-library-websockets.xml",
         "/spring/spring-library-object-title.xml",
         "/spring/spring-library-labels-service.xml",
-        "/spring/spring-test-quartz-scheduler.xml"
+        "/spring/spring-test-quartz-scheduler.xml",
+        "/spring/spring-library-templates-configuration.xml"
 })
 @Rollback(true)
 public class NotificationIT
