@@ -1,10 +1,10 @@
-package com.armedia.acm.acm_services.acm_configuration;
+package gov.foia.model;
 
 /*-
  * #%L
- * ACM Service: Configuration Library
+ * ACM Standard Application: Freedom of Information Act
  * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
+ * Copyright (C) 2014 - 2020 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 
@@ -27,39 +27,30 @@ package com.armedia.acm.acm_services.acm_configuration;
  * #L%
  */
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import com.armedia.acm.plugins.task.model.AcmTask;
 
-/**
- * Unit test for simple App.
- */
-public class AppTest 
-    extends TestCase
+public class FOIATaskRequestModel
 {
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-    public AppTest( String testName )
+    private AcmTask task;
+    private FOIARequest request;
+
+    public FOIARequest getRequest()
     {
-        super( testName );
+        return request;
     }
 
-    /**
-     * @return the suite of tests being tested
-     */
-    public static Test suite()
+    public void setRequest(FOIARequest request)
     {
-        return new TestSuite( AppTest.class );
+        this.request = request;
     }
 
-    /**
-     * Rigourous Test :-)
-     */
-    public void testApp()
+    public AcmTask getTask()
     {
-        assertTrue( true );
+        return task;
+    }
+
+    public void setTask(AcmTask task)
+    {
+        this.task = task;
     }
 }

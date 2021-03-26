@@ -151,10 +151,10 @@ angular.module('services').factory('DocTreeExt.Email',
                             emailData.modelReferenceName = res.template;
                             emailData.attachmentIds = res.selectedFilesToEmail;
 
-                            if(emailData.modelReferenceName != 'plainEmail') {
-                                EcmEmailService.sendManualEmail(emailData);
+                            if(emailData.attachmentIds && emailData.modelReferenceName == 'plainEmail') {
+                                EcmEmailService.sendEmailWithAttachments(emailData, emailData.objectType);
                             } else {
-                                EcmEmailService.sendPlainEmail(emailData, ObjectService.ObjectTypes.CASE_FILE);
+                                EcmEmailService.sendManualEmail(emailData);
                             }
                         });
                     });

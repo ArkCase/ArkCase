@@ -259,6 +259,7 @@
             <beans:property name="foiaConfigurationService" ref="foiaConfigurationService"/>
             <beans:property name="executeSolrQuery" ref="executeSolrQuery"/>
             <beans:property name="foiaConfig" ref="foiaConfig"/>
+            <beans:property name="objectAssociationService" ref="objectAssociationService"/>
         </beans:bean>
 
         <bean id="foiaRequestEventUtility" class="gov.foia.service.FOIARequestEventUtility"/>
@@ -329,6 +330,13 @@
 
         <beans:bean id="foiaRequestTemplateModelProvider" class="gov.foia.model.provider.FOIARequestTemplateModelProvider">
             <beans:property name="objectAssociationDao" ref="objectAssociationDao"/>
+            <beans:property name="applicationConfig" ref="applicationProperties"/>
+            <beans:property name="userDao" ref="userJpaDao"/>
+            <beans:property name="userOrgService" ref="acmUserOrgService"/>
+        </beans:bean>
+
+        <beans:bean id="foiaTaskRequestTemplateModelProvider" class="gov.foia.model.provider.FOIATaskRequestTemplateModelProvider">
+            <beans:property name="foiaRequestDao" ref="foiaRequestDao"/>
         </beans:bean>
 
         <beans:bean id="foiaDeterminationLetterModelProvider" class="gov.foia.model.provider.FOIADeterminationLetterModelProvider">

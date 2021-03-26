@@ -31,6 +31,7 @@ package com.armedia.acm.services.notification.service;
 import static org.junit.Assert.fail;
 
 import com.armedia.acm.core.model.ApplicationConfig;
+import com.armedia.acm.correspondence.service.CorrespondenceMergeFieldManager;
 import com.armedia.acm.services.email.service.TemplatingEngine;
 
 import org.junit.Before;
@@ -43,10 +44,14 @@ import java.util.Date;
 import java.util.List;
 
 import freemarker.template.TemplateException;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
 public class TemplatingEngineTest
 {
     private TemplatingEngine templatingEngine;
+    private CorrespondenceMergeFieldManager mergeFieldManager;
+    private Resource correspondenceMergeFieldsConfiguration;
 
     @Before
     public void setup()
@@ -56,7 +61,12 @@ public class TemplatingEngineTest
         ApplicationConfig appConfig = new ApplicationConfig();
         appConfig.setBaseUrl("https://test.com/arkcase");
 
+        mergeFieldManager = new CorrespondenceMergeFieldManager();
+        correspondenceMergeFieldsConfiguration = new ClassPathResource("correspondence-merge-fields.json");
+        mergeFieldManager.setCorrespondenceMergeFieldsConfiguration(correspondenceMergeFieldsConfiguration);
+
         templatingEngine.setApplicationConfig(appConfig);
+        templatingEngine.setMergeFieldManager(mergeFieldManager);
     }
 
     public class Model

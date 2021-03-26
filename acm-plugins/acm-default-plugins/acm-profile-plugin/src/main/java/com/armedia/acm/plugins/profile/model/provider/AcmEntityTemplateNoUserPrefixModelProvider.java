@@ -1,4 +1,4 @@
-package com.armedia.acm.services.notification.service.provider;
+package com.armedia.acm.plugins.profile.model.provider;
 
 /*-
  * #%L
@@ -37,6 +37,9 @@ import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.service.provider.model.AcmEntityTemplateModel;
 import com.armedia.acm.services.objecttitle.model.TitleConfiguration;
 import com.armedia.acm.services.objecttitle.service.ObjectTitleConfigurationService;
+import com.armedia.acm.services.users.dao.UserDao;
+import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.plugins.profile.service.UserOrgService;
 
 import java.util.Map;
 
@@ -45,6 +48,8 @@ public class AcmEntityTemplateNoUserPrefixModelProvider implements TemplateModel
     private AcmDataService dataService;
     private UserInfoHelper userInfoHelper;
     private ObjectTitleConfigurationService objectTitleConfigurationService;
+    private UserDao userDao;
+    private UserOrgService userOrgService;
 
     @Override
     public AcmEntityTemplateModel getModel(Object object)
@@ -58,12 +63,20 @@ public class AcmEntityTemplateNoUserPrefixModelProvider implements TemplateModel
         String baseAssigneeGroupId = "";
         String modifierEmail = "";
         String assigneeEmail = "";
+        String assigneeTitle = "";
+        String assigneeFullName = "";
 
         if (acmObject instanceof AcmAssignee && ((AcmAssignee) acmObject).getAssigneeLdapId() != null)
         {
             AcmAssignee acmAssignee = (AcmAssignee) acmObject;
 
             String assigneeLdapId = acmAssignee.getAssigneeLdapId();
+            if(assigneeLdapId != null)
+            {
+                AcmUser assignee = userDao.findByUserId(assigneeLdapId);
+                assigneeTitle = userOrgService.getUserOrgForUserId(acmAssignee.getAssigneeLdapId()).getTitle();
+                assigneeFullName = assignee.getFullName();
+            }
             String modifier = acmAssignee.getModifier();
 
             baseAssigneeLdapId = getUserInfoHelper().removeUserPrefix(assigneeLdapId);
@@ -79,7 +92,6 @@ public class AcmEntityTemplateNoUserPrefixModelProvider implements TemplateModel
         else if (acmObject instanceof AcmAssignee && ((AcmAssignee) acmObject).getAssigneeGroupId() != null)
         {
             AcmAssignee acmAssignee = (AcmAssignee) acmObject;
-
             String assigneeLdapGroupId = acmAssignee.getAssigneeGroupId();
             baseAssigneeGroupId = getUserInfoHelper().removeGroupPrefix(assigneeLdapGroupId);
         }
@@ -91,6 +103,8 @@ public class AcmEntityTemplateNoUserPrefixModelProvider implements TemplateModel
         acmEntityTemplateModel.assigneeGroupId = baseAssigneeGroupId;
         acmEntityTemplateModel.modifierEmail = modifierEmail;
         acmEntityTemplateModel.assigneeEmail = assigneeEmail;
+        acmEntityTemplateModel.assigneeTitle = assigneeTitle;
+        acmEntityTemplateModel.assigneeFullName = assigneeFullName;
 
         Boolean isTitleEnabled = false;
         Map<String, TitleConfiguration> titleConfigurationMap = objectTitleConfigurationService.getObjectTitleConfig();
@@ -141,5 +155,21 @@ public class AcmEntityTemplateNoUserPrefixModelProvider implements TemplateModel
     public void setObjectTitleConfigurationService(ObjectTitleConfigurationService objectTitleConfigurationService)
     {
         this.objectTitleConfigurationService = objectTitleConfigurationService;
+    }
+
+    public UserDao getUserDao() {
+        return userDao;
+    }
+
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
+    }
+
+    public UserOrgService getUserOrgService() {
+        return userOrgService;
+    }
+
+    public void setUserOrgService(UserOrgService userOrgService) {
+        this.userOrgService = userOrgService;
     }
 }

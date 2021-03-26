@@ -6,6 +6,7 @@
 
     <bean id="downloadCorrespondenceTemplate" class="com.armedia.acm.plugins.admin.web.api.TemplateDownloadControllerAPI">
         <property name="correspondenceFolderName" value="${user.home}/.arkcase/acm/correspondenceTemplates"/>
+        <property name="emailTemplateFolderName" value="${user.home}/.arkcase/acm/templates"/>
     </bean>
 
     <bean id="listCorrespondenceTemplates" class="com.armedia.acm.plugins.admin.web.api.ListAllTemplatesControllerAPI"></bean>

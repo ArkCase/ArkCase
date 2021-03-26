@@ -33,17 +33,28 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import com.armedia.acm.correspondence.model.CorrespondenceMergeField;
+import com.armedia.acm.correspondence.service.CorrespondenceMergeFieldManager;
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import org.springframework.expression.spel.SpelParserConfiguration;
+import org.springframework.expression.spel.standard.SpelExpression;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
+import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 public class TemplatingEngine
 {
     private ApplicationConfig applicationConfig;
+    private CorrespondenceMergeFieldManager mergeFieldManager;
 
     public String process(String emailBodyTemplate, String modelReferenceName, Object model) throws TemplateException, IOException
     {
@@ -59,6 +70,9 @@ public class TemplatingEngine
         templatingModel.put("formatDateTime", new FormatDateTimeMethodModel());
         // set the application base URL as a variable, to be used in any templates
         templatingModel.put("baseURL", applicationConfig.getBaseUrl());
+        templatingModel.put("basePortalURL", applicationConfig.getBasePortalUrl());
+
+        checkIfTemplateBodyContainsMergeTerms(emailBodyTemplate, model);
 
         Template t = new Template("templateName", new StringReader(emailBodyTemplate), cfg);
 
@@ -66,6 +80,52 @@ public class TemplatingEngine
         t.process(templatingModel, out);
 
         return out.toString();
+    }
+
+    private void checkIfTemplateBodyContainsMergeTerms(String emailBodyTemplate, Object model)
+    {
+        List<String> spelExpressions = getSpelExpressions(emailBodyTemplate);
+        if(spelExpressions != null)
+        {
+            Map<String, String> expressionsToEvaluate = new HashMap<>();
+            StandardEvaluationContext stContext = new StandardEvaluationContext(model);
+            SpelParserConfiguration config = new SpelParserConfiguration(true, true);
+            SpelExpressionParser parser = new SpelExpressionParser(config);
+
+            for(String spelExpression : spelExpressions)
+            {
+                for (CorrespondenceMergeField mergeField : getMergeFieldManager().getMergeFields())
+                {
+                    String mergeFieldId = "${" + mergeField.getFieldId() + "}";
+                    if (mergeFieldId.equalsIgnoreCase(spelExpression) && mergeField.getEmailFieldValue() != null)
+                    {
+                        SpelExpression expression = parser.parseRaw(mergeField.getEmailFieldValue());
+                        if (expression.getValue(stContext) != null)
+                        {
+                            expressionsToEvaluate.put(mergeField.getFieldId(),String.valueOf(expression.getValue(stContext)));
+                        }
+                    }
+                }
+            }
+            for (String spelEx : expressionsToEvaluate.keySet())
+            {
+                String replaceSpelExpression = "${" + spelEx + "}";
+                emailBodyTemplate = emailBodyTemplate.replace(replaceSpelExpression, expressionsToEvaluate.get(spelEx));
+            }
+        }
+    }
+
+    private List<String> getSpelExpressions(String emailBodyTemplate)
+    {
+        Pattern regex = Pattern.compile("(\\$\\{)(.*?)(\\})");
+        Matcher m = regex.matcher(emailBodyTemplate);
+        List<String> spelExpressions = new ArrayList<>();
+
+        while(m.find())
+        {
+            spelExpressions.add(m.group());
+        }
+        return spelExpressions;
     }
 
     public void setApplicationConfig(ApplicationConfig applicationConfig)
@@ -76,5 +136,15 @@ public class TemplatingEngine
     public ApplicationConfig getApplicationConfig()
     {
         return applicationConfig;
+    }
+
+    public CorrespondenceMergeFieldManager getMergeFieldManager()
+    {
+        return mergeFieldManager;
+    }
+
+    public void setMergeFieldManager(CorrespondenceMergeFieldManager mergeFieldManager)
+    {
+        this.mergeFieldManager = mergeFieldManager;
     }
 }

@@ -20,6 +20,7 @@
 
     <bean id="portalUserService" class="com.armedia.acm.portalgateway.service.DefaultPluggablePortalUserService">
         <property name="springContextHolder" ref="acmContextHolder"/>
+        <property name="userDao" ref="userJpaDao"/>
     </bean>
 
     <bean id="checkPortalUserService" class="com.armedia.acm.portalgateway.service.DefaultPortalCheckUserAssignementService">

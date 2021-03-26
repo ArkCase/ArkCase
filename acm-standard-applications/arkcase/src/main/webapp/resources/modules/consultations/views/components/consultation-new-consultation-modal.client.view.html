@@ -158,7 +158,7 @@
                                        ng-blur="checkExistingEmail()" required="required"
                                        ng-disabled="isExistingPerson && existingPerson.defaultEmail.value">
                                 <span class="text-danger"
-                                        ng-if="confirmationEmail !== config.data.originator.person.defaultEmail.value && formInvalid && !confirmEmailEmpty"
+                                        ng-if="confirmationEmail !== config.data.originator.person.defaultEmail.value && formInvalid"
                                         translate>
                                 consultations.newConsultation.confirmationEmail.validation.errorInvalid</span>
                             </div>
@@ -176,10 +176,6 @@
                                         {{option.value | translate}}
                                     </option>
                                 </select>
-                                <span class="text-danger"
-                                        ng-if="!config.data.originator.person.addresses[primaryAddressIndex].country && formInvalid"
-                                        translate>
-                            consultations.newConsultation.country.validation.error</span>
                             </div>
                             <div class="col-sm-2">
                                 <label for="addressType" translate>consultations.newConsultation.address.type.label</label>
@@ -192,9 +188,6 @@
                                         {{option.value | translate}}
                                     </option>
                                 </select>
-                                <span class="text-danger"
-                                        ng-if="!config.data.originator.person.addresses[primaryAddressIndex].type && formInvalid" translate>
-                            consultations.newConsultation.address.type.validation.error</span>
                             </div>
                         </div>
                         <div class="row form-group">
@@ -206,10 +199,6 @@
                                         ng-model="config.data.originator.person.addresses[primaryAddressIndex].streetAddress"
                                         placeholder="{{'consultations.newConsultation.address.placeholder' | translate}}" name="address1"
                                         ng-disabled="isExistingPerson && existingPerson.addresses[primaryAddressIndex].streetAddress">
-                                <span class="text-danger"
-                                        ng-if="!config.data.originator.person.addresses[primaryAddressIndex].streetAddress && formInvalid"
-                                        translate>
-                                consultations.newConsultation.address.validation.error</span>
                             </div>
                             <div class="col-sm-2">
                                 <label for="address2" translate>consultations.newConsultation.address2.label</label>
@@ -286,7 +275,7 @@
                     <div class="col-sm-9 form-group">
                         <input id="externalAgency" name="externalAgency" class="form-control" ng-model="config.data.externalRequestingAgency" maxlength="50"
                                 placeholder="{{'consultations.newConsultation.externalAgency.placeholder' | translate}}" required="required" />
-                        <span class="text-danger" ng-if="!config.data.externalAgency && formInvalid" translate>
+                        <span class="text-danger" ng-if="!config.data.externalRequestingAgency && formInvalid" translate>
                                 consultations.newConsultation.externalAgency.validation.error</span>
                     </div>
                 </div>

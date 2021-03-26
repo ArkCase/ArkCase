@@ -121,13 +121,33 @@ angular.module('directives').directive('objectAuthorization', [ 'Menus', 'Messag
                }
             };
 
+            function selectionInsertion(insertionArray, sel) {
+                if (insertionArray.length === 0) {
+                    insertionArray.splice(0, 0, sel);
+                }
+                else if (sel.name < insertionArray[0]["key"]) {
+                    insertionArray.splice(0, 0, sel);
+                }
+                else if (sel.name > insertionArray[insertionArray.length - 1]["key"]) {
+                    insertionArray.splice(insertionArray.length, 0, sel);
+                }
+                else {
+                    for (var m = 0; m < insertionArray.length; m++) {
+                        if ((sel.name > insertionArray[m]["key"]) && (sel.name < insertionArray[m + 1]["key"])) {
+                            insertionArray.splice(m + 1, 0, sel);
+                            break;
+                        }
+                    }
+                }
+            }
+
             var _unAuthorize = function(toRemove, data) {
                 angular.forEach(toRemove, function(sel) {
                     var indexOf = data.selectedAuthorized.map(function(obj) {
                         return obj.key + " " + obj.name;
                     }).indexOf(sel.key + " " + sel.name);
                     data.selectedAuthorized.splice(indexOf, 1);
-                    data.selectedNotAuthorized.push(sel);
+                    selectionInsertion(data.selectedNotAuthorized, sel);
                 });
             };
 
@@ -137,7 +157,7 @@ angular.module('directives').directive('objectAuthorization', [ 'Menus', 'Messag
                         return obj.key + " " + obj.name;
                     }).indexOf(sel.key + " " + sel.name);
                     data.selectedNotAuthorized.splice(indexOf, 1);
-                    data.selectedAuthorized.push(sel);
+                    selectionInsertion(data.selectedAuthorized, sel);
                 });
             };
 

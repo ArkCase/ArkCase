@@ -226,7 +226,6 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
 
                     try (InputStream is = bodyPart.getInputStream())
                     {
-                        bodyPart.setFileName(checkDuplicateFileName(bodyPart.getFileName(), emailReceivedFolder.getId()));
                         Authentication auth = new UsernamePasswordAuthenticationToken(userId, "");
                         getEcmFileService().upload(bodyPart.getFileName(), "attachment", "Document", is, bodyPart.getContentType(),
                                 bodyPart.getFileName(), auth,
@@ -263,7 +262,8 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
         }
         return newFileName;
     }
-    
+
+
     public String makeFileOrFolderName(Message message, String emailSender) throws MessagingException
     {
         ZonedDateTime date = ZonedDateTime.now(ZoneOffset.UTC);

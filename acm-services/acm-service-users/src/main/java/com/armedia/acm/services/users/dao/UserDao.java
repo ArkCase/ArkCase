@@ -33,7 +33,6 @@ import com.armedia.acm.services.users.model.AcmRole;
 import com.armedia.acm.services.users.model.AcmRoleType;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserState;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -48,13 +47,13 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 public class UserDao extends AcmAbstractDao<AcmUser>
 {
@@ -434,6 +433,18 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         acmUser.setLang(DEFAULT_LOCALE_CODE);
         getEm().persist(acmUser);
         return acmUser;
+    }
+
+    public Optional<AcmUser> findByEmailAddressAndDirectoryName(String email, String directoryName)
+    {
+        String select = "SELECT user FROM AcmUser user WHERE LOWER(user.mail) = :email AND user.userDirectoryName = :directoryName";
+        TypedQuery<AcmUser> query = getEm().createQuery(select, AcmUser.class);
+        query.setParameter("email", email.toLowerCase());
+        query.setParameter("directoryName", directoryName);
+
+        Optional<AcmUser> optionalUser = Optional.of(query.getSingleResult());
+
+        return optionalUser;
     }
 
     public EntityManager getEntityManager()

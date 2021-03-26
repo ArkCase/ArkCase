@@ -38,12 +38,15 @@ import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.FacetedSearchService;
 import com.armedia.acm.services.search.service.SearchResults;
+import com.armedia.acm.services.users.dao.UserDao;
+import com.armedia.acm.services.users.model.AcmUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -60,6 +63,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -78,8 +82,14 @@ public class ArkCasePortalGatewayRequestAPIController
 
     private FacetedSearchService facetedSearchService;
 
+    private UserDao userDao;
+
+    @Value("${portal.serviceProvider.directory.name}")
+    private String directoryName;
+
     @CheckPortalUserAssignement
-    @RequestMapping(value = "/{portalId}/requests", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE })
+    @RequestMapping(value = "/{portalId}/requests", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE,
+            MediaType.TEXT_PLAIN_VALUE })
     @ResponseBody
     public PortalResponse submitRequest(Authentication auth, @PortalId @PathVariable(value = "portalId") String portalId,
             @RequestBody PortalRequest request) throws PortalRequestServiceException
@@ -134,16 +144,16 @@ public class ArkCasePortalGatewayRequestAPIController
         }
     }
 
+    @CheckPortalUserAssignement
     @RequestMapping(value = "/{portalId}/requests/suggestRequests", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<String> suggestRequests(Authentication auth,
-            @PortalId @PathVariable(value = "portalId") String portalId,
+    public List<String> suggestRequests(@PortalId @PathVariable(value = "portalId") String portalId,
             @RequestParam(value = "q") String query,
+            @RequestParam(value = "emailAddress") String emailAddress,
             Authentication authentication) throws SolrException
     {
         String filterQueries = "";
-        Long userId = ((AcmAuthentication) authentication).getUserIdentity();
-        String[] filter = new String[] { "object_type_s:CASE_FILE", "allow_user_ls:" + userId };
+        String[] filter = new String[] { "object_type_s:CASE_FILE", "requester_email_s:" + emailAddress };
         filterQueries = Arrays.asList(filter).stream().map(f -> getFacetedSearchService().buildSolrQuery(f))
                 .collect(Collectors.joining(""));
         filterQueries += filterQueries.trim().length() > 0 ? "&fq=hidden_b:false" : "fq=hidden_b:false";
@@ -163,7 +173,6 @@ public class ArkCasePortalGatewayRequestAPIController
             JSONObject docFile = docFiles.getJSONObject(i);
             caseNames.add(docFile.getString("name"));
         }
-
         return caseNames;
     }
 
@@ -204,5 +213,15 @@ public class ArkCasePortalGatewayRequestAPIController
     public void setFacetedSearchService(FacetedSearchService facetedSearchService)
     {
         this.facetedSearchService = facetedSearchService;
+    }
+
+    public UserDao getUserDao()
+    {
+        return userDao;
+    }
+
+    public void setUserDao(UserDao userDao)
+    {
+        this.userDao = userDao;
     }
 }

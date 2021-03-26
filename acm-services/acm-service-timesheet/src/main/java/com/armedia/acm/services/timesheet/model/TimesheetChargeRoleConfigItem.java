@@ -27,11 +27,13 @@ package com.armedia.acm.services.timesheet.model;
  * #L%
  */
 
+import java.math.BigDecimal;
+
 public class TimesheetChargeRoleConfigItem
 {
 
     private String chargeRole;
-    private Long rate;
+    private BigDecimal rate;
     private String active;
 
     public String getChargeRole()
@@ -44,12 +46,12 @@ public class TimesheetChargeRoleConfigItem
         this.chargeRole = chargeRole;
     }
 
-    public Long getRate()
+    public BigDecimal getRate()
     {
         return rate;
     }
 
-    public void setRate(Long rate)
+    public void setRate(BigDecimal rate)
     {
         this.rate = rate;
     }

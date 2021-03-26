@@ -65,8 +65,12 @@
                         <label class="control-label" for="defaultTimezone">
                             <span translate>admin.application.applicationConfiguration.defaultTimezone.label</span>
                         </label>
-                        <input ng-model="defaultTimezone" class="form-control input-sm" type="text" id="defaultTimezone"
-                                ng-blur="validateTimezone(defaultTimezone)" />
+                        <select ng-model="defaultTimezone" class="form-control input-sm" type="text" id="defaultTimezone"
+                                ng-blur="validateTimezone(defaultTimezone)">
+                            <option ng-repeat="option in timeZones" value="{{option.value | translate}}" translate>
+                                {{option.key}}
+                            </option>
+                        </select>
                         <span class="text-danger" ng-if="!isTimezoneValid" translate>
                                     admin.application.applicationConfiguration.defaultTimezone.error</span>
 

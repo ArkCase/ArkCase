@@ -33,6 +33,7 @@ import com.armedia.acm.core.AcmNotificationReceiver;
 import com.armedia.acm.core.AcmObjectType;
 import com.armedia.acm.data.AcmNotificationDao;
 import com.armedia.acm.data.service.AcmDataService;
+import com.armedia.acm.portalgateway.model.PortalConfig;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.users.dao.UserDao;
@@ -42,6 +43,9 @@ import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.UnsatisfiedDependencyException;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -53,10 +57,13 @@ import java.util.stream.Collectors;
 
 public class NotificationUtils
 {
+    private final Logger LOG = LogManager.getLogger(getClass());
+
     private AcmApplication acmAppConfiguration;
     private AcmDataService acmDataService;
     private UserDao userDao;
     private AcmGroupDao groupDao;
+    private PortalConfig portalConfig;
 
     public String buildNotificationLink(String parentType, Long parentId, String relatedObjectType, Long relatedObjectId)
     {
@@ -131,6 +138,26 @@ public class NotificationUtils
         return "";
     }
 
+    public String getEmailsCommaSeparatedForNonPortalParticipantsForObject(Long parentObjectId, String parentObjectType)
+    {
+        AcmNotificationDao notificationDao = acmDataService.getNotificationDaoByObjectType(parentObjectType);
+        if (notificationDao != null)
+        {
+            AcmNotifiableEntity entity = notificationDao.findEntity(parentObjectId);
+            if (entity != null)
+            {
+                Set<AcmNotificationReceiver> participants = entity.getReceivers();
+                return participants.stream()
+                        .filter(participant -> isNonPortalParticipant(participant.getReceiverType(), participant.getReceiverLdapId()))
+                        .flatMap(it -> getEmailAddressForParticipant(it.getReceiverType(), it.getReceiverLdapId()).stream())
+                        .filter(Objects::nonNull)
+                        .distinct()
+                        .collect(Collectors.joining(","));
+            }
+        }
+        return "";
+    }
+
     public Set<String> getEmailAddressForParticipant(String participantType, String participantLdapId)
     {
         if (participantType.equals(NotificationConstants.PARTICIPANT_TYPE_GROUP))
@@ -154,6 +181,44 @@ public class NotificationUtils
             }
         }
         return new HashSet<>();
+    }
+
+    public List<AcmParticipant> getNonPortalParticipants(List<AcmParticipant> participants)
+    {
+        return participants.stream()
+                .filter(participant -> isNonPortalParticipant(participant.getParticipantType(), participant.getParticipantLdapId()))
+                .collect(Collectors.toList());
+    }
+
+    private boolean isNonPortalParticipant(String participantType, String participantLdapId)
+    {
+        String portalGroupName;
+        try
+        {
+            portalGroupName = getPortalConfig().getGroupName();
+        }
+        catch (UnsatisfiedDependencyException e)
+        {
+            LOG.warn("Portal configuration does not exist");
+            return true;
+        }
+
+        if (participantType.equals(NotificationConstants.PARTICIPANT_TYPE_GROUP)
+                && participantLdapId.equals(portalGroupName))
+        {
+            return false;
+        }
+
+        AcmUser user = getUserDao().findByUserId(participantLdapId);
+
+        if (user != null)
+        {
+            return user.getGroups().stream().noneMatch(group -> group.getName().equals(portalGroupName));
+        }
+        else
+        {
+            return true;
+        }
     }
 
     public UserDao getUserDao()
@@ -184,6 +249,16 @@ public class NotificationUtils
     public void setAcmAppConfiguration(AcmApplication acmAppConfiguration)
     {
         this.acmAppConfiguration = acmAppConfiguration;
+    }
+
+    public PortalConfig getPortalConfig()
+    {
+        return portalConfig;
+    }
+
+    public void setPortalConfig(PortalConfig portalConfig)
+    {
+        this.portalConfig = portalConfig;
     }
 
     public AcmDataService getAcmDataService()

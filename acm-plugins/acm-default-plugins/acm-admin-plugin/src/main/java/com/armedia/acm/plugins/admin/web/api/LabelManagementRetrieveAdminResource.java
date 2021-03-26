@@ -69,7 +69,7 @@ public class LabelManagementRetrieveAdminResource
         }
         catch (Exception e)
         {
-            String msg = String.format("Can't retrieve admin resource %s:%s", lang, ns);
+            String msg = String.format("Can't retrieve admin resource %s-%s", ns, lang);
             log.error(msg, e);
             throw new AcmLabelManagementException(msg, e);
         }

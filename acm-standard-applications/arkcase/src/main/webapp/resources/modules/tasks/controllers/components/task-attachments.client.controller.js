@@ -21,7 +21,8 @@ angular.module('tasks').controller(
                 'DocTreeExt.WebDAV',
                 'DocTreeExt.Checkin',
                 'DocTreeExt.Email',
-                function($scope, $stateParams, $q, $modal, $translate, Util, LocaleService, ConfigService, ObjectService, ObjectLookupService, TaskInfoService, HelperObjectBrowserService, Authentication, DocTreeService, PermissionsService, DocTreeExtWebDAV, DocTreeExtCheckin, DocTreeExtEmail) {
+                'Admin.CMTemplatesService',
+                function($scope, $stateParams, $q, $modal, $translate, Util, LocaleService, ConfigService, ObjectService, ObjectLookupService, TaskInfoService, HelperObjectBrowserService, Authentication, DocTreeService, PermissionsService, DocTreeExtWebDAV, DocTreeExtCheckin, DocTreeExtEmail, CorrespondenceService) {
 
                     Authentication.queryUserInfo().then(function(userInfo) {
                         $scope.user = userInfo.userId;
@@ -47,14 +48,16 @@ angular.module('tasks').controller(
                     var promiseFormTypes = ObjectLookupService.getFormTypes(ObjectService.ObjectTypes.TASK);
                     var promiseFileTypes = ObjectLookupService.getFileTypes();
                     var promiseFileLanguages = LocaleService.getSettings();
+                    var promiseCorrespondenceForms = CorrespondenceService.getActivatedTemplatesData(ObjectService.ObjectTypes.TASK);
                     var onConfigRetrieved = function(config) {
                         $scope.config = config;
                         $scope.treeConfig = config.docTree;
 
-                        $q.all([ promiseFormTypes, promiseFileTypes, promiseFileLanguages ]).then(function(data) {
+                        $q.all([ promiseFormTypes, promiseFileTypes, promiseFileLanguages, promiseCorrespondenceForms ]).then(function(data) {
                             $scope.treeConfig.formTypes = data[0];
                             $scope.treeConfig.fileTypes = data[1];
                             $scope.treeConfig.fileLanguages = data[2];
+                            $scope.treeConfig.correspondenceForms = data[3];
                         });
                     };
 
