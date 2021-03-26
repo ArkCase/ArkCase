@@ -35,8 +35,14 @@ import org.springframework.web.context.ServletContextAware;
 
 import javax.servlet.ServletContext;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.attribute.FileTime;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Map;
 import java.util.Properties;
 import java.util.stream.Collectors;
@@ -108,8 +114,33 @@ public class ApplicationMetaInfoService implements InitializingBean, ServletCont
             prop.load(inputStream);
             extensionVersion = prop.getProperty("version", "");
             version.put("extensionVersion", extensionVersion);
+
+            // Get modified date of the jar file
+            String userHome = System.getProperty("user.home");
+            String pathName = userHome + "/.arkcase/custom/WEB-INF/lib";
+            File templateFolder = new File(pathName);
+            File[] templates = templateFolder.listFiles();
+            if (templates != null)
+            {
+                for (File template : templates)
+                {
+                    if (template.getName().contains(".jar"))
+                    {
+                        try
+                        {
+                            FileTime fileTime = Files.getLastModifiedTime(Paths.get(template.getPath()));
+                            DateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy");
+                            version.put("JarModifiedTime", dateFormat.format(fileTime.toMillis()));
+                        }
+                        catch (Exception e)
+                        {
+                            log.warn("Could not retrieve modified time from jar file in path: {}", e.getMessage());
+                        }
+                    }
+                }
+            }
         } catch (IOException e) {
-            log.warn("Could not retrieve version from properties file: ", e.getMessage());
+            log.warn("Could not retrieve version from properties file: {}", e.getMessage());
         }
     }
 

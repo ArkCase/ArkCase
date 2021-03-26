@@ -5,7 +5,19 @@ angular.module('admin').controller('Admin.ApplicationVersionController', [ '$sco
     $scope.applicationVersion = "";
     ApplicationVersionService.getApplicationVersion().then(function (result) {
         $scope.applicationVersion = result.data["Implementation-Version"];
-        $scope.buildTime = result.data["Build-Time"];
+        var warBuildTime = moment.utc(result.data["Build-Time"]).format("MMMM DD, YYYY");
+        var jarModifiedTime = "";
+        var isJarTimeNewer = false;
+        if (result.data["JarModifiedTime"]) {
+            jarModifiedTime = moment.utc(result.data["JarModifiedTime"]).format("MMMM DD, YYYY");
+            isJarTimeNewer = moment(jarModifiedTime).isAfter(warBuildTime);
+        }
+
+        if (jarModifiedTime !== "" && isJarTimeNewer === true) {
+            $scope.buildTime = jarModifiedTime;
+        } else {
+            $scope.buildTime = warBuildTime;
+        }
         if (result.data["extensionVersion"]) {
             $scope.extensionVersion = result.data["extensionVersion"];
         }
