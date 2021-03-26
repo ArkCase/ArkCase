@@ -1,6 +1,13 @@
 <div class="modal-header">
     <h3 translate>admin.correspondenceManagement.templates.preview.title</h3>
 </div>
+<div ng-if="objectType === 'CASE_FILE'">
+    <input type="text" class="form-control input-sm" ng-keydown="keyDown($event)" ng-model="$parent.inputQuery"
+           placeholder=" {{'admin.correspondenceManagement.templates.preview.search' | translate}}"
+           typeahead="result for result in queryTypeahead($viewValue) | limitTo:10 "
+           typeahead-on-select="onSelect($item, $model, $label)" typeahead-loading="loadingResults"
+           typeahead-no-results="noResults" typeahead-focus-first="false" typeahead-min-length="2">
+</div>
 <div class="modal-body">
     <div id="content" ng-disabled="true"></div>
 </div>
