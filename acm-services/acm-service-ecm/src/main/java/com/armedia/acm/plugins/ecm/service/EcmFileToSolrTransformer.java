@@ -156,6 +156,10 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         doc.setAdditionalProperty("duplicate_b", in.isDuplicate());
         doc.setAdditionalProperty("custodian_s", in.getCustodian());
 
+        if (in.getZylabFileMetadata() != null)
+        {
+            doc.setAdditionalProperty("zylab_review_analysis_lcs", in.getZylabFileMetadata().getReviewedAnalysis());
+        }
         return doc;
     }
 
@@ -279,6 +283,11 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
 
         solr.setAdditionalProperty("cmis_repository_id_s", in.getCmisRepositoryId());
         solr.setAdditionalProperty("custodian_s", in.getCustodian());
+
+        if (in.getZylabFileMetadata() != null)
+        {
+            solr.setAdditionalProperty("zylab_review_analysis_lcs", in.getZylabFileMetadata().getReviewedAnalysis());
+        }
 
         String participantsListJson = ParticipantUtils.createParticipantsListJson(in.getParticipants());
         solr.setAdditionalProperty("acm_participants_lcs", participantsListJson);
