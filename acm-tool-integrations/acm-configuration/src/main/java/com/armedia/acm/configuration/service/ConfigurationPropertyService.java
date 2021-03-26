@@ -29,13 +29,13 @@ package com.armedia.acm.configuration.service;
 
 import com.armedia.acm.configuration.core.ConfigurationContainer;
 import com.armedia.acm.configuration.model.ConfigurationClientConfig;
+import com.armedia.acm.core.DynamicApplicationConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.http.ResponseEntity;
@@ -51,17 +51,28 @@ import java.util.Map;
 @Service("configurationPropertyService")
 public class ConfigurationPropertyService implements InitializingBean
 {
-    @Autowired
-    private ConfigurationContainer configurationContainer;
+    private final ConfigurationContainer configurationContainer;
 
-    @Autowired
-    private RestTemplate configRestTemplate;
+    private final RestTemplate configRestTemplate;
 
-    @Autowired
-    private ConfigurableEnvironment configurableEnvironment;
+    private final ConfigurableEnvironment configurableEnvironment;
 
-    @Autowired
-    private ConfigurationClientConfig configurationClientConfig;
+    private final ConfigurationClientConfig configurationClientConfig;
+
+    private final ObjectMapper objectMapper;
+
+    public ConfigurationPropertyService(ConfigurationContainer configurationContainer,
+                                        RestTemplate configRestTemplate,
+                                        ConfigurableEnvironment configurableEnvironment,
+                                        ConfigurationClientConfig configurationClientConfig,
+                                        @Qualifier("sourceObjectMapper") ObjectMapper objectMapper)
+    {
+        this.configurationContainer = configurationContainer;
+        this.configRestTemplate = configRestTemplate;
+        this.configurableEnvironment = configurableEnvironment;
+        this.configurationClientConfig = configurationClientConfig;
+        this.objectMapper = objectMapper;
+    }
 
     private String updatePropertiesEndpoint;
 
@@ -90,12 +101,26 @@ public class ConfigurationPropertyService implements InitializingBean
         resetFilePropertiesEndpoint = String.format("%s%s", resetPropertiesEndpoint, "/{applicationName}");
     }
 
-    @Autowired
-    private @Qualifier("sourceObjectMapper") ObjectMapper objectMapper;
-
     public Object getProperty(String propertyKey)
     {
         return configurationContainer.getProperty(propertyKey);
+    }
+
+    public Map<String, Object> getObjectDynamicProperties(Object config)
+    {
+        if (config == null)
+        {
+            return new HashMap<>();
+        }
+
+        Class configClass = AopUtils.getTargetClass(config);
+
+        if (DynamicApplicationConfig.class.isAssignableFrom(configClass))
+        {
+            return ((DynamicApplicationConfig) config).getManagedProperties();
+        }
+
+        return getProperties(config);
     }
 
     public Map<String, Object> getProperties(Object propertyConfig)
@@ -106,6 +131,7 @@ public class ConfigurationPropertyService implements InitializingBean
         }
 
         Class targetClass = AopUtils.getTargetClass(propertyConfig);
+
         try
         {
             String json = objectMapper.writerFor(targetClass)
@@ -172,8 +198,8 @@ public class ConfigurationPropertyService implements InitializingBean
         {
             Map<String, String> params = new HashMap<>();
             params.put("applicationName", applicationName);
-            configRestTemplate.postForEntity(updatePropertiesEndpoint,
-                    getProperties(propertyConfig), ResponseEntity.class, params);
+            configRestTemplate.postForEntity(updatePropertiesEndpoint, getObjectDynamicProperties(propertyConfig), ResponseEntity.class,
+                    params);
         }
         catch (RestClientException e)
         {

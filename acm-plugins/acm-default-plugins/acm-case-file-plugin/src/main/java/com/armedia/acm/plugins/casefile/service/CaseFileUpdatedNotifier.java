@@ -59,16 +59,29 @@ public class CaseFileUpdatedNotifier implements ApplicationListener<AcmEvent>
             if (eventType.equals("com.armedia.acm.casefile.status.changed"))
             {
                 logger.debug("On 'Case status changed' event create notification for participants.");
-
-                Notification notification = notificationService.getNotificationBuilder()
-                        .newNotification("caseStatusChanged", NotificationConstants.CASE_STATUS_CHANGED, caseFile.getObjectType(),
-                                caseFile.getId(), event.getUserId())
-                        .forObjectWithNumber(caseFile.getCaseNumber())
-                        .forObjectWithTitle(caseFile.getTitle())
-                        .withEmailAddressesForParticipants(caseFile.getParticipants())
-                        .build();
-
-                notificationService.saveNotification(notification);
+                Notification notification;
+                if (caseFile.getQueue() != null && caseFile.getQueue().getName().equals("Release"))
+                {
+                    notification = notificationService.getNotificationBuilder()
+                            .newNotification("requestReleased", NotificationConstants.REQUEST_RELEASED, caseFile.getObjectType(),
+                                    caseFile.getId(), event.getUserId())
+                            .forObjectWithNumber(caseFile.getCaseNumber())
+                            .forObjectWithTitle(caseFile.getTitle())
+                            .withEmailAddressesForNonPortalParticipants(caseFile.getParticipants())
+                            .build();
+                    notificationService.saveNotification(notification);
+                }
+                else
+                {
+                    notification = notificationService.getNotificationBuilder()
+                            .newNotification("caseStatusChanged", NotificationConstants.CASE_STATUS_CHANGED, caseFile.getObjectType(),
+                                    caseFile.getId(), event.getUserId())
+                            .forObjectWithNumber(caseFile.getCaseNumber())
+                            .forObjectWithTitle(caseFile.getTitle())
+                            .withEmailAddressesForNonPortalParticipants(caseFile.getParticipants())
+                            .build();
+                    notificationService.saveNotification(notification);
+                }
             }
             else if (eventType.equals("com.armedia.acm.casefile.priority.changed"))
             {
@@ -79,7 +92,7 @@ public class CaseFileUpdatedNotifier implements ApplicationListener<AcmEvent>
                                 caseFile.getId(), event.getUserId())
                         .forObjectWithNumber(caseFile.getCaseNumber())
                         .forObjectWithTitle(caseFile.getTitle())
-                        .withEmailAddressesForParticipants(caseFile.getParticipants())
+                        .withEmailAddressesForNonPortalParticipants(caseFile.getParticipants())
                         .build();
 
                 notificationService.saveNotification(notification);
@@ -95,17 +108,27 @@ public class CaseFileUpdatedNotifier implements ApplicationListener<AcmEvent>
                 CaseFile caseFile = caseFileDao.find(caseId);
                 if (caseFile != null)
                 {
-                    logger.debug("On 'Case participants added' event create notification for participants.");
+                    logger.debug("On 'Case participants added' event create notification for participants and user.");
 
                     Notification notification = notificationService.getNotificationBuilder()
                             .newNotification("participantsAdded", NotificationConstants.PARTICIPANTS_ADDED, event.getObjectType(),
                                     event.getObjectId(), event.getUserId())
                             .forRelatedObjectTypeAndId(caseFile.getObjectType(), caseFile.getId())
                             .forRelatedObjectWithNumber(caseFile.getCaseNumber())
-                            .withEmailAddressesForParticipants(caseFile.getParticipants())
+                            .withEmailAddressesForNonPortalParticipants(caseFile.getParticipants())
                             .build();
 
                     notificationService.saveNotification(notification);
+
+                    Notification notificationForUser = notificationService.getNotificationBuilder()
+                            .newNotification("participantsAdded", NotificationConstants.PARTICIPANTS_USER_ADDED, event.getObjectType(),
+                                    event.getObjectId(), event.getUserId())
+                            .forRelatedObjectTypeAndId(caseFile.getObjectType(), caseFile.getId())
+                            .forRelatedObjectWithNumber(caseFile.getCaseNumber())
+                            .withEmailAddressForUser(((CaseFileParticipantsModifiedEvent) event).getParticipantLdapId())
+                            .build();
+
+                    notificationService.saveNotification(notificationForUser);
                 }
 
             }
@@ -121,7 +144,7 @@ public class CaseFileUpdatedNotifier implements ApplicationListener<AcmEvent>
                                     event.getObjectId(), event.getUserId())
                             .forRelatedObjectTypeAndId(caseFile.getObjectType(), caseFile.getId())
                             .forRelatedObjectWithNumber(caseFile.getCaseNumber())
-                            .withEmailAddressesForParticipants(caseFile.getParticipants())
+                            .withEmailAddressesForNonPortalParticipants(caseFile.getParticipants())
                             .build();
 
                     notificationService.saveNotification(notification);

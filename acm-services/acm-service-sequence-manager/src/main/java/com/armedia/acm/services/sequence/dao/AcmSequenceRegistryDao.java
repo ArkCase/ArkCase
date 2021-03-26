@@ -31,8 +31,12 @@ import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.services.sequence.model.AcmSequenceRegistry;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.FlushModeType;
+import javax.persistence.LockModeType;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.ArrayList;
@@ -89,11 +93,11 @@ public class AcmSequenceRegistryDao extends AcmAbstractDao<AcmSequenceRegistry>
         query.setParameter("sequenceValue", sequenceValue);
         return query.executeUpdate();
     }
-
-    public List<AcmSequenceRegistry> getSequenceRegistryList(String sequenceName, String sequencePartName,
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public AcmSequenceRegistry getSequenceRegistry(String sequenceName, String sequencePartName,
             Boolean sequencePartValueUsedFlag, FlushModeType flushModeType)
     {
-
+        AcmSequenceRegistry sequenceRegistry = null;
         String queryText = "SELECT sequenceRegistry " +
                 "FROM AcmSequenceRegistry sequenceRegistry " +
                 "WHERE sequenceRegistry.sequenceName = :sequenceName " +
@@ -103,17 +107,22 @@ public class AcmSequenceRegistryDao extends AcmAbstractDao<AcmSequenceRegistry>
 
         TypedQuery<AcmSequenceRegistry> query = getEm().createQuery(queryText, AcmSequenceRegistry.class);
         query.setFlushMode(flushModeType);
+        query.setLockMode(LockModeType.PESSIMISTIC_WRITE);
+        query.setMaxResults(1);
 
         query.setParameter("sequenceName", sequenceName);
         query.setParameter("sequencePartName", sequencePartName);
         query.setParameter("sequencePartValueUsedFlag", sequencePartValueUsedFlag);
 
-        List<AcmSequenceRegistry> sequenceRegistryList = query.getResultList();
-        if (null == sequenceRegistryList)
-        {
-            sequenceRegistryList = new ArrayList<AcmSequenceRegistry>();
+        try{
+            sequenceRegistry = query.getSingleResult();
         }
-        return sequenceRegistryList;
+        catch (NoResultException nre)
+        {
+            log.trace("No SequenceRegistry with sequence name [{}], sequence part name [{}]", sequenceName,
+                    sequencePartName);
+        }
+        return sequenceRegistry;
     }
 
     public List<AcmSequenceRegistry> getSequenceRegistryList()

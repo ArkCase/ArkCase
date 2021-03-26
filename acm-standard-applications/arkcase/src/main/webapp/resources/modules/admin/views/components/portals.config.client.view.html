@@ -1,67 +1,68 @@
 <div data-ng-controller="Admin.PortalsController">
-    <panel-view header="{{'admin.portals.portalSettings.arkcaseTitle' | translate}}" collapsible="false">
-
-                <div class="modal-body">
-                    <form name="portalForm">
-                        <div class="row">
-                            <div class="col-sm-12 form-group">
-                                <label for="portalUrl" translate>admin.portals.portalsConfiguration.url</label><span
-                                    class="required-asterisk">*</span><br />
-                                <input type="text" id="portalUrl" name="portalUrl" ng-model="portalConfigDataModel['portal.url']" class="input-md form-control"
-                                       placeholder="{{'admin.portals.portalsConfiguration.placeholder.portalUrl' | translate}}" required>
-                            </div>
-                            <div class="col-sm-12 form-group">
-                                <label for="portalId" translate>admin.portals.portalsConfiguration.id</label><br />
-                                <input type="text" id="portalId" name="portalId" ng-model="portalConfigDataModel['portal.id']" class="input-md form-control"
-                                       placeholder="{{'admin.portals.portalsConfiguration.placeholder.portalId' | translate}}" ng-disabled="true">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-12 form-group">
-                                <label for="fullName" translate>admin.portals.portalsConfiguration.portalUser</label><span
-                                    class="required-asterisk">*</span><br />
-                                <input type="text" id="fullName" name="fullName" ng-model="portalConfigDataModel['portal.fullName']" class="input-md form-control"
-                                       placeholder="{{'admin.portals.portalsConfiguration.placeholder.portalUser' | translate}}"
-                                       style="background-color: white;" ng-click="userSearch()" required>
-                            </div>
-                            <div class="col-sm-12 form-group">
-                                <label for="groupName" translate>admin.portals.portalsConfiguration.groupName</label><span
-                                    class="required-asterisk">*</span><br />
-                                <input type="text" id="groupName" name="groupName" ng-model="portalConfigDataModel['portal.groupName']" class="input-md form-control"
-                                       placeholder="{{'admin.portals.portalsConfiguration.placeholder.groupName' | translate}}"
-                                       style="background-color: white;" ng-click="groupSearch()" required>
-                            </div>
-                            <div class="col-sm-12 form-group">
-                                <label for="portalDescription" translate>admin.portals.portalsConfiguration.portalDescription</label>
-                                <textarea class="form-control" rows="3" id="portalDescription" name="portalDescription" ng-model="portalConfigDataModel['portal.description']"
-                                          placeholder="{{'admin.portals.portalsConfiguration.placeholder.portalDescription' | translate}}"></textarea>
-                            </div>
-                        </div>
-                        <button type="button" class="btn btn-primary" ng-click="savePortalConfig()" ng-disabled="portalForm.$invalid">
-                            <span translate>admin.portals.portalsConfiguration.save</span>
-                        </button>
-                    </form>
+    <form name="portalForm">
+        <div class="pull-right well">
+            <div class="btn-group">
+                <button class="btn btn-xs btn-link" ng-click="savePortalConfig()" ng-disabled="portalForm.$invalid">
+                    <i class="fa fa-save"></i>
+                    <span translate>admin.portals.portalsConfiguration.save</span>
+                </button>
+            </div>
+        </div>
+        <panel-view header="{{'admin.portals.portalSettings.arkcaseTitle' | translate}}" collapsible="false">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 form-group">
+                        <label for="portalUrl" translate>admin.portals.portalsConfiguration.url</label><span
+                            class="required-asterisk">*</span><br/>
+                        <input type="text" id="portalUrl" name="portalUrl"
+                               ng-model="portalConfigDataModel['portal.url']" class="input-md form-control"
+                               placeholder="{{'admin.portals.portalsConfiguration.placeholder.portalUrl' | translate}}"
+                               required>
+                    </div>
+                    <div class="col-sm-12 form-group">
+                        <label for="portalId" translate>admin.portals.portalsConfiguration.id</label><br/>
+                        <input type="text" id="portalId" name="portalId" ng-model="portalConfigDataModel['portal.id']"
+                               class="input-md form-control"
+                               placeholder="{{'admin.portals.portalsConfiguration.placeholder.portalId' | translate}}"
+                               ng-disabled="true">
+                    </div>
                 </div>
-
-
-    </panel-view>
-    <panel-view header="{{'admin.portals.portalSettings.title' | translate}}" collapsible="false">
-        <div class="row form-group">
-            <div class="col-lg-12">
-                <form>
+                <div class="row">
+                    <div class="col-sm-12 form-group">
+                        <label for="fullName" translate>admin.portals.portalsConfiguration.portalUser</label><span
+                            class="required-asterisk">*</span><br/>
+                        <input type="text" id="fullName" name="fullName"
+                               ng-model="portalConfigDataModel['portal.fullName']" class="input-md form-control"
+                               placeholder="{{'admin.portals.portalsConfiguration.placeholder.portalUser' | translate}}"
+                               style="background-color: white;" ng-click="userSearch()" required>
+                    </div>
+                    <div class="col-sm-12 form-group">
+                        <label for="groupName" translate>admin.portals.portalsConfiguration.groupName</label><span
+                            class="required-asterisk">*</span><br/>
+                        <input type="text" id="groupName" name="groupName"
+                               ng-model="portalConfigDataModel['portal.groupName']" class="input-md form-control"
+                               placeholder="{{'admin.portals.portalsConfiguration.placeholder.groupName' | translate}}"
+                               style="background-color: white;" ng-click="groupSearch()" required>
+                    </div>
+                    <div class="col-sm-12 form-group">
+                        <label for="portalDescription"
+                               translate>admin.portals.portalsConfiguration.portalDescription</label>
+                        <textarea class="form-control" rows="3" id="portalDescription" name="portalDescription"
+                                  ng-model="portalConfigDataModel['portal.description']"
+                                  placeholder="{{'admin.portals.portalsConfiguration.placeholder.portalDescription' | translate}}"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-lg-12">
                     <div class="checkbox">
                         <label>
                             <input type="checkbox" ng-model="portalConfigDataModel['portal.authenticatedMode']">
                             <span translate>admin.portals.portalSettings.authenticatedMode</span>
                         </label>
                     </div>
-                    <div class="form-group">
-                        <button ng-click="savePortalConfig()" class="btn btn-sm btn-primary" translate>
-                            admin.portals.portalSettings.applyBtn
-                        </button>
-                    </div>
-                </form>
+                </div>
             </div>
-        </div>
-    </panel-view>
+        </panel-view>
+    </form>
 </div>

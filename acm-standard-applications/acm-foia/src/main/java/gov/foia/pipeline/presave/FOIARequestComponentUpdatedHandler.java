@@ -31,7 +31,12 @@ import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
 import com.armedia.acm.services.holiday.service.HolidayConfigurationService;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
-
+import gov.foia.dao.FOIARequestDao;
+import gov.foia.model.FOIAConstants;
+import gov.foia.model.FOIARequest;
+import gov.foia.model.FoiaConfig;
+import gov.foia.model.event.RequestComponentAgencyChangedEvent;
+import gov.foia.service.QueuesTimeToCompleteService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationEventPublisher;
@@ -44,13 +49,6 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.Date;
-
-import gov.foia.dao.FOIARequestDao;
-import gov.foia.model.FOIAConstants;
-import gov.foia.model.FOIARequest;
-import gov.foia.model.FoiaConfig;
-import gov.foia.model.event.RequestComponentAgencyChangedEvent;
-import gov.foia.service.QueuesTimeToCompleteService;
 
 /**
  * Created by Vladimir Cherepnalkovski <vladimir.cherepnalkovski@armedia.com> on Apr, 2020
@@ -76,26 +74,26 @@ public class FOIARequestComponentUpdatedHandler
                 && !pipelineContext.isNewCase() && !entity.getStatus().equalsIgnoreCase("Closed"))
         {
             FOIARequest originalRequest = getFoiaRequestDao().find(entity.getId());
-            if (!originalRequest.getComponentAgency().equals(entity.getComponentAgency()))
+            if ((originalRequest.getComponentAgency() == null && entity.getComponentAgency()!=null) || !originalRequest.getComponentAgency().equals(entity.getComponentAgency()))
             {
                 entity.setRedirectedDate(holidayConfigurationService.getFirstWorkingDay(LocalDate.now()).atTime(LocalTime.now()));
-
                 entity.setExtensionFlag(false);
                 entity.setRequestTrack(FOIAConstants.SIMPLE_REQUEST_TRACK);
 
                 if (getFoiaConfig().getRedirectFunctionalityCalculationEnabled())
                 {
-                    LocalDate originalRedirectedDate = originalRequest.getRedirectedDate().toLocalDate();
-
+                    LocalDate originalRedirectedDate = originalRequest.getRedirectedDate() != null ? originalRequest.getRedirectedDate().toLocalDate()
+                            : originalRequest.getPerfectedDate().toLocalDate();
+                    Integer ttcOnLastRedirection = originalRequest.getTtcOnLastRedirection() != null ? originalRequest.getTtcOnLastRedirection() : 20;
                     Integer TTC = queuesTimeToCompleteService.getTimeToComplete().getRequest().getTotalTimeToComplete();
                     Integer elapsedDays = holidayConfigurationService.countWorkingDates(originalRedirectedDate, LocalDate.now());
-                    Integer elapsedTTC = originalRequest.getTtcOnLastRedirection() - elapsedDays;
+                    Integer elapsedTTC = ttcOnLastRedirection - elapsedDays;
 
                     Integer calculatedTTC = elapsedTTC + TTC / 2;
                     calculatedTTC = calculatedTTC > TTC ? TTC : calculatedTTC;
 
                     // Do not update duedate if its overdue
-                    if (!entity.getDueDate().before(new Date()))
+                    if (entity.getDueDate()!=null && !entity.getDueDate().before(new Date()))
                     {
                         entity.setDueDate(holidayConfigurationService.addWorkingDaysToDate(
                                 Date.from(

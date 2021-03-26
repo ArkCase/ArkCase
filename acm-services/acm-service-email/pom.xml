@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.armedia.acm</groupId>
         <artifactId>acm-services</artifactId>
-        <version>2020.18</version>
+        <version>2021.01</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -88,6 +88,12 @@
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-all</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-correspondence</artifactId>
+            <version>${acm.version}</version>
+            <scope>compile</scope>
         </dependency>
 
     </dependencies>

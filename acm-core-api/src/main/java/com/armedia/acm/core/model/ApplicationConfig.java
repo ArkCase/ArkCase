@@ -27,16 +27,16 @@ package com.armedia.acm.core.model;
  * #L%
  */
 
+import com.armedia.acm.core.UnmodifiableConfigProperty;
+import com.armedia.acm.core.DynamicApplicationConfig;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import org.springframework.beans.factory.annotation.Value;
 
-import java.util.HashMap;
-
 @JsonSerialize(as = ApplicationConfig.class)
-public class ApplicationConfig
+public class ApplicationConfig implements DynamicApplicationConfig
 {
 
     @JsonProperty("application.properties.idleLimit")
@@ -59,14 +59,22 @@ public class ApplicationConfig
     @Value("${application.properties.historyDays}")
     private Integer historyDays;
 
+    @UnmodifiableConfigProperty
     @JsonProperty("application.properties.baseUrl")
     @Value("${application.properties.baseUrl}")
     private String baseUrl;
 
+    @UnmodifiableConfigProperty
+    @JsonProperty("application.properties.basePortalUrl")
+    @Value("${application.properties.basePortalUrl}")
+    private String basePortalUrl;
+
+    @UnmodifiableConfigProperty
     @JsonProperty("application.properties.applicationName")
     @Value("${application.properties.applicationName}")
     private String applicationName;
 
+    @UnmodifiableConfigProperty
     @JsonProperty("application.properties.helpUrl")
     @Value("${application.properties.helpUrl}")
     private String helpUrl;
@@ -84,6 +92,7 @@ public class ApplicationConfig
      * So with this attribute we can control what is sent to Alfresco.
      * Valid values: uid, samAccountName, userPrincipalName, distinguishedName
      */
+    @UnmodifiableConfigProperty
     @JsonIgnore
     @Value("${application.properties.alfrescoUserIdLdapAttribute}")
     private String alfrescoUserIdLdapAttribute;
@@ -98,7 +107,7 @@ public class ApplicationConfig
     @Value("${application.properties.issueCollectorFlag}")
     private Boolean issueCollectorFlag;
 
-
+    @UnmodifiableConfigProperty
     @JsonProperty("application.properties.logoutUrl")
     @Value("${application.properties.logoutUrl}")
     private String logoutUrl;
@@ -134,9 +143,6 @@ public class ApplicationConfig
     @JsonProperty("application.properties.organizationFax")
     @Value("${application.properties.organizationFax}")
     private String organizationFax;
-
-
-    private HashMap<Object, String> roles;
 
     public Integer getIdleLimit()
     {
@@ -198,6 +204,16 @@ public class ApplicationConfig
         this.baseUrl = baseUrl;
     }
 
+    public String getBasePortalUrl()
+    {
+        return basePortalUrl;
+    }
+
+    public void setBasePortalUrl(String basePortalUrl)
+    {
+        this.basePortalUrl = basePortalUrl;
+    }
+
     public String getApplicationName()
     {
         return applicationName;
@@ -238,21 +254,13 @@ public class ApplicationConfig
         this.issueCollectorFlag = issueCollectorFlag;
     }
 
-    public HashMap<Object, String> getRoles()
+    public String getLogoutUrl()
     {
-        return roles;
-    }
-
-    public void setRoles(HashMap<Object, String> roles)
-    {
-        this.roles = roles;
-    }
-
-    public String getLogoutUrl() {
         return logoutUrl;
     }
 
-    public void setLogoutUrl(String logoutUrl) {
+    public void setLogoutUrl(String logoutUrl)
+    {
         this.logoutUrl = logoutUrl;
     }
 

@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.armedia</groupId>
     <artifactId>acm</artifactId>
-    <version>2020.18</version>
+    <version>2021.01</version>
     <packaging>pom</packaging>
     <name>ArkCase Case Management System</name>
     <description>Cloud-based case management system with a very nice UI</description>
@@ -99,7 +99,7 @@
         <net.sf.jtidy.version>r938</net.sf.jtidy.version>
         <org.json.version>20140107</org.json.version>
         <org.mvel.version>2.4.7.Final</org.mvel.version>
-        <pdfbox.version>2.0.11</pdfbox.version>
+        <pdfbox.version>2.0.22</pdfbox.version>
         <postgresql.version>9.3-1100-jdbc41</postgresql.version>
         <powermock.version>1.7.0</powermock.version>
         <puppycrawl.version>6.8.1</puppycrawl.version>
@@ -135,13 +135,13 @@
         <quartz.version>2.3.2</quartz.version>
         <jaudiotagger.version>2.0.3</jaudiotagger.version>
         <reflections.version>0.9.9</reflections.version>
-        <camel.spring.version>3.6.0</camel.spring.version>
-        <camel.core.engine.version>3.6.0</camel.core.engine.version>
-        <camel.spi.version>3.6.0</camel.spi.version>
-        <camel.core.version>3.6.0</camel.core.version>
-        <camel.cmis.version>3.7.0-rc1</camel.cmis.version>
-        <camel.support.version>3.6.0</camel.support.version>
-        <camel.api.version>3.6.0</camel.api.version>
+        <camel.spring.version>3.7.0</camel.spring.version>
+        <camel.core.engine.version>3.7.0</camel.core.engine.version>
+        <camel.spi.version>3.7.0</camel.spi.version>
+        <camel.core.version>3.7.0</camel.core.version>
+        <camel.cmis.version>3.7.0</camel.cmis.version>
+        <camel.support.version>3.7.0</camel.support.version>
+        <camel.api.version>3.7.0</camel.api.version>
         <kryo.version>5.0.0-RC4</kryo.version>
         <subzero.version>0.9</subzero.version>
         <xsync-version>1.2</xsync-version>
@@ -902,18 +902,11 @@
                 <version>${camel.support.version}</version>
             </dependency>
 
-            <!--<dependency>
+            <dependency>
                 <groupId>org.apache.camel</groupId>
                 <artifactId>camel-cmis</artifactId>
                 <version>${camel.cmis.version}</version>
-            </dependency>-->
-
-            <dependency>
-                <groupId>org.apache.camel</groupId>
-                <artifactId>camel-cmis-arkcase</artifactId>
-                <version>${camel.cmis.version}</version>
             </dependency>
-
 
             <!-- apache libraries -->
             <dependency>

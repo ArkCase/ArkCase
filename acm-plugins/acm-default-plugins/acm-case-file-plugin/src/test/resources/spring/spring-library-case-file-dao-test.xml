@@ -13,4 +13,8 @@
         </constructor-arg>
     </bean>
 
+    <bean id="loginConfig" class="com.armedia.acm.web.model.LoginConfig" scope="refresh">
+        <aop:scoped-proxy/>
+    </bean>
+
 </beans>

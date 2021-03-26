@@ -708,6 +708,20 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
 
     /**
      * @ngdoc method
+     * @name getTimeZones
+     * @methodOf services:Object.LookupService
+     *
+     * @description
+     * Query list of time zones
+     *
+     * @returns {Object} An array returned by $resource
+     */
+    Service.getTimeZones = function() {
+        return Service.getLookupByLookupName("timeZones");
+    };
+
+    /**
+     * @ngdoc method
      * @name getPersonOrganizationRelationTypes
      * @methodOf services:Object.LookupService
      *

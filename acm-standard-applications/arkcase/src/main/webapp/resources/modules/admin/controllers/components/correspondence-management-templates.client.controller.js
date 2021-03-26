@@ -197,17 +197,10 @@ angular.module('admin').controller('Admin.CMTemplatesController',
 
                 ObjectLookupService.getCorrespondenceObjectTypes().then(function(correspondenceObject) {
                     $scope.correspondenceObjectTypes = correspondenceObject;
-                    $scope.mergingType = ObjectLookupService.getPrimaryLookup($scope.objectTypes);
-                    if ($scope.mergingType) {
-                        $scope.mergingType = $scope.correspondenceObjectTypes[0].key;
-                    }
-                    correspondenceMergeFieldsService.retrieveActiveMergeFieldsByType($scope.mergingType).then(function (mergeFields) {
-                        $scope.mergeFieldsByType = mergeFields.data;
-                    });
                 });
             }
 
-            $scope.getNavBarTree = function(templateModelProvider){
+            $scope.getNavBarTree = function(templateModelProvider, objectType){
                 var modalScope = $scope.$new();
                 modalScope.config = $scope.config;
                 $scope.myData = [];
@@ -293,6 +286,10 @@ angular.module('admin').controller('Admin.CMTemplatesController',
                             )
                         }
                     }];
+                });
+
+                correspondenceMergeFieldsService.retrieveActiveMergeFieldsByType(objectType).then(function (mergeFields) {
+                    $scope.mergeFieldsByType = mergeFields.data;
                 });
 
                 var modalInstance = $modal.open({

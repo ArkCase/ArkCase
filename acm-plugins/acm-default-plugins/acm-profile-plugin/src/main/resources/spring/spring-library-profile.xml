@@ -29,4 +29,12 @@
     <bean id="profileConfig" class="com.armedia.acm.plugins.profile.model.ProfileConfig" scope="refresh">
         <aop:scoped-proxy/>
     </bean>
+
+    <bean id="acmEntityTemplateNoUserPrefixModelProvider"
+          class="com.armedia.acm.plugins.profile.model.provider.AcmEntityTemplateNoUserPrefixModelProvider">
+        <property name="dataService" ref="acmDataService"/>
+        <property name="userInfoHelper" ref="userInfoHelper"/>
+        <property name="objectTitleConfigurationService" ref="objectTitleConfigurationService"/>
+        <property name="userDao" ref="userJpaDao"/>
+    </bean>
 </beans>

@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <bean id="formResource" class="com.armedia.acm.frevvo.config.FrevvoFormUrl">
         <property name="properties" ref="acm-forms-properties"/>
@@ -40,11 +42,17 @@
     </bean>
 
     <bean id="formsTypeManagementService" class="com.armedia.acm.form.config.FormsTypeManagementService">
-        <property name="propertiesFileLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/formsType.json"/>
+        <property name="formsTypeConfig" ref="formsTypeConfig"/>
+        <property name="objectConverter" ref="objectConverter"/>
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
     </bean>
 
     <bean id="formsTypeCheckService" class="com.armedia.acm.form.config.FormsTypeCheckService">
         <property name="formsTypeManagementService" ref="formsTypeManagementService"/>
+    </bean>
+
+    <bean id="formsTypeConfig" class="com.armedia.acm.form.config.FormsTypeConfig" scope="refresh">
+        <aop:scoped-proxy/>
     </bean>
 
 </beans>

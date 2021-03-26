@@ -105,25 +105,25 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
         List<CorrespondenceMergeField> mergeFields = new ArrayList<>();
         CorrespondenceMergeField mergeField = new CorrespondenceMergeField();
         mergeField.setFieldId(key1);
-        mergeField.setFieldValue(var1);
+        mergeField.setCorrespondenceFieldValue(var1);
         mergeField.setFieldObjectType("CASE_FILE");
         mergeFields.add(mergeField);
 
         mergeField = new CorrespondenceMergeField();
         mergeField.setFieldId(key2);
-        mergeField.setFieldValue(var2);
+        mergeField.setCorrespondenceFieldValue(var2);
         mergeField.setFieldObjectType("CASE_FILE");
         mergeFields.add(mergeField);
 
         mergeField = new CorrespondenceMergeField();
         mergeField.setFieldId(key3);
-        mergeField.setFieldValue(var3);
+        mergeField.setCorrespondenceFieldValue(var3);
         mergeField.setFieldObjectType("CASE_FILE");
         mergeFields.add(mergeField);
 
         mergeField = new CorrespondenceMergeField();
         mergeField.setFieldId(key4);
-        mergeField.setFieldValue(var4);
+        mergeField.setCorrespondenceFieldValue(var4);
         mergeField.setFieldObjectType("CASE_FILE");
         mergeFields.add(mergeField);
         return mergeFields;

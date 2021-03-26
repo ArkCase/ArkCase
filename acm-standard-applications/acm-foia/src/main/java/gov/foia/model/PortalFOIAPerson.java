@@ -26,23 +26,17 @@ package gov.foia.model;
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
+
 import static gov.foia.model.PortalFOIAPerson.FIND_BY_EMAIL;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
-import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.MapKeyColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jul 23, 2018
@@ -60,27 +54,16 @@ public class PortalFOIAPerson extends FOIAPerson
 
     public static final String FIND_BY_EMAIL = "PortalFOIAPerson.findByEmail";
 
-    @ElementCollection
-    @CollectionTable(name = "acm_foia_person_portal_roles", joinColumns = @JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id"))
-    @MapKeyColumn(name = "cm_portal_id")
-    @Column(name = "cm_user_role")
-    private Map<String, String> portalRoles = new HashMap<>();
+    @Column(name = "fo_portal_role")
+    private String role;
 
-    /**
-     * @return the portalRoles
-     */
-    public Map<String, String> getPortalRoles()
+    public String getRole()
     {
-        return portalRoles;
+        return role;
     }
 
-    /**
-     * @param portalRoles
-     *            the portalRoles to set
-     */
-    public void setPortalRoles(Map<String, String> portalRoles)
+    public void setRole(String role)
     {
-        this.portalRoles = portalRoles;
+        this.role = role;
     }
-
 }

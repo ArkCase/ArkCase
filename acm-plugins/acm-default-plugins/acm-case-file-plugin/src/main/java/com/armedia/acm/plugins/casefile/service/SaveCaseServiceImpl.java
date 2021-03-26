@@ -35,6 +35,7 @@ import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.SaveCaseServiceCaller;
 import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
+import com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility;
 import com.armedia.acm.plugins.ecm.model.AcmMultipartFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.pipeline.PipelineManager;
@@ -47,7 +48,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -61,6 +64,7 @@ public class SaveCaseServiceImpl implements SaveCaseService
     private CaseFileDao caseFileDao;
     private PipelineManager<CaseFile, CaseFilePipelineContext> pipelineManager;
     private EcmFileService ecmFileService;
+    private CaseFileEventUtility caseFileEventUtility;
 
     @Override
     @Transactional
@@ -86,11 +90,18 @@ public class SaveCaseServiceImpl implements SaveCaseService
             AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmObjectNotFoundException, PipelineProcessException,
             IOException
     {
+        boolean isNewCase = caseFile.getId() == null;
+
         CaseFilePipelineContext pipelineContext = new CaseFilePipelineContext();
         // populate the context
-        pipelineContext.setNewCase(caseFile.getId() == null);
+        pipelineContext.setNewCase(isNewCase);
         pipelineContext.setAuthentication(authentication);
         pipelineContext.setIpAddress(ipAddress);
+
+        if (!isNewCase)
+        {
+           checkIfDueDateIsChangedAndRaiseEvent(caseFile, ipAddress, authentication);
+        }
 
         if (files != null && !files.isEmpty())
         {
@@ -120,13 +131,20 @@ public class SaveCaseServiceImpl implements SaveCaseService
     public CaseFile saveCase(CaseFile caseFile, Map<String, List<MultipartFile>> filesMap, Authentication authentication, String ipAddress)
             throws PipelineProcessException
     {
+        boolean isNewCase = caseFile.getId() == null;
+
         CaseFilePipelineContext pipelineContext = new CaseFilePipelineContext();
         // populate the context
-        pipelineContext.setNewCase(caseFile.getId() == null);
+        pipelineContext.setNewCase(isNewCase);
         pipelineContext.setAuthentication(authentication);
         pipelineContext.setIpAddress(ipAddress);
 
         List<AcmMultipartFile> files = new ArrayList<>();
+
+        if (!isNewCase)
+        {
+            checkIfDueDateIsChangedAndRaiseEvent(caseFile, ipAddress, authentication);
+        }
 
         if (Objects.nonNull(filesMap))
         {
@@ -183,6 +201,23 @@ public class SaveCaseServiceImpl implements SaveCaseService
         });
     }
 
+    private void checkIfDueDateIsChangedAndRaiseEvent(CaseFile caseFile, String ipAddress, Authentication authentication) {
+
+        CaseFile notUpdatedCaseFile = caseFileDao.find(caseFile.getId());
+        SimpleDateFormat datePattern = new SimpleDateFormat("MM/dd/yyyy");
+        String oldDate = datePattern.format(notUpdatedCaseFile.getDueDate());
+        String newDate = datePattern.format(caseFile.getDueDate());
+        String eventDescription = "- Due Date Changed from " + oldDate + " to " + newDate;
+
+        String caseState = "dueDateChanged";
+
+        if (!oldDate.equals(newDate))
+        {
+            getCaseFileEventUtility().raiseCustomEvent(caseFile, caseState, eventDescription, new Date(), ipAddress, authentication.getName(), authentication);
+        }
+
+    }
+
     public CaseFileDao getCaseFileDao()
     {
         return caseFileDao;
@@ -213,4 +248,11 @@ public class SaveCaseServiceImpl implements SaveCaseService
         this.ecmFileService = ecmFileService;
     }
 
+    public CaseFileEventUtility getCaseFileEventUtility() {
+        return caseFileEventUtility;
+    }
+
+    public void setCaseFileEventUtility(CaseFileEventUtility caseFileEventUtility) {
+        this.caseFileEventUtility = caseFileEventUtility;
+    }
 }

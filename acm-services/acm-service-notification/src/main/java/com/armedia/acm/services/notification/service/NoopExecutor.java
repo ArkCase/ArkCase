@@ -28,6 +28,7 @@ package com.armedia.acm.services.notification.service;
  */
 
 import com.armedia.acm.services.notification.model.Notification;
+import com.armedia.acm.services.notification.model.NotificationConstants;
 
 /**
  * Useful when we just want to store the notification. We don't actually want to send it by e-mail or anything.
@@ -37,7 +38,7 @@ public class NoopExecutor implements Executor
     @Override
     public Notification execute(Notification notification)
     {
-        notification.setState("SENT");
+        notification.setState(NotificationConstants.STATE_SENT);
         return notification;
     }
 }

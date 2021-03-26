@@ -2,8 +2,8 @@
 
 angular.module('document-repository').controller(
         'DocumentRepository.ActionsController',
-        [ '$scope', '$state', '$stateParams', '$q', '$modal', 'UtilService', 'ConfigService', 'ObjectService', 'Authentication', 'Object.SubscriptionService', 'Object.ModelService', 'DocumentRepository.InfoService', 'Helper.ObjectBrowserService',
-                function($scope, $state, $stateParams, $q, $modal, Util, ConfigService, ObjectService, Authentication, ObjectSubscriptionService, ObjectModelService, DocumentRepositoryInfoService, HelperObjectBrowserService) {
+        [ '$scope', '$state', '$stateParams', '$q', '$modal', 'UtilService', 'ConfigService', 'ObjectService', 'Authentication', 'Object.SubscriptionService', 'Object.ModelService', 'DocumentRepository.InfoService', 'Helper.ObjectBrowserService', 'Ecm.EmailService',
+                function($scope, $state, $stateParams, $q, $modal, Util, ConfigService, ObjectService, Authentication, ObjectSubscriptionService, ObjectModelService, DocumentRepositoryInfoService, HelperObjectBrowserService, EcmEmailService) {
 
                     new HelperObjectBrowserService.Component({
                         scope: $scope,
@@ -69,4 +69,45 @@ angular.module('document-repository').controller(
                     $scope.refresh = function() {
                         $scope.$emit('report-object-refreshed', $stateParams.id);
                     };
+
+                    $scope.sendEmail = function () {
+                        var params = {
+                            objectId: $scope.objectInfo.id,
+                            objectType: ObjectService.ObjectTypes.DOC_REPO,
+                            objectNumber: "",
+                            emailSubject: 'Repository ' + $scope.objectInfo.id
+                        };
+                        var modalInstance = $modal.open({
+                            templateUrl: 'modules/common/views/send-email-modal.client.view.html',
+                            controller: 'Common.SendEmailModalController',
+                            animation: true,
+                            size: 'lg',
+                            backdrop: 'static',
+                            resolve: {
+                                params: function() {
+                                    return params;
+                                }
+                            }
+                        });
+
+                        modalInstance.result.then(function(res) {
+                            var emailData = {};
+                            emailData.subject = res.subject;
+                            emailData.body = res.body;
+                            emailData.footer = '\n\n' + res.footer;
+                            emailData.emailAddresses = res.recipients;
+                            emailData.objectId = $scope.objectInfo.id;
+                            emailData.objectType = ObjectService.ObjectTypes.DOC_REPO;
+                            emailData.objectNumber = "";
+                            emailData.modelReferenceName = res.template;
+
+                            if(emailData.modelReferenceName != 'plainEmail') {
+                                EcmEmailService.sendManualEmail(emailData);
+                            } else {
+                                EcmEmailService.sendPlainEmail(emailData);
+                            }
+
+                        });
+                    };
+
                 } ]);
