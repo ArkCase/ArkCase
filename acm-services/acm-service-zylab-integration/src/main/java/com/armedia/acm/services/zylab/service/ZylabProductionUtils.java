@@ -42,7 +42,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.armedia.acm.tool.zylab.service.ZylabProductionFileExtractor;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -53,6 +52,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.armedia.acm.services.zylab.model.ZylabFile;
 import com.armedia.acm.services.zylab.model.ZylabFileMetadata;
+import com.armedia.acm.tool.zylab.exception.ZylabProductionSyncException;
 
 /**
  * Created by Aleksandar Acevski <aleksandar.acevski@armedia.com> on March, 2021
@@ -63,8 +63,17 @@ public class ZylabProductionUtils
 
     private static final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
+    public static File getLoadFile(long matterId, String productionKey, List<File> productionFiles) throws ZylabProductionSyncException
+    {
+        return productionFiles.stream()
+                .filter(file -> file.getParentFile().getName().equals("DATA") && file.getName().toLowerCase().endsWith(".csv"))
+                .findFirst()
+                .orElseThrow(() -> new ZylabProductionSyncException(
+                        String.format("No load file found in production %s,for ZyLAB Matter %d", productionKey, matterId)));
+    }
+
     public static List<ZylabFileMetadata> getFileMetadataFromLoadFile(File loadFile, Long matterId, String productionKey)
-            throws IOException
+            throws ZylabProductionSyncException
     {
         List<ZylabFileMetadata> zylabFileMetadataList = new ArrayList<>();
 
@@ -84,6 +93,11 @@ public class ZylabProductionUtils
                 ZylabFileMetadata zylabFileMetadata = mapZylabFileMetadata(map, matterId, productionKey);
                 zylabFileMetadataList.add(zylabFileMetadata);
             }
+        }
+        catch (IOException e)
+        {
+            throw new ZylabProductionSyncException(
+                    String.format("Error processing load file data in production %s,for ZyLAB Matter %d", productionKey, matterId));
         }
         return zylabFileMetadataList;
     }
@@ -141,7 +155,6 @@ public class ZylabProductionUtils
 
     public static List<ZylabFile> linkMetadataToZylabFiles(List<File> productionFiles, List<ZylabFileMetadata> zylabFileMetadataList)
     {
-
         List<ZylabFile> zylabFiles = new ArrayList<>();
 
         for (ZylabFileMetadata zylabFileMetadata : zylabFileMetadataList)

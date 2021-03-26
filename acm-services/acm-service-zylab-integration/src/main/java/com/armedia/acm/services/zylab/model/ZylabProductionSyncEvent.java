@@ -33,6 +33,7 @@ import org.springframework.security.core.Authentication;
 
 import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.core.model.AcmEvent;
+import com.armedia.acm.tool.zylab.model.ZylabProductionSyncDTO;
 
 /**
  * Created by Aleksandar Acevski <aleksandar.acevski@armedia.com> on March, 2021
@@ -41,11 +42,10 @@ public class ZylabProductionSyncEvent extends AcmEvent
 {
     private static final String EVENT_TYPE = "com.armedia.acm.zylab.production.sync";
 
-    private Long matterId;
-    private String productionKey;
+    private ZylabProductionSyncDTO zylabProductionSyncDTO;
 
-    public ZylabProductionSyncEvent(Object source, Long objectId, String objectType, Long matterId, String productionKey, boolean success,
-            Authentication auth)
+    public ZylabProductionSyncEvent(Object source, Long objectId, String objectType, ZylabProductionSyncDTO zylabProductionSyncDTO,
+            boolean success, Authentication auth)
     {
         super(source);
 
@@ -56,29 +56,19 @@ public class ZylabProductionSyncEvent extends AcmEvent
         setSucceeded(success);
         setUserId(auth.getName());
         setIpAddress(AuthenticationUtils.getUserIpAddress());
-        setEventDescription(String.format("Sync production %s for matter %d", productionKey, matterId));
-        setMatterId(matterId);
-        setProductionKey(productionKey);
+        setEventDescription(String.format("Sync production %s for matter %d", zylabProductionSyncDTO.getProductionKey(),
+                zylabProductionSyncDTO.getMatterId()));
+        setZylabProductionSyncDTO(zylabProductionSyncDTO);
     }
 
-    public Long getMatterId()
+    public ZylabProductionSyncDTO getZylabProductionSyncDTO()
     {
-        return matterId;
+        return zylabProductionSyncDTO;
     }
 
-    public void setMatterId(Long matterId)
+    public void setZylabProductionSyncDTO(ZylabProductionSyncDTO zylabProductionSyncDTO)
     {
-        this.matterId = matterId;
-    }
-
-    public String getProductionKey()
-    {
-        return productionKey;
-    }
-
-    public void setProductionKey(String productionKey)
-    {
-        this.productionKey = productionKey;
+        this.zylabProductionSyncDTO = zylabProductionSyncDTO;
     }
 
     @Override

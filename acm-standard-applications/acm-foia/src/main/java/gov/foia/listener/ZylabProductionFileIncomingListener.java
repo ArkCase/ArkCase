@@ -52,6 +52,7 @@ import org.slf4j.MDC;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
@@ -107,30 +108,77 @@ public class ZylabProductionFileIncomingListener implements ApplicationListener<
     {
         if (getZylabIntegrationConfig().isEnabled())
         {
+            Authentication auth = setCredentials();
+
+            Long matterId = fileIncomingEvent.getMatterId();
+            String productionKey = fileIncomingEvent.getProductionKey();
+            FOIARequest foiaRequest = findRequestForMatter(matterId, productionKey, auth);
+
             try
             {
-                FOIARequest foiaRequest = foiaRequestDao.findByExternalIdentifier(String.valueOf(fileIncomingEvent.getMatterId()));
+                if (foiaRequest != null)
+                {
+                    uploadZylabProductionToRequest(foiaRequest, matterId, productionKey, auth);
+                }
+            }
+            catch (Exception e)
+            {
+                getZylabEventPublisher().publishProductionFailedEvent(foiaRequest, foiaRequest.getId(), foiaRequest.getObjectType(),
+                        matterId, productionKey, e.getMessage(), auth);
 
-                uploadZylabProductionToRequest(foiaRequest, fileIncomingEvent.getMatterId(), fileIncomingEvent.getProductionKey());
-            }
-            catch (NoResultException e)
-            {
-                log.error("No associated request found for ZyLAB Matter [{}] ", fileIncomingEvent.getMatterId());
-            }
-            catch (NonUniqueResultException e)
-            {
-                log.error("Multiple requests found for ZyLAB Matter [{}] ", fileIncomingEvent.getMatterId());
-            }
-            catch (ZylabProductionSyncException e)
-            {
-                log.error("Processing of production [{}] unsuccessful for matter [{}]", fileIncomingEvent.getMatterId(),
-                        fileIncomingEvent.getProductionKey());
+                log.error("Processing of production [{}] unsuccessful for matter [{}]", matterId,
+                        productionKey, e);
+
             }
         }
-
     }
 
-    public void uploadZylabProductionToRequest(FOIARequest foiaRequest, long matterId, String productionKey)
+    private FOIARequest findRequestForMatter(Long matterId, String productionKey, Authentication auth)
+    {
+        FOIARequest foiaRequest = null;
+        try
+        {
+            foiaRequest = foiaRequestDao.findByExternalIdentifier(String.valueOf(matterId));
+        }
+        catch (NoResultException e)
+        {
+            String error = "No associated request found for ZyLAB Matter ID: " + matterId;
+            getZylabEventPublisher().publishProductionFailedEvent(matterId, null, null,
+                    matterId, productionKey, error, auth);
+
+            log.error(error, e);
+        }
+        catch (NonUniqueResultException e)
+        {
+            String error = "Multiple requests found for ZyLAB Matter ID: " + matterId;
+            getZylabEventPublisher().publishProductionFailedEvent(null, null, null,
+                    matterId, productionKey, error, auth);
+
+            log.error(error, e);
+        }
+        return foiaRequest;
+    }
+
+    /**
+     *
+     * The code is triggered by a JMS message, there is no authenticated user, so we need to specify a user
+     * for CMIS connections and DB entries
+     *
+     * @return Zylab Integration System User Authentication
+     */
+    private Authentication setCredentials()
+    {
+        getAuditPropertyEntityAdapter().setUserId(ZYLAB_INTEGRATION_SYSTEM_USER);
+
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY, ZYLAB_INTEGRATION_SYSTEM_USER);
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
+
+        return new UsernamePasswordAuthenticationToken(ZYLAB_INTEGRATION_SYSTEM_USER, "");
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void uploadZylabProductionToRequest(FOIARequest foiaRequest, long matterId, String productionKey, Authentication auth)
             throws ZylabProductionSyncException
     {
         File uncompressedProductionFolder = getZylabIntegrationService().getZylabProductionFolder(matterId, productionKey);
@@ -139,18 +187,13 @@ public class ZylabProductionFileIncomingListener implements ApplicationListener<
                 FileFilterUtils.trueFileFilter(),
                 FileFilterUtils.trueFileFilter());
 
-        File loadFile = productionFiles.stream()
-                .filter(file -> file.getParentFile().getName().equals("DATA") && file.getName().toLowerCase().endsWith(".csv"))
-                .findFirst()
-                .orElseThrow(() -> new ZylabProductionSyncException(
-                        "No load file found in production " + productionKey + ",for ZyLAB Matter " + matterId));
+        File loadFile = ZylabProductionUtils.getLoadFile(matterId, productionKey, productionFiles);
 
-        Authentication auth = setCredentials();
+        List<ZylabFileMetadata> zylabFileMetadataList = ZylabProductionUtils.getFileMetadataFromLoadFile(loadFile, matterId,
+                productionKey);
 
         try
         {
-            List<ZylabFileMetadata> zylabFileMetadataList = ZylabProductionUtils.getFileMetadataFromLoadFile(loadFile, matterId,
-                    productionKey);
             List<ZylabFile> zylabFiles = ZylabProductionUtils.linkMetadataToZylabFiles(productionFiles, zylabFileMetadataList);
 
             List<ZylabFile> responsiveFiles = zylabFiles.stream()
@@ -201,11 +244,8 @@ public class ZylabProductionFileIncomingListener implements ApplicationListener<
         }
         catch (Exception e)
         {
-            log.error("Uploading Zylab production files failed", e);
-            getZylabEventPublisher().publishProductionFailedEvent(foiaRequest, foiaRequest.getId(), foiaRequest.getObjectType(),
-                    matterId, productionKey, auth);
-
-            throw new ZylabProductionSyncException("Uploading Zylab production files failed", e);
+            log.error("Uploading Zylab production files to Arkcase failed", e);
+            throw new ZylabProductionSyncException("Uploading Zylab production files to Arkcase failed", e);
         }
         finally
         {
@@ -213,24 +253,6 @@ public class ZylabProductionFileIncomingListener implements ApplicationListener<
             getZylabIntegrationService().cleanupTemporaryProductionFiles(uncompressedProductionFolder);
         }
 
-    }
-
-    /**
-     *
-     * The code is triggered by a JMS message, there is no authenticated user, so we need to specify a user
-     * for CMIS connections and DB entries
-     * 
-     * @return Zylab Integration System User Authentication
-     */
-    private Authentication setCredentials()
-    {
-        getAuditPropertyEntityAdapter().setUserId(ZYLAB_INTEGRATION_SYSTEM_USER);
-
-        MDC.put(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY, ZYLAB_INTEGRATION_SYSTEM_USER);
-        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
-        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
-
-        return new UsernamePasswordAuthenticationToken(ZYLAB_INTEGRATION_SYSTEM_USER, "");
     }
 
     private List<EcmFile> uploadZylabFiles(AcmFolder parentFolder, List<ZylabFile> zylabFiles, FOIARequest foiaRequest, Authentication auth)
@@ -314,10 +336,10 @@ public class ZylabProductionFileIncomingListener implements ApplicationListener<
 
         for (EcmFile file : redactionCodeFiles)
         {
-            String exemptionCode = file.getZylabFileMetadata().getRedactionCode1();
+            String exemptionCodeSubstring = file.getZylabFileMetadata().getRedactionCode1();
 
             StandardLookupEntry exemption = lookupEntries.stream()
-                    .filter(code -> code.getKey().startsWith(exemptionCode))
+                    .filter(code -> code.getKey().startsWith(exemptionCodeSubstring))
                     .findFirst().orElse(null);
 
             if (exemption != null)
@@ -327,6 +349,9 @@ public class ZylabProductionFileIncomingListener implements ApplicationListener<
             else
             {
                 log.warn("Exemption code not found by key. Exemption codes in Arkcase and ZyLAB should match");
+                String exemptionCode = String.format("%s %s", file.getZylabFileMetadata().getRedactionCode1(),
+                        file.getZylabFileMetadata().getRedactionCode2());
+                documentExemptionService.saveExemptionCodeAndNumberForFile(file, exemptionCode, null);
             }
         }
     }

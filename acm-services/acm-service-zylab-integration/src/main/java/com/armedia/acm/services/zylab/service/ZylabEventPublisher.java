@@ -35,6 +35,8 @@ import org.springframework.security.core.Authentication;
 
 import com.armedia.acm.services.zylab.model.ZylabMatterCreatedEvent;
 import com.armedia.acm.services.zylab.model.ZylabProductionSyncEvent;
+import com.armedia.acm.services.zylab.model.ZylabProductionSyncStatus;
+import com.armedia.acm.tool.zylab.model.ZylabProductionSyncDTO;
 
 /**
  * Created by Aleksandar Acevski <aleksandar.acevski@armedia.com> on February, 2021
@@ -55,17 +57,33 @@ public class ZylabEventPublisher implements ApplicationEventPublisherAware
             Authentication auth)
     {
         log.debug("Publishing ZylabProductionSync succeeded event");
-        ZylabProductionSyncEvent zylabProductionSyncEvent = new ZylabProductionSyncEvent(source, objectId, objectType, matterId,
-                productionKey, true, auth);
+
+        ZylabProductionSyncDTO zylabProductionSyncDTO = new ZylabProductionSyncDTO();
+
+        zylabProductionSyncDTO.setProductionKey(productionKey);
+        zylabProductionSyncDTO.setMatterId(matterId);
+        zylabProductionSyncDTO.setStatus(ZylabProductionSyncStatus.INGESTED.name());
+
+        ZylabProductionSyncEvent zylabProductionSyncEvent = new ZylabProductionSyncEvent(source, objectId, objectType,
+                zylabProductionSyncDTO, true, auth);
         applicationEventPublisher.publishEvent(zylabProductionSyncEvent);
     }
 
     public void publishProductionFailedEvent(Object source, Long objectId, String objectType, Long matterId, String productionKey,
+            String error,
             Authentication auth)
     {
         log.debug("Publishing ZylabProductionSync failed event");
-        ZylabProductionSyncEvent zylabProductionSyncEvent = new ZylabProductionSyncEvent(source, objectId, objectType, matterId,
-                productionKey, false, auth);
+
+        ZylabProductionSyncDTO zylabProductionSyncDTO = new ZylabProductionSyncDTO();
+
+        zylabProductionSyncDTO.setProductionKey(productionKey);
+        zylabProductionSyncDTO.setMatterId(matterId);
+        zylabProductionSyncDTO.setStatus(ZylabProductionSyncStatus.FAILED.name());
+        zylabProductionSyncDTO.setError(error);
+
+        ZylabProductionSyncEvent zylabProductionSyncEvent = new ZylabProductionSyncEvent(source, objectId, objectType,
+                zylabProductionSyncDTO, false, auth);
         applicationEventPublisher.publishEvent(zylabProductionSyncEvent);
     }
 
