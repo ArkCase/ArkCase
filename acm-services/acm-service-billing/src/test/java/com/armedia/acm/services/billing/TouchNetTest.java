@@ -31,6 +31,7 @@ import com.touchnet.secureLink.service.TPGSecureLink_BindingStub;
 import com.touchnet.secureLink.service.TPGSecureLink_ServiceLocator;
 import com.touchnet.secureLink.types.GenerateSecureLinkTicketRequest;
 import com.touchnet.secureLink.types.GenerateSecureLinkTicketResponse;
+import com.touchnet.secureLink.types.NameValuePair;
 import org.junit.Test;
 
 import javax.xml.rpc.ServiceException;
@@ -47,6 +48,11 @@ public class TouchNetTest
 
         GenerateSecureLinkTicketRequest req = new GenerateSecureLinkTicketRequest();
         req.setTicketName("Test");
+        NameValuePair[] pairs = new NameValuePair[1];
+        pairs[0] = new NameValuePair();
+        pairs[0].setName("AMT");
+        pairs[0].setValue("10.00");
+        req.setNameValuePairs(pairs);
 
         TPGSecureLink_BindingStub binding;
 
