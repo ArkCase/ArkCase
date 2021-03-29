@@ -103,7 +103,7 @@ public class NotificationServiceImpl implements NotificationService
 
         do
         {
-            Map<String, Object> properties = getJpaProperties(rule, lastRun);
+            Map<String, Object> properties = getJpaProperties(rule);
             notifications = getNotificationDao().executeQuery(properties, firstResult, maxResult, rule);
 
             if (!notifications.isEmpty())
@@ -208,10 +208,9 @@ public class NotificationServiceImpl implements NotificationService
      * Create needed JPA query properties. In the DAO we have logic which one should be excluded
      *
      * @param rule
-     * @param lastRun
      * @return
      */
-    private Map<String, Object> getJpaProperties(NotificationRule rule, Date lastRun)
+    private Map<String, Object> getJpaProperties(NotificationRule rule)
     {
         Map<String, Object> jpaProperties = rule.getJpaProperties();
 
@@ -220,7 +219,6 @@ public class NotificationServiceImpl implements NotificationService
             jpaProperties = new HashMap<>();
         }
 
-        jpaProperties.put("lastRunDate", lastRun);
         jpaProperties.put("threshold", createPurgeThreshold());
 
         return jpaProperties;
