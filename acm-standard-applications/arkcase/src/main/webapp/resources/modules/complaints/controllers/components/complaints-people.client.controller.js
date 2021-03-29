@@ -170,6 +170,11 @@ angular.module('complaints').controller(
                     }
 
                     $scope.isDeleteDisabled = function(rowEntity) {
-                        return rowEntity.personType == $scope.initiatorType;
+                        return rowEntity.personType == $scope.initiatorType.key;
                     };
+
+                    $scope.isEditDisabled = function(rowEntity) {
+                        return rowEntity.personType == $scope.initiatorType.key;
+                    };
+
                 } ]);
