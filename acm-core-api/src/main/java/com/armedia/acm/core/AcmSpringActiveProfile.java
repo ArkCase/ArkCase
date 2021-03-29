@@ -31,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -38,6 +39,8 @@ public class AcmSpringActiveProfile
 {
     @Autowired
     private Environment environment;
+
+    private final List<String> externalAuthProfiles = Arrays.asList("externalAuth", "externalOidc", "externalSaml");
 
     public boolean isSAMLEnabledEnvironment()
     {
@@ -55,7 +58,7 @@ public class AcmSpringActiveProfile
 
     public boolean isExternalAuthEnabledEnvironment()
     {
-        Predicate<String> isExternalAuthProfile = it -> it.equals("externalAuth");
+        Predicate<String> isExternalAuthProfile = externalAuthProfiles::contains;
         return isProfileActivated(isExternalAuthProfile);
     }
 
