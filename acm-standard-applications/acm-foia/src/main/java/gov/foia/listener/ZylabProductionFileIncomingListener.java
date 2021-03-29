@@ -46,12 +46,14 @@ import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.slf4j.MDC;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
@@ -88,7 +90,7 @@ public class ZylabProductionFileIncomingListener implements ApplicationListener<
     public static final String ZYLAB_INTEGRATION_SYSTEM_USER = "ZYLAB-INTEGRATION-SYSTEM-USER";
     public static final String RESPONSIVE_FOLDER_NAME = "Release";
     public static final String WITHELD_FOLDER_NAME = "Exempt Withheld";
-    public static final String MICS_FOLDER_NAME = "Misc";
+    public static final String EXEMPTION_WITHELD_CODES_SEPARATOR = ",";
     private transient final Logger log = LogManager.getLogger(getClass());
 
     private AcmFolderService acmFolderService;
@@ -107,119 +109,62 @@ public class ZylabProductionFileIncomingListener implements ApplicationListener<
     {
         if (getZylabIntegrationConfig().isEnabled())
         {
+            Authentication auth = setCredentials();
+
+            Long matterId = fileIncomingEvent.getMatterId();
+            String productionKey = fileIncomingEvent.getProductionKey();
+            FOIARequest foiaRequest = findRequestForMatter(matterId, productionKey, auth);
+
             try
             {
-                FOIARequest foiaRequest = foiaRequestDao.findByExternalIdentifier(String.valueOf(fileIncomingEvent.getMatterId()));
+                if (foiaRequest != null)
+                {
+                    uploadZylabProductionToRequest(foiaRequest, matterId, productionKey, auth);
+                }
+            }
+            catch (Exception e)
+            {
+                getZylabEventPublisher().publishProductionFailedEvent(foiaRequest, foiaRequest.getId(), foiaRequest.getObjectType(),
+                        matterId, productionKey, e.getMessage(), auth);
 
-                uploadZylabProductionToRequest(foiaRequest, fileIncomingEvent.getMatterId(), fileIncomingEvent.getProductionKey());
-            }
-            catch (NoResultException e)
-            {
-                log.error("No associated request found for ZyLAB Matter [{}] ", fileIncomingEvent.getMatterId());
-            }
-            catch (NonUniqueResultException e)
-            {
-                log.error("Multiple requests found for ZyLAB Matter [{}] ", fileIncomingEvent.getMatterId());
-            }
-            catch (ZylabProductionSyncException e)
-            {
-                log.error("Processing of production [{}] unsuccessful for matter [{}]", fileIncomingEvent.getMatterId(),
-                        fileIncomingEvent.getProductionKey());
+                log.error("Processing of production [{}] unsuccessful for matter [{}]", matterId,
+                        productionKey, e);
+
             }
         }
-
     }
 
-    public void uploadZylabProductionToRequest(FOIARequest foiaRequest, long matterId, String productionKey)
-            throws ZylabProductionSyncException
+    private FOIARequest findRequestForMatter(Long matterId, String productionKey, Authentication auth)
     {
-        File uncompressedProductionFolder = getZylabIntegrationService().getZylabProductionFolder(matterId, productionKey);
-
-        List<File> productionFiles = (List<File>) FileUtils.listFiles(uncompressedProductionFolder,
-                FileFilterUtils.trueFileFilter(),
-                FileFilterUtils.trueFileFilter());
-
-        File loadFile = productionFiles.stream()
-                .filter(file -> file.getParentFile().getName().equals("DATA") && file.getName().toLowerCase().endsWith(".csv"))
-                .findFirst()
-                .orElseThrow(() -> new ZylabProductionSyncException(
-                        "No load file found in production " + productionKey + ",for ZyLAB Matter " + matterId));
-
-        Authentication auth = setCredentials();
-
+        FOIARequest foiaRequest = null;
         try
         {
-            List<ZylabFileMetadata> zylabFileMetadataList = ZylabProductionUtils.getFileMetadataFromLoadFile(loadFile, matterId,
-                    productionKey);
-            List<ZylabFile> zylabFiles = ZylabProductionUtils.linkMetadataToZylabFiles(productionFiles, zylabFileMetadataList);
-
-            List<ZylabFile> responsiveFiles = zylabFiles.stream()
-                    .filter(zylabFile -> zylabFile.getFileMetadata().getReviewedAnalysis().equals(RESPONSIVE_FOLDER_NAME))
-                    .collect(Collectors.toList());
-
-            List<ZylabFile> exemptWithheldFiles = zylabFiles.stream()
-                    .filter(zylabFile -> zylabFile.getFileMetadata().getReviewedAnalysis().equals(WITHELD_FOLDER_NAME))
-                    .collect(Collectors.toList());
-
-            List<ZylabFile> miscFiles = zylabFiles.stream()
-                    .filter(zylabFile -> !zylabFile.getFileMetadata().getReviewedAnalysis().equals(WITHELD_FOLDER_NAME)
-                            && !zylabFile.getFileMetadata().getReviewedAnalysis().equals(RESPONSIVE_FOLDER_NAME))
-                    .collect(Collectors.toList());
-
-            log.info("Creating new production folder structure for production [{}]", productionKey);
-
-            AcmFolder rootFolder = foiaRequest.getContainer().getFolder();
-            AcmFolder workingFolder = getAcmFolderService().getSubfolderByName(rootFolder, workingFolderName);
-
-            String productionFolderName = "Production " + FilenameUtils.getBaseName(loadFile.getName());
-            AcmFolder newProductionFolder = getAcmFolderService().addNewFolder(workingFolder, productionFolderName);
-
-            AcmFolder responsiveFolder = getAcmFolderService().addNewFolder(newProductionFolder, RESPONSIVE_FOLDER_NAME);
-            AcmFolder exemptWithheldFolder = getAcmFolderService().addNewFolder(newProductionFolder, WITHELD_FOLDER_NAME);
-            AcmFolder miscFolder = getAcmFolderService().addNewFolder(newProductionFolder, MICS_FOLDER_NAME);
-
-            log.info("Uploading Zylab production files [{}]", productionKey);
-
-            List<EcmFile> arkResponsiveFiles = uploadZylabFiles(responsiveFolder, responsiveFiles, foiaRequest, auth);
-            List<EcmFile> arkExemptWitheldFiles = uploadZylabFiles(exemptWithheldFolder, exemptWithheldFiles, foiaRequest, auth);
-            List<EcmFile> arkMiscFiles = uploadZylabFiles(miscFolder, miscFiles, foiaRequest, auth);
-
-            List<EcmFile> uploadedFiles = new ArrayList<>();
-
-            uploadedFiles.addAll(arkExemptWitheldFiles);
-            uploadedFiles.addAll(arkResponsiveFiles);
-            uploadedFiles.addAll(arkMiscFiles);
-
-            log.info("Adding exemption codes to files for production [{}]", productionKey);
-
-            addExemptionCodesToFiles(uploadedFiles);
-
-            log.info("ZyLAB Production files for request [{}] processed successfully", foiaRequest.getId());
-
-            getZylabEventPublisher().publishProductionSucceededEvent(foiaRequest, foiaRequest.getId(), foiaRequest.getObjectType(),
-                    matterId, productionKey, auth);
+            foiaRequest = foiaRequestDao.findByExternalIdentifier(String.valueOf(matterId));
         }
-        catch (Exception e)
+        catch (NoResultException e)
         {
-            log.error("Uploading Zylab production files failed", e);
-            getZylabEventPublisher().publishProductionFailedEvent(foiaRequest, foiaRequest.getId(), foiaRequest.getObjectType(),
-                    matterId, productionKey, auth);
+            String error = "No associated request found for ZyLAB Matter ID: " + matterId;
+            getZylabEventPublisher().publishProductionFailedEvent(matterId, null, null,
+                    matterId, productionKey, error, auth);
 
-            throw new ZylabProductionSyncException("Uploading Zylab production files failed", e);
+            log.error(error, e);
         }
-        finally
+        catch (NonUniqueResultException e)
         {
-            log.info("Deleting temporary folder for Production [{}], Matter [{}]", productionKey, matterId);
-            getZylabIntegrationService().cleanupTemporaryProductionFiles(uncompressedProductionFolder);
-        }
+            String error = "Multiple requests found for ZyLAB Matter ID: " + matterId;
+            getZylabEventPublisher().publishProductionFailedEvent(null, null, null,
+                    matterId, productionKey, error, auth);
 
+            log.error(error, e);
+        }
+        return foiaRequest;
     }
 
     /**
      *
      * The code is triggered by a JMS message, there is no authenticated user, so we need to specify a user
      * for CMIS connections and DB entries
-     * 
+     *
      * @return Zylab Integration System User Authentication
      */
     private Authentication setCredentials()
@@ -231,6 +176,71 @@ public class ZylabProductionFileIncomingListener implements ApplicationListener<
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
 
         return new UsernamePasswordAuthenticationToken(ZYLAB_INTEGRATION_SYSTEM_USER, "");
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void uploadZylabProductionToRequest(FOIARequest foiaRequest, long matterId, String productionKey, Authentication auth)
+            throws ZylabProductionSyncException
+    {
+        File uncompressedProductionFolder = getZylabIntegrationService().getZylabProductionFolder(matterId, productionKey);
+
+        List<File> productionFiles = (List<File>) FileUtils.listFiles(uncompressedProductionFolder,
+                FileFilterUtils.trueFileFilter(),
+                FileFilterUtils.trueFileFilter());
+
+        File loadFile = ZylabProductionUtils.getLoadFile(matterId, productionKey, productionFiles);
+
+        List<ZylabFileMetadata> zylabFileMetadataList = ZylabProductionUtils.getFileMetadataFromLoadFile(loadFile, matterId,
+                productionKey);
+
+        try
+        {
+            List<ZylabFile> zylabFiles = ZylabProductionUtils.linkMetadataToZylabFiles(productionFiles, zylabFileMetadataList);
+
+            List<ZylabFile> exemptWithheldFiles = zylabFiles.stream()
+                    .filter(zylabFile -> zylabFile.getFileMetadata().getExemptWithheld())
+                    .collect(Collectors.toList());
+            List<ZylabFile> responsiveFiles = zylabFiles.stream()
+                    .filter(zylabFile -> !zylabFile.getFileMetadata().getExemptWithheld())
+                    .collect(Collectors.toList());
+
+            log.info("Creating new production folder structure for production [{}]", productionKey);
+
+            AcmFolder rootFolder = foiaRequest.getContainer().getFolder();
+            AcmFolder workingFolder = getAcmFolderService().getSubfolderByName(rootFolder, workingFolderName);
+
+            String productionFolderName = FilenameUtils.getBaseName(loadFile.getName());
+            AcmFolder newProductionFolder = getAcmFolderService().addNewFolder(workingFolder, productionFolderName);
+
+            AcmFolder responsiveFolder = getAcmFolderService().addNewFolder(newProductionFolder, RESPONSIVE_FOLDER_NAME);
+            AcmFolder exemptWithheldFolder = getAcmFolderService().addNewFolder(newProductionFolder, WITHELD_FOLDER_NAME);
+
+            log.info("Uploading Zylab production files [{}]", productionKey);
+
+            List<EcmFile> arkResponsiveFiles = uploadZylabFiles(responsiveFolder, responsiveFiles, foiaRequest, auth);
+            List<EcmFile> arkExemptWitheldFiles = uploadZylabFiles(exemptWithheldFolder, exemptWithheldFiles, foiaRequest, auth);
+
+            log.info("Adding exemption codes to files for production [{}]", productionKey);
+
+            addExemptionCodesToResponsiveFiles(arkResponsiveFiles);
+            addExemptionCodesToWitheldFiles(arkExemptWitheldFiles);
+
+            log.info("ZyLAB Production files for request [{}] processed successfully", foiaRequest.getId());
+
+            getZylabEventPublisher().publishProductionSucceededEvent(foiaRequest, foiaRequest.getId(), foiaRequest.getObjectType(),
+                    matterId, productionKey, auth);
+        }
+        catch (Exception e)
+        {
+            log.error("Uploading Zylab production files to Arkcase failed", e);
+            throw new ZylabProductionSyncException("Uploading Zylab production files to Arkcase failed", e);
+        }
+        finally
+        {
+            log.info("Deleting temporary folder for Production [{}], Matter [{}]", productionKey, matterId);
+            getZylabIntegrationService().cleanupTemporaryProductionFiles(uncompressedProductionFolder);
+        }
+
     }
 
     private List<EcmFile> uploadZylabFiles(AcmFolder parentFolder, List<ZylabFile> zylabFiles, FOIARequest foiaRequest, Authentication auth)
@@ -275,7 +285,7 @@ public class ZylabProductionFileIncomingListener implements ApplicationListener<
         return metadata;
     }
 
-    private void addExemptionCodesToFiles(List<EcmFile> files)
+    private void addExemptionCodesToResponsiveFiles(List<EcmFile> files)
     {
         List<StandardLookupEntry> lookupEntries = (List<StandardLookupEntry>) lookupDao.getLookupByName("annotationTags").getEntries();
 
@@ -289,37 +299,19 @@ public class ZylabProductionFileIncomingListener implements ApplicationListener<
                     .mapToInt(Integer::parseInt)
                     .toArray();
 
-            for (int exemptionCodeNumber : exemptionCodes)
-            {
-                StandardLookupEntry exemption = lookupEntries.stream()
-                        .filter(code -> code.getOrder() == exemptionCodeNumber)
-                        .findFirst().orElse(null);
-                if (exemption != null)
-                {
-                    documentExemptionService.saveExemptionCodeAndNumberForFile(file, exemption.getKey(), exemption.getOrder());
-                }
-                else
-                {
-                    log.warn("Exemption code not found by order. Exemption codes in Arkcase and ZyLAB should match");
-                }
-            }
+            addExemptionCodesToFileByOrder(file, exemptionCodes, lookupEntries);
         }
 
-        // If redaction justification field is used, it takes precedence over the redaction code fields and the
-        // redaction added to that field will be ignored
         List<EcmFile> redactionCodeFiles = files.stream()
-                .filter(ecmFile -> ecmFile.getZylabFileMetadata().getRedactionJustification().isEmpty())
                 .filter(ecmFile -> !ecmFile.getZylabFileMetadata().getRedactionCode1().isEmpty())
                 .collect(Collectors.toList());
 
         for (EcmFile file : redactionCodeFiles)
         {
-            String exemptionCode = file.getZylabFileMetadata().getRedactionCode1();
-
+            String exemptionCodeSubstring = file.getZylabFileMetadata().getRedactionCode1();
             StandardLookupEntry exemption = lookupEntries.stream()
-                    .filter(code -> code.getKey().startsWith(exemptionCode))
+                    .filter(code -> code.getKey().startsWith(exemptionCodeSubstring))
                     .findFirst().orElse(null);
-
             if (exemption != null)
             {
                 documentExemptionService.saveExemptionCodeAndNumberForFile(file, exemption.getKey(), exemption.getOrder());
@@ -327,6 +319,48 @@ public class ZylabProductionFileIncomingListener implements ApplicationListener<
             else
             {
                 log.warn("Exemption code not found by key. Exemption codes in Arkcase and ZyLAB should match");
+                String exemptionCode = String.format("%s %s", file.getZylabFileMetadata().getRedactionCode1(),
+                        file.getZylabFileMetadata().getRedactionCode2());
+                documentExemptionService.saveExemptionCodeAndNumberForFile(file, exemptionCode, null);
+            }
+        }
+    }
+
+    private void addExemptionCodesToWitheldFiles(List<EcmFile> files)
+    {
+        List<StandardLookupEntry> lookupEntries = (List<StandardLookupEntry>) lookupDao.getLookupByName("annotationTags").getEntries();
+
+        List<EcmFile> redactionJustificationFiles = files.stream()
+                .filter(ecmFile -> !ecmFile.getZylabFileMetadata().getExemptWithheldReason().isEmpty())
+                .collect(Collectors.toList());
+
+        for (EcmFile file : redactionJustificationFiles)
+        {
+            String[] exemptionCodesSent = file.getZylabFileMetadata().getExemptWithheldReason().split(EXEMPTION_WITHELD_CODES_SEPARATOR);
+            int[] exemptionCodes = Arrays.stream(exemptionCodesSent)
+                    .map(code -> StringUtils.substringBefore(code, "_"))
+                    .mapToInt(Integer::parseInt)
+                    .toArray();
+
+            addExemptionCodesToFileByOrder(file, exemptionCodes, lookupEntries);
+        }
+    }
+
+    private void addExemptionCodesToFileByOrder(EcmFile file, int[] exemptionCodes, List<StandardLookupEntry> lookupEntries)
+    {
+        for (int exemptionCodeNumber : exemptionCodes)
+        {
+            StandardLookupEntry exemption = lookupEntries.stream()
+                    .filter(code -> code.getOrder() == exemptionCodeNumber)
+                    .findFirst().orElse(null);
+            if (exemption != null)
+            {
+                documentExemptionService.saveExemptionCodeAndNumberForFile(file, exemption.getKey(), exemption.getOrder());
+            }
+            else
+            {
+                log.warn("Exemption code not found by order. Exemption codes in Arkcase and ZyLAB should match");
+                documentExemptionService.saveExemptionCodeAndNumberForFile(file, "", exemptionCodeNumber);
             }
         }
     }

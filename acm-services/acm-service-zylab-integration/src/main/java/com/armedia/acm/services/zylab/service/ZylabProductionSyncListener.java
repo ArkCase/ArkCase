@@ -21,15 +21,7 @@ public class ZylabProductionSyncListener implements ApplicationListener<ZylabPro
     @Override
     public void onApplicationEvent(ZylabProductionSyncEvent zylabProductionSyncEvent)
     {
-        ZylabProductionSyncDTO zylabProductionSyncDTO = new ZylabProductionSyncDTO();
-
-        zylabProductionSyncDTO.setProductionKey(zylabProductionSyncEvent.getProductionKey());
-        zylabProductionSyncDTO.setMatterId(zylabProductionSyncEvent.getMatterId());
-        ZylabProductionSyncStatus status = zylabProductionSyncEvent.isSucceeded() ? ZylabProductionSyncStatus.INGESTED
-                : ZylabProductionSyncStatus.FAILED;
-        zylabProductionSyncDTO.setStatus(status.name());
-
-        zylabProductionSyncStatusToJmsSender.sendProductionSyncStatus(zylabProductionSyncDTO);
+        zylabProductionSyncStatusToJmsSender.sendProductionSyncStatus(zylabProductionSyncEvent.getZylabProductionSyncDTO());
     }
 
     public ZylabProductionSyncStatusToJmsSender getZylabProductionSyncStatusToJmsSender()
