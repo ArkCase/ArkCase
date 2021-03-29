@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('request-info').controller('RequestInfo.ExemptionController',
-    ['$scope', '$stateParams', '$q', 'Case.InfoService', 'Profile.UserInfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'ConfigService', 'ExemptionService', '$modal', 'Object.LookupService', '$state', 'Case.ExemptionService', 'UtilService', 'MessageService',
-        function ($scope, $stateParams, $q, CaseInfoService, UserInfoService, HelperUiGridService, HelperObjectBrowserService, ConfigService, ExemptionService, $modal, ObjectLookupService, $state, CaseExemptionService, Util, MessageService) {
+    ['$scope', '$stateParams', '$q', 'Case.InfoService', 'Profile.UserInfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'ConfigService', 'ExemptionService', '$modal', 'Object.LookupService', '$state', 'Case.ExemptionService', 'UtilService', 'MessageService', 'Admin.ZylabIntegrationService',
+        function ($scope, $stateParams, $q, CaseInfoService, UserInfoService, HelperUiGridService, HelperObjectBrowserService, ConfigService, ExemptionService, $modal, ObjectLookupService, $state, CaseExemptionService, Util, MessageService, ZylabIntegrationService) {
 
             $scope.isDisabled = false;
             $scope.statuteGridOptions = {};
@@ -28,12 +28,23 @@ angular.module('request-info').controller('RequestInfo.ExemptionController',
             var promiseUsers = gridHelper.getUsers();
 
             var onConfigRetrieved = function (config) {
-                gridHelper.setColumnDefs(config);
-                gridHelper.setBasicOptions(config);
-                gridHelper.disableGridScrolling(config);
-                gridHelper.setUserNameFilterToConfig(promiseUsers);
-                gridHelper.addButton(config, "delete", null, null, "isDeleteDisabled");
-                retrieveGridData($stateParams.id, $stateParams.fileId);
+                ZylabIntegrationService.getConfiguration().then(function (response) {
+                    $scope.documentReviewEnabled = response.data["zylabIntegration.enabled"];
+                    if ($scope.documentReviewEnabled) {
+                        config.columnDefs.unshift({
+                            "name": "exemptionCodeNumber",
+                            "displayName": "cases.comp.exemption.table.columns.exemptionCodeNumber",
+                            "headerCellFilter": "translate"
+                        });
+                    }
+
+                    gridHelper.setColumnDefs(config);
+                    gridHelper.setBasicOptions(config);
+                    gridHelper.disableGridScrolling(config);
+                    gridHelper.setUserNameFilterToConfig(promiseUsers);
+                    gridHelper.addButton(config, "delete", null, null, "isDeleteDisabled");
+                    retrieveGridData($stateParams.id, $stateParams.fileId);
+                });
             };
 
             var onObjectInfoRetrieved = function (objectInfo) {

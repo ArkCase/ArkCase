@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('cases').controller('Cases.ExemptionController',
-    ['$scope', '$stateParams', '$q', 'Case.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'ConfigService', 'Case.ExemptionService', '$modal', 'Object.LookupService', 'Profile.UserInfoService', 'UtilService', 'MessageService',
-        function ($scope, $stateParams, $q, CaseInfoService, HelperUiGridService, HelperObjectBrowserService, ConfigService, CaseExemptionService, $modal, ObjectLookupService, UserInfoService, Util, MessageService) {
+    ['$scope', '$stateParams', '$q', 'Case.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'ConfigService', 'Case.ExemptionService', '$modal', 'Object.LookupService', 'Profile.UserInfoService', 'UtilService', 'MessageService', 'Admin.ZylabIntegrationService',
+        function ($scope, $stateParams, $q, CaseInfoService, HelperUiGridService, HelperObjectBrowserService, ConfigService, CaseExemptionService, $modal, ObjectLookupService, UserInfoService, Util, MessageService, ZylabIntegrationService) {
 
             $scope.isDisabled = false;
             $scope.statuteGridOptions = {};
@@ -40,12 +40,23 @@ angular.module('cases').controller('Cases.ExemptionController',
             var promiseUsers = gridHelper.getUsers();
 
             var onConfigRetrieved = function (config) {
-                gridHelper.setColumnDefs(config);
-                gridHelper.setBasicOptions(config);
-                gridHelper.disableGridScrolling(config);
-                gridHelper.setUserNameFilterToConfig(promiseUsers, config);
-                gridHelper.addButton(config, "delete", null, null, "isDeleteDisabled");
-                retrieveGridData();
+                ZylabIntegrationService.getConfiguration().then(function (response) {
+                    $scope.documentReviewEnabled = response.data["zylabIntegration.enabled"];
+                    if($scope.documentReviewEnabled) {
+                        config.columnDefs.unshift({
+                            "name": "exemptionCodeNumber",
+                            "displayName": "cases.comp.exemption.table.columns.exemptionCodeNumber",
+                            "headerCellFilter": "translate"
+                        });
+                    }
+
+                    gridHelper.setColumnDefs(config);
+                    gridHelper.setBasicOptions(config);
+                    gridHelper.disableGridScrolling(config);
+                    gridHelper.setUserNameFilterToConfig(promiseUsers, config);
+                    gridHelper.addButton(config, "delete", null, null, "isDeleteDisabled");
+                    retrieveGridData();
+                });
             };
 
             ObjectLookupService.getExemptionStatutes().then(function (exemptionStatute) {
