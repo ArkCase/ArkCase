@@ -149,6 +149,7 @@ public class ZylabProductionUtils
         zylabFileMetadata.setLastReviewedBy(dataMap.get("LastRevieweBy"));
         zylabFileMetadata.setSource(dataMap.get("Source"));
         zylabFileMetadata.setExemptWithheldReason(dataMap.get("Exempt_Withheld_Reason"));
+        zylabFileMetadata.setExemptWithheld(Boolean.valueOf(dataMap.get("ExemptWithheld")));
 
         return zylabFileMetadata;
     }

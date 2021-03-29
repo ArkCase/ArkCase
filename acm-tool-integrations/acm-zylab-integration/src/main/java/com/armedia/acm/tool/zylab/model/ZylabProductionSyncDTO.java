@@ -27,16 +27,24 @@ package com.armedia.acm.tool.zylab.model;
  * #L%
  */
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Created by Aleksandar Acevski <aleksandar.acevski@armedia.com> on March, 2021
  */
 public class ZylabProductionSyncDTO
 {
+    @JsonProperty("MatterId")
     Long matterId;
 
+    @JsonProperty("ProductionKey")
     String productionKey;
 
+    @JsonProperty("ProductionStatus")
     String status;
+
+    @JsonProperty("Error")
+    String error;
 
     public Long getMatterId()
     {
@@ -64,5 +72,13 @@ public class ZylabProductionSyncDTO
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
     }
 }

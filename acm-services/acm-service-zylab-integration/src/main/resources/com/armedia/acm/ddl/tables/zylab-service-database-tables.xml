@@ -96,4 +96,10 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="05-add_exempt_withheld_to_zylab-file-metadata" author="aleksandar.acevski">
+        <addColumn tableName="acm_zylab_file_metadata">
+            <column name="cm_exempt_withheld" type="BOOLEAN"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
