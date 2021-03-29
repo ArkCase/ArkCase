@@ -90,7 +90,7 @@ public class ZylabProductionFileIncomingListener implements ApplicationListener<
     public static final String ZYLAB_INTEGRATION_SYSTEM_USER = "ZYLAB-INTEGRATION-SYSTEM-USER";
     public static final String RESPONSIVE_FOLDER_NAME = "Release";
     public static final String WITHELD_FOLDER_NAME = "Exempt Withheld";
-    public static final String EXEMPTION_WITHELD_CODES_SEPARATOR = ".";
+    public static final String EXEMPTION_WITHELD_CODES_SEPARATOR = ",";
     private transient final Logger log = LogManager.getLogger(getClass());
 
     private AcmFolderService acmFolderService;
