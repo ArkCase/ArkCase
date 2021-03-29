@@ -4,6 +4,7 @@
 
     <bean id="zylabProductionSubscriber" class="com.armedia.acm.services.zylab.jms.ZylabProductionSubscriber">
         <property name="objectConverter" ref="objectConverter"/>
+        <property name="zylabProductionSyncStatusToJmsSender" ref="zylabProductionSyncStatusToJmsSender"/>
     </bean>
 
     <bean id="zylabIntegrationConfigService"

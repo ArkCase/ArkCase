@@ -35,6 +35,7 @@ import org.springframework.jms.annotation.JmsListener;
 import org.springframework.messaging.Message;
 
 import com.armedia.acm.objectonverter.ObjectConverter;
+import com.armedia.acm.services.zylab.model.ZylabProductionSyncStatus;
 import com.armedia.acm.tool.zylab.model.ZylabProductionFileIncomingEvent;
 import com.armedia.acm.tool.zylab.model.ZylabProductionSyncDTO;
 
@@ -47,6 +48,7 @@ public class ZylabProductionSubscriber implements ApplicationEventPublisherAware
 
     private ApplicationEventPublisher applicationEventPublisher;
     private ObjectConverter objectConverter;
+    private ZylabProductionSyncStatusToJmsSender zylabProductionSyncStatusToJmsSender;
 
     /**
      *
@@ -64,14 +66,23 @@ public class ZylabProductionSubscriber implements ApplicationEventPublisherAware
         ZylabProductionSyncDTO productionSyncDTO = objectConverter.getJsonUnmarshaller().unmarshall(messagePayload,
                 ZylabProductionSyncDTO.class);
 
-        if (productionSyncDTO != null && productionSyncDTO.getMatterId() > 0 && !productionSyncDTO.getProductionKey().isEmpty())
+        if (productionSyncDTO != null && productionSyncDTO.getMatterId() != null && productionSyncDTO.getMatterId() > 0
+                && productionSyncDTO.getProductionKey() != null && !productionSyncDTO.getProductionKey().isEmpty())
         {
             ZylabProductionFileIncomingEvent event = new ZylabProductionFileIncomingEvent(productionSyncDTO);
             applicationEventPublisher.publishEvent(event);
         }
         else
         {
-            log.error("Improper ZyLAB production sync message received, [{}]", message.getPayload());
+            String errorMsg = String.format("Improper ZyLAB production sync message received, %s", message.getPayload());
+            log.error(errorMsg);
+            if (productionSyncDTO == null)
+            {
+                productionSyncDTO = new ZylabProductionSyncDTO();
+            }
+            productionSyncDTO.setStatus(ZylabProductionSyncStatus.FAILED.name());
+            productionSyncDTO.setError(errorMsg);
+            zylabProductionSyncStatusToJmsSender.sendProductionSyncStatus(productionSyncDTO);
         }
     }
 
@@ -89,5 +100,15 @@ public class ZylabProductionSubscriber implements ApplicationEventPublisherAware
     public void setObjectConverter(ObjectConverter objectConverter)
     {
         this.objectConverter = objectConverter;
+    }
+
+    public ZylabProductionSyncStatusToJmsSender getZylabProductionSyncStatusToJmsSender()
+    {
+        return zylabProductionSyncStatusToJmsSender;
+    }
+
+    public void setZylabProductionSyncStatusToJmsSender(ZylabProductionSyncStatusToJmsSender zylabProductionSyncStatusToJmsSender)
+    {
+        this.zylabProductionSyncStatusToJmsSender = zylabProductionSyncStatusToJmsSender;
     }
 }
