@@ -122,7 +122,7 @@ public class ExemptionCodeDao extends AcmAbstractDao<ExemptionCode>
 
     public List<ExemptionCode> getExemptionCodesByFileIdAndCaseId(Long caseId, Long fileId)
     {
-        String queryText = "SELECT codes.id, codes.exemptionCode, codes.exemptionStatus, codes.creator, codes.created, file.fileId, codes.fileVersion, cont.containerObjectId, codes.manuallyFlag "
+        String queryText = "SELECT codes.id, codes.exemptionCode, codes.exemptionStatus, codes.creator, codes.created, file.fileId, codes.fileVersion, cont.containerObjectId, codes.manuallyFlag, codes.exemptionCodeNumber "
                 +
                 "FROM AcmContainer cont " +
                 "JOIN EcmFile file ON cont.id = file.container.id " +
@@ -151,6 +151,7 @@ public class ExemptionCodeDao extends AcmAbstractDao<ExemptionCode>
             exemptionCode.setFileVersion((String) record[6]);
             exemptionCode.setParentObjectId((Long) record[7]);
             exemptionCode.setManuallyFlag((Boolean) record[8]);
+            exemptionCode.setExemptionCodeNumber((Integer) record[9]);
             exemptionMappedList.add(exemptionCode);
         }
 
