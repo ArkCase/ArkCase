@@ -149,6 +149,10 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
         try
         {
             String token = ServletRequestUtils.getStringParameter(request, "acm_ticket");
+            if(token == null)
+            {
+                token = ServletRequestUtils.getStringParameter(request, "EXT_TRANS_ID");
+            }
             log.trace("Starting token authentication using acm_ticket [{}]", token);
             Authentication auth = getAuthenticationTokenService().getAuthenticationForToken(token);
             SecurityContextHolder.getContext().setAuthentication(auth);
@@ -328,7 +332,7 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
     {
         AuthRequestType authRequestType = AuthRequestType.AUTH_REQUEST_TYPE_OTHER;
 
-        if (request.getParameter("acm_ticket") != null)
+        if (request.getParameter("acm_ticket") != null || request.getParameter("EXT_TRANS_ID") != null)
         {
             log.trace("Token authentication requested");
             authRequestType = AuthRequestType.AUTH_REQUEST_TYPE_TOKEN;
