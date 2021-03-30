@@ -27,15 +27,17 @@ package com.armedia.acm.tool.zylab.service;
  * #L%
  */
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -78,15 +80,10 @@ public class ZylabProductionFileExtractor
     private static void extractZipEntry(ZipFile zipFile, ZipEntry entry, String destPath) throws IOException
     {
 
-        try (InputStream inputStream = zipFile.getInputStream(entry);
-                FileOutputStream outputStream = new FileOutputStream(destPath))
+        try (BufferedInputStream inputStream = new BufferedInputStream(zipFile.getInputStream(entry));
+                BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(destPath)))
         {
-            int data = inputStream.read();
-            while (data != -1)
-            {
-                outputStream.write(data);
-                data = inputStream.read();
-            }
+            IOUtils.copyLarge(inputStream, out);
         }
     }
 
