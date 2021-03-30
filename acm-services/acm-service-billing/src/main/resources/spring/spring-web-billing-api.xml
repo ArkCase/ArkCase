@@ -17,4 +17,13 @@
     <bean id="createBillingInvoice" class="com.armedia.acm.services.billing.web.api.CreateBillingInvoiceAPIController">
         <property name="billingService" ref="billingService"/>
     </bean>
+
+    <bean id="touchNet" class="com.armedia.acm.services.billing.web.api.TouchNetAPIController">
+        <property name="touchNetService" ref="touchNetService"/>
+        <property name="billingService" ref="billingService"/>
+        <property name="acmDataService" ref="acmDataService"/>
+        <property name="notificationService" ref="notificationService"/>
+        <property name="acmParticipantService" ref="acmParticipantService"/>
+    </bean>
+
 </beans>

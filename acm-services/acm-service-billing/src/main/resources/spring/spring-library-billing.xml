@@ -15,6 +15,10 @@
         <property name="billingInvoiceBusinessRule" ref="billingInvoiceBusinessRule"/>
     </bean>
 
+    <bean id="touchNetService" class="com.armedia.acm.services.billing.service.impl.TouchNetService">
+        <property name="authenticationTokenService" ref="authenticationTokenService"/>
+        <property name="applicationConfig" ref="applicationProperties"/>
+    </bean>
     <bean id="billingInvoiceBusinessRule" class="com.armedia.acm.services.billing.rules.BillingInvoiceBusinessRule"
           parent="simpleStatelessSingleObjectRuleManager">
         <property name="ruleSpreadsheetFilename" value="drools-billing-invoice-rules.xlsx"/>

@@ -36,6 +36,7 @@ import com.armedia.acm.plugins.person.model.AcmObjectOriginator;
 import com.armedia.acm.plugins.person.model.ExtractPersonInfoUtils;
 import com.armedia.acm.services.billing.model.BillingInvoice;
 import com.armedia.acm.services.billing.model.BillingInvoiceRequest;
+import com.armedia.acm.services.billing.model.BillingItem;
 import com.armedia.acm.services.billing.service.BillingService;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
@@ -88,6 +89,15 @@ public class BillingInvoiceEmailSenderService<T extends AcmContainerEntity & Acm
             notificationFiles.add(file.getVersions().get(file.getVersions().size() - 1));
         }
 
+        Double totalAmount = 0.00;
+        if(billingInvoice.getBillingItems() != null)
+        {
+            for (BillingItem billingItem : billingInvoice.getBillingItems())
+            {
+                totalAmount += billingItem.getItemAmount();
+            }
+        }
+
         Notification notification = new Notification();
         notification.setTemplateModelName("billingInvoice");
         notification.setParentType(billingInvoice.getParentObjectType());
@@ -97,6 +107,7 @@ public class BillingInvoiceEmailSenderService<T extends AcmContainerEntity & Acm
         notification.setEmailAddresses(emailAddress);
         notification.setTitle(notificationTitle.toString());
         notification.setUser(acmUser.getUserId());
+        notification.setNote(totalAmount.toString() + "_" + billingInvoice.getBillingInvoiceEcmFile().getFileId().toString());
         getNotificationDao().save(notification);
 
     }

@@ -53,4 +53,6 @@ public interface BillingConstants
     String BILLING_ITEM_TYPE_TIMESHEET = "Timesheet";
     String BILLING_ITEM_TYPE_COSTSHEET = "Costsheet";
     String BILLING_ITEM_TYPE_DEFAULT = "Adhoc";
+
+    String CONFIRMATION_PAYMENT_TITLE = "Payment Confirmation Notification";
 }

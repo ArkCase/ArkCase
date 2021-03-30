@@ -49,6 +49,11 @@
         <property name="authenticationTokenService" ref="authenticationTokenService"/>
     </bean>
 
+    <bean id="billingTemplateModelProvider" class="com.armedia.acm.services.notification.service.provider.BillingTemplateModelProvider">
+        <property name="authenticationTokenService" ref="authenticationTokenService"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+    </bean>
+
     <bean id="forgotUserNameTemplateModelProvider"
           class="com.armedia.acm.services.notification.service.provider.ForgotUsernameTemplateModelProvider">
         <property name="userDao" ref="userJpaDao"/>
@@ -108,6 +113,11 @@
     <bean id="documentLinkedSendExecutor" class="com.armedia.acm.services.notification.service.SendExecutor">
         <property name="springContextHolder" ref="acmContextHolder"/>
         <property name="templateModelProvider" ref="documentLinkedTemplateModelProvider"/>
+    </bean>
+
+    <bean id="billingSendExecutor" class="com.armedia.acm.services.notification.service.SendExecutor">
+        <property name="springContextHolder" ref="acmContextHolder"/>
+        <property name="templateModelProvider" ref="billingTemplateModelProvider"/>
     </bean>
 
     <bean id="userSendExecutor" class="com.armedia.acm.services.notification.service.SendExecutor">
