@@ -91,4 +91,10 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="01-change_cm_object_lock_created" author="mario.gjurcheski" dbms="mysql">
+        <modifyDataType tableName="acm_object_lock" columnName="cm_object_lock_created" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_object_lock" columnName="cm_object_lock_modified" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_object_lock" columnName="cm_expiry" newDataType="DATETIME"/>
+    </changeSet>
+
 </databaseChangeLog>

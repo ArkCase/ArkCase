@@ -135,4 +135,9 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="09-change_cm_note_datetime" author="mario.gjurcheski" dbms="mysql">
+        <modifyDataType tableName="acm_note" columnName="cm_note_created" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_note" columnName="cm_note_modified" newDataType="DATETIME"/>
+    </changeSet>
+
 </databaseChangeLog>

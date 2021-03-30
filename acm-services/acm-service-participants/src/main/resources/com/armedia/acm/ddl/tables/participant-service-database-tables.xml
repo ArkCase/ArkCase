@@ -388,4 +388,14 @@ GO
         </addColumn>
     </changeSet>
 
+    <changeSet id="14-change_cm_participant_datetime" author="mario.gjurcheski" dbms="mysql">
+        <modifyDataType tableName="acm_participant" columnName="cm_participant_created" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_participant" columnName="cm_participant_modified" newDataType="DATETIME"/>
+    </changeSet>
+
+    <changeSet id="15-change_cm_participant_privilege_datetime" author="mario.gjurcheski" dbms="mysql">
+        <modifyDataType tableName="acm_participant_privilege" columnName="cm_privilege_created" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_participant_privilege" columnName="cm_privilege_modified" newDataType="DATETIME"/>
+    </changeSet>
+
 </databaseChangeLog>

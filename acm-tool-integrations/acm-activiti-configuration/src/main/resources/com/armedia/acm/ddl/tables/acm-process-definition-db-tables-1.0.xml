@@ -105,5 +105,10 @@
     <changeSet id="03-widen-cm_pd_md5_hex" author="jivanovski">
         <modifyDataType tableName="acm_process_definition" columnName="cm_pd_sha256_hex" newDataType="VARCHAR(256)"/>
     </changeSet>
+    <changeSet id="04-change_cm_pd_modified" author="mario.gjurcheski" dbms="mysql">
+        <modifyDataType tableName="acm_process_definition" columnName="cm_pd_modified" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_process_definition" columnName="cm_pd_created" newDataType="DATETIME"/>
+    </changeSet>
+
 </databaseChangeLog>
 

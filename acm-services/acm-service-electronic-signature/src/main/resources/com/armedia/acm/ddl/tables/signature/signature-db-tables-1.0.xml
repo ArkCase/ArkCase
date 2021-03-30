@@ -36,5 +36,9 @@
             <column name="cm_seq_name" value="acm_signature"></column>
         </insert>
     </changeSet>
+
+    <changeSet id="01-change_cm_signature_datetime" author="mario.gjurcheski" dbms="mysql">
+        <modifyDataType tableName="acm_signature" columnName="cm_signature_datetime" newDataType="DATETIME"/>
+    </changeSet>
 </databaseChangeLog>
 

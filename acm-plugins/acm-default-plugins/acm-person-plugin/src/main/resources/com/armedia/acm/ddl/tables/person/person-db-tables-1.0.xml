@@ -760,4 +760,23 @@
         <modifyDataType tableName="acm_identification" columnName="cm_year_issued" newDataType="DATE"/>
     </changeSet>
 
+    <changeSet id="49-change_cm_person_datetime" author="mario.gjurcheski" dbms="mysql">
+        <modifyDataType tableName="acm_person" columnName="cm_person_created" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_person" columnName="cm_person_modified" newDataType="DATETIME"/>
+    </changeSet>
+
+    <changeSet id="50-change_cm_person_alias_type_lu_datetime" author="mario.gjurcheski" dbms="mysql">
+        <modifyDataType tableName="acm_person_alias_type_lu" columnName="cm_created" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_person_alias_type_lu" columnName="cm_modified" newDataType="DATETIME"/>
+    </changeSet>
+
+    <changeSet id="51-change_cm_person_assoc_datetime" author="mario.gjurcheski" dbms="mysql">
+        <modifyDataType tableName="acm_person_assoc" columnName="cm_person_assoc_created" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_person_assoc" columnName="cm_person_assoc_modified" newDataType="DATETIME"/>
+    </changeSet>
+
+    <changeSet id="52-change_cm_person_identification_datetime" author="mario.gjurcheski" dbms="mysql">
+        <modifyDataType tableName="acm_identification" columnName="cm_created" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_identification" columnName="cm_modified" newDataType="DATETIME"/>
+    </changeSet>
 </databaseChangeLog>

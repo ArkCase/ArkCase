@@ -70,4 +70,10 @@
             </column>
         </addColumn>
     </changeSet>
+    <changeSet id="01-change_cm_doc_repo_created" author="mario.gjurcheski" dbms="mysql">
+        <modifyDataType tableName="acm_document_repository" columnName="cm_doc_repo_created" newDataType="DATETIME"/>
+    </changeSet>
+    <changeSet id="02-change_cm_doc_repo_modified" author="mario.gjurcheski" dbms="mysql">
+        <modifyDataType tableName="acm_document_repository" columnName="cm_doc_repo_modified" newDataType="DATETIME"/>
+    </changeSet>
 </databaseChangeLog>

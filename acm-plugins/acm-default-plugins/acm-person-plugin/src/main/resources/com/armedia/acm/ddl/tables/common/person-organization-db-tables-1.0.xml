@@ -84,4 +84,8 @@
             <column name="cm_default_organization" type="VARCHAR(10)"></column>
         </addColumn>
     </changeSet>
+    <changeSet id="04-change_cm_person_org_assoc_datetime" author="mario.gjurcheski" dbms="mysql">
+        <modifyDataType tableName="acm_person_org_assoc" columnName="cm_created" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_person_org_assoc" columnName="cm_modified" newDataType="DATETIME"/>
+    </changeSet>
 </databaseChangeLog>

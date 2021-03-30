@@ -126,4 +126,9 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="07-change_cm_billing_invoice_datetime" author="mario.gjurcheski" dbms="mysql">
+        <modifyDataType tableName="acm_billing_invoice" columnName="cm_billing_invoice_modified" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_billing_invoice" columnName="cm_billing_invoice_created" newDataType="DATETIME"/>
+    </changeSet>
+
 </databaseChangeLog>
