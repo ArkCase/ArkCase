@@ -126,4 +126,12 @@
                       newColumnName="cm_media_file_version_id" columnDataType="${idType}"/>
     </changeSet>
 
+    <changeSet id="01-change_cm_transcribe_created" author="mario.gjurcheski" dbms="mysql">
+        <modifyDataType tableName="acm_transcribe" columnName="cm_transcribe_created" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_transcribe" columnName="cm_transcribe_modified" newDataType="DATETIME"/>
+    </changeSet>
+    <changeSet id="02-change_cm_transcribe_item_created" author="mario.gjurcheski" dbms="mysql">
+        <modifyDataType tableName="acm_transcribe_item" columnName="cm_transcribe_item_created" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_transcribe_item" columnName="cm_transcribe_item_modified" newDataType="DATETIME"/>
+    </changeSet>
 </databaseChangeLog>

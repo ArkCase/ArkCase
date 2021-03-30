@@ -100,4 +100,10 @@
             <column name="cm_seq_name" value="acm_history"></column>
         </insert>
     </changeSet>
+    <changeSet id="05-change_cm_history_start_date" author="mario.gjurcheski" dbms="mysql">
+        <modifyDataType tableName="acm_history" columnName="cm_history_start_date" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_history" columnName="cm_history_end_date" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_history" columnName="cm_history_created" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_history" columnName="cm_history_modified" newDataType="DATETIME"/>
+    </changeSet>
 </databaseChangeLog>

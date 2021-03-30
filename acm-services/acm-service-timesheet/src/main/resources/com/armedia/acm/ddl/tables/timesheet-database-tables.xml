@@ -267,4 +267,17 @@
         <addNotNullConstraint tableName="acm_timesheet" columnName="cm_timesheet_number" columnDataType="VARCHAR(1024)"/>
     </changeSet>
 
+    <changeSet id="01-change_cm_timesheet_datetime" author="mario.gjurcheski" dbms="mysql">
+        <modifyDataType tableName="acm_timesheet" columnName="cm_timesheet_start_date" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_timesheet" columnName="cm_timesheet_end_date" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_timesheet" columnName="cm_timesheet_created" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_timesheet" columnName="cm_timesheet_modified" newDataType="DATETIME"/>
+
+    </changeSet>
+
+    <changeSet id="01-change_cm_time_datetime" author="mario.gjurcheski" dbms="mysql">
+        <modifyDataType tableName="acm_time" columnName="cm_time_date" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_time" columnName="cm_time_created" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_time" columnName="cm_time_modified" newDataType="DATETIME"/>
+    </changeSet>
 </databaseChangeLog>

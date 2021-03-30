@@ -42,5 +42,9 @@
             <column name="cm_seq_name" value="acm_business_process"></column>
         </insert>
     </changeSet>
-    
+
+    <changeSet id="01-change_cm_business_process_created" author="mario.gjurcheski" dbms="mysql">
+        <modifyDataType tableName="acm_business_process" columnName="cm_business_process_created" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_business_process" columnName="cm_business_process_modified" newDataType="DATETIME"/>
+    </changeSet>
 </databaseChangeLog>

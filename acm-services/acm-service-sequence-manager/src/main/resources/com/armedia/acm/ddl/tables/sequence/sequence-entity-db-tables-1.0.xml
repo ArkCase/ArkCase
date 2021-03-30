@@ -53,4 +53,10 @@
         </createTable>
         <addPrimaryKey tableName="acm_sequence_reset" columnNames="cm_sequence_name, cm_sequence_part_name, cm_reset_date"/>
     </changeSet>
+
+    <changeSet id="04-change_cm_sequence_reset_datetime" author="mario.gjurcheski" dbms="mysql">
+        <modifyDataType tableName="acm_sequence_reset" columnName="cm_reset_date" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_sequence_reset" columnName="cm_reset_executed_date" newDataType="DATETIME"/>
+    </changeSet>
+
 </databaseChangeLog>
