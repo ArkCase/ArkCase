@@ -27,12 +27,31 @@ package com.armedia.acm.plugins.ecm.service.impl;
  * #L%
  */
 
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
 
+import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISActions;
+import com.armedia.acm.camelcontext.context.CamelContextManager;
+import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
+import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
+import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConfig;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
+import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 
+import org.apache.chemistry.opencmis.client.runtime.FolderImpl;
+import org.apache.chemistry.opencmis.client.runtime.util.EmptyItemIterable;
+import org.easymock.Capture;
+import org.easymock.CaptureType;
+import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
 import org.junit.Assert;
 import org.junit.Before;
@@ -48,6 +67,10 @@ public class AcmFolderServiceImplTest extends EasyMockSupport
 {
     private AcmFolderServiceImpl unit;
     private EcmFileDao fileDaoMock;
+    private AcmFolderDao folderDaoMock;
+    private CamelContextManager camelContextManagerMock;
+    private FolderAndFilesUtils folderAndFilesUtilsMock;
+    private EcmFileParticipantService fileParticipantServiceMock;
 
     @Before
     public void setUp() throws Exception
@@ -55,6 +78,17 @@ public class AcmFolderServiceImplTest extends EasyMockSupport
         unit = new AcmFolderServiceImpl();
         fileDaoMock = createMock(EcmFileDao.class);
         unit.setFileDao(fileDaoMock);
+        folderDaoMock = createMock(AcmFolderDao.class);
+        unit.setFolderDao(folderDaoMock);
+        EcmFileConfig config = new EcmFileConfig();
+        config.setDefaultCmisId("default");
+        unit.setEcmFileConfig(config);
+        camelContextManagerMock = createMock(CamelContextManager.class);
+        unit.setCamelContextManager(camelContextManagerMock);
+        folderAndFilesUtilsMock = createMock(FolderAndFilesUtils.class);
+        unit.setFolderAndFilesUtils(folderAndFilesUtilsMock);
+        fileParticipantServiceMock = createMock(EcmFileParticipantService.class);
+        unit.setFileParticipantService(fileParticipantServiceMock);
     }
 
     @Test
@@ -103,6 +137,128 @@ public class AcmFolderServiceImplTest extends EasyMockSupport
         Assert.assertTrue(childFiles.contains(subFile1));
         Assert.assertTrue(childFiles.contains(subFile2));
         Assert.assertTrue(childFiles.contains(subFile3));
+    }
+
+    @Test
+    public void testCopyFolderIntoItself()
+    {
+        AcmFolder source = new AcmFolder();
+        source.setId(101L);
+        source.setParentFolder(new AcmFolder());
+
+        Exception exception = null;
+
+        try
+        {
+            unit.copyFolder(source, source, 101L, "FOLDER");
+        }
+        catch (AcmUserActionFailedException | AcmObjectNotFoundException | AcmCreateObjectFailedException | AcmFolderException e)
+        {
+            exception = e;
+        }
+
+        Assert.assertNotNull(exception);
+        Assert.assertTrue(exception instanceof AcmUserActionFailedException);
+        Assert.assertEquals("Destination folder is a subfolder of the source folder",
+                ((AcmUserActionFailedException) exception).getShortMessage());
+    }
+
+    @Test
+    public void testCopyFolderIntoAChildFolder()
+    {
+        AcmFolder source = new AcmFolder();
+        source.setId(101L);
+        source.setParentFolder(new AcmFolder());
+
+        AcmFolder dstFolder = new AcmFolder();
+        dstFolder.setId(102L);
+        dstFolder.setChildrenFolders(new ArrayList<>());
+
+        source.setChildrenFolders(Collections.singletonList(dstFolder));
+        dstFolder.setParentFolder(source);
+
+        expect(fileDaoMock.findByFolderId(source.getId())).andReturn(new ArrayList<>());
+        expect(fileDaoMock.findByFolderId(dstFolder.getId())).andReturn(new ArrayList<>());
+
+        Exception exception = null;
+        replayAll();
+        try
+        {
+            unit.copyFolder(source, dstFolder, dstFolder.getId(), "FOLDER");
+        }
+        catch (AcmUserActionFailedException | AcmObjectNotFoundException | AcmCreateObjectFailedException | AcmFolderException e)
+        {
+            exception = e;
+        }
+
+        verifyAll();
+        Assert.assertNotNull(exception);
+        Assert.assertTrue(exception instanceof AcmUserActionFailedException);
+        Assert.assertEquals("Destination folder is a subfolder of the source folder",
+                ((AcmUserActionFailedException) exception).getShortMessage());
+    }
+
+    @Test
+    public void testCopyChildFolderIntoSameParentFolder() throws ArkCaseFileRepositoryException
+    {
+        AcmFolder dstFolder = new AcmFolder();
+        dstFolder.setId(101L);
+        dstFolder.setParticipants(new ArrayList<>());
+
+        AcmFolder source = new AcmFolder();
+        source.setId(102L);
+        source.setParentFolder(dstFolder);
+        source.setChildrenFolders(new ArrayList<>());
+        source.setName("sourceFolder");
+        source.setParticipants(new ArrayList<>());
+
+        dstFolder.setChildrenFolders(Collections.singletonList(source));
+
+        AcmFolder resultFolder = new AcmFolder();
+
+        expect(fileDaoMock.findByFolderId(source.getId())).andReturn(new ArrayList<>());
+
+        FolderImpl folderMock = createMock(FolderImpl.class);
+        expect(camelContextManagerMock.send(eq(ArkCaseCMISActions.GET_FOLDER), EasyMock.anyObject()))
+                .andReturn(folderMock).anyTimes();
+        expect(folderMock.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID)).andReturn("id").anyTimes();
+        expect(folderMock.getChildren()).andReturn(new EmptyItemIterable<>());
+        expect(camelContextManagerMock.send(eq(ArkCaseCMISActions.CREATE_FOLDER), EasyMock.anyObject()))
+                .andReturn(folderMock);
+
+        expect(folderAndFilesUtilsMock.createUniqueFolderName(source.getName())).andReturn("uniqueName");
+
+        Capture<AcmFolder> newlyCreatedFolderCapture = Capture.newInstance(CaptureType.FIRST);
+        expect(folderDaoMock.save(capture(newlyCreatedFolderCapture))).andReturn(resultFolder).anyTimes();
+        fileParticipantServiceMock.setFolderParticipantsFromParentFolder(resultFolder);
+        expectLastCall();
+
+        expect(folderDaoMock.findByCmisFolderId("id")).andReturn(resultFolder);
+        expect(folderDaoMock.findByCmisFolderId("id")).andReturn(source);
+
+        expect(folderDaoMock.find(EasyMock.anyLong())).andReturn(null);
+        expect(folderDaoMock.findSubFolders(EasyMock.anyLong())).andReturn(null);
+        expect(fileDaoMock.findByFolderId(EasyMock.anyLong())).andReturn(null);
+
+        Exception exception = null;
+
+        replayAll();
+        try
+        {
+            unit.copyFolder(source, dstFolder, dstFolder.getId(), "FOLDER");
+        }
+        catch (AcmUserActionFailedException | AcmObjectNotFoundException | AcmCreateObjectFailedException | AcmFolderException e)
+        {
+            exception = e;
+        }
+
+        verifyAll();
+        Assert.assertNull(exception);
+
+        AcmFolder copiedFolder = newlyCreatedFolderCapture.getValue();
+        Assert.assertEquals(dstFolder.getId(), copiedFolder.getParentFolder().getId());
+        Assert.assertEquals(source.getName(), copiedFolder.getName());
+        Assert.assertNull(copiedFolder.getChildrenFolders());
     }
 
 }
