@@ -144,6 +144,10 @@
             <column name="cm_parent_object_id"/>
         </createIndex>
     </changeSet>
+
+    <changeSet id="15-change_cm_audit_log_datetime" author="mario.gjurcheski" dbms="mysql">
+        <modifyDataType tableName="acm_audit_log" columnName="cm_audit_datetime" newDataType="DATETIME"/>
+    </changeSet>
 </databaseChangeLog>
     
 

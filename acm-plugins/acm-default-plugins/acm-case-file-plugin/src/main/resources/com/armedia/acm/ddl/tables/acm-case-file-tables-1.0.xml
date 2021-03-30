@@ -550,4 +550,29 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="36-change_cm_case_file_datetime" author="mario.gjurcheski" dbms="mysql">
+        <modifyDataType tableName="acm_case_file" columnName="cm_case_created" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_case_file" columnName="cm_case_modified" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_case_file" columnName="cm_case_incident_date" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_case_file" columnName="cm_due_date" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_case_file" columnName="cm_next_court_date" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_case_file" columnName="cm_queue_enter_date" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_case_file" columnName="cm_response_due_date" newDataType="DATETIME"/>
+    </changeSet>
+
+    <changeSet id="37-change_cm_disposition_datetime" author="mario.gjurcheski" dbms="mysql">
+        <modifyDataType tableName="acm_disposition" columnName="cm_disposition_created" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_disposition" columnName="cm_disposition_modified" newDataType="DATETIME"/>
+    </changeSet>
+    
+    <changeSet id="39-change_cm_change_case_status_datetime" author="mario.gjurcheski" dbms="mysql">
+        <modifyDataType tableName="acm_change_case_status" columnName="cm_change_case_status_created" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_change_case_status" columnName="cm_change_case_status_modified" newDataType="DATETIME"/>
+    </changeSet>
+
+    <changeSet id="40-change_cm_queue_datetime" author="mario.gjurcheski" dbms="mysql">
+        <modifyDataType tableName="acm_queue" columnName="cm_queue_created" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_queue" columnName="cm_queue_modified" newDataType="DATETIME"/>
+    </changeSet>
+
 </databaseChangeLog>

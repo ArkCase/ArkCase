@@ -242,5 +242,18 @@
         <dropNotNullConstraint tableName="acm_consultation" columnName="cm_component_agency" columnDataType="VARCHAR(4000)"/>
     </changeSet>
 
+    <changeSet id="12-change_cm_consultation_datetime" author="mario.gjurcheski" dbms="mysql">
+        <modifyDataType tableName="acm_consultation" columnName="cm_consultation_created" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_consultation" columnName="cm_consultation_modified" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_consultation" columnName="cm_due_date" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_consultation" columnName="cm_response_due_date" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_consultation" columnName="cm_received_date" newDataType="DATETIME"/>
+    </changeSet>
 
+    <changeSet id="13-change_cm_change_consultation_status_datetime" author="mario.gjurcheski" dbms="mysql">
+        <modifyDataType tableName="acm_change_consultation_status" columnName="cm_change_consultation_status_created"
+            newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_change_consultation_status" columnName="cm_change_consultation_status_modified"
+            newDataType="DATETIME"/>
+    </changeSet>
 </databaseChangeLog>

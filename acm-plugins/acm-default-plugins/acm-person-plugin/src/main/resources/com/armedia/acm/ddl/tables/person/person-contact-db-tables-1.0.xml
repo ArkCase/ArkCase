@@ -115,4 +115,9 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="08-change_cm_person_contact_datetime" author="mario.gjurcheski" dbms="mysql">
+        <modifyDataType tableName="acm_person_contact" columnName="cm_person_contact_created" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_person_contact" columnName="cm_person_contact_modified" newDataType="DATETIME"/>
+    </changeSet>
+
 </databaseChangeLog>

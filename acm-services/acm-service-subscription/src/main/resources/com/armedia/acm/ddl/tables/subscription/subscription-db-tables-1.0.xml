@@ -217,4 +217,14 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="01-change_cm_subscription_event_datetime" author="mario.gjurcheski" dbms="mysql">
+        <modifyDataType tableName="acm_subscription_event" columnName="cm_event_date" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_subscription_event" columnName="cm_event_created" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_subscription_event" columnName="cm_event_modified" newDataType="DATETIME"/>
+    </changeSet>
+
+    <changeSet id="01-change_cm_subscription_datetime" author="mario.gjurcheski" dbms="mysql">
+        <modifyDataType tableName="acm_subscription" columnName="cm_subscription_created" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_subscription" columnName="cm_subscription_modified" newDataType="DATETIME"/>
+    </changeSet>
 </databaseChangeLog>

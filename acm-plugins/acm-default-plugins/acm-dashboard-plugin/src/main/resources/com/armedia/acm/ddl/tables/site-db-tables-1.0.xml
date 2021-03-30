@@ -48,4 +48,8 @@
         </insert>
     </changeSet>
 
+    <changeSet id="03-change_cm_site_datetime" author="mario.gjurcheski" dbms="mysql">
+        <modifyDataType tableName="acm_site" columnName="cm_site_created" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_site" columnName="cm_site_modified" newDataType="DATETIME"/>
+    </changeSet>
 </databaseChangeLog>
