@@ -81,7 +81,7 @@ public class TouchNetAPIController
                 "</script>\n";
     }
 
-    @RequestMapping(value = "/confirmPayment", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/confirmPayment", method = RequestMethod.POST, produces = MediaType.TEXT_HTML_VALUE)
     public String confirmPayment(@RequestParam(value = "session_identifier", required = true) String sessionId,
                                  @RequestParam(value = "pmt_amt", required = true) String paymentAmount,
                                  @RequestParam(value = "name_on_acct", required = true) String billName,
@@ -110,7 +110,11 @@ public class TouchNetAPIController
         generateAndSaveBilling(objectId,objectType,paymentAmount);
         sendPaymentConfirmationEmail(objectType, Long.valueOf(objectId));
 
-        return "";
+        return "<div class=\"jumbotron\">\n" +
+                "  <h1>Thanks for your payment.</h1>\n" +
+                "  <p>A confirmation email will be sent.</p>\n" +
+                "  <p><a class=\"btn btn-primary btn-lg\" href=\"#\" role=\"button”>Continue...</a></p>\n" +
+                "</div>";
 
     }
 
