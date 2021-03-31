@@ -30,6 +30,7 @@ package com.armedia.acm.correspondence.service;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.core.provider.TemplateModelProvider;
+import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.templateconfiguration.model.CorrespondenceMergeField;
 import com.armedia.acm.services.templateconfiguration.model.Template;
 import com.armedia.acm.data.AcmAbstractDao;
@@ -196,5 +197,5 @@ public interface CorrespondenceService
     /**
      * Translating merge terms by objectId and objectType
      */
-    String convertMergeTerms(String templateName, String templateContent, String objectType, String objectId);
+    Notification convertMergeTerms(String templateName, String templateContent, String objectType, String objectId);
 }

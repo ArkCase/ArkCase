@@ -34,6 +34,7 @@ import static gov.foia.model.FOIARequestUtils.extractRequestorEmailAddress;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.correspondence.service.CorrespondenceService;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
@@ -90,6 +91,7 @@ public class FOIAQueueCorrespondenceService
     private NotificationService notificationService;
     private TranslationService translationService;
     private LookupDao lookupDao;
+    private CorrespondenceService correspondenceService;
 
     public void handleApproveCorrespondence(Long requestId)
     {
@@ -190,6 +192,7 @@ public class FOIAQueueCorrespondenceService
 
             String emailAddress = extractRequestorEmailAddress(request.getOriginator().getPerson());
 
+            String emailSubject = correspondenceService.findTemplate("requestDocumentAttached").getEmailSubject();
 
             Notification notification = notificationService.getNotificationBuilder()
                     .newNotification("requestDocumentAttached", String.format("%s %s", request.getRequestType(), request.getCaseNumber()),
@@ -198,6 +201,7 @@ public class FOIAQueueCorrespondenceService
                     .withEmailAddresses(emailAddress)
                     .forObjectWithNumber(request.getCaseNumber())
                     .forObjectWithTitle(request.getTitle())
+                    .withSubject(emailSubject)
                     .build();
 
             notificationService.saveNotification(notification);
@@ -427,5 +431,15 @@ public class FOIAQueueCorrespondenceService
     public void setLookupDao(LookupDao lookupDao)
     {
         this.lookupDao = lookupDao;
+    }
+
+    public CorrespondenceService getCorrespondenceService()
+    {
+        return correspondenceService;
+    }
+
+    public void setCorrespondenceService(CorrespondenceService correspondenceService)
+    {
+        this.correspondenceService = correspondenceService;
     }
 }

@@ -409,7 +409,7 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
     }
 
     @Override
-    public String convertMergeTerms(String templateName, String templateContent, String objectType, String objectId)
+    public Notification convertMergeTerms(String templateName, String templateContent, String objectType, String objectId)
     {
         String templateModelName = templateName.substring(0, templateName.indexOf("."));
         Template template = findTemplate(templateName);
@@ -440,14 +440,17 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
             Object object = modelProvider.getModel(notification);
             try {
                 String body = getTemplatingEngine().process(templateContent, templateModelName, object);
-                return body;
+                notification.setEmailContent(body);
+                String subject = getTemplatingEngine().process(template.getEmailSubject(), templateModelName, object);
+                notification.setSubject(subject);
+                return notification;
             }
             catch(Exception ex)
             {
                 log.error("Failed to process template {}! Error: {} ", templateName, ex.getMessage());
             }
         }
-        return templateContent;
+        return notification;
     }
 
     public SpringContextHolder getSpringContextHolder()

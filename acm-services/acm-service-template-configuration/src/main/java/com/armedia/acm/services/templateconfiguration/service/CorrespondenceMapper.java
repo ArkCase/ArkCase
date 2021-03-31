@@ -57,6 +57,7 @@ public class CorrespondenceMapper
         template.setTemplateType(configuration.getTemplateType());
         template.setEnabled(configuration.isEnabled());
         template.setParentType(configuration.getParentType());
+        template.setEmailSubject(configuration.getEmailSubject());
 
         return template;
     }

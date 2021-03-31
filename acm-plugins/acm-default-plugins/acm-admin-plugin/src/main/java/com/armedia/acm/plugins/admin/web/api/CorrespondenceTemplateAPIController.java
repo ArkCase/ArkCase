@@ -27,6 +27,7 @@ package com.armedia.acm.plugins.admin.web.api;
  * #L%
  */
 
+import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.templateconfiguration.model.Template;
 import com.armedia.acm.correspondence.service.CorrespondenceService;
 import com.armedia.acm.plugins.admin.exception.CorrespondenceTemplateNotFoundException;
@@ -234,12 +235,10 @@ public class CorrespondenceTemplateAPIController
 
             }
 
-            String body = content.toString();
-            if(!templateName.contains("plainEmail"))
-            {
-                body = correspondenceService.convertMergeTerms(templateName, content.toString(), objectType, objectId);
-            }
-            retval.put("templateContent", body);
+            Notification notification = correspondenceService.convertMergeTerms(templateName, content.toString(), objectType, objectId);
+            retval.put("templateContent", notification.getEmailContent());
+            retval.put("templateEmailSubject", notification.getSubject());
+
             return new ResponseEntity<>(retval.toString(), HttpStatus.OK);
         }
         catch(Exception ex)
@@ -282,6 +281,7 @@ public class CorrespondenceTemplateAPIController
         response.setTemplateType(template.getTemplateType());
         response.setEnabled(template.isEnabled());
         response.setParentType(template.getParentType());
+        response.setEmailSubject(template.getEmailSubject());
 
         return response;
     }
@@ -310,6 +310,7 @@ public class CorrespondenceTemplateAPIController
         template.setTemplateType(request.getTemplateType());
         template.setEnabled(request.isEnabled());
         template.setParentType(request.getParentType());
+        template.setEmailSubject(request.getEmailSubject());
 
         return template;
     }

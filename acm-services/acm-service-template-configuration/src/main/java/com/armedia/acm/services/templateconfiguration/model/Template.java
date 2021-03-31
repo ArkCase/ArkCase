@@ -109,6 +109,8 @@ public class Template
      */
     private String parentType;
 
+    private String emailSubject;
+
     /**
      * @return the templateId
      */
@@ -377,5 +379,15 @@ public class Template
     public void setParentType(String parentType)
     {
         this.parentType = parentType;
+    }
+
+    public String getEmailSubject()
+    {
+        return emailSubject;
+    }
+
+    public void setEmailSubject(String emailSubject)
+    {
+        this.emailSubject = emailSubject;
     }
 }
