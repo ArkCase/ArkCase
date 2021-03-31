@@ -87,10 +87,8 @@ public class TouchNetAPIController
     public String confirmPayment(@RequestParam(value = "session_identifier", required = true) String sessionId,
                                  @RequestParam(value = "pmt_amt", required = true) String paymentAmount,
                                  @RequestParam(value = "name_on_acct", required = true) String billName,
-                                 @RequestParam(value = "acct_number", required = true) int cardNumber,
-                                 @RequestParam(value = "pmt_method", required = true) String paymentMethod,
-                                 @RequestParam(value = "UPAY_SITE_ID", required = true) String uPayId,
-                                 @RequestParam(value = "EXT_TRANS_ID", required = false) String token) throws ServiceException, RemoteException
+                                 @RequestParam(value = "acct_number", required = true) String cardNumber,
+                                 @RequestParam(value = "pmt_method", required = true) String paymentMethod) throws ServiceException, RemoteException
     {
 
 
