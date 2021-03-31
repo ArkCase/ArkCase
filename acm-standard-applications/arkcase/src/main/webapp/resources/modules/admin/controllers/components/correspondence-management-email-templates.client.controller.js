@@ -188,8 +188,17 @@ angular.module('admin').controller('Admin.CMEmailTemplatesController',
 
             };
 
-
-
+            $scope.emailSubjectChanged = function(rowEntity) {
+                var template = angular.copy(rowEntity);
+                template.emailSubject = rowEntity.emailSubject;
+                correspondenceService.saveTemplateData(template).then(function() {
+                    clearCachedForms(template);
+                    messageService.succsessAction();
+                    reloadGrid();
+                }, function() {
+                    messageService.errorAction();
+                });
+            };
 
             $scope.activate = function(rowEntity) {
                 var template = angular.copy(rowEntity);

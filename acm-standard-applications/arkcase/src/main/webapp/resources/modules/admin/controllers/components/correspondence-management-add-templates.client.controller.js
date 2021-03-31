@@ -48,6 +48,7 @@ angular.module('admin').controller('Admin.AddCMTemplateController', [ '$scope', 
                     $scope.template.templateFilename = template.data.templateFilename;
                     $scope.template.dateFormatString = template.data.dateFormatString;
                     $scope.template.numberFormatString = template.data.numberFormatString;
+                    $scope.template.emailSubject = template.data.emailSubject;
                     //we will activate it by default
                     $scope.template.activated = true;
                     $scope.template.enabled = true;

@@ -297,6 +297,7 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
             template.setDocumentType(existingTemplate.getDocumentType());
             template.setObjectType(existingTemplate.getObjectType());
             template.setTemplateModelProvider(existingTemplate.getTemplateModelProvider());
+            template.setEmailSubject(existingTemplate.getEmailSubject());
         }
         else
         {

@@ -6,7 +6,8 @@ angular.module('common').controller('Common.SendEmailModalController', [ '$scope
     $scope.recipients = [];
     $scope.recipientsStr = "";
     $scope.emailDataModel = {};
-    $scope.emailDataModel.subject = params.emailSubject;
+    $scope.subject = params.emailSubject;
+    $scope.emailDataModel.subject = $scope.subject;
     $scope.summernoteOptions = {
         focus: true,
         height: 300
@@ -72,6 +73,7 @@ angular.module('common').controller('Common.SendEmailModalController', [ '$scope
     $scope.loadContent = function () {
         if($scope.template === "plainEmail.html") {
             $('#plain').summernote('code', "");
+            $scope.emailDataModel.subject = $scope.subject;
         } else {
             var params = {};
             params.objectType = $scope.objectType;
@@ -82,6 +84,11 @@ angular.module('common').controller('Common.SendEmailModalController', [ '$scope
 
             getTemplateContentPromise.then(function (response) {
                 $scope.templateContent = response.data.templateContent.replace("${baseURL}", window.location.href.split('/home.html#!')[0]);
+                if(response.data.templateEmailSubject) {
+                    $scope.emailDataModel.subject = response.data.templateEmailSubject;
+                } else {
+                    $scope.emailDataModel.subject = $scope.subject;
+                }
                 $('#content').summernote('code', $scope.templateContent);
             });
         }

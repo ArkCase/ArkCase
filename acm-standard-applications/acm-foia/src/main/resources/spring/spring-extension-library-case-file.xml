@@ -234,6 +234,7 @@
             <beans:property name="notificationService" ref="notificationService"/>
             <beans:property name="translationService" ref="translationService" />
             <beans:property name="lookupDao" ref="lookupDao" />
+            <beans:property name="correspondenceService" ref="correspondenceService" />
         </beans:bean>
 
         <beans:bean id="requestAssignmentService" class="gov.foia.service.RequestAssignmentService">
