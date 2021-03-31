@@ -202,21 +202,6 @@ angular.module('directives').directive('objectAuthorization', [ 'Menus', 'Messag
                         messageService.errorAction();
                     }
                 });
-
-                var allMenuObj = [];
-                angular.forEach(Menus.allMenuObjects, function(menuO) {
-                    allMenuObj.push(menuO);
-                });
-                Menus.allMenuObjects.splice(0, Menus.allMenuObjects.length);
-                Menus.menus.leftnav.items.splice(0, Menus.menus.leftnav.items.length);
-                Menus.menus.topbar.items.splice(0, Menus.menus.topbar.items.length);
-                Menus.menus.usermenu.items.splice(0, Menus.menus.usermenu.items.length);
-                for (var i = 0; i < allMenuObj.length; i++) {
-                    var mO = [];
-                    mO.push(allMenuObj[i]);
-                    Menus.addMenuItems(mO);
-                }
-                scope.$bus.publish('refreshLeftMenu', null);
                 return deferred.promise;
             };
 
