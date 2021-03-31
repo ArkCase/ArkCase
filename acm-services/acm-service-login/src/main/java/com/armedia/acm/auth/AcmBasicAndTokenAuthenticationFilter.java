@@ -107,6 +107,9 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
         case AUTH_REQUEST_TYPE_EMAIL_TOKEN:
             emailTokenAuthentication(request);
             break;
+        case AUTH_REQUEST_TYPE_TOUCHNET_TOKEN:
+            touchnetTokenAuthentication(request);
+            break;
         case AUTH_REQUEST_TYPE_CLIENT_CERT:
             certificateAuthentication(request);
             break;
@@ -149,10 +152,6 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
         try
         {
             String token = ServletRequestUtils.getStringParameter(request, "acm_ticket");
-            if(token == null)
-            {
-                token = ServletRequestUtils.getStringParameter(request, "EXT_TRANS_ID");
-            }
             log.trace("Starting token authentication using acm_ticket [{}]", token);
             Authentication auth = getAuthenticationTokenService().getAuthenticationForToken(token);
             SecurityContextHolder.getContext().setAuthentication(auth);
@@ -185,39 +184,54 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
         String emailToken = ServletRequestUtils.getStringParameter(request, "acm_email_ticket");
         if (emailToken != null)
         {
-            AuthenticationToken authenticationToken = authenticationTokenService.findByKey(emailToken);
-            if (authenticationToken != null)
+            authenticate(request,emailToken);
+        }
+    }
+
+    private void touchnetTokenAuthentication(HttpServletRequest request) throws ServletException
+    {
+        String touchnetToken = ServletRequestUtils.getStringParameter(request, "EXT_TRANS_ID");
+        if (touchnetToken != null)
+        {
+            authenticate(request, touchnetToken);
+        }
+    }
+
+
+    private void authenticate(HttpServletRequest request, String token) throws ServletRequestBindingException
+    {
+        AuthenticationToken authenticationToken = authenticationTokenService.findByKey(token);
+        if (authenticationToken != null)
+        {
+            if ((AuthenticationTokenConstants.ACTIVE).equals(authenticationToken.getStatus()))
             {
-                if ((AuthenticationTokenConstants.ACTIVE).equals(authenticationToken.getStatus()))
+                String fileId = ServletRequestUtils.getStringParameter(request, "ecmFileId");
+                if (token.equals(authenticationToken.getKey())
+                        && Objects.equals(fileId, authenticationToken.getFileId().toString()))
                 {
-                    String fileId = ServletRequestUtils.getStringParameter(request, "ecmFileId");
-                    if (emailToken.equals(authenticationToken.getKey())
-                            && Objects.equals(fileId, authenticationToken.getFileId().toString()))
+                    log.trace("Starting token authentication for email links using acm_email_ticket [{}]", token);
+                    int days = Days.daysBetween(new DateTime(authenticationToken.getCreated()), new DateTime()).getDays();
+                    // token expires after 3 days
+                    if (days > AuthenticationTokenService.EMAIL_TICKET_EXPIRATION_DAYS)
                     {
-                        log.trace("Starting token authentication for email links using acm_email_ticket [{}]", emailToken);
-                        int days = Days.daysBetween(new DateTime(authenticationToken.getCreated()), new DateTime()).getDays();
-                        // token expires after 3 days
-                        if (days > AuthenticationTokenService.EMAIL_TICKET_EXPIRATION_DAYS)
-                        {
-                            authenticationToken.setStatus(AuthenticationTokenConstants.EXPIRED);
-                            authenticationToken.setModifier(authenticationToken.getCreator());
-                            authenticationToken.setModified(new Date());
-                            authenticationTokenService.saveAuthenticationToken(authenticationToken);
-                            log.warn("Authentication token acm_email_ticket [{}] for user [{}] expired", emailToken,
-                                    authenticationToken.getCreator());
-                            return;
-                        }
-                        try
-                        {
-                            authenticateUser(request, authenticationToken.getCreator());
-                            log.trace("User [{}] successfully authenticated using acm_email_ticket [{}]",
-                                    authenticationToken.getCreator(), emailToken);
-                        }
-                        catch (AuthenticationServiceException e)
-                        {
-                            log.warn("User [{}] failed authenticating using acm_email_ticket [{}]", authenticationToken.getCreator(),
-                                    emailToken);
-                        }
+                        authenticationToken.setStatus(AuthenticationTokenConstants.EXPIRED);
+                        authenticationToken.setModifier(authenticationToken.getCreator());
+                        authenticationToken.setModified(new Date());
+                        authenticationTokenService.saveAuthenticationToken(authenticationToken);
+                        log.warn("Authentication token acm_email_ticket [{}] for user [{}] expired", token,
+                                authenticationToken.getCreator());
+                        return;
+                    }
+                    try
+                    {
+                        authenticateUser(request, authenticationToken.getCreator());
+                        log.trace("User [{}] successfully authenticated using acm_email_ticket [{}]",
+                                authenticationToken.getCreator(), token);
+                    }
+                    catch (AuthenticationServiceException e)
+                    {
+                        log.warn("User [{}] failed authenticating using acm_email_ticket [{}]", authenticationToken.getCreator(),
+                                token);
                     }
                 }
             }
@@ -332,7 +346,7 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
     {
         AuthRequestType authRequestType = AuthRequestType.AUTH_REQUEST_TYPE_OTHER;
 
-        if (request.getParameter("acm_ticket") != null || request.getParameter("EXT_TRANS_ID") != null)
+        if (request.getParameter("acm_ticket") != null)
         {
             log.trace("Token authentication requested");
             authRequestType = AuthRequestType.AUTH_REQUEST_TYPE_TOKEN;
@@ -341,6 +355,11 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
         {
             log.trace("Email token authentication requested");
             authRequestType = AuthRequestType.AUTH_REQUEST_TYPE_EMAIL_TOKEN;
+        }
+        else if (request.getParameter("EXT_TRANS_ID") != null)
+        {
+            log.trace("Touchnet token authentication requested");
+            authRequestType = AuthRequestType.AUTH_REQUEST_TYPE_TOUCHNET_TOKEN;
         }
         else if (request.getAttribute("javax.servlet.request.X509Certificate") != null)
         {
@@ -404,6 +423,7 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
     {
         AUTH_REQUEST_TYPE_TOKEN,
         AUTH_REQUEST_TYPE_EMAIL_TOKEN,
+        AUTH_REQUEST_TYPE_TOUCHNET_TOKEN,
         AUTH_REQUEST_TYPE_CLIENT_CERT,
         AUTH_REQUEST_TYPE_BASIC,
         AUTH_REQUEST_TYPE_OTHER
