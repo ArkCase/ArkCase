@@ -1,6 +1,11 @@
 package com.armedia.acm.services.billing.web.api;
 
 import com.armedia.acm.data.service.AcmDataService;
+import com.armedia.acm.plugins.addressable.model.ContactMethod;
+import com.armedia.acm.plugins.person.dao.PersonAssociationDao;
+import com.armedia.acm.plugins.person.dao.PersonDao;
+import com.armedia.acm.plugins.person.model.Person;
+import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.services.billing.exception.CreateBillingItemException;
 import com.armedia.acm.services.billing.model.BillingConstants;
 import com.armedia.acm.services.billing.model.BillingItem;
@@ -21,6 +26,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.xml.rpc.ServiceException;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.List;
 
 /*-
  * #%L
@@ -59,6 +66,7 @@ public class TouchNetAPIController
     private AcmDataService acmDataService;
     private NotificationService notificationService;
     private AcmParticipantService acmParticipantService;
+    private PersonAssociationDao personAssociationDao;
 
     private Logger log = LogManager.getLogger(getClass());
 
@@ -84,6 +92,7 @@ public class TouchNetAPIController
     }
 
     @RequestMapping(value = "/confirmPayment", method = RequestMethod.POST, produces = MediaType.TEXT_HTML_VALUE)
+    @ResponseBody
     public String confirmPayment(@RequestParam(value = "session_identifier", required = true) String sessionId,
                                  @RequestParam(value = "pmt_amt", required = true) String paymentAmount,
                                  @RequestParam(value = "name_on_acct", required = true) String billName,
@@ -140,14 +149,49 @@ public class TouchNetAPIController
 
     private void sendPaymentConfirmationEmail(String objectType, Long objectId)
     {
+        List<Person> requestors = new ArrayList<>();
+        getPersonAssociationDao().findPersonByParentIdAndParentTypeAndPersonType(objectType,objectId, "Requester");
+        if(requestors.size() > 0 ||  requestors == null)
+        {
+            requestors = getPersonAssociationDao().findPersonByParentIdAndParentTypeAndPersonType(objectType, objectId, "Initiator");
+        }
+        String requestorEmailAddress = extractRequestorEmailAddress(requestors.get(0));
         String assigneeEmailAddress = ParticipantUtils.getAssigneeIdFromParticipants(getAcmParticipantService().getParticipantsFromParentObject(objectId,objectType));
 
         Notification notification = notificationService.getNotificationBuilder()
                 .newNotification("confirmationPayment", BillingConstants.CONFIRMATION_PAYMENT_TITLE, objectType, objectId, null)
-                .withEmailAddresses(assigneeEmailAddress)
+                .withEmailAddresses(requestorEmailAddress)
                 .build();
 
         notificationService.saveNotification(notification);
+
+        Notification requestorNotification = notificationService.getNotificationBuilder()
+                .newNotification("assigneeConfirmationPayment", BillingConstants.CONFIRMATION_PAYMENT_TITLE, objectType, objectId, null)
+                .withEmailAddresses(assigneeEmailAddress != null ? assigneeEmailAddress : "")
+                .build();
+        notificationService.saveNotification(requestorNotification);
+    }
+
+    private String extractRequestorEmailAddress(Person person)
+    {
+        List<ContactMethod> contactMethods = person.getContactMethods();
+
+        if (contactMethods != null && !contactMethods.isEmpty())
+        {
+
+            for (ContactMethod contactMethod : contactMethods)
+            {
+
+                // Is `email` the correct type? Is there a constant somewhere for the email contact method type?
+                if (contactMethod.getType().equalsIgnoreCase("email"))
+                {
+                    return contactMethod.getValue();
+                }
+
+            }
+
+        }
+        return "";
     }
 
     public TouchNetService getTouchNetService()
@@ -198,6 +242,16 @@ public class TouchNetAPIController
     public void setAcmParticipantService(AcmParticipantService acmParticipantService)
     {
         this.acmParticipantService = acmParticipantService;
+    }
+
+    public PersonAssociationDao getPersonAssociationDao()
+    {
+        return personAssociationDao;
+    }
+
+    public void setPersonAssociationDao(PersonAssociationDao personAssociationDao)
+    {
+        this.personAssociationDao = personAssociationDao;
     }
 }
 

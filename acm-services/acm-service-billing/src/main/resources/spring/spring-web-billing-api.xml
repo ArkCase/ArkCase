@@ -24,6 +24,7 @@
         <property name="acmDataService" ref="acmDataService"/>
         <property name="notificationService" ref="notificationService"/>
         <property name="acmParticipantService" ref="acmParticipantService"/>
+        <property name="personAssociationDao" ref="acmPersonAssociationDao"/>
     </bean>
 
 </beans>
