@@ -177,6 +177,8 @@ public class SaveNotificationAPIController
                 .withNotificationType(NotificationConstants.TYPE_MANUAL)
                 .withEmailAddresses(String.join(",", emailDTO.getEmailAddresses()))
                 .withEmailContent(emailDTO.getBody())
+                .withCCEmailAddresses(String.join(",", emailDTO.getCcEmailAddresses()))
+                .withBCCEmailAddresses(String.join(",", emailDTO.getBccEmailAddresses()))
                 .forRelatedObjectWithNumber(emailDTO.getObjectNumber())
                 .forRelatedObjectTypeAndId(emailDTO.getObjectType(), Long.parseLong(emailDTO.getObjectId()))
                 .withFiles(notificationFiles)

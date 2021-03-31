@@ -125,6 +125,8 @@ public class SmtpServiceTest
     {
         // given
         final String email = "user_email@test.com";
+        final String ccEmail = "cc_user_email@test.com";
+        final String bccEmail = "bcc_user_email@test.com";
         final String header = "header";
         final String baseUrl = "base_url";
         final String title = "title";
@@ -135,6 +137,10 @@ public class SmtpServiceTest
 
         List<String> addresses = new ArrayList<>();
         addresses.add(email);
+        List<String> ccAddresses = new ArrayList<>();
+        ccAddresses.add(ccEmail);
+        List<String> bccAddresses = new ArrayList<>();
+        bccAddresses.add(bccEmail);
         List<Long> fileIds = new ArrayList<>();
         fileIds.add(fileId);
         EmailWithEmbeddedLinksDTO inputDTO = new EmailWithEmbeddedLinksDTO();
@@ -146,6 +152,8 @@ public class SmtpServiceTest
         inputDTO.setFooter(footer);
         inputDTO.setModelReferenceName("someEmail");
         inputDTO.setSubject("subject");
+        inputDTO.setCcEmailAddresses(ccAddresses);
+        inputDTO.setBccEmailAddresses(bccAddresses);
 
         senderConfig.setEncryption("off");
 
@@ -160,7 +168,7 @@ public class SmtpServiceTest
         EmailWithEmbeddedLinksResultDTO resultDTO = results.get(0);
         assertThat(resultDTO.isState(), is(true));
         assertThat(resultDTO.getEmailAddress(), is(email));
-        verify(mockMailSender, times(1)).sendEmail(eq(email), anyString(), eq(note), eq(null), eq(null));
+        verify(mockMailSender, times(1)).sendEmail(eq(email), anyString(), eq(note), eq(null), eq(null), eq(ccEmail), eq(bccEmail));
 
     }
 

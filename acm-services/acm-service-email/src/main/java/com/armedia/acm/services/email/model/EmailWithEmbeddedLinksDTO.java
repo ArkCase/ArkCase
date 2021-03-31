@@ -48,6 +48,10 @@ public class EmailWithEmbeddedLinksDTO
 
     private List<String> emailAddresses;
 
+    private List<String> ccEmailAddresses;
+
+    private List<String> bccEmailAddresses;
+
     private List<Long> fileIds;
 
     @JsonIgnore
@@ -120,6 +124,26 @@ public class EmailWithEmbeddedLinksDTO
     public void setEmailAddresses(List<String> emailAddresses)
     {
         this.emailAddresses = emailAddresses;
+    }
+
+    public List<String> getCcEmailAddresses()
+    {
+        return ccEmailAddresses;
+    }
+
+    public void setCcEmailAddresses(List<String> ccEmailAddresses)
+    {
+        this.ccEmailAddresses = ccEmailAddresses;
+    }
+
+    public List<String> getBccEmailAddresses()
+    {
+        return bccEmailAddresses;
+    }
+
+    public void setBccEmailAddresses(List<String> bccEmailAddresses)
+    {
+        this.bccEmailAddresses = bccEmailAddresses;
     }
 
     public List<Long> getFileIds()

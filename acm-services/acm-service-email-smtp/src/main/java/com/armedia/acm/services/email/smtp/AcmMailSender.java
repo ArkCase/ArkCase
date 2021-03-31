@@ -78,7 +78,29 @@ public class AcmMailSender
         helper.setSubject(subject);
         helper.setText(body, true);
         mailSender.send(helper.getMimeMessage());
-        trackOutgoingEmailService.trackEmail(mimeMessage, recipient, group, subject, parentType, parentId, null);
+        trackOutgoingEmailService.trackEmail(mimeMessage, recipient, group, subject, parentType, parentId, null, null, null);
+    }
+
+    public void sendEmail(String recipient, String subject, String body, String parentType, String parentId, String ccRecipient,
+            String bccRecipient) throws Exception
+    {
+        sendEmail(recipient, null, subject, body, parentType, parentId, ccRecipient, bccRecipient);
+    }
+
+    public void sendEmail(String recipient, String group, String subject, String body, String parentType, String parentId,
+            String ccRecipient, String bccRecipient) throws Exception
+    {
+        JavaMailSender mailSender = getMailSender();
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
+        helper.setFrom(emailConfig.getUserFrom());
+        helper.setTo(StringUtils.split(recipient, ","));
+        helper.setCc(StringUtils.split(ccRecipient, ","));
+        helper.setBcc(StringUtils.split(bccRecipient, ","));
+        helper.setSubject(subject);
+        helper.setText(body, true);
+        mailSender.send(helper.getMimeMessage());
+        trackOutgoingEmailService.trackEmail(mimeMessage, recipient, group, subject, parentType, parentId, null, ccRecipient, bccRecipient);
     }
 
     @Deprecated
@@ -134,7 +156,7 @@ public class AcmMailSender
             }
         });
         mailSender.send(helper.getMimeMessage());
-        trackOutgoingEmailService.trackEmail(mimeMessage, recipient, group, subject, parentType, parentId, attachments);
+        trackOutgoingEmailService.trackEmail(mimeMessage, recipient, group, subject, parentType, parentId, attachments, null, null);
     }
 
     public EmailSenderConfig getEmailConfig()
