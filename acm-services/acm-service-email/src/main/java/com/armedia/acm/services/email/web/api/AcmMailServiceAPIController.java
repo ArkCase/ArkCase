@@ -194,6 +194,8 @@ public class AcmMailServiceAPIController
             String template = templateService.getTemplate(templateName);
             in.setTemplate(template);
             in.setEmailAddresses(emailAddresses);
+            in.setCcEmailAddresses(in.getCcEmailAddresses());
+            in.setBccEmailAddresses(in.getBccEmailAddresses());
             result.addAll(emailSenderService.sendEmailWithEmbeddedLinks(in, authentication, user));
             return result;
         }

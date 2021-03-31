@@ -19,7 +19,23 @@
             </label>
             <textarea name="textarea" id="recipients" ng-model="recipientsStr" class="user-picker-input input-md form-control"
                     placeholder="{{ 'common.directive.docTree.emailDialog.recipients.placeholder' | translate }}"
-                    ng-click="chooseRecipients()" readonly required></textarea>
+                    ng-click="chooseRecipients('to')" rows="1" readonly required></textarea>
+        </div>
+        <div class="col-sm-12 form-group">
+            <label for="ccRecipients">
+                <span translate>common.directive.docTree.emailDialog.ccRecipients.label</span>
+            </label>
+            <textarea name="textarea" id="ccRecipients" ng-model="ccRecipientsStr" class="user-picker-input input-md form-control"
+                      placeholder="{{ 'common.directive.docTree.emailDialog.ccRecipients.placeholder' | translate }}"
+                      ng-click="chooseRecipients('cc')" rows="1" readonly></textarea>
+        </div>
+        <div class="col-sm-12 form-group">
+            <label for="bccRecipients">
+                <span translate>common.directive.docTree.emailDialog.bccRecipients.label</span>
+            </label>
+            <textarea name="textarea" id="bccRecipients" ng-model="bccRecipientsStr" class="user-picker-input input-md form-control"
+                      placeholder="{{ 'common.directive.docTree.emailDialog.bccRecipients.placeholder' | translate }}"
+                      ng-click="chooseRecipients('bcc')" rows="1" readonly></textarea>
         </div>
         <div class="col-sm-12 form-group">
             <label for="subject">

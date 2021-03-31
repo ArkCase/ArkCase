@@ -5,6 +5,10 @@ angular.module('common').controller('Common.SendEmailModalController', [ '$scope
     $scope.objectNumber = params.objectNumber;
     $scope.recipients = [];
     $scope.recipientsStr = "";
+    $scope.ccRecipients = [];
+    $scope.ccRecipientsStr = "";
+    $scope.bccRecipients = [];
+    $scope.bccRecipientsStr = "";
     $scope.emailDataModel = {};
     $scope.emailDataModel.subject = params.emailSubject;
     $scope.summernoteOptions = {
@@ -13,7 +17,7 @@ angular.module('common').controller('Common.SendEmailModalController', [ '$scope
     };
     $scope.emailDataModel.footer = $translate.instant('common.directive.docTree.email.defaultFooter');
 
-    ConfigService.getModuleConfig("common").then(function(moduleConfig) {
+    ConfigService.getModuleConfig("common").then(function (moduleConfig) {
         $scope.config = moduleConfig.docTree.emailDialog;
     });
 
@@ -22,6 +26,7 @@ angular.module('common').controller('Common.SendEmailModalController', [ '$scope
         $scope.emailTemplates = _.filter(templates.data, function(et) {
             return et.activated && (et.objectType == $scope.objectType || et.objectType == 'ALL');
         });
+        $scope.emailTemplates = _.sortBy($scope.emailTemplates, "label");
         var found = _.find($scope.emailTemplates, {
             templateFilename: 'plainEmail.html'
         });
@@ -46,7 +51,7 @@ angular.module('common').controller('Common.SendEmailModalController', [ '$scope
         return recipientsStr;
     };
 
-    $scope.chooseRecipients = function() {
+    $scope.chooseRecipients = function (recipientType) {
         var modalInstance = $modal.open({
             templateUrl: 'directives/doc-tree/doc-tree-ext.email-recipients.dialog.html',
             controller: 'directives.DocTreeEmailRecipientsDialogController',
@@ -54,18 +59,35 @@ angular.module('common').controller('Common.SendEmailModalController', [ '$scope
             size: 'lg',
             backdrop: 'static',
             resolve: {
-                config: function() {
+                config: function () {
                     return $scope.config;
                 },
-                recipients: function() {
+                recipients: function () {
                     return $scope.recipients;
+                },
+                ccRecipients: function () {
+                    return $scope.ccRecipients;
+                },
+                bccRecipients: function () {
+                    return $scope.bccRecipients;
+                },
+                recipientType: function() {
+                    return recipientType
                 }
             }
         });
 
         modalInstance.result.then(function(recipients) {
-            $scope.recipients = recipients;
-            $scope.recipientsStr = buildRecipientsStr(recipients);
+            if (recipientType == 'cc') {
+                $scope.ccRecipients = recipients;
+                $scope.ccRecipientsStr = buildRecipientsStr(recipients);
+            } else if (recipientType == 'bcc') {
+                $scope.bccRecipients = recipients;
+                $scope.bccRecipientsStr = buildRecipientsStr(recipients);
+            } else {
+                $scope.recipients = recipients;
+                $scope.recipientsStr = buildRecipientsStr(recipients);
+            }
         });
     };
 
@@ -93,6 +115,8 @@ angular.module('common').controller('Common.SendEmailModalController', [ '$scope
 
     $scope.onClickOk = function() {
         $scope.emailDataModel.recipients = $scope.recipientsStr.split('; ');
+        $scope.emailDataModel.ccRecipients = $scope.ccRecipientsStr.split('; ');
+        $scope.emailDataModel.bccRecipients = $scope.bccRecipientsStr.split('; ');
         $scope.emailDataModel.template = _.contains($scope.template, '.html') ? $scope.template.replace('.html', '') : $scope.template;
         $modalInstance.close($scope.emailDataModel);
     };

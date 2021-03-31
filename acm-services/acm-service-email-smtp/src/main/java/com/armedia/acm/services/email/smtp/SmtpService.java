@@ -357,16 +357,30 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
     {
         List<EmailWithEmbeddedLinksResultDTO> emailResultList = new ArrayList<>();
         Exception exception = null;
+        String ccEmailAddresses = "";
+        String bccEmailAddresses = "";
 
         String emailAddresses = in.getEmailAddresses().stream()
                 .filter(this::isEmailValid)
                 .collect(Collectors.joining(","));
 
+        if (in.getCcEmailAddresses() != null && !in.getCcEmailAddresses().isEmpty())
+        {
+             ccEmailAddresses = in.getCcEmailAddresses().stream()
+                    .filter(this::isEmailValid)
+                    .collect(Collectors.joining(","));
+        }
+        if (in.getBccEmailAddresses() != null && !in.getBccEmailAddresses().isEmpty())
+        {
+             bccEmailAddresses = in.getBccEmailAddresses().stream()
+                    .filter(this::isEmailValid)
+                    .collect(Collectors.joining(","));
+        }
         try
         {
             // makeNote generates access token so any email address will do
             acmMailSender.sendEmail(emailAddresses, in.getSubject(), makeNote(in.getEmailAddresses().get(0), in, authentication),
-                    in.getObjectType(), in.getObjectId());
+                    in.getObjectType(), in.getObjectId(), ccEmailAddresses, bccEmailAddresses);
         }
         catch (Exception e)
         {

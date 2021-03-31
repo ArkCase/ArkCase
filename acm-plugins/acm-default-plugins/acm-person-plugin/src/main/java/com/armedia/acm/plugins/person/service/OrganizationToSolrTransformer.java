@@ -105,11 +105,28 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
         orgDoc.setAdditionalProperty("default_phone_s", getDefaultPhone(org));
         orgDoc.setAdditionalProperty("default_location_s", getDefaultAddress(org));
         orgDoc.setAdditionalProperty("default_identification_s", getDefaultIdentification(org));
+        orgDoc.setAdditionalProperty("default_email_lcs", getDefaultEmail(org));
 
         String participantsListJson = ParticipantUtils.createParticipantsListJson(org.getParticipants());
         orgDoc.setAdditionalProperty("acm_participants_lcs", participantsListJson);
 
         return orgDoc;
+    }
+
+    private String getDefaultEmail(Organization organization)
+    {
+        if (organization.getDefaultEmail() != null)
+        {
+            return organization.getDefaultEmail().getValue();
+        }
+        else
+        {
+            return organization.getContactMethods().stream()
+                    .filter(cm -> cm.getType().equalsIgnoreCase("email"))
+                    .findFirst()
+                    .map(ContactMethod::getValue)
+                    .orElse(null);
+        }
     }
 
     private String getPrimaryContact(Organization organization)

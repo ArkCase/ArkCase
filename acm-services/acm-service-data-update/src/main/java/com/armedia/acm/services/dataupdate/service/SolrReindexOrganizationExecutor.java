@@ -2,9 +2,9 @@ package com.armedia.acm.services.dataupdate.service;
 
 /*-
  * #%L
- * ACM Standard Application: Freedom of Information Act
+ * ACM Service: Data Update Service
  * %%
- * Copyright (C) 2014 - 2020 ArkCase LLC
+ * Copyright (C) 2014 - 2021 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 
@@ -27,24 +27,27 @@ package com.armedia.acm.services.dataupdate.service;
  * #L%
  */
 
-import com.armedia.acm.plugins.person.model.Person;
+import com.armedia.acm.plugins.person.model.Organization;
 
 import java.util.Arrays;
 
-public class SolrReindexPersonExecutor implements AcmDataUpdateExecutor
+/**
+ * Created by ana.serafimoska
+ */
+public class SolrReindexOrganizationExecutor implements AcmDataUpdateExecutor
 {
     private SolrReindexService solrReindexService;
 
     @Override
     public String getUpdateId()
     {
-        return "solr-person-reindex-v4";
+        return "solr-organization-reindex-v1";
     }
 
     @Override
     public void execute()
     {
-        solrReindexService.reindex(Arrays.asList(Person.class));
+        getSolrReindexService().reindex(Arrays.asList(Organization.class));
     }
 
     public SolrReindexService getSolrReindexService()
