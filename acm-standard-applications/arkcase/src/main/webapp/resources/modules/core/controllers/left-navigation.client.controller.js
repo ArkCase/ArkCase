@@ -9,8 +9,4 @@ angular.module('core').controller('LeftNavigationController', [ '$scope', '$stat
     $scope.$watch('isLeftMenuCollapsed', function() {
         $scope.$emit('isLeftMenuCollapsed', $scope.isLeftMenuCollapsed);
     });
-
-    $scope.$bus.subscribe('refreshLeftMenu', function(data) {
-        $scope.menu = Menus.getMenu('leftnav');
-    });
 } ]);
