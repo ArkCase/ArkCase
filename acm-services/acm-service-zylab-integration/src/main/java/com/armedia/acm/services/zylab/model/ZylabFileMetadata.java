@@ -75,12 +75,6 @@ public class ZylabFileMetadata
     @Column(name = "cm_zylab_id")
     private Long zylabId;
 
-    @Column(name = "cm_beg_bates_number")
-    private String begBatesNumber;
-
-    @Column(name = "cm_end_bates_number")
-    private String endBatesNumber;
-
     @Column(name = "cm_produced_pages")
     private Integer producedPages;
 
@@ -200,26 +194,6 @@ public class ZylabFileMetadata
     public void setZylabId(Long zylabId)
     {
         this.zylabId = zylabId;
-    }
-
-    public String getBegBatesNumber()
-    {
-        return begBatesNumber;
-    }
-
-    public void setBegBatesNumber(String begBatesNumber)
-    {
-        this.begBatesNumber = begBatesNumber;
-    }
-
-    public String getEndBatesNumber()
-    {
-        return endBatesNumber;
-    }
-
-    public void setEndBatesNumber(String endBatesNumber)
-    {
-        this.endBatesNumber = endBatesNumber;
     }
 
     public Integer getProducedPages()

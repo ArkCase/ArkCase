@@ -90,7 +90,8 @@
         </addColumn>
     </changeSet>
 
-    <changeSet id="04-add_exempt_withheld_reason_to_zylab-file-metadata" author="aleksandar.acevski" dbms="oracle,postgresql,mssql">
+    <changeSet id="04-add_exempt_withheld_reason_to_zylab-file-metadata" author="aleksandar.acevski"
+               dbms="oracle,postgresql,mssql">
         <addColumn tableName="acm_zylab_file_metadata">
             <column name="cm_exempt_withheld_reason" type="VARCHAR(1024)"/>
         </addColumn>
@@ -101,5 +102,11 @@
             <column name="cm_exempt_withheld" type="BOOLEAN"/>
         </addColumn>
     </changeSet>
+
+    <changeSet id="06-drop-bagbates-numbers-from-zylab-file-metadata" author="aleksandar.acevski">
+        <dropColumn tableName="acm_zylab_file_metadata" columnName="cm_beg_bates_number"/>
+        <dropColumn tableName="acm_zylab_file_metadata" columnName="cm_end_bates_number"/>
+    </changeSet>
+
 
 </databaseChangeLog>
