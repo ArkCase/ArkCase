@@ -66,15 +66,17 @@ public class TouchNetAPIController
     @ResponseBody
     public String redirectToPayment(@RequestParam(value = "amt", required = true) String amt,
                                     @RequestParam(value = "objectId", required = true) String objectId,
+                                    @RequestParam(value = "ecmFileId", required = true) String ecmFileId,
                                     @RequestParam(value = "objectType", required = true) String objectType,
-                                    @RequestParam(value = "acm_ticket", required = false) String acm_ticket) throws ServiceException
+                                    @RequestParam(value = "acm_email_ticket", required = false) String acm_ticket) throws ServiceException
     {
         String ticket = touchNetService.generateTicketID(amt, objectId, objectType);
+        String ticketName = objectId + objectType;
 
         return "<form name=\"autoform\" action=\"https://test.secure.touchnet.net:8443/C30002test_upay/web/index.jsp\" method=\"post\">\n" +
                 "    <input name=\"UPAY_SITE_ID\" type=\"hidden\" value=\"252\" />\n" +
                 "    <input name=\"TICKET\" type=\"hidden\" value=\"" + ticket + "\" />\n" +
-                "    <input name=\"TICKET_NAME\" type=\"hidden\" value=\"Test\" />\n" +
+                "    <input name=\"TICKET_NAME\" type=\"hidden\" value=\"" + ticketName + "\" />\n" +
                 "</form>\n" +
                 "<script type=\"text/javascript\">\n" +
                 "         document.autoform.submit();\n" +

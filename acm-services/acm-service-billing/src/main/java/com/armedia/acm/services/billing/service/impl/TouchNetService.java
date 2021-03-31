@@ -58,7 +58,7 @@ public class TouchNetService
     private String secureLinkEndPoint;
 
 
-    public String generateTicketID(String amt, String objectId, String objectType) throws ServiceException
+    public String generateTicketID(String amt, String objectId, String objectType)
     {
         String ticketName = authenticationTokenService.getTokenForAuthentication(null);
 
@@ -82,7 +82,15 @@ public class TouchNetService
         pairs[4].setValue(objectType);
         req.setNameValuePairs(pairs);
 
-        TPGSecureLink_BindingStub binding = getSecureLinkBinding();
+        TPGSecureLink_BindingStub binding = null;
+        try
+        {
+            binding = getSecureLinkBinding();
+        }
+        catch (ServiceException e)
+        {
+            e.printStackTrace();
+        }
         String ticketId = null;
         try
         {
@@ -115,7 +123,7 @@ public class TouchNetService
         return authorizeAccountResponse;
     }
 
-    public TPGSecureLink_BindingStub getSecureLinkBinding() throws ServiceException
+    private TPGSecureLink_BindingStub getSecureLinkBinding() throws ServiceException
     {
         TPGSecureLink_BindingStub binding;
 
