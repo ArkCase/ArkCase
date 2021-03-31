@@ -15,7 +15,7 @@
         <property name="billingInvoiceBusinessRule" ref="billingInvoiceBusinessRule"/>
     </bean>
 
-    <bean id="touchNetService" class="com.armedia.acm.services.billing.service.impl.TouchNetService">
+    <bean id="touchNetService" class="com.armedia.acm.services.billing.service.impl.TouchNetService" scope="refresh">
         <property name="authenticationTokenService" ref="authenticationTokenService"/>
         <property name="applicationConfig" ref="applicationProperties"/>
     </bean>
