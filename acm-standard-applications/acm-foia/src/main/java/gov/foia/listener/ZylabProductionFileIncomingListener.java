@@ -91,6 +91,7 @@ public class ZylabProductionFileIncomingListener implements ApplicationListener<
     public static final String RESPONSIVE_FOLDER_NAME = "Release";
     public static final String WITHELD_FOLDER_NAME = "Exempt Withheld";
     public static final String EXEMPTION_WITHELD_CODES_SEPARATOR = ",";
+    public static final String RESPONSIVE_CODES_SEPARATOR = ";";
     private transient final Logger log = LogManager.getLogger(getClass());
 
     private AcmFolderService acmFolderService;
@@ -192,11 +193,10 @@ public class ZylabProductionFileIncomingListener implements ApplicationListener<
 
         List<ZylabFileMetadata> zylabFileMetadataList = ZylabProductionUtils.getFileMetadataFromLoadFile(loadFile, matterId,
                 productionKey);
+        List<ZylabFile> zylabFiles = ZylabProductionUtils.linkMetadataToZylabFiles(productionFiles, zylabFileMetadataList);
 
         try
         {
-            List<ZylabFile> zylabFiles = ZylabProductionUtils.linkMetadataToZylabFiles(productionFiles, zylabFileMetadataList);
-
             List<ZylabFile> exemptWithheldFiles = zylabFiles.stream()
                     .filter(zylabFile -> zylabFile.getFileMetadata().getExemptWithheld())
                     .collect(Collectors.toList());
@@ -212,18 +212,21 @@ public class ZylabProductionFileIncomingListener implements ApplicationListener<
             String productionFolderName = FilenameUtils.getBaseName(loadFile.getName());
             AcmFolder newProductionFolder = getAcmFolderService().addNewFolder(workingFolder, productionFolderName);
 
-            AcmFolder responsiveFolder = getAcmFolderService().addNewFolder(newProductionFolder, RESPONSIVE_FOLDER_NAME);
-            AcmFolder exemptWithheldFolder = getAcmFolderService().addNewFolder(newProductionFolder, WITHELD_FOLDER_NAME);
+            if (!responsiveFiles.isEmpty())
+            {
+                log.info("Uploading responsive files from ZyLAB production [{}]", productionKey);
+                AcmFolder responsiveFolder = getAcmFolderService().addNewFolder(newProductionFolder, RESPONSIVE_FOLDER_NAME);
+                List<EcmFile> arkResponsiveFiles = uploadZylabFiles(responsiveFolder, responsiveFiles, foiaRequest, auth);
+                addExemptionCodesToResponsiveFiles(arkResponsiveFiles);
+            }
 
-            log.info("Uploading Zylab production files [{}]", productionKey);
-
-            List<EcmFile> arkResponsiveFiles = uploadZylabFiles(responsiveFolder, responsiveFiles, foiaRequest, auth);
-            List<EcmFile> arkExemptWitheldFiles = uploadZylabFiles(exemptWithheldFolder, exemptWithheldFiles, foiaRequest, auth);
-
-            log.info("Adding exemption codes to files for production [{}]", productionKey);
-
-            addExemptionCodesToResponsiveFiles(arkResponsiveFiles);
-            addExemptionCodesToWitheldFiles(arkExemptWitheldFiles);
+            if (!exemptWithheldFiles.isEmpty())
+            {
+                log.info("Uploading exempt witheld files from ZyLAB production [{}]", productionKey);
+                AcmFolder exemptWithheldFolder = getAcmFolderService().addNewFolder(newProductionFolder, WITHELD_FOLDER_NAME);
+                List<EcmFile> arkExemptWitheldFiles = uploadZylabFiles(exemptWithheldFolder, exemptWithheldFiles, foiaRequest, auth);
+                addExemptionCodesToWitheldFiles(arkExemptWitheldFiles);
+            }
 
             log.info("ZyLAB Production files for request [{}] processed successfully", foiaRequest.getId());
 
@@ -277,7 +280,7 @@ public class ZylabProductionFileIncomingListener implements ApplicationListener<
     private FOIAFile getEcmFile(ZylabFile zylabFile) throws IOException
     {
         FOIAFile metadata = new FOIAFile();
-        metadata.setFileName(zylabFile.getFileMetadata().getDocName());
+        metadata.setFileName(String.valueOf(zylabFile.getFileMetadata().getZylabId()));
         metadata.setFileType("Other");
         metadata.setFileActiveVersionMimeType(Files.probeContentType(zylabFile.getFile().toPath()));
         metadata.setCustodian(zylabFile.getFileMetadata().getCustodian());
@@ -295,10 +298,10 @@ public class ZylabProductionFileIncomingListener implements ApplicationListener<
 
         for (EcmFile file : redactionJustificationFiles)
         {
-            int[] exemptionCodes = Arrays.stream(file.getZylabFileMetadata().getRedactionJustification().split(";"))
+            String[] exemptionCodesSent = file.getZylabFileMetadata().getRedactionJustification().split(RESPONSIVE_CODES_SEPARATOR);
+            int[] exemptionCodes = Arrays.stream(exemptionCodesSent)
                     .mapToInt(Integer::parseInt)
                     .toArray();
-
             addExemptionCodesToFileByOrder(file, exemptionCodes, lookupEntries);
         }
 
@@ -308,7 +311,34 @@ public class ZylabProductionFileIncomingListener implements ApplicationListener<
 
         for (EcmFile file : redactionCodeFiles)
         {
-            String exemptionCodeSubstring = file.getZylabFileMetadata().getRedactionCode1();
+            String[] exemptionCodes = file.getZylabFileMetadata().getRedactionCode1().split(RESPONSIVE_CODES_SEPARATOR);
+            addExemptionCodesToFileByKey(file, exemptionCodes, lookupEntries);
+        }
+    }
+
+    private void addExemptionCodesToFileByOrder(EcmFile file, int[] exemptionCodes, List<StandardLookupEntry> lookupEntries)
+    {
+        for (int exemptionCodeNumber : exemptionCodes)
+        {
+            StandardLookupEntry exemption = lookupEntries.stream()
+                    .filter(code -> code.getOrder() == exemptionCodeNumber)
+                    .findFirst().orElse(null);
+            if (exemption != null)
+            {
+                documentExemptionService.saveExemptionCodeAndNumberForFile(file, exemption.getKey(), exemption.getOrder());
+            }
+            else
+            {
+                log.warn("Exemption code not found by order. Exemption codes in Arkcase and ZyLAB should match");
+                documentExemptionService.saveExemptionCodeAndNumberForFile(file, "", exemptionCodeNumber);
+            }
+        }
+    }
+
+    private void addExemptionCodesToFileByKey(EcmFile file, String[] exemptionCodes, List<StandardLookupEntry> lookupEntries)
+    {
+        for (String exemptionCodeSubstring : exemptionCodes)
+        {
             StandardLookupEntry exemption = lookupEntries.stream()
                     .filter(code -> code.getKey().startsWith(exemptionCodeSubstring))
                     .findFirst().orElse(null);
@@ -343,25 +373,6 @@ public class ZylabProductionFileIncomingListener implements ApplicationListener<
                     .toArray();
 
             addExemptionCodesToFileByOrder(file, exemptionCodes, lookupEntries);
-        }
-    }
-
-    private void addExemptionCodesToFileByOrder(EcmFile file, int[] exemptionCodes, List<StandardLookupEntry> lookupEntries)
-    {
-        for (int exemptionCodeNumber : exemptionCodes)
-        {
-            StandardLookupEntry exemption = lookupEntries.stream()
-                    .filter(code -> code.getOrder() == exemptionCodeNumber)
-                    .findFirst().orElse(null);
-            if (exemption != null)
-            {
-                documentExemptionService.saveExemptionCodeAndNumberForFile(file, exemption.getKey(), exemption.getOrder());
-            }
-            else
-            {
-                log.warn("Exemption code not found by order. Exemption codes in Arkcase and ZyLAB should match");
-                documentExemptionService.saveExemptionCodeAndNumberForFile(file, "", exemptionCodeNumber);
-            }
         }
     }
 

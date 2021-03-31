@@ -113,8 +113,6 @@ public class ZylabProductionUtils
         {
             zylabFileMetadata.setZylabId(Long.valueOf(dataMap.get("ZyLAB_ID")));
         }
-        zylabFileMetadata.setBegBatesNumber(dataMap.get("Beg_BatesNumber"));
-        zylabFileMetadata.setEndBatesNumber(dataMap.get("End_BatesNumber"));
         if (NumberUtils.isParsable(dataMap.get("Produced_Pages")))
         {
             zylabFileMetadata.setProducedPages(Integer.valueOf(dataMap.get("Produced_Pages")));
@@ -137,7 +135,7 @@ public class ZylabProductionUtils
             zylabFileMetadata.setDocSize(Long.valueOf(dataMap.get("Doc_Size")));
         }
         zylabFileMetadata.setHasAttachment(Boolean.valueOf(dataMap.get("Has_Attachment")));
-        zylabFileMetadata.setAttachment(Boolean.valueOf(dataMap.get("Is_Attachmentt")));
+        zylabFileMetadata.setAttachment(Boolean.valueOf(dataMap.get("Is_Attachment")));
         zylabFileMetadata.setEmailFrom(dataMap.get("Email_From"));
         zylabFileMetadata.setEmailRecipient(dataMap.get("Email_Recipient"));
         if (NumberUtils.isParsable(dataMap.get("Multimedia_Duration(Sec)")))
@@ -146,7 +144,7 @@ public class ZylabProductionUtils
         }
         zylabFileMetadata.setMultimediaProperties(dataMap.get("Multimedia_properties"));
         zylabFileMetadata.setReviewedAnalysis(dataMap.get("Reviewed_Analysis"));
-        zylabFileMetadata.setLastReviewedBy(dataMap.get("LastRevieweBy"));
+        zylabFileMetadata.setLastReviewedBy(dataMap.get("LastReviewedBy"));
         zylabFileMetadata.setSource(dataMap.get("Source"));
         zylabFileMetadata.setExemptWithheldReason(dataMap.get("Exempt_Withheld_Reason"));
         zylabFileMetadata.setExemptWithheld(Boolean.valueOf(dataMap.get("ExemptWithheld")));
@@ -155,6 +153,7 @@ public class ZylabProductionUtils
     }
 
     public static List<ZylabFile> linkMetadataToZylabFiles(List<File> productionFiles, List<ZylabFileMetadata> zylabFileMetadataList)
+            throws ZylabProductionSyncException
     {
         List<ZylabFile> zylabFiles = new ArrayList<>();
 
@@ -166,6 +165,11 @@ public class ZylabProductionUtils
                     .filter(file -> file.getName().startsWith(fileNameInSentFolder))
                     .map(file -> new ZylabFile(file, zylabFileMetadata))
                     .forEach(zylabFiles::add);
+        }
+        if (zylabFiles.isEmpty())
+        {
+            throw new ZylabProductionSyncException(
+                    "No files found in production. ZyLAB_ID field must be set, and files in production must be named with this field.");
         }
         return zylabFiles;
     }
