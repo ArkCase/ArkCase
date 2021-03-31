@@ -27,7 +27,6 @@ package com.armedia.acm.plugins.person.service;
  * #L%
  */
 
-import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
@@ -65,22 +64,6 @@ public class PersonEmailToSolrTransformer implements AcmObjectToSolrDocTransform
         }
 
         return solrDocument;
-    }
-
-    private String getDefaultEmail(Person person)
-    {
-        if (person.getDefaultEmail() != null)
-        {
-            return person.getDefaultEmail().getValue();
-        }
-        else
-        {
-            return person.getContactMethods().stream()
-                    .filter(cm -> cm.getType().equalsIgnoreCase("email"))
-                    .findFirst()
-                    .map(ContactMethod::getValue)
-                    .orElse(null);
-        }
     }
 
     // No implementation needed due to https://arkcase.atlassian.net/browse/ACFP-704
