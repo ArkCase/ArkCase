@@ -35,6 +35,8 @@ import com.touchnet.secureLink.types.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.xml.rpc.ServiceException;
 import java.rmi.RemoteException;
@@ -58,9 +60,10 @@ public class TouchNetService
     private String secureLinkEndPoint;
 
 
-    public String generateTicketID(String amt, String objectId, String objectType)
+    public String generateTicketID(String amt, String objectId, String objectType, String ecmFileId)
     {
-        String ticketName = authenticationTokenService.getTokenForAuthentication(null);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String ticketName = authenticationTokenService.generateAndSaveAuthenticationToken(Long.valueOf(ecmFileId),authentication.getName(),null);
 
         GenerateSecureLinkTicketRequest req = new GenerateSecureLinkTicketRequest();
         req.setTicketName(objectId + objectType);

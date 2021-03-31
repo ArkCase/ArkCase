@@ -68,9 +68,9 @@ public class TouchNetAPIController
                                     @RequestParam(value = "objectId", required = true) String objectId,
                                     @RequestParam(value = "ecmFileId", required = true) String ecmFileId,
                                     @RequestParam(value = "objectType", required = true) String objectType,
-                                    @RequestParam(value = "acm_email_ticket", required = false) String acm_ticket) throws ServiceException
+                                    @RequestParam(value = "acm_email_ticket", required = false) String acm_ticket)
     {
-        String ticket = touchNetService.generateTicketID(amt, objectId, objectType);
+        String ticket = touchNetService.generateTicketID(amt, objectId, objectType, ecmFileId);
         String ticketName = objectId + objectType;
 
         return "<form name=\"autoform\" action=\"https://test.secure.touchnet.net:8443/C30002test_upay/web/index.jsp\" method=\"post\">\n" +
