@@ -129,5 +129,11 @@
             <artifactId>spring-webmvc</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
+            <artifactId>acm-person-plugin</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+
     </dependencies>
 </project>
