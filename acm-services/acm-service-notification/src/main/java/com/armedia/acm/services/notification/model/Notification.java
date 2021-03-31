@@ -170,6 +170,12 @@ public class Notification implements Serializable, AcmObject, AcmEntity
     @Column (name = "cm_type")
     private String notificationType = NotificationConstants.TYPE_AUTOMATED;
 
+    @Column(name = "cm_cc_email_addresses")
+    private String ccEmailAddresses;
+
+    @Column(name = "cm_bcc_email_addresses")
+    private String bccEmailAddresses;
+
     @Override
     public Long getId()
     {
@@ -502,4 +508,25 @@ public class Notification implements Serializable, AcmObject, AcmEntity
     public String getEmailContent() { return emailContent; }
 
     public void setEmailContent(String emailContent) { this.emailContent = emailContent; }
+
+    public String getCcEmailAddresses()
+    {
+        return ccEmailAddresses;
+    }
+
+    public void setCcEmailAddresses(String ccEmailAddresses)
+    {
+        this.ccEmailAddresses = ccEmailAddresses;
+    }
+
+    public String getBccEmailAddresses()
+    {
+        return bccEmailAddresses;
+    }
+
+    public void setBccEmailAddresses(String bccEmailAddresses)
+    {
+        this.bccEmailAddresses = bccEmailAddresses;
+    }
+
 }

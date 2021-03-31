@@ -319,6 +319,8 @@ angular.module('tasks').controller(
                             emailData.body = res.body;
                             emailData.footer = '\n\n' + res.footer;
                             emailData.emailAddresses = res.recipients;
+                            emailData.ccEmailAddresses = res.ccRecipients;
+                            emailData.bccEmailAddresses = res.bccRecipients;
                             emailData.objectId = $scope.objectInfo.taskId;
                             emailData.objectType = ObjectService.ObjectTypes.TASK;
                             emailData.modelReferenceName = res.template;

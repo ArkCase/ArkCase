@@ -138,6 +138,18 @@ public class NotificationBuilder
             return this;
         }
 
+        public Builder withCCEmailAddresses(String emailAddressesCommaSeparated)
+        {
+            this.notification.setCcEmailAddresses(emailAddressesCommaSeparated);
+            return this;
+        }
+
+        public Builder withBCCEmailAddresses(String emailAddressesCommaSeparated)
+        {
+            this.notification.setBccEmailAddresses(emailAddressesCommaSeparated);
+            return this;
+        }
+
         public Builder withEmailAddressesForUsers(List<AcmUser> users)
         {
             String emailAddressesCommaSeparated = notificationUtils.getEmailsCommaSeparatedForUsers(users);

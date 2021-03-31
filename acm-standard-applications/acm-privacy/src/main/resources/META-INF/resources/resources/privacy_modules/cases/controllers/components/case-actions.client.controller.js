@@ -152,6 +152,8 @@ angular.module('cases').controller(
                             emailData.body = res.body;
                             emailData.footer = '\n\n' + res.footer;
                             emailData.emailAddresses = res.recipients;
+                            emailData.ccEmailAddresses = res.ccRecipients;
+                            emailData.bccEmailAddresses = res.bccRecipients;
                             emailData.objectId = $scope.objectInfo.id;
                             emailData.objectType = ObjectService.ObjectTypes.CASE_FILE;
                             emailData.objectNumber = $scope.objectInfo.caseNumber;

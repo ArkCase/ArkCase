@@ -807,6 +807,11 @@
           "headerCellFilter": "translate"
         },
         {
+          "name": "type_lcs",
+          "displayName": "common.directive.docTree.recipientsDialog.gridColumns.entity",
+          "headerCellFilter": "translate"
+        },
+        {
           "name": "email_lcs",
           "displayName": "common.directive.docTree.recipientsDialog.gridColumns.email",
           "headerCellFilter": "translate"

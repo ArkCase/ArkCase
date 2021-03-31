@@ -187,6 +187,8 @@ angular.module('complaints').controller(
                             emailData.body = res.body;
                             emailData.footer = '\n\n' + res.footer;
                             emailData.emailAddresses = res.recipients;
+                            emailData.ccEmailAddresses = res.ccRecipients;
+                            emailData.bccEmailAddresses = res.bccRecipients;
                             emailData.objectId = $scope.objectInfo.complaintId;
                             emailData.objectType = ObjectService.ObjectTypes.COMPLAINT;
                             emailData.objectNumber = $scope.objectInfo.complaintNumber;

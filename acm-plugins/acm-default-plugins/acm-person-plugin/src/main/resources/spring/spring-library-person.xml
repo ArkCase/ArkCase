@@ -159,4 +159,17 @@
     <bean id="personConfig" class="com.armedia.acm.plugins.person.model.PersonConfig" scope="refresh">
         <aop:scoped-proxy/>
     </bean>
+
+    <bean id="userEmailToSolrTransformer" class="com.armedia.acm.plugins.person.service.UserEmailToSolrTransformer">
+        <property name="userDao" ref="userJpaDao"/>
+    </bean>
+
+    <bean id="personEmailToSolrTransformer" class="com.armedia.acm.plugins.person.service.PersonEmailToSolrTransformer">
+        <property name="personDao" ref="acmPersonDao"/>
+    </bean>
+
+    <bean id="organizationEmailToSolrTransformer" class="com.armedia.acm.plugins.person.service.OrganizationEmailToSolrTransformer">
+        <property name="organizationDao" ref="acmOrganizationDao"/>
+        <property name="userDao" ref="userJpaDao"/>
+    </bean>
 </beans>
