@@ -69,15 +69,21 @@
             parent="personToSolrTransformer"/>
 
         <beans:bean id="portalFOIAPersonToSolrTransformer" class="gov.foia.transformer.FOIAPortalPersonToSolrTransformer"
-            parent="foiaPersonToSolrTransformer">
+                    parent="foiaPersonToSolrTransformer">
         </beans:bean>
 
         <beans:bean id="foiaFileToSolrTransformer" class="gov.foia.transformer.FOIAFileToSolrTransformer"
-            parent="ecmFileToSolrTrasnformer"/>
+                    parent="ecmFileToSolrTrasnformer"/>
 
         <beans:bean id="foiaUserToSolrTransformer" class="gov.foia.transformer.FOIAUserToSolrTransformer" parent="userToSolrTransformer">
             <beans:property name="acmContextHolder" ref="acmContextHolder"/>
         </beans:bean>
+
+        <beans:bean id="foiaPersonEmailToSolrTransformer" class="gov.foia.transformer.FOIAPersonEmailToSolrTransformer"
+                    parent="personEmailToSolrTransformer"/>
+
+        <beans:bean id="foiaPortalPersonEmailToSolrTransformer" class="gov.foia.transformer.FOIAPortalPersonEmailToSolrTransformer"
+                    parent="foiaPersonEmailToSolrTransformer"/>
 
         <beans:bean id="foiaRequestDao" class="gov.foia.dao.FOIARequestDao"/>
 
