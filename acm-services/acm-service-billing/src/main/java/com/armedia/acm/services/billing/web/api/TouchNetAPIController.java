@@ -149,9 +149,9 @@ public class TouchNetAPIController
 
     private void sendPaymentConfirmationEmail(String objectType, Long objectId)
     {
-        List<Person> requestors = new ArrayList<>();
-        getPersonAssociationDao().findPersonByParentIdAndParentTypeAndPersonType(objectType,objectId, "Requester");
-        if(requestors.size() > 0 ||  requestors == null)
+        List<Person> requestors;
+        requestors = getPersonAssociationDao().findPersonByParentIdAndParentTypeAndPersonType(objectType,objectId, "Requester");
+        if(requestors.size() < 1 ||  requestors == null)
         {
             requestors = getPersonAssociationDao().findPersonByParentIdAndParentTypeAndPersonType(objectType, objectId, "Initiator");
         }
