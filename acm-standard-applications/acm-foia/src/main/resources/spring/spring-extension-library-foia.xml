@@ -184,6 +184,7 @@
                     <beans:ref bean="solrReindexAcmUserExecutor"/>
                     <beans:ref bean="solrReindexPersonAssociationsExecutor"/>
                     <beans:ref bean="foiaRequestDataUpdateExecutor"/>
+                    <beans:ref bean="solrReindexFOIAPersonExecutor"/>
                 </beans:list>
             </beans:property>
 
@@ -218,6 +219,10 @@
 
         <beans:bean id="foiaRequestDataUpdateExecutor"
                     class="gov.foia.service.dataupdate.FoiaRequestDataUpdateExecutor">
+            <beans:property name="solrReindexService" ref="solrReindexService"/>
+        </beans:bean>
+
+        <beans:bean id="solrReindexFOIAPersonExecutor" class="gov.foia.service.dataupdate.SolrReindexFOIAPersonExecutor">
             <beans:property name="solrReindexService" ref="solrReindexService"/>
         </beans:bean>
 
