@@ -197,6 +197,16 @@ angular.module('complaints').controller(
                             $scope.assignees = options;
                             return approvers;
                         });
+
+                        var complaintTypeObj = _.filter($scope.complaintTypes, function(complaintType) {
+                            if (objectInfo.complaintType == complaintType.key) {
+                                return complaintType;
+                            }
+                        });
+
+                        if (objectInfo.complaintType) {
+                            objectInfo.complaintType = $translate.instant(complaintTypeObj[0].value);
+                        }
                     };
 
                     $scope.saveComplaint = function() {
