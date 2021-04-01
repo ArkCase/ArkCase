@@ -45,7 +45,7 @@
                     placeholder="{{'common.directive.docTree.emailDialog.subject.placeholder' | translate}}">
         </div>
         <div class="col-sm-12 form-group" ng-form="emailBodyForm" ng-show="template === 'plainEmail.html'">
-            <summernote config="summernoteOptions" name="emailBody" ng-model="emailDataModel.body"></summernote>
+            <summernote config="summernoteOptions" name="emailBody" ng-model="emailDataModel.body" id="plain"></summernote>
         </div>
         <div class="col-sm-12 form-group" ng-if="emailSendConfiguration.allowDocuments">
             <label for="attachments">
@@ -63,7 +63,7 @@
         </div>
     </div>
     <div class="row">
-        <div style="border: 1px solid #ccc; margin: 15px;" ng-if="template != 'plainEmail.html'" id="content"></div>
+        <summernote style="border: 1px solid #ccc; margin: 15px;" ng-if="template != 'plainEmail.html'" id="content" ng-model="emailDataModel.body"></summernote>
     </div>
 </div>
 <div class="modal-footer">

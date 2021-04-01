@@ -124,6 +124,9 @@ public abstract class NotificationSender
                 }
                 String body = getTemplatingEngine().process(template, notification.getTemplateModelName(), object);
                 in.setBody(body);
+                String subject = notification.getSubject() != null && !notification.getSubject().isEmpty() ? notification.getSubject() : notification.getTitle();
+                subject = getTemplatingEngine().process(subject, notification.getTemplateModelName(), object);
+                in.setSubject(subject);
             }
             catch (AcmEmailConfigurationIOException e)
             {
@@ -150,7 +153,6 @@ public abstract class NotificationSender
                 in.setAttachmentIds(notificationFileIds);
             }
 
-            in.setSubject(notification.getSubject() != null ? notification.getSubject() : notification.getTitle());
             in.setEmailAddresses(Arrays.asList(notification.getEmailAddresses().split(",")));
             in.setEmailGroup(notification.getEmailGroup());
             if (notification.getRelatedObjectId() != null && notification.getRelatedObjectType() != null)

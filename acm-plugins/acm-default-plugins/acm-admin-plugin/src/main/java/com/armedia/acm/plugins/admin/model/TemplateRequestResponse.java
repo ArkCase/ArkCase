@@ -74,6 +74,9 @@ public class TemplateRequestResponse
     private boolean enabled;
 
     private String parentType;
+
+    private String emailSubject;
+
     /**
      * @return the templateId
      */
@@ -359,5 +362,15 @@ public class TemplateRequestResponse
     public void setParentType(String parentType)
     {
         this.parentType = parentType;
+    }
+
+    public String getEmailSubject()
+    {
+        return emailSubject;
+    }
+
+    public void setEmailSubject(String emailSubject)
+    {
+        this.emailSubject = emailSubject;
     }
 }

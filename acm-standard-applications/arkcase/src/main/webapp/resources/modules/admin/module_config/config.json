@@ -375,6 +375,15 @@
                     "lookup": "userFullNames"
                 },
                 {
+                    "name": "emailSubject",
+                    "displayName": "admin.correspondenceManagement.templates.grid.emailSubject",
+                    "visible": true,
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<input ng-if=\"row.entity.objectType === 'CASE_FILE'\" class='ui-grid-cell-contents' type='text' ng-change='grid.appScope.emailSubjectChanged(row.entity)' ng-paste='grid.appScope.emailSubjectChanged(row.entity)' ng-input='row.entity.emailSubject' ng-model='row.entity.emailSubject'/>",
+                    "enableCellEdit": true,
+                    "width": 150
+                },
+                {
                     "name": "activated",
                     "displayName": "admin.correspondenceManagement.templates.grid.manualEmails",
                     "visible": true,
