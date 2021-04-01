@@ -201,8 +201,8 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         String body = "body";
         expect(templatingEngine.process(template, notification.getTemplateModelName(), object)).andReturn(body);
 
-        String subject = notification.getSubject() != null && !notification.getSubject().isEmpty() ? notification.getSubject() : notification.getTitle();
-        expect(templatingEngine.process(subject, notification.getTemplateModelName(), object)).andReturn(subject);
+        Capture<String> subjectCapture = EasyMock.newCapture();
+        expect(templatingEngine.process(capture(subjectCapture), eq(notification.getTemplateModelName()), eq(object))).andReturn("subject");
 
         Capture<EmailWithAttachmentsDTO> dtoCapture = EasyMock.newCapture();
         Capture<AcmUser> userCapture = EasyMock.newCapture();
@@ -219,6 +219,7 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         Notification returnedNotification = smtpNotificationSender.send(notification, object);
 
         verifyAll();
+        assertEquals("title", subjectCapture.getValue());
         assertEquals(NotificationConstants.STATE_SENT, returnedNotification.getState());
 
     }

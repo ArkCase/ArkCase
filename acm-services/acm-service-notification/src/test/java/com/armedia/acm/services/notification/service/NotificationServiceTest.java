@@ -226,6 +226,7 @@ public class NotificationServiceTest extends EasyMockSupport
         expect(mockNotificationDao.executeQuery(capture(propertiesCapture), eq(10), eq(10), capture(ruleCapture)))
                 .andReturn(new ArrayList<>()).anyTimes();
         String template = "Template";
+        Capture<String> subjectCapture = EasyMock.newCapture();
 
         smtpNotificationServer.setTemplateService(mockTemplateService);
         smtpNotificationServer.setTemplatingEngine(mockTemplatingEngine);
@@ -241,6 +242,8 @@ public class NotificationServiceTest extends EasyMockSupport
 
             expect(smtpNotificationServer.getTemplatingEngine().process(template, notification.getTemplateModelName(), notification))
                     .andReturn("Body").times(1);
+            expect(smtpNotificationServer.getTemplatingEngine().process(capture(subjectCapture), eq(notification.getTemplateModelName()), eq(notification)))
+                    .andReturn("subject").times(1);
             expect(mockTemplateModelProvider.getModel(notification)).andReturn(notification).times(1);
 
             smtpNotificationServer.getEmailSenderService().sendEmail(capture(emailWithAttachmentsDTOCapture), eq(null), eq(null));
@@ -353,6 +356,7 @@ public class NotificationServiceTest extends EasyMockSupport
         expect(mockNotificationDao.executeQuery(capture(propertiesCapture), eq(10), eq(10), capture(ruleCapture)))
                 .andReturn(new ArrayList<>()).anyTimes();
         String template = "Template";
+        Capture<String> subjectCapture = EasyMock.newCapture();
 
         smtpNotificationServer.setTemplateService(mockTemplateService);
         smtpNotificationServer.setTemplatingEngine(mockTemplatingEngine);
@@ -367,6 +371,8 @@ public class NotificationServiceTest extends EasyMockSupport
 
             expect(smtpNotificationServer.getTemplatingEngine().process(template, notification.getTemplateModelName(), notification))
                     .andReturn("Body").times(2);
+            expect(smtpNotificationServer.getTemplatingEngine().process(capture(subjectCapture), eq(notification.getTemplateModelName()), eq(notification)))
+                    .andReturn("subject").times(2);
             expect(mockTemplateModelProvider.getModel(notification)).andReturn(notification).times(2);
 
             smtpNotificationServer.getEmailSenderService().sendEmail(capture(emailWithAttachmentsDTOCapture), eq(null), eq(null));
