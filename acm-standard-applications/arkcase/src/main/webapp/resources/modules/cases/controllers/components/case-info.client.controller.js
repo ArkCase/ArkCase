@@ -209,6 +209,16 @@ angular.module('cases').controller(
                             $scope.hasSuggestedCases = value.data.length > 0;
                             $scope.numberOfSuggestedCases = value.data.length;
                         });
+
+                        var caseTypeObj = _.filter($scope.caseTypes, function(casefileType) {
+                            if (data.caseType == casefileType.key) {
+                                return casefileType;
+                            }
+                        });
+
+                        if (data.caseType) {
+                            data.caseType = $translate.instant(caseTypeObj[0].value);
+                        }
                     };
 
                     // Updates the ArkCase database when the user changes a case attribute
