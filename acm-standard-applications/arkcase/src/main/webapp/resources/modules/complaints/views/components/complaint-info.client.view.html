@@ -23,7 +23,7 @@
                 <div class="h4 font-bold">
                     <a href="#" editable-select="objectInfo.complaintType" onaftersave="saveComplaint()" permission="editComplaint"
                             permission-object-type="COMPLAINT" permission-properties="objectInfo" permission-action="disable"
-                            e-ng-options="c.key as (c.key | translateData: 'core.lookups.categories' : lang) for c in complaintTypes">
+                            e-ng-options="c.key as (c.value | translate) for c in complaintTypes">
                         {{ (objectInfo.complaintType | translateData: 'core.lookups.categories' : lang) || ('common.value.unknown' |
                         translate) }}</a>
                 </div>

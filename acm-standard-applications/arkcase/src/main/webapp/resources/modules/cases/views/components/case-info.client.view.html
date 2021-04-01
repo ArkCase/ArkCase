@@ -30,7 +30,7 @@
                 <div class="h4 font-bold">
                     <a href="#" editable-select="objectInfo.caseType" onaftersave="saveCase()" permission="editCase"
                             permission-object-type="CASE_FILE" permission-properties="objectInfo" permission-action="disable"
-                            e-ng-options="c.key as (c.key | translateData: 'core.lookups.categories' : lang) for c in caseTypes">
+                            e-ng-options="c.key as (c.value | translate) for c in caseTypes">
                         {{ (objectInfo.caseType | translateData: 'core.lookups.categories' : lang) || ('common.value.unknown' | translate)
                         }}</a>
                 </div>

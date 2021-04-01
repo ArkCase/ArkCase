@@ -131,7 +131,16 @@ angular.module('organizations').controller(
                                 });
                             }
 
-                            identification.identificationType = data.identification.identificationType;
+                            var orgTypeObj = _.filter($scope.identificationTypes, function(ident) {
+                                if (ident.key == data.identification.identificationType) {
+                                    return ident;
+                                }
+                            });
+
+                            if (data.identification.identificationType) {
+                                identification.identificationType = $translate.instant(orgTypeObj[0].value);
+                            }
+
                             identification.identificationNumber = data.identification.identificationNumber;
                             identification.identificationIssuer = data.identification.identificationIssuer;
                             identification.identificationYearIssued = data.identification.identificationYearIssued;
