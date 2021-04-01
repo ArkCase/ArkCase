@@ -27,6 +27,7 @@ package com.armedia.acm.plugins.ecm.web.api;
  * #L%
  */
 
+import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
@@ -37,8 +38,8 @@ import com.armedia.acm.plugins.ecm.model.FolderDTO;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.FolderEventPublisher;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -68,28 +69,22 @@ public class CopyFolderAPIController
     @ResponseBody
     public FolderDTO copyFolder(@PathVariable("folderId") Long folderId, @PathVariable("dstFolderId") Long dstFolderId,
             @PathVariable("targetObjectType") String targetObjectType, @PathVariable("targetObjectId") Long targetObjectId,
-            Authentication authentication, HttpSession session) throws AcmUserActionFailedException
+            Authentication authentication, HttpSession session) throws AcmUserActionFailedException, AcmAppErrorJsonMsg
     {
 
         /**
          * This API is documented in ark-document-management.raml. If you update the API, also update the RAML.
          */
 
-        if (log.isInfoEnabled())
-        {
-            log.info("Folder with id: " + folderId + " will be copy into folder with id: " + dstFolderId);
-        }
+        log.info("Folder with id: {} will be copy into folder with id: {}", folderId, dstFolderId);
         String ipAddress = (String) session.getAttribute(AcmFolderConstants.IP_ADDRESS_ATTRIBUTE);
         AcmFolder source = getFolderService().findById(folderId);
         try
         {
-            if (log.isInfoEnabled())
-            {
-                log.info("Folder with id: " + folderId + " successfully copied to the location with id: " + dstFolderId);
-            }
             AcmFolder folder = getFolderService().copyFolder(folderId, dstFolderId, targetObjectId, targetObjectType);
             getFolderEventPublisher().publishFolderCopiedEvent(source, authentication, ipAddress, true);
             getFolderEventPublisher().publishFolderCreatedEvent(folder, authentication, ipAddress, true);
+            log.info("Folder with id: {} successfully copied to the location with id: {}", folderId, dstFolderId);
             FolderDTO folderDTO = new FolderDTO();
             folderDTO.setOriginalFolderId(folderId);
             folderDTO.setNewFolder(folder);
@@ -97,14 +92,17 @@ public class CopyFolderAPIController
         }
         catch (AcmFolderException | AcmCreateObjectFailedException | AcmObjectNotFoundException e)
         {
-            if (log.isErrorEnabled())
-            {
-                log.error("Exception occurred while trying to copy folder with id: " + folderId + " to the location with id:" + dstFolderId
-                        + "  " + e.getMessage(), e);
-            }
+            log.error("Exception occurred while trying to copy folder with id: {} to the location with id: {}. {}", folderId,
+                    dstFolderId, e.getMessage());
             getFolderEventPublisher().publishFolderCopiedEvent(source, authentication, ipAddress, false);
             throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_COPY_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
-                    source.getId(), "Exception occurred while trying to copy folder " + e.getMessage(), e);
+                    source.getId(), e.getMessage(), e);
+        }
+        catch (AcmUserActionFailedException e)
+        {
+            log.error("Failed to copy folder with id: [{}] to the destination folder with id: [{}]. {}", folderId, dstFolderId,
+                    e.getMessage());
+            throw new AcmAppErrorJsonMsg(e.getShortMessage(), AcmFolderConstants.OBJECT_FOLDER_TYPE, e);
         }
     }
 

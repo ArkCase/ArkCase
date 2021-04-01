@@ -27,10 +27,9 @@ package com.armedia.acm.plugins.ecm.web.api;
  * #L%
  */
 
-import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.plugins.ecm.exception.LinkAlreadyExistException;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.AcmFolderConstants;
@@ -38,8 +37,8 @@ import com.armedia.acm.plugins.ecm.model.FolderDTO;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.FolderEventPublisher;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -69,7 +68,8 @@ public class CopyFolderAsLinkAPIController
     @ResponseBody
     public FolderDTO copyFolderAsLink(@PathVariable("folderId") Long folderId, @PathVariable("dstFolderId") Long dstFolderId,
             @PathVariable("targetObjectType") String targetObjectType, @PathVariable("targetObjectId") Long targetObjectId,
-            Authentication authentication, HttpSession session) throws AcmUserActionFailedException, LinkAlreadyExistException
+            Authentication authentication, HttpSession session)
+            throws AcmUserActionFailedException, LinkAlreadyExistException, AcmAppErrorJsonMsg
     {
 
         log.debug("Folder with id: {} will be a link into folder with id: {}", folderId, dstFolderId);
@@ -80,27 +80,29 @@ public class CopyFolderAsLinkAPIController
 
         try
         {
-
-            log.debug("A Link for folder with id: {} was successfully created to the location with id: {}", folderId, dstFolderId);
-
             AcmFolder folder = getFolderService().copyFolderAsLink(source, dstFolder, targetObjectId, targetObjectType);
             getFolderEventPublisher().publishFolderCopiedAsLinkEvent(source, authentication, ipAddress, true);
+            log.debug("A Link for folder with id: {} was successfully created to the location with id: {}", folderId, dstFolderId);
             FolderDTO folderDTO = new FolderDTO();
             folderDTO.setOriginalFolderId(folderId);
             folderDTO.setNewFolder(folder);
             folderDTO.setLink(folder.isLink());
             return folderDTO;
         }
-        catch (AcmObjectNotFoundException e)
+        catch (AcmObjectNotFoundException  | LinkAlreadyExistException e)
         {
-
-            log.error("Exception occurred while trying to copy folder with id: {} to the location with id: {}" + e.getMessage(), folderId,
-                    dstFolderId, e);
+            log.error("Exception occurred while trying to copy folder with id: {} to the location with id: {}. {}", folderId,
+                    dstFolderId, e.getMessage());
 
             getFolderEventPublisher().publishFolderCopiedAsLinkEvent(source, authentication, ipAddress, false);
             throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_COPY_FOLDER_AS_LINK,
-                    AcmFolderConstants.OBJECT_FOLDER_TYPE,
-                    source.getId(), "Exception occurred while trying to copy folder " + e.getMessage(), e);
+                    AcmFolderConstants.OBJECT_FOLDER_TYPE, source.getId(), e.getMessage(), e);
+        }
+        catch (AcmUserActionFailedException e)
+        {
+            log.error("Failed to copy folder with id: [{}] to the destination folder with id: [{}]. {}", folderId, dstFolderId,
+                    e.getMessage());
+            throw new AcmAppErrorJsonMsg(e.getShortMessage(), AcmFolderConstants.OBJECT_FOLDER_TYPE, e);
         }
     }
 

@@ -609,12 +609,6 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     public AcmFolder copyFolder(AcmFolder toBeCopied, AcmFolder dstFolder, Long targetObjectId, String targetObjectType)
             throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException, AcmFolderException
     {
-        if (toBeCopied.getParentFolder() == null)
-        {
-            log.info("The folder: {} is a root folder, can not be moved!", toBeCopied.getName());
-            throw new AcmFolderException("The folder: " + toBeCopied.getName() + " is a root folder, can not be moved!");
-        }
-
         if (dstFolder.isLink())
         {
             dstFolder = getFolderLinkTarget(dstFolder);
@@ -625,18 +619,45 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             toBeCopied = getFolderLinkTarget(toBeCopied);
         }
 
-        String cmisRepositoryId = getCmisRepositoryId(toBeCopied);
+        if (toBeCopied.getParentFolder() == null)
+        {
+            log.error("The folder: {} is a root folder, can not be moved!", toBeCopied.getName());
+            throw new AcmFolderException("The folder: " + toBeCopied.getName() + " is a root folder, can not be moved!");
+        }
 
+        checkDestinationFolderIsSubfolderOfSourceFolder(toBeCopied, dstFolder);
+
+        String cmisRepositoryId = getCmisRepositoryId(toBeCopied);
         Folder cmisFolderToBeCopied = getCmisFolder(toBeCopied);
         Folder cmisFolderParent = getCmisFolder(dstFolder);
 
-        AcmFolder copiedFolder = copyDir(cmisFolderParent, cmisFolderToBeCopied, dstFolder, toBeCopied, targetObjectId, targetObjectType,
+        return copyDir(cmisFolderParent, cmisFolderToBeCopied, dstFolder, toBeCopied, targetObjectId, targetObjectType,
                 cmisRepositoryId);
-        return copiedFolder;
     }
 
-    private Folder getCmisFolder(AcmFolder folder)
-            throws AcmUserActionFailedException
+    private void checkDestinationFolderIsSubfolderOfSourceFolder(AcmFolder toBeCopied, AcmFolder dstFolder) throws AcmUserActionFailedException
+    {
+        if (toBeCopied.getId().equals(dstFolder.getId()))
+        {
+            throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_COPY_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
+                    toBeCopied.getId(), "Destination folder is a subfolder of the source folder", null);
+        }
+
+        Set<AcmFolder> folderChildren = new HashSet<>();
+        findFolderChildren(toBeCopied, new HashSet<>(), folderChildren);
+
+        final Long dstFolderId = dstFolder.getId();
+        boolean dstFolderIsSubFolderOfSourceFolder = folderChildren.stream()
+                .anyMatch(it -> it.getId()
+                        .equals(dstFolderId));
+        if (dstFolderIsSubFolderOfSourceFolder)
+        {
+            throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_COPY_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
+                    toBeCopied.getId(), "Destination folder is a subfolder of the source folder", null);
+        }
+    }
+
+    private Folder getCmisFolder(AcmFolder folder) throws AcmUserActionFailedException
     {
         Folder result;
         Map<String, Object> folderProperties = new HashMap<>();
@@ -652,14 +673,14 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         catch (ArkCaseFileRepositoryException | ClassCastException e)
         {
             throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_GET_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
-                    folder.getId(), "Folder " + folder.getName() + "was not fetched successfully", e);
+                    folder.getId(), "Folder " + folder.getName() + " was not fetched successfully", e);
         }
         return result;
     }
 
     private AcmFolder copyDir(Folder cmisFolderParent, Folder cmisFolderToBeCopied, AcmFolder dstFolder, AcmFolder toBeCopied,
-            Long targetObjectId,
-            String targetObjectType, String cmisRepositoryId) throws AcmUserActionFailedException, AcmObjectNotFoundException
+            Long targetObjectId, String targetObjectType, String cmisRepositoryId)
+            throws AcmUserActionFailedException, AcmObjectNotFoundException
     {
         Map<String, Object> newFolderProperties = new HashMap<>();
 
@@ -692,8 +713,8 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     private void copyChildren(Folder parentFolder, Folder toCopyFolder, Long targetObjectId, String targetObjectType,
             String cmisRepositoryId) throws AcmObjectNotFoundException, AcmUserActionFailedException
     {
-        String acmParentCmisId = toCopyFolder.getProperty(EcmFileConstants.REPOSITORY_VERSION_ID).getValue();
-        String dstFolderCmisId = parentFolder.getProperty(EcmFileConstants.REPOSITORY_VERSION_ID).getValue();
+        String acmParentCmisId = toCopyFolder.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID);
+        String dstFolderCmisId = parentFolder.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID);
 
         AcmFolder acmParent = getFolderDao().findByCmisFolderId(acmParentCmisId);
         AcmFolder dstFolder = getFolderDao().findByCmisFolderId(dstFolderCmisId);
@@ -705,7 +726,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         {
             if (child instanceof Document)
             {
-                String fileCmisId = child.getProperty(EcmFileConstants.REPOSITORY_VERSION_ID).getValue();
+                String fileCmisId = child.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID);
                 EcmFile childEcmFile = getFileDao().findByCmisFileIdAndFolderId(fileCmisId, acmParent.getId());
                 if (childEcmFile != null)
                 {
@@ -718,7 +739,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             }
             else if (child instanceof Folder)
             {
-                String folderCmisId = child.getProperty(EcmFileConstants.REPOSITORY_VERSION_ID).getValue();
+                String folderCmisId = child.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID);
                 AcmFolder childAcmFolder = getFolderDao().findByCmisFolderId(folderCmisId);
                 if (childAcmFolder != null)
                 {
@@ -1679,39 +1700,30 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 0, objectType = "FOLDER", lockType = "READ")
     @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 1, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
     public AcmFolder copyFolderAsLink(AcmFolder toBeCopied, AcmFolder dstFolder, Long targetObjectId, String targetObjectType)
-            throws AcmObjectNotFoundException, LinkAlreadyExistException
+            throws AcmObjectNotFoundException, LinkAlreadyExistException, AcmUserActionFailedException
     {
-        if (toBeCopied == null || dstFolder == null)
-        {
-            throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE, null,
-                    "Folder or Destination folder not found", null);
-        }
-
-        AcmFolder folderLink = null;
-
-        folderLink = copyFolderProperties(toBeCopied, dstFolder);
-        folderLink.setLink(true);
-
-        getFileParticipantService().setFolderParticipantsFromParentFolder(folderLink);
-
+        AcmFolder linkFolder;
         try
         {
-            return getFolderDao().save(folderLink);
+            linkFolder = copyFolderAsLink(toBeCopied, dstFolder, targetObjectId, targetObjectType,
+                    dstFolder != null ? toBeCopied.getName() : "");
         }
         catch (TransactionSystemException e)
         {
-            log.error("Folder with id {} already exist in current directory", folderLink.getId());
-            throw new LinkAlreadyExistException("Link for folder " + folderLink.getName() + " already exist " +
+            log.error("Folder with id {} already exist in current directory", toBeCopied.getId());
+            throw new LinkAlreadyExistException("Link for folder " + toBeCopied.getName() + " already exist " +
                     "in current directory");
         }
 
+        getFileParticipantService().setFolderParticipantsFromParentFolder(linkFolder);
+        return linkFolder;
     }
 
     @Override
     @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 0, objectType = "FOLDER", lockType = "READ")
     @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 1, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
     public AcmFolder copyFolderAsLink(AcmFolder toBeCopied, AcmFolder dstFolder, Long targetObjectId, String targetObjectType,
-            String newFolderName) throws AcmObjectNotFoundException
+            String newFolderName) throws AcmObjectNotFoundException, AcmUserActionFailedException
     {
         if (toBeCopied == null || dstFolder == null)
         {
@@ -1719,15 +1731,12 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
                     "Folder or Destination folder not found", null);
         }
 
-        AcmFolder folderLink = null;
+        checkDestinationFolderIsSubfolderOfSourceFolder(toBeCopied, dstFolder);
 
-        folderLink = copyFolderProperties(toBeCopied, dstFolder);
+        AcmFolder folderLink = copyFolderProperties(toBeCopied, dstFolder);
         folderLink.setName(newFolderName);
         folderLink.setLink(true);
-
-        AcmFolder folder = getFolderDao().save(folderLink);
-
-        return folder;
+        return getFolderDao().save(folderLink);
     }
 
     private AcmFolder copyFolderProperties(AcmFolder folder, AcmFolder destFolder)
