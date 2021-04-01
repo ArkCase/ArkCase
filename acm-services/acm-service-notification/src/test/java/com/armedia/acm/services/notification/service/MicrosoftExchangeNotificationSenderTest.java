@@ -190,6 +190,9 @@ public class MicrosoftExchangeNotificationSenderTest extends EasyMockSupport
         String body = "body";
         expect(templatingEngine.process(template, notification.getTemplateModelName(), object)).andReturn(body);
 
+        String subject = notification.getSubject() != null && !notification.getSubject().isEmpty() ? notification.getSubject() : notification.getTitle();
+        expect(templatingEngine.process(subject, notification.getTemplateModelName(), object)).andReturn(subject);
+
         Capture<EmailWithAttachmentsDTO> emailWithAttachmentsDTOCapture = EasyMock.newCapture();
         Capture<AcmUser> userCapture = EasyMock.newCapture();
         Authentication authentication = SecurityContextHolder.getContext() != null ? SecurityContextHolder.getContext().getAuthentication()
