@@ -437,8 +437,8 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
         TemplateModelProvider modelProvider = getTemplateModelProvider(templateModelProviderClass);
         if (modelProvider != null)
         {
-            Object object = modelProvider.getModel(notification);
             try {
+                Object object = modelProvider.getModel(notification);
                 String body = getTemplatingEngine().process(templateContent, templateModelName, object);
                 notification.setEmailContent(body);
                 String subject = getTemplatingEngine().process(template.getEmailSubject(), templateModelName, object);

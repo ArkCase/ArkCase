@@ -123,7 +123,7 @@ angular.module('services').factory('DocTreeExt.Email',
                             emailSendConfiguration: DocTree.treeConfig.emailSendConfiguration,
                             DocTree: DocTree,
                             emailOfOriginator: emailOfOriginator,
-                            emailSubject: DocTree.scope.objectType === 'CASE_FILE' ? "Request " + DocTree.scope.objectInfo.acmObjectNumber : DocTree.scope.objectType.charAt(0) + DocTree.scope.objectType.substring(1).toLowerCase() + " " + DocTree.scope.objectInfo.acmObjectNumber
+                            emailSubject: DocTree.scope.objectType === 'CASE_FILE' ? "Case " + DocTree.scope.objectInfo.acmObjectNumber : DocTree.scope.objectType.charAt(0) + DocTree.scope.objectType.substring(1).toLowerCase() + " " + DocTree.scope.objectInfo.acmObjectNumber
                         };
 
                         modalInstance = $modal.open({
