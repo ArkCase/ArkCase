@@ -205,37 +205,33 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
         {
             if ((AuthenticationTokenConstants.ACTIVE).equals(authenticationToken.getStatus()))
             {
-                String fileId = ServletRequestUtils.getStringParameter(request, "ecmFileId");
-                if (token.equals(authenticationToken.getKey())
-                        && Objects.equals(fileId, authenticationToken.getFileId().toString()))
+                log.trace("Starting token authentication for email links using acm_email_ticket [{}]", token);
+                int days = Days.daysBetween(new DateTime(authenticationToken.getCreated()), new DateTime()).getDays();
+                // token expires after 3 days
+                if (days > AuthenticationTokenService.EMAIL_TICKET_EXPIRATION_DAYS)
                 {
-                    log.trace("Starting token authentication for email links using acm_email_ticket [{}]", token);
-                    int days = Days.daysBetween(new DateTime(authenticationToken.getCreated()), new DateTime()).getDays();
-                    // token expires after 3 days
-                    if (days > AuthenticationTokenService.EMAIL_TICKET_EXPIRATION_DAYS)
-                    {
-                        authenticationToken.setStatus(AuthenticationTokenConstants.EXPIRED);
-                        authenticationToken.setModifier(authenticationToken.getCreator());
-                        authenticationToken.setModified(new Date());
-                        authenticationTokenService.saveAuthenticationToken(authenticationToken);
-                        log.warn("Authentication token acm_email_ticket [{}] for user [{}] expired", token,
-                                authenticationToken.getCreator());
-                        return;
-                    }
-                    try
-                    {
-                        authenticateUser(request, authenticationToken.getCreator());
-                        log.trace("User [{}] successfully authenticated using acm_email_ticket [{}]",
-                                authenticationToken.getCreator(), token);
-                    }
-                    catch (AuthenticationServiceException e)
-                    {
-                        log.warn("User [{}] failed authenticating using acm_email_ticket [{}]", authenticationToken.getCreator(),
-                                token);
-                    }
+                    authenticationToken.setStatus(AuthenticationTokenConstants.EXPIRED);
+                    authenticationToken.setModifier(authenticationToken.getCreator());
+                    authenticationToken.setModified(new Date());
+                    authenticationTokenService.saveAuthenticationToken(authenticationToken);
+                    log.warn("Authentication token acm_email_ticket [{}] for user [{}] expired", token,
+                            authenticationToken.getCreator());
+                    return;
+                }
+                try
+                {
+                    authenticateUser(request, authenticationToken.getCreator());
+                    log.trace("User [{}] successfully authenticated using acm_email_ticket [{}]",
+                            authenticationToken.getCreator(), token);
+                }
+                catch (AuthenticationServiceException e)
+                {
+                    log.warn("User [{}] failed authenticating using acm_email_ticket [{}]", authenticationToken.getCreator(),
+                            token);
                 }
             }
         }
+
     }
 
     /**
