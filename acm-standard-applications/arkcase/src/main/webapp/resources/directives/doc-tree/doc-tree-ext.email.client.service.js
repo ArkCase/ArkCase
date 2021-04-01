@@ -306,6 +306,8 @@ angular.module('directives').controller('directives.DocTreeEmailDialogController
 
     $scope.onClickOk = function() {
         $scope.emailDataModel.recipients = $scope.recipientsStr.split('; ');
+        $scope.emailDataModel.ccRecipients = $scope.ccRecipientsStr.split('; ');
+        $scope.emailDataModel.bccRecipients = $scope.bccRecipientsStr.split('; ');
         $scope.emailDataModel.template = _.contains($scope.template, '.html') ? $scope.template.replace('.html', '') : $scope.template;
         $modalInstance.close($scope.emailDataModel);
     };
