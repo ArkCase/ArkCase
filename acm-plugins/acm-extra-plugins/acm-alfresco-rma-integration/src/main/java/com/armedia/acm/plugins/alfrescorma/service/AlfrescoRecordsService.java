@@ -27,6 +27,21 @@ package com.armedia.acm.plugins.alfrescorma.service;
  * #L%
  */
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import org.apache.chemistry.opencmis.client.api.Folder;
+import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.slf4j.MDC;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.core.Authentication;
+
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
@@ -42,21 +57,6 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.web.api.MDCConstants;
-
-import org.apache.chemistry.opencmis.client.api.Folder;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
-import org.slf4j.MDC;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.security.core.Authentication;
-
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-import java.util.List;
-
 
 /**
  * Created by armdev on 3/27/15.
@@ -117,7 +117,9 @@ public class AlfrescoRecordsService implements AcmConfigurablePlugin
         {
             for (AcmCmisObject file : files.getChildren())
             {
-                declareFileAsRecord(container, receiveDate, recordFolderName, originatorOrg, file.getModifier(), file.getCmisObjectId(),
+                String originator = file.getCustodian() != null ? file.getCustodian() : file.getCreator();
+
+                declareFileAsRecord(container, receiveDate, recordFolderName, originatorOrg, originator, file.getCmisObjectId(),
                         file.getStatus(), file.getObjectId(), file.isLink());
             }
         }
@@ -131,7 +133,7 @@ public class AlfrescoRecordsService implements AcmConfigurablePlugin
     protected void declareFileAsRecord(AcmContainer container, Date receiveDate, String recordFolderName, String originatorOrg,
             String originator, String cmisObjectId, String objectStatus, Long ecmFileId) throws AlfrescoServiceException
     {
-        declareFileAsRecord(container, receiveDate, recordFolderName, originatorOrg, cmisObjectId, cmisObjectId,
+        declareFileAsRecord(container, receiveDate, recordFolderName, originatorOrg,  originator,cmisObjectId,
                 objectStatus, ecmFileId, false);
     }
 
@@ -139,19 +141,28 @@ public class AlfrescoRecordsService implements AcmConfigurablePlugin
     protected void declareFileAsRecord(AcmContainer container, Date receiveDate, String recordFolderName, String originatorOrg,
             String originator, String cmisObjectId, String objectStatus, Long ecmFileId, boolean isFileLink) throws AlfrescoServiceException
     {
-        if (!isFileLink) {
+        if (!isFileLink)
+        {
             MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
             MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
             getAuditPropertyEntityAdapter().setUserId("RECORDS_SERVICE_USER");
 
-            if (!((EcmFileConstants.RECORD).equals(objectStatus))) {
+            if (!((EcmFileConstants.RECORD).equals(objectStatus)))
+            {
                 declareRecord(cmisObjectId);
 
                 writeRecordMetadata(receiveDate, originatorOrg, cmisObjectId, originator);
+                Folder categoryFolder;
+                if (getRmaConfig().getRmaUseSameCategoryFolderPathForCaseFiles() && container.getContainerObjectType().equals("CASE_FILE"))
+                {
+                    categoryFolder = findCategoryFolderByPath(container);
+                }
+                else
+                {
+                    categoryFolder = findFolder(container.getContainerObjectType());
+                }
 
-                Folder categoryFolder = findFolder(container.getContainerObjectType());
-
-                Folder parentFolder = addDateInAlfrescoStructure(categoryFolder, container.getContainerObjectType());
+                Folder parentFolder = addDateInAlfrescoStructure(categoryFolder);
 
                 String recordFolderId = createOrFindRecordFolderOrRecordCategory(recordFolderName, parentFolder, "Record Folder");
                 log.debug("recordFolderId: {}", recordFolderId);
@@ -166,7 +177,24 @@ public class AlfrescoRecordsService implements AcmConfigurablePlugin
         }
     }
 
-    public Folder addDateInAlfrescoStructure(Folder categoryFolder, String objectType) throws AlfrescoServiceException
+    private Folder findCategoryFolderByPath(AcmContainer container) throws AlfrescoServiceException
+    {
+        String parentFolderCmisId = container.getFolder().getCmisFolderId();
+
+        try
+        {
+            Folder activeParentFolder = (Folder) ecmFileService.findObjectById(container.getCmisRepositoryId(), parentFolderCmisId);
+            String path = activeParentFolder.getPath();
+            String categoryFolderName = StringUtils.substringBetween(path,"documentLibrary/", "/");
+            return findRecordFolder(categoryFolderName);
+        }
+        catch (Exception e)
+        {
+            throw new AlfrescoServiceException("Record Category folder not found for " + container.getFolder().getCmisFolderId(), e);
+        }
+    }
+
+    public Folder addDateInAlfrescoStructure(Folder categoryFolder) throws AlfrescoServiceException
     {
 
         Calendar calendar = Calendar.getInstance();
@@ -176,7 +204,7 @@ public class AlfrescoRecordsService implements AcmConfigurablePlugin
 
         String yearFolderId = createOrFindRecordFolderOrRecordCategory(year, categoryFolder, "Record Category");
         log.debug("yearFolderId: {}", yearFolderId);
-        String yearPath = rmaConfig.getCategoryFolderForObject(objectType) + "/" + year;
+        String yearPath = categoryFolder.getName() + "/" + year;
         Folder yearFolder = findRecordFolder(yearPath);
 
         String monthFolderId = createOrFindRecordFolderOrRecordCategory(month, yearFolder, "Record Category");
@@ -195,7 +223,7 @@ public class AlfrescoRecordsService implements AcmConfigurablePlugin
     {
         if (value < 10)
         {
-            return  "0" + String.valueOf(value);
+            return "0" + value;
         }
         else
         {
@@ -218,7 +246,16 @@ public class AlfrescoRecordsService implements AcmConfigurablePlugin
         getMoveToRecordFolderService().service(moveToRecordFolderContext);
     }
 
-    protected String createOrFindRecordFolderOrRecordCategory(String recordFolderName, Folder folder, String type) throws AlfrescoServiceException
+    public String createNewRecordCategoryInBaseFolder(String recordCategoryName) throws AlfrescoServiceException
+    {
+        Folder baseFolder = findRecordFolder("");
+        String categoryFolderCmisId = createOrFindRecordFolderOrRecordCategory(recordCategoryName, baseFolder, "Record Category");
+
+        return categoryFolderCmisId;
+    }
+
+    protected String createOrFindRecordFolderOrRecordCategory(String recordFolderName, Folder folder, String type)
+            throws AlfrescoServiceException
     {
         Map<String, Object> findRecordFolderContext = new HashMap<>();
         findRecordFolderContext.put("parentFolder", folder);
@@ -286,17 +323,20 @@ public class AlfrescoRecordsService implements AcmConfigurablePlugin
         }
     }
 
-    public void setFileLinksStatusAsRecord(Long fileId) {
+    public void setFileLinksStatusAsRecord(Long fileId)
+    {
         try
         {
             List<EcmFile> ecmFileLinks = getEcmFileService().getFileLinks(fileId);
-            for (EcmFile ecmFileLink : ecmFileLinks) {
+            for (EcmFile ecmFileLink : ecmFileLinks)
+            {
                 ecmFileLink.setStatus(EcmFileConstants.RECORD);
                 getEcmFileDao().save(ecmFileLink);
                 log.debug("For file link with ID: [{}] status is changed to [{}]", ecmFileLink.getFileId(), EcmFileConstants.RECORD);
             }
         }
-        catch (AcmObjectNotFoundException e) {
+        catch (AcmObjectNotFoundException e)
+        {
             log.error("File link with id: [{}] does not exists - ", fileId, e.getMessage());
         }
     }
@@ -366,7 +406,8 @@ public class AlfrescoRecordsService implements AcmConfigurablePlugin
         return createOrFindRecordFolderOrRecordCategoryService;
     }
 
-    public void setCreateOrFindRecordFolderOrRecordCategoryService(CreateOrFindRecordFolderOrRecordCategoryService createOrFindRecordFolderOrRecordCategoryService)
+    public void setCreateOrFindRecordFolderOrRecordCategoryService(
+            CreateOrFindRecordFolderOrRecordCategoryService createOrFindRecordFolderOrRecordCategoryService)
     {
         this.createOrFindRecordFolderOrRecordCategoryService = createOrFindRecordFolderOrRecordCategoryService;
     }

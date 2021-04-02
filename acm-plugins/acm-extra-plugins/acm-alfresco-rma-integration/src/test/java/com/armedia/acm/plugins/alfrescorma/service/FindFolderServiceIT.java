@@ -58,6 +58,7 @@ import java.util.UUID;
         "/spring/spring-library-ecm-tika.xml",
         "/spring/spring-library-data-source.xml",
         "/spring/spring-library-context-holder.xml",
+        "/spring/spring-library-pdf-utilities.xml",
         "/spring/spring-library-search.xml",
         "/spring/spring-library-user-service.xml",
         "/spring/spring-library-core-api.xml",
