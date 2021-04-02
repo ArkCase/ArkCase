@@ -117,7 +117,9 @@ public class AlfrescoRecordsService implements AcmConfigurablePlugin
         {
             for (AcmCmisObject file : files.getChildren())
             {
-                declareFileAsRecord(container, receiveDate, recordFolderName, originatorOrg, file.getModifier(), file.getCmisObjectId(),
+                String originator = file.getCustodian() != null ? file.getCustodian() : file.getCreator();
+
+                declareFileAsRecord(container, receiveDate, recordFolderName, originatorOrg, originator, file.getCmisObjectId(),
                         file.getStatus(), file.getObjectId(), file.isLink());
             }
         }
@@ -131,7 +133,7 @@ public class AlfrescoRecordsService implements AcmConfigurablePlugin
     protected void declareFileAsRecord(AcmContainer container, Date receiveDate, String recordFolderName, String originatorOrg,
             String originator, String cmisObjectId, String objectStatus, Long ecmFileId) throws AlfrescoServiceException
     {
-        declareFileAsRecord(container, receiveDate, recordFolderName, originatorOrg, cmisObjectId, cmisObjectId,
+        declareFileAsRecord(container, receiveDate, recordFolderName, originatorOrg,  originator,cmisObjectId,
                 objectStatus, ecmFileId, false);
     }
 

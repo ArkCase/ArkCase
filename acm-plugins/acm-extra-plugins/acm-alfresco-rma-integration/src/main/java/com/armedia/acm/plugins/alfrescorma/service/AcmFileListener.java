@@ -29,6 +29,7 @@ package com.armedia.acm.plugins.alfrescorma.service;
 
 import com.armedia.acm.plugins.alfrescorma.exception.AlfrescoServiceException;
 import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaConfig;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileAddedEvent;
 
 import org.apache.logging.log4j.Logger;
@@ -63,10 +64,13 @@ public class AcmFileListener implements ApplicationListener<EcmFileAddedEvent>
 
         try
         {
+            EcmFile ecmFile = ecmFileAddedEvent.getSource();
+            String originator = ecmFile.getCustodian() != null ? ecmFile.getCustodian() : ecmFileAddedEvent.getUserId();
+
             getAlfrescoRecordsService().declareFileAsRecord(ecmFileAddedEvent.getSource().getContainer(), ecmFileAddedEvent.getEventDate(),
                     ecmFileAddedEvent.getParentObjectName(),
                     rmaConfig.getDefaultOriginatorOrg(),
-                    ecmFileAddedEvent.getUserId(), ecmFileAddedEvent.getEcmFileId(), ecmFileAddedEvent.getSource().getStatus(),
+                    originator, ecmFileAddedEvent.getEcmFileId(), ecmFileAddedEvent.getSource().getStatus(),
                     ecmFileAddedEvent.getObjectId());
 
         }
