@@ -131,6 +131,8 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
             throws Exception
     {
         Exception exception = null;
+        String ccEmailAddresses = "";
+        String bccEmailAddresses = "";
 
         List<AcmEvent> sentEvents = new ArrayList<>();
         Map<String, InputStreamDataSource> attachments = processAttachments(in, user, sentEvents);
@@ -138,10 +140,23 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
                 .filter(this::isEmailValid)
                 .collect(Collectors.joining(","));
 
+        if (in.getCcEmailAddresses() != null && !in.getCcEmailAddresses().isEmpty())
+        {
+            ccEmailAddresses = in.getCcEmailAddresses().stream()
+                    .filter(this::isEmailValid)
+                    .collect(Collectors.joining(","));
+        }
+        if (in.getBccEmailAddresses() != null && !in.getBccEmailAddresses().isEmpty())
+        {
+            bccEmailAddresses = in.getBccEmailAddresses().stream()
+                    .filter(this::isEmailValid)
+                    .collect(Collectors.joining(","));
+        }
+
         try
         {
             acmMailSender.sendMultipartEmail(emailAddresses, in.getEmailGroup(), in.getSubject(), in.getBody(),
-                    new ArrayList<>(attachments.values()), in.getObjectType(), in.getObjectId());
+                    new ArrayList<>(attachments.values()), in.getObjectType(), in.getObjectId(), ccEmailAddresses, bccEmailAddresses);
         }
         catch (Exception e)
         {
@@ -182,7 +197,8 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
             throws Exception
     {
         Exception exception = null;
-
+        String ccEmailAddresses = "";
+        String bccEmailAddresses = "";
         setFilenames(in);
 
         List<AcmEvent> sentEvents = new ArrayList<>();
@@ -190,11 +206,23 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
         String emailAddresses = in.getEmailAddresses().stream()
                 .filter(this::isEmailValid)
                 .collect(Collectors.joining(","));
+        if (in.getCcEmailAddresses() != null && !in.getCcEmailAddresses().isEmpty())
+        {
+            ccEmailAddresses = in.getCcEmailAddresses().stream()
+                    .filter(this::isEmailValid)
+                    .collect(Collectors.joining(","));
+        }
+        if (in.getBccEmailAddresses() != null && !in.getBccEmailAddresses().isEmpty())
+        {
+            bccEmailAddresses = in.getBccEmailAddresses().stream()
+                    .filter(this::isEmailValid)
+                    .collect(Collectors.joining(","));
+        }
 
         try
         {
             acmMailSender.sendMultipartEmail(emailAddresses, in.getSubject(), makeNote(emailAddresses, in, authentication),
-                    new ArrayList<>(attachments.values()), in.getObjectType(), in.getObjectId());
+                    new ArrayList<>(attachments.values()), in.getObjectType(), in.getObjectId(), ccEmailAddresses, bccEmailAddresses);
         }
         catch (Exception e)
         {
