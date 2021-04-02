@@ -156,16 +156,6 @@
                             <span class="text-danger" ng-if="!config.data.originator.person.familyName && formInvalid" translate>
                                 cases.newRequest.lastName.validation.error</span>
                         </div>
-                        <div class="col-sm-2">
-                            <label for="position" translate>cases.newRequest.position.label</label>
-                        </div>
-                        <div class="col-sm-4">
-                            <input type="position" class="form-control" id="position" ng-model="config.data.originator.person.position"
-                                    placeholder="{{'cases.newRequest.position.placeholder' | translate}}" name="position"
-                                    ng-disabled="isExistingPerson">
-                        </div>
-                    </div>
-                    <div class="row form-group">
                         <div class="col-sm-2 form-group">
                             <label for="phone" translate>cases.newRequest.phone.label </label>
                         </div>
@@ -178,6 +168,9 @@
                                     ng-if="!config.data.originator.person.defaultPhone.value && formInvalid && !phoneEmpty" translate>
                                 cases.newRequest.phone.validation.errorInvalid</span>
                         </div>
+
+                    </div>
+                    <div class="row form-group">
                         <div class="col-sm-2 form-group">
                             <label for="organization" translate>cases.newRequest.organization.label </label>
                         </div>
@@ -185,6 +178,17 @@
                             <input type="text" id="organization" ng-model="organizationValue" readonly ng-click="searchOrganization()"
                                     class="input-md form-control" placeholder="{{'cases.newRequest.organization.placeholder' | translate}}"
                                     name="organization">
+                        </div>
+                        <div class="col-sm-2">
+                            <label for="personPosition" translate>cases.newRequest.position.label</label>
+                        </div>
+                        <div class="col-sm-4">
+                            <select id="personPosition" class="form-control"
+                                    ng-model="personPosition" ng-disabled="true">
+                                <option ng-repeat="option in positions" value="{{option.key}}">
+                                    {{option.value | translate}}
+                                </option>
+                            </select>
                         </div>
                     </div>
                     <div class="row form-group">

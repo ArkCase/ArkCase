@@ -101,8 +101,9 @@ angular.module('cases').controller(
             var japanStates = ObjectLookupService.getLookupByLookupName('japanStates');
             var commonModuleConfig = ConfigService.getModuleConfig("common");
             var adminFoiaConfig = AdminFoiaConfigService.getFoiaConfig();
+            var positionLookup = ObjectLookupService.getPersonOrganizationRelationTypes();
 
-            $q.all([requestConfig, componentsAgenciesPromise, organizationTypeLookup, prefixNewRequest, newRequestTypes, deliveryMethodOfResponsesRequest, payFeesRequest, requestCategories, stateRequest, promiseConfigTitle, personTypesLookup, getPortal, getCountries, getAddressTypes, canadaProvinces, japanStates, commonModuleConfig, adminFoiaConfig]).then(function (data) {
+            $q.all([requestConfig, componentsAgenciesPromise, organizationTypeLookup, prefixNewRequest, newRequestTypes, deliveryMethodOfResponsesRequest, payFeesRequest, requestCategories, stateRequest, promiseConfigTitle, personTypesLookup, getPortal, getCountries, getAddressTypes, canadaProvinces, japanStates, commonModuleConfig, adminFoiaConfig, positionLookup]).then(function (data) {
 
                 var moduleConfig = data[0];
                 var componentsAgencies = data[1];
@@ -122,6 +123,7 @@ angular.module('cases').controller(
                 var japanStates = data[15];
                 $scope.commonModuleConfig = data[16];
                 $scope.enableNewPortalUserCreation = data[17].data.createNewPortalUserOptionOnArkcaseRequestForm;
+                $scope.positions = data[18];
 
                 if (!Util.isEmpty(configTitle)) {
                     $scope.enableTitle = configTitle.data.CASE_FILE.enableTitleField;
@@ -396,7 +398,7 @@ angular.module('cases').controller(
                 var associationFound = _.find($scope.config.data.originator.person.organizationAssociations, function (item) {
                     return !Util.isEmpty(item) && !Util.isEmpty(item.organization);
                 });
-                var association = !!$scope.config.data.originator.person.organizationAssociations[0] ? $scope.config.data.originator.person.organizationAssociations[0] : {};
+                var association = {};
                 var params = {
                     showSetPrimary: true,
                     isDefault: false,
@@ -420,16 +422,21 @@ angular.module('cases').controller(
                 });
 
                 modalInstance.result.then(function (data) {
-                    $scope.config.data.originator.person.organizations = [];
                     if (data.organization) {
-                        $scope.config.data.originator.person.organizations.push(data.organization);
-                        setOrganizationAssociation(association, data);
                         $scope.organizationValue = data.organization.organizationValue;
+                        $scope.personPosition = data.type;
+                        setOrganizationAssociation(association, data);
                     } else {
                         OrganizationInfoService.getOrganizationInfo(data.organizationId).then(function (organization) {
                             data.organization = organization;
                             $scope.organizationValue = data.organization.organizationValue;
-                            $scope.config.data.originator.person.organizations.push(data.organization);
+                            if(Util.isEmpty($scope.config.data.originator.person.organizationAssociations)){
+                                association =_.find($scope.config.data.originator.person.organizationAssociations, function (item) {
+                                    return item.organization.organizationId === data.organization.organizationId;
+                                });
+
+                            }
+                            $scope.personPosition = data.type;
                             setOrganizationAssociation(association, data);
                         });
                     }
@@ -454,6 +461,7 @@ angular.module('cases').controller(
                     if (defaultAssociation) {
                         defaultAssociation.defaultOrganization = false;
                     }
+                    association.person.defaultOrganization = association;
                 }
                 association.defaultOrganization = data.isDefault;
 
