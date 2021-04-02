@@ -27,13 +27,15 @@ package com.armedia.acm.portalgateway.model;
  * #L%
  */
 
+import com.armedia.acm.core.DynamicApplicationConfig;
+import com.armedia.acm.core.UnmodifiableConfigProperty;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import org.springframework.beans.factory.annotation.Value;
 
 @JsonSerialize(as = PortalConfig.class)
-public class PortalConfig
+public class PortalConfig implements DynamicApplicationConfig
 {
     @JsonProperty("portal.id")
     @Value("${portal.id}")
@@ -71,6 +73,10 @@ public class PortalConfig
     @Value("${portal.responseInstallment.maxDownloadAttempts}")
     private Integer maxDownloadAttempts;
 
+    @UnmodifiableConfigProperty
+    @JsonProperty("portal.serviceProvider.directory.name")
+    @Value("${portal.serviceProvider.directory.name}")
+    private String portalDirectoryName;
 
     public String getId() {
         return id;
@@ -148,5 +154,15 @@ public class PortalConfig
     public void setMaxDownloadAttempts(Integer maxDownloadAttempts)
     {
         this.maxDownloadAttempts = maxDownloadAttempts;
+    }
+
+    public String getPortalDirectoryName()
+    {
+        return portalDirectoryName;
+    }
+
+    public void setPortalDirectoryName(String portalDirectoryName)
+    {
+        this.portalDirectoryName = portalDirectoryName;
     }
 }

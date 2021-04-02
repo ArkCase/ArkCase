@@ -2,8 +2,10 @@
 
 angular.module('admin').controller(
         'Admin.OrganizationalHierarchyController',
-        [ '$scope', '$timeout', 'Admin.OrganizationalHierarchyService', '$q', '$modal', 'MessageService', '$translate', 'Admin.ModalDialogService', 'UtilService', 'Admin.LdapConfigService',
-                function($scope, $timeout, organizationalHierarchyService, $q, $modal, messageService, $translate, ModalDialogService, Util, LdapConfigService) {
+        [ '$scope', '$timeout', 'Admin.OrganizationalHierarchyService', '$q', '$modal', 'MessageService', '$translate',
+            'Admin.ModalDialogService', 'UtilService', 'Admin.LdapConfigService', 'Admin.PortalConfigurationService',
+                function($scope, $timeout, organizationalHierarchyService, $q, $modal, messageService, $translate, ModalDialogService, Util,
+                         LdapConfigService, AdminPortalConfigurationService) {
 
                     $scope.data = [];
                     var groupsMap = {};
@@ -11,32 +13,13 @@ angular.module('admin').controller(
                     var gridPageSize;
                     var controlGroups = [];
 
-                    var enableEditingLdapUsers = false;
-                    function getEnableEditingLdapUsers() {
-                        var tempLdapPromise = LdapConfigService.retrieveDirectories();
-                        tempLdapPromise.then(function(directories) {
-                            removePrefixInKey(directories.data);
-                            _.forEach(directories.data , function (data) {
-                                enableEditingLdapUsers = data.enableEditingLdapUsers;
-                            });
-                            $scope.showButton = enableEditingLdapUsers;
-                        });
-                    }
+                    var directoriesConfigPromise = LdapConfigService.retrieveDirectories();
 
-                    //we need this because key name contains '.'
-                    function removePrefixInKey(data) {
-                        angular.forEach(data, function(row, index) {
-                            angular.forEach(row, function(element, key) {
-                                if (key.match('.') !== -1) {
-                                    delete row[key];
-                                    var newKey = key.replace(/[a-zA-Z]*?\./, '');
-                                    row[newKey] = element;
-                                }
-                            });
-                        });
-                    }
-                    getEnableEditingLdapUsers();
-                    LdapConfigService.retrieveDirectories().then(function(directories) {
+                    AdminPortalConfigurationService.getPortalConfig().then(function(config) {
+                        $scope.portalDirName = config.data["portal.serviceProvider.directory.name"];
+                    });
+
+                   directoriesConfigPromise.then(function(directories) {
                         $scope.ldapEditingEnabledPerDirectoryServer = {};
                         $scope.directoryServers = _.map(directories.data, function(ds) {
                             var dirId = ds["ldapConfig.id"];
@@ -45,10 +28,10 @@ angular.module('admin').controller(
                             var userControlGroup = ds["ldapConfig.userControlGroup"];
                             var userIdAttributeName = ds["ldapConfig.userIdAttributeName"];
 
-                            if (groupControlGroup.trim() !== '') {
+                            if (groupControlGroup && groupControlGroup.trim() !== '') {
                                 controlGroups.push(groupControlGroup);
                             }
-                            if (userControlGroup.trim() !== '') {
+                            if (userControlGroup && userControlGroup.trim() !== '') {
                                 controlGroups.push(userControlGroup);
                             }
 
@@ -125,7 +108,7 @@ angular.module('admin').controller(
                     $scope.onLoadMore = function (currentPage, pageSize, directoryName) {
                         gridPageSize = pageSize;
                         gridCurrentPage = currentPage;
-                        LdapConfigService.retrieveDirectories().then(function (directories) {
+                        directoriesConfigPromise.then(function (directories) {
                             $scope.directories = Object.keys(directories.data).sort();
                             $scope.directories.push("adhoc");
                             $scope.directoryName = $scope.directoryName ? $scope.directoryName : $scope.directories[0];
@@ -534,13 +517,14 @@ angular.module('admin').controller(
                         return $modal.open({
                             animation: $scope.animationsEnabled,
                             templateUrl: 'modules/admin/views/components/security.organizational-hierarchy.create-user.dialog.html',
-                            controller: [ '$scope', '$modalInstance', function($scope, $modalInstance) {
+                            controller: [ '$scope', '$modalInstance', 'portalDirName', function($scope, $modalInstance, portalDirName) {
                                 $scope.enableUsernameEdit = false;
                                 $scope.cloneUser = false;
                                 $scope.header = "admin.security.organizationalHierarchy.createUserDialog.editLdapMember.title";
                                 $scope.okBtn = "admin.security.organizationalHierarchy.createUserDialog.editLdapMember.btn.ok";
                                 $scope.cancelBtn = "admin.security.organizationalHierarchy.createUserDialog.editLdapMember.btn.cancel";
                                 $scope.user = mapMember(member);
+                                $scope.editUserDisabled = portalDirName === $scope.user.userDirectoryName;
                                 if (error.field === "email") {
                                     $scope.emailError = error.message;
                                 }
@@ -549,7 +533,12 @@ angular.module('admin').controller(
                                 };
                             } ],
                             size: 'md',
-                            backdrop: 'static'
+                            backdrop: 'static',
+                            resolve: {
+                                portalDirName: function () {
+                                    return $scope.portalDirName;
+                                }
+                            }
                         });
                     }
 
