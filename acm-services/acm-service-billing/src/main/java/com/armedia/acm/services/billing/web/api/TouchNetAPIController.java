@@ -78,17 +78,7 @@ public class TouchNetAPIController
                                     @RequestParam(value = "objectType", required = true) String objectType,
                                     @RequestParam(value = "acm_email_ticket", required = false) String acm_ticket)
     {
-        String ticket = touchNetService.generateTicketID(amt, objectId, objectType, ecmFileId);
-        String ticketName = objectId + objectType;
-
-        return "<form name=\"autoform\" action=\"https://test.secure.touchnet.net:8443/C30002test_upay/web/index.jsp\" method=\"post\">\n" +
-                "    <input name=\"UPAY_SITE_ID\" type=\"hidden\" value=\"252\" />\n" +
-                "    <input name=\"TICKET\" type=\"hidden\" value=\"" + ticket + "\" />\n" +
-                "    <input name=\"TICKET_NAME\" type=\"hidden\" value=\"" + ticketName + "\" />\n" +
-                "</form>\n" +
-                "<script type=\"text/javascript\">\n" +
-                "         document.autoform.submit();\n" +
-                "</script>\n";
+        return getTouchNetService().redirectToPaymentForm(amt,objectId,objectType,ecmFileId);
     }
 
     @RequestMapping(value = "/confirmPayment", method = RequestMethod.POST, produces = MediaType.TEXT_HTML_VALUE)
@@ -117,13 +107,9 @@ public class TouchNetAPIController
             }
         }
         generateAndSaveBilling(objectId,objectType,paymentAmount);
-        sendPaymentConfirmationEmail(objectType, Long.valueOf(objectId));
+        sendPaymentConfirmationEmail(objectType, Long.valueOf(objectId),billName,paymentAmount,cardNumber,paymentMethod);
 
-        return "<div class=\"jumbotron\">\n" +
-                "  <h1>Thanks for your payment.</h1>\n" +
-                "  <p>A confirmation email will be sent.</p>\n" +
-                "  <p><a class=\"btn btn-primary btn-lg\" href=\"#\" role=\"button”>Continue...</a></p>\n" +
-                "</div>";
+        return getTouchNetService().redirectToConfirmationPage();
 
     }
 
@@ -147,7 +133,7 @@ public class TouchNetAPIController
         }
     }
 
-    private void sendPaymentConfirmationEmail(String objectType, Long objectId)
+    private void sendPaymentConfirmationEmail(String objectType, Long objectId, String billName, String amount, String cardNumber, String paymentMethod)
     {
         List<Person> requestors;
         requestors = getPersonAssociationDao().findPersonByParentIdAndParentTypeAndPersonType(objectType,objectId, "Requester");
@@ -159,15 +145,18 @@ public class TouchNetAPIController
         String assigneeEmailAddress = ParticipantUtils.getAssigneeIdFromParticipants(getAcmParticipantService().getParticipantsFromParentObject(objectId,objectType));
 
         Notification notification = notificationService.getNotificationBuilder()
-                .newNotification("confirmationPayment", BillingConstants.CONFIRMATION_PAYMENT_TITLE, objectType, objectId, null)
+                .newNotification("paymentConfirmation", BillingConstants.CONFIRMATION_PAYMENT_TITLE, objectType, objectId, null)
                 .withEmailAddresses(requestorEmailAddress)
                 .build();
 
         notificationService.saveNotification(notification);
 
+        String note = objectId.toString() + "_" + amount + "_" + billName + "_" + paymentMethod + "_" + cardNumber.substring(cardNumber.length() - 4);
+
         Notification requestorNotification = notificationService.getNotificationBuilder()
                 .newNotification("assigneeConfirmationPayment", BillingConstants.CONFIRMATION_PAYMENT_TITLE, objectType, objectId, null)
                 .withEmailAddresses(assigneeEmailAddress != null ? assigneeEmailAddress : "")
+                .withNote(note)
                 .build();
         notificationService.saveNotification(requestorNotification);
     }
