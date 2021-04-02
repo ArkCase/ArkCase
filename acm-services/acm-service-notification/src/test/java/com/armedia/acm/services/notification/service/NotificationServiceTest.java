@@ -36,15 +36,12 @@ import static org.easymock.EasyMock.expectLastCall;
 import static org.junit.Assert.assertEquals;
 
 import com.armedia.acm.core.provider.TemplateModelProvider;
-import com.armedia.acm.services.templateconfiguration.model.Template;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.email.model.EmailSenderConfig;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.services.email.service.AcmEmailSenderService;
 import com.armedia.acm.services.email.service.AcmMailTemplateConfigurationService;
-import com.armedia.acm.services.templateconfiguration.service.TemplateConfigurationManager;
-import com.armedia.acm.services.templateconfiguration.service.TemplatingEngine;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.ApplicationNotificationEvent;
 import com.armedia.acm.services.notification.model.BasicNotificationRule;
@@ -52,6 +49,9 @@ import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConfig;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.notification.model.NotificationRule;
+import com.armedia.acm.services.templateconfiguration.model.Template;
+import com.armedia.acm.services.templateconfiguration.service.TemplateConfigurationManager;
+import com.armedia.acm.services.templateconfiguration.service.TemplatingEngine;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.spring.SpringContextHolder;
 
@@ -156,6 +156,8 @@ public class NotificationServiceTest extends EasyMockSupport
         notification1.setState("state");
         notification1.setTemplateModelName("modelName");
         notification1.setEmailAddresses("user email");
+        notification1.setCcEmailAddresses("cc user email");
+        notification1.setBccEmailAddresses("bcc user email");
 
         Notification notification2 = new Notification();
         notification2.setTitle("title2");
@@ -172,6 +174,8 @@ public class NotificationServiceTest extends EasyMockSupport
         notification2.setState("state");
         notification2.setTemplateModelName("modelName");
         notification2.setEmailAddresses("user email");
+        notification2.setCcEmailAddresses("cc user email");
+        notification2.setBccEmailAddresses("bcc user email");
 
         notifications.add(notification1);
         notifications.add(notification2);
