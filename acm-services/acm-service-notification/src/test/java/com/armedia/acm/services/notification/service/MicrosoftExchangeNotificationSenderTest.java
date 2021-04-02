@@ -36,7 +36,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import com.armedia.acm.services.templateconfiguration.model.Template;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.data.service.AcmDataService;
 import com.armedia.acm.email.model.EmailSenderConfig;
@@ -49,11 +48,12 @@ import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksDTO;
 import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksResultDTO;
 import com.armedia.acm.services.email.service.AcmEmailConfigurationIOException;
 import com.armedia.acm.services.email.service.AcmMailTemplateConfigurationService;
-import com.armedia.acm.services.templateconfiguration.service.TemplateConfigurationManager;
-import com.armedia.acm.services.templateconfiguration.service.TemplatingEngine;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConfig;
 import com.armedia.acm.services.notification.model.NotificationConstants;
+import com.armedia.acm.services.templateconfiguration.model.Template;
+import com.armedia.acm.services.templateconfiguration.service.TemplateConfigurationManager;
+import com.armedia.acm.services.templateconfiguration.service.TemplatingEngine;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
@@ -140,6 +140,8 @@ public class MicrosoftExchangeNotificationSenderTest extends EasyMockSupport
 
         Notification notification = new Notification();
         notification.setEmailAddresses("user_email");
+        notification.setCcEmailAddresses("cc user email");
+        notification.setBccEmailAddresses("bcc user email");
         notification.setTitle("title");
         notification.setNote("the_note");
         notification.setParentId(0L);
@@ -175,6 +177,8 @@ public class MicrosoftExchangeNotificationSenderTest extends EasyMockSupport
         Notification notification = new Notification();
         notification.setUserEmail("user_email");
         notification.setEmailAddresses("no-suchmail@armedia.com");
+        notification.setCcEmailAddresses("no-suchmail@armedia.com");
+        notification.setBccEmailAddresses("no-suchmail@armedia.com");
         notification.setTitle("title");
         notification.setNote("the_note");
         notification.setTemplateModelName("modelName");
