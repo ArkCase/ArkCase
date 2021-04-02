@@ -59,11 +59,13 @@ public class TouchNetService
     @Value("${payment.touchnet.securelinkendpoint}")
     private String secureLinkEndPoint;
 
+    @Value("${payment.touchnet.upaysiteid}")
+    private String uPaySiteId;
 
     public String generateTicketID(String amt, String objectId, String objectType, String ecmFileId)
     {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String ticketName = authenticationTokenService.generateAndSaveAuthenticationToken(Long.valueOf(ecmFileId),authentication.getName(),null);
+        String ticket = authenticationTokenService.generateAndSaveAuthenticationToken(Long.valueOf(ecmFileId),authentication.getName(),null);
 
         GenerateSecureLinkTicketRequest req = new GenerateSecureLinkTicketRequest();
         req.setTicketName(objectId + objectType);
@@ -73,7 +75,7 @@ public class TouchNetService
         pairs[0].setValue(amt);
         pairs[1] = new NameValuePair();
         pairs[1].setName("EXT_TRANS_ID");
-        pairs[1].setValue(ticketName);
+        pairs[1].setValue(ticket);
         pairs[2] = new NameValuePair();
         pairs[2].setName("SUCCESS_LINK");
         pairs[2].setValue(getApplicationConfig().getBaseUrl() + "/api/latest/plugin/billing/confirmPayment");
@@ -138,6 +140,71 @@ public class TouchNetService
         binding.setPassword(getTouchNetPassword());
 
         return binding;
+    }
+
+    public String redirectToPaymentForm(String amount, String objectId, String objectType, String ecmFileId)
+    {
+        String ticket = generateTicketID(amount,objectId,objectType,ecmFileId);
+        String ticketName = objectId + objectType;
+
+        return "<form name=\"autoform\" action=\"https://test.secure.touchnet.net:8443/C30002test_upay/web/index.jsp\" method=\"post\">\n" +
+                "    <input name=\"UPAY_SITE_ID\" type=\"hidden\" value=\"" + uPaySiteId + "\" />\n" +
+                "    <input name=\"TICKET\" type=\"hidden\" value=\"" + ticket + "\" />\n" +
+                "    <input name=\"TICKET_NAME\" type=\"hidden\" value=\"" + ticketName + "\" />\n" +
+                "</form>\n" +
+                "<script type=\"text/javascript\">\n" +
+                "         document.autoform.submit();\n" +
+                "</script>\n";
+    }
+
+    public String redirectToConfirmationPage()
+    {
+        String imgSrc = getApplicationConfig().getBaseUrl() + "/branding/emaillogo.png";
+
+        return "<html>\n" +
+                "<header>\n" +
+                "<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css\">\n" +
+                "<style>\n" +
+                ".icon{\n" +
+                "  font-size:90px;\n" +
+                "  color:#3E8F3E;\n" +
+                "}\n" +
+                ".htext{\n" +
+                "  font-family: Arial, Helvetica, sans-serif;\n" +
+                "  font-size:36;\n" +
+                "  color:#788288;\n" +
+                "}\n" +
+                ".ptext {\n" +
+                "  font-family: Arial, Helvetica, sans-serif;\n" +
+                "  font-size:24;\n" +
+                "  color:#788288\n" +
+                "}\n" +
+                ".button {\n" +
+                "  background-color: #177BBB;\n" +
+                "  border: none;\n" +
+                "  color: white;\n" +
+                "  padding: 15px 32px;\n" +
+                "  text-align: center;\n" +
+                "  text-decoration: none;\n" +
+                "  display: inline-block;\n" +
+                "  font-size: 18px;\n" +
+                "  margin: 4px 2px;\n" +
+                "  cursor: pointer;\n" +
+                "  font-family: Arial, Helvetica, sans-serif;\n" +
+                "  border-radius: 6px;\n" +
+                "}\n" +
+                "</style>\n" +
+                "</header>\n" +
+                "<body style=\"background-color:#F2F4F8;text-align: center;\">\n" +
+                "<br><br><br><br><br><br><br><br><br>\n" +
+                "<i class=\"fa fa-check-circle icon\"/>\n" +
+                "<h1 class=\"htext\">Thank You For Your Payment</h1>\n" +
+                "<p class=\"ptext\">A confirmation email will be sent.</p></br>\n" +
+                "<a href=\"" + getApplicationConfig().getBaseUrl() + "\" class=\"button\">Return Home</a>\n" +
+                "<br><br><br>\n" +
+                "<img src=\"" + imgSrc + "\" width=\"186\" height=\"38.79\">\n" +
+                "</body>\n" +
+                "</html>\n";
     }
 
 
