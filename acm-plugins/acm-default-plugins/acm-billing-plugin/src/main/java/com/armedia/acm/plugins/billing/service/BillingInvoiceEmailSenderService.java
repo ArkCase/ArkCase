@@ -107,7 +107,7 @@ public class BillingInvoiceEmailSenderService<T extends AcmContainerEntity & Acm
         notification.setEmailAddresses(emailAddress);
         notification.setTitle(notificationTitle.toString());
         notification.setUser(acmUser.getUserId());
-        notification.setNote(totalAmount.toString() + "_" + billingInvoice.getBillingInvoiceEcmFile().getFileId().toString());
+        notification.setNote(billingInvoice.getBillingInvoiceEcmFile().getFileId().toString() + "_" + totalAmount.toString());
         getNotificationDao().save(notification);
 
     }
