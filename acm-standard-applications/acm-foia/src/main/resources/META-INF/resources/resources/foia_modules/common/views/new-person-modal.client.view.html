@@ -24,8 +24,7 @@
                         placeholder="{{ 'common.newPerson.middleName.placeholder' | translate }}" style="background-color: white;">
             </div>
             <div class="col-sm-3">
-                <label for="givenName" class="control-label">{{ 'common.newPerson.givenName' |
-                    translate}}</label>
+                <label for="givenName" class="control-label">{{ 'common.newPerson.givenName' | translate}}</label>
                 <span class="required-asterisk">*</span>
                 <input type="text" id="givenName" ng-model="person.givenName" class="input-md form-control" required="required"
                         placeholder="{{ 'common.newPerson.givenName.placeholder' | translate }}">
@@ -208,7 +207,7 @@
                                 </div>
                                 <div class="col-sm-4 form-group">
                                     <label translate>
-                                        common.newPerson.organizations.organizationType</label>
+                                        common.newPerson.organizations.position</label>
                                     <input class="form-control" ng-disabled="true"
                                             ng-model="organizationAssociation.personToOrganizationAssociationType">
                                 </div>
