@@ -65,7 +65,7 @@ public class AcmComplaintFolderListener implements ApplicationListener<Complaint
         try
         {
             Folder categoryFolder = getAlfrescoRecordsService().findFolder(ComplaintConstants.OBJECT_TYPE);
-            Folder parentFolder = alfrescoRecordsService.addDateInAlfrescoStructure(categoryFolder, ComplaintConstants.OBJECT_TYPE);
+            Folder parentFolder = alfrescoRecordsService.addDateInAlfrescoStructure(categoryFolder);
             getAlfrescoRecordsService().createOrFindRecordFolderOrRecordCategory(complaintCreatedEvent.getComplaintNumber(), parentFolder, "Record Folder");
         }
         catch (AlfrescoServiceException e)
