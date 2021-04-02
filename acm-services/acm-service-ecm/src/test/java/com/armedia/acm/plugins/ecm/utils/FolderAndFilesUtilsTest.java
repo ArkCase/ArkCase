@@ -27,8 +27,6 @@ package com.armedia.acm.plugins.ecm.utils;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 
@@ -38,6 +36,8 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.junit.Assert.*;
 
 /**
  * Created by manoj.dhungana on 6/24/2015.
@@ -88,5 +88,15 @@ public class FolderAndFilesUtilsTest extends EasyMockSupport
 
         assertEquals(cmisId, secondCmisId);
 
+    }
+
+    @Test
+    public void createUniqueIdentificator_cutLastDot()
+    {
+        String input = "someFileNameWithLastDot.";
+
+        String result = unit.createUniqueIdentificator(input);
+
+        assertFalse(result.endsWith("."));
     }
 }
