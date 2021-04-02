@@ -257,4 +257,14 @@ public class TouchNetService
     {
         this.applicationConfig = applicationConfig;
     }
+
+    public String getuPaySiteId()
+    {
+        return uPaySiteId;
+    }
+
+    public void setuPaySiteId(String uPaySiteId)
+    {
+        this.uPaySiteId = uPaySiteId;
+    }
 }
