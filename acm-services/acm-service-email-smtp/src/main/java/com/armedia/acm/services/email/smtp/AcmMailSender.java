@@ -78,7 +78,7 @@ public class AcmMailSender
         helper.setSubject(subject);
         helper.setText(body, true);
         mailSender.send(helper.getMimeMessage());
-        trackOutgoingEmailService.trackEmail(mimeMessage, recipient, group, subject, parentType, parentId, null, null, null);
+        trackOutgoingEmailService.trackEmail(mimeMessage, recipient, group, subject, parentType, parentId, null, "", "");
     }
 
     public void sendEmail(String recipient, String subject, String body, String parentType, String parentId, String ccRecipient,
@@ -156,7 +156,42 @@ public class AcmMailSender
             }
         });
         mailSender.send(helper.getMimeMessage());
-        trackOutgoingEmailService.trackEmail(mimeMessage, recipient, group, subject, parentType, parentId, attachments, null, null);
+        trackOutgoingEmailService.trackEmail(mimeMessage, recipient, group, subject, parentType, parentId, attachments, "", "");
+    }
+
+    public void sendMultipartEmail(String recipient, String subject, String body, List<InputStreamDataSource> attachments,
+            String parentType, String parentId, String ccRecipient, String bccRecipient)
+            throws Exception
+    {
+        sendMultipartEmail(recipient, null, subject, body, attachments, parentType, parentId, ccRecipient, bccRecipient);
+    }
+
+    public void sendMultipartEmail(String recipient, String group, String subject, String body, List<InputStreamDataSource> attachments,
+            String parentType, String parentId, String ccRecipient, String bccRecipient)
+            throws Exception
+    {
+        JavaMailSender mailSender = getMailSender();
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+        helper.setFrom(emailConfig.getUserFrom());
+        helper.setTo(StringUtils.split(recipient, ","));
+        helper.setCc(StringUtils.split(ccRecipient, ","));
+        helper.setBcc(StringUtils.split(bccRecipient, ","));
+        helper.setSubject(subject);
+        helper.setText(body, true);
+        attachments.forEach(attachment -> {
+            try
+            {
+                helper.addAttachment(attachment.getName(), attachment);
+            }
+            catch (MessagingException e)
+            {
+                log.warn("Failed to add attachment [{}]. Cause: {}.", attachment.getName(), e.getMessage(), e);
+            }
+        });
+        mailSender.send(helper.getMimeMessage());
+        trackOutgoingEmailService.trackEmail(mimeMessage, recipient, group, subject, parentType, parentId, attachments, ccRecipient,
+                bccRecipient);
     }
 
     public EmailSenderConfig getEmailConfig()

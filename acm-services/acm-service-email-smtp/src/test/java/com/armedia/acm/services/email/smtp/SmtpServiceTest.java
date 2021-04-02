@@ -177,6 +177,8 @@ public class SmtpServiceTest
     {
         // given
         final String email = "user_email@test.com";
+        final String ccEmail = "cc_user_email@test.com";
+        final String bccEmail = "bcc_user_email@test.com";
         final String header = "header";
         final String body = "body";
         final String footer = "footer";
@@ -184,8 +186,14 @@ public class SmtpServiceTest
 
         List<String> addresses = new ArrayList<>();
         addresses.add(email);
+        List<String> ccAddresses = new ArrayList<>();
+        ccAddresses.add(ccEmail);
+        List<String> bccAddresses = new ArrayList<>();
+        bccAddresses.add(bccEmail);
         EmailWithAttachmentsDTO inputDTO = new EmailWithAttachmentsDTO();
         inputDTO.setEmailAddresses(addresses);
+        inputDTO.setCcEmailAddresses(ccAddresses);
+        inputDTO.setBccEmailAddresses(bccAddresses);
         inputDTO.setHeader(header);
         inputDTO.setBody(note);
         inputDTO.setFooter(footer);
@@ -228,7 +236,7 @@ public class SmtpServiceTest
 
         // then
         verify(mockMailSender).sendMultipartEmail(eq(email), eq(null), anyString(), capturedNote.capture(),
-                capturedAttachments.capture(), eq(null), eq(null));
+                capturedAttachments.capture(), eq(null), eq(null), eq(ccEmail), eq(bccEmail));
         assertThat(note.equals(capturedNote.getValue()), is(true));
         assertThat(capturedAttachments.getValue(), notNullValue());
         assertThat(capturedAttachments.getValue().size(), is(2));
@@ -244,6 +252,8 @@ public class SmtpServiceTest
     {
         // given
         final String email = "user_email@test.com";
+        final String ccEmail = "cc_user_email@test.com";
+        final String bccEmail = "bcc_user_email@test.com";
         final String header = "header";
         final String baseUrl = "base_url";
         final String title = "title";
@@ -254,12 +264,18 @@ public class SmtpServiceTest
 
         List<String> addresses = new ArrayList<>();
         addresses.add(email);
+        List<String> ccAddresses = new ArrayList<>();
+        ccAddresses.add(ccEmail);
+        List<String> bccAddresses = new ArrayList<>();
+        bccAddresses.add(bccEmail);
         List<Long> fileIds = new ArrayList<>();
         fileIds.add(fileId);
         EmailWithAttachmentsAndLinksDTO inputDTO = new EmailWithAttachmentsAndLinksDTO();
         inputDTO.setTitle(title);
         inputDTO.setHeader(header);
         inputDTO.setEmailAddresses(addresses);
+        inputDTO.setCcEmailAddresses(ccAddresses);
+        inputDTO.setBccEmailAddresses(bccAddresses);
         inputDTO.setBaseUrl(baseUrl);
         inputDTO.setFileIds(fileIds);
         inputDTO.setFooter(footer);
@@ -303,7 +319,7 @@ public class SmtpServiceTest
 
         // then
         verify(mockMailSender).sendMultipartEmail(eq(email), eq(null), capturedNote.capture(), capturedAttachments.capture(),
-                eq(null), eq(null));
+                eq(null), eq(null), eq(ccEmail), eq(bccEmail));
         assertEquals(note, capturedNote.getValue());
         assertThat(capturedAttachments.getValue(), notNullValue());
         assertThat(capturedAttachments.getValue().size(), is(2));

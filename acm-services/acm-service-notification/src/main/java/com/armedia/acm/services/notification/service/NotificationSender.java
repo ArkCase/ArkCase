@@ -154,6 +154,8 @@ public abstract class NotificationSender
             }
 
             in.setEmailAddresses(Arrays.asList(notification.getEmailAddresses().split(",")));
+            in.setCcEmailAddresses(Arrays.asList(notification.getCcEmailAddresses().split(",")));
+            in.setBccEmailAddresses(Arrays.asList(notification.getBccEmailAddresses().split(",")));
             in.setEmailGroup(notification.getEmailGroup());
             if (notification.getRelatedObjectId() != null && notification.getRelatedObjectType() != null)
             {
