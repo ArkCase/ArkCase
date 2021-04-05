@@ -38,10 +38,10 @@ public class BillingTemplateModel
     private final String billName;
     private final String paymentMethod;
     private final String cardNumber;
-    private final Date paymentDate;
+    private final String paymentDate;
 
     public BillingTemplateModel(String amount, String token, String fileId, String objectId, String objectType, String billName,
-            String paymentMethod, String cardNumber, Date paymentDate)
+            String paymentMethod, String cardNumber, String paymentDate)
     {
         this.amount = amount;
         this.token = token;
@@ -94,7 +94,7 @@ public class BillingTemplateModel
         return cardNumber;
     }
 
-    public Date getPaymentDate()
+    public String getPaymentDate()
     {
         return paymentDate;
     }
