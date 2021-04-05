@@ -75,7 +75,8 @@
         <beans:bean id="foiaFileToSolrTransformer" class="gov.foia.transformer.FOIAFileToSolrTransformer"
                     parent="ecmFileToSolrTrasnformer"/>
 
-        <beans:bean id="foiaUserToSolrTransformer" class="gov.foia.transformer.FOIAUserToSolrTransformer" parent="userToSolrTransformer">
+        <beans:bean id="userToSolrTransformer" class="gov.foia.transformer.FOIAUserToSolrTransformer">
+            <beans:property name="userDao" ref="userJpaDao"/>
             <beans:property name="acmContextHolder" ref="acmContextHolder"/>
         </beans:bean>
 
