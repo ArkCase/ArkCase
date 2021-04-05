@@ -38,7 +38,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -49,9 +48,11 @@ import org.apache.commons.io.input.BOMInputStream;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.util.LinkedCaseInsensitiveMap;
 
 import com.armedia.acm.services.zylab.model.ZylabFile;
 import com.armedia.acm.services.zylab.model.ZylabFileMetadata;
+import com.armedia.acm.services.zylab.model.ZylabLoadFileColumns;
 import com.armedia.acm.tool.zylab.exception.ZylabProductionSyncException;
 
 /**
@@ -69,7 +70,7 @@ public class ZylabProductionUtils
                 .filter(file -> file.getParentFile().getName().equals("DATA") && file.getName().toLowerCase().endsWith(".csv"))
                 .findFirst()
                 .orElseThrow(() -> new ZylabProductionSyncException(
-                        String.format("No load file found in production %s,for ZyLAB Matter %d", productionKey, matterId)));
+                        String.format("No CSV load file found in production %s,for ZyLAB Matter %d", productionKey, matterId)));
     }
 
     public static List<ZylabFileMetadata> getFileMetadataFromLoadFile(File loadFile, Long matterId, String productionKey)
@@ -85,7 +86,7 @@ public class ZylabProductionUtils
 
             for (CSVRecord record : records)
             {
-                Map<String, String> map = new LinkedHashMap<>();
+                Map<String, String> map = new LinkedCaseInsensitiveMap<>();
                 for (int j = 0; j < headers.size(); j++)
                 {
                     map.put(headers.get(j), record.get(j));
@@ -97,7 +98,7 @@ public class ZylabProductionUtils
         catch (IOException e)
         {
             throw new ZylabProductionSyncException(
-                    String.format("Error processing load file data in production %s,for ZyLAB Matter %d", productionKey, matterId));
+                    String.format("Error processing load file data in production %s,for ZyLAB Matter %d", productionKey, matterId), e);
         }
         return zylabFileMetadataList;
     }
@@ -109,45 +110,45 @@ public class ZylabProductionUtils
         zylabFileMetadata.setMatterId(matterId);
         zylabFileMetadata.setProductionKey(productionKey);
 
-        if (NumberUtils.isParsable(dataMap.get("ZyLAB_ID")))
+        if (NumberUtils.isParsable(dataMap.get(ZylabLoadFileColumns.ZYLAB_ID)))
         {
-            zylabFileMetadata.setZylabId(Long.valueOf(dataMap.get("ZyLAB_ID")));
+            zylabFileMetadata.setZylabId(Long.valueOf(dataMap.get(ZylabLoadFileColumns.ZYLAB_ID)));
         }
-        if (NumberUtils.isParsable(dataMap.get("Produced_Pages")))
+        if (NumberUtils.isParsable(dataMap.get(ZylabLoadFileColumns.PRODUCED_PAGES)))
         {
-            zylabFileMetadata.setProducedPages(Integer.valueOf(dataMap.get("Produced_Pages")));
+            zylabFileMetadata.setProducedPages(Integer.valueOf(dataMap.get(ZylabLoadFileColumns.PRODUCED_PAGES)));
         }
-        zylabFileMetadata.setProductionCreateDate(parseDate(dataMap.get("Production_CreateDate")));
-        zylabFileMetadata.setContainsRedaction(Boolean.valueOf(dataMap.get("Contains_Redaction")));
-        zylabFileMetadata.setRedactionCode1(dataMap.get("RedactionCode1"));
-        zylabFileMetadata.setRedactionCode2(dataMap.get("RedactionCode2"));
-        zylabFileMetadata.setRedactionJustification(dataMap.get("RedactionJustification"));
-        zylabFileMetadata.setCustodian(dataMap.get("Custodian"));
-        zylabFileMetadata.setDocName(dataMap.get("Doc_Name"));
-        if (NumberUtils.isParsable(dataMap.get("Doc_PageCount")))
+        zylabFileMetadata.setProductionCreateDate(parseDate(dataMap.get(ZylabLoadFileColumns.PRODUCTION_CREATE_DATE)));
+        zylabFileMetadata.setContainsRedaction(Boolean.valueOf(dataMap.get(ZylabLoadFileColumns.CONTAINS_REDACTION)));
+        zylabFileMetadata.setRedactionCode1(dataMap.get(ZylabLoadFileColumns.REDACTION_CODE_1));
+        zylabFileMetadata.setRedactionCode2(dataMap.get(ZylabLoadFileColumns.REDACTION_CODE_2));
+        zylabFileMetadata.setRedactionJustification(dataMap.get(ZylabLoadFileColumns.REDACTION_JUSTIFICATION));
+        zylabFileMetadata.setCustodian(dataMap.get(ZylabLoadFileColumns.CUSTODIAN));
+        zylabFileMetadata.setDocName(dataMap.get(ZylabLoadFileColumns.DOC_NAME));
+        if (NumberUtils.isParsable(dataMap.get(ZylabLoadFileColumns.DOC_PAGE_COUNT)))
         {
-            zylabFileMetadata.setDocPageCount(Integer.valueOf(dataMap.get("Doc_PageCount")));
+            zylabFileMetadata.setDocPageCount(Integer.valueOf(dataMap.get(ZylabLoadFileColumns.DOC_PAGE_COUNT)));
         }
-        zylabFileMetadata.setDocDate(parseDate(dataMap.get("Doc_Date")));
-        zylabFileMetadata.setDocExt(dataMap.get("Doc_Ext"));
-        if (NumberUtils.isParsable(dataMap.get("Doc_Size")))
+        zylabFileMetadata.setDocDate(parseDate(dataMap.get(ZylabLoadFileColumns.DOC_DATE)));
+        zylabFileMetadata.setDocExt(dataMap.get(ZylabLoadFileColumns.DOC_EXT));
+        if (NumberUtils.isParsable(dataMap.get(ZylabLoadFileColumns.DOC_SIZE)))
         {
-            zylabFileMetadata.setDocSize(Long.valueOf(dataMap.get("Doc_Size")));
+            zylabFileMetadata.setDocSize(Long.valueOf(dataMap.get(ZylabLoadFileColumns.DOC_SIZE)));
         }
-        zylabFileMetadata.setHasAttachment(Boolean.valueOf(dataMap.get("Has_Attachment")));
-        zylabFileMetadata.setAttachment(Boolean.valueOf(dataMap.get("Is_Attachment")));
-        zylabFileMetadata.setEmailFrom(dataMap.get("Email_From"));
-        zylabFileMetadata.setEmailRecipient(dataMap.get("Email_Recipient"));
-        if (NumberUtils.isParsable(dataMap.get("Multimedia_Duration(Sec)")))
+        zylabFileMetadata.setHasAttachment(Boolean.valueOf(dataMap.get(ZylabLoadFileColumns.HAS_ATTACHMENT)));
+        zylabFileMetadata.setAttachment(Boolean.valueOf(dataMap.get(ZylabLoadFileColumns.IS_ATTACHMENT)));
+        zylabFileMetadata.setEmailFrom(dataMap.get(ZylabLoadFileColumns.EMAIL_FROM));
+        zylabFileMetadata.setEmailRecipient(dataMap.get(ZylabLoadFileColumns.EMAIL_RECIPIENT));
+        if (NumberUtils.isParsable(dataMap.get(ZylabLoadFileColumns.MULTIMEDIA_DURATION_SEC)))
         {
-            zylabFileMetadata.setMultimediaDurationSec(Integer.valueOf(dataMap.get("Multimedia_Duration(Sec)")));
+            zylabFileMetadata.setMultimediaDurationSec(Integer.valueOf(dataMap.get(ZylabLoadFileColumns.MULTIMEDIA_DURATION_SEC)));
         }
-        zylabFileMetadata.setMultimediaProperties(dataMap.get("Multimedia_properties"));
-        zylabFileMetadata.setReviewedAnalysis(dataMap.get("Reviewed_Analysis"));
-        zylabFileMetadata.setLastReviewedBy(dataMap.get("LastReviewedBy"));
-        zylabFileMetadata.setSource(dataMap.get("Source"));
-        zylabFileMetadata.setExemptWithheldReason(dataMap.get("Exempt_Withheld_Reason"));
-        zylabFileMetadata.setExemptWithheld(Boolean.valueOf(dataMap.get("ExemptWithheld")));
+        zylabFileMetadata.setMultimediaProperties(dataMap.get(ZylabLoadFileColumns.MULTIMEDIA_PROPERTIES));
+        zylabFileMetadata.setReviewedAnalysis(dataMap.get(ZylabLoadFileColumns.REVIEWED_ANALYSIS));
+        zylabFileMetadata.setLastReviewedBy(dataMap.get(ZylabLoadFileColumns.LAST_REVIEWED_BY));
+        zylabFileMetadata.setSource(dataMap.get(ZylabLoadFileColumns.SOURCE));
+        zylabFileMetadata.setExemptWithheldReason(dataMap.get(ZylabLoadFileColumns.EXEMPT_WITHHELD_REASON));
+        zylabFileMetadata.setExemptWithheld(Boolean.valueOf(dataMap.get(ZylabLoadFileColumns.EXEMPT_WITHHELD)));
 
         return zylabFileMetadata;
     }
@@ -159,7 +160,14 @@ public class ZylabProductionUtils
 
         for (ZylabFileMetadata zylabFileMetadata : zylabFileMetadataList)
         {
-            String fileNameInSentFolder = String.valueOf(zylabFileMetadata.getZylabId());
+            Long zylabId = zylabFileMetadata.getZylabId();
+            if (zylabId == null)
+            {
+                throw new ZylabProductionSyncException(
+                        "ZyLAB_ID field not set in load file for entry " + zylabFileMetadata);
+            }
+
+            String fileNameInSentFolder = String.valueOf(zylabId);
 
             productionFiles.stream()
                     .filter(file -> file.getName().startsWith(fileNameInSentFolder))
@@ -169,7 +177,7 @@ public class ZylabProductionUtils
         if (zylabFiles.isEmpty())
         {
             throw new ZylabProductionSyncException(
-                    "No files found in production. ZyLAB_ID field must be set, and files in production must be named with this field.");
+                    "No files found in production. Files in production must be named with the ZyLAB ID field.");
         }
         return zylabFiles;
     }
