@@ -118,13 +118,14 @@ public abstract class NotificationSender
             try
             {
                 String template = notification.getEmailContent();
-                if(template == null || template.isEmpty())
+                if (template == null || template.isEmpty())
                 {
                     template = templateService.getTemplate(templateName);
                 }
                 String body = getTemplatingEngine().process(template, notification.getTemplateModelName(), object);
                 in.setBody(body);
-                String subject = notification.getSubject() != null && !notification.getSubject().isEmpty() ? notification.getSubject() : notification.getTitle();
+                String subject = notification.getSubject() != null && !notification.getSubject().isEmpty() ? notification.getSubject()
+                        : notification.getTitle();
                 subject = getTemplatingEngine().process(subject, notification.getTemplateModelName(), object);
                 in.setSubject(subject);
             }
@@ -154,8 +155,11 @@ public abstract class NotificationSender
             }
 
             in.setEmailAddresses(Arrays.asList(notification.getEmailAddresses().split(",")));
-            in.setCcEmailAddresses(Arrays.asList(notification.getCcEmailAddresses().split(",")));
-            in.setBccEmailAddresses(Arrays.asList(notification.getBccEmailAddresses().split(",")));
+            in.setCcEmailAddresses(notification.getCcEmailAddresses() != null ? Arrays.asList(notification.getCcEmailAddresses().split(","))
+                    : new ArrayList<>());
+            in.setBccEmailAddresses(
+                    notification.getBccEmailAddresses() != null ? Arrays.asList(notification.getBccEmailAddresses().split(","))
+                            : new ArrayList<>());
             in.setEmailGroup(notification.getEmailGroup());
             if (notification.getRelatedObjectId() != null && notification.getRelatedObjectType() != null)
             {
@@ -176,14 +180,14 @@ public abstract class NotificationSender
                     : null;
 
             AcmUser acmUser = notification.getUser() != null ? userDao.findByUserId(notification.getUser()) : null;
-            if(isEnabledSendingEmails(notification))
+            if (isEnabledSendingEmails(notification))
             {
                 getEmailSenderService().sendEmail(in, authentication, acmUser);
                 if (in.getMailSent())
                 {
                     notification.setState(NotificationConstants.STATE_SENT);
                 }
-                else 
+                else
                 {
                     notification.setState(NotificationConstants.STATE_NOT_SENT);
                 }
@@ -220,7 +224,7 @@ public abstract class NotificationSender
 
         in.setBody(new MessageBodyFactory(notificationTemplate).buildMessageBodyFromTemplate(messageBody, "", ""));
     }
-    
+
     private Boolean isEnabledSendingEmails(Notification notification)
     {
         return templateConfigurationManager.getTemplateConfigurations().stream()
