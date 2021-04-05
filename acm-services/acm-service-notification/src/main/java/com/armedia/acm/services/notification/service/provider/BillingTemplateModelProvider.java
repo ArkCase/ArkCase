@@ -65,7 +65,7 @@ public class BillingTemplateModelProvider implements TemplateModelProvider<Billi
         getAuditPropertyEntityAdapter().setUserId(notification.getCreator());
         String token = authenticationTokenService.generateAndSaveAuthenticationToken(Long.valueOf(fileId), notification.getEmailAddresses(),null);
 
-        return new BillingTemplateModel(amount, token, fileId, objectId, notification.getParentType(), billName, paymentMethod, last4digitsOfCardNumber, date);
+        return new BillingTemplateModel(amount, token, fileId, objectId, notification.getParentType(), billName, paymentMethod, last4digitsOfCardNumber, date.toString());
     }
 
     @Override
