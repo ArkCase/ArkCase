@@ -37,7 +37,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
@@ -294,26 +296,45 @@ public class ZylabProductionFileIncomingListener implements ApplicationListener<
         List<StandardLookupEntry> lookupEntries = (List<StandardLookupEntry>) lookupDao.getLookupByName("annotationTags").getEntries();
 
         List<EcmFile> redactionJustificationFiles = files.stream()
-                .filter(ecmFile -> !ecmFile.getZylabFileMetadata().getRedactionJustification().isEmpty())
+                .filter(containsResponsiveFileExemptions)
                 .collect(Collectors.toList());
 
         for (EcmFile file : redactionJustificationFiles)
         {
-            String[] exemptionCodesSent = file.getZylabFileMetadata().getRedactionJustification().split(RESPONSIVE_CODES_SEPARATOR);
-            int[] exemptionCodes = Arrays.stream(exemptionCodesSent)
+            String[] redactionJustificationExemptions = file.getZylabFileMetadata().getRedactionJustification()
+                    .split(RESPONSIVE_CODES_SEPARATOR);
+            String[] redactionCodeExemptions = file.getZylabFileMetadata().getRedactionCode1().split(RESPONSIVE_CODES_SEPARATOR);
+            int[] exemptionCodes = Stream.concat(Arrays.stream(redactionJustificationExemptions), Arrays.stream(redactionCodeExemptions))
+                    .filter(NumberUtils::isParsable)
                     .mapToInt(Integer::parseInt)
                     .toArray();
+
             addExemptionCodesToFileByOrder(file, exemptionCodes, lookupEntries);
         }
+    }
 
-        List<EcmFile> redactionCodeFiles = files.stream()
-                .filter(ecmFile -> !ecmFile.getZylabFileMetadata().getRedactionCode1().isEmpty())
+    private Predicate<EcmFile> containsResponsiveFileExemptions = ecmFile -> StringUtils
+            .isNotBlank(ecmFile.getZylabFileMetadata().getRedactionJustification())
+            || StringUtils.isNotBlank(ecmFile.getZylabFileMetadata().getRedactionCode1());
+
+    private void addExemptionCodesToWitheldFiles(List<EcmFile> files)
+    {
+        List<StandardLookupEntry> lookupEntries = (List<StandardLookupEntry>) lookupDao.getLookupByName("annotationTags").getEntries();
+
+        List<EcmFile> redactionJustificationFiles = files.stream()
+                .filter(ecmFile -> !ecmFile.getZylabFileMetadata().getExemptWithheldReason().isEmpty())
                 .collect(Collectors.toList());
 
-        for (EcmFile file : redactionCodeFiles)
+        for (EcmFile file : redactionJustificationFiles)
         {
-            String[] exemptionCodes = file.getZylabFileMetadata().getRedactionCode1().split(RESPONSIVE_CODES_SEPARATOR);
-            addExemptionCodesToFileByKey(file, exemptionCodes, lookupEntries);
+            String[] exemptionCodesSent = file.getZylabFileMetadata().getExemptWithheldReason().split(EXEMPTION_WITHELD_CODES_SEPARATOR);
+            int[] exemptionCodes = Arrays.stream(exemptionCodesSent)
+                    .map(code -> StringUtils.substringBetween(code, "[", "]"))
+                    .filter(NumberUtils::isParsable)
+                    .mapToInt(Integer::parseInt)
+                    .toArray();
+
+            addExemptionCodesToFileByOrder(file, exemptionCodes, lookupEntries);
         }
     }
 
@@ -354,26 +375,6 @@ public class ZylabProductionFileIncomingListener implements ApplicationListener<
                         file.getZylabFileMetadata().getRedactionCode2());
                 documentExemptionService.saveExemptionCodeAndNumberForFile(file, exemptionCode, null);
             }
-        }
-    }
-
-    private void addExemptionCodesToWitheldFiles(List<EcmFile> files)
-    {
-        List<StandardLookupEntry> lookupEntries = (List<StandardLookupEntry>) lookupDao.getLookupByName("annotationTags").getEntries();
-
-        List<EcmFile> redactionJustificationFiles = files.stream()
-                .filter(ecmFile -> !ecmFile.getZylabFileMetadata().getExemptWithheldReason().isEmpty())
-                .collect(Collectors.toList());
-
-        for (EcmFile file : redactionJustificationFiles)
-        {
-            String[] exemptionCodesSent = file.getZylabFileMetadata().getExemptWithheldReason().split(EXEMPTION_WITHELD_CODES_SEPARATOR);
-            int[] exemptionCodes = Arrays.stream(exemptionCodesSent)
-                    .map(code -> StringUtils.substringBefore(code, "_"))
-                    .mapToInt(Integer::parseInt)
-                    .toArray();
-
-            addExemptionCodesToFileByOrder(file, exemptionCodes, lookupEntries);
         }
     }
 
