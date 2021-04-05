@@ -67,18 +67,11 @@ public class RequestAssignmentService
 
     public FOIARequest startWorking(Long queueId, Authentication auth, HttpSession session)
     {
-        FOIARequest oldestAssignedRequestInQueueToUser = getRequestDao().getOldestRequestInQueueAssignedToUser(queueId, auth.getName());
 
         // get requests in the current queue with no assignee, sorted by ascending queue due date
         List<FOIARequest> unassignedRequestsInQueue = getRequestDao().getAllUnassignedRequestsInQueue(queueId);
 
         FOIARequest oldestAssignableRequestForUser = getOldestAssignableRequestForUser(unassignedRequestsInQueue, auth.getName());
-
-        if (oldestAssignedRequestInQueueToUser != null && (oldestAssignableRequestForUser == null
-                || oldestAssignedRequestInQueueToUser.getQueueEnterDate().isBefore(oldestAssignableRequestForUser.getQueueEnterDate())))
-        {
-            return oldestAssignedRequestInQueueToUser;
-        }
 
         if (oldestAssignableRequestForUser != null)
         {
@@ -91,14 +84,17 @@ public class RequestAssignmentService
 
     public FOIARequest assignRequestToUser(FOIARequest request, Authentication auth, HttpSession session)
     {
-        request.getParticipants().stream().filter(p -> "assignee".equals(p.getParticipantType())).forEach(p -> {
-            p.setParticipantLdapId(auth.getName());
-        });
+        AcmParticipant assignee = new AcmParticipant();
+        assignee.setParticipantLdapId(auth.getName());
+        assignee.setParticipantType(ParticipantTypes.ASSIGNEE);
+        assignee.setObjectId(request.getId());
+        assignee.setObjectType(request.getObjectType());
 
         try
         {
+            request.getParticipants().add(assignee);
             String ipAddress = (String) session.getAttribute("acm_ip_address");
-            request.setModifier(AuthenticationUtils.getUsername());
+            request.setModifier(auth.getName());
             request.setModified(new Date());
             return (FOIARequest) getSaveCaseService().saveCase(request, auth, ipAddress);
         }
