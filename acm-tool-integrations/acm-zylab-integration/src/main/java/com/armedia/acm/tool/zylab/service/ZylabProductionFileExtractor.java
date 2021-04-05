@@ -52,26 +52,27 @@ public class ZylabProductionFileExtractor
     {
         String extractedDirectoryPath = fileToUnzip.getAbsolutePath().replace(".zip", "_unzipped");
         log.info("Extracting file: " + fileToUnzip.getName());
-        ZipFile zipFile = new ZipFile(fileToUnzip);
-
-        Enumeration<? extends ZipEntry> entries = zipFile.entries();
-
-        while (entries.hasMoreElements())
+        try (ZipFile zipFile = new ZipFile(fileToUnzip))
         {
-            ZipEntry entry = entries.nextElement();
-            String destPath = extractedDirectoryPath + File.separator + entry.getName();
-            File destinationFile = new File(destPath);
+            Enumeration<? extends ZipEntry> entries = zipFile.entries();
 
-            if (entry.isDirectory())
+            while (entries.hasMoreElements())
             {
-                FileUtils.forceMkdir(destinationFile);
-                log.info("Folder entry extracted: " + entry.getName());
-            }
-            else
-            {
-                FileUtils.forceMkdir(destinationFile.getParentFile());
-                extractZipEntry(zipFile, entry, destPath);
-                log.info("File entry extracted: " + entry.getName());
+                ZipEntry entry = entries.nextElement();
+                String destPath = extractedDirectoryPath + File.separator + entry.getName();
+                File destinationFile = new File(destPath);
+
+                if (entry.isDirectory())
+                {
+                    FileUtils.forceMkdir(destinationFile);
+                    log.info("Folder entry extracted: " + entry.getName());
+                }
+                else
+                {
+                    FileUtils.forceMkdir(destinationFile.getParentFile());
+                    extractZipEntry(zipFile, entry, destPath);
+                    log.info("File entry extracted: " + entry.getName());
+                }
             }
         }
         return new File(extractedDirectoryPath);
