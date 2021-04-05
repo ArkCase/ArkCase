@@ -45,11 +45,11 @@ import org.springframework.security.core.Authentication;
 
 import javax.servlet.http.HttpSession;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import gov.foia.dao.FOIARequestDao;
 import gov.foia.model.FOIARequest;
@@ -75,6 +75,7 @@ public class RequestAssignmentServiceTest
     private GroupService mockedGroupService = createMock(GroupService.class);
     private FOIARequestDao mockedRequestDao = createMock(FOIARequestDao.class);
     private Object[] mocks = { mockedHttpSession, mockedAuthentication, mockedSaveCaseService, mockedGroupService, mockedRequestDao };
+    private List<AcmParticipant> acmParticipants = new ArrayList<>();
 
     @Before
     public void setUp()
@@ -100,22 +101,22 @@ public class RequestAssignmentServiceTest
     }
 
     @Test
-    public void testStartWorkingReturnsOldestSelfAssignedRequest() throws Exception
+    public void testStartWorkingOnUnassignedRequestAndAssignUser() throws Exception
     {
-        participant.setParticipantLdapId("");
-        oldestSelfAssignedRequest.setParticipants(Arrays.asList(selfAssignedParticipant, owningGroupParticipant));
-        oldestSelfAssignedRequest.setQueueEnterDate(LocalDateTime.now().minus(1, ChronoUnit.DAYS));
-
-        oldestNotAssignedRequest.setParticipants(Arrays.asList(participant, owningGroupParticipant));
+        acmParticipants.add(owningGroupParticipant);
+        oldestNotAssignedRequest.setParticipants(acmParticipants);
         oldestNotAssignedRequest.setQueueEnterDate(LocalDateTime.now());
-
-        expect(mockedRequestDao.getOldestRequestInQueueAssignedToUser(queueId, userId)).andReturn(oldestSelfAssignedRequest);
 
         expect(mockedRequestDao.getAllUnassignedRequestsInQueue(queueId)).andReturn(Arrays.asList(oldestNotAssignedRequest));
 
         expect(mockedGroupService.isUserMemberOfGroup(userId, owningGroup)).andReturn(true);
 
         expect(mockedAuthentication.getName()).andReturn(userId).anyTimes();
+
+        expect(mockedHttpSession.getAttribute("acm_ip_address")).andReturn(ipAddress);
+
+        expect(mockedSaveCaseService.saveCase(oldestNotAssignedRequest, mockedAuthentication, ipAddress))
+                .andReturn(oldestNotAssignedRequest);
 
         replay(mocks);
 
@@ -124,19 +125,23 @@ public class RequestAssignmentServiceTest
         verify(mocks);
 
         assertEquals(userId, ParticipantUtils.getAssigneeIdFromParticipants(found.getParticipants()));
+
+        assertEquals("assignee", found.getParticipants().stream().filter(p -> p.getParticipantType().equals("assignee")).findFirst().get().getParticipantType());
     }
 
     @Test
     public void testStartWorkingReturnsOldestNotAssignedRequest() throws Exception
     {
         participant.setParticipantLdapId("");
-        oldestSelfAssignedRequest.setParticipants(Arrays.asList(selfAssignedParticipant, owningGroupParticipant));
+
+        acmParticipants.add(owningGroupParticipant);
+        acmParticipants.add(selfAssignedParticipant);
+
+        oldestSelfAssignedRequest.setParticipants(acmParticipants);
         oldestSelfAssignedRequest.setQueueEnterDate(LocalDateTime.now());
 
-        oldestNotAssignedRequest.setParticipants(Arrays.asList(participant, owningGroupParticipant));
+        oldestNotAssignedRequest.setParticipants(acmParticipants);
         oldestNotAssignedRequest.setQueueEnterDate(LocalDateTime.now().minus(1, ChronoUnit.DAYS));
-
-        expect(mockedRequestDao.getOldestRequestInQueueAssignedToUser(queueId, userId)).andReturn(oldestSelfAssignedRequest);
 
         expect(mockedRequestDao.getAllUnassignedRequestsInQueue(queueId)).andReturn(Arrays.asList(oldestNotAssignedRequest));
 
@@ -161,8 +166,6 @@ public class RequestAssignmentServiceTest
     @Test
     public void testStartWorkingReturnsNullWhenAllRequestsAreAlreadyAssigned() throws Exception
     {
-        expect(mockedRequestDao.getOldestRequestInQueueAssignedToUser(queueId, userId)).andReturn(null);
-
         expect(mockedRequestDao.getAllUnassignedRequestsInQueue(queueId)).andReturn(new ArrayList<>());
 
         expect(mockedAuthentication.getName()).andReturn(userId).anyTimes();
@@ -181,8 +184,6 @@ public class RequestAssignmentServiceTest
     {
         participant.setParticipantLdapId("");
         oldestNotAssignedRequest.setParticipants(Arrays.asList(participant, owningGroupParticipant));
-
-        expect(mockedRequestDao.getOldestRequestInQueueAssignedToUser(queueId, userId)).andReturn(null);
 
         expect(mockedRequestDao.getAllUnassignedRequestsInQueue(queueId)).andReturn(Arrays.asList(oldestNotAssignedRequest));
 
