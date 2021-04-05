@@ -46,6 +46,9 @@ public class ZylabProductionSyncDTO
     @JsonProperty("Error")
     String error;
 
+    @JsonProperty("ErrorDetails")
+    String errorDetails;
+
     public Long getMatterId()
     {
         return matterId;
@@ -80,5 +83,13 @@ public class ZylabProductionSyncDTO
 
     public void setError(String error) {
         this.error = error;
+    }
+
+    public String getErrorDetails() {
+        return errorDetails;
+    }
+
+    public void setErrorDetails(String errorDetails) {
+        this.errorDetails = errorDetails;
     }
 }

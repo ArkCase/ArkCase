@@ -421,4 +421,37 @@ public class ZylabFileMetadata
     public void setExemptWithheld(Boolean exemptWithheld) {
         this.exemptWithheld = exemptWithheld;
     }
+
+    @Override
+    public String toString() {
+        return "ZylabFileMetadata{" +
+                "id=" + id +
+                ", matterId=" + matterId +
+                ", productionKey='" + productionKey + '\'' +
+                ", zylabId=" + zylabId +
+                ", producedPages=" + producedPages +
+                ", productionCreateDate=" + productionCreateDate +
+                ", containsRedaction=" + containsRedaction +
+                ", redactionCode1='" + redactionCode1 + '\'' +
+                ", redactionCode2='" + redactionCode2 + '\'' +
+                ", redactionJustification='" + redactionJustification + '\'' +
+                ", custodian='" + custodian + '\'' +
+                ", docName='" + docName + '\'' +
+                ", docPageCount=" + docPageCount +
+                ", docDate=" + docDate +
+                ", docExt='" + docExt + '\'' +
+                ", docSize=" + docSize +
+                ", hasAttachment=" + hasAttachment +
+                ", isAttachment=" + isAttachment +
+                ", emailFrom='" + emailFrom + '\'' +
+                ", emailRecipient='" + emailRecipient + '\'' +
+                ", multimediaDurationSec=" + multimediaDurationSec +
+                ", multimediaProperties='" + multimediaProperties + '\'' +
+                ", reviewedAnalysis='" + reviewedAnalysis + '\'' +
+                ", lastReviewedBy='" + lastReviewedBy + '\'' +
+                ", source='" + source + '\'' +
+                ", exemptWithheldReason='" + exemptWithheldReason + '\'' +
+                ", exemptWithheld=" + exemptWithheld +
+                '}';
+    }
 }

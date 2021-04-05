@@ -70,8 +70,7 @@ public class ZylabEventPublisher implements ApplicationEventPublisherAware
     }
 
     public void publishProductionFailedEvent(Object source, Long objectId, String objectType, Long matterId, String productionKey,
-            String error,
-            Authentication auth)
+            String error, String errorDetails, Authentication auth)
     {
         log.debug("Publishing ZylabProductionSync failed event");
 
@@ -81,6 +80,7 @@ public class ZylabEventPublisher implements ApplicationEventPublisherAware
         zylabProductionSyncDTO.setMatterId(matterId);
         zylabProductionSyncDTO.setStatus(ZylabProductionSyncStatus.FAILED.name());
         zylabProductionSyncDTO.setError(error);
+        zylabProductionSyncDTO.setErrorDetails(errorDetails);
 
         ZylabProductionSyncEvent zylabProductionSyncEvent = new ZylabProductionSyncEvent(source, objectId, objectType,
                 zylabProductionSyncDTO, false, auth);
