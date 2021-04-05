@@ -27,8 +27,10 @@ package com.armedia.acm.plugins.ecm.service.impl;
  * #L%
  */
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -49,10 +51,17 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
+import javax.activation.DataHandler;
+import javax.mail.BodyPart;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.Part;
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpSession;
 import javax.validation.ValidationException;
 
+import com.healthmarketscience.jackcess.complex.Attachment;
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.client.api.Folder;
@@ -64,6 +73,8 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.poi.hsmf.MAPIMessage;
+import org.apache.poi.hsmf.datatypes.AttachmentChunks;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.context.ApplicationEventPublisher;
@@ -136,6 +147,7 @@ import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.web.api.MDCConstants;
+import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 
 /**
  * Created by armdev on 5/1/14.
@@ -191,6 +203,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     private AuthenticationTokenDao authenticationTokenDao;
 
     private FileEventPublisher fileEventPublisher;
+
+    private EmailAttachmentExtractorComponent emailAttachmentExtractorComponent;
 
     @Override
     public CmisObject findObjectByPath(String path) throws Exception
@@ -2356,6 +2370,27 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                 {
                     for (final MultipartFile attachment : attachmentsList)
                     {
+                        if (attachment.getOriginalFilename()!= null && attachment.getOriginalFilename().endsWith(".msg"))
+                        {
+                            List<EmailAttachmentExtractorComponent.EmailAttachment> emailAttachments =
+                                    getEmailAttachmentExtractorComponent().extractFromMsg(attachment);
+                            uploadAttachment(authentication, parentObjectType, parentObjectId, fileType, folderCmisId, uploadedFiles, emailAttachments);
+                        }
+                        else if (attachment.getOriginalFilename()!= null && attachment.getOriginalFilename().endsWith(".eml"))
+                        {
+                            List<EmailAttachmentExtractorComponent.EmailAttachment> emailAttachments = null;
+                            try
+                            {
+                               emailAttachments = getEmailAttachmentExtractorComponent().extractFromEml(attachment);
+                            }
+                            catch (Exception e)
+                            {
+                                throw new AcmCreateObjectFailedException(parentObjectType, "Email attachments extraction failed", e);
+                            }
+                            
+                            uploadAttachment(authentication, parentObjectType, parentObjectId, fileType, folderCmisId, uploadedFiles, emailAttachments);
+                        }
+
                         AcmMultipartFile acmMultipartFile = new AcmMultipartFile(attachment, false);
 
                         EcmFile metadata = new EcmFile();
@@ -2376,6 +2411,26 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
 
         return uploadedFiles;
+    }
+
+    private void uploadAttachment(Authentication authentication, String parentObjectType, Long parentObjectId, String fileType, String folderCmisId, List<EcmFile> uploadedFiles, List<EmailAttachmentExtractorComponent.EmailAttachment> emailAttachments) throws AcmCreateObjectFailedException, AcmUserActionFailedException {
+        for (EmailAttachmentExtractorComponent.EmailAttachment emailAttachment : emailAttachments) {
+            EcmFile temp = upload(
+                    emailAttachment.getName(),
+                    "Attachment",
+                    "Document",
+                    emailAttachment.getInputStream(),
+                    emailAttachment.getContentType(),
+                    emailAttachment.getName(),
+                    authentication,
+                    folderCmisId,
+                    parentObjectType,
+                    parentObjectId
+            );
+            uploadedFiles.add(temp);
+
+            applicationEventPublisher.publishEvent(new EcmFilePostUploadEvent(temp, authentication.getName()));
+        }
     }
 
     @Override
@@ -2799,5 +2854,15 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     public void setFileEventPublisher(FileEventPublisher fileEventPublisher)
     {
         this.fileEventPublisher = fileEventPublisher;
+    }
+
+    public EmailAttachmentExtractorComponent getEmailAttachmentExtractorComponent()
+    {
+        return emailAttachmentExtractorComponent;
+    }
+
+    public void setEmailAttachmentExtractorComponent(EmailAttachmentExtractorComponent emailAttachmentExtractorComponent)
+    {
+        this.emailAttachmentExtractorComponent = emailAttachmentExtractorComponent;
     }
 }
