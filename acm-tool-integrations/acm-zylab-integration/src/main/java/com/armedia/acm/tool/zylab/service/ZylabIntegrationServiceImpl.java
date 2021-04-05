@@ -114,6 +114,12 @@ public class ZylabIntegrationServiceImpl implements ZylabIntegrationService
             log.error("Unable to uncompress ZyLAB production files");
             throw new ZylabProductionSyncException("Unable to uncompress ZyLAB production files", e);
         }
+        catch (Exception e)
+        {
+            log.error("Unable to download ZyLAB production files for Production [{}], Matter [{}]", productionKey, matterId);
+            throw new ZylabProductionSyncException(
+                    "Unable to download ZyLAB production files. Possible wrong production key sent or authentication issues", e);
+        }
 
     }
 
