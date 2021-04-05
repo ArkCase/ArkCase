@@ -144,21 +144,23 @@ public class TouchNetAPIController
         String requestorEmailAddress = extractRequestorEmailAddress(requestors.get(0));
         String assigneeEmailAddress = ParticipantUtils.getAssigneeIdFromParticipants(getAcmParticipantService().getParticipantsFromParentObject(objectId,objectType));
 
-        Notification notification = notificationService.getNotificationBuilder()
-                .newNotification("paymentConfirmation", BillingConstants.CONFIRMATION_PAYMENT_TITLE, objectType, objectId, null)
-                .withEmailAddresses(requestorEmailAddress)
-                .build();
-
-        notificationService.saveNotification(notification);
-
         String note = objectId.toString() + "_" + amount + "_" + billName + "_" + paymentMethod + "_" + cardNumber.substring(cardNumber.length() - 4);
 
-        Notification requestorNotification = notificationService.getNotificationBuilder()
+        Notification requestorNotification  = notificationService.getNotificationBuilder()
+                .newNotification("paymentConfirmation", BillingConstants.CONFIRMATION_PAYMENT_TITLE, objectType, objectId, null)
+                .withEmailAddresses(requestorEmailAddress)
+                .withNote(note)
+                .build();
+
+        notificationService.saveNotification(requestorNotification);
+
+
+        Notification assigneeNotification = notificationService.getNotificationBuilder()
                 .newNotification("assigneeConfirmationPayment", BillingConstants.CONFIRMATION_PAYMENT_TITLE, objectType, objectId, null)
                 .withEmailAddresses(assigneeEmailAddress != null ? assigneeEmailAddress : "")
                 .withNote(note)
                 .build();
-        notificationService.saveNotification(requestorNotification);
+        notificationService.saveNotification(assigneeNotification);
     }
 
     private String extractRequestorEmailAddress(Person person)
