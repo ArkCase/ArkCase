@@ -199,6 +199,10 @@
             <groupId>org.apache.tika</groupId>
             <artifactId>tika-parsers</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-email</artifactId>
+        </dependency>
         <!--  needed by tika, but Tika asks for 1.7.24, which we exclude in the top-level pom, so we can use 1.7.25 instead  -->
         <dependency>
             <groupId>org.slf4j</groupId>
