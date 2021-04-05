@@ -47,6 +47,8 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.slf4j.MDC;
@@ -126,11 +128,10 @@ public class ZylabProductionFileIncomingListener implements ApplicationListener<
             catch (Exception e)
             {
                 getZylabEventPublisher().publishProductionFailedEvent(foiaRequest, foiaRequest.getId(), foiaRequest.getObjectType(),
-                        matterId, productionKey, e.getMessage(), auth);
+                        matterId, productionKey, e.getMessage(), ExceptionUtils.getStackTrace(e), auth);
 
                 log.error("Processing of production [{}] unsuccessful for matter [{}]", matterId,
                         productionKey, e);
-
             }
         }
     }
@@ -146,7 +147,7 @@ public class ZylabProductionFileIncomingListener implements ApplicationListener<
         {
             String error = "No associated request found for ZyLAB Matter ID: " + matterId;
             getZylabEventPublisher().publishProductionFailedEvent(matterId, null, null,
-                    matterId, productionKey, error, auth);
+                    matterId, productionKey, error, ExceptionUtils.getStackTrace(e), auth);
 
             log.error(error, e);
         }
@@ -154,7 +155,7 @@ public class ZylabProductionFileIncomingListener implements ApplicationListener<
         {
             String error = "Multiple requests found for ZyLAB Matter ID: " + matterId;
             getZylabEventPublisher().publishProductionFailedEvent(null, null, null,
-                    matterId, productionKey, error, auth);
+                    matterId, productionKey, error, ExceptionUtils.getStackTrace(e), auth);
 
             log.error(error, e);
         }
