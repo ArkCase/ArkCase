@@ -69,7 +69,7 @@ public class TouchNetService
 
         GenerateSecureLinkTicketRequest req = new GenerateSecureLinkTicketRequest();
         req.setTicketName(objectId + objectType);
-        NameValuePair[] pairs = new NameValuePair[5];
+        NameValuePair[] pairs = new NameValuePair[6];
         pairs[0] = new NameValuePair();
         pairs[0].setName("AMT");
         pairs[0].setValue(amt);
@@ -85,6 +85,9 @@ public class TouchNetService
         pairs[4] = new NameValuePair();
         pairs[4].setName("BILL_PARENT_TYPE");
         pairs[4].setValue(objectType);
+        pairs[5] = new NameValuePair();
+        pairs[5].setName("BILL_INVOICE_ID");
+        pairs[5].setValue(ecmFileId);
         req.setNameValuePairs(pairs);
 
         TPGSecureLink_BindingStub binding = null;
@@ -179,20 +182,6 @@ public class TouchNetService
                 "  font-size:24;\n" +
                 "  color:#788288\n" +
                 "}\n" +
-                ".button {\n" +
-                "  background-color: #177BBB;\n" +
-                "  border: none;\n" +
-                "  color: white;\n" +
-                "  padding: 15px 32px;\n" +
-                "  text-align: center;\n" +
-                "  text-decoration: none;\n" +
-                "  display: inline-block;\n" +
-                "  font-size: 18px;\n" +
-                "  margin: 4px 2px;\n" +
-                "  cursor: pointer;\n" +
-                "  font-family: Arial, Helvetica, sans-serif;\n" +
-                "  border-radius: 6px;\n" +
-                "}\n" +
                 "</style>\n" +
                 "</header>\n" +
                 "<body style=\"background-color:#F2F4F8;text-align: center;\">\n" +
@@ -200,7 +189,6 @@ public class TouchNetService
                 "<i class=\"fa fa-check-circle icon\"/>\n" +
                 "<h1 class=\"htext\">Thank You For Your Payment</h1>\n" +
                 "<p class=\"ptext\">A confirmation email will be sent.</p></br>\n" +
-                "<a href=\"" + getApplicationConfig().getBaseUrl() + "\" class=\"button\">Return Home</a>\n" +
                 "<br><br><br>\n" +
                 "<img src=\"" + imgSrc + "\" width=\"186\" height=\"38.79\">\n" +
                 "</body>\n" +
