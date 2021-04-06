@@ -6,8 +6,10 @@ import com.armedia.acm.plugins.person.dao.PersonAssociationDao;
 import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
+import com.armedia.acm.services.billing.dao.BillingInvoiceDao;
 import com.armedia.acm.services.billing.exception.CreateBillingItemException;
 import com.armedia.acm.services.billing.model.BillingConstants;
+import com.armedia.acm.services.billing.model.BillingEventPublisher;
 import com.armedia.acm.services.billing.model.BillingItem;
 import com.armedia.acm.services.billing.service.BillingService;
 import com.armedia.acm.services.billing.service.impl.TouchNetService;
@@ -67,6 +69,8 @@ public class TouchNetAPIController
     private NotificationService notificationService;
     private AcmParticipantService acmParticipantService;
     private PersonAssociationDao personAssociationDao;
+    private BillingEventPublisher billingEventPublisher;
+    private BillingInvoiceDao billingInvoiceDao;
 
     private Logger log = LogManager.getLogger(getClass());
 
@@ -94,6 +98,7 @@ public class TouchNetAPIController
         AuthorizeAccountResponse authorizeAccountResponse = touchNetService.authorizeAccount(sessionId);
         String objectType = "";
         String objectId = "";
+        String invoiceId = "";
         NameValuePair[] params = authorizeAccountResponse.getNameValuePairs();
         for (NameValuePair param : params)
         {
@@ -105,20 +110,24 @@ public class TouchNetAPIController
             {
                 objectType = param.getValue();
             }
+            else if(param.getName().equals("BILL_INVOICE_ID"))
+            {
+                invoiceId = param.getValue();
+            }
         }
-        generateAndSaveBilling(objectId,objectType,paymentAmount);
-        sendPaymentConfirmationEmail(objectType, Long.valueOf(objectId),billName,paymentAmount,cardNumber,paymentMethod);
+        generateAndSaveBilling(objectId,objectType,paymentAmount, sessionId, invoiceId);
+        sendPaymentConfirmationEmail(objectType, Long.valueOf(objectId),billName,paymentAmount,cardNumber,paymentMethod, sessionId);
 
         return getTouchNetService().redirectToConfirmationPage();
 
     }
 
-    private void generateAndSaveBilling(String objectId, String objectType, String itemAmount)
+    private void generateAndSaveBilling(String objectId, String objectType, String itemAmount, String sessionId, String invoiceId)
     {
         BillingItem billingItem = new BillingItem();
         billingItem.setCreator("TOUCHNET-PAYMENT");
         billingItem.setModifier("TOUCHNET-PAYMENT");
-        billingItem.setItemDescription("TouchNet Payment");
+        billingItem.setItemDescription("TouchNet Payment with session ID: " + sessionId);
         billingItem.setParentObjectId(Long.valueOf(objectId));
         billingItem.setParentObjectType(objectType);
         billingItem.setItemAmount(-Double.valueOf(itemAmount));
@@ -126,6 +135,7 @@ public class TouchNetAPIController
         try
         {
             billingService.createBillingItem(billingItem);
+            getBillingEventPublisher().publishTouchnetPaymentCreatedEvent(getBillingInvoiceDao().getBillingInvoiceByEcmFileId(Long.valueOf(invoiceId)));
         }
         catch (CreateBillingItemException e)
         {
@@ -133,7 +143,7 @@ public class TouchNetAPIController
         }
     }
 
-    private void sendPaymentConfirmationEmail(String objectType, Long objectId, String billName, String amount, String cardNumber, String paymentMethod)
+    private void sendPaymentConfirmationEmail(String objectType, Long objectId, String billName, String amount, String cardNumber, String paymentMethod, String sessionId)
     {
         List<Person> requestors;
         requestors = getPersonAssociationDao().findPersonByParentIdAndParentTypeAndPersonType(objectType,objectId, "Requester");
@@ -144,7 +154,7 @@ public class TouchNetAPIController
         String requestorEmailAddress = extractRequestorEmailAddress(requestors.get(0));
         String assigneeEmailAddress = ParticipantUtils.getAssigneeIdFromParticipants(getAcmParticipantService().getParticipantsFromParentObject(objectId,objectType));
 
-        String note = objectId.toString() + "_" + amount + "_" + billName + "_" + paymentMethod + "_" + cardNumber.substring(cardNumber.length() - 4);
+        String note = objectId.toString() + "_" + amount + "_" + billName + "_" + paymentMethod + "_" + cardNumber.substring(cardNumber.length() - 4) + "_" + sessionId;
 
         Notification requestorNotification  = notificationService.getNotificationBuilder()
                 .newNotification("paymentConfirmation", BillingConstants.CONFIRMATION_PAYMENT_TITLE, objectType, objectId, null)
@@ -243,6 +253,26 @@ public class TouchNetAPIController
     public void setPersonAssociationDao(PersonAssociationDao personAssociationDao)
     {
         this.personAssociationDao = personAssociationDao;
+    }
+
+    public BillingEventPublisher getBillingEventPublisher()
+    {
+        return billingEventPublisher;
+    }
+
+    public void setBillingEventPublisher(BillingEventPublisher billingEventPublisher)
+    {
+        this.billingEventPublisher = billingEventPublisher;
+    }
+
+    public BillingInvoiceDao getBillingInvoiceDao()
+    {
+        return billingInvoiceDao;
+    }
+
+    public void setBillingInvoiceDao(BillingInvoiceDao billingInvoiceDao)
+    {
+        this.billingInvoiceDao = billingInvoiceDao;
     }
 }
 
