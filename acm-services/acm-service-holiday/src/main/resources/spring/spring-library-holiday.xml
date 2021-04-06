@@ -4,7 +4,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
-    <bean id="holidayConfigurationService" class="com.armedia.acm.services.holiday.service.HolidayConfigurationService">
+    <bean id="holidayConfigurationService" class="com.armedia.acm.services.holiday.service.HolidayConfigurationService" init-method="init">
         <property name="holidayConfigurationProps" ref="holidayConfigurationProps"/>
         <property name="configurationPropertyService" ref="configurationPropertyService"/>
         <property name="businessHoursConfig" ref="businessHoursConfig"/>
