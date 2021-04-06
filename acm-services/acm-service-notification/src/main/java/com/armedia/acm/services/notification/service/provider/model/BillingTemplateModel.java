@@ -39,9 +39,10 @@ public class BillingTemplateModel
     private final String paymentMethod;
     private final String cardNumber;
     private final String paymentDate;
+    private final String sessionId;
 
     public BillingTemplateModel(String amount, String token, String fileId, String objectId, String objectType, String billName,
-            String paymentMethod, String cardNumber, String paymentDate)
+            String paymentMethod, String cardNumber, String paymentDate, String sessionId)
     {
         this.amount = amount;
         this.token = token;
@@ -52,6 +53,7 @@ public class BillingTemplateModel
         this.paymentMethod = paymentMethod;
         this.cardNumber = cardNumber;
         this.paymentDate = paymentDate;
+        this.sessionId = sessionId;
     }
 
     public String getAmount()
@@ -97,5 +99,10 @@ public class BillingTemplateModel
     public String getPaymentDate()
     {
         return paymentDate;
+    }
+
+    public String getSessionId()
+    {
+        return sessionId;
     }
 }

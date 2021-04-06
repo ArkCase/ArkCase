@@ -25,6 +25,8 @@
         <property name="notificationService" ref="notificationService"/>
         <property name="acmParticipantService" ref="acmParticipantService"/>
         <property name="personAssociationDao" ref="acmPersonAssociationDao"/>
+        <property name="billingEventPublisher" ref="billingEventPublisher"/>
+        <property name="billingInvoiceDao" ref="billingInvoiceDao"/>
     </bean>
 
 </beans>
