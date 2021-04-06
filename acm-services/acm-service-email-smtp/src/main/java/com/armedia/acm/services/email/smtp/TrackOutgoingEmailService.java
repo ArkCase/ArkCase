@@ -94,7 +94,7 @@ public class TrackOutgoingEmailService implements ApplicationEventPublisherAware
         // email address might be multiple emails concatenated with a comma. Se we cut the email address not to exceed
         // filename limit of 255 characters
         String email = group != null ? group : emailAddress + "," + ccEmailAddress + "," + bccEmailAddress;
-        email.replaceAll(",,", "");
+        email = email.replaceAll(",,", "");
         messageFileName = email.substring(0, Math.min(email.length(), 255 - messageFileName.length())) + messageFileName;
         File messageFile = new File(tempDir + File.separator + messageFileName);
 
