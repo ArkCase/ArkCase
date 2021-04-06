@@ -79,9 +79,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import gov.foia.dao.PortalFOIAPersonDao;
@@ -177,7 +180,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
                 portalId);
         Optional<PortalFOIAPerson> registeredPerson = portalPersonDao.findByEmail(registrationRequest.getEmailAddress());
 
-        if (isUserRejectedForPortal(registeredPerson))
+        if (registeredPerson.isPresent() && isUserRejectedForPortal(registeredPerson.get()))
         {
             return UserRegistrationResponse.rejected();
         }
@@ -289,7 +292,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         Optional<UserRegistrationRequestRecord> registrationRecord = registrationDao.findByRegistrationId(registrationId);
         Optional<PortalFOIAPerson> registeredPortalPerson = portalPersonDao.findByEmail(userEmail);
         Optional<Person> registeredFoiaPerson = getPersonDao().findByEmail(userEmail);
-        if (isUserRejectedForPortal(registeredPortalPerson))
+        if (registeredPortalPerson.isPresent() && isUserRejectedForPortal(registeredPortalPerson.get()))
         {
             return UserRegistrationResponse.rejected();
         }
@@ -308,14 +311,15 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         else if (registeredFoiaPerson.isPresent())
         {
             PortalFOIAPerson person = changePersonIntoPortalFOIAPerson(registeredFoiaPerson.get());
-            person = getPortalFOIAPerson(user, Optional.of(person));
+            updatePortalPersonFromPortalUser(person, user);
             createPortalUser(user, person, password);
             registrationDao.delete(registrationRecord.get());
             return UserRegistrationResponse.accepted();
         }
         else
         {
-            PortalFOIAPerson person = getPortalFOIAPerson(user, registeredPortalPerson);
+            user.setRole(PortalUser.PENDING_USER);
+            PortalFOIAPerson person = portalPersonFromPortalUser(user);
             createPortalUser(user, person, password);
             registrationDao.delete(registrationRecord.get());
             return UserRegistrationResponse.accepted();
@@ -323,25 +327,9 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
 
     }
 
-    private boolean isUserRejectedForPortal(Optional<PortalFOIAPerson> registeredPerson)
+    private boolean isUserRejectedForPortal(PortalFOIAPerson registeredPerson)
     {
-        return registeredPerson.isPresent() && registeredPerson.get().getRole().equals(PortalUser.REJECTED_USER);
-    }
-
-    public PortalFOIAPerson getPortalFOIAPerson(PortalUser user, Optional<PortalFOIAPerson> registeredPerson)
-    {
-        PortalFOIAPerson person;
-        user.setRole(PortalUser.PENDING_USER);
-        if (registeredPerson.isPresent())
-        {
-            person = registeredPerson.get();
-            updatePortalPersonFromPortalUser(registeredPerson.get(), user);
-        }
-        else
-        {
-            person = portalPersonFromPortalUser(user);
-        }
-        return person;
+        return registeredPerson.getRole().equals(PortalUser.REJECTED_USER);
     }
 
     @Override
@@ -370,7 +358,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
             }
             return UserRegistrationResponse.exists();
         }
-        else if (isUserRejectedForPortal(registeredPerson))
+        else if (registeredPerson.isPresent() && isUserRejectedForPortal(registeredPerson.get()))
         {
             return UserRegistrationResponse.rejected();
         }
@@ -766,17 +754,20 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
 
         catch (AcmUserActionFailedException e)
         {
-            log.debug(String.format("Couldn't update password for LDAP user %s. Using configured system user %s.", portalUserId, acmSystemUserId));
+            log.debug(String.format("Couldn't update password for LDAP user %s. Using configured system user %s.", portalUserId,
+                    acmSystemUserId));
             throw new PortalUserServiceException(String.format("Couldn't update password for user %s.", portalUserEmail), e);
         }
         catch (AuthenticationException e)
         {
-            log.debug(String.format("Failed to authenticate! Wrong password for LDAP user %s. Using configured system user %s.", portalUserId, acmSystemUserId));
+            log.debug(String.format("Failed to authenticate! Wrong password for LDAP user %s. Using configured system user %s.",
+                    portalUserId, acmSystemUserId));
             return UserResetResponse.invalidCredentials();
         }
         catch (InvalidAttributeValueException e)
         {
-            log.debug(String.format("Password policy error for LDAP user %s. Using configured system user %s.", portalUserId, acmSystemUserId));
+            log.debug(String.format("Password policy error for LDAP user %s. Using configured system user %s.", portalUserId,
+                    acmSystemUserId));
             throw new PortalUserServiceException(String.format("Password fails quality checking policy for user %s.", portalUserEmail), e);
         }
         catch (Exception e)
@@ -894,92 +885,54 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
 
     public Person findOrCreateOrganizationAndPersonOrganizationAssociation(Person person, String organizationName)
     {
-        Organization organization = checkOrganizationByNameOrCreateNew(person.getGivenName(), person.getFamilyName(), organizationName);
-        boolean organizationExists = false;
-
-        for (Organization org : person.getOrganizations())
+        List<Organization> organizationsByGivenName = organizationDao.findOrganizationsByName(organizationName);
+        if (organizationsByGivenName.isEmpty())
         {
-            if (org.getId().equals(organization.getId()))
-            {
-                organizationExists = true;
-                break;
-            }
-        }
-        if (person.getOrganizationAssociations().isEmpty() || !organizationExists)
-        {
-            PersonOrganizationAssociation personOrganizationAssociation = addPersonOrganizationAssociation(person,
-                    organization);
-            personOrganizationAssociation.setDefaultOrganization(true);
+            Organization organization = new Organization();
+            organization.setOrganizationValue(organizationName);
+            organization.setOrganizationType("Unknown");
             person.getOrganizations().add(organization);
-            person.getOrganizationAssociations().add(personOrganizationAssociation);
-            person.setDefaultOrganization(personOrganizationAssociation);
+
+            addPersonDefaultOrganizationAssociation(organization, person);
+
         }
         else
         {
-            List<PersonOrganizationAssociation> poas = person.getOrganizationAssociations();
-            for (PersonOrganizationAssociation poa : poas)
+            List<PersonOrganizationAssociation> personOrganizationAssociations = person.getOrganizationAssociations();
+
+            if (personOrganizationAssociations.isEmpty())
             {
-                if (poa.getOrganization().getOrganizationValue().equalsIgnoreCase(organization.getOrganizationValue()))
+                addPersonDefaultOrganizationAssociation(organizationsByGivenName.get(0), person);
+            }
+            else
+            {
+                Map<String, Organization> organizationByName = organizationsByGivenName.stream()
+                        .collect(Collectors.toMap(Organization::getOrganizationValue, Function.identity()));
+
+                boolean personHasOrganizationAssociation = personOrganizationAssociations.stream()
+                        .anyMatch(poa -> organizationByName.containsKey(poa.getOrganization().getOrganizationValue()));
+
+                if (!personHasOrganizationAssociation)
                 {
-                    poa.setDefaultOrganization(true);
-                    person.setDefaultOrganization(poa);
-                    break;
+                    addPersonDefaultOrganizationAssociation(organizationsByGivenName.get(0), person);
                 }
             }
         }
         return person;
     }
 
-    private Organization checkOrganizationByNameOrCreateNew(String firstName, String familyName, String organizationName)
+    private void addPersonDefaultOrganizationAssociation(Organization org, Person person)
     {
-        List<Organization> organizationList = getOrganizationDao().findOrganizationsByName(organizationName);
+        PersonOrganizationAssociation poa = new PersonOrganizationAssociation();
+        poa.setOrganization(org);
+        poa.setPerson(person);
 
-        if (organizationList == null)
-        {
-            Organization newOrganization = new Organization();
-            newOrganization.setOrganizationValue(organizationName);
-            newOrganization.setOrganizationType("Unknown");
-            return newOrganization;
-        }
-        else if (organizationList.size() == 1)
-        {
-            return organizationList.get(0);
-        }
-        else
-        {
-            for (Organization existingOrganization : organizationList)
-            {
-                for (PersonOrganizationAssociation poa : existingOrganization.getPersonAssociations())
-                {
-                    if (poa.getPerson().getGivenName().toLowerCase().startsWith(firstName.toLowerCase())
-                            && poa.getPerson().getFamilyName().equalsIgnoreCase(familyName))
-                    {
-                        return existingOrganization;
-                    }
-                }
-            }
-            Organization newOrganization = new Organization();
-            newOrganization.setOrganizationValue(organizationName);
-            newOrganization.setOrganizationType("Unknown");
-            return newOrganization;
+        poa.setPersonToOrganizationAssociationType("Unknown");
+        poa.setOrganizationToPersonAssociationType("Unknown");
+        person.getOrganizationAssociations().add(poa);
 
-        }
-    }
-
-    private PersonOrganizationAssociation addPersonOrganizationAssociation(Person person, Organization organization)
-    {
-        PersonOrganizationAssociation personOrganizationAssociation = new PersonOrganizationAssociation();
-        personOrganizationAssociation.setOrganization(organization);
-        personOrganizationAssociation.setDefaultOrganization(false);
-        personOrganizationAssociation.setPerson(person);
-        personOrganizationAssociation.setPersonToOrganizationAssociationType("unknown");
-        personOrganizationAssociation.setOrganizationToPersonAssociationType("unknown");
-        if (person.getOrganizationAssociations().isEmpty())
-        {
-            personOrganizationAssociation.setDefaultOrganization(true);
-        }
-
-        return personOrganizationAssociation;
+        person.getOrganizations().add(org);
+        person.setDefaultOrganization(poa);
     }
 
     /**
@@ -1139,35 +1092,34 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         existingPerson.setPosition(user.getPosition());
 
         PostalAddress address = existingPerson.getDefaultAddress();
-        if (address != null)
+        if (address == null)
         {
-            address.setCity(user.getCity());
-            address.setCountry(user.getCountry());
-            address.setState(user.getState());
-            address.setStreetAddress(user.getAddress1());
-            address.setStreetAddress2(user.getAddress2());
-            address.setZip(user.getZipCode());
-            address.setType(user.getAddressType());
+            address = new PostalAddress();
+
+            existingPerson.setDefaultAddress(address);
+            existingPerson.getAddresses().add(address);
         }
+        address.setCity(user.getCity());
+        address.setCountry(user.getCountry());
+        address.setState(user.getState());
+        address.setStreetAddress(user.getAddress1());
+        address.setStreetAddress2(user.getAddress2());
+        address.setZip(user.getZipCode());
+        address.setType(user.getAddressType());
 
         ContactMethod contactMethodPhone = existingPerson.getDefaultPhone();
-        if (contactMethodPhone != null)
+        if (contactMethodPhone == null)
+        {
+            contactMethodPhone = buildContactMethod("phone", user.getPhoneNumber());
+            existingPerson.setDefaultPhone(contactMethodPhone);
+            existingPerson.getContactMethods().add(contactMethodPhone);
+        }
+        else
         {
             contactMethodPhone.setValue(user.getPhoneNumber());
         }
 
-        ContactMethod contactMethodEmail = existingPerson.getDefaultEmail();
-        if (contactMethodEmail != null)
-        {
-            contactMethodEmail.setValue(user.getEmail());
-        }
-
-        if (user.getOrganization() != null)
-        {
-            findOrCreateOrganizationAndPersonOrganizationAssociation(existingPerson, user.getOrganization());
-        }
-
-        existingPerson.setRole(user.getRole());
+        findOrCreateOrganizationAndPersonOrganizationAssociation(existingPerson, user.getOrganization());
     }
 
     private ContactMethod buildContactMethod(String type, String value)
