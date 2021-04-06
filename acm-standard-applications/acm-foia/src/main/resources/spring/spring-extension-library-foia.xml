@@ -425,6 +425,7 @@
             <beans:property name="authenticationTokenDao" ref="authenticationTokenDao"/>
             <beans:property name="camelContextManager" ref="camelContextManager"/>
             <beans:property name="fileEventPublisher" ref="fileEventPublisher"/>
+            <beans:property name="emailAttachmentExtractorComponent" ref="emailAttachmentExtractorComponent"/>
         </beans:bean>
 
         <beans:bean id="foiaConfig" class="gov.foia.model.FoiaConfig" scope="refresh">
