@@ -102,7 +102,7 @@ public class BillingInvoiceDao extends AcmAbstractDao<BillingInvoice>
     {
         String queryText = "SELECT billingInvoice " +
                 "FROM BillingInvoice billingInvoice " +
-                "WHERE billingInvoice.billingInvoiceEcmFile = :ecmFileId";
+                "WHERE billingInvoice.billingInvoiceEcmFile.fileId = :ecmFileId";
 
         TypedQuery<BillingInvoice> query = getEntityManager().createQuery(queryText, BillingInvoice.class);
         query.setParameter("ecmFileId", ecmFileId);
