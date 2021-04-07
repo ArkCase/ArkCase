@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.ecm.service.impl;
 
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import org.apache.commons.mail.util.MimeMessageParser;
 import org.apache.poi.hsmf.MAPIMessage;
 import org.apache.poi.hsmf.datatypes.AttachmentChunks;
@@ -10,7 +11,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.activation.DataSource;
 import javax.activation.MimetypesFileTypeMap;
 import javax.mail.Address;
-import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
@@ -25,16 +25,12 @@ import java.util.Properties;
 @Component
 public class EmailAttachmentExtractorComponent
 {
-
-    public EmailContent extractFromMsg(MultipartFile attachment)
-    {
+    public EmailContent extractFromMsg(MultipartFile attachment) throws ChunkNotFoundException, IOException {
         List<EmailAttachment> emailAttachments = new ArrayList<>();
         String sender = "";
         String subject = "";
-        InputStream inputStream = null;
-        try
+        try(InputStream inputStream = attachment.getInputStream())
         {
-            inputStream = attachment.getInputStream();
             MAPIMessage message = new MAPIMessage(inputStream);
             AttachmentChunks[] attachmentFiles = message.getAttachmentFiles();
 
@@ -52,28 +48,21 @@ public class EmailAttachmentExtractorComponent
             subject = message.getSubject();
             sender = message.getMainChunks().getEmailFromChunk().getValue();
         }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
 
 
         return new EmailContent(emailAttachments, subject, sender);
     }
 
-    public EmailContent extractFromEml(MultipartFile attachment)
-    {
+    public EmailContent extractFromEml(MultipartFile attachment) throws Exception {
         List<EmailAttachment> emailAttachments = new ArrayList<>();
         String subject = "";
         String sender = "";
         Properties props = new Properties();
         Session mailSession = Session.getDefaultInstance(props, null);
-        InputStream inputStream = null;
-        try
-        {
-            inputStream = attachment.getInputStream();
-            MimeMessage message = new MimeMessage(mailSession, inputStream);
 
+        try(InputStream inputStream = attachment.getInputStream())
+        {
+            MimeMessage message = new MimeMessage(mailSession, inputStream);
             MimeMessageParser mimeParser = new MimeMessageParser(message);
             mimeParser.parse();
             List<DataSource> dsl = mimeParser.getAttachmentList();
@@ -90,12 +79,32 @@ public class EmailAttachmentExtractorComponent
             Address[] froms = message.getFrom();
             sender = froms == null ? "" : ((InternetAddress) froms[0]).getAddress();
         }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+
+
         return new EmailContent(emailAttachments, subject, sender);
     }
+    public boolean isEmail(MultipartFile file)
+    {
+        return file.getOriginalFilename().endsWith(EcmFileConstants.FILE_EXTENSION_MSG) || file.getOriginalFilename().endsWith(EcmFileConstants.FILE_EXTENSION_EML);
+    }
+
+    public EmailContent extract(MultipartFile attachment) throws Exception {
+        String emailFileType = attachment.getOriginalFilename();
+
+        if (emailFileType != null && emailFileType.endsWith(EcmFileConstants.FILE_EXTENSION_MSG))
+        {
+            return extractFromMsg(attachment);
+        }
+        else if(emailFileType != null && emailFileType.endsWith(EcmFileConstants.FILE_EXTENSION_EML))
+        {
+            return extractFromEml(attachment);
+        }
+        else
+        {
+            throw new UnsupportedOperationException("Not supported type: " + emailFileType);
+        }
+    }
+
 
     public static class EmailContent
     {
