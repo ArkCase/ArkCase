@@ -6,6 +6,7 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 /*-
  * #%L
@@ -93,6 +94,7 @@ public class EcmFileToSolrTransformerTest extends EasyMockSupport
         unit.setDacConfig(dacConfig);
 
         solrConfig = new SolrConfig();
+        solrConfig.setContentIndexingFileSizeBytesLimit(5000L);
         unit.setSolrConfig(solrConfig);
     }
 
@@ -146,7 +148,7 @@ public class EcmFileToSolrTransformerTest extends EasyMockSupport
         version.setFile(in);
         version.setModified(now);
         version.setModifier(userId);
-        version.setVersionTag("VERSION_TAG");
+        version.setVersionTag("ACTIVE_TAG");
         version.setVersionFileNameExtension(".txt");
         version.setVersionMimeType("text/plain");
         in.setVersions(Collections.singletonList(version));
@@ -195,6 +197,21 @@ public class EcmFileToSolrTransformerTest extends EasyMockSupport
 
         validateResult(result);
 
+    }
+
+    @Test
+    public void toContentFileIndexWhenFileTooLarge()
+    {
+        solrConfig.setEnableContentFileIndexing(true);
+        in.getVersions().get(0).setFileSizeBytes(5001L);
+
+        replayAll();
+
+        SolrContentDocument result = unit.toContentFileIndex(in);
+
+        verifyAll();
+
+        assertNull("Content for large files is not indexed!", result);
     }
 
     @Test
