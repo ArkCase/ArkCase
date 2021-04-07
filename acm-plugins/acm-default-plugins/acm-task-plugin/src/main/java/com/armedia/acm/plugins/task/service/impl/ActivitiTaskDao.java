@@ -27,6 +27,54 @@ package com.armedia.acm.plugins.task.service.impl;
  * #L%
  */
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+
+import org.activiti.bpmn.model.BpmnModel;
+import org.activiti.bpmn.model.FlowElement;
+import org.activiti.bpmn.model.FormProperty;
+import org.activiti.bpmn.model.FormValue;
+import org.activiti.bpmn.model.Process;
+import org.activiti.bpmn.model.UserTask;
+import org.activiti.engine.ActivitiException;
+import org.activiti.engine.HistoryService;
+import org.activiti.engine.RepositoryService;
+import org.activiti.engine.RuntimeService;
+import org.activiti.engine.TaskService;
+import org.activiti.engine.history.HistoricIdentityLink;
+import org.activiti.engine.history.HistoricProcessInstance;
+import org.activiti.engine.history.HistoricTaskInstance;
+import org.activiti.engine.history.HistoricTaskInstanceQuery;
+import org.activiti.engine.history.HistoricVariableInstance;
+import org.activiti.engine.impl.bpmn.diagram.ProcessDiagramGenerator;
+import org.activiti.engine.repository.ProcessDefinition;
+import org.activiti.engine.runtime.Execution;
+import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.engine.runtime.ProcessInstanceQuery;
+import org.activiti.engine.task.IdentityLink;
+import org.activiti.engine.task.Task;
+import org.apache.commons.compress.utils.IOUtils;
+import org.apache.commons.lang.WordUtils;
+import org.apache.commons.lang.time.DateUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.armedia.acm.activiti.services.AcmBpmnService;
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
 import com.armedia.acm.core.AcmNotifiableEntity;
@@ -63,53 +111,6 @@ import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.ParticipantTypes;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-
-import org.activiti.bpmn.model.BpmnModel;
-import org.activiti.bpmn.model.FlowElement;
-import org.activiti.bpmn.model.FormProperty;
-import org.activiti.bpmn.model.FormValue;
-import org.activiti.bpmn.model.Process;
-import org.activiti.bpmn.model.UserTask;
-import org.activiti.engine.ActivitiException;
-import org.activiti.engine.HistoryService;
-import org.activiti.engine.RepositoryService;
-import org.activiti.engine.RuntimeService;
-import org.activiti.engine.TaskService;
-import org.activiti.engine.history.HistoricIdentityLink;
-import org.activiti.engine.history.HistoricProcessInstance;
-import org.activiti.engine.history.HistoricTaskInstance;
-import org.activiti.engine.history.HistoricTaskInstanceQuery;
-import org.activiti.engine.history.HistoricVariableInstance;
-import org.activiti.engine.impl.bpmn.diagram.ProcessDiagramGenerator;
-import org.activiti.engine.repository.ProcessDefinition;
-import org.activiti.engine.runtime.Execution;
-import org.activiti.engine.runtime.ProcessInstance;
-import org.activiti.engine.runtime.ProcessInstanceQuery;
-import org.activiti.engine.task.IdentityLink;
-import org.activiti.engine.task.Task;
-import org.apache.commons.compress.utils.IOUtils;
-import org.apache.commons.lang.WordUtils;
-import org.apache.commons.lang.time.DateUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.security.core.Authentication;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.TypedQuery;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao, AcmNotificationDao, AcmNameDao
 {
@@ -1259,6 +1260,19 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
             log.info("Created folder id '{}' for task with ID {}", folderId, task.getTaskId());
         }
 
+    }
+
+    public List<Task> findAllTasksByVariable(String variableName, String variableValue)
+    {
+        return getActivitiTaskService()
+                .createTaskQuery()
+                .taskVariableValueEquals(variableName, variableValue)
+                .list();
+    }
+
+    public void updateVariableForTask(Task activitiTask, String variableName, String variableValue)
+    {
+        getActivitiTaskService().setVariableLocal(activitiTask.getId(), variableName,variableValue);
     }
 
     private void findSelectedTaskOutcome(HistoricTaskInstance hti, AcmTask retval)
