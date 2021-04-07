@@ -2308,7 +2308,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
         try
         {
-
             EcmFileVersion fileCopyVersion = new EcmFileVersion();
             fileCopyVersion.setCmisObjectId(file.getVersions().get(file.getVersions().size() - 1).getCmisObjectId());
             fileCopyVersion.setVersionTag(file.getActiveVersionTag());
@@ -2364,26 +2363,15 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                 {
                     for (final MultipartFile attachment : attachmentsList)
                     {
-                        if (attachment.getOriginalFilename()!= null && attachment.getOriginalFilename().endsWith(EcmFileConstants.FILE_EXTENSION_MSG))
+                        if(getEmailAttachmentExtractorComponent().isEmail(attachment))
                         {
                             try
                             {
-                                uploadFilesFromEmail(EcmFileConstants.FILE_EXTENSION_MSG, attachment, authentication, parentObjectType, parentObjectId, fileType, folderCmisId, uploadedFiles, fileLang, request.getParameter("uuid"));
-
+                                uploadFilesFromEmail(attachment, authentication, parentObjectType, parentObjectId, fileType, folderCmisId, uploadedFiles, fileLang, request.getParameter("uuid"));
                             }
                             catch (Exception e)
                             {
-                                throw new AcmCreateObjectFailedException(parentObjectType, "Email file and attachments upload failed", e);
-                            }
-                        }
-                        else if (attachment.getOriginalFilename()!= null && attachment.getOriginalFilename().endsWith(EcmFileConstants.FILE_EXTENSION_EML))
-                        {
-                            try
-                            {
-                                uploadFilesFromEmail(EcmFileConstants.FILE_EXTENSION_EML, attachment, authentication, parentObjectType, parentObjectId, fileType, folderCmisId, uploadedFiles, fileLang, request.getParameter("uuid") );
-                            }
-                            catch (Exception e)
-                            {
+                                log.error("Upload of email file and attachments failed", e);
                                 throw new AcmCreateObjectFailedException(parentObjectType, "Email file and attachments upload failed", e);
                             }
                         }
@@ -2412,28 +2400,24 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         return uploadedFiles;
     }
 
-    private void uploadFilesFromEmail(String emailFileType, MultipartFile attachment, Authentication authentication, String parentObjectType, Long parentObjectId, String fileType, String folderCmisId, List<EcmFile> uploadedFiles, String fileLang, String uuid) throws Exception {
+    private void uploadFilesFromEmail(MultipartFile attachment, Authentication authentication, String parentObjectType, Long parentObjectId, String fileType, String folderCmisId, List<EcmFile> uploadedFiles, String fileLang, String uuid) throws Exception {
 
-        EmailAttachmentExtractorComponent.EmailContent emailContent = null;
         String folderName;
 
         ZonedDateTime date = ZonedDateTime.now(ZoneOffset.UTC);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         String currentDate = formatter.format(date);
 
-        if (emailFileType.equalsIgnoreCase(EcmFileConstants.FILE_EXTENSION_MSG))
-        {
-            emailContent = getEmailAttachmentExtractorComponent().extractFromMsg(attachment);
-        }
-        else if(emailFileType.equalsIgnoreCase(EcmFileConstants.FILE_EXTENSION_EML))
-        {
-            emailContent = getEmailAttachmentExtractorComponent().extractFromEml(attachment);
-        }
+        //extract email attachments
+        EmailAttachmentExtractorComponent.EmailContent emailContent = getEmailAttachmentExtractorComponent().extract(attachment);
 
         // make folder name and create new folder with that name for email file and it's attachment
         folderName = emailContent.getSubject().replaceAll("\\W+", "") + "-" + currentDate + "-" + emailContent.getSender();
         AcmFolder folder = getFolderDao().findByCmisFolderId(folderCmisId);
-        AcmFolder emailFolder = getAcmFolderService().addNewFolder(folder, folderName);
+        AcmFolder emailFolder = null;
+
+        emailFolder = getAcmFolderService().addNewFolder(folder, folderName);
+
 
         //upload emails attachment
         uploadAttachment(
