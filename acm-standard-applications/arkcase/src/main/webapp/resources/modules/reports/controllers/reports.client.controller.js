@@ -62,6 +62,9 @@ angular.module('reports').controller('ReportsController',
                 $scope.data.reportSelected = null;
                 $scope.data.dateSearchType = null;
 
+                // add for uwp-486
+                $scope.data.outputType = null
+
                 $scope.showReportParameters = false;
             });
 
@@ -100,6 +103,12 @@ angular.module('reports').controller('ReportsController',
                     $scope.showReportParameters = false;
                     return;
                 }
+
+                // Retrieve outputType from acm-reports-parameters.json file
+                LookupService.getConfig("reportsParameters").then(function(payload) {
+                    $scope.data.outputType = payload['outputType'];
+                });
+
                 var reportUrl = $scope.data.reports[$scope.data.reportSelected];
                 // show report parameters only on prpt reports
                 if (reportUrl.indexOf('prpt/viewer', reportUrl.length - 'prpt/viewer'.length) !== -1) {

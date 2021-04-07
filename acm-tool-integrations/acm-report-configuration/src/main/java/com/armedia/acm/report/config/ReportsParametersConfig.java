@@ -43,6 +43,7 @@ public class ReportsParametersConfig
         return description;
     }
 
+
     public void setDescription(String description)
     {
         this.description = description;
@@ -59,5 +60,19 @@ public class ReportsParametersConfig
     public void setDateSearchTypes(Map<String, String> dateSearchTypes)
     {
         this.dateSearchTypes = dateSearchTypes;
+    }
+
+    // add for UPP-489
+    private Map<String, String> outputType = new HashMap<>();
+
+    @MapValue(value = "report.config.reportsParametersConfiguration.outputType")
+    public Map<String, String> getOutputType()
+    {
+        return outputType;
+    }
+
+    public void setOutputType(Map<String, String> outputType)
+    {
+        this.outputType = outputType;
     }
 }
