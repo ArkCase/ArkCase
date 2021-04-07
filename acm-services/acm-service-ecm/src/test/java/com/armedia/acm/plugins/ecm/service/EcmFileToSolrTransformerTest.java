@@ -14,22 +14,22 @@ import static org.junit.Assert.assertNull;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
@@ -38,6 +38,7 @@ import static org.junit.Assert.assertNull;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConfig;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.services.dataaccess.model.DataAccessControlConfig;
 import com.armedia.acm.services.dataaccess.service.SearchAccessControlFields;
@@ -94,8 +95,11 @@ public class EcmFileToSolrTransformerTest extends EasyMockSupport
         unit.setDacConfig(dacConfig);
 
         solrConfig = new SolrConfig();
-        solrConfig.setContentIndexingFileSizeBytesLimit(5000L);
         unit.setSolrConfig(solrConfig);
+
+        EcmFileConfig fileConfig = new EcmFileConfig();
+        fileConfig.setDocumentSizeBytesLimit(5000L);
+        unit.setFileConfig(fileConfig);
     }
 
     private void setupEcmFile(EcmFile in)
@@ -230,6 +234,38 @@ public class EcmFileToSolrTransformerTest extends EasyMockSupport
         verifyAll();
 
         validateResult(result);
+    }
+
+    @Test
+    public void toSolrAdvancedSearchWhenLargeFile()
+    {
+        solrConfig.setEnableContentFileIndexing(true);
+        in.getVersions().get(0).setFileSizeBytes(5001L);
+
+        mockSearchAccessControlFields.setAccessControlFields(anyObject(SolrBaseDocument.class), anyObject(AcmAssignedObject.class));
+        expectLastCall();
+
+        expect(mockUserDao.quietFindByUserId(eq("user"))).andReturn(user).times(2);
+        expect(mockUserDao.quietFindByUserId(null)).andReturn(null);
+
+        replayAll();
+        SolrAdvancedSearchDocument result = unit.toSolrAdvancedSearch(in);
+        verifyAll();
+
+        validateResult(result);
+    }
+
+    @Test
+    public void toSolrAdvancedSearchWhenFileSizeLowerThanLimit()
+    {
+        solrConfig.setEnableContentFileIndexing(true);
+        in.getVersions().get(0).setFileSizeBytes(0L);
+
+        replayAll();
+        SolrAdvancedSearchDocument result = unit.toSolrAdvancedSearch(in);
+        verifyAll();
+
+        assertNull("Content index will index file metadata as well", result);
     }
 
     @Test
