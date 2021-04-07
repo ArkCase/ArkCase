@@ -68,7 +68,7 @@ public class SolrRestClient
             // so the admin can view the message and investigate the result
             if (isUnRecoverable(response.getStatusCode()))
             {
-                logger.error("Could not post to Solr: [{}], got response code {}, sending to DLQ.[%s] queue",
+                logger.error("Could not post to Solr: [{}], got response code {}, sending to DLQ. [{}] queue",
                         logText, response.getStatusCode().value(), core);
                 getJmsTemplate().convertAndSend(destinationName, entity.getBody());
             }
@@ -80,7 +80,7 @@ public class SolrRestClient
         // can view the message and investigate it
         catch (HttpStatusCodeException e)
         {
-            logger.error("Could not post to Solr: [{}],  sending to DLQ.[%s] queue",
+            logger.error("Could not post to Solr: [{}],  sending to DLQ. [{}] queue",
                     logText, core);
             getJmsTemplate().convertAndSend(destinationName, entity.getBody());
         }
@@ -109,7 +109,7 @@ public class SolrRestClient
             // so the admin can view the message and investigate it
             if (isUnRecoverable(response.getStatusCode()))
             {
-                logger.error("Could not post to Solr: [{}], got response code {}, sending to DLQ.[%s] queue",
+                logger.error("Could not post to Solr: [{}], got response code {}, sending to DLQ. [{}] queue",
                         logText, response.getStatusCode().value(), core);
                 getJmsTemplate().convertAndSend(destinationName, entity.getBody());
             }
@@ -120,7 +120,7 @@ public class SolrRestClient
         {
             // If we get HttpStatusCodeException we send the message to DLQ so the admin
             // can view the message and investigate the result
-            logger.error("Could not post to Solr: [{}],  sending to DLQ.[%s] queue", logText, core);
+            logger.error("Could not post to Solr: [{}],  sending to DLQ. [{}] queue", logText, core);
             getJmsTemplate().convertAndSend(destinationName, entity.getBody());
         }
         // If we catch RestClientException we will propagate the error to crash the whole transaction

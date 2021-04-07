@@ -34,6 +34,7 @@ import com.armedia.acm.objectonverter.ArkCaseBeanUtils;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
+import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.services.dataaccess.model.DataAccessControlConfig;
 import com.armedia.acm.services.dataaccess.service.SearchAccessControlFields;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
@@ -83,7 +84,16 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         // whether to index file contents or just store document-related metadata
         if (solrConfig.getEnableContentFileIndexing())
         {
-            return mapContentDocumentProperties(in);
+            Long fileSizeBytes = in.getVersions().stream()
+                    .filter(fileVersion -> fileVersion.getVersionTag().equals(in.getActiveVersionTag()))
+                    .findFirst()
+                    .map(EcmFileVersion::getFileSizeBytes)
+                    .orElse(0L);
+
+            if (fileSizeBytes < solrConfig.getContentIndexingFileSizeBytesLimit())
+            {
+                return mapContentDocumentProperties(in);
+            }
         }
 
         return null;
@@ -181,21 +191,18 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         SolrContentDocument solr = new SolrContentDocument();
         SolrAdvancedSearchDocument solrAdvancedSearchDocument = mapDocumentProperties(in);
 
-        if (solrAdvancedSearchDocument != null)
+        try
         {
-            try
-            {
-                getArkCaseBeanUtils().copyProperties(solr, solrAdvancedSearchDocument);
-            }
-            catch (IllegalAccessException | InvocationTargetException e)
-            {
-                log.error("Could not copy properties from SolrAdvancedSearchDocument to SolrContentDocument");
-            }
-
-            // Somehow "org.apache.commons.beanutils.BeanUtilBean.copyProperties(..)" is not finding
-            // "additionalProperties" property. Copy them explicitly here.
-            solr.getAdditionalProperties().putAll(solrAdvancedSearchDocument.getAdditionalProperties());
+            getArkCaseBeanUtils().copyProperties(solr, solrAdvancedSearchDocument);
         }
+        catch (IllegalAccessException | InvocationTargetException e)
+        {
+            log.error("Could not copy properties from SolrAdvancedSearchDocument to SolrContentDocument");
+        }
+
+        // Somehow "org.apache.commons.beanutils.BeanUtilBean.copyProperties(..)" is not finding
+        // "additionalProperties" property. Copy them explicitly here.
+        solr.getAdditionalProperties().putAll(solrAdvancedSearchDocument.getAdditionalProperties());
 
         List<String> skipAdditionalPropertiesInURL = new ArrayList<>();
         skipAdditionalPropertiesInURL.add("file_source_s");
