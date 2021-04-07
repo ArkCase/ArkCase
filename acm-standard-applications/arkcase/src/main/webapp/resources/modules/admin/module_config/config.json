@@ -320,20 +320,23 @@
                     "name": "id",
                     "displayName": "admin.correspondenceManagement.templates.grid.id",
                     "visible": false,
-                    "headerCellFilter": "translate"
+                    "headerCellFilter": "translate",
+                    "enableCellEdit": false
                 },
                 {
                     "name": "label",
                     "displayName": "admin.correspondenceManagement.templates.grid.label",
                     "visible": true,
-                    "headerCellFilter": "translate"
+                    "headerCellFilter": "translate",
+                    "enableCellEdit": false
                 },
                 {
                     "name": "templateFilename",
                     "displayName": "admin.correspondenceManagement.templates.grid.title",
                     "visible": true,
                     "cellTemplate": "<a target='_blank' ng-href='{{row.entity.downloadFileName}}'><span ng-if=\"row.entity.templateFilename.indexOf('_') > 0\">{{row.entity.templateFilename.substring(row.entity.templateFilename.indexOf('_') + 1)}}</span><span ng-if=\"row.entity.templateFilename.indexOf('_') == -1\">{{row.entity.templateFilename}}</span></a>",
-                    "headerCellFilter": "translate"
+                    "headerCellFilter": "translate",
+                    "enableCellEdit": false
                 },
                 {
                     "name": "objectType",
@@ -341,6 +344,7 @@
                     "visible": true,
                     "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.correspondenceObjectTypes, row.entity.objectType) | translate }}</div>",
                     "headerCellFilter": "translate",
+                    "enableCellEdit": false,
                     "width": 120
                 },
                 {
@@ -349,6 +353,7 @@
                     "visible": true,
                     "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.correspondenceParentTypes, row.entity.parentType) | translate }}</div>",
                     "headerCellFilter": "translate",
+                    "enableCellEdit": false,
                     "width": 120
                 },
                 {
@@ -357,6 +362,7 @@
                     "visible": true,
                     "headerCellFilter": "translate",
                     "width": 320,
+                    "enableCellEdit": false,
                     "cellTemplate": "<div><span>{{ row.entity.templateModelProvider.substr(row.entity.templateModelProvider.lastIndexOf(\".\") + 1) }}</span> <i class='fa fa-info-circle' style='cursor :pointer' ng-click='grid.appScope.getNavBarTree(row.entity.templateModelProvider)'></i> </div>"
                 },
                 {
@@ -365,6 +371,7 @@
                     "visible": true,
                     "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>",
                     "headerCellFilter": "translate",
+                    "enableCellEdit": false,
                     "width": 120
                 },
                 {
@@ -372,7 +379,8 @@
                     "displayName": "admin.correspondenceManagement.templates.grid.modifier",
                     "visible": true,
                     "headerCellFilter": "translate",
-                    "lookup": "userFullNames"
+                    "lookup": "userFullNames",
+                    "enableCellEdit": false
                 },
                 {
                     "name": "emailSubject",
@@ -390,6 +398,7 @@
                     "headerCellFilter": "translate",
                     "cellTemplate": "<div align='center'><span ng-if='!row.entity.activated' class='label label-warning' ng-click='grid.appScope.activate(row.entity)' translate>admin.correspondenceManagement.templates.grid.statusDeactivated</span><span ng-if='row.entity.activated' class='label label-success' ng-click='grid.appScope.activate(row.entity)' translate>admin.correspondenceManagement.templates.grid.statusActivated</span></div>'",
                     "cellFilter": "translate",
+                    "enableCellEdit": false,
                     "width": 120
                 },
                 {
@@ -399,6 +408,7 @@
                     "headerCellFilter": "translate",
                     "cellTemplate": "<div align='center'><span ng-if='!row.entity.enabled' class='label label-danger' ng-click='grid.appScope.enable(row.entity)' translate>admin.correspondenceManagement.templates.grid.statusDisabled</span><span ng-if='row.entity.enabled' class='label label-success' ng-click='grid.appScope.enable(row.entity)' translate>admin.correspondenceManagement.templates.grid.statusEnabled</span></div>'",
                     "cellFilter": "translate",
+                    "enableCellEdit": false,
                     "width": 120
                 }
             ],
