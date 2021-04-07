@@ -30,6 +30,7 @@ package com.armedia.acm.plugins.ecm.service.impl;
 import static org.junit.Assert.assertEquals;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.poi.hsmf.exceptions.ChunkNotFoundException;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockMultipartFile;
@@ -67,15 +68,14 @@ public class EmailAttachmentExtractorComponentTest
     }
 
     @Test
-    public void shouldExtractAttachmentFromMsgFile() throws IOException
-    {
-        List<EmailAttachmentExtractorComponent.EmailAttachment> emailAttachments = emailAttachmentExtractorComponent
+    public void shouldExtractAttachmentFromMsgFile() throws IOException, ChunkNotFoundException {
+        EmailAttachmentExtractorComponent.EmailContent emailContent = emailAttachmentExtractorComponent
                 .extractFromMsg(new MockMultipartFile(
                         exampleWithAttachmentMsg.getName(),
                         new FileInputStream(exampleWithAttachmentMsg)));
 
-        assertEquals(1, emailAttachments.size());
-        EmailAttachmentExtractorComponent.EmailAttachment emailAttachment = emailAttachments.get(0);
+        assertEquals(1, emailContent.getEmailAttachments().size());
+        EmailAttachmentExtractorComponent.EmailAttachment emailAttachment = emailContent.getEmailAttachments().get(0);
 
         String expectedFileName = "Practice+Worksheet+Present+Simple+vs+Present+Continuous.pdf";
         assertEquals(expectedFileName, emailAttachment.getName());
@@ -100,13 +100,13 @@ public class EmailAttachmentExtractorComponentTest
         URL resource = classLoader.getResource("email/eml/example.eml");
         File emlFile = new File(Objects.requireNonNull(resource).getFile());
 
-        List<EmailAttachmentExtractorComponent.EmailAttachment> emailAttachments = emailAttachmentExtractorComponent
+        EmailAttachmentExtractorComponent.EmailContent emailContent = emailAttachmentExtractorComponent
                 .extractFromEml(new MockMultipartFile(
                         emlFile.getName(),
                         new FileInputStream(emlFile)));
 
-        assertEquals(1, emailAttachments.size());
-        EmailAttachmentExtractorComponent.EmailAttachment emailAttachment = emailAttachments.get(0);
+        assertEquals(1, emailContent.getEmailAttachments().size());
+        EmailAttachmentExtractorComponent.EmailAttachment emailAttachment = emailContent.getEmailAttachments().get(0);
 
         String expectedFileName = "ENVIRONMENTS.docx";
         assertEquals(expectedFileName, emailAttachment.getName());

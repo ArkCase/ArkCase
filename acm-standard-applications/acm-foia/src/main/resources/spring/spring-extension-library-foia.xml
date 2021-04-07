@@ -426,6 +426,7 @@
             <beans:property name="camelContextManager" ref="camelContextManager"/>
             <beans:property name="fileEventPublisher" ref="fileEventPublisher"/>
             <beans:property name="emailAttachmentExtractorComponent" ref="emailAttachmentExtractorComponent"/>
+            <beans:property name="acmFolderService" ref="acmFolderService"/>
         </beans:bean>
 
         <beans:bean id="foiaConfig" class="gov.foia.model.FoiaConfig" scope="refresh">
