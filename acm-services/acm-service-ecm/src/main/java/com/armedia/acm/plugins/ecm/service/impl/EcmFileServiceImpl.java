@@ -27,10 +27,8 @@ package com.armedia.acm.plugins.ecm.service.impl;
  * #L%
  */
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -41,6 +39,9 @@ import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -51,17 +52,11 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
-import javax.activation.DataHandler;
-import javax.mail.BodyPart;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.Part;
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpSession;
 import javax.validation.ValidationException;
 
-import com.healthmarketscience.jackcess.complex.Attachment;
+import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.client.api.Folder;
@@ -73,8 +68,6 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.poi.hsmf.MAPIMessage;
-import org.apache.poi.hsmf.datatypes.AttachmentChunks;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.context.ApplicationEventPublisher;
@@ -147,7 +140,6 @@ import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.web.api.MDCConstants;
-import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 
 /**
  * Created by armdev on 5/1/14.
@@ -205,6 +197,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     private FileEventPublisher fileEventPublisher;
 
     private EmailAttachmentExtractorComponent emailAttachmentExtractorComponent;
+
+    private AcmFolderService acmFolderService;
 
     @Override
     public CmisObject findObjectByPath(String path) throws Exception
@@ -2370,41 +2364,46 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                 {
                     for (final MultipartFile attachment : attachmentsList)
                     {
-                        if (attachment.getOriginalFilename()!= null && attachment.getOriginalFilename().endsWith(".msg"))
+                        if (attachment.getOriginalFilename()!= null && attachment.getOriginalFilename().endsWith(EcmFileConstants.FILE_EXTENSION_MSG))
                         {
-                            List<EmailAttachmentExtractorComponent.EmailAttachment> emailAttachments =
-                                    getEmailAttachmentExtractorComponent().extractFromMsg(attachment);
-                            uploadAttachment(authentication, parentObjectType, parentObjectId, fileType, folderCmisId, uploadedFiles, emailAttachments);
-                        }
-                        else if (attachment.getOriginalFilename()!= null && attachment.getOriginalFilename().endsWith(".eml"))
-                        {
-                            List<EmailAttachmentExtractorComponent.EmailAttachment> emailAttachments = null;
                             try
                             {
-                               emailAttachments = getEmailAttachmentExtractorComponent().extractFromEml(attachment);
+                                uploadFilesFromEmail(EcmFileConstants.FILE_EXTENSION_MSG, attachment, authentication, parentObjectType, parentObjectId, fileType, folderCmisId, uploadedFiles, fileLang, request.getParameter("uuid"));
+
                             }
                             catch (Exception e)
                             {
-                                throw new AcmCreateObjectFailedException(parentObjectType, "Email attachments extraction failed", e);
+                                throw new AcmCreateObjectFailedException(parentObjectType, "Email file and attachments upload failed", e);
                             }
-                            
-                            uploadAttachment(authentication, parentObjectType, parentObjectId, fileType, folderCmisId, uploadedFiles, emailAttachments);
                         }
+                        else if (attachment.getOriginalFilename()!= null && attachment.getOriginalFilename().endsWith(EcmFileConstants.FILE_EXTENSION_EML))
+                        {
+                            try
+                            {
+                                uploadFilesFromEmail(EcmFileConstants.FILE_EXTENSION_EML, attachment, authentication, parentObjectType, parentObjectId, fileType, folderCmisId, uploadedFiles, fileLang, request.getParameter("uuid") );
+                            }
+                            catch (Exception e)
+                            {
+                                throw new AcmCreateObjectFailedException(parentObjectType, "Email file and attachments upload failed", e);
+                            }
+                        }
+                        else
+                        {
+                            AcmMultipartFile acmMultipartFile = new AcmMultipartFile(attachment, false);
 
-                        AcmMultipartFile acmMultipartFile = new AcmMultipartFile(attachment, false);
+                            EcmFile metadata = new EcmFile();
+                            metadata.setFileType(fileType);
+                            metadata.setFileLang(fileLang);
+                            metadata.setFileName(attachment.getOriginalFilename());
+                            metadata.setFileActiveVersionMimeType(acmMultipartFile.getContentType());
+                            metadata.setUuid(request.getParameter("uuid"));
+                            EcmFile temp = upload(authentication, acmMultipartFile, folderCmisId, parentObjectType,
+                                    parentObjectId,
+                                    metadata);
+                            uploadedFiles.add(temp);
 
-                        EcmFile metadata = new EcmFile();
-                        metadata.setFileType(fileType);
-                        metadata.setFileLang(fileLang);
-                        metadata.setFileName(attachment.getOriginalFilename());
-                        metadata.setFileActiveVersionMimeType(acmMultipartFile.getContentType());
-                        metadata.setUuid(request.getParameter("uuid"));
-                        EcmFile temp = upload(authentication, acmMultipartFile, folderCmisId, parentObjectType,
-                                parentObjectId,
-                                metadata);
-                        uploadedFiles.add(temp);
-
-                        applicationEventPublisher.publishEvent(new EcmFilePostUploadEvent(temp, authentication.getName()));
+                            applicationEventPublisher.publishEvent(new EcmFilePostUploadEvent(temp, authentication.getName()));
+                        }
                     }
                 }
             }
@@ -2413,8 +2412,63 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         return uploadedFiles;
     }
 
-    private void uploadAttachment(Authentication authentication, String parentObjectType, Long parentObjectId, String fileType, String folderCmisId, List<EcmFile> uploadedFiles, List<EmailAttachmentExtractorComponent.EmailAttachment> emailAttachments) throws AcmCreateObjectFailedException, AcmUserActionFailedException {
-        for (EmailAttachmentExtractorComponent.EmailAttachment emailAttachment : emailAttachments) {
+    private void uploadFilesFromEmail(String emailFileType, MultipartFile attachment, Authentication authentication, String parentObjectType, Long parentObjectId, String fileType, String folderCmisId, List<EcmFile> uploadedFiles, String fileLang, String uuid) throws Exception {
+
+        EmailAttachmentExtractorComponent.EmailContent emailContent = null;
+        String folderName;
+
+        ZonedDateTime date = ZonedDateTime.now(ZoneOffset.UTC);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        String currentDate = formatter.format(date);
+
+        if (emailFileType.equalsIgnoreCase(EcmFileConstants.FILE_EXTENSION_MSG))
+        {
+            emailContent = getEmailAttachmentExtractorComponent().extractFromMsg(attachment);
+        }
+        else if(emailFileType.equalsIgnoreCase(EcmFileConstants.FILE_EXTENSION_EML))
+        {
+            emailContent = getEmailAttachmentExtractorComponent().extractFromEml(attachment);
+        }
+
+        // make folder name and create new folder with that name for email file and it's attachment
+        folderName = emailContent.getSubject().replaceAll("\\W+", "") + "-" + currentDate + "-" + emailContent.getSender();
+        AcmFolder folder = getFolderDao().findByCmisFolderId(folderCmisId);
+        AcmFolder emailFolder = getAcmFolderService().addNewFolder(folder, folderName);
+
+        //upload emails attachment
+        uploadAttachment(
+                authentication,
+                parentObjectType,
+                parentObjectId,
+                emailFolder.getCmisFolderId(),
+                uploadedFiles,
+                Objects.requireNonNull(emailContent).getEmailAttachments());
+
+        //create and upload email file and publish event
+        AcmMultipartFile acmMultipartFile = new AcmMultipartFile(attachment, false);
+
+        EcmFile metadata = new EcmFile();
+        metadata.setFileType(fileType);
+        metadata.setFileLang(fileLang);
+        metadata.setFileName(attachment.getOriginalFilename());
+        metadata.setFileActiveVersionMimeType(acmMultipartFile.getContentType());
+        metadata.setUuid(uuid);
+        EcmFile temp = upload(
+                authentication,
+                acmMultipartFile,
+                emailFolder.getCmisFolderId(),
+                parentObjectType,
+                parentObjectId,
+                metadata);
+
+        applicationEventPublisher.publishEvent(new EcmFilePostUploadEvent(temp, authentication.getName()));
+
+        uploadedFiles.add(temp);
+    }
+
+    private void uploadAttachment(Authentication authentication, String parentObjectType, Long parentObjectId, String folderCmisId, List<EcmFile> uploadedFiles, List<EmailAttachmentExtractorComponent.EmailAttachment> emailAttachments) throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException {
+        for (EmailAttachmentExtractorComponent.EmailAttachment emailAttachment : emailAttachments)
+        {
             EcmFile temp = upload(
                     emailAttachment.getName(),
                     "Attachment",
@@ -2864,5 +2918,15 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     public void setEmailAttachmentExtractorComponent(EmailAttachmentExtractorComponent emailAttachmentExtractorComponent)
     {
         this.emailAttachmentExtractorComponent = emailAttachmentExtractorComponent;
+    }
+
+    public AcmFolderService getAcmFolderService()
+    {
+        return acmFolderService;
+    }
+
+    public void setAcmFolderService(AcmFolderService acmFolderService)
+    {
+        this.acmFolderService = acmFolderService;
     }
 }

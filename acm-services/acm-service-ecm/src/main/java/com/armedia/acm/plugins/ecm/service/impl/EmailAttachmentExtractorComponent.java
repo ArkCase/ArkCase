@@ -3,12 +3,16 @@ package com.armedia.acm.plugins.ecm.service.impl;
 import org.apache.commons.mail.util.MimeMessageParser;
 import org.apache.poi.hsmf.MAPIMessage;
 import org.apache.poi.hsmf.datatypes.AttachmentChunks;
+import org.apache.poi.hsmf.exceptions.ChunkNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.activation.DataSource;
 import javax.activation.MimetypesFileTypeMap;
+import javax.mail.Address;
+import javax.mail.MessagingException;
 import javax.mail.Session;
+import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import java.io.ByteArrayInputStream;
@@ -22,47 +26,119 @@ import java.util.Properties;
 public class EmailAttachmentExtractorComponent
 {
 
-    public List<EmailAttachment> extractFromMsg(MultipartFile attachment) throws IOException
+    public EmailContent extractFromMsg(MultipartFile attachment)
     {
-        InputStream inputStream = attachment.getInputStream();
-        MAPIMessage message = new MAPIMessage(inputStream);
-        AttachmentChunks[] attachmentFiles = message.getAttachmentFiles();
         List<EmailAttachment> emailAttachments = new ArrayList<>();
-        for (AttachmentChunks attachmentChunks : attachmentFiles)
+        String sender = "";
+        String subject = "";
+        InputStream inputStream = null;
+        try
         {
-            InputStream byteArrayInputStream = new ByteArrayInputStream(attachmentChunks.getEmbeddedAttachmentObject());
+            inputStream = attachment.getInputStream();
+            MAPIMessage message = new MAPIMessage(inputStream);
+            AttachmentChunks[] attachmentFiles = message.getAttachmentFiles();
 
-            String fileName = attachmentChunks.getAttachLongFileName().getValue();
-            String contentType = new MimetypesFileTypeMap().getContentType(fileName);
-            emailAttachments.add(new EmailAttachment(
-                    fileName,
-                    byteArrayInputStream,
-                    contentType));
+            for (AttachmentChunks attachmentChunks : attachmentFiles)
+            {
+                InputStream byteArrayInputStream = new ByteArrayInputStream(attachmentChunks.getEmbeddedAttachmentObject());
+
+                String fileName = attachmentChunks.getAttachLongFileName().getValue();
+                String contentType = new MimetypesFileTypeMap().getContentType(fileName);
+                emailAttachments.add(new EmailAttachment(
+                        fileName,
+                        byteArrayInputStream,
+                        contentType));
+            }
+            subject = message.getSubject();
+            sender = message.getMainChunks().getEmailFromChunk().getValue();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
         }
 
-        return emailAttachments;
+
+        return new EmailContent(emailAttachments, subject, sender);
     }
 
-    public List<EmailAttachment> extractFromEml(MultipartFile attachment) throws Exception
+    public EmailContent extractFromEml(MultipartFile attachment)
     {
+        List<EmailAttachment> emailAttachments = new ArrayList<>();
+        String subject = "";
+        String sender = "";
         Properties props = new Properties();
         Session mailSession = Session.getDefaultInstance(props, null);
-        InputStream inputStream = attachment.getInputStream();
-        MimeMessage message = new MimeMessage(mailSession, inputStream);
-
-        MimeMessageParser mimeParser = new MimeMessageParser(message);
-        mimeParser.parse();
-        List<DataSource> dsl = mimeParser.getAttachmentList();
-
-        List<EmailAttachment> emailAttachments = new ArrayList<>();
-        for (DataSource ds : dsl)
+        InputStream inputStream = null;
+        try
         {
-            emailAttachments.add(new EmailAttachment(
-                    ds.getName(),
-                    ds.getInputStream(),
-                    ds.getContentType()));
+            inputStream = attachment.getInputStream();
+            MimeMessage message = new MimeMessage(mailSession, inputStream);
+
+            MimeMessageParser mimeParser = new MimeMessageParser(message);
+            mimeParser.parse();
+            List<DataSource> dsl = mimeParser.getAttachmentList();
+
+
+            for (DataSource ds : dsl)
+            {
+                emailAttachments.add(new EmailAttachment(
+                        ds.getName(),
+                        ds.getInputStream(),
+                        ds.getContentType()));
+            }
+            subject = message.getSubject();
+            Address[] froms = message.getFrom();
+            sender = froms == null ? "" : ((InternetAddress) froms[0]).getAddress();
         }
-        return emailAttachments;
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return new EmailContent(emailAttachments, subject, sender);
+    }
+
+    public static class EmailContent
+    {
+        private List<EmailAttachment> emailAttachments;
+        private String subject;
+        private String sender;
+
+        public EmailContent(List<EmailAttachment> emailAttachments, String subject, String sender)
+        {
+            this.emailAttachments = emailAttachments;
+            this.subject = subject;
+            this.sender = sender;
+        }
+
+        public List<EmailAttachment> getEmailAttachments()
+        {
+            return emailAttachments;
+        }
+
+        public void setEmailAttachments(List<EmailAttachment> emailAttachments)
+        {
+            this.emailAttachments = emailAttachments;
+        }
+
+        public String getSubject()
+        {
+            return subject;
+        }
+
+        public void setSubject(String subject)
+        {
+            this.subject = subject;
+        }
+
+        public String getSender()
+        {
+            return sender;
+        }
+
+        public void setSender(String sender)
+        {
+            this.sender = sender;
+        }
     }
 
     public static class EmailAttachment
@@ -107,5 +183,6 @@ public class EmailAttachmentExtractorComponent
         {
             this.contentType = contentType;
         }
+
     }
 }
