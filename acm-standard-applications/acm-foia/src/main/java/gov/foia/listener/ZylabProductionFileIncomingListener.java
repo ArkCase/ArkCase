@@ -352,7 +352,6 @@ public class ZylabProductionFileIncomingListener implements ApplicationListener<
             else
             {
                 log.warn("Exemption code not found by order. Exemption codes in Arkcase and ZyLAB should match");
-                documentExemptionService.saveExemptionCodeAndNumberForFile(file, "", exemptionCodeNumber);
             }
         }
     }
