@@ -51,6 +51,12 @@ public class HolidayConfigurationService
     private ConfigurationPropertyService configurationPropertyService;
     private BusinessHoursConfig businessHoursConfig;
     private ApplicationConfig applicationConfig;
+    public static HolidayConfigurationService util;
+
+    public void init()
+    {
+        HolidayConfigurationService.util = this;
+    }
 
     public void saveHolidayConfig(HolidayConfiguration config)
     {
