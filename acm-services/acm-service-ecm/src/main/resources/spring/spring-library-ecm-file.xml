@@ -252,7 +252,7 @@
         <property name="userDao" ref="userJpaDao"/>
         <property name="searchAccessControlFields" ref="searchAccessControlFields"/>
         <property name="acmDataService" ref="acmDataService"/>
-
+        <property name="fileConfig" ref="ecmFileConfig"/>
     </bean>
 
     <bean id="acmContainerToSolrTransformer" class="com.armedia.acm.plugins.ecm.service.AcmContainerToSolrTransformer">
