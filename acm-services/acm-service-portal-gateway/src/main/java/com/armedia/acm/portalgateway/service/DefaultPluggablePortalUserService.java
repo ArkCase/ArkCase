@@ -103,7 +103,7 @@ public class DefaultPluggablePortalUserService implements PortalUserService
     public UserRegistrationResponse registerUser(String portalId, String registrationId, PortalUser user, String password)
             throws PortalUserServiceException
     {
-        log.debug("Registering user [{}] at portal with ID [{}].", PortalUser.composeUserName(user), portalId);
+        log.debug("Registering user with email [{}] at portal with ID [{}].", user.getEmail(), portalId);
         return getServiceProvider().registerUser(portalId, registrationId, user, password);
     }
 

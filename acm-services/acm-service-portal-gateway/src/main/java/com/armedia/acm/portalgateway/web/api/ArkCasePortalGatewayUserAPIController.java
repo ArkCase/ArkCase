@@ -115,7 +115,6 @@ public class ArkCasePortalGatewayUserAPIController
             @RequestHeader(value = "X-Arkcase-User-Password") String password)
             throws PortalUserAssignementException, PortalUserServiceException
     {
-        log.debug("Registering [{}] user for portal with [{}] ID.", PortalUser.composeUserName(user), portalId);
         return portalUserService.registerUser(portalId, registrationId, user, password);
     }
 
