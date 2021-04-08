@@ -61,7 +61,6 @@ angular.module('reports').factory(
                                 reportUrl += "&status=" + params.stateSelected;
                             }
 
-                            //add for uwp-489
                             var outputType = _.get(params.outputType, params.reportSelected);
                             if(!Util.isEmpty(outputType) && !xmlReport){
                                 reportUrl += "&output-target=" + outputType;

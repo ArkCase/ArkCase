@@ -67,7 +67,7 @@ angular.module('reports').controller('ReportsController',
                 $scope.data.reportsPassword = reportsConfig['report.plugin.PENTAHO_SERVER_PASSWORD'];
                 $scope.data.reportSelected = null;
                 $scope.data.dateSearchType = null;
-                // add for uwp-486
+
                 $scope.data.outputType = null
 
                 $scope.showReportParameters = false;
@@ -131,7 +131,7 @@ angular.module('reports').controller('ReportsController',
                     return;
                 }
 
-                // Retrieve outputType from acm-reports-parameters.json file
+                // Retrieve outputType
                 LookupService.getConfig("reportsParameters").then(function(payload) {
                     $scope.data.outputType = payload['outputType'];
                 });
