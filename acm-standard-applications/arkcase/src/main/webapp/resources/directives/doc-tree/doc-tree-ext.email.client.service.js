@@ -174,7 +174,7 @@ angular.module('services').factory('DocTreeExt.Email',
                             case ObjectService.ObjectTypes.DOC_REPO:
                                 return DocTree.scope.objectInfo.id;
                             default:
-                                return "";
+                                return DocTree.scope.objectInfo.acmObjectNumber;
                         }
                     }
                 }
