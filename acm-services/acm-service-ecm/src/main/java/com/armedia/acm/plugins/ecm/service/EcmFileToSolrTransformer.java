@@ -33,6 +33,7 @@ import com.armedia.acm.data.service.AcmDataService;
 import com.armedia.acm.objectonverter.ArkCaseBeanUtils;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConfig;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.services.dataaccess.model.DataAccessControlConfig;
@@ -71,6 +72,7 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
     private SolrConfig solrConfig;
     private DataAccessControlConfig dacConfig;
     private AcmDataService acmDataService;
+    private EcmFileConfig fileConfig;
 
     @Override
     public List<EcmFile> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
@@ -82,18 +84,9 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
     public SolrContentDocument toContentFileIndex(EcmFile in)
     {
         // whether to index file contents or just store document-related metadata
-        if (solrConfig.getEnableContentFileIndexing())
+        if (solrConfig.getEnableContentFileIndexing() && getFileSizeBytes(in) < fileConfig.getDocumentSizeBytesLimit())
         {
-            Long fileSizeBytes = in.getVersions().stream()
-                    .filter(fileVersion -> fileVersion.getVersionTag().equals(in.getActiveVersionTag()))
-                    .findFirst()
-                    .map(EcmFileVersion::getFileSizeBytes)
-                    .orElse(0L);
-
-            if (fileSizeBytes < solrConfig.getContentIndexingFileSizeBytesLimit())
-            {
-                return mapContentDocumentProperties(in);
-            }
+            return mapContentDocumentProperties(in);
         }
 
         return null;
@@ -102,7 +95,7 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
     @Override
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(EcmFile in)
     {
-        if (solrConfig.getEnableContentFileIndexing())
+        if (solrConfig.getEnableContentFileIndexing() && getFileSizeBytes(in) < fileConfig.getDocumentSizeBytesLimit())
         {
             return null;
         }
@@ -171,6 +164,15 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
             doc.setAdditionalProperty("zylab_review_analysis_lcs", in.getZylabFileMetadata().getReviewedAnalysis());
         }
         return doc;
+    }
+
+    private Long getFileSizeBytes(EcmFile in)
+    {
+        return in.getVersions().stream()
+                .filter(fileVersion -> fileVersion.getVersionTag().equals(in.getActiveVersionTag()))
+                .findFirst()
+                .map(EcmFileVersion::getFileSizeBytes)
+                .orElse(0L);
     }
 
     private void mapParentAclProperties(SolrBaseDocument doc, EcmFile in)
@@ -417,5 +419,15 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
     public void setDacConfig(DataAccessControlConfig dacConfig)
     {
         this.dacConfig = dacConfig;
+    }
+
+    public EcmFileConfig getFileConfig()
+    {
+        return fileConfig;
+    }
+
+    public void setFileConfig(EcmFileConfig fileConfig)
+    {
+        this.fileConfig = fileConfig;
     }
 }

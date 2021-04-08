@@ -95,10 +95,6 @@ public class SolrConfig implements InitializingBean
     @Value("${solr.enableContentFileIndexing}")
     private Boolean enableContentFileIndexing;
 
-    @JsonProperty("solr.contentIndexingFileSizeBytesLimit")
-    @Value("${solr.contentIndexingFileSizeBytesLimit}")
-    private Long contentIndexingFileSizeBytesLimit;
-
     @JsonProperty("solr.suggestHandler")
     @Value("${solr.suggestHandler}")
     private String suggestHandler;
@@ -263,16 +259,6 @@ public class SolrConfig implements InitializingBean
     public void setEnableContentFileIndexing(Boolean enableContentFileIndexing)
     {
         this.enableContentFileIndexing = enableContentFileIndexing;
-    }
-
-    public Long getContentIndexingFileSizeBytesLimit()
-    {
-        return contentIndexingFileSizeBytesLimit;
-    }
-
-    public void setContentIndexingFileSizeBytesLimit(Long contentIndexingFileSizeBytesLimit)
-    {
-        this.contentIndexingFileSizeBytesLimit = contentIndexingFileSizeBytesLimit;
     }
 
     public String getSuggestHandler()
