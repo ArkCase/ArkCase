@@ -574,13 +574,8 @@ public class DefaultFolderCompressor implements FolderCompressor, ApplicationEve
         {
             return true;
         }
-        else if (compressNode != null
-                && (isFileSelected(file.getId(), compressNode) || isFileParentFolderSelected(folder.getId(), compressNode)
-                        || isRootFolderSelected(compressNode)))
-        {
-            return true;
-        }
-        return false;
+        else return isFileSelected(file.getId(), compressNode) || isFileParentFolderSelected(folder.getId(), compressNode)
+                || isRootFolderSelected(compressNode);
     }
 
     @Override
