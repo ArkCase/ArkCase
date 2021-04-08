@@ -27,28 +27,21 @@ package com.armedia.acm.services.email.config.web.api;
  * #L%
  */
 
-import com.armedia.acm.services.email.model.EmailTemplateValidationResponse;
 import com.armedia.acm.services.email.service.AcmEmailConfigurationException;
 import com.armedia.acm.services.email.service.AcmEmailServiceException;
 import com.armedia.acm.services.email.service.AcmEmailServiceExceptionMapper;
 import com.armedia.acm.services.email.service.AcmMailTemplateConfigurationService;
-import com.armedia.acm.services.email.service.EmailTemplateConfiguration;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -62,36 +55,6 @@ public class AcmMailTemplateConfigurationServiceAPIController
 
     private AcmMailTemplateConfigurationService mailService;
 
-    @RequestMapping(method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE })
-    @ResponseBody
-    public List<EmailTemplateConfiguration> getTemplateConfigurations() throws AcmEmailConfigurationException
-    {
-        return mailService.getTemplateConfigurations();
-    }
-
-    @RequestMapping(method = RequestMethod.PUT, consumes = { "multipart/mixed", MediaType.MULTIPART_FORM_DATA_VALUE })
-    public ResponseEntity<?> updateEmailTemplate(@RequestPart("data") EmailTemplateConfiguration templateConfiguration,
-            @RequestPart(value = "file", required = false) MultipartFile template) throws AcmEmailConfigurationException
-    {
-        mailService.updateEmailTemplate(templateConfiguration, template);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @RequestMapping(path = "/validate", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public EmailTemplateValidationResponse validateEmailTemplate(@RequestBody EmailTemplateConfiguration templateConfiguration)
-            throws AcmEmailConfigurationException
-    {
-        return mailService.validateEmailTemplate(templateConfiguration);
-    }
-
-    @RequestMapping(path = "/{templateName:.+}", method = RequestMethod.DELETE)
-    public ResponseEntity<?> deleteEmailTemplate(@PathVariable(value = "templateName") String templateName)
-            throws AcmEmailConfigurationException
-    {
-        mailService.deleteTemplate(templateName);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
 
     @RequestMapping(path = "/{templateName:.+}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody

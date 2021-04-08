@@ -30,22 +30,18 @@ package com.armedia.acm.services.notification.service;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.ApplicationNotificationEvent;
-import com.armedia.acm.services.notification.model.BasicNotificationRule;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConfig;
 import com.armedia.acm.services.notification.model.NotificationConstants;
-import com.armedia.acm.services.notification.model.NotificationRule;
 import com.armedia.acm.spring.SpringContextHolder;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Calendar;
+import javax.persistence.TypedQuery;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class NotificationServiceImpl implements NotificationService
 {
@@ -58,6 +54,7 @@ public class NotificationServiceImpl implements NotificationService
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private NotificationFormatter notificationFormatter;
     private NotificationBuilder notificationBuilder;
+    private SendExecutor sendExecutor;
 
     /**
      * This method is called by scheduled task
@@ -74,52 +71,29 @@ public class NotificationServiceImpl implements NotificationService
 
         try
         {
-            Map<String, NotificationRule> rules = getSpringContextHolder().getAllBeansOfType(NotificationRule.class);
 
-            if (rules != null)
-            {
-                for (NotificationRule rule : rules.values())
-                {
-                    runRule(lastRun, rule);
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            LOG.error("Cannot send notifications to the users: {}", e.getMessage(), e);
-        }
-    }
-
-    /**
-     * This method is called for executing the rule query and sending notifications
-     */
-    @Override
-    public void runRule(Date lastRun, NotificationRule rule)
-    {
-        int firstResult = 0;
-        int maxResult = notificationConfig.getUserBatchSize();
-
-        List<Notification> notifications;
-
-        do
-        {
-            Map<String, Object> properties = getJpaProperties(rule);
-            notifications = getNotificationDao().executeQuery(properties, firstResult, maxResult, rule);
+            String queryText = "SELECT n FROM Notification n WHERE n.state is null";
+            TypedQuery<Notification> query = getNotificationDao().getEntityManager().createQuery(queryText, Notification.class);
+            List<Notification> notifications = query.getResultList();
 
             if (!notifications.isEmpty())
-            {
-                firstResult += maxResult;
+                {
 
                 notifications.stream()
-                        .map(element -> rule.getExecutor().execute(element))
+                        .map(element -> getSendExecutor().execute(element))
                         .map(element -> getNotificationDao().save(element))
                         .forEach(element -> {
                             ApplicationNotificationEvent event = new ApplicationNotificationEvent(element,
                                     NotificationConstants.OBJECT_TYPE.toLowerCase(), true, null);
                             getNotificationEventPublisher().publishNotificationEvent(event);
                         });
-            }
-        } while (!notifications.isEmpty());
+                }
+
+        }
+        catch (Exception e)
+        {
+            LOG.error("Cannot send notifications to the users: {}", e.getMessage(), e);
+        }
     }
 
     @Override
@@ -204,39 +178,6 @@ public class NotificationServiceImpl implements NotificationService
         return title;
     }
 
-    /**
-     * Create needed JPA query properties. In the DAO we have logic which one should be excluded
-     *
-     * @param rule
-     * @return
-     */
-    private Map<String, Object> getJpaProperties(NotificationRule rule)
-    {
-        Map<String, Object> jpaProperties = rule.getJpaProperties();
-
-        if (jpaProperties == null)
-        {
-            jpaProperties = new HashMap<>();
-        }
-
-        jpaProperties.put("threshold", createPurgeThreshold());
-
-        return jpaProperties;
-    }
-
-    /**
-     * Create purge date threshold: today-days
-     *
-     * @return
-     */
-    private Date createPurgeThreshold()
-    {
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DATE, -notificationConfig.getPurgeDays());
-
-        return calendar.getTime();
-    }
-
     public NotificationDao getNotificationDao()
     {
         return notificationDao;
@@ -300,5 +241,15 @@ public class NotificationServiceImpl implements NotificationService
     public void setNotificationBuilder(NotificationBuilder notificationBuilder)
     {
         this.notificationBuilder = notificationBuilder;
+    }
+
+    public SendExecutor getSendExecutor()
+    {
+        return sendExecutor;
+    }
+
+    public void setSendExecutor(SendExecutor sendExecutor)
+    {
+        this.sendExecutor = sendExecutor;
     }
 }

@@ -12,6 +12,7 @@
         <property name="notificationFormatter" ref="notificationFormatter"/>
         <property name="notificationConfig" ref="notificationConfig"/>
         <property name="notificationBuilder" ref="notificationBuilder"/>
+        <property name="sendExecutor" ref="notificationSendExecutor"/>
     </bean>
 
     <bean id ="notificationBuilder" class="com.armedia.acm.services.notification.service.NotificationBuilder">
@@ -134,8 +135,6 @@
         <property name="springContextHolder" ref="acmContextHolder"/>
         <property name="templateModelProvider" ref="requestDownloadedModelProvider"/>
     </bean>
-
-    <bean id="noopExecutor" class="com.armedia.acm.services.notification.service.NoopExecutor"/>
 
     <bean id="acmNotificationPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Save Notification Service Plugin"/>
