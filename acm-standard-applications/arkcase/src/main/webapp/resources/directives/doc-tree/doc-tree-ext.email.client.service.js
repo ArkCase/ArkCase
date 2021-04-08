@@ -123,7 +123,7 @@ angular.module('services').factory('DocTreeExt.Email',
                             emailSendConfiguration: DocTree.treeConfig.emailSendConfiguration,
                             DocTree: DocTree,
                             emailOfOriginator: emailOfOriginator,
-                            emailSubject: $translate.instant('common.objectTypes.' + DocTree.scope.objectType) + " " + DocTree.scope.objectInfo.acmObjectNumber
+                            emailSubject: $translate.instant('common.objectTypes.' + DocTree.scope.objectType) + " " + getAcmObjectNumber()
                         };
 
                         modalInstance = $modal.open({
@@ -153,13 +153,30 @@ angular.module('services').factory('DocTreeExt.Email',
                             emailData.modelReferenceName = res.template;
                             emailData.attachmentIds = res.selectedFilesToEmail;
 
-                            if(emailData.attachmentIds && emailData.modelReferenceName == 'plainEmail') {
+                            if (emailData.attachmentIds && emailData.modelReferenceName == 'plainEmail') {
                                 EcmEmailService.sendEmailWithAttachments(emailData, emailData.objectType);
                             } else {
                                 EcmEmailService.sendManualEmail(emailData);
                             }
                         });
                     });
+
+                    function getAcmObjectNumber() {
+                        switch (DocTree.scope.objectType) {
+                            case ObjectService.ObjectTypes.CASE_FILE:
+                                return DocTree.scope.objectInfo.acmObjectNumber;
+                            case ObjectService.ObjectTypes.COMPLAINT:
+                                return DocTree.scope.objectInfo.acmObjectNumber;
+                            case ObjectService.ObjectTypes.CONSULTATION:
+                                return DocTree.scope.objectInfo.acmObjectNumber;
+                            case ObjectService.ObjectTypes.TASK:
+                                return DocTree.scope.objectInfo.taskId;
+                            case ObjectService.ObjectTypes.DOC_REPO:
+                                return DocTree.scope.objectInfo.id;
+                            default:
+                                return "";
+                        }
+                    }
                 }
 
                 ,
@@ -212,6 +229,8 @@ angular.module('directives').controller('directives.DocTreeEmailDialogController
     $scope.ccRecipientsStr = "";
     $scope.bccRecipients = [];
     $scope.bccRecipientsStr = "";
+    $scope.subject = params.emailSubject;
+    $scope.emailDataModel.subject = $scope.subject;
 
     if (!Util.isEmpty(params.emailOfOriginator)) {
         $scope.recipients.push(params.emailOfOriginator);
@@ -295,6 +314,11 @@ angular.module('directives').controller('directives.DocTreeEmailDialogController
 
             getTemplateContentPromise.then(function (response) {
                 $scope.templateContent = response.data.templateContent.replace("${baseURL}", window.location.href.split('/home.html#!')[0]);
+                if (response.data.templateEmailSubject) {
+                    $scope.emailDataModel.subject = response.data.templateEmailSubject;
+                } else {
+                    $scope.emailDataModel.subject = $scope.subject;
+                }
                 $('#content').summernote('code', $scope.templateContent);
             });
         }
