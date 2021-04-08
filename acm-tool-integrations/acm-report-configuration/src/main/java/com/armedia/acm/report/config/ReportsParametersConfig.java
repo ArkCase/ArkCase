@@ -62,7 +62,6 @@ public class ReportsParametersConfig
         this.dateSearchTypes = dateSearchTypes;
     }
 
-    // add for UPP-489
     private Map<String, String> outputType = new HashMap<>();
 
     @MapValue(value = "report.config.reportsParametersConfiguration.outputType")
