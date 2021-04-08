@@ -184,7 +184,7 @@ public class FolderCompressorTest extends EasyMockSupport
             if (child.isDirectory())
             {
                 folder_level_1 = child;
-                expect(mockedLevel1Folder.getName()).andReturn(child.getName());
+                expect(mockedLevel1Folder.getName()).andReturn(child.getName()).anyTimes();
             }
             else
             {
@@ -207,7 +207,7 @@ public class FolderCompressorTest extends EasyMockSupport
             if (child.isDirectory())
             {
                 folder_level_2 = child;
-                expect(mockedLevel2Folder.getName()).andReturn(child.getName());
+                expect(mockedLevel2Folder.getName()).andReturn(child.getName()).anyTimes();
             }
             else
             {
