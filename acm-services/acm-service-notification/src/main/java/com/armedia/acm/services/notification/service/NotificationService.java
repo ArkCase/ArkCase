@@ -36,8 +36,6 @@ public interface NotificationService
 {
     void run(Date lastRun);
 
-    void runRule(Date lastRun, NotificationRule rule);
-
     NotificationBuilder getNotificationBuilder();
 
     Notification saveNotification(Notification notification);
