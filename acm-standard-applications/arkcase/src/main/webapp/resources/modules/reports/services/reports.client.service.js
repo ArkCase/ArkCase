@@ -10,7 +10,7 @@
  *
  * The BuildUrl is used for building report url with given parameters.
  */
-angular.module('reports').factory('Reports.BuildUrl', [ '$sce', 'Util.DateService', '$http', '$browser', '$location', function($sce, UtilDateService, $http, $browser, $location) {
+angular.module('reports').factory('Reports.BuildUrl', [ '$sce', 'Util.DateService', '$http', '$browser', '$location', 'UtilService', function($sce, UtilDateService, $http, $browser, $location,Util) {
     return {
 
         /**
@@ -53,6 +53,11 @@ angular.module('reports').factory('Reports.BuildUrl', [ '$sce', 'Util.DateServic
 
             if (params.stateSelected) {
                 reportUrl += (reportUrl.indexOf("?") == -1 ? "?" : "&") + "status=" + params.stateSelected;
+            }
+
+            var outputType = _.get(params.outputType, params.reportSelected);
+            if(!Util.isEmpty(outputType) && !xmlReport){
+                reportUrl += "&output-target=" + outputType;
             }
 
             // add baseUrl parameter
