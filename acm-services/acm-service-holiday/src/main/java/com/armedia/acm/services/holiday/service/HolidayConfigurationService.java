@@ -37,8 +37,10 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.OffsetTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.Date;
@@ -105,10 +107,10 @@ public class HolidayConfigurationService
      */
     public Date addWorkingDaysToDate(Date date, int workingDays)
     {
-        LocalDate localDate = getDateTimeService().toUTCDate(date);
+        LocalDate localDate = getLocalDateAtSystemDefault(date);
         localDate = addWorkingDaysToDate(localDate, workingDays);
 
-        return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        return addEndOfLocalTimeBusinessHoursToDate(Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
     }
 
     /**
@@ -135,6 +137,7 @@ public class HolidayConfigurationService
      */
     public Date addWorkingDaysAndWorkingHoursToDateWithBusinessHours(Date date, int workingDays)
     {
+        LocalDate localDate = getLocalDateAtSystemDefault(date);
 
         LocalDateTime ldt = getDateTimeService().fromDateToLocalDateTime(date);
 
@@ -148,33 +151,30 @@ public class HolidayConfigurationService
         }
     }
 
-    /**
-     *
-     * @param date
-     * @return Date with added BusinessHours depending on configuration (endOfBusinessDay) adjusted to
-     *         defaultClientTimezone
-     */
-    public Date setEndOfLocalTimeBusinessHoursToDate(LocalDate date)
-    {
-        LocalTime endOfLocalTimeBusinessHoursToUTC = getEndOfLocalTimeBusinessHoursToUTC(date);
-
-        LocalDateTime localDateTimeWithSetBusinessHours = date.atTime(endOfLocalTimeBusinessHoursToUTC);
-
-        return Date.from(localDateTimeWithSetBusinessHours.atZone(ZoneId.systemDefault()).toInstant());
+        return addEndOfLocalTimeBusinessHoursToDate(Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
     }
 
     public boolean isTimeAfterBusinessHours(LocalDateTime date)
     {
-        LocalTime localTimeInSetTimezone = date.toLocalTime();
+        LocalTime localTimeInSetTimezone = date.toInstant().atZone(getDefaultClientZoneId()).toLocalTime();
 
         return localTimeInSetTimezone.isAfter(getEndOfClientBusinessDayTime());
     }
 
-    public boolean isTimeBeforeBusinessHours(LocalDateTime date)
+    public Date addEndOfLocalTimeBusinessHoursToDate(Date date)
     {
-        LocalTime localTimeInSetTimezone = date.toLocalTime();
+        LocalTime endOfLocalTimeBusinessHoursToUTC = LocalDateTime.of(getLocalDateAtSystemDefault(date), getEndOfClientBusinessDayTime())
+                .atZone(getDefaultClientZoneId())
+                .withZoneSameInstant(ZoneOffset.UTC)
+                .toLocalTime();
 
-        return localTimeInSetTimezone.isBefore(getStartOfClientBusinessDayTime());
+        LocalDateTime ldt = getLocalDateAtSystemDefault(date).atTime(endOfLocalTimeBusinessHoursToUTC);
+
+        return Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+    private LocalDate getLocalDateAtSystemDefault(Date date) {
+        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
     public boolean isWeekendNonWorkingDay(LocalDate date)
@@ -296,30 +296,12 @@ public class HolidayConfigurationService
         return props;
     }
 
-    private LocalTime getEndOfLocalTimeBusinessHoursToUTC(LocalDate date)
-    {
-        return LocalDateTime.of(date, getEndOfClientBusinessDayTime())
-                .atZone(getDateTimeService().getDefaultClientZoneId())
-                .withZoneSameInstant(ZoneOffset.UTC)
-                .toLocalTime();
-    }
-
-    private LocalTime getStartOfLocalTimeBusinessHoursToUTC(LocalDate date)
-    {
-        return LocalDateTime.of(date, getStartOfClientBusinessDayTime())
-                .atZone(getDateTimeService().getDefaultClientZoneId())
-                .withZoneSameInstant(ZoneOffset.UTC)
-                .toLocalTime();
-    }
-
-    private LocalTime getEndOfClientBusinessDayTime()
-    {
+    private LocalTime getEndOfClientBusinessDayTime() {
         return LocalTime.parse(getBusinessHoursConfig().getEndOfBusinessDayTime());
     }
 
-    private LocalTime getStartOfClientBusinessDayTime()
-    {
-        return LocalTime.parse(getBusinessHoursConfig().getStartOfBusinessDayTime());
+    private ZoneId getDefaultClientZoneId() {
+        return ZoneId.of(getApplicationConfig().getDefaultTimezone());
     }
 
     public HolidayConfigurationProps getHolidayConfigurationProps()
