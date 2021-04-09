@@ -152,6 +152,10 @@ angular.module('cases').controller('Cases.BillingController', ['$scope', '$modal
             CaseBillingService.addBillingItem(itemData);
         }
 
+        $scope.refreshBillingTable = function() {
+            retrieveGridData();
+        };
+
         $scope.onClickObjLink = function (event, rowEntity) {
             event.preventDefault();
             var targetType = Util.goodMapValue(rowEntity, "itemType").toUpperCase();

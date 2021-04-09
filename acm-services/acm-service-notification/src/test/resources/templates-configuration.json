@@ -7,7 +7,7 @@
   "documentType" : "document type",
   "templateFilename" : "modelName.html",
   "objectType" : "OBJECT_TYPE",
-  "templateModelProvider" : "com.armedia.acm.services.notification.service.provider.TemplateModelProvider",
+  "templateModelProvider" : "com.armedia.acm.services.notification.service.provider.RequestDownloadedModelProvider",
   "templateType" : "emailTemplate",
   "enabled" : true,
   "dateFormatString" : "MM/dd/yyyy",
