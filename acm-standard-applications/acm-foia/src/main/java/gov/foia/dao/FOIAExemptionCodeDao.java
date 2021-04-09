@@ -44,8 +44,6 @@ import com.armedia.acm.services.exemption.model.ExemptionCode;
 
 import gov.foia.model.FOIARequest;
 
-import gov.foia.model.FOIARequest;
-
 /**
  * Created by ana.serafimoska
  */
