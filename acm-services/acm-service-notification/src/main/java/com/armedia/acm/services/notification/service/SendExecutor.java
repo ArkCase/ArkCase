@@ -33,7 +33,12 @@ package com.armedia.acm.services.notification.service;
 import com.armedia.acm.core.provider.TemplateModelProvider;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
+import com.armedia.acm.services.templateconfiguration.model.Template;
+import com.armedia.acm.services.templateconfiguration.service.TemplateConfigurationManager;
+import com.armedia.acm.services.templateconfiguration.service.TemplatingEngine;
 import com.armedia.acm.spring.SpringContextHolder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
@@ -45,12 +50,25 @@ public class SendExecutor implements Executor
 {
 
     private SpringContextHolder springContextHolder;
+    private TemplateConfigurationManager templateConfigurationManager;
 
-    private TemplateModelProvider<Notification> templateModelProvider;
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
     public Notification execute(Notification notification)
     {
+        String templateModelProviderClassPath = getTemplateModelProviderClassName(notification.getTemplateModelName() + ".html");
+
+        Class templateModelProviderClass = null;
+        try
+        {
+            templateModelProviderClass = Class.forName(templateModelProviderClassPath);
+        }
+        catch (Exception e)
+        {
+            log.error("Can not find class for provided classpath {}. Error: {}", templateModelProviderClassPath, e.getMessage());
+        }
+        TemplateModelProvider templateModelProvider = getTemplateModelProvider(templateModelProviderClass);
 
         // Get all registered senders
         Map<String, NotificationSenderFactory> senderFactoryList = getSpringContextHolder()
@@ -67,6 +85,32 @@ public class SendExecutor implements Executor
         return notification;
     }
 
+
+    private String getTemplateModelProviderClassName(String templateFileName)
+    {
+        String templateModelProvider = getTemplateConfigurationManager().getTemplateConfigurations().stream()
+                .filter(t -> t.getTemplateFilename().equals(templateFileName) && t.getTemplateType().equals("emailTemplate"))
+                .findFirst().get().getTemplateModelProvider();
+
+        return templateModelProvider;
+    }
+
+    private TemplateModelProvider getTemplateModelProvider(Class templateModelProviderClass)
+    {
+        Map<String, TemplateModelProvider> templateModelproviders = getSpringContextHolder().getAllBeansOfType(templateModelProviderClass);
+        if (templateModelproviders.size() > 1)
+        {
+            for (TemplateModelProvider provider : templateModelproviders.values())
+            {
+                if (provider.getClass().equals(templateModelProviderClass))
+                {
+                    return provider;
+                }
+            }
+        }
+        return templateModelproviders.values().iterator().hasNext() ? templateModelproviders.values().iterator().next() : null;
+    }
+
     public SpringContextHolder getSpringContextHolder()
     {
         return springContextHolder;
@@ -77,13 +121,13 @@ public class SendExecutor implements Executor
         this.springContextHolder = springContextHolder;
     }
 
-    public TemplateModelProvider<Notification> getTemplateModelProvider()
+    public TemplateConfigurationManager getTemplateConfigurationManager()
     {
-        return templateModelProvider;
+        return templateConfigurationManager;
     }
 
-    public void setTemplateModelProvider(TemplateModelProvider<Notification> templateModelProvider)
+    public void setTemplateConfigurationManager(TemplateConfigurationManager templateConfigurationManager)
     {
-        this.templateModelProvider = templateModelProvider;
+        this.templateConfigurationManager = templateConfigurationManager;
     }
 }

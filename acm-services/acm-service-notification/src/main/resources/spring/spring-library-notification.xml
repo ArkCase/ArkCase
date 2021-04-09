@@ -86,54 +86,10 @@
         <property name="userDao" ref="userJpaDao"/>
     </bean>
 
-    <bean id="acmEntitySendExecutor" class="com.armedia.acm.services.notification.service.SendExecutor">
-        <property name="springContextHolder" ref="acmContextHolder"/>
-        <property name="templateModelProvider" ref="acmEntityTemplateModelProvider"/>
-    </bean>
-
-    <bean id="acmEntitySendExecutorNoUserPrefix" class="com.armedia.acm.services.notification.service.SendExecutor">
-        <property name="springContextHolder" ref="acmContextHolder"/>
-        <property name="templateModelProvider" ref="acmEntityTemplateNoUserPrefixModelProvider"/>
-    </bean>
 
     <bean id="notificationSendExecutor" class="com.armedia.acm.services.notification.service.SendExecutor">
         <property name="springContextHolder" ref="acmContextHolder"/>
-        <property name="templateModelProvider" ref="notificationTemplateModelProvider"/>
-    </bean>
-
-    <bean id="notificationGroupSendExecutor" class="com.armedia.acm.services.notification.service.SendExecutor">
-        <property name="springContextHolder" ref="acmContextHolder"/>
-        <property name="templateModelProvider" ref="notificationGroupTemplateModelProvider"/>
-    </bean>
-
-    <bean id="forgotUsernameSendExecutor" class="com.armedia.acm.services.notification.service.SendExecutor">
-        <property name="springContextHolder" ref="acmContextHolder"/>
-        <property name="templateModelProvider" ref="forgotUserNameTemplateModelProvider"/>
-    </bean>
-    
-    <bean id="documentLinkedSendExecutor" class="com.armedia.acm.services.notification.service.SendExecutor">
-        <property name="springContextHolder" ref="acmContextHolder"/>
-        <property name="templateModelProvider" ref="documentLinkedTemplateModelProvider"/>
-    </bean>
-
-    <bean id="billingSendExecutor" class="com.armedia.acm.services.notification.service.SendExecutor">
-        <property name="springContextHolder" ref="acmContextHolder"/>
-        <property name="templateModelProvider" ref="billingTemplateModelProvider"/>
-    </bean>
-
-    <bean id="userSendExecutor" class="com.armedia.acm.services.notification.service.SendExecutor">
-        <property name="springContextHolder" ref="acmContextHolder"/>
-        <property name="templateModelProvider" ref="acmUserTemplateModelProvider"/>
-    </bean>
-
-    <bean id="dueDateReminderExecutor" class="com.armedia.acm.services.notification.service.SendExecutor">
-        <property name="springContextHolder" ref="acmContextHolder"/>
-        <property name="templateModelProvider" ref="dueDateReminderModelProvider"/>
-    </bean>
-
-    <bean id="requestDownloadedExecutor" class="com.armedia.acm.services.notification.service.SendExecutor">
-        <property name="springContextHolder" ref="acmContextHolder"/>
-        <property name="templateModelProvider" ref="requestDownloadedModelProvider"/>
+        <property name="templateConfigurationManager" ref="templateConfigurationManager"/>
     </bean>
 
     <bean id="acmNotificationPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">

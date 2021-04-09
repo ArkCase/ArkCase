@@ -11,11 +11,6 @@
             <beans:property name="acmGroupDao" ref="groupDao"/>
         </beans:bean>
 
-        <beans:bean id="taskRequestExecutor" class="com.armedia.acm.services.notification.service.SendExecutor">
-            <beans:property name="springContextHolder" ref="acmContextHolder"/>
-            <beans:property name="templateModelProvider" ref="foiaTaskRequestTemplateModelProvider"/>
-        </beans:bean>
-
     </beans:beans>
 
 </beans:beans>
