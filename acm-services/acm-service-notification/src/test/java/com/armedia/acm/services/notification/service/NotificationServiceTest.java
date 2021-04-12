@@ -35,6 +35,9 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
 import static org.junit.Assert.assertEquals;
 
+import com.armedia.acm.core.provider.TemplateModelProvider;
+import com.armedia.acm.services.notification.service.provider.NotificationTemplateModelProvider;
+import com.armedia.acm.services.templateconfiguration.model.Template;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.email.model.EmailSenderConfig;
 import com.armedia.acm.objectonverter.ObjectConverter;
@@ -58,7 +61,6 @@ import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -68,7 +70,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-@Ignore
+
 public class NotificationServiceTest extends EasyMockSupport
 {
     private NotificationServiceImpl notificationService;
@@ -105,7 +107,7 @@ public class NotificationServiceTest extends EasyMockSupport
 
         SendExecutor sendExecutor = new SendExecutor();
         sendExecutor.setSpringContextHolder(mockSpringContextHolder);
-
+        sendExecutor.setTemplateConfigurationManager(templateConfigurationManager);
 
         notificationService.setNotificationDao(mockNotificationDao);
         notificationService.setNotificationEventPublisher(mockNotificationEventPublisher);
@@ -190,6 +192,12 @@ public class NotificationServiceTest extends EasyMockSupport
 
         expect(mockNotificationDao.getNotificationsToProcess()).andReturn(notifications).times(1);
 
+        NotificationTemplateModelProvider notificationTemplateModelProvider = createMock(NotificationTemplateModelProvider.class);
+        Map<String, NotificationTemplateModelProvider> providerMap = new HashMap<>();
+        providerMap.put("modelProvider", notificationTemplateModelProvider);
+
+        expect(mockSpringContextHolder.getAllBeansOfType(NotificationTemplateModelProvider.class)).andReturn(providerMap).anyTimes();
+
         mockAuditPropertyEntityAdapter.setUserId(eq("NOTIFICATION-BATCH-INSERT"));
         expectLastCall().anyTimes();
 
@@ -215,8 +223,8 @@ public class NotificationServiceTest extends EasyMockSupport
 
             expect(smtpNotificationServer.getTemplatingEngine().process(template, notification.getTemplateModelName(), notification))
                     .andReturn("Body").times(1);
-            expect(smtpNotificationServer.getTemplatingEngine().process(anyString(), eq(notification.getTemplateModelName()),
-                    eq(notification))).andReturn("subject").times(1);
+            expect(smtpNotificationServer.getTemplatingEngine().process(capture(subjectCapture), eq(notification.getTemplateModelName()), eq(notification)))
+                    .andReturn("subject").times(1);
             expect(notificationTemplateModelProvider.getModel(notification)).andReturn(notification).times(1);
 
             smtpNotificationServer.getEmailSenderService().sendEmail(capture(emailWithAttachmentsDTOCapture), eq(null), eq(null));
@@ -284,7 +292,16 @@ public class NotificationServiceTest extends EasyMockSupport
 
         expect(mockSpringContextHolder.getAllBeansOfType(NotificationTemplateModelProvider.class)).andReturn(providerMap).anyTimes();
 
-        expect(mockNotificationDao.getNotificationsToProcess()).andReturn(notifications).anyTimes();
+        NotificationTemplateModelProvider notificationTemplateModelProvider = createMock(NotificationTemplateModelProvider.class);
+        Map<String, NotificationTemplateModelProvider> providerMap = new HashMap<>();
+        providerMap.put("modelProvider", notificationTemplateModelProvider);
+
+        expect(mockSpringContextHolder.getAllBeansOfType(NotificationTemplateModelProvider.class)).andReturn(providerMap).anyTimes();
+
+        expect(mockSpringContextHolder.getAllBeansOfType(NotificationSenderFactory.class)).andReturn(senders).anyTimes();
+        expect(mockNotificationDao.getEntityManager()).andReturn(mockEntityManager).anyTimes();
+        expect(mockEntityManager.createQuery(anyString(), eq(Notification.class))).andReturn(mockQuery).anyTimes();
+        expect(mockQuery.getResultList()).andReturn(notifications).anyTimes();
 
         expect(mockNotificationUtils.buildNotificationLink(anyString(), anyLong(), anyString(), anyLong())).andReturn(null).anyTimes();
 
@@ -298,6 +315,11 @@ public class NotificationServiceTest extends EasyMockSupport
         String template = "Template";
         Capture<String> subjectCapture = EasyMock.newCapture();
 
+        smtpNotificationServer.setTemplateService(mockTemplateService);
+        smtpNotificationServer.setTemplatingEngine(mockTemplatingEngine);
+        smtpNotificationServer.setUserDao(mockUserDao);
+        smtpNotificationServer.setEmailSenderService(mockEmailSenderService);
+
         expect(mockTemplateService.getTemplate("modelName.html")).andReturn(template).times(2);
 
         for (Notification notification : notifications)
@@ -306,9 +328,8 @@ public class NotificationServiceTest extends EasyMockSupport
 
             expect(smtpNotificationServer.getTemplatingEngine().process(template, notification.getTemplateModelName(), notification))
                     .andReturn("Body").times(1);
-            expect(smtpNotificationServer.getTemplatingEngine().process(capture(subjectCapture), eq(notification.getTemplateModelName()),
-                    eq(notification)))
-                            .andReturn("subject").times(1);
+            expect(smtpNotificationServer.getTemplatingEngine().process(capture(subjectCapture), eq(notification.getTemplateModelName()), eq(notification)))
+                    .andReturn("subject").times(1);
             expect(notificationTemplateModelProvider.getModel(notification)).andReturn(notification).times(1);
 
             smtpNotificationServer.getEmailSenderService().sendEmail(capture(emailWithAttachmentsDTOCapture), eq(null), eq(null));
