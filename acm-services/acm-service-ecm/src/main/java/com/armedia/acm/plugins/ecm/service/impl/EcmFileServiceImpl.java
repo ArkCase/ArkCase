@@ -313,16 +313,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
         log.info("The user '{}' uploaded file: '{}'", authentication.getName(), fileName);
 
-        //Solve the problem of Yahoo mail filename encode issue
-        if(fileName.startsWith("=?UTF-8?b?")) {
-            fileName = fileName.substring(10, fileName.length() - 3);
-            byte[] decodedBytes = Base64.getDecoder().decode(fileName.getBytes());
-
-            fileName = new String(decodedBytes);
-            log.debug("FileName after Decode: " + fileName);
-
-            arkcaseFileName = fileName.substring(0,fileName.lastIndexOf('.'));
-        }
         EcmFile metadata = new EcmFile();
         metadata.setFileType(fileType);
         metadata.setCategory(fileCategory);
