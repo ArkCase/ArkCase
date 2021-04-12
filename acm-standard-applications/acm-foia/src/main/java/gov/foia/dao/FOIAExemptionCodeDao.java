@@ -27,13 +27,6 @@ package gov.foia.dao;
  * #L%
  */
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
-
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
@@ -41,6 +34,13 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.services.exemption.dao.ExemptionCodeDao;
 import com.armedia.acm.services.exemption.model.ExemptionCode;
+
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import gov.foia.model.FOIARequest;
 
@@ -66,31 +66,52 @@ public class FOIAExemptionCodeDao extends AcmAbstractDao<ExemptionCode>
 
         if (request != null)
         {
-            String exemptFilesQueryText = "SELECT exemption " +
-                    "FROM ExemptionCode exemption " +
-                    "JOIN EcmFile exemptionfile ON exemption.fileId = exemptionfile.fileId " +
-                    "JOIN AcmContainer container ON container = exemptionfile.container " +
-                    "JOIN ZylabFileMetadata zylabmetadata ON zylabmetadata = exemptionfile.zylabFileMetadata " +
-                    "WHERE container.containerObjectType = :parentObjectType " +
-                    "AND container.containerObjectId = :parentObjectId " +
-                    "AND exemptionfile.zylabFileMetadata IS NOT NULL " +
-                    "AND zylabmetadata.exemptWithheld=true ";
-
-            Query query = getEm().createQuery(exemptFilesQueryText);
-            query.setParameter("parentObjectId", parentObjectId);
-            query.setParameter("parentObjectType", parentObjectType);
-
-            List<ExemptionCode> exemptFilesExemptions = (List<ExemptionCode>) query.getResultList();
+            List<ExemptionCode> exemptFilesExemptions = getExemptionCodesForExemptFilesForRequest(parentObjectId, parentObjectType);
+            List<ExemptionCode> responseFolderExemptions = getResponseFolderExemptionCodesForRequest(request);
 
             listCodesOnDocuments.addAll(exemptFilesExemptions);
-
-            AcmFolder responseFolder = getAcmFolderService().findByNameAndParent("03 Response", request.getContainer().getFolder());
-            List<EcmFile> filesInResponseFolder = getAcmFolderService().getFilesInFolderAndSubfolders(responseFolder.getId());
-            filesInResponseFolder.stream()
-                    .map(EcmFile::getFileId)
-                    .forEach(fileId -> listCodesOnDocuments.addAll(getApprovedAndManualExemptionCodesByFileId(fileId)));
+            listCodesOnDocuments.addAll(responseFolderExemptions);
         }
         return listCodesOnDocuments;
+    }
+
+    public List<ExemptionCode> getExemptionCodesForExemptFilesForRequest(Long parentObjectId, String parentObjectType)
+    {
+        String exemptFilesQueryText = "SELECT exemption " +
+                "FROM ExemptionCode exemption " +
+                "JOIN EcmFile exemptionfile ON exemption.fileId = exemptionfile.fileId " +
+                "JOIN AcmContainer container ON container = exemptionfile.container " +
+                "JOIN ZylabFileMetadata zylabmetadata ON zylabmetadata = exemptionfile.zylabFileMetadata " +
+                "WHERE container.containerObjectType = :parentObjectType " +
+                "AND container.containerObjectId = :parentObjectId " +
+                "AND exemptionfile.zylabFileMetadata IS NOT NULL " +
+                "AND zylabmetadata.exemptWithheld=true ";
+
+        Query query = getEm().createQuery(exemptFilesQueryText);
+        query.setParameter("parentObjectId", parentObjectId);
+        query.setParameter("parentObjectType", parentObjectType);
+
+        List<ExemptionCode> exemptFilesExemptions = (List<ExemptionCode>) query.getResultList();
+
+        if (null == exemptFilesExemptions)
+        {
+            return new ArrayList<>();
+        }
+
+        return exemptFilesExemptions;
+    }
+
+    public List<ExemptionCode> getResponseFolderExemptionCodesForRequest(FOIARequest request)
+    {
+        List<ExemptionCode> exemptFilesExemptions = new ArrayList<>();
+
+        AcmFolder responseFolder = getAcmFolderService().findByNameAndParent("03 Response", request.getContainer().getFolder());
+        List<EcmFile> filesInResponseFolder = getAcmFolderService().getFilesInFolderAndSubfolders(responseFolder.getId());
+        filesInResponseFolder.stream()
+                .map(EcmFile::getFileId)
+                .forEach(fileId -> exemptFilesExemptions.addAll(getApprovedAndManualExemptionCodesByFileId(fileId)));
+
+        return exemptFilesExemptions;
     }
 
     public List<ExemptionCode> getManuallyAddedCodesOnRequestLevel(Long parentObjectId, String parentObjectType)

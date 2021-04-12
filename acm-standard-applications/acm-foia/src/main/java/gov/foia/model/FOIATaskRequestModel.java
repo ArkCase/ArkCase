@@ -36,9 +36,9 @@ public class FOIATaskRequestModel
     private AcmTask task;
     private FOIARequest request;
     private Person taskContact;
-    private FormattedMergeTerm exemptionCodesAndDescription;
-    private FormattedMergeTerm redactions;
-    private FormattedMergeTerm exemptions;
+    private String exemptionCodesAndDescription;
+    private String redactions;
+    private String exemptions;
 
     public FOIARequest getRequest()
     {
@@ -80,22 +80,22 @@ public class FOIATaskRequestModel
         this.exemptionCodesAndDescription = exemptionCodesAndDescription;
     }
 
-    public FormattedMergeTerm getRedactions()
+    public String getRedactions()
     {
         return redactions;
     }
 
-    public void setRedactions(FormattedMergeTerm redactions)
+    public void setRedactions(String redactions)
     {
         this.redactions = redactions;
     }
 
-    public FormattedMergeTerm getExemptions()
+    public String getExemptions()
     {
         return exemptions;
     }
 
-    public void setExemptions(FormattedMergeTerm exemptions)
+    public void setExemptions(String exemptions)
     {
         this.exemptions = exemptions;
     }
