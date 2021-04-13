@@ -131,7 +131,7 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
         model.setTask(task);
         model.setRequest(request);
         model.setExemptionCodesAndDescription(exemptionCodesAndDescription);
-        model.setRedactions(exemptionCodesAndDescription.toString());
+        model.setRedactions(exemptionCodesAndDescription.getRuns().toString());
         model.setExemptions(exemptionCodesOnExemptDocument.stream().collect(Collectors.joining(",")));
         return model;
     }
