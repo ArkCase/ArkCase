@@ -61,10 +61,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import gov.foia.dao.FOIAExemptionCodeDao;
-import gov.foia.dao.FOIARequestDao;
-import gov.foia.model.FOIARequest;
-import gov.foia.model.FOIATaskRequestModel;
-import gov.foia.service.FOIAExemptionService;
 
 public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvider<FOIATaskRequestModel>
 {
@@ -128,32 +124,32 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
                 request = foiaRequestDao.find(task.getParentObjectId());
                 if (request != null)
                 {
-                    setRequestFieldsAndExemptionCodes(request, exemptionCodesAndDescription);
+                    exemptionCodesAndDescription = setRequestFieldsAndGetExemptionCodes(request);
                     exemptionCodesOnExemptDocument = setExemptionCodesOnExemptDocument(request);
                 }
             }
         }
         else
         {
-            setRequestFieldsAndExemptionCodes(request, exemptionCodesAndDescription);
+            exemptionCodesAndDescription = setRequestFieldsAndGetExemptionCodes(request);
             exemptionCodesOnExemptDocument = setExemptionCodesOnExemptDocument(request);
         }
 
         model.setTask(task);
         model.setRequest(request);
         model.setExemptionCodesAndDescription(exemptionCodesAndDescription);
-        model.setRedactions(exemptionCodesAndDescription);
+        model.setRedactions(exemptionCodesAndDescription.toString());
         model.setExemptions(exemptionCodesOnExemptDocument.stream().collect(Collectors.joining(",")));
         return model;
     }
 
-    private void setRequestFieldsAndExemptionCodes(FOIARequest request, FormattedMergeTerm exemptionCodesAndDescription)
+    private FormattedMergeTerm setRequestFieldsAndGetExemptionCodes(FOIARequest request)
     {
         request.setApplicationConfig(applicationConfig);
         String assigneeLdapID = request.getAssigneeLdapId();
         AcmUser assignee = null;
         FormattedMergeTerm exemptionCodesAndDescription = new FormattedMergeTerm();
-        if (assigneeLdapID != null)
+        if(assigneeLdapID != null)
         {
             assignee = userDao.findByUserId(assigneeLdapID);
             UserOrg userOrg = userOrgService.getUserOrgForUserId(assigneeLdapID);
@@ -201,81 +197,6 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
             e.printStackTrace();
         }
         return exemptionCodesAndDescription;
-    }
-
-    private FormattedMergeTerm setExemptionCodesOnExemptDocument(FOIARequest request)
-    {
-        FormattedMergeTerm exemptionCodesForExemptFiles = new FormattedMergeTerm();
-        exemptionCodesOnExemptDoc = foiaExemptionCodeDao.getExemptionCodesForExemptFilesForRequest(request.getId(),
-                request.getObjectType()).stream().filter(distinctByProperty(ExemptionCode::getExemptionCode)).collect(Collectors.toList());
-        if (exemptionCodesOnExemptDoc != null)
-        {
-            List<StandardLookupEntry> lookupEntries = (List<StandardLookupEntry>) getLookupDao().getLookupByName("annotationTags")
-                    .getEntries();
-            Map<String, String> codeDescriptions = lookupEntries.stream()
-                    .collect(Collectors.toMap(StandardLookupEntry::getKey, StandardLookupEntry::getValue));
-            List<FormattedRun> runs = new ArrayList<>();
-            for (ExemptionCode exCode : exemptionCodesOnExemptDoc)
-            {
-                foiaExemptionService.createAndStyleRunsForCorrespondenceLetters(codeDescriptions, runs, exCode);
-            }
-            exemptionCodesForExemptFiles.setRuns(runs);
-        }
-        return exemptionCodesForExemptFiles;
-    }
-
-    private FormattedMergeTerm setRedactionsOnReleasedDocument(FOIARequest request)
-    {
-        FormattedMergeTerm redactionsForReleasedDocuments = new FormattedMergeTerm();
-        List<ExemptionCode> exemptionCodes = foiaExemptionCodeDao.getResponseFolderExemptionCodesForRequest(request).stream()
-                .filter(distinctByProperty(ExemptionCode::getExemptionCode)).collect(Collectors.toList());
-        if (exemptionCodes != null)
-        {
-            List<String> mappedExemptionCodesOnExemptDoc = exemptionCodesOnExemptDoc.stream().map(ExemptionCode::getExemptionCode).collect(Collectors.toList());
-            exemptionCodes = exemptionCodes.stream().filter(element-> !mappedExemptionCodesOnExemptDoc.contains(element.getExemptionCode())).collect(Collectors.toList());
-
-            List<StandardLookupEntry> lookupEntries = (List<StandardLookupEntry>) getLookupDao().getLookupByName("annotationTags")
-                    .getEntries();
-            Map<String, String> codeDescriptions = lookupEntries.stream()
-                    .collect(Collectors.toMap(StandardLookupEntry::getKey, StandardLookupEntry::getValue));
-            List<FormattedRun> runs = new ArrayList<>();
-            for (ExemptionCode exCode : exemptionCodes)
-            {
-                foiaExemptionService.createAndStyleRunsForCorrespondenceLetters(codeDescriptions, runs, exCode);
-            }
-            redactionsForReleasedDocuments.setRuns(runs);
-        }
-        return redactionsForReleasedDocuments;
-    }
-
-    private static <T> Predicate<T> distinctByProperty(Function<? super T, ?> propertyExtractor)
-    {
-        Set<Object> seen = ConcurrentHashMap.newKeySet();
-        return t -> seen.add(propertyExtractor.apply(t));
-    }
-
-    private List<String> setExemptionCodesOnExemptDocument(FOIARequest request)
-    {
-        List<String> exemptionOnWithheldDocument;
-
-        List<ExemptionCode> exemptionCodesForExemptFiles = foiaExemptionCodeDao
-                .getExemptionCodesForExemptFilesForRequest(request.getId(), request.getObjectType());
-        exemptionOnWithheldDocument = exemptionCodesForExemptFiles.stream().map(ExemptionCode::getExemptionCode)
-                .collect(Collectors.toList());
-
-        return exemptionOnWithheldDocument;
-    }
-
-    private List<String> setExemptionCodesOnExemptDocument(FOIARequest request)
-    {
-        List<String> exemptionOnWithheldDocument;
-
-        List<ExemptionCode> exemptionCodesForExemptFiles = foiaExemptionCodeDao
-                .getExemptionCodesForExemptFilesForRequest(request.getId(), request.getObjectType());
-        exemptionOnWithheldDocument = exemptionCodesForExemptFiles.stream().map(ExemptionCode::getExemptionCode)
-                .collect(Collectors.toList());
-
-        return exemptionOnWithheldDocument;
     }
 
     private List<String> setExemptionCodesOnExemptDocument(FOIARequest request)
