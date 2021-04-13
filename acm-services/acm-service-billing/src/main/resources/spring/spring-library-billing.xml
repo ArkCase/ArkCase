@@ -22,6 +22,7 @@
         <aop:scoped-proxy/>
         <property name="authenticationTokenService" ref="authenticationTokenService"/>
         <property name="applicationConfig" ref="applicationProperties"/>
+        <property name="billingItemDao" ref="billingItemDao"/>
     </bean>
     <bean id="billingInvoiceBusinessRule" class="com.armedia.acm.services.billing.rules.BillingInvoiceBusinessRule"
           parent="simpleStatelessSingleObjectRuleManager">
