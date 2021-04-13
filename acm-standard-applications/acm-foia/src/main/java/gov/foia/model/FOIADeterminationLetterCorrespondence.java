@@ -38,7 +38,7 @@ public class FOIADeterminationLetterCorrespondence
     private List<PersonAssociation> personAssociations;
 
     private String exemptionCodeSummary;
-    private String exemptionCodesAndDescription;
+    private FormattedMergeTerm exemptionCodesAndDescription;
     private String assigneeName;
     private String assigneeTitle;
     private String assigneeEmail;
@@ -67,12 +67,12 @@ public class FOIADeterminationLetterCorrespondence
         this.exemptionCodeSummary = exemptionCodeSummary;
     }
 
-    public String getExemptionCodesAndDescription()
+    public FormattedMergeTerm getExemptionCodesAndDescription()
     {
         return exemptionCodesAndDescription;
     }
 
-    public void setExemptionCodesAndDescription(String exemptionCodesAndDescription)
+    public void setExemptionCodesAndDescription(FormattedMergeTerm exemptionCodesAndDescription)
     {
         this.exemptionCodesAndDescription = exemptionCodesAndDescription;
     }

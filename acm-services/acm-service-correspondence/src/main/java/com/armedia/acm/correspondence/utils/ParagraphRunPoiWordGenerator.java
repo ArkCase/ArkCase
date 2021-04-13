@@ -40,6 +40,8 @@ import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.spring.SpringContextHolder;
 
+import gov.foia.model.FormattedMergeTerm;
+import gov.foia.model.FormattedRun;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -251,54 +253,54 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                     }
                     break;
                 }
+                addNewRun(paragraph, run, runNum, lastRunNum, texts);
 
-                // set the run text to the first line of the replacement; this existing run maintains its formatting
-                // so no formatting code is needed.
-                run.setText(texts[0], 0);
-                XWPFRun newRun = run;
-
-                // for each subsequent line of the replacement text, add a new run with the new line; since we are
-                // adding a new run, we need to set the formatting.
-                for (int i = 1; i < texts.length; i++)
-                {
-                    newRun.addCarriageReturn();
-                    if (texts[i] != null && !texts[i].equals(""))
-                    {
-                        newRun = paragraph.insertNewRun(runNum + i);
-                        /*
-                         * We should copy all style attributes to the newRun from run
-                         * also from background color, ...
-                         * Here we duplicate only the simple attributes...
-                         */
-                        newRun.setText(texts[i]);
-                        newRun.setBold(true);
-                        newRun.setCapitalized(run.isCapitalized());
-                        // run.getCharacterSpacing() throws NullPointerException. Maybe in future version of the library
-                        // this will be fixed.
-                        // newRun.setCharacterSpacing(run.getCharacterSpacing());
-                        if (run.getColor() != null)
-                        {
-                            newRun.setColor(run.getColor());
-                        }
-                        newRun.setDoubleStrikethrough(run.isDoubleStrikeThrough());
-                        newRun.setEmbossed(run.isEmbossed());
-                        newRun.setFontFamily(run.getFontFamily());
-                        newRun.setFontSize(run.getFontSize());
-                        newRun.setImprinted(run.isImprinted());
-                        newRun.setItalic(run.isItalic());
-                        newRun.setKerning(run.getKerning());
-                        newRun.setShadow(run.isShadowed());
-                        newRun.setSmallCaps(run.isSmallCaps());
-                        newRun.setStrikeThrough(run.isStrikeThrough());
-                        newRun.setSubscript(run.getSubscript());
-                        newRun.setUnderline(run.getUnderline());
-                    }
-                }
-                for (int i = lastRunNum + texts.length - 1; i > runNum + texts.length - 1; i--)
-                {
-                    paragraph.removeRun(i);
-                }
             }
+        }
+    }
+
+    private void addNewRun(XWPFParagraph paragraph, XWPFRun run, int runNum, int lastRunNum, String[] texts) {
+        // set the run text to the first line of the replacement; this existing run maintains its formatting
+        // so no formatting code is needed.
+        run.setText(texts[0], 0);
+        XWPFRun newRun = run;
+
+        // for each subsequent line of the replacement text, add a new run with the new line; since we are
+        // adding a new run, we need to set the formatting.
+        for (int i = 1; i < texts.length; i++) {
+            newRun.addCarriageReturn();
+            if (texts[i] != null && !texts[i].equals("")) {
+                newRun = paragraph.insertNewRun(runNum + i);
+                /*
+                 * We should copy all style attributes to the newRun from run
+                 * also from background color, ...
+                 * Here we duplicate only the simple attributes...
+                 */
+                newRun.setText(texts[i]);
+                newRun.setBold(true);
+                newRun.setCapitalized(run.isCapitalized());
+                // run.getCharacterSpacing() throws NullPointerException. Maybe in future version of the library
+                // this will be fixed.
+                // newRun.setCharacterSpacing(run.getCharacterSpacing());
+                if (run.getColor() != null) {
+                    newRun.setColor(run.getColor());
+                }
+                newRun.setDoubleStrikethrough(run.isDoubleStrikeThrough());
+                newRun.setEmbossed(run.isEmbossed());
+                newRun.setFontFamily(run.getFontFamily());
+                newRun.setFontSize(run.getFontSize());
+                newRun.setImprinted(run.isImprinted());
+                newRun.setItalic(run.isItalic());
+                newRun.setKerning(run.getKerning());
+                newRun.setShadow(run.isShadowed());
+                newRun.setSmallCaps(run.isSmallCaps());
+                newRun.setStrikeThrough(run.isStrikeThrough());
+                newRun.setSubscript(run.getSubscript());
+                newRun.setUnderline(run.getUnderline());
+            }
+        }
+        for (int i = lastRunNum + texts.length - 1; i > runNum + texts.length - 1; i--) {
+            paragraph.removeRun(i);
         }
     }
 
@@ -344,12 +346,23 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                 String spelExpressionToBeEvaluted = sb.toString();
                 if (spelExpressionToBeEvaluted != null && !spelExpressionToBeEvaluted.isEmpty())
                 {
-                    texts = evaluateSpelExpression(object, spelExpressionToBeEvaluted, objectType).split("\n");
+                    Object expression = evaluateSpelExpression(object, spelExpressionToBeEvaluted, objectType);
+                    if(expression instanceof FormattedMergeTerm)
+                    {
+                        FormattedMergeTerm exepmtionTexts = (FormattedMergeTerm) expression;
+                        addNewRun(paragraph, run, runNum, lastRunNum, exepmtionTexts);
+                        continue;
+                    }
+                    else
+                    {
+                        texts = String.valueOf(expression).split("\n");
+                    }
                 }
 
                 // Snowbound throws error on runs with empty text (see AFDP-6414). So we just delete these runs
                 if (texts[0].equals(""))
                 {
+
                     for (int i = lastRunNum; i >= runNum; i--)
                     {
                         paragraph.removeRun(i);
@@ -364,54 +377,90 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                             .toArray(size -> new String[size]);
                 }
 
-                // set the run text to the first line of the replacement; this existing run maintains its formatting
-                // so no formatting code is needed.
-                run.setText(texts[0], 0);
-                XWPFRun newRun = run;
-
-                // for each subsequent line of the replacement text, add a new run with the new line; since we are
-                // adding a new run, we need to set the formatting.
-                for (int i = 1; i < texts.length; i++)
-                {
-                    newRun.addCarriageReturn();
-                    if (texts[i] != null && !texts[i].equals(""))
-                    {
-                        newRun = paragraph.insertNewRun(runNum + i);
-                        /*
-                         * We should copy all style attributes to the newRun from run
-                         * also from background color, ...
-                         * Here we duplicate only the simple attributes...
-                         */
-                        newRun.setText(texts[i]);
-                        newRun.setBold(true);
-                        newRun.setCapitalized(run.isCapitalized());
-                        // run.getCharacterSpacing() throws NullPointerException. Maybe in future version of the library
-                        // this will be fixed.
-                        // newRun.setCharacterSpacing(run.getCharacterSpacing());
-                        if (run.getColor() != null)
-                        {
-                            newRun.setColor(run.getColor());
-                        }
-                        newRun.setDoubleStrikethrough(run.isDoubleStrikeThrough());
-                        newRun.setEmbossed(run.isEmbossed());
-                        newRun.setFontFamily(run.getFontFamily());
-                        newRun.setFontSize(run.getFontSize());
-                        newRun.setImprinted(run.isImprinted());
-                        newRun.setItalic(run.isItalic());
-                        newRun.setKerning(run.getKerning());
-                        newRun.setShadow(run.isShadowed());
-                        newRun.setSmallCaps(run.isSmallCaps());
-                        newRun.setStrikeThrough(run.isStrikeThrough());
-                        newRun.setSubscript(run.getSubscript());
-                        newRun.setUnderline(run.getUnderline());
-                    }
-                }
-
-                for (int i = lastRunNum + texts.length - 1; i > runNum + texts.length - 1; i--)
-                {
-                    paragraph.removeRun(i);
-                }
+                addNewRun(paragraph, run, runNum, lastRunNum, texts);
             }
+        }
+    }
+
+    private void addNewRun(XWPFParagraph paragraph, XWPFRun run, int runNum, int lastRunNum, FormattedMergeTerm expemtionCodes) {
+        XWPFRun newRun = run;
+        List<FormattedRun> texts = expemtionCodes.getRuns();
+
+        for (int i = 0; i < texts.size(); i++)
+        {
+            newRun.addCarriageReturn();
+            if (texts.get(i) != null)
+            {
+                FormattedRun formattedRun = texts.get(i);
+                newRun = paragraph.insertNewRun(runNum + i);
+                /*
+                 * We should copy all style attributes to the newRun from formattedRun
+                 * also from background color, ...
+                 */
+                newRun.setText(formattedRun.getText());
+                if(formattedRun.getFontFamily() != null )
+                {
+                    newRun.setFontFamily(formattedRun.getFontFamily());
+                }
+                else
+                {
+                    newRun.setFontFamily(run.getFontFamily());
+                }
+                if(formattedRun.getFontSize() != null)
+                {
+                    newRun.setFontSize(formattedRun.getFontSize());
+                }
+                else
+                {
+                    newRun.setFontSize(run.getFontSize());
+                }
+                if (formattedRun.getColor() != null)
+                {
+                    newRun.setColor(formattedRun.getColor());
+                }
+                else if(run.getColor() != null)
+                {
+                    newRun.setColor(run.getColor());
+                }
+                if(formattedRun.getKerning() != null)
+                {
+                    newRun.setKerning(formattedRun.getKerning());
+                }
+                else
+                {
+                    newRun.setKerning(run.getKerning());
+                }
+                if(formattedRun.getSubscript() != null)
+                {
+                    newRun.setSubscript(formattedRun.getSubscript());
+                }
+                else
+                {
+                    newRun.setSubscript(run.getSubscript());
+                }
+                if(formattedRun.getUnderline() != null)
+                {
+                    newRun.setUnderline(formattedRun.getUnderline());
+                }
+                else
+                {
+                    newRun.setUnderline(run.getUnderline());
+                }
+                newRun.setBold(formattedRun.isBold());
+                newRun.setImprinted(formattedRun.isImprinted());
+                newRun.setItalic(formattedRun.isItalic());
+                newRun.setEmbossed(formattedRun.isEmbossed());
+                newRun.setCapitalized(formattedRun.isCapitalized());
+                newRun.setShadow(formattedRun.isShadowed());
+                newRun.setSmallCaps(formattedRun.isSmallCaps());
+                newRun.setStrikeThrough(formattedRun.isStrikeThrough());
+                newRun.setDoubleStrikethrough(formattedRun.isDoubleStrikeThrough());
+            }
+        }
+
+        for (int i = lastRunNum + texts.size() - 1; i > runNum + texts.size(); i--)
+        {
+            paragraph.removeRun(i);
         }
     }
 
@@ -448,7 +497,11 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                     } else {
                         if (!(text.contains(":")))
                         {
-                            texts = evaluateSpelExpression(object, text, objectType).split("\n");
+                            Object expression = evaluateSpelExpression(object, text, objectType);
+                            if(expression instanceof String)
+                            {
+                                texts = String.valueOf(expression).split("\n");
+                            }
                             if (texts[0] != null && !texts[0].equals("")) {
                                 bufferrun.setText(texts[0], 0);
                             }
@@ -566,9 +619,9 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
         return cells;
     }
 
-    public String evaluateSpelExpression(Object object, String spelExpression, String objectType)
+    public Object evaluateSpelExpression(Object object, String spelExpression, String objectType)
     {
-        String generatedExpression = "";
+        Object generatedExpression = "";
         boolean isExistingMergeField = false;
         SimpleDateFormat formatter = new SimpleDateFormat(DateFormats.WORKFLOW_DATE_FORMAT);
         SimpleDateFormat dateTimeFormatter = new SimpleDateFormat(DateFormats.CORRESPONDENCE_DATE_FORMAT);
@@ -612,7 +665,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                     }
                     else
                     {
-                        generatedExpression = String.valueOf(expression.getValue(stContext));
+                        generatedExpression = expression.getValue(stContext);
                     }
                 }
                 else
@@ -708,7 +761,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                         else
                         {
 
-                            generatedExpression = String.valueOf(expression.getValue(stContext));
+                            generatedExpression = expression.getValue(stContext);
 
                         }
                     }

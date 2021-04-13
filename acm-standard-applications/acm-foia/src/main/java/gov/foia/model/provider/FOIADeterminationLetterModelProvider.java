@@ -42,6 +42,8 @@ import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.correspondence.exception.CorrespondenceTemplateMissingAssigneeException;
 import gov.foia.model.FOIADeterminationLetterCorrespondence;
 import gov.foia.model.FOIARequest;
+import gov.foia.model.FormattedMergeTerm;
+import gov.foia.model.FormattedRun;
 import gov.foia.service.FOIAExemptionService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -85,9 +87,28 @@ public class FOIADeterminationLetterModelProvider implements TemplateModelProvid
 
         List<StandardLookupEntry> lookupEntries = (List<StandardLookupEntry>) getLookupDao().getLookupByName("annotationTags").getEntries();
         Map<String, String> codeDescriptions = lookupEntries.stream().collect(Collectors.toMap(StandardLookupEntry::getKey, StandardLookupEntry::getValue));
-        String exemptionCodesAndDescription = exemptionCodes.stream()
-                .map(code -> String.format("%s: %s.", code.getExemptionCode(), labelValue(codeDescriptions.get(code.getExemptionCode()))))
-                .collect(Collectors.joining(","));
+        List<FormattedRun> runs = new ArrayList<>();
+        for (ExemptionCode exCode : exemptionCodes)
+        {
+            runs.add(new FormattedRun("\n"));
+            FormattedRun exemptionCodeRun = new FormattedRun();
+            exemptionCodeRun.setText(exCode.getExemptionCode());
+            exemptionCodeRun.setBold(true);
+            runs.add(exemptionCodeRun);
+            runs.add(new FormattedRun("\n"));
+            FormattedRun exemptionDescriptionRun = new FormattedRun();
+            exemptionDescriptionRun.setText(labelValue(codeDescriptions.get(exCode.getExemptionCode())));
+            exemptionDescriptionRun.setFontSize(11);
+            exemptionDescriptionRun.setSmallCaps(true);
+            runs.add(exemptionDescriptionRun);
+            FormattedRun exemptionLine = new FormattedRun();
+            exemptionLine.setText("------------------------------------------------------------------------------------------------------------");
+            exemptionLine.setFontSize(11);
+            exemptionLine.setBold(false);
+            runs.add(exemptionLine);
+        }
+        FormattedMergeTerm exemptionCodesAndDescription = new FormattedMergeTerm();
+        exemptionCodesAndDescription.setRuns(runs);
         determinationLetterCorrespondence.setExemptionCodesAndDescription(exemptionCodesAndDescription);
 
         String requestAssignee = ParticipantUtils.getAssigneeIdFromParticipants(request.getParticipants());

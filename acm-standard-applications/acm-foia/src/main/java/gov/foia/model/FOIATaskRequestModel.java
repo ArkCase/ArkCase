@@ -35,7 +35,7 @@ public class FOIATaskRequestModel
     private AcmTask task;
     private FOIARequest request;
     private Person taskContact;
-    private String exemptionCodesAndDescription;
+    private FormattedMergeTerm exemptionCodesAndDescription;
 
     public FOIARequest getRequest()
     {
@@ -65,12 +65,12 @@ public class FOIATaskRequestModel
         this.taskContact = taskContact;
     }
 
-    public String getExemptionCodesAndDescription()
+    public FormattedMergeTerm getExemptionCodesAndDescription()
     {
         return exemptionCodesAndDescription;
     }
 
-    public void setExemptionCodesAndDescription(String exemptionCodesAndDescription)
+    public void setExemptionCodesAndDescription(FormattedMergeTerm exemptionCodesAndDescription)
     {
         this.exemptionCodesAndDescription = exemptionCodesAndDescription;
     }
