@@ -54,8 +54,11 @@ public class AcmEntityTemplateNoUserPrefixModelProvider implements TemplateModel
     {
         Notification notification = (Notification) object;
         AcmAbstractDao<AcmObject> dao = getDataService().getDaoByObjectType(notification.getParentType());
-        AcmObject acmObject = dao.find(notification.getParentId());
-
+        AcmObject acmObject = null;
+        if (notification.getParentId() != null)
+        {
+            acmObject = dao.find(notification.getParentId());
+        }
         String baseAssigneeLdapId = "";
         String baseModifier = "";
         String baseAssigneeGroupId = "";
