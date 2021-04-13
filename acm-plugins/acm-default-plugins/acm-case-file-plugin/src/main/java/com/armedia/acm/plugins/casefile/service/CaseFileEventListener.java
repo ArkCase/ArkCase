@@ -346,7 +346,7 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
 
         String timeZone = getHolidayConfigurationService().getDefaultClientZoneId().getId();
 
-        String eventDescription = "- Due Date Changed from " + oldDate + " to " + newDate + " " + timeZone + ".";
+        String eventDescription = String.format("%s %s %s %s %s %s", "- Due Date Changed from ", oldDate, " to ", newDate, " ", timeZone);
 
         String caseState = "dueDateChanged";
 
