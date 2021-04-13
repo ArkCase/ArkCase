@@ -77,6 +77,7 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
     private NoteDao noteDao;
     private TaskDao taskDao;
     private FOIAExemptionService foiaExemptionService;
+    private FOIAExemptionCodeDao foiaExemptionCodeDao;
     private TranslationService translationService;
     private LookupDao lookupDao;
 
@@ -115,6 +116,7 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
         }
         FOIATaskRequestModel model = new FOIATaskRequestModel();
         FormattedMergeTerm exemptionCodesAndDescription = null;
+        List<String> exemptionCodesOnExemptDocument = new ArrayList<>();
         if(task != null)
         {
             task.setTaskNotes(noteDao.listNotes("GENERAL", task.getId(), task.getObjectType()).stream().map(Note::getNote)
@@ -140,7 +142,8 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
         model.setTask(task);
         model.setRequest(request);
         model.setExemptionCodesAndDescription(exemptionCodesAndDescription);
-
+        model.setRedactions(exemptionCodesAndDescription);
+        model.setExemptions(exemptionCodesOnExemptDocument.stream().collect(Collectors.joining(",")));
         return model;
     }
 
@@ -249,6 +252,18 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
     {
         Set<Object> seen = ConcurrentHashMap.newKeySet();
         return t -> seen.add(propertyExtractor.apply(t));
+    }
+
+    private List<String> setExemptionCodesOnExemptDocument(FOIARequest request)
+    {
+        List<String> exemptionOnWithheldDocument;
+
+        List<ExemptionCode> exemptionCodesForExemptFiles = foiaExemptionCodeDao
+                .getExemptionCodesForExemptFilesForRequest(request.getId(), request.getObjectType());
+        exemptionOnWithheldDocument = exemptionCodesForExemptFiles.stream().map(ExemptionCode::getExemptionCode)
+                .collect(Collectors.toList());
+
+        return exemptionOnWithheldDocument;
     }
 
     private List<String> setExemptionCodesOnExemptDocument(FOIARequest request)
@@ -384,6 +399,16 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
     public void setLookupDao(LookupDao lookupDao)
     {
         this.lookupDao = lookupDao;
+    }
+
+    public FOIAExemptionCodeDao getFoiaExemptionCodeDao()
+    {
+        return foiaExemptionCodeDao;
+    }
+
+    public void setFoiaExemptionCodeDao(FOIAExemptionCodeDao foiaExemptionCodeDao)
+    {
+        this.foiaExemptionCodeDao = foiaExemptionCodeDao;
     }
 }
 

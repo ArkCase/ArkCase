@@ -210,6 +210,12 @@ public class NotificationServiceTest extends EasyMockSupport
 
         expect(mockSpringContextHolder.getAllBeansOfType(NotificationTemplateModelProvider.class)).andReturn(providerMap).anyTimes();
 
+        NotificationTemplateModelProvider notificationTemplateModelProvider = createMock(NotificationTemplateModelProvider.class);
+        Map<String, NotificationTemplateModelProvider> providerMap = new HashMap<>();
+        providerMap.put("modelProvider", notificationTemplateModelProvider);
+
+        expect(mockSpringContextHolder.getAllBeansOfType(NotificationTemplateModelProvider.class)).andReturn(providerMap).anyTimes();
+
         mockAuditPropertyEntityAdapter.setUserId(eq("NOTIFICATION-BATCH-INSERT"));
         expectLastCall().anyTimes();
 
@@ -297,6 +303,12 @@ public class NotificationServiceTest extends EasyMockSupport
 
         notifications.add(notification1);
         notifications.add(notification2);
+
+        NotificationTemplateModelProvider notificationTemplateModelProvider = createMock(NotificationTemplateModelProvider.class);
+        Map<String, NotificationTemplateModelProvider> providerMap = new HashMap<>();
+        providerMap.put("modelProvider", notificationTemplateModelProvider);
+
+        expect(mockSpringContextHolder.getAllBeansOfType(NotificationTemplateModelProvider.class)).andReturn(providerMap).anyTimes();
 
         NotificationTemplateModelProvider notificationTemplateModelProvider = createMock(NotificationTemplateModelProvider.class);
         Map<String, NotificationTemplateModelProvider> providerMap = new HashMap<>();
