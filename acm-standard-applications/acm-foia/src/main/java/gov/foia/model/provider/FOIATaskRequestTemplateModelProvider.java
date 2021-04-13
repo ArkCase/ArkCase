@@ -249,6 +249,18 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
         return exemptionOnWithheldDocument;
     }
 
+    private List<String> setExemptionCodesOnExemptDocument(FOIARequest request)
+    {
+        List<String> exemptionOnWithheldDocument;
+
+        List<ExemptionCode> exemptionCodesForExemptFiles = foiaExemptionCodeDao
+                .getExemptionCodesForExemptFilesForRequest(request.getId(), request.getObjectType());
+        exemptionOnWithheldDocument = exemptionCodesForExemptFiles.stream().map(ExemptionCode::getExemptionCode)
+                .collect(Collectors.toList());
+
+        return exemptionOnWithheldDocument;
+    }
+
     @Override
     public Class<FOIATaskRequestModel> getType()
     {
