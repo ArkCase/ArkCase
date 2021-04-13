@@ -29,6 +29,7 @@ package com.armedia.acm.services.billing.service.impl;
 
 import com.armedia.acm.core.model.ApplicationConfig;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
+import com.armedia.acm.services.billing.dao.BillingItemDao;
 import com.touchnet.secureLink.service.TPGSecureLink_BindingStub;
 import com.touchnet.secureLink.service.TPGSecureLink_ServiceLocator;
 import com.touchnet.secureLink.types.*;
@@ -47,6 +48,7 @@ public class TouchNetService
 
     private AuthenticationTokenService authenticationTokenService;
     private ApplicationConfig applicationConfig;
+    private BillingItemDao billingItemDao;
 
     private Logger log = LogManager.getLogger(getClass());
 
@@ -145,19 +147,16 @@ public class TouchNetService
         return binding;
     }
 
-    public String redirectToPaymentForm(String amount, String objectId, String objectType, String ecmFileId)
+    public String redirectToPaymentForm(String amount, String objectId, String objectType, String ecmFileId, String acm_ticket)
     {
-        String ticket = generateTicketID(amount,objectId,objectType,ecmFileId);
-        String ticketName = objectId + objectType;
-
-        return "<form name=\"autoform\" action=\"https://test.secure.touchnet.net:8443/C30002test_upay/web/index.jsp\" method=\"post\">\n" +
-                "    <input name=\"UPAY_SITE_ID\" type=\"hidden\" value=\"" + uPaySiteId + "\" />\n" +
-                "    <input name=\"TICKET\" type=\"hidden\" value=\"" + ticket + "\" />\n" +
-                "    <input name=\"TICKET_NAME\" type=\"hidden\" value=\"" + ticketName + "\" />\n" +
-                "</form>\n" +
-                "<script type=\"text/javascript\">\n" +
-                "         document.autoform.submit();\n" +
-                "</script>\n";
+        if(!billingItemDao.checkIfPaymentIsAlreadyDone(acm_ticket))
+        {
+            return redirectToPaymentForm(amount,objectId,objectType,ecmFileId);
+        }
+        else
+        {
+            return redirectToAlreadyPaidPage();
+        }
     }
 
     public String redirectToConfirmationPage()
@@ -190,6 +189,49 @@ public class TouchNetService
                 "<h1 class=\"htext\">Thank You For Your Payment</h1>\n" +
                 "<p class=\"ptext\">A confirmation email will be sent.</p></br>\n" +
                 "<br><br><br>\n" +
+                "<img src=\"" + imgSrc + "\" width=\"186\" height=\"38.79\">\n" +
+                "</body>\n" +
+                "</html>\n";
+    }
+
+    private String redirectToPaymentForm(String amount, String objectId, String objectType, String ecmFileId)
+    {
+        String ticket = generateTicketID(amount, objectId, objectType, ecmFileId);
+        String ticketName = objectId + objectType;
+
+        return "<form name=\"autoform\" action=\"https://test.secure.touchnet.net:8443/C30002test_upay/web/index.jsp\" method=\"post\">\n" +
+                "    <input name=\"UPAY_SITE_ID\" type=\"hidden\" value=\"" + uPaySiteId + "\" />\n" +
+                "    <input name=\"TICKET\" type=\"hidden\" value=\"" + ticket + "\" />\n" +
+                "    <input name=\"TICKET_NAME\" type=\"hidden\" value=\"" + ticketName + "\" />\n" +
+                "</form>\n" +
+                "<script type=\"text/javascript\">\n" +
+                "         document.autoform.submit();\n" +
+                "</script>\n";
+    }
+
+    private String redirectToAlreadyPaidPage()
+    {
+        String imgSrc = getApplicationConfig().getBaseUrl() + "/branding/emaillogo.png";
+        return "<html>\n" +
+                "<header>\n" +
+                "<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css\">\n" +
+                "<style>\n" +
+                ".icon{\n" +
+                "  font-size:90px;\n" +
+                "  color:#3393b7;\n" +
+                "}\n" +
+                ".htext{\n" +
+                "  font-family: Arial, Helvetica, sans-serif;\n" +
+                "  font-size:36;\n" +
+                "  color:#788288;\n" +
+                "}\n" +
+                "</style>\n" +
+                "</header>\n" +
+                "<body style=\"background-color:#F2F4F8;text-align: center;\">\n" +
+                "<br><br><br><br><br><br><br><br><br><br><br>\n" +
+                "<i class=\"fa fa-exclamation-circle icon\"/>\n" +
+                "<h1 class=\"htext\">This invoice has already been paid</h1>\n" +
+                "<br>\n" +
                 "<img src=\"" + imgSrc + "\" width=\"186\" height=\"38.79\">\n" +
                 "</body>\n" +
                 "</html>\n";
@@ -254,5 +296,15 @@ public class TouchNetService
     public void setuPaySiteId(String uPaySiteId)
     {
         this.uPaySiteId = uPaySiteId;
+    }
+
+    public BillingItemDao getBillingItemDao()
+    {
+        return billingItemDao;
+    }
+
+    public void setBillingItemDao(BillingItemDao billingItemDao)
+    {
+        this.billingItemDao = billingItemDao;
     }
 }
