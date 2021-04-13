@@ -88,7 +88,7 @@ public class SendExecutor implements Executor
         try
         {
 
-on            if (notification.getState() == null || !notification.getState().equals(NotificationConstants.STATE_SENT))
+            if (notification.getState() == null || !notification.getState().equals(NotificationConstants.STATE_SENT))
             {
                 try
                 {
