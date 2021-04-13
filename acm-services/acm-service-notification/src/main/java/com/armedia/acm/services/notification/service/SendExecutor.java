@@ -76,8 +76,7 @@ public class SendExecutor implements Executor
 
         for (NotificationSenderFactory senderFactory : senderFactoryList.values())
         {
-
-on            if (notification.getState() == null || !notification.getState().equals(NotificationConstants.STATE_SENT))
+            if (notification.getState() == null || !notification.getState().equals(NotificationConstants.STATE_SENT))
             {
                 try
                 {
