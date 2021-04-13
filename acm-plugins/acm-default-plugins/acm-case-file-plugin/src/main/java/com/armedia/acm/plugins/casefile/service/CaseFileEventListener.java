@@ -55,7 +55,10 @@ import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationListener;
 
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -179,7 +182,7 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
                             String newDate = getDateString(setDateToLocalDateTimeByDefaultClientTimezone(updatedCaseFile.getDueDate()));
                             String oldDate = getDateString(setDateToLocalDateTimeByDefaultClientTimezone(existing.getDueDate()));
 
-                            raiseDueDateEvent(updatedCaseFile, newDate, oldDate, event.getIpAddress(), SecurityContextHolder.getContext().getAuthentication());
+                            raiseDueDateEvent(updatedCaseFile, oldDate, newDate, event.getIpAddress(), SecurityContextHolder.getContext().getAuthentication());
                         }
                     }
                 }
@@ -233,7 +236,7 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
 
     private boolean isDueDateChanged(CaseFile caseFile, CaseFile updatedCaseFile)
     {
-        return !getDateString(caseFile.getDueDate()).equals(getDateString(updatedCaseFile.getDueDate()));
+        return !caseFile.getDueDate().equals(updatedCaseFile.getDueDate());
     }
 
     private boolean isPriorityChanged(CaseFile caseFile, CaseFile updatedCaseFile)
@@ -327,12 +330,12 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
         return objectType.equals(CaseFileConstants.OBJECT_TYPE);
     }
 
-    private String getDateString(Date date)
+    private String getDateString(LocalDateTime date)
     {
         if (date != null)
         {
-            SimpleDateFormat datePattern = new SimpleDateFormat("MM/dd/yyyy HH:mm");
-            return datePattern.format(date);
+            DateTimeFormatter datePattern = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm");
+            return date.format(datePattern);
         }
 
         return "None";
@@ -343,7 +346,7 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
 
         String timeZone = getHolidayConfigurationService().getDefaultClientZoneId().getId();
 
-        String eventDescription = "- Due Date Changed from " + oldDate + " to " + newDate + timeZone + " timeZone";
+        String eventDescription = "- Due Date Changed from " + oldDate + " to " + newDate + " " + timeZone + ".";
 
         String caseState = "dueDateChanged";
 
@@ -351,9 +354,9 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
 
     }
 
-    private Date setDateToLocalDateTimeByDefaultClientTimezone(Date date)
+    private LocalDateTime setDateToLocalDateTimeByDefaultClientTimezone(Date date)
     {
-        return Date.from(getHolidayConfigurationService().getZonedDateTimeAtDefaultClientTimezone(date).toInstant());
+        return getHolidayConfigurationService().getZonedDateTimeAtDefaultClientTimezone(date).toLocalDateTime();
     }
 
     public AcmObjectHistoryService getAcmObjectHistoryService()
