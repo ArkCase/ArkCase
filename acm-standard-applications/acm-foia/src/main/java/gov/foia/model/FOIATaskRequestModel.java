@@ -36,6 +36,8 @@ public class FOIATaskRequestModel
     private FOIARequest request;
     private Person taskContact;
     private String exemptionCodesAndDescription;
+    private String redactions;
+    private String exemptions;
 
     public FOIARequest getRequest()
     {
@@ -73,5 +75,25 @@ public class FOIATaskRequestModel
     public void setExemptionCodesAndDescription(String exemptionCodesAndDescription)
     {
         this.exemptionCodesAndDescription = exemptionCodesAndDescription;
+    }
+
+    public String getRedactions()
+    {
+        return redactions;
+    }
+
+    public void setRedactions(String redactions)
+    {
+        this.redactions = redactions;
+    }
+
+    public String getExemptions()
+    {
+        return exemptions;
+    }
+
+    public void setExemptions(String exemptions)
+    {
+        this.exemptions = exemptions;
     }
 }

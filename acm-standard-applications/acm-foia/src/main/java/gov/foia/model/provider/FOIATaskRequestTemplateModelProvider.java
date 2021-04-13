@@ -40,16 +40,19 @@ import com.armedia.acm.services.note.dao.NoteDao;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-import gov.foia.dao.FOIARequestDao;
-import gov.foia.model.FOIARequest;
-import gov.foia.model.FOIATaskRequestModel;
-import gov.foia.service.FOIAExemptionService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import gov.foia.dao.FOIAExemptionCodeDao;
+import gov.foia.dao.FOIARequestDao;
+import gov.foia.model.FOIARequest;
+import gov.foia.model.FOIATaskRequestModel;
+import gov.foia.service.FOIAExemptionService;
 
 public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvider<FOIATaskRequestModel>
 {
@@ -62,6 +65,7 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
     private NoteDao noteDao;
     private TaskDao taskDao;
     private FOIAExemptionService foiaExemptionService;
+    private FOIAExemptionCodeDao foiaExemptionCodeDao;
 
     private final Logger log = LoggerFactory.getLogger(getClass().getName());
 
@@ -96,6 +100,7 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
         }
         FOIATaskRequestModel model = new FOIATaskRequestModel();
         List<String> exemptionCodesAndDescription = new ArrayList<>();
+        List<String> exemptionCodesOnExemptDocument = new ArrayList<>();
         if(task != null)
         {
             task.setTaskNotes(noteDao.listNotes("GENERAL", task.getId(), task.getObjectType()).stream().map(note -> note.getNote()).collect(Collectors.joining("\n\n")));
@@ -106,18 +111,21 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
                 if(request != null)
                 {
                     setRequestFieldsAndExemptionCodes(request, exemptionCodesAndDescription);
+                    exemptionCodesOnExemptDocument = setExemptionCodesOnExemptDocument(request);
                 }
             }
         }
         else
         {
             setRequestFieldsAndExemptionCodes(request, exemptionCodesAndDescription);
+            exemptionCodesOnExemptDocument = setExemptionCodesOnExemptDocument(request);
         }
 
         model.setTask(task);
         model.setRequest(request);
         model.setExemptionCodesAndDescription(exemptionCodesAndDescription.stream().collect(Collectors.joining(",")));
-
+        model.setRedactions(exemptionCodesAndDescription.stream().collect(Collectors.joining(",")));
+        model.setExemptions(exemptionCodesOnExemptDocument.stream().collect(Collectors.joining(",")));
         return model;
     }
 
@@ -154,6 +162,18 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
             log.error("Unable to get exemption codes for objectId: {}" + request.getId(), e);
             e.printStackTrace();
         }
+    }
+
+    private List<String> setExemptionCodesOnExemptDocument(FOIARequest request)
+    {
+        List<String> exemptionOnWithheldDocument;
+
+        List<ExemptionCode> exemptionCodesForExemptFiles = foiaExemptionCodeDao
+                .getExemptionCodesForExemptFilesForRequest(request.getId(), request.getObjectType());
+        exemptionOnWithheldDocument = exemptionCodesForExemptFiles.stream().map(ExemptionCode::getExemptionCode)
+                .collect(Collectors.toList());
+
+        return exemptionOnWithheldDocument;
     }
 
     @Override
@@ -230,6 +250,16 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
     public void setFoiaExemptionService(FOIAExemptionService foiaExemptionService)
     {
         this.foiaExemptionService = foiaExemptionService;
+    }
+
+    public FOIAExemptionCodeDao getFoiaExemptionCodeDao()
+    {
+        return foiaExemptionCodeDao;
+    }
+
+    public void setFoiaExemptionCodeDao(FOIAExemptionCodeDao foiaExemptionCodeDao)
+    {
+        this.foiaExemptionCodeDao = foiaExemptionCodeDao;
     }
 }
 
