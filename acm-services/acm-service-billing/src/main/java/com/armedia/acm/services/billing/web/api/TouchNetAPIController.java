@@ -86,7 +86,7 @@ public class TouchNetAPIController
                                     @RequestParam(value = "objectNumber", required = true) String objectNumber,
                                     @RequestParam(value = "acm_email_ticket", required = false) String acm_ticket)
     {
-        return getTouchNetService().validateLinkAndRedirectToPaymentForm(amt,objectId,objectType,objectNumber,ecmFileId, acm_ticket);
+        return getTouchNetService().redirectToPaymentForm(amt,objectId,objectType,ecmFileId, acm_ticket);
     }
 
     @RequestMapping(value = "/confirmPayment", method = RequestMethod.POST, produces = MediaType.TEXT_HTML_VALUE)
@@ -104,7 +104,6 @@ public class TouchNetAPIController
         String objectId = "";
         String invoiceId = "";
         String acmTicket = "";
-        String objectNumber = "";
         NameValuePair[] params = authorizeAccountResponse.getNameValuePairs();
         for (NameValuePair param : params)
         {
@@ -124,13 +123,9 @@ public class TouchNetAPIController
             {
                 acmTicket = param.getValue();
             }
-            else if(param.getName().equals("BILL_PARENT_NUMBER"))
-            {
-                objectNumber = param.getValue().replace("_", "-");
-            }
         }
         generateAndSaveBilling(objectId,objectType,paymentAmount, sessionId, invoiceId, acmTicket);
-        sendPaymentConfirmationEmail(objectType, Long.valueOf(objectId),billName,paymentAmount,cardNumber,paymentMethod, sessionId, objectNumber);
+        sendPaymentConfirmationEmail(objectType, Long.valueOf(objectId),billName,paymentAmount,cardNumber,paymentMethod, sessionId);
 
         return getTouchNetService().redirectToConfirmationPage();
 
