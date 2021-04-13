@@ -103,6 +103,19 @@ public class BillingItemDao extends AcmAbstractDao<BillingItem>
         return currentItemNumber != null ? currentItemNumber + 1 : 1;
     }
 
+    public boolean checkIfPaymentIsAlreadyDone(String acmTicket)
+    {
+        acmTicket = '%' + acmTicket + '%';
+
+        Query queryText = getEntityManager().createQuery(
+                "SELECT COUNT(billingItem) " +
+                        "FROM BillingItem billingItem " +
+                        "WHERE billingItem.billingNote LIKE :acmTicket");
+        queryText.setParameter("acmTicket", acmTicket);
+
+        return (Long)queryText.getSingleResult() > 0 ? true : false;
+    }
+
     public EntityManager getEntityManager()
     {
         return entityManager;
