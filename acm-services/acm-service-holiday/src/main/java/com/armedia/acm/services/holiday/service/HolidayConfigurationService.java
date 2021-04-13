@@ -39,6 +39,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.Date;
@@ -165,9 +166,14 @@ public class HolidayConfigurationService
 
     public boolean isTimeAfterBusinessHours(Date date)
     {
-        LocalTime localTimeInSetTimezone = date.toInstant().atZone(getDefaultClientZoneId()).toLocalTime();
+        LocalTime localTimeInSetTimezone = getZonedDateTimeAtDefaultClientTimezone(date).toLocalTime();
 
         return localTimeInSetTimezone.isAfter(getEndOfClientBusinessDayTime());
+    }
+
+    public ZonedDateTime getZonedDateTimeAtDefaultClientTimezone(Date date)
+    {
+        return date.toInstant().atZone(getDefaultClientZoneId());
     }
 
     public boolean isWeekendNonWorkingDay(LocalDate date)
@@ -297,7 +303,7 @@ public class HolidayConfigurationService
         return LocalTime.parse(getBusinessHoursConfig().getEndOfBusinessDayTime());
     }
 
-    private ZoneId getDefaultClientZoneId() {
+    public ZoneId getDefaultClientZoneId() {
         return ZoneId.of(getApplicationConfig().getDefaultTimezone());
     }
 

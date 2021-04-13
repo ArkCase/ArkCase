@@ -17,7 +17,7 @@
         <property name="calendarAdminService" ref="outlookCalendarAdminServiceExtension"/>
         <property name="objectConverter" ref="objectConverter"/>
         <property name="folderCreatorDao" ref="outlookFolderCreatorDao"/>
-        <property name="dateTimeService" ref="dateTimeService"/>
+        <property name="holidayConfigurationService" ref="holidayConfigurationService"/>
     </bean>
 
     <bean id="changeCaseStatusTaskName" class="java.lang.String">

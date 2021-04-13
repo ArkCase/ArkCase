@@ -66,7 +66,6 @@ public class SaveCaseServiceImpl implements SaveCaseService
     private CaseFileDao caseFileDao;
     private PipelineManager<CaseFile, CaseFilePipelineContext> pipelineManager;
     private EcmFileService ecmFileService;
-    private HolidayConfigurationService holidayConfigurationService;
 
     @Override
     @Transactional
@@ -225,13 +224,4 @@ public class SaveCaseServiceImpl implements SaveCaseService
         this.ecmFileService = ecmFileService;
     }
 
-    public HolidayConfigurationService getHolidayConfigurationService()
-    {
-        return holidayConfigurationService;
-    }
-
-    public void setHolidayConfigurationService(HolidayConfigurationService holidayConfigurationService)
-    {
-        this.holidayConfigurationService = holidayConfigurationService;
-    }
 }
