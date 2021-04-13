@@ -87,8 +87,7 @@ public class SendExecutor implements Executor
         Class templateModelProviderClass = null;
         try
         {
-
-on            if (notification.getState() == null || !notification.getState().equals(NotificationConstants.STATE_SENT))
+            if (notification.getState() == null || !notification.getState().equals(NotificationConstants.STATE_SENT))
             {
                 try
                 {
