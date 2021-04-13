@@ -58,10 +58,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import gov.foia.dao.FOIAExemptionCodeDao;
-import gov.foia.dao.FOIARequestDao;
-import gov.foia.model.FOIARequest;
-import gov.foia.model.FOIATaskRequestModel;
-import gov.foia.service.FOIAExemptionService;
 
 public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvider<FOIATaskRequestModel>
 {
@@ -121,30 +117,31 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
                 request = foiaRequestDao.find(task.getParentObjectId());
                 if(request != null)
                 {
-                    setRequestFieldsAndExemptionCodes(request, exemptionCodesAndDescription);
+                    exemptionCodesAndDescription = setRequestFieldsAndGetExemptionCodes(request);
                     exemptionCodesOnExemptDocument = setExemptionCodesOnExemptDocument(request);
                 }
             }
         }
         else
         {
-            setRequestFieldsAndExemptionCodes(request, exemptionCodesAndDescription);
+            exemptionCodesAndDescription = setRequestFieldsAndGetExemptionCodes(request);
             exemptionCodesOnExemptDocument = setExemptionCodesOnExemptDocument(request);
         }
 
         model.setTask(task);
         model.setRequest(request);
         model.setExemptionCodesAndDescription(exemptionCodesAndDescription);
-        model.setRedactions(exemptionCodesAndDescription);
+        model.setRedactions(exemptionCodesAndDescription.toString());
         model.setExemptions(exemptionCodesOnExemptDocument.stream().collect(Collectors.joining(",")));
         return model;
     }
 
-    private void setRequestFieldsAndExemptionCodes(FOIARequest request, FormattedMergeTerm exemptionCodesAndDescription)
+    private FormattedMergeTerm setRequestFieldsAndGetExemptionCodes(FOIARequest request)
     {
         request.setApplicationConfig(applicationConfig);
         String assigneeLdapID = request.getAssigneeLdapId();
         AcmUser assignee = null;
+        FormattedMergeTerm exemptionCodesAndDescription = new FormattedMergeTerm();
         if(assigneeLdapID != null)
         {
             assignee = userDao.findByUserId(assigneeLdapID);
@@ -192,6 +189,7 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
             log.error("Unable to get exemption codes for objectId: {}" + request.getId(), e);
             e.printStackTrace();
         }
+        return exemptionCodesAndDescription;
     }
 
     private List<String> setExemptionCodesOnExemptDocument(FOIARequest request)
