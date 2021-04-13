@@ -76,17 +76,6 @@ public class SendExecutor implements Executor
         Class templateModelProviderClass = null;
         try
         {
-            templateModelProviderClass = Class.forName(templateModelProviderClassPath);
-        }
-        catch (Exception e)
-        {
-            log.error("Can not find class for provided classpath {}. Error: {}", templateModelProviderClassPath, e.getMessage());
-        }
-        TemplateModelProvider templateModelProvider = getTemplateModelProvider(templateModelProviderClass);
-
-        Class templateModelProviderClass = null;
-        try
-        {
             if (notification.getState() == null || !notification.getState().equals(NotificationConstants.STATE_SENT))
             {
                 try
