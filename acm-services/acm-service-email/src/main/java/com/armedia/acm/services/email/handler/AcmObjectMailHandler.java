@@ -68,6 +68,7 @@ import java.io.OutputStream;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Base64;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -224,11 +225,12 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
                         continue;
                     }
 
+                    String fileName = base64DecodeForAttachmentFile(bodyPart.getFileName());
                     try (InputStream is = bodyPart.getInputStream())
                     {
                         Authentication auth = new UsernamePasswordAuthenticationToken(userId, "");
-                        getEcmFileService().upload(bodyPart.getFileName(), "attachment", "Document", is, bodyPart.getContentType(),
-                                bodyPart.getFileName(), auth,
+                        getEcmFileService().upload(fileName, "attachment", "Document", is, bodyPart.getContentType(),
+                                fileName, auth,
                                 emailReceivedFolder.getCmisFolderId(), entity.getObjectType(), entity.getId());
 
                     }
@@ -278,6 +280,27 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
         Address[] froms = message.getFrom();
         String emailSender = froms == null ? "" : ((InternetAddress) froms[0]).getAddress();
         return emailSender;
+    }
+
+    /**
+     *
+     * @param fileName file name from message
+     * @return
+     */
+    private String base64DecodeForAttachmentFile(String fileName){
+        //Solve the problem of Yahoo mail filename encode issue
+        if(fileName.startsWith("=?UTF-8?b?")) {
+            fileName = fileName.substring(10);
+            fileName = fileName.substring(0,fileName.indexOf('='));
+
+            byte[] decodedBytes = Base64.getDecoder().decode(fileName.getBytes());
+
+            fileName = new String(decodedBytes);
+            log.debug("FileName after Decode: " + fileName);
+
+        }
+
+        return fileName;
     }
 
     public void setObjectIdRegexPattern(String objectIdRegexPattern)
