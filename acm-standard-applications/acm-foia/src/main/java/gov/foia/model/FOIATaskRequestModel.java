@@ -36,7 +36,7 @@ public class FOIATaskRequestModel
     private AcmTask task;
     private FOIARequest request;
     private Person taskContact;
-    private FormattedMergeTerm exemptionCodesAndDescription;
+    private String exemptionCodesAndDescription;
     private String redactions;
     private String exemptions;
 
