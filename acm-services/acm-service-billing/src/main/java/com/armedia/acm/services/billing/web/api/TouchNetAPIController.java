@@ -82,7 +82,7 @@ public class TouchNetAPIController
                                     @RequestParam(value = "objectType", required = true) String objectType,
                                     @RequestParam(value = "acm_email_ticket", required = false) String acm_ticket)
     {
-        return getTouchNetService().redirectToPaymentForm(amt,objectId,objectType,ecmFileId);
+        return getTouchNetService().redirectToPaymentForm(amt,objectId,objectType,ecmFileId, acm_ticket);
     }
 
     @RequestMapping(value = "/confirmPayment", method = RequestMethod.POST, produces = MediaType.TEXT_HTML_VALUE)
@@ -99,6 +99,7 @@ public class TouchNetAPIController
         String objectType = "";
         String objectId = "";
         String invoiceId = "";
+        String acmTicket = "";
         NameValuePair[] params = authorizeAccountResponse.getNameValuePairs();
         for (NameValuePair param : params)
         {
@@ -114,24 +115,29 @@ public class TouchNetAPIController
             {
                 invoiceId = param.getValue();
             }
+            else if(param.getName().equals("EXT_TRANS_ID"))
+            {
+                acmTicket = param.getValue();
+            }
         }
-        generateAndSaveBilling(objectId,objectType,paymentAmount, sessionId, invoiceId);
+        generateAndSaveBilling(objectId,objectType,paymentAmount, sessionId, invoiceId, acmTicket);
         sendPaymentConfirmationEmail(objectType, Long.valueOf(objectId),billName,paymentAmount,cardNumber,paymentMethod, sessionId);
 
         return getTouchNetService().redirectToConfirmationPage();
 
     }
 
-    private void generateAndSaveBilling(String objectId, String objectType, String itemAmount, String sessionId, String invoiceId)
+    private void generateAndSaveBilling(String objectId, String objectType, String itemAmount, String sessionId, String invoiceId, String acmTicket)
     {
         BillingItem billingItem = new BillingItem();
         billingItem.setCreator("TOUCHNET-PAYMENT");
         billingItem.setModifier("TOUCHNET-PAYMENT");
-        billingItem.setItemDescription("TouchNet Payment with session ID: " + sessionId);
+        billingItem.setItemDescription("TouchNet Payment with Transaction ID: " + sessionId);
         billingItem.setParentObjectId(Long.valueOf(objectId));
         billingItem.setParentObjectType(objectType);
         billingItem.setItemAmount(-Double.valueOf(itemAmount));
         billingItem.setItemType(BillingConstants.BILLING_ITEM_TYPE_DEFAULT);
+        billingItem.setBillingNote(acmTicket);
         try
         {
             billingService.createBillingItem(billingItem);
