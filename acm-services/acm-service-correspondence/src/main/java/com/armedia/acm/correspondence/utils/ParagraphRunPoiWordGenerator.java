@@ -41,6 +41,8 @@ import com.armedia.acm.services.templateconfiguration.model.CorrespondenceMergeF
 import com.armedia.acm.services.templateconfiguration.service.CorrespondenceMergeFieldManager;
 import com.armedia.acm.spring.SpringContextHolder;
 
+import gov.foia.model.FormattedMergeTerm;
+import gov.foia.model.FormattedRun;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -273,7 +275,53 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                     break;
                 }
                 addNewRun(paragraph, run, runNum, lastRunNum, texts);
+
             }
+        }
+    }
+
+    private void addNewRun(XWPFParagraph paragraph, XWPFRun run, int runNum, int lastRunNum, String[] texts) {
+        // set the run text to the first line of the replacement; this existing run maintains its formatting
+        // so no formatting code is needed.
+        run.setText(texts[0], 0);
+        XWPFRun newRun = run;
+
+        // for each subsequent line of the replacement text, add a new run with the new line; since we are
+        // adding a new run, we need to set the formatting.
+        for (int i = 1; i < texts.length; i++) {
+            newRun.addCarriageReturn();
+            if (texts[i] != null && !texts[i].equals("")) {
+                newRun = paragraph.insertNewRun(runNum + i);
+                /*
+                 * We should copy all style attributes to the newRun from run
+                 * also from background color, ...
+                 * Here we duplicate only the simple attributes...
+                 */
+                newRun.setText(texts[i]);
+                newRun.setBold(true);
+                newRun.setCapitalized(run.isCapitalized());
+                // run.getCharacterSpacing() throws NullPointerException. Maybe in future version of the library
+                // this will be fixed.
+                // newRun.setCharacterSpacing(run.getCharacterSpacing());
+                if (run.getColor() != null) {
+                    newRun.setColor(run.getColor());
+                }
+                newRun.setDoubleStrikethrough(run.isDoubleStrikeThrough());
+                newRun.setEmbossed(run.isEmbossed());
+                newRun.setFontFamily(run.getFontFamily());
+                newRun.setFontSize(run.getFontSize());
+                newRun.setImprinted(run.isImprinted());
+                newRun.setItalic(run.isItalic());
+                newRun.setKerning(run.getKerning());
+                newRun.setShadow(run.isShadowed());
+                newRun.setSmallCaps(run.isSmallCaps());
+                newRun.setStrikeThrough(run.isStrikeThrough());
+                newRun.setSubscript(run.getSubscript());
+                newRun.setUnderline(run.getUnderline());
+            }
+        }
+        for (int i = lastRunNum + texts.length - 1; i > runNum + texts.length - 1; i--) {
+            paragraph.removeRun(i);
         }
     }
 
@@ -320,10 +368,10 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                 if (spelExpressionToBeEvaluted != null && !spelExpressionToBeEvaluted.isEmpty())
                 {
                     Object expression = evaluateSpelExpression(object, spelExpressionToBeEvaluted, objectType);
-                    if (expression instanceof FormattedMergeTerm)
+                    if(expression instanceof FormattedMergeTerm)
                     {
-                        FormattedMergeTerm formattedMergeTerm = (FormattedMergeTerm) expression;
-                        addNewRun(paragraph, run, runNum, lastRunNum, formattedMergeTerm);
+                        FormattedMergeTerm exepmtionTexts = (FormattedMergeTerm) expression;
+                        addNewRun(paragraph, run, runNum, lastRunNum, exepmtionTexts);
                         continue;
                     }
                     else
@@ -355,59 +403,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
         }
     }
 
-    private void addNewRun(XWPFParagraph paragraph, XWPFRun run, int runNum, int lastRunNum, String[] texts)
-    {
-        // set the run text to the first line of the replacement; this existing run maintains its formatting
-        // so no formatting code is needed.
-        run.setText(texts[0], 0);
-        XWPFRun newRun = run;
-
-        // for each subsequent line of the replacement text, add a new run with the new line; since we are
-        // adding a new run, we need to set the formatting.
-        for (int i = 1; i < texts.length; i++)
-        {
-            newRun.addCarriageReturn();
-            if (texts[i] != null && !texts[i].equals(""))
-            {
-                newRun = paragraph.insertNewRun(runNum + i);
-                /*
-                 * We should copy all style attributes to the newRun from run
-                 * also from background color, ...
-                 * Here we duplicate only the simple attributes...
-                 */
-                newRun.setText(texts[i]);
-                newRun.setBold(run.isBold());
-                // run.getCharacterSpacing() throws NullPointerException. Maybe in future version of the library
-                // this will be fixed.
-                // newRun.setCharacterSpacing(run.getCharacterSpacing());
-                // Combination of this two is causing Snowbound to display all caps.
-                // newRun.setEmbossed(run.isEmbossed());
-                // newRun.setCapitalized(run.isCapitalized());
-                if (run.getColor() != null)
-                {
-                    newRun.setColor(run.getColor());
-                }
-                newRun.setDoubleStrikethrough(run.isDoubleStrikeThrough());
-                newRun.setFontFamily(run.getFontFamily());
-                newRun.setFontSize(run.getFontSize());
-                newRun.setImprinted(run.isImprinted());
-                newRun.setItalic(run.isItalic());
-                newRun.setKerning(run.getKerning());
-                newRun.setShadow(run.isShadowed());
-                newRun.setSmallCaps(run.isSmallCaps());
-                newRun.setStrikeThrough(run.isStrikeThrough());
-                newRun.setSubscript(run.getSubscript());
-                newRun.setUnderline(run.getUnderline());
-            }
-        }
-        for (int i = lastRunNum + texts.length - 1; i > runNum + texts.length - 1; i--)
-        {
-            paragraph.removeRun(i);
-        }
-    }
-
-    private void addNewRun(XWPFParagraph paragraph, XWPFRun run, int runNum, int lastRunNum, FormattedMergeTerm expemtionCodes)
-    {
+    private void addNewRun(XWPFParagraph paragraph, XWPFRun run, int runNum, int lastRunNum, FormattedMergeTerm expemtionCodes) {
         XWPFRun newRun = run;
         List<FormattedRun> texts = expemtionCodes.getRuns();
 
@@ -423,7 +419,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                  * also from background color, ...
                  */
                 newRun.setText(formattedRun.getText());
-                if (formattedRun.getFontFamily() != null)
+                if(formattedRun.getFontFamily() != null )
                 {
                     newRun.setFontFamily(formattedRun.getFontFamily());
                 }
@@ -431,7 +427,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                 {
                     newRun.setFontFamily(run.getFontFamily());
                 }
-                if (formattedRun.getFontSize() != null)
+                if(formattedRun.getFontSize() != null)
                 {
                     newRun.setFontSize(formattedRun.getFontSize());
                 }
@@ -443,11 +439,11 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                 {
                     newRun.setColor(formattedRun.getColor());
                 }
-                else if (run.getColor() != null)
+                else if(run.getColor() != null)
                 {
                     newRun.setColor(run.getColor());
                 }
-                if (formattedRun.getKerning() != null)
+                if(formattedRun.getKerning() != null)
                 {
                     newRun.setKerning(formattedRun.getKerning());
                 }
@@ -455,7 +451,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                 {
                     newRun.setKerning(run.getKerning());
                 }
-                if (formattedRun.getSubscript() != null)
+                if(formattedRun.getSubscript() != null)
                 {
                     newRun.setSubscript(formattedRun.getSubscript());
                 }
@@ -463,7 +459,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                 {
                     newRun.setSubscript(run.getSubscript());
                 }
-                if (formattedRun.getUnderline() != null)
+                if(formattedRun.getUnderline() != null)
                 {
                     newRun.setUnderline(formattedRun.getUnderline());
                 }
@@ -474,9 +470,8 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                 newRun.setBold(formattedRun.isBold());
                 newRun.setImprinted(formattedRun.isImprinted());
                 newRun.setItalic(formattedRun.isItalic());
-                // Combination of this two is causing Snowbound to display all caps.
-                // newRun.setEmbossed(formattedRun.isEmbossed());
-                // newRun.setCapitalized(formattedRun.isCapitalized());
+                newRun.setEmbossed(formattedRun.isEmbossed());
+                newRun.setCapitalized(formattedRun.isCapitalized());
                 newRun.setShadow(formattedRun.isShadowed());
                 newRun.setSmallCaps(formattedRun.isSmallCaps());
                 newRun.setStrikeThrough(formattedRun.isStrikeThrough());
@@ -532,12 +527,11 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                         if (!(text.contains(":")))
                         {
                             Object expression = evaluateSpelExpression(object, text, objectType);
-                            if (expression instanceof String)
+                            if(expression instanceof String)
                             {
                                 texts = String.valueOf(expression).split("\n");
                             }
-                            if (texts[0] != null && !texts[0].equals(""))
-                            {
+                            if (texts[0] != null && !texts[0].equals("")) {
                                 bufferrun.setText(texts[0], 0);
                             }
                             else
@@ -706,7 +700,20 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
             {
                 if (expression.getValue(stContext) != null)
                 {
-                    generatedExpression = expression.getValue(stContext);
+                    if (expression.getValue(stContext).getClass().getSimpleName().equalsIgnoreCase(DATE_TYPE))
+                    {
+                        generatedExpression = formatter.format(expression.getValue(stContext));
+                    }
+                    else if (expression.getValue(stContext).getClass().getSimpleName().equalsIgnoreCase(DATE_TIME_TYPE))
+                    {
+
+                        generatedExpression = formatter.format(
+                                dateTimeFormatter.parse((((LocalDateTime) expression.getValue(stContext)).toLocalDate().toString())));
+                    }
+                    else
+                    {
+                        generatedExpression = expression.getValue(stContext);
+                    }
                 }
                 else
                     generatedExpression = "";
@@ -793,7 +800,29 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                 {
                     if (expression.getValue(stContext) != null)
                     {
-                        generatedExpression = expression.getValue(stContext);
+                        if (expression.getValue(stContext).getClass().getSimpleName().equalsIgnoreCase(DATE_TYPE))
+                        {
+                            generatedExpression = formatter.format(expression.getValue(stContext));
+                        }
+                        else if (expression.getValue(stContext).getClass().getSimpleName().equalsIgnoreCase(DATE_TIME_TYPE))
+                        {
+                            try
+                            {
+                                generatedExpression = formatter.format(dateTimeFormatter
+                                        .parse((((LocalDateTime) expression.getValue(stContext)).toLocalDate().toString())));
+                            }
+                            catch (ParseException e)
+                            {
+                                e.printStackTrace();
+                            }
+
+                        }
+                        else
+                        {
+
+                            generatedExpression = expression.getValue(stContext);
+
+                        }
                     }
                     else
                     {
