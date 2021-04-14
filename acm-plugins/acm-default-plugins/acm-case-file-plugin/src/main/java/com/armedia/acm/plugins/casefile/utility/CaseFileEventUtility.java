@@ -88,7 +88,6 @@ public class CaseFileEventUtility implements ApplicationEventPublisherAware
 
     public void raiseDueDateUpdatedEvent(CaseFile source, String oldDate, String newDate, String timeZone, String ipAddress)
     {
-
         String eventDescription = String.format("%s %s %s %s %s %s", "- Due Date Changed from ", oldDate, " to ", newDate, " ", timeZone);
 
         CaseFileDueDateUpdatedEvent event = new CaseFileDueDateUpdatedEvent(source);
