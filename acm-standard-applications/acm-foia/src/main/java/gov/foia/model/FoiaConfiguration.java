@@ -28,6 +28,8 @@ package gov.foia.model;
  */
 
 import com.armedia.acm.plugins.businessprocess.model.SystemConfiguration;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.Map;
 
@@ -57,6 +59,8 @@ public class FoiaConfiguration extends SystemConfiguration
     private Boolean createNewPortalUserOptionOnArkcaseRequestForm;
     private Boolean automaticCreationOfRequestWhenAppealIsRemandedEnabled;
     private Map<String, String> dojYearlyReports;
+    private Boolean declareRequestAsRecordsEnabled;
+    private Integer declareRequestAsRecordsDaysDelay;
 
     public Integer getMaxDaysInBillingQueue()
     {
@@ -303,5 +307,21 @@ public class FoiaConfiguration extends SystemConfiguration
     public void setDojYearlyReports(Map<String, String> dojYearlyReports)
     {
         this.dojYearlyReports = dojYearlyReports;
+    }
+
+    public Boolean getDeclareRequestAsRecordsEnabled() {
+        return declareRequestAsRecordsEnabled;
+    }
+
+    public void setDeclareRequestAsRecordsEnabled(Boolean declareRequestAsRecordsEnabled) {
+        this.declareRequestAsRecordsEnabled = declareRequestAsRecordsEnabled;
+    }
+
+    public Integer getDeclareRequestAsRecordsDaysDelay() {
+        return declareRequestAsRecordsDaysDelay;
+    }
+
+    public void setDeclareRequestAsRecordsDaysDelay(Integer declareRequestAsRecordsDaysDelay) {
+        this.declareRequestAsRecordsDaysDelay = declareRequestAsRecordsDaysDelay;
     }
 }
