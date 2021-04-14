@@ -95,7 +95,7 @@ public class FOIARequestComponentUpdatedHandler
                     // Do not update duedate if its overdue
                     if (entity.getDueDate()!=null && !entity.getDueDate().before(new Date()))
                     {
-                        entity.setDueDate(holidayConfigurationService.addWorkingDaysToDate(
+                        entity.setDueDate(holidayConfigurationService.addWorkingDaysToDateAndSetTimeToBusinessHours(
                                 Date.from(
                                         entity.getRedirectedDate().toLocalDate().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()),
                                 calculatedTTC));
