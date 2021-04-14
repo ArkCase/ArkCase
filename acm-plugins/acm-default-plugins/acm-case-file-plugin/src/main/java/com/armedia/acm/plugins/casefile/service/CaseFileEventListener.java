@@ -176,10 +176,16 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
                                         "from " + existing.getStatus() + " to " + updatedCaseFile.getStatus());
 
                         }
-
-                        if (isDueDateChanged(updatedCaseFile, existing))
+                        if (updatedCaseFile.getDueDate() != null && existing.getDueDate() != null)
                         {
-                            raiseDueDateChangedEvent(event, updatedCaseFile, existing);
+                            if (isDueDateChanged(updatedCaseFile, existing))
+                            {
+                                String newDate = getDateString(setDateToLocalDateTimeByDefaultClientTimezone(updatedCaseFile.getDueDate()));
+                                String oldDate = getDateString(setDateToLocalDateTimeByDefaultClientTimezone(existing.getDueDate()));
+                                String timeZone = getHolidayConfigurationService().getDefaultClientZoneId().getId();
+
+                                getCaseFileEventUtility().raiseDueDateUpdatedEvent(updatedCaseFile, oldDate, newDate, timeZone, event.getIpAddress());
+                            }
                         }
                     }
                 }
@@ -195,15 +201,6 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
                 }
             }
         }
-    }
-
-    private void raiseDueDateChangedEvent(AcmObjectHistoryEvent event, CaseFile updatedCaseFile, CaseFile existing)
-    {
-        String newDate = getDateString(setDateToLocalDateTimeByDefaultClientTimezone(updatedCaseFile.getDueDate()));
-        String oldDate = getDateString(setDateToLocalDateTimeByDefaultClientTimezone(existing.getDueDate()));
-        String timeZone = getHolidayConfigurationService().getDefaultClientZoneId().getId();
-
-        getCaseFileEventUtility().raiseDueDateUpdatedEvent(updatedCaseFile, oldDate, newDate, timeZone, event.getIpAddress());
     }
 
     private boolean shouldDeleteOnClose()
