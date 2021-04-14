@@ -30,7 +30,7 @@ package com.armedia.acm.services.templateconfiguration.service;
 import static org.reflections.Reflections.log;
 
 import com.armedia.acm.core.model.ApplicationConfig;
-import com.armedia.acm.services.holiday.service.DateTimeService;
+import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.services.templateconfiguration.model.CorrespondenceMergeField;
 import com.armedia.acm.services.templateconfiguration.model.FormatDateTimeMethodModel;
 
@@ -43,6 +43,8 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -63,6 +65,8 @@ public class TemplatingEngine
     public static final String DATE_TIME_TYPE = "LocalDateTime";
     private ApplicationConfig applicationConfig;
     private CorrespondenceMergeFieldManager mergeFieldManager;
+    SimpleDateFormat formatter = new SimpleDateFormat(DateFormats.WORKFLOW_DATE_FORMAT);
+    SimpleDateFormat dateTimeFormatter = new SimpleDateFormat(DateFormats.CORRESPONDENCE_DATE_FORMAT);
 
     public String process(String emailBodyTemplate, String modelReferenceName, Object model) throws TemplateException, IOException
     {
@@ -127,26 +131,32 @@ public class TemplatingEngine
                     if (mergeFieldId.equalsIgnoreCase(spelExpression) && mergeField.getEmailFieldValue() != null)
                     {
                         SpelExpression expression = parser.parseRaw(mergeField.getEmailFieldValue());
-                        Object generatedExpression = "";
+                        String generatedExpression = "";
                         if (expression.getValue(stContext) != null)
                         {
-                            try
+                            if (expression.getValue(stContext).getClass().getSimpleName().equalsIgnoreCase(DATE_TYPE))
                             {
-                                generatedExpression = expression.getValue(stContext);
+                                generatedExpression = formatter.format(expression.getValue(stContext));
                             }
-                            catch (RuntimeException e)
+                            else if (expression.getValue(stContext).getClass().getSimpleName().equalsIgnoreCase(DATE_TIME_TYPE))
                             {
-                                log.error("Unable to parse SpEL expression [{}]", spelExpression);
-                            }
-                            if (expression.getValue(stContext) instanceof String)
-                            {
-                                generatedExpression = String.valueOf(expression.getValue(stContext)).replace("\n\n", "<br>");
+                                try
+                                {
+                                    generatedExpression = formatter.format(
+                                            dateTimeFormatter
+                                                    .parse((((LocalDateTime) expression.getValue(stContext)).toLocalDate().toString())));
+                                }
+                                catch (ParseException e)
+                                {
+                                    log.error("Unable to parse SpEL expression [{}]", spelExpression);
+                                }
                             }
                             else
                             {
                                 generatedExpression = String.valueOf(expression.getValue(stContext));
                             }
-                            expressionsToEvaluate.put(mergeField.getFieldId(), (String) generatedExpression);
+
+                            expressionsToEvaluate.put(mergeField.getFieldId(), generatedExpression);
                         }
                     }
                 }
