@@ -73,6 +73,7 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
     private TaskDao taskDao;
     private FOIAExemptionService foiaExemptionService;
     private FOIAExemptionCodeDao foiaExemptionCodeDao;
+    private LookupDao lookupDao;
 
     private final Logger log = LoggerFactory.getLogger(getClass().getName());
 
@@ -168,22 +169,7 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
                 List<FormattedRun> runs = new ArrayList<>();
                 for (ExemptionCode exCode : exemptionCodes)
                 {
-                    runs.add(new FormattedRun("\n"));
-                    FormattedRun exemptionCodeRun = new FormattedRun();
-                    exemptionCodeRun.setText(exCode.getExemptionCode());
-                    exemptionCodeRun.setBold(true);
-                    runs.add(exemptionCodeRun);
-                    runs.add(new FormattedRun("\n"));
-                    FormattedRun exemptionDescriptionRun = new FormattedRun();
-                    exemptionDescriptionRun.setText(labelValue(codeDescriptions.get(exCode.getExemptionCode())));
-                    exemptionDescriptionRun.setFontSize(11);
-                    exemptionDescriptionRun.setSmallCaps(true);
-                    runs.add(exemptionDescriptionRun);
-                    FormattedRun exemptionLine = new FormattedRun();
-                    exemptionLine.setText("------------------------------------------------------------------------------------------------------------");
-                    exemptionLine.setFontSize(11);
-                    exemptionLine.setBold(false);
-                    runs.add(exemptionLine);
+                    foiaExemptionService.createAndStyleRunsForCorrespondenceLetters(codeDescriptions, runs, exCode);
                 }
                 exemptionCodesAndDescription.setRuns(runs);
             }
@@ -194,23 +180,6 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
             e.printStackTrace();
         }
         return exemptionCodesAndDescription;
-    }
-
-    private List<String> setExemptionCodesOnExemptDocument(FOIARequest request)
-    {
-        List<String> exemptionOnWithheldDocument;
-
-        List<ExemptionCode> exemptionCodesForExemptFiles = foiaExemptionCodeDao
-                .getExemptionCodesForExemptFilesForRequest(request.getId(), request.getObjectType());
-        exemptionOnWithheldDocument = exemptionCodesForExemptFiles.stream().map(ExemptionCode::getExemptionCode)
-                .collect(Collectors.toList());
-
-        return exemptionOnWithheldDocument;
-    }
-
-    private String labelValue(String labelKey)
-    {
-        return translationService.translate(labelKey);
     }
 
     private List<String> setExemptionCodesOnExemptDocument(FOIARequest request)
@@ -310,17 +279,6 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
     {
         this.foiaExemptionService = foiaExemptionService;
     }
-
-    public FOIAExemptionCodeDao getFoiaExemptionCodeDao()
-    {
-        return foiaExemptionCodeDao;
-    }
-
-    public void setFoiaExemptionCodeDao(FOIAExemptionCodeDao foiaExemptionCodeDao)
-    {
-        this.foiaExemptionCodeDao = foiaExemptionCodeDao;
-    }
-}
 
     public LookupDao getLookupDao()
     {

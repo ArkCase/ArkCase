@@ -373,6 +373,7 @@
             <beans:property name="noteDao" ref="noteDao"/>
             <beans:property name="taskDao" ref="acmTaskDao"/>
             <beans:property name="foiaExemptionService" ref="foiaExemptionService"/>
+            <beans:property name="lookupDao" ref="lookupDao"/>
             <beans:property name="foiaExemptionCodeDao" ref="foiaExemptionCodeDao"/>
         </beans:bean>
 

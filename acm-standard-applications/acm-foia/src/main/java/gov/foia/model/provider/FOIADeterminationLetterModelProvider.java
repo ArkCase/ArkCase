@@ -90,29 +90,8 @@ public class FOIADeterminationLetterModelProvider implements TemplateModelProvid
                 .collect(Collectors.joining("and"));
         determinationLetterCorrespondence.setExemptionCodeSummary(exemptionCodesNames);
 
-        List<StandardLookupEntry> lookupEntries = (List<StandardLookupEntry>) getLookupDao().getLookupByName("annotationTags").getEntries();
-        Map<String, String> codeDescriptions = lookupEntries.stream().collect(Collectors.toMap(StandardLookupEntry::getKey, StandardLookupEntry::getValue));
-        List<FormattedRun> runs = new ArrayList<>();
-        for (ExemptionCode exCode : exemptionCodes)
-        {
-            runs.add(new FormattedRun("\n"));
-            FormattedRun exemptionCodeRun = new FormattedRun();
-            exemptionCodeRun.setText(exCode.getExemptionCode());
-            exemptionCodeRun.setBold(true);
-            runs.add(exemptionCodeRun);
-            runs.add(new FormattedRun("\n"));
-            FormattedRun exemptionDescriptionRun = new FormattedRun();
-            exemptionDescriptionRun.setText(labelValue(codeDescriptions.get(exCode.getExemptionCode())));
-            exemptionDescriptionRun.setFontSize(11);
-            exemptionDescriptionRun.setSmallCaps(true);
-            runs.add(exemptionDescriptionRun);
-            FormattedRun exemptionLine = new FormattedRun();
-            exemptionLine.setText("------------------------------------------------------------------------------------------------------------");
-            exemptionLine.setFontSize(11);
-            exemptionLine.setBold(false);
-            runs.add(exemptionLine);
-        }
         FormattedMergeTerm exemptionCodesAndDescription = new FormattedMergeTerm();
+        List<FormattedRun> runs = getExemptionCodesAndDiscriptionRuns(exemptionCodes);
         exemptionCodesAndDescription.setRuns(runs);
         determinationLetterCorrespondence.setExemptionCodesAndDescription(exemptionCodesAndDescription);
 
@@ -154,11 +133,9 @@ public class FOIADeterminationLetterModelProvider implements TemplateModelProvid
         return determinationLetterCorrespondence;
     }
 
-    public List<FormattedRun> getExemptionCodesAndDiscriptionRuns(List<ExemptionCode> exemptionCodes)
-    {
+    public List<FormattedRun> getExemptionCodesAndDiscriptionRuns(List<ExemptionCode> exemptionCodes) {
         List<StandardLookupEntry> lookupEntries = (List<StandardLookupEntry>) getLookupDao().getLookupByName("annotationTags").getEntries();
-        Map<String, String> codeDescriptions = lookupEntries.stream()
-                .collect(Collectors.toMap(StandardLookupEntry::getKey, StandardLookupEntry::getValue));
+        Map<String, String> codeDescriptions = lookupEntries.stream().collect(Collectors.toMap(StandardLookupEntry::getKey, StandardLookupEntry::getValue));
         List<FormattedRun> runs = new ArrayList<>();
         for (ExemptionCode exCode : exemptionCodes)
         {
