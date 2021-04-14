@@ -181,8 +181,9 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
                         {
                             String newDate = getDateString(setDateToLocalDateTimeByDefaultClientTimezone(updatedCaseFile.getDueDate()));
                             String oldDate = getDateString(setDateToLocalDateTimeByDefaultClientTimezone(existing.getDueDate()));
+                            String timeZone = getHolidayConfigurationService().getDefaultClientZoneId().getId();
 
-                            raiseDueDateEvent(updatedCaseFile, oldDate, newDate, event.getIpAddress(), SecurityContextHolder.getContext().getAuthentication());
+                            getCaseFileEventUtility().raiseDueDateUpdatedEvent(updatedCaseFile, oldDate, newDate, timeZone, event.getIpAddress());
                         }
                     }
                 }
@@ -339,19 +340,6 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
         }
 
         return "None";
-    }
-
-    private void raiseDueDateEvent(CaseFile caseFile, String oldDate, String newDate, String ipAddress, Authentication authentication)
-    {
-
-        String timeZone = getHolidayConfigurationService().getDefaultClientZoneId().getId();
-
-        String eventDescription = String.format("%s %s %s %s %s %s", "- Due Date Changed from ", oldDate, " to ", newDate, " ", timeZone);
-
-        String caseState = "dueDateChanged";
-
-        getCaseFileEventUtility().raiseCustomEvent(caseFile, caseState, eventDescription, new Date(), ipAddress, authentication.getName(), authentication);
-
     }
 
     private LocalDateTime setDateToLocalDateTimeByDefaultClientTimezone(Date date)
