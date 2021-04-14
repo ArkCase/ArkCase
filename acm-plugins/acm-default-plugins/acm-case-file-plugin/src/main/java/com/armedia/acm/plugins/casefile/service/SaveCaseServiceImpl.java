@@ -64,7 +64,6 @@ public class SaveCaseServiceImpl implements SaveCaseService
     private CaseFileDao caseFileDao;
     private PipelineManager<CaseFile, CaseFilePipelineContext> pipelineManager;
     private EcmFileService ecmFileService;
-    private CaseFileEventUtility caseFileEventUtility;
 
     @Override
     @Transactional
@@ -97,11 +96,6 @@ public class SaveCaseServiceImpl implements SaveCaseService
         pipelineContext.setNewCase(isNewCase);
         pipelineContext.setAuthentication(authentication);
         pipelineContext.setIpAddress(ipAddress);
-
-        if (!isNewCase)
-        {
-           checkIfDueDateIsChangedAndRaiseEvent(caseFile, ipAddress, authentication);
-        }
 
         if (files != null && !files.isEmpty())
         {
@@ -140,11 +134,6 @@ public class SaveCaseServiceImpl implements SaveCaseService
         pipelineContext.setIpAddress(ipAddress);
 
         List<AcmMultipartFile> files = new ArrayList<>();
-
-        if (!isNewCase)
-        {
-            checkIfDueDateIsChangedAndRaiseEvent(caseFile, ipAddress, authentication);
-        }
 
         if (Objects.nonNull(filesMap))
         {
@@ -201,33 +190,6 @@ public class SaveCaseServiceImpl implements SaveCaseService
         });
     }
 
-    private void checkIfDueDateIsChangedAndRaiseEvent(CaseFile caseFile, String ipAddress, Authentication authentication) {
-
-        CaseFile notUpdatedCaseFile = caseFileDao.find(caseFile.getId());
-        String oldDate = getDateString(notUpdatedCaseFile.getDueDate());
-        String newDate = getDateString(caseFile.getDueDate());
-        String eventDescription = "- Due Date Changed from " + oldDate + " to " + newDate;
-
-        String caseState = "dueDateChanged";
-
-        if (!oldDate.equals(newDate))
-        {
-            getCaseFileEventUtility().raiseCustomEvent(caseFile, caseState, eventDescription, new Date(), ipAddress, authentication.getName(), authentication);
-        }
-
-    }
-
-    private String getDateString(Date date)
-    {
-        if (date != null)
-        {
-            SimpleDateFormat datePattern = new SimpleDateFormat("MM/dd/yyyy");
-            return datePattern.format(date);
-        }
-
-        return "None";
-    }
-
     public CaseFileDao getCaseFileDao()
     {
         return caseFileDao;
@@ -258,11 +220,4 @@ public class SaveCaseServiceImpl implements SaveCaseService
         this.ecmFileService = ecmFileService;
     }
 
-    public CaseFileEventUtility getCaseFileEventUtility() {
-        return caseFileEventUtility;
-    }
-
-    public void setCaseFileEventUtility(CaseFileEventUtility caseFileEventUtility) {
-        this.caseFileEventUtility = caseFileEventUtility;
-    }
 }

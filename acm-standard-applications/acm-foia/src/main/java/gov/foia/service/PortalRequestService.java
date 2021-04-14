@@ -438,7 +438,7 @@ public class PortalRequestService
         requestWithdrawalTask.setCandidateGroups(Arrays.asList(owningGroup.get(0).getParticipantLdapId()));
 
         //Setting task due date
-        requestWithdrawalTask.setDueDate(getHolidayConfigurationService().addWorkingDaysToDateWithBusinessHours(new Date(), 3));
+        requestWithdrawalTask.setDueDate(getHolidayConfigurationService().addWorkingDaysAndWorkingHoursToDateWithBusinessHours(new Date(), 3));
 
 
         if (request != null)
