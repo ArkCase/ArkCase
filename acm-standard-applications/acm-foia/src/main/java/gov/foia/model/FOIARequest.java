@@ -211,7 +211,7 @@ public class FOIARequest extends CaseFile implements FOIAObject
     private Boolean generatedZipFlag;
 
     @Column(name = "fo_declared_as_record")
-    private Boolean declaredAsRecord = false;
+    private Boolean declaredAsRecord;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "cm_case_id")
