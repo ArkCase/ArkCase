@@ -846,26 +846,50 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         person.setFamilyName(user.getLastName());
         person.setTitle(user.getPrefix());
 
-        PostalAddress postalAddress = new PostalAddress();
-        postalAddress.setCountry(user.getCountry());
-        postalAddress.setType(user.getAddressType());
-        postalAddress.setCity(user.getCity());
-        postalAddress.setState(user.getState());
-        postalAddress.setStreetAddress(user.getAddress1());
-        postalAddress.setStreetAddress2(user.getAddress2());
-        postalAddress.setZip(user.getZipCode());
-        person.setDefaultAddress(postalAddress);
-
-        person.getAddresses().add(postalAddress);
-
+        ((PortalFOIAPerson) person).setPosition(user.getPosition());
+        person.getAddresses().get(0).setCountry(user.getCountry());
+        person.getAddresses().get(0).setType(user.getAddressType());
+        person.getAddresses().get(0).setCity(user.getCity());
+        person.getAddresses().get(0).setState(user.getState());
+        person.getAddresses().get(0).setStreetAddress(user.getAddress1());
+        person.getAddresses().get(0).setStreetAddress2(user.getAddress2());
+        person.getAddresses().get(0).setZip(user.getZipCode());
         if (user.getPhoneNumber() != null && !user.getPhoneNumber().isEmpty())
         {
-            ContactMethod contactMethodPhone;
-            contactMethodPhone = buildContactMethod("phone", user.getPhoneNumber());
-            contactMethodPhone.setValue(user.getPhoneNumber());
+            if (!person.getContactMethods().isEmpty())
+            {
+                ContactMethod phoneContact = person.getDefaultPhone();
+                if (phoneContact != null)
+                {
+                    phoneContact.setValue(user.getPhoneNumber());
+                    person.setDefaultPhone(phoneContact);
+                }
+                else
+                {
+                    ContactMethod newPhoneContact = buildContactMethod("phone", user.getPhoneNumber());
+                    person.getContactMethods().add(newPhoneContact);
+                    person.setDefaultPhone(newPhoneContact);
+                }
+            }
+            else
+            {
+                List<ContactMethod> contactMethods = new ArrayList<>();
+                ContactMethod newPhoneContact = buildContactMethod("phone", user.getPhoneNumber());
+                contactMethods.add(newPhoneContact);
+                person.setContactMethods(contactMethods);
+                person.setDefaultPhone(newPhoneContact);
+            }
+        }
+        else
+        {
+            person.getContactMethods().remove(person.getDefaultPhone());
 
-            person.setDefaultPhone(contactMethodPhone);
-            person.getContactMethods().add(contactMethodPhone);
+            ContactMethod otherPhoneContact = person.getContactMethods().stream()
+                    .filter(cm -> cm.getType().equalsIgnoreCase("Phone"))
+                    .findFirst()
+                    .orElse(null);
+            person.setDefaultPhone(otherPhoneContact);
+        }
 
         }
 
@@ -914,8 +938,19 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     {
         if (organizationName != null)
         {
-            List<Organization> organizationsByGivenName = organizationDao.findOrganizationsByName(organizationName);
-            if (organizationsByGivenName.isEmpty())
+            Organization organization = new Organization();
+            organization.setOrganizationValue(organizationName);
+            organization.setOrganizationType("unknown");
+            person.getOrganizations().add(organization);
+
+            addPersonDefaultOrganizationAssociation(organization, person);
+
+        }
+        else
+        {
+            List<PersonOrganizationAssociation> personOrganizationAssociations = person.getOrganizationAssociations();
+
+            if (personOrganizationAssociations.isEmpty())
             {
                 Organization organization = new Organization();
                 organization.setOrganizationValue(organizationName);
@@ -926,9 +961,15 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
             }
             else
             {
-                List<PersonOrganizationAssociation> personOrganizationAssociations = person.getOrganizationAssociations();
+                Map<String, Organization> organizationByName = organizationsByGivenName.stream()
+                        .collect(Collectors.toMap(Organization::getOrganizationValue, Function.identity()));
 
-                if (personOrganizationAssociations.isEmpty())
+                PersonOrganizationAssociation personOrganizationAssociation = personOrganizationAssociations.stream()
+                        .filter(poa -> organizationByName.containsKey(poa.getOrganization().getOrganizationValue()))
+                        .findFirst()
+                        .orElse(null);
+
+                if (personOrganizationAssociation == null)
                 {
                     addPersonDefaultOrganizationAssociation(organizationsByGivenName.get(0), person, personPositionInOrg);
                 }
@@ -961,6 +1002,10 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
                         }
                     }
                 }
+                else
+                {
+                    person.setDefaultOrganization(personOrganizationAssociation);
+                }
             }
         }
         return person;
@@ -972,9 +1017,9 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         poa.setOrganization(org);
         poa.setPerson(person);
 
-        poa.setPersonToOrganizationAssociationType(personPositionInOrg);
-        String organizationToPersonAssociationType = findPersonToOrganizationAssociationInverseType(personPositionInOrg);
-        poa.setOrganizationToPersonAssociationType(organizationToPersonAssociationType);
+        poa.setPersonToOrganizationAssociationType("unknown");
+        poa.setOrganizationToPersonAssociationType("unknown");
+        person.getOrganizationAssociations().add(poa);
 
         person.getOrganizationAssociations().add(poa);
         person.getOrganizations().add(org);
