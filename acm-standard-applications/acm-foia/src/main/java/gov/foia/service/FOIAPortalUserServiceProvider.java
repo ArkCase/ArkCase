@@ -147,8 +147,6 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
 
     private LookupDao lookupDao;
 
-    private CorrespondenceTemplateManager templateManager;
-
     /*
      * (non-Javadoc)
      * @see com.armedia.acm.portalgateway.service.PortalUserServiceProvider#requestRegistration(java.lang.String,
@@ -846,7 +844,6 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         person.setFamilyName(user.getLastName());
         person.setTitle(user.getPrefix());
 
-        ((PortalFOIAPerson) person).setPosition(user.getPosition());
         person.getAddresses().get(0).setCountry(user.getCountry());
         person.getAddresses().get(0).setType(user.getAddressType());
         person.getAddresses().get(0).setCity(user.getCity());
@@ -889,8 +886,6 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
                     .findFirst()
                     .orElse(null);
             person.setDefaultPhone(otherPhoneContact);
-        }
-
         }
 
         if (user.getOrganization() != null && !user.getOrganization().isEmpty())
@@ -943,8 +938,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
             organization.setOrganizationType("unknown");
             person.getOrganizations().add(organization);
 
-            addPersonDefaultOrganizationAssociation(organization, person);
-
+            addPersonDefaultOrganizationAssociation(organization, person, personPositionInOrg);
         }
         else
         {
@@ -952,12 +946,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
 
             if (personOrganizationAssociations.isEmpty())
             {
-                Organization organization = new Organization();
-                organization.setOrganizationValue(organizationName);
-                organization.setOrganizationType("unknown");
-                person.getOrganizations().add(organization);
-
-                addPersonDefaultOrganizationAssociation(organization, person, personPositionInOrg);
+                addPersonDefaultOrganizationAssociation(organizationsByGivenName.get(0), person, personPositionInOrg);
             }
             else
             {
@@ -971,11 +960,20 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
 
                 if (personOrganizationAssociation == null)
                 {
-                    person.setDefaultOrganization(personOrganizationAssociation);
+                    addPersonDefaultOrganizationAssociation(organizationsByGivenName.get(0), person, personPositionInOrg);
                 }
                 else
                 {
-                    person.setDefaultOrganization(personOrganizationAssociation);
+                    if (!personPositionInOrg.equals(personOrganizationAssociation.getPersonToOrganizationAssociationType()))
+                    {
+                        personOrganizationAssociation.setPersonToOrganizationAssociationType(personPositionInOrg);
+                        String organizationToPersonAssociationType = findPersonToOrganizationAssociationInverseType(personPositionInOrg);
+                        personOrganizationAssociation.setOrganizationToPersonAssociationType(organizationToPersonAssociationType);
+                    }
+                    if (!personOrganizationAssociation.isDefaultOrganization())
+                    {
+                        person.setDefaultOrganization(personOrganizationAssociation);
+                    }
                 }
             }
         }
@@ -988,9 +986,9 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         poa.setOrganization(org);
         poa.setPerson(person);
 
-        poa.setPersonToOrganizationAssociationType("unknown");
-        poa.setOrganizationToPersonAssociationType("unknown");
-        person.getOrganizationAssociations().add(poa);
+        poa.setPersonToOrganizationAssociationType(personPositionInOrg);
+        String organizationToPersonAssociationType = findPersonToOrganizationAssociationInverseType(personPositionInOrg);
+        poa.setOrganizationToPersonAssociationType(organizationToPersonAssociationType);
 
         person.getOrganizationAssociations().add(poa);
         person.getOrganizations().add(org);
@@ -1183,14 +1181,6 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
 
         existingPerson.setDefaultAddress(address);
         existingPerson.getAddresses().add(address);
-
-        ContactMethod contactMethodPhone;
-        contactMethodPhone = buildContactMethod("phone", user.getPhoneNumber());
-        contactMethodPhone.setValue(user.getPhoneNumber());
-
-        existingPerson.setDefaultPhone(contactMethodPhone);
-
-        existingPerson.getContactMethods().add(contactMethodPhone);
 
         findOrCreateOrganizationAndPersonOrganizationAssociation(existingPerson, user.getOrganization(), user.getPosition());
     }
@@ -1420,15 +1410,5 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     public void setLookupDao(LookupDao lookupDao)
     {
         this.lookupDao = lookupDao;
-    }
-
-    public CorrespondenceTemplateManager getTemplateManager()
-    {
-        return templateManager;
-    }
-
-    public void setTemplateManager(CorrespondenceTemplateManager templateManager)
-    {
-        this.templateManager = templateManager;
     }
 }
