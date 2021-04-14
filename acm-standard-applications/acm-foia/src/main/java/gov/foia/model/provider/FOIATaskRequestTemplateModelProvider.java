@@ -40,7 +40,6 @@ import com.armedia.acm.services.config.lookups.model.StandardLookupEntry;
 import com.armedia.acm.services.config.lookups.service.LookupDao;
 import com.armedia.acm.services.exemption.exception.GetExemptionCodeException;
 import com.armedia.acm.services.exemption.model.ExemptionCode;
-import com.armedia.acm.services.labels.service.TranslationService;
 import com.armedia.acm.services.note.dao.NoteDao;
 import com.armedia.acm.services.note.model.Note;
 import com.armedia.acm.services.notification.model.Notification;
