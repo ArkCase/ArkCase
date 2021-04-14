@@ -556,7 +556,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
             orgAddress.setType("Business");
             Organization organization = new Organization();
             organization.setOrganizationValue(acmUser.getCompany());
-            organization.setOrganizationType("Unknown");
+            organization.setOrganizationType("unknown");
             organization.getAddresses().add(orgAddress);
             person.getOrganizations().add(organization);
         }
@@ -787,11 +787,11 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     public PortalUser updateUser(String portalId, PortalUser user) throws PortalUserServiceException
     {
         Person person = getPersonDao().find(Long.valueOf(user.getPortalUserId()));
-
         person.setGivenName(user.getFirstName());
         person.setMiddleName(user.getMiddleName());
         person.setFamilyName(user.getLastName());
         person.setTitle(user.getPrefix());
+
         ((PortalFOIAPerson) person).setPosition(user.getPosition());
         person.getAddresses().get(0).setCountry(user.getCountry());
         person.getAddresses().get(0).setType(user.getAddressType());
@@ -802,7 +802,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         person.getAddresses().get(0).setZip(user.getZipCode());
         if (user.getPhoneNumber() != null && !user.getPhoneNumber().isEmpty())
         {
-            if (person.getContactMethods() != null && !person.getContactMethods().isEmpty())
+            if (!person.getContactMethods().isEmpty())
             {
                 ContactMethod phoneContact = person.getDefaultPhone();
                 if (phoneContact != null)
@@ -829,17 +829,12 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         else
         {
             person.getContactMethods().remove(person.getDefaultPhone());
-            Optional<ContactMethod> otherPhoneContact = person.getContactMethods().stream()
+
+            ContactMethod otherPhoneContact = person.getContactMethods().stream()
                     .filter(cm -> cm.getType().equalsIgnoreCase("Phone"))
-                    .findFirst();
-            if (otherPhoneContact.isPresent())
-            {
-                person.setDefaultPhone(otherPhoneContact.get());
-            }
-            else
-            {
-                person.setDefaultPhone(null);
-            }
+                    .findFirst()
+                    .orElse(null);
+            person.setDefaultPhone(otherPhoneContact);
         }
 
         for (PersonOrganizationAssociation poa : person.getOrganizationAssociations())
@@ -857,12 +852,12 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         AcmUser existingPortalUser = getPortalAcmUser(user.getEmail());
         boolean firstNameChanged = !Objects.equals(existingPortalUser.getFirstName(), user.getFirstName());
         boolean lastNameChanged = !Objects.equals(existingPortalUser.getLastName(), user.getLastName());
-        boolean countryChanged = !Objects.equals(existingPortalUser.getCountry(), user.getCountry());
+        boolean countryChanged = !Objects.equals(existingPortalUser.getCountryAbbreviation(), user.getCountry());
         if (firstNameChanged || lastNameChanged || countryChanged)
         {
             existingPortalUser.setFirstName(user.getFirstName());
             existingPortalUser.setLastName(user.getLastName());
-            existingPortalUser.setCountry(user.getCountry());
+            existingPortalUser.setCountryAbbreviation(user.getCountry());
             try
             {
                 ldapUserService.editLdapUser(existingPortalUser, existingPortalUser.getUserId(), existingPortalUser.getUserDirectoryName());
@@ -890,7 +885,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         {
             Organization organization = new Organization();
             organization.setOrganizationValue(organizationName);
-            organization.setOrganizationType("Unknown");
+            organization.setOrganizationType("unknown");
             person.getOrganizations().add(organization);
 
             addPersonDefaultOrganizationAssociation(organization, person);
@@ -909,12 +904,18 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
                 Map<String, Organization> organizationByName = organizationsByGivenName.stream()
                         .collect(Collectors.toMap(Organization::getOrganizationValue, Function.identity()));
 
-                boolean personHasOrganizationAssociation = personOrganizationAssociations.stream()
-                        .anyMatch(poa -> organizationByName.containsKey(poa.getOrganization().getOrganizationValue()));
+                PersonOrganizationAssociation personOrganizationAssociation = personOrganizationAssociations.stream()
+                        .filter(poa -> organizationByName.containsKey(poa.getOrganization().getOrganizationValue()))
+                        .findFirst()
+                        .orElse(null);
 
-                if (!personHasOrganizationAssociation)
+                if (personOrganizationAssociation == null)
                 {
                     addPersonDefaultOrganizationAssociation(organizationsByGivenName.get(0), person);
+                }
+                else
+                {
+                    person.setDefaultOrganization(personOrganizationAssociation);
                 }
             }
         }
@@ -927,8 +928,8 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         poa.setOrganization(org);
         poa.setPerson(person);
 
-        poa.setPersonToOrganizationAssociationType("Unknown");
-        poa.setOrganizationToPersonAssociationType("Unknown");
+        poa.setPersonToOrganizationAssociationType("unknown");
+        poa.setOrganizationToPersonAssociationType("unknown");
         person.getOrganizationAssociations().add(poa);
 
         person.getOrganizations().add(org);
@@ -981,7 +982,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         user.setPrefix(person.getTitle());
         user.setPosition(person.getPosition());
         ContactMethod phoneContact = person.getDefaultPhone();
-        if (phoneContact != null && phoneContact.getValue() != null && !phoneContact.getValue().isEmpty())
+        if (phoneContact != null && phoneContact.getValue() != null)
         {
             user.setPhoneNumber(phoneContact.getValue());
         }
