@@ -971,36 +971,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
 
                 if (personOrganizationAssociation == null)
                 {
-                    addPersonDefaultOrganizationAssociation(organizationsByGivenName.get(0), person, personPositionInOrg);
-                }
-                else
-                {
-                    Map<String, Organization> organizationByName = organizationsByGivenName.stream()
-                            .collect(Collectors.toMap(Organization::getOrganizationValue, Function.identity()));
-
-                    PersonOrganizationAssociation personOrganizationAssociation = personOrganizationAssociations.stream()
-                            .filter(poa -> organizationByName.containsKey(poa.getOrganization().getOrganizationValue()))
-                            .findFirst()
-                            .orElse(null);
-
-                    if (personOrganizationAssociation == null)
-                    {
-                        addPersonDefaultOrganizationAssociation(organizationsByGivenName.get(0), person, personPositionInOrg);
-                    }
-                    else
-                    {
-                        if (!personPositionInOrg.equals(personOrganizationAssociation.getPersonToOrganizationAssociationType()))
-                        {
-                            personOrganizationAssociation.setPersonToOrganizationAssociationType(personPositionInOrg);
-                            String organizationToPersonAssociationType = findPersonToOrganizationAssociationInverseType(
-                                    personPositionInOrg);
-                            personOrganizationAssociation.setOrganizationToPersonAssociationType(organizationToPersonAssociationType);
-                        }
-                        if (!personOrganizationAssociation.isDefaultOrganization())
-                        {
-                            person.setDefaultOrganization(personOrganizationAssociation);
-                        }
-                    }
+                    person.setDefaultOrganization(personOrganizationAssociation);
                 }
                 else
                 {
