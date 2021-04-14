@@ -78,7 +78,15 @@ public class SendExecutor implements Executor
         {
             if (notification.getState() == null || !notification.getState().equals(NotificationConstants.STATE_SENT))
             {
-                notification = senderFactory.getNotificationSender().send(notification, templateModelProvider.getModel(notification));
+                try
+                {
+                    notification = senderFactory.getNotificationSender().send(notification, templateModelProvider.getModel(notification));
+                }
+                catch (Exception e)
+                {
+                    log.error("Can not send the notification. Error: {}", e.getMessage());
+                    notification.setStatus(NotificationConstants.STATE_NOT_SENT);
+                }
             }
         }
 

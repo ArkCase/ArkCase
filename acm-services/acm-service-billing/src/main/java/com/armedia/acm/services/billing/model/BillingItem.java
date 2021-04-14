@@ -115,6 +115,9 @@ public class BillingItem implements Serializable, AcmObject, AcmEntity, AcmParen
     @Column(name = "cm_billing_reference_object_id")
     private Long referenceObjectId;
 
+    @Column(name = "cm_billing_note")
+    private String billingNote;
+
     @PrePersist
     public void beforeInsert()
     {
@@ -356,5 +359,22 @@ public class BillingItem implements Serializable, AcmObject, AcmEntity, AcmParen
     public void setReferenceObjectId(Long referenceObjectId)
     {
         this.referenceObjectId = referenceObjectId;
+    }
+
+    /**
+     * @return the billingNote
+     */
+    public String getBillingNote()
+    {
+        return billingNote;
+    }
+
+    /**
+     * @param billingNote
+     *            the billingNote to set
+     */
+    public void setBillingNote(String billingNote)
+    {
+        this.billingNote = billingNote;
     }
 }
