@@ -35,7 +35,6 @@ import com.armedia.acm.services.config.lookups.model.StandardLookupEntry;
 import com.armedia.acm.services.config.lookups.service.LookupDao;
 import com.armedia.acm.services.exemption.exception.GetExemptionCodeException;
 import com.armedia.acm.services.exemption.model.ExemptionCode;
-import com.armedia.acm.services.labels.service.TranslationService;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
