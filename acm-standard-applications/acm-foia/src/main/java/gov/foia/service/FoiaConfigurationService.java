@@ -64,6 +64,8 @@ public class FoiaConfigurationService extends SystemConfigurationService
         foiaConfig.setCreateNewPortalUserOptionOnArkcaseRequestForm(foiaConfiguration.getCreateNewPortalUserOptionOnArkcaseRequestForm());
         foiaConfig.setAutomaticCreationOfRequestWhenAppealIsRemandedEnabled(
                 foiaConfiguration.getAutomaticCreationOfRequestWhenAppealIsRemandedEnabled());
+        foiaConfig.setDeclareRequestAsRecordsEnabled(foiaConfiguration.getDeclareRequestAsRecordsEnabled());
+        foiaConfig.setDeclareRequestAsRecordsDaysDelay(foiaConfiguration.getDeclareRequestAsRecordsDaysDelay());
 
         configurationPropertyService.updateProperties(foiaConfig);
     }
@@ -96,8 +98,9 @@ public class FoiaConfigurationService extends SystemConfigurationService
         foiaConfiguration.setCreateNewPortalUserOptionOnArkcaseRequestForm(foiaConfig.getCreateNewPortalUserOptionOnArkcaseRequestForm());
         foiaConfiguration.setAutomaticCreationOfRequestWhenAppealIsRemandedEnabled(
                 foiaConfig.getAutomaticCreationOfRequestWhenAppealIsRemandedEnabled());
-        foiaConfiguration.setDojYearlyReports(
-                foiaConfig.getDojYearlyReports());
+        foiaConfiguration.setDojYearlyReports(foiaConfig.getDojYearlyReports());
+        foiaConfiguration.setDeclareRequestAsRecordsEnabled(foiaConfig.getDeclareRequestAsRecordsEnabled());
+        foiaConfiguration.setDeclareRequestAsRecordsDaysDelay(foiaConfig.getDeclareRequestAsRecordsDaysDelay());
 
         return foiaConfiguration;
     }

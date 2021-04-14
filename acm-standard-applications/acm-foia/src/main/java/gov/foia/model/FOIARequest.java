@@ -210,6 +210,9 @@ public class FOIARequest extends CaseFile implements FOIAObject
     @Column(name = "fo_generated_zip_flag")
     private Boolean generatedZipFlag;
 
+    @Column(name = "fo_declared_as_record")
+    private Boolean declaredAsRecord;
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "cm_case_id")
     private List<DispositionReason> dispositionReasons = new ArrayList<>();
@@ -941,6 +944,14 @@ public class FOIARequest extends CaseFile implements FOIAObject
     public void setDifficultyRating(String difficultyRating)
     {
         this.difficultyRating = difficultyRating;
+    }
+
+    public Boolean getDeclaredAsRecord() {
+        return declaredAsRecord;
+    }
+
+    public void setDeclaredAsRecord(Boolean declaredAsRecord) {
+        this.declaredAsRecord = declaredAsRecord;
     }
 
     /*
