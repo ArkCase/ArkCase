@@ -254,53 +254,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                     break;
                 }
                 addNewRun(paragraph, run, runNum, lastRunNum, texts);
-
             }
-        }
-    }
-
-    private void addNewRun(XWPFParagraph paragraph, XWPFRun run, int runNum, int lastRunNum, String[] texts) {
-        // set the run text to the first line of the replacement; this existing run maintains its formatting
-        // so no formatting code is needed.
-        run.setText(texts[0], 0);
-        XWPFRun newRun = run;
-
-        // for each subsequent line of the replacement text, add a new run with the new line; since we are
-        // adding a new run, we need to set the formatting.
-        for (int i = 1; i < texts.length; i++) {
-            newRun.addCarriageReturn();
-            if (texts[i] != null && !texts[i].equals("")) {
-                newRun = paragraph.insertNewRun(runNum + i);
-                /*
-                 * We should copy all style attributes to the newRun from run
-                 * also from background color, ...
-                 * Here we duplicate only the simple attributes...
-                 */
-                newRun.setText(texts[i]);
-                newRun.setBold(true);
-                newRun.setCapitalized(run.isCapitalized());
-                // run.getCharacterSpacing() throws NullPointerException. Maybe in future version of the library
-                // this will be fixed.
-                // newRun.setCharacterSpacing(run.getCharacterSpacing());
-                if (run.getColor() != null) {
-                    newRun.setColor(run.getColor());
-                }
-                newRun.setDoubleStrikethrough(run.isDoubleStrikeThrough());
-                newRun.setEmbossed(run.isEmbossed());
-                newRun.setFontFamily(run.getFontFamily());
-                newRun.setFontSize(run.getFontSize());
-                newRun.setImprinted(run.isImprinted());
-                newRun.setItalic(run.isItalic());
-                newRun.setKerning(run.getKerning());
-                newRun.setShadow(run.isShadowed());
-                newRun.setSmallCaps(run.isSmallCaps());
-                newRun.setStrikeThrough(run.isStrikeThrough());
-                newRun.setSubscript(run.getSubscript());
-                newRun.setUnderline(run.getUnderline());
-            }
-        }
-        for (int i = lastRunNum + texts.length - 1; i > runNum + texts.length - 1; i--) {
-            paragraph.removeRun(i);
         }
     }
 
@@ -382,7 +336,54 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
         }
     }
 
-    private void addNewRun(XWPFParagraph paragraph, XWPFRun run, int runNum, int lastRunNum, FormattedMergeTerm expemtionCodes) {
+    private void addNewRun(XWPFParagraph paragraph, XWPFRun run, int runNum, int lastRunNum, String[] texts)
+    {
+        // set the run text to the first line of the replacement; this existing run maintains its formatting
+        // so no formatting code is needed.
+        run.setText(texts[0], 0);
+        XWPFRun newRun = run;
+
+        // for each subsequent line of the replacement text, add a new run with the new line; since we are
+        // adding a new run, we need to set the formatting.
+        for (int i = 1; i < texts.length; i++) {
+            newRun.addCarriageReturn();
+            if (texts[i] != null && !texts[i].equals("")) {
+                newRun = paragraph.insertNewRun(runNum + i);
+                /*
+                 * We should copy all style attributes to the newRun from run
+                 * also from background color, ...
+                 * Here we duplicate only the simple attributes...
+                 */
+                newRun.setText(texts[i]);
+                newRun.setBold(true);
+                newRun.setCapitalized(run.isCapitalized());
+                // run.getCharacterSpacing() throws NullPointerException. Maybe in future version of the library
+                // this will be fixed.
+                // newRun.setCharacterSpacing(run.getCharacterSpacing());
+                if (run.getColor() != null) {
+                    newRun.setColor(run.getColor());
+                }
+                newRun.setDoubleStrikethrough(run.isDoubleStrikeThrough());
+                newRun.setEmbossed(run.isEmbossed());
+                newRun.setFontFamily(run.getFontFamily());
+                newRun.setFontSize(run.getFontSize());
+                newRun.setImprinted(run.isImprinted());
+                newRun.setItalic(run.isItalic());
+                newRun.setKerning(run.getKerning());
+                newRun.setShadow(run.isShadowed());
+                newRun.setSmallCaps(run.isSmallCaps());
+                newRun.setStrikeThrough(run.isStrikeThrough());
+                newRun.setSubscript(run.getSubscript());
+                newRun.setUnderline(run.getUnderline());
+            }
+        }
+        for (int i = lastRunNum + texts.length - 1; i > runNum + texts.length - 1; i--) {
+            paragraph.removeRun(i);
+        }
+    }
+
+    private void addNewRun(XWPFParagraph paragraph, XWPFRun run, int runNum, int lastRunNum, FormattedMergeTerm expemtionCodes)
+    {
         XWPFRun newRun = run;
         List<FormattedRun> texts = expemtionCodes.getRuns();
 

@@ -71,7 +71,6 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
     private TaskDao taskDao;
     private FOIAExemptionService foiaExemptionService;
     private FOIAExemptionCodeDao foiaExemptionCodeDao;
-    private TranslationService translationService;
     private LookupDao lookupDao;
 
     private final Logger log = LoggerFactory.getLogger(getClass().getName());
@@ -164,22 +163,7 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
                 List<FormattedRun> runs = new ArrayList<>();
                 for (ExemptionCode exCode : exemptionCodes)
                 {
-                    runs.add(new FormattedRun("\n"));
-                    FormattedRun exemptionCodeRun = new FormattedRun();
-                    exemptionCodeRun.setText(exCode.getExemptionCode());
-                    exemptionCodeRun.setBold(true);
-                    runs.add(exemptionCodeRun);
-                    runs.add(new FormattedRun("\n"));
-                    FormattedRun exemptionDescriptionRun = new FormattedRun();
-                    exemptionDescriptionRun.setText(labelValue(codeDescriptions.get(exCode.getExemptionCode())));
-                    exemptionDescriptionRun.setFontSize(11);
-                    exemptionDescriptionRun.setSmallCaps(true);
-                    runs.add(exemptionDescriptionRun);
-                    FormattedRun exemptionLine = new FormattedRun();
-                    exemptionLine.setText("------------------------------------------------------------------------------------------------------------");
-                    exemptionLine.setFontSize(11);
-                    exemptionLine.setBold(false);
-                    runs.add(exemptionLine);
+                    foiaExemptionService.createAndStyleRunsForCorrespondenceLetters(codeDescriptions, runs, exCode);
                 }
                 exemptionCodesAndDescription.setRuns(runs);
             }
@@ -202,11 +186,6 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
                 .collect(Collectors.toList());
 
         return exemptionOnWithheldDocument;
-    }
-
-    private String labelValue(String labelKey)
-    {
-        return translationService.translate(labelKey);
     }
 
     @Override
@@ -283,16 +262,6 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
     public void setFoiaExemptionService(FOIAExemptionService foiaExemptionService)
     {
         this.foiaExemptionService = foiaExemptionService;
-    }
-
-    public TranslationService getTranslationService()
-    {
-        return translationService;
-    }
-
-    public void setTranslationService(TranslationService translationService)
-    {
-        this.translationService = translationService;
     }
 
     public LookupDao getLookupDao()
