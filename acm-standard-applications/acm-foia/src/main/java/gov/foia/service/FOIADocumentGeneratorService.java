@@ -31,6 +31,7 @@ import static gov.foia.model.FOIARequestUtils.extractRequestorAddress;
 import static gov.foia.model.FOIARequestUtils.extractRequestorEmailAddress;
 import static gov.foia.model.FOIARequestUtils.extractRequestorName;
 
+import com.armedia.acm.plugins.person.model.PersonOrganizationAssociation;
 import com.armedia.acm.spring.SpringContextHolder;
 
 import javax.ws.rs.NotFoundException;
@@ -73,9 +74,13 @@ public class FOIADocumentGeneratorService
         parameters.put("requestID", request.getCaseNumber().toString());
 
         FOIAPerson person = (FOIAPerson) request.getOriginator().getPerson();
-
         parameters.put("requestorName", extractRequestorName(person));
-        parameters.put("requestorPosition", person.getPosition());
+
+        String personPositionInDefaultOrganization = Optional.ofNullable(person.getDefaultOrganization())
+                .map(PersonOrganizationAssociation::getPersonToOrganizationAssociationType)
+                .orElse("unknown");
+        parameters.put("requestorPosition", personPositionInDefaultOrganization);
+
         parameters.put("requestorEmailAddress", extractRequestorEmailAddress(person));
 
         parameters.put("requestType", request.getRequestType());

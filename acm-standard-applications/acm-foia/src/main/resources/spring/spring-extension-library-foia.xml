@@ -64,6 +64,7 @@
             <beans:property name="acmUserEventPublisher" ref="acmUserEventPublisher"/>
             <beans:property name="organizationDao" ref="acmOrganizationDao"/>
             <beans:property name="requestAssignmentService" ref="requestAssignmentService"/>
+            <beans:property name="lookupDao" ref="lookupDao"/>
         </beans:bean>
 
         <beans:bean id="portalCreateRequestService" class="gov.foia.service.PortalCreateRequestService">
