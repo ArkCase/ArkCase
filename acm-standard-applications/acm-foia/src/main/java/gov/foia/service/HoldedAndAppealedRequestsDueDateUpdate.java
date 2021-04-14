@@ -67,7 +67,7 @@ public class HoldedAndAppealedRequestsDueDateUpdate
             Date dueDate = request.getDueDate();
             if (dueDate != null)
             {
-                request.setDueDate(getHolidayConfigurationService().addWorkingDaysToDate(dueDate, 1));
+                request.setDueDate(getHolidayConfigurationService().addWorkingDaysToDateAndSetTimeToBusinessHours(dueDate, 1));
             }
 
             LocalDateTime perfectedDate = request.getPerfectedDate();

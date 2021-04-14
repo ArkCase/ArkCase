@@ -88,12 +88,12 @@ public class FOIAExtensionHandler implements PipelineHandler<FOIARequest, CaseFi
                         Date baseTTCDueDate = getQueuesTimeToCompleteService().addWorkingDaysToDate(
                                 Date.from(originalRequest.getPerfectedDate().atZone(ZoneId.systemDefault()).toInstant()),
                                 originalRequest.getRequestType());
-                        entity.setDueDate(getHolidayConfigurationService().addWorkingDaysToDate(baseTTCDueDate,
+                        entity.setDueDate(getHolidayConfigurationService().addWorkingDaysToDateAndSetTimeToBusinessHours(baseTTCDueDate,
                                 foiaConfig.getRequestExtensionWorkingDays()));
                     } else
                     {
                         entity.setDueDate(
-                                getHolidayConfigurationService().addWorkingDaysToDate(originalRequest.getDueDate(),
+                                getHolidayConfigurationService().addWorkingDaysToDateAndSetTimeToBusinessHours(originalRequest.getDueDate(),
                                 foiaConfig.getRequestExtensionWorkingDays()));
                     }
 

@@ -90,7 +90,7 @@ angular.module('cases').controller(
                         else {
                             $scope.calculateDaysObj = DueDateService.daysLeftWithWeekends($scope.holidays, $scope.objectInfo.dueDate);
                         }
-                        $scope.dueDate = $scope.objectInfo.dueDate.replace(/(\d{4})\-(\d{2})\-(\d{2}).*/, '$2/$3/$1');
+                        $scope.dueDate = moment.utc($scope.objectInfo.dueDate).local().format('MMM/DD/YYYY h:mmA');
                     }
                     CaseLookupService.getApprovers($scope.owningGroup, $scope.assignee).then(function (approvers) {
                         var options = [];
@@ -289,7 +289,7 @@ angular.module('cases').controller(
 
             function dueDateChanged(e, newDueDate) {
                 $scope.objectInfo.dueDate = new Date(newDueDate).toISOString();
-                $scope.dueDate = newDueDate.replace(/(\d{4})\-(\d{2})\-(\d{2}).*/, '$2/$3/$1');
+                $scope.dueDate = moment.utc($scope.objectInfo.dueDate).local().format('MMM/DD/YYYY h:mmA');
                 if(!$scope.includeWeekends) {
                     $scope.calculateDaysObj = DueDateService.daysLeft($scope.holidays, $scope.objectInfo.dueDate);
                 }
