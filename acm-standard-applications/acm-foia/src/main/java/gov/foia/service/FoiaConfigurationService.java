@@ -66,7 +66,6 @@ public class FoiaConfigurationService extends SystemConfigurationService
                 foiaConfiguration.getAutomaticCreationOfRequestWhenAppealIsRemandedEnabled());
         foiaConfig.setDeclareRequestAsRecordsEnabled(foiaConfiguration.getDeclareRequestAsRecordsEnabled());
         foiaConfig.setDeclareRequestAsRecordsDaysDelay(foiaConfiguration.getDeclareRequestAsRecordsDaysDelay());
-        foiaConfig.setEnableStagedRelease(foiaConfiguration.getEnableStagedRelease());
 
         configurationPropertyService.updateProperties(foiaConfig);
     }
@@ -102,7 +101,6 @@ public class FoiaConfigurationService extends SystemConfigurationService
         foiaConfiguration.setDojYearlyReports(foiaConfig.getDojYearlyReports());
         foiaConfiguration.setDeclareRequestAsRecordsEnabled(foiaConfig.getDeclareRequestAsRecordsEnabled());
         foiaConfiguration.setDeclareRequestAsRecordsDaysDelay(foiaConfig.getDeclareRequestAsRecordsDaysDelay());
-        foiaConfiguration.setEnableStagedRelease(foiaConfig.getEnableStagedRelease());
 
         return foiaConfiguration;
     }
