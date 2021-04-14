@@ -283,7 +283,8 @@ public class HolidayConfigurationService
         return config;
     }
 
-    private LocalDate getLocalDateAtSystemDefault(Date date) {
+    private LocalDate getLocalDateAtSystemDefault(Date date)
+    {
         return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
@@ -299,7 +300,8 @@ public class HolidayConfigurationService
         return props;
     }
 
-    private LocalTime getEndOfClientBusinessDayTime() {
+    private LocalTime getEndOfClientBusinessDayTime()
+    {
         return LocalTime.parse(getBusinessHoursConfig().getEndOfBusinessDayTime());
     }
 
