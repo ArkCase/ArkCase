@@ -242,6 +242,7 @@ public class LdapUserService implements ApplicationEventPublisherAware
         existingUser.setLastName(acmUser.getLastName());
         existingUser.setFullName(String.format("%s %s", acmUser.getFirstName(), acmUser.getLastName()));
         existingUser.setMail(acmUser.getMail());
+        existingUser.setCountryAbbreviation(acmUser.getCountryAbbreviation());
         acmUser = userDao.save(existingUser);
         userDao.getEntityManager().flush();
         AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directory);
