@@ -32,6 +32,7 @@ import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.plugins.casefile.model.CaseEvent;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
+import com.armedia.acm.plugins.casefile.model.CaseFileDueDateUpdatedEvent;
 import com.armedia.acm.plugins.casefile.model.CaseFileModifiedEvent;
 import com.armedia.acm.plugins.casefile.model.CaseFileParticipantsModifiedEvent;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
@@ -82,6 +83,18 @@ public class CaseFileEventUtility implements ApplicationEventPublisherAware
         event.setSucceeded(true);
         event.setIpAddress(ipAddress);
         event.setEventStatus(eventStatus);
+        applicationEventPublisher.publishEvent(event);
+    }
+
+    public void raiseDueDateUpdatedEvent(CaseFile source, String oldDate, String newDate, String timeZone, String ipAddress)
+    {
+
+        String eventDescription = String.format("%s %s %s %s %s %s", "- Due Date Changed from ", oldDate, " to ", newDate, " ", timeZone);
+
+        CaseFileDueDateUpdatedEvent event = new CaseFileDueDateUpdatedEvent(source);
+        event.setSucceeded(true);
+        event.setIpAddress(ipAddress);
+        event.setEventDescription(eventDescription);
         applicationEventPublisher.publishEvent(event);
     }
 
