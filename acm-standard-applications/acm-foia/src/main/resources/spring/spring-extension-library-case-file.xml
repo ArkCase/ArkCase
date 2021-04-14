@@ -336,6 +336,24 @@
             <beans:property name="billingQueuePurger" ref="scheduledBillingQueuePurger"/>
         </beans:bean>
 
+        <beans:bean id="requestQueueChangedListener" class="gov.foia.listener.RequestQueueChangedListener" >
+            <beans:property name="declareRequestAsRecordService" ref="declareRequestAsRecordService"/>
+            <beans:property name="foiaConfig" ref="foiaConfig"/>
+        </beans:bean>
+
+        <beans:bean id="declareRequestFilesAsRecordsJobDescriptor" class="gov.foia.service.DeclareRequestFilesAsRecordsJobDescriptor" parent="acmJobDescriptor">
+            <beans:property name="declareRequestAsRecordService" ref="declareRequestAsRecordService"/>
+        </beans:bean>
+
+        <beans:bean id="declareRequestAsRecordService" class="gov.foia.service.DeclareRequestAsRecordService">
+            <beans:property name="alfrescoRecordsService" ref="alfrescoRecordsService"/>
+            <beans:property name="authenticationMapper" ref="acmAuthenticationMapper"/>
+            <beans:property name="requestDao" ref="foiaRequestDao"/>
+            <beans:property name="activitiTaskDao" ref="acmTaskDao"/>
+            <beans:property name="foiaConfig" ref="foiaConfig"/>
+        </beans:bean>
+
+
         <beans:bean id="foiaRequestTemplateModelProvider" class="gov.foia.model.provider.FOIARequestTemplateModelProvider">
             <beans:property name="objectAssociationDao" ref="objectAssociationDao"/>
             <beans:property name="applicationConfig" ref="applicationProperties"/>

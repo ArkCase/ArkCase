@@ -40,6 +40,7 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -100,10 +101,6 @@ public class FOIARequestDao extends AcmAbstractDao<FOIARequest>
         }
     }
 
-    /**
-     * @param minusDays
-     * @return
-     */
     public List<FOIARequest> getAllRequestsInHoldBefore(LocalDate holdEnterDate)
     {
         return getAllRequestsInQueueBefore(PURGE_HOLD_QUEUE, "Hold", "holdEnterDate", holdEnterDate);
@@ -327,6 +324,19 @@ public class FOIARequestDao extends AcmAbstractDao<FOIARequest>
         String queryText = "SELECT request FROM FOIARequest request"
                 + " WHERE request.queue.name != 'Release'";
         TypedQuery<FOIARequest> allRecords = getEm().createQuery(queryText, FOIARequest.class);
+        List<FOIARequest> requests = allRecords.getResultList();
+        return requests;
+    }
+
+    public List<FOIARequest> findAllReleasedNonRecordRequestsBeforeDate(LocalDateTime releaseQueueEnterDate)
+    {
+        String queryText = "SELECT request FROM FOIARequest request"
+                + " WHERE request.queue.name = 'Release'" +
+                " AND request.queueEnterDate < :releaseQueueEnterDate" +
+                " AND request.declaredAsRecord = false";
+        TypedQuery<FOIARequest> allRecords = getEm().createQuery(queryText, FOIARequest.class);
+        allRecords.setParameter("releaseQueueEnterDate", releaseQueueEnterDate);
+
         List<FOIARequest> requests = allRecords.getResultList();
         return requests;
     }
