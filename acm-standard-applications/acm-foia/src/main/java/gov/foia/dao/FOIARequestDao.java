@@ -32,6 +32,7 @@ import static gov.foia.model.FOIARequest.PURGE_HOLD_QUEUE;
 import static gov.foia.model.FOIARequest.REQUESTS_BY_STATUS;
 
 import com.armedia.acm.data.AcmAbstractDao;
+import com.armedia.acm.plugins.addressable.model.ContactMethod;
 
 import org.springframework.transaction.annotation.Transactional;
 
@@ -240,8 +241,13 @@ public class FOIARequestDao extends AcmAbstractDao<FOIARequest>
         requestStatus.setRequestType(request.getRequestType());
         requestStatus.setRequesterFirstName(request.getOriginator().getPerson().getGivenName());
         requestStatus.setRequesterLastName(request.getOriginator().getPerson().getFamilyName());
-        requestStatus.setRequesterEmail(request.getOriginator().getPerson().getContactMethods()
-                .stream().filter(cm -> cm.getType().equalsIgnoreCase("email")).findFirst().get().getValue());
+        String requesterEmail = request.getOriginator().getPerson().getContactMethods()
+                .stream()
+                .filter(cm -> cm.getType().equalsIgnoreCase("email"))
+                .findFirst()
+                .map(ContactMethod::getValue)
+                .orElse(null);
+        requestStatus.setRequesterEmail(requesterEmail);
         requestStatus.setDispositionValue(request.getDisposition());
 
         if (!request.getChildObjects().isEmpty() && request.getRequestType().equals(FOIAConstants.APPEAL_REQUEST_TYPE))
