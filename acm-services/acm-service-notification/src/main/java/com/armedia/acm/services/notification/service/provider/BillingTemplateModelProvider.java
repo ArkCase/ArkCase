@@ -77,12 +77,12 @@ public class BillingTemplateModelProvider implements TemplateModelProvider<Billi
             message = params[6].replace("-", "_");
         }
         Date date = notification.getCreated();
-        String objectNumber = "";
-        if (notification.getTitle().contains(":"))
+        String message = "";
+        if(notification.getTitle().contains(":"))
         {
             String[] objectParams = notification.getTitle().split(":");
             String[] objParams = objectParams[1].split(" ");
-            objectNumber = objectParams[0] + ": " + objParams[1];
+            message = objectParams[0] + " with number: " + objParams[1];
         }
 
         getAuditPropertyEntityAdapter().setUserId(notification.getCreator());
