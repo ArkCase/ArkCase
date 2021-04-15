@@ -20,6 +20,8 @@ angular.module('cases').controller(
 
             $scope.loadingRequestIcon = "fa fa-save";
             $scope.creatingMatterIcon = "fa fa-gavel";
+            $scope.createMatterInProgress = false;
+
             $scope.showBtnChildOutcomes = false;
             $scope.availableChildOutcomes = [];
             $scope.splitting = false;
@@ -112,14 +114,18 @@ angular.module('cases').controller(
 
             $scope.createMatter = function (requestInfo) {
                 $scope.creatingMatterIcon = "fa fa-circle-o-notch fa-spin";
+                $scope.createMatterInProgress = true;
+
                 RequestZylabMatterService.createMatter(requestInfo.id).then(function (data) {
                     $scope.objectInfo =  data.data;
                     MessageService.info($translate.instant("cases.comp.actions.createMatter.sucess"));
                     $scope.creatingMatterIcon = "fa fa-gavel";
                     $scope.openMatter($scope.objectInfo);
+                    $scope.createMatterInProgress = false;
                 }).catch(function () {
                     MessageService.error($translate.instant("cases.comp.actions.createMatter.error"));
                     $scope.creatingMatterIcon = "fa fa-gavel";
+                    $scope.createMatterInProgress = false;
                 });
             };
 
