@@ -217,7 +217,6 @@ public class ArkCasePortalGatewayUserAPIController
     public PortalUser retrieveUser(@PortalId @PathVariable(value = "portalId") String portalId,
             @PathVariable(value = "portalUserId") String portalUserId) throws PortalUserServiceException
     {
-        log.debug("Retrieve [{}] user for portal with [{}] ID.", portalUserId, portalId);
         return portalUserService.retrieveUser(portalUserId, portalId);
     }
 
