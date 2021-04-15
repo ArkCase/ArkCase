@@ -63,9 +63,13 @@ public class BillingTemplateModelProvider implements TemplateModelProvider<Billi
             sessionId = params[5];
         }
         Date date = notification.getCreated();
-        String[] objectParams = notification.getTitle().split(":");
-        String[] objParams = objectParams[1].split(" ");
-        String message = objectParams[0] + " with number: " + objParams[1];
+        String message = "";
+        if(notification.getTitle().contains(":"))
+        {
+            String[] objectParams = notification.getTitle().split(":");
+            String[] objParams = objectParams[1].split(" ");
+            message = objectParams[0] + " with number: " + objParams[1];
+        }
 
         getAuditPropertyEntityAdapter().setUserId(notification.getCreator());
         String token = authenticationTokenService.generateAndSaveAuthenticationToken(Long.valueOf(fileId), notification.getEmailAddresses(),null);
