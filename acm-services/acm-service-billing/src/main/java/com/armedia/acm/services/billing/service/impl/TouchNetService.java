@@ -46,7 +46,6 @@ import java.rmi.RemoteException;
 public class TouchNetService
 {
 
-    private AuthenticationTokenService authenticationTokenService;
     private ApplicationConfig applicationConfig;
     private BillingItemDao billingItemDao;
 
@@ -64,10 +63,8 @@ public class TouchNetService
     @Value("${payment.touchnet.upaysiteid}")
     private String uPaySiteId;
 
-    public String generateTicketID(String amt, String objectId, String objectType, String ecmFileId)
+    public String generateTicketID(String amt, String objectId, String objectType, String ecmFileId, String acm_ticket)
     {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String ticket = authenticationTokenService.generateAndSaveAuthenticationToken(Long.valueOf(ecmFileId),authentication.getName(),null);
 
         GenerateSecureLinkTicketRequest req = new GenerateSecureLinkTicketRequest();
         req.setTicketName(objectId + objectType);
@@ -77,7 +74,7 @@ public class TouchNetService
         pairs[0].setValue(amt);
         pairs[1] = new NameValuePair();
         pairs[1].setName("EXT_TRANS_ID");
-        pairs[1].setValue(ticket);
+        pairs[1].setValue(acm_ticket);
         pairs[2] = new NameValuePair();
         pairs[2].setName("SUCCESS_LINK");
         pairs[2].setValue(getApplicationConfig().getBaseUrl() + "/api/latest/plugin/billing/confirmPayment");
@@ -147,11 +144,11 @@ public class TouchNetService
         return binding;
     }
 
-    public String redirectToPaymentForm(String amount, String objectId, String objectType, String ecmFileId, String acm_ticket)
+    public String validateLinkAndRedirectToPaymentForm(String amount, String objectId, String objectType, String ecmFileId, String acm_ticket)
     {
         if(!billingItemDao.checkIfPaymentIsAlreadyDone(acm_ticket))
         {
-            return redirectToPaymentForm(amount,objectId,objectType,ecmFileId);
+            return redirectToPaymentForm(amount,objectId,objectType,ecmFileId, acm_ticket);
         }
         else
         {
@@ -194,9 +191,9 @@ public class TouchNetService
                 "</html>\n";
     }
 
-    private String redirectToPaymentForm(String amount, String objectId, String objectType, String ecmFileId)
+    private String redirectToPaymentForm(String amount, String objectId, String objectType, String ecmFileId, String acm_ticket)
     {
-        String ticket = generateTicketID(amount, objectId, objectType, ecmFileId);
+        String ticket = generateTicketID(amount, objectId, objectType, ecmFileId, acm_ticket);
         String ticketName = objectId + objectType;
 
         return "<form name=\"autoform\" action=\"https://test.secure.touchnet.net:8443/C30002test_upay/web/index.jsp\" method=\"post\">\n" +
@@ -237,16 +234,6 @@ public class TouchNetService
                 "</html>\n";
     }
 
-
-    public AuthenticationTokenService getAuthenticationTokenService()
-    {
-        return authenticationTokenService;
-    }
-
-    public void setAuthenticationTokenService(AuthenticationTokenService authenticationTokenService)
-    {
-        this.authenticationTokenService = authenticationTokenService;
-    }
 
     public String getTouchNetUsername()
     {
