@@ -27,7 +27,6 @@ package com.armedia.acm.portalgateway.web.api;
  * #L%
  */
 
-import com.armedia.acm.auth.AcmAuthentication;
 import com.armedia.acm.portalgateway.service.CheckPortalUserAssignement;
 import com.armedia.acm.portalgateway.service.PortalId;
 import com.armedia.acm.portalgateway.service.PortalRequestService;
@@ -39,7 +38,6 @@ import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.FacetedSearchService;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.services.users.dao.UserDao;
-import com.armedia.acm.services.users.model.AcmUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.logging.log4j.LogManager;
@@ -63,7 +61,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -121,18 +118,18 @@ public class ArkCasePortalGatewayRequestAPIController
             @PathVariable(value = "requestId") String requestId)
             throws PortalRequestServiceException
     {
-        log.debug("Getting request status from portal with [{}] ID for portal user with [{}] ID of [{}] type.", portalId, portalUserId,
-                requestType);
         return portalRequestService.getRequestStatus(portalId, portalUserId, requestType, requestId);
     }
 
-    @RequestMapping(value = "/inquiry", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE})
+    @RequestMapping(value = "/inquiry", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE,
+            MediaType.TEXT_PLAIN_VALUE })
     @ResponseBody
     public String submitInquiry(Authentication auth, @RequestBody String inquiry)
     {
         log.debug("Submitting request from portal for portal user with [{}] ID of [{}] type.", auth.getName(),
                 inquiry);
-        try {
+        try
+        {
             ObjectMapper mapper = new ObjectMapper();
             PortalRequest portalRequest = mapper.readValue(inquiry, PortalRequest.class);
             portalRequestService.submitInquiry(portalRequest);

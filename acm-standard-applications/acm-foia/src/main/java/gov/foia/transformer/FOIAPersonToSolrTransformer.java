@@ -70,7 +70,6 @@ public class FOIAPersonToSolrTransformer extends PersonToSolrTransformer
                 // has a specific property 'object_sub_type_s', so also setting it via
                 // mapRequestProperties may cause a duplicate key exception.
                 solr.setObject_sub_type_s("FOIA_PERSON");
-                solr.getAdditionalProperties().put("position_s", personIn.getPosition());
             }
 
             return solr;
@@ -119,8 +118,6 @@ public class FOIAPersonToSolrTransformer extends PersonToSolrTransformer
     protected void mapRequestProperties(FOIAPerson personIn, Map<String, Object> additionalProperties)
     {
         additionalProperties.put("object_sub_type_s", "FOIA_PERSON");
-        additionalProperties.put("position_s", personIn.getPosition());
-
     }
 
 }
