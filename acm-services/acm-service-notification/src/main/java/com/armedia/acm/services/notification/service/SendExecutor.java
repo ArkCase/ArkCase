@@ -85,7 +85,7 @@ public class SendExecutor implements Executor
                 catch (Exception e)
                 {
                     log.error("Can not send the notification. Error: {}", e.getMessage());
-                    notification.setStatus(NotificationConstants.STATE_NOT_SENT);
+                    notification.setState(NotificationConstants.STATE_NOT_SENT);
                 }
             }
         }

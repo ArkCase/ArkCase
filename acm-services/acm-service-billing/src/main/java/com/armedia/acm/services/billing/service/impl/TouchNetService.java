@@ -70,7 +70,7 @@ public class TouchNetService
     @Value("${payment.touchnet.upaysiteid}")
     private String uPaySiteId;
 
-    public String generateTicketID(String amt, String objectId, String objectType, String ecmFileId, String acm_ticket, String objectNumber)
+    public String generateTicketID(String amt, String objectId, String objectType, String ecmFileId, String acm_ticket)
     {
 
         GenerateSecureLinkTicketRequest req = new GenerateSecureLinkTicketRequest();
@@ -154,11 +154,11 @@ public class TouchNetService
         return binding;
     }
 
-    public String redirectToPaymentForm(String amount, String objectId, String objectType, String ecmFileId, String acm_ticket)
+    public String validateLinkAndRedirectToPaymentForm(String amount, String objectId, String objectType, String ecmFileId, String acm_ticket)
     {
         if(!billingItemDao.checkIfPaymentIsAlreadyDone(acm_ticket))
         {
-            return redirectToPaymentForm(amount,objectId,objectType,ecmFileId);
+            return redirectToPaymentForm(amount,objectId,objectType,ecmFileId, acm_ticket);
         }
         else
         {
@@ -201,9 +201,9 @@ public class TouchNetService
                 "</html>\n";
     }
 
-    private String redirectToPaymentForm(String amount, String objectId, String objectType, String ecmFileId)
+    private String redirectToPaymentForm(String amount, String objectId, String objectType, String ecmFileId, String acm_ticket)
     {
-        String ticket = generateTicketID(amount, objectId, objectType, ecmFileId);
+        String ticket = generateTicketID(amount, objectId, objectType, ecmFileId, acm_ticket);
         String ticketName = objectId + objectType;
 
         return "<form name=\"autoform\" action=\"https://test.secure.touchnet.net:8443/C30002test_upay/web/index.jsp\" method=\"post\">\n" +
@@ -244,53 +244,6 @@ public class TouchNetService
                 "</html>\n";
     }
 
-
-    public AuthenticationTokenService getAuthenticationTokenService()
-    {
-        String ticket = generateTicketID(amount, objectId, objectType, ecmFileId, acm_ticket, objectNumber);
-        String ticketName = objectId + objectType;
-
-        String form = "<form name=\"autoform\" action=\"" + securePayLinkEndPoint + "\" method=\"post\">\n" +
-                "    <input name=\"UPAY_SITE_ID\" type=\"hidden\" value=\"" + uPaySiteId + "\" />\n" +
-                "    <input name=\"TICKET\" type=\"hidden\" value=\"" + ticket + "\" />\n" +
-                "    <input name=\"TICKET_NAME\" type=\"hidden\" value=\"" + ticketName + "\" />\n" +
-                "</form>\n" +
-                "<script type=\"text/javascript\">\n" +
-                "         document.autoform.submit();\n" +
-                "</script>\n";
-
-        log.debug(form);
-
-        return form;
-    }
-
-    private String redirectToAlreadyPaidPage()
-    {
-        String imgSrc = getApplicationConfig().getBaseUrl() + "/branding/emaillogo.png";
-        return "<html>\n" +
-                "<header>\n" +
-                "<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css\">\n" +
-                "<style>\n" +
-                ".icon{\n" +
-                "  font-size:90px;\n" +
-                "  color:#3393b7;\n" +
-                "}\n" +
-                ".htext{\n" +
-                "  font-family: Arial, Helvetica, sans-serif;\n" +
-                "  font-size:36;\n" +
-                "  color:#788288;\n" +
-                "}\n" +
-                "</style>\n" +
-                "</header>\n" +
-                "<body style=\"background-color:#F2F4F8;text-align: center;\">\n" +
-                "<br><br><br><br><br><br><br><br><br><br><br>\n" +
-                "<i class=\"fa fa-exclamation-circle icon\"/>\n" +
-                "<h1 class=\"htext\">This invoice has already been paid</h1>\n" +
-                "<br>\n" +
-                "<img src=\"" + imgSrc + "\" width=\"186\" height=\"38.79\">\n" +
-                "</body>\n" +
-                "</html>\n";
-    }
 
     public String getTouchNetUsername()
     {
