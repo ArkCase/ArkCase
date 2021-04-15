@@ -303,8 +303,8 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                     Object expression = evaluateSpelExpression(object, spelExpressionToBeEvaluted, objectType);
                     if(expression instanceof FormattedMergeTerm)
                     {
-                        FormattedMergeTerm exepmtionTexts = (FormattedMergeTerm) expression;
-                        addNewRun(paragraph, run, runNum, lastRunNum, exepmtionTexts);
+                        FormattedMergeTerm formattedMergeTerm  = (FormattedMergeTerm) expression;
+                        addNewRun(paragraph, run, runNum, lastRunNum, formattedMergeTerm );
                         continue;
                     }
                     else
