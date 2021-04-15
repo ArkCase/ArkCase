@@ -82,7 +82,7 @@ public class TouchNetAPIController
                                     @RequestParam(value = "objectType", required = true) String objectType,
                                     @RequestParam(value = "acm_email_ticket", required = false) String acm_ticket)
     {
-        return getTouchNetService().redirectToPaymentForm(amt,objectId,objectType,ecmFileId, acm_ticket);
+        return getTouchNetService().validateLinkAndRedirectToPaymentForm(amt,objectId,objectType,ecmFileId, acm_ticket);
     }
 
     @RequestMapping(value = "/confirmPayment", method = RequestMethod.POST, produces = MediaType.TEXT_HTML_VALUE)
