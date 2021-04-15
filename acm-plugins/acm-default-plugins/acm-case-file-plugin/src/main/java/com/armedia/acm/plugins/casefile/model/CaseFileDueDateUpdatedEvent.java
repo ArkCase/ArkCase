@@ -1,10 +1,10 @@
-package gov.foia.model;
+package com.armedia.acm.plugins.casefile.model;
 
 /*-
  * #%L
- * ACM Standard Application: Freedom of Information Act
+ * ACM Default Plugin: Case File
  * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
+ * Copyright (C) 2014 - 2021 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 
@@ -27,25 +27,24 @@ package gov.foia.model;
  * #L%
  */
 
-import com.armedia.acm.plugins.person.model.Person;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.voodoodyne.jackson.jsog.JSOGGenerator;
+import com.armedia.acm.core.model.AcmEvent;
 
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+import java.util.Date;
 
-/**
- * @author sasko.tanaskoski
- *
- */
-
-@Entity
-@DiscriminatorValue("gov.foia.model.FOIAPerson")
-@JsonIdentityInfo(generator = JSOGGenerator.class)
-public class FOIAPerson extends Person
+public class CaseFileDueDateUpdatedEvent extends AcmEvent
 {
 
-    private static final long serialVersionUID = -5025159640218061551L;
+    private static final String EVENT_TYPE = "com.armedia.acm.casefile.dueDateChanged";
+
+    public CaseFileDueDateUpdatedEvent(CaseFile source)
+    {
+        super(source);
+
+        setObjectId(source.getId());
+        setObjectType(source.getObjectType());
+        setEventDate(new Date());
+        setUserId(source.getModifier());
+        setEventType(EVENT_TYPE);
+    }
 
 }

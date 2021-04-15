@@ -79,7 +79,7 @@ public class RequestResponseFolderService
         FOIARequest request = (FOIARequest) caseFileDao.find(requestId);
 
         Date today = new Date();
-        Date dueDate = getHolidayConfigurationService().addWorkingDaysToDate(today, getPortalConfig().getNumOfAvailableDays());
+        Date dueDate = getHolidayConfigurationService().addWorkingDaysToDateAndSetTimeToBusinessHours(today, getPortalConfig().getNumOfAvailableDays());
 
         ResponseInstallment responseInstallment = new ResponseInstallment();
 

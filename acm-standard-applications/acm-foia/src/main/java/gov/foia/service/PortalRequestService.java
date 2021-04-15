@@ -142,8 +142,6 @@ public class PortalRequestService
         List<PortalFOIARequestStatus> responseRequests = getRequestDao().getExternalRequests(portalRequestStatus);
         if (responseRequests.isEmpty())
         {
-            log.info("FOIA Requests not found for the caseNumber [{}], lastName [{}]", portalRequestStatus.getRequestId(),
-                    portalRequestStatus.getLastName());
             throw new AcmObjectNotFoundException("PortalFOIARequestStatus", null,
                     "FOIA Requests not found for the caseNumber [" + portalRequestStatus.getRequestId() + "], and lastName ["
                             + portalRequestStatus.getLastName() + "]");
@@ -192,7 +190,6 @@ public class PortalRequestService
 
     public void populateResponseRequest(FOIARequest foiaRequest, PortalFOIARequest portalFOIARequest)
     {
-
         FOIAPerson person = (FOIAPerson) foiaRequest.getOriginator().getPerson();
         portalFOIARequest.setOriginalRequestNumber(foiaRequest.getCaseNumber());
         portalFOIARequest.setTitle(foiaRequest.getTitle());
@@ -204,7 +201,9 @@ public class PortalRequestService
         portalFOIARequest.setFirstName(person.getGivenName());
         portalFOIARequest.setMiddleName(person.getMiddleName());
         portalFOIARequest.setLastName(person.getFamilyName());
-        portalFOIARequest.setPosition(person.getPosition());
+        String position = person.getDefaultOrganization() != null ?
+                person.getDefaultOrganization().getPersonToOrganizationAssociationType() : "unknown";
+        portalFOIARequest.setPosition(position);
         portalFOIARequest.setOrganization(person.getCompany());
 
         if (person.getDefaultEmail() != null)
@@ -438,7 +437,7 @@ public class PortalRequestService
         requestWithdrawalTask.setCandidateGroups(Arrays.asList(owningGroup.get(0).getParticipantLdapId()));
 
         //Setting task due date
-        requestWithdrawalTask.setDueDate(getHolidayConfigurationService().addWorkingDaysToDateWithBusinessHours(new Date(), 3));
+        requestWithdrawalTask.setDueDate(getHolidayConfigurationService().addWorkingDaysAndWorkingHoursToDateWithBusinessHours(new Date(), 3));
 
 
         if (request != null)
