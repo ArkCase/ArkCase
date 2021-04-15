@@ -134,6 +134,7 @@ angular.module('cases').controller(
                     }
 
                     $scope.creatingMatterIcon = "fa fa-gavel";
+                    $scope.openMatter($scope.objectInfo);
                     $scope.createMatterInProgress = false;
                 }).catch(function () {
                     MessageService.error($translate.instant("cases.comp.actions.createMatter.error"));
