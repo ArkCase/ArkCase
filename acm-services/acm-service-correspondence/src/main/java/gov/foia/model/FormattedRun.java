@@ -49,12 +49,12 @@ public class FormattedRun
     UnderlinePatterns underline;
     String text;
 
-    public FormattedRun(String text){
+    public FormattedRun(String text)
+    {
         this.text = text;
     }
 
-    public FormattedRun(){
-    }
+    public FormattedRun(){}
 
     public String getFontFamily()
     {
