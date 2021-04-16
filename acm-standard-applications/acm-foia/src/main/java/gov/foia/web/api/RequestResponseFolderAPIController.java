@@ -27,11 +27,6 @@ package gov.foia.web.api;
  * #L%
  */
 
-import com.armedia.acm.convertfolder.ConversionException;
-import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
-import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
@@ -44,6 +39,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.armedia.acm.convertfolder.ConversionException;
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 
 import gov.foia.service.RequestResponseFolderService;
 
@@ -65,6 +65,26 @@ public class RequestResponseFolderAPIController
         {
             log.debug("Trying to Compress and Send the Response folder for the request [{}] to Portal", requestId);
             getRequestResponseFolderService().compressAndSendResponseFolderToPortal(requestId, authentication.getName());
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        catch (ConversionException | AcmUserActionFailedException | AcmFolderException | AcmObjectNotFoundException e)
+        {
+            log.error("Failed to Compress and Send the Response folder for the request [{}] to Portal", requestId, e);
+            throw e;
+        }
+    }
+
+    @PreAuthorize("hasPermission(#requestId, 'CASE_FILE', 'saveCase')")
+    @RequestMapping(value = "/{caseId}/compressAndSendResponseFolder/{folderId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity compressAndSendResponseSubFolderToPortal(@PathVariable("caseId") Long requestId,
+            @PathVariable("folderId") Long folderId, Authentication authentication)
+            throws AcmObjectNotFoundException, AcmUserActionFailedException, ConversionException, AcmFolderException
+    {
+        try
+        {
+            log.debug("Trying to Compress and Send the Response folder for the request [{}] to Portal", requestId);
+            getRequestResponseFolderService().compressAndSendResponseSubFolderToPortal(requestId, folderId, authentication.getName());
             return new ResponseEntity<>(HttpStatus.OK);
         }
         catch (ConversionException | AcmUserActionFailedException | AcmFolderException | AcmObjectNotFoundException e)
