@@ -90,7 +90,7 @@ angular.module('dashboard.my-complaints').controller('Dashboard.MyComplaintsCont
                 value.status_lcs = value.status_lcs.toUpperCase();
 
                 if (Util.goodValue(value.dueDate_tdt)) {
-                    value.dueDate_tdt = UtilDateService.isoToDate(value.dueDate_tdt);
+                    value.dueDate_tdt = UtilDateService.isoToLocalDateTime(value.dueDate_tdt);
                 }
 
                 //calculate to show alert icons if complaints is in overdue or deadline is approaching

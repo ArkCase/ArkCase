@@ -60,9 +60,9 @@ public class AcmAssigneeChangeEvent extends AcmEvent
         if (source.getNewAssignee() == null || source.getNewAssignee().isEmpty()) // For unclaiming case
             source.setNewAssignee("None");
         if (source.getOldAssignee() == null || source.getOldAssignee().isEmpty()) // For claiming case
-            setEventDescription("Assignee changed to " + source.getNewAssignee());
+            setEventDescription(" to " + source.getNewAssignee());
         else // For changing from one Assignee to another
-            setEventDescription("Assignee changed from " + source.getOldAssignee() + " to " + source.getNewAssignee());
+            setEventDescription(" from " + source.getOldAssignee() + " to " + source.getNewAssignee());
 
         Map<String, Object> eventProperties = new HashMap<>();
 
