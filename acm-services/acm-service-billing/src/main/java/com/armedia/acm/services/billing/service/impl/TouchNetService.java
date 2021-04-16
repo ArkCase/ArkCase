@@ -68,7 +68,7 @@ public class TouchNetService
 
         GenerateSecureLinkTicketRequest req = new GenerateSecureLinkTicketRequest();
         req.setTicketName(objectId + objectType);
-        NameValuePair[] pairs = new NameValuePair[6];
+        NameValuePair[] pairs = new NameValuePair[7];
         pairs[0] = new NameValuePair();
         pairs[0].setName("AMT");
         pairs[0].setValue(amt);
