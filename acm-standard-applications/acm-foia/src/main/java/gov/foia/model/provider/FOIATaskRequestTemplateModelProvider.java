@@ -45,7 +45,12 @@ import com.armedia.acm.services.note.model.Note;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-
+import gov.foia.dao.FOIARequestDao;
+import gov.foia.model.FOIARequest;
+import gov.foia.model.FOIATaskRequestModel;
+import gov.foia.model.FormattedMergeTerm;
+import gov.foia.model.FormattedRun;
+import gov.foia.service.FOIAExemptionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,10 +60,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import gov.foia.dao.FOIAExemptionCodeDao;
-import gov.foia.dao.FOIARequestDao;
-import gov.foia.model.FOIARequest;
-import gov.foia.model.FOIATaskRequestModel;
-import gov.foia.service.FOIAExemptionService;
 
 public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvider<FOIATaskRequestModel>
 {
@@ -108,7 +109,7 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
 
         }
         FOIATaskRequestModel model = new FOIATaskRequestModel();
-        List<String> exemptionCodesAndDescription = new ArrayList<>();
+        FormattedMergeTerm exemptionCodesAndDescription = null;
         List<String> exemptionCodesOnExemptDocument = new ArrayList<>();
         if(task != null)
         {
@@ -121,14 +122,14 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
                 request = foiaRequestDao.find(task.getParentObjectId());
                 if (request != null)
                 {
-                    setRequestFieldsAndExemptionCodes(request, exemptionCodesAndDescription);
+                    exemptionCodesAndDescription = setRequestFieldsAndGetExemptionCodes(request);
                     exemptionCodesOnExemptDocument = setExemptionCodesOnExemptDocument(request);
                 }
             }
         }
         else
         {
-            setRequestFieldsAndExemptionCodes(request, exemptionCodesAndDescription);
+            exemptionCodesAndDescription = setRequestFieldsAndGetExemptionCodes(request);
             exemptionCodesOnExemptDocument = setExemptionCodesOnExemptDocument(request);
         }
 
