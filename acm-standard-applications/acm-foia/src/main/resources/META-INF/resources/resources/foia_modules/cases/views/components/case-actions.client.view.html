@@ -47,7 +47,7 @@
                 </button>
 
                 <button class="btn btn-sm btn-default" ng-if="documentReviewEnabled && !objectInfo.externalIdentifier"
-                        ng-click="createMatter(objectInfo)" permission="buttonAction" permission-object-type="CASE_FILE"
+                        ng-click="createMatter(objectInfo)" ng-disabled="createMatterInProgress" permission="buttonAction" permission-object-type="CASE_FILE"
                         permission-properties="objectInfo" permission-action="hide">
                     <i class="{{creatingMatterIcon}}"></i>
                     <span translate>cases.comp.actions.createMatter.button</span>
