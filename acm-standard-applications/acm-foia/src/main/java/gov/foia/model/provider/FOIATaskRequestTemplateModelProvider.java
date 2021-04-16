@@ -34,25 +34,29 @@ import com.armedia.acm.plugins.profile.model.UserOrg;
 import com.armedia.acm.plugins.profile.service.UserOrgService;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.service.TaskDao;
+import com.armedia.acm.services.config.lookups.model.StandardLookupEntry;
+import com.armedia.acm.services.config.lookups.service.LookupDao;
 import com.armedia.acm.services.exemption.exception.GetExemptionCodeException;
 import com.armedia.acm.services.exemption.model.ExemptionCode;
 import com.armedia.acm.services.note.dao.NoteDao;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-
+import gov.foia.dao.FOIARequestDao;
+import gov.foia.model.FOIARequest;
+import gov.foia.model.FOIATaskRequestModel;
+import gov.foia.model.FormattedMergeTerm;
+import gov.foia.model.FormattedRun;
+import gov.foia.service.FOIAExemptionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import gov.foia.dao.FOIAExemptionCodeDao;
-import gov.foia.dao.FOIARequestDao;
-import gov.foia.model.FOIARequest;
-import gov.foia.model.FOIATaskRequestModel;
-import gov.foia.service.FOIAExemptionService;
 
 public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvider<FOIATaskRequestModel>
 {
@@ -66,6 +70,7 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
     private TaskDao taskDao;
     private FOIAExemptionService foiaExemptionService;
     private FOIAExemptionCodeDao foiaExemptionCodeDao;
+    private LookupDao lookupDao;
 
     private final Logger log = LoggerFactory.getLogger(getClass().getName());
 
@@ -99,7 +104,7 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
 
         }
         FOIATaskRequestModel model = new FOIATaskRequestModel();
-        List<String> exemptionCodesAndDescription = new ArrayList<>();
+        FormattedMergeTerm exemptionCodesAndDescription = null;
         List<String> exemptionCodesOnExemptDocument = new ArrayList<>();
         if(task != null)
         {
@@ -110,30 +115,31 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
                 request = foiaRequestDao.find(task.getParentObjectId());
                 if(request != null)
                 {
-                    setRequestFieldsAndExemptionCodes(request, exemptionCodesAndDescription);
+                    exemptionCodesAndDescription = setRequestFieldsAndGetExemptionCodes(request);
                     exemptionCodesOnExemptDocument = setExemptionCodesOnExemptDocument(request);
                 }
             }
         }
         else
         {
-            setRequestFieldsAndExemptionCodes(request, exemptionCodesAndDescription);
+            exemptionCodesAndDescription = setRequestFieldsAndGetExemptionCodes(request);
             exemptionCodesOnExemptDocument = setExemptionCodesOnExemptDocument(request);
         }
 
         model.setTask(task);
         model.setRequest(request);
-        model.setExemptionCodesAndDescription(exemptionCodesAndDescription.stream().collect(Collectors.joining(",")));
-        model.setRedactions(exemptionCodesAndDescription.stream().collect(Collectors.joining(",")));
+        model.setExemptionCodesAndDescription(exemptionCodesAndDescription);
+        model.setRedactions(exemptionCodesAndDescription.getRuns().toString());
         model.setExemptions(exemptionCodesOnExemptDocument.stream().collect(Collectors.joining(",")));
         return model;
     }
 
-    private void setRequestFieldsAndExemptionCodes(FOIARequest request, List<String> exemptionCodesAndDescription)
+    private FormattedMergeTerm setRequestFieldsAndGetExemptionCodes(FOIARequest request)
     {
         request.setApplicationConfig(applicationConfig);
         String assigneeLdapID = request.getAssigneeLdapId();
         AcmUser assignee = null;
+        FormattedMergeTerm exemptionCodesAndDescription = new FormattedMergeTerm();
         if(assigneeLdapID != null)
         {
             assignee = userDao.findByUserId(assigneeLdapID);
@@ -151,10 +157,14 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
             List<ExemptionCode> exemptionCodes = foiaExemptionService.getExemptionCodes(request.getId(), request.getObjectType());
             if(exemptionCodes != null)
             {
+                List<StandardLookupEntry> lookupEntries = (List<StandardLookupEntry>) getLookupDao().getLookupByName("annotationTags").getEntries();
+                Map<String, String> codeDescriptions = lookupEntries.stream().collect(Collectors.toMap(StandardLookupEntry::getKey, StandardLookupEntry::getValue));
+                List<FormattedRun> runs = new ArrayList<>();
                 for (ExemptionCode exCode : exemptionCodes)
                 {
-                    exemptionCodesAndDescription.add(exCode.getExemptionCode());
+                    foiaExemptionService.createAndStyleRunsForCorrespondenceLetters(codeDescriptions, runs, exCode);
                 }
+                exemptionCodesAndDescription.setRuns(runs);
             }
         }
         catch (GetExemptionCodeException e)
@@ -162,6 +172,7 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
             log.error("Unable to get exemption codes for objectId: {}" + request.getId(), e);
             e.printStackTrace();
         }
+        return exemptionCodesAndDescription;
     }
 
     private List<String> setExemptionCodesOnExemptDocument(FOIARequest request)
@@ -250,6 +261,16 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
     public void setFoiaExemptionService(FOIAExemptionService foiaExemptionService)
     {
         this.foiaExemptionService = foiaExemptionService;
+    }
+
+    public LookupDao getLookupDao()
+    {
+        return lookupDao;
+    }
+
+    public void setLookupDao(LookupDao lookupDao)
+    {
+        this.lookupDao = lookupDao;
     }
 
     public FOIAExemptionCodeDao getFoiaExemptionCodeDao()
