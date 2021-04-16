@@ -42,12 +42,7 @@ import com.armedia.acm.services.note.dao.NoteDao;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-import gov.foia.dao.FOIARequestDao;
-import gov.foia.model.FOIARequest;
-import gov.foia.model.FOIATaskRequestModel;
-import gov.foia.model.FormattedMergeTerm;
-import gov.foia.model.FormattedRun;
-import gov.foia.service.FOIAExemptionService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,6 +52,12 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import gov.foia.dao.FOIAExemptionCodeDao;
+import gov.foia.dao.FOIARequestDao;
+import gov.foia.model.FOIARequest;
+import gov.foia.model.FOIATaskRequestModel;
+import gov.foia.model.FormattedMergeTerm;
+import gov.foia.model.FormattedRun;
+import gov.foia.service.FOIAExemptionService;
 
 public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvider<FOIATaskRequestModel>
 {
@@ -79,9 +80,9 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
     {
         FOIARequest request = null;
         AcmTask task = null;
-        if(object instanceof Notification)
+        if (object instanceof Notification)
         {
-            if(((Notification) object).getParentType().equals("TASK"))
+            if (((Notification) object).getParentType().equals("TASK"))
             {
                 task = getTaskDao().findById(((Notification) object).getParentId());
             }
@@ -93,7 +94,7 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
         }
         else
         {
-            if(object instanceof AcmTask)
+            if (object instanceof AcmTask)
             {
                 task = (AcmTask) object;
             }
@@ -104,16 +105,18 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
 
         }
         FOIATaskRequestModel model = new FOIATaskRequestModel();
-        FormattedMergeTerm exemptionCodesAndDescription = null;
-        List<String> exemptionCodesOnExemptDocument = new ArrayList<>();
-        if(task != null)
+        FormattedMergeTerm exemptionCodesAndDescription = new FormattedMergeTerm();
+        FormattedMergeTerm exemptionCodesOnExemptDocument = new FormattedMergeTerm();
+        if (task != null)
         {
-            task.setTaskNotes(noteDao.listNotes("GENERAL", task.getId(), task.getObjectType()).stream().map(note -> note.getNote()).collect(Collectors.joining("\n\n")));
-            model.setTaskContact(getPersonAssociationService().getPersonsInAssociatonsByPersonType("TASK", task.getId(), "Contact Person").stream().findFirst().orElse(null));
-            if(task.getParentObjectId() != null)
+            task.setTaskNotes(noteDao.listNotes("GENERAL", task.getId(), task.getObjectType()).stream().map(note -> note.getNote())
+                    .collect(Collectors.joining("\n\n")));
+            model.setTaskContact(getPersonAssociationService().getPersonsInAssociatonsByPersonType("TASK", task.getId(), "Contact Person")
+                    .stream().findFirst().orElse(null));
+            if (task.getParentObjectId() != null)
             {
                 request = foiaRequestDao.find(task.getParentObjectId());
-                if(request != null)
+                if (request != null)
                 {
                     exemptionCodesAndDescription = setRequestFieldsAndGetExemptionCodes(request);
                     exemptionCodesOnExemptDocument = setExemptionCodesOnExemptDocument(request);
@@ -129,8 +132,8 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
         model.setTask(task);
         model.setRequest(request);
         model.setExemptionCodesAndDescription(exemptionCodesAndDescription);
-        model.setRedactions(exemptionCodesAndDescription.getRuns().toString());
-        model.setExemptions(exemptionCodesOnExemptDocument.stream().collect(Collectors.joining(",")));
+        model.setRedactions(exemptionCodesAndDescription);
+        model.setExemptions(exemptionCodesOnExemptDocument);
         return model;
     }
 
@@ -140,7 +143,7 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
         String assigneeLdapID = request.getAssigneeLdapId();
         AcmUser assignee = null;
         FormattedMergeTerm exemptionCodesAndDescription = new FormattedMergeTerm();
-        if(assigneeLdapID != null)
+        if (assigneeLdapID != null)
         {
             assignee = userDao.findByUserId(assigneeLdapID);
             UserOrg userOrg = userOrgService.getUserOrgForUserId(assigneeLdapID);
@@ -155,10 +158,12 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
         try
         {
             List<ExemptionCode> exemptionCodes = foiaExemptionService.getExemptionCodes(request.getId(), request.getObjectType());
-            if(exemptionCodes != null)
+            if (exemptionCodes != null)
             {
-                List<StandardLookupEntry> lookupEntries = (List<StandardLookupEntry>) getLookupDao().getLookupByName("annotationTags").getEntries();
-                Map<String, String> codeDescriptions = lookupEntries.stream().collect(Collectors.toMap(StandardLookupEntry::getKey, StandardLookupEntry::getValue));
+                List<StandardLookupEntry> lookupEntries = (List<StandardLookupEntry>) getLookupDao().getLookupByName("annotationTags")
+                        .getEntries();
+                Map<String, String> codeDescriptions = lookupEntries.stream()
+                        .collect(Collectors.toMap(StandardLookupEntry::getKey, StandardLookupEntry::getValue));
                 List<FormattedRun> runs = new ArrayList<>();
                 for (ExemptionCode exCode : exemptionCodes)
                 {
@@ -175,16 +180,25 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
         return exemptionCodesAndDescription;
     }
 
-    private List<String> setExemptionCodesOnExemptDocument(FOIARequest request)
+    private FormattedMergeTerm setExemptionCodesOnExemptDocument(FOIARequest request)
     {
-        List<String> exemptionOnWithheldDocument;
-
-        List<ExemptionCode> exemptionCodesForExemptFiles = foiaExemptionCodeDao
-                .getExemptionCodesForExemptFilesForRequest(request.getId(), request.getObjectType());
-        exemptionOnWithheldDocument = exemptionCodesForExemptFiles.stream().map(ExemptionCode::getExemptionCode)
-                .collect(Collectors.toList());
-
-        return exemptionOnWithheldDocument;
+        FormattedMergeTerm exemptionCodesForExemptFiles = new FormattedMergeTerm();
+        List<ExemptionCode> exemptionCodes = foiaExemptionCodeDao.getExemptionCodesForExemptFilesForRequest(request.getId(),
+                request.getObjectType());
+        if (exemptionCodes != null)
+        {
+            List<StandardLookupEntry> lookupEntries = (List<StandardLookupEntry>) getLookupDao().getLookupByName("annotationTags")
+                    .getEntries();
+            Map<String, String> codeDescriptions = lookupEntries.stream()
+                    .collect(Collectors.toMap(StandardLookupEntry::getKey, StandardLookupEntry::getValue));
+            List<FormattedRun> runs = new ArrayList<>();
+            for (ExemptionCode exCode : exemptionCodes)
+            {
+                foiaExemptionService.createAndStyleRunsForCorrespondenceLetters(codeDescriptions, runs, exCode);
+            }
+            exemptionCodesForExemptFiles.setRuns(runs);
+        }
+        return exemptionCodesForExemptFiles;
     }
 
     @Override
@@ -203,43 +217,53 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
         this.foiaRequestDao = foiaRequestDao;
     }
 
-    public ApplicationConfig getApplicationConfig() {
+    public ApplicationConfig getApplicationConfig()
+    {
         return applicationConfig;
     }
 
-    public void setApplicationConfig(ApplicationConfig applicationConfig) {
+    public void setApplicationConfig(ApplicationConfig applicationConfig)
+    {
         this.applicationConfig = applicationConfig;
     }
 
-    public UserDao getUserDao() {
+    public UserDao getUserDao()
+    {
         return userDao;
     }
 
-    public void setUserDao(UserDao userDao) {
+    public void setUserDao(UserDao userDao)
+    {
         this.userDao = userDao;
     }
 
-    public UserOrgService getUserOrgService() {
+    public UserOrgService getUserOrgService()
+    {
         return userOrgService;
     }
 
-    public void setUserOrgService(UserOrgService userOrgService) {
+    public void setUserOrgService(UserOrgService userOrgService)
+    {
         this.userOrgService = userOrgService;
     }
 
-    public PersonAssociationService getPersonAssociationService() {
+    public PersonAssociationService getPersonAssociationService()
+    {
         return personAssociationService;
     }
 
-    public void setPersonAssociationService(PersonAssociationService personAssociationService) {
+    public void setPersonAssociationService(PersonAssociationService personAssociationService)
+    {
         this.personAssociationService = personAssociationService;
     }
 
-    public NoteDao getNoteDao() {
+    public NoteDao getNoteDao()
+    {
         return noteDao;
     }
 
-    public void setNoteDao(NoteDao noteDao) {
+    public void setNoteDao(NoteDao noteDao)
+    {
         this.noteDao = noteDao;
     }
 
@@ -283,4 +307,3 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
         this.foiaExemptionCodeDao = foiaExemptionCodeDao;
     }
 }
-
