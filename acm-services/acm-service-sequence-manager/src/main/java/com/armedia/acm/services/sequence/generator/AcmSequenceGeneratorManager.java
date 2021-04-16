@@ -102,7 +102,7 @@ public class AcmSequenceGeneratorManager implements ApplicationListener<AcmSeque
             }
         }
 
-        if (!sequenceValue.isEmpty() && !acmSequenceRegistry.getSequencePartValueUsedFlag())
+        if (!sequenceValue.isEmpty())
         {
             //Add sequence as used in Used Sequence Registry
             registerSequence(sequenceValue, usedSequenceRegistry);
@@ -137,10 +137,9 @@ public class AcmSequenceGeneratorManager implements ApplicationListener<AcmSeque
     private void registerSequence(String sequenceValue, AcmSequenceRegistryUsed usedSequenceRegistry)
             throws AcmSequenceException
     {
-        acmSequenceRegistry.setSequenceValue(sequenceValue);
-        acmSequenceRegistry.setSequencePartValueUsedFlag(true);
-        getSequenceService().saveSequenceRegistry(acmSequenceRegistry);
-
+        usedSequenceRegistry.setSequenceValue(sequenceValue);
+        //Add sequence as used in Used Sequence Registry
+        getSequenceService().saveUsedSequenceRegistry(usedSequenceRegistry);
     }
 
     /**
