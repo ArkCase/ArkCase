@@ -27,6 +27,7 @@
         <property name="personAssociationDao" ref="acmPersonAssociationDao"/>
         <property name="billingEventPublisher" ref="billingEventPublisher"/>
         <property name="billingInvoiceDao" ref="billingInvoiceDao"/>
+        <property name="userInfoHelper" ref="userInfoHelper"/>
     </bean>
 
 </beans>

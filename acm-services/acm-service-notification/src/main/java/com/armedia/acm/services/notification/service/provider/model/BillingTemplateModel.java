@@ -35,6 +35,7 @@ public class BillingTemplateModel
     private final String fileId;
     private final String objectId;
     private final String objectType;
+    private final String objectNumber;
     private final String billName;
     private final String paymentMethod;
     private final String cardNumber;
@@ -42,7 +43,7 @@ public class BillingTemplateModel
     private final String sessionId;
     private final String message;
 
-    public BillingTemplateModel(String amount, String token, String fileId, String objectId, String objectType, String billName,
+    public BillingTemplateModel(String amount, String token, String fileId, String objectId, String objectType, String objectNumber, String billName,
             String paymentMethod, String cardNumber, String paymentDate, String sessionId, String message)
     {
         this.amount = amount;
@@ -50,6 +51,7 @@ public class BillingTemplateModel
         this.fileId = fileId;
         this.objectId = objectId;
         this.objectType = objectType;
+        this.objectNumber = objectNumber;
         this.billName = billName;
         this.paymentMethod = paymentMethod;
         this.cardNumber = cardNumber;
@@ -81,6 +83,11 @@ public class BillingTemplateModel
     public String getObjectType()
     {
         return objectType;
+    }
+
+    public String getObjectNumber()
+    {
+        return objectNumber;
     }
 
     public String getBillName()
