@@ -46,10 +46,14 @@ import java.io.Writer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -74,7 +78,7 @@ public class TemplatingEngine
         cfg.setClassicCompatible(true); // does't throw error on null values
         cfg.setDateFormat("MM/dd/yyyy");
         cfg.setDateTimeFormat("MM/dd/yyyy HH:mm");
-
+        cfg.setTimeZone(TimeZone.getTimeZone(applicationConfig.getDefaultTimezone()));
 
         Map<String, Object> templatingModel = new HashMap<>();
         templatingModel.put(modelReferenceName, model);
@@ -117,15 +121,22 @@ public class TemplatingEngine
                         {
                             if (expression.getValue(stContext).getClass().getSimpleName().equalsIgnoreCase(DATE_TYPE))
                             {
-                                generatedExpression = formatter.format(expression.getValue(stContext));
+                                try
+                                {
+                                LocalDateTime ldt = setLocalDateTimeFromDateToDefaultClientTimezone((Date) expression.getValue(stContext));
+                                generatedExpression = formatter.format(dateTimeFormatter.parse((ldt.toString())));
+                                }
+                                catch (ParseException e)
+                                {
+                                    log.error("Unable to parse SpEL expression [{}]", spelExpression);
+                                }
                             }
                             else if (expression.getValue(stContext).getClass().getSimpleName().equalsIgnoreCase(DATE_TIME_TYPE))
                             {
                                 try
                                 {
-                                    generatedExpression = formatter.format(
-                                            dateTimeFormatter
-                                                    .parse((((LocalDateTime) expression.getValue(stContext)).toLocalDate().toString())));
+                                    LocalDateTime ldt = setLocalDateTimeToClientDefaultTimezone(((LocalDateTime) expression.getValue(stContext)));
+                                    generatedExpression = formatter.format(dateTimeFormatter.parse((ldt.toString())));
                                 }
                                 catch (ParseException e)
                                 {
@@ -149,6 +160,17 @@ public class TemplatingEngine
             }
         }
         return emailBodyTemplate;
+    }
+
+
+    private LocalDateTime setLocalDateTimeToClientDefaultTimezone(LocalDateTime ldt)
+    {
+        return ldt.atZone(ZoneId.of(applicationConfig.getDefaultTimezone())).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime();
+    }
+
+
+    private LocalDateTime setLocalDateTimeFromDateToDefaultClientTimezone(Date dtl) {
+        return dtl.toInstant().atZone(ZoneId.of(applicationConfig.getDefaultTimezone())).toLocalDateTime();
     }
 
     private List<String> getSpelExpressions(String emailBodyTemplate)

@@ -62,6 +62,9 @@ import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 /**
@@ -656,13 +659,14 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                 {
                     if (expression.getValue(stContext).getClass().getSimpleName().equalsIgnoreCase(DATE_TYPE))
                     {
-                        generatedExpression = formatter.format(expression.getValue(stContext));
+
+                        LocalDateTime ldt = setLocalDateTimeFromDateToDefaultClientTimezone((Date) expression.getValue(stContext));
+                        generatedExpression = formatter.format(dateTimeFormatter.parse((ldt.toString())));
                     }
                     else if (expression.getValue(stContext).getClass().getSimpleName().equalsIgnoreCase(DATE_TIME_TYPE))
                     {
-
-                        generatedExpression = formatter.format(
-                                dateTimeFormatter.parse((((LocalDateTime) expression.getValue(stContext)).toLocalDate().toString())));
+                        LocalDateTime ldt = setLocalDateTimeToClientDefaultTimezone(((LocalDateTime) expression.getValue(stContext)));
+                        generatedExpression = formatter.format(dateTimeFormatter.parse((ldt.toString())));
                     }
                     else
                     {
@@ -871,6 +875,16 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
             }
         }
 
+    }
+
+    private LocalDateTime setLocalDateTimeToClientDefaultTimezone(LocalDateTime ldt)
+    {
+        return ldt.atZone(ZoneId.of(appConfig.getDefaultTimezone())).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime();
+    }
+
+
+    private LocalDateTime setLocalDateTimeFromDateToDefaultClientTimezone(Date dtl) {
+        return dtl.toInstant().atZone(ZoneId.of(appConfig.getDefaultTimezone())).toLocalDateTime();
     }
 
     public CorrespondenceService getCorrespondenceService()
