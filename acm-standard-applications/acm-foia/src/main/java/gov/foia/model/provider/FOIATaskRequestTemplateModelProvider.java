@@ -45,12 +45,7 @@ import com.armedia.acm.services.note.model.Note;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-import gov.foia.dao.FOIARequestDao;
-import gov.foia.model.FOIARequest;
-import gov.foia.model.FOIATaskRequestModel;
-import gov.foia.model.FormattedMergeTerm;
-import gov.foia.model.FormattedRun;
-import gov.foia.service.FOIAExemptionService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,6 +55,12 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import gov.foia.dao.FOIAExemptionCodeDao;
+import gov.foia.dao.FOIARequestDao;
+import gov.foia.model.FOIARequest;
+import gov.foia.model.FOIATaskRequestModel;
+import gov.foia.model.FormattedMergeTerm;
+import gov.foia.model.FormattedRun;
+import gov.foia.service.FOIAExemptionService;
 
 public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvider<FOIATaskRequestModel>
 {
@@ -109,11 +110,11 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
 
         }
         FOIATaskRequestModel model = new FOIATaskRequestModel();
-        FormattedMergeTerm exemptionCodesAndDescription = null;
-        List<String> exemptionCodesOnExemptDocument = new ArrayList<>();
-        if(task != null)
+        FormattedMergeTerm exemptionCodesAndDescription = new FormattedMergeTerm();
+        FormattedMergeTerm exemptionCodesOnExemptDocument = new FormattedMergeTerm();
+        if (task != null)
         {
-            task.setTaskNotes(noteDao.listNotes("GENERAL", task.getId(), task.getObjectType()).stream().map(Note::getNote)
+            task.setTaskNotes(noteDao.listNotes("GENERAL", task.getId(), task.getObjectType()).stream().map(note -> note.getNote())
                     .collect(Collectors.joining("\n\n")));
             model.setTaskContact(getPersonAssociationService().getPersonsInAssociatonsByPersonType("TASK", task.getId(), "Contact Person")
                     .stream().findFirst().orElse(null));
@@ -136,8 +137,8 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
         model.setTask(task);
         model.setRequest(request);
         model.setExemptionCodesAndDescription(exemptionCodesAndDescription);
-        model.setRedactions(exemptionCodesAndDescription.getRuns().toString());
-        model.setExemptions(exemptionCodesOnExemptDocument.stream().collect(Collectors.joining(",")));
+        model.setRedactions(exemptionCodesAndDescription);
+        model.setExemptions(exemptionCodesOnExemptDocument);
         return model;
     }
 
@@ -147,7 +148,7 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
         String assigneeLdapID = request.getAssigneeLdapId();
         AcmUser assignee = null;
         FormattedMergeTerm exemptionCodesAndDescription = new FormattedMergeTerm();
-        if(assigneeLdapID != null)
+        if (assigneeLdapID != null)
         {
             assignee = userDao.findByUserId(assigneeLdapID);
             UserOrg userOrg = userOrgService.getUserOrgForUserId(assigneeLdapID);
@@ -164,8 +165,10 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
             List<ExemptionCode> exemptionCodes = foiaExemptionService.getExemptionCodes(request.getId(), request.getObjectType());
             if (exemptionCodes != null)
             {
-                List<StandardLookupEntry> lookupEntries = (List<StandardLookupEntry>) getLookupDao().getLookupByName("annotationTags").getEntries();
-                Map<String, String> codeDescriptions = lookupEntries.stream().collect(Collectors.toMap(StandardLookupEntry::getKey, StandardLookupEntry::getValue));
+                List<StandardLookupEntry> lookupEntries = (List<StandardLookupEntry>) getLookupDao().getLookupByName("annotationTags")
+                        .getEntries();
+                Map<String, String> codeDescriptions = lookupEntries.stream()
+                        .collect(Collectors.toMap(StandardLookupEntry::getKey, StandardLookupEntry::getValue));
                 List<FormattedRun> runs = new ArrayList<>();
                 for (ExemptionCode exCode : exemptionCodes)
                 {
@@ -182,16 +185,25 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
         return exemptionCodesAndDescription;
     }
 
-    private List<String> setExemptionCodesOnExemptDocument(FOIARequest request)
+    private FormattedMergeTerm setExemptionCodesOnExemptDocument(FOIARequest request)
     {
-        List<String> exemptionOnWithheldDocument;
-
-        List<ExemptionCode> exemptionCodesForExemptFiles = foiaExemptionCodeDao
-                .getExemptionCodesForExemptFilesForRequest(request.getId(), request.getObjectType());
-        exemptionOnWithheldDocument = exemptionCodesForExemptFiles.stream().map(ExemptionCode::getExemptionCode)
-                .collect(Collectors.toList());
-
-        return exemptionOnWithheldDocument;
+        FormattedMergeTerm exemptionCodesForExemptFiles = new FormattedMergeTerm();
+        List<ExemptionCode> exemptionCodes = foiaExemptionCodeDao.getExemptionCodesForExemptFilesForRequest(request.getId(),
+                request.getObjectType());
+        if (exemptionCodes != null)
+        {
+            List<StandardLookupEntry> lookupEntries = (List<StandardLookupEntry>) getLookupDao().getLookupByName("annotationTags")
+                    .getEntries();
+            Map<String, String> codeDescriptions = lookupEntries.stream()
+                    .collect(Collectors.toMap(StandardLookupEntry::getKey, StandardLookupEntry::getValue));
+            List<FormattedRun> runs = new ArrayList<>();
+            for (ExemptionCode exCode : exemptionCodes)
+            {
+                foiaExemptionService.createAndStyleRunsForCorrespondenceLetters(codeDescriptions, runs, exCode);
+            }
+            exemptionCodesForExemptFiles.setRuns(runs);
+        }
+        return exemptionCodesForExemptFiles;
     }
 
     @Override
