@@ -1,23 +1,23 @@
 package com.armedia.acm.services.sequence.dao;
 
 import com.armedia.acm.data.AcmAbstractDao;
-import com.armedia.acm.services.sequence.model.AcmUsedSequenceRegistry;
+import com.armedia.acm.services.sequence.model.AcmSequenceRegistryUsed;
 
 import javax.persistence.Query;
 
-public class AcmUsedSequenceRegistryDao extends AcmAbstractDao<AcmUsedSequenceRegistry>
+public class AcmSequenceRegistryUsedDao extends AcmAbstractDao<AcmSequenceRegistryUsed>
 {
 
     @Override
-    protected Class<AcmUsedSequenceRegistry> getPersistenceClass()
+    protected Class<AcmSequenceRegistryUsed> getPersistenceClass()
     {
-        return AcmUsedSequenceRegistry.class;
+        return AcmSequenceRegistryUsed.class;
     }
 
     public Integer removeUsedSequenceRegistry(String sequenceValue)
     {
         String queryText = "DELETE FROM " +
-                "AcmUsedSequenceRegistry sequenceRegistry " +
+                "AcmSequenceRegistryUsed sequenceRegistry " +
                 "WHERE sequenceRegistry.sequenceValue = :sequenceValue";
 
         Query query = getEm().createQuery(queryText);
@@ -29,7 +29,7 @@ public class AcmUsedSequenceRegistryDao extends AcmAbstractDao<AcmUsedSequenceRe
     public Integer removeUsedSequenceRegistry(String sequenceName, String sequencePartName)
     {
         String queryText = "DELETE FROM " +
-                "AcmUsedSequenceRegistry sequenceRegistry " +
+                "AcmSequenceRegistryUsed sequenceRegistry " +
                 "WHERE sequenceRegistry.sequenceName = :sequenceName " +
                 "AND sequenceRegistry.sequencePartName = :sequencePartName";
 
@@ -40,18 +40,18 @@ public class AcmUsedSequenceRegistryDao extends AcmAbstractDao<AcmUsedSequenceRe
         return query.executeUpdate();
     }
 
-    public AcmUsedSequenceRegistry getUsedSequenceRegistry(String sequenceValue)
+    public AcmSequenceRegistryUsed getUsedSequenceRegistry(String sequenceValue)
     {
-        AcmUsedSequenceRegistry acmUsedSequenceRegistry = null;
+        AcmSequenceRegistryUsed acmSequenceRegistryUsed;
         String queryText = "SELECT sequenceRegistry " +
-                "FROM AcmUsedSequenceRegistry sequenceRegistry "+
+                "FROM AcmSequenceRegistryUsed sequenceRegistry "+
                 "WHERE sequenceRegistry.sequenceValue = :sequenceValue";
 
         Query query = getEm().createQuery(queryText);
         query.setParameter("sequenceValue", sequenceValue);
 
-        acmUsedSequenceRegistry = (AcmUsedSequenceRegistry) query.getSingleResult();
+        acmSequenceRegistryUsed = (AcmSequenceRegistryUsed) query.getSingleResult();
 
-        return acmUsedSequenceRegistry;
+        return acmSequenceRegistryUsed;
     }
 }

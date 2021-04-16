@@ -10,7 +10,7 @@ import java.io.Serializable;
 @Entity
 @IdClass(AcmSequenceRegistryId.class)
 @Table(name = "acm_sequence_registry_used")
-public class AcmUsedSequenceRegistry implements Serializable
+public class AcmSequenceRegistryUsed implements Serializable
 {
     private static final long serialVersionUID = -2497132561629649750L;
 

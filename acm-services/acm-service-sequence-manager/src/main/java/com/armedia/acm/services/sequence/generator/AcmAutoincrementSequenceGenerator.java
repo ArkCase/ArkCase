@@ -32,7 +32,7 @@ import com.armedia.acm.services.sequence.model.AcmSequenceEntity;
 import com.armedia.acm.services.sequence.model.AcmSequencePart;
 import com.armedia.acm.services.sequence.model.AcmSequenceRegistry;
 import com.armedia.acm.services.sequence.model.AcmSequenceReset;
-import com.armedia.acm.services.sequence.model.AcmUsedSequenceRegistry;
+import com.armedia.acm.services.sequence.model.AcmSequenceRegistryUsed;
 import com.armedia.acm.services.sequence.service.AcmSequenceService;
 
 import javax.persistence.FlushModeType;
@@ -63,7 +63,7 @@ public class AcmAutoincrementSequenceGenerator implements AcmSequenceGenerator
      */
     @Override
     public String generatePartValue(String sequenceName, AcmSequencePart sequencePart, Object object,
-           AcmUsedSequenceRegistry usedSequenceRegistry) throws AcmSequenceException
+           AcmSequenceRegistryUsed usedSequenceRegistry) throws AcmSequenceException
     {
         String autoIncrementPartValue = "";
         Long nextValue = 0L;
@@ -123,7 +123,7 @@ public class AcmAutoincrementSequenceGenerator implements AcmSequenceGenerator
 
     @Override
     public String getGeneratePartValue(String sequenceName, AcmSequencePart sequencePart, Object object,
-           AcmUsedSequenceRegistry usedSequenceRegistry, AcmSequenceEntity acmSequenceEntity)
+                                       AcmSequenceRegistryUsed usedSequenceRegistry, AcmSequenceEntity acmSequenceEntity)
     {
         String autoIncrementPartValue = "";
 
@@ -143,7 +143,7 @@ public class AcmAutoincrementSequenceGenerator implements AcmSequenceGenerator
         return autoIncrementPartValue;
     }
 
-    private Long createSequence(String sequenceName, AcmSequencePart sequencePart, AcmUsedSequenceRegistry usedSequenceRegistry)
+    private Long createSequence(String sequenceName, AcmSequencePart sequencePart, AcmSequenceRegistryUsed usedSequenceRegistry)
             throws AcmSequenceException
     {
         AcmSequenceEntity sequenceEntity = new AcmSequenceEntity();
@@ -157,7 +157,7 @@ public class AcmAutoincrementSequenceGenerator implements AcmSequenceGenerator
     }
 
     private Long updateSequence(AcmSequenceEntity sequenceEntity, String sequenceName, AcmSequencePart sequencePart,
-            AcmUsedSequenceRegistry usedSequenceRegistry) throws AcmSequenceException
+            AcmSequenceRegistryUsed usedSequenceRegistry) throws AcmSequenceException
     {
         AcmSequenceEntity updated = getSequenceService().updateSequenceEntity(sequenceEntity, sequencePart, false);
         Long partValue = updated.getSequencePartValue();
@@ -166,7 +166,7 @@ public class AcmAutoincrementSequenceGenerator implements AcmSequenceGenerator
     }
 
     private Long getNextGeneratedSequence(AcmSequenceEntity sequenceEntity, String sequenceName, AcmSequencePart sequencePart,
-            AcmUsedSequenceRegistry usedSequenceRegistry)
+            AcmSequenceRegistryUsed usedSequenceRegistry)
     {
         AcmSequenceEntity updated = getSequenceService().getNextGeneratedSequence(sequenceEntity, sequencePart);
         Long partValue = updated.getSequencePartValue();
@@ -175,7 +175,7 @@ public class AcmAutoincrementSequenceGenerator implements AcmSequenceGenerator
     }
 
     private Long updateSequenceRegistry(AcmSequenceRegistry sequenceRegistry, AcmSequencePart sequencePart,
-            AcmUsedSequenceRegistry usedSequenceRegistry) throws AcmSequenceException
+            AcmSequenceRegistryUsed usedSequenceRegistry) throws AcmSequenceException
     {
         Long partValue = sequenceRegistry.getSequencePartValue();
         usedSequenceRegistry.setSequenceValue(sequenceRegistry.getSequenceValue());
@@ -184,7 +184,7 @@ public class AcmAutoincrementSequenceGenerator implements AcmSequenceGenerator
     }
 
     private Long resetSequence(List<AcmSequenceReset> sequenceResetList, AcmSequenceEntity sequenceEntity, AcmSequencePart sequencePart,
-            AcmUsedSequenceRegistry usedSequenceRegistry) throws AcmSequenceException
+            AcmSequenceRegistryUsed usedSequenceRegistry) throws AcmSequenceException
     {
 
         boolean resetFlag = false;

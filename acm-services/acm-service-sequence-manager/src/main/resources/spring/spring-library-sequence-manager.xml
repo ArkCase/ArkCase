@@ -54,7 +54,7 @@
     
     <bean id="acmSequenceRegistryDao" class="com.armedia.acm.services.sequence.dao.AcmSequenceRegistryDao"/>
 
-    <bean id="acmUsedSequenceRegistryDao" class="com.armedia.acm.services.sequence.dao.AcmUsedSequenceRegistryDao"/>
+    <bean id="acmUsedSequenceRegistryDao" class="com.armedia.acm.services.sequence.dao.AcmSequenceRegistryUsedDao"/>
     
     <bean id="acmSequenceResetDao" class="com.armedia.acm.services.sequence.dao.AcmSequenceResetDao"/>
     
