@@ -39,12 +39,7 @@ import com.armedia.acm.services.exemption.model.ExemptionCode;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-import com.armedia.acm.correspondence.exception.CorrespondenceTemplateMissingAssigneeException;
-import gov.foia.model.FOIADeterminationLetterCorrespondence;
-import gov.foia.model.FOIARequest;
-import gov.foia.model.FormattedMergeTerm;
-import gov.foia.model.FormattedRun;
-import gov.foia.service.FOIAExemptionService;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -55,8 +50,8 @@ import java.util.stream.Collectors;
 
 import gov.foia.model.FOIADeterminationLetterCorrespondence;
 import gov.foia.model.FOIARequest;
-import com.armedia.acm.correspondence.model.FormattedMergeTerm;
-import com.armedia.acm.correspondence.model.FormattedRun;
+import gov.foia.model.FormattedMergeTerm;
+import gov.foia.model.FormattedRun;
 import gov.foia.service.FOIAExemptionService;
 
 public class FOIADeterminationLetterModelProvider implements TemplateModelProvider<FOIADeterminationLetterCorrespondence>
@@ -133,9 +128,11 @@ public class FOIADeterminationLetterModelProvider implements TemplateModelProvid
         return determinationLetterCorrespondence;
     }
 
-    public List<FormattedRun> getExemptionCodesAndDiscriptionRuns(List<ExemptionCode> exemptionCodes) {
+    public List<FormattedRun> getExemptionCodesAndDiscriptionRuns(List<ExemptionCode> exemptionCodes)
+    {
         List<StandardLookupEntry> lookupEntries = (List<StandardLookupEntry>) getLookupDao().getLookupByName("annotationTags").getEntries();
-        Map<String, String> codeDescriptions = lookupEntries.stream().collect(Collectors.toMap(StandardLookupEntry::getKey, StandardLookupEntry::getValue));
+        Map<String, String> codeDescriptions = lookupEntries.stream()
+                .collect(Collectors.toMap(StandardLookupEntry::getKey, StandardLookupEntry::getValue));
         List<FormattedRun> runs = new ArrayList<>();
         for (ExemptionCode exCode : exemptionCodes)
         {

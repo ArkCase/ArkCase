@@ -32,10 +32,7 @@ import com.armedia.acm.services.exemption.exception.GetExemptionCodeException;
 import com.armedia.acm.services.exemption.model.ExemptionCode;
 import com.armedia.acm.services.exemption.model.ExemptionConstants;
 import com.armedia.acm.services.labels.service.TranslationService;
-import gov.foia.dao.FOIAExemptionCodeDao;
-import gov.foia.dao.FOIAExemptionStatuteDao;
-import gov.foia.model.ExemptionStatute;
-import gov.foia.model.FormattedRun;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,7 +50,7 @@ import java.util.stream.Collectors;
 import gov.foia.dao.FOIAExemptionCodeDao;
 import gov.foia.dao.FOIAExemptionStatuteDao;
 import gov.foia.model.ExemptionStatute;
-import com.armedia.acm.correspondence.model.FormattedRun;
+import gov.foia.model.FormattedRun;
 
 /**
  * Created by ana.serafimoska
@@ -167,7 +164,8 @@ public class FOIAExemptionService
         return resultList;
     }
 
-    public void createAndStyleRunsForCorrespondenceLetters(Map<String, String> codeDescriptions, List<FormattedRun> runs, ExemptionCode exCode)
+    public void createAndStyleRunsForCorrespondenceLetters(Map<String, String> codeDescriptions, List<FormattedRun> runs,
+            ExemptionCode exCode)
     {
         runs.add(new FormattedRun());
         FormattedRun exemptionCodeRun = new FormattedRun();
@@ -181,8 +179,9 @@ public class FOIAExemptionService
         exemptionDescriptionRun.setFontSize(11);
         runs.add(exemptionDescriptionRun);
         FormattedRun exemptionLine = new FormattedRun();
-        exemptionLine.setText("--------------------------------------------------------------------------------------------------------------------");
-        exemptionLine.setFontSize(11);
+        exemptionLine.setText(
+                "--------------------------------------------------------------------------------------------------------------------");
+        exemptionLine.setFontSize(12);
         runs.add(exemptionLine);
     }
 
@@ -190,7 +189,6 @@ public class FOIAExemptionService
     {
         return translationService.translate(labelKey);
     }
-
 
     public boolean hasExemptionOnAnyDocumentsOnRequest(Long objectId, String objectType)
     {

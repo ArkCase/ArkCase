@@ -36,13 +36,10 @@ import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.services.holiday.service.DateTimeService;
 import com.armedia.acm.services.templateconfiguration.model.CorrespondenceMergeField;
 import com.armedia.acm.services.templateconfiguration.service.CorrespondenceMergeFieldManager;
 import com.armedia.acm.spring.SpringContextHolder;
 
-import gov.foia.model.FormattedMergeTerm;
-import gov.foia.model.FormattedRun;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -69,10 +66,16 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.StringJoiner;
+
+import gov.foia.model.FormattedMergeTerm;
+import gov.foia.model.FormattedRun;
 
 /**
  * Created by armdev on 12/11/14.
@@ -314,10 +317,10 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                 if (spelExpressionToBeEvaluted != null && !spelExpressionToBeEvaluted.isEmpty())
                 {
                     Object expression = evaluateSpelExpression(object, spelExpressionToBeEvaluted, objectType);
-                    if(expression instanceof FormattedMergeTerm)
+                    if (expression instanceof FormattedMergeTerm)
                     {
-                        FormattedMergeTerm formattedMergeTerm  = (FormattedMergeTerm) expression;
-                        addNewRun(paragraph, run, runNum, lastRunNum, formattedMergeTerm );
+                        FormattedMergeTerm formattedMergeTerm = (FormattedMergeTerm) expression;
+                        addNewRun(paragraph, run, runNum, lastRunNum, formattedMergeTerm);
                         continue;
                     }
                     else
@@ -358,9 +361,11 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
 
         // for each subsequent line of the replacement text, add a new run with the new line; since we are
         // adding a new run, we need to set the formatting.
-        for (int i = 1; i < texts.length; i++) {
+        for (int i = 1; i < texts.length; i++)
+        {
             newRun.addCarriageReturn();
-            if (texts[i] != null && !texts[i].equals("")) {
+            if (texts[i] != null && !texts[i].equals(""))
+            {
                 newRun = paragraph.insertNewRun(runNum + i);
                 /*
                  * We should copy all style attributes to the newRun from run
@@ -373,7 +378,8 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                 // run.getCharacterSpacing() throws NullPointerException. Maybe in future version of the library
                 // this will be fixed.
                 // newRun.setCharacterSpacing(run.getCharacterSpacing());
-                if (run.getColor() != null) {
+                if (run.getColor() != null)
+                {
                     newRun.setColor(run.getColor());
                 }
                 newRun.setDoubleStrikethrough(run.isDoubleStrikeThrough());
@@ -390,7 +396,8 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                 newRun.setUnderline(run.getUnderline());
             }
         }
-        for (int i = lastRunNum + texts.length - 1; i > runNum + texts.length - 1; i--) {
+        for (int i = lastRunNum + texts.length - 1; i > runNum + texts.length - 1; i--)
+        {
             paragraph.removeRun(i);
         }
     }
@@ -412,7 +419,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                  * also from background color, ...
                  */
                 newRun.setText(formattedRun.getText());
-                if(formattedRun.getFontFamily() != null )
+                if (formattedRun.getFontFamily() != null)
                 {
                     newRun.setFontFamily(formattedRun.getFontFamily());
                 }
@@ -420,7 +427,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                 {
                     newRun.setFontFamily(run.getFontFamily());
                 }
-                if(formattedRun.getFontSize() != null)
+                if (formattedRun.getFontSize() != null)
                 {
                     newRun.setFontSize(formattedRun.getFontSize());
                 }
@@ -432,11 +439,11 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                 {
                     newRun.setColor(formattedRun.getColor());
                 }
-                else if(run.getColor() != null)
+                else if (run.getColor() != null)
                 {
                     newRun.setColor(run.getColor());
                 }
-                if(formattedRun.getKerning() != null)
+                if (formattedRun.getKerning() != null)
                 {
                     newRun.setKerning(formattedRun.getKerning());
                 }
@@ -444,7 +451,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                 {
                     newRun.setKerning(run.getKerning());
                 }
-                if(formattedRun.getSubscript() != null)
+                if (formattedRun.getSubscript() != null)
                 {
                     newRun.setSubscript(formattedRun.getSubscript());
                 }
@@ -452,7 +459,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                 {
                     newRun.setSubscript(run.getSubscript());
                 }
-                if(formattedRun.getUnderline() != null)
+                if (formattedRun.getUnderline() != null)
                 {
                     newRun.setUnderline(formattedRun.getUnderline());
                 }
@@ -520,11 +527,12 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                         if (!(text.contains(":")))
                         {
                             Object expression = evaluateSpelExpression(object, text, objectType);
-                            if(expression instanceof String)
+                            if (expression instanceof String)
                             {
                                 texts = String.valueOf(expression).split("\n");
                             }
-                            if (texts[0] != null && !texts[0].equals("")) {
+                            if (texts[0] != null && !texts[0].equals(""))
+                            {
                                 bufferrun.setText(texts[0], 0);
                             }
                             else
