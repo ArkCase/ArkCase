@@ -54,7 +54,9 @@ public class FormattedRun
         this.text = text;
     }
 
-    public FormattedRun(){}
+    public FormattedRun()
+    {
+    }
 
     public String getFontFamily()
     {
