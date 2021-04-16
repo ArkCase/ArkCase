@@ -125,7 +125,7 @@ public class TouchNetAPIController
             }
             else if(param.getName().equals("BILL_PARENT_NUMBER"))
             {
-                objectNumber = param.getValue();
+                objectNumber = param.getValue().replace("_", "-");
             }
         }
         generateAndSaveBilling(objectId,objectType,paymentAmount, sessionId, invoiceId, acmTicket);

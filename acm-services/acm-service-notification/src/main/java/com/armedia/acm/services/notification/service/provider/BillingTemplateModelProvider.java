@@ -74,7 +74,7 @@ public class BillingTemplateModelProvider implements TemplateModelProvider<Billi
             paymentMethod = params[3];
             last4digitsOfCardNumber = params[4];
             sessionId = params[5];
-            message = params[6];
+            message = params[6].replace("-", "_");
         }
         Date date = notification.getCreated();
         String objectNumber = "";
