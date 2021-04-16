@@ -323,6 +323,7 @@ angular.module('queues').factory('Queues.QueuesService', [ '$http', '$q', 'Ecm.M
                     item['dueDate_tdt'] = new Date(item['dueDate_tdt']);
                     item['modified_date_tdt'] = new Date(item['modified_date_tdt']);
                     item['received_date_tdt'] = new Date(item['received_date_tdt']);
+                    item['queue_enter_date_tdt'] = new Date(item['queue_enter_date_tdt'])
                 });
 
                 var idsFilter = [];

@@ -68,8 +68,8 @@ angular.module('complaints').controller(
 
                                         $scope.objectInfo = taskInfo;
                                         $scope.dateInfo = $scope.dateInfo || {};
-                                        $scope.dateInfo.dueDate = UtilDateService.isoToDate($scope.objectInfo.dueDate);
-                                        $scope.dateInfo.taskStartDate = UtilDateService.isoToDate($scope.objectInfo.taskStartDate);
+                                        $scope.dateInfo.dueDate = UtilDateService.isoToLocalDateTime($scope.objectInfo.dueDate);
+                                        $scope.dateInfo.taskStartDate = UtilDateService.isoToLocalDateTime($scope.objectInfo.taskStartDate);
                                         $scope.assignee = ObjectModelService.getAssignee($scope.objectInfo);
 
                                         if (!Util.isEmpty(ObjectModelService.getGroup($scope.objectInfo))) {

@@ -512,7 +512,7 @@ angular.module('request-info').controller(
 
                 $scope.requestInfo = objectInfo;
                 $scope.dateInfo = $scope.dateInfo || {};
-                $scope.dateInfo.dueDate = UtilDateService.isoToDate($scope.requestInfo.dueDate);
+                $scope.dateInfo.dueDate = UtilDateService.isoToLocalDateTime($scope.requestInfo.dueDate);
                 if (!Util.isEmpty($scope.objectInfo.recordSearchDateFrom)) {
                     $scope.objectInfo.recordSearchDateFrom = moment(objectInfo.recordSearchDateFrom).format(UtilDateService.defaultDateTimeFormat);
                 }

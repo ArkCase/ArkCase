@@ -59,8 +59,8 @@ angular.module('request-info').controller(
 
                                         $scope.objectInfo = taskInfo;
                                         $scope.dateInfo = $scope.dateInfo || {};
-                                        $scope.dateInfo.dueDate = UtilDateService.isoToDate($scope.objectInfo.dueDate);
-                                        $scope.dateInfo.taskStartDate = UtilDateService.isoToDate($scope.objectInfo.taskStartDate);
+                                        $scope.dateInfo.dueDate = UtilDateService.isoToLocalDateTime($scope.objectInfo.dueDate);
+                                        $scope.dateInfo.taskStartDate = UtilDateService.isoToLocalDateTime($scope.objectInfo.taskStartDate);
                                         $scope.assignee = ObjectModelService.getAssignee($scope.objectInfo);
                                         $scope.owningGroup = ObjectModelService.getGroup($scope.objectInfo);
 
