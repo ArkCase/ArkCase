@@ -58,5 +58,24 @@
         <modifyDataType tableName="acm_sequence_reset" columnName="cm_reset_date" newDataType="DATETIME"/>
         <modifyDataType tableName="acm_sequence_reset" columnName="cm_reset_executed_date" newDataType="DATETIME"/>
     </changeSet>
-
+    <changeSet id="05-drop-sequence-part-value-used-flag-column" author="adrijana.maneva">
+        <dropColumn tableName="acm_sequence_registry" columnName="cm_sequence_part_value_used_flag"/>
+    </changeSet>
+    <changeSet id="06-create-used-sequence-registry-table" author="adrijana.maneva">
+        <createTable tableName="acm_sequence_registry_used">
+            <column name="cm_sequence_value" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_sequence_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_sequence_part_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_sequence_part_value" type="${idType}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey tableName="acm_sequence_registry_used" columnNames="cm_sequence_value, cm_sequence_name, cm_sequence_part_name"/>
+    </changeSet>
 </databaseChangeLog>

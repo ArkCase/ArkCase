@@ -28,15 +28,21 @@ package com.armedia.acm.services.sequence.dao;
  */
 
 import com.armedia.acm.data.AcmAbstractDao;
+import com.armedia.acm.services.sequence.exception.AcmSequenceException;
 import com.armedia.acm.services.sequence.model.AcmSequenceRegistry;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.FlushModeType;
 import javax.persistence.LockModeType;
+import javax.persistence.LockTimeoutException;
 import javax.persistence.NoResultException;
+import javax.persistence.OptimisticLockException;
+import javax.persistence.PessimisticLockException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.ArrayList;
@@ -82,46 +88,54 @@ public class AcmSequenceRegistryDao extends AcmAbstractDao<AcmSequenceRegistry>
         return query.executeUpdate();
     }
 
-    public Integer updateSequenceRegistryAsUnused(String sequenceValue)
-    {
-        String queryText = "UPDATE AcmSequenceRegistry sequenceRegistry " +
-                "SET sequenceRegistry.sequencePartValueUsedFlag = false " +
-                "WHERE sequenceRegistry.sequenceValue = :sequenceValue";
-
-        Query query = getEm().createQuery(queryText);
-
-        query.setParameter("sequenceValue", sequenceValue);
-        return query.executeUpdate();
-    }
-    @Transactional(propagation = Propagation.SUPPORTS)
-    public AcmSequenceRegistry getSequenceRegistry(String sequenceName, String sequencePartName,
-            Boolean sequencePartValueUsedFlag, FlushModeType flushModeType)
-    {
+    @Retryable(maxAttempts = 30, value = PessimisticLockException.class, backoff = @Backoff(delay = 100))
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public AcmSequenceRegistry getSequenceRegistry(String sequenceName, String sequencePartName, FlushModeType flushModeType) throws InterruptedException, AcmSequenceException {
         AcmSequenceRegistry sequenceRegistry = null;
         String queryText = "SELECT sequenceRegistry " +
                 "FROM AcmSequenceRegistry sequenceRegistry " +
                 "WHERE sequenceRegistry.sequenceName = :sequenceName " +
                 "AND sequenceRegistry.sequencePartName = :sequencePartName " +
-                "AND sequenceRegistry.sequencePartValueUsedFlag = :sequencePartValueUsedFlag " +
                 "ORDER BY sequenceRegistry.sequencePartValue";
 
         TypedQuery<AcmSequenceRegistry> query = getEm().createQuery(queryText, AcmSequenceRegistry.class);
         query.setFlushMode(flushModeType);
         query.setLockMode(LockModeType.PESSIMISTIC_WRITE);
+        query.setHint("javax.persistence.lock.timeout", "3000");
         query.setMaxResults(1);
 
         query.setParameter("sequenceName", sequenceName);
         query.setParameter("sequencePartName", sequencePartName);
-        query.setParameter("sequencePartValueUsedFlag", sequencePartValueUsedFlag);
 
-        try{
+        try
+        {
             sequenceRegistry = query.getSingleResult();
+        }
+        catch (PessimisticLockException | LockTimeoutException e)
+        {
+            log.trace("Error locking entry", e);
         }
         catch (NoResultException nre)
         {
             log.trace("No SequenceRegistry with sequence name [{}], sequence part name [{}]", sequenceName,
                     sequencePartName);
         }
+
+        if(sequenceRegistry != null){
+            log.info("Removing Sequence Entity for [{}] [{}]", sequenceRegistry.getSequenceName(), sequenceRegistry.getSequencePartName());
+            try
+            {
+                removeSequenceRegistry(sequenceRegistry.getSequenceValue());
+            }
+            catch (Exception e)
+            {
+                throw new AcmSequenceException(
+                        String.format("Unable to remove Sequence Entity [%s] [%s]", sequenceRegistry.getSequenceName(),
+                                sequenceRegistry.getSequencePartName()),
+                        e);
+            }
+        }
+
         return sequenceRegistry;
     }
 

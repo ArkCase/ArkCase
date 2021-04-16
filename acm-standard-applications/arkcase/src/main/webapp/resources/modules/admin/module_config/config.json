@@ -1455,12 +1455,6 @@
                     "displayName": "admin.application.sequenceRegistry.sequencePartValue",
                     "visible": true,
                     "headerCellFilter": "translate"
-                },
-                {
-                    "name": "sequencePartValueUsedFlag",
-                    "displayName": "admin.application.sequenceRegistry.sequencePartValueUsedFlag",
-                    "visible": true,
-                    "headerCellFilter": "translate"
                 }
             ]
         },
