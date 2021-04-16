@@ -31,7 +31,7 @@ import com.armedia.acm.services.sequence.exception.AcmSequenceException;
 import com.armedia.acm.services.sequence.model.AcmSequenceConfiguration;
 import com.armedia.acm.services.sequence.model.AcmSequenceEntity;
 import com.armedia.acm.services.sequence.model.AcmSequencePart;
-import com.armedia.acm.services.sequence.model.AcmUsedSequenceRegistry;
+import com.armedia.acm.services.sequence.model.AcmSequenceRegistryUsed;
 import com.armedia.acm.services.sequence.service.AcmSequenceConfigurationService;
 import com.armedia.acm.services.sequence.service.AcmSequenceService;
 
@@ -87,7 +87,7 @@ public class AcmSequenceGeneratorManager implements ApplicationListener<AcmSeque
 
         String sequenceValue = "";
         List<AcmSequencePart> sequenceParts = sequenceMap.get(sequenceName).getSequenceParts();
-        AcmUsedSequenceRegistry usedSequenceRegistry = new AcmUsedSequenceRegistry();
+        AcmSequenceRegistryUsed usedSequenceRegistry = new AcmSequenceRegistryUsed();
         for (AcmSequencePart sequencePart : sequenceParts)
         {
             if (sequencePart.getSequencePartType() != null)
@@ -117,7 +117,7 @@ public class AcmSequenceGeneratorManager implements ApplicationListener<AcmSeque
         String sequenceValue = "";
         List<AcmSequencePart> sequenceParts = sequenceMap.get(sequenceName).getSequenceParts();
         Map<String, Long> autoincrementPartNameToValue = new HashMap<>();
-        AcmUsedSequenceRegistry usedSequenceRegistry = new AcmUsedSequenceRegistry();
+        AcmSequenceRegistryUsed usedSequenceRegistry = new AcmSequenceRegistryUsed();
         for (AcmSequencePart sequencePart : sequenceParts)
         {
             if (sequencePart.getSequencePartType() != null)
@@ -134,7 +134,7 @@ public class AcmSequenceGeneratorManager implements ApplicationListener<AcmSeque
         return sequenceValue;
     }
 
-    private void registerSequence(String sequenceValue, AcmUsedSequenceRegistry usedSequenceRegistry)
+    private void registerSequence(String sequenceValue, AcmSequenceRegistryUsed usedSequenceRegistry)
             throws AcmSequenceException
     {
         usedSequenceRegistry.setSequenceValue(sequenceValue);

@@ -35,7 +35,7 @@ import com.armedia.acm.services.sequence.model.AcmSequencePart;
 import com.armedia.acm.services.sequence.model.AcmSequenceRegistry;
 import com.armedia.acm.services.sequence.model.AcmSequenceReset;
 
-import com.armedia.acm.services.sequence.model.AcmUsedSequenceRegistry;
+import com.armedia.acm.services.sequence.model.AcmSequenceRegistryUsed;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 
@@ -99,5 +99,5 @@ public interface AcmSequenceService
 
     public Integer removeUsedSequenceRegistry(String sequenceName, String sequencePartName) throws AcmSequenceException;
 
-    public AcmUsedSequenceRegistry saveUsedSequenceRegistry(AcmUsedSequenceRegistry sequenceRegistry) throws AcmSequenceException;
+    public AcmSequenceRegistryUsed saveUsedSequenceRegistry(AcmSequenceRegistryUsed sequenceRegistry) throws AcmSequenceException;
 }
