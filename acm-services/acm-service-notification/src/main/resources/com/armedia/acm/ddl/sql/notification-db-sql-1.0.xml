@@ -1,0 +1,15 @@
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <!-- Set notification cm_notification_state to `NOT_SENT` for all notifications older than 3 days and current cm_notification_state is null-->
+    <changeSet id="01-acm_notifications-update-cm_notification_state" author="vladimir.cherepnalkovski" dbms="mysql">
+        <sql>
+            UPDATE acm_notification
+            SET cm_notification_state = 'NOT_SENT'
+            WHERE cm_notification_state is null
+            AND cm_notification_created &lt; DATE_ADD(NOW(), INTERVAL -3 DAY);
+        </sql>
+    </changeSet>
+</databaseChangeLog>
