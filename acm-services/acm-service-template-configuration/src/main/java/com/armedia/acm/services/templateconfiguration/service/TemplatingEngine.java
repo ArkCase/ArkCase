@@ -75,6 +75,7 @@ public class TemplatingEngine
         cfg.setDateFormat("MM/dd/yyyy");
         cfg.setDateTimeFormat("MM/dd/yyyy HH:mm");
 
+
         Map<String, Object> templatingModel = new HashMap<>();
         templatingModel.put(modelReferenceName, model);
         // formatting date time for java.time.* classes isn't implemented in Freemarker

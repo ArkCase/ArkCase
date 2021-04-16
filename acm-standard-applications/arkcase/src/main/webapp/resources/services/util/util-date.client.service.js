@@ -426,8 +426,8 @@ angular.module('services').factory('Util.DateService', [ '$translate', 'UtilServ
                 }
             }
             if(convertToDateFormat){
-                startDateConverted = this.isoToDate(start);
-                endDateConverted = this.isoToDate(end);
+                startDateConverted = this.isoToLocalDateTime(start);
+                endDateConverted = this.isoToLocalDateTime(end);
             }else {
                 startDateConverted = this.isoToLocalDateTime(start);
                 endDateConverted = this.isoToLocalDateTime(end);

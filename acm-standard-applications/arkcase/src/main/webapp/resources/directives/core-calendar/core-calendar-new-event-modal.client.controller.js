@@ -188,8 +188,8 @@ angular.module('directives').controller(
                         $scope.eventDataModel = angular.copy($scope.existingEvent);
                         $scope.attachmentModel.attachedFiles = angular.copy($scope.eventDataModel.files);
                         $scope.eventDataModel.files = [];
-                        $scope.eventDataModel.start = DateService.isoToDate($scope.eventDataModel.start);
-                        $scope.eventDataModel.end = DateService.isoToDate($scope.eventDataModel.end);
+                        $scope.eventDataModel.start = DateService.isoToLocalDateTime($scope.eventDataModel.start);
+                        $scope.eventDataModel.end = DateService.isoToLocalDateTime($scope.eventDataModel.end);
                         if ($scope.eventDataModel.recurrenceDetails.recurrenceType !== 'ONLY_ONCE') {
                             $scope.eventDataModel.recurrenceDetails.startAt = moment($scope.eventDataModel.recurrenceDetails.startAt).toDate();
                             $scope.eventDataModel.recurrenceDetails.endBy = moment($scope.eventDataModel.recurrenceDetails.endBy).toDate();
@@ -253,13 +253,13 @@ angular.module('directives').controller(
                             MessageService.succsessAction();
                             $modalInstance.close('ADD_EVENT');
                         }, function(err) {
-                            $scope.eventDataModel.start = DateService.isoToDate($scope.eventDataModel.start);
-                            $scope.eventDataModel.end = DateService.isoToDate($scope.eventDataModel.end);
+                            $scope.eventDataModel.start = DateService.isoToLocalDateTime($scope.eventDataModel.start);
+                            $scope.eventDataModel.end = DateService.isoToLocalDateTime($scope.eventDataModel.end);
                             if ($scope.eventDataModel.recurrenceDetails.startAt) {
-                                $scope.eventDataModel.recurrenceDetails.startAt = DateService.isoToDate($scope.eventDataModel.recurrenceDetails.startAt);
+                                $scope.eventDataModel.recurrenceDetails.startAt = DateService.isoToLocalDateTime($scope.eventDataModel.recurrenceDetails.startAt);
                             }
                             if ($scope.eventDataModel.recurrenceDetails.endBy) {
-                                $scope.eventDataModel.recurrenceDetails.endBy = DateService.isoToDate($scope.eventDataModel.recurrenceDetails.endBy);
+                                $scope.eventDataModel.recurrenceDetails.endBy = DateService.isoToLocalDateTime($scope.eventDataModel.recurrenceDetails.endBy);
                             }
                             MessageService.errorAction();
                         });
@@ -272,13 +272,13 @@ angular.module('directives').controller(
                             MessageService.succsessAction();
                             $modalInstance.close('EDIT_EVENT');
                         }, function(err) {
-                            $scope.eventDataModel.start = DateService.isoToDate($scope.eventDataModel.start);
-                            $scope.eventDataModel.end = DateService.isoToDate($scope.eventDataModel.end);
+                            $scope.eventDataModel.start = DateService.isoToLocalDateTime($scope.eventDataModel.start);
+                            $scope.eventDataModel.end = DateService.isoToLocalDateTime($scope.eventDataModel.end);
                             if ($scope.eventDataModel.recurrenceDetails.startAt) {
-                                $scope.eventDataModel.recurrenceDetails.startAt = DateService.isoToDate($scope.eventDataModel.recurrenceDetails.startAt);
+                                $scope.eventDataModel.recurrenceDetails.startAt = DateService.isoToLocalDateTime($scope.eventDataModel.recurrenceDetails.startAt);
                             }
                             if ($scope.eventDataModel.recurrenceDetails.endBy) {
-                                $scope.eventDataModel.recurrenceDetails.endBy = DateService.isoToDate($scope.eventDataModel.recurrenceDetails.endBy);
+                                $scope.eventDataModel.recurrenceDetails.endBy = DateService.isoToLocalDateTime($scope.eventDataModel.recurrenceDetails.endBy);
                             }
 
                             MessageService.errorAction();

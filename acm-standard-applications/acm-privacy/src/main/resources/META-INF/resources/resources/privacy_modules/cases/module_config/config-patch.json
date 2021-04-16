@@ -200,7 +200,7 @@
                 {
                     "name": "created",
                     "displayName": "cases.comp.exemption.table.columns.created",
-                    "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
+                    "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateTimeUIFormat' | translate) }}</div>",
                     "headerCellFilter": "translate"
                 },
                 {
@@ -244,7 +244,7 @@
                 {
                     "name": "created",
                     "displayName": "cases.comp.statute.table.columns.created",
-                    "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
+                    "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateTimeUIFormat' | translate) }}</div>",
                     "headerCellFilter": "translate"
                 },
                 {
@@ -505,7 +505,7 @@
                     "name": "modified",
                     "displayName": "cases.comp.people.organizations.table.columns.modified",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+                    "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>",
                     "enableCellEdit": false
                 },
                 {
@@ -567,7 +567,7 @@
                     "name": "modified",
                     "displayName": "cases.comp.people.addresses.table.columns.modified",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+                    "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>",
                     "enableCellEdit": false
                 },
                 {
@@ -650,7 +650,7 @@
                     "name": "modified",
                     "displayName": "cases.comp.people.contactMethods.table.columns.modified",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+                    "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>",
                     "enableCellEdit": false
                 },
                 {
