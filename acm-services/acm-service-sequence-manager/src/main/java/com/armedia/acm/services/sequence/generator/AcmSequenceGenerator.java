@@ -30,7 +30,7 @@ package com.armedia.acm.services.sequence.generator;
 import com.armedia.acm.services.sequence.exception.AcmSequenceException;
 import com.armedia.acm.services.sequence.model.AcmSequenceEntity;
 import com.armedia.acm.services.sequence.model.AcmSequencePart;
-import com.armedia.acm.services.sequence.model.AcmSequenceRegistryUsed;
+import com.armedia.acm.services.sequence.model.AcmUsedSequenceRegistry;
 
 /**
  * @author sasko.tanaskoski
@@ -40,9 +40,9 @@ public interface AcmSequenceGenerator
 {
 
     public String generatePartValue(String sequenceName, AcmSequencePart sequencePart, Object object,
-           AcmSequenceRegistryUsed usedSequenceRegistry) throws AcmSequenceException;
+           AcmUsedSequenceRegistry usedSequenceRegistry) throws AcmSequenceException;
 
     public String getGeneratePartValue(String sequenceName, AcmSequencePart sequencePart, Object object,
-                                       AcmSequenceRegistryUsed usedSequenceRegistry, AcmSequenceEntity acmSequenceEntity) throws AcmSequenceException;
+           AcmUsedSequenceRegistry usedSequenceRegistry, AcmSequenceEntity acmSequenceEntity) throws AcmSequenceException;
 
 }

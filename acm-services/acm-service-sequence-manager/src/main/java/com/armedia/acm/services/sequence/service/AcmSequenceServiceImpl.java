@@ -32,7 +32,7 @@ import com.armedia.acm.services.sequence.annotation.AcmSequence;
 import com.armedia.acm.services.sequence.dao.AcmSequenceDao;
 import com.armedia.acm.services.sequence.dao.AcmSequenceRegistryDao;
 import com.armedia.acm.services.sequence.dao.AcmSequenceResetDao;
-import com.armedia.acm.services.sequence.dao.AcmSequenceRegistryUsedDao;
+import com.armedia.acm.services.sequence.dao.AcmUsedSequenceRegistryDao;
 import com.armedia.acm.services.sequence.exception.AcmSequenceException;
 import com.armedia.acm.services.sequence.generator.AcmSequenceGeneratorManager;
 import com.armedia.acm.services.sequence.model.AcmSequenceEntity;
@@ -42,7 +42,7 @@ import com.armedia.acm.services.sequence.model.AcmSequenceRegistry;
 import com.armedia.acm.services.sequence.model.AcmSequenceReset;
 import com.armedia.acm.services.sequence.model.AcmSequenceResetId;
 
-import com.armedia.acm.services.sequence.model.AcmSequenceRegistryUsed;
+import com.armedia.acm.services.sequence.model.AcmUsedSequenceRegistry;
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
@@ -77,7 +77,7 @@ public class AcmSequenceServiceImpl implements AcmSequenceService
 
     private AcmSequenceGeneratorManager sequenceGeneratorManager;
 
-    private AcmSequenceRegistryUsedDao usedSequenceRegistryDao;
+    private AcmUsedSequenceRegistryDao usedSequenceRegistryDao;
 
     @Override
     public AcmSequenceEntity getSequenceEntity(String sequenceName, String sequencePartName, FlushModeType flushModeType)
@@ -293,14 +293,14 @@ public class AcmSequenceServiceImpl implements AcmSequenceService
         try
         {
             //looking for sequence in Used Sequence Registry
-            AcmSequenceRegistryUsed acmSequenceRegistryUsed = getUsedSequenceRegistryDao().getUsedSequenceRegistry(sequenceValue);
+            AcmUsedSequenceRegistry acmUsedSequenceRegistry = getUsedSequenceRegistryDao().getUsedSequenceRegistry(sequenceValue);
 
-            if(acmSequenceRegistryUsed != null){
+            if(acmUsedSequenceRegistry != null){
                 AcmSequenceRegistry sequenceRegistry = new AcmSequenceRegistry();
-                sequenceRegistry.setSequenceValue(acmSequenceRegistryUsed.getSequenceValue());
-                sequenceRegistry.setSequenceName(acmSequenceRegistryUsed.getSequenceName());
-                sequenceRegistry.setSequencePartName(acmSequenceRegistryUsed.getSequencePartName());
-                sequenceRegistry.setSequencePartValue(acmSequenceRegistryUsed.getSequencePartValue());
+                sequenceRegistry.setSequenceValue(acmUsedSequenceRegistry.getSequenceValue());
+                sequenceRegistry.setSequenceName(acmUsedSequenceRegistry.getSequenceName());
+                sequenceRegistry.setSequencePartName(acmUsedSequenceRegistry.getSequencePartName());
+                sequenceRegistry.setSequencePartValue(acmUsedSequenceRegistry.getSequencePartValue());
                 //if such sequence is found move it in the Sequence Registry with other unused sequences
                 saveSequenceRegistry(sequenceRegistry);
                 // and remove it from Used Sequence Registry
@@ -494,7 +494,7 @@ public class AcmSequenceServiceImpl implements AcmSequenceService
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS)
-    public AcmSequenceRegistryUsed saveUsedSequenceRegistry(AcmSequenceRegistryUsed sequenceRegistry) throws AcmSequenceException
+    public AcmUsedSequenceRegistry saveUsedSequenceRegistry(AcmUsedSequenceRegistry sequenceRegistry) throws AcmSequenceException
     {
         log.info("Saving sequence in to Used Sequence Registry for [{}] [{}] [{}]", sequenceRegistry.getSequenceValue(),
                 sequenceRegistry.getSequenceName(), sequenceRegistry.getSequencePartName());
@@ -582,12 +582,12 @@ public class AcmSequenceServiceImpl implements AcmSequenceService
         this.sequenceGeneratorManager = sequenceGeneratorManager;
     }
 
-    public AcmSequenceRegistryUsedDao getUsedSequenceRegistryDao()
+    public AcmUsedSequenceRegistryDao getUsedSequenceRegistryDao()
     {
         return usedSequenceRegistryDao;
     }
 
-    public void setUsedSequenceRegistryDao(AcmSequenceRegistryUsedDao usedSequenceRegistryDao)
+    public void setUsedSequenceRegistryDao(AcmUsedSequenceRegistryDao usedSequenceRegistryDao)
     {
         this.usedSequenceRegistryDao = usedSequenceRegistryDao;
     }

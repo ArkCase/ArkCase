@@ -158,7 +158,7 @@ public class AcmSequenceGeneratorIT {
         });
         transactionTemplate.execute(status -> {
             String queryTextDelete = "DELETE " +
-                    "FROM AcmSequenceRegistryUsed sequenceEntity " +
+                    "FROM AcmUsedSequenceRegistry sequenceEntity " +
                     "WHERE sequenceEntity.sequenceName = 'acmTestSequence'";
 
             TypedQuery<AcmSequenceEntity> queryDelete = entityManager.createQuery(queryTextDelete, AcmSequenceEntity.class);

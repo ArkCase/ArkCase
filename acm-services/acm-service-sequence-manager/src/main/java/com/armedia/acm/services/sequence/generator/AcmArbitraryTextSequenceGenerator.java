@@ -29,7 +29,7 @@ package com.armedia.acm.services.sequence.generator;
 
 import com.armedia.acm.services.sequence.model.AcmSequenceEntity;
 import com.armedia.acm.services.sequence.model.AcmSequencePart;
-import com.armedia.acm.services.sequence.model.AcmSequenceRegistryUsed;
+import com.armedia.acm.services.sequence.model.AcmUsedSequenceRegistry;
 
 /**
  * @author sasko.tanaskoski
@@ -51,14 +51,14 @@ public class AcmArbitraryTextSequenceGenerator implements AcmSequenceGenerator
      */
     @Override
     public String generatePartValue(String sequenceName, AcmSequencePart sequencePart, Object object,
-           AcmSequenceRegistryUsed usedSequenceRegistry)
+           AcmUsedSequenceRegistry usedSequenceRegistry)
     {
         return sequencePart.getSequenceArbitraryText();
     }
 
     @Override
     public String getGeneratePartValue(String sequenceName, AcmSequencePart sequencePart, Object object,
-                                       AcmSequenceRegistryUsed usedSequenceRegistry, AcmSequenceEntity acmSequenceEntity)
+           AcmUsedSequenceRegistry usedSequenceRegistry, AcmSequenceEntity acmSequenceEntity)
     {
         return generatePartValue(sequenceName, sequencePart, object, usedSequenceRegistry);
     }
