@@ -80,7 +80,7 @@ public class AcmSequenceDatabaseChangeHandler implements ApplicationListener<Acm
                         if (getSequenceGeneratorManager().isSequenceEnabled(sequenceName))
                         {
                             String sequenceValue = PropertyUtils.getProperty(object, annotatedField.getName()).toString();
-                            getSequenceService().removeSequenceRegistry(sequenceValue);
+                            getSequenceService().removeUsedSequenceRegistry(sequenceValue);
                         }
                     }
                     catch (Exception e)

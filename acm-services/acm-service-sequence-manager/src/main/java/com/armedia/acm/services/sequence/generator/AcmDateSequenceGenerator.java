@@ -29,7 +29,7 @@ package com.armedia.acm.services.sequence.generator;
 import com.armedia.acm.services.sequence.exception.AcmSequenceException;
 import com.armedia.acm.services.sequence.model.AcmSequenceEntity;
 import com.armedia.acm.services.sequence.model.AcmSequencePart;
-import com.armedia.acm.services.sequence.model.AcmSequenceRegistry;
+import com.armedia.acm.services.sequence.model.AcmUsedSequenceRegistry;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -54,7 +54,7 @@ public class AcmDateSequenceGenerator implements AcmSequenceGenerator
      */
     @Override
     public String generatePartValue(String sequenceName, AcmSequencePart sequencePart, Object object,
-            AcmSequenceRegistry acmSequenceRegistry) throws AcmSequenceException
+           AcmUsedSequenceRegistry usedSequenceRegistry) throws AcmSequenceException
     {
         try
         {
@@ -68,9 +68,9 @@ public class AcmDateSequenceGenerator implements AcmSequenceGenerator
 
     @Override
     public String getGeneratePartValue(String sequenceName, AcmSequencePart sequencePart, Object object,
-            AcmSequenceRegistry acmSequenceRegistry, AcmSequenceEntity acmSequenceEntity) throws AcmSequenceException
+           AcmUsedSequenceRegistry usedSequenceRegistry, AcmSequenceEntity acmSequenceEntity) throws AcmSequenceException
     {
-        return generatePartValue(sequenceName, sequencePart, object, acmSequenceRegistry);
+        return generatePartValue(sequenceName, sequencePart, object, usedSequenceRegistry);
     }
 
     /**

@@ -156,11 +156,20 @@ public class AcmSequenceGeneratorIT {
             queryDelete.executeUpdate();
             return null;
         });
+        transactionTemplate.execute(status -> {
+            String queryTextDelete = "DELETE " +
+                    "FROM AcmUsedSequenceRegistry sequenceEntity " +
+                    "WHERE sequenceEntity.sequenceName = 'acmTestSequence'";
+
+            TypedQuery<AcmSequenceEntity> queryDelete = entityManager.createQuery(queryTextDelete, AcmSequenceEntity.class);
+            queryDelete.executeUpdate();
+            return null;
+        });
 
         AcmSequenceEntity sequenceEntity = new AcmSequenceEntity();
         sequenceEntity.setSequenceName("acmTestSequence");
         sequenceEntity.setSequencePartName("Autoincrement1");
-        sequenceEntity.setSequencePartValue(1L);
+        sequenceEntity.setSequencePartValue(NUM_OF_THREADS + 1L);
         acmSequenceService.saveSequenceEntity(sequenceEntity);
 
         transactionTemplate.execute(status -> {
@@ -222,7 +231,6 @@ public class AcmSequenceGeneratorIT {
         AcmSequenceRegistry sequenceRegistry = new AcmSequenceRegistry();
         sequenceRegistry.setSequenceName("acmTestSequence");
         sequenceRegistry.setSequencePartName("Autoincrement1");
-        sequenceRegistry.setSequencePartValueUsedFlag(false);
 
         for (int i = 0; i < NUM_OF_THREADS; i++)
         {

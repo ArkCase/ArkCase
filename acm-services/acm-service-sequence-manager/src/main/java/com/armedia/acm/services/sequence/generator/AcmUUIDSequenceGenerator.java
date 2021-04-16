@@ -29,7 +29,7 @@ package com.armedia.acm.services.sequence.generator;
 
 import com.armedia.acm.services.sequence.model.AcmSequenceEntity;
 import com.armedia.acm.services.sequence.model.AcmSequencePart;
-import com.armedia.acm.services.sequence.model.AcmSequenceRegistry;
+import com.armedia.acm.services.sequence.model.AcmUsedSequenceRegistry;
 
 import java.util.UUID;
 
@@ -53,16 +53,16 @@ public class AcmUUIDSequenceGenerator implements AcmSequenceGenerator
      */
     @Override
     public String generatePartValue(String sequenceName, AcmSequencePart sequencePart, Object object,
-            AcmSequenceRegistry acmSequenceRegistry)
+            AcmUsedSequenceRegistry usedSequenceRegistry)
     {
         return UUID.randomUUID().toString();
     }
 
     @Override
     public String getGeneratePartValue(String sequenceName, AcmSequencePart sequencePart, Object object,
-            AcmSequenceRegistry acmSequenceRegistry, AcmSequenceEntity acmSequenceEntity)
+            AcmUsedSequenceRegistry usedSequenceRegistry, AcmSequenceEntity acmSequenceEntity)
     {
-        return generatePartValue(sequenceName, sequencePart, object, acmSequenceRegistry);
+        return generatePartValue(sequenceName, sequencePart, object, usedSequenceRegistry);
     }
 
     /**
