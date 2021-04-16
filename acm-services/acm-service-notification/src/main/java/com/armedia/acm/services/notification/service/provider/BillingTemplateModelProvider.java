@@ -55,22 +55,28 @@ public class BillingTemplateModelProvider implements TemplateModelProvider<Billi
         String paymentMethod = "";
         String last4digitsOfCardNumber = "";
         String sessionId = "";
+        String message = "";
         if(params.length > 2)
         {
             billName = params[2];
             paymentMethod = params[3];
             last4digitsOfCardNumber = params[4];
             sessionId = params[5];
+            message = params[6];
         }
         Date date = notification.getCreated();
-        String[] objectParams = notification.getTitle().split(":");
-        String[] objParams = objectParams[1].split(" ");
-        String message = objectParams[0] + " with number: " + objParams[1];
+        String objectNumber = "";
+        if(notification.getTitle().contains(":"))
+        {
+            String[] objectParams = notification.getTitle().split(":");
+            String[] objParams = objectParams[1].split(" ");
+            objectNumber = objectParams[0] + ": " + objParams[1];
+        }
 
         getAuditPropertyEntityAdapter().setUserId(notification.getCreator());
         String token = authenticationTokenService.generateAndSaveAuthenticationToken(Long.valueOf(fileId), notification.getEmailAddresses(),null);
 
-        return new BillingTemplateModel(amount, token, fileId, objectId, notification.getParentType(), billName, paymentMethod, last4digitsOfCardNumber, date.toString(), sessionId, message);
+        return new BillingTemplateModel(amount, token, fileId, objectId, notification.getParentType(), objectNumber, billName, paymentMethod, last4digitsOfCardNumber, date.toString(), sessionId, message);
     }
 
     @Override

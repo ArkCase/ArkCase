@@ -2,9 +2,9 @@ package gov.foia.model;
 
 /*-
  * #%L
- * ACM Standard Application: Freedom of Information Act
+ * ACM Service: Correspondence Library
  * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
+ * Copyright (C) 2014 - 2021 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 
@@ -27,25 +27,19 @@ package gov.foia.model;
  * #L%
  */
 
-import com.armedia.acm.plugins.person.model.Person;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.voodoodyne.jackson.jsog.JSOGGenerator;
+import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-
-/**
- * @author sasko.tanaskoski
- *
- */
-
-@Entity
-@DiscriminatorValue("gov.foia.model.FOIAPerson")
-@JsonIdentityInfo(generator = JSOGGenerator.class)
-public class FOIAPerson extends Person
+public class FormattedMergeTerm
 {
+    List<FormattedRun> runs;
 
-    private static final long serialVersionUID = -5025159640218061551L;
+    public List<FormattedRun> getRuns()
+    {
+        return runs;
+    }
 
+    public void setRuns(List<FormattedRun> runs)
+    {
+        this.runs = runs;
+    }
 }
