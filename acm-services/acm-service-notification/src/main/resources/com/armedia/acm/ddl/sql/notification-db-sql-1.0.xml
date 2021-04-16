@@ -3,7 +3,7 @@
     xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <!-- Set notification cm_notification_state to `NOT_SENT` for all notifications older than 3 days and current cm_notification_state is null-->
+    <!-- Set notification cm_notification_state to `NOT_SENT` for all notifications older than 3 days and current cm_notification_state is null -->
     <changeSet id="01-acm_notifications-update-cm_notification_state" author="vladimir.cherepnalkovski" dbms="mysql">
         <sql>
             UPDATE acm_notification

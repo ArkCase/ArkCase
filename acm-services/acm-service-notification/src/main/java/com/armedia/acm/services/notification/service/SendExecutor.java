@@ -37,6 +37,7 @@ import com.armedia.acm.services.templateconfiguration.model.Template;
 import com.armedia.acm.services.templateconfiguration.service.TemplateConfigurationManager;
 import com.armedia.acm.services.templateconfiguration.service.TemplatingEngine;
 import com.armedia.acm.spring.SpringContextHolder;
+import freemarker.template.TemplateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,6 +71,14 @@ public class SendExecutor implements Executor
         catch (Exception e)
         {
             log.error("Can not find class for provided classpath {}. Error: {}", templateModelProviderClassPath, e.getMessage());
+            if (e instanceof TemplateException)
+            {
+                notification.setState(NotificationConstants.STATE_TEMPLATE_ERROR);
+            }
+            else
+            {
+                notification.setState(NotificationConstants.STATE_NOT_SENT);
+            }
         }
         TemplateModelProvider templateModelProvider = getTemplateModelProvider(templateModelProviderClass);
 
