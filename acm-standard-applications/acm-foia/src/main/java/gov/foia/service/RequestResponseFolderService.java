@@ -27,6 +27,11 @@ package gov.foia.service;
  * #L%
  */
 
+import java.util.Date;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.armedia.acm.convertfolder.ConversionException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
@@ -34,11 +39,6 @@ import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.portalgateway.model.PortalConfig;
 import com.armedia.acm.services.holiday.service.HolidayConfigurationService;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.util.Date;
 
 import gov.foia.broker.FOIARequestFileBrokerClient;
 import gov.foia.dao.ResponseInstallmentDao;
@@ -64,13 +64,7 @@ public class RequestResponseFolderService
     public void compressAndSendResponseSubFolderToPortal(Long requestId, Long folderId, String userName)
             throws ConversionException, AcmUserActionFailedException, AcmFolderException, AcmObjectNotFoundException
     {
-        if (!getFoiaConfig().getEnableStagedRelease())
-        {
-            log.debug("Staged releases are disabled, main response folder [{}] will be used", folderId);
-            folderId = getResponseFolderService().getResponseFolder(requestId).getId();
-        }
-
-        log.debug("Converting response folder [{}] for the request [{}]", folderId, requestId);
+        log.debug("Converting response folder [{}] for the request [{}]",folderId, requestId);
         getResponseFolderConverterService().convertResponseSubFolder(folderId, userName);
 
         log.debug("Compressing response folder [{}] for the request [{}]", folderId, requestId);
@@ -105,7 +99,8 @@ public class RequestResponseFolderService
         FOIARequest request = (FOIARequest) caseFileDao.find(requestId);
 
         Date today = new Date();
-        Date dueDate = getHolidayConfigurationService().addWorkingDaysToDateAndSetTimeToBusinessHours(today, getPortalConfig().getNumOfAvailableDays());
+        Date dueDate = getHolidayConfigurationService().addWorkingDaysToDateAndSetTimeToBusinessHours(today,
+                getPortalConfig().getNumOfAvailableDays());
 
         ResponseInstallment responseInstallment = new ResponseInstallment();
 
