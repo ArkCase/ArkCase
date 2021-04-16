@@ -28,7 +28,6 @@
         <property name="billingEventPublisher" ref="billingEventPublisher"/>
         <property name="billingInvoiceDao" ref="billingInvoiceDao"/>
         <property name="userInfoHelper" ref="userInfoHelper"/>
-        <property name="templateManager" ref="correspondenceTemplateManager"/>
     </bean>
 
 </beans>

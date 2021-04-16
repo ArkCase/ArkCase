@@ -70,7 +70,7 @@ public class TouchNetService
     @Value("${payment.touchnet.upaysiteid}")
     private String uPaySiteId;
 
-    public String generateTicketID(String amt, String objectId, String objectType, String ecmFileId, String acm_ticket)
+    public String generateTicketID(String amt, String objectId, String objectType, String ecmFileId, String acm_ticket, String objectNumber)
     {
 
         GenerateSecureLinkTicketRequest req = new GenerateSecureLinkTicketRequest();
@@ -154,11 +154,11 @@ public class TouchNetService
         return binding;
     }
 
-    public String validateLinkAndRedirectToPaymentForm(String amount, String objectId, String objectType, String ecmFileId, String acm_ticket)
+    public String validateLinkAndRedirectToPaymentForm(String amount, String objectId, String objectType, String objectNumber, String ecmFileId, String acm_ticket)
     {
         if(!billingItemDao.checkIfPaymentIsAlreadyDone(acm_ticket))
         {
-            return redirectToPaymentForm(amount,objectId,objectType,ecmFileId, acm_ticket);
+            return redirectToPaymentForm(amount,objectId,objectType,ecmFileId, acm_ticket, objectNumber);
         }
         else
         {
@@ -201,9 +201,9 @@ public class TouchNetService
                 "</html>\n";
     }
 
-    private String redirectToPaymentForm(String amount, String objectId, String objectType, String ecmFileId, String acm_ticket)
+    private String redirectToPaymentForm(String amount, String objectId, String objectType, String ecmFileId, String acm_ticket, String objectNumber)
     {
-        String ticket = generateTicketID(amount, objectId, objectType, ecmFileId, acm_ticket);
+        String ticket = generateTicketID(amount, objectId, objectType, ecmFileId, acm_ticket, objectNumber);
         String ticketName = objectId + objectType;
 
         return "<form name=\"autoform\" action=\"https://test.secure.touchnet.net:8443/C30002test_upay/web/index.jsp\" method=\"post\">\n" +

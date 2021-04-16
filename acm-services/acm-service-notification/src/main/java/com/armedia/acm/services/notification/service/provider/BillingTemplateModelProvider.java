@@ -68,43 +68,26 @@ public class BillingTemplateModelProvider implements TemplateModelProvider<Billi
         String last4digitsOfCardNumber = "";
         String sessionId = "";
         String message = "";
-        if (params.length > 2)
+        if(params.length > 2)
         {
             billName = params[2];
             paymentMethod = params[3];
             last4digitsOfCardNumber = params[4];
             sessionId = params[5];
-            message = params[6].replace("-", "_");
+            message = params[6];
         }
         Date date = notification.getCreated();
-        String message = "";
+        String objectNumber = "";
         if(notification.getTitle().contains(":"))
         {
             String[] objectParams = notification.getTitle().split(":");
             String[] objParams = objectParams[1].split(" ");
-            message = objectParams[0] + " with number: " + objParams[1];
+            objectNumber = objectParams[0] + ": " + objParams[1];
         }
 
         getAuditPropertyEntityAdapter().setUserId(notification.getCreator());
 
-        String token = null;
-        if (paymentEnabled)
-        {
-            token = authenticationTokenService.getUncachedTokenForAuthentication(null);
-
-            String relativePaths = applicationConfig.getBaseUrl() + "/api/latest/plugin/billing/touchnet?amt=" + amount
-                    + "&objectId=" + objectId + "&ecmFileId=" + fileId + "&objectType=" + notification.getParentType()
-                    + "&objectNumber=" + objectNumber + "&acm_email_ticket=" + token + "__comma__" + applicationConfig.getBaseUrl()
-                    + "/api/latest/plugin/billing/confirmPayment?UPAY_SITE_ID=" + uPaySiteId + "&EXT_TRANS_ID=" + token;
-
-            relativePaths = relativePaths.replace(" ", "%20");
-
-            authenticationTokenService.addTokenToRelativePaths(Arrays.asList(relativePaths.split("__comma__")), token, tokenExpiry,
-                    notification.getEmailAddresses());
-
-        }
-        return new BillingTemplateModel(amount, token, fileId, objectId, notification.getParentType(), objectNumber, billName,
-                paymentMethod, last4digitsOfCardNumber, date.toString(), sessionId, message);
+        return new BillingTemplateModel(amount, token, fileId, objectId, notification.getParentType(), objectNumber, billName, paymentMethod, last4digitsOfCardNumber, date.toString(), sessionId, message);
     }
 
     @Override
