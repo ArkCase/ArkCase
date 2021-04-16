@@ -73,6 +73,18 @@ public class RequestResponseFolderService
         log.debug("Sending the compressed Response folder file to outbound message queue the request [{}]", requestId);
         getFoiaRequestFileBrokerClient().sendReleaseFile(requestId, filePath);
 
+    public void compressAndSendResponseSubFolderToPortal(Long requestId, Long folderId, String userName)
+            throws ConversionException, AcmUserActionFailedException, AcmFolderException, AcmObjectNotFoundException
+    {
+        log.debug("Converting response folder [{}] for the request [{}]",folderId, requestId);
+        getResponseFolderConverterService().convertResponseSubFolder(folderId, userName);
+
+        log.debug("Compressing response folder [{}] for the request [{}]", folderId, requestId);
+        String filePath = getResponseFolderCompressorService().compressResponseFolder(requestId, folderId);
+
+        log.debug("Sending the compressed Response folder file to outbound message queue the request [{}]", requestId);
+        getFoiaRequestFileBrokerClient().sendReleaseFile(requestId, filePath);
+
         log.debug("Sending Email notification Response folder zip completed for the request [{}]", requestId);
         getResponseFolderNotifyService().sendEmailResponseCompressNotification(requestId);
     }
