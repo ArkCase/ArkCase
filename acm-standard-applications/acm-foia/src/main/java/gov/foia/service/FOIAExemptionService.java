@@ -31,9 +31,11 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.services.exemption.exception.GetExemptionCodeException;
 import com.armedia.acm.services.exemption.model.ExemptionCode;
 import com.armedia.acm.services.exemption.model.ExemptionConstants;
+import com.armedia.acm.services.labels.service.TranslationService;
 import gov.foia.dao.FOIAExemptionCodeDao;
 import gov.foia.dao.FOIAExemptionStatuteDao;
 import gov.foia.model.ExemptionStatute;
+import gov.foia.model.FormattedRun;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,6 +58,7 @@ public class FOIAExemptionService
     private Logger log = LogManager.getLogger(getClass());
     private FOIAExemptionCodeDao foiaExemptionCodeDao;
     private FOIAExemptionStatuteDao foiaExemptionStatuteDao;
+    private TranslationService translationService;
 
     public List<ExemptionCode> getExemptionCodes(Long parentObjectId, String parentObjectType) throws GetExemptionCodeException
     {
@@ -158,6 +161,31 @@ public class FOIAExemptionService
         return resultList;
     }
 
+    public void createAndStyleRunsForCorrespondenceLetters(Map<String, String> codeDescriptions, List<FormattedRun> runs, ExemptionCode exCode)
+    {
+        runs.add(new FormattedRun());
+        FormattedRun exemptionCodeRun = new FormattedRun();
+        exemptionCodeRun.setText(exCode.getExemptionCode());
+        exemptionCodeRun.setBold(true);
+        exemptionCodeRun.setCapitalized(true);
+        runs.add(exemptionCodeRun);
+        runs.add(new FormattedRun());
+        FormattedRun exemptionDescriptionRun = new FormattedRun();
+        exemptionDescriptionRun.setText(labelValue(codeDescriptions.get(exCode.getExemptionCode())));
+        exemptionDescriptionRun.setFontSize(11);
+        runs.add(exemptionDescriptionRun);
+        FormattedRun exemptionLine = new FormattedRun();
+        exemptionLine.setText("--------------------------------------------------------------------------------------------------------------------");
+        exemptionLine.setFontSize(11);
+        runs.add(exemptionLine);
+    }
+
+    private String labelValue(String labelKey)
+    {
+        return translationService.translate(labelKey);
+    }
+
+
     public boolean hasExemptionOnAnyDocumentsOnRequest(Long objectId, String objectType)
     {
         return foiaExemptionCodeDao.hasExemptionOnAnyDocumentsOnRequest(objectId, objectType);
@@ -181,5 +209,15 @@ public class FOIAExemptionService
     public void setFoiaExemptionStatuteDao(FOIAExemptionStatuteDao foiaExemptionStatuteDao)
     {
         this.foiaExemptionStatuteDao = foiaExemptionStatuteDao;
+    }
+
+    public TranslationService getTranslationService()
+    {
+        return translationService;
+    }
+
+    public void setTranslationService(TranslationService translationService)
+    {
+        this.translationService = translationService;
     }
 }
