@@ -31,7 +31,7 @@ import com.armedia.acm.services.sequence.exception.AcmSequenceException;
 import com.armedia.acm.services.sequence.model.AcmSequenceEntity;
 import com.armedia.acm.services.sequence.model.AcmSequencePart;
 
-import com.armedia.acm.services.sequence.model.AcmSequenceRegistry;
+import com.armedia.acm.services.sequence.model.AcmSequenceRegistryUsed;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.expression.Expression;
@@ -61,7 +61,7 @@ public class AcmObjectPropertySequenceGenerator implements AcmSequenceGenerator
      */
     @Override
     public String generatePartValue(String sequenceName, AcmSequencePart sequencePart, Object object,
-            AcmSequenceRegistry acmSequenceRegistry) throws AcmSequenceException
+           AcmSequenceRegistryUsed usedSequenceRegistry) throws AcmSequenceException
     {
         String objectPropertyValue = "";
         try
@@ -82,9 +82,9 @@ public class AcmObjectPropertySequenceGenerator implements AcmSequenceGenerator
 
     @Override
     public String getGeneratePartValue(String sequenceName, AcmSequencePart sequencePart, Object object,
-            AcmSequenceRegistry acmSequenceRegistry, AcmSequenceEntity acmSequenceEntity) throws AcmSequenceException
+                                       AcmSequenceRegistryUsed usedSequenceRegistry, AcmSequenceEntity acmSequenceEntity) throws AcmSequenceException
     {
-        return generatePartValue(sequenceName, sequencePart, object, acmSequenceRegistry);
+        return generatePartValue(sequenceName, sequencePart, object, usedSequenceRegistry);
     }
 
     /**
