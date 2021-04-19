@@ -56,7 +56,6 @@ import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpSession;
 import javax.validation.ValidationException;
 
-import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.client.api.Folder;
@@ -117,6 +116,7 @@ import com.armedia.acm.plugins.ecm.model.LinkTargetFileDTO;
 import com.armedia.acm.plugins.ecm.model.ProgressbarDetails;
 import com.armedia.acm.plugins.ecm.model.RecycleBinItem;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileConvertEvent;
+import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
 import com.armedia.acm.plugins.ecm.service.FileEventPublisher;
@@ -952,15 +952,9 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             }
             else
             {
-                for (AcmCmisObject file : cmisFolder.getChildren())
-                {
-                    if (!((EcmFileConstants.RECORD).equals(file.getStatus())))
-                    {
-                        EcmFolderDeclareRequestEvent event = new EcmFolderDeclareRequestEvent(cmisFolder, container, authentication);
-                        event.setSucceeded(true);
-                        getApplicationEventPublisher().publishEvent(event);
-                    }
-                }
+                EcmFolderDeclareRequestEvent event = new EcmFolderDeclareRequestEvent(cmisFolder, container, authentication);
+                event.setSucceeded(true);
+                getApplicationEventPublisher().publishEvent(event);
             }
         }
     }
@@ -2363,11 +2357,12 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                 {
                     for (final MultipartFile attachment : attachmentsList)
                     {
-                        if(getEmailAttachmentExtractorComponent().isEmail(attachment))
+                        if (getEmailAttachmentExtractorComponent().isEmail(attachment))
                         {
                             try
                             {
-                                uploadFilesFromEmail(attachment, authentication, parentObjectType, parentObjectId, fileType, folderCmisId, uploadedFiles, fileLang, request.getParameter("uuid"));
+                                uploadFilesFromEmail(attachment, authentication, parentObjectType, parentObjectId, fileType, folderCmisId,
+                                        uploadedFiles, fileLang, request.getParameter("uuid"));
                             }
                             catch (Exception e)
                             {
@@ -2400,7 +2395,9 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         return uploadedFiles;
     }
 
-    private void uploadFilesFromEmail(MultipartFile attachment, Authentication authentication, String parentObjectType, Long parentObjectId, String fileType, String folderCmisId, List<EcmFile> uploadedFiles, String fileLang, String uuid) throws Exception {
+    private void uploadFilesFromEmail(MultipartFile attachment, Authentication authentication, String parentObjectType, Long parentObjectId,
+            String fileType, String folderCmisId, List<EcmFile> uploadedFiles, String fileLang, String uuid) throws Exception
+    {
 
         String folderName;
 
@@ -2408,7 +2405,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         String currentDate = formatter.format(date);
 
-        //extract email attachments
+        // extract email attachments
         EmailAttachmentExtractorComponent.EmailContent emailContent = getEmailAttachmentExtractorComponent().extract(attachment);
 
         // make folder name and create new folder with that name for email file and it's attachment
@@ -2418,8 +2415,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
         emailFolder = getAcmFolderService().addNewFolder(folder, folderName);
 
-
-        //upload emails attachment
+        // upload emails attachment
         uploadAttachment(
                 authentication,
                 parentObjectType,
@@ -2428,7 +2424,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                 uploadedFiles,
                 Objects.requireNonNull(emailContent).getEmailAttachments());
 
-        //create and upload email file and publish event
+        // create and upload email file and publish event
         AcmMultipartFile acmMultipartFile = new AcmMultipartFile(attachment, false);
 
         EcmFile metadata = new EcmFile();
@@ -2450,7 +2446,10 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         uploadedFiles.add(temp);
     }
 
-    private void uploadAttachment(Authentication authentication, String parentObjectType, Long parentObjectId, String folderCmisId, List<EcmFile> uploadedFiles, List<EmailAttachmentExtractorComponent.EmailAttachment> emailAttachments) throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException {
+    private void uploadAttachment(Authentication authentication, String parentObjectType, Long parentObjectId, String folderCmisId,
+            List<EcmFile> uploadedFiles, List<EmailAttachmentExtractorComponent.EmailAttachment> emailAttachments)
+            throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException
+    {
         for (EmailAttachmentExtractorComponent.EmailAttachment emailAttachment : emailAttachments)
         {
             EcmFile temp = upload(
@@ -2463,8 +2462,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                     authentication,
                     folderCmisId,
                     parentObjectType,
-                    parentObjectId
-            );
+                    parentObjectId);
             uploadedFiles.add(temp);
 
             applicationEventPublisher.publishEvent(new EcmFilePostUploadEvent(temp, authentication.getName()));
