@@ -140,8 +140,8 @@ public class FOIARequestComponentUpdatedHandler
         {
             SimpleDateFormat dateFormatter = new SimpleDateFormat("MMMM-dd-yyyy");
             String updatedDueDate = String.format("which updates the Due Date from %s to %s",
-                    dateFormatter.format(originalRequest.getDueDate()),
-                    dateFormatter.format(entity.getDueDate()));
+                    dateFormatter.format(holidayConfigurationService.setDateToLocalDateTimeByDefaultClientTimezone(originalRequest.getDueDate())),
+                    dateFormatter.format(holidayConfigurationService.setDateToLocalDateTimeByDefaultClientTimezone(entity.getDueDate())));
             event = new RequestComponentAgencyChangedEvent(entity, originalRequest, updatedDueDate);
             applicationEventPublisher.publishEvent(event);
         }
