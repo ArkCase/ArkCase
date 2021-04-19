@@ -35,22 +35,21 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
 import static org.junit.Assert.assertEquals;
 
-import com.armedia.acm.core.provider.TemplateModelProvider;
-import com.armedia.acm.services.notification.service.provider.NotificationTemplateModelProvider;
-import com.armedia.acm.services.templateconfiguration.model.Template;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.email.model.EmailSenderConfig;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.services.email.service.AcmEmailSenderService;
 import com.armedia.acm.services.email.service.AcmMailTemplateConfigurationService;
-import com.armedia.acm.services.templateconfiguration.service.TemplateConfigurationManager;
-import com.armedia.acm.services.templateconfiguration.service.TemplatingEngine;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.ApplicationNotificationEvent;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConfig;
 import com.armedia.acm.services.notification.model.NotificationConstants;
+import com.armedia.acm.services.notification.service.provider.NotificationTemplateModelProvider;
+import com.armedia.acm.services.templateconfiguration.model.Template;
+import com.armedia.acm.services.templateconfiguration.service.TemplateConfigurationManager;
+import com.armedia.acm.services.templateconfiguration.service.TemplatingEngine;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.spring.SpringContextHolder;
 
@@ -63,10 +62,8 @@ import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,18 +75,9 @@ public class NotificationServiceTest extends EasyMockSupport
     private NotificationEventPublisher mockNotificationEventPublisher;
     private AuditPropertyEntityAdapter mockAuditPropertyEntityAdapter;
     private SpringContextHolder mockSpringContextHolder;
-    private SendExecutor sendExecutor;
-    private EmailSenderConfig emailSenderConfig;
-    private TemplateModelProvider<Notification> mockTemplateModelProvider;
     private AcmMailTemplateConfigurationService mockTemplateService;
-    private TemplatingEngine mockTemplatingEngine;
-    private UserDao mockUserDao;
-    private AcmEmailSenderService mockEmailSenderService;
-    private Resource templateConfiguration;
-    private List<Template> templateConfigurations = new ArrayList<>();
-    private TemplateConfigurationManager templateConfigurationManager;
-    private EntityManager mockEntityManager;
-    private TypedQuery<Notification> mockQuery;
+    private NotificationUtils mockNotificationUtils;
+    private SmtpNotificationSender smtpNotificationServer;
 
     @Before
     public void setUp() throws Exception
@@ -100,28 +88,26 @@ public class NotificationServiceTest extends EasyMockSupport
         mockNotificationEventPublisher = createMock(NotificationEventPublisher.class);
         mockAuditPropertyEntityAdapter = createMock(AuditPropertyEntityAdapter.class);
         mockSpringContextHolder = createMock(SpringContextHolder.class);
-        mockTemplateModelProvider = createMock(TemplateModelProvider.class);
         mockTemplateService = createMock(AcmMailTemplateConfigurationService.class);
-        mockTemplatingEngine = createMock(TemplatingEngine.class);
-        mockUserDao = createMock(UserDao.class);
-        mockEmailSenderService = createMock(AcmEmailSenderService.class);
-        mockEntityManager = createMock(EntityManager.class);
-        mockQuery = createMock(TypedQuery.class);
-        templateConfiguration = new ClassPathResource("templates-configuration.json");
-        templateConfigurationManager = new TemplateConfigurationManager();
+        TemplatingEngine mockTemplatingEngine = createMock(TemplatingEngine.class);
+        UserDao mockUserDao = createMock(UserDao.class);
+        AcmEmailSenderService mockEmailSenderService = createMock(AcmEmailSenderService.class);
+        mockNotificationUtils = createMock(NotificationUtils.class);
+
+        Resource templateConfiguration = new ClassPathResource("templates-configuration.json");
+        TemplateConfigurationManager templateConfigurationManager = new TemplateConfigurationManager();
         templateConfigurationManager.setTemplatesConfiguration(templateConfiguration);
         templateConfigurationManager.setObjectConverter(ObjectConverter.createObjectConverterForTests());
-        templateConfigurations = templateConfigurationManager.getObjectConverter().getJsonUnmarshaller()
+        List<Template> templateConfigurations = templateConfigurationManager.getObjectConverter().getJsonUnmarshaller()
                 .unmarshallCollection(FileUtils.readFileToString(templateConfiguration.getFile()), List.class, Template.class);
         templateConfigurationManager.setTemplateConfigurations(templateConfigurations);
 
-        sendExecutor = new SendExecutor();
+        SendExecutor sendExecutor = new SendExecutor();
         sendExecutor.setSpringContextHolder(mockSpringContextHolder);
         sendExecutor.setTemplateConfigurationManager(templateConfigurationManager);
 
         notificationService.setNotificationDao(mockNotificationDao);
         notificationService.setNotificationEventPublisher(mockNotificationEventPublisher);
-        notificationService.setSpringContextHolder(mockSpringContextHolder);
         notificationService.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
 
         NotificationConfig notificationConfig = new NotificationConfig();
@@ -131,7 +117,22 @@ public class NotificationServiceTest extends EasyMockSupport
         notificationService.setNotificationConfig(notificationConfig);
         notificationService.setSendExecutor(sendExecutor);
 
-        emailSenderConfig = new EmailSenderConfig();
+        smtpNotificationServer = new SmtpNotificationSender();
+        smtpNotificationServer.setTemplateService(mockTemplateService);
+        smtpNotificationServer.setTemplatingEngine(mockTemplatingEngine);
+        smtpNotificationServer.setUserDao(mockUserDao);
+        smtpNotificationServer.setEmailSenderService(mockEmailSenderService);
+        smtpNotificationServer.setNotificationUtils(mockNotificationUtils);
+        smtpNotificationServer.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
+        smtpNotificationServer.setTemplateConfigurationManager(templateConfigurationManager);
+
+        NotificationSenderFactory notificationSenderFactory = new NotificationSenderFactory();
+        Map<String, NotificationSender> notificationSenderMap = new HashMap<>();
+        notificationSenderMap.put("smtp", smtpNotificationServer);
+        notificationSenderFactory.setNotificationSenderMap(notificationSenderMap);
+        sendExecutor.setNotificationSenderFactory(notificationSenderFactory);
+
+        EmailSenderConfig emailSenderConfig = new EmailSenderConfig();
         emailSenderConfig.setHost("host");
         emailSenderConfig.setPort(8080);
         emailSenderConfig.setUsername("user");
@@ -139,6 +140,7 @@ public class NotificationServiceTest extends EasyMockSupport
         emailSenderConfig.setUserFrom("from");
         emailSenderConfig.setType("smtp");
         emailSenderConfig.setEncryption("off");
+        notificationSenderFactory.setEmailSenderConfig(emailSenderConfig);
     }
 
     @Test
@@ -185,28 +187,7 @@ public class NotificationServiceTest extends EasyMockSupport
         notifications.add(notification1);
         notifications.add(notification2);
 
-
-        NotificationSenderFactory notificationSenderFactory = new NotificationSenderFactory();
-        Map<String, NotificationSender> notificationSenderMap = new HashMap<>();
-
-        SmtpNotificationSender smtpNotificationServer = new SmtpNotificationSender();
-        smtpNotificationServer.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
-
-        notificationSenderMap.put("smtp", smtpNotificationServer);
-        notificationSenderFactory.setNotificationSenderMap(notificationSenderMap);
-        notificationSenderFactory.setEmailSenderConfig(emailSenderConfig);
-
-        NotificationUtils mockNotificationUtils = createMock(NotificationUtils.class);
-        smtpNotificationServer.setNotificationUtils(mockNotificationUtils);
-
-        Map<String, NotificationSenderFactory> senders = new HashMap<>();
-        senders.put("notificationSender", notificationSenderFactory);
-
-        NotificationTemplateModelProvider notificationTemplateModelProvider = createMock(NotificationTemplateModelProvider.class);
-        Map<String, NotificationTemplateModelProvider> providerMap = new HashMap<>();
-        providerMap.put("modelProvider", notificationTemplateModelProvider);
-
-        expect(mockSpringContextHolder.getAllBeansOfType(NotificationTemplateModelProvider.class)).andReturn(providerMap).anyTimes();
+        expect(mockNotificationDao.getNotificationsToProcess()).andReturn(notifications).times(1);
 
         mockAuditPropertyEntityAdapter.setUserId(eq("NOTIFICATION-BATCH-INSERT"));
         expectLastCall().anyTimes();
@@ -218,21 +199,14 @@ public class NotificationServiceTest extends EasyMockSupport
         mockNotificationEventPublisher.publishNotificationEvent(capture(capturedEvent));
         expectLastCall().anyTimes();
 
-        expect(mockNotificationDao.getEntityManager()).andReturn(mockEntityManager).times(1);
-        expect(mockEntityManager.createQuery(anyString(), eq(Notification.class))).andReturn(mockQuery).times(1);
-        expect(mockQuery.getResultList()).andReturn(notifications).times(1);
-        expect(mockSpringContextHolder.getAllBeansOfType(NotificationSenderFactory.class)).andReturn(senders).anyTimes();
-
         String template = "Template";
-        Capture<String> subjectCapture = EasyMock.newCapture();
-
-        smtpNotificationServer.setTemplateService(mockTemplateService);
-        smtpNotificationServer.setTemplatingEngine(mockTemplatingEngine);
-        smtpNotificationServer.setUserDao(mockUserDao);
-        smtpNotificationServer.setEmailSenderService(mockEmailSenderService);
-        smtpNotificationServer.setTemplateConfigurationManager(templateConfigurationManager);
-
         expect(mockTemplateService.getTemplate("modelName.html")).andReturn(template).times(2);
+
+        NotificationTemplateModelProvider notificationTemplateModelProvider = createMock(NotificationTemplateModelProvider.class);
+        Map<String, NotificationTemplateModelProvider> providerMap = new HashMap<>();
+        providerMap.put("modelProvider", notificationTemplateModelProvider);
+
+        expect(mockSpringContextHolder.getAllBeansOfType(NotificationTemplateModelProvider.class)).andReturn(providerMap).anyTimes();
 
         for (Notification notification : notifications)
         {
@@ -240,8 +214,8 @@ public class NotificationServiceTest extends EasyMockSupport
 
             expect(smtpNotificationServer.getTemplatingEngine().process(template, notification.getTemplateModelName(), notification))
                     .andReturn("Body").times(1);
-            expect(smtpNotificationServer.getTemplatingEngine().process(capture(subjectCapture), eq(notification.getTemplateModelName()), eq(notification)))
-                    .andReturn("subject").times(1);
+            expect(smtpNotificationServer.getTemplatingEngine().process(anyString(), eq(notification.getTemplateModelName()),
+                    eq(notification))).andReturn("subject").times(1);
             expect(notificationTemplateModelProvider.getModel(notification)).andReturn(notification).times(1);
 
             smtpNotificationServer.getEmailSenderService().sendEmail(capture(emailWithAttachmentsDTOCapture), eq(null), eq(null));
@@ -255,7 +229,7 @@ public class NotificationServiceTest extends EasyMockSupport
 
         replayAll();
 
-        notificationService.run(new Date(0));
+        notificationService.run();
 
         verifyAll();
 
@@ -303,33 +277,13 @@ public class NotificationServiceTest extends EasyMockSupport
         notifications.add(notification1);
         notifications.add(notification2);
 
-        NotificationSenderFactory notificationSenderFactory = new NotificationSenderFactory();
-        Map<String, NotificationSender> notificationSenderMap = new HashMap<>();
-
-        SmtpNotificationSender smtpNotificationServer = new SmtpNotificationSender();
-
-        NotificationUtils mockNotificationUtils = createMock(NotificationUtils.class);
-        smtpNotificationServer.setNotificationUtils(mockNotificationUtils);
-        smtpNotificationServer.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
-        smtpNotificationServer.setTemplateConfigurationManager(templateConfigurationManager);
-
-        notificationSenderMap.put("smtp", smtpNotificationServer);
-        notificationSenderFactory.setNotificationSenderMap(notificationSenderMap);
-        notificationSenderFactory.setEmailSenderConfig(emailSenderConfig);
-
-        Map<String, NotificationSenderFactory> senders = new HashMap<>();
-        senders.put("notificationSender", notificationSenderFactory);
-
         NotificationTemplateModelProvider notificationTemplateModelProvider = createMock(NotificationTemplateModelProvider.class);
         Map<String, NotificationTemplateModelProvider> providerMap = new HashMap<>();
         providerMap.put("modelProvider", notificationTemplateModelProvider);
 
         expect(mockSpringContextHolder.getAllBeansOfType(NotificationTemplateModelProvider.class)).andReturn(providerMap).anyTimes();
 
-        expect(mockSpringContextHolder.getAllBeansOfType(NotificationSenderFactory.class)).andReturn(senders).anyTimes();
-        expect(mockNotificationDao.getEntityManager()).andReturn(mockEntityManager).anyTimes();
-        expect(mockEntityManager.createQuery(anyString(), eq(Notification.class))).andReturn(mockQuery).anyTimes();
-        expect(mockQuery.getResultList()).andReturn(notifications).anyTimes();
+        expect(mockNotificationDao.getNotificationsToProcess()).andReturn(notifications).anyTimes();
 
         expect(mockNotificationUtils.buildNotificationLink(anyString(), anyLong(), anyString(), anyLong())).andReturn(null).anyTimes();
 
@@ -343,11 +297,6 @@ public class NotificationServiceTest extends EasyMockSupport
         String template = "Template";
         Capture<String> subjectCapture = EasyMock.newCapture();
 
-        smtpNotificationServer.setTemplateService(mockTemplateService);
-        smtpNotificationServer.setTemplatingEngine(mockTemplatingEngine);
-        smtpNotificationServer.setUserDao(mockUserDao);
-        smtpNotificationServer.setEmailSenderService(mockEmailSenderService);
-
         expect(mockTemplateService.getTemplate("modelName.html")).andReturn(template).times(2);
 
         for (Notification notification : notifications)
@@ -356,8 +305,9 @@ public class NotificationServiceTest extends EasyMockSupport
 
             expect(smtpNotificationServer.getTemplatingEngine().process(template, notification.getTemplateModelName(), notification))
                     .andReturn("Body").times(1);
-            expect(smtpNotificationServer.getTemplatingEngine().process(capture(subjectCapture), eq(notification.getTemplateModelName()), eq(notification)))
-                    .andReturn("subject").times(1);
+            expect(smtpNotificationServer.getTemplatingEngine().process(capture(subjectCapture), eq(notification.getTemplateModelName()),
+                    eq(notification)))
+                            .andReturn("subject").times(1);
             expect(notificationTemplateModelProvider.getModel(notification)).andReturn(notification).times(1);
 
             smtpNotificationServer.getEmailSenderService().sendEmail(capture(emailWithAttachmentsDTOCapture), eq(null), eq(null));
@@ -371,8 +321,37 @@ public class NotificationServiceTest extends EasyMockSupport
 
         replayAll();
 
-        notificationService.run(new Date(0));
+        notificationService.run();
 
         verifyAll();
+    }
+
+    @Test
+    public void testRunEmailNotSentDueToTemplateError() throws Exception
+    {
+        Notification notification1 = new Notification();
+        notification1.setTitle("title1");
+        notification1.setNote("note");
+        notification1.setType("type");
+        notification1.setEmailAddresses("user email");
+
+        expect(mockNotificationDao.getNotificationsToProcess()).andReturn(Collections.singletonList(notification1)).anyTimes();
+
+        Capture<Notification> capturedNotification = EasyMock.newCapture();
+        expect(mockNotificationDao.save(capture(capturedNotification))).andReturn(notification1).anyTimes();
+
+        Capture<ApplicationNotificationEvent> capturedEvent = EasyMock.newCapture();
+        mockNotificationEventPublisher.publishNotificationEvent(capture(capturedEvent));
+        expectLastCall().anyTimes();
+
+        mockAuditPropertyEntityAdapter.setUserId(eq("NOTIFICATION-BATCH-INSERT"));
+        expectLastCall().anyTimes();
+
+        replayAll();
+
+        notificationService.run();
+
+        verifyAll();
+        assertEquals(NotificationConstants.STATE_TEMPLATE_ERROR, capturedNotification.getValue().getState());
     }
 }

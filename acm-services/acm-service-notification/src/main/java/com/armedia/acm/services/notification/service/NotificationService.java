@@ -34,7 +34,7 @@ import java.util.Date;
 
 public interface NotificationService
 {
-    void run(Date lastRun);
+    void run();
 
     NotificationBuilder getNotificationBuilder();
 
