@@ -35,12 +35,12 @@ import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.templateconfiguration.model.Template;
 import com.armedia.acm.services.templateconfiguration.service.TemplateConfigurationManager;
-import com.armedia.acm.services.templateconfiguration.service.TemplatingEngine;
 import com.armedia.acm.spring.SpringContextHolder;
-import freemarker.template.TemplateException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -49,9 +49,9 @@ import java.util.Map;
  */
 public class SendExecutor implements Executor
 {
-
     private SpringContextHolder springContextHolder;
     private TemplateConfigurationManager templateConfigurationManager;
+    private NotificationSenderFactory notificationSenderFactory;
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -60,72 +60,69 @@ public class SendExecutor implements Executor
     {
         String templateModelProviderClassPath = getTemplateModelProviderClassName(notification.getTemplateModelName() + ".html");
 
-        Class templateModelProviderClass = null;
+        if (templateModelProviderClassPath == null)
+        {
+            log.warn("Template model provider class not found for notification with template [{}]", notification.getTemplateModelName());
+            notification.setState(NotificationConstants.STATE_TEMPLATE_ERROR);
+            return notification;
+        }
+
+        Class<?> templateModelProviderClass;
         try
         {
             templateModelProviderClass = Class.forName(templateModelProviderClassPath);
         }
+        catch (ClassNotFoundException | ExceptionInInitializerError e)
+        {
+            log.error("Can not find class for provided classname [{}]. Error: {}", templateModelProviderClassPath, e.getMessage());
+            notification.setState(NotificationConstants.STATE_TEMPLATE_ERROR);
+            return notification;
+        }
+
+        TemplateModelProvider<?> templateModelProvider = getTemplateModelProvider(templateModelProviderClass);
+        if (templateModelProvider == null)
+        {
+            log.warn("Template model provider not found for provider class [{}] configured for notification with template [{}]",
+                    templateModelProviderClass.getName(), notification.getTemplateModelName());
+            notification.setState(NotificationConstants.STATE_TEMPLATE_ERROR);
+            return notification;
+        }
+
+        try
+        {
+            notification = notificationSenderFactory.getNotificationSender()
+                    .send(notification, templateModelProvider.getModel(notification));
+        }
         catch (Exception e)
         {
-            log.error("Can not find class for provided classpath {}. Error: {}", templateModelProviderClassPath, e.getMessage());
-            if (e instanceof TemplateException)
-            {
-                notification.setState(NotificationConstants.STATE_TEMPLATE_ERROR);
-            }
-            else
-            {
-                notification.setState(NotificationConstants.STATE_NOT_SENT);
-            }
+            log.error("Failed to send the notification [{}]. Error: {}", notification.getSubject(), e.getMessage());
+            notification.setState(NotificationConstants.STATE_NOT_SENT);
         }
-        TemplateModelProvider templateModelProvider = getTemplateModelProvider(templateModelProviderClass);
-
-        // Get all registered senders
-        Map<String, NotificationSenderFactory> senderFactoryList = getSpringContextHolder()
-                .getAllBeansOfType(NotificationSenderFactory.class);
-
-        for (NotificationSenderFactory senderFactory : senderFactoryList.values())
-        {
-            if (notification.getState() == null || !notification.getState().equals(NotificationConstants.STATE_SENT))
-            {
-                try
-                {
-                    notification = senderFactory.getNotificationSender().send(notification, templateModelProvider.getModel(notification));
-                }
-                catch (Exception e)
-                {
-                    log.error("Can not send the notification. Error: {}", e.getMessage());
-                    notification.setState(NotificationConstants.STATE_NOT_SENT);
-                }
-            }
-        }
-
         return notification;
     }
 
-
     private String getTemplateModelProviderClassName(String templateFileName)
     {
-        String templateModelProvider = getTemplateConfigurationManager().getTemplateConfigurations().stream()
+        return getTemplateConfigurationManager().getTemplateConfigurations()
+                .stream()
                 .filter(t -> t.getTemplateFilename().equals(templateFileName) && t.getTemplateType().equals("emailTemplate"))
-                .findFirst().get().getTemplateModelProvider();
-
-        return templateModelProvider;
+                .findFirst()
+                .map(Template::getTemplateModelProvider)
+                .orElse(null);
     }
 
-    private TemplateModelProvider getTemplateModelProvider(Class templateModelProviderClass)
+    private <T> TemplateModelProvider<T> getTemplateModelProvider(Class<?> templateModelProviderClass)
     {
-        Map<String, TemplateModelProvider> templateModelproviders = getSpringContextHolder().getAllBeansOfType(templateModelProviderClass);
-        if (templateModelproviders.size() > 1)
-        {
-            for (TemplateModelProvider provider : templateModelproviders.values())
-            {
-                if (provider.getClass().equals(templateModelProviderClass))
-                {
-                    return provider;
-                }
-            }
-        }
-        return templateModelproviders.values().iterator().hasNext() ? templateModelproviders.values().iterator().next() : null;
+        Collection<TemplateModelProvider<T>> templateModelProviders = ((Map<String, TemplateModelProvider<T>>) getSpringContextHolder()
+                .getAllBeansOfType(templateModelProviderClass)).values();
+
+        return templateModelProviders
+                .stream()
+                .filter(provider -> provider.getClass().equals(templateModelProviderClass))
+                .findFirst()
+                .orElseGet(() -> templateModelProviders.stream()
+                        .findFirst()
+                        .orElse(null));
     }
 
     public SpringContextHolder getSpringContextHolder()
@@ -146,5 +143,15 @@ public class SendExecutor implements Executor
     public void setTemplateConfigurationManager(TemplateConfigurationManager templateConfigurationManager)
     {
         this.templateConfigurationManager = templateConfigurationManager;
+    }
+
+    public NotificationSenderFactory getNotificationSenderFactory()
+    {
+        return notificationSenderFactory;
+    }
+
+    public void setNotificationSenderFactory(NotificationSenderFactory notificationSenderFactory)
+    {
+        this.notificationSenderFactory = notificationSenderFactory;
     }
 }
