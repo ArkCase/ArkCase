@@ -33,8 +33,6 @@ import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobExecutionContext;
 import org.quartz.PersistJobDataAfterExecution;
 
-import java.util.Date;
-
 @DisallowConcurrentExecution
 @PersistJobDataAfterExecution
 public class NotificationJobDescriptor extends AcmJobDescriptor
@@ -50,8 +48,7 @@ public class NotificationJobDescriptor extends AcmJobDescriptor
     @Override
     public void executeJob(JobExecutionContext context)
     {
-        Date lastRun = context.getPreviousFireTime() == null ? new Date() : context.getPreviousFireTime();
-        notificationService.run(lastRun);
+        notificationService.run();
     }
 
     public NotificationService getNotificationService()

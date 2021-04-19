@@ -30,23 +30,19 @@ package com.armedia.acm.services.notification.dao;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
-import com.armedia.acm.services.notification.model.NotificationRule;
-import com.armedia.acm.services.notification.service.NotificationUtils;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Parameter;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public class NotificationDao extends AcmAbstractDao<Notification>
 {
@@ -54,8 +50,6 @@ public class NotificationDao extends AcmAbstractDao<Notification>
 
     @PersistenceContext
     private EntityManager entityManager;
-
-    private NotificationUtils notificationUtils;
 
     @Override
     protected Class<Notification> getPersistenceClass()
@@ -125,95 +119,15 @@ public class NotificationDao extends AcmAbstractDao<Notification>
         entityManager.remove(notificationToBeDeleted);
     }
 
-    /**
-     * This method is used only for notification rules. We have two possibilities - when we want to create notifications
-     * ('create' should be true) and get already existing notifications that rich the rules that we want to update
-     *
-     * @param parameters
-     * @param firstResult
-     * @param maxResult
-     * @param rule
-     * @return
-     */
-    public List<Notification> executeQuery(Map<String, Object> parameters, int firstResult, int maxResult, NotificationRule rule)
+    public List<Notification> getNotificationsToProcess()
     {
-        return getNotifications(parameters, firstResult, maxResult, rule.getJpaQuery());
-    }
-
-    /**
-     * This method is called when we have to take already existing notifications with rules defined in the query
-     *
-     * @param parameters
-     * @param firstResult
-     * @param maxResult
-     * @param query
-     * @return
-     */
-    private List<Notification> getNotifications(Map<String, Object> parameters, int firstResult, int maxResult, String query)
-    {
-        Query select = getEm().createQuery(query);
-
-        select = populateQueryParameters(select, parameters);
-        select.setFirstResult(firstResult);
-        select.setMaxResults(maxResult);
-
-        @SuppressWarnings("unchecked")
-        List<Notification> retval = select.getResultList();
-
-        if (null == retval)
-        {
-            retval = new ArrayList<>();
-        }
-
-        return retval;
-    }
-
-    /**
-     * This method will populate query parameters. If JPQL don't have specific property, that will be excluded from
-     * adding them in the query
-     *
-     * @param query
-     * @param parameters
-     * @return
-     */
-    private Query populateQueryParameters(Query query, Map<String, Object> parameters)
-    {
-        if (parameters != null)
-        {
-            // Get parameters that are in the query
-            Set<Parameter<?>> queryParameters = query.getParameters();
-
-            if (queryParameters != null)
-            {
-                for (Parameter<?> queryParameter : queryParameters)
-                {
-                    // Take query parameter name
-                    String key = queryParameter.getName();
-
-                    // If query parameter name exist in the provided parameters, take the value and add it
-                    if (parameters.containsKey(key))
-                    {
-                        query.setParameter(key, parameters.get(key));
-                    }
-                }
-            }
-        }
-
-        return query;
+        String queryText = "SELECT n FROM Notification n WHERE n.state is null";
+        TypedQuery<Notification> query = entityManager.createQuery(queryText, Notification.class);
+        return query.getResultList();
     }
 
     public EntityManager getEntityManager()
     {
         return entityManager;
-    }
-
-    public NotificationUtils getNotificationUtils()
-    {
-        return notificationUtils;
-    }
-
-    public void setNotificationUtils(NotificationUtils notificationUtils)
-    {
-        this.notificationUtils = notificationUtils;
     }
 }
