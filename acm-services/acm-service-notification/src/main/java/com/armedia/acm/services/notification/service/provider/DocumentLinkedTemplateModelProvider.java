@@ -49,17 +49,17 @@ public class DocumentLinkedTemplateModelProvider implements TemplateModelProvide
         List<EcmFileVersion> fileVersions = notification.getFiles();
         List<String> links = new ArrayList<>();
         List<String> fileNames = new ArrayList<>();
-        if (fileVersions.size() > 0)
+        if (fileVersions != null)
         {
-            fileVersions = fileVersions.stream()
-                    .filter(filversion -> filversion.getVersionTag().equals(filversion.getFile().getActiveVersionTag()))
-                    .collect(Collectors.toList());
             for (int i = 0; i < fileVersions.size(); i++)
             {
-                fileNames.add(fileVersions.get(i).getFile().getFileName() + fileVersions.get(i).getFile().getFileActiveVersionNameExtension());
-                links.add("ecmFileId=" + fileVersions.get(i).getFile().getFileId() + "&version=&acm_email_ticket="
-                        + authenticationTokenService.generateAndSaveAuthenticationToken(fileVersions.get(i).getId(),
-                                notification.getEmailAddresses(), null));
+                if(fileVersions.get(i).getVersionTag().equals(fileVersions.get(i).getFile().getActiveVersionTag()))
+                {
+                    fileNames.add(fileVersions.get(i).getFile().getFileName() + fileVersions.get(i).getFile().getFileActiveVersionNameExtension());
+                    links.add("ecmFileId=" + fileVersions.get(i).getFile().getFileId() + "&version=&acm_email_ticket="
+                            + authenticationTokenService.generateAndSaveAuthenticationToken(fileVersions.get(i).getId(),
+                            notification.getEmailAddresses(), null));
+                }
             }
         }
         return new DocumentLinkedModel(links, fileNames, notification.getRelatedObjectType(), notification.getRelatedObjectNumber());
