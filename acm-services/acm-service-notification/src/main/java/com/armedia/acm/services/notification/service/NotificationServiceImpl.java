@@ -33,14 +33,11 @@ import com.armedia.acm.services.notification.model.ApplicationNotificationEvent;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConfig;
 import com.armedia.acm.services.notification.model.NotificationConstants;
-import com.armedia.acm.spring.SpringContextHolder;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.persistence.TypedQuery;
-import java.util.Date;
 import java.util.List;
 
 public class NotificationServiceImpl implements NotificationService
@@ -50,9 +47,7 @@ public class NotificationServiceImpl implements NotificationService
     private NotificationConfig notificationConfig;
     private NotificationDao notificationDao;
     private NotificationEventPublisher notificationEventPublisher;
-    private SpringContextHolder springContextHolder;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
-    private NotificationFormatter notificationFormatter;
     private NotificationBuilder notificationBuilder;
     private SendExecutor sendExecutor;
 
@@ -60,10 +55,11 @@ public class NotificationServiceImpl implements NotificationService
      * This method is called by scheduled task
      */
     @Override
-    public void run(Date lastRun)
+    public void run()
     {
         if (!notificationConfig.getUserBatchRun())
         {
+            LOG.info("Notifications won't be processed since batch run is disabled");
             return;
         }
 
@@ -71,24 +67,16 @@ public class NotificationServiceImpl implements NotificationService
 
         try
         {
+            List<Notification> notificationToProcess = notificationDao.getNotificationsToProcess();
 
-            String queryText = "SELECT n FROM Notification n WHERE n.state is null";
-            TypedQuery<Notification> query = getNotificationDao().getEntityManager().createQuery(queryText, Notification.class);
-            List<Notification> notifications = query.getResultList();
-
-            if (!notifications.isEmpty())
-                {
-
-                notifications.stream()
-                        .map(element -> getSendExecutor().execute(element))
-                        .map(element -> getNotificationDao().save(element))
-                        .forEach(element -> {
-                            ApplicationNotificationEvent event = new ApplicationNotificationEvent(element,
-                                    NotificationConstants.OBJECT_TYPE.toLowerCase(), true, null);
-                            getNotificationEventPublisher().publishNotificationEvent(event);
-                        });
-                }
-
+            notificationToProcess.stream()
+                    .map(element -> getSendExecutor().execute(element))
+                    .map(element -> getNotificationDao().save(element))
+                    .forEach(element -> {
+                        ApplicationNotificationEvent event = new ApplicationNotificationEvent(element,
+                                NotificationConstants.OBJECT_TYPE.toLowerCase(), true, null);
+                        getNotificationEventPublisher().publishNotificationEvent(event);
+                    });
         }
         catch (Exception e)
         {
@@ -119,61 +107,61 @@ public class NotificationServiceImpl implements NotificationService
 
         return saved;
     }
-    
+
     @Override
     public String setNotificationTitleForManualNotification(String templateName)
     {
         String title = "";
         switch (templateName)
         {
-            case "casePriorityChanged":
-                title = NotificationConstants.CASE_PRIORITY_CHANGED;
-                break;
-            case "caseStatusChanged":
-                title = NotificationConstants.CASE_STATUS_CHANGED;
-                break;
-            case "complaintPriorityChanged":
-                title = NotificationConstants.COMPLAINT_PRIORITY_CHANGED;
-                break;
-            case "complaintStatusChanged":
-                title = NotificationConstants.COMPLAINT_STATUS_CHANGED;
-                break;
-            case "mentions":
-                title = NotificationConstants.EMAIL_MENTIONS;
-                break;
-            case "noteAdded":
-                title = NotificationConstants.NOTE_ADDED;
-                break;
-            case "objectAssigned":
-                title = NotificationConstants.OBJECT_ASSIGNED;
-                break;
-            case "objectUnassigned":
-                title = NotificationConstants.OBJECT_UNASSIGNED;
-                break;
-            case "participantsAdded":
-                title = NotificationConstants.PARTICIPANTS_ADDED;
-                break;
-            case "participantsDeleted":
-                title = NotificationConstants.PARTICIPANTS_DELETED;
-                break;
-            case "taskOverdue":
-                title = NotificationConstants.TASK_OVERDUE;
-                break;
-            case "taskPriorityChanged":
-                title = NotificationConstants.TASK_PRIORITY_CHANGED;
-                break;
-            case "taskStatusChanged":
-                title = NotificationConstants.TASK_STATUS_CHANGED;
-                break;
-            case "taskUpcoming":
-                title = NotificationConstants.TASK_UPCOMING;
-                break;
-            case "concurNonConcur":
-                title = NotificationConstants.TASK_CONCUR_NONCONCUR;
-                break;
-            case "requestReleased":
-                title = NotificationConstants.REQUEST_RELEASED;
-                break;
+        case "casePriorityChanged":
+            title = NotificationConstants.CASE_PRIORITY_CHANGED;
+            break;
+        case "caseStatusChanged":
+            title = NotificationConstants.CASE_STATUS_CHANGED;
+            break;
+        case "complaintPriorityChanged":
+            title = NotificationConstants.COMPLAINT_PRIORITY_CHANGED;
+            break;
+        case "complaintStatusChanged":
+            title = NotificationConstants.COMPLAINT_STATUS_CHANGED;
+            break;
+        case "mentions":
+            title = NotificationConstants.EMAIL_MENTIONS;
+            break;
+        case "noteAdded":
+            title = NotificationConstants.NOTE_ADDED;
+            break;
+        case "objectAssigned":
+            title = NotificationConstants.OBJECT_ASSIGNED;
+            break;
+        case "objectUnassigned":
+            title = NotificationConstants.OBJECT_UNASSIGNED;
+            break;
+        case "participantsAdded":
+            title = NotificationConstants.PARTICIPANTS_ADDED;
+            break;
+        case "participantsDeleted":
+            title = NotificationConstants.PARTICIPANTS_DELETED;
+            break;
+        case "taskOverdue":
+            title = NotificationConstants.TASK_OVERDUE;
+            break;
+        case "taskPriorityChanged":
+            title = NotificationConstants.TASK_PRIORITY_CHANGED;
+            break;
+        case "taskStatusChanged":
+            title = NotificationConstants.TASK_STATUS_CHANGED;
+            break;
+        case "taskUpcoming":
+            title = NotificationConstants.TASK_UPCOMING;
+            break;
+        case "concurNonConcur":
+            title = NotificationConstants.TASK_CONCUR_NONCONCUR;
+            break;
+        case "requestReleased":
+            title = NotificationConstants.REQUEST_RELEASED;
+            break;
         }
         return title;
     }
@@ -198,16 +186,6 @@ public class NotificationServiceImpl implements NotificationService
         this.notificationEventPublisher = notificationEventPublisher;
     }
 
-    public SpringContextHolder getSpringContextHolder()
-    {
-        return springContextHolder;
-    }
-
-    public void setSpringContextHolder(SpringContextHolder springContextHolder)
-    {
-        this.springContextHolder = springContextHolder;
-    }
-
     public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()
     {
         return auditPropertyEntityAdapter;
@@ -216,16 +194,6 @@ public class NotificationServiceImpl implements NotificationService
     public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
     {
         this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
-    }
-
-    public NotificationFormatter getNotificationFormatter()
-    {
-        return notificationFormatter;
-    }
-
-    public void setNotificationFormatter(NotificationFormatter notificationFormatter)
-    {
-        this.notificationFormatter = notificationFormatter;
     }
 
     public NotificationConfig getNotificationConfig()
