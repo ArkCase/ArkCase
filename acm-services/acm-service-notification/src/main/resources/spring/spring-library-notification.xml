@@ -90,6 +90,7 @@
     <bean id="notificationSendExecutor" class="com.armedia.acm.services.notification.service.SendExecutor">
         <property name="springContextHolder" ref="acmContextHolder"/>
         <property name="templateConfigurationManager" ref="templateConfigurationManager"/>
+        <property name="notificationSenderFactory" ref="notificationSenderFactory"/>
     </bean>
 
     <bean id="acmNotificationPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
