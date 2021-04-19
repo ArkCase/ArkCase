@@ -56,7 +56,6 @@ import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpSession;
 import javax.validation.ValidationException;
 
-import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.client.api.Folder;
@@ -1000,11 +999,9 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             }
             else
             {
-                List<EcmFile> filesInFolderAndSubfolders = getAcmFolderService().getFilesInFolderAndSubfolders(folderId);
-                filesInFolderAndSubfolders.stream()
-                        .filter(file -> file.getStatus().equalsIgnoreCase(EcmFileConstants.ACTIVE))
-                        .map(file -> new EcmFileDeclareRequestEvent(file, true, authentication))
-                        .forEach(event -> getApplicationEventPublisher().publishEvent(event));
+                EcmFolderDeclareRequestEvent event = new EcmFolderDeclareRequestEvent(cmisFolder, container, authentication);
+                event.setSucceeded(true);
+                getApplicationEventPublisher().publishEvent(event);
             }
         }
     }
@@ -2494,6 +2491,31 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     private void uploadAttachment(Authentication authentication, String parentObjectType, Long parentObjectId, String folderCmisId,
             List<EcmFile> uploadedFiles, List<EmailAttachmentExtractorComponent.EmailAttachment> emailAttachments)
             throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException
+    {
+        for (EmailAttachmentExtractorComponent.EmailAttachment emailAttachment : emailAttachments)
+        {
+            EcmFile temp = upload(
+                    emailAttachment.getName(),
+                    "Attachment",
+                    "Document",
+                    emailAttachment.getInputStream(),
+                    emailAttachment.getContentType(),
+                    emailAttachment.getName(),
+                    authentication,
+                    folderCmisId,
+                    parentObjectType,
+                    parentObjectId);
+            uploadedFiles.add(temp);
+
+            applicationEventPublisher.publishEvent(new EcmFilePostUploadEvent(temp, authentication.getName()));
+        }
+    }
+
+    @Override
+    @Transactional
+    public List<EcmFile> uploadMultipleFilesWithData(List<MultipartFile> fileList, List<EcmFile> metadataList, String parentObjectType,
+            Long parentObjectId, String folderCmisId, Authentication authentication)
+            throws AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         for (EmailAttachmentExtractorComponent.EmailAttachment emailAttachment : emailAttachments)
         {
