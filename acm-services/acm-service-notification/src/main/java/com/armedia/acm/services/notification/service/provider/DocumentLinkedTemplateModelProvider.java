@@ -55,17 +55,14 @@ public class DocumentLinkedTemplateModelProvider implements TemplateModelProvide
         List<String> fileNames = new ArrayList<>();
         if (fileVersions != null)
         {
-            String token = authenticationTokenService.getUncachedTokenForAuthentication(null);
-            String requestUrl = applicationConfig.getBaseUrl() + "/api/latest/plugin/ecm/download?";
-            String relativePath = "";
             for (int i = 0; i < fileVersions.size(); i++)
             {
-                if (fileVersions.get(i).getVersionTag().equals(fileVersions.get(i).getFile().getActiveVersionTag()))
+                if(fileVersions.get(i).getVersionTag().equals(fileVersions.get(i).getFile().getActiveVersionTag()))
                 {
                     fileNames.add(fileVersions.get(i).getFile().getFileName() + fileVersions.get(i).getFile().getFileActiveVersionNameExtension());
-                    String url = "ecmFileId=" + fileVersions.get(i).getFile().getFileId() + "&version=&acm_email_ticket=" + token;
-                    links.add(url);
-                    relativePath += requestUrl + url + "__comma__";
+                    links.add("ecmFileId=" + fileVersions.get(i).getFile().getFileId() + "&version=&acm_email_ticket="
+                            + authenticationTokenService.generateAndSaveAuthenticationToken(fileVersions.get(i).getId(),
+                            notification.getEmailAddresses(), null));
                 }
             }
             authenticationTokenService.addTokenToRelativePaths(Arrays.asList(relativePath.split("__comma__")), token, tokenExpiry, notification.getEmailAddresses());
