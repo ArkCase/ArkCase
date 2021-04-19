@@ -171,7 +171,12 @@ public class HolidayConfigurationService
         return localTimeInSetTimezone.isAfter(getEndOfClientBusinessDayTime());
     }
 
-    public ZonedDateTime getZonedDateTimeAtDefaultClientTimezone(Date date)
+    public LocalDateTime setDateToLocalDateTimeByDefaultClientTimezone(Date date)
+    {
+        return getZonedDateTimeAtDefaultClientTimezone(date).toLocalDateTime();
+    }
+
+    private ZonedDateTime getZonedDateTimeAtDefaultClientTimezone(Date date)
     {
         return date.toInstant().atZone(getDefaultClientZoneId());
     }

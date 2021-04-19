@@ -180,8 +180,8 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
                         {
                             if (isDueDateChanged(updatedCaseFile, existing))
                             {
-                                String newDate = getDateString(setDateToLocalDateTimeByDefaultClientTimezone(updatedCaseFile.getDueDate()));
-                                String oldDate = getDateString(setDateToLocalDateTimeByDefaultClientTimezone(existing.getDueDate()));
+                                String newDate = getDateString(getHolidayConfigurationService().setDateToLocalDateTimeByDefaultClientTimezone(updatedCaseFile.getDueDate()));
+                                String oldDate = getDateString(getHolidayConfigurationService().setDateToLocalDateTimeByDefaultClientTimezone(existing.getDueDate()));
                                 String timeZone = getHolidayConfigurationService().getDefaultClientZoneId().getId();
 
                                 getCaseFileEventUtility().raiseDueDateUpdatedEvent(updatedCaseFile, oldDate, newDate, timeZone, event.getIpAddress());
@@ -342,11 +342,6 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
         }
 
         return "None";
-    }
-
-    private LocalDateTime setDateToLocalDateTimeByDefaultClientTimezone(Date date)
-    {
-        return getHolidayConfigurationService().getZonedDateTimeAtDefaultClientTimezone(date).toLocalDateTime();
     }
 
     public AcmObjectHistoryService getAcmObjectHistoryService()
