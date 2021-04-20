@@ -30,7 +30,6 @@ package gov.foia.service;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.service.GetCaseByNumberService;
-import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.person.dao.PersonAssociationDao;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.service.impl.CreateAdHocTaskService;
