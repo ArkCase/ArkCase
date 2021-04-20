@@ -27,12 +27,12 @@ package com.armedia.acm.plugins.ecm.model;
  * #L%
  */
 
-import com.armedia.acm.auth.AcmAuthenticationDetails;
-import com.armedia.acm.core.model.AcmEvent;
+import java.util.Date;
 
 import org.springframework.security.core.Authentication;
 
-import java.util.Date;
+import com.armedia.acm.auth.AcmAuthenticationDetails;
+import com.armedia.acm.core.model.AcmEvent;
 
 /**
  * Created by armdev on 5/1/14.
@@ -66,6 +66,12 @@ public class EcmFileDeclareRequestEvent extends AcmEvent
             setIpAddress(((AcmAuthenticationDetails) authentication.getDetails()).getRemoteAddress());
         }
 
+    }
+
+    public EcmFileDeclareRequestEvent(EcmFile ecmFile, Boolean succeeded, Authentication authentication)
+    {
+        this(ecmFile, authentication);
+        setSucceeded(succeeded);
     }
 
     @Override
