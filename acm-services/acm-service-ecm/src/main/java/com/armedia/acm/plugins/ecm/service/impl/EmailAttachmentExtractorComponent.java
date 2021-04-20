@@ -77,13 +77,10 @@ public class EmailAttachmentExtractorComponent
                         contentType));
             }
             subject = message.getSubject();
-            if (message.getHeaders() != null)
+            Optional<String> from = Arrays.stream(message.getHeaders()).filter(m-> m.startsWith("From:")).findFirst();
+            if(from.isPresent())
             {
-                Optional<String> from = Arrays.stream(message.getHeaders()).filter(m-> m.startsWith("From:")).findFirst();
-                if(from.isPresent())
-                {
-                    sender = StringUtils.substringBetween(from.get(), "<", ">");
-                }
+                sender = StringUtils.substringBetween(from.get(), "<", ">");
             }
         }
         return new EmailContent(emailAttachments, subject, sender);
