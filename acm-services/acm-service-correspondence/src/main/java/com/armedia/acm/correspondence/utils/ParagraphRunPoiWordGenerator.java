@@ -373,17 +373,18 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                  * Here we duplicate only the simple attributes...
                  */
                 newRun.setText(texts[i]);
-                newRun.setBold(true);
-                newRun.setCapitalized(run.isCapitalized());
+                newRun.setBold(run.isBold());
                 // run.getCharacterSpacing() throws NullPointerException. Maybe in future version of the library
                 // this will be fixed.
                 // newRun.setCharacterSpacing(run.getCharacterSpacing());
+                // Combination of this two is causing Snowbound to display all caps.
+                // newRun.setEmbossed(run.isEmbossed());
+                // newRun.setCapitalized(run.isCapitalized());
                 if (run.getColor() != null)
                 {
                     newRun.setColor(run.getColor());
                 }
                 newRun.setDoubleStrikethrough(run.isDoubleStrikeThrough());
-                newRun.setEmbossed(run.isEmbossed());
                 newRun.setFontFamily(run.getFontFamily());
                 newRun.setFontSize(run.getFontSize());
                 newRun.setImprinted(run.isImprinted());
@@ -470,8 +471,9 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                 newRun.setBold(formattedRun.isBold());
                 newRun.setImprinted(formattedRun.isImprinted());
                 newRun.setItalic(formattedRun.isItalic());
-                newRun.setEmbossed(formattedRun.isEmbossed());
-                newRun.setCapitalized(formattedRun.isCapitalized());
+                // Combination of this two is causing Snowbound to display all caps.
+                // newRun.setEmbossed(formattedRun.isEmbossed());
+                // newRun.setCapitalized(formattedRun.isCapitalized());
                 newRun.setShadow(formattedRun.isShadowed());
                 newRun.setSmallCaps(formattedRun.isSmallCaps());
                 newRun.setStrikeThrough(formattedRun.isStrikeThrough());
@@ -733,7 +735,18 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                 StringJoiner joiner = new StringJoiner(",");
                 for (EcmFile file : allFiles)
                 {
-                    joiner.add(file.getFileName());
+                    // Covers only FOIA, for extensions will list all files
+                    if (spelExpressionForContainerId.contains("request"))
+                    {
+                        if (file.getFolder().getName().equals(appConfig.getListFilesInFolder()))
+                        {
+                            joiner.add(file.getFileName());
+                        }
+                    }
+                    else
+                    {
+                        joiner.add(file.getFileName());
+                    }
                 }
                 generatedExpression = joiner.toString();
             }
