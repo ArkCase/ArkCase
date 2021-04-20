@@ -153,6 +153,10 @@ public class ApplicationConfig implements DynamicApplicationConfig
     @Value("${application.properties.dashboardBannerEnabled}")
     private Boolean dashboardBannerEnabled;
 
+    @JsonProperty("application.properties.listFilesInFolder")
+    @Value("${application.properties.listFilesInFolder}")
+    private String listFilesInFolder;
+
     public Integer getIdleLimit()
     {
         return idleLimit;
@@ -381,5 +385,15 @@ public class ApplicationConfig implements DynamicApplicationConfig
     public void setDashboardBannerEnabled(Boolean dashboardBannerEnabled)
     {
         this.dashboardBannerEnabled = dashboardBannerEnabled;
+    }
+
+    public String getListFilesInFolder()
+    {
+        return listFilesInFolder;
+    }
+
+    public void setListFilesInFolder(String listFilesInFolder)
+    {
+        this.listFilesInFolder = listFilesInFolder;
     }
 }
