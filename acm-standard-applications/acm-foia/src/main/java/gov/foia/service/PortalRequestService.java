@@ -431,7 +431,7 @@ public class PortalRequestService
         return files;
     }
 
-    private AcmTask populateWithdrawalTask(WithdrawRequest withdrawRequestDetails, FOIARequest request)
+    protected AcmTask populateWithdrawalTask(WithdrawRequest withdrawRequestDetails, FOIARequest request)
     {
         AcmTask requestWithdrawalTask = new AcmTask();
 
