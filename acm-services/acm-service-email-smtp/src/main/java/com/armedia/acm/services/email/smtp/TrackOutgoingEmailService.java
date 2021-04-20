@@ -120,24 +120,6 @@ public class TrackOutgoingEmailService implements ApplicationEventPublisherAware
                         folder.getCmisFolderId(), objectType, Long.parseLong(objectId));
 
             }
-            if (attachments != null)
-            {
-                attachments.forEach(attachment -> {
-                    try (InputStream is = attachment.getInputStream())
-                    {
-                        String attachmentFileName = checkDuplicateFileName(attachment.getName(), folder.getId());
-                        getEcmFileService().upload(attachmentFileName, "attachment", "Document", is, attachment.getContentType(),
-                                attachmentFileName, auth,
-                                folder.getCmisFolderId(), objectType, Long.parseLong(objectId));
-                    }
-                    // File upload falling should not break the flow
-                    catch (IOException | AcmUserActionFailedException | AcmCreateObjectFailedException e)
-                    {
-                        log.error("Failed to upload attachments to Outgoing Email folder for object with ID '{}'. Cause: {}", objectId,
-                                e.getMessage());
-                    }
-                });
-            }
 
             SmtpEventMailSent event = new SmtpEventMailSent(email, userId, mailFile.getId(), mailFile.getObjectType(),
                     Long.parseLong(objectId),

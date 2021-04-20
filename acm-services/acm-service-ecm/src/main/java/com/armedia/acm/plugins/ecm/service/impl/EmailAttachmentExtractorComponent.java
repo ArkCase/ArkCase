@@ -28,6 +28,7 @@ package com.armedia.acm.plugins.ecm.service.impl;
  */
 
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.mail.util.MimeMessageParser;
 import org.apache.poi.hsmf.MAPIMessage;
 import org.apache.poi.hsmf.datatypes.AttachmentChunks;
@@ -46,7 +47,9 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.Properties;
 
 @Component
@@ -55,7 +58,7 @@ public class EmailAttachmentExtractorComponent
     public EmailContent extractFromMsg(MultipartFile attachment) throws ChunkNotFoundException, IOException {
         List<EmailAttachment> emailAttachments = new ArrayList<>();
         String sender = "";
-        String subject = "";
+        String subject;
         try(InputStream inputStream = attachment.getInputStream())
         {
             MAPIMessage message = new MAPIMessage(inputStream);
@@ -73,17 +76,19 @@ public class EmailAttachmentExtractorComponent
                         contentType));
             }
             subject = message.getSubject();
-            sender = message.getMainChunks().getEmailFromChunk().getValue();
+            Optional<String> from = Arrays.stream(message.getHeaders()).filter(m-> m.startsWith("From:")).findFirst();
+            if(from.isPresent())
+            {
+                sender = StringUtils.substringBetween(from.get(), "<", ">");
+            }
         }
-
-
         return new EmailContent(emailAttachments, subject, sender);
     }
 
     public EmailContent extractFromEml(MultipartFile attachment) throws Exception {
         List<EmailAttachment> emailAttachments = new ArrayList<>();
-        String subject = "";
-        String sender = "";
+        String subject;
+        String sender;
         Properties props = new Properties();
         Session mailSession = Session.getDefaultInstance(props, null);
 
