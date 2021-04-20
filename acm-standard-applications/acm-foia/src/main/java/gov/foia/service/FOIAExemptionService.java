@@ -169,9 +169,9 @@ public class FOIAExemptionService
     {
         runs.add(new FormattedRun());
         FormattedRun exemptionCodeRun = new FormattedRun();
-        exemptionCodeRun.setText(exCode.getExemptionCode());
+        exemptionCodeRun.setText(exCode.getExemptionCode().toUpperCase());
         exemptionCodeRun.setBold(true);
-        exemptionCodeRun.setCapitalized(true);
+        // exemptionCodeRun.setCapitalized(true); is causing Snowbound to display all caps
         runs.add(exemptionCodeRun);
         runs.add(new FormattedRun());
         FormattedRun exemptionDescriptionRun = new FormattedRun();
@@ -181,7 +181,7 @@ public class FOIAExemptionService
         FormattedRun exemptionLine = new FormattedRun();
         exemptionLine.setText(
                 "--------------------------------------------------------------------------------------------------------------------");
-        exemptionLine.setFontSize(12);
+        exemptionLine.setFontSize(11);
         runs.add(exemptionLine);
     }
 
