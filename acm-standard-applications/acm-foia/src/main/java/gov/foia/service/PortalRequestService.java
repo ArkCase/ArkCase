@@ -379,18 +379,7 @@ public class PortalRequestService
 
         AcmTask requestWithdrawalTask = populateWithdrawalTask(withdrawRequestDetails, request);
 
-        List<MultipartFile> files = new ArrayList<>();
-        for (PortalFOIARequestFile portalFile : withdrawRequestDetails.getDocuments())
-        {
-            try
-            {
-                files.add(convertPortalRequestFileToMultipartFile(portalFile));
-            }
-            catch (IOException e)
-            {
-                log.error("Failed to receive file {}, {}", portalFile.getFileName(), e.getMessage());
-            }
-        }
+        List<MultipartFile> files = addWithdrawalFiles(withdrawRequestDetails);
 
         try
         {
@@ -409,13 +398,34 @@ public class PortalRequestService
 
     }
 
-    private AcmTask populateWithdrawalTask(WithdrawRequest withdrawRequestDetails, FOIARequest request)
+    private List<MultipartFile> addWithdrawalFiles(WithdrawRequest withdrawRequestDetails)
+    {
+        if (withdrawRequestDetails.getDocuments() == null || withdrawRequestDetails.getDocuments().isEmpty())
+        {
+            return new ArrayList<>();
+        }
+
+        List<MultipartFile> files = new ArrayList<>();
+        for (PortalFOIARequestFile portalFile : withdrawRequestDetails.getDocuments())
+        {
+            try
+            {
+                files.add(convertPortalRequestFileToMultipartFile(portalFile));
+            } catch (IOException e)
+            {
+                log.error("Failed to receive file {}, {}", portalFile.getFileName(), e.getMessage());
+            }
+        }
+        return files;
+    }
+
+    protected AcmTask populateWithdrawalTask(WithdrawRequest withdrawRequestDetails, FOIARequest request)
     {
         AcmTask requestWithdrawalTask = new AcmTask();
 
         String requestTitle = withdrawRequestDetails.getSubject() != null ?
                 String.format("%s %s: %s", WITHDRAW_REQUEST_TITLE, withdrawRequestDetails.getOriginalRequestNumber(),
-                withdrawRequestDetails.getSubject()) :
+                        withdrawRequestDetails.getSubject()) :
                 String.format("%s %s", WITHDRAW_REQUEST_TITLE, withdrawRequestDetails.getOriginalRequestNumber());
         requestWithdrawalTask.setTitle(requestTitle);
         requestWithdrawalTask.setType("web-portal-withdrawal");
