@@ -111,7 +111,6 @@ import com.armedia.acm.plugins.ecm.model.EcmFileDeclareRequestEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFilePostUploadEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFileUpdatedEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
-import com.armedia.acm.plugins.ecm.model.EcmFolderDeclareRequestEvent;
 import com.armedia.acm.plugins.ecm.model.LinkTargetFileDTO;
 import com.armedia.acm.plugins.ecm.model.ProgressbarDetails;
 import com.armedia.acm.plugins.ecm.model.RecycleBinItem;
@@ -943,18 +942,18 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
         if (null != folderId)
         {
-            AcmContainer container = getOrCreateContainer(parentObjectType, parentObjectId);
-            AcmCmisObjectList cmisFolder = allFilesForFolder(authentication, container, folderId);
-            if (cmisFolder == null)
+            if (folder == null)
             {
                 log.error("Folder with id: {} does not exists", folderId);
                 throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FOLDER_TYPE, folderId, "Folder not found", null);
             }
             else
             {
-                EcmFolderDeclareRequestEvent event = new EcmFolderDeclareRequestEvent(cmisFolder, container, authentication);
-                event.setSucceeded(true);
-                getApplicationEventPublisher().publishEvent(event);
+                List<EcmFile> filesInFolderAndSubfolders = getAcmFolderService().getFilesInFolderAndSubfolders(folderId);
+                filesInFolderAndSubfolders.stream()
+                        .filter(file -> file.getStatus().equalsIgnoreCase(EcmFileConstants.ACTIVE))
+                        .map(file -> new EcmFileDeclareRequestEvent(file, true, authentication))
+                        .forEach(event -> getApplicationEventPublisher().publishEvent(event));
             }
         }
     }
