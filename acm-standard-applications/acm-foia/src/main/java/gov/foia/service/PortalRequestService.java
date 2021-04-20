@@ -30,6 +30,7 @@ package gov.foia.service;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.service.GetCaseByNumberService;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.person.dao.PersonAssociationDao;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.service.impl.CreateAdHocTaskService;
@@ -379,18 +380,7 @@ public class PortalRequestService
 
         AcmTask requestWithdrawalTask = populateWithdrawalTask(withdrawRequestDetails, request);
 
-        List<MultipartFile> files = new ArrayList<>();
-        for (PortalFOIARequestFile portalFile : withdrawRequestDetails.getDocuments())
-        {
-            try
-            {
-                files.add(convertPortalRequestFileToMultipartFile(portalFile));
-            }
-            catch (IOException e)
-            {
-                log.error("Failed to receive file {}, {}", portalFile.getFileName(), e.getMessage());
-            }
-        }
+        List<MultipartFile> files = addWithdrawalFiles(withdrawRequestDetails);
 
         try
         {
@@ -409,13 +399,34 @@ public class PortalRequestService
 
     }
 
+    private List<MultipartFile> addWithdrawalFiles(WithdrawRequest withdrawRequestDetails)
+    {
+        if (withdrawRequestDetails.getDocuments() == null || withdrawRequestDetails.getDocuments().isEmpty())
+        {
+            return new ArrayList<>();
+        }
+
+        List<MultipartFile> files = new ArrayList<>();
+        for (PortalFOIARequestFile portalFile : withdrawRequestDetails.getDocuments())
+        {
+            try
+            {
+                files.add(convertPortalRequestFileToMultipartFile(portalFile));
+            } catch (IOException e)
+            {
+                log.error("Failed to receive file {}, {}", portalFile.getFileName(), e.getMessage());
+            }
+        }
+        return files;
+    }
+
     private AcmTask populateWithdrawalTask(WithdrawRequest withdrawRequestDetails, FOIARequest request)
     {
         AcmTask requestWithdrawalTask = new AcmTask();
 
         String requestTitle = withdrawRequestDetails.getSubject() != null ?
                 String.format("%s %s: %s", WITHDRAW_REQUEST_TITLE, withdrawRequestDetails.getOriginalRequestNumber(),
-                withdrawRequestDetails.getSubject()) :
+                        withdrawRequestDetails.getSubject()) :
                 String.format("%s %s", WITHDRAW_REQUEST_TITLE, withdrawRequestDetails.getOriginalRequestNumber());
         requestWithdrawalTask.setTitle(requestTitle);
         requestWithdrawalTask.setType("web-portal-withdrawal");
