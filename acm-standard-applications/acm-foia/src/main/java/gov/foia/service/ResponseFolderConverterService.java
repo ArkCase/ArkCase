@@ -50,13 +50,24 @@ public class ResponseFolderConverterService
 
     private PDFConversionConfigurationService pdfConversionConfigurationService;
 
+    @Deprecated
     public void convertResponseFolder(Long requestId, String username)
             throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmFolderException, ConversionException
     {
         if (getPdfConversionConfigurationService().isResponseFolderConversionEnabled())
         {
             CaseFile request = caseFileDao.find(requestId);
-            converter.convertFolder(responseFolderService.getResponseFolder(request).getId(), username);
+            Long responseFolderId = responseFolderService.getResponseFolder(request).getId();
+            convertResponseSubFolder(responseFolderId, username);
+        }
+    }
+
+    public void convertResponseSubFolder(Long responseFolderId, String username)
+            throws ConversionException
+    {
+        if (getPdfConversionConfigurationService().isResponseFolderConversionEnabled())
+        {
+            converter.convertFolder(responseFolderId, username);
         }
     }
 
