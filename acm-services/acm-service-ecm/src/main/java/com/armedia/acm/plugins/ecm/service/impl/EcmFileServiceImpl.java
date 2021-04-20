@@ -999,9 +999,11 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             }
             else
             {
-                EcmFolderDeclareRequestEvent event = new EcmFolderDeclareRequestEvent(cmisFolder, container, authentication);
-                event.setSucceeded(true);
-                getApplicationEventPublisher().publishEvent(event);
+                List<EcmFile> filesInFolderAndSubfolders = getAcmFolderService().getFilesInFolderAndSubfolders(folderId);
+                filesInFolderAndSubfolders.stream()
+                        .filter(file -> file.getStatus().equalsIgnoreCase(EcmFileConstants.ACTIVE))
+                        .map(file -> new EcmFileDeclareRequestEvent(file, true, authentication))
+                        .forEach(event -> getApplicationEventPublisher().publishEvent(event));
             }
         }
     }
