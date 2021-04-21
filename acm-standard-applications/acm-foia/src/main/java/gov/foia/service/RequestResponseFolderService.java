@@ -79,12 +79,6 @@ public class RequestResponseFolderService
         log.debug("Converting response folder [{}] for the request [{}]",folderId, requestId);
         getResponseFolderConverterService().convertResponseSubFolder(folderId, userName);
 
-    public void compressAndSendResponseSubFolderToPortal(Long requestId, Long folderId, String userName)
-            throws ConversionException, AcmUserActionFailedException, AcmFolderException, AcmObjectNotFoundException
-    {
-        log.debug("Converting response folder [{}] for the request [{}]",folderId, requestId);
-        getResponseFolderConverterService().convertResponseSubFolder(folderId, userName);
-
         log.debug("Compressing response folder [{}] for the request [{}]", folderId, requestId);
         String filePath = getResponseFolderCompressorService().compressResponseFolder(requestId, folderId);
 

@@ -46,8 +46,6 @@ import java.io.Writer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -79,6 +77,7 @@ public class TemplatingEngine
         cfg.setDateFormat("MM/dd/yyyy");
         cfg.setDateTimeFormat("MM/dd/yyyy HH:mm");
         cfg.setTimeZone(TimeZone.getTimeZone(applicationConfig.getDefaultTimezone()));
+
 
         Map<String, Object> templatingModel = new HashMap<>();
         templatingModel.put(modelReferenceName, model);
@@ -140,22 +139,15 @@ public class TemplatingEngine
                         {
                             if (expression.getValue(stContext).getClass().getSimpleName().equalsIgnoreCase(DATE_TYPE))
                             {
-                                try
-                                {
-                                LocalDateTime ldt = setLocalDateTimeFromDateToDefaultClientTimezone((Date) expression.getValue(stContext));
-                                generatedExpression = formatter.format(dateTimeFormatter.parse((ldt.toString())));
-                                }
-                                catch (ParseException e)
-                                {
-                                    log.error("Unable to parse SpEL expression [{}]", spelExpression);
-                                }
+                                generatedExpression = formatter.format(expression.getValue(stContext));
                             }
                             else if (expression.getValue(stContext).getClass().getSimpleName().equalsIgnoreCase(DATE_TIME_TYPE))
                             {
                                 try
                                 {
-                                    LocalDateTime ldt = setLocalDateTimeToClientDefaultTimezone(((LocalDateTime) expression.getValue(stContext)));
-                                    generatedExpression = formatter.format(dateTimeFormatter.parse((ldt.toString())));
+                                    generatedExpression = formatter.format(
+                                            dateTimeFormatter
+                                                    .parse((((LocalDateTime) expression.getValue(stContext)).toLocalDate().toString())));
                                 }
                                 catch (ParseException e)
                                 {

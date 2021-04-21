@@ -135,6 +135,16 @@ public class HolidayConfigurationService
     public Date addWorkingDaysAndWorkingHoursToDateWithBusinessHours(Date date, int workingDays)
     {
 
+    /**
+     *
+     * @param date
+     * @param workingDays
+     * @return Date with added Working Days and Businees Hours depending on configuration
+     * (endOfBusinessDaysEnabled & endOfBusinessDayTime)
+     */
+    public Date addWorkingDaysAndWorkingHoursToDateWithBusinessHours(Date date, int workingDays)
+    {
+
         LocalDateTime ldt = getDateTimeService().fromDateToLocalDateTime(date);
 
         if (getBusinessHoursConfig().getBusinessDayHoursEnabled() && isTimeAfterBusinessHours(ldt))
@@ -171,12 +181,7 @@ public class HolidayConfigurationService
         return localTimeInSetTimezone.isAfter(getEndOfClientBusinessDayTime());
     }
 
-    public LocalDateTime setDateToLocalDateTimeByDefaultClientTimezone(Date date)
-    {
-        return getZonedDateTimeAtDefaultClientTimezone(date).toLocalDateTime();
-    }
-
-    private ZonedDateTime getZonedDateTimeAtDefaultClientTimezone(Date date)
+    public ZonedDateTime getZonedDateTimeAtDefaultClientTimezone(Date date)
     {
         return date.toInstant().atZone(getDefaultClientZoneId());
     }
