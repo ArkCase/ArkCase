@@ -2,8 +2,8 @@
 
 angular.module('cases').controller(
     'Cases.MainController',
-    ['$scope', '$state', '$stateParams', '$translate', '$rootScope', '$modal', 'Case.InfoService', 'Helper.ObjectBrowserService', 'ConfigService', 'UtilService', 'Util.DateService', 'MessageService', 'Object.LookupService', 'LookupService', 'DueDate.Service', 'Admin.HolidayService', 'Admin.FoiaConfigService', 'Admin.QueuesTimeToCompleteService', 'Admin.ObjectTitleConfigurationService', 'EcmService',
-        function ($scope, $state, $stateParams, $translate, $rootScope, $modal, CaseInfoService, HelperObjectBrowserService, ConfigService, Util, UtilDateService, MessageService, ObjectLookupService, LookupService, DueDateService, AdminHolidayService, AdminFoiaConfigService, AdminQueuesTimeToCompleteService, AdminObjectTitleConfigurationService, EcmService) {
+    ['$scope', '$state', '$stateParams', '$translate', '$rootScope', '$modal', 'Case.InfoService', 'Helper.ObjectBrowserService', 'ConfigService', 'UtilService', 'Util.DateService', 'MessageService', 'Object.LookupService', 'LookupService', 'DueDate.Service', 'Admin.HolidayService', 'Admin.FoiaConfigService', 'Admin.QueuesTimeToCompleteService', 'Admin.ObjectTitleConfigurationService', 'EcmService', 'Dialog.BootboxService',
+        function ($scope, $state, $stateParams, $translate, $rootScope, $modal, CaseInfoService, HelperObjectBrowserService, ConfigService, Util, UtilDateService, MessageService, ObjectLookupService, LookupService, DueDateService, AdminHolidayService, AdminFoiaConfigService, AdminQueuesTimeToCompleteService, AdminObjectTitleConfigurationService, EcmService, DialogService) {
 
             new HelperObjectBrowserService.Component({
                 scope: $scope,
@@ -21,6 +21,7 @@ angular.module('cases').controller(
                 $scope.objectInfo = objectInfo;
                 $scope.requestAlreadyExtended = objectInfo.extensionFlag;
                 $scope.originalRequestTrack = objectInfo.requestTrack;
+                $scope.wrongDate = false;
 
                 ObjectLookupService.getRequestCategories().then(function (requestCategories) {
                     $scope.requestCategories = requestCategories;
@@ -352,6 +353,12 @@ angular.module('cases').controller(
                     $rootScope.$broadcast('dueDate-changed', $scope.expeditedDueDate);
                 }
             }
+            $scope.onComboAfterSave = function () {
+                if (moment($scope.objectInfo.dispositionClosedDate).isBefore($scope.objectInfo.receivedDate)) {
+                    $scope.objectInfo.dispositionClosedDate = null;
+                    DialogService.alert($translate.instant('cases.comp.main.dispositionClosedDate.wrongDateMessage ') + " " + moment($scope.objectInfo.receivedDate).format('MM/DD/YYYY h:mm A'));
+                }
+            };
 
             /**
              * Persists the updated casefile metadata to the ArkCase database
