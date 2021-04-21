@@ -181,9 +181,8 @@ angular.module('tasks').controller(
                             $scope.startDateInfo = new Date();
                             $scope.startDateInfo = moment($scope.startDateInfo).format(defaultDateTimeUTCFormat);
                         }
-
-                        $scope.dateInfo.isOverdue = TaskAlertsService.calculateOverdue(new Date($scope.dateInfo.dueDate));
-                        $scope.dateInfo.isDeadline = TaskAlertsService.calculateDeadline(new Date($scope.dateInfo.dueDate));
+                        $scope.dateInfo.isOverdue = TaskAlertsService.calculateOverdue(new Date($scope.dateInfo.dueDate)) && $scope.objectInfo.status !== "CLOSED";
+                        $scope.dateInfo.isDeadline = TaskAlertsService.calculateDeadline(new Date($scope.dateInfo.dueDate)) && $scope.objectInfo.status !== "CLOSED";
                         $scope.assignee = ObjectModelService.getAssignee($scope.objectInfo);
                         $scope.taskStartDateBeforeChange = $scope.dateInfo.taskStartDate;
                         $scope.dueDateBeforeChange = $scope.dateInfo.dueDate;
