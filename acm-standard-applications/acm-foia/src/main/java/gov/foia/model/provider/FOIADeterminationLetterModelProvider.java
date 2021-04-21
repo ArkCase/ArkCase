@@ -28,6 +28,7 @@ package gov.foia.model.provider;
  */
 
 import com.armedia.acm.core.provider.TemplateModelProvider;
+import com.armedia.acm.correspondence.exception.CorrespondenceTemplateMissingAssigneeException;
 import com.armedia.acm.services.billing.exception.GetBillingInvoiceException;
 import com.armedia.acm.services.billing.model.BillingInvoice;
 import com.armedia.acm.services.billing.service.BillingService;
@@ -35,14 +36,10 @@ import com.armedia.acm.services.config.lookups.model.StandardLookupEntry;
 import com.armedia.acm.services.config.lookups.service.LookupDao;
 import com.armedia.acm.services.exemption.exception.GetExemptionCodeException;
 import com.armedia.acm.services.exemption.model.ExemptionCode;
-import com.armedia.acm.services.labels.service.TranslationService;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-import com.armedia.acm.correspondence.exception.CorrespondenceTemplateMissingAssigneeException;
-import gov.foia.model.FOIADeterminationLetterCorrespondence;
-import gov.foia.model.FOIARequest;
-import gov.foia.service.FOIAExemptionService;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -50,6 +47,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import gov.foia.model.FOIADeterminationLetterCorrespondence;
+import gov.foia.model.FOIARequest;
+import gov.foia.model.FormattedMergeTerm;
+import gov.foia.model.FormattedRun;
+import gov.foia.service.FOIAExemptionService;
 
 public class FOIADeterminationLetterModelProvider implements TemplateModelProvider<FOIADeterminationLetterCorrespondence>
 {
@@ -59,7 +62,6 @@ public class FOIADeterminationLetterModelProvider implements TemplateModelProvid
     private BillingService billingService;
     private UserDao userDao;
     private LookupDao lookupDao;
-    private TranslationService translationService;
 
     @Override
     public FOIADeterminationLetterCorrespondence getModel(Object foiaRequest)
@@ -83,15 +85,14 @@ public class FOIADeterminationLetterModelProvider implements TemplateModelProvid
                 .collect(Collectors.joining("and"));
         determinationLetterCorrespondence.setExemptionCodeSummary(exemptionCodesNames);
 
-        List<StandardLookupEntry> lookupEntries = (List<StandardLookupEntry>) getLookupDao().getLookupByName("annotationTags").getEntries();
-        Map<String, String> codeDescriptions = lookupEntries.stream().collect(Collectors.toMap(StandardLookupEntry::getKey, StandardLookupEntry::getValue));
-        String exemptionCodesAndDescription = exemptionCodes.stream()
-                .map(code -> String.format("%s: %s.", code.getExemptionCode(), labelValue(codeDescriptions.get(code.getExemptionCode()))))
-                .collect(Collectors.joining(","));
+        FormattedMergeTerm exemptionCodesAndDescription = new FormattedMergeTerm();
+        List<FormattedRun> runs = getExemptionCodesAndDiscriptionRuns(exemptionCodes);
+        exemptionCodesAndDescription.setRuns(runs);
         determinationLetterCorrespondence.setExemptionCodesAndDescription(exemptionCodesAndDescription);
 
         String requestAssignee = ParticipantUtils.getAssigneeIdFromParticipants(request.getParticipants());
-        if (requestAssignee == null) {
+        if (requestAssignee == null)
+        {
             throw new CorrespondenceTemplateMissingAssigneeException("Assignee is Required");
         }
         AcmUser acmUser = userDao.findByUserId(requestAssignee);
@@ -114,7 +115,8 @@ public class FOIADeterminationLetterModelProvider implements TemplateModelProvid
 
         try
         {
-            List<BillingInvoice> billingInvoices = billingService.getBillingInvoicesByParentObjectTypeAndId(request.getObjectType(), request.getId());
+            List<BillingInvoice> billingInvoices = billingService.getBillingInvoicesByParentObjectTypeAndId(request.getObjectType(),
+                    request.getId());
             double sum = billingInvoices.stream().map(BillingInvoice::getBillingInvoiceAmount).mapToDouble(Double::doubleValue).sum();
             determinationLetterCorrespondence.setInvoiceAmount(sum);
         }
@@ -126,9 +128,17 @@ public class FOIADeterminationLetterModelProvider implements TemplateModelProvid
         return determinationLetterCorrespondence;
     }
 
-    private String labelValue(String labelKey)
+    public List<FormattedRun> getExemptionCodesAndDiscriptionRuns(List<ExemptionCode> exemptionCodes)
     {
-        return translationService.translate(labelKey);
+        List<StandardLookupEntry> lookupEntries = (List<StandardLookupEntry>) getLookupDao().getLookupByName("annotationTags").getEntries();
+        Map<String, String> codeDescriptions = lookupEntries.stream()
+                .collect(Collectors.toMap(StandardLookupEntry::getKey, StandardLookupEntry::getValue));
+        List<FormattedRun> runs = new ArrayList<>();
+        for (ExemptionCode exCode : exemptionCodes)
+        {
+            foiaExemptionService.createAndStyleRunsForCorrespondenceLetters(codeDescriptions, runs, exCode);
+        }
+        return runs;
     }
 
     @Override
@@ -177,13 +187,4 @@ public class FOIADeterminationLetterModelProvider implements TemplateModelProvid
         this.lookupDao = lookupDao;
     }
 
-    public TranslationService getTranslationService()
-    {
-        return translationService;
-    }
-
-    public void setTranslationService(TranslationService translationService)
-    {
-        this.translationService = translationService;
-    }
 }

@@ -196,7 +196,6 @@ public class PortalCreateRequestService
         requester.setFamilyName(in.getLastName());
         requester.setMiddleName(in.getMiddleName());
         requester.setTitle(in.getPrefix());
-        requester.setPosition(in.getPosition());
 
         PostalAddress address = getPostalAddressFromPortalFOIARequest(in);
         if (addressHasData(address))
@@ -220,7 +219,7 @@ public class PortalCreateRequestService
 
         if (in.getOrganization() != null && in.getOrganization().length() > 0)
         {
-            getPortalUserServiceProvider().findOrCreateOrganizationAndPersonOrganizationAssociation(requester, in.getOrganization());
+            getPortalUserServiceProvider().findOrCreateOrganizationAndPersonOrganizationAssociation(requester, in.getOrganization(), in.getPosition());
         }
         return requester;
     }
@@ -233,7 +232,6 @@ public class PortalCreateRequestService
         requester.setFamilyName(in.getLastName());
         requester.setMiddleName(in.getMiddleName());
         requester.setTitle(in.getPrefix());
-        requester.setPosition(in.getPosition());
 
         PostalAddress address = getPostalAddressFromPortalFOIARequest(in);
         if (addressHasData(address)
@@ -252,7 +250,7 @@ public class PortalCreateRequestService
 
         if (in.getOrganization() != null && in.getOrganization().length() > 0)
         {
-            getPortalUserServiceProvider().findOrCreateOrganizationAndPersonOrganizationAssociation(requester, in.getOrganization());
+            getPortalUserServiceProvider().findOrCreateOrganizationAndPersonOrganizationAssociation(requester, in.getOrganization(), in.getPosition());
         }
         return requester;
     }

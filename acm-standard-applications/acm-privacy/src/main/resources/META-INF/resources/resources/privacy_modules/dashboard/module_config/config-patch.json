@@ -82,7 +82,7 @@
                 "name": "dueDate_tdt",
                 "displayName": "dashboard.widgets.myTasks.table.header.dueDate",
                 "headerCellFilter": "translate",
-                "cellTemplate": "<div>{{ row.entity.dueDate_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+                "cellTemplate": "<div>{{ row.entity.dueDate_tdt | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>",
                 "width": 110
             },
             {
@@ -245,7 +245,7 @@
                     "name": "dueDate_tdt",
                     "displayName": "dashboard.widgets.myOverdueRequests.dueDate",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.dueDate_tdt | date : 'shortDate' }}</div>"
+                    "cellTemplate": "<div>{{ row.entity.dueDate_tdt | date : ('common.defaultDateTimeUIFormat' | translate) }}</div>"
                 }
             ]
         }

@@ -138,6 +138,14 @@ public class FoiaConfig
     @Value("${dojNiemAbbreviationText}")
     private String dojNiemAbbreviationText;
 
+    @JsonProperty("declareRequestAsRecordsEnabled")
+    @Value("${declareRequestAsRecordsEnabled}")
+    private Boolean declareRequestAsRecordsEnabled;
+
+    @JsonProperty("declareRequestAsRecordsDaysDelay")
+    @Value("${declareRequestAsRecordsDaysDelay}")
+    private Integer declareRequestAsRecordsDaysDelay;
+
     public Integer getMaxDaysInHoldQueue()
     {
         return maxDaysInHoldQueue;
@@ -404,5 +412,21 @@ public class FoiaConfig
     public void setCreateNewPortalUserOptionOnArkcaseRequestForm(Boolean createNewPortalUserOptionOnArkcaseRequestForm)
     {
         this.createNewPortalUserOptionOnArkcaseRequestForm = createNewPortalUserOptionOnArkcaseRequestForm;
+    }
+
+    public Boolean getDeclareRequestAsRecordsEnabled() {
+        return declareRequestAsRecordsEnabled;
+    }
+
+    public void setDeclareRequestAsRecordsEnabled(Boolean declareRequestAsRecordsEnabled) {
+        this.declareRequestAsRecordsEnabled = declareRequestAsRecordsEnabled;
+    }
+
+    public Integer getDeclareRequestAsRecordsDaysDelay() {
+        return declareRequestAsRecordsDaysDelay;
+    }
+
+    public void setDeclareRequestAsRecordsDaysDelay(Integer declareRequestAsRecordsDaysDelay) {
+        this.declareRequestAsRecordsDaysDelay = declareRequestAsRecordsDaysDelay;
     }
 }

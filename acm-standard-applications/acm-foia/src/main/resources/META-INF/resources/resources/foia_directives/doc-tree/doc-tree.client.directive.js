@@ -2033,12 +2033,13 @@ angular
                                     name: "generateZipFile",
                                     execute: function (nodes, args) {
                                         var objectInfo = DocTree.objectInfo;
+                                        var node = nodes[0];
                                         if (DocTree.limitedDeliveryToSpecificPageCountEnabled) {
                                             var deferred = $q.defer();
                                             openLimitedPageReleaseModal(deferred);
                                             deferred.promise.then(function () {
                                                 saveCaseAndSelectLimitedDeliveryFlag(DocTree.limitedDeliveryFlag).then(function () {
-                                                    RequestResponseFolderService.compressAndSendResponseFolder(objectInfo.id).then(
+                                                    RequestResponseFolderService.compressAndSendResponseFolder(objectInfo.id, node.data.objectId).then(
                                                         function (response) {
                                                             MessageService.succsessAction();
                                                         },
@@ -2048,7 +2049,7 @@ angular
                                                 });
                                             });
                                         } else {
-                                            RequestResponseFolderService.compressAndSendResponseFolder(objectInfo.id).then(
+                                            RequestResponseFolderService.compressAndSendResponseFolder(objectInfo.id, node.data.objectId).then(
                                                 function (response) {
                                                     MessageService.succsessAction();
                                                 },

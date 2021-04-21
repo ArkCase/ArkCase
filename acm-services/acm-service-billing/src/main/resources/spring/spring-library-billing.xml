@@ -20,7 +20,6 @@
 
     <bean id="touchNetService" class="com.armedia.acm.services.billing.service.impl.TouchNetService" scope="refresh">
         <aop:scoped-proxy/>
-        <property name="authenticationTokenService" ref="authenticationTokenService"/>
         <property name="applicationConfig" ref="applicationProperties"/>
         <property name="billingItemDao" ref="billingItemDao"/>
     </bean>

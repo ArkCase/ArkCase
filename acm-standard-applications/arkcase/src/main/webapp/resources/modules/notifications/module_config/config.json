@@ -34,7 +34,7 @@
                     "name": "description_parseable",
                     "displayName": "notifications.comp.grid.columns.description",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{row.entity.description_parseable || row.entity.title_parseable}} on {{(row.entity.action_date_tdt || row.entity.modified_date_tdt) | date : 'short'}}</div>"
+                    "cellTemplate": "<div>{{row.entity.description_parseable || row.entity.title_parseable}} on {{(row.entity.action_date_tdt || row.entity.modified_date_tdt) | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                 },
                 {
                     "name": "parent_number_lcs",
@@ -56,7 +56,7 @@
                     },
                     "displayName": "notifications.comp.grid.columns.modified",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{(row.entity.modified_date_tdt || row.entity.action_date_tdt) | date : 'short' }}</div>"
+                    "cellTemplate": "<div>{{(row.entity.modified_date_tdt || row.entity.action_date_tdt) | date : ('common.defaultDateTimeUIFormat' | translate) }}</div>"
                 }
             ],
             "paginationPageSizes": [

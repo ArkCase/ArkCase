@@ -12,7 +12,7 @@
     {
         "op": "replace",
         "path": "/docTree/columnDefs/?@.name=='type'/__todo__cellTemplate",
-        "value": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+        "value": "<div>{{ row.entity.created | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>"
     },
     {
         "op": "replace",
@@ -22,7 +22,7 @@
     {
         "op": "replace",
         "path": "/docTree/columnDefs/?@.name=='created'/__todo__cellTemplate",
-        "value": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+        "value": "<div>{{ row.entity.created | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>"
     },
     {
         "op": "replace",
@@ -32,7 +32,7 @@
     {
         "op": "replace",
         "path": "/docTree/columnDefs/?@.name=='modified'/__todo__cellTemplate",
-        "value": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+        "value": "<div>{{ row.entity.modified | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>"
     },
     {
         "op": "replace",
@@ -75,7 +75,7 @@
     {
         "op": "replace",
         "path": "/docTree/columnDefs/?@.name=='version'/__todo__cellTemplate",
-        "value": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+        "value": "<div>{{ row.entity.created | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>"
     },
     {
         "op": "replace",

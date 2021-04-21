@@ -114,7 +114,7 @@ angular.module('dashboard.my-cases').controller('Dashboard.MyCasesController', [
                 value.status_lcs = value.status_lcs.toUpperCase();
 
                 if (Util.goodValue(value.dueDate_tdt)) {
-                    value.dueDate_tdt = UtilDateService.isoToDate(value.dueDate_tdt);
+                    value.dueDate_tdt = UtilDateService.isoToLocalDateTime(value.dueDate_tdt);
                 }
 
                 //calculate to show alert icons if cases is in overdue or deadline is approaching

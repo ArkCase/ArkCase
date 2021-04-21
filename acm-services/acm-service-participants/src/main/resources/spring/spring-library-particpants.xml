@@ -18,11 +18,6 @@
         <property name="configurationPropertyService" ref="configurationPropertyService"/>
     </bean>
 
-    <bean id="participantToSolrTransformer" class="com.armedia.acm.services.participants.service.ParticipantToSolrTransformer">
-        <property name="acmParticipantDao" ref="acmParticipantDao"/>
-        <property name="userDao" ref="userJpaDao"/>
-    </bean>
-
     <bean id="participantsBusinessRule" class="com.armedia.acm.services.participants.service.ParticipantsBusinessRule"
           parent="simpleStatelessSingleObjectRuleManager">
         <property name="ruleSpreadsheetFilename" value="drools-participant-assignment-rules.xlsx"/>

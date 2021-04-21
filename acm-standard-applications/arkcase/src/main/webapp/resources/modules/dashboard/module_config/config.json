@@ -79,13 +79,13 @@
                     "name": "dueDate_tdt",
                     "displayName": "dashboard.widgets.myCases.table.header.dueDate",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.dueDate_tdt | date : 'shortDate' }}</div>"
+                    "cellTemplate": "<div>{{ row.entity.dueDate_tdt | date : ('common.defaultDateTimeUIFormat' | translate) }}</div>"
                 },
                 {
                     "name": "modified_date_tdt",
                     "displayName": "dashboard.widgets.myCases.table.header.modified",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : 'shortDate' }}</div>"
+                    "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateTimeUIFormat' | translate) }}</div>"
                 }
             ]
         },
@@ -147,13 +147,13 @@
                     "name": "dueDate_tdt",
                     "displayName": "dashboard.widgets.activeCaseFiles.table.header.dueDate",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.dueDate_tdt | date : 'shortDate' }}</div>"
+                    "cellTemplate": "<div>{{ row.entity.dueDate_tdt | date : ('common.defaultDateTimeUIFormat' | translate) }}</div>"
                 },
                 {
                     "name": "modified_date_tdt",
                     "displayName": "dashboard.widgets.activeCaseFiles.table.header.modified",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : 'shortDate' }}</div>"
+                    "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateTimeUIFormat' | translate) }}</div>"
                 }
             ]
         },
@@ -215,13 +215,13 @@
                     "name": "dueDate_tdt",
                     "displayName": "dashboard.widgets.myConsultations.table.header.dueDate",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.dueDate_tdt | date : 'shortDate' }}</div>"
+                    "cellTemplate": "<div>{{ row.entity.dueDate_tdt | date : ('common.defaultDateTimeUIFormat' | translate) }}</div>"
                 },
                 {
                     "name": "modified_date_tdt",
                     "displayName": "dashboard.widgets.myConsultations.table.header.modified",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : 'shortDate' }}</div>"
+                    "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateTimeUIFormat' | translate) }}</div>"
                 }
             ]
         },
@@ -274,7 +274,7 @@
                     "name": "dueDate_tdt",
                     "displayName": "dashboard.widgets.myTasks.table.header.dueDate",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.dueDate_tdt | date : 'shortDate' }}</div>",
+                    "cellTemplate": "<div>{{ row.entity.dueDate_tdt | date : ('common.defaultDateTimeUIFormat' | translate) }}</div>",
                     "width": 70
                 },
                 {
@@ -338,13 +338,13 @@
                     "name": "dueDate_tdt",
                     "displayName": "dashboard.widgets.myComplaints.table.header.dueDate",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.dueDate_tdt | date : 'shortDate' }}</div>"
+                    "cellTemplate": "<div>{{ row.entity.dueDate_tdt | date : ('common.defaultDateTimeUIFormat' | translate) }}</div>"
                 },
                 {
                     "name": "modified_date_tdt",
                     "displayName": "dashboard.widgets.myComplaints.table.header.modified",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : 'shortDate' }}</div>"
+                    "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateTimeUIFormat' | translate) }}</div>"
                 }
             ]
         },

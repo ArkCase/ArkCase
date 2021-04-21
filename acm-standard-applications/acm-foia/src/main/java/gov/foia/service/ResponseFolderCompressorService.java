@@ -27,6 +27,13 @@ package gov.foia.service;
  * #L%
  */
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
+
 import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.compressfolder.FolderCompressor;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
@@ -34,15 +41,9 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
-
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.ApplicationEventPublisherAware;
-
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
 
 import gov.foia.model.FOIARequest;
 import gov.foia.model.FoiaConfig;
@@ -71,8 +72,22 @@ public class ResponseFolderCompressorService implements ApplicationEventPublishe
     {
         FOIARequest request = (FOIARequest) caseFileDao.find(requestId);
 
-        Long responseFolderId = getResponseFolderService().getResponseFolder(request).getId();
+        Long mainResponseFolderId = getResponseFolderService().getResponseFolder(request).getId();
 
+        return compressResponseFolder(request, mainResponseFolderId);
+    }
+
+    public String compressResponseFolder(Long requestId, Long folderId)
+            throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmFolderException
+    {
+        FOIARequest request = (FOIARequest) caseFileDao.find(requestId);
+
+        return compressResponseFolder(request, folderId);
+    }
+
+    public String compressResponseFolder(FOIARequest request, Long responseFolderId)
+            throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmFolderException
+    {
         String compressFileName = "";
 
         if (getAcmFolderService().getFolderChildren(responseFolderId).isEmpty())
@@ -93,7 +108,7 @@ public class ResponseFolderCompressorService implements ApplicationEventPublishe
             compressFileName = compressor.compressFolder(responseFolderId);
             request.setGeneratedZipFlag(true);
             caseFileDao.save(request);
-            publishResponseFolderCompressedEvent(request);
+            publishResponseFolderCompressedEvent(request, responseFolderId);
         }
         return compressFileName;
     }
@@ -127,9 +142,10 @@ public class ResponseFolderCompressorService implements ApplicationEventPublishe
         return getFoiaConfig().getLimitedDeliveryToSpecificPageCountEnabled() && request.getLimitedDeliveryFlag();
     }
 
-    private void publishResponseFolderCompressedEvent(CaseFile source)
+    private void publishResponseFolderCompressedEvent(CaseFile source, Long responseFolderId)
     {
-        RequestResponseFolderCompressedEvent event = new RequestResponseFolderCompressedEvent(source,
+        AcmFolder folder = acmFolderService.findById(responseFolderId);
+        RequestResponseFolderCompressedEvent event = new RequestResponseFolderCompressedEvent(source, folder.getName(),
                 AuthenticationUtils.getUserIpAddress());
         applicationEventPublisher.publishEvent(event);
     }

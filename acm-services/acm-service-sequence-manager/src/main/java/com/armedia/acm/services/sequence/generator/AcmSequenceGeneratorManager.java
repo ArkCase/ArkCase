@@ -31,7 +31,7 @@ import com.armedia.acm.services.sequence.exception.AcmSequenceException;
 import com.armedia.acm.services.sequence.model.AcmSequenceConfiguration;
 import com.armedia.acm.services.sequence.model.AcmSequenceEntity;
 import com.armedia.acm.services.sequence.model.AcmSequencePart;
-import com.armedia.acm.services.sequence.model.AcmSequenceRegistry;
+import com.armedia.acm.services.sequence.model.AcmSequenceRegistryUsed;
 import com.armedia.acm.services.sequence.service.AcmSequenceConfigurationService;
 import com.armedia.acm.services.sequence.service.AcmSequenceService;
 
@@ -87,7 +87,7 @@ public class AcmSequenceGeneratorManager implements ApplicationListener<AcmSeque
 
         String sequenceValue = "";
         List<AcmSequencePart> sequenceParts = sequenceMap.get(sequenceName).getSequenceParts();
-        AcmSequenceRegistry acmSequenceRegistry = new AcmSequenceRegistry();
+        AcmSequenceRegistryUsed usedSequenceRegistry = new AcmSequenceRegistryUsed();
         for (AcmSequencePart sequencePart : sequenceParts)
         {
             if (sequencePart.getSequencePartType() != null)
@@ -97,14 +97,15 @@ public class AcmSequenceGeneratorManager implements ApplicationListener<AcmSeque
                 {
                     sequenceValue += generatorsMap.get(sequencePart.getSequencePartType()).generatePartValue(sequenceName, sequencePart,
                             object,
-                            acmSequenceRegistry);
+                            usedSequenceRegistry);
                 }
             }
         }
 
-        if (!sequenceValue.isEmpty() && !acmSequenceRegistry.getSequencePartValueUsedFlag())
+        if (!sequenceValue.isEmpty())
         {
-            registerSequence(sequenceValue, acmSequenceRegistry);
+            //Add sequence as used in Used Sequence Registry
+            registerSequence(sequenceValue, usedSequenceRegistry);
         }
 
         return sequenceValue;
@@ -116,7 +117,7 @@ public class AcmSequenceGeneratorManager implements ApplicationListener<AcmSeque
         String sequenceValue = "";
         List<AcmSequencePart> sequenceParts = sequenceMap.get(sequenceName).getSequenceParts();
         Map<String, Long> autoincrementPartNameToValue = new HashMap<>();
-        AcmSequenceRegistry acmSequenceRegistry = new AcmSequenceRegistry();
+        AcmSequenceRegistryUsed usedSequenceRegistry = new AcmSequenceRegistryUsed();
         for (AcmSequencePart sequencePart : sequenceParts)
         {
             if (sequencePart.getSequencePartType() != null)
@@ -125,7 +126,7 @@ public class AcmSequenceGeneratorManager implements ApplicationListener<AcmSeque
                         && evaluateSequencePartCondition(sequencePart.getSequenceCondition(), object)))
                 {
                     sequenceValue += generatorsMap.get(sequencePart.getSequencePartType()).getGeneratePartValue(sequenceName, sequencePart,
-                            object, acmSequenceRegistry, acmSequenceEntity);
+                            object, usedSequenceRegistry, acmSequenceEntity);
                 }
             }
         }
@@ -133,13 +134,12 @@ public class AcmSequenceGeneratorManager implements ApplicationListener<AcmSeque
         return sequenceValue;
     }
 
-    private void registerSequence(String sequenceValue, AcmSequenceRegistry acmSequenceRegistry)
+    private void registerSequence(String sequenceValue, AcmSequenceRegistryUsed usedSequenceRegistry)
             throws AcmSequenceException
     {
-        acmSequenceRegistry.setSequenceValue(sequenceValue);
-        acmSequenceRegistry.setSequencePartValueUsedFlag(true);
-        getSequenceService().saveSequenceRegistry(acmSequenceRegistry);
-
+        usedSequenceRegistry.setSequenceValue(sequenceValue);
+        //Add sequence as used in Used Sequence Registry
+        getSequenceService().saveUsedSequenceRegistry(usedSequenceRegistry);
     }
 
     /**

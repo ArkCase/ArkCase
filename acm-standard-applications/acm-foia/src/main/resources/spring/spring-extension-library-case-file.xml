@@ -104,6 +104,7 @@
         <beans:bean id="foiaExemptionService" class="gov.foia.service.FOIAExemptionService">
             <beans:property name="foiaExemptionCodeDao" ref="foiaExemptionCodeDao"/>
             <beans:property name="foiaExemptionStatuteDao" ref="foiaExemptionStatuteDao"/>
+            <beans:property name="translationService" ref="translationService"/>
         </beans:bean>
 
         <beans:bean id="foiaExemptionStatuteService" class="gov.foia.service.FOIAExemptionStatuteService">
@@ -336,6 +337,24 @@
             <beans:property name="billingQueuePurger" ref="scheduledBillingQueuePurger"/>
         </beans:bean>
 
+        <beans:bean id="requestQueueChangedListener" class="gov.foia.listener.RequestQueueChangedListener" >
+            <beans:property name="declareRequestAsRecordService" ref="declareRequestAsRecordService"/>
+            <beans:property name="foiaConfig" ref="foiaConfig"/>
+        </beans:bean>
+
+        <beans:bean id="declareRequestFilesAsRecordsJobDescriptor" class="gov.foia.service.DeclareRequestFilesAsRecordsJobDescriptor" parent="acmJobDescriptor">
+            <beans:property name="declareRequestAsRecordService" ref="declareRequestAsRecordService"/>
+        </beans:bean>
+
+        <beans:bean id="declareRequestAsRecordService" class="gov.foia.service.DeclareRequestAsRecordService">
+            <beans:property name="alfrescoRecordsService" ref="alfrescoRecordsService"/>
+            <beans:property name="authenticationMapper" ref="acmAuthenticationMapper"/>
+            <beans:property name="requestDao" ref="foiaRequestDao"/>
+            <beans:property name="activitiTaskDao" ref="acmTaskDao"/>
+            <beans:property name="foiaConfig" ref="foiaConfig"/>
+        </beans:bean>
+
+
         <beans:bean id="foiaRequestTemplateModelProvider" class="gov.foia.model.provider.FOIARequestTemplateModelProvider">
             <beans:property name="objectAssociationDao" ref="objectAssociationDao"/>
             <beans:property name="applicationConfig" ref="applicationProperties"/>
@@ -352,6 +371,7 @@
             <beans:property name="noteDao" ref="noteDao"/>
             <beans:property name="taskDao" ref="acmTaskDao"/>
             <beans:property name="foiaExemptionService" ref="foiaExemptionService"/>
+            <beans:property name="lookupDao" ref="lookupDao"/>
             <beans:property name="foiaExemptionCodeDao" ref="foiaExemptionCodeDao"/>
         </beans:bean>
 
@@ -360,7 +380,6 @@
             <beans:property name="userDao" ref="userJpaDao" />
             <beans:property name="billingService" ref="billingService" />
             <beans:property name="lookupDao" ref="lookupDao" />
-            <beans:property name="translationService" ref="translationService" />
         </beans:bean>
 
         <beans:bean id="holdQueuePurgerJobDescriptor" class="gov.foia.service.HoldQueuePurgerJobDescriptor" parent="acmJobDescriptor">

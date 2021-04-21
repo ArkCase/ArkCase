@@ -209,7 +209,6 @@ angular.module('directives').controller('directives.DocTreeEmailDialogController
     });
     $scope.emailDataModel = {};
     $scope.emailDataModel.selectedFilesToEmail = DocTreeExtEmail._extractFileIds($scope.nodes);
-    $scope.emailDataModel.subject = params.emailSubject;
 
     var templatesPromise = correspondenceService.retrieveActiveVersionTemplatesList('emailTemplate');
     templatesPromise.then(function(templates) {
@@ -230,7 +229,19 @@ angular.module('directives').controller('directives.DocTreeEmailDialogController
     $scope.bccRecipients = [];
     $scope.bccRecipientsStr = "";
     $scope.subject = params.emailSubject;
-    $scope.emailDataModel.subject = $scope.subject;
+    var paramsPlainEmail = {};
+    paramsPlainEmail.objectType = $scope.DocTree._objType;
+    paramsPlainEmail.objectId = $scope.DocTree._objId;
+    paramsPlainEmail.templateName = 'plainEmail.html';
+
+    var getTemplateContentPromise = correspondenceService.retrieveConvertedTemplateContent(paramsPlainEmail);
+    getTemplateContentPromise.then(function (response) {
+        if (response.data.templateEmailSubject) {
+            $scope.emailDataModel.subject = response.data.templateEmailSubject;
+        } else {
+            $scope.emailDataModel.subject = $scope.subject;
+        }
+    });
 
     if (!Util.isEmpty(params.emailOfOriginator)) {
         $scope.recipients.push(params.emailOfOriginator);
@@ -302,26 +313,26 @@ angular.module('directives').controller('directives.DocTreeEmailDialogController
     };
 
     $scope.loadContent = function () {
-        if($scope.template === "plainEmail.html") {
-            $('#plain').summernote('code', "");
-        } else {
-            var params = {};
-            params.objectType = $scope.DocTree._objType;
-            params.objectId = $scope.DocTree._objId;
-            params.templateName = $scope.template;
+        var params = {};
+        params.objectType = $scope.DocTree._objType;
+        params.objectId = $scope.DocTree._objId;
+        params.templateName = $scope.template;
 
-            var getTemplateContentPromise = correspondenceService.retrieveConvertedTemplateContent(params);
+        var getTemplateContentPromise = correspondenceService.retrieveConvertedTemplateContent(params);
 
-            getTemplateContentPromise.then(function (response) {
+        getTemplateContentPromise.then(function (response) {
+            if (response.data.templateEmailSubject) {
+                $scope.emailDataModel.subject = response.data.templateEmailSubject;
+            } else {
+                $scope.emailDataModel.subject = $scope.subject;
+            }
+            if ($scope.template === "plainEmail.html") {
+                $('#plain').summernote('code', "");
+            } else {
                 $scope.templateContent = response.data.templateContent.replace("${baseURL}", window.location.href.split('/home.html#!')[0]);
-                if (response.data.templateEmailSubject) {
-                    $scope.emailDataModel.subject = response.data.templateEmailSubject;
-                } else {
-                    $scope.emailDataModel.subject = $scope.subject;
-                }
                 $('#content').summernote('code', $scope.templateContent);
-            });
-        }
+            }
+        });
     };
 
     $scope.onClickCancel = function() {
