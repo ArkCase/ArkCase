@@ -38,14 +38,14 @@ public class RequestResponseFolderCompressedEvent extends AcmEvent
 {
     private static final String EVENT_TYPE = "com.armedia.acm.casefile.response.folder.compressed";
 
-    public RequestResponseFolderCompressedEvent(Object source, String ipAddress)
+    public RequestResponseFolderCompressedEvent(Object source, String folderName, String ipAddress)
     {
         super(source);
 
         if (source instanceof FOIARequest)
         {
             setBaseProperties(source, ipAddress);
-            setEventDescription("In Full");
+            setEventDescription(folderName);
         }
     }
 
