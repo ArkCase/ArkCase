@@ -107,6 +107,7 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
         FOIATaskRequestModel model = new FOIATaskRequestModel();
         FormattedMergeTerm exemptionCodesAndDescription = new FormattedMergeTerm();
         FormattedMergeTerm exemptionCodesOnExemptDocument = new FormattedMergeTerm();
+        FormattedMergeTerm redactionsOnReleasedDocument = new FormattedMergeTerm();
         if (task != null)
         {
             task.setTaskNotes(noteDao.listNotes("GENERAL", task.getId(), task.getObjectType()).stream().map(note -> note.getNote())
@@ -120,6 +121,7 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
                 {
                     exemptionCodesAndDescription = setRequestFieldsAndGetExemptionCodes(request);
                     exemptionCodesOnExemptDocument = setExemptionCodesOnExemptDocument(request);
+                    redactionsOnReleasedDocument = setRedactionsOnReleasedDocument(request);
                 }
             }
         }
@@ -127,13 +129,14 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
         {
             exemptionCodesAndDescription = setRequestFieldsAndGetExemptionCodes(request);
             exemptionCodesOnExemptDocument = setExemptionCodesOnExemptDocument(request);
+            redactionsOnReleasedDocument = setRedactionsOnReleasedDocument(request);
         }
 
         model.setTask(task);
         model.setRequest(request);
-        model.setExemptionCodesAndDescription(exemptionCodesAndDescription);
-        model.setRedactions(exemptionCodesAndDescription);
-        model.setExemptions(exemptionCodesOnExemptDocument);
+        model.setExemptionCodesAndDescription(exemptionCodesAndDescription.getRuns().isEmpty() ? null : exemptionCodesAndDescription);
+        model.setRedactions(redactionsOnReleasedDocument.getRuns().isEmpty() ? null : redactionsOnReleasedDocument);
+        model.setExemptions(exemptionCodesOnExemptDocument.getRuns().isEmpty() ? null : exemptionCodesOnExemptDocument);
         return model;
     }
 
@@ -199,6 +202,26 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
             exemptionCodesForExemptFiles.setRuns(runs);
         }
         return exemptionCodesForExemptFiles;
+    }
+
+    private FormattedMergeTerm setRedactionsOnReleasedDocument(FOIARequest request)
+    {
+        FormattedMergeTerm redactionsForReleasedDocuments = new FormattedMergeTerm();
+        List<ExemptionCode> exemptionCodes = foiaExemptionCodeDao.getResponseFolderExemptionCodesForRequest(request);
+        if (exemptionCodes != null)
+        {
+            List<StandardLookupEntry> lookupEntries = (List<StandardLookupEntry>) getLookupDao().getLookupByName("annotationTags")
+                    .getEntries();
+            Map<String, String> codeDescriptions = lookupEntries.stream()
+                    .collect(Collectors.toMap(StandardLookupEntry::getKey, StandardLookupEntry::getValue));
+            List<FormattedRun> runs = new ArrayList<>();
+            for (ExemptionCode exCode : exemptionCodes)
+            {
+                foiaExemptionService.createAndStyleRunsForCorrespondenceLetters(codeDescriptions, runs, exCode);
+            }
+            redactionsForReleasedDocuments.setRuns(runs);
+        }
+        return redactionsForReleasedDocuments;
     }
 
     @Override
