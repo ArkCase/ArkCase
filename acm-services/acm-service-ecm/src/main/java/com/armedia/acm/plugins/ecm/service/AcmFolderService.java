@@ -70,6 +70,8 @@ public interface AcmFolderService
     AcmFolder getSubfolderByName(AcmFolder parentFolder, String folderName)
             throws AcmFolderException;
 
+    boolean isFolderOrParentFolderWithName(AcmFolder folder, String folderName);
+
     List<EcmFile> getFilesInFolderAndSubfolders(Long folderId);
 
     AcmFolder moveFolder(AcmFolder folderForMoving, AcmFolder dstFolder)
