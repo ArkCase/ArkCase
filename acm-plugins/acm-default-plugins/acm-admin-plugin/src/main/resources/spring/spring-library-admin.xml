@@ -43,6 +43,9 @@
         <property name="headerLogoFile" value="header-logo.png"/>
         <property name="loginLogoFile" value="login-logo.png"/>
         <property name="emailLogoFile" value="email-logo.png"/>
+        <property name="headerLogoPortalFile" value="header-logo-portal.png"/>
+        <property name="loginLogoPortalFile" value="login-logo-portal.png"/>
+        <property name="bannerLogoPortalFile" value="banner-portal.png"/>
     </bean>
 
     <bean id="moduleConfigurationService" class="com.armedia.acm.plugins.admin.service.ModuleConfigurationService">
