@@ -66,8 +66,6 @@ public class TemplatingEngine
     public static final String DATE_TIME_TYPE = "LocalDateTime";
     private ApplicationConfig applicationConfig;
     private CorrespondenceMergeFieldManager mergeFieldManager;
-    SimpleDateFormat formatter = new SimpleDateFormat(DateFormats.WORKFLOW_DATE_FORMAT);
-    SimpleDateFormat dateTimeFormatter = new SimpleDateFormat(DateFormats.CORRESPONDENCE_DATE_FORMAT);
 
     public String process(String emailBodyTemplate, String modelReferenceName, Object model) throws TemplateException, IOException
     {
@@ -137,27 +135,7 @@ public class TemplatingEngine
                         String generatedExpression = "";
                         if (expression.getValue(stContext) != null)
                         {
-                            if (expression.getValue(stContext).getClass().getSimpleName().equalsIgnoreCase(DATE_TYPE))
-                            {
-                                generatedExpression = formatter.format(expression.getValue(stContext));
-                            }
-                            else if (expression.getValue(stContext).getClass().getSimpleName().equalsIgnoreCase(DATE_TIME_TYPE))
-                            {
-                                try
-                                {
-                                    generatedExpression = formatter.format(
-                                            dateTimeFormatter
-                                                    .parse((((LocalDateTime) expression.getValue(stContext)).toLocalDate().toString())));
-                                }
-                                catch (ParseException e)
-                                {
-                                    log.error("Unable to parse SpEL expression [{}]", spelExpression);
-                                }
-                            }
-                            else
-                            {
-                                generatedExpression = String.valueOf(expression.getValue(stContext));
-                            }
+                            generatedExpression = String.valueOf(expression.getValue(stContext));
 
                             expressionsToEvaluate.put(mergeField.getFieldId(), generatedExpression);
                         }
@@ -171,17 +149,6 @@ public class TemplatingEngine
             }
         }
         return emailBodyTemplate;
-    }
-
-
-    private LocalDateTime setLocalDateTimeToClientDefaultTimezone(LocalDateTime ldt)
-    {
-        return ldt.atZone(ZoneId.of(applicationConfig.getDefaultTimezone())).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime();
-    }
-
-
-    private LocalDateTime setLocalDateTimeFromDateToDefaultClientTimezone(Date dtl) {
-        return dtl.toInstant().atZone(ZoneId.of(applicationConfig.getDefaultTimezone())).toLocalDateTime();
     }
 
     private List<String> getSpelExpressions(String emailBodyTemplate)

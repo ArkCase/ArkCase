@@ -36,6 +36,7 @@ import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.services.holiday.service.DateTimeService;
 import com.armedia.acm.services.templateconfiguration.model.CorrespondenceMergeField;
 import com.armedia.acm.services.templateconfiguration.service.CorrespondenceMergeFieldManager;
 import com.armedia.acm.spring.SpringContextHolder;
@@ -66,6 +67,7 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -667,15 +669,11 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
 
         try
         {
-            stContext.registerFunction("toClientDateTimeTimezone", DateTimeService.class.getDeclaredMethod("toClientDateTimeTimezone", LocalDateTime.class));
-            stContext.registerFunction("toClientDateTimezone", DateTimeService.class.getDeclaredMethod("toClientDateTimezone", LocalDateTime.class));
-            stContext.registerFunction("toUTCDateTimeTimezone", DateTimeService.class.getDeclaredMethod("toUTCDateTimeTimezone", LocalDateTime.class));
-            stContext.registerFunction("toUTCDateTimezone", DateTimeService.class.getDeclaredMethod("toUTCDateTimezone", LocalDateTime.class));
-            stContext.registerFunction("toClientDateDateTimezone",
-                    DateTimeService.class.getDeclaredMethod("toClientDateDateTimezone", Date.class));
-
-        }
-        catch (NoSuchMethodException e)
+            stContext.registerFunction("toLocalDateTime", DateTimeService.class.getDeclaredMethod("toLocalDateTime", LocalDateTime.class));
+            stContext.registerFunction("toLocalDate", DateTimeService.class.getDeclaredMethod("toLocalDate", LocalDateTime.class));
+            stContext.registerFunction("toUTCDateTime", DateTimeService.class.getDeclaredMethod("toUTCDateTime", LocalDateTime.class));
+            stContext.registerFunction("toUTCDate", DateTimeService.class.getDeclaredMethod("toUTCDate", LocalDateTime.class));
+        } catch (NoSuchMethodException e)
         {
             log.error("There is no method with that name", e);
         }
@@ -703,21 +701,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
             {
                 if (expression.getValue(stContext) != null)
                 {
-                    if (expression.getValue(stContext).getClass().getSimpleName().equalsIgnoreCase(DATE_TYPE))
-                    {
-
-                        LocalDateTime ldt = setLocalDateTimeFromDateToDefaultClientTimezone((Date) expression.getValue(stContext));
-                        generatedExpression = formatter.format(dateTimeFormatter.parse((ldt.toString())));
-                    }
-                    else if (expression.getValue(stContext).getClass().getSimpleName().equalsIgnoreCase(DATE_TIME_TYPE))
-                    {
-                        LocalDateTime ldt = setLocalDateTimeToClientDefaultTimezone(((LocalDateTime) expression.getValue(stContext)));
-                        generatedExpression = formatter.format(dateTimeFormatter.parse((ldt.toString())));
-                    }
-                    else
-                    {
-                        generatedExpression = expression.getValue(stContext);
-                    }
+                    generatedExpression = expression.getValue(stContext);
                 }
                 else
                     generatedExpression = "";
@@ -804,29 +788,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                 {
                     if (expression.getValue(stContext) != null)
                     {
-                        if (expression.getValue(stContext).getClass().getSimpleName().equalsIgnoreCase(DATE_TYPE))
-                        {
-                            generatedExpression = formatter.format(expression.getValue(stContext));
-                        }
-                        else if (expression.getValue(stContext).getClass().getSimpleName().equalsIgnoreCase(DATE_TIME_TYPE))
-                        {
-                            try
-                            {
-                                generatedExpression = formatter.format(dateTimeFormatter
-                                        .parse((((LocalDateTime) expression.getValue(stContext)).toLocalDate().toString())));
-                            }
-                            catch (ParseException e)
-                            {
-                                e.printStackTrace();
-                            }
-
-                        }
-                        else
-                        {
-
-                            generatedExpression = expression.getValue(stContext);
-
-                        }
+                        generatedExpression = expression.getValue(stContext);
                     }
                     else
                     {
@@ -933,16 +895,6 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
             }
         }
 
-    }
-
-    private LocalDateTime setLocalDateTimeToClientDefaultTimezone(LocalDateTime ldt)
-    {
-        return ldt.atZone(ZoneId.of(appConfig.getDefaultTimezone())).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime();
-    }
-
-
-    private LocalDateTime setLocalDateTimeFromDateToDefaultClientTimezone(Date dtl) {
-        return dtl.toInstant().atZone(ZoneId.of(appConfig.getDefaultTimezone())).toLocalDateTime();
     }
 
     public CorrespondenceService getCorrespondenceService()
