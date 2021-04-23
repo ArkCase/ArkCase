@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('admin').factory('Admin.PortalConfigurationService', [ '$http', function($http) {
+angular.module('admin').factory('Admin.PortalConfigurationService', [ '$http', 'Upload', function($http, Upload) {
 
     var getPortalConfig = function () {
         return $http({
@@ -20,9 +20,34 @@ angular.module('admin').factory('Admin.PortalConfigurationService', [ '$http', f
         });
     };
 
+    /**
+     * @ngdoc method
+     * @name uploadLogo
+     * @methodOf admin.service:Admin.PortalConfigurationService
+     *
+     * @description
+     * Performs uploads logo files.
+     *
+     * @param {array} files files to be uploaded
+     *
+     * @param {array} formNames corresponding form names for each file
+     *
+     * @returns {HttpPromise} Future info about file upload progress
+     */
+    var uploadLogo = function (files, formNames) {
+        return Upload.upload({
+            url: 'api/latest/plugin/admin/portal/branding/customlogos',
+            method: 'POST',
+            fileFormDataName: formNames,
+            file: files
+        });
+    }
+    ;
+
     return {
         getPortalConfig: getPortalConfig,
-        savePortalConfig: savePortalConfig
+        savePortalConfig: savePortalConfig,
+        uploadLogo: uploadLogo
     };
 
 } ]);

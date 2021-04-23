@@ -1,0 +1,58 @@
+<panel-view header="{{'admin.portals.logo.header' | translate}}" collapsible="false">
+    <div ng-controller="Admin.PortalsLogoController">
+        <div class="clearfix">
+            <!-- Header logo -->
+            <div class="col-lg-6">
+                <h4 translate>admin.portals.logo.logoTitle</h4>
+                <img class="img-responsive thumbnail" id="imgCustomPortalLogo" src="branding/headerlogoportal.png" />
+                <div>
+                    <button name="headerLogo" accept="image/png" ng-disabled="uploadingInProgress" ngf-select
+                            data-ng-model="selectedHeaderFile" class="btn btn-sm btn-default">
+                        <i class="fa fa-folder-open-o"></i>
+                        <span translate>admin.portals.logo.btn.chooseLogo</span>
+                    </button>
+                    <div ng-bind="selectedHeaderFile.name"></div>
+                </div>
+            </div>
+
+            <!-- Login logo -->
+            <div class="col-lg-6">
+                <h4 translate>admin.portals.logo.loginTitle</h4>
+                <img class="img-responsive thumbnail" id="imgCustomPortalLogin" src="branding/loginlogoportal.png" />
+                <div>
+                    <button name="loginLogo" accept="image/png" ng-disabled="uploadingInProgress" ng-model="selectedLoginFile" ngf-select
+                            class="btn btn-sm btn-default">
+                        <i class="fa fa-folder-open-o"></i>
+                        <span translate>admin.portals.logo.btn.chooseLogin</span>
+                    </button>
+                    <div>{{selectedLoginFile.name}}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="clearfix">
+            <!-- Banner logo -->
+            <div class="col-lg-6">
+                <h4 translate>admin.portals.logo.bannerTitle</h4>
+                <img class="img-responsive thumbnail" id="imgCustomPortalBanner" src="branding/bannerportal.png" />
+                <div>
+                    <button name="emailLogo" accept="image/png" ng-disabled="uploadingInProgress" ng-model="selectedBannerFile" ngf-select
+                            class="btn btn-sm btn-default">
+                        <i class="fa fa-folder-open-o"></i>
+                        <span translate>admin.portals.logo.btn.chooseHeader</span>
+                    </button>
+                    <div>{{selectedBannerFile.name}}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Save button -->
+        <div class="well-sm">
+
+            <button class="btn btn-sm btn-default" ng-click="saveFiles()" ng-disabled="!isFileTypeValid()">
+                <i class="fa fa-save" />
+                <span translate>admin.portals.logo.btn.saveFiles</span>
+            </button>
+        </div>
+    </div>
+</panel-view>

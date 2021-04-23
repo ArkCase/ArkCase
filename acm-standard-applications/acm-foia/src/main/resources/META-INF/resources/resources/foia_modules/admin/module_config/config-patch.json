@@ -215,5 +215,16 @@
                 "portals.config"
             ]
         }
+    },
+    {
+        "path": "/tree/nodeTypes/-",
+        "op": "add",
+        "value": {
+            "type": "p/portalsService/portalsLogoConfiguration",
+            "label": "admin.portals.logo.title",
+            "components": [
+                "portals.logo"
+            ]
+        }
     }
 ]

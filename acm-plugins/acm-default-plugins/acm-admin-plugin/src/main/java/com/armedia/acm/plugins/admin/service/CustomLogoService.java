@@ -50,6 +50,9 @@ public class CustomLogoService
     private String headerLogoFile;
     private String loginLogoFile;
     private String emailLogoFile;
+    private String headerLogoPortalFile;
+    private String loginLogoPortalFile;
+    private String bannerLogoPortalFile;
 
     private FileConfigurationService fileConfigurationService;
     private ConfigurationClientConfig configurationClientConfig;
@@ -57,64 +60,67 @@ public class CustomLogoService
     /**
      * Return Header logo
      *
-     * @return
+     * @return header logo
      * @throws AcmCustomLogoException
      */
     public byte[] getHeaderLogo() throws AcmCustomLogoException
     {
-        try
-        {
-            File headerLogo = new File(brandingFilesLocation + headerLogoFile);
-            byte[] result = FileUtils.readFileToByteArray(headerLogo);
-            return result;
-        }
-        catch (Exception e)
-        {
-            log.error("Can't get custom Header Logo file", e);
-            throw new AcmCustomLogoException("Can't get custom Header Logo file", e);
-        }
+        return getLogoFile(headerLogoFile);
     }
 
     /**
      * Return Login logo
      *
-     * @return
+     * @return login logo
      * @throws AcmCustomLogoException
      */
     public byte[] getLoginLogo() throws AcmCustomLogoException
     {
-        try
-        {
-            File loginLogo = new File(brandingFilesLocation + loginLogoFile);
-            byte[] result = FileUtils.readFileToByteArray(loginLogo);
-            return result;
-        }
-        catch (Exception e)
-        {
-            log.error("Can't get custom Login Logo file", e);
-            throw new AcmCustomLogoException("Can't get custom Login Logo file", e);
-        }
+        return getLogoFile(loginLogoFile);
     }
 
     /**
      * Return email logo
      *
-     * @return
+     * @return email logo
      * @throws AcmCustomLogoException
      */
     public byte[] getEmailLogo() throws AcmCustomLogoException
     {
-        try
-        {
-            File emailLogo = new File(brandingFilesLocation + emailLogoFile);
-            byte[] result = FileUtils.readFileToByteArray(emailLogo);
-            return result;
-        }
-        catch (Exception e)
-        {
-            log.error("Can't get custom Email Logo file", e);
-            throw new AcmCustomLogoException("Can't get custom Email Logo file", e);
-        }
+        return getLogoFile(emailLogoFile);
+    }
+
+    /**
+     * Return portal header logo
+     *
+     * @return portal header logo
+     * @throws AcmCustomLogoException
+     */
+    public byte[] getHeaderLogoPortalFile() throws AcmCustomLogoException
+    {
+        return getLogoFile(headerLogoPortalFile);
+    }
+
+    /**
+     * Return portal login logo
+     *
+     * @return portal login logo
+     * @throws AcmCustomLogoException
+     */
+    public byte[] getLoginLogoPortalFile() throws AcmCustomLogoException
+    {
+        return getLogoFile(loginLogoPortalFile);
+    }
+
+    /**
+     * Return portal banner logo
+     *
+     * @return portal banner logo
+     * @throws AcmCustomLogoException
+     */
+    public byte[] getBannerLogoPortalFile() throws AcmCustomLogoException
+    {
+        return getLogoFile(bannerLogoPortalFile);
     }
 
     public void updateLoginLogo(InputStreamResource logoFileSource) throws IOException
@@ -132,11 +138,40 @@ public class CustomLogoService
         updateFile(logoFileSource, emailLogoFile);
     }
 
+    public void updateLoginLogoPortal(InputStreamResource logoFileSource) throws IOException
+    {
+        updateFile(logoFileSource, loginLogoPortalFile);
+    }
+
+    public void updateHeaderLogoPortal(InputStreamResource logoFileSource) throws IOException
+    {
+        updateFile(logoFileSource, headerLogoPortalFile);
+    }
+
+    public void updateBannerLogoPortal(InputStreamResource logoFileSource) throws IOException
+    {
+        updateFile(logoFileSource, bannerLogoPortalFile);
+    }
+
     private void updateFile(InputStreamResource logoFileSource, String fileName) throws IOException
     {
         log.debug("Trying to update the file with file name {} in the configuration.", fileName);
         fileConfigurationService.moveFileToConfiguration(logoFileSource,
                 configurationClientConfig.getBrandingPath() + "/" + fileName);
+    }
+
+    private byte[] getLogoFile(String logoFile) throws AcmCustomLogoException
+    {
+        try
+        {
+            File logo = new File(brandingFilesLocation + logoFile);
+            return FileUtils.readFileToByteArray(logo);
+        }
+        catch (Exception e)
+        {
+            log.error("Can't get custom Logo file {} {}", logoFile, e.getMessage());
+            throw new AcmCustomLogoException("Can't get custom Logo file", e);
+        }
     }
 
     public void setBrandingFilesLocation(String brandingFilesLocation)
@@ -172,5 +207,20 @@ public class CustomLogoService
     public void setConfigurationClientConfig(ConfigurationClientConfig configurationClientConfig)
     {
         this.configurationClientConfig = configurationClientConfig;
+    }
+
+    public void setHeaderLogoPortalFile(String headerLogoPortalFile)
+    {
+        this.headerLogoPortalFile = headerLogoPortalFile;
+    }
+
+    public void setLoginLogoPortalFile(String loginLogoPortalFile)
+    {
+        this.loginLogoPortalFile = loginLogoPortalFile;
+    }
+
+    public void setBannerLogoPortalFile(String bannerLogoPortalFile)
+    {
+        this.bannerLogoPortalFile = bannerLogoPortalFile;
     }
 }
