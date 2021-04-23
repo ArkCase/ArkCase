@@ -43,6 +43,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Objects;
+
 /**
  * Created by sergey.kolomiets on 6/22/15.
  */
@@ -69,7 +71,7 @@ public class CustomLogoUploadFile
         {
             if (headerLogoFile != null && !headerLogoFile.isEmpty())
             {
-                if (headerLogoFile.getContentType().equals(MediaType.IMAGE_PNG_VALUE))
+                if (Objects.equals(headerLogoFile.getContentType(), MediaType.IMAGE_PNG_VALUE))
                 {
                     log.debug("Trying to upload file with name {}", headerLogoFile.getOriginalFilename());
                     customLogoService.updateHeaderLogo(new InputStreamResource(headerLogoFile.getInputStream()));
@@ -82,7 +84,7 @@ public class CustomLogoUploadFile
 
             if (loginLogoFile != null && !loginLogoFile.isEmpty())
             {
-                if (loginLogoFile.getContentType().equals(MediaType.IMAGE_PNG_VALUE))
+                if (Objects.equals(loginLogoFile.getContentType(), MediaType.IMAGE_PNG_VALUE))
                 {
                     log.debug("Trying to upload file with name {}", loginLogoFile.getOriginalFilename());
                     customLogoService.updateLoginLogo(new InputStreamResource(loginLogoFile.getInputStream()));
@@ -95,7 +97,7 @@ public class CustomLogoUploadFile
 
             if (emailLogoFile != null && !emailLogoFile.isEmpty())
             {
-                if (emailLogoFile.getContentType().equals(MediaType.IMAGE_PNG_VALUE))
+                if (Objects.equals(emailLogoFile.getContentType(), MediaType.IMAGE_PNG_VALUE))
                 {
                     log.debug("Trying to upload file with name {}", emailLogoFile.getOriginalFilename());
                     customLogoService.updateEmailLogo(new InputStreamResource(emailLogoFile.getInputStream()));
@@ -115,6 +117,64 @@ public class CustomLogoUploadFile
         }
     }
 
+    @RequestMapping(value = "/portal/branding/customlogos", method = RequestMethod.POST)
+    @ResponseBody
+    public String replacePortalFile(
+            @RequestParam(value = "headerLogoPortal", required = false) MultipartFile headerLogoFile,
+            @RequestParam(value = "loginLogoPortal", required = false) MultipartFile loginLogoFile,
+            @RequestParam(value = "bannerPortal", required = false) MultipartFile bannerLogoFile)
+            throws AcmWorkflowConfigurationException
+    {
+
+        try
+        {
+            if (headerLogoFile != null && !headerLogoFile.isEmpty())
+            {
+                if (Objects.equals(headerLogoFile.getContentType(), MediaType.IMAGE_PNG_VALUE))
+                {
+                    log.debug("Trying to upload file with name {}", headerLogoFile.getOriginalFilename());
+                    customLogoService.updateHeaderLogoPortal(new InputStreamResource(headerLogoFile.getInputStream()));
+                }
+                else
+                {
+                    throw new AcmCustomLogoException("Only PNG files are supported for portal logo");
+                }
+            }
+
+            if (loginLogoFile != null && !loginLogoFile.isEmpty())
+            {
+                if (Objects.equals(loginLogoFile.getContentType(), MediaType.IMAGE_PNG_VALUE))
+                {
+                    log.debug("Trying to upload file with name {}", loginLogoFile.getOriginalFilename());
+                    customLogoService.updateLoginLogoPortal(new InputStreamResource(loginLogoFile.getInputStream()));
+                }
+                else
+                {
+                    throw new AcmCustomLogoException("Only PNG files are supported for portal logo");
+                }
+            }
+
+            if (bannerLogoFile != null && !bannerLogoFile.isEmpty())
+            {
+                if (Objects.equals(bannerLogoFile.getContentType(), MediaType.IMAGE_PNG_VALUE))
+                {
+                    log.debug("Trying to upload file with name {}", bannerLogoFile.getOriginalFilename());
+                    customLogoService.updateBannerLogoPortal(new InputStreamResource(bannerLogoFile.getInputStream()));
+                }
+                else
+                {
+                    throw new AcmCustomLogoException("Only PNG files are supported for portal logo");
+                }
+            }
+
+            return "{}";
+        }
+        catch (Exception e)
+        {
+            log.error("Can't update logos", e);
+            throw new AcmWorkflowConfigurationException("Can't update logos. " + e.getLocalizedMessage(), e);
+        }
+    }
 
     public void setCustomLogoService(CustomLogoService customLogoService)
     {
