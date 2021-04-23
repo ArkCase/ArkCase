@@ -8,11 +8,15 @@
         <property name="holidayConfigurationProps" ref="holidayConfigurationProps"/>
         <property name="configurationPropertyService" ref="configurationPropertyService"/>
         <property name="businessHoursConfig" ref="businessHoursConfig"/>
-        <property name="applicationConfig" ref="applicationProperties"/>
+        <property name="dateTimeService" ref="dateTimeService"/>
     </bean>
 
     <bean id="holidayConfigurationProps" class="com.armedia.acm.services.holiday.model.HolidayConfigurationProps" scope="refresh">
         <aop:scoped-proxy/>
+    </bean>
+
+    <bean id="dateTimeService" class="com.armedia.acm.services.holiday.service.DateTimeService" init-method="init">
+        <property name="appConfig" ref="applicationProperties"/>
     </bean>
 
     <bean id="businessHoursConfig" class="com.armedia.acm.services.holiday.model.BusinessHoursConfig" scope="refresh">
