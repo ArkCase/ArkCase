@@ -65,6 +65,7 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import java.util.ArrayList;
@@ -668,10 +669,10 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
 
         try
         {
-            stContext.registerFunction("toLocalDateTime", DateTimeService.class.getDeclaredMethod("toLocalDateTime", LocalDateTime.class));
-            stContext.registerFunction("toLocalDate", DateTimeService.class.getDeclaredMethod("toLocalDate", LocalDateTime.class));
-            stContext.registerFunction("toUTCDateTime", DateTimeService.class.getDeclaredMethod("toUTCDateTime", LocalDateTime.class));
-            stContext.registerFunction("toUTCDate", DateTimeService.class.getDeclaredMethod("toUTCDate", LocalDateTime.class));
+            stContext.registerFunction("toClientDateTimeTimezone", DateTimeService.class.getDeclaredMethod("toClientDateTimeTimezone", LocalDateTime.class ));
+            stContext.registerFunction("toClientDateTimezone", DateTimeService.class.getDeclaredMethod("toClientDateTimezone", LocalDateTime.class ));
+            stContext.registerFunction("toUTCDateTimeTimezone", DateTimeService.class.getDeclaredMethod("toUTCDateTimeTimezone", LocalDateTime.class ));
+            stContext.registerFunction("toUTCDateTimezone", DateTimeService.class.getDeclaredMethod("toUTCDateTimezone", LocalDateTime.class ));
         } catch (NoSuchMethodException e)
         {
             log.error("There is no method with that name", e);
@@ -700,7 +701,19 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
             {
                 if (expression.getValue(stContext) != null)
                 {
-                    generatedExpression = expression.getValue(stContext);
+                    if (expression.getValue(stContext).getClass().getSimpleName().equalsIgnoreCase(DATE_TYPE))
+                    {
+
+                        generatedExpression = (Date) expression.getValue(stContext);
+                    }
+                    else if (expression.getValue(stContext).getClass().getSimpleName().equalsIgnoreCase(DATE_TIME_TYPE))
+                    {
+                        generatedExpression = (LocalDateTime) expression.getValue(stContext);
+                    }
+                    else
+                    {
+                        generatedExpression = expression.getValue(stContext);
+                    }
                 }
                 else
                     generatedExpression = "";

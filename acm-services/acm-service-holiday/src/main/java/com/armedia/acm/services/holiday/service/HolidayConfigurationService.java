@@ -28,7 +28,6 @@ package com.armedia.acm.services.holiday.service;
  */
 
 import com.armedia.acm.configuration.service.ConfigurationPropertyService;
-import com.armedia.acm.core.model.ApplicationConfig;
 import com.armedia.acm.services.holiday.model.BusinessHoursConfig;
 import com.armedia.acm.services.holiday.model.HolidayConfiguration;
 import com.armedia.acm.services.holiday.model.HolidayConfigurationProps;
@@ -40,7 +39,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.Date;
@@ -165,7 +163,7 @@ public class HolidayConfigurationService
 
     public boolean isTimeAfterBusinessHours(Date date)
     {
-        LocalTime localTimeInSetTimezone = getDateTimeService().toLocalTime(date);
+        LocalTime localTimeInSetTimezone = getDateTimeService().fromDateToClientTimeTimezone(date);
 
         return localTimeInSetTimezone.isAfter(getEndOfClientBusinessDayTime());
     }
