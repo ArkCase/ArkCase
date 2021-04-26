@@ -120,7 +120,9 @@ angular.module('tasks').controller(
                             }
                             $scope.treeConfig.correspondenceForms = data[2];
                             $scope.treeConfig.fileLanguages = data[3];
-                            $scope.treeControl.refreshTree();
+                            if (!Util.isEmpty($scope.treeControl)) {
+                                $scope.treeControl.refreshTree();
+                            }
                         });
 
                         $scope.isreadOnly = false;
