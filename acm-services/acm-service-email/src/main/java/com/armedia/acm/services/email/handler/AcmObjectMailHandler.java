@@ -271,7 +271,7 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
         ZonedDateTime date = ZonedDateTime.now(ZoneOffset.UTC);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         String currentDate = formatter.format(date);
-        String fileAndFolderName = emailSender + "-" + currentDate + "-" + message.getSubject().replaceAll("\\W+", "");
+        String fileAndFolderName = message.getSubject().replaceAll("\\W+", "") + "-" + currentDate + "-" + emailSender;
         return fileAndFolderName;
     }
     

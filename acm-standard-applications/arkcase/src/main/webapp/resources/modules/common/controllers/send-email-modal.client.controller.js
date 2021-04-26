@@ -1,4 +1,4 @@
-angular.module('common').controller('Common.SendEmailModalController', [ '$scope', '$modal', '$modalInstance', '$translate', 'UtilService', 'ConfigService', 'params', 'Admin.CMTemplatesService', function($scope, $modal, $modalInstance, $translate, Util, ConfigService, params, correspondenceService) {
+angular.module('common').controller('Common.SendEmailModalController', ['$scope', '$modal', '$modalInstance', '$translate', 'UtilService', 'ConfigService', 'params', 'Admin.CMTemplatesService', function ($scope, $modal, $modalInstance, $translate, Util, ConfigService, params, correspondenceService) {
 
     $scope.objectId = params.objectId;
     $scope.objectType = params.objectType;
@@ -11,7 +11,21 @@ angular.module('common').controller('Common.SendEmailModalController', [ '$scope
     $scope.bccRecipientsStr = "";
     $scope.emailDataModel = {};
     $scope.subject = params.emailSubject;
-    $scope.emailDataModel.subject = $scope.subject;
+
+    var paramsPlainEmail = {};
+    paramsPlainEmail.objectType = $scope.objectType;
+    paramsPlainEmail.objectId = $scope.objectId;
+    paramsPlainEmail.templateName = 'plainEmail.html';
+
+    var getTemplateContentPromise = correspondenceService.retrieveConvertedTemplateContent(paramsPlainEmail);
+    getTemplateContentPromise.then(function (response) {
+        if (response.data.templateEmailSubject) {
+            $scope.emailDataModel.subject = response.data.templateEmailSubject;
+        } else {
+            $scope.emailDataModel.subject = $scope.subject;
+        }
+    });
+
     $scope.summernoteOptions = {
         focus: true,
         height: 300
@@ -93,27 +107,26 @@ angular.module('common').controller('Common.SendEmailModalController', [ '$scope
     };
 
     $scope.loadContent = function () {
-        if($scope.template === "plainEmail.html") {
-            $('#plain').summernote('code', "");
-            $scope.emailDataModel.subject = $scope.subject;
-        } else {
-            var params = {};
-            params.objectType = $scope.objectType;
-            params.objectId = $scope.objectId;
-            params.templateName = $scope.template;
+        var params = {};
+        params.objectType = $scope.objectType;
+        params.objectId = $scope.objectId;
+        params.templateName = $scope.template;
 
-            var getTemplateContentPromise = correspondenceService.retrieveConvertedTemplateContent(params);
+        var getTemplateContentPromise = correspondenceService.retrieveConvertedTemplateContent(params);
 
-            getTemplateContentPromise.then(function (response) {
+        getTemplateContentPromise.then(function (response) {
+            if (response.data.templateEmailSubject) {
+                $scope.emailDataModel.subject = response.data.templateEmailSubject;
+            } else {
+                $scope.emailDataModel.subject = $scope.subject;
+            }
+            if ($scope.template === "plainEmail.html") {
+                $('#plain').summernote('code', "");
+            } else {
                 $scope.templateContent = response.data.templateContent.replace("${baseURL}", window.location.href.split('/home.html#!')[0]);
-                if(response.data.templateEmailSubject) {
-                    $scope.emailDataModel.subject = response.data.templateEmailSubject;
-                } else {
-                    $scope.emailDataModel.subject = $scope.subject;
-                }
                 $('#content').summernote('code', $scope.templateContent);
-            });
-        }
+            }
+        });
     };
 
     $scope.onClickCancel = function() {

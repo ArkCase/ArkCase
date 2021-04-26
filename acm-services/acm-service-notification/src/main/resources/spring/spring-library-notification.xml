@@ -7,9 +7,7 @@
     <bean id="notificationService" class="com.armedia.acm.services.notification.service.NotificationServiceImpl">
         <property name="notificationDao" ref="notificationDao"/>
         <property name="notificationEventPublisher" ref="notificationEventPublisher"/>
-        <property name="springContextHolder" ref="acmContextHolder"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
-        <property name="notificationFormatter" ref="notificationFormatter"/>
         <property name="notificationConfig" ref="notificationConfig"/>
         <property name="notificationBuilder" ref="notificationBuilder"/>
         <property name="sendExecutor" ref="notificationSendExecutor"/>
@@ -20,9 +18,7 @@
         <property name="notificationFormatter" ref="notificationFormatter"/>
     </bean>
 
-    <bean id="notificationDao" class="com.armedia.acm.services.notification.dao.NotificationDao">
-        <property name="notificationUtils" ref="notificationUtils"/>
-    </bean>
+    <bean id="notificationDao" class="com.armedia.acm.services.notification.dao.NotificationDao"/>
 
     <bean id="notificationJobDescriptor" class="com.armedia.acm.services.notification.service.NotificationJobDescriptor"
           parent="acmJobDescriptor">
@@ -90,6 +86,7 @@
     <bean id="notificationSendExecutor" class="com.armedia.acm.services.notification.service.SendExecutor">
         <property name="springContextHolder" ref="acmContextHolder"/>
         <property name="templateConfigurationManager" ref="templateConfigurationManager"/>
+        <property name="notificationSenderFactory" ref="notificationSenderFactory"/>
     </bean>
 
     <bean id="acmNotificationPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">

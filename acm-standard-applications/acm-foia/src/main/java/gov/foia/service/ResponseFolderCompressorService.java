@@ -41,6 +41,7 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 
@@ -107,7 +108,7 @@ public class ResponseFolderCompressorService implements ApplicationEventPublishe
             compressFileName = compressor.compressFolder(responseFolderId);
             request.setGeneratedZipFlag(true);
             caseFileDao.save(request);
-            publishResponseFolderCompressedEvent(request);
+            publishResponseFolderCompressedEvent(request, responseFolderId);
         }
         return compressFileName;
     }
@@ -141,9 +142,10 @@ public class ResponseFolderCompressorService implements ApplicationEventPublishe
         return getFoiaConfig().getLimitedDeliveryToSpecificPageCountEnabled() && request.getLimitedDeliveryFlag();
     }
 
-    private void publishResponseFolderCompressedEvent(CaseFile source)
+    private void publishResponseFolderCompressedEvent(CaseFile source, Long responseFolderId)
     {
-        RequestResponseFolderCompressedEvent event = new RequestResponseFolderCompressedEvent(source,
+        AcmFolder folder = acmFolderService.findById(responseFolderId);
+        RequestResponseFolderCompressedEvent event = new RequestResponseFolderCompressedEvent(source, folder.getName(),
                 AuthenticationUtils.getUserIpAddress());
         applicationEventPublisher.publishEvent(event);
     }

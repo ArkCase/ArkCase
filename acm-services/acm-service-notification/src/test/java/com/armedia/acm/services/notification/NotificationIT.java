@@ -81,9 +81,11 @@ import org.springframework.transaction.annotation.Transactional;
         "/spring/spring-library-object-title.xml",
         "/spring/spring-library-labels-service.xml",
         "/spring/spring-test-quartz-scheduler.xml",
-        "/spring/spring-library-templates-configuration.xml"
+        "/spring/spring-library-templates-configuration.xml",
+        "/spring/spring-library-portal-gateway-service.xml",
+        "/spring/spring-library-pdf-utilities.xml"
 })
-@Rollback(true)
+@Rollback
 public class NotificationIT
 {
     static

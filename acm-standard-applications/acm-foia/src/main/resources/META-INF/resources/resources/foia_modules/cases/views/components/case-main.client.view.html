@@ -131,7 +131,7 @@
                         <fieldset ng-disabled="!enableDispositionClosedDate">
                             <div class="form-group">
                                 <date-time-picker data="objectInfo.dispositionClosedDate" property="startDate"
-                                        date-picker-id="comboDate1"></date-time-picker>
+                                        on-after-save="onComboAfterSave()" date-picker-id="comboDate1"></date-time-picker>
                             </div>
                         </fieldset>
                     </div>
