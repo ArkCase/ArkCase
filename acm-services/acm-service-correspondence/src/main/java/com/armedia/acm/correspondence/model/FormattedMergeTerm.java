@@ -1,4 +1,4 @@
-package gov.foia.model;
+package com.armedia.acm.correspondence.model;
 
 /*-
  * #%L
