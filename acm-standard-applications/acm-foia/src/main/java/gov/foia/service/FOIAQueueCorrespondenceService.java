@@ -42,6 +42,7 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.config.lookups.model.StandardLookupEntry;
 import com.armedia.acm.services.config.lookups.service.LookupDao;
 import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
+import com.armedia.acm.services.templateconfiguration.model.Template;
 import com.armedia.acm.services.templateconfiguration.service.TemplatingEngine;
 import com.armedia.acm.services.labels.service.TranslationService;
 import com.armedia.acm.services.notification.model.Notification;
@@ -192,7 +193,12 @@ public class FOIAQueueCorrespondenceService
 
             String emailAddress = extractRequestorEmailAddress(request.getOriginator().getPerson());
 
-            String emailSubject = correspondenceService.findTemplate("requestDocumentAttached").getEmailSubject();
+            String emailSubject = "";
+            Template template = correspondenceService.findTemplate("requestDocumentAttached.html");
+            if(template != null)
+            {
+                emailSubject = template.getEmailSubject();
+            }
 
             Notification notification = notificationService.getNotificationBuilder()
                     .newNotification("requestDocumentAttached", String.format("%s %s", request.getRequestType(), request.getCaseNumber()),
