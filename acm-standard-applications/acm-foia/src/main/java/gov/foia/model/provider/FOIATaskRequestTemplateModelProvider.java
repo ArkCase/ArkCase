@@ -58,8 +58,6 @@ import gov.foia.dao.FOIAExemptionCodeDao;
 import gov.foia.dao.FOIARequestDao;
 import gov.foia.model.FOIARequest;
 import gov.foia.model.FOIATaskRequestModel;
-import gov.foia.model.FormattedMergeTerm;
-import gov.foia.model.FormattedRun;
 import gov.foia.service.FOIAExemptionService;
 
 public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvider<FOIATaskRequestModel>
