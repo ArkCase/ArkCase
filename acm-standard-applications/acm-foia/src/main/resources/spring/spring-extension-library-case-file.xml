@@ -344,11 +344,6 @@
             <beans:property name="billingQueuePurger" ref="scheduledBillingQueuePurger"/>
         </beans:bean>
 
-        <beans:bean id="requestQueueChangedListener" class="gov.foia.listener.RequestQueueChangedListener" >
-            <beans:property name="declareRequestAsRecordService" ref="declareRequestAsRecordService"/>
-            <beans:property name="foiaConfig" ref="foiaConfig"/>
-        </beans:bean>
-
         <beans:bean id="declareRequestFilesAsRecordsJobDescriptor" class="gov.foia.service.DeclareRequestFilesAsRecordsJobDescriptor" parent="acmJobDescriptor">
             <beans:property name="declareRequestAsRecordService" ref="declareRequestAsRecordService"/>
         </beans:bean>
