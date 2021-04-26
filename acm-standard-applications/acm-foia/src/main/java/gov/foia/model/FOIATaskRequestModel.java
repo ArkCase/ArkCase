@@ -27,6 +27,7 @@ package gov.foia.model;
  * #L%
  */
 
+import com.armedia.acm.correspondence.model.FormattedMergeTerm;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.task.model.AcmTask;
 
@@ -59,11 +60,13 @@ public class FOIATaskRequestModel
         this.task = task;
     }
 
-    public Person getTaskContact() {
+    public Person getTaskContact()
+    {
         return taskContact;
     }
 
-    public void setTaskContact(Person taskContact) {
+    public void setTaskContact(Person taskContact)
+    {
         this.taskContact = taskContact;
     }
 

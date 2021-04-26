@@ -233,6 +233,7 @@ angular.module('directives').controller('directives.DocTreeEmailDialogController
     paramsPlainEmail.objectType = $scope.DocTree._objType;
     paramsPlainEmail.objectId = $scope.DocTree._objId;
     paramsPlainEmail.templateName = 'plainEmail.html';
+    paramsPlainEmail.fileIds = $scope.emailDataModel.selectedFilesToEmail;
 
     var getTemplateContentPromise = correspondenceService.retrieveConvertedTemplateContent(paramsPlainEmail);
     getTemplateContentPromise.then(function (response) {
@@ -317,7 +318,8 @@ angular.module('directives').controller('directives.DocTreeEmailDialogController
         params.objectType = $scope.DocTree._objType;
         params.objectId = $scope.DocTree._objId;
         params.templateName = $scope.template;
-
+        params.fileIds = $scope.emailDataModel.selectedFilesToEmail;
+        
         var getTemplateContentPromise = correspondenceService.retrieveConvertedTemplateContent(params);
 
         getTemplateContentPromise.then(function (response) {

@@ -50,8 +50,8 @@ import java.util.stream.Collectors;
 
 import gov.foia.model.FOIADeterminationLetterCorrespondence;
 import gov.foia.model.FOIARequest;
-import gov.foia.model.FormattedMergeTerm;
-import gov.foia.model.FormattedRun;
+import com.armedia.acm.correspondence.model.FormattedMergeTerm;
+import com.armedia.acm.correspondence.model.FormattedRun;
 import gov.foia.service.FOIAExemptionService;
 
 public class FOIADeterminationLetterModelProvider implements TemplateModelProvider<FOIADeterminationLetterCorrespondence>

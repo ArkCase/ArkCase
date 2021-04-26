@@ -37,6 +37,7 @@
         <property name="mergeFieldManager" ref="correspondenceMergeFieldManager"/>
         <property name="notificationService" ref="notificationService"/>
         <property name="templatingEngine" ref="templatingEngine"/>
+        <property name="ecmFileVersionDao" ref="ecmFileVersionDao"/>
     </bean>
 
     <bean id="correspondenceTemplateManager" class="com.armedia.acm.correspondence.service.CorrespondenceTemplateManager">
