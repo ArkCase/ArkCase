@@ -30,7 +30,13 @@ angular.module('services').factory('DocTreeExt.Email',
                    DocumentRepositoryInfoService.getDocumentRepositoryInfo(objectId).then(function(data) {
                        getOriginatorEmail(data);
                     });
-                }else {
+                } else if (objectType === "BUSINESS_PROCESS") {
+                    objectTypeInEndpoint = ObjectService.ObjectTypesInEndpoints.TASK;
+                    objectId = DocTree.objectInfo.taskId;
+                    ObjectInfoService.getObjectInfo(objectTypeInEndpoint, objectId).then(function (data) {
+                        getOriginatorEmail(data);
+                    });
+                } else {
                    ObjectInfoService.getObjectInfo(objectTypeInEndpoint, objectId).then(function(data) {
                        getOriginatorEmail(data);
                     });
@@ -117,13 +123,14 @@ angular.module('services').factory('DocTreeExt.Email',
                 openModal: function(DocTree, nodes) {
                     var modalInstance;
                     checkForOriginatorEmail(DocTree).then(function(emailOfOriginator) {
+                        var objectType = DocTree.scope.objectType === "BUSINESS_PROCESS" ? ObjectService.ObjectTypes.TASK : DocTree.scope.objectType;
                         var params = {
                             config: Util.goodMapValue(DocTree.treeConfig, "emailDialog", {}),
                             nodes: nodes,
                             emailSendConfiguration: DocTree.treeConfig.emailSendConfiguration,
                             DocTree: DocTree,
                             emailOfOriginator: emailOfOriginator,
-                            emailSubject: $translate.instant('common.objectTypes.' + DocTree.scope.objectType) + " " + getAcmObjectNumber()
+                            emailSubject: $translate.instant('common.objectTypes.' + objectType) + " " + getAcmObjectNumber()
                         };
 
                         modalInstance = $modal.open({
@@ -173,6 +180,8 @@ angular.module('services').factory('DocTreeExt.Email',
                                 return DocTree.scope.objectInfo.taskId;
                             case ObjectService.ObjectTypes.DOC_REPO:
                                 return DocTree.scope.objectInfo.id;
+                            case ObjectService.ObjectTypes.BUSINESS_PROCESS:
+                                return DocTree.scope.objectInfo.taskId;
                             default:
                                 return DocTree.scope.objectInfo.acmObjectNumber;
                         }
