@@ -39,7 +39,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.Date;
@@ -176,7 +175,7 @@ public class HolidayConfigurationService
 
     public boolean isTimeAfterBusinessHours(Date date)
     {
-        LocalTime localTimeInSetTimezone = getDateTimeService().toLocalTime(date);
+        LocalTime localTimeInSetTimezone = getDateTimeService().fromDateToClientTimeTimezone(date);
 
         return localTimeInSetTimezone.isAfter(getEndOfClientBusinessDayTime());
     }

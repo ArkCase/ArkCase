@@ -106,6 +106,7 @@
             <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-holiday</artifactId>
             <version>${acm.version}</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

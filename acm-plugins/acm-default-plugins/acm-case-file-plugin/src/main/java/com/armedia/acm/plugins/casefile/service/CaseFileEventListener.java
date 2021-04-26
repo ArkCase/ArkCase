@@ -46,7 +46,6 @@ import com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDao;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
 import com.armedia.acm.service.outlook.service.OutlookCalendarAdminServiceExtension;
 import com.armedia.acm.services.holiday.service.DateTimeService;
-import com.armedia.acm.services.holiday.service.HolidayConfigurationService;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
 
@@ -174,8 +173,8 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
                         {
                             if (isDueDateChanged(updatedCaseFile, existing))
                             {
-                                String newDate = getDateString(getDateTimeService().toLocalDateTime(updatedCaseFile.getDueDate()));
-                                String oldDate = getDateString(getDateTimeService().toLocalDateTime(existing.getDueDate()));
+                                String newDate = getDateString(getDateTimeService().fromDateToClientLocalDateTime(updatedCaseFile.getDueDate()));
+                                String oldDate = getDateString(getDateTimeService().fromDateToClientLocalDateTime(existing.getDueDate()));
                                 String timeZone = getDateTimeService().getDefaultClientZoneId().getId();
 
                                 getCaseFileEventUtility().raiseDueDateUpdatedEvent(updatedCaseFile, oldDate, newDate, timeZone, event.getIpAddress());
