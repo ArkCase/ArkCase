@@ -50,7 +50,7 @@ import java.util.stream.Collectors;
 import gov.foia.dao.FOIAExemptionCodeDao;
 import gov.foia.dao.FOIAExemptionStatuteDao;
 import gov.foia.model.ExemptionStatute;
-import gov.foia.model.FormattedRun;
+import com.armedia.acm.correspondence.model.FormattedRun;
 
 /**
  * Created by ana.serafimoska

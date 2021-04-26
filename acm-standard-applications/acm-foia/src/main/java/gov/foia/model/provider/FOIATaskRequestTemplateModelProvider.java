@@ -29,6 +29,8 @@ package gov.foia.model.provider;
 
 import com.armedia.acm.core.model.ApplicationConfig;
 import com.armedia.acm.core.provider.TemplateModelProvider;
+import com.armedia.acm.correspondence.model.FormattedMergeTerm;
+import com.armedia.acm.correspondence.model.FormattedRun;
 import com.armedia.acm.plugins.person.service.PersonAssociationService;
 import com.armedia.acm.plugins.profile.model.UserOrg;
 import com.armedia.acm.plugins.profile.service.UserOrgService;
@@ -55,8 +57,6 @@ import gov.foia.dao.FOIAExemptionCodeDao;
 import gov.foia.dao.FOIARequestDao;
 import gov.foia.model.FOIARequest;
 import gov.foia.model.FOIATaskRequestModel;
-import gov.foia.model.FormattedMergeTerm;
-import gov.foia.model.FormattedRun;
 import gov.foia.service.FOIAExemptionService;
 
 public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvider<FOIATaskRequestModel>
