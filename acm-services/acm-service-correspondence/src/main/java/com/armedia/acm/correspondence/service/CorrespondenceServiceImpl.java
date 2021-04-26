@@ -30,6 +30,8 @@ package com.armedia.acm.correspondence.service;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.core.provider.TemplateModelProvider;
+import com.armedia.acm.plugins.ecm.dao.EcmFileVersionDao;
+import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.notification.service.NotificationService;
@@ -55,6 +57,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -74,6 +77,7 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
     private CorrespondenceMergeFieldManager mergeFieldManager;
     private NotificationService notificationService;
     private TemplatingEngine templatingEngine;
+    private EcmFileVersionDao ecmFileVersionDao;
 
     /**
      * For use from MVC controllers and any other client with an Authentication object.
@@ -409,17 +413,23 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
     }
 
     @Override
-    public Notification convertMergeTerms(String templateName, String templateContent, String objectType, String objectId)
+    public Notification convertMergeTerms(String templateName, String templateContent, String objectType, String objectId,
+            List<Long> fileIds)
     {
         String templateModelName = templateName.substring(0, templateName.indexOf("."));
         Template template = findTemplate(templateName);
         String title = getNotificationService().setNotificationTitleForManualNotification(templateModelName);
 
+        List<EcmFileVersion> ecmFileVersions = new ArrayList<>();
+        if(fileIds != null) {
+            ecmFileVersions = getEcmFileVersionDao().findByIds(fileIds);
+        }
         Notification notification = getNotificationService().getNotificationBuilder()
                 .newNotification(templateModelName, title, objectType,
                         Long.parseLong(objectId), null)
                 .withNotificationType(NotificationConstants.TYPE_MANUAL)
                 .withEmailContent(templateContent)
+                .withFiles(ecmFileVersions)
                 .build();
 
         String templateModelProvider = template.getTemplateModelProvider();
@@ -520,4 +530,13 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
         this.templatingEngine = templatingEngine;
     }
 
+    public EcmFileVersionDao getEcmFileVersionDao()
+    {
+        return ecmFileVersionDao;
+    }
+
+    public void setEcmFileVersionDao(EcmFileVersionDao ecmFileVersionDao)
+    {
+        this.ecmFileVersionDao = ecmFileVersionDao;
+    }
 }

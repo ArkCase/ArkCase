@@ -197,5 +197,5 @@ public interface CorrespondenceService
     /**
      * Translating merge terms by objectId and objectType
      */
-    Notification convertMergeTerms(String templateName, String templateContent, String objectType, String objectId);
+    Notification convertMergeTerms(String templateName, String templateContent, String objectType, String objectId, List<Long> fileIds);
 }

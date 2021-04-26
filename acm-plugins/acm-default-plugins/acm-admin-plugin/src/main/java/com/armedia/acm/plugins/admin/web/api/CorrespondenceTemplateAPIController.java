@@ -48,6 +48,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -215,8 +216,9 @@ public class CorrespondenceTemplateAPIController
     @RequestMapping(value = "/convertedTemplateContent/{objectType}/{objectId}/{templateName:.+}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<String> getTemplateContent(@PathVariable(value = "objectType") String objectType,
-                                                     @PathVariable(value = "objectId") String objectId,
-                                                     @PathVariable(value = "templateName") String templateName) throws AcmEmailConfigurationIOException
+            @PathVariable(value = "objectId") String objectId,
+            @PathVariable(value = "templateName") String templateName,
+            @RequestParam(value = "fileIds", required = false) List<Long> fileIds) throws AcmEmailConfigurationIOException
     {
 
         JSONObject retval = new JSONObject();
@@ -235,7 +237,8 @@ public class CorrespondenceTemplateAPIController
 
             }
 
-            Notification notification = correspondenceService.convertMergeTerms(templateName, content.toString(), objectType, objectId);
+            Notification notification = correspondenceService.convertMergeTerms(templateName, content.toString(), objectType, objectId,
+                    fileIds);
             retval.put("templateContent", notification.getEmailContent());
             retval.put("templateEmailSubject", notification.getSubject());
 
