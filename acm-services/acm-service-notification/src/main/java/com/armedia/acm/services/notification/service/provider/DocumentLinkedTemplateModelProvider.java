@@ -57,7 +57,7 @@ public class DocumentLinkedTemplateModelProvider implements TemplateModelProvide
                 {
                     fileNames.add(fileVersions.get(i).getFile().getFileName() + fileVersions.get(i).getFile().getFileActiveVersionNameExtension());
                     links.add("ecmFileId=" + fileVersions.get(i).getFile().getFileId() + "&version=&acm_email_ticket="
-                            + authenticationTokenService.generateAndSaveAuthenticationToken(fileVersions.get(i).getId(),
+                            + authenticationTokenService.generateAndSaveAuthenticationToken(fileVersions.get(i).getFile().getFileId(),
                             notification.getEmailAddresses(), null));
                 }
             }
