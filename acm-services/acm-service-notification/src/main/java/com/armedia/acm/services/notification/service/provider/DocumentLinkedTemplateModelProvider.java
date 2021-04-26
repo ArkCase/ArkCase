@@ -35,7 +35,8 @@ import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.service.provider.model.DocumentLinkedModel;
 import org.springframework.beans.factory.annotation.Value;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DocumentLinkedTemplateModelProvider implements TemplateModelProvider<DocumentLinkedModel>
 {
@@ -57,12 +58,13 @@ public class DocumentLinkedTemplateModelProvider implements TemplateModelProvide
         {
             for (int i = 0; i < fileVersions.size(); i++)
             {
-                if(fileVersions.get(i).getVersionTag().equals(fileVersions.get(i).getFile().getActiveVersionTag()))
+                if (fileVersions.get(i).getVersionTag().equals(fileVersions.get(i).getFile().getActiveVersionTag()))
                 {
-                    fileNames.add(fileVersions.get(i).getFile().getFileName() + fileVersions.get(i).getFile().getFileActiveVersionNameExtension());
+                    fileNames.add(fileVersions.get(i).getFile().getFileName()
+                            + fileVersions.get(i).getFile().getFileActiveVersionNameExtension());
                     links.add("ecmFileId=" + fileVersions.get(i).getFile().getFileId() + "&version=&acm_email_ticket="
                             + authenticationTokenService.generateAndSaveAuthenticationToken(fileVersions.get(i).getFile().getFileId(),
-                            notification.getEmailAddresses(), null));
+                                    notification.getEmailAddresses(), null));
                 }
             }
             authenticationTokenService.addTokenToRelativePaths(Arrays.asList(relativePath.split("__comma__")), token, tokenExpiry, notification.getEmailAddresses());

@@ -30,7 +30,10 @@ package com.armedia.acm.correspondence.service;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.core.provider.TemplateModelProvider;
+import com.armedia.acm.data.AcmAbstractDao;
+import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.plugins.ecm.dao.EcmFileVersionDao;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
@@ -95,7 +98,7 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
             String targetCmisFolderId) throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException
     {
 
-        Template template = templateManager.findTemplate(templateName);
+        Template template = findTemplate(templateName);
         if (template.isEnabled())
         {
             return generateCorrespondence(authentication, templateName, parentObjectType, parentObjectId, targetCmisFolderId);
@@ -109,7 +112,7 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
     @Override
     public EcmFile generate(Authentication authentication, String templateName, String parentObjectType, Long parentObjectId,
             String targetCmisFolderId, Boolean isManual)
-            throws IOException, AcmCreateObjectFailedException, AcmUserActionFailedException
+            throws IOException, IllegalArgumentException, AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         if (isManual)
         {
@@ -123,7 +126,7 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
 
     private EcmFile generateCorrespondence(Authentication authentication, String templateName, String parentObjectType, Long parentObjectId,
             String targetCmisFolderId)
-            throws IOException, AcmCreateObjectFailedException, AcmUserActionFailedException
+            throws IOException, IllegalArgumentException, AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         Template template = templateManager.findTemplate(templateName);
         File file = File.createTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX);
@@ -409,7 +412,8 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
         String title = getNotificationService().setNotificationTitleForManualNotification(templateModelName);
 
         List<EcmFileVersion> ecmFileVersions = new ArrayList<>();
-        if(fileIds != null) {
+        if (fileIds != null)
+        {
             ecmFileVersions = getEcmFileVersionDao().findByIds(fileIds);
         }
         Notification notification = getNotificationService().getNotificationBuilder()
