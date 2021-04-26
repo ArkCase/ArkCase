@@ -30,16 +30,16 @@ package com.armedia.acm.correspondence.service;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.core.provider.TemplateModelProvider;
+import com.armedia.acm.data.AcmAbstractDao;
+import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.plugins.ecm.dao.EcmFileVersionDao;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.notification.service.NotificationService;
 import com.armedia.acm.services.templateconfiguration.model.CorrespondenceMergeField;
 import com.armedia.acm.services.templateconfiguration.model.Template;
-import com.armedia.acm.data.AcmAbstractDao;
-import com.armedia.acm.data.AcmEntity;
-import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.services.templateconfiguration.service.CorrespondenceMergeFieldManager;
 import com.armedia.acm.services.templateconfiguration.service.TemplatingEngine;
 import com.armedia.acm.spring.SpringContextHolder;
@@ -47,6 +47,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchemaGenerator;
+
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -94,12 +95,14 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
      */
     @Override
     public EcmFile generate(Authentication authentication, String templateName, String parentObjectType, Long parentObjectId,
-            String targetCmisFolderId) throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException {
+            String targetCmisFolderId) throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException
+    {
 
         Template template = findTemplate(templateName);
-        if(template.isEnabled())
+        if (template.isEnabled())
         {
-            return generateCorrespondence(authentication, templateName, parentObjectType, parentObjectId, targetCmisFolderId);        }
+            return generateCorrespondence(authentication, templateName, parentObjectType, parentObjectId, targetCmisFolderId);
+        }
         else
         {
             throw new IOException("Failed to generate correspondence document for template with name: [" + templateName + "]");
@@ -108,10 +111,10 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
 
     @Override
     public EcmFile generate(Authentication authentication, String templateName, String parentObjectType, Long parentObjectId,
-                            String targetCmisFolderId, Boolean isManual)
+            String targetCmisFolderId, Boolean isManual)
             throws IOException, IllegalArgumentException, AcmCreateObjectFailedException, AcmUserActionFailedException
     {
-        if(isManual)
+        if (isManual)
         {
             return generateCorrespondence(authentication, templateName, parentObjectType, parentObjectId, targetCmisFolderId);
         }
@@ -122,14 +125,14 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
     }
 
     private EcmFile generateCorrespondence(Authentication authentication, String templateName, String parentObjectType, Long parentObjectId,
-                                           String targetCmisFolderId)
+            String targetCmisFolderId)
             throws IOException, IllegalArgumentException, AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         Template template = findTemplate(templateName);
         File file = File.createTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX);
 
         try (FileInputStream fisForUploadToEcm = new FileInputStream(file);
-             FileOutputStream fosToWriteFile = new FileOutputStream(file))
+                FileOutputStream fosToWriteFile = new FileOutputStream(file))
         {
 
             log.debug("writing correspondence to file: " + file.getCanonicalPath());
@@ -299,7 +302,6 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
         return mergeFieldManager.getMergeFieldByMergeFieldId(mergeFieldId);
     }
 
-
     @Override
     public void deleteMergeFields(String mergeFieldId) throws IOException
     {
@@ -307,10 +309,11 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
     }
 
     @Override
-    public void addMergeField (CorrespondenceMergeField newMergeField) throws IOException
+    public void addMergeField(CorrespondenceMergeField newMergeField) throws IOException
     {
         mergeFieldManager.addMergeField(newMergeField);
     }
+
     /**
      * @param mergeFields
      * @param auth
@@ -357,14 +360,16 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
     }
 
     @Override
-    public Map<String, String> listTemplateModelProviders() {
-        Collection<TemplateModelProvider> templateModelProviders = getSpringContextHolder().getAllBeansOfType(TemplateModelProvider.class).values();
+    public Map<String, String> listTemplateModelProviders()
+    {
+        Collection<TemplateModelProvider> templateModelProviders = getSpringContextHolder().getAllBeansOfType(TemplateModelProvider.class)
+                .values();
 
         Map<String, String> mapTemplateModelProviders = new HashMap<>();
         for (TemplateModelProvider modelProvider : templateModelProviders)
         {
             String[] splittedTemplateProviderClassPath = modelProvider.getClass().getName().split("\\.");
-            String templateModelProviderShortName = splittedTemplateProviderClassPath[splittedTemplateProviderClassPath.length-1];
+            String templateModelProviderShortName = splittedTemplateProviderClassPath[splittedTemplateProviderClassPath.length - 1];
 
             mapTemplateModelProviders.put(modelProvider.getClass().getName(), templateModelProviderShortName);
         }
@@ -372,7 +377,8 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
     }
 
     @Override
-    public String getTemplateModelProviderDeclaredFields(String classPath) {
+    public String getTemplateModelProviderDeclaredFields(String classPath)
+    {
         String jsonSchemaProperties = null;
         try
         {
@@ -421,7 +427,8 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
         String title = getNotificationService().setNotificationTitleForManualNotification(templateModelName);
 
         List<EcmFileVersion> ecmFileVersions = new ArrayList<>();
-        if(fileIds != null) {
+        if (fileIds != null)
+        {
             ecmFileVersions = getEcmFileVersionDao().findByIds(fileIds);
         }
         Notification notification = getNotificationService().getNotificationBuilder()
@@ -447,7 +454,8 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
         TemplateModelProvider modelProvider = getTemplateModelProvider(templateModelProviderClass);
         if (modelProvider != null)
         {
-            try {
+            try
+            {
                 Object object = modelProvider.getModel(notification);
                 String body = getTemplatingEngine().process(templateContent, templateModelName, object);
                 notification.setEmailContent(body);
@@ -455,7 +463,7 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
                 notification.setSubject(subject);
                 return notification;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 log.error("Failed to process template {}! Error: {} ", templateName, ex.getMessage());
             }
@@ -516,7 +524,8 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
         return notificationService;
     }
 
-    public void setNotificationService(NotificationService notificationService) {
+    public void setNotificationService(NotificationService notificationService)
+    {
         this.notificationService = notificationService;
     }
 

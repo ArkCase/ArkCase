@@ -30,12 +30,13 @@ package com.armedia.acm.correspondence.service;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.core.provider.TemplateModelProvider;
-import com.armedia.acm.services.notification.model.Notification;
-import com.armedia.acm.services.templateconfiguration.model.CorrespondenceMergeField;
-import com.armedia.acm.services.templateconfiguration.model.Template;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.services.notification.model.Notification;
+import com.armedia.acm.services.templateconfiguration.model.CorrespondenceMergeField;
+import com.armedia.acm.services.templateconfiguration.model.Template;
+
 import org.springframework.security.core.Authentication;
 
 import java.io.IOException;
@@ -66,7 +67,7 @@ public interface CorrespondenceService
             throws IOException, IllegalArgumentException, AcmCreateObjectFailedException, AcmUserActionFailedException;
 
     EcmFile generate(Authentication authentication, String templateName, String parentObjectType, Long parentObjectId,
-                     String targetCmisFolderId, Boolean isManual)
+            String targetCmisFolderId, Boolean isManual)
             throws IOException, IllegalArgumentException, AcmCreateObjectFailedException, AcmUserActionFailedException;
 
     /**
@@ -84,7 +85,6 @@ public interface CorrespondenceService
      */
     EcmFile generate(String templateName, String parentObjectType, Long parentObjectId, String targetCmisFolderId)
             throws IOException, IllegalArgumentException, AcmCreateObjectFailedException, AcmUserActionFailedException;
-
 
     List<Template> getAllTemplates();
 
@@ -134,29 +134,33 @@ public interface CorrespondenceService
     /**
      * @param objectType
      * @return
-     * @throws IOException, CorrespondenceMergeFieldVersionException
+     * @throws IOException,
+     *             CorrespondenceMergeFieldVersionException
      */
     List<CorrespondenceMergeField> getMergeFieldsByType(String objectType);
 
     /**
      * @param mergeFieldId
      * @return
-     * @throws IOException, CorrespondenceMergeFieldVersionException
+     * @throws IOException,
+     *             CorrespondenceMergeFieldVersionException
      */
     List<CorrespondenceMergeField> getMergeFieldByMergeFieldId(String mergeFieldId);
 
     /**
      * @param mergeField
      * @return
-     * @throws IOException, CorrespondenceMergeFieldVersionException
+     * @throws IOException,
+     *             CorrespondenceMergeFieldVersionException
      */
-    void deleteMergeFields (String mergeFieldId) throws IOException;
+    void deleteMergeFields(String mergeFieldId) throws IOException;
 
     /**
      * @param newMergeField
      * @return
      */
-    void addMergeField (CorrespondenceMergeField newMergeField) throws IOException;
+    void addMergeField(CorrespondenceMergeField newMergeField) throws IOException;
+
     /**
      * @param mergeFields
      * @param auth

@@ -60,11 +60,13 @@ public class FOIATaskRequestModel
         this.task = task;
     }
 
-    public Person getTaskContact() {
+    public Person getTaskContact()
+    {
         return taskContact;
     }
 
-    public void setTaskContact(Person taskContact) {
+    public void setTaskContact(Person taskContact)
+    {
         this.taskContact = taskContact;
     }
 
