@@ -49,6 +49,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -79,7 +81,6 @@ public class TemplatingEngine
         cfg.setDateFormat("MM/dd/yyyy");
         cfg.setDateTimeFormat("MM/dd/yyyy HH:mm");
         cfg.setTimeZone(TimeZone.getTimeZone(applicationConfig.getDefaultTimezone()));
-
 
         Map<String, Object> templatingModel = new HashMap<>();
         templatingModel.put(modelReferenceName, model);

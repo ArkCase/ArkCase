@@ -337,11 +337,6 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
         return "None";
     }
 
-    private LocalDateTime setDateToLocalDateTimeByDefaultClientTimezone(Date date)
-    {
-        return getHolidayConfigurationService().getZonedDateTimeAtDefaultClientTimezone(date).toLocalDateTime();
-    }
-
     public AcmObjectHistoryService getAcmObjectHistoryService()
     {
 
