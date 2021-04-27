@@ -18,6 +18,7 @@
             <beans:property name="holidayConfigurationService" ref="holidayConfigurationService"/>
             <beans:property name="foiaConfig" ref="foiaConfig"/>
             <beans:property name="queuesTimeToCompleteService" ref="queuesTimeToCompleteService"/>
+            <beans:property name="dateTimeService" ref="dateTimeService"/>
         </beans:bean>
 
         <beans:bean id="foiaConfigurationHandler" class="gov.foia.pipeline.postsave.FOIAConfigurationHandler">

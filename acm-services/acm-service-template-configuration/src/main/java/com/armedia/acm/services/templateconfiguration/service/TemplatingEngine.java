@@ -31,9 +31,11 @@ import static org.reflections.Reflections.log;
 
 import com.armedia.acm.core.model.ApplicationConfig;
 import com.armedia.acm.objectonverter.DateFormats;
+import com.armedia.acm.services.holiday.service.DateTimeService;
 import com.armedia.acm.services.templateconfiguration.model.CorrespondenceMergeField;
 import com.armedia.acm.services.templateconfiguration.model.FormatDateTimeMethodModel;
 
+import org.springframework.cglib.core.Local;
 import org.springframework.expression.spel.SpelParserConfiguration;
 import org.springframework.expression.spel.standard.SpelExpression;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
@@ -45,11 +47,16 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -64,8 +71,7 @@ public class TemplatingEngine
     public static final String DATE_TIME_TYPE = "LocalDateTime";
     private ApplicationConfig applicationConfig;
     private CorrespondenceMergeFieldManager mergeFieldManager;
-    SimpleDateFormat formatter = new SimpleDateFormat(DateFormats.WORKFLOW_DATE_FORMAT);
-    SimpleDateFormat dateTimeFormatter = new SimpleDateFormat(DateFormats.CORRESPONDENCE_DATE_FORMAT);
+    private DateTimeService dateTimeService;
 
     public String process(String emailBodyTemplate, String modelReferenceName, Object model) throws TemplateException, IOException
     {
@@ -74,7 +80,7 @@ public class TemplatingEngine
         cfg.setClassicCompatible(true); // does't throw error on null values
         cfg.setDateFormat("MM/dd/yyyy");
         cfg.setDateTimeFormat("MM/dd/yyyy HH:mm");
-
+        cfg.setTimeZone(TimeZone.getTimeZone(applicationConfig.getDefaultTimezone()));
 
         Map<String, Object> templatingModel = new HashMap<>();
         templatingModel.put(modelReferenceName, model);
@@ -104,6 +110,18 @@ public class TemplatingEngine
             SpelParserConfiguration config = new SpelParserConfiguration(true, true);
             SpelExpressionParser parser = new SpelExpressionParser(config);
 
+            try
+            {
+                stContext.registerFunction("toClientDateTimeTimezone", DateTimeService.class.getDeclaredMethod("toClientDateTimeTimezone", LocalDateTime.class ));
+                stContext.registerFunction("toClientDateTimezone", DateTimeService.class.getDeclaredMethod("toClientDateTimezone", LocalDateTime.class ));
+                stContext.registerFunction("toUTCDateTimeTimezone", DateTimeService.class.getDeclaredMethod("toUTCDateTimeTimezone", LocalDateTime.class ));
+                stContext.registerFunction("toUTCDateTimezone", DateTimeService.class.getDeclaredMethod("toUTCDateTimezone", LocalDateTime.class ));
+            }
+            catch (NoSuchMethodException e)
+            {
+                log.error("There is no method with that name", e);
+            }
+
             for(String spelExpression : spelExpressions)
             {
                 for (CorrespondenceMergeField mergeField : getMergeFieldManager().getMergeFields())
@@ -112,32 +130,23 @@ public class TemplatingEngine
                     if (mergeFieldId.equalsIgnoreCase(spelExpression) && mergeField.getEmailFieldValue() != null)
                     {
                         SpelExpression expression = parser.parseRaw(mergeField.getEmailFieldValue());
-                        String generatedExpression = "";
+                        Object generatedExpression = "";
                         if (expression.getValue(stContext) != null)
                         {
                             if (expression.getValue(stContext).getClass().getSimpleName().equalsIgnoreCase(DATE_TYPE))
                             {
-                                generatedExpression = formatter.format(expression.getValue(stContext));
+                                generatedExpression = (LocalDateTime) getDateTimeService().fromDateToClientLocalDateTime((Date) expression.getValue(stContext));
                             }
                             else if (expression.getValue(stContext).getClass().getSimpleName().equalsIgnoreCase(DATE_TIME_TYPE))
                             {
-                                try
-                                {
-                                    generatedExpression = formatter.format(
-                                            dateTimeFormatter
-                                                    .parse((((LocalDateTime) expression.getValue(stContext)).toLocalDate().toString())));
-                                }
-                                catch (ParseException e)
-                                {
-                                    log.error("Unable to parse SpEL expression [{}]", spelExpression);
-                                }
+                                generatedExpression = (LocalDateTime) expression.getValue(stContext);
                             }
                             else
                             {
                                 generatedExpression = String.valueOf(expression.getValue(stContext));
                             }
 
-                            expressionsToEvaluate.put(mergeField.getFieldId(), generatedExpression);
+                            expressionsToEvaluate.put(mergeField.getFieldId(), (String) generatedExpression);
                         }
                     }
                 }
@@ -182,5 +191,15 @@ public class TemplatingEngine
     public void setMergeFieldManager(CorrespondenceMergeFieldManager mergeFieldManager)
     {
         this.mergeFieldManager = mergeFieldManager;
+    }
+
+    public DateTimeService getDateTimeService()
+    {
+        return dateTimeService;
+    }
+
+    public void setDateTimeService(DateTimeService dateTimeService)
+    {
+        this.dateTimeService = dateTimeService;
     }
 }
