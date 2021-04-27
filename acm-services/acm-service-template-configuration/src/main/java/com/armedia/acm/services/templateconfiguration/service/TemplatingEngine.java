@@ -133,7 +133,8 @@ public class TemplatingEngine
                         {
                             if (expression.getValue(stContext).getClass().getSimpleName().equalsIgnoreCase(DATE_TYPE))
                             {
-                                generatedExpression = (Date) expression.getValue(stContext);
+
+                                generatedExpression = (LocalDateTime) getDateTimeService().fromDateToClientLocalDateTime((Date) expression.getValue(stContext));
                             }
                             else if (expression.getValue(stContext).getClass().getSimpleName().equalsIgnoreCase(DATE_TIME_TYPE))
                             {

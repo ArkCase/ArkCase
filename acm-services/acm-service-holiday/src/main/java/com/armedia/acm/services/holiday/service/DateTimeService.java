@@ -28,6 +28,7 @@ package com.armedia.acm.services.holiday.service;
  */
 
 import com.armedia.acm.core.model.ApplicationConfig;
+import org.joda.time.DateTime;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -43,54 +44,61 @@ public class DateTimeService {
     private ApplicationConfig appConfig;
     public static DateTimeService dateTimeService;
 
-    private DateTimeFormatter dateTimePattern = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm");
-    private DateTimeFormatter datePattern = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+    private String dateTimePattern = "MM/dd/yyyy HH:mm [VV]";
+    private String datePattern = "MM/dd/yyyy [VV]";
 
-    public void init() {
+    public void init()
+    {
         DateTimeService.dateTimeService = this;
     }
 
     public static String toClientDateTimeTimezone(LocalDateTime date)
     {
-        return dateTimeService.dateTimePattern.format(dateTimeService.toClientLocalDateTime(date));
+        return dateTimeService.getZonedDateTimeAtDefaultClientTimezone(date).format(DateTimeFormatter.ofPattern(dateTimeService.datePattern));
     }
 
     public static String toClientDateTimezone(LocalDateTime date)
     {
-        return dateTimeService.datePattern.format(dateTimeService.toClientLocalDate(date));
+        return dateTimeService.getZonedDateTimeAtDefaultClientTimezone(date).format(DateTimeFormatter.ofPattern(dateTimeService.dateTimePattern));
     }
 
     public static String toUTCDateTimeTimezone(LocalDateTime date)
     {
-        return dateTimeService.dateTimePattern.format(dateTimeService.toUTCDateTime(date));
+        return dateTimeService.getZonedDateTimeAtUTC(date).format(DateTimeFormatter.ofPattern(dateTimeService.dateTimePattern));
     }
 
     public static String toUTCDateTimezone(LocalDateTime date)
     {
-        return dateTimeService.datePattern.format(dateTimeService.toUTCDate(date));
+        return dateTimeService.getZonedDateTimeAtUTC(date).format(DateTimeFormatter.ofPattern(dateTimeService.datePattern));
     }
 
-    public LocalDateTime fromDateToClientLocalDateTime(Date date) {
+    public LocalDateTime fromDateToClientLocalDateTime(Date date)
+    {
         return getZonedDateTimeAtDefaultClientTimezone(date).toLocalDateTime();
     }
 
-    public LocalDateTime toClientLocalDateTime(LocalDateTime date) {
+    public LocalDateTime toClientLocalDateTime(LocalDateTime date)
+    {
         return getZonedDateTimeAtDefaultClientTimezone(date).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime();
     }
 
-    public LocalDate fromDateToClientLocalDate(Date date) {
+    public LocalDate fromDateToClientLocalDate(Date date)
+    {
         return getZonedDateTimeAtDefaultClientTimezone(date).toLocalDate();
     }
 
-    public LocalDate toClientLocalDate(LocalDateTime date) {
+    public LocalDate toClientLocalDate(LocalDateTime date)
+    {
         return getZonedDateTimeAtDefaultClientTimezone(date).withZoneSameInstant(ZoneOffset.UTC).toLocalDate();
     }
 
-    public LocalTime fromDateToClientTimeTimezone(Date date) {
+    public LocalTime fromDateToClientTimeTimezone(Date date)
+    {
         return getZonedDateTimeAtDefaultClientTimezone(date).toLocalTime();
     }
 
-    public LocalTime toClientLocalTime(LocalDateTime date) {
+    public LocalTime toClientLocalTime(LocalDateTime date)
+    {
         return getZonedDateTimeAtDefaultClientTimezone(date).withZoneSameInstant(ZoneOffset.UTC).toLocalTime();
     }
 

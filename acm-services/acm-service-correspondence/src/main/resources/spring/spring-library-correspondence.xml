@@ -14,6 +14,7 @@
         <property name="mergeFieldManager" ref="correspondenceMergeFieldManager"/>
         <property name="appConfig" ref="applicationProperties"/>
         <property name="contextHolder" ref="acmContextHolder"/>
+        <property name="dateTimeService" ref="dateTimeService"/>
     </bean>
 
     <import resource="file:${user.home}/.arkcase/acm/app-config.xml"/>

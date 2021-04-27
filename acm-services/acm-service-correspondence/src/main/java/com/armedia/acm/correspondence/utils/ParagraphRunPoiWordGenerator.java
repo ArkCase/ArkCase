@@ -108,6 +108,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
     private CorrespondenceMergeFieldManager mergeFieldManager;
     private ApplicationConfig appConfig;
     private SpringContextHolder contextHolder;
+    private DateTimeService dateTimeService;
 
     @Override
     public void generate(Resource wordTemplate, OutputStream targetStream, String objectType, Long parentObjectId,
@@ -704,7 +705,8 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                     if (expression.getValue(stContext).getClass().getSimpleName().equalsIgnoreCase(DATE_TYPE))
                     {
 
-                        generatedExpression = (Date) expression.getValue(stContext);
+
+                        generatedExpression = (LocalDateTime) getDateTimeService().fromDateToClientLocalDateTime((Date) expression.getValue(stContext));
                     }
                     else if (expression.getValue(stContext).getClass().getSimpleName().equalsIgnoreCase(DATE_TIME_TYPE))
                     {
@@ -968,4 +970,13 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
         this.contextHolder = contextHolder;
     }
 
+    public DateTimeService getDateTimeService()
+    {
+        return dateTimeService;
+    }
+
+    public void setDateTimeService(DateTimeService dateTimeService)
+    {
+        this.dateTimeService = dateTimeService;
+    }
 }
