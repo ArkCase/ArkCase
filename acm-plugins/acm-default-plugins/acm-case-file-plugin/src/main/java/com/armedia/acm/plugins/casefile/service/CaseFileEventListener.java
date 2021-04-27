@@ -45,8 +45,7 @@ import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryService;
 import com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDao;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
 import com.armedia.acm.service.outlook.service.OutlookCalendarAdminServiceExtension;
-import com.armedia.acm.services.holiday.model.HolidayConfiguration;
-import com.armedia.acm.services.holiday.service.HolidayConfigurationService;
+import com.armedia.acm.services.holiday.service.DateTimeService;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
 
@@ -54,20 +53,14 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationListener;
 
-import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 public class CaseFileEventListener implements ApplicationListener<AcmObjectHistoryEvent>
 {
@@ -84,7 +77,7 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
     private boolean shouldDeleteCalendarFolder;
     private List<String> caseFileStatusClosed;
     private ObjectConverter objectConverter;
-    private HolidayConfigurationService holidayConfigurationService;
+    private DateTimeService dateTimeService;
 
     private OutlookCalendarAdminServiceExtension calendarAdminService;
 
@@ -180,9 +173,9 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
                         {
                             if (isDueDateChanged(updatedCaseFile, existing))
                             {
-                                String newDate = getDateString(setDateToLocalDateTimeByDefaultClientTimezone(updatedCaseFile.getDueDate()));
-                                String oldDate = getDateString(setDateToLocalDateTimeByDefaultClientTimezone(existing.getDueDate()));
-                                String timeZone = getHolidayConfigurationService().getDefaultClientZoneId().getId();
+                                String newDate = getDateString(getDateTimeService().fromDateToClientLocalDateTime(updatedCaseFile.getDueDate()));
+                                String oldDate = getDateString(getDateTimeService().fromDateToClientLocalDateTime(existing.getDueDate()));
+                                String timeZone = getDateTimeService().getDefaultClientZoneId().getId();
 
                                 getCaseFileEventUtility().raiseDueDateUpdatedEvent(updatedCaseFile, oldDate, newDate, timeZone, event.getIpAddress());
                             }
@@ -344,11 +337,6 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
         return "None";
     }
 
-    private LocalDateTime setDateToLocalDateTimeByDefaultClientTimezone(Date date)
-    {
-        return getHolidayConfigurationService().getZonedDateTimeAtDefaultClientTimezone(date).toLocalDateTime();
-    }
-
     public AcmObjectHistoryService getAcmObjectHistoryService()
     {
 
@@ -446,13 +434,11 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
         this.folderCreatorDao = folderCreatorDao;
     }
 
-    public HolidayConfigurationService getHolidayConfigurationService()
-    {
-        return holidayConfigurationService;
+    public DateTimeService getDateTimeService() {
+        return dateTimeService;
     }
 
-    public void setHolidayConfigurationService(HolidayConfigurationService holidayConfigurationService)
-    {
-        this.holidayConfigurationService = holidayConfigurationService;
+    public void setDateTimeService(DateTimeService dateTimeService) {
+        this.dateTimeService = dateTimeService;
     }
 }
