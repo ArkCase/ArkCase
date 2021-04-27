@@ -112,7 +112,9 @@ angular.module('admin').controller('Admin.AddCMTemplateController', [ '$scope', 
             $scope.template.label = $scope.selectedRow.label;
             $scope.changeTemplateModelProvider($scope.selectedRow.templateModelProvider);
             $scope.change(currentSelectedObjectType);
-            $scope.changeParentType(currentSelectedParentType);
+            if (currentSelectedParentType) {
+                $scope.changeParentType(currentSelectedParentType);
+            }
         }
 
         $scope.getNavBarTree = function(){
