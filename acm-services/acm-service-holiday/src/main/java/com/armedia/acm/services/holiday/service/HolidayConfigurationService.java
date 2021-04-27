@@ -28,7 +28,6 @@ package com.armedia.acm.services.holiday.service;
  */
 
 import com.armedia.acm.configuration.service.ConfigurationPropertyService;
-import com.armedia.acm.core.model.ApplicationConfig;
 import com.armedia.acm.services.holiday.model.BusinessHoursConfig;
 import com.armedia.acm.services.holiday.model.HolidayConfiguration;
 import com.armedia.acm.services.holiday.model.HolidayConfigurationProps;
@@ -40,7 +39,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.Date;
@@ -52,7 +50,7 @@ public class HolidayConfigurationService
     private HolidayConfigurationProps holidayConfigurationProps;
     private ConfigurationPropertyService configurationPropertyService;
     private BusinessHoursConfig businessHoursConfig;
-    private ApplicationConfig applicationConfig;
+    private DateTimeService dateTimeService;
     public static HolidayConfigurationService util;
 
     public void init()
@@ -154,7 +152,7 @@ public class HolidayConfigurationService
     public Date setEndOfLocalTimeBusinessHoursToDate(LocalDate date)
     {
         LocalTime endOfLocalTimeBusinessHoursToUTC = LocalDateTime.of(date, getEndOfClientBusinessDayTime())
-                .atZone(getDefaultClientZoneId())
+                .atZone(getDateTimeService().getDefaultClientZoneId())
                 .withZoneSameInstant(ZoneOffset.UTC)
                 .toLocalTime();
 
@@ -165,14 +163,9 @@ public class HolidayConfigurationService
 
     public boolean isTimeAfterBusinessHours(Date date)
     {
-        LocalTime localTimeInSetTimezone = getZonedDateTimeAtDefaultClientTimezone(date).toLocalTime();
+        LocalTime localTimeInSetTimezone = getDateTimeService().fromDateToClientTimeTimezone(date);
 
         return localTimeInSetTimezone.isAfter(getEndOfClientBusinessDayTime());
-    }
-
-    public ZonedDateTime getZonedDateTimeAtDefaultClientTimezone(Date date)
-    {
-        return date.toInstant().atZone(getDefaultClientZoneId());
     }
 
     public boolean isWeekendNonWorkingDay(LocalDate date)
@@ -276,10 +269,6 @@ public class HolidayConfigurationService
         return LocalTime.parse(getBusinessHoursConfig().getEndOfBusinessDayTime());
     }
 
-    public ZoneId getDefaultClientZoneId() {
-        return ZoneId.of(getApplicationConfig().getDefaultTimezone());
-    }
-
     public HolidayConfigurationProps getHolidayConfigurationProps()
     {
         return holidayConfigurationProps;
@@ -310,13 +299,11 @@ public class HolidayConfigurationService
         this.businessHoursConfig = businessHoursConfig;
     }
 
-    public ApplicationConfig getApplicationConfig()
-    {
-        return applicationConfig;
+    public DateTimeService getDateTimeService() {
+        return dateTimeService;
     }
 
-    public void setApplicationConfig(ApplicationConfig applicationConfig)
-    {
-        this.applicationConfig = applicationConfig;
+    public void setDateTimeService(DateTimeService dateTimeService) {
+        this.dateTimeService = dateTimeService;
     }
 }

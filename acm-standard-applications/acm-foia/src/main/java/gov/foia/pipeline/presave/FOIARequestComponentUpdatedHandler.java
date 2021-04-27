@@ -28,6 +28,7 @@ package gov.foia.pipeline.presave;
  */
 
 import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
+import com.armedia.acm.services.holiday.service.DateTimeService;
 import com.armedia.acm.services.holiday.service.HolidayConfigurationService;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
@@ -64,6 +65,7 @@ public class FOIARequestComponentUpdatedHandler
     private FoiaConfig foiaConfig;
     private QueuesTimeToCompleteService queuesTimeToCompleteService;
     private ApplicationEventPublisher applicationEventPublisher;
+    private DateTimeService dateTimeService;
 
     @Override
     public void execute(FOIARequest entity, CaseFilePipelineContext pipelineContext) throws PipelineProcessException
@@ -140,8 +142,8 @@ public class FOIARequestComponentUpdatedHandler
         {
             SimpleDateFormat dateFormatter = new SimpleDateFormat("MMMM-dd-yyyy");
             String updatedDueDate = String.format("which updates the Due Date from %s to %s",
-                    dateFormatter.format(originalRequest.getDueDate()),
-                    dateFormatter.format(entity.getDueDate()));
+                    dateFormatter.format(getDateTimeService().fromDateToClientLocalDateTime(originalRequest.getDueDate())),
+                    dateFormatter.format(getDateTimeService().fromDateToClientLocalDateTime(entity.getDueDate())));
             event = new RequestComponentAgencyChangedEvent(entity, originalRequest, updatedDueDate);
             applicationEventPublisher.publishEvent(event);
         }
@@ -202,5 +204,13 @@ public class FOIARequestComponentUpdatedHandler
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
     {
         this.applicationEventPublisher = applicationEventPublisher;
+    }
+
+    public DateTimeService getDateTimeService() {
+        return dateTimeService;
+    }
+
+    public void setDateTimeService(DateTimeService dateTimeService) {
+        this.dateTimeService = dateTimeService;
     }
 }
