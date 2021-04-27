@@ -116,7 +116,8 @@ public class TemplatingEngine
                 stContext.registerFunction("toClientDateTimezone", DateTimeService.class.getDeclaredMethod("toClientDateTimezone", LocalDateTime.class ));
                 stContext.registerFunction("toUTCDateTimeTimezone", DateTimeService.class.getDeclaredMethod("toUTCDateTimeTimezone", LocalDateTime.class ));
                 stContext.registerFunction("toUTCDateTimezone", DateTimeService.class.getDeclaredMethod("toUTCDateTimezone", LocalDateTime.class ));
-            } catch (NoSuchMethodException e)
+            }
+            catch (NoSuchMethodException e)
             {
                 log.error("There is no method with that name", e);
             }
@@ -134,7 +135,6 @@ public class TemplatingEngine
                         {
                             if (expression.getValue(stContext).getClass().getSimpleName().equalsIgnoreCase(DATE_TYPE))
                             {
-
                                 generatedExpression = (LocalDateTime) getDateTimeService().fromDateToClientLocalDateTime((Date) expression.getValue(stContext));
                             }
                             else if (expression.getValue(stContext).getClass().getSimpleName().equalsIgnoreCase(DATE_TIME_TYPE))
@@ -193,11 +193,13 @@ public class TemplatingEngine
         this.mergeFieldManager = mergeFieldManager;
     }
 
-    public DateTimeService getDateTimeService() {
+    public DateTimeService getDateTimeService()
+    {
         return dateTimeService;
     }
 
-    public void setDateTimeService(DateTimeService dateTimeService) {
+    public void setDateTimeService(DateTimeService dateTimeService)
+    {
         this.dateTimeService = dateTimeService;
     }
 }
