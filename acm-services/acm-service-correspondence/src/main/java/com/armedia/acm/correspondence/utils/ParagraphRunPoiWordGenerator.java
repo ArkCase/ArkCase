@@ -74,8 +74,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
 
-import gov.foia.model.FormattedMergeTerm;
-import gov.foia.model.FormattedRun;
+import com.armedia.acm.correspondence.model.FormattedMergeTerm;
+import com.armedia.acm.correspondence.model.FormattedRun;
 
 /**
  * Created by armdev on 12/11/14.

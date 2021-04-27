@@ -35,7 +35,6 @@ import com.armedia.acm.services.notification.service.provider.model.DocumentLink
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class DocumentLinkedTemplateModelProvider implements TemplateModelProvider<DocumentLinkedModel>
 {
@@ -53,12 +52,13 @@ public class DocumentLinkedTemplateModelProvider implements TemplateModelProvide
         {
             for (int i = 0; i < fileVersions.size(); i++)
             {
-                if(fileVersions.get(i).getVersionTag().equals(fileVersions.get(i).getFile().getActiveVersionTag()))
+                if (fileVersions.get(i).getVersionTag().equals(fileVersions.get(i).getFile().getActiveVersionTag()))
                 {
-                    fileNames.add(fileVersions.get(i).getFile().getFileName() + fileVersions.get(i).getFile().getFileActiveVersionNameExtension());
+                    fileNames.add(fileVersions.get(i).getFile().getFileName()
+                            + fileVersions.get(i).getFile().getFileActiveVersionNameExtension());
                     links.add("ecmFileId=" + fileVersions.get(i).getFile().getFileId() + "&version=&acm_email_ticket="
-                            + authenticationTokenService.generateAndSaveAuthenticationToken(fileVersions.get(i).getId(),
-                            notification.getEmailAddresses(), null));
+                            + authenticationTokenService.generateAndSaveAuthenticationToken(fileVersions.get(i).getFile().getFileId(),
+                                    notification.getEmailAddresses(), null));
                 }
             }
         }
