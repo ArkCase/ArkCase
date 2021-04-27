@@ -45,7 +45,7 @@ public class DateTimeService {
     public static DateTimeService dateTimeService;
 
     private String dateTimePattern = "MM/dd/yyyy HH:mm [VV]";
-    private String datePattern = "MM/dd/yyyy [VV]";
+    private String datePattern = "MM/dd/yyyy";
 
     public void init()
     {
@@ -54,12 +54,12 @@ public class DateTimeService {
 
     public static String toClientDateTimeTimezone(LocalDateTime date)
     {
-        return dateTimeService.getZonedDateTimeAtDefaultClientTimezone(date).format(DateTimeFormatter.ofPattern(dateTimeService.datePattern));
+        return dateTimeService.getZonedDateTimeAtDefaultClientTimezone(date).format(DateTimeFormatter.ofPattern(dateTimeService.dateTimePattern));
     }
 
     public static String toClientDateTimezone(LocalDateTime date)
     {
-        return dateTimeService.getZonedDateTimeAtDefaultClientTimezone(date).format(DateTimeFormatter.ofPattern(dateTimeService.dateTimePattern));
+        return dateTimeService.getZonedDateTimeAtDefaultClientTimezone(date).format(DateTimeFormatter.ofPattern(dateTimeService.datePattern));
     }
 
     public static String toUTCDateTimeTimezone(LocalDateTime date)
