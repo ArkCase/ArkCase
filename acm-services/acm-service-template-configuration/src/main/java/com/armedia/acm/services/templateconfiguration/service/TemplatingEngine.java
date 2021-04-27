@@ -80,7 +80,6 @@ public class TemplatingEngine
         cfg.setClassicCompatible(true); // does't throw error on null values
         cfg.setDateFormat("MM/dd/yyyy");
         cfg.setDateTimeFormat("MM/dd/yyyy HH:mm");
-        cfg.setTimeZone(TimeZone.getTimeZone(applicationConfig.getDefaultTimezone()));
 
         Map<String, Object> templatingModel = new HashMap<>();
         templatingModel.put(modelReferenceName, model);
