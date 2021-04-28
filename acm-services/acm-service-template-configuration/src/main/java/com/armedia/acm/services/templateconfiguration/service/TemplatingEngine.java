@@ -143,6 +143,10 @@ public class TemplatingEngine
                             {
                                 generatedExpression = (LocalDateTime) expression.getValue(stContext);
                             }
+                            else if (expression.getValue(stContext) instanceof String)
+                            {
+                                generatedExpression = String.valueOf(expression.getValue(stContext)).replace("\n\n", "<br>");
+                            }
                             else
                             {
                                 generatedExpression = String.valueOf(expression.getValue(stContext));
