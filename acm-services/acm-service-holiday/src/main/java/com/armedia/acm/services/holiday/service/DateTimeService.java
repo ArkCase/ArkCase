@@ -67,6 +67,26 @@ public class DateTimeService {
         return dateTimeService.getZonedDateTimeAtUTC(date).format(DateTimeFormatter.ofPattern(dateTimeService.dateTimePattern));
     }
 
+    public static String toUTCDateTimezone(Date date)
+    {
+        return dateTimeService.getZonedDateTimeAtUTC(date).format(DateTimeFormatter.ofPattern(dateTimeService.datePattern));
+    }
+
+    public static String toClientDateTimeTimezone(Date date)
+    {
+        return dateTimeService.getZonedDateTimeAtDefaultClientTimezone(date).format(DateTimeFormatter.ofPattern(dateTimeService.dateTimePattern));
+    }
+
+    public static String toClientDateTimezone(Date date)
+    {
+        return dateTimeService.getZonedDateTimeAtDefaultClientTimezone(date).format(DateTimeFormatter.ofPattern(dateTimeService.datePattern));
+    }
+
+    public static String toUTCDateTimeTimezone(Date date)
+    {
+        return dateTimeService.getZonedDateTimeAtUTC(date).format(DateTimeFormatter.ofPattern(dateTimeService.dateTimePattern));
+    }
+
     public static String toUTCDateTimezone(LocalDateTime date)
     {
         return dateTimeService.getZonedDateTimeAtUTC(date).format(DateTimeFormatter.ofPattern(dateTimeService.datePattern));
