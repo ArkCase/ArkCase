@@ -743,7 +743,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
 
             String approversCsv = configuration.getApprovers();
             List<String> approvers = approversCsv == null ? new ArrayList<>()
-                    : Arrays.stream(approversCsv.split(",")).filter(s -> s != null).map(s -> s.trim()).collect(Collectors.toList());
+                    : Arrays.stream(approversCsv.split(",")).filter(Objects::nonNull).map(String::trim).collect(Collectors.toList());
             pvars.put("approvers", approversCsv);
             pvars.put("taskName", task.getTitle());
 
@@ -758,7 +758,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
             pvars.put("taskDueDateExpression", configuration.getTaskDueDateExpression());
             pvars.put("taskPriority", configuration.getTaskPriority());
 
-            pvars.put("approver1", task.getAssignee());
+            pvars.put("approver", task.getAssignee());
 
             pvars.put("currentTaskName", task.getTitle());
             pvars.put("owningGroup", task.getCandidateGroups());
