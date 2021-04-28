@@ -71,7 +71,6 @@ public class TemplatingEngine
     public static final String DATE_TIME_TYPE = "LocalDateTime";
     private ApplicationConfig applicationConfig;
     private CorrespondenceMergeFieldManager mergeFieldManager;
-    private DateTimeService dateTimeService;
 
     public String process(String emailBodyTemplate, String modelReferenceName, Object model) throws TemplateException, IOException
     {
@@ -111,10 +110,14 @@ public class TemplatingEngine
 
             try
             {
-                stContext.registerFunction("toClientDateTimeTimezone", DateTimeService.class.getDeclaredMethod("toClientDateTimeTimezone", LocalDateTime.class ));
-                stContext.registerFunction("toClientDateTimezone", DateTimeService.class.getDeclaredMethod("toClientDateTimezone", LocalDateTime.class ));
-                stContext.registerFunction("toUTCDateTimeTimezone", DateTimeService.class.getDeclaredMethod("toUTCDateTimeTimezone", LocalDateTime.class ));
-                stContext.registerFunction("toUTCDateTimezone", DateTimeService.class.getDeclaredMethod("toUTCDateTimezone", LocalDateTime.class ));
+                stContext.registerFunction("toClientDateTimeTimezone", DateTimeService.class.getDeclaredMethod("toClientDateTimeTimezone", LocalDateTime.class));
+                stContext.registerFunction("toClientDateTimezone", DateTimeService.class.getDeclaredMethod("toClientDateTimezone", LocalDateTime.class));
+                stContext.registerFunction("toUTCDateTimeTimezone", DateTimeService.class.getDeclaredMethod("toUTCDateTimeTimezone", LocalDateTime.class));
+                stContext.registerFunction("toUTCDateTimezone", DateTimeService.class.getDeclaredMethod("toUTCDateTimezone", LocalDateTime.class));
+                stContext.registerFunction("toClientDateTimeTimezone", DateTimeService.class.getDeclaredMethod("toClientDateTimeTimezone", Date.class));
+                stContext.registerFunction("toClientDateTimezone", DateTimeService.class.getDeclaredMethod("toClientDateTimezone", Date.class));
+                stContext.registerFunction("toUTCDateTimeTimezone", DateTimeService.class.getDeclaredMethod("toUTCDateTimeTimezone", Date.class));
+                stContext.registerFunction("toUTCDateTimezone", DateTimeService.class.getDeclaredMethod("toUTCDateTimezone", Date.class));
             }
             catch (NoSuchMethodException e)
             {
@@ -134,7 +137,7 @@ public class TemplatingEngine
                         {
                             if (expression.getValue(stContext).getClass().getSimpleName().equalsIgnoreCase(DATE_TYPE))
                             {
-                                generatedExpression = (LocalDateTime) getDateTimeService().fromDateToClientLocalDateTime((Date) expression.getValue(stContext));
+                                generatedExpression = (Date) expression.getValue(stContext);
                             }
                             else if (expression.getValue(stContext).getClass().getSimpleName().equalsIgnoreCase(DATE_TIME_TYPE))
                             {
@@ -192,13 +195,4 @@ public class TemplatingEngine
         this.mergeFieldManager = mergeFieldManager;
     }
 
-    public DateTimeService getDateTimeService()
-    {
-        return dateTimeService;
-    }
-
-    public void setDateTimeService(DateTimeService dateTimeService)
-    {
-        this.dateTimeService = dateTimeService;
-    }
 }

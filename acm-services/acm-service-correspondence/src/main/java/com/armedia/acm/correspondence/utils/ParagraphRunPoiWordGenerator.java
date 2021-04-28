@@ -108,7 +108,6 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
     private CorrespondenceMergeFieldManager mergeFieldManager;
     private ApplicationConfig appConfig;
     private SpringContextHolder contextHolder;
-    private DateTimeService dateTimeService;
 
     @Override
     public void generate(Resource wordTemplate, OutputStream targetStream, String objectType, Long parentObjectId,
@@ -670,10 +669,14 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
 
         try
         {
-            stContext.registerFunction("toClientDateTimeTimezone", DateTimeService.class.getDeclaredMethod("toClientDateTimeTimezone", LocalDateTime.class ));
-            stContext.registerFunction("toClientDateTimezone", DateTimeService.class.getDeclaredMethod("toClientDateTimezone", LocalDateTime.class ));
-            stContext.registerFunction("toUTCDateTimeTimezone", DateTimeService.class.getDeclaredMethod("toUTCDateTimeTimezone", LocalDateTime.class ));
-            stContext.registerFunction("toUTCDateTimezone", DateTimeService.class.getDeclaredMethod("toUTCDateTimezone", LocalDateTime.class ));
+            stContext.registerFunction("toClientDateTimeTimezone", DateTimeService.class.getDeclaredMethod("toClientDateTimeTimezone", LocalDateTime.class));
+            stContext.registerFunction("toClientDateTimezone", DateTimeService.class.getDeclaredMethod("toClientDateTimezone", LocalDateTime.class));
+            stContext.registerFunction("toUTCDateTimeTimezone", DateTimeService.class.getDeclaredMethod("toUTCDateTimeTimezone", LocalDateTime.class));
+            stContext.registerFunction("toUTCDateTimezone", DateTimeService.class.getDeclaredMethod("toUTCDateTimezone", LocalDateTime.class));
+            stContext.registerFunction("toClientDateTimeTimezone", DateTimeService.class.getDeclaredMethod("toClientDateTimeTimezone", Date.class));
+            stContext.registerFunction("toClientDateTimezone", DateTimeService.class.getDeclaredMethod("toClientDateTimezone", Date.class));
+            stContext.registerFunction("toUTCDateTimeTimezone", DateTimeService.class.getDeclaredMethod("toUTCDateTimeTimezone", Date.class));
+            stContext.registerFunction("toUTCDateTimezone", DateTimeService.class.getDeclaredMethod("toUTCDateTimezone", Date.class));
         }
         catch (NoSuchMethodException e)
         {
@@ -705,7 +708,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                 {
                     if (expression.getValue(stContext).getClass().getSimpleName().equalsIgnoreCase(DATE_TYPE))
                     {
-                        generatedExpression = (LocalDateTime) getDateTimeService().fromDateToClientLocalDateTime((Date) expression.getValue(stContext));
+                        generatedExpression = (Date) expression.getValue(stContext);
                     }
                     else if (expression.getValue(stContext).getClass().getSimpleName().equalsIgnoreCase(DATE_TIME_TYPE))
                     {
@@ -969,13 +972,4 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
         this.contextHolder = contextHolder;
     }
 
-    public DateTimeService getDateTimeService()
-    {
-        return dateTimeService;
-    }
-
-    public void setDateTimeService(DateTimeService dateTimeService)
-    {
-        this.dateTimeService = dateTimeService;
-    }
 }
