@@ -78,7 +78,7 @@ import freemarker.template.TemplateException;
 /**
  * @author riste.tutureski
  */
-public abstract class NotificationSender
+public abstract class NotificationSender implements ApplicationListener
 {
     private final Logger LOG = LogManager.getLogger(getClass());
 
@@ -94,7 +94,9 @@ public abstract class NotificationSender
     private TemplatingEngine templatingEngine;
     private AcmMailTemplateConfigurationService templateService;
     private NotificationConfig notificationConfig;
-    private TemplateConfigurationManager templateConfigurationManager;
+    private Resource templatesConfiguration;
+    private ObjectConverter objectConverter;
+    private List<Template> templateConfigurations = new ArrayList<>();
 
     /**
      * Sends the notification to user's email. If successful, sets the notification state to
@@ -235,12 +237,50 @@ public abstract class NotificationSender
 
     private Boolean isEnabledSendingEmails(Notification notification)
     {
-        return getTemplateConfigurationManager().getTemplateConfigurations().stream()
-                .anyMatch(t -> t.getTemplateFilename().equals(notification.getTemplateModelName() + ".html") && t.isEnabled()
-                        && t.isTemplateVersionActive());
-
+        return templateConfigurations.stream()
+                .anyMatch(t -> t.getTemplateFilename().equals(notification.getTemplateModelName() + ".html") && t.isEnabled());
     }
 
+    @Override
+    public void onApplicationEvent(ApplicationEvent event)
+    {
+        if (event instanceof ConfigurationFileChangedEvent && (((ConfigurationFileChangedEvent) event).getBaseFileName().equals("templates-configuration.json")))
+        {
+            try
+            {
+                templateConfigurations = getObjectConverter().getJsonUnmarshaller()
+                        .unmarshallCollection(FileUtils.readFileToString(templatesConfiguration.getFile()), List.class, Template.class);
+            }
+            catch (Exception e)
+            {
+                LOG.error("Error while reading from config file [{}]", e.getMessage(), e);
+            }
+        }
+        else if (event instanceof ContextRefreshedEvent)
+        {
+            try
+            {
+                File file = templatesConfiguration.getFile();
+                if (!file.exists())
+                {
+                    file.createNewFile();
+                }
+
+                String resource = FileUtils.readFileToString(file);
+                if (resource.isEmpty())
+                {
+                    resource = "[]";
+                }
+
+                templateConfigurations = getObjectConverter().getJsonUnmarshaller()
+                        .unmarshallCollection(FileUtils.readFileToString(templatesConfiguration.getFile()), List.class, Template.class);
+            }
+            catch (IOException ioe)
+            {
+                throw new IllegalStateException("Error while reading from config file [{}]",ioe);
+            }
+        }
+    }
     public abstract <T> void sendPlainEmail(Stream<T> emailsDataStream, EmailBuilder<T> emailBuilder, EmailBodyBuilder<T> emailBodyBuilder)
             throws Exception;
 
@@ -375,13 +415,28 @@ public abstract class NotificationSender
         this.templateService = templateService;
     }
 
-    public TemplateConfigurationManager getTemplateConfigurationManager()
+    public void setTemplatesConfiguration(Resource templatesConfiguration)
     {
-        return templateConfigurationManager;
+        this.templatesConfiguration = templatesConfiguration;
     }
 
-    public void setTemplateConfigurationManager(TemplateConfigurationManager templateConfigurationManager)
+    public ObjectConverter getObjectConverter()
     {
-        this.templateConfigurationManager = templateConfigurationManager;
+        return objectConverter;
+    }
+
+    public void setObjectConverter(ObjectConverter objectConverter)
+    {
+        this.objectConverter = objectConverter;
+    }
+
+    public List<Template> getTemplateConfigurations()
+    {
+        return templateConfigurations;
+    }
+
+    public void setTemplateConfigurations(List<Template> templateConfigurations)
+    {
+        this.templateConfigurations = templateConfigurations;
     }
 }
