@@ -11,7 +11,6 @@
     <bean id="templatingEngine" class="com.armedia.acm.services.templateconfiguration.service.TemplatingEngine">
         <property name="applicationConfig" ref="applicationProperties"/>
         <property name="mergeFieldManager" ref="correspondenceMergeFieldManager"/>
-        <property name="dateTimeService" ref="dateTimeService"/>
     </bean>
 
     <bean id="correspondenceMergeFieldManager" class="com.armedia.acm.services.templateconfiguration.service.CorrespondenceMergeFieldManager">
