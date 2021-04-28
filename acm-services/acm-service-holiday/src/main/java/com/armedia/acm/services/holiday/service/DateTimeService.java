@@ -28,8 +28,6 @@ package com.armedia.acm.services.holiday.service;
  */
 
 import com.armedia.acm.core.model.ApplicationConfig;
-import org.joda.time.DateTime;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -54,41 +52,74 @@ public class DateTimeService {
 
     public static String toClientDateTimeTimezone(LocalDateTime date)
     {
+        if (date == null)
+        {
+            return "";
+        }
         return dateTimeService.getZonedDateTimeAtDefaultClientTimezone(date).format(DateTimeFormatter.ofPattern(dateTimeService.dateTimePattern));
     }
 
     public static String toClientDateTimezone(LocalDateTime date)
     {
+        if (date == null)
+        {
+            return "";
+        }
         return dateTimeService.getZonedDateTimeAtDefaultClientTimezone(date).format(DateTimeFormatter.ofPattern(dateTimeService.datePattern));
     }
 
     public static String toUTCDateTimeTimezone(LocalDateTime date)
     {
+        if (date == null)
+        {
+            return "";
+        }
         return dateTimeService.getZonedDateTimeAtUTC(date).format(DateTimeFormatter.ofPattern(dateTimeService.dateTimePattern));
     }
 
     public static String toUTCDateTimezone(Date date)
     {
+        if (date == null)
+        {
+            return "";
+        }
         return dateTimeService.getZonedDateTimeAtUTC(date).format(DateTimeFormatter.ofPattern(dateTimeService.datePattern));
     }
 
     public static String toClientDateTimeTimezone(Date date)
     {
+        if (date == null)
+        {
+            return "";
+        }
         return dateTimeService.getZonedDateTimeAtDefaultClientTimezone(date).format(DateTimeFormatter.ofPattern(dateTimeService.dateTimePattern));
     }
 
     public static String toClientDateTimezone(Date date)
     {
+        if (date == null)
+        {
+            return "";
+        }
+
         return dateTimeService.getZonedDateTimeAtDefaultClientTimezone(date).format(DateTimeFormatter.ofPattern(dateTimeService.datePattern));
     }
 
     public static String toUTCDateTimeTimezone(Date date)
     {
+        if (date == null)
+        {
+            return "";
+        }
         return dateTimeService.getZonedDateTimeAtUTC(date).format(DateTimeFormatter.ofPattern(dateTimeService.dateTimePattern));
     }
 
     public static String toUTCDateTimezone(LocalDateTime date)
     {
+        if (date == null)
+        {
+            return "";
+        }
         return dateTimeService.getZonedDateTimeAtUTC(date).format(DateTimeFormatter.ofPattern(dateTimeService.datePattern));
     }
 
