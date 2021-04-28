@@ -102,13 +102,20 @@ public class TemplatingEngine
 
             try
             {
-                stContext.registerFunction("toClientDateTimeTimezone", DateTimeService.class.getDeclaredMethod("toClientDateTimeTimezone", LocalDateTime.class));
-                stContext.registerFunction("toClientDateTimezone", DateTimeService.class.getDeclaredMethod("toClientDateTimezone", LocalDateTime.class));
-                stContext.registerFunction("toUTCDateTimeTimezone", DateTimeService.class.getDeclaredMethod("toUTCDateTimeTimezone", LocalDateTime.class));
-                stContext.registerFunction("toUTCDateTimezone", DateTimeService.class.getDeclaredMethod("toUTCDateTimezone", LocalDateTime.class));
-                stContext.registerFunction("toClientDateTimeTimezone", DateTimeService.class.getDeclaredMethod("toClientDateTimeTimezone", Date.class));
-                stContext.registerFunction("toClientDateTimezone", DateTimeService.class.getDeclaredMethod("toClientDateTimezone", Date.class));
-                stContext.registerFunction("toUTCDateTimeTimezone", DateTimeService.class.getDeclaredMethod("toUTCDateTimeTimezone", Date.class));
+                stContext.registerFunction("toClientDateTimeTimezone",
+                        DateTimeService.class.getDeclaredMethod("toClientDateTimeTimezone", LocalDateTime.class));
+                stContext.registerFunction("toClientDateTimezone",
+                        DateTimeService.class.getDeclaredMethod("toClientDateTimezone", LocalDateTime.class));
+                stContext.registerFunction("toUTCDateTimeTimezone",
+                        DateTimeService.class.getDeclaredMethod("toUTCDateTimeTimezone", LocalDateTime.class));
+                stContext.registerFunction("toUTCDateTimezone",
+                        DateTimeService.class.getDeclaredMethod("toUTCDateTimezone", LocalDateTime.class));
+                stContext.registerFunction("toClientDateTimeTimezone",
+                        DateTimeService.class.getDeclaredMethod("toClientDateTimeTimezone", Date.class));
+                stContext.registerFunction("toClientDateTimezone",
+                        DateTimeService.class.getDeclaredMethod("toClientDateTimezone", Date.class));
+                stContext.registerFunction("toUTCDateTimeTimezone",
+                        DateTimeService.class.getDeclaredMethod("toUTCDateTimeTimezone", Date.class));
                 stContext.registerFunction("toUTCDateTimezone", DateTimeService.class.getDeclaredMethod("toUTCDateTimezone", Date.class));
             }
             catch (NoSuchMethodException e)
@@ -116,7 +123,7 @@ public class TemplatingEngine
                 log.error("There is no method with that name", e);
             }
 
-            for(String spelExpression : spelExpressions)
+            for (String spelExpression : spelExpressions)
             {
                 for (CorrespondenceMergeField mergeField : getMergeFieldManager().getMergeFields())
                 {
@@ -135,7 +142,7 @@ public class TemplatingEngine
                             {
                                 log.error("Unable to parse SpEL expression [{}]", spelExpression);
                             }
-                            else if (expression.getValue(stContext) instanceof String)
+                            if (expression.getValue(stContext) instanceof String)
                             {
                                 generatedExpression = String.valueOf(expression.getValue(stContext)).replace("\n\n", "<br>");
                             }
@@ -143,7 +150,6 @@ public class TemplatingEngine
                             {
                                 generatedExpression = String.valueOf(expression.getValue(stContext));
                             }
-
                             expressionsToEvaluate.put(mergeField.getFieldId(), (String) generatedExpression);
                         }
                     }
