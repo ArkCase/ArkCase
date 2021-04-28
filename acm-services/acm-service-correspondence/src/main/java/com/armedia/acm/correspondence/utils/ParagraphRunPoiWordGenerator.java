@@ -36,6 +36,7 @@ import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.services.holiday.service.DateTimeService;
 import com.armedia.acm.services.templateconfiguration.model.CorrespondenceMergeField;
 import com.armedia.acm.services.templateconfiguration.service.CorrespondenceMergeFieldManager;
 import com.armedia.acm.spring.SpringContextHolder;
@@ -63,9 +64,10 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -665,6 +667,22 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
         // expressions in the context of this object.
         StandardEvaluationContext stContext = new StandardEvaluationContext(object);
 
+        try
+        {
+            stContext.registerFunction("toClientDateTimeTimezone", DateTimeService.class.getDeclaredMethod("toClientDateTimeTimezone", LocalDateTime.class));
+            stContext.registerFunction("toClientDateTimezone", DateTimeService.class.getDeclaredMethod("toClientDateTimezone", LocalDateTime.class));
+            stContext.registerFunction("toUTCDateTimeTimezone", DateTimeService.class.getDeclaredMethod("toUTCDateTimeTimezone", LocalDateTime.class));
+            stContext.registerFunction("toUTCDateTimezone", DateTimeService.class.getDeclaredMethod("toUTCDateTimezone", LocalDateTime.class));
+            stContext.registerFunction("toClientDateTimeTimezone", DateTimeService.class.getDeclaredMethod("toClientDateTimeTimezone", Date.class));
+            stContext.registerFunction("toClientDateTimezone", DateTimeService.class.getDeclaredMethod("toClientDateTimezone", Date.class));
+            stContext.registerFunction("toUTCDateTimeTimezone", DateTimeService.class.getDeclaredMethod("toUTCDateTimeTimezone", Date.class));
+            stContext.registerFunction("toUTCDateTimezone", DateTimeService.class.getDeclaredMethod("toUTCDateTimezone", Date.class));
+        }
+        catch (NoSuchMethodException e)
+        {
+            log.error("There is no method with that name", e);
+        }
+
         // Creating an object of SpelExpressionParser class, used to parse the SpEL expression
         SpelParserConfiguration config = new SpelParserConfiguration(true, true);
         SpelExpressionParser parser = new SpelExpressionParser(config);
@@ -690,13 +708,11 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                 {
                     if (expression.getValue(stContext).getClass().getSimpleName().equalsIgnoreCase(DATE_TYPE))
                     {
-                        generatedExpression = formatter.format(expression.getValue(stContext));
+                        generatedExpression = (Date) expression.getValue(stContext);
                     }
                     else if (expression.getValue(stContext).getClass().getSimpleName().equalsIgnoreCase(DATE_TIME_TYPE))
                     {
-
-                        generatedExpression = formatter.format(
-                                dateTimeFormatter.parse((((LocalDateTime) expression.getValue(stContext)).toLocalDate().toString())));
+                        generatedExpression = (LocalDateTime) expression.getValue(stContext);
                     }
                     else
                     {
@@ -788,29 +804,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                 {
                     if (expression.getValue(stContext) != null)
                     {
-                        if (expression.getValue(stContext).getClass().getSimpleName().equalsIgnoreCase(DATE_TYPE))
-                        {
-                            generatedExpression = formatter.format(expression.getValue(stContext));
-                        }
-                        else if (expression.getValue(stContext).getClass().getSimpleName().equalsIgnoreCase(DATE_TIME_TYPE))
-                        {
-                            try
-                            {
-                                generatedExpression = formatter.format(dateTimeFormatter
-                                        .parse((((LocalDateTime) expression.getValue(stContext)).toLocalDate().toString())));
-                            }
-                            catch (ParseException e)
-                            {
-                                e.printStackTrace();
-                            }
-
-                        }
-                        else
-                        {
-
-                            generatedExpression = expression.getValue(stContext);
-
-                        }
+                        generatedExpression = expression.getValue(stContext);
                     }
                     else
                     {
@@ -977,4 +971,5 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
     {
         this.contextHolder = contextHolder;
     }
+
 }

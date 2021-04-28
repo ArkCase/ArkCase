@@ -157,7 +157,7 @@
         "value": {
             "titleKey": "common.directive.docTree.menu.makePublic",
             "cmd": "makePublic",
-            "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release' || DocTree.objectInfo.queue.name === 'Release' && !DocTree.isNodeInResponseFolder(nodes[0])"
+            "disabledExpression": "nodes[0].data.publicFlag || DocTree.objectInfo.queue.name !== 'Release' || DocTree.objectInfo.queue.name === 'Release' && !DocTree.isNodeInResponseFolder(nodes[0])"
         }
     },
     {
@@ -166,7 +166,7 @@
         "value": {
             "titleKey": "common.directive.docTree.menu.makeNonPublic",
             "cmd": "makeNonPublic",
-            "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release' || DocTree.objectInfo.queue.name === 'Release' && !DocTree.isNodeInResponseFolder(nodes[0])"
+            "disabledExpression": "!nodes[0].data.publicFlag || DocTree.objectInfo.queue.name !== 'Release' || DocTree.objectInfo.queue.name === 'Release' && !DocTree.isNodeInResponseFolder(nodes[0])"
         }
     },
     {
@@ -211,7 +211,7 @@
         "value": {
             "titleKey": "common.directive.docTree.menu.makePublic",
             "cmd": "makePublic",
-            "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release' || DocTree.objectInfo.queue.name === 'Release' && !DocTree.isNodeInResponseFolder(nodes[0])"
+            "disabledExpression": "nodes[0].data.publicFlag || DocTree.objectInfo.queue.name !== 'Release' || DocTree.objectInfo.queue.name === 'Release' && !DocTree.isNodeInResponseFolder(nodes[0])"
         }
     },
     {
@@ -220,7 +220,7 @@
         "value": {
             "titleKey": "common.directive.docTree.menu.makeNonPublic",
             "cmd": "makeNonPublic",
-            "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release' || DocTree.objectInfo.queue.name === 'Release' && !DocTree.isNodeInResponseFolder(nodes[0])"
+            "disabledExpression": "!nodes[0].data.publicFlag || DocTree.objectInfo.queue.name !== 'Release' || DocTree.objectInfo.queue.name === 'Release' && !DocTree.isNodeInResponseFolder(nodes[0])"
         }
     },
     {
