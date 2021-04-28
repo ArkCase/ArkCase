@@ -93,7 +93,7 @@ public class TemplatingEngine
     private String checkIfTemplateBodyContainsMergeTerms(String emailBodyTemplate, Object model)
     {
         List<String> spelExpressions = getSpelExpressions(emailBodyTemplate);
-        if(spelExpressions != null)
+        if (spelExpressions != null)
         {
             Map<String, String> expressionsToEvaluate = new HashMap<>();
             StandardEvaluationContext stContext = new StandardEvaluationContext(model);
@@ -102,13 +102,20 @@ public class TemplatingEngine
 
             try
             {
-                stContext.registerFunction("toClientDateTimeTimezone", DateTimeService.class.getDeclaredMethod("toClientDateTimeTimezone", LocalDateTime.class));
-                stContext.registerFunction("toClientDateTimezone", DateTimeService.class.getDeclaredMethod("toClientDateTimezone", LocalDateTime.class));
-                stContext.registerFunction("toUTCDateTimeTimezone", DateTimeService.class.getDeclaredMethod("toUTCDateTimeTimezone", LocalDateTime.class));
-                stContext.registerFunction("toUTCDateTimezone", DateTimeService.class.getDeclaredMethod("toUTCDateTimezone", LocalDateTime.class));
-                stContext.registerFunction("toClientDateTimeTimezone", DateTimeService.class.getDeclaredMethod("toClientDateTimeTimezone", Date.class));
-                stContext.registerFunction("toClientDateTimezone", DateTimeService.class.getDeclaredMethod("toClientDateTimezone", Date.class));
-                stContext.registerFunction("toUTCDateTimeTimezone", DateTimeService.class.getDeclaredMethod("toUTCDateTimeTimezone", Date.class));
+                stContext.registerFunction("toClientDateTimeTimezone",
+                        DateTimeService.class.getDeclaredMethod("toClientDateTimeTimezone", LocalDateTime.class));
+                stContext.registerFunction("toClientDateTimezone",
+                        DateTimeService.class.getDeclaredMethod("toClientDateTimezone", LocalDateTime.class));
+                stContext.registerFunction("toUTCDateTimeTimezone",
+                        DateTimeService.class.getDeclaredMethod("toUTCDateTimeTimezone", LocalDateTime.class));
+                stContext.registerFunction("toUTCDateTimezone",
+                        DateTimeService.class.getDeclaredMethod("toUTCDateTimezone", LocalDateTime.class));
+                stContext.registerFunction("toClientDateTimeTimezone",
+                        DateTimeService.class.getDeclaredMethod("toClientDateTimeTimezone", Date.class));
+                stContext.registerFunction("toClientDateTimezone",
+                        DateTimeService.class.getDeclaredMethod("toClientDateTimezone", Date.class));
+                stContext.registerFunction("toUTCDateTimeTimezone",
+                        DateTimeService.class.getDeclaredMethod("toUTCDateTimeTimezone", Date.class));
                 stContext.registerFunction("toUTCDateTimezone", DateTimeService.class.getDeclaredMethod("toUTCDateTimezone", Date.class));
             }
             catch (NoSuchMethodException e)
@@ -116,7 +123,7 @@ public class TemplatingEngine
                 log.error("There is no method with that name", e);
             }
 
-            for(String spelExpression : spelExpressions)
+            for (String spelExpression : spelExpressions)
             {
                 for (CorrespondenceMergeField mergeField : getMergeFieldManager().getMergeFields())
                 {
@@ -134,6 +141,14 @@ public class TemplatingEngine
                             catch (RuntimeException e)
                             {
                                 log.error("Unable to parse SpEL expression [{}]", spelExpression);
+                            }
+                            if (expression.getValue(stContext) instanceof String)
+                            {
+                                generatedExpression = String.valueOf(expression.getValue(stContext)).replace("\n\n", "<br>");
+                            }
+                            else
+                            {
+                                generatedExpression = String.valueOf(expression.getValue(stContext));
                             }
                             expressionsToEvaluate.put(mergeField.getFieldId(), (String) generatedExpression);
                         }
@@ -155,7 +170,7 @@ public class TemplatingEngine
         Matcher m = regex.matcher(emailBodyTemplate);
         List<String> spelExpressions = new ArrayList<>();
 
-        while(m.find())
+        while (m.find())
         {
             spelExpressions.add(m.group());
         }
