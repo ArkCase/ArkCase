@@ -271,7 +271,7 @@ public class EcmTikaFileServiceImpl implements EcmTikaFileService
                     (m, u) -> {
                     });
         }
-        catch (Exception tikaException)
+        catch (Error tikaException)
         {
             // we have to at least return the mime type and extension, so we just log the parser error, and continue
             // with the already-detected mime type.
