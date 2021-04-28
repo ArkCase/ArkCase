@@ -8,6 +8,7 @@ angular.module('organizations').controller(
                     $scope.modalParams = modalParams;
                     $scope.loading = false;
                     $scope.loadingIcon = "fa fa-floppy-o";
+                    $scope.showPhoneError = false;
 
                     //used for showing/hiding buttons in communication accounts
                     var contactMethodsCounts = {
@@ -452,12 +453,16 @@ angular.module('organizations').controller(
                 regEx = regExp;
             });
 
-            $scope.validateInput = function (caType) {
-                var inputType = caType;
-                if (inputType == 'phone') {
-                    var validateObject = PhoneValidationService.validateInput($scope.organization.defaultPhone.value, regEx);
-                        $scope.organization.defaultPhone.value = validateObject.inputValue;
+            $scope.validatePhone = function (type, data, isDefaultPhone) {
+                if (type === 'phone') {
+                    var validateObject = PhoneValidationService.validateInput(data.value, regEx);
+                    data.value = validateObject.inputValue;
+                    if (isDefaultPhone) {
                         $scope.showPhoneError = validateObject.showPhoneError;
+                    } else {
+                        data.showPhoneError = validateObject.showPhoneError;
+                    }
                 }
             }
+
         }]);
