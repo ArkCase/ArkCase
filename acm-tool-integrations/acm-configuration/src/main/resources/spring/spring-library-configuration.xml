@@ -26,17 +26,7 @@
         class="com.armedia.acm.configuration.core.initialization.BrandingConfigurationInitialization">
         <property name="customFilesLocation" value="#{ systemProperties ['user.home'] }/.arkcase/custom/"/>
         <property name="fileConfigurationService" ref="fileConfigurationServiceImpl"/>
-        <property name="brandingFiles">
-            <list value-type="java.lang.String">
-                <value>header-logo.png</value>
-                <value>login-logo.png</value>
-                <value>email-logo.png</value>
-                <value>header-logo-portal.png</value>
-                <value>login-logo-portal.png</value>
-                <value>banner-portal.png</value>
-                <value>custom.css</value>
-            </list>
-        </property>
+        <property name="clientConfig" ref="configurationClientConfig"/>
     </bean>
 
     <bean id="acmLdapBeanSyncEventPublisher" class="com.armedia.acm.configuration.core.propertysource.AcmLdapBeanSyncEventPublisher"/>
