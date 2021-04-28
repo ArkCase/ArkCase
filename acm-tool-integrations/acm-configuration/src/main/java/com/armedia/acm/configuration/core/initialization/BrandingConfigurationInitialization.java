@@ -27,6 +27,7 @@ package com.armedia.acm.configuration.core.initialization;
  * #L%
  */
 
+import com.armedia.acm.configuration.model.ConfigurationClientConfig;
 import com.armedia.acm.configuration.service.FileConfigurationService;
 
 import org.springframework.beans.factory.InitializingBean;
@@ -35,30 +36,19 @@ import java.util.List;
 
 public class BrandingConfigurationInitialization implements InitializingBean
 {
-
     private String customFilesLocation;
 
-    private List<String> brandingFiles;
+    private ConfigurationClientConfig clientConfig;
 
     private FileConfigurationService fileConfigurationService;
 
     @Override
     public void afterPropertiesSet() throws Exception
     {
-        for (String file : brandingFiles)
+        for (String file : clientConfig.getBrandingFiles())
         {
             fileConfigurationService.getFileFromConfiguration(file, customFilesLocation);
         }
-    }
-
-    public List<String> getBrandingFiles()
-    {
-        return brandingFiles;
-    }
-
-    public void setBrandingFiles(List<String> brandingFiles)
-    {
-        this.brandingFiles = brandingFiles;
     }
 
     public void setFileConfigurationService(FileConfigurationService fileConfigurationService)
@@ -74,5 +64,15 @@ public class BrandingConfigurationInitialization implements InitializingBean
     public void setCustomFilesLocation(String customFilesLocation)
     {
         this.customFilesLocation = customFilesLocation;
+    }
+
+    public ConfigurationClientConfig getClientConfig()
+    {
+        return clientConfig;
+    }
+
+    public void setClientConfig(ConfigurationClientConfig clientConfig)
+    {
+        this.clientConfig = clientConfig;
     }
 }
