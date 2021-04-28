@@ -27,7 +27,10 @@ package com.armedia.acm.configuration.model;
  * #L%
  */
 
+import com.armedia.acm.configuration.annotations.ListValue;
 import org.springframework.beans.factory.annotation.Value;
+
+import java.util.List;
 
 public class ConfigurationClientConfig
 {
@@ -70,6 +73,8 @@ public class ConfigurationClientConfig
 
     @Value("${configuration.client.spring.path}")
     private String springPath;
+
+    private List<String> brandingFiles;
 
     private String updatePropertiesEndpoint;
 
@@ -206,5 +211,16 @@ public class ConfigurationClientConfig
     public void setSpringPath(String springPath)
     {
         this.springPath = springPath;
+    }
+
+    @ListValue("application.brandingFiles")
+    public List<String> getBrandingFiles()
+    {
+        return brandingFiles;
+    }
+
+    public void setBrandingFiles(List<String> brandingFiles)
+    {
+        this.brandingFiles = brandingFiles;
     }
 }
