@@ -30,12 +30,10 @@ package com.armedia.acm.services.templateconfiguration.service;
 import static org.reflections.Reflections.log;
 
 import com.armedia.acm.core.model.ApplicationConfig;
-import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.services.holiday.service.DateTimeService;
 import com.armedia.acm.services.templateconfiguration.model.CorrespondenceMergeField;
 import com.armedia.acm.services.templateconfiguration.model.FormatDateTimeMethodModel;
 
-import org.springframework.cglib.core.Local;
 import org.springframework.expression.spel.SpelParserConfiguration;
 import org.springframework.expression.spel.standard.SpelExpression;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
@@ -45,18 +43,12 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -135,19 +127,14 @@ public class TemplatingEngine
                         Object generatedExpression = "";
                         if (expression.getValue(stContext) != null)
                         {
-                            if (expression.getValue(stContext).getClass().getSimpleName().equalsIgnoreCase(DATE_TYPE))
+                            try
                             {
-                                generatedExpression = (Date) expression.getValue(stContext);
+                                generatedExpression = expression.getValue(stContext);
                             }
-                            else if (expression.getValue(stContext).getClass().getSimpleName().equalsIgnoreCase(DATE_TIME_TYPE))
+                            catch (RuntimeException e)
                             {
-                                generatedExpression = (LocalDateTime) expression.getValue(stContext);
+                                log.error("Unable to parse SpEL expression [{}]", spelExpression);
                             }
-                            else
-                            {
-                                generatedExpression = String.valueOf(expression.getValue(stContext));
-                            }
-
                             expressionsToEvaluate.put(mergeField.getFieldId(), (String) generatedExpression);
                         }
                     }
