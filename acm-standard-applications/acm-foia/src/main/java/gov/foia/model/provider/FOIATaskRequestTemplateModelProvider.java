@@ -113,7 +113,7 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
         FormattedMergeTerm redactionsOnReleasedDocument = new FormattedMergeTerm();
         if (task != null)
         {
-            task.setTaskNotes(noteDao.listNotes("GENERAL", task.getId(), task.getObjectType()).stream().map(note -> note.getNote())
+            task.setTaskNotes(noteDao.listNotes("GENERAL", task.getId(), task.getObjectType()).stream().map(Note::getNote)
                     .collect(Collectors.joining("\n\n")));
             model.setTaskContact(getPersonAssociationService().getPersonsInAssociatonsByPersonType("TASK", task.getId(), "Contact Person")
                     .stream().findFirst().orElse(null));
