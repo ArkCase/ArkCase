@@ -190,16 +190,6 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     {
         AcmUser user = null;
 
-        try
-        {
-            user = checkForExistingUser(registrationRequest.getEmailAddress());
-        }
-        catch (NonUniqueResultException e)
-        {
-            log.error("More than one user has same email address",  e);
-            return UserRegistrationResponse.exists();
-        }
-
         if (user != null)
         {
             return UserRegistrationResponse.exists();
@@ -319,15 +309,6 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     {
         String userEmail = user.getEmail();
         AcmUser portalUser = null;
-
-        try {
-            portalUser = checkForExistingUser(userEmail);
-        }
-        catch (NonUniqueResultException e)
-        {
-            log.error("More than one user has same name or address");
-            return UserRegistrationResponse.exists();
-        }
 
         if (portalUser != null)
         {
