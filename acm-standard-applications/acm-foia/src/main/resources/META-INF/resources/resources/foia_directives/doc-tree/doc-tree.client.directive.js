@@ -2357,6 +2357,7 @@ angular
                                     menuCorrespondenceForms.children = this.makeSubMenu(_.filter(DocTree.correspondenceForms, function(ct) {
                                         return ct.templateType ==  ObjectService.ObjectTypes.CORRESPONDENCE_TEMPLATE;
                                     }));
+                                    menuCorrespondenceForms.children = _.sortBy(menuCorrespondenceForms.children, 'title');
                                 }
                                 // On active search disable Cut & Copy
                                 var cutMenu = _.find(menu, {
