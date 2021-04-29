@@ -92,7 +92,6 @@ public class MicrosoftExchangeNotificationSenderTest extends EasyMockSupport
     private List<Template> templateConfigurations = new ArrayList<>();
 
 
-
     @Before
     public void setUp() throws IOException {
         microsoftExchangeNotificationSender = new MicrosoftExchangeNotificationSender();
