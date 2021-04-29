@@ -90,7 +90,7 @@ public class MicrosoftExchangeNotificationSenderTest extends EasyMockSupport
     private TemplatingEngine templatingEngine;
     private Resource templateConfiguration;
     private List<Template> templateConfigurations = new ArrayList<>();
-    private TemplateConfigurationManager templateConfigurationManager;
+
 
     @Before
     public void setUp() throws IOException {
@@ -108,12 +108,9 @@ public class MicrosoftExchangeNotificationSenderTest extends EasyMockSupport
         acmDataService = createMock(AcmDataService.class);
         templatingEngine = createMock(TemplatingEngine.class);
         templateConfiguration = new ClassPathResource("templates-configuration.json");
-        templateConfigurationManager = new TemplateConfigurationManager();
-        templateConfigurationManager.setTemplatesConfiguration(templateConfiguration);
-        templateConfigurationManager.setObjectConverter(ObjectConverter.createObjectConverterForTests());
-        templateConfigurations = templateConfigurationManager.getObjectConverter().getJsonUnmarshaller()
+        microsoftExchangeNotificationSender.setObjectConverter(ObjectConverter.createObjectConverterForTests());
+        templateConfigurations = microsoftExchangeNotificationSender.getObjectConverter().getJsonUnmarshaller()
                 .unmarshallCollection(FileUtils.readFileToString(templateConfiguration.getFile()), List.class, Template.class);
-        templateConfigurationManager.setTemplateConfigurations(templateConfigurations);
 
         microsoftExchangeNotificationSender.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
         microsoftExchangeNotificationSender.setEcmFileService(mockEcmFileService);
@@ -130,7 +127,8 @@ public class MicrosoftExchangeNotificationSenderTest extends EasyMockSupport
         NotificationConfig notificationConfig = new NotificationConfig();
         notificationConfig.setBaseUrl(BASE_URL);
         microsoftExchangeNotificationSender.setNotificationConfig(notificationConfig);
-        microsoftExchangeNotificationSender.setTemplateConfigurationManager(templateConfigurationManager);
+        microsoftExchangeNotificationSender.setTemplateConfigurations(templateConfigurations);
+        microsoftExchangeNotificationSender.setTemplatesConfiguration(templateConfiguration);
     }
 
     @Test
