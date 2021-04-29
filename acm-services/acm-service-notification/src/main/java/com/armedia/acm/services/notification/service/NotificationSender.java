@@ -2,6 +2,8 @@ package com.armedia.acm.services.notification.service;
 
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.data.service.AcmDataService;
+import com.armedia.acm.files.ConfigurationFileChangedEvent;
+import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
@@ -19,18 +21,24 @@ import com.armedia.acm.services.email.service.AcmMailTemplateConfigurationServic
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConfig;
 import com.armedia.acm.services.notification.model.NotificationConstants;
+import com.armedia.acm.services.templateconfiguration.model.Template;
 import com.armedia.acm.services.templateconfiguration.service.TemplateConfigurationManager;
 import com.armedia.acm.services.templateconfiguration.service.TemplatingEngine;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.context.ApplicationEvent;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.io.Resource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.io.DataInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -70,7 +78,7 @@ import freemarker.template.TemplateException;
 /**
  * @author riste.tutureski
  */
-public abstract class NotificationSender
+public abstract class NotificationSender implements ApplicationListener
 {
     private final Logger LOG = LogManager.getLogger(getClass());
 
@@ -86,7 +94,9 @@ public abstract class NotificationSender
     private TemplatingEngine templatingEngine;
     private AcmMailTemplateConfigurationService templateService;
     private NotificationConfig notificationConfig;
-    private TemplateConfigurationManager templateConfigurationManager;
+    private Resource templatesConfiguration;
+    private ObjectConverter objectConverter;
+    private List<Template> templateConfigurations = new ArrayList<>();
 
     /**
      * Sends the notification to user's email. If successful, sets the notification state to
@@ -227,12 +237,50 @@ public abstract class NotificationSender
 
     private Boolean isEnabledSendingEmails(Notification notification)
     {
-        return templateConfigurationManager.getTemplateConfigurations().stream()
-                .filter(t -> t.getTemplateFilename().equals(notification.getTemplateModelName() + ".html") && t.isEnabled())
-                .findAny().isPresent();
-
+        return templateConfigurations.stream()
+                .anyMatch(t -> t.getTemplateFilename().equals(notification.getTemplateModelName() + ".html") && t.isEnabled());
     }
 
+    @Override
+    public void onApplicationEvent(ApplicationEvent event)
+    {
+        if (event instanceof ConfigurationFileChangedEvent && (((ConfigurationFileChangedEvent) event).getBaseFileName().equals("templates-configuration.json")))
+        {
+            try
+            {
+                templateConfigurations = getObjectConverter().getJsonUnmarshaller()
+                        .unmarshallCollection(FileUtils.readFileToString(templatesConfiguration.getFile()), List.class, Template.class);
+            }
+            catch (Exception e)
+            {
+                LOG.error("Error while reading from config file [{}]", e.getMessage(), e);
+            }
+        }
+        else if (event instanceof ContextRefreshedEvent)
+        {
+            try
+            {
+                File file = templatesConfiguration.getFile();
+                if (!file.exists())
+                {
+                    file.createNewFile();
+                }
+
+                String resource = FileUtils.readFileToString(file);
+                if (resource.isEmpty())
+                {
+                    resource = "[]";
+                }
+
+                templateConfigurations = getObjectConverter().getJsonUnmarshaller()
+                        .unmarshallCollection(FileUtils.readFileToString(templatesConfiguration.getFile()), List.class, Template.class);
+            }
+            catch (IOException ioe)
+            {
+                throw new IllegalStateException("Error while reading from config file [{}]",ioe);
+            }
+        }
+    }
     public abstract <T> void sendPlainEmail(Stream<T> emailsDataStream, EmailBuilder<T> emailBuilder, EmailBodyBuilder<T> emailBodyBuilder)
             throws Exception;
 
@@ -367,13 +415,28 @@ public abstract class NotificationSender
         this.templateService = templateService;
     }
 
-    public TemplateConfigurationManager getTemplateConfigurationManager()
+    public void setTemplatesConfiguration(Resource templatesConfiguration)
     {
-        return templateConfigurationManager;
+        this.templatesConfiguration = templatesConfiguration;
     }
 
-    public void setTemplateConfigurationManager(TemplateConfigurationManager templateConfigurationManager)
+    public ObjectConverter getObjectConverter()
     {
-        this.templateConfigurationManager = templateConfigurationManager;
+        return objectConverter;
+    }
+
+    public void setObjectConverter(ObjectConverter objectConverter)
+    {
+        this.objectConverter = objectConverter;
+    }
+
+    public List<Template> getTemplateConfigurations()
+    {
+        return templateConfigurations;
+    }
+
+    public void setTemplateConfigurations(List<Template> templateConfigurations)
+    {
+        this.templateConfigurations = templateConfigurations;
     }
 }
