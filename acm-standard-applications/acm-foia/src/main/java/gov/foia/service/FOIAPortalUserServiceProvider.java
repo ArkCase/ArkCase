@@ -176,7 +176,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     {
         AcmUser user = getPortalAcmUser(registrationRequest.getEmailAddress());
 
-        if (user != null && user.getUserState() == AcmUserState.VALID)
+        if (user != null)
         {
             return UserRegistrationResponse.exists();
         }
@@ -289,7 +289,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         String userEmail = user.getEmail();
         AcmUser portalUser = getPortalAcmUser(userEmail);
 
-        if (portalUser != null && portalUser.getUserState() == AcmUserState.VALID)
+        if (portalUser != null)
         {
             return UserRegistrationResponse.exists();
         }
