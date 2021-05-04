@@ -237,7 +237,7 @@ public class DefaultFolderAndFileConverter implements FolderConverter, FileConve
                 .filter(obj -> obj.getFileActiveVersionNameExtension().equals(".pdf"))
                 .filter(obj -> obj.getFileName().contains(fileName + "-converted-"))
                 .collect(Collectors.toList());
-        if (pdfFiles.size() > 0)
+        if(pdfFiles.size() > 0)
         {
             String pdfFileName[] = pdfFiles.get(0).getFileName().split("-");
             String pdfVersion = pdfFileName[pdfFileName.length - 1];
