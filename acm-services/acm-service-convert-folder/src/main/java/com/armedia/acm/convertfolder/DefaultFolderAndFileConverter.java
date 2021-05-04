@@ -272,25 +272,16 @@ public class DefaultFolderAndFileConverter implements FolderConverter, FileConve
         try
         {
             EcmFile renamedFile = getEcmFileService().renameFile(objectId, newFileName);
-            if (log.isInfoEnabled())
-            {
-                log.info("File with id: " + objectId + " successfully renamed to: " + newFileName);
-            }
+            log.info("File with id: {} successfully renamed to: {}", objectId, newFileName);
             return renamedFile;
         }
         catch (AcmUserActionFailedException e)
         {
-            if (log.isErrorEnabled())
-            {
-                log.error("Exception occurred while trying to rename file with id: " + objectId);
-            }
+            log.error("Exception occurred while trying to rename file with id: {}. Exception msg: {}", objectId, e.getMessage());
         }
         catch (AcmObjectNotFoundException e)
         {
-            if (log.isErrorEnabled())
-            {
-                log.error("Exception occurred while trying to rename file with id: " + objectId);
-            }
+            log.error("Exception occurred while trying to rename file with id: {}. Exception msg: {}", objectId, e.getMessage());
         }
         return null;
     }
