@@ -29,6 +29,18 @@ package com.armedia.acm.convertfolder;
 
 import static com.armedia.acm.plugins.ecm.model.EcmFileConstants.OBJECT_FOLDER_TYPE;
 
+import com.armedia.acm.core.AcmObject;
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.service.AcmFolderService;
+
+import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -244,17 +256,12 @@ public class DefaultFolderAndFileConverter implements FolderConverter, FileConve
             String pdfVersion = pdfFileName[pdfFileName.length - 1];
             if (!pdfVersion.equals(EcmFile.class.cast(file).getActiveVersionTag()))
             {
-                ecmFileDao.deleteFile(pdfFiles.get(0).getId());
-                EcmFile.class.cast(file).setFileName(fileName + "-converted-" + EcmFile.class.cast(file).getActiveVersionTag());
-            }
-            else
-            {
-                return pdfFiles.get(0);
+                return renamePdfFile(pdfFiles.get(0).getId(), fileName + "-converted-" + EcmFile.class.cast(file).getActiveVersionTag());
             }
         }
         else
         {
-            EcmFile.class.cast(file).setFileName(fileName);
+            EcmFile.class.cast(file).setFileName(fileName + "-converted-" + EcmFile.class.cast(file).getActiveVersionTag());
         }
 
         return file;
@@ -265,16 +272,25 @@ public class DefaultFolderAndFileConverter implements FolderConverter, FileConve
         try
         {
             EcmFile renamedFile = getEcmFileService().renameFile(objectId, newFileName);
-            log.info("File with id: {} successfully renamed to: {}", objectId, newFileName);
+            if (log.isInfoEnabled())
+            {
+                log.info("File with id: " + objectId + " successfully renamed to: " + newFileName);
+            }
             return renamedFile;
         }
         catch (AcmUserActionFailedException e)
         {
-            log.error("Exception occurred while trying to rename file with id: {}. Exception msg: {}", objectId, e.getMessage());
+            if (log.isErrorEnabled())
+            {
+                log.error("Exception occurred while trying to rename file with id: " + objectId);
+            }
         }
         catch (AcmObjectNotFoundException e)
         {
-            log.error("Exception occurred while trying to rename file with id: {}. Exception msg: {}", objectId, e.getMessage());
+            if (log.isErrorEnabled())
+            {
+                log.error("Exception occurred while trying to rename file with id: " + objectId);
+            }
         }
         return null;
     }
