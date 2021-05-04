@@ -78,9 +78,7 @@ public class ZylabRestClientImpl implements ZylabRestClient
         return getAcmOAuth2AccessTokenService().executeAuthenticatedRemoteAction(zylabIntegrationConfig.getoAuth2Credentials(),
                 accessToken -> {
                     String createMatterURL = zylabIntegrationConfig.getBaseUrl() + zylabIntegrationConfig.getCreateMatterPath();
-                    // Current implementation requires the use of ID tokens as opposed to access tokens. Might need to be
-                    // changed in the future in accordance with the tenant and provider
-                    HttpHeaders headers = createZylabCommonHeaders(accessToken.getUserIdToken());
+                    HttpHeaders headers = createZylabCommonHeaders(accessToken.getValue());
                     ResponseEntity<MatterDTO> response = zylabRestTemplate.exchange(createMatterURL, HttpMethod.POST,
                             new HttpEntity<>(createMatterRequest, headers), MatterDTO.class);
                     return response.getBody();
@@ -94,9 +92,7 @@ public class ZylabRestClientImpl implements ZylabRestClient
                 accessToken -> {
                     String getAllMatterTemplatesURL = zylabIntegrationConfig.getBaseUrl()
                             + zylabIntegrationConfig.getGetMatterTemplatesPath();
-                    // Current implementation requires the use of ID tokens as opposed to access tokens. Might need to be
-                    // changed in the future in accordance with the tenant and provider
-                    HttpHeaders headers = createZylabCommonHeaders(accessToken.getUserIdToken());
+                    HttpHeaders headers = createZylabCommonHeaders(accessToken.getValue());
                     ResponseEntity<MatterTemplateDTO[]> response = zylabRestTemplate.exchange(getAllMatterTemplatesURL, HttpMethod.GET,
                             new HttpEntity<>(headers), MatterTemplateDTO[].class);
                     return Arrays.asList(response.getBody());
@@ -119,9 +115,7 @@ public class ZylabRestClientImpl implements ZylabRestClient
                             .build()
                             .expand(uriParameters);
 
-                    // Current implementation requires the use of ID tokens as opposed to access tokens. Might need to be
-                    // changed in the future in accordance with the tenant and provider
-                    HttpHeaders headers = createZylabCommonHeaders(accessToken.getUserIdToken());
+                    HttpHeaders headers = createZylabCommonHeaders(accessToken.getValue());
 
                     RequestCallback requestCallback = request -> request.getHeaders().addAll(headers);
 
