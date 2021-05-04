@@ -67,18 +67,18 @@ public class AcmOAuth2AccessTokenService
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.put("grant_type", Collections.singletonList("password"));
-        params.put("scope", Collections.singletonList("openid"));
+        params.put("grant_type", Collections.singletonList("client_credentials"));
+        String scope = String.format("%s/.default", oAuth2Credentials.getClientId());
+        params.put("scope", Collections.singletonList(scope));
         params.put("client_id", Collections.singletonList(oAuth2Credentials.getClientId()));
         params.put("client_secret", Collections.singletonList(oAuth2Credentials.getClientSecret()));
-        params.put("username", Collections.singletonList(oAuth2Credentials.getSystemUserEmail()));
-        params.put("password", Collections.singletonList(oAuth2Credentials.getSystemUserPassword()));
+        params.put("tenant", Collections.singletonList(oAuth2Credentials.getTenant()));
         HttpEntity<MultiValueMap<String, String>> nameParam = new HttpEntity<>(params, headers);
         try
         {
             ResponseEntity<OAuth2Token> response = acmRestTemplate.postForEntity(tokenEndpoint, nameParam, OAuth2Token.class);
-            logger.debug("Successfully obtained access token for user [{}] from [{}] provider.",
-                    oAuth2Credentials.getSystemUserEmail(), oAuth2Credentials.getRegistrationId());
+            logger.debug("Successfully obtained access token for tenant [{}] from [{}] provider.",
+                    oAuth2Credentials.getTenant(), oAuth2Credentials.getRegistrationId());
             return response.getBody();
         }
         catch (RestClientException e)
@@ -102,30 +102,16 @@ public class AcmOAuth2AccessTokenService
         }
     }
 
-    public UserAccessToken getOAuth2AccessTokenForSystemUser() throws UserAccessTokenException
-    {
-        OAuth2Credentials oAuth2Credentials = new OAuth2Credentials();
-
-        oAuth2Credentials.setRegistrationId(clientRegistrationConfig.getRegistrationId());
-        oAuth2Credentials.setClientId(clientRegistrationConfig.getTenantId());
-        oAuth2Credentials.setClientSecret(clientRegistrationConfig.getTenantSecret());
-        oAuth2Credentials.setTokenUri(clientRegistrationConfig.getTokenUri());
-        oAuth2Credentials.setSystemUserEmail(clientRegistrationConfig.getSystemUserEmail());
-        oAuth2Credentials.setSystemUserPassword(clientRegistrationConfig.getSystemUserPassword());
-
-        return getOAuth2AccessTokenForCredentials(oAuth2Credentials);
-    }
-
     public UserAccessToken getOAuth2AccessTokenForCredentials(OAuth2Credentials oAuth2Credentials) throws UserAccessTokenException
     {
-        String systemUserEmail = oAuth2Credentials.getSystemUserEmail();
+        String tenant = oAuth2Credentials.getTenant();
         String provider = oAuth2Credentials.getRegistrationId();
 
-        UserAccessToken acmAccessToken = userAccessTokenDao.getAccessTokenByUserAndProvider(systemUserEmail, provider);
+        UserAccessToken acmAccessToken = userAccessTokenDao.getAccessTokenByTenantAndProvider(tenant, provider);
 
         if (acmAccessToken != null && acmAccessToken.isExpired())
         {
-            userAccessTokenDao.deleteAccessTokenForUserAndProvider(systemUserEmail, provider);
+            userAccessTokenDao.deleteAccessTokenForTenantAndProvider(tenant, provider);
         }
         if (acmAccessToken == null || acmAccessToken.isExpired())
         {
@@ -133,7 +119,7 @@ public class AcmOAuth2AccessTokenService
             UserAccessToken accessToken = new UserAccessToken();
             accessToken.setExpirationInSec(token.getExpiresIn());
             accessToken.setProvider(provider);
-            accessToken.setUserEmail(systemUserEmail);
+            accessToken.setTenant(tenant);
             accessToken.setValue(token.getAccessToken());
             accessToken.setUserIdToken(token.getIdToken());
             accessToken.setCreatedDateTime(LocalDateTime.now());
@@ -156,29 +142,9 @@ public class AcmOAuth2AccessTokenService
         }
         catch (HttpClientErrorException e)
         {
-            String systemUserEmail = oAuth2Credentials.getSystemUserEmail();
+            String tenant = oAuth2Credentials.getTenant();
             String provider = oAuth2Credentials.getRegistrationId();
-            userAccessTokenDao.deleteAccessTokenForUserAndProvider(systemUserEmail, provider);
-
-            throw new UserRemoteActionException("Failed to execute.", e);
-        }
-    }
-
-    public <T> T executeAuthenticatedRemoteAction(Function<UserAccessToken, T> remoteAction)
-    {
-        try
-        {
-            return remoteAction.apply(getOAuth2AccessTokenForSystemUser());
-        }
-        catch (UserAccessTokenException e)
-        {
-            throw new UserRemoteActionException("Failed to obtain token.", e);
-        }
-        catch (HttpClientErrorException e)
-        {
-            String systemUserEmail = clientRegistrationConfig.getSystemUserEmail();
-            String provider = clientRegistrationConfig.getRegistrationId();
-            userAccessTokenDao.deleteAccessTokenForUserAndProvider(systemUserEmail, provider);
+            userAccessTokenDao.deleteAccessTokenForTenantAndProvider(tenant, provider);
 
             throw new UserRemoteActionException("Failed to execute.", e);
         }
