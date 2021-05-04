@@ -37,14 +37,8 @@ public class OAuth2ClientRegistrationConfig
     @Value("${oidc.clientId}")
     private String clientId;
 
-    @Value("${oidc.tenantId}")
-    private String tenantId;
-
     @Value("${oidc.clientSecret}")
     private String clientSecret;
-
-    @Value("${oidc.tenantSecret}")
-    private String tenantSecret;
 
     @Value("${oidc.redirectUri}")
     private String redirectUri;
@@ -102,26 +96,6 @@ public class OAuth2ClientRegistrationConfig
     public String getClientSecret()
     {
         return clientSecret;
-    }
-
-    public String getTenantId()
-    {
-        return tenantId;
-    }
-
-    public void setTenantId(String tenantId)
-    {
-        this.tenantId = tenantId;
-    }
-
-    public String getTenantSecret()
-    {
-        return tenantSecret;
-    }
-
-    public void setTenantSecret(String tenantSecret)
-    {
-        this.tenantSecret = tenantSecret;
     }
 
     public void setClientSecret(String clientSecret)

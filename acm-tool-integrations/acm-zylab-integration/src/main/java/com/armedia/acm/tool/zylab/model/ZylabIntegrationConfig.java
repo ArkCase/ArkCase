@@ -117,12 +117,8 @@ public class ZylabIntegrationConfig
     private String tokenUri;
 
     @JsonIgnore
-    @Value("${zylabIntegration.authentication.systemUserEmail}")
-    private String systemUserEmail;
-
-    @JsonIgnore
-    @Value("${zylabIntegration.authentication.systemUserPassword}")
-    private String systemUserPassword;
+    @Value("${zylabIntegration.authentication.tenant}")
+    private String tenant;
 
     @JsonIgnore
     private OAuth2Credentials oAuth2Credentials = new OAuth2Credentials();
@@ -317,24 +313,12 @@ public class ZylabIntegrationConfig
         this.tokenUri = tokenUri;
     }
 
-    public String getSystemUserEmail()
-    {
-        return systemUserEmail;
+    public String getTenant() {
+        return tenant;
     }
 
-    public void setSystemUserEmail(String systemUserEmail)
-    {
-        this.systemUserEmail = systemUserEmail;
-    }
-
-    public String getSystemUserPassword()
-    {
-        return systemUserPassword;
-    }
-
-    public void setSystemUserPassword(String systemUserPassword)
-    {
-        this.systemUserPassword = systemUserPassword;
+    public void setTenant(String tenant) {
+        this.tenant = tenant;
     }
 
     @JsonIgnore
@@ -344,8 +328,7 @@ public class ZylabIntegrationConfig
         oAuth2Credentials.setClientId(clientId);
         oAuth2Credentials.setClientSecret(clientSecret);
         oAuth2Credentials.setTokenUri(tokenUri);
-        oAuth2Credentials.setSystemUserEmail(systemUserEmail);
-        oAuth2Credentials.setSystemUserPassword(systemUserPassword);
+        oAuth2Credentials.setTenant(tenant);
 
         return oAuth2Credentials;
     }

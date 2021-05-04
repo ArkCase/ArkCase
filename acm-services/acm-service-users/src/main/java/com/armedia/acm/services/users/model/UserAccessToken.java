@@ -27,8 +27,7 @@ package com.armedia.acm.services.users.model;
  * #L%
  */
 
-import com.armedia.acm.data.converter.LocalDateTimeConverter;
-import org.springframework.format.annotation.DateTimeFormat;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -39,7 +38,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
-import java.time.LocalDateTime;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.armedia.acm.data.converter.LocalDateTimeConverter;
 
 @Entity
 @Table(name = "acm_user_access_token")
@@ -54,11 +55,11 @@ public class UserAccessToken
     @Column(name = "cm_value", nullable = false, updatable = false)
     private String value;
 
-    @Column(name = "cm_user_id_token", nullable = false, updatable = false)
+    @Column(name = "cm_user_id_token", updatable = false)
     private String userIdToken;
 
-    @Column(name = "cm_user_email", nullable = false, updatable = false)
-    private String userEmail;
+    @Column(name = "cm_tenant", nullable = false, updatable = false)
+    private String tenant;
 
     @Column(name = "cm_expiration_in_sec")
     private Long expirationInSec;
@@ -98,22 +99,24 @@ public class UserAccessToken
         this.value = value;
     }
 
-    public String getUserIdToken() {
+    public String getUserIdToken()
+    {
         return userIdToken;
     }
 
-    public void setUserIdToken(String userIdToken) {
+    public void setUserIdToken(String userIdToken)
+    {
         this.userIdToken = userIdToken;
     }
 
-    public String getUserEmail()
+    public String getTenant()
     {
-        return userEmail;
+        return tenant;
     }
 
-    public void setUserEmail(String userEmail)
+    public void setTenant(String tenant)
     {
-        this.userEmail = userEmail;
+        this.tenant = tenant;
     }
 
     public Long getExpirationInSec()
