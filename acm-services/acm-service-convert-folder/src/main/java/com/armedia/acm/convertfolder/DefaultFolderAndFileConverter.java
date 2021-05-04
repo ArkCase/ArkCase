@@ -37,14 +37,11 @@ import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 
+import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 import java.io.File;
-import java.io.InputStream;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -75,6 +72,8 @@ public class DefaultFolderAndFileConverter implements FolderConverter, FileConve
     private List<String> supportedTypes;
     
     private EcmFileDao ecmFileDao;
+
+    private EcmFileService ecmFileService;
 
     public DefaultFolderAndFileConverter(List<FileConverter> converters)
     {
@@ -236,17 +235,53 @@ public class DefaultFolderAndFileConverter implements FolderConverter, FileConve
         String fileName = EcmFile.class.cast(file).getFileName();
         List<EcmFile> pdfFiles = getEcmFileDao().findByFolderId(folderId).stream()
                 .filter(obj -> obj.getFileActiveVersionNameExtension().equals(".pdf"))
-                .filter(obj -> obj.getFileName().equals(fileName))
+                .filter(obj -> obj.getFileName().contains(fileName + "-converted-"))
                 .collect(Collectors.toList());
-        if(pdfFiles.size() > 0)
+        if (pdfFiles.size() > 0)
         {
-            ZonedDateTime date = ZonedDateTime.now(ZoneOffset.UTC);
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
-            String timestampName = formatter.format(date);
-            EcmFile.class.cast(file).setFileName(fileName + "-" + timestampName);
+            String pdfFileName[] = pdfFiles.get(0).getFileName().split("-");
+            String pdfVersion = pdfFileName[pdfFileName.length - 1];
+            if (!pdfVersion.equals(EcmFile.class.cast(file).getActiveVersionTag()))
+            {
+                return renamePdfFile(pdfFiles.get(0).getId(), fileName + "-converted-" + EcmFile.class.cast(file).getActiveVersionTag());
+            }
         }
+        else
+        {
+            EcmFile.class.cast(file).setFileName(fileName + "-converted-" + EcmFile.class.cast(file).getActiveVersionTag());
+        }
+
         return file;
     }
+
+    private EcmFile renamePdfFile(Long objectId, String newFileName)
+    {
+        try
+        {
+            EcmFile renamedFile = getEcmFileService().renameFile(objectId, newFileName);
+            if (log.isInfoEnabled())
+            {
+                log.info("File with id: " + objectId + " successfully renamed to: " + newFileName);
+            }
+            return renamedFile;
+        }
+        catch (AcmUserActionFailedException e)
+        {
+            if (log.isErrorEnabled())
+            {
+                log.error("Exception occurred while trying to rename file with id: " + objectId);
+            }
+        }
+        catch (AcmObjectNotFoundException e)
+        {
+            if (log.isErrorEnabled())
+            {
+                log.error("Exception occurred while trying to rename file with id: " + objectId);
+            }
+        }
+        return null;
+    }
+
     /**
      * @param folderService
      *            the folderService to set
@@ -264,5 +299,15 @@ public class DefaultFolderAndFileConverter implements FolderConverter, FileConve
     public void setEcmFileDao(EcmFileDao ecmFileDao) 
     {
         this.ecmFileDao = ecmFileDao;
+    }
+
+    public EcmFileService getEcmFileService()
+    {
+        return ecmFileService;
+    }
+
+    public void setEcmFileService(EcmFileService ecmFileService)
+    {
+        this.ecmFileService = ecmFileService;
     }
 }
