@@ -1,8 +1,12 @@
 'use strict';
 
 angular.module('admin').controller('Admin.CMEmailTemplatesController',
-    [ '$rootScope', '$scope', '$modal', 'Admin.CMTemplatesService', 'Helper.UiGridService', 'MessageService', 'LookupService', 'Acm.StoreService', 'Object.LookupService', 'Admin.CMMergeFieldsService', '$translate',
-        function($rootScope, $scope, $modal, correspondenceService, HelperUiGridService, messageService, LookupService, Store, ObjectLookupService, correspondenceMergeFieldsService, $translate) {
+    [ '$rootScope', '$scope', '$modal', 'Admin.CMTemplatesService', 'Helper.UiGridService', 'MessageService', 'LookupService', 'Acm.StoreService', 'Object.LookupService', 'Admin.CMMergeFieldsService', '$translate', 'Admin.ApplicationSettingsService',
+        function($rootScope, $scope, $modal, correspondenceService, HelperUiGridService, messageService, LookupService, Store, ObjectLookupService, correspondenceMergeFieldsService, $translate, ApplicationSettingsService) {
+
+            ApplicationSettingsService.getApplicationPropertiesConfig().then(function (response) {
+                $scope.templateGuideUrl = response.data["application.properties.templateGuideUrl"];
+            });
 
             var gridHelper = new HelperUiGridService.Grid({
                 scope: $scope
