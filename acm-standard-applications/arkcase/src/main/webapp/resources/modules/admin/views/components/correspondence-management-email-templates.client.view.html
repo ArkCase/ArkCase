@@ -31,6 +31,14 @@
             </button>
         </div>
     </div>
+    <div class="pull-right well">
+        <div class="btn-group">
+            <a class="btn btn-xs btn-link" href="{{templateGuideUrl}}" target="_blank">
+                <i class="fa fa-external-link-square"></i>
+                <span translate>admin.correspondenceManagement.templates.instructions</span>
+            </a>
+        </div>
+    </div>
     <panel-view header="{{'admin.correspondenceManagement.email.templates' | translate}}" collapsible="false">
         <div ui-grid="gridOptions" ui-grid-resize-columns adjust-table-height="gridOptions.data.length" ui-grid-auto-resize
                 ui-grid-pagination ui-grid-selection class="grid" ui-grid-edit ui-grid-cellnav ui-grid-row-edit></div>
