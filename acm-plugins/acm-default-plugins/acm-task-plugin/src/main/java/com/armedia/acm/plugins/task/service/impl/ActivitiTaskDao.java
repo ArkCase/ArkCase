@@ -39,7 +39,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import org.activiti.bpmn.model.BpmnModel;
@@ -1148,7 +1147,7 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
                 }
                 else
                 {
-                    retval.setReviewDocumentPdfRenditionId((String) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PDF_RENDITION_ID));
+                    retval.setReviewDocumentPdfRenditionId(getReviewDocumentPdfRenditionIdFromVariables(hti));
                 }
             }
             retval.setReviewDocumentFormXmlId((Long) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_XML_RENDITION_ID));
@@ -1790,6 +1789,19 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
 
         throw new AcmTaskException(
                 String.format("Process variable %s does not exist in the process with Id %s", processVariable, processId));
+    }
+
+    private String getReviewDocumentPdfRenditionIdFromVariables(HistoricTaskInstance hti)
+    {
+        Object renditionId = hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PDF_RENDITION_ID);
+        if (renditionId instanceof Long)
+        {
+            return ((Long) renditionId).toString();
+        }
+        else
+        {
+            return (String) renditionId;
+        }
     }
 
     public RuntimeService getActivitiRuntimeService()
