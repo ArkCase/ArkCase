@@ -106,7 +106,7 @@ angular.module('cases').controller('RequestInfo.BillingController', ['$scope', '
                     var itemData = $scope.entry;
                     itemData.parentObjectId = $stateParams.id;
                     itemData.parentObjectType = 'CASE_FILE';
-                    CaseBillingService.addBillingItemForRequest(itemData);
+                    CaseBillingService.addBillingItem(itemData);
                 }
 
             }]);
