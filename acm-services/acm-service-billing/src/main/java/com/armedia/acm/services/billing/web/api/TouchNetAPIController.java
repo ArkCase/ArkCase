@@ -73,6 +73,7 @@ public class TouchNetAPIController
     private BillingEventPublisher billingEventPublisher;
     private BillingInvoiceDao billingInvoiceDao;
     private UserInfoHelper userInfoHelper;
+    private CorrespondenceTemplateManager templateManager;
 
     private Logger log = LogManager.getLogger(getClass());
 
@@ -168,8 +169,6 @@ public class TouchNetAPIController
         String requestorEmailAddress = extractRequestorEmailAddress(requestors.get(0));
         String assigneeLdapId = ParticipantUtils.getAssigneeIdFromParticipants(getAcmParticipantService().getParticipantsFromParentObject(objectId,objectType));
         String assigneeEmailAddress = getUserInfoHelper().getUserEmail(assigneeLdapId);
-
-        String note = objectId.toString() + "_" + amount + "_" + billName + "_" + paymentMethod + "_" + cardNumber.substring(cardNumber.length() - 4) + "_" + sessionId + "_" + objectNumber;
 
         String note = objectId.toString() + "_" + amount + "_" + billName + "_" + paymentMethod + "_" + cardNumber.substring(cardNumber.length() - 4) + "_" + sessionId + "_" + objectNumber;
         String emailSubject = "";
@@ -311,6 +310,16 @@ public class TouchNetAPIController
     public void setUserInfoHelper(UserInfoHelper userInfoHelper)
     {
         this.userInfoHelper = userInfoHelper;
+    }
+
+    public CorrespondenceTemplateManager getTemplateManager()
+    {
+        return templateManager;
+    }
+
+    public void setTemplateManager(CorrespondenceTemplateManager templateManager)
+    {
+        this.templateManager = templateManager;
     }
 }
 

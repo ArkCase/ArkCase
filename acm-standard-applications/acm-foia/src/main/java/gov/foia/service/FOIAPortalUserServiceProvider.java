@@ -147,6 +147,8 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
 
     private LookupDao lookupDao;
 
+    private CorrespondenceTemplateManager templateManager;
+
     /*
      * (non-Javadoc)
      * @see com.armedia.acm.portalgateway.service.PortalUserServiceProvider#requestRegistration(java.lang.String,
@@ -1391,5 +1393,15 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     public void setLookupDao(LookupDao lookupDao)
     {
         this.lookupDao = lookupDao;
+    }
+
+    public CorrespondenceTemplateManager getTemplateManager()
+    {
+        return templateManager;
+    }
+
+    public void setTemplateManager(CorrespondenceTemplateManager templateManager)
+    {
+        this.templateManager = templateManager;
     }
 }

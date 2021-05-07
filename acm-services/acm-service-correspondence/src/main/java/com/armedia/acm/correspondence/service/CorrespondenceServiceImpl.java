@@ -98,7 +98,7 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
             String targetCmisFolderId) throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException
     {
 
-        Template template = findTemplate(templateName);
+        Template template = templateManager.findTemplate(templateName);
         if (template.isEnabled())
         {
             return generateCorrespondence(authentication, templateName, parentObjectType, parentObjectId, targetCmisFolderId);
