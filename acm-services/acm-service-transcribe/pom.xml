@@ -104,7 +104,7 @@
         </dependency>
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
-            <artifactId>acm-service-notification</artifactId>
+            <artifactId>acm-service-correspondence</artifactId>
             <version>${acm.version}</version>
             <scope>compile</scope>
         </dependency>

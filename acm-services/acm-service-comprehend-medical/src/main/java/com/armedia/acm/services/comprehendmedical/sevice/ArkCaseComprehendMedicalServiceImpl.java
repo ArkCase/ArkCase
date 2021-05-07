@@ -66,6 +66,8 @@ import com.armedia.acm.services.tag.model.AcmAssociatedTag;
 import com.armedia.acm.services.tag.model.AcmTag;
 import com.armedia.acm.services.tag.service.AssociatedTagService;
 import com.armedia.acm.services.tag.service.TagService;
+import com.armedia.acm.services.templateconfiguration.model.Template;
+import com.armedia.acm.services.templateconfiguration.service.CorrespondenceTemplateManager;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.tool.comprehendmedical.model.ComprehendMedicalConstants;
@@ -108,6 +110,7 @@ public class ArkCaseComprehendMedicalServiceImpl extends ArkCaseMediaEngineServi
     private TagService tagService;
     private AssociatedTagService associatedTagService;
     private NotificationService notificationService;
+    private CorrespondenceTemplateManager templateManager;
 
     @Override
     public MediaEngine getExisting(MediaEngine mediaEngine) throws GetMediaEngineException
@@ -170,22 +173,31 @@ public class ArkCaseComprehendMedicalServiceImpl extends ArkCaseMediaEngineServi
 
                 getUsersToNotify(users, comprehendMedical);
 
-                String template;
+                String templateName;
+                Template template;
+                String emailSubject = "";
                 if (!action.equals("QUEUED"))
                 {
-                    template = "transcribeStatus";
+                    templateName = "transcribeStatus";
+                    template = templateManager.findTemplate("transcribeStatus.html");
                 }
                 else
                 {
-                    template = "transcribeQueued";
+                    templateName = "transcribeQueued";
+                    template = templateManager.findTemplate("transcribeQueued.html");
+                }
+                if (template != null)
+                {
+                    emailSubject = template.getEmailSubject();
                 }
 
                 Notification notification = notificationService.getNotificationBuilder()
-                        .newNotification(template, NotificationConstants.STATUS_COMPREHEND_MEDICAL, comprehendMedical.getObjectType(),
+                        .newNotification(templateName, NotificationConstants.STATUS_COMPREHEND_MEDICAL, comprehendMedical.getObjectType(),
                                 comprehendMedical.getMediaEcmFileVersion().getId(), null)
                         .withNote(action)
                         .withData(comprehendMedical.getMediaEcmFileVersion().getFile().getFileName())
                         .withEmailAddressesForUsers(users)
+                        .withSubject(emailSubject)
                         .build();
 
                 notificationService.saveNotification(notification);
@@ -942,5 +954,15 @@ public class ArkCaseComprehendMedicalServiceImpl extends ArkCaseMediaEngineServi
     public void setNotificationService(NotificationService notificationService)
     {
         this.notificationService = notificationService;
+    }
+
+    public CorrespondenceTemplateManager getTemplateManager()
+    {
+        return templateManager;
+    }
+
+    public void setTemplateManager(CorrespondenceTemplateManager templateManager)
+    {
+        this.templateManager = templateManager;
     }
 }

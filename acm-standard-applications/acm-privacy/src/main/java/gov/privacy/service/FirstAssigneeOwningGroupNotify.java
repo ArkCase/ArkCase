@@ -36,6 +36,8 @@ import com.armedia.acm.services.notification.service.NotificationService;
 import com.armedia.acm.services.notification.service.NotificationUtils;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
 
+import com.armedia.acm.services.templateconfiguration.model.Template;
+import com.armedia.acm.services.templateconfiguration.service.CorrespondenceTemplateManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationListener;
@@ -53,6 +55,7 @@ public class FirstAssigneeOwningGroupNotify implements ApplicationListener<CaseE
     private NotificationUtils notificationUtils;
     private UserInfoHelper userInfoHelper;
     private NotificationService notificationService;
+    private CorrespondenceTemplateManager templateManager;
 
     @Override
     public void onApplicationEvent(CaseEvent event)
@@ -85,7 +88,12 @@ public class FirstAssigneeOwningGroupNotify implements ApplicationListener<CaseE
                     assigneeId = owningGroupId;
                 }
 
-
+                String emailSubject = "";
+                Template template = templateManager.findTemplate("requestAssigned.html");
+                if (template != null)
+                {
+                    emailSubject = template.getEmailSubject();
+                }
                 Notification notification = notificationService.getNotificationBuilder()
                         .newNotification("requestAssigned", NotificationConstants.REQUEST_ASSIGNED, event.getObjectType(),
                                 event.getObjectId(), assigneeId)
@@ -93,6 +101,7 @@ public class FirstAssigneeOwningGroupNotify implements ApplicationListener<CaseE
                         .forObjectWithTitle(caseFile.getTitle())
                         .withEmailAddresses(String.join(",", emailAddresses))
                         .withEmailGroup(userInfoHelper.removeGroupPrefix(owningGroupId))
+                        .withSubject(emailSubject)
                         .build(assigneeId);
 
                 notificationService.saveNotification(notification);
@@ -128,5 +137,15 @@ public class FirstAssigneeOwningGroupNotify implements ApplicationListener<CaseE
     public void setNotificationService(NotificationService notificationService)
     {
         this.notificationService = notificationService;
+    }
+
+    public CorrespondenceTemplateManager getTemplateManager()
+    {
+        return templateManager;
+    }
+
+    public void setTemplateManager(CorrespondenceTemplateManager templateManager)
+    {
+        this.templateManager = templateManager;
     }
 }

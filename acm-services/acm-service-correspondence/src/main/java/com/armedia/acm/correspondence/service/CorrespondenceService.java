@@ -71,15 +71,6 @@ public interface CorrespondenceService
             throws IOException, IllegalArgumentException, AcmCreateObjectFailedException, AcmUserActionFailedException;
 
     /**
-     * For use from MVC controllers and any other client with an Authentication object.
-     *
-     * @param templateName
-     * @return EcmFile
-     * @throws Exception
-     */
-    Template findTemplate(String templateName);
-
-    /**
      * Helper method for use from Activiti and other clients with no direct access to an Authentication, but in the call
      * stack of a Spring MVC authentication... so there is an Authentication in the Spring Security context holder.
      */

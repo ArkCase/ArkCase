@@ -40,7 +40,8 @@
         <property name="ecmFileVersionDao" ref="ecmFileVersionDao"/>
     </bean>
 
-    <bean id="correspondenceTemplateManager" class="com.armedia.acm.correspondence.service.CorrespondenceTemplateManager">
+    <bean id="correspondenceTemplateManager"
+          class="com.armedia.acm.services.templateconfiguration.service.CorrespondenceTemplateManager">
         <property name="springContextHolder" ref="acmContextHolder"/>
         <property name="templatesConfiguration"
                   value="file:${user.home}/.arkcase/acm/templates-configuration.json"/>

@@ -52,6 +52,8 @@ import com.armedia.acm.services.ldap.syncer.AcmLdapSyncEvent;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
+import com.armedia.acm.services.templateconfiguration.model.Template;
+import com.armedia.acm.services.templateconfiguration.service.CorrespondenceTemplateManager;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
@@ -131,6 +133,8 @@ public class SARPortalUserServiceProvider implements PortalUserServiceProvider
 
     private PortalConfigurationService portalConfigurationService;
 
+    private CorrespondenceTemplateManager templateManager;
+
     /*
      * (non-Javadoc)
      * @see com.armedia.acm.portalgateway.service.PortalUserServiceProvider#requestRegistration(java.lang.String,
@@ -200,6 +204,12 @@ public class SARPortalUserServiceProvider implements PortalUserServiceProvider
         String registrationLink = new String(Base64Utils.decodeFromString(registrationRequest.getRegistrationUrl()),
                 Charset.forName("UTF-8")) + "/" + registrationKey + "/" + registrationRequest.getEmailAddress();
 
+        String emailSubject = "";
+        Template template = templateManager.findTemplate("portalRequestRegistrationLink.html");
+        if (template != null)
+        {
+            emailSubject = template.getEmailSubject();
+        }
         Notification notification = new Notification();
         notification.setTemplateModelName("portalRequestRegistrationLink");
         notification.setTitle(translationService.translate(NotificationConstants.PORTAL_REGISTRATION));
@@ -208,6 +218,7 @@ public class SARPortalUserServiceProvider implements PortalUserServiceProvider
         notification.setEmailAddresses(registrationRequest.getEmailAddress());
         notification.setUser(SecurityContextHolder.getContext().getAuthentication().getName());
         notification.setParentType("USER");
+        notification.setSubject(emailSubject);
 
         getNotificationDao().save(notification);
     }
@@ -1279,5 +1290,15 @@ public class SARPortalUserServiceProvider implements PortalUserServiceProvider
     public void setPortalConfigurationService(PortalConfigurationService portalConfigurationService)
     {
         this.portalConfigurationService = portalConfigurationService;
+    }
+
+    public CorrespondenceTemplateManager getTemplateManager()
+    {
+        return templateManager;
+    }
+
+    public void setTemplateManager(CorrespondenceTemplateManager templateManager)
+    {
+        this.templateManager = templateManager;
     }
 }

@@ -41,6 +41,7 @@ import com.armedia.acm.services.notification.service.NotificationService;
 import com.armedia.acm.services.templateconfiguration.model.CorrespondenceMergeField;
 import com.armedia.acm.services.templateconfiguration.model.Template;
 import com.armedia.acm.services.templateconfiguration.service.CorrespondenceMergeFieldManager;
+import com.armedia.acm.services.templateconfiguration.service.CorrespondenceTemplateManager;
 import com.armedia.acm.services.templateconfiguration.service.TemplatingEngine;
 import com.armedia.acm.spring.SpringContextHolder;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -98,7 +99,7 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
             String targetCmisFolderId) throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException
     {
 
-        Template template = findTemplate(templateName);
+        Template template = templateManager.findTemplate(templateName);
         if (template.isEnabled())
         {
             return generateCorrespondence(authentication, templateName, parentObjectType, parentObjectId, targetCmisFolderId);
@@ -128,7 +129,7 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
             String targetCmisFolderId)
             throws IOException, IllegalArgumentException, AcmCreateObjectFailedException, AcmUserActionFailedException
     {
-        Template template = findTemplate(templateName);
+        Template template = templateManager.findTemplate(templateName);
         File file = File.createTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX);
 
         try (FileInputStream fisForUploadToEcm = new FileInputStream(file);
@@ -150,21 +151,6 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
         {
             FileUtils.deleteQuietly(file);
         }
-    }
-
-    @Override
-    public Template findTemplate(String templateName)
-    {
-        Collection<Template> templates = templateManager.getActiveVersionTemplates();
-        for (Template template : templates)
-        {
-            if (templateName.equalsIgnoreCase(template.getTemplateFilename()))
-            {
-                return template;
-            }
-        }
-
-        throw new IllegalArgumentException("Template '" + templateName + "' is not a registered template name!");
     }
 
     /**
@@ -423,7 +409,7 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
             List<Long> fileIds)
     {
         String templateModelName = templateName.substring(0, templateName.indexOf("."));
-        Template template = findTemplate(templateName);
+        Template template = templateManager.findTemplate(templateName);
         String title = getNotificationService().setNotificationTitleForManualNotification(templateModelName);
 
         List<EcmFileVersion> ecmFileVersions = new ArrayList<>();

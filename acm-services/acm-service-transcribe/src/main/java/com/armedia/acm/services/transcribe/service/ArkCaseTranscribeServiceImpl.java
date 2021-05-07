@@ -62,6 +62,8 @@ import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.notification.service.NotificationService;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
+import com.armedia.acm.services.templateconfiguration.model.Template;
+import com.armedia.acm.services.templateconfiguration.service.CorrespondenceTemplateManager;
 import com.armedia.acm.services.transcribe.dao.TranscribeDao;
 import com.armedia.acm.services.transcribe.exception.CompileMediaEngineException;
 import com.armedia.acm.services.transcribe.factory.TranscribeProviderFactory;
@@ -121,6 +123,7 @@ public class ArkCaseTranscribeServiceImpl extends ArkCaseMediaEngineServiceImpl<
     private EcmFileDao ecmFileDao;
     private TranscribeConfigurationService transcribeConfigurationService;
     private NotificationService notificationService;
+    private CorrespondenceTemplateManager templateManager;
 
     @Override
     public void notify(Long id, String action)
@@ -135,22 +138,32 @@ public class ArkCaseTranscribeServiceImpl extends ArkCaseMediaEngineServiceImpl<
 
                 getUsersToNotify(users, transcribe);
 
-                String template;
+                String templateName;
+                String emailSubject = "";
+                Template template;
+
                 if (!action.equals("QUEUED"))
                 {
-                    template = "transcribeStatus";
+                    templateName = "transcribeStatus";
+                    template = templateManager.findTemplate("transcribeStatus.html");
                 }
                 else
                 {
-                    template = "transcribeQueued";
+                    templateName = "transcribeQueued";
+                    template = templateManager.findTemplate("transcribeQueued.html");
                 }
 
+                if (template != null)
+                {
+                    emailSubject = template.getEmailSubject();
+                }
                 Notification notification = notificationService.getNotificationBuilder()
-                        .newNotification(template, NotificationConstants.STATUS_TRANSCRIPTION, transcribe.getObjectType(),
+                        .newNotification(templateName, NotificationConstants.STATUS_TRANSCRIPTION, transcribe.getObjectType(),
                                 transcribe.getMediaEcmFileVersion().getId(), null)
                         .withEmailAddressesForUsers(users)
                         .withData(transcribe.getMediaEcmFileVersion().getFile().getFileName())
                         .withNote(action)
+                        .withSubject(emailSubject)
                         .build();
 
                 notificationService.saveNotification(notification);
@@ -976,5 +989,15 @@ public class ArkCaseTranscribeServiceImpl extends ArkCaseMediaEngineServiceImpl<
     public void setNotificationService(NotificationService notificationService)
     {
         this.notificationService = notificationService;
+    }
+
+    public CorrespondenceTemplateManager getTemplateManager()
+    {
+        return templateManager;
+    }
+
+    public void setTemplateManager(CorrespondenceTemplateManager templateManager)
+    {
+        this.templateManager = templateManager;
     }
 }

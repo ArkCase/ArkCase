@@ -16,6 +16,7 @@
 
     <bean id="adHocTaskCompletedListener" class="com.armedia.acm.plugins.task.listener.AdHocTaskCompletedListener">
         <property name="notificationService" ref="notificationService"/>
+        <property name="templateManager" ref="correspondenceTemplateManager"/>
         <property name="taskConfig" ref="taskConfig"/>
     </bean>
 
@@ -25,6 +26,7 @@
         <property name="userDao" ref="userJpaDao"/>
         <property name="notificationUtils" ref="notificationUtils"/>
         <property name="assignmentDao" ref="acmAssignmentDao"/>
+        <property name="templateManager" ref="correspondenceTemplateManager"/>
     </bean>
 
     <bean id="taskPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
@@ -155,6 +157,7 @@
         <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
         <property name="translationService" ref="translationService" />
         <property name="fileParticipantService" ref="fileParticipantService"/>
+        <property name="templateManager" ref="correspondenceTemplateManager"/>
     </bean>
 
     <bean id="acmApplicationTaskEventHandler" class="com.armedia.acm.plugins.task.service.impl.AcmApplicationTaskEventHandler">

@@ -1,4 +1,4 @@
-package com.armedia.acm.correspondence.service;
+package com.armedia.acm.services.templateconfiguration.service;
 
 /*-
  * #%L
@@ -130,7 +130,7 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
     /**
      * @return the templates
      */
-    List<Template> getActiveVersionTemplates()
+    public List<Template> getActiveVersionTemplates()
     {
         List<Template> list = new ArrayList<>();
 
@@ -149,7 +149,7 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
      * @param objectType
      * @return the templates
      */
-    List<Template> getActivatedActiveVersionTemplatesByObjectType(String objectType)
+    public List<Template> getActivatedActiveVersionTemplatesByObjectType(String objectType)
     {
         List<Template> list = new ArrayList<>();
 
@@ -169,7 +169,7 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
      * @param templateType
      * @return the templates
      */
-    List<Template> getActiveVersionTemplatesByTemplateType(String templateType)
+    public List<Template> getActiveVersionTemplatesByTemplateType(String templateType)
     {
 
         List<Template> list = new ArrayList<>();
@@ -188,7 +188,7 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
     /**
      * @return the templates
      */
-    List<Template> getAllTemplates()
+    public List<Template> getAllTemplates()
     {
         List<Template> list = new ArrayList<>();
 
@@ -204,7 +204,7 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
      * @return
      * @throws IOException
      */
-    Optional<Template> updateTemplate(Template template) throws IOException
+    public Optional<Template> updateTemplate(Template template) throws IOException
     {
         Optional<Template> optExisting = findActiveVersionTemplate(template.getTemplateId());
         if (optExisting.isPresent())
@@ -232,7 +232,7 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
      * @return
      * @throws IOException
      */
-    Optional<Template> deleteActiveVersionTemplate(String templateId) throws IOException
+    public Optional<Template> deleteActiveVersionTemplate(String templateId) throws IOException
     {
         Optional<Template> optTemplate = findActiveVersionTemplate(templateId);
         if (optTemplate.isPresent())
@@ -256,7 +256,7 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
      * @return
      * @throws IOException
      */
-    Optional<Template> deleteTemplateByIdAndVersion(String templateId, String templateVersion) throws IOException
+    public Optional<Template> deleteTemplateByIdAndVersion(String templateId, String templateVersion) throws IOException
     {
         Optional<Template> optTemplate = findTemplateByIdAndVersion(templateId, templateVersion);
         if (optTemplate.isPresent())
@@ -279,7 +279,7 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
      * @param templateFilename
      * @return
      */
-    Optional<Template> getTemplateByIdAndFilename(String templateId, String templateFilename)
+    public Optional<Template> getTemplateByIdAndFilename(String templateId, String templateFilename)
     {
         Template template = new Template();
         Optional<Template> optExistingTemplate = findActiveVersionTemplate(templateId);
@@ -319,7 +319,7 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
      * @param templateId
      * @return
      */
-    Optional<Template> getActiveTemplateById(String templateId)
+    public Optional<Template> getActiveTemplateById(String templateId)
     {
         return findActiveVersionTemplate(templateId);
     }
@@ -328,7 +328,7 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
      * @param templateId
      * @return
      */
-    List<Template> getTemplateVersionsById(String templateId)
+    public List<Template> getTemplateVersionsById(String templateId)
     {
         return new ArrayList<>(templates.get(templateId).values());
     }
@@ -338,7 +338,7 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
      * @param templateVersion
      * @return
      */
-    Optional<Template> getTemplateByIdAndVersion(String templateId, String templateVersion)
+    public Optional<Template> getTemplateByIdAndVersion(String templateId, String templateVersion)
     {
         return findTemplateByIdAndVersion(templateId, templateVersion);
     }
@@ -404,6 +404,20 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
         Map<String, Template> versionToTempateMap = new HashMap<>();
         versionToTempateMap.put(correspondenceTemplate.getTemplateVersion(), correspondenceTemplate);
         return versionToTempateMap;
+    }
+
+    public Template findTemplate(String templateName)
+    {
+        Collection<Template> templates = getActiveVersionTemplates();
+        for (Template template : templates)
+        {
+            if (templateName.equalsIgnoreCase(template.getTemplateFilename()))
+            {
+                return template;
+            }
+        }
+
+        throw new IllegalArgumentException("Template '" + templateName + "' is not a registered template name!");
     }
 
     public ObjectConverter getObjectConverter()

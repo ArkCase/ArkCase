@@ -34,7 +34,6 @@ import static gov.foia.model.FOIARequestUtils.extractRequestorEmailAddress;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.correspondence.service.CorrespondenceService;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
@@ -43,6 +42,7 @@ import com.armedia.acm.services.config.lookups.model.StandardLookupEntry;
 import com.armedia.acm.services.config.lookups.service.LookupDao;
 import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.services.templateconfiguration.model.Template;
+import com.armedia.acm.services.templateconfiguration.service.CorrespondenceTemplateManager;
 import com.armedia.acm.services.templateconfiguration.service.TemplatingEngine;
 import com.armedia.acm.services.labels.service.TranslationService;
 import com.armedia.acm.services.notification.model.Notification;
@@ -92,7 +92,7 @@ public class FOIAQueueCorrespondenceService
     private NotificationService notificationService;
     private TranslationService translationService;
     private LookupDao lookupDao;
-    private CorrespondenceService correspondenceService;
+    private CorrespondenceTemplateManager templateManager;
 
     public void handleApproveCorrespondence(Long requestId)
     {
@@ -194,7 +194,7 @@ public class FOIAQueueCorrespondenceService
             String emailAddress = extractRequestorEmailAddress(request.getOriginator().getPerson());
 
             String emailSubject = "";
-            Template template = correspondenceService.findTemplate("requestDocumentAttached.html");
+            Template template = templateManager.findTemplate("requestDocumentAttached.html");
             if(template != null)
             {
                 emailSubject = template.getEmailSubject();
@@ -439,13 +439,13 @@ public class FOIAQueueCorrespondenceService
         this.lookupDao = lookupDao;
     }
 
-    public CorrespondenceService getCorrespondenceService()
+    public CorrespondenceTemplateManager getTemplateManager()
     {
-        return correspondenceService;
+        return templateManager;
     }
 
-    public void setCorrespondenceService(CorrespondenceService correspondenceService)
+    public void setTemplateManager(CorrespondenceTemplateManager templateManager)
     {
-        this.correspondenceService = correspondenceService;
+        this.templateManager = templateManager;
     }
 }

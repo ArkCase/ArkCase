@@ -65,6 +65,7 @@
             <beans:property name="organizationDao" ref="acmOrganizationDao"/>
             <beans:property name="requestAssignmentService" ref="requestAssignmentService"/>
             <beans:property name="lookupDao" ref="lookupDao"/>
+            <beans:property name="templateManager" ref="correspondenceTemplateManager"/>
         </beans:bean>
 
         <beans:bean id="portalCreateRequestService" class="gov.foia.service.PortalCreateRequestService">
@@ -102,6 +103,7 @@
             <beans:property name="translationService" ref="translationService"/>
             <beans:property name="createAdHocTaskService" ref="createAdHocTaskService"/>
             <beans:property name="holidayConfigurationService" ref="holidayConfigurationService"/>
+            <beans:property name="templateManager" ref="correspondenceTemplateManager"/>
         </beans:bean>
 
         <beans:bean id="holdedAndAppealedRequestsDueDateUpdate"
@@ -124,6 +126,7 @@
             <property name="userDao" ref="userJpaDao"/>
             <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
             <property name="translationService" ref="translationService"/>
+            <property name="templateManager" ref="correspondenceTemplateManager"/>
         </beans:bean>
 
         <beans:bean id="dueDateReminderJobDescriptor" class="gov.foia.service.DueDateReminderJobDescriptor">
@@ -365,12 +368,14 @@
             <beans:property name="ecmFileDao" ref="ecmFileDao"/>
             <beans:property name="lookupDao" ref="lookupDao"/>
             <beans:property name="notificationDao" ref="notificationDao"/>
+            <beans:property name="templateManager" ref="correspondenceTemplateManager"/>
         </beans:bean>
 
         <beans:bean id="firstAssigneeOwningGroupNotify" class="gov.foia.service.FirstAssigneeOwningGroupNotify">
             <beans:property name="notificationUtils" ref="notificationUtils"/>
             <beans:property name="userInfoHelper" ref="userInfoHelper"/>
             <beans:property name="notificationService" ref="notificationService"/>
+            <beans:property name="templateManager" ref="correspondenceTemplateManager"/>
         </beans:bean>
 
         <beans:bean id="foiaExecutiveGroupNotificationService"
@@ -445,6 +450,7 @@
 
         <beans:bean id="assignmentNotifier" class="gov.foia.listener.FoiaAssignmentNotifier">
             <beans:property name="notificationService" ref="notificationService"/>
+            <beans:property name="templateManager" ref="correspondenceTemplateManager"/>
         </beans:bean>
 
         <beans:bean id="niemExportService" class="gov.foia.service.NiemExportServiceImpl">

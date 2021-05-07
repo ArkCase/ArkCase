@@ -43,6 +43,8 @@ import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
+import com.armedia.acm.services.templateconfiguration.model.Template;
+import com.armedia.acm.services.templateconfiguration.service.CorrespondenceTemplateManager;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.service.group.GroupService;
@@ -132,6 +134,8 @@ public class PortalRequestService
     private TranslationService translationService;
 
     private CreateAdHocTaskService createAdHocTaskService;
+
+    private CorrespondenceTemplateManager templateManager;
 
     private final String WITHDRAW_REQUEST_TITLE = "Withdraw Request";
 
@@ -334,6 +338,12 @@ public class PortalRequestService
             OffsetDateTime downloadedDateTime = OffsetDateTime.now(ZoneOffset.UTC);
             String downloadedDateTimeFormatted = DateTimeFormatter.ofPattern("yyyy-MM-dd / HH:mm:ss").format(downloadedDateTime);
 
+            String emailSubject = "";
+            Template template = templateManager.findTemplate("requestDownloaded.html");
+            if (template != null)
+            {
+                emailSubject = template.getEmailSubject();
+            }
             Notification notification = notificationService.getNotificationBuilder()
                     .newNotification("requestDownloaded",
                             String.format(translationService.translate(NotificationConstants.REQUEST_DOWNLOADED), request.getCaseNumber()),
@@ -342,6 +352,7 @@ public class PortalRequestService
                     .forObjectWithTitle(StringUtils.left(request.getDetails(), 1000))
                     .withEmailAddresses(emailAddresses)
                     .withNote(downloadedDateTimeFormatted)
+                    .withSubject(emailSubject)
                     .build();
 
             notificationService.saveNotification(notification);
@@ -628,5 +639,15 @@ public class PortalRequestService
     public void setPersonAssociationDao(PersonAssociationDao personAssociationDao)
     {
         this.personAssociationDao = personAssociationDao;
+    }
+
+    public CorrespondenceTemplateManager getTemplateManager()
+    {
+        return templateManager;
+    }
+
+    public void setTemplateManager(CorrespondenceTemplateManager templateManager)
+    {
+        this.templateManager = templateManager;
     }
 }

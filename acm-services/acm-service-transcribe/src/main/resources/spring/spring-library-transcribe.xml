@@ -31,6 +31,7 @@
         <property name="auditDao" ref="auditDao"/>
         <property name="notificationService" ref="notificationService"/>
         <property name="acmBpmnService" ref="processDefinitionManagementService"/>
+        <property name="templateManager" ref="correspondenceTemplateManager"/>
     </bean>
 
     <bean id="transcribeToSolrTransformer" class="com.armedia.acm.services.transcribe.transformer.TranscribeToSolrTransformer">
