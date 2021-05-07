@@ -156,10 +156,10 @@
                             <span class="text-danger" ng-if="!config.data.originator.person.familyName && formInvalid" translate>
                                 cases.newRequest.lastName.validation.error</span>
                         </div>
-                        <div class="col-sm-2 form-group">
+                        <div class="col-sm-2">
                             <label for="phone" translate>cases.newRequest.phone.label </label>
                         </div>
-                        <div class="col-sm-4 form-group">
+                        <div class="col-sm-4">
                             <input type="text" class="form-control" id="phone" pattern="^\d{3}[\-]\d{3}[\-]\d{4}"
                                     ng-model="config.data.originator.person.defaultPhone.value"
                                     placeholder="{{'cases.newRequest.phone.placeholder' | translate}}" name="phone"
@@ -171,10 +171,10 @@
 
                     </div>
                     <div class="row form-group">
-                        <div class="col-sm-2 form-group">
+                        <div class="col-sm-2">
                             <label for="organization" translate>cases.newRequest.organization.label </label>
                         </div>
-                        <div class="col-sm-4 form-group">
+                        <div class="col-sm-4">
                             <input type="text" id="organization" ng-model="organizationValue" readonly ng-click="searchOrganization()"
                                     class="input-md form-control" placeholder="{{'cases.newRequest.organization.placeholder' | translate}}"
                                     name="organization">
