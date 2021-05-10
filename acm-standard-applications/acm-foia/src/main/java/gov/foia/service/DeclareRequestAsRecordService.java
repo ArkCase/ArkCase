@@ -81,19 +81,11 @@ public class DeclareRequestAsRecordService
         }
     }
 
-    public void declareRecordsIfEnabled(Long requestId) {
-
+    public void declareRecordsIfEnabled(Long requestId)
+    {
         FOIARequest request = requestDao.find(requestId);
 
-        if (request != null)
-        {
-            declareRecordsIfEnabled(request);
-        }
-    }
-
-    public void declareRecordsIfEnabled(FOIARequest request) {
-
-        if (shouldDeclareRequestAsRecordWithoutDelay())
+        if (request != null && shouldDeclareRequestAsRecordWithoutDelay())
         {
             declareRecords(request);
         }
@@ -103,8 +95,6 @@ public class DeclareRequestAsRecordService
     {
         return foiaConfig.getDeclareRequestAsRecordsEnabled() && foiaConfig.getDeclareRequestAsRecordsDaysDelay() == 0;
     }
-
-
 
     public void declareRecords(FOIARequest request)
     {
