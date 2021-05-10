@@ -27,20 +27,25 @@ package com.armedia.acm.plugins.person.service;
  * #L%
  */
 
+import java.util.Date;
+import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 
-import java.util.Date;
-import java.util.List;
-
 /**
  * Created by ana.serafimoska
  */
 public class PersonEmailToSolrTransformer implements AcmObjectToSolrDocTransformer<Person>
 {
+    private final Logger log = LogManager.getLogger(getClass());
+
     private PersonDao personDao;
 
     @Override
@@ -52,18 +57,22 @@ public class PersonEmailToSolrTransformer implements AcmObjectToSolrDocTransform
     @Override
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(Person in)
     {
-        SolrAdvancedSearchDocument solrDocument = new SolrAdvancedSearchDocument();
         if (in.getDefaultEmail() != null)
         {
+            SolrAdvancedSearchDocument solrDocument = new SolrAdvancedSearchDocument();
             solrDocument.setObject_type_s("EMAIL");
             solrDocument.setId(in.getId() + "-EMAIL");
             solrDocument.setObject_id_s(in.getId() + "");
             solrDocument.setType_lcs(in.getObjectType());
             solrDocument.setName(in.getGivenName() + " " + in.getFamilyName());
             solrDocument.setEmail_lcs(in.getDefaultEmail().getValue());
+            return solrDocument;
         }
-
-        return solrDocument;
+        else
+        {
+            log.info("Person has no default email. No EMAIL solr document will be added");
+            return null;
+        }
     }
 
     // No implementation needed due to https://arkcase.atlassian.net/browse/ACFP-704
