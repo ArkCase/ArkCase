@@ -27,27 +27,27 @@ package com.armedia.acm.services.users.dao;
  * #L%
  */
 
-import com.armedia.acm.data.AcmAbstractDao;
-import com.armedia.acm.services.users.model.UserAccessToken;
+import javax.persistence.NoResultException;
+import javax.persistence.TypedQuery;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.NoResultException;
-import javax.persistence.TypedQuery;
+import com.armedia.acm.data.AcmAbstractDao;
+import com.armedia.acm.services.users.model.UserAccessToken;
 
 public class UserAccessTokenDao extends AcmAbstractDao<UserAccessToken>
 {
     private static final Logger logger = LogManager.getLogger(UserAccessTokenDao.class);
 
-    public UserAccessToken getAccessTokenByUserAndProvider(String email, String provider)
+    public UserAccessToken getAccessTokenByTenantAndProvider(String tenant, String provider)
     {
         TypedQuery<UserAccessToken> tokenQuery = getEm().createQuery(
-                "SELECT token FROM UserAccessToken token WHERE token.userEmail = :email AND token.provider = :provider",
+                "SELECT token FROM UserAccessToken token WHERE token.tenant = :tenant AND token.provider = :provider",
                 UserAccessToken.class);
 
-        tokenQuery.setParameter("email", email);
+        tokenQuery.setParameter("tenant", tenant);
         tokenQuery.setParameter("provider", provider);
         try
         {
@@ -55,19 +55,19 @@ public class UserAccessTokenDao extends AcmAbstractDao<UserAccessToken>
         }
         catch (NoResultException e)
         {
-            logger.warn("Token not found for user with email [{}] and provider [{}]", email, provider);
+            logger.warn("Token not found for tenant [{}] and provider [{}]", tenant, provider);
             return null;
         }
 
     }
 
     @Transactional
-    public void deleteAccessTokenForUserAndProvider(String email, String provider)
+    public void deleteAccessTokenForTenantAndProvider(String tenant, String provider)
     {
         TypedQuery<UserAccessToken> deleteTokenQuery = getEm().createQuery(
-                "DELETE FROM UserAccessToken token WHERE token.userEmail = :email AND token.provider = :provider",
+                "DELETE FROM UserAccessToken token WHERE token.tenant = :tenant AND token.provider = :provider",
                 UserAccessToken.class);
-        deleteTokenQuery.setParameter("email", email);
+        deleteTokenQuery.setParameter("tenant", tenant);
         deleteTokenQuery.setParameter("provider", provider);
         deleteTokenQuery.executeUpdate();
     }

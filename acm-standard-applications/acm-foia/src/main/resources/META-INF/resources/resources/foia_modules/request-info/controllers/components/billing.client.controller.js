@@ -73,7 +73,7 @@ angular.module('cases').controller('RequestInfo.BillingController', ['$scope', '
                 };
 
                 $scope.generateInvoice = function(){
-                    CaseBillingService.createBillingInvoiceForRequest(invoiceData).then(function() {
+                    CaseBillingService.createBillingInvoice(invoiceData).then(function() {
                         MessageService.succsessAction();
                     }, function() {
                         MessageService.errorAction();
@@ -106,7 +106,7 @@ angular.module('cases').controller('RequestInfo.BillingController', ['$scope', '
                     var itemData = $scope.entry;
                     itemData.parentObjectId = $stateParams.id;
                     itemData.parentObjectType = 'CASE_FILE';
-                    CaseBillingService.addBillingItemForRequest(itemData);
+                    CaseBillingService.addBillingItem(itemData);
                 }
 
             }]);

@@ -37,9 +37,7 @@ public class OAuth2Credentials
 
     private String tokenUri;
 
-    private String systemUserEmail;
-
-    private String systemUserPassword;
+    private String tenant;
 
     public String getRegistrationId()
     {
@@ -81,24 +79,11 @@ public class OAuth2Credentials
         this.tokenUri = tokenUri;
     }
 
-    public String getSystemUserEmail()
-    {
-        return systemUserEmail;
+    public String getTenant() {
+        return tenant;
     }
 
-    public void setSystemUserEmail(String systemUserEmail)
-    {
-        this.systemUserEmail = systemUserEmail;
+    public void setTenant(String tenant) {
+        this.tenant = tenant;
     }
-
-    public String getSystemUserPassword()
-    {
-        return systemUserPassword;
-    }
-
-    public void setSystemUserPassword(String systemUserPassword)
-    {
-        this.systemUserPassword = systemUserPassword;
-    }
-
 }
