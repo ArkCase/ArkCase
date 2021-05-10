@@ -417,7 +417,7 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
             }
         }
 
-        throw new IllegalArgumentException("Template '" + templateName + "' is not a registered template name!");
+        return null;
     }
 
     public ObjectConverter getObjectConverter()

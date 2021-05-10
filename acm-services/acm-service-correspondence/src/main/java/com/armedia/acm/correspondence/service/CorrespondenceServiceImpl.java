@@ -112,7 +112,7 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
     @Override
     public EcmFile generate(Authentication authentication, String templateName, String parentObjectType, Long parentObjectId,
             String targetCmisFolderId, Boolean isManual)
-            throws IOException, IllegalArgumentException, AcmCreateObjectFailedException, AcmUserActionFailedException
+            throws IOException, AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         if (isManual)
         {
@@ -126,7 +126,7 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
 
     private EcmFile generateCorrespondence(Authentication authentication, String templateName, String parentObjectType, Long parentObjectId,
             String targetCmisFolderId)
-            throws IOException, IllegalArgumentException, AcmCreateObjectFailedException, AcmUserActionFailedException
+            throws IOException, AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         Template template = templateManager.findTemplate(templateName);
         File file = File.createTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX);
