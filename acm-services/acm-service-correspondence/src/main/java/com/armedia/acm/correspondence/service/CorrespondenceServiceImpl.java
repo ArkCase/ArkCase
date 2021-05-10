@@ -91,7 +91,6 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
      * @param targetCmisFolderId
      * @return
      * @throws IOException
-     * @throws IllegalArgumentException
      * @throws AcmCreateObjectFailedException
      */
     @Override
@@ -113,7 +112,7 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
     @Override
     public EcmFile generate(Authentication authentication, String templateName, String parentObjectType, Long parentObjectId,
             String targetCmisFolderId, Boolean isManual)
-            throws IOException, IllegalArgumentException, AcmCreateObjectFailedException, AcmUserActionFailedException
+            throws IOException, AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         if (isManual)
         {
@@ -127,7 +126,7 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
 
     private EcmFile generateCorrespondence(Authentication authentication, String templateName, String parentObjectType, Long parentObjectId,
             String targetCmisFolderId)
-            throws IOException, IllegalArgumentException, AcmCreateObjectFailedException, AcmUserActionFailedException
+            throws IOException, AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         Template template = templateManager.findTemplate(templateName);
         File file = File.createTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX);
@@ -159,7 +158,7 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
      */
     @Override
     public EcmFile generate(String templateName, String parentObjectType, Long parentObjectId, String targetCmisFolderId)
-            throws IOException, IllegalArgumentException, AcmCreateObjectFailedException, AcmUserActionFailedException
+            throws IOException, AcmCreateObjectFailedException, AcmUserActionFailedException
 
     {
         Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
@@ -425,7 +424,7 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
                 .withFiles(ecmFileVersions)
                 .build();
 
-        String templateModelProvider = template.getTemplateModelProvider();
+        String templateModelProvider = template != null ? template.getTemplateModelProvider() : "";
 
         Class templateModelProviderClass = null;
         try
