@@ -29,18 +29,6 @@ package com.armedia.acm.convertfolder;
 
 import static com.armedia.acm.plugins.ecm.model.EcmFileConstants.OBJECT_FOLDER_TYPE;
 
-import com.armedia.acm.core.AcmObject;
-import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
-import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
-import com.armedia.acm.plugins.ecm.model.AcmFolder;
-import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.ecm.service.AcmFolderService;
-
-import com.armedia.acm.plugins.ecm.service.EcmFileService;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -250,13 +238,18 @@ public class DefaultFolderAndFileConverter implements FolderConverter, FileConve
                 .filter(obj -> obj.getFileActiveVersionNameExtension().equals(".pdf"))
                 .filter(obj -> obj.getFileName().contains(fileName + "-converted-"))
                 .collect(Collectors.toList());
-        if(pdfFiles.size() > 0)
+        if (pdfFiles.size() > 0)
         {
             String pdfFileName[] = pdfFiles.get(0).getFileName().split("-");
             String pdfVersion = pdfFileName[pdfFileName.length - 1];
             if (!pdfVersion.equals(EcmFile.class.cast(file).getActiveVersionTag()))
             {
-                return renamePdfFile(pdfFiles.get(0).getId(), fileName + "-converted-" + EcmFile.class.cast(file).getActiveVersionTag());
+                ecmFileDao.deleteFile(pdfFiles.get(0).getId());
+                EcmFile.class.cast(file).setFileName(fileName + "-converted-" + EcmFile.class.cast(file).getActiveVersionTag());
+            }
+            else
+            {
+                return pdfFiles.get(0);
             }
         }
         else
