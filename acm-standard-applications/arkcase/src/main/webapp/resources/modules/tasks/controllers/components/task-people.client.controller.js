@@ -105,7 +105,7 @@ angular.module('tasks').controller(
 
             $scope.deleteRow = function(rowEntity) {
                 if (rowEntity.id) {
-                    PersonAssociationService.deletePersonAssociationInfo(rowEntity.id).then(function(response) {
+                    PersonAssociationService.deletePersonAssociationInfo(rowEntity.object_id_s).then(function(response) {
                         _.remove($scope.gridOptions.data, function(item) {
                             return item === rowEntity;
                         });
