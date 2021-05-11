@@ -44,7 +44,7 @@ public class SolrReindexFOIAPersonExecutor implements AcmDataUpdateExecutor
     @Override
     public String getUpdateId()
     {
-        return "solr-foia-person-reindex-v1";
+        return "solr-foia-person-reindex-v2";
     }
 
     @Override
