@@ -114,7 +114,7 @@ public class MultiplePortalUsersWithSameEmailCleanupExecutorTestIT
     public void cleanDuplicateUsers() throws AcmLdapActionFailedException
     {
         expect(acmLdapSyncConfig.getUserPrefix()).andReturn("portal").anyTimes();
-        springLdapUserDao.updateUserEntry(anyObject(AcmUser.class), anyObject(AcmLdapSyncConfig.class));
+        springLdapUserDao.deleteUserEntry(anyString(), anyObject(AcmLdapSyncConfig.class));
         expectLastCall().anyTimes();
 
         replay(acmLdapSyncConfig);
