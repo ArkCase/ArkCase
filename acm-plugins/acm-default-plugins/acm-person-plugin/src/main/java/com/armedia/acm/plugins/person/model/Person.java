@@ -304,7 +304,6 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
             ap.setObjectId(getId());
             ap.setObjectType(getObjectType());
         }
-        getTitle() != null
         if (getContainer() != null)
         {
             getContainer().setContainerObjectId(getId());
