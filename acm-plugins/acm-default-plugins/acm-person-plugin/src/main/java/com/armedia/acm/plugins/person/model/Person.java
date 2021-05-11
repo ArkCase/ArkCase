@@ -297,7 +297,7 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
             ap.setObjectId(getId());
             ap.setObjectType(getObjectType());
         }
-
+        getTitle() != null
         if (getContainer() != null)
         {
             getContainer().setContainerObjectId(getId());
@@ -390,11 +390,7 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
     public String getFullName()
     {
         StringBuilder sb = new StringBuilder();
-        if (getTitle() != null)
-        {
-            String translatedTitle = translatedPersonTitle();
-            sb.append(translatedTitle).append(" ");
-        }
+
         if (getGivenName() != null)
         {
             sb.append(getGivenName()).append(" ");
