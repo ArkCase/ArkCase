@@ -186,6 +186,7 @@
                     <beans:ref bean="solrReindexPersonAssociationsExecutor"/>
                     <beans:ref bean="foiaRequestDataUpdateExecutor"/>
                     <beans:ref bean="solrReindexFOIAPersonExecutor"/>
+                    <beans:ref bean="multiplePortalUsersWithSameEmailCleanupExecutor"/>
                 </beans:list>
             </beans:property>
 
@@ -225,6 +226,13 @@
 
         <beans:bean id="solrReindexFOIAPersonExecutor" class="gov.foia.service.dataupdate.SolrReindexFOIAPersonExecutor">
             <beans:property name="solrReindexService" ref="solrReindexService"/>
+        </beans:bean>
+
+        <beans:bean id="multiplePortalUsersWithSameEmailCleanupExecutor"
+                    class="gov.foia.service.dataupdate.MultiplePortalUsersWithSameEmailCleanupExecutor">
+            <beans:property name="acmContextHolder" ref="acmContextHolder"/>
+            <beans:property name="userDao" ref="userJpaDao"/>
+            <beans:property name="springLdapUserDao" ref="springLdapUserDao"/>
         </beans:bean>
 
         <beans:bean id="queuesTimeToCompleteService" class="gov.foia.service.QueuesTimeToCompleteService">
