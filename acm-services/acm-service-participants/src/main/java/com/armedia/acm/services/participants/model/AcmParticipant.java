@@ -330,6 +330,11 @@ public class AcmParticipant implements Serializable, AcmEntity, AcmNotificationR
         {
             return false;
         }
+        if (this == obj)
+        {
+            // same object
+            return true;
+        }
         AcmParticipant other = (AcmParticipant) obj;
         if (this.getId() == null || other.getId() == null)
         {
