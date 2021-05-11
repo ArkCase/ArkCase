@@ -1139,7 +1139,7 @@ public class SARPortalUserServiceProvider implements PortalUserServiceProvider
         AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directoryName);
         if (ldapSyncConfig != null)
         {
-            acmUser = userDao.findByPrefixAndEmailAddress(ldapSyncConfig.getUserPrefix(), username);
+            acmUser = userDao.findByPrefixAndEmailAddressAndValidState(ldapSyncConfig.getUserPrefix(), username);
         }
         return acmUser;
     }

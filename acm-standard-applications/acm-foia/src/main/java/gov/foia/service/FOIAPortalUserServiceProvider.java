@@ -98,6 +98,8 @@ import gov.foia.model.PortalFOIAPerson;
 import gov.foia.model.UserRegistrationRequestRecord;
 import gov.foia.model.UserResetRequestRecord;
 
+import javax.persistence.NonUniqueResultException;
+
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jul 12, 2018
  *
@@ -152,7 +154,17 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     public UserRegistrationResponse regenerateRegistrationRequest(String portalId, UserRegistrationRequest registrationRequest)
             throws PortalUserServiceException
     {
-        if (getPortalAcmUser(registrationRequest.getEmailAddress()) != null)
+        AcmUser existingUser = null;
+        try
+        {
+            existingUser = checkForExistingUser(registrationRequest.getEmailAddress());
+        }
+        catch (NonUniqueResultException e)
+        {
+            log.error("More than one user has same email address",  e);
+            return UserRegistrationResponse.exists();
+        }
+        if (existingUser != null)
         {
             return UserRegistrationResponse.exists();
         }
@@ -174,9 +186,19 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     public UserRegistrationResponse requestRegistration(String portalId, UserRegistrationRequest registrationRequest)
             throws PortalUserServiceException
     {
-        AcmUser user = getPortalAcmUser(registrationRequest.getEmailAddress());
+        AcmUser user = null;
 
-        if (user != null && user.getUserState() == AcmUserState.VALID)
+        try
+        {
+            user = checkForExistingUser(registrationRequest.getEmailAddress());
+        }
+        catch (NonUniqueResultException e)
+        {
+            log.error("More than one user has same email address",  e);
+            return UserRegistrationResponse.exists();
+        }
+
+        if (user != null)
         {
             return UserRegistrationResponse.exists();
         }
@@ -287,9 +309,18 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
             throws PortalUserServiceException
     {
         String userEmail = user.getEmail();
-        AcmUser portalUser = getPortalAcmUser(userEmail);
+        AcmUser portalUser = null;
 
-        if (portalUser != null && portalUser.getUserState() == AcmUserState.VALID)
+        try {
+            portalUser = checkForExistingUser(userEmail);
+        }
+        catch (NonUniqueResultException e)
+        {
+            log.error("More than one user has same name or address");
+            return UserRegistrationResponse.exists();
+        }
+
+        if (portalUser != null)
         {
             return UserRegistrationResponse.exists();
         }
@@ -349,7 +380,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         }
         String emailAddress = person.getDefaultEmail().getValue();
         Optional<PortalFOIAPerson> registeredPerson = portalPersonDao.findByEmail(emailAddress);
-        AcmUser acmUser = getPortalAcmUser(emailAddress);
+        AcmUser acmUser = checkForExistingUser(emailAddress);
 
         if (acmUser != null)
         {
@@ -434,7 +465,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
                     portalConfigurationService.getPortalConfiguration().getGroupName());
             portalPersonDao.save(person);
 
-            AcmUser existingUser = getPortalAcmUser(user.getEmail());
+            AcmUser existingUser = checkForExistingUser(user.getEmail());
             if (existingUser != null && existingUser.getUserState() != AcmUserState.VALID)
             {
                 userDto.setUserId(stripPrefixAndSuffix(existingUser.getUserId(), ldapSyncConfig.getUserPrefix()));
@@ -469,7 +500,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         String username = usernamePassword[0];
         String password = usernamePassword[1];
 
-        AcmUser portalAcmUser = getPortalAcmUser(username);
+        AcmUser portalAcmUser = checkForExistingUser(username);
 
         if (portalAcmUser == null || portalAcmUser.getUserState() != AcmUserState.VALID)
         {
@@ -615,7 +646,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     public UserResetResponse requestPasswordReset(String portalId, UserResetRequest resetRequest, String templateName, String emailTitle)
             throws PortalUserServiceException
     {
-        AcmUser acmPortalUser = getPortalAcmUser(resetRequest.getEmailAddress());
+        AcmUser acmPortalUser = checkForExistingUser(resetRequest.getEmailAddress());
         if (acmPortalUser == null)
         {
             return UserResetResponse.reqistrationRequired();
@@ -706,7 +737,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
             }
             else if (isRegistrationRecordActive(reset.getRequestTime()))
             {
-                AcmUser acmPortalUser = getPortalAcmUser(reset.getEmailAddress());
+                AcmUser acmPortalUser = checkForExistingUser(reset.getEmailAddress());
                 if (acmPortalUser == null)
                 {
                     throw new PortalUserServiceException(String.format("User %s doesn't exist!", reset.getEmailAddress()));
@@ -853,7 +884,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
 
         Person saved = personDao.save(person);
 
-        AcmUser existingPortalUser = getPortalAcmUser(user.getEmail());
+        AcmUser existingPortalUser = checkForExistingUser(user.getEmail());
         boolean firstNameChanged = !Objects.equals(existingPortalUser.getFirstName(), user.getFirstName());
         boolean lastNameChanged = !Objects.equals(existingPortalUser.getLastName(), user.getLastName());
         boolean countryChanged = !Objects.equals(existingPortalUser.getCountryAbbreviation(), user.getCountry());
@@ -1217,17 +1248,23 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         return ldapAuthenticateService != null ? FOIALdapAuthenticationService.getInstance(ldapAuthenticateService) : null;
     }
 
-    private AcmUser getPortalAcmUser(String username)
+    private AcmUser checkForExistingUser(String username)
     {
         AcmUser acmUser = null;
         AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directoryName);
         if (ldapSyncConfig != null)
         {
-            acmUser = userDao.findByPrefixAndEmailAddress(ldapSyncConfig.getUserPrefix(), username);
+            try {
+                acmUser = userDao.findByPrefixAndEmailAddressAndValidState(ldapSyncConfig.getUserPrefix(), username);
+            }
+            catch (NonUniqueResultException e)
+            {
+                throw e;
+            }
+
         }
         return acmUser;
     }
-
     /**
      * @param emailSenderService
      *            the emailSenderService to set
