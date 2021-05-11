@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <beans:bean id="userJpaDao" class="com.armedia.acm.services.users.dao.UserDao" init-method="init">
+    </beans:bean>
+
+    <beans:bean id="acmContextHolder" class="com.armedia.acm.spring.SpringContextHolder"/>
+
+    <beans:bean id="multiplePortalUsersWithSameEmailCleanupExecutor"
+                class="gov.foia.service.dataupdate.MultiplePortalUsersWithSameEmailCleanupExecutor">
+        <beans:property name="acmContextHolder" ref="acmContextHolder"/>
+        <beans:property name="userDao" ref="userJpaDao"/>
+        <beans:property name="springLdapUserDao" ref="springLdapUserDao"/>
+    </beans:bean>
+
+    <beans:bean id="acmSpringLdapConfigClass" class="java.lang.Class" factory-method="forName">
+        <beans:constructor-arg value="com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig"/>
+    </beans:bean>
+    <beans:bean id="foiaportal_sync" class="org.easymock.EasyMock" factory-method="createMock" >
+        <beans:constructor-arg ref="acmSpringLdapConfigClass"/>
+    </beans:bean>
+
+    <beans:bean id="springLdapUserDaoClass" class="java.lang.Class" factory-method="forName">
+        <beans:constructor-arg value="com.armedia.acm.services.users.dao.ldap.SpringLdapUserDao"/>
+    </beans:bean>
+    <beans:bean id="springLdapUserDao" class="org.easymock.EasyMock" factory-method="createMock" >
+        <beans:constructor-arg ref="springLdapUserDaoClass"/>
+    </beans:bean>
+
+</beans:beans>
