@@ -67,7 +67,7 @@ public class MultiplePortalUsersWithSameEmailCleanupExecutor implements AcmDataU
                             }
                             try
                             {
-                                getSpringLdapUserDao().updateUserEntry(users.get(i), ldapSyncConfig);
+                                getSpringLdapUserDao().deleteUserEntry(users.get(i).getUserId(), ldapSyncConfig);
                             }
                             catch (AcmLdapActionFailedException e)
                             {
