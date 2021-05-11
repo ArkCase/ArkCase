@@ -565,7 +565,7 @@ public class DefaultFolderCompressor implements FolderCompressor, ApplicationEve
 
     private boolean canBeCompressed(EcmFile file, List<AcmObject> files, AcmFolder folder, CompressNode compressNode)
     {
-        //TODO : Check isConverted only for Response folder
+        // TODO : Check isConverted only for Response folder
         if (folderService.isFolderOrParentFolderWithName(folder, "03 Response") && isConverted(file, files))
         {
             return false;
@@ -598,11 +598,6 @@ public class DefaultFolderCompressor implements FolderCompressor, ApplicationEve
         if (".pdf".equalsIgnoreCase(file.getFileActiveVersionNameExtension()))
         {
             return false;
-        }
-        else if (files.stream().map(EcmFile.class::cast).filter(f -> ".pdf".equalsIgnoreCase(f.getFileActiveVersionNameExtension()))
-                .anyMatch(f -> f.getFileName().equals(file.getFileName())))
-        {
-            return true;
         }
         else
         {
