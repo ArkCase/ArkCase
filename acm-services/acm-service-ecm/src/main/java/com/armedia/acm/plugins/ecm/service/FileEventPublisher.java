@@ -31,6 +31,7 @@ import com.armedia.acm.auth.AcmAuthenticationDetails;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileUpdatedEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
+import com.armedia.acm.plugins.ecm.model.FileMadePublicEvent;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileActiveVersionSetEvent;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileCopiedAsLinkEvent;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileCopiedEvent;
@@ -176,4 +177,18 @@ public class FileEventPublisher implements ApplicationEventPublisherAware
 
         eventPublisher.publishEvent(filedCopiedAsLinkEvent);
     }
+
+    public void raiseFileMadePublicEvent(EcmFile ecmFile, String ipAddress, String publicType, Authentication auth)
+    {
+        String eventType = "com.armedia.acm.casefile.fileMade" + publicType;
+        String eventDescription = String.format("%s %s %s %s", "- The file named ", ecmFile.getFileName(), " has been made ", publicType);
+
+        FileMadePublicEvent event = new FileMadePublicEvent(ecmFile, auth);
+        event.setSucceeded(true);
+        event.setIpAddress(ipAddress);
+        event.setEventType(eventType);
+        event.setEventDescription(eventDescription);
+        eventPublisher.publishEvent(event);
+    }
+
 }
