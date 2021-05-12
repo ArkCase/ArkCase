@@ -41,6 +41,8 @@ import com.armedia.acm.services.billing.service.BillingService;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.service.NotificationSender;
+import com.armedia.acm.services.templateconfiguration.model.Template;
+import com.armedia.acm.services.templateconfiguration.service.CorrespondenceTemplateManager;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import org.apache.logging.log4j.Logger;
@@ -59,6 +61,7 @@ public class BillingInvoiceEmailSenderService<T extends AcmContainerEntity & Acm
     private NotificationSender notificationSender;
     private NotificationDao notificationDao;
     private EcmFileService fileService;
+    private CorrespondenceTemplateManager templateManager;
 
     public void sendBillingInvoiceByEmail(BillingInvoiceRequest billingInvoiceRequest, AcmUser acmUser, Authentication authentication)
             throws Exception
@@ -98,6 +101,12 @@ public class BillingInvoiceEmailSenderService<T extends AcmContainerEntity & Acm
             }
         }
 
+        String emailSubject = "";
+        Template template = templateManager.findTemplate("billingInvoice.html");
+        if (template != null)
+        {
+            emailSubject = template.getEmailSubject();
+        }
         Notification notification = new Notification();
         notification.setTemplateModelName("billingInvoice");
         notification.setParentType(billingInvoice.getParentObjectType());
@@ -108,6 +117,7 @@ public class BillingInvoiceEmailSenderService<T extends AcmContainerEntity & Acm
         notification.setTitle(notificationTitle.toString());
         notification.setUser(acmUser.getUserId());
         notification.setNote(billingInvoice.getBillingInvoiceEcmFile().getFileId().toString() + "_" + totalAmount.toString());
+        notification.setSubject(emailSubject);
         getNotificationDao().save(notification);
 
     }
@@ -154,5 +164,15 @@ public class BillingInvoiceEmailSenderService<T extends AcmContainerEntity & Acm
 
     public void setParentObject(T parentObject) {
         this.parentObject = parentObject;
+    }
+
+    public CorrespondenceTemplateManager getTemplateManager()
+    {
+        return templateManager;
+    }
+
+    public void setTemplateManager(CorrespondenceTemplateManager templateManager)
+    {
+        this.templateManager = templateManager;
     }
 }

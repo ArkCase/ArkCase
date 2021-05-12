@@ -158,6 +158,7 @@
           class="com.armedia.acm.plugins.consultation.service.ConsultationUpdatedNotifier">
         <property name="notificationService" ref="notificationService"/>
         <property name="consultationDao" ref="consultationDao"/>
+        <property name="templateManager" ref="correspondenceTemplateManager"/>
     </bean>
 
 </beans>

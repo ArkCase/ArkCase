@@ -78,6 +78,8 @@ import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
+import com.armedia.acm.services.templateconfiguration.model.Template;
+import com.armedia.acm.services.templateconfiguration.service.CorrespondenceTemplateManager;
 import com.armedia.acm.web.api.MDCConstants;
 import com.google.common.collect.ImmutableMap;
 
@@ -140,6 +142,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
     private RuntimeService activitiRuntimeService;
     private TranslationService translationService;
     private EcmFileParticipantService fileParticipantService;
+    private CorrespondenceTemplateManager templateManager;
 
     @Override
     public List<BuckslipProcess> getBuckslipProcessesForObject(String objectType, Long objectId)
@@ -699,6 +702,12 @@ public class AcmTaskServiceImpl implements AcmTaskService
     @Override
     public void sendAcmDocumentSingleTaskWorkflowMail(Long objectId, String objectType, String approvers)
     {
+        String emailSubject = "";
+        Template template = templateManager.findTemplate("acmDocumentSingleTaskWorkflow.html");
+        if (template != null)
+        {
+            emailSubject = template.getEmailSubject();
+        }
         AcmAbstractDao<AcmObject> dao = getAcmDataService().getDaoByObjectType(objectType);
         AcmObject object = dao.find(objectId);
         Notification notification = new Notification();
@@ -708,6 +717,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
                 ((AcmNotifiableEntity) object).getNotifiableEntityNumber()));
         notification.setEmailAddresses(approvers);
         notification.setTemplateModelName("acmDocumentSingleTaskWorkflow");
+        notification.setSubject(emailSubject);
         notificationDao.save(notification);
 
     }
@@ -1056,5 +1066,15 @@ public class AcmTaskServiceImpl implements AcmTaskService
     public void setFileParticipantService(EcmFileParticipantService fileParticipantService)
     {
         this.fileParticipantService = fileParticipantService;
+    }
+
+    public CorrespondenceTemplateManager getTemplateManager()
+    {
+        return templateManager;
+    }
+
+    public void setTemplateManager(CorrespondenceTemplateManager templateManager)
+    {
+        this.templateManager = templateManager;
     }
 }

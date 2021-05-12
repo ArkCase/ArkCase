@@ -249,5 +249,6 @@
     <bean id="caseFileUpdatedNotifier" class="com.armedia.acm.plugins.casefile.service.CaseFileUpdatedNotifier">
         <property name="notificationService" ref="notificationService"/>
         <property name="caseFileDao" ref="caseFileDao"/>
+        <property name="templateManager" ref="correspondenceTemplateManager"/>
     </bean>
 </beans>
