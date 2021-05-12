@@ -41,6 +41,8 @@ import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.service.NotificationSender;
+import com.armedia.acm.services.templateconfiguration.model.Template;
+import com.armedia.acm.services.templateconfiguration.service.CorrespondenceTemplateManager;
 import com.armedia.acm.services.users.dao.UserDao;
 
 import org.easymock.Capture;
@@ -83,6 +85,7 @@ public class ResponseFolderNotifyServiceTest extends EasyMockSupport
     private ResponseFolderService mockedResponseFolderService;
     private AcmApplication mockedAcmApplication;
     private NotificationDao mockNotificationDao;
+    private CorrespondenceTemplateManager mockTemplateManager;
 
     @Before
     public void setUp()
@@ -100,6 +103,7 @@ public class ResponseFolderNotifyServiceTest extends EasyMockSupport
         mockedResponseFolderService = createMock(ResponseFolderService.class);
         mockedAcmApplication = createMock(AcmApplication.class);
         mockNotificationDao = createMock(NotificationDao.class);
+        mockTemplateManager = createMock(CorrespondenceTemplateManager.class);
 
         responseFolderNotifyService.setCaseFileDao(mockedCaseFileDao);
         responseFolderNotifyService.setUserDao(mockedUserDao);
@@ -108,6 +112,7 @@ public class ResponseFolderNotifyServiceTest extends EasyMockSupport
         responseFolderNotifyService.setNotificationSender(mockedNotificationSender);
         responseFolderNotifyService.setAcmAppConfiguration(mockedAcmApplication);
         responseFolderNotifyService.setNotificationDao(mockNotificationDao);
+        responseFolderNotifyService.setTemplateManager(mockTemplateManager);
 
         mockedContactMethods = Arrays.asList(mockedContactMethod);
     }
@@ -130,7 +135,7 @@ public class ResponseFolderNotifyServiceTest extends EasyMockSupport
 
         Capture<Notification> captureReleaseNotifier = Capture.newInstance();
         expect(mockNotificationDao.save(capture(captureReleaseNotifier))).andReturn(new Notification());
-
+        expect(mockTemplateManager.findTemplate("portalRequestCompleteLink.html")).andReturn(new Template()).anyTimes();
         replayAll();
 
         responseFolderNotifyService.sendEmailNotification(requestId);
@@ -159,6 +164,8 @@ public class ResponseFolderNotifyServiceTest extends EasyMockSupport
 
         Capture<Notification> captureReleaseNotifier = Capture.newInstance();
         expect(mockNotificationDao.save(capture(captureReleaseNotifier))).andReturn(new Notification());
+        expect(mockTemplateManager.findTemplate("portalDocumentsLink.html")).andReturn(new Template()).anyTimes();
+
         replayAll();
 
         responseFolderNotifyService.sendEmailResponseCompressNotification(requestId);
