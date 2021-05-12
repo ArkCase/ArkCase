@@ -339,7 +339,7 @@ public class FOIARequestDao extends AcmAbstractDao<FOIARequest>
         String queryText = "SELECT request FROM FOIARequest request"
                 + " WHERE request.queue.name = 'Release'" +
                 " AND request.queueEnterDate < :releaseQueueEnterDate" +
-                " AND request.declaredAsRecord = false";
+                " AND (request.declaredAsRecord IS NULL OR request.declaredAsRecord = false)";
         TypedQuery<FOIARequest> allRecords = getEm().createQuery(queryText, FOIARequest.class);
         allRecords.setParameter("releaseQueueEnterDate", releaseQueueEnterDate);
 
