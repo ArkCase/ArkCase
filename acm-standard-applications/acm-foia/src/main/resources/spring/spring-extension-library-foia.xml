@@ -277,6 +277,7 @@
             <beans:property name="caseFileDao" ref="caseFileDao"/>
             <beans:property name="portalAdminService" ref="portalAdminService"/>
             <beans:property name="portalConfigurationService" ref="portalConfigurationService"/>
+            <beans:property name="fileEventPublisher" ref="fileEventPublisher"/>
         </beans:bean>
 
         <beans:bean id="foiaQueuedEventListener" class="gov.foia.listener.FOIAQueuedEventListener">
