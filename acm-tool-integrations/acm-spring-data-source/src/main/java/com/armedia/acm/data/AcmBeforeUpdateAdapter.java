@@ -47,7 +47,7 @@ public class AcmBeforeUpdateAdapter extends DescriptorEventAdapter
     }
 
     @Override
-    public void postMerge(DescriptorEvent event)
+    public void preUpdate(DescriptorEvent event)
     {
         super.preUpdate(event);
         try
