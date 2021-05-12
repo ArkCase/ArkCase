@@ -32,6 +32,8 @@ import com.armedia.acm.core.AcmSpringActiveProfile;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
+import com.armedia.acm.services.templateconfiguration.model.Template;
+import com.armedia.acm.services.templateconfiguration.service.CorrespondenceTemplateManager;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import org.apache.logging.log4j.LogManager;
@@ -44,6 +46,7 @@ public class OnForgotUsername implements ApplicationListener<ForgotUsernameEvent
     private AcmSpringActiveProfile acmSpringActiveProfile;
     private NotificationService notificationService;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
+    private CorrespondenceTemplateManager templateManager;
 
     @Override
     public void onApplicationEvent(ForgotUsernameEvent forgotUsernameEvent)
@@ -61,11 +64,18 @@ public class OnForgotUsername implements ApplicationListener<ForgotUsernameEvent
 
             auditPropertyEntityAdapter.setUserId(user.getUserId());
 
+            String emailSubject = "";
+            Template template = templateManager.findTemplate("forgotUsername.html");
+            if (template != null)
+            {
+                emailSubject = template.getEmailSubject();
+            }
             Notification notification = notificationService.getNotificationBuilder()
                     .newNotification("forgotUsername", NotificationConstants.FORGOT_USERNAME, "USER", user.getIdentifier(),
                             user.getUserId())
                     .forObjectWithNumber(user.getUserId())
                     .withEmailAddresses(user.getMail())
+                    .withSubject(emailSubject)
                     .build();
 
             notificationService.saveNotification(notification);
@@ -100,5 +110,15 @@ public class OnForgotUsername implements ApplicationListener<ForgotUsernameEvent
     public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
     {
         this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
+    }
+
+    public CorrespondenceTemplateManager getTemplateManager()
+    {
+        return templateManager;
+    }
+
+    public void setTemplateManager(CorrespondenceTemplateManager templateManager)
+    {
+        this.templateManager = templateManager;
     }
 }

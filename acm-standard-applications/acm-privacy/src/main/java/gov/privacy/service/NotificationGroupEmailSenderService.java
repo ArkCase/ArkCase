@@ -38,6 +38,8 @@ import com.armedia.acm.services.config.lookups.model.StandardLookupEntry;
 import com.armedia.acm.services.config.lookups.service.LookupDao;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
+import com.armedia.acm.services.templateconfiguration.model.Template;
+import com.armedia.acm.services.templateconfiguration.service.CorrespondenceTemplateManager;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import org.apache.commons.lang3.StringUtils;
@@ -65,6 +67,7 @@ public class NotificationGroupEmailSenderService
     private EcmFileDao ecmFileDao;
     private LookupDao lookupDao;
     private NotificationDao notificationDao;
+    private CorrespondenceTemplateManager templateManager;
 
     public void sendRequestEmailToNotificationGroup(Long caseId, String notificationGroupName, AcmUser acmUser,
             Authentication authentication) throws Exception
@@ -114,6 +117,12 @@ public class NotificationGroupEmailSenderService
                 List<EcmFileVersion> fileVersions = new ArrayList<>();
                 fileVersions.add(requestFormFile.getVersions().get(requestFormFile.getVersions().size() - 1));
 
+                String emailSubject = "";
+                Template template = templateManager.findTemplate("notificationGroup.html");
+                if (template != null)
+                {
+                    emailSubject = template.getEmailSubject();
+                }
                 Notification notification = new Notification();
                 notification.setTemplateModelName("notificationGroup");
                 notification.setAttachFiles(true);
@@ -125,6 +134,7 @@ public class NotificationGroupEmailSenderService
                 notification.setParentTitle(StringUtils.left(caseFile.getDetails(), 1000));
                 notification.setUser(acmUser.getUserId());
                 notification.setEmailAddresses(emailAddresses.stream().collect(Collectors.joining(",")));
+                notification.setSubject(emailSubject);
                 notificationDao.save(notification);
 
             }
@@ -173,5 +183,15 @@ public class NotificationGroupEmailSenderService
     public void setNotificationDao(NotificationDao notificationDao)
     {
         this.notificationDao = notificationDao;
+    }
+
+    public CorrespondenceTemplateManager getCorrespondenceTemplateManager()
+    {
+        return templateManager;
+    }
+
+    public void setCorrespondenceTemplateManager(CorrespondenceTemplateManager templateManager)
+    {
+        this.templateManager = templateManager;
     }
 }

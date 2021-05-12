@@ -86,6 +86,7 @@
             <beans:property name="SARConfigurationService" ref="sarConfigurationService"/>
             <beans:property name="SARQueueCorrespondenceService" ref="sarQueueCorrespondenceService"/>
             <beans:property name="notificationDao" ref="notificationDao"/>
+            <beans:property name="templateManager" ref="correspondenceTemplateManager"/>
 
         </beans:bean>
 
@@ -136,6 +137,7 @@
             <beans:property name="responseFolderService" ref="responseFolderService"/>
             <beans:property name="acmAppConfiguration" ref="acmApplication"/>
             <beans:property name="notificationDao" ref="notificationDao"/>
+            <beans:property name="templateManager" ref="correspondenceTemplateManager"/>
         </beans:bean>
 
         <beans:bean id="responseFolderService" class="gov.privacy.service.ResponseFolderService">
@@ -169,6 +171,7 @@
             <beans:property name="templatingEngine" ref="templatingEngine"/>
             <beans:property name="emailBodyTemplate" value="file:${user.home}/.arkcase/acm/templates/requestDocumentAttached.html"/>
             <beans:property name="notificationService" ref="notificationService"/>
+            <beans:property name="templateManager" ref="correspondenceTemplateManager"/>
         </beans:bean>
 
         <beans:bean id="requestAssignmentService" class="gov.privacy.service.RequestAssignmentService">

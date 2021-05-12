@@ -33,6 +33,8 @@ import com.armedia.acm.services.email.model.EmailMentionsDTO;
 import com.armedia.acm.services.email.service.AcmEmailServiceException;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
+import com.armedia.acm.services.templateconfiguration.model.Template;
+import com.armedia.acm.services.templateconfiguration.service.CorrespondenceTemplateManager;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import org.apache.logging.log4j.LogManager;
@@ -51,6 +53,7 @@ public class AcmEmailMentionsService
     private AcmApplication acmAppConfiguration;
     private ApplicationConfig applicationConfig;
     private NotificationService notificationService;
+    private CorrespondenceTemplateManager templateManager;
 
     private String buildObjectUrl(EmailMentionsDTO in)
     {
@@ -72,6 +75,12 @@ public class AcmEmailMentionsService
 
     public void sendMentionsEmail(EmailMentionsDTO in, AcmUser user) throws AcmEmailServiceException
     {
+        String emailSubject = "";
+        Template template = templateManager.findTemplate("mentions.html");
+        if (template != null)
+        {
+            emailSubject = template.getEmailSubject();
+        }
         Notification notification = notificationService.getNotificationBuilder()
                 .newNotification("mentions", NotificationConstants.EMAIL_MENTIONS, in.getObjectType(), in.getObjectId(),
                         user.getUserId())
@@ -79,6 +88,7 @@ public class AcmEmailMentionsService
                 .withNote(in.getTextMentioned())
                 .withData(buildObjectUrl(in))
                 .withEmailAddresses(String.join(",", in.getEmailAddresses()))
+                .withSubject(emailSubject)
                 .build(user.getFullName());
 
         notificationService.saveNotification(notification);
@@ -102,5 +112,15 @@ public class AcmEmailMentionsService
     public void setNotificationService(NotificationService notificationService)
     {
         this.notificationService = notificationService;
+    }
+
+    public CorrespondenceTemplateManager getTemplateManager()
+    {
+        return templateManager;
+    }
+
+    public void setTemplateManager(CorrespondenceTemplateManager templateManager)
+    {
+        this.templateManager = templateManager;
     }
 }

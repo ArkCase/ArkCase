@@ -36,6 +36,8 @@ import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.notification.service.NotificationService;
 
+import com.armedia.acm.services.templateconfiguration.model.Template;
+import com.armedia.acm.services.templateconfiguration.service.CorrespondenceTemplateManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationListener;
@@ -44,6 +46,7 @@ public class ComplaintUpdatedNotifier implements ApplicationListener<AcmEvent>
 {
     private NotificationService notificationService;
     private ComplaintDao complaintDao;
+    private CorrespondenceTemplateManager templateManager;
 
     private static final Logger logger = LogManager.getLogger(ComplaintUpdatedNotifier.class);
 
@@ -51,6 +54,8 @@ public class ComplaintUpdatedNotifier implements ApplicationListener<AcmEvent>
     public void onApplicationEvent(AcmEvent event)
     {
         String eventType = event.getEventType();
+        String emailSubject = "";
+        Template template;
 
         if (event instanceof ComplaintModifiedEvent)
         {
@@ -60,12 +65,18 @@ public class ComplaintUpdatedNotifier implements ApplicationListener<AcmEvent>
             {
                 logger.debug("On 'Complaint status changed' event create notification for participants.");
 
+                template = templateManager.findTemplate("complaintStatusChanged.html");
+                if (template != null)
+                {
+                    emailSubject = template.getEmailSubject();
+                }
                 Notification notification = notificationService.getNotificationBuilder()
                         .newNotification("complaintStatusChanged", NotificationConstants.COMPLAINT_STATUS_CHANGED,
                                 complaint.getObjectType(), complaint.getId(), event.getUserId())
                         .forObjectWithNumber(complaint.getComplaintNumber())
                         .forObjectWithTitle(complaint.getTitle())
                         .withEmailAddressesForNonPortalParticipants(complaint.getParticipants())
+                        .withSubject(emailSubject)
                         .build();
 
                 notificationService.saveNotification(notification);
@@ -74,12 +85,18 @@ public class ComplaintUpdatedNotifier implements ApplicationListener<AcmEvent>
             {
                 logger.debug("On 'Complaint priority changed' event create notification for participants.");
 
+                template = templateManager.findTemplate("complaintPriorityChanged.html");
+                if (template != null)
+                {
+                    emailSubject = template.getEmailSubject();
+                }
                 Notification notification = notificationService.getNotificationBuilder()
                         .newNotification("complaintPriorityChanged", NotificationConstants.COMPLAINT_PRIORITY_CHANGED,
                                 complaint.getObjectType(), complaint.getId(), event.getUserId())
                         .forObjectWithNumber(complaint.getComplaintNumber())
                         .forObjectWithTitle(complaint.getTitle())
                         .withEmailAddressesForNonPortalParticipants(complaint.getParticipants())
+                        .withSubject(emailSubject)
                         .build();
 
                 notificationService.saveNotification(notification);
@@ -96,12 +113,18 @@ public class ComplaintUpdatedNotifier implements ApplicationListener<AcmEvent>
                 {
                     logger.debug("On 'Complaint participants added' event create notification for participants.");
 
+                    template = templateManager.findTemplate("participantsAdded.html");
+                    if (template != null)
+                    {
+                        emailSubject = template.getEmailSubject();
+                    }
                     Notification notification = notificationService.getNotificationBuilder()
                             .newNotification("participantsAdded", NotificationConstants.PARTICIPANTS_ADDED, event.getObjectType(),
                                     event.getObjectId(), event.getUserId())
                             .forRelatedObjectTypeAndId(complaint.getObjectType(), complaint.getId())
                             .forRelatedObjectWithNumber(complaint.getComplaintNumber())
                             .withEmailAddressesForNonPortalParticipants(complaint.getParticipants())
+                            .withSubject(emailSubject)
                             .build();
 
                     notificationService.saveNotification(notification);
@@ -114,12 +137,18 @@ public class ComplaintUpdatedNotifier implements ApplicationListener<AcmEvent>
                 {
                     logger.debug("On 'Complaint participants deleted' event create notification for participants.");
 
+                    template = templateManager.findTemplate("participantsDeleted.html");
+                    if (template != null)
+                    {
+                        emailSubject = template.getEmailSubject();
+                    }
                     Notification notification = notificationService.getNotificationBuilder()
                             .newNotification("participantsDeleted", NotificationConstants.PARTICIPANTS_DELETED, event.getObjectType(),
                                     event.getObjectId(), event.getUserId())
                             .forRelatedObjectTypeAndId(complaint.getObjectType(), complaint.getId())
                             .forRelatedObjectWithNumber(complaint.getComplaintNumber())
                             .withEmailAddressesForNonPortalParticipants(complaint.getParticipants())
+                            .withSubject(emailSubject)
                             .build();
 
                     notificationService.saveNotification(notification);
@@ -146,5 +175,15 @@ public class ComplaintUpdatedNotifier implements ApplicationListener<AcmEvent>
     public void setComplaintDao(ComplaintDao complaintDao)
     {
         this.complaintDao = complaintDao;
+    }
+
+    public CorrespondenceTemplateManager getTemplateManager()
+    {
+        return templateManager;
+    }
+
+    public void setTemplateManager(CorrespondenceTemplateManager templateManager)
+    {
+        this.templateManager = templateManager;
     }
 }

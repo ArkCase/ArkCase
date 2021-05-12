@@ -46,6 +46,8 @@ import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.notification.service.NotificationSender;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
+import com.armedia.acm.services.templateconfiguration.model.Template;
+import com.armedia.acm.services.templateconfiguration.service.CorrespondenceTemplateManager;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
@@ -77,6 +79,7 @@ public class FOIAExtensionEmailHandler implements PipelineHandler<FOIARequest, C
     private UserDao userDao;
     private NotificationDao notificationDao;
     private TranslationService translationService;
+    private CorrespondenceTemplateManager templateManager;
 
     @Override
     public void execute(FOIARequest entity, CaseFilePipelineContext pipelineContext)
@@ -105,6 +108,12 @@ public class FOIAExtensionEmailHandler implements PipelineHandler<FOIARequest, C
 
             String emailAddress = extractRequestorEmailAddress(entity.getOriginator().getPerson());
 
+            String emailSubject = "";
+            Template template = templateManager.findTemplate("requestExtension.html");
+            if (template != null)
+            {
+                emailSubject = template.getEmailSubject();
+            }
             Notification notification = new Notification();
             notification.setTemplateModelName("requestExtension");
             notification.setParentType(entity.getObjectType());
@@ -115,6 +124,7 @@ public class FOIAExtensionEmailHandler implements PipelineHandler<FOIARequest, C
             notification.setEmailAddresses(emailAddress);
             notification.setFiles(Arrays.asList(ecmFileVersion));
             notification.setUser(user != null ? user.getUserId() : null);
+            notification.setSubject(emailSubject);
             notificationDao.save(notification);
 
         }
@@ -277,5 +287,15 @@ public class FOIAExtensionEmailHandler implements PipelineHandler<FOIARequest, C
     public void setTranslationService(TranslationService translationService)
     {
         this.translationService = translationService;
+    }
+
+    public CorrespondenceTemplateManager getTemplateManager()
+    {
+        return templateManager;
+    }
+
+    public void setTemplateManager(CorrespondenceTemplateManager templateManager)
+    {
+        this.templateManager = templateManager;
     }
 }
