@@ -39,6 +39,8 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
+import com.armedia.acm.services.templateconfiguration.model.Template;
+import com.armedia.acm.services.templateconfiguration.service.CorrespondenceTemplateManager;
 import com.armedia.acm.services.templateconfiguration.service.TemplatingEngine;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.service.NotificationSender;
@@ -84,6 +86,7 @@ public class SARQueueCorrespondenceService
     private String emailBodyTemplate;
     private TemplatingEngine templatingEngine;
     private NotificationService notificationService;
+    private CorrespondenceTemplateManager templateManager;
 
     public void handleApproveCorrespondence(Long requestId)
     {
@@ -184,7 +187,12 @@ public class SARQueueCorrespondenceService
 
             String emailAddress = extractRequestorEmailAddress(request.getOriginator().getPerson());
 
-
+            String emailSubject = "";
+            Template template = templateManager.findTemplate("requestDocumentAttached.html");
+            if (template != null)
+            {
+                emailSubject = template.getEmailSubject();
+            }
             Notification notification = notificationService.getNotificationBuilder()
                     .newNotification("requestDocumentAttached", String.format("%s %s", request.getRequestType(), request.getCaseNumber()),
                             request.getObjectType(), requestId, user != null ? user.getUserId() : null)
@@ -192,6 +200,7 @@ public class SARQueueCorrespondenceService
                     .withEmailAddresses(emailAddress)
                     .forObjectWithNumber(request.getCaseNumber())
                     .forObjectWithTitle(request.getTitle())
+                    .withSubject(emailSubject)
                     .build();
 
             notificationService.saveNotification(notification);
@@ -225,7 +234,12 @@ public class SARQueueCorrespondenceService
 
             String emailAddress = extractRequestorEmailAddress(request.getOriginator().getPerson());
 
-
+            String emailSubject = "";
+            Template template = templateManager.findTemplate("requestDocumentAttached.html");
+            if (template != null)
+            {
+                emailSubject = template.getEmailSubject();
+            }
             Notification notification = notificationService.getNotificationBuilder()
                     .newNotification("requestDocumentAttached", String.format("%s %s", request.getRequestType(), request.getCaseNumber()),
                             request.getObjectType(), requestId, user != null ? user.getUserId() : null)
@@ -233,6 +247,7 @@ public class SARQueueCorrespondenceService
                     .withEmailAddresses(emailAddress)
                     .forObjectWithNumber(request.getCaseNumber())
                     .forObjectWithTitle(request.getTitle())
+                    .withSubject(emailSubject)
                     .build();
 
             notificationService.saveNotification(notification);
@@ -433,5 +448,15 @@ public class SARQueueCorrespondenceService
     public void setNotificationService(NotificationService notificationService)
     {
         this.notificationService = notificationService;
+    }
+
+    public CorrespondenceTemplateManager getTemplateManager()
+    {
+        return templateManager;
+    }
+
+    public void setTemplateManager(CorrespondenceTemplateManager templateManager)
+    {
+        this.templateManager = templateManager;
     }
 }

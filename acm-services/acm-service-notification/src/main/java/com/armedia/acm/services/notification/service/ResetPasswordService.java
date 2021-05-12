@@ -31,6 +31,8 @@ import com.armedia.acm.core.AcmSpringActiveProfile;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
+import com.armedia.acm.services.templateconfiguration.model.Template;
+import com.armedia.acm.services.templateconfiguration.service.CorrespondenceTemplateManager;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.PasswordResetToken;
@@ -47,6 +49,7 @@ public class ResetPasswordService
     private final Logger log = LogManager.getLogger(getClass());
     private NotificationService notificationService;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
+    private CorrespondenceTemplateManager templateManager;
 
     public void sendPasswordResetNotification(AcmUser user)
     {
@@ -61,11 +64,18 @@ public class ResetPasswordService
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY, user.getUserId());
         auditPropertyEntityAdapter.setUserId(user.getUserId());
 
+        String emailSubject = "";
+        Template template = templateManager.findTemplate("changePassword.html");
+        if (template != null)
+        {
+            emailSubject = template.getEmailSubject();
+        }
         Notification notification = notificationService.getNotificationBuilder()
                 .newNotification("changePassword", NotificationConstants.PASSWORD_RESET, "USER", user.getIdentifier(),
                         user.getUserId())
                 .forObjectWithNumber(user.getUserId())
                 .withEmailAddresses(user.getMail())
+                .withSubject(emailSubject)
                 .build();
 
         notificationService.saveNotification(notification);
@@ -109,5 +119,15 @@ public class ResetPasswordService
     public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
     {
         this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
+    }
+
+    public CorrespondenceTemplateManager getTemplateManager()
+    {
+        return templateManager;
+    }
+
+    public void setTemplateManager(CorrespondenceTemplateManager templateManager)
+    {
+        this.templateManager = templateManager;
     }
 }

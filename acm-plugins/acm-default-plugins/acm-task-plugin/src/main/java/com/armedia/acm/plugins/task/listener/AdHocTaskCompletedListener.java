@@ -34,6 +34,8 @@ import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.notification.service.NotificationService;
 
+import com.armedia.acm.services.templateconfiguration.model.Template;
+import com.armedia.acm.services.templateconfiguration.service.CorrespondenceTemplateManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationListener;
@@ -42,6 +44,7 @@ public class AdHocTaskCompletedListener implements ApplicationListener<AcmApplic
 {
     private NotificationService notificationService;
     private TaskConfig taskConfig;
+    private CorrespondenceTemplateManager templateManager;
 
     private static final Logger logger = LogManager.getLogger(TaskUpdatedNotifier.class);
 
@@ -57,12 +60,19 @@ public class AdHocTaskCompletedListener implements ApplicationListener<AcmApplic
             {
                 logger.debug("On 'Task completed event' create notification for creator [{}].", taskOwner);
 
+                String emailSubject = "";
+                Template template = templateManager.findTemplate("taskCompletedNotifyCreator.html");
+                if (template != null)
+                {
+                    emailSubject = template.getEmailSubject();
+                }
                 Notification notification = notificationService.getNotificationBuilder()
                         .newNotification("taskCompletedNotifyCreator", NotificationConstants.NOTIFICATION_TASK_COMPLETED,
                                 acmTask.getObjectType(), acmTask.getId(), taskOwner)
                         .withEmailAddressForUser(taskOwner)
                         .forObjectWithNumber(String.format("%s-%s", acmTask.getObjectType(), acmTask.getId()))
                         .forObjectWithTitle(acmTask.getTitle())
+                        .withSubject(emailSubject)
                         .build(taskOwner, acmTask.getId());
 
                 notificationService.saveNotification(notification);
@@ -88,5 +98,15 @@ public class AdHocTaskCompletedListener implements ApplicationListener<AcmApplic
     public void setTaskConfig(TaskConfig taskConfig)
     {
         this.taskConfig = taskConfig;
+    }
+
+    public CorrespondenceTemplateManager getTemplateManager()
+    {
+        return templateManager;
+    }
+
+    public void setTemplateManager(CorrespondenceTemplateManager templateManager)
+    {
+        this.templateManager = templateManager;
     }
 }

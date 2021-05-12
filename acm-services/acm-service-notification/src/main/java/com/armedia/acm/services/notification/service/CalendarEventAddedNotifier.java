@@ -33,6 +33,8 @@ import com.armedia.acm.core.model.AcmEvent;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 
+import com.armedia.acm.services.templateconfiguration.model.Template;
+import com.armedia.acm.services.templateconfiguration.service.CorrespondenceTemplateManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationListener;
@@ -43,6 +45,7 @@ public class CalendarEventAddedNotifier implements ApplicationListener<AcmEvent>
 {
     private NotificationService notificationService;
     private NotificationUtils notificationUtils;
+    private CorrespondenceTemplateManager templateManager;
 
     private static final Logger logger = LogManager.getLogger(CalendarEventAddedNotifier.class);
 
@@ -71,12 +74,19 @@ public class CalendarEventAddedNotifier implements ApplicationListener<AcmEvent>
 
             logger.debug("On 'Calendar event added' event create notification for participants.");
 
+            String emailSubject = "";
+            Template template = templateManager.findTemplate("calendarEventAdded.html");
+            if (template != null)
+            {
+                emailSubject = template.getEmailSubject();
+            }
             Notification notification = notificationService.getNotificationBuilder()
                     .newNotification("calendarEventAdded", NotificationConstants.CALENDAR_EVENT_ADDED, event.getObjectType(),
                             event.getObjectId(), event.getUserId())
                     .forRelatedObjectTypeAndId(event.getParentObjectType(), event.getParentObjectId())
                     .forRelatedObjectWithNumber(event.getParentObjectName())
                     .withEmailAddresses(emailAddresses)
+                    .withSubject(emailSubject)
                     .build();
 
             notificationService.saveNotification(notification);
@@ -101,5 +111,15 @@ public class CalendarEventAddedNotifier implements ApplicationListener<AcmEvent>
     public void setNotificationUtils(NotificationUtils notificationUtils)
     {
         this.notificationUtils = notificationUtils;
+    }
+
+    public CorrespondenceTemplateManager getTemplateManager()
+    {
+        return templateManager;
+    }
+
+    public void setTemplateManager(CorrespondenceTemplateManager templateManager)
+    {
+        this.templateManager = templateManager;
     }
 }

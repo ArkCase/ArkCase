@@ -76,7 +76,7 @@ public class CorrespondenceDocumentGenerator implements DocumentGenerator
             }
 
         }
-        catch (IllegalArgumentException | IOException | AcmCreateObjectFailedException | AcmUserActionFailedException e)
+        catch (IOException | AcmCreateObjectFailedException | AcmUserActionFailedException e)
         {
             throw new DocumentGeneratorException(
                     "Failed to generate correspondence document for objectId: [" + acmObject.getId() + "], objectType: ["

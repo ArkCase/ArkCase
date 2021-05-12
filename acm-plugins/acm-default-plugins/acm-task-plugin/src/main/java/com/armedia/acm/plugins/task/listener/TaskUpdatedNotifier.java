@@ -36,6 +36,8 @@ import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.notification.service.NotificationService;
 import com.armedia.acm.services.notification.service.NotificationUtils;
+import com.armedia.acm.services.templateconfiguration.model.Template;
+import com.armedia.acm.services.templateconfiguration.service.CorrespondenceTemplateManager;
 import com.armedia.acm.services.users.dao.UserDao;
 
 import org.apache.logging.log4j.LogManager;
@@ -52,6 +54,7 @@ public class TaskUpdatedNotifier implements ApplicationListener<AcmApplicationTa
     private AcmAssignmentDao assignmentDao;
     private NotificationService notificationService;
     private NotificationUtils notificationUtils;
+    private CorrespondenceTemplateManager templateManager;
 
     private static final Logger logger = LogManager.getLogger(TaskUpdatedNotifier.class);
 
@@ -61,17 +64,25 @@ public class TaskUpdatedNotifier implements ApplicationListener<AcmApplicationTa
         String eventType = event.getEventType();
         String eventDescription = event.getEventDescription();
         AcmTask acmTask = event.getAcmTask();
+        String emailSubject = "";
+        Template template;
 
         if (eventType.equals("com.armedia.acm.app.task.status.changed"))
         {
             logger.debug("On 'Task status changed' event create notification for participants.");
 
+            template = templateManager.findTemplate("taskStatusChanged.html");
+            if (template != null)
+            {
+                emailSubject = template.getEmailSubject();
+            }
             Notification notification = notificationService.getNotificationBuilder()
                     .newNotification("taskStatusChanged", NotificationConstants.TASK_STATUS_CHANGED, acmTask.getObjectType(),
                             acmTask.getId(), event.getUserId())
                     .withEmailAddressesForNonPortalParticipants(acmTask.getParticipants())
                     .forObjectWithNumber(String.format("%s-%s", acmTask.getObjectType(), acmTask.getId()))
                     .forObjectWithTitle(acmTask.getTitle())
+                    .withSubject(emailSubject)
                     .build();
 
             notificationService.saveNotification(notification);
@@ -80,12 +91,18 @@ public class TaskUpdatedNotifier implements ApplicationListener<AcmApplicationTa
         {
             logger.debug("On 'Task priority changed' event create notification for participants.");
 
+            template = templateManager.findTemplate("taskPriorityChanged.html");
+            if (template != null)
+            {
+                emailSubject = template.getEmailSubject();
+            }
             Notification notification = notificationService.getNotificationBuilder()
                     .newNotification("taskPriorityChanged", NotificationConstants.TASK_PRIORITY_CHANGED, acmTask.getObjectType(),
                             acmTask.getId(), event.getUserId())
                     .withEmailAddressesForNonPortalParticipants(acmTask.getParticipants())
                     .forObjectWithNumber(String.format("%s-%s", acmTask.getObjectType(), acmTask.getId()))
                     .forObjectWithTitle(acmTask.getTitle())
+                    .withSubject(emailSubject)
                     .build();
 
             notificationService.saveNotification(notification);
@@ -120,12 +137,18 @@ public class TaskUpdatedNotifier implements ApplicationListener<AcmApplicationTa
 
             if (parentAssignment.isPresent())
             {
+                template = templateManager.findTemplate("concurNonConcur.html");
+                if (template != null)
+                {
+                    emailSubject = template.getEmailSubject();
+                }
                 Notification notification = notificationService.getNotificationBuilder()
                         .newNotification("concurNonConcur", NotificationConstants.TASK_CONCUR_NONCONCUR, event.getObjectType(),
                                 event.getObjectId(), event.getUserId())
                         .forObjectWithTitle(String.format("%s-%s", event.getObjectType(), event.getObjectId()))
                         .withNote(note)
                         .withEmailAddressForUser(parentAssignment.get().getNewAssignee())
+                        .withSubject(emailSubject)
                         .build(assignment.map(AcmAssignment::getNewAssignee).orElse(""));
 
                 notificationService.saveNotification(notification);
@@ -181,5 +204,15 @@ public class TaskUpdatedNotifier implements ApplicationListener<AcmApplicationTa
     public void setNotificationUtils(NotificationUtils notificationUtils)
     {
         this.notificationUtils = notificationUtils;
+    }
+
+    public CorrespondenceTemplateManager getTemplateManager()
+    {
+        return templateManager;
+    }
+
+    public void setTemplateManager(CorrespondenceTemplateManager templateManager)
+    {
+        this.templateManager = templateManager;
     }
 }

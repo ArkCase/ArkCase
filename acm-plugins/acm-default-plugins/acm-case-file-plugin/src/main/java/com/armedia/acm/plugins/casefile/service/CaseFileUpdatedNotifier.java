@@ -36,6 +36,8 @@ import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.notification.service.NotificationService;
 
+import com.armedia.acm.services.templateconfiguration.model.Template;
+import com.armedia.acm.services.templateconfiguration.service.CorrespondenceTemplateManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationListener;
@@ -44,6 +46,7 @@ public class CaseFileUpdatedNotifier implements ApplicationListener<AcmEvent>
 {
     private NotificationService notificationService;
     private CaseFileDao caseFileDao;
+    private CorrespondenceTemplateManager templateManager;
 
     private static final Logger logger = LogManager.getLogger(CaseFileUpdatedNotifier.class);
 
@@ -51,6 +54,8 @@ public class CaseFileUpdatedNotifier implements ApplicationListener<AcmEvent>
     public void onApplicationEvent(AcmEvent event)
     {
         String eventType = event.getEventType();
+        String emailSubject = "";
+        Template template;
 
         if (event instanceof CaseFileModifiedEvent)
         {
@@ -60,6 +65,11 @@ public class CaseFileUpdatedNotifier implements ApplicationListener<AcmEvent>
             {
                 logger.debug("On 'Case status changed' event create notification for participants.");
                 Notification notification;
+                template = templateManager.findTemplate("requestReleased.html");
+                if (template != null)
+                {
+                    emailSubject = template.getEmailSubject();
+                }
                 if (caseFile.getQueue() != null && caseFile.getQueue().getName().equals("Release"))
                 {
                     notification = notificationService.getNotificationBuilder()
@@ -68,17 +78,24 @@ public class CaseFileUpdatedNotifier implements ApplicationListener<AcmEvent>
                             .forObjectWithNumber(caseFile.getCaseNumber())
                             .forObjectWithTitle(caseFile.getTitle())
                             .withEmailAddressesForNonPortalParticipants(caseFile.getParticipants())
+                            .withSubject(emailSubject)
                             .build();
                     notificationService.saveNotification(notification);
                 }
                 else
                 {
+                    template = templateManager.findTemplate("caseStatusChanged.html");
+                    if (template != null)
+                    {
+                        emailSubject = template.getEmailSubject();
+                    }
                     notification = notificationService.getNotificationBuilder()
                             .newNotification("caseStatusChanged", NotificationConstants.CASE_STATUS_CHANGED, caseFile.getObjectType(),
                                     caseFile.getId(), event.getUserId())
                             .forObjectWithNumber(caseFile.getCaseNumber())
                             .forObjectWithTitle(caseFile.getTitle())
                             .withEmailAddressesForNonPortalParticipants(caseFile.getParticipants())
+                            .withSubject(emailSubject)
                             .build();
                     notificationService.saveNotification(notification);
                 }
@@ -87,12 +104,18 @@ public class CaseFileUpdatedNotifier implements ApplicationListener<AcmEvent>
             {
                 logger.debug("On 'Case priority changed' event create notification for participants.");
 
+                template = templateManager.findTemplate("casePriorityChanged.html");
+                if (template != null)
+                {
+                    emailSubject = template.getEmailSubject();
+                }
                 Notification notification = notificationService.getNotificationBuilder()
                         .newNotification("casePriorityChanged", NotificationConstants.CASE_PRIORITY_CHANGED, caseFile.getObjectType(),
                                 caseFile.getId(), event.getUserId())
                         .forObjectWithNumber(caseFile.getCaseNumber())
                         .forObjectWithTitle(caseFile.getTitle())
                         .withEmailAddressesForNonPortalParticipants(caseFile.getParticipants())
+                        .withSubject(emailSubject)
                         .build();
 
                 notificationService.saveNotification(notification);
@@ -110,12 +133,18 @@ public class CaseFileUpdatedNotifier implements ApplicationListener<AcmEvent>
                 {
                     logger.debug("On 'Case participants added' event create notification for participants and user.");
 
+                    template = templateManager.findTemplate("participantsAdded.html");
+                    if (template != null)
+                    {
+                        emailSubject = template.getEmailSubject();
+                    }
                     Notification notification = notificationService.getNotificationBuilder()
                             .newNotification("participantsAdded", NotificationConstants.PARTICIPANTS_ADDED, event.getObjectType(),
                                     event.getObjectId(), event.getUserId())
                             .forRelatedObjectTypeAndId(caseFile.getObjectType(), caseFile.getId())
                             .forRelatedObjectWithNumber(caseFile.getCaseNumber())
                             .withEmailAddressesForNonPortalParticipants(caseFile.getParticipants())
+                            .withSubject(emailSubject)
                             .build();
 
                     notificationService.saveNotification(notification);
@@ -126,6 +155,7 @@ public class CaseFileUpdatedNotifier implements ApplicationListener<AcmEvent>
                             .forRelatedObjectTypeAndId(caseFile.getObjectType(), caseFile.getId())
                             .forRelatedObjectWithNumber(caseFile.getCaseNumber())
                             .withEmailAddressForUser(((CaseFileParticipantsModifiedEvent) event).getParticipantLdapId())
+                            .withSubject(emailSubject)
                             .build();
 
                     notificationService.saveNotification(notificationForUser);
@@ -139,12 +169,18 @@ public class CaseFileUpdatedNotifier implements ApplicationListener<AcmEvent>
                 {
                     logger.debug("On 'Case participants deleted' event create notification for participants.");
 
+                    template = templateManager.findTemplate("participantsDeleted.html");
+                    if (template != null)
+                    {
+                        emailSubject = template.getEmailSubject();
+                    }
                     Notification notification = notificationService.getNotificationBuilder()
                             .newNotification("participantsDeleted", NotificationConstants.PARTICIPANTS_DELETED, event.getObjectType(),
                                     event.getObjectId(), event.getUserId())
                             .forRelatedObjectTypeAndId(caseFile.getObjectType(), caseFile.getId())
                             .forRelatedObjectWithNumber(caseFile.getCaseNumber())
                             .withEmailAddressesForNonPortalParticipants(caseFile.getParticipants())
+                            .withSubject(emailSubject)
                             .build();
 
                     notificationService.saveNotification(notification);
@@ -171,5 +207,15 @@ public class CaseFileUpdatedNotifier implements ApplicationListener<AcmEvent>
     public void setCaseFileDao(CaseFileDao caseFileDao)
     {
         this.caseFileDao = caseFileDao;
+    }
+
+    public CorrespondenceTemplateManager getTemplateManager()
+    {
+        return templateManager;
+    }
+
+    public void setTemplateManager(CorrespondenceTemplateManager templateManager)
+    {
+        this.templateManager = templateManager;
     }
 }

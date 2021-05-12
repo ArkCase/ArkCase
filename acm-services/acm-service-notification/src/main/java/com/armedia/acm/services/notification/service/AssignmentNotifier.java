@@ -32,6 +32,8 @@ import com.armedia.acm.service.objecthistory.model.AcmAssignment;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 
+import com.armedia.acm.services.templateconfiguration.model.Template;
+import com.armedia.acm.services.templateconfiguration.service.CorrespondenceTemplateManager;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -40,6 +42,8 @@ import org.springframework.context.ApplicationListener;
 public class AssignmentNotifier implements ApplicationListener<AcmAssigneeChangeEvent>
 {
     private NotificationService notificationService;
+
+    private CorrespondenceTemplateManager templateManager;
 
     private static final Logger logger = LogManager.getLogger(AssignmentNotifier.class);
 
@@ -50,17 +54,25 @@ public class AssignmentNotifier implements ApplicationListener<AcmAssigneeChange
 
         String newAssignee = assignment.getNewAssignee();
         String oldAssignee = assignment.getOldAssignee();
+        String emailSubject = "";
+        Template template;
 
         if (StringUtils.isNotBlank(newAssignee) && !newAssignee.equals("None"))
         {
             logger.debug("On 'Assignment changed' event create notification for new assignee [{}].", newAssignee);
 
+            template = templateManager.findTemplate("objectAssigned.html");
+            if (template != null)
+            {
+                emailSubject = template.getEmailSubject();
+            }
             Notification notification = notificationService.getNotificationBuilder()
                     .newNotification("objectAssigned", NotificationConstants.OBJECT_ASSIGNED, assignment.getObjectType(),
                             assignment.getObjectId(), event.getUserId())
                     .forObjectWithNumber(assignment.getObjectName())
                     .forObjectWithTitle(assignment.getObjectTitle())
                     .withEmailAddressForUser(newAssignee)
+                    .withSubject(emailSubject)
                     .build(newAssignee);
 
             notificationService.saveNotification(notification);
@@ -70,12 +82,18 @@ public class AssignmentNotifier implements ApplicationListener<AcmAssigneeChange
         {
             logger.debug("On 'Assignment changed' event create notification for old assignee [{}].", oldAssignee);
 
+            template = templateManager.findTemplate("objectUnassigned.html");
+            if (template != null)
+            {
+                emailSubject = template.getEmailSubject();
+            }
             Notification notification = notificationService.getNotificationBuilder()
                     .newNotification("objectUnassigned", NotificationConstants.OBJECT_UNASSIGNED, assignment.getObjectType(),
                             assignment.getObjectId(), event.getUserId())
                     .forObjectWithNumber(assignment.getObjectName())
                     .forObjectWithTitle(assignment.getObjectTitle())
                     .withEmailAddressForUser(oldAssignee)
+                    .withSubject(emailSubject)
                     .build(oldAssignee);
 
             notificationService.saveNotification(notification);
@@ -90,5 +108,15 @@ public class AssignmentNotifier implements ApplicationListener<AcmAssigneeChange
     public void setNotificationService(NotificationService notificationService)
     {
         this.notificationService = notificationService;
+    }
+
+    public CorrespondenceTemplateManager getTemplateManager()
+    {
+        return templateManager;
+    }
+
+    public void setTemplateManager(CorrespondenceTemplateManager templateManager)
+    {
+        this.templateManager = templateManager;
     }
 }

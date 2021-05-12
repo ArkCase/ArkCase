@@ -3,9 +3,7 @@ package com.armedia.acm.services.billing.web.api;
 import com.armedia.acm.data.service.AcmDataService;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.person.dao.PersonAssociationDao;
-import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Person;
-import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.services.billing.dao.BillingInvoiceDao;
 import com.armedia.acm.services.billing.exception.CreateBillingItemException;
 import com.armedia.acm.services.billing.model.BillingConstants;
@@ -18,6 +16,8 @@ import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.service.NotificationService;
 import com.armedia.acm.services.participants.service.AcmParticipantService;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
+import com.armedia.acm.services.templateconfiguration.model.Template;
+import com.armedia.acm.services.templateconfiguration.service.CorrespondenceTemplateManager;
 import com.touchnet.secureLink.types.AuthorizeAccountResponse;
 import com.touchnet.secureLink.types.NameValuePair;
 import org.apache.logging.log4j.LogManager;
@@ -73,6 +73,7 @@ public class TouchNetAPIController
     private BillingEventPublisher billingEventPublisher;
     private BillingInvoiceDao billingInvoiceDao;
     private UserInfoHelper userInfoHelper;
+    private CorrespondenceTemplateManager templateManager;
 
     private Logger log = LogManager.getLogger(getClass());
 
@@ -170,20 +171,31 @@ public class TouchNetAPIController
         String assigneeEmailAddress = getUserInfoHelper().getUserEmail(assigneeLdapId);
 
         String note = objectId.toString() + "_" + amount + "_" + billName + "_" + paymentMethod + "_" + cardNumber.substring(cardNumber.length() - 4) + "_" + sessionId + "_" + objectNumber;
-
+        String emailSubject = "";
+        Template template = templateManager.findTemplate("paymentConfirmation.html");
+        if (template != null)
+        {
+            emailSubject = template.getEmailSubject();
+        }
         Notification requestorNotification  = notificationService.getNotificationBuilder()
                 .newNotification("paymentConfirmation", BillingConstants.CONFIRMATION_PAYMENT_TITLE, objectType, objectId, null)
                 .withEmailAddresses(requestorEmailAddress)
                 .withNote(note)
+                .withSubject(emailSubject)
                 .build();
 
         notificationService.saveNotification(requestorNotification);
 
-
+        template = templateManager.findTemplate("assigneeConfirmationPayment.html");
+        if (template != null)
+        {
+            emailSubject = template.getEmailSubject();
+        }
         Notification assigneeNotification = notificationService.getNotificationBuilder()
                 .newNotification("assigneeConfirmationPayment", BillingConstants.CONFIRMATION_PAYMENT_TITLE, objectType, objectId, null)
                 .withEmailAddresses(assigneeEmailAddress != null ? assigneeEmailAddress : "")
                 .withNote(note)
+                .withSubject(emailSubject)
                 .build();
         notificationService.saveNotification(assigneeNotification);
     }
@@ -298,6 +310,16 @@ public class TouchNetAPIController
     public void setUserInfoHelper(UserInfoHelper userInfoHelper)
     {
         this.userInfoHelper = userInfoHelper;
+    }
+
+    public CorrespondenceTemplateManager getTemplateManager()
+    {
+        return templateManager;
+    }
+
+    public void setTemplateManager(CorrespondenceTemplateManager templateManager)
+    {
+        this.templateManager = templateManager;
     }
 }
 
