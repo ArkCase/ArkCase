@@ -213,7 +213,7 @@ angular.module('cases').controller(
                     objectType: ObjectService.ObjectTypes.CASE_FILE,
                     objectNumber: $scope.objectInfo.caseNumber,
                     emailSubject: 'Request ' + $scope.objectInfo.caseNumber,
-                    emailOfOriginator: $scope.objectInfo.acmObjectOriginator.person.defaultEmail.value
+                    emailOfOriginator: $scope.objectInfo.acmObjectOriginator.person.defaultEmail ? $scope.objectInfo.acmObjectOriginator.person.defaultEmail.value : ""
                 };
                 var modalInstance = $modal.open({
                     templateUrl: 'modules/common/views/send-email-modal.client.view.html',
