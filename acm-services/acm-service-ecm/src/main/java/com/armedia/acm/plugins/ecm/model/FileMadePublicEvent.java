@@ -1,10 +1,10 @@
-package gov.foia.service.dataupdate;
+package com.armedia.acm.plugins.ecm.model;
 
 /*-
  * #%L
- * ACM Standard Application: Freedom of Information Act
+ * ACM Service: Enterprise Content Management
  * %%
- * Copyright (C) 2014 - 2020 ArkCase LLC
+ * Copyright (C) 2014 - 2021 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 
@@ -27,36 +27,23 @@ package gov.foia.service.dataupdate;
  * #L%
  */
 
-import com.armedia.acm.services.dataupdate.service.AcmDataUpdateExecutor;
-import com.armedia.acm.services.dataupdate.service.SolrReindexService;
-import gov.foia.model.FOIARequest;
+import com.armedia.acm.core.model.AcmEvent;
+import org.springframework.security.core.Authentication;
 
-import java.util.Arrays;
+import java.util.Date;
 
-public class FoiaRequestDataUpdateExecutor implements AcmDataUpdateExecutor
+public class FileMadePublicEvent extends AcmEvent
 {
+    private static final long serialVersionUID = -2309165680659166953L;
 
-    private SolrReindexService solrReindexService;
-
-    @Override
-    public String getUpdateId()
+    public FileMadePublicEvent(EcmFile source, Authentication auth)
     {
-        return "solr-foia-request-reindex-v3";
-    }
-
-    @Override
-    public void execute()
-    {
-        solrReindexService.reindex(Arrays.asList(FOIARequest.class));
-    }
-
-    public SolrReindexService getSolrReindexService()
-    {
-        return solrReindexService;
-    }
-
-    public void setSolrReindexService(SolrReindexService solrReindexService)
-    {
-        this.solrReindexService = solrReindexService;
+        super(source);
+        setEventDate(new Date());
+        setObjectId(source.getId());
+        setUserId(auth.getName());
+        setObjectType(EcmFileConstants.OBJECT_FILE_TYPE);
+        setParentObjectType(source.getContainer().getContainerObjectType());
+        setParentObjectId(source.getContainer().getContainerObjectId());
     }
 }

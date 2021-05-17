@@ -19,6 +19,7 @@
         <property name="notificationSender" ref="notificationSender"/>
         <property name="notificationDao" ref="notificationDao"/>
         <property name="fileService" ref="ecmFileService"/>
+        <property name="templateManager" ref="correspondenceTemplateManager"/>
     </bean>
 
 </beans>

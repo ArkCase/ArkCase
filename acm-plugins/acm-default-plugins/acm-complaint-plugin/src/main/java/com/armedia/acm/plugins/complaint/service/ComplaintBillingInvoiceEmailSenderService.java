@@ -41,6 +41,8 @@ import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.notification.service.NotificationSender;
+import com.armedia.acm.services.templateconfiguration.model.Template;
+import com.armedia.acm.services.templateconfiguration.service.CorrespondenceTemplateManager;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import org.apache.logging.log4j.Logger;
@@ -61,6 +63,7 @@ public class ComplaintBillingInvoiceEmailSenderService
     private NotificationDao notificationDao;
     private EcmFileService fileService;
     private TranslationService translationService;
+    private CorrespondenceTemplateManager templateManager;
 
     public void sendBillingInvoiceByEmail(BillingInvoiceRequest billingInvoiceRequest, AcmUser acmUser, Authentication authentication)
             throws Exception
@@ -82,6 +85,12 @@ public class ComplaintBillingInvoiceEmailSenderService
             notificationFiles.add(file.getVersions().get(file.getVersions().size() - 1));
         }
 
+        String emailSubject = "";
+        Template template = templateManager.findTemplate("billingInvoice.html");
+        if (template != null)
+        {
+            emailSubject = template.getEmailSubject();
+        }
         Notification notification = new Notification();
         notification.setTemplateModelName("billingInvoice");
         notification.setParentType(billingInvoice.getParentObjectType());
@@ -91,6 +100,7 @@ public class ComplaintBillingInvoiceEmailSenderService
         notification.setEmailAddresses(emailAddress);
         notification.setTitle(String.format(translationService.translate(NotificationConstants.COMPLAINT_INVOICE), complaint.getComplaintNumber()));
         notification.setUser(acmUser.getUserId());
+        notification.setSubject(emailSubject);
         getNotificationDao().save(notification);
 
     }
@@ -151,5 +161,15 @@ public class ComplaintBillingInvoiceEmailSenderService
     public void setTranslationService(TranslationService translationService)
     {
         this.translationService = translationService;
+    }
+
+    public CorrespondenceTemplateManager getTemplateManager()
+    {
+        return templateManager;
+    }
+
+    public void setTemplateManager(CorrespondenceTemplateManager templateManager)
+    {
+        this.templateManager = templateManager;
     }
 }

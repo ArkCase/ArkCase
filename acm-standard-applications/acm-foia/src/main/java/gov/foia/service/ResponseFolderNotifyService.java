@@ -37,6 +37,8 @@ import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.service.NotificationSender;
+import com.armedia.acm.services.templateconfiguration.model.Template;
+import com.armedia.acm.services.templateconfiguration.service.CorrespondenceTemplateManager;
 import com.armedia.acm.services.users.dao.UserDao;
 
 import org.apache.logging.log4j.Logger;
@@ -57,6 +59,7 @@ public class ResponseFolderNotifyService
     private Logger log = LogManager.getLogger(getClass());
     private AcmApplication acmAppConfiguration;
     private NotificationDao notificationDao;
+    private CorrespondenceTemplateManager templateManager;
 
     /**
      * @return the acmAppConfiguration
@@ -81,6 +84,12 @@ public class ResponseFolderNotifyService
         String emailAddress = extractRequestorEmailAddress(request.getOriginator().getPerson());
         if (emailAddress != null)
         {
+            String emailSubject = "";
+            Template template = templateManager.findTemplate("portalRequestCompleteLink.html");
+            if (template != null)
+            {
+                emailSubject = template.getEmailSubject();
+            }
             Notification responseFolderNotifier = new Notification();
             responseFolderNotifier.setEmailAddresses(emailAddress);
             responseFolderNotifier.setTitle(String.format("%s %s", EMAIL_RELEASE_SUBJECT, request.getCaseNumber()));
@@ -88,6 +97,7 @@ public class ResponseFolderNotifyService
             responseFolderNotifier.setParentType(request.getObjectType());
             responseFolderNotifier.setParentId(request.getId());
             responseFolderNotifier.setAttachFiles(false);
+            responseFolderNotifier.setSubject(emailSubject);
             notificationDao.save(responseFolderNotifier);
         }
 
@@ -99,6 +109,12 @@ public class ResponseFolderNotifyService
         String emailAddress = extractRequestorEmailAddress(request.getOriginator().getPerson());
         if (emailAddress != null)
         {
+            String emailSubject = "";
+            Template template = templateManager.findTemplate("portalDocumentsLink.html");
+            if (template != null)
+            {
+                emailSubject = template.getEmailSubject();
+            }
             Notification responseFolderNotifier = new Notification();
             responseFolderNotifier.setEmailAddresses(emailAddress);
             responseFolderNotifier.setTitle(String.format("%s %s", EMAIL_RESPONSE_FOLDER_ZIP, request.getCaseNumber()));
@@ -106,6 +122,7 @@ public class ResponseFolderNotifyService
             responseFolderNotifier.setParentType(request.getObjectType());
             responseFolderNotifier.setParentId(request.getId());
             responseFolderNotifier.setAttachFiles(false);
+            responseFolderNotifier.setSubject(emailSubject);
             notificationDao.save(responseFolderNotifier);
         }
     }
@@ -175,5 +192,15 @@ public class ResponseFolderNotifyService
     public void setNotificationDao(NotificationDao notificationDao)
     {
         this.notificationDao = notificationDao;
+    }
+
+    public CorrespondenceTemplateManager getTemplateManager()
+    {
+        return templateManager;
+    }
+
+    public void setTemplateManager(CorrespondenceTemplateManager templateManager)
+    {
+        this.templateManager = templateManager;
     }
 }

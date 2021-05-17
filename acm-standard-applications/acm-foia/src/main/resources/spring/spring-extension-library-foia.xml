@@ -65,6 +65,7 @@
             <beans:property name="organizationDao" ref="acmOrganizationDao"/>
             <beans:property name="requestAssignmentService" ref="requestAssignmentService"/>
             <beans:property name="lookupDao" ref="lookupDao"/>
+            <beans:property name="templateManager" ref="correspondenceTemplateManager"/>
         </beans:bean>
 
         <beans:bean id="portalCreateRequestService" class="gov.foia.service.PortalCreateRequestService">
@@ -102,6 +103,7 @@
             <beans:property name="translationService" ref="translationService"/>
             <beans:property name="createAdHocTaskService" ref="createAdHocTaskService"/>
             <beans:property name="holidayConfigurationService" ref="holidayConfigurationService"/>
+            <beans:property name="templateManager" ref="correspondenceTemplateManager"/>
         </beans:bean>
 
         <beans:bean id="holdedAndAppealedRequestsDueDateUpdate"
@@ -124,6 +126,7 @@
             <property name="userDao" ref="userJpaDao"/>
             <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
             <property name="translationService" ref="translationService"/>
+            <property name="templateManager" ref="correspondenceTemplateManager"/>
         </beans:bean>
 
         <beans:bean id="dueDateReminderJobDescriptor" class="gov.foia.service.DueDateReminderJobDescriptor">
@@ -186,6 +189,7 @@
                     <beans:ref bean="solrReindexPersonAssociationsExecutor"/>
                     <beans:ref bean="foiaRequestDataUpdateExecutor"/>
                     <beans:ref bean="solrReindexFOIAPersonExecutor"/>
+                    <beans:ref bean="multiplePortalUsersWithSameEmailCleanupExecutor"/>
                 </beans:list>
             </beans:property>
 
@@ -227,6 +231,13 @@
             <beans:property name="solrReindexService" ref="solrReindexService"/>
         </beans:bean>
 
+        <beans:bean id="multiplePortalUsersWithSameEmailCleanupExecutor"
+                    class="gov.foia.service.dataupdate.MultiplePortalUsersWithSameEmailCleanupExecutor">
+            <beans:property name="acmContextHolder" ref="acmContextHolder"/>
+            <beans:property name="userDao" ref="userJpaDao"/>
+            <beans:property name="springLdapUserDao" ref="springLdapUserDao"/>
+        </beans:bean>
+
         <beans:bean id="queuesTimeToCompleteService" class="gov.foia.service.QueuesTimeToCompleteService">
             <beans:property name="queueConfigFile" value="file:${user.home}/.arkcase/acm/queuesConfiguration.json"/>
             <beans:property name="objectConverter" ref="objectConverter"/>
@@ -266,6 +277,7 @@
             <beans:property name="caseFileDao" ref="caseFileDao"/>
             <beans:property name="portalAdminService" ref="portalAdminService"/>
             <beans:property name="portalConfigurationService" ref="portalConfigurationService"/>
+            <beans:property name="fileEventPublisher" ref="fileEventPublisher"/>
         </beans:bean>
 
         <beans:bean id="foiaQueuedEventListener" class="gov.foia.listener.FOIAQueuedEventListener">
@@ -365,12 +377,14 @@
             <beans:property name="ecmFileDao" ref="ecmFileDao"/>
             <beans:property name="lookupDao" ref="lookupDao"/>
             <beans:property name="notificationDao" ref="notificationDao"/>
+            <beans:property name="templateManager" ref="correspondenceTemplateManager"/>
         </beans:bean>
 
         <beans:bean id="firstAssigneeOwningGroupNotify" class="gov.foia.service.FirstAssigneeOwningGroupNotify">
             <beans:property name="notificationUtils" ref="notificationUtils"/>
             <beans:property name="userInfoHelper" ref="userInfoHelper"/>
             <beans:property name="notificationService" ref="notificationService"/>
+            <beans:property name="templateManager" ref="correspondenceTemplateManager"/>
         </beans:bean>
 
         <beans:bean id="foiaExecutiveGroupNotificationService"
@@ -445,6 +459,7 @@
 
         <beans:bean id="assignmentNotifier" class="gov.foia.listener.FoiaAssignmentNotifier">
             <beans:property name="notificationService" ref="notificationService"/>
+            <beans:property name="templateManager" ref="correspondenceTemplateManager"/>
         </beans:bean>
 
         <beans:bean id="niemExportService" class="gov.foia.service.NiemExportServiceImpl">

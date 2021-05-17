@@ -162,12 +162,14 @@
         <property name="acmSpringActiveProfile" ref="acmSpringActiveProfile"/>
         <property name="notificationService" ref="notificationService"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="templateManager" ref="correspondenceTemplateManager"/>
     </bean>
 
     <bean id="onForgotUsername" class="com.armedia.acm.services.notification.service.OnForgotUsername">
         <property name="acmSpringActiveProfile" ref="acmSpringActiveProfile"/>
         <property name="notificationService" ref="notificationService"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="templateManager" ref="correspondenceTemplateManager"/>
     </bean>
 
     <bean id="onLoginCheckPasswordExpiration" class="com.armedia.acm.services.notification.service.OnLoginCheckPasswordExpiration">
@@ -179,6 +181,7 @@
         <property name="acmAppConfiguration" ref="acmApplication"/>
         <property name="applicationConfig" ref="applicationProperties"/>
         <property name="notificationService" ref="notificationService"/>
+        <property name="templateManager" ref="correspondenceTemplateManager"/>
     </bean>
 
     <bean id="userInfoHelper" class="com.armedia.acm.services.notification.helper.UserInfoHelper">
@@ -189,10 +192,12 @@
 
     <bean id="assignmentNotifier" class="com.armedia.acm.services.notification.service.AssignmentNotifier">
         <property name="notificationService" ref="notificationService"/>
+        <property name="templateManager" ref="correspondenceTemplateManager"/>
     </bean>
 
     <bean id="calendarEventAddedNotifier" class="com.armedia.acm.services.notification.service.CalendarEventAddedNotifier">
         <property name="notificationService" ref="notificationService"/>
         <property name="notificationUtils" ref="notificationUtils"/>
+        <property name="templateManager" ref="correspondenceTemplateManager"/>
     </bean>
 </beans>
