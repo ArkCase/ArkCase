@@ -5,7 +5,8 @@ angular.module('admin').factory('Admin.ScheduledJobsManagementService', [ '$http
         getScheduledJobs: getScheduledJobs,
         runJob: runJob,
         pauseJob: pauseJob,
-        resumeJob: resumeJob
+        resumeJob: resumeJob,
+        restoreTriggerState: restoreTriggerState
     };
 
     function getScheduledJobs() {
@@ -33,6 +34,13 @@ angular.module('admin').factory('Admin.ScheduledJobsManagementService', [ '$http
         return $http({
             method: "PUT",
             url: "api/latest/plugin/admin/scheduler/jobs/" + name + "/resume"
+        });
+    }
+
+    function restoreTriggerState(name) {
+        return $http({
+            method: "PUT",
+            url: "api/latest/plugin/admin/scheduler/jobs/" + name + "/restoreTrigger"
         });
     }
 
