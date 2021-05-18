@@ -450,9 +450,7 @@ angular.module('cases').controller(
                 association.organizationToPersonAssociationType = data.inverseType;
 
                 var organizationAssociation = {};
-                organizationAssociation["associationType"] = _.find($scope.positions, {
-                    key: 'request-organization'
-                }).key;
+                organizationAssociation["associationType"] = 'requestor-organization';
                 organizationAssociation["organization"] = data.organization;
 
                 if (data.isDefault) {
