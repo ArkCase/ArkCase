@@ -1536,6 +1536,14 @@
                     "width": "20%"
                 },
                 {
+                    "name": "triggerState",
+                    "displayName": "admin.application.scheduled.jobs.column.triggerState.title",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div><span>{{ row.entity.triggerState | translate}}</span> <i class='fa fa-play-circle-o' style='cursor :pointer' ng-click='grid.appScope.restoreTriggerState(row.entity)' title='Restore State'></i>  </div>",
+                    "visible": true,
+                    "width": "10%"
+                },
+                {
                     "name": "act",
                     "cellEditableCondition": false,
                     "width": "20%",

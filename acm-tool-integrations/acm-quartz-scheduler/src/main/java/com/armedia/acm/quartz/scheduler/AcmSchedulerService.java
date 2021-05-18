@@ -123,6 +123,7 @@ public class AcmSchedulerService
         job.setNextRun(it.getNextFireTime());
         job.setPaused(getTriggerState(triggerName) == Trigger.TriggerState.PAUSED);
         job.setRunning(getTriggerState(triggerName) == Trigger.TriggerState.BLOCKED);
+        job.setTriggerState(getTriggerState(triggerName).toString());
         return job;
     };
 
@@ -233,6 +234,28 @@ public class AcmSchedulerService
         catch (SchedulerException e)
         {
             logger.warn("Failed to resume paused job [{}]. [{}]", name, e.getMessage());
+        }
+    }
+
+    @Transactional
+    public void restoreTriggerState(String triggerName)
+    {
+        try
+        {
+            Trigger trigger = scheduler.getTrigger(TriggerKey.triggerKey(triggerName));
+            Trigger.TriggerState state = getTriggerState(triggerName);
+            if (state == Trigger.TriggerState.BLOCKED || state == Trigger.TriggerState.ERROR)
+            {
+                logger.info("Restore trigger [{}] with execution.", triggerName);
+                scheduler.resetTriggerFromErrorState(trigger.getKey());
+                publishSchedulerActionEvent(AcmJobEventPublisher.JOB_RESUMED,
+                        new AcmJobState(triggerName, trigger.getKey().getName(),
+                                trigger.getPreviousFireTime(), trigger.getNextFireTime(), false));
+            }
+        }
+        catch (SchedulerException e)
+        {
+            logger.warn("Failed to restore trigger [{}]. [{}]", triggerName, e.getMessage());
         }
     }
 

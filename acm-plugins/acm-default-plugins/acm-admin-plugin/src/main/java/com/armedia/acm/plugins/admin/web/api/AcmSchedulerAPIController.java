@@ -73,6 +73,13 @@ public class AcmSchedulerAPIController
         schedulerService.resumeJob(name);
     }
 
+    @RequestMapping(value = "/jobs/{name}/restoreTrigger", method = RequestMethod.PUT)
+    @ResponseBody
+    public void restoreTriggerState(@PathVariable String name)
+    {
+        schedulerService.restoreTriggerState(name);
+    }
+
     public AcmSchedulerService getSchedulerService()
     {
         return schedulerService;
