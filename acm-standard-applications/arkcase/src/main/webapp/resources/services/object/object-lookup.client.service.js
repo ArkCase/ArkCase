@@ -341,6 +341,47 @@ angular.module('services').factory('Object.LookupService', [ '$q', '$resource', 
 
     /**
      * @ngdoc method
+     * @name getObjectOrganizationTypes
+     * @methodOf services:Object.LookupService
+     *
+     * @description
+     * Query list of organization types related to particular object (COMPLAINT, CASE_FILE, CONSULTATION, DOC_REPO)
+     *
+     * @returns {Object} An array returned by $resource
+     */
+    // TODO this is only changed for caseFileOrganizationTypes because there are not specified organization types for other objects
+    Service.getObjectOrganizationTypes = function (objectType, initiator) {
+        switch (objectType) {
+            case "COMPLAINT":
+                if (initiator) {
+                    return Service.getLookupByLookupName("complaintPersonInitiatorTypes");
+                } else {
+                    return Service.getLookupByLookupName("complaintPersonTypes");
+                }
+            case "CASE_FILE":
+                if (initiator) {
+                    return Service.getLookupByLookupName("caseFilePersonInitiatorTypes");
+                } else {
+                    return Service.getLookupByLookupName("caseFileOrganizationTypes");
+                }
+                if (initiator) {
+                    return Service.getLookupByLookupName("consultationPersonInitiatorTypes");
+                } else {
+                    return Service.getLookupByLookupName("consultationPersonTypes")
+                }
+            case "CONSULTATION":
+                if (initiator) {
+                    return Service.getLookupByLookupName("consultationPersonInitiatorTypes");
+                } else {
+                    return Service.getLookupByLookupName("consultationPersonTypes");
+                }
+            case "DOC_REPO":
+                return Service.getLookupByLookupName("documentPersonTypes");
+        }
+    };
+
+    /**
+     * @ngdoc method
      * @name validatePersonTypes
      * @methodOf services:Object.LookupService
      *

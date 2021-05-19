@@ -10,8 +10,8 @@ angular.module('organizations').controller(
                 return userInfo;
             });
 
-            //we are using person types because there are not specified organization types
-            ObjectLookupService.getPersonTypes(ObjectService.ObjectTypes.CONSULTATION).then(function (organizationTypes) {
+            // TODO: this is only changed for caseFileOrganizationTypes because there are not specified organization types for other objects
+            ObjectLookupService.getObjectOrganizationTypes(ObjectService.ObjectTypes.CONSULTATION).then(function (organizationTypes) {
                 $scope.organizationTypes = organizationTypes;
                 return organizationTypes;
             });
