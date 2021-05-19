@@ -5,13 +5,13 @@ angular.module('cases').controller(
         [ '$scope', '$q', '$stateParams', '$translate', '$modal', 'UtilService', 'ObjectService', 'Case.InfoService', 'Authentication', 'Object.LookupService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Organization.InfoService',
                 function($scope, $q, $stateParams, $translate, $modal, Util, ObjectService, CaseInfoService, Authentication, ObjectLookupService, HelperUiGridService, HelperObjectBrowserService, OrganizationInfoService) {
 
-                    Authentication.queryUserInfo().then(function(userInfo) {
+                    Authentication.queryUserInfo().then(function (userInfo) {
                         $scope.userId = userInfo.userId;
                         return userInfo;
                     });
 
-                    //TODO: change personTypes with some new organizationTypes
-                    ObjectLookupService.getPersonTypes(ObjectService.ObjectTypes.CASE_FILE).then(function(organizationTypes) {
+                    // TODO: this is only changed for caseFileOrganizationTypes because there are not specified organization types for other objects
+                    ObjectLookupService.getObjectOrganizationTypes(ObjectService.ObjectTypes.CASE_FILE).then(function (organizationTypes) {
                         $scope.organizationTypes = organizationTypes;
                         return organizationTypes;
                     });
