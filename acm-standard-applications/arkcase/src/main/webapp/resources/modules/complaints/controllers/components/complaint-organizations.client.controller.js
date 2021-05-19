@@ -5,13 +5,13 @@ angular.module('complaints').controller(
         [ '$scope', '$q', '$stateParams', '$translate', '$modal', 'UtilService', 'ObjectService', 'Complaint.InfoService', 'Authentication', 'Object.LookupService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Organization.InfoService',
                 function($scope, $q, $stateParams, $translate, $modal, Util, ObjectService, ComplaintInfoService, Authentication, ObjectLookupService, HelperUiGridService, HelperObjectBrowserService, OrganizationInfoService) {
 
-                    Authentication.queryUserInfo().then(function(userInfo) {
+                    Authentication.queryUserInfo().then(function (userInfo) {
                         $scope.userId = userInfo.userId;
                         return userInfo;
                     });
 
-                    //TODO: check for organization types
-                    ObjectLookupService.getPersonTypes(ObjectService.ObjectTypes.COMPLAINT).then(function(organizationTypes) {
+                    // TODO: this is only changed for caseFileOrganizationTypes because there are not specified organization types for other objects
+                    ObjectLookupService.getObjectOrganizationTypes(ObjectService.ObjectTypes.COMPLAINT).then(function (organizationTypes) {
                         $scope.organizationTypes = organizationTypes;
                         return organizationTypes;
                     });
