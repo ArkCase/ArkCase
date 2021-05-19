@@ -68,6 +68,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -495,7 +496,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
         XmlCursor cursor = paragraph.getCTP().newCursor();
         cursor.selectPath("declare namespace w='http://schemas.openxmlformats.org/wordprocessingml/2006/main' .//*/w:txbxContent/w:p/w:r");
 
-        List<XmlObject> ctrsintxtbx = new ArrayList<XmlObject>();
+        List<XmlObject> ctrsintxtbx = new ArrayList<>();
 
         while (cursor.hasNextSelection())
         {
@@ -673,10 +674,6 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
             stContext.registerFunction("toClientDateTimezone", DateTimeService.class.getDeclaredMethod("toClientDateTimezone", LocalDateTime.class));
             stContext.registerFunction("toUTCDateTimeTimezone", DateTimeService.class.getDeclaredMethod("toUTCDateTimeTimezone", LocalDateTime.class));
             stContext.registerFunction("toUTCDateTimezone", DateTimeService.class.getDeclaredMethod("toUTCDateTimezone", LocalDateTime.class));
-            stContext.registerFunction("toClientDateTimeTimezone", DateTimeService.class.getDeclaredMethod("toClientDateTimeTimezone", Date.class));
-            stContext.registerFunction("toClientDateTimezone", DateTimeService.class.getDeclaredMethod("toClientDateTimezone", Date.class));
-            stContext.registerFunction("toUTCDateTimeTimezone", DateTimeService.class.getDeclaredMethod("toUTCDateTimeTimezone", Date.class));
-            stContext.registerFunction("toUTCDateTimezone", DateTimeService.class.getDeclaredMethod("toUTCDateTimezone", Date.class));
         }
         catch (NoSuchMethodException e)
         {
@@ -708,7 +705,8 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                 {
                     if (expression.getValue(stContext).getClass().getSimpleName().equalsIgnoreCase(DATE_TYPE))
                     {
-                        generatedExpression = (Date) expression.getValue(stContext);
+                        generatedExpression = (LocalDateTime) ((Date) expression.getValue(stContext)).toInstant()
+                                .atZone(ZoneId.of(getAppConfig().getDefaultTimezone())).toLocalDateTime();
                     }
                     else if (expression.getValue(stContext).getClass().getSimpleName().equalsIgnoreCase(DATE_TIME_TYPE))
                     {
