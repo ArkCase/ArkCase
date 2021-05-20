@@ -217,6 +217,7 @@
         <beans:bean id="responseFolderService" class="gov.foia.service.ResponseFolderService">
             <beans:property name="folderService" ref="acmFolderService"/>
             <beans:property name="responseFolderName" value="03 Response"/>
+            <beans:property name="caseFileDao" ref="caseFileDao"/>
         </beans:bean>
 
         <beans:bean id="responseFolderFileUpdateService" class="gov.foia.service.ConvertAndCompressResponseFolderFileUpdateService">
@@ -335,6 +336,8 @@
             <beans:property name="caseFileDao" ref="caseFileDao"/>
             <beans:property name="portalConfig" ref="arkcasePortalConfig"/>
             <beans:property name="holidayConfigurationService" ref="holidayConfigurationService"/>
+            <beans:property name="foiaConfig" ref="foiaConfig"/>
+            <beans:property name="responseFolderService" ref="responseFolderService"/>
         </beans:bean>
 
         <beans:bean id="billingQueuePurgerJobDescriptor" class="gov.foia.service.BillingQueuePurgerJobDescriptor" parent="acmJobDescriptor">

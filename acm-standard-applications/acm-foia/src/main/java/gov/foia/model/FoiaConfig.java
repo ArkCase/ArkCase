@@ -146,6 +146,10 @@ public class FoiaConfig
     @Value("${declareRequestAsRecordsDaysDelay}")
     private Integer declareRequestAsRecordsDaysDelay;
 
+    @JsonProperty("enableStagedRelease")
+    @Value("${enableStagedRelease}")
+    private Boolean enableStagedRelease;
+
     public Integer getMaxDaysInHoldQueue()
     {
         return maxDaysInHoldQueue;
@@ -428,5 +432,13 @@ public class FoiaConfig
 
     public void setDeclareRequestAsRecordsDaysDelay(Integer declareRequestAsRecordsDaysDelay) {
         this.declareRequestAsRecordsDaysDelay = declareRequestAsRecordsDaysDelay;
+    }
+
+    public Boolean getEnableStagedRelease() {
+        return enableStagedRelease;
+    }
+
+    public void setEnableStagedRelease(Boolean enableStagedRelease) {
+        this.enableStagedRelease = enableStagedRelease;
     }
 }
