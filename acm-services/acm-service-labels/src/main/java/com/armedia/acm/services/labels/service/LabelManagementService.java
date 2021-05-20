@@ -28,6 +28,7 @@ package com.armedia.acm.services.labels.service;
  */
 
 import com.armedia.acm.configuration.core.LabelsConfiguration;
+import com.armedia.acm.configuration.core.LabelsRefreshedEvent;
 import com.armedia.acm.configuration.service.ConfigurationPropertyService;
 import com.armedia.acm.core.LanguageSettingsConfig;
 import com.armedia.acm.services.labels.exception.AcmLabelManagementException;
@@ -37,6 +38,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.context.ApplicationListener;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -46,13 +48,13 @@ import java.util.Map;
 /**
  * Created by sergey on 2/12/16.
  */
-public class LabelManagementService
+public class LabelManagementService implements ApplicationListener<LabelsRefreshedEvent>
 {
     private static final String labelsDescriptionKeyEnd = ".desc?";
     private Logger log = LogManager.getLogger(getClass());
     private String defaultLocale;
     private Map<String, Object> defaultLocales;
-    private Map<String, Map<String, JSONObject>> labelResourcesForFrevvo = new HashMap<>();
+    private Map<String, Map<String, JSONObject>> labelResourcesMap = new HashMap<>();
 
     private LanguageSettingsConfig languageSettingsConfig;
     private LabelsConfiguration labelsConfiguration;
@@ -67,14 +69,14 @@ public class LabelManagementService
      */
     public JSONObject getLabelResources(String moduleId, String lang) throws AcmLabelManagementException
     {
-        Map<String, JSONObject> moduleResource = labelResourcesForFrevvo.get(moduleId);
+        Map<String, JSONObject> moduleResource = labelResourcesMap.get(moduleId);
 
         if (moduleResource == null)
         {
             JSONObject jsonObject = loadResource(moduleId, lang);
             moduleResource = new HashMap<>();
             moduleResource.put(lang, jsonObject);
-            labelResourcesForFrevvo.put(moduleId, moduleResource);
+            labelResourcesMap.put(moduleId, moduleResource);
         }
 
         JSONObject json = moduleResource.get(lang);
@@ -325,6 +327,11 @@ public class LabelManagementService
         }
     }
 
+    @Override
+    public void onApplicationEvent(LabelsRefreshedEvent labelsRefreshedEvent) {
+        this.labelResourcesMap.clear();
+    }
+
     public void setLanguageSettingsConfig(LanguageSettingsConfig languageSettingsConfig)
     {
         this.languageSettingsConfig = languageSettingsConfig;
@@ -369,4 +376,5 @@ public class LabelManagementService
     {
         this.configurationPropertyService = configurationPropertyService;
     }
+
 }

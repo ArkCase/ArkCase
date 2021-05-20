@@ -34,6 +34,8 @@ import com.armedia.acm.configuration.model.ModuleConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jmx.export.annotation.ManagedResource;
@@ -45,7 +47,7 @@ import java.util.Map;
 
 @Configuration
 @ManagedResource(objectName = "configuration:name=labels-service,type=com.armedia.acm.configuration.ConfigurationService,artifactId=labels-service")
-public class LabelsConfiguration implements ConfigurationFacade
+public class LabelsConfiguration implements ConfigurationFacade, ApplicationEventPublisherAware
 {
     private static final Logger log = LogManager.getLogger(LabelsConfiguration.class);
 
@@ -54,6 +56,8 @@ public class LabelsConfiguration implements ConfigurationFacade
 
     private Map<String, Object> labelsMap = new HashMap<>();
     private Map<String, Object> labelsDefaultMap = new HashMap<>();
+
+    private ApplicationEventPublisher applicationEventPublisher;
 
     @Autowired
     private ConfigurationServiceBootClient configurationServiceBootClient;
@@ -81,6 +85,10 @@ public class LabelsConfiguration implements ConfigurationFacade
         List<String> modulesNames = configurationServiceBootClient.getModulesNames();
 
         log.info("Loading labels from config server with language: {}", defaultLocale);
+
+        LabelsRefreshedEvent labelsRefreshedEventPublisher = new LabelsRefreshedEvent(this);
+        applicationEventPublisher.publishEvent(labelsRefreshedEventPublisher);
+
         modulesNames.parallelStream().forEach(labelsModule -> {
             String key = String.format("%s-%s", labelsModule, defaultLocale);
             log.trace("Loading {} labels", labelsModule);
@@ -157,4 +165,8 @@ public class LabelsConfiguration implements ConfigurationFacade
         this.labelsMap = labelsMap;
     }
 
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+        this.applicationEventPublisher = applicationEventPublisher;
+    }
 }
