@@ -27,11 +27,6 @@ package gov.foia.service;
  * #L%
  */
 
-import java.util.Date;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.armedia.acm.convertfolder.ConversionException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
@@ -40,9 +35,15 @@ import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.portalgateway.model.PortalConfig;
 import com.armedia.acm.services.holiday.service.HolidayConfigurationService;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.Date;
+
 import gov.foia.broker.FOIARequestFileBrokerClient;
 import gov.foia.dao.ResponseInstallmentDao;
 import gov.foia.model.FOIARequest;
+import gov.foia.model.FoiaConfig;
 import gov.foia.model.ResponseInstallment;
 
 public class RequestResponseFolderService
@@ -55,13 +56,21 @@ public class RequestResponseFolderService
     private ResponseFolderNotifyService responseFolderNotifyService;
     private CaseFileDao caseFileDao;
     private PortalConfig portalConfig;
+    private ResponseFolderService responseFolderService;
     private HolidayConfigurationService holidayConfigurationService;
     private ResponseInstallmentDao responseInstallmentDao;
+    private FoiaConfig foiaConfig;
 
     public void compressAndSendResponseSubFolderToPortal(Long requestId, Long folderId, String userName)
             throws ConversionException, AcmUserActionFailedException, AcmFolderException, AcmObjectNotFoundException
     {
-        log.debug("Converting response folder [{}] for the request [{}]",folderId, requestId);
+        if (!getFoiaConfig().getEnableStagedRelease())
+        {
+            log.debug("Staged releases are disabled, main response folder [{}] will be used", folderId);
+            folderId = getResponseFolderService().getResponseFolder(requestId).getId();
+        }
+
+        log.debug("Converting response folder [{}] for the request [{}]", folderId, requestId);
         getResponseFolderConverterService().convertResponseSubFolder(folderId, userName);
 
         log.debug("Compressing response folder [{}] for the request [{}]", folderId, requestId);
@@ -186,5 +195,25 @@ public class RequestResponseFolderService
     public void setHolidayConfigurationService(HolidayConfigurationService holidayConfigurationService)
     {
         this.holidayConfigurationService = holidayConfigurationService;
+    }
+
+    public ResponseFolderService getResponseFolderService()
+    {
+        return responseFolderService;
+    }
+
+    public void setResponseFolderService(ResponseFolderService responseFolderService)
+    {
+        this.responseFolderService = responseFolderService;
+    }
+
+    public FoiaConfig getFoiaConfig()
+    {
+        return foiaConfig;
+    }
+
+    public void setFoiaConfig(FoiaConfig foiaConfig)
+    {
+        this.foiaConfig = foiaConfig;
     }
 }

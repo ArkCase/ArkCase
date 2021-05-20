@@ -61,6 +61,7 @@ public class FoiaConfiguration extends SystemConfiguration
     private Map<String, String> dojYearlyReports;
     private Boolean declareRequestAsRecordsEnabled;
     private Integer declareRequestAsRecordsDaysDelay;
+    private Boolean enableStagedRelease;
 
     public Integer getMaxDaysInBillingQueue()
     {
@@ -323,5 +324,13 @@ public class FoiaConfiguration extends SystemConfiguration
 
     public void setDeclareRequestAsRecordsDaysDelay(Integer declareRequestAsRecordsDaysDelay) {
         this.declareRequestAsRecordsDaysDelay = declareRequestAsRecordsDaysDelay;
+    }
+
+    public Boolean getEnableStagedRelease() {
+        return enableStagedRelease;
+    }
+
+    public void setEnableStagedRelease(Boolean enableStagedRelease) {
+        this.enableStagedRelease = enableStagedRelease;
     }
 }
