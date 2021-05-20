@@ -19,7 +19,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Created by Ana Serafimoska <ana.serafimoska@armedia.com> on 5/19/2021
@@ -39,28 +38,17 @@ public class CreatePersonFromUser implements ApplicationListener<UserPersistence
     void addOrUpdatePerson(Object object)
     {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String userId = ((AcmUser) ((UserPersistenceEvent) object).getSource()).getUserId();
         if (((UserPersistenceEvent) object).getSource() instanceof AcmUser)
         {
-            if (!userId.equals("OCR_SERVICE") && !userId.equals("TRANSCRIBE_SERVICE"))
+            Person personExists = getPersonDao().findByLdapUserId(((AcmUser) ((UserPersistenceEvent) object).getSource()).getUserId());
+            if (personExists != null)
             {
-                Person existingPerson = getPersonDao()
-                        .findByLdapUserId(((AcmUser) ((UserPersistenceEvent) object).getSource()).getUserId());
-                Optional<Person> existingPersonWithoutLdapId = getPersonDao()
-                        .findByEmail(((AcmUser) ((UserPersistenceEvent) object).getSource()).getMail());
-                if (existingPerson != null)
-                {
-                    addOrUpdatePerson((UserPersistenceEvent) object, auth, existingPerson);
-                }
-                else if (existingPersonWithoutLdapId.isPresent())
-                {
-                    addOrUpdatePerson((UserPersistenceEvent) object, auth, existingPersonWithoutLdapId.get());
-                }
-                else
-                {
-                    Person person = new Person();
-                    addOrUpdatePerson((UserPersistenceEvent) object, auth, person);
-                }
+                addOrUpdatePerson((UserPersistenceEvent) object, auth, personExists);
+            }
+            else
+            {
+                Person person = new Person();
+                addOrUpdatePerson((UserPersistenceEvent) object, auth, person);
             }
         }
     }
@@ -68,11 +56,8 @@ public class CreatePersonFromUser implements ApplicationListener<UserPersistence
     private void addOrUpdatePerson(UserPersistenceEvent object, Authentication auth, Person person)
     {
         person.setLdapUserId(((AcmUser) object.getSource()).getUserId());
-        person.setGivenName(
-                ((AcmUser) object.getSource()).getFirstName() != null ? ((AcmUser) object.getSource()).getFirstName() : "Unknown");
-        person.setFamilyName(
-                ((AcmUser) object.getSource()).getLastName() != null ? ((AcmUser) object.getSource()).getLastName() : "Unknown");
-        person.setTitle("-");
+        person.setGivenName(((AcmUser) object.getSource()).getFirstName());
+        person.setFamilyName(((AcmUser) object.getSource()).getLastName());
 
         List<ContactMethod> contactMethods = new ArrayList<>();
         ContactMethod contactMethodEmail = new ContactMethod();

@@ -44,7 +44,6 @@
                 <ref bean="solrReindexCaseComplaintDocumentRepositoryExecutor"/>
                 <ref bean="solrReindexOrganizationExecutor"/>
                 <ref bean="createPersonFromExistingUsersExecutor"/>
-                <ref bean="solrReindexTaskExecutor" />
             </list>
         </property>
         <property name="dataUpdateService" ref="dataUpdateService"/>
@@ -174,10 +173,5 @@
         <property name="solrReindexService" ref="solrReindexService"/>
         <property name="userDao" ref="userJpaDao"/>
         <property name="personDao" ref="acmPersonDao"/>
-        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
-    </bean>
-
-    <bean id="solrReindexTaskExecutor" class="com.armedia.acm.services.dataupdate.service.SolrReindexTaskExecutor">
-        <property name="solrReindexService" ref="solrReindexService" />
     </bean>
 </beans>
