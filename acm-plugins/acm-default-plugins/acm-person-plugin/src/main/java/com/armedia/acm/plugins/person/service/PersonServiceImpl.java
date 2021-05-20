@@ -444,7 +444,6 @@ public class PersonServiceImpl implements PersonService
     }
 
     @Override
-    // @Transactional
     public Person savePerson(Person in, Authentication authentication) throws AcmCreateObjectFailedException,
             AcmUpdateObjectFailedException, PipelineProcessException
     {
