@@ -110,6 +110,9 @@ public class TemplatingEngine
                         DateTimeService.class.getDeclaredMethod("toUTCDateTimeTimezone", LocalDateTime.class));
                 stContext.registerFunction("toUTCDateTimezone",
                         DateTimeService.class.getDeclaredMethod("toUTCDateTimezone", LocalDateTime.class));
+                stContext.registerFunction("toClientDateDateTimezone",
+                        DateTimeService.class.getDeclaredMethod("toClientDateDateTimezone", Date.class));
+
             }
             catch (NoSuchMethodException e)
             {

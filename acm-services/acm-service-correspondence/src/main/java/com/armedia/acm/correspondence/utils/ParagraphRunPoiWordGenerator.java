@@ -674,6 +674,9 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
             stContext.registerFunction("toClientDateTimezone", DateTimeService.class.getDeclaredMethod("toClientDateTimezone", LocalDateTime.class));
             stContext.registerFunction("toUTCDateTimeTimezone", DateTimeService.class.getDeclaredMethod("toUTCDateTimeTimezone", LocalDateTime.class));
             stContext.registerFunction("toUTCDateTimezone", DateTimeService.class.getDeclaredMethod("toUTCDateTimezone", LocalDateTime.class));
+            stContext.registerFunction("toClientDateDateTimezone",
+                    DateTimeService.class.getDeclaredMethod("toClientDateDateTimezone", Date.class));
+
         }
         catch (NoSuchMethodException e)
         {
@@ -703,19 +706,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
             {
                 if (expression.getValue(stContext) != null)
                 {
-                    if (expression.getValue(stContext).getClass().getSimpleName().equalsIgnoreCase(DATE_TYPE))
-                    {
-                        generatedExpression = (LocalDateTime) ((Date) expression.getValue(stContext)).toInstant()
-                                .atZone(ZoneId.of(getAppConfig().getDefaultTimezone())).toLocalDateTime();
-                    }
-                    else if (expression.getValue(stContext).getClass().getSimpleName().equalsIgnoreCase(DATE_TIME_TYPE))
-                    {
-                        generatedExpression = (LocalDateTime) expression.getValue(stContext);
-                    }
-                    else
-                    {
-                        generatedExpression = expression.getValue(stContext);
-                    }
+                    generatedExpression = expression.getValue(stContext);
                 }
                 else
                     generatedExpression = "";
