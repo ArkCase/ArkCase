@@ -77,41 +77,15 @@ public class DateTimeService {
         return dateTimeService.getZonedDateTimeAtUTC(date).format(DateTimeFormatter.ofPattern(dateTimeService.dateTimePattern));
     }
 
-    public static String toUTCDateTimezone(Date date)
-    {
-        if (date == null)
-        {
-            return "";
-        }
-        return dateTimeService.getZonedDateTimeAtUTC(date).format(DateTimeFormatter.ofPattern(dateTimeService.datePattern));
-    }
-
-    public static String toClientDateTimeTimezone(Date date)
-    {
-        if (date == null)
-        {
-            return "";
-        }
-        return dateTimeService.getZonedDateTimeAtDefaultClientTimezone(date).format(DateTimeFormatter.ofPattern(dateTimeService.dateTimePattern));
-    }
-
-    public static String toClientDateTimezone(Date date)
+    public static String toClientDateDateTimezone(Date date)
     {
         if (date == null)
         {
             return "";
         }
 
-        return dateTimeService.getZonedDateTimeAtDefaultClientTimezone(date).format(DateTimeFormatter.ofPattern(dateTimeService.datePattern));
-    }
-
-    public static String toUTCDateTimeTimezone(Date date)
-    {
-        if (date == null)
-        {
-            return "";
-        }
-        return dateTimeService.getZonedDateTimeAtUTC(date).format(DateTimeFormatter.ofPattern(dateTimeService.dateTimePattern));
+        return dateTimeService.getZonedDateTimeAtDefaultClientTimezone(date)
+                .format(DateTimeFormatter.ofPattern(dateTimeService.datePattern));
     }
 
     public static String toUTCDateTimezone(LocalDateTime date)
