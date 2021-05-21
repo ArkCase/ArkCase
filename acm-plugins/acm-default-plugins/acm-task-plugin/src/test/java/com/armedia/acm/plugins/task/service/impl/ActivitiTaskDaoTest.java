@@ -777,6 +777,8 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         String objectType = "objectType";
         String objectName = "objectName";
 
+        String objectTypeTask = "TASK";
+
         Map<String, Object> pvars = new HashMap<>();
         pvars.put("OBJECT_ID", objectId);
         pvars.put("OBJECT_TYPE", objectType);
@@ -817,6 +819,8 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockHistoricTaskInstance.getAssignee()).andReturn(user);
         expect(mockHistoricTaskInstance.getProcessDefinitionId()).andReturn(processId);
         expect(mockHistoricTaskInstance.getProcessInstanceId()).andReturn("250").atLeastOnce();
+        expect(mockAcmContainerDao.findByObjectTypeAndIdOrCreate(objectTypeTask, taskId, null, title)).andReturn(mockAcmContainer);
+
 
         expect(mockRepositoryService.createProcessDefinitionQuery()).andReturn(mockProcessDefinitionQuery);
         expect(mockProcessDefinitionQuery.processDefinitionId(processId)).andReturn(mockProcessDefinitionQuery);
@@ -1077,6 +1081,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
     @Test
     public void deleteProcessInstance() throws Exception
     {
+        String objectTypeTask = "TASK";
         Long taskId = 500L;
         Date dueDate = new Date();
         Date started = new Date();
@@ -1184,6 +1189,8 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockHistoryService.getHistoricIdentityLinksForTask(taskId.toString())).andReturn(Arrays.asList(mockCandidateGroup2));
         expect(mockCandidateGroup2.getType()).andReturn(TaskConstants.IDENTITY_LINK_TYPE_CANDIDATE);
         expect(mockCandidateGroup2.getGroupId()).andReturn("candidate group").atLeastOnce();
+
+        expect(mockAcmContainerDao.findByObjectTypeAndIdOrCreate(objectTypeTask, taskId, null, title)).andReturn(mockAcmContainer);
 
         replayAll();
 
