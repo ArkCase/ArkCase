@@ -38,17 +38,22 @@ public class CreatePersonFromUser implements ApplicationListener<UserPersistence
     void addOrUpdatePerson(Object object)
     {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String userId = ((AcmUser) ((UserPersistenceEvent) object).getSource()).getUserId();
         if (((UserPersistenceEvent) object).getSource() instanceof AcmUser)
         {
-            Person personExists = getPersonDao().findByLdapUserId(((AcmUser) ((UserPersistenceEvent) object).getSource()).getUserId());
-            if (personExists != null)
+            if (!userId.equals("OCR_SERVICE") && !userId.equals("TRANSCRIBE_SERVICE"))
             {
-                addOrUpdatePerson((UserPersistenceEvent) object, auth, personExists);
-            }
-            else
-            {
-                Person person = new Person();
-                addOrUpdatePerson((UserPersistenceEvent) object, auth, person);
+                Person existingPerson = getPersonDao()
+                        .findByLdapUserId(((AcmUser) ((UserPersistenceEvent) object).getSource()).getUserId());
+                if (existingPerson != null)
+                {
+                    addOrUpdatePerson((UserPersistenceEvent) object, auth, existingPerson);
+                }
+                else
+                {
+                    Person person = new Person();
+                    addOrUpdatePerson((UserPersistenceEvent) object, auth, person);
+                }
             }
         }
     }
