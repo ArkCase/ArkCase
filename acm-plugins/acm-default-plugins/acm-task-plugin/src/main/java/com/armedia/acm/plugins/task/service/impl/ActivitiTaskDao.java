@@ -1127,6 +1127,12 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
         retval.setTitle(hti.getName());
         retval.setAssignee(hti.getAssignee());
 
+        if (retval.isCompleted())
+        {
+            retval.setContainer(getContainerFolderDao().findByObjectTypeAndIdOrCreate(TaskConstants.OBJECT_TYPE, retval.getTaskId(), null,
+                    retval.getTitle()));
+        }
+
         // set Candidate Groups if there are any
         List<String> candidateGroups = findHistoricCandidateGroups(hti.getId());
         retval.setCandidateGroups(candidateGroups);
