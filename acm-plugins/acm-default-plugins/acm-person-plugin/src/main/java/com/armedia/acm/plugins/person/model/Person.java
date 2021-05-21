@@ -243,6 +243,9 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
     @Convert(converter = BooleanToStringConverter.class)
     private Boolean restricted = Boolean.FALSE;
 
+    @Column(name = "cm_ldap_user_id")
+    private String ldapUserId;
+
     @Transient
     private static LookupDao lookupDao;
 
@@ -352,6 +355,7 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
     @Transient
     @JsonIgnore
     private String requesterPositionTranslated;
+
     public String getRequesterPositionTranslated()
     {
         requesterPositionTranslated = translatedPersonTitle();
@@ -361,6 +365,7 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
     @Transient
     @JsonIgnore
     private String titleTranslated;
+
     public String getTitleTranslated()
     {
         titleTranslated = translatedPersonTitle();
@@ -369,7 +374,8 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
 
     public String translatedPersonTitle()
     {
-        if(Strings.isNull(getTitle())) return null;
+        if (Strings.isNull(getTitle()))
+            return null;
         List<StandardLookupEntry> lookupEntries = (List<StandardLookupEntry>) lookupDao.getLookupByName("personTitles").getEntries();
         String labelKey = lookupEntries.stream()
                 .filter(standardLookupEntry -> standardLookupEntry.getKey().equals(getTitle()))
@@ -792,6 +798,16 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
     public void setRestricted(Boolean restricted)
     {
         this.restricted = restricted;
+    }
+
+    public String getLdapUserId()
+    {
+        return ldapUserId;
+    }
+
+    public void setLdapUserId(String ldapUserId)
+    {
+        this.ldapUserId = ldapUserId;
     }
 
     @Override
