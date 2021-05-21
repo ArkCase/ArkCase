@@ -234,7 +234,7 @@
                         <div class="col-sm-6 form-group">
                             <label translate> people.comp.editPerson.locations.country</label>
                             <select class="form-control" ng-model="person.defaultAddress.country"
-                                    ng-change="changeStates(person.defaultAddress.country)">
+                                    ng-change="changeStates(person.defaultAddress.country)" ng-required="checkLocationRules(person.defaultAddress)">
                                 <option ng-repeat="option in countries" value="{{option.key}}">
                                     {{option.value | translate}}
                                 </option>
@@ -242,7 +242,7 @@
                         </div>
                         <div class="col-sm-6 form-group">
                             <label translate> people.comp.editPerson.locations.type</label>
-                            <select class="form-control" ng-model="person.defaultAddress.type">
+                            <select class="form-control" ng-model="person.defaultAddress.type" ng-required="checkLocationRules(person.defaultAddress)">
                                 <option ng-repeat="option in addressTypes" value="{{option.key}}">
                                     {{option.value | translate}}
                                 </option>
@@ -254,7 +254,8 @@
                             <label translate>
                                 people.comp.editPerson.locations.streetAddress</label>
                             <input type="text" ng-model="person.defaultAddress.streetAddress" class="input-md form-control"
-                                    placeholder="{{ 'people.comp.editPerson.locations.streetAddress.placeholder' | translate }}">
+                                    placeholder="{{ 'people.comp.editPerson.locations.streetAddress.placeholder' | translate }}"
+                                   ng-required="checkLocationRules(person.defaultAddress)">
                         </div>
                         <div class="col-sm-6 form-group">
                             <label translate>
@@ -268,13 +269,14 @@
                             <label translate>
                                 people.comp.editPerson.locations.city</label>
                             <input type="text" ng-model="person.defaultAddress.city" class="input-md form-control"
-                                    placeholder="{{ 'people.comp.editPerson.locations.city.placeholder' | translate }}">
+                                    placeholder="{{ 'people.comp.editPerson.locations.city.placeholder' | translate }}"
+                                   ng-required="checkLocationRules(person.defaultAddress)">
                         </div>
                         <div class="col-sm-2 form-group"
                                 ng-if="person.defaultAddress.country == 'US' || person.defaultAddress.country == 'CA' || person.defaultAddress.country == 'JP'">
                             <label translate>
                                 people.comp.editPerson.locations.state</label>
-                            <select class="form-control" ng-model="person.defaultAddress.state">
+                            <select class="form-control" ng-model="person.defaultAddress.state" ng-required="checkLocationRules(person.defaultAddress)">
                                 <option ng-repeat="option in states" value="{{option.key}}">
                                     {{option.value | translate}}
                                 </option>
@@ -286,13 +288,14 @@
                                 people.comp.addresses.modal.state.label
                             </label>
                             <input id="txtState" type="text" ng-model="person.defaultAddress.state" class="input-md form-control"
-                                    placeholder="{{ 'people.comp.addresses.modal.state.placeholder' | translate }}">
+                                    placeholder="{{ 'people.comp.addresses.modal.state.placeholder' | translate }}" ng-required="checkLocationRules(person.defaultAddress)">
                         </div>
                         <div class="col-sm-2 form-group">
                             <label translate>
                                 people.comp.editPerson.locations.zip</label>
                             <input type="text" ng-model="person.defaultAddress.zip" class="input-md form-control"
-                                    placeholder="{{ 'people.comp.editPerson.locations.zip.placeholder' | translate }}">
+                                    placeholder="{{ 'people.comp.editPerson.locations.zip.placeholder' | translate }}"
+                                   ng-required="checkLocationRules(person.defaultAddress)">
                         </div>
 
                         <div class="col-sm-2 form-group">
@@ -307,11 +310,11 @@
 
                     </div>
 
-                    <div ng-repeat="address in person.addresses">
+                    <div ng-repeat="address in person.addresses track by $index">
                         <div class="row">
                             <div class="col-sm-6 form-group">
                                 <label translate> people.comp.editPerson.locations.country</label>
-                                <select class="form-control" ng-model="address.country" ng-change="changeStates(address.country)">
+                                <select class="form-control" ng-model="address.country" ng-change="changeStates(address.country)" ng-required="checkLocationRules(address)">
                                     <option ng-repeat="option in countries" value="{{option.key}}">
                                         {{option.value | translate}}
                                     </option>
@@ -319,7 +322,7 @@
                             </div>
                             <div class="col-sm-6 form-group">
                                 <label translate> people.comp.editPerson.locations.type</label>
-                                <select class="form-control" ng-model="address.type">
+                                <select class="form-control" ng-model="address.type" ng-required="checkLocationRules(address)">
                                     <option ng-repeat="option in addressTypes" value="{{option.key}}">
                                         {{option.value | translate}}
                                     </option>
@@ -331,7 +334,8 @@
                                 <label translate>
                                     people.comp.editPerson.locations.streetAddress</label>
                                 <input type="text" ng-model="address.streetAddress" class="input-md form-control"
-                                        placeholder="{{ 'people.comp.editPerson.locations.streetAddress.placeholder' | translate }}">
+                                        placeholder="{{ 'people.comp.editPerson.locations.streetAddress.placeholder' | translate }}"
+                                       ng-required="checkLocationRules(address)">
                             </div>
                             <div class="col-sm-6 form-group">
                                 <label translate>
@@ -345,13 +349,14 @@
                                 <label translate>
                                     people.comp.editPerson.locations.city</label>
                                 <input type="text" ng-model="address.city" class="input-md form-control"
-                                        placeholder="{{ 'people.comp.editPerson.locations.city.placeholder' | translate }}">
+                                        placeholder="{{ 'people.comp.editPerson.locations.city.placeholder' | translate }}"
+                                       ng-required="checkLocationRules(address)">
                             </div>
                             <div class="col-sm-2 form-group"
                                     ng-if="address.country == 'US' || address.country == 'CA' || address.country == 'JP'">
                                 <label translate>
                                     people.comp.editPerson.locations.state</label>
-                                <select class="form-control" ng-model="address.state">
+                                <select class="form-control" ng-model="address.state" ng-required="checkLocationRules(address)">
                                     <option ng-repeat="option in states" value="{{option.key}}">
                                         {{option.value | translate}}
                                     </option>
@@ -363,13 +368,15 @@
                                     people.comp.addresses.modal.state.label
                                 </label>
                                 <input type="text" ng-model="address.state" class="input-md form-control"
-                                        placeholder="{{ 'people.comp.addresses.modal.state.placeholder' | translate }}">
+                                        placeholder="{{ 'people.comp.addresses.modal.state.placeholder' | translate }}"
+                                       ng-required="checkLocationRules(address)">
                             </div>
                             <div class="col-sm-2 form-group">
                                 <label translate>
                                     people.comp.editPerson.locations.zip</label>
                                 <input type="text" ng-model="address.zip" class="input-md form-control"
-                                        placeholder="{{ 'people.comp.editPerson.locations.zip.placeholder' | translate }}">
+                                        placeholder="{{ 'people.comp.editPerson.locations.zip.placeholder' | translate }}"
+                                       ng-required="checkLocationRules(address)">
                             </div>
                             <div class="col-sm-2 form-group">
                                 <div class="pull-left">
