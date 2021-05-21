@@ -61,8 +61,10 @@ public class CreatePersonFromUser implements ApplicationListener<UserPersistence
     private void addOrUpdatePerson(UserPersistenceEvent object, Authentication auth, Person person)
     {
         person.setLdapUserId(((AcmUser) object.getSource()).getUserId());
-        person.setGivenName(((AcmUser) object.getSource()).getFirstName());
-        person.setFamilyName(((AcmUser) object.getSource()).getLastName());
+        person.setGivenName(
+                ((AcmUser) object.getSource()).getFirstName() != null ? ((AcmUser) object.getSource()).getFirstName() : "Unknown");
+        person.setFamilyName(
+                ((AcmUser) object.getSource()).getLastName() != null ? ((AcmUser) object.getSource()).getLastName() : "Unknown");
 
         List<ContactMethod> contactMethods = new ArrayList<>();
         ContactMethod contactMethodEmail = new ContactMethod();
