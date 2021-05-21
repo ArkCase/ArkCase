@@ -27,12 +27,11 @@ package com.armedia.acm.plugins.person.dao;
  * #L%
  */
 
-
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.person.model.Person;
-
 import com.armedia.acm.services.config.lookups.service.LookupDao;
 import com.armedia.acm.services.labels.service.TranslationService;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
@@ -150,8 +150,26 @@ public class PersonDao extends AcmAbstractDao<Person>
         }
     }
 
+    public Person findByLdapUserId(String ldapUserId)
+    {
+        Query query = getEntityManager().createQuery(
+                "SELECT p From Person p WHERE p.ldapUserId = :ldapUserId");
+
+        query.setParameter("ldapUserId", ldapUserId);
+
+        try
+        {
+            return (Person) query.getSingleResult();
+        }
+        catch (NoResultException e)
+        {
+            LOG.debug("Person with ldapUserId: [{}] not found.", ldapUserId);
+            return null;
+        }
+    }
+
     @PostConstruct
-    public void postConstruct ()
+    public void postConstruct()
     {
         Person.setLookupDao(lookupDao);
         Person.setTranslationService(translationService);
