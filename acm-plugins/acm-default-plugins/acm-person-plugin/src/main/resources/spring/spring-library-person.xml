@@ -172,4 +172,10 @@
         <property name="organizationDao" ref="acmOrganizationDao"/>
         <property name="userDao" ref="userJpaDao"/>
     </bean>
+
+    <bean id="createPersonFromUser" class="com.armedia.acm.plugins.person.service.CreatePersonFromUser">
+        <property name="personService" ref="personService"/>
+        <property name="personDao" ref="acmPersonDao"/>
+    </bean>
+
 </beans>
