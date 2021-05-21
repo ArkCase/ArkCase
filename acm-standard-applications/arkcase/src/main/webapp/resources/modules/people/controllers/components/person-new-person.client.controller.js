@@ -459,5 +459,9 @@ angular.module('people').controller(
                     $scope.checkExistingEmail(caValue);
                 }
             };
+
+            $scope.checkLocationRules = function (location) {
+                return !_.values(location).every(_.isEmpty)
+            }
         }])
 ;

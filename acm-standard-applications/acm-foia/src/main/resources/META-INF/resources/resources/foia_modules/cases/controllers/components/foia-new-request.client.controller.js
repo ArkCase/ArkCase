@@ -689,4 +689,8 @@ angular.module('cases').controller(
             $scope.openedRecordSearchDateTo.openedStart = false;
             $scope.openedRecordSearchDateTo.openedEnd = false;
 
+            $scope.checkLocationRules = function (location) {
+                return !_.values(location).every(_.isEmpty)
+            }
+
         }]);
