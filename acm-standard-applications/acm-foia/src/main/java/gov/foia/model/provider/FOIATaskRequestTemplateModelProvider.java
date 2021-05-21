@@ -137,9 +137,9 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
 
         model.setTask(task);
         model.setRequest(request);
-        model.setExemptionCodesAndDescription(exemptionCodesAndDescription.getRuns().isEmpty() ? null : exemptionCodesAndDescription);
-        model.setRedactions(redactionsOnReleasedDocument.getRuns().isEmpty() ? null : redactionsOnReleasedDocument);
-        model.setExemptions(exemptionCodesOnExemptDocument.getRuns().isEmpty() ? null : exemptionCodesOnExemptDocument);
+        model.setExemptionCodesAndDescription(exemptionCodesAndDescription.getRuns() == null || redactionsOnReleasedDocument.getRuns().isEmpty() ? null : exemptionCodesAndDescription);
+        model.setRedactions(redactionsOnReleasedDocument.getRuns() == null || redactionsOnReleasedDocument.getRuns().isEmpty() ? null : redactionsOnReleasedDocument);
+        model.setExemptions(exemptionCodesOnExemptDocument.getRuns() == null || exemptionCodesOnExemptDocument.getRuns().isEmpty() ? null : exemptionCodesOnExemptDocument);
         return model;
     }
 
