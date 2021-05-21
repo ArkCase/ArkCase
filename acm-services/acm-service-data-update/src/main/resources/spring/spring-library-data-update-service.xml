@@ -173,5 +173,6 @@
         <property name="solrReindexService" ref="solrReindexService"/>
         <property name="userDao" ref="userJpaDao"/>
         <property name="personDao" ref="acmPersonDao"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
 </beans>

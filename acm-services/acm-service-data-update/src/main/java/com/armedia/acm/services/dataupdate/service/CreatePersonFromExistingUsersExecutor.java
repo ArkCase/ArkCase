@@ -1,5 +1,6 @@
 package com.armedia.acm.services.dataupdate.service;
 
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Person;
@@ -21,16 +22,18 @@ public class CreatePersonFromExistingUsersExecutor implements AcmDataUpdateExecu
     private SolrReindexService solrReindexService;
     private UserDao userDao;
     private PersonDao personDao;
+    private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
 
     @Override
     public String getUpdateId()
     {
-        return "create-persons-from-existing-users-v1";
+        return "create-persons-from-existing-users-v2";
     }
 
     @Override
     public void execute()
     {
+        auditPropertyEntityAdapter.setUserId(AcmDataUpdateService.DATA_UPDATE_MODIFIER);
 
         List<AcmUser> acmUsers = getUserDao().findAll();
         for (AcmUser acmUser : acmUsers)
@@ -99,5 +102,15 @@ public class CreatePersonFromExistingUsersExecutor implements AcmDataUpdateExecu
     public void setPersonDao(PersonDao personDao)
     {
         this.personDao = personDao;
+    }
+
+    public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()
+    {
+        return auditPropertyEntityAdapter;
+    }
+
+    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
+    {
+        this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
     }
 }
