@@ -33,28 +33,42 @@ public class CreatePersonFromExistingUsersExecutor implements AcmDataUpdateExecu
     {
 
         List<AcmUser> acmUsers = getUserDao().findAll();
-        Person person = new Person();
         for (AcmUser acmUser : acmUsers)
         {
             if (!acmUser.getUserId().equals("OCR_SERVICE") && !acmUser.getUserId().equals("TRANSCRIBE_SERVICE"))
             {
-                person.setLdapUserId(acmUser.getUserId());
-                person.setGivenName(acmUser.getFirstName());
-                person.setFamilyName(acmUser.getLastName());
-
-                List<ContactMethod> contactMethods = new ArrayList<>();
-                ContactMethod contactMethodEmail = new ContactMethod();
-                contactMethodEmail.setType("email");
-                contactMethodEmail.setSubType("Business");
-                contactMethodEmail.setValue(acmUser.getMail());
-                contactMethods.add(contactMethodEmail);
-
-                person.setContactMethods(contactMethods);
-                person.setDefaultEmail(contactMethodEmail);
-
-                getPersonDao().save(person);
+                Person existingPerson = getPersonDao().findByLdapUserId(acmUser.getUserId());
+                if (existingPerson != null)
+                {
+                    addOrUpdatePerson(acmUser, existingPerson);
+                }
+                else
+                {
+                    Person person = new Person();
+                    addOrUpdatePerson(acmUser, person);
+                }
             }
         }
+    }
+
+    private void addOrUpdatePerson(AcmUser acmUser, Person person)
+    {
+        person.setLdapUserId(acmUser.getUserId());
+        person.setGivenName(acmUser.getFirstName());
+        person.setFamilyName(acmUser.getLastName());
+
+        List<ContactMethod> contactMethods = new ArrayList<>();
+        ContactMethod contactMethodEmail = new ContactMethod();
+        contactMethodEmail.setType("email");
+        contactMethodEmail.setSubType("Business");
+        contactMethodEmail.setValue(acmUser.getMail());
+        contactMethods.add(contactMethodEmail);
+
+        person.setContactMethods(contactMethods);
+        person.setDefaultEmail(contactMethodEmail);
+
+        getPersonDao().save(person);
+
     }
 
     public SolrReindexService getSolrReindexService()
