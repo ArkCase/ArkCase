@@ -23,8 +23,8 @@ angular.module('people').controller('People.InfoController', ['$scope', '$stateP
     var onObjectInfoRetrieved = function (objectInfo) {
         $q.all([prefixesPromise, positionsPromise]).then(function (data)
         {
-            var prefixes = data[0];
-            $scope.personTitle = _.find(prefixes, function (prefix) {
+            $scope.prefixes = data[0];
+            $scope.personTitle = _.find($scope.prefixes, function (prefix) {
                 return prefix.key === objectInfo.title
             });
 
