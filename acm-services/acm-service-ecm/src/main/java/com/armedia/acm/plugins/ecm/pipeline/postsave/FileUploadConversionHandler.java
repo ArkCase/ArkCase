@@ -80,7 +80,7 @@ public class FileUploadConversionHandler implements PipelineHandler<EcmFile, Ecm
 					try (InputStream pdfConvertedFileIs = new FileInputStream(pdfConvertedFile)) {
 						entity.setFileActiveVersionNameExtension(".pdf");
 						entity.setFileActiveVersionMimeType("application/pdf");
-
+						ecmFileDao.getEm().flush();
 						ecmFileService.update(entity, pdfConvertedFileIs, pipelineContext.getAuthentication());
 
 						entity.getVersions().get(1).setFile(entity);
