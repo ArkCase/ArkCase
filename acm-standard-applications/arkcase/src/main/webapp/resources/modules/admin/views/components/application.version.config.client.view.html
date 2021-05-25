@@ -9,8 +9,9 @@
             <div class="row">
                 <div class="col-lg-12">
                     <p>{{'admin.application.productVersion' | translate}}: {{applicationVersion}}</p>
-                    <p ng-if="extensionVersion">{{'admin.application.extensionVersion' | translate}}: {{extensionVersion}}</p>
                     <p>{{'admin.application.dateLastInstalled' | translate}}: {{buildTime}}</p>
+                    <p ng-if="extensionVersion">{{'admin.application.extensionVersion' | translate}}: {{extensionVersion}}</p>
+                    <p ng-if="jarModifiedTime">{{'admin.application.dateLastInstalled' | translate}}: {{jarModifiedTime}}</p>
                 </div>
             </div>
         </div>
