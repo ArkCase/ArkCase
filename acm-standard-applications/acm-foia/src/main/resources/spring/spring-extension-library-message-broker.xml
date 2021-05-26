@@ -12,6 +12,8 @@
             <beans:property name="keyStorePassword" value="#{foiaRequestBrokerConfig.keystorePassword}"/>
             <beans:property name="trustStore" value="#{foiaRequestBrokerConfig.truststore}"/>
             <beans:property name="trustStorePassword" value="#{foiaRequestBrokerConfig.truststorePassword}"/>
+            <beans:property name="userName" value="#{foiaRequestBrokerConfig.userName}"/>
+            <beans:property name="password" value="#{foiaRequestBrokerConfig.password}"/>
         </beans:bean>
 
         <beans:bean id="portalEntity" class="gov.foia.model.PortalFOIARequest"/>
