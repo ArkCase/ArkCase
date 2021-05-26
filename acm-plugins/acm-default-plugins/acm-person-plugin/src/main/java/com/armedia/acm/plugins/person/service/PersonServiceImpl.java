@@ -552,6 +552,7 @@ public class PersonServiceImpl implements PersonService
             PipelineProcessException
     {
         Person savedPerson = savePerson(person, authentication);
+        getPersonDao().getEm().flush();
         return uploadPicturesForPerson(savedPerson, pictures, authentication);
     }
 

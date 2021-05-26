@@ -85,6 +85,7 @@ import javax.persistence.PersistenceContext;
         "/spring/spring-library-camel-context.xml",
         "/spring/spring-library-authentication-token.xml",
         "/spring/spring-library-plugin-manager.xml",
+        "/spring/spring-library-labels-service.xml",
         "/spring/spring-test-quartz-scheduler.xml" })
 @Rollback(true)
 public class PersonIT
