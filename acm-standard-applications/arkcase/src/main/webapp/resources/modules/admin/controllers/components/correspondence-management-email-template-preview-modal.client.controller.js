@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('admin').controller('Admin.CMEmailTemplatePreviewModalController',
-    [ '$rootScope', '$scope', '$modal', '$modalInstance', '$translate', 'params', '$q', '$state', 'Search.AutoSuggestService', 'Requests.RequestsService', 'Admin.CMTemplatesService',
-        function($rootScope, $scope, $modal, $modalInstance, $translate, params, $q, $state, AutoSuggestService, RequestsService, CorrespondenceService) {
+    ['$rootScope', '$scope', '$modal', '$modalInstance', '$translate', 'params', '$q', '$state', 'Search.AutoSuggestService', 'Case.InfoService', 'Admin.CMTemplatesService',
+        function ($rootScope, $scope, $modal, $modalInstance, $translate, params, $q, $state, AutoSuggestService, CaseInfoService, CorrespondenceService) {
 
         $scope.templateContent = params.templateContent.replace("${baseURL}", window.location.href.split('/home.html#!')[0]);
         $scope.templateName = params.templateName;
@@ -20,25 +20,23 @@ angular.module('admin').controller('Admin.CMEmailTemplatePreviewModalController'
         var isSelected = false;
         $scope.onSelect = function($item, $model, $label) {
             isSelected = true;
-            retrieveTemplateContentByRequestNumber();
+            retrieveTemplateContentByCaseNumber();
         };
 
         $scope.keyDown = function(event) {
             if (event.keyCode == 13) {
                 $scope.isSelected = isSelected;
-                retrieveTemplateContentByRequestNumber();
+                retrieveTemplateContentByCaseNumber();
             }
         }
 
-        function retrieveTemplateContentByRequestNumber() {
-            var param = {};
-            param.caseNumber = $scope.inputQuery;
-            RequestsService.getRequestByNumber(param).$promise.then(function (originalRequest) {
-                if(originalRequest.id) {
-                    param = {};
-                    param.objectType = $scope.objectType;
-                    param.objectId = originalRequest.id;
-                    param.templateName = $scope.templateName;
+            function retrieveTemplateContentByCaseNumber() {
+                CaseInfoService.getCaseInfoByNumber($scope.inputQuery).then(function (caseFile) {
+                    if (caseFile.id) {
+                        var param = {};
+                        param.objectType = $scope.objectType;
+                        param.objectId = caseFile.id;
+                        param.templateName = $scope.templateName;
 
                     var getTemplateContentPromise = CorrespondenceService.retrieveConvertedTemplateContent(param);
                     getTemplateContentPromise.then(function (response) {
