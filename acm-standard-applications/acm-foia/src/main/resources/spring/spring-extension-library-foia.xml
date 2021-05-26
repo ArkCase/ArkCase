@@ -437,7 +437,6 @@
             <beans:property name="cmisConfigUtils" ref="cmisConfigUtils"/>
             <beans:property name="fileParticipantService" ref="fileParticipantService"/>
             <beans:property name="recycleBinItemService" ref="recycleBinItemServiceImpl"/>
-            <beans:property name="authenticationTokenDao" ref="authenticationTokenDao"/>
             <beans:property name="camelContextManager" ref="camelContextManager"/>
             <beans:property name="fileEventPublisher" ref="fileEventPublisher"/>
             <beans:property name="emailAttachmentExtractorComponent" ref="emailAttachmentExtractorComponent"/>
