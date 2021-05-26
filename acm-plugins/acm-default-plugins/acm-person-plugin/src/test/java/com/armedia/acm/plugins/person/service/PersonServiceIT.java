@@ -35,12 +35,19 @@ import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Person;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -89,6 +96,8 @@ public class PersonServiceIT
         String userHomePath = System.getProperty("user.home");
         System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
         System.setProperty("configuration.server.url", "http://localhost:9999");
+        System.setProperty("javax.net.ssl.trustStore", userHomePath + "/.arkcase/acm/private/arkcase.ts");
+        System.setProperty("javax.net.ssl.trustStorePassword", "password");
         System.setProperty("application.profile.reversed", "runtime");
     }
 
@@ -126,6 +135,43 @@ public class PersonServiceIT
 
         foundedPerson = personService.get(person.getId());
         assertNull(foundedPerson);
+    }
+
+    /**
+     *
+     * Run this to test concurrency issues on creating a new person. Ignore the test for normal operation due to
+     * performance concerns.
+     *
+     * @throws Exception
+     */
+    @Test
+    @Ignore
+    public void saveNewPersonConcurrencyTest() throws Exception
+    {
+        Person person = new Person();
+        List<MultipartFile> pictures = new ArrayList<>();
+
+        Authentication auth = new UsernamePasswordAuthenticationToken("testUser", "testUser");
+        adapter.setUserId("testUser");
+
+        person.setCompany("Company");
+        person.setFamilyName("Family name");
+        person.setGivenName("Name");
+        person.setCreator("creator");
+
+        for (int i = 0; i < 1000; i++)
+        {
+            Person savedPerson = personService.savePerson(person, pictures, auth);
+            assertNotNull(savedPerson.getId());
+
+            Person foundPerson = personService.get(savedPerson.getId());
+            assertNotNull(foundPerson);
+
+            personDao.deletePersonById(foundPerson.getId());
+
+            foundPerson = personService.get(foundPerson.getId());
+            assertNull(foundPerson);
+        }
     }
 
 }
