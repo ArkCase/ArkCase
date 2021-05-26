@@ -61,6 +61,8 @@ import java.security.cert.X509Certificate;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Lookup cached authentications for token requests (token requests are requests that include an acm_ticket in the
@@ -207,11 +209,13 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
             {
                 String requestUrl = request.getRequestURL() + "?" + request.getQueryString();
                 if (token.equals(authenticationToken.getKey())
-                        && Arrays.asList(authenticationToken.getRelativePath().split("__comma__")).contains(requestUrl))
+                        && Objects.equals(requestUrl, authenticationToken.getRelativePath()))
                 {
                     log.trace("Starting token authentication for email links using acm_email_ticket [{}]", token);
+                    int expiry = (int) TimeUnit.MILLISECONDS.toDays(authenticationToken.getTokenExpiry());
+                    int days = Days.daysBetween(new DateTime(authenticationToken.getCreated()), new DateTime()).getDays();
                     // token expires after 3 days, configured in arkcase.yaml (tokenExpiration)
-                    if (authenticationToken.getCreated().getTime() + authenticationToken.getTokenExpiry() < new Date().getTime())
+                    if (days > expiry)
                     {
                         authenticationToken.setStatus(AuthenticationTokenConstants.EXPIRED);
                         authenticationToken.setModifier(authenticationToken.getCreator());
