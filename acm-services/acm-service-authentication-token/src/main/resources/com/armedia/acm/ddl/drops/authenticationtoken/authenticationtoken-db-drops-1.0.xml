@@ -1,0 +1,16 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="01-drop-column-cm_authentication_token_file_id" author="stefan.sanevski">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <columnExists tableName="acm_authentication_token" columnName="cm_authentication_token_file_id"/>
+                <foreignKeyConstraintExists foreignKeyName="fk_authentication_token_file_id"/>
+            </and>
+        </preConditions>
+        <dropForeignKeyConstraint baseTableName="acm_authentication_token" constraintName="fk_authentication_token_file_id"/>
+        <dropColumn tableName="acm_authentication_token" columnName="cm_authentication_token_file_id"/>
+    </changeSet>
+</databaseChangeLog>
+

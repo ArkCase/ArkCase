@@ -85,8 +85,11 @@ public class AuthenticationToken implements Serializable, AcmEntity
     @Column(name = "cm_authentication_token_status", nullable = true, insertable = true, updatable = true)
     private String status;
 
-    @Column(name = "cm_authentication_token_file_id", nullable = true, insertable = true, updatable = true)
-    private Long fileId;
+    @Column(name = "cm_authentication_token_relative_path")
+    private String relativePath;
+
+    @Column(name = "cm_authentication_token_expiry_milliseconds")
+    private Long tokenExpiry;
 
     public Long getId()
     {
@@ -138,14 +141,24 @@ public class AuthenticationToken implements Serializable, AcmEntity
         this.status = status;
     }
 
-    public Long getFileId()
+    public String getRelativePath()
     {
-        return fileId;
+        return relativePath;
     }
 
-    public void setFileId(Long fileId)
+    public void setRelativePath(String relativePath)
     {
-        this.fileId = fileId;
+        this.relativePath = relativePath;
+    }
+
+    public Long getTokenExpiry()
+    {
+        return tokenExpiry;
+    }
+
+    public void setTokenExpiry(Long tokenExpiry)
+    {
+        this.tokenExpiry = tokenExpiry;
     }
 
     @Override

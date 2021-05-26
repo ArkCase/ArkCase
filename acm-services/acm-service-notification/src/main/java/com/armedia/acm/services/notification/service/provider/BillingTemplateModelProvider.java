@@ -27,12 +27,15 @@ package com.armedia.acm.services.notification.service.provider;
  * #L%
  */
 
+import com.armedia.acm.core.model.ApplicationConfig;
 import com.armedia.acm.core.provider.TemplateModelProvider;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.service.provider.model.BillingTemplateModel;
+import org.springframework.beans.factory.annotation.Value;
 
+import java.util.Arrays;
 import java.util.Date;
 
 
@@ -41,6 +44,10 @@ public class BillingTemplateModelProvider implements TemplateModelProvider<Billi
 {
     private AuthenticationTokenService authenticationTokenService;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
+    private ApplicationConfig applicationConfig;
+
+    @Value("${tokenExpiration.fileLinks}")
+    private Long tokenExpiry;
 
     @Override
     public BillingTemplateModel getModel(Object object)
@@ -74,7 +81,11 @@ public class BillingTemplateModelProvider implements TemplateModelProvider<Billi
         }
 
         getAuditPropertyEntityAdapter().setUserId(notification.getCreator());
-        String token = authenticationTokenService.generateAndSaveAuthenticationToken(Long.valueOf(fileId), notification.getEmailAddresses(),null);
+        String token = authenticationTokenService.getUncachedTokenForAuthentication(null);
+        String relativePaths = applicationConfig.getBaseUrl() + "/api/latest/plugin/billing/touchnet?amt=" + amount + "&objectId=" + objectId + "&ecmFileId=" + fileId + "&objectType=" + notification.getParentType()
+                + "&objectNumber=" + objectNumber + "&acm_email_ticket=" + token + "__comma__" + applicationConfig.getBaseUrl() + "/api/latest/plugin/billing/confirmPayment";
+
+        authenticationTokenService.addTokenToRelativePaths(Arrays.asList(relativePaths.split("__comma__")), token, tokenExpiry, notification.getEmailAddresses());
 
         return new BillingTemplateModel(amount, token, fileId, objectId, notification.getParentType(), objectNumber, billName, paymentMethod, last4digitsOfCardNumber, date.toString(), sessionId, message);
     }
@@ -104,5 +115,15 @@ public class BillingTemplateModelProvider implements TemplateModelProvider<Billi
     public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
     {
         this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
+    }
+
+    public ApplicationConfig getApplicationConfig()
+    {
+        return applicationConfig;
+    }
+
+    public void setApplicationConfig(ApplicationConfig applicationConfig)
+    {
+        this.applicationConfig = applicationConfig;
     }
 }
