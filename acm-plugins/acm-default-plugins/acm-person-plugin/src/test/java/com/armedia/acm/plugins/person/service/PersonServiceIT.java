@@ -79,6 +79,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
         "/spring/spring-library-camel-context.xml",
         "/spring/spring-library-authentication-token.xml",
         "/spring/spring-library-plugin-manager.xml",
+        "/spring/spring-library-labels-service.xml",
         "/spring/spring-library-folder-watcher.xml" })
 @Rollback(true)
 public class PersonServiceIT

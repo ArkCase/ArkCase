@@ -18,6 +18,12 @@
 
     <bean id="auditDao" class="com.armedia.acm.audit.dao.AuditDao"/>
 
+    <bean id="pdfService" class="com.armedia.acm.pdf.service.PdfServiceImpl"/>
+
+    <bean id="loginConfig" class="com.armedia.acm.web.model.LoginConfig"/>
+
+    <bean id="lookupDao" class="com.armedia.acm.services.config.lookups.service.ConfigLookupDao"/>
+
     <bean id="cacheManager" class="org.springframework.cache.support.SimpleCacheManager">
         <property name="caches">
             <set>
