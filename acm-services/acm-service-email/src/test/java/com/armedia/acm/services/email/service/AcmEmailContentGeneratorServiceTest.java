@@ -119,14 +119,12 @@ public class AcmEmailContentGeneratorServiceTest
         EcmFile ecmFile = new EcmFile();
         ecmFile.setActiveVersionTag(version);
 
-        when(mockAuthenticationTokenService.generateAndSaveAuthenticationToken(fileId, email, mockAuthentication))
-                .thenReturn(token);
+        when(mockAuthenticationTokenService.getUncachedTokenForAuthentication(null)).thenReturn(token);
         when(mockEcmFileDao.find(Mockito.anyLong())).thenReturn(ecmFile);
         AuthenticationToken authenticationToken = new AuthenticationToken();
         authenticationToken.setKey(token);
         authenticationToken.setStatus(AuthenticationTokenConstants.ACTIVE);
         authenticationToken.setEmail(email);
-        authenticationToken.setFileId(fileId);
 
         // when
 

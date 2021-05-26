@@ -239,7 +239,6 @@
         <property name="emailSenderConfig" ref="emailSenderConfig"/>
         <property name="progressIndicatorService" ref="progressIndicatorService"/>
         <property name="camelContextManager" ref="camelContextManager"/>
-        <property name="authenticationTokenDao" ref="authenticationTokenDao"/>
         <property name="fileEventPublisher" ref="fileEventPublisher"/>
         <property name="emailAttachmentExtractorComponent" ref="emailAttachmentExtractorComponent"/>
         <property name="acmFolderService" ref="acmFolderService"/>

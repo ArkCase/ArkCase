@@ -33,6 +33,7 @@ import com.armedia.acm.services.users.model.AcmUser;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -42,6 +43,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
+import java.util.Arrays;
 
 @Controller
 @RequestMapping("/plugin/office")
@@ -52,6 +54,9 @@ public class WopiHostUIController
     private WopiConfig wopiConfig;
     private AuthenticationTokenService tokenService;
 
+    @Value("${tokenExpiration.wopiLinks}")
+    private Long tokenExpiry;
+
     @PreAuthorize("hasPermission(#fileId, 'FILE', 'read|group-read|write|group-write')")
     @RequestMapping(method = RequestMethod.GET, value = "/{fileId}")
     public ModelAndView getWopiHostPage(Authentication authentication, @PathVariable Long fileId, HttpSession session)
@@ -59,7 +64,9 @@ public class WopiHostUIController
         log.info("Opening file with id [{}] per user [{}]", fileId, authentication.getName());
 
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
-        String accessToken = tokenService.generateAndSaveAuthenticationToken(fileId, user.getMail(), authentication);
+        String accessToken = tokenService.getUncachedTokenForAuthentication(authentication);
+        String requestUrl = wopiConfig.getWopiHostUrl(fileId, accessToken);
+        tokenService.generateAndSaveAuthenticationToken(Arrays.asList(requestUrl), tokenExpiry, user.getMail(), authentication);
 
         ModelAndView model = new ModelAndView();
         model.setViewName("wopi-host");
@@ -74,7 +81,9 @@ public class WopiHostUIController
         log.info("Opening wopi validation app for file with id [{}] per user [{}]", fileId, authentication.getName());
 
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
-        String accessToken = tokenService.generateAndSaveAuthenticationToken(fileId, user.getMail(), authentication);
+        String accessToken = tokenService.getUncachedTokenForAuthentication(authentication);
+        String requestUrl = wopiConfig.getWopiHostValidationUrl(fileId, accessToken);
+        tokenService.generateAndSaveAuthenticationToken(Arrays.asList(requestUrl), tokenExpiry, user.getMail(), authentication);
 
         ModelAndView model = new ModelAndView();
         model.setViewName("wopi-host");
