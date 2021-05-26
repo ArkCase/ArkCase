@@ -54,8 +54,11 @@ import gov.foia.model.PortalFOIARequest;
 @ContextConfiguration(locations = {
         "/spring/spring-library-configuration.xml",
         "/spring/spring-library-object-converter.xml",
+        "/spring/spring-library-data-source.xml",
+        "/spring/spring-library-context-holder.xml",
         "/spring/spring-library-property-file-manager.xml",
         "/spring/spring-library-acm-encryption.xml",
+        "/spring/spring-library-websockets.xml",
         "classpath:/spring/spring-library-message-broker-test.xml"
 })
 @IfProfileValue(name = "spring.profiles.active", value = "extension-foia")
