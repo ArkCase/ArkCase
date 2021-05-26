@@ -37,4 +37,8 @@
         <dropNotNullConstraint tableName="acm_authentication_token" columnName="cm_authentication_token_email" columnDataType="VARCHAR(512)" />
     </changeSet>
 
+    <changeSet id="05-acm_authentication_token_constraint_relative-path" author="stefan.sanevski">
+        <addUniqueConstraint tableName="acm_authentication_token" columnNames="cm_authentication_token_key, cm_authentication_token_relative_path"/>
+    </changeSet>
+
 </databaseChangeLog>

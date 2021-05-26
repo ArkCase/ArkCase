@@ -39,8 +39,10 @@ import org.springframework.web.context.request.RequestContextHolder;
 
 import java.time.temporal.TemporalAmount;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Created by armdev on 8/5/14.
@@ -128,7 +130,8 @@ public class AuthenticationTokenService
         }
     }
 
-    public String generateAndSaveAuthenticationToken(Long fileId, String emailAddress, Authentication authentication)
+    
+    public String generateAndSaveAuthenticationToken(List<String> relativePaths, Long tokenExpiry, String emailAddress, Authentication authentication)
     {
         log.debug("Generation authentication token for email address [{}]", emailAddress);
         String token = getUncachedTokenForAuthentication(authentication);
@@ -136,9 +139,21 @@ public class AuthenticationTokenService
         authenticationToken.setKey(token);
         authenticationToken.setStatus(AuthenticationTokenConstants.ACTIVE);
         authenticationToken.setEmail(emailAddress);
-        authenticationToken.setFileId(fileId);
+        authenticationToken.setRelativePath(relativePaths.stream().collect(Collectors.joining("__comma__")));
+        authenticationToken.setTokenExpiry(tokenExpiry);
         authenticationTokenDao.save(authenticationToken);
         return token;
+    }
+
+    public void addTokenToRelativePaths(List<String> relativePaths, String token, Long tokenExpiry, String emailAddress)
+    {
+        AuthenticationToken authenticationToken = new AuthenticationToken();
+        authenticationToken.setKey(token);
+        authenticationToken.setStatus(AuthenticationTokenConstants.ACTIVE);
+        authenticationToken.setEmail(emailAddress);
+        authenticationToken.setRelativePath(relativePaths.stream().collect(Collectors.joining("__comma__")));
+        authenticationToken.setTokenExpiry(tokenExpiry);
+        authenticationTokenDao.save(authenticationToken);
     }
 
     public AuthenticationToken findByKey(String key)

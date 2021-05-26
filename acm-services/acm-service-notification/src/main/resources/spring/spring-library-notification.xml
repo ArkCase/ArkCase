@@ -42,13 +42,17 @@
         <property name="userDao" ref="userJpaDao"/>
     </bean>
     
-    <bean id="documentLinkedTemplateModelProvider" class="com.armedia.acm.services.notification.service.provider.DocumentLinkedTemplateModelProvider">
+    <bean id="documentLinkedTemplateModelProvider" class="com.armedia.acm.services.notification.service.provider.DocumentLinkedTemplateModelProvider" scope="refresh">
+        <aop:scoped-proxy/>
         <property name="authenticationTokenService" ref="authenticationTokenService"/>
+        <property name="applicationConfig" ref="applicationProperties"/>
     </bean>
 
-    <bean id="billingTemplateModelProvider" class="com.armedia.acm.services.notification.service.provider.BillingTemplateModelProvider">
+    <bean id="billingTemplateModelProvider" class="com.armedia.acm.services.notification.service.provider.BillingTemplateModelProvider" scope="refresh">
+        <aop:scoped-proxy/>
         <property name="authenticationTokenService" ref="authenticationTokenService"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="applicationConfig" ref="applicationProperties"/>
     </bean>
 
     <bean id="forgotUserNameTemplateModelProvider"

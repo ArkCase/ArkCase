@@ -191,8 +191,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
     private CamelContextManager camelContextManager;
 
-    private AuthenticationTokenDao authenticationTokenDao;
-
     private FileEventPublisher fileEventPublisher;
 
     private EmailAttachmentExtractorComponent emailAttachmentExtractorComponent;
@@ -1807,7 +1805,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "DELETE")
     public void deleteFileFromArkcase(Long fileId)
     {
-        deleteAuthenticationTokens(fileId);
         getEcmFileDao().deleteFile(fileId);
     }
 
@@ -1861,7 +1858,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         {
             if (removeFileFromDatabase)
             {
-                deleteAuthenticationTokens(objectId);
                 getEcmFileDao().deleteFile(objectId);
             }
             else
@@ -1993,7 +1989,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         props.put(ArkCaseCMISConstants.ALL_VERSIONS, true);
         try
         {
-            deleteAuthenticationTokens(file.getId());
             getEcmFileDao().deleteFile(file.getId());
             getRecycleBinItemService().removeItemFromRecycleBin(recycleBinId);
             getCamelContextManager().send(ArkCaseCMISActions.DELETE_DOCUMENT, props);
@@ -2041,7 +2036,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
         try
         {
-            deleteAuthenticationTokens(objectId);
             getEcmFileDao().deleteFile(objectId);
             getCamelContextManager().send(ArkCaseCMISActions.DELETE_DOCUMENT, props);
         }
@@ -2072,7 +2066,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
         try
         {
-            deleteAuthenticationTokens(file.getId());
             getEcmFileDao().deleteFile(file.getId());
         }
         catch (PersistenceException e)
@@ -2633,18 +2626,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         return files;
     }
 
-    private void deleteAuthenticationTokens(Long fileId)
-    {
-        List<AuthenticationToken> authenticationTokens = getAuthenticationTokenDao().findAuthenticationTokenByTokenFileId(fileId);
-        for (AuthenticationToken authenticationToken : authenticationTokens)
-        {
-            authenticationToken.setStatus(AuthenticationTokenConstants.FILE_DELETED);
-            authenticationToken.setFileId(null);
-            getAuthenticationTokenDao().save(authenticationToken);
-            getAuthenticationTokenDao().getEntityManager().flush();
-        }
-    }
-
     private AcmFolder getFolderLinkTarget(AcmFolder folderLink)
     {
         return getFolderDao().findByCmisFolderId(folderLink.getCmisFolderId());
@@ -2859,16 +2840,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     public void setRecycleBinItemService(RecycleBinItemService recycleBinItemService)
     {
         this.recycleBinItemService = recycleBinItemService;
-    }
-
-    public AuthenticationTokenDao getAuthenticationTokenDao()
-    {
-        return authenticationTokenDao;
-    }
-
-    public void setAuthenticationTokenDao(AuthenticationTokenDao authenticationTokenDao)
-    {
-        this.authenticationTokenDao = authenticationTokenDao;
     }
 
     public CamelContextManager getCamelContextManager()
