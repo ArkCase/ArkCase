@@ -64,6 +64,12 @@ public class FoiaRequestBrokerConfig
     @Value("${gov.foia.broker.file_upload_url}")
     private String fileUploadUrl;
 
+    @Value("${gov.foia.broker.userName}")
+    private String userName;
+
+    @Value("${gov.foia.broker.password}")
+    private String password;
+
     public String getUrl()
     {
         return url;
@@ -172,5 +178,21 @@ public class FoiaRequestBrokerConfig
     public void setFileUploadUrl(String fileUploadUrl)
     {
         this.fileUploadUrl = fileUploadUrl;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
