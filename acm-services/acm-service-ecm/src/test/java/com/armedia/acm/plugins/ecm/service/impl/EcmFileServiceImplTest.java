@@ -124,14 +124,12 @@ public class EcmFileServiceImplTest extends EasyMockSupport
         unit.setApplicationEventPublisher(mockApplicationEventPublisher);
         unit.setContainerFolderDao(mockContainerDao);
         unit.setFileParticipantService(mockFileParticipantService);
-        unit.setAuthenticationTokenDao(mockAuthenticationTokenDao);
         SecurityContextHolder.getContext().setAuthentication(mockAuthentication);
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
 
         authenticationTokens = new ArrayList<>();
 
         AuthenticationToken token = new AuthenticationToken();
-        token.setFileId(500L);
         token.setStatus(AuthenticationTokenConstants.ACTIVE);
         token.setEmail("user_email");
         token.setKey("token");
@@ -217,10 +215,6 @@ public class EcmFileServiceImplTest extends EasyMockSupport
 
         expect(mockEcmFileDao.find(toBeDeleted.getFileId())).andReturn(toBeDeleted);
         expect(camelContextManager.send(ArkCaseCMISActions.DELETE_DOCUMENT, props)).andReturn(new Object());
-        expect(mockAuthenticationTokenDao.findAuthenticationTokenByTokenFileId(toBeDeleted.getFileId())).andReturn(authenticationTokens);
-        expect(mockAuthenticationTokenDao.save(authenticationTokens.get(0))).andReturn(authenticationTokens.get(0));
-        expect(mockAuthenticationTokenDao.getEntityManager()).andReturn(mockEntityManager);
-        mockEntityManager.flush();
         expectLastCall();
 
         mockEcmFileDao.deleteFile(toBeDeleted.getFileId());
@@ -288,10 +282,6 @@ public class EcmFileServiceImplTest extends EasyMockSupport
 
         expect(mockEcmFileDao.find(toBeDeleted.getFileId())).andReturn(toBeDeleted);
         expect(camelContextManager.send(ArkCaseCMISActions.DELETE_DOCUMENT, props)).andReturn(new Object());
-        expect(mockAuthenticationTokenDao.findAuthenticationTokenByTokenFileId(toBeDeleted.getFileId())).andReturn(authenticationTokens);
-        expect(mockAuthenticationTokenDao.save(authenticationTokens.get(0))).andReturn(authenticationTokens.get(0));
-        expect(mockAuthenticationTokenDao.getEntityManager()).andReturn(mockEntityManager);
-        mockEntityManager.flush();
         expectLastCall();
         mockEcmFileDao.deleteFile(toBeDeleted.getFileId());
 

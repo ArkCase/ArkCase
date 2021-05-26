@@ -27,6 +27,7 @@ package com.armedia.acm.plugins.onlyoffice.web.controllers;
  * #L%
  */
 
+import com.armedia.acm.core.model.ApplicationConfig;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.lock.FileLockType;
 import com.armedia.acm.plugins.onlyoffice.model.config.Config;
@@ -42,11 +43,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.Arrays;
 
 @RequestMapping(value = "/onlyoffice")
 public class OnlyOfficeViewController
@@ -59,6 +63,10 @@ public class OnlyOfficeViewController
     private JWTSigningService JWTSigningService;
     private ObjectMapper objectMapper;
     private UserDao userDao;
+    private ApplicationConfig applicationConfig;
+
+    @Value("${tokenExpiration.onlyofficeLinks}")
+    private Long tokenExpiry;
 
     @RequestMapping(value = "/editor", method = RequestMethod.GET)
     public ModelAndView editor(
@@ -72,7 +80,9 @@ public class OnlyOfficeViewController
 
             ModelAndView mav = new ModelAndView("onlyoffice/editor");
 
-            String authTicket = authenticationTokenService.generateAndSaveAuthenticationToken(fileId, user.getMail(), auth);
+            String requestUrl = applicationConfig.getBaseUrl() + "/onlyoffice/editor?file=" + fileId;
+
+            String authTicket = authenticationTokenService.generateAndSaveAuthenticationToken(Arrays.asList(requestUrl), tokenExpiry, user.getMail(), auth);
 
             Config config = configService.getConfig(fileId, "edit", "en-US", auth, authTicket, user);
 
@@ -146,5 +156,15 @@ public class OnlyOfficeViewController
     public void setUserDao(UserDao userDao)
     {
         this.userDao = userDao;
+    }
+
+    public ApplicationConfig getApplicationConfig()
+    {
+        return applicationConfig;
+    }
+
+    public void setApplicationConfig(ApplicationConfig applicationConfig)
+    {
+        this.applicationConfig = applicationConfig;
     }
 }

@@ -101,4 +101,14 @@
         <modifyDataType tableName="acm_authentication_token" columnName="cm_authentication_token_modified" newDataType="DATETIME"/>
     </changeSet>
 
+    <changeSet id="03-add_cm_authentication_token_relative_path_and_token_expiry_columns" author="stefan.sanevski">
+        <addColumn tableName="acm_authentication_token">
+            <column name="cm_authentication_token_relative_path" type="CLOB"></column>
+        </addColumn>
+        <addColumn tableName="acm_authentication_token">
+            <column name="cm_authentication_token_expiry_milliseconds" type="LONG"></column>
+        </addColumn>
+        <sql>UPDATE acm_authentication_token SET cm_authentication_token_expiry_milliseconds=259200000</sql>
+    </changeSet>
+
 </databaseChangeLog>
