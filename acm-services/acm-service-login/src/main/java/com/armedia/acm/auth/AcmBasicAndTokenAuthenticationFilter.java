@@ -211,7 +211,7 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
                 {
                     log.trace("Starting token authentication for email links using acm_email_ticket [{}]", token);
                     // token expires after 3 days, configured in arkcase.yaml (tokenExpiration)
-                    if (authenticationToken.getCreated().getTime() + authenticationToken.getTokenExpiry() > new Date().getTime())
+                    if (authenticationToken.getCreated().getTime() + authenticationToken.getTokenExpiry() < new Date().getTime())
                     {
                         authenticationToken.setStatus(AuthenticationTokenConstants.EXPIRED);
                         authenticationToken.setModifier(authenticationToken.getCreator());
