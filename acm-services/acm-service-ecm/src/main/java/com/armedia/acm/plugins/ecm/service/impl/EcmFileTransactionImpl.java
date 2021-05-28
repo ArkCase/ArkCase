@@ -225,11 +225,12 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
 
     private boolean isFileTypeUploadAllowed(EcmTikaFile detectedMetadata, String activeVersionMimeType)
     {
+        String contentType = detectedMetadata.getContentType().replaceAll("\\.", "-dot-");
         List<String> allAllowedUploadFileTypes = getAllAllowedUploadFileTypes(allowedUploadFileTypesConfig.getAllowedUploadFileTypes(),
                 activeVersionMimeType);
         return !getAllowedUploadFileTypesConfig().getRestrictFileTypesUpload()
                 || detectedMetadata.getContentType().equals(activeVersionMimeType)
-                || allAllowedUploadFileTypes.contains(detectedMetadata.getContentType().replaceAll("\\.", "-dot-"));
+                || allAllowedUploadFileTypes.contains(contentType);
     }
 
     @Override
