@@ -32,7 +32,6 @@ package com.armedia.acm.plugins.person.model;
 
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
@@ -52,7 +51,7 @@ public class ExtractPersonInfoUtils
 
         if (person.getTitle() != null && !person.getTitle().isEmpty())
         {
-            nameBuilder.append(StringUtils.capitalize(person.getTitle()));
+            nameBuilder.append(person.getTitleTranslated());
         }
         if (person.getGivenName() != null && !person.getGivenName().isEmpty())
         {
