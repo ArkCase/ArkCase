@@ -2444,20 +2444,36 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     {
         for (EmailAttachmentExtractorComponent.EmailAttachment emailAttachment : emailAttachments)
         {
-            EcmFile temp = upload(
-                    emailAttachment.getName(),
-                    "Attachment",
-                    "Document",
-                    emailAttachment.getInputStream(),
-                    emailAttachment.getContentType(),
-                    emailAttachment.getName(),
-                    authentication,
-                    folderCmisId,
-                    parentObjectType,
-                    parentObjectId);
-            uploadedFiles.add(temp);
+            try
+            {
+                EcmFile temp = upload(
+                        emailAttachment.getName(),
+                        "Attachment",
+                        "Document",
+                        emailAttachment.getInputStream(),
+                        emailAttachment.getContentType(),
+                        emailAttachment.getName(),
+                        authentication,
+                        folderCmisId,
+                        parentObjectType,
+                        parentObjectId);
+                uploadedFiles.add(temp);
 
-            applicationEventPublisher.publishEvent(new EcmFilePostUploadEvent(temp, authentication.getName()));
+                applicationEventPublisher.publishEvent(new EcmFilePostUploadEvent(temp, authentication.getName()));
+            }
+            catch (AcmCreateObjectFailedException e)
+            {
+                if (e.getMessage().contains("MIME type"))
+                {
+                    log.warn("Failed to upload email attachment {}. Attachment MIME type not acceptable. Skip this file",
+                            emailAttachment.getName());
+                }
+                else
+                {
+                    throw e;
+                }
+            }
+
         }
     }
 
