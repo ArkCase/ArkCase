@@ -96,7 +96,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     private PipelineManager<EcmFile, EcmFileTransactionPipelineContext> ecmFileUpdatePipelineManager;
     private CmisConfigUtils cmisConfigUtils;
     private Logger log = LogManager.getLogger(getClass());
-    private AcmAallowedUploadFileTypesConfig allowedUploadFileTypes;
+    private AcmAallowedUploadFileTypesConfig allowedUploadFileTypesConfig;
     private EcmFileConfig ecmFileConfig;
     private ProgressIndicatorService progressIndicatorService;
     private EcmFileService ecmFileService;
@@ -156,9 +156,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             }
 
             if (activeVersionMimeType != null && detectedMetadata != null
-                    && ((detectedMetadata.getContentType().equals(activeVersionMimeType)) ||
-                            (getAllAllowedUploadFileTypes(allowedUploadFileTypes.getAllowedUploadFileTypes(), activeVersionMimeType)
-                                    .contains(detectedMetadata.getContentType().replaceAll("\\.", "-dot-")))))
+                    && isFileTypeUploadAllowed(detectedMetadata, activeVersionMimeType))
             {
 
                 Pair<String, String> mimeTypeAndExtension = buildMimeTypeAndExtension(detectedMetadata, ecmUniqueFilename,
@@ -223,6 +221,16 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         {
             FileUtils.deleteQuietly(tempFileContents);
         }
+    }
+
+    private boolean isFileTypeUploadAllowed(EcmTikaFile detectedMetadata, String activeVersionMimeType)
+    {
+        String contentType = detectedMetadata.getContentType().replaceAll("\\.", "-dot-");
+        List<String> allAllowedUploadFileTypes = getAllAllowedUploadFileTypes(allowedUploadFileTypesConfig.getAllowedUploadFileTypes(),
+                activeVersionMimeType);
+        return !getAllowedUploadFileTypesConfig().getRestrictFileTypesUpload()
+                || detectedMetadata.getContentType().equals(activeVersionMimeType)
+                || allAllowedUploadFileTypes.contains(contentType);
     }
 
     @Override
@@ -328,9 +336,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
                 detectedMetadata.setContentType(detectedMetadata.getContentType().split(";")[0]);
             }
             if (activeVersionMimeType != null && detectedMetadata != null
-                    && ((detectedMetadata.getContentType().equals(activeVersionMimeType)) ||
-                            (getAllAllowedUploadFileTypes(allowedUploadFileTypes.getAllowedUploadFileTypes(), activeVersionMimeType)
-                                    .contains(detectedMetadata.getContentType().replaceAll("\\.", "-dot-")))))
+                    && isFileTypeUploadAllowed(detectedMetadata, activeVersionMimeType))
             {
 
                 Pair<String, String> mimeTypeAndExtension = buildMimeTypeAndExtension(detectedMetadata, ecmUniqueFilename,
@@ -381,7 +387,8 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
                 {
                     log.error("pipeline handler call failed: {}", e.getMessage(), e);
                     if (pipelineContext.isFileNameAlreadyInEcmSystem())
-                    {stopProgressBar(metadata);
+                    {
+                        stopProgressBar(metadata);
                         log.debug("File: {} already exists in ecm system", metadata.getFileName());
                         throw new ArkCaseFileNameAlreadyExistsException("fileName already exists");
                     }
@@ -390,7 +397,8 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
                 return pipelineContext.getEcmFile();
             }
             else
-            {stopProgressBar(metadata);
+            {
+                stopProgressBar(metadata);
                 log.error("Uploaded file with name [{}] - MIME type [{}] is not compatible with advertised type [{}]",
                         metadata.getFileName(), metadata.getFileType(), metadata.getFileActiveVersionMimeType());
                 throw new IOException("Uploaded file's " + metadata.getFileName() + " MIME type " + metadata.getFileActiveVersionMimeType()
@@ -403,7 +411,8 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         }
     }
 
-    private void stopProgressBar(EcmFile metadata){
+    private void stopProgressBar(EcmFile metadata)
+    {
         // stop the progressbar executor
         ProgressbarExecutor progressbarExecutor = progressIndicatorService.getExecutor(metadata.getUuid());
         if (StringUtils.isNotEmpty(metadata.getUuid()) && progressbarExecutor != null
@@ -858,14 +867,14 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         this.cmisConfigUtils = cmisConfigUtils;
     }
 
-    public AcmAallowedUploadFileTypesConfig getAllowedUploadFileTypes()
+    public AcmAallowedUploadFileTypesConfig getAllowedUploadFileTypesConfig()
     {
-        return allowedUploadFileTypes;
+        return allowedUploadFileTypesConfig;
     }
 
-    public void setAllowedUploadFileTypes(AcmAallowedUploadFileTypesConfig allowedUploadFileTypes)
+    public void setAllowedUploadFileTypesConfig(AcmAallowedUploadFileTypesConfig allowedUploadFileTypesConfig)
     {
-        this.allowedUploadFileTypes = allowedUploadFileTypes;
+        this.allowedUploadFileTypesConfig = allowedUploadFileTypesConfig;
     }
 
     public ProgressIndicatorService getProgressIndicatorService()
