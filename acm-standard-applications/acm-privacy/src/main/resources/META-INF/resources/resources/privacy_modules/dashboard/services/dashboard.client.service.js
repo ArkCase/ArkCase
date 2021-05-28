@@ -46,7 +46,7 @@ angular.module('dashboard').factory('Dashboard.DashboardService',
                 },
                 queryMyTasks: {
                     method: 'GET',
-                    url: 'api/v1/plugin/search/advancedSearch?q=(assignee_id_lcs\\::userId' + '+OR+candidate_group_ss\\::userGroupList)' + '+AND+object_type_s\\:TASK+' + 'AND+status_lcs\:(ACTIVE OR UNCLAIMED)&start=:startWith&n=:pageSize&s=:sortBy :sortDir',
+                    url: 'api/v1/plugin/search/advancedSearch?q=object_type_s\\:TASK' + '+AND+((assignee_id_lcs\\::userId AND status_lcs\\:ACTIVE)' + '+OR+(candidate_group_ss\\::userGroupList AND status_lcs\\:UNCLAIMED))&start=:startWith&n=:pageSize&s=:sortBy :sortDir',
                     isArray: false,
                     data: ''
                 },

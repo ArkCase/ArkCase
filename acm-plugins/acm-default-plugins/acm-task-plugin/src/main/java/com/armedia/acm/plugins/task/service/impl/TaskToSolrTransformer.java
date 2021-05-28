@@ -35,6 +35,7 @@ import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.services.dataaccess.service.SearchAccessControlFields;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
+import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrBaseDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
@@ -117,7 +118,15 @@ public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmT
         doc.setBusiness_process_name_lcs(in.getBusinessProcessName());
         doc.setBusiness_process_id_i(in.getBusinessProcessId());
 
-        doc.setAdditionalProperty("candidate_group_ss", in.getCandidateGroups());
+        AcmParticipant owningGroupParticipantLdapId = in.getParticipants().stream().filter(p -> p.getParticipantType().equals("owning group")).findFirst().orElse(null);
+        if (owningGroupParticipantLdapId != null)
+        {
+            doc.setAdditionalProperty("candidate_group_ss", in.getParticipants().stream().filter(p -> p.getParticipantType().equals("owning group")).findFirst().get().getParticipantLdapId());
+        }
+        else
+        {
+            doc.setAdditionalProperty("candidate_group_ss", in.getCandidateGroups());
+        }
 
         // needed a _lcs property for sorting
         doc.setTitle_parseable_lcs(in.getTitle());
@@ -180,7 +189,16 @@ public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmT
         doc.setAuthor_s(in.getOwner());
         doc.setLast_modified_tdt(new Date());
 
-        doc.setAdditionalProperty("candidate_group_ss", in.getCandidateGroups());
+        AcmParticipant owningGroupParticipantLdapId = in.getParticipants().stream().filter(p -> p.getParticipantType().equals("owning group")).findFirst().orElse(null);
+        if (owningGroupParticipantLdapId != null)
+        {
+            doc.setAdditionalProperty("candidate_group_ss", in.getParticipants().stream().filter(p -> p.getParticipantType().equals("owning group")).findFirst().get().getParticipantLdapId());
+        }
+        else
+        {
+            doc.setAdditionalProperty("candidate_group_ss", in.getCandidateGroups());
+        }
+
         doc.setAdditionalProperty("parent_title_s", in.getParentObjectTitle());
         /*
          * 'task_owner_s' is explicitly added as an additional property, because the current schema does not support
