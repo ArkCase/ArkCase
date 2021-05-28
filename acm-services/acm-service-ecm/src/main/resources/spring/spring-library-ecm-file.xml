@@ -173,7 +173,7 @@
         <property name="ecmFileUpdatePipelineManager" ref="ecmFileUpdatePipelineManager"/>
         <property name="cmisConfigUtils" ref="cmisConfigUtils"/>
         <property name="ecmFileConfig" ref="ecmFileConfig"/>
-        <property name="allowedUploadFileTypes" ref="allowedUploadFileTypes"/>
+        <property name="allowedUploadFileTypesConfig" ref="allowedUploadFileTypes"/>
         <property name="progressIndicatorService" ref="progressIndicatorService"/>
         <property name="ecmFileService" ref="ecmFileService"/>
     </bean>
