@@ -27,41 +27,6 @@ package gov.foia.listener;
  * #L%
  */
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import javax.persistence.NoResultException;
-import javax.persistence.NonUniqueResultException;
-
-import org.apache.commons.fileupload.disk.DiskFileItem;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.filefilter.FileFilterUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.exception.ExceptionUtils;
-import org.apache.commons.lang3.math.NumberUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.slf4j.MDC;
-import org.springframework.context.ApplicationListener;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
-
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
@@ -81,6 +46,41 @@ import com.armedia.acm.tool.zylab.model.ZylabIntegrationConfig;
 import com.armedia.acm.tool.zylab.model.ZylabProductionFileIncomingEvent;
 import com.armedia.acm.tool.zylab.service.ZylabIntegrationService;
 import com.armedia.acm.web.api.MDCConstants;
+
+import org.apache.commons.fileupload.disk.DiskFileItem;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.filefilter.FileFilterUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.slf4j.MDC;
+import org.springframework.context.ApplicationListener;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
+
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import gov.foia.dao.FOIARequestDao;
 import gov.foia.model.FOIAFile;
@@ -283,7 +283,7 @@ public class ZylabProductionFileIncomingListener implements ApplicationListener<
     private FOIAFile getEcmFile(ZylabFile zylabFile) throws IOException
     {
         FOIAFile metadata = new FOIAFile();
-        metadata.setFileName(String.valueOf(zylabFile.getFileMetadata().getZylabId()));
+        metadata.setFileName(zylabFile.getFileMetadata().getZylabId() + "." + FilenameUtils.getExtension(zylabFile.getFile().getPath()));
         metadata.setFileType("Other");
         metadata.setFileActiveVersionMimeType(Files.probeContentType(zylabFile.getFile().toPath()));
         metadata.setCustodian(zylabFile.getFileMetadata().getCustodian());
