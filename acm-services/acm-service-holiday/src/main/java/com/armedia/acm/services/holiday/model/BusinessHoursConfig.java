@@ -47,15 +47,11 @@ public class BusinessHoursConfig
     @Value("${businessHours.endOfBusinessDayTime}")
     private String endOfBusinessDayTime;
 
-    @JsonProperty("businessHours.startOfBusinessDayTime")
-    @Value("${businessHours.startOfBusinessDayTime}")
-    private String startOfBusinessDayTime;
-
     @JsonProperty("businessHours.defaultDueDateGap")
     @Value("${businessHours.defaultDueDateGap}")
     private int defaultDueDateGap;
 
-    public Boolean getBusinessDayHoursEnabled()
+    public Boolean getEndOfBusinessDayEnabled()
     {
         return businessDayHoursEnabled;
     }
@@ -83,15 +79,5 @@ public class BusinessHoursConfig
     public void setDefaultDueDateGap(int defaultDueDateGap)
     {
         this.defaultDueDateGap = defaultDueDateGap;
-    }
-
-    public String getStartOfBusinessDayTime()
-    {
-        return startOfBusinessDayTime;
-    }
-
-    public void setStartOfBusinessDayTime(String startOfBusinessDayTime)
-    {
-        this.startOfBusinessDayTime = startOfBusinessDayTime;
     }
 }

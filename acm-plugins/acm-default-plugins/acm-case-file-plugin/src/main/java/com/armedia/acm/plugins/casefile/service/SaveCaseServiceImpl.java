@@ -66,6 +66,7 @@ public class SaveCaseServiceImpl implements SaveCaseService
     private CaseFileDao caseFileDao;
     private PipelineManager<CaseFile, CaseFilePipelineContext> pipelineManager;
     private EcmFileService ecmFileService;
+    private HolidayConfigurationService holidayConfigurationService;
 
     @Override
     @Transactional
@@ -92,6 +93,12 @@ public class SaveCaseServiceImpl implements SaveCaseService
             IOException
     {
         boolean isNewCase = caseFile.getId() == null;
+
+        if (isNewCase) {
+            caseFile.setDueDate(holidayConfigurationService.addWorkingDaysAndWorkingHoursToDateWithBusinessHours(
+                    Optional.ofNullable(caseFile.getDueDate()).orElse(new Date()),
+                    holidayConfigurationService.getBusinessHoursConfig().getDefaultDueDateGap()));
+        }
 
         CaseFilePipelineContext pipelineContext = new CaseFilePipelineContext();
         // populate the context
@@ -128,6 +135,12 @@ public class SaveCaseServiceImpl implements SaveCaseService
             throws PipelineProcessException
     {
         boolean isNewCase = caseFile.getId() == null;
+
+        if (isNewCase) {
+            caseFile.setDueDate(holidayConfigurationService.addWorkingDaysAndWorkingHoursToDateWithBusinessHours(
+                    Optional.ofNullable(caseFile.getDueDate()).orElse(new Date()),
+                    holidayConfigurationService.getBusinessHoursConfig().getDefaultDueDateGap()));
+        }
 
         CaseFilePipelineContext pipelineContext = new CaseFilePipelineContext();
         // populate the context
@@ -175,6 +188,12 @@ public class SaveCaseServiceImpl implements SaveCaseService
             throws PipelineProcessException
     {
         boolean isNewCase = in.getId() == null;
+
+        if (isNewCase) {
+            in.setDueDate(holidayConfigurationService.addWorkingDaysAndWorkingHoursToDateWithBusinessHours(
+                    Optional.ofNullable(in.getDueDate()).orElse(new Date()),
+                    holidayConfigurationService.getBusinessHoursConfig().getDefaultDueDateGap()));
+        }
 
         CaseFilePipelineContext pipelineContext = new CaseFilePipelineContext();
         // populate the context
@@ -224,4 +243,13 @@ public class SaveCaseServiceImpl implements SaveCaseService
         this.ecmFileService = ecmFileService;
     }
 
+    public HolidayConfigurationService getHolidayConfigurationService()
+    {
+        return holidayConfigurationService;
+    }
+
+    public void setHolidayConfigurationService(HolidayConfigurationService holidayConfigurationService)
+    {
+        this.holidayConfigurationService = holidayConfigurationService;
+    }
 }

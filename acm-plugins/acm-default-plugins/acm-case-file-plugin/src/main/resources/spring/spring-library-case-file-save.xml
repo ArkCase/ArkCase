@@ -6,6 +6,7 @@
         <property name="caseFileDao" ref="caseFileDao"/>
         <property name="pipelineManager" ref="caseFilePipelineManager"/>
         <property name="ecmFileService" ref="ecmFileService"/>
+        <property name="holidayConfigurationService" ref="holidayConfigurationService"/>
      </bean>
 
     <bean id="caseFilePipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
