@@ -35,11 +35,11 @@ import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.SaveCaseServiceCaller;
 import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
-import com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility;
 import com.armedia.acm.plugins.ecm.model.AcmMultipartFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
+import com.armedia.acm.services.holiday.service.HolidayConfigurationService;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -48,12 +48,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Created by armdev on 8/29/14.
@@ -61,9 +62,11 @@ import java.util.Objects;
 public class SaveCaseServiceImpl implements SaveCaseService
 {
     private final Logger log = LogManager.getLogger(getClass());
+
     private CaseFileDao caseFileDao;
     private PipelineManager<CaseFile, CaseFilePipelineContext> pipelineManager;
     private EcmFileService ecmFileService;
+    private HolidayConfigurationService holidayConfigurationService;
 
     @Override
     @Transactional
@@ -90,6 +93,12 @@ public class SaveCaseServiceImpl implements SaveCaseService
             IOException
     {
         boolean isNewCase = caseFile.getId() == null;
+
+        if (isNewCase) {
+            caseFile.setDueDate(holidayConfigurationService.addWorkingDaysAndWorkingHoursToDateWithBusinessHours(
+                    Optional.ofNullable(caseFile.getDueDate()).orElse(new Date()),
+                    holidayConfigurationService.getBusinessHoursConfig().getDefaultDueDateGap()));
+        }
 
         CaseFilePipelineContext pipelineContext = new CaseFilePipelineContext();
         // populate the context
@@ -126,6 +135,12 @@ public class SaveCaseServiceImpl implements SaveCaseService
             throws PipelineProcessException
     {
         boolean isNewCase = caseFile.getId() == null;
+
+        if (isNewCase) {
+            caseFile.setDueDate(holidayConfigurationService.addWorkingDaysAndWorkingHoursToDateWithBusinessHours(
+                    Optional.ofNullable(caseFile.getDueDate()).orElse(new Date()),
+                    holidayConfigurationService.getBusinessHoursConfig().getDefaultDueDateGap()));
+        }
 
         CaseFilePipelineContext pipelineContext = new CaseFilePipelineContext();
         // populate the context
@@ -172,9 +187,17 @@ public class SaveCaseServiceImpl implements SaveCaseService
     public CaseFile saveCase(CaseFile in, Authentication auth, String ipAddress, SaveCaseServiceCaller caller)
             throws PipelineProcessException
     {
+        boolean isNewCase = in.getId() == null;
+
+        if (isNewCase) {
+            in.setDueDate(holidayConfigurationService.addWorkingDaysAndWorkingHoursToDateWithBusinessHours(
+                    Optional.ofNullable(in.getDueDate()).orElse(new Date()),
+                    holidayConfigurationService.getBusinessHoursConfig().getDefaultDueDateGap()));
+        }
+
         CaseFilePipelineContext pipelineContext = new CaseFilePipelineContext();
         // populate the context
-        pipelineContext.setNewCase(in.getId() == null);
+        pipelineContext.setNewCase(isNewCase);
         pipelineContext.setAuthentication(auth);
         pipelineContext.setIpAddress(ipAddress);
         pipelineContext.setCaller(caller);
@@ -220,4 +243,13 @@ public class SaveCaseServiceImpl implements SaveCaseService
         this.ecmFileService = ecmFileService;
     }
 
+    public HolidayConfigurationService getHolidayConfigurationService()
+    {
+        return holidayConfigurationService;
+    }
+
+    public void setHolidayConfigurationService(HolidayConfigurationService holidayConfigurationService)
+    {
+        this.holidayConfigurationService = holidayConfigurationService;
+    }
 }
