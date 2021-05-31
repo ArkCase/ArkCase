@@ -74,8 +74,7 @@ public class SuggestedObject
 
     public String type;
 
-    @JsonSerialize(using = JsonDateSerializer.class)
-    private Date modifiedDate;
+    private String modifiedDate;
 
     private File file;
 
@@ -139,12 +138,12 @@ public class SuggestedObject
         this.type = type;
     }
 
-    public Date getModifiedDate()
+    public String getModifiedDate()
     {
         return modifiedDate;
     }
 
-    public void setModifiedDate(Date modifiedDate)
+    public void setModifiedDate(String modifiedDate)
     {
         this.modifiedDate = modifiedDate;
     }
