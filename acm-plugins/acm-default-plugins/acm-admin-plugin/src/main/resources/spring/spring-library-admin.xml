@@ -123,11 +123,20 @@
         <property name="configurationPropertyService" ref="configurationPropertyService"/>
     </bean>
 
+    <bean id="outgoingIncomingEmailConversionConfigurationService" class="com.armedia.acm.plugins.admin.service.OutgoingIncomingEmailConversionConfigurationService">
+        <property name="outgoingIncomingEmailConversionConfig" ref="outgoingIncomingEmailConversionConfig"/>
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
+    </bean>
+
     <bean id="pdfConversionConfig" class="com.armedia.acm.plugins.admin.model.PdfConversionConfig" scope="refresh">
         <aop:scoped-proxy/>
     </bean>
 
     <bean id="documentUploadPolicyConfig" class="com.armedia.acm.plugins.admin.model.DocumentUploadPolicyConfig" scope="refresh">
+        <aop:scoped-proxy/>
+    </bean>
+
+    <bean id="outgoingIncomingEmailConversionConfig" class="com.armedia.acm.plugins.admin.model.OutgoingIncomingEmailConversionConfig" scope="refresh">
         <aop:scoped-proxy/>
     </bean>
 

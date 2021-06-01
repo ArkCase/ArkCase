@@ -38,8 +38,10 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 
+import com.armedia.acm.service.EMLToPDFConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -70,6 +72,10 @@ public class TrackOutgoingEmailService implements ApplicationEventPublisherAware
     private EcmFileDao ecmFileDao;
     private ApplicationEventPublisher eventPublisher;
     private EmailSenderConfig emailSenderConfig;
+    private EMLToPDFConverter emlToPDFConverter;
+
+    @Value("${convertEmailsToPDF.outgoingEmailToPdf:false}")
+    private Boolean convertFileToPdf;
 
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
@@ -118,6 +124,28 @@ public class TrackOutgoingEmailService implements ApplicationEventPublisherAware
                 messageFileName = checkDuplicateFileName(messageFileName, folder.getId());
                 mailFile = getEcmFileService().upload(messageFileName, "mail", "Document", is, "message/rfc822", messageFileName, auth,
                         folder.getCmisFolderId(), objectType, Long.parseLong(objectId));
+                if(convertFileToPdf)
+                {
+                    try
+                    {
+                        log.debug("Converting file [{}] to PDF started!", messageFileName);
+                        File pdfConvertedFile = emlToPDFConverter.convert(new FileInputStream(messageFile), messageFileName);
+                        if (pdfConvertedFile != null && pdfConvertedFile.exists() && pdfConvertedFile.length() > 0)
+                        {
+                            try (InputStream pdfConvertedFileIs = new FileInputStream(pdfConvertedFile))
+                            {
+                                mailFile.setFileActiveVersionNameExtension(".pdf");
+                                mailFile.setFileActiveVersionMimeType("application/pdf");
+                                ecmFileService.update(mailFile, pdfConvertedFileIs, auth);
+                                mailFile.getVersions().get(1).setFile(mailFile);
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        log.debug("Converting file [{}] to PDF failed!", messageFileName, e);
+                    }
+                }
 
             }
 
@@ -211,5 +239,15 @@ public class TrackOutgoingEmailService implements ApplicationEventPublisherAware
     public void setEmailSenderConfig(EmailSenderConfig emailSenderConfig)
     {
         this.emailSenderConfig = emailSenderConfig;
+    }
+
+    public EMLToPDFConverter getEmlToPDFConverter()
+    {
+        return emlToPDFConverter;
+    }
+
+    public void setEmlToPDFConverter(EMLToPDFConverter emlToPDFConverter)
+    {
+        this.emlToPDFConverter = emlToPDFConverter;
     }
 }
