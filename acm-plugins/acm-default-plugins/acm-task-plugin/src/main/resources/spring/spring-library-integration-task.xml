@@ -10,7 +10,7 @@
         <aop:scoped-proxy/>
     </bean>
 
-    <bean id="taskMailHandler" class="com.armedia.acm.services.email.handler.AcmObjectMailHandler">
+    <bean id="taskMailHandler" class="com.armedia.acm.services.email.handler.AcmObjectMailHandler" scope="refresh">
         <constructor-arg index="0" ref="acmTaskDao"/>
         <property name="mailDirectory" value="#{taskConfig.emailFolderRelativePath}"/>
         <property name="enabled" value="#{taskConfig.emailHandlerEnabled}"/>
@@ -20,6 +20,7 @@
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="emailReceiverConfig" ref="emailReceiverConfig"/>
+        <property name="emlToPDFConverter" ref="emlToPDFConverter"/>
     </bean>
 
 </beans>
