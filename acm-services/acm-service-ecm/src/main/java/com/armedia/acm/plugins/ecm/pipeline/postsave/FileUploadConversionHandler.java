@@ -66,6 +66,18 @@ public class FileUploadConversionHandler implements PipelineHandler<EcmFile, Ecm
     @Value("${document.upload.policy.convertEmlToPdf:false}")
     private Boolean convertEmlToPdf;
 
+    @Value("${email.sender.outgoingEmail.folderName}")
+	private String outgoingEmailFolderName;
+
+	@Value("${casefile.plugin.email.folder.relative.path}")
+	private String caseFileIncomingEmailFolderName;
+
+	@Value("${complaint.plugin.email.folder.relative.path}")
+	private String complaintIncomingEmailFolderName;
+
+	@Value("${task.plugin.email.folder.relative.path}")
+	private String taskIncomingEmailFolderName;
+
 	@Override
 	public void execute(EcmFile entity, EcmFileTransactionPipelineContext pipelineContext)
 			throws PipelineProcessException {
@@ -74,7 +86,9 @@ public class FileUploadConversionHandler implements PipelineHandler<EcmFile, Ecm
 		String fileType = "." + entity.getFileExtension();
 
 		FileConverter fileConverter = getFileConverterFactory().getConverterOfType(fileType);
-		if (isConverterEnabledForFileType(fileType) && Objects.nonNull(fileConverter)) {
+		if (isConverterEnabledForFileType(fileType) && Objects.nonNull(fileConverter) && !entity.getFolder().getName().equals(outgoingEmailFolderName)
+				&& !entity.getFolder().getName().equals(caseFileIncomingEmailFolderName) && !!entity.getFolder().getName().equals(complaintIncomingEmailFolderName)
+				&& !entity.getFolder().getName().equals(taskIncomingEmailFolderName)) {
 			try {
 				log.debug("Converting file [{}.{}] to PDF started!", entity.getFileName(), entity.getFileExtension());
 
