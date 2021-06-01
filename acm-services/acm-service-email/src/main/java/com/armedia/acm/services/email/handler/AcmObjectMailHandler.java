@@ -37,6 +37,7 @@ import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.service.EMLToPDFConverter;
 import com.armedia.acm.services.email.event.SmtpEmailReceivedEvent;
 import com.armedia.acm.web.api.MDCConstants;
 
@@ -44,6 +45,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.slf4j.MDC;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -92,10 +94,14 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
     private ApplicationEventPublisher eventPublisher;
     private EcmFileDao ecmFileDao;
     private EmailReceiverConfig emailReceiverConfig;
+    private EMLToPDFConverter emlToPDFConverter;
 
     private String objectIdRegexPattern;
     private String mailDirectory;
     private boolean enabled;
+
+    @Value("${convertEmailsToPDF.incomingEmailToPdf:false}")
+    private Boolean convertFileToPdf;
 
     public AcmObjectMailHandler(AcmNameDao dao)
     {
@@ -161,6 +167,28 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
                 Authentication auth = new UsernamePasswordAuthenticationToken(userId, "");
                 mailFile = ecmFileService.upload(messageFileName, "mail", "Document", is, "message/rfc822", messageFileName, auth,
                         emailReceivedFolder.getCmisFolderId(), entity.getObjectType(), entity.getId());
+                if(convertFileToPdf)
+                {
+                    try
+                    {
+                        log.debug("Converting file [{}] to PDF started!", messageFileName);
+                        File pdfConvertedFile = emlToPDFConverter.convert(new FileInputStream(messageFile), messageFileName);
+                        if (pdfConvertedFile != null && pdfConvertedFile.exists() && pdfConvertedFile.length() > 0)
+                        {
+                            try (InputStream pdfConvertedFileIs = new FileInputStream(pdfConvertedFile))
+                            {
+                                mailFile.setFileActiveVersionNameExtension(".pdf");
+                                mailFile.setFileActiveVersionMimeType("application/pdf");
+                                ecmFileService.update(mailFile, pdfConvertedFileIs, auth);
+                                mailFile.getVersions().get(1).setFile(mailFile);
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        log.debug("Converting file [{}] to PDF failed!", messageFileName, e);
+                    }
+                }
 
             }
 
@@ -386,5 +414,15 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
     public void setEmailReceiverConfig(EmailReceiverConfig emailReceiverConfig) 
     {
         this.emailReceiverConfig = emailReceiverConfig;
+    }
+
+    public EMLToPDFConverter getEmlToPDFConverter()
+    {
+        return emlToPDFConverter;
+    }
+
+    public void setEmlToPDFConverter(EMLToPDFConverter emlToPDFConverter)
+    {
+        this.emlToPDFConverter = emlToPDFConverter;
     }
 }

@@ -12,7 +12,7 @@
         <aop:scoped-proxy/>
     </bean>
 
-    <bean id="complaintMailHandler" class="com.armedia.acm.services.email.handler.AcmObjectMailHandler">
+    <bean id="complaintMailHandler" class="com.armedia.acm.services.email.handler.AcmObjectMailHandler" scope="refresh">
         <constructor-arg index="0" ref="acmComplaintDao"/>
         <property name="mailDirectory" value="#{complaintConfig.emailFolderRelativePath}"/>
         <property name="enabled" value="#{complaintConfig.emailHandlerEnabled}"/>
@@ -22,6 +22,7 @@
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="emailReceiverConfig" ref="emailReceiverConfig"/>
+        <property name="emlToPDFConverter" ref="emlToPDFConverter"/>
     </bean>
 
     <int:service-activator input-channel="complaintFilteredMailChannel" ref="complaintMailHandler" method="handle"/>
