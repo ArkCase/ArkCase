@@ -67,16 +67,16 @@ public class FileUploadConversionHandler implements PipelineHandler<EcmFile, Ecm
     private Boolean convertEmlToPdf;
 
     @Value("${email.sender.outgoingEmail.folderName}")
-	private String outgoingEmailFolderName;
+    private String outgoingEmailFolderName;
 
-	@Value("${casefile.plugin.email.folder.relative.path}")
-	private String caseFileIncomingEmailFolderName;
+    @Value("${casefile.plugin.email.folder.relative.path}")
+    private String caseFileIncomingEmailFolderName;
 
-	@Value("${complaint.plugin.email.folder.relative.path}")
-	private String complaintIncomingEmailFolderName;
+    @Value("${complaint.plugin.email.folder.relative.path}")
+    private String complaintIncomingEmailFolderName;
 
-	@Value("${task.plugin.email.folder.relative.path}")
-	private String taskIncomingEmailFolderName;
+    @Value("${task.plugin.email.folder.relative.path}")
+    private String taskIncomingEmailFolderName;
 
 	@Override
 	public void execute(EcmFile entity, EcmFileTransactionPipelineContext pipelineContext)
