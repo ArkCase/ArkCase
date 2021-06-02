@@ -27,61 +27,6 @@ package com.armedia.acm.plugins.ecm.service.impl;
  * #L%
  */
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
-
-import javax.persistence.PersistenceException;
-import javax.servlet.http.HttpSession;
-import javax.validation.ValidationException;
-
-import org.apache.chemistry.opencmis.client.api.CmisObject;
-import org.apache.chemistry.opencmis.client.api.Document;
-import org.apache.chemistry.opencmis.client.api.Folder;
-import org.apache.chemistry.opencmis.commons.PropertyIds;
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.disk.DiskFileItem;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.ApplicationEventPublisherAware;
-import org.springframework.messaging.MessageChannel;
-import org.springframework.messaging.support.MessageBuilder;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
-
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISActions;
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
 import com.armedia.acm.camelcontext.context.CamelContextManager;
@@ -2493,47 +2438,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     private void uploadAttachment(Authentication authentication, String parentObjectType, Long parentObjectId, String folderCmisId,
             List<EcmFile> uploadedFiles, List<EmailAttachmentExtractorComponent.EmailAttachment> emailAttachments)
             throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException
-    {
-        for (EmailAttachmentExtractorComponent.EmailAttachment emailAttachment : emailAttachments)
-        {
-            try
-            {
-                EcmFile temp = upload(
-                        emailAttachment.getName(),
-                        "Attachment",
-                        "Document",
-                        emailAttachment.getInputStream(),
-                        emailAttachment.getContentType(),
-                        emailAttachment.getName(),
-                        authentication,
-                        folderCmisId,
-                        parentObjectType,
-                        parentObjectId);
-                uploadedFiles.add(temp);
-
-                applicationEventPublisher.publishEvent(new EcmFilePostUploadEvent(temp, authentication.getName()));
-            }
-            catch (AcmCreateObjectFailedException e)
-            {
-                if (e.getMessage().contains("MIME type"))
-                {
-                    log.warn("Failed to upload email attachment {}. Attachment MIME type not acceptable. Skip this file",
-                            emailAttachment.getName());
-                }
-                else
-                {
-                    throw e;
-                }
-            }
-
-        }
-    }
-
-    @Override
-    @Transactional
-    public List<EcmFile> uploadMultipleFilesWithData(List<MultipartFile> fileList, List<EcmFile> metadataList, String parentObjectType,
-            Long parentObjectId, String folderCmisId, Authentication authentication)
-            throws AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         for (EmailAttachmentExtractorComponent.EmailAttachment emailAttachment : emailAttachments)
         {
