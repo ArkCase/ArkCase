@@ -50,6 +50,9 @@ public class BillingTemplateModelProvider implements TemplateModelProvider<Billi
     @Value("${tokenExpiration.fileLinks}")
     private Long tokenExpiry;
 
+    @Value("${payment.enabled}")
+    private Boolean paymentEnabled;
+
     @Override
     public BillingTemplateModel getModel(Object object)
     {
@@ -82,12 +85,16 @@ public class BillingTemplateModelProvider implements TemplateModelProvider<Billi
         }
 
         getAuditPropertyEntityAdapter().setUserId(notification.getCreator());
-        String token = authenticationTokenService.getUncachedTokenForAuthentication(null);
-        String relativePaths = applicationConfig.getBaseUrl() + "/api/latest/plugin/billing/touchnet?amt=" + amount + "&objectId=" + objectId + "&ecmFileId=" + fileId + "&objectType=" + notification.getParentType()
-                + "&objectNumber=" + objectNumber + "&acm_email_ticket=" + token + "__comma__" + applicationConfig.getBaseUrl() + "/api/latest/plugin/billing/confirmPayment";
 
-        authenticationTokenService.addTokenToRelativePaths(Arrays.asList(relativePaths.split("__comma__")), token, tokenExpiry, notification.getEmailAddresses());
+        String token = null;
+        if(paymentEnabled)
+        {
+            token = authenticationTokenService.getUncachedTokenForAuthentication(null);
+            String relativePaths = applicationConfig.getBaseUrl() + "/api/latest/plugin/billing/touchnet?amt=" + amount + "&objectId=" + objectId + "&ecmFileId=" + fileId + "&objectType=" + notification.getParentType()
+                    + "&objectNumber=" + objectNumber + "&acm_email_ticket=" + token + "__comma__" + applicationConfig.getBaseUrl() + "/api/latest/plugin/billing/confirmPayment";
 
+            authenticationTokenService.addTokenToRelativePaths(Arrays.asList(relativePaths.split("__comma__")), token, tokenExpiry, notification.getEmailAddresses());
+        }
         return new BillingTemplateModel(amount, token, fileId, objectId, notification.getParentType(), objectNumber, billName, paymentMethod, last4digitsOfCardNumber, date.toString(), sessionId, message);
     }
 
@@ -125,5 +132,12 @@ public class BillingTemplateModelProvider implements TemplateModelProvider<Billi
     public void setApplicationConfig(ApplicationConfig applicationConfig)
     {
         this.applicationConfig = applicationConfig;
+    }
+    public Boolean getPaymentEnabled() {
+        return paymentEnabled;
+    }
+
+    public void setPaymentEnabled(Boolean paymentEnabled) {
+        this.paymentEnabled = paymentEnabled;
     }
 }
