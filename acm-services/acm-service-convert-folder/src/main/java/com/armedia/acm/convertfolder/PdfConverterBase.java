@@ -125,7 +125,7 @@ public abstract class PdfConverterBase implements FileConverter
             EcmFile metadata = new EcmFile();
             metadata.setFileType(file.getFileType());
             metadata.setFileLang(file.getFileLang());
-            metadata.setFileName(file.getFileName() + "-converted-" + file.getActiveVersionTag());
+            metadata.setFileName(file.getFileName() + "-converted-" + file.getActiveVersionTag()); //createFileName(file)
             metadata.setCmisRepositoryId(file.getCmisRepositoryId());
             metadata.setFileActiveVersionMimeType(APPLICATION_PDF);
 
