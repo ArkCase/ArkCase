@@ -28,9 +28,11 @@ package gov.foia.listener;
  */
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.plugins.ecm.model.AcmMultipartFile;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
@@ -60,9 +62,7 @@ import org.slf4j.MDC;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import javax.persistence.NoResultException;
@@ -182,7 +182,6 @@ public class ZylabProductionFileIncomingListener implements ApplicationListener<
         return new UsernamePasswordAuthenticationToken(ZYLAB_INTEGRATION_SYSTEM_USER, "");
     }
 
-    @Transactional(rollbackFor = Exception.class)
     public void uploadZylabProductionToRequest(FOIARequest foiaRequest, long matterId, String productionKey, Authentication auth)
             throws ZylabProductionSyncException
     {
@@ -197,6 +196,8 @@ public class ZylabProductionFileIncomingListener implements ApplicationListener<
         List<ZylabFileMetadata> zylabFileMetadataList = ZylabProductionUtils.getFileMetadataFromLoadFile(loadFile, matterId,
                 productionKey);
         List<ZylabFile> zylabFiles = ZylabProductionUtils.linkMetadataToZylabFiles(productionFiles, zylabFileMetadataList);
+
+        AcmFolder newProductionFolder = null;
 
         try
         {
@@ -213,7 +214,7 @@ public class ZylabProductionFileIncomingListener implements ApplicationListener<
             AcmFolder workingFolder = getAcmFolderService().getSubfolderByName(rootFolder, workingFolderName);
 
             String productionFolderName = FilenameUtils.getBaseName(loadFile.getName());
-            AcmFolder newProductionFolder = getAcmFolderService().addNewFolder(workingFolder, productionFolderName);
+            newProductionFolder = getAcmFolderService().addNewFolder(workingFolder, productionFolderName);
 
             if (!responsiveFiles.isEmpty())
             {
@@ -239,6 +240,17 @@ public class ZylabProductionFileIncomingListener implements ApplicationListener<
         catch (Exception e)
         {
             log.error("Uploading Zylab production files to Arkcase failed", e);
+            if (newProductionFolder != null)
+            {
+                try
+                {
+                    getAcmFolderService().deleteFolderTree(newProductionFolder.getId(), auth);
+                }
+                catch (AcmUserActionFailedException | AcmObjectNotFoundException acmUserActionFailedException)
+                {
+                    log.warn("Deleting root production folder for Production [{}], Matter [{}] failed", productionKey, matterId);
+                }
+            }
             throw new ZylabProductionSyncException("Uploading Zylab production files to Arkcase failed", e);
         }
         finally
@@ -252,17 +264,18 @@ public class ZylabProductionFileIncomingListener implements ApplicationListener<
     private List<EcmFile> uploadZylabFiles(AcmFolder parentFolder, List<ZylabFile> zylabFiles, FOIARequest foiaRequest, Authentication auth)
             throws IOException, AcmCreateObjectFailedException, AcmUserActionFailedException
     {
-        List<MultipartFile> filesToUpload = new ArrayList<>();
-        List<EcmFile> filesData = new ArrayList<>();
+        List<EcmFile> uploadedFiles = new ArrayList<>();
 
         for (ZylabFile zylabFile : zylabFiles)
         {
-            filesToUpload.add(getMultipartFile(zylabFile));
-            filesData.add(getEcmFile(zylabFile));
+            AcmMultipartFile multipartFile = new AcmMultipartFile(getMultipartFile(zylabFile), false);
+            EcmFile uploadedFile = getEcmFileService().upload(auth, multipartFile, parentFolder.getCmisFolderId(),
+                    foiaRequest.getObjectType(),
+                    foiaRequest.getId(), getEcmFile(zylabFile));
+            uploadedFiles.add(uploadedFile);
         }
 
-        return getEcmFileService().uploadMultipleFilesWithData(filesToUpload, filesData, foiaRequest.getObjectType(),
-                foiaRequest.getId(), parentFolder.getCmisFolderId(), auth);
+        return uploadedFiles;
     }
 
     private CommonsMultipartFile getMultipartFile(ZylabFile zylabFile) throws IOException
