@@ -190,6 +190,7 @@
                     <beans:ref bean="foiaRequestDataUpdateExecutor"/>
                     <beans:ref bean="solrReindexFOIAPersonExecutor"/>
                     <beans:ref bean="multiplePortalUsersWithSameEmailCleanupExecutor"/>
+                    <beans:ref bean="createPersonFromExistingUsersExecutor"/>
                 </beans:list>
             </beans:property>
 

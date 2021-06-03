@@ -15,7 +15,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Created by Ana Serafimoska <ana.serafimoska@armedia.com> on 6/3/2021
@@ -45,15 +44,9 @@ public class CreateFOIAPersonFromExistingUsersExecutor implements AcmDataUpdateE
             if (!acmUser.getUserId().equals("OCR_SERVICE") && !acmUser.getUserId().equals("TRANSCRIBE_SERVICE"))
             {
                 FOIAPerson existingPerson = (FOIAPerson) getPersonDao().findByLdapUserId(acmUser.getUserId());
-                Optional<Person> existingPersonWithoutLdapId = getPersonDao()
-                        .findByEmail(acmUser.getMail());
                 if (existingPerson != null)
                 {
                     addOrUpdatePerson(acmUser, existingPerson);
-                }
-                else if (existingPersonWithoutLdapId.isPresent())
-                {
-                    addOrUpdatePerson(acmUser, (FOIAPerson) existingPersonWithoutLdapId.get());
                 }
                 else
                 {

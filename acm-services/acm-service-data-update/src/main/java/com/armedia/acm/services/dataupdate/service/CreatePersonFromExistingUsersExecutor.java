@@ -27,7 +27,7 @@ public class CreatePersonFromExistingUsersExecutor implements AcmDataUpdateExecu
     @Override
     public String getUpdateId()
     {
-        return "create-persons-from-existing-users-v2";
+        return "create-persons-from-existing-users-v1";
     }
 
     @Override
@@ -59,6 +59,7 @@ public class CreatePersonFromExistingUsersExecutor implements AcmDataUpdateExecu
         person.setLdapUserId(acmUser.getUserId());
         person.setGivenName(acmUser.getFirstName() != null ? acmUser.getFirstName() : "Unknown");
         person.setFamilyName(acmUser.getLastName() != null ? acmUser.getLastName() : "Unknown");
+        person.setTitle("-");
 
         List<ContactMethod> contactMethods = new ArrayList<>();
         ContactMethod contactMethodEmail = new ContactMethod();

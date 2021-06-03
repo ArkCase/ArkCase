@@ -13,7 +13,6 @@ import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.event.UserPersistenceEvent;
 import gov.foia.model.FOIAPerson;
-import gov.foia.model.FoiaConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationListener;
@@ -22,7 +21,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Created by Ana Serafimoska <ana.serafimoska@armedia.com> on 6/3/2021
@@ -49,15 +47,9 @@ public class CreateFOIAPersonFromUserListener implements ApplicationListener<Use
             {
                 FOIAPerson existingPerson = (FOIAPerson) getPersonDao()
                         .findByLdapUserId(((AcmUser) ((UserPersistenceEvent) object).getSource()).getUserId());
-                Optional<Person> existingPersonWithoutLdapId = getPersonDao()
-                        .findByEmail(((AcmUser) ((UserPersistenceEvent) object).getSource()).getMail());
                 if (existingPerson != null)
                 {
                     addOrUpdatePerson((UserPersistenceEvent) object, auth, existingPerson);
-                }
-                else if (existingPersonWithoutLdapId.isPresent())
-                {
-                    addOrUpdatePerson((UserPersistenceEvent) object, auth, (FOIAPerson) existingPersonWithoutLdapId.get());
                 }
                 else
                 {
