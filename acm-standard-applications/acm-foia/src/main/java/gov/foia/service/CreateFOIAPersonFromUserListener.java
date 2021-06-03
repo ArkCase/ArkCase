@@ -1,5 +1,6 @@
-package com.armedia.acm.plugins.person.service;
+package gov.foia.service;
 
+import com.armedia.acm.configuration.model.ConfigurationClientConfig;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
@@ -7,10 +8,11 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Person;
+import com.armedia.acm.plugins.person.service.PersonService;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.event.UserPersistenceEvent;
-
+import gov.foia.model.FOIAPerson;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationListener;
@@ -21,9 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Ana Serafimoska <ana.serafimoska@armedia.com> on 5/19/2021
+ * Created by Ana Serafimoska <ana.serafimoska@armedia.com> on 6/3/2021
  */
-public class CreatePersonFromUser implements ApplicationListener<UserPersistenceEvent>
+public class CreateFOIAPersonFromUserListener implements ApplicationListener<UserPersistenceEvent>
 {
     private transient Logger log = LogManager.getLogger(getClass());
     private PersonService personService;
@@ -43,7 +45,7 @@ public class CreatePersonFromUser implements ApplicationListener<UserPersistence
         {
             if (!userId.equals("OCR_SERVICE") && !userId.equals("TRANSCRIBE_SERVICE"))
             {
-                Person existingPerson = getPersonDao()
+                FOIAPerson existingPerson = (FOIAPerson) getPersonDao()
                         .findByLdapUserId(((AcmUser) ((UserPersistenceEvent) object).getSource()).getUserId());
                 if (existingPerson != null)
                 {
@@ -51,14 +53,14 @@ public class CreatePersonFromUser implements ApplicationListener<UserPersistence
                 }
                 else
                 {
-                    Person person = new Person();
+                    FOIAPerson person = new FOIAPerson();
                     addOrUpdatePerson((UserPersistenceEvent) object, auth, person);
                 }
             }
         }
     }
 
-    private void addOrUpdatePerson(UserPersistenceEvent object, Authentication auth, Person person)
+    private void addOrUpdatePerson(UserPersistenceEvent object, Authentication auth, FOIAPerson person)
     {
         person.setLdapUserId(((AcmUser) object.getSource()).getUserId());
         person.setGivenName(
@@ -66,6 +68,7 @@ public class CreatePersonFromUser implements ApplicationListener<UserPersistence
         person.setFamilyName(
                 ((AcmUser) object.getSource()).getLastName() != null ? ((AcmUser) object.getSource()).getLastName() : "Unknown");
         person.setTitle("-");
+
 
         List<ContactMethod> contactMethods = new ArrayList<>();
         ContactMethod contactMethodEmail = new ContactMethod();
@@ -108,4 +111,5 @@ public class CreatePersonFromUser implements ApplicationListener<UserPersistence
     {
         this.personDao = personDao;
     }
+
 }

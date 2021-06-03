@@ -1,12 +1,15 @@
-package com.armedia.acm.services.dataupdate.service;
+package gov.foia.service.dataupdate;
 
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Person;
+import com.armedia.acm.services.dataupdate.service.AcmDataUpdateExecutor;
+import com.armedia.acm.services.dataupdate.service.AcmDataUpdateService;
+import com.armedia.acm.services.dataupdate.service.SolrReindexService;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-
+import gov.foia.model.FOIAPerson;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -14,9 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Ana Serafimoska <ana.serafimoska@armedia.com> on 5/20/2021
+ * Created by Ana Serafimoska <ana.serafimoska@armedia.com> on 6/3/2021
  */
-public class CreatePersonFromExistingUsersExecutor implements AcmDataUpdateExecutor
+public class CreateFOIAPersonFromExistingUsersExecutor implements AcmDataUpdateExecutor
 {
     private transient Logger log = LogManager.getLogger(getClass());
     private SolrReindexService solrReindexService;
@@ -27,7 +30,7 @@ public class CreatePersonFromExistingUsersExecutor implements AcmDataUpdateExecu
     @Override
     public String getUpdateId()
     {
-        return "create-persons-from-existing-users-v1";
+        return "create-foia-persons-from-existing-users-v1";
     }
 
     @Override
@@ -40,21 +43,21 @@ public class CreatePersonFromExistingUsersExecutor implements AcmDataUpdateExecu
         {
             if (!acmUser.getUserId().equals("OCR_SERVICE") && !acmUser.getUserId().equals("TRANSCRIBE_SERVICE"))
             {
-                Person existingPerson = getPersonDao().findByLdapUserId(acmUser.getUserId());
+                FOIAPerson existingPerson = (FOIAPerson) getPersonDao().findByLdapUserId(acmUser.getUserId());
                 if (existingPerson != null)
                 {
                     addOrUpdatePerson(acmUser, existingPerson);
                 }
                 else
                 {
-                    Person person = new Person();
+                    FOIAPerson person = new FOIAPerson();
                     addOrUpdatePerson(acmUser, person);
                 }
             }
         }
     }
 
-    private void addOrUpdatePerson(AcmUser acmUser, Person person)
+    private void addOrUpdatePerson(AcmUser acmUser, FOIAPerson person)
     {
         person.setLdapUserId(acmUser.getUserId());
         person.setGivenName(acmUser.getFirstName() != null ? acmUser.getFirstName() : "Unknown");
