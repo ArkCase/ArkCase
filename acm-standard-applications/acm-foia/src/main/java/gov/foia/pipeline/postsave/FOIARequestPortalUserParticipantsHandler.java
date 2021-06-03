@@ -64,7 +64,7 @@ public class FOIARequestPortalUserParticipantsHandler implements PipelineHandler
         if (entity.getId() != null && requester instanceof PortalFOIAPerson)
         {
 
-            if (requester.getDefaultAddress() != null)
+            if (requester.getDefaultEmail() != null)
             {
                 List<AcmUser> portalUsers = getUserDao().findByEmailAddress(requester.getDefaultEmail().getValue());
 
