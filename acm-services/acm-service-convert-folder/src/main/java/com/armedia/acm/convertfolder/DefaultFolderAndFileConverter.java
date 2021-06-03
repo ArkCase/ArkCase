@@ -254,7 +254,7 @@ public class DefaultFolderAndFileConverter implements FolderConverter, FileConve
         }
         else
         {
-            EcmFile.class.cast(file).setFileName(fileName + "-converted-" + EcmFile.class.cast(file).getActiveVersionTag());
+            EcmFile.class.cast(file).setFileName(fileName);
         }
 
         return file;
