@@ -190,6 +190,7 @@
                     <beans:ref bean="foiaRequestDataUpdateExecutor"/>
                     <beans:ref bean="solrReindexFOIAPersonExecutor"/>
                     <beans:ref bean="multiplePortalUsersWithSameEmailCleanupExecutor"/>
+                    <beans:ref bean="createPersonFromExistingUsersExecutor"/>
                 </beans:list>
             </beans:property>
 
@@ -487,6 +488,14 @@
             <beans:property name="documentExemptionService" ref="documentExemptionService"/>
             <beans:property name="lookupDao" ref="lookupDao"/>
             <beans:property name="zylabEventPublisher" ref="zylabEventPublisher"/>
+        </beans:bean>
+
+        <beans:bean id="createPersonFromExistingUsersExecutor"
+              class="gov.foia.service.dataupdate.CreateFOIAPersonFromExistingUsersExecutor">
+            <beans:property name="solrReindexService" ref="solrReindexService"/>
+            <beans:property name="userDao" ref="userJpaDao"/>
+            <beans:property name="personDao" ref="acmPersonDao"/>
+            <beans:property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         </beans:bean>
 
     </beans:beans>

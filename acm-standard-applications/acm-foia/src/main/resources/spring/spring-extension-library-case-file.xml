@@ -411,6 +411,10 @@
             <beans:property name="foiaRequestDao" ref="foiaRequestDao"/>
         </beans:bean>
 
+        <beans:bean id="createPersonFromUser" class="gov.foia.service.CreateFOIAPersonFromUserListener">
+            <beans:property name="personService" ref="personService"/>
+            <beans:property name="personDao" ref="acmPersonDao"/>
+        </beans:bean>
 
     </beans:beans>
 </beans:beans>
