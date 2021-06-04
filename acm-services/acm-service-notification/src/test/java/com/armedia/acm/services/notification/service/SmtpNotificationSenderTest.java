@@ -138,8 +138,7 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         NotificationConfig notificationConfig = new NotificationConfig();
         notificationConfig.setBaseUrl(BASE_URL);
         smtpNotificationSender.setNotificationConfig(notificationConfig);
-        smtpNotificationSender.setTemplateConfigurations(templateConfigurations);
-        smtpNotificationSender.setTemplatesConfiguration(templateConfiguration);
+        smtpNotificationSender.setTemplateConfigurationManager(templateConfigurationManager);
     }
 
     @Test

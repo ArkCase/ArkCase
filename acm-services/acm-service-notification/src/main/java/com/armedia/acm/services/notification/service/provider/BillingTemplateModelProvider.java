@@ -40,13 +40,12 @@ import java.util.Arrays;
 import java.util.Date;
 
 public class BillingTemplateModelProvider implements TemplateModelProvider<BillingTemplateModel>
-
 {
     private AuthenticationTokenService authenticationTokenService;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private ApplicationConfig applicationConfig;
 
-    @Value("${tokenExpiration.fileLinks}")
+    @Value("${tokenExpiration.paymentLinks}")
     private Long tokenExpiry;
 
     @Value("${payment.enabled}")
