@@ -43,7 +43,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TemplateConfigurationManager implements ApplicationListener<ApplicationEvent>
+public class TemplateConfigurationManager implements ApplicationListener
 {
 
     private final Logger LOG = LogManager.getLogger(getClass());
@@ -56,7 +56,7 @@ public class TemplateConfigurationManager implements ApplicationListener<Applica
     public void onApplicationEvent(ApplicationEvent event)
     {
         if (event instanceof ConfigurationFileChangedEvent
-                && (((ConfigurationFileChangedEvent) event).getConfigFile().equals("templates-configuration.json")))
+                && (((ConfigurationFileChangedEvent) event).getBaseFileName().equals("templates-configuration.json")))
         {
             try
             {
