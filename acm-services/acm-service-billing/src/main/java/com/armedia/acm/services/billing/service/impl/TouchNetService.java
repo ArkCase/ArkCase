@@ -207,7 +207,7 @@ public class TouchNetService
         String ticket = generateTicketID(amount, objectId, objectType, ecmFileId, acm_ticket, objectNumber);
         String ticketName = objectId + objectType;
 
-        return "<form name=\"autoform\" action=\"" + securePayLinkEndPoint + "\" method=\"post\">\n" +
+        String form = "<form name=\"autoform\" action=\"" + securePayLinkEndPoint + "\" method=\"post\">\n" +
                 "    <input name=\"UPAY_SITE_ID\" type=\"hidden\" value=\"" + uPaySiteId + "\" />\n" +
                 "    <input name=\"TICKET\" type=\"hidden\" value=\"" + ticket + "\" />\n" +
                 "    <input name=\"TICKET_NAME\" type=\"hidden\" value=\"" + ticketName + "\" />\n" +
@@ -215,6 +215,10 @@ public class TouchNetService
                 "<script type=\"text/javascript\">\n" +
                 "         document.autoform.submit();\n" +
                 "</script>\n";
+
+        log.debug(form);
+
+        return form;
     }
 
     private String redirectToAlreadyPaidPage()
