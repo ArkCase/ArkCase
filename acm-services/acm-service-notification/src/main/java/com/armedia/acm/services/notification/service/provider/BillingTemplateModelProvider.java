@@ -33,21 +33,25 @@ import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.service.provider.model.BillingTemplateModel;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 
-import java.util.Arrays;
-import java.util.Date;
-
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.Date;
 
 public class BillingTemplateModelProvider implements TemplateModelProvider<BillingTemplateModel>
 {
+    private Logger log = LogManager.getLogger(getClass());
+
     private AuthenticationTokenService authenticationTokenService;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private ApplicationConfig applicationConfig;
 
-    @Value("${tokenExpiration.fileLinks}")
+    @Value("${tokenExpiration.paymentLinks}")
     private Long tokenExpiry;
 
     @Value("${payment.enabled}")
@@ -67,7 +71,7 @@ public class BillingTemplateModelProvider implements TemplateModelProvider<Billi
         String last4digitsOfCardNumber = "";
         String sessionId = "";
         String message = "";
-        if(params.length > 2)
+        if (params.length > 2)
         {
             billName = params[2];
             paymentMethod = params[3];
@@ -77,7 +81,7 @@ public class BillingTemplateModelProvider implements TemplateModelProvider<Billi
         }
         Date date = notification.getCreated();
         String objectNumber = "";
-        if(notification.getTitle().contains(":"))
+        if (notification.getTitle().contains(":"))
         {
             String[] objectParams = notification.getTitle().split(":");
             String[] objParams = objectParams[1].split(" ");
@@ -87,15 +91,27 @@ public class BillingTemplateModelProvider implements TemplateModelProvider<Billi
         getAuditPropertyEntityAdapter().setUserId(notification.getCreator());
 
         String token = null;
-        if(paymentEnabled)
+        if (paymentEnabled)
         {
             token = authenticationTokenService.getUncachedTokenForAuthentication(null);
-            String relativePaths = applicationConfig.getBaseUrl() + "/api/latest/plugin/billing/touchnet?amt=" + amount + "&objectId=" + objectId + "&ecmFileId=" + fileId + "&objectType=" + notification.getParentType()
-                    + "&objectNumber=" + objectNumber + "&acm_email_ticket=" + token + "__comma__" + applicationConfig.getBaseUrl() + "/api/latest/plugin/billing/confirmPayment";
+            String relativePaths = applicationConfig.getBaseUrl() + "/api/latest/plugin/billing/touchnet?amt=" + amount
+                    + "&objectId=" + objectId + "&ecmFileId=" + fileId + "&objectType=" + notification.getParentType()
+                    + "&objectNumber=" + objectNumber + "&acm_email_ticket=" + token + "__comma__" + applicationConfig.getBaseUrl()
+                    + "/api/latest/plugin/billing/confirmPayment";
+            try
+            {
+                relativePaths = URLEncoder.encode(relativePaths, "UTF-8");
+            }
+            catch (UnsupportedEncodingException e)
+            {
+                log.error("Cannot encode URL=" + relativePaths + ". The original path will be used.", e);
+            }
 
-            authenticationTokenService.addTokenToRelativePaths(Arrays.asList(relativePaths.split("__comma__")), token, tokenExpiry, notification.getEmailAddresses());
+            authenticationTokenService.addTokenToRelativePaths(Arrays.asList(relativePaths.split("__comma__")), token, tokenExpiry,
+                    notification.getEmailAddresses());
         }
-        return new BillingTemplateModel(amount, token, fileId, objectId, notification.getParentType(), objectNumber, billName, paymentMethod, last4digitsOfCardNumber, date.toString(), sessionId, message);
+        return new BillingTemplateModel(amount, token, fileId, objectId, notification.getParentType(), objectNumber, billName,
+                paymentMethod, last4digitsOfCardNumber, date.toString(), sessionId, message);
     }
 
     @Override
@@ -133,11 +149,14 @@ public class BillingTemplateModelProvider implements TemplateModelProvider<Billi
     {
         this.applicationConfig = applicationConfig;
     }
-    public Boolean getPaymentEnabled() {
+
+    public Boolean getPaymentEnabled()
+    {
         return paymentEnabled;
     }
 
-    public void setPaymentEnabled(Boolean paymentEnabled) {
+    public void setPaymentEnabled(Boolean paymentEnabled)
+    {
         this.paymentEnabled = paymentEnabled;
     }
 }
