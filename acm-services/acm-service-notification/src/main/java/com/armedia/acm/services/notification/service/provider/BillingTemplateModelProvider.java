@@ -36,15 +36,11 @@ import com.armedia.acm.services.notification.service.provider.model.BillingTempl
 
 import org.springframework.beans.factory.annotation.Value;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.Date;
 
 public class BillingTemplateModelProvider implements TemplateModelProvider<BillingTemplateModel>
 {
-    private Logger log = LogManager.getLogger(getClass());
-
     private AuthenticationTokenService authenticationTokenService;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private ApplicationConfig applicationConfig;
