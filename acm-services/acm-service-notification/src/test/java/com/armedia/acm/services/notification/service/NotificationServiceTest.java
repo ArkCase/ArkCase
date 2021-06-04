@@ -124,8 +124,7 @@ public class NotificationServiceTest extends EasyMockSupport
         smtpNotificationServer.setEmailSenderService(mockEmailSenderService);
         smtpNotificationServer.setNotificationUtils(mockNotificationUtils);
         smtpNotificationServer.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
-        smtpNotificationServer.setTemplateConfigurations(templateConfigurations);
-        smtpNotificationServer.setTemplatesConfiguration(templateConfiguration);
+        smtpNotificationServer.setTemplateConfigurationManager(templateConfigurationManager);
 
         NotificationSenderFactory notificationSenderFactory = new NotificationSenderFactory();
         Map<String, NotificationSender> notificationSenderMap = new HashMap<>();
