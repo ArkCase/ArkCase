@@ -34,8 +34,6 @@ import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenS
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.service.provider.model.BillingTemplateModel;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.io.UnsupportedEncodingException;
@@ -94,21 +92,17 @@ public class BillingTemplateModelProvider implements TemplateModelProvider<Billi
         if (paymentEnabled)
         {
             token = authenticationTokenService.getUncachedTokenForAuthentication(null);
+
             String relativePaths = applicationConfig.getBaseUrl() + "/api/latest/plugin/billing/touchnet?amt=" + amount
                     + "&objectId=" + objectId + "&ecmFileId=" + fileId + "&objectType=" + notification.getParentType()
                     + "&objectNumber=" + objectNumber + "&acm_email_ticket=" + token + "__comma__" + applicationConfig.getBaseUrl()
                     + "/api/latest/plugin/billing/confirmPayment";
-            try
-            {
-                relativePaths = URLEncoder.encode(relativePaths, "UTF-8");
-            }
-            catch (UnsupportedEncodingException e)
-            {
-                log.error("Cannot encode URL=" + relativePaths + ". The original path will be used.", e);
-            }
+
+            relativePaths = relativePaths.replace(" ", "%20");
 
             authenticationTokenService.addTokenToRelativePaths(Arrays.asList(relativePaths.split("__comma__")), token, tokenExpiry,
                     notification.getEmailAddresses());
+
         }
         return new BillingTemplateModel(amount, token, fileId, objectId, notification.getParentType(), objectNumber, billName,
                 paymentMethod, last4digitsOfCardNumber, date.toString(), sessionId, message);
