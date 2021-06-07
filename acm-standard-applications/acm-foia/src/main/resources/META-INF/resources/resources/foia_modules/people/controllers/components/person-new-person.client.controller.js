@@ -215,7 +215,7 @@ angular.module('people').controller(
                     MessageService.info(personWasCreatedMessage);
                     $timeout(function () {
                         ObjectService.showObject(ObjectService.ObjectTypes.PERSON, objectInfo.data.id);
-                    }, 1000);
+                    }, 1500);
                     $scope.onModalClose();
                     $scope.loading = false;
                     $scope.loadingIcon = "fa fa-floppy-o";
