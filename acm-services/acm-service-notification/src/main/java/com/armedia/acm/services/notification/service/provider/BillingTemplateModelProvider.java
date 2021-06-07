@@ -51,6 +51,9 @@ public class BillingTemplateModelProvider implements TemplateModelProvider<Billi
     @Value("${payment.enabled}")
     private Boolean paymentEnabled;
 
+    @Value("${payment.touchnet.upaysiteid}")
+    private String uPaySiteId;
+
     @Override
     public BillingTemplateModel getModel(Object object)
     {
@@ -92,7 +95,7 @@ public class BillingTemplateModelProvider implements TemplateModelProvider<Billi
             String relativePaths = applicationConfig.getBaseUrl() + "/api/latest/plugin/billing/touchnet?amt=" + amount
                     + "&objectId=" + objectId + "&ecmFileId=" + fileId + "&objectType=" + notification.getParentType()
                     + "&objectNumber=" + objectNumber + "&acm_email_ticket=" + token + "__comma__" + applicationConfig.getBaseUrl()
-                    + "/api/latest/plugin/billing/confirmPayment";
+                    + "/api/latest/plugin/billing/confirmPayment?UPAY_SITE_ID=" + uPaySiteId + "&EXT_TRANS_ID=" + token;
 
             relativePaths = relativePaths.replace(" ", "%20");
 
@@ -148,5 +151,15 @@ public class BillingTemplateModelProvider implements TemplateModelProvider<Billi
     public void setPaymentEnabled(Boolean paymentEnabled)
     {
         this.paymentEnabled = paymentEnabled;
+    }
+
+    public String getuPaySiteId()
+    {
+        return uPaySiteId;
+    }
+
+    public void setuPaySiteId(String uPaySiteId)
+    {
+        this.uPaySiteId = uPaySiteId;
     }
 }
