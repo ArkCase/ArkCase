@@ -42,7 +42,7 @@ public class DateTimeService {
     private ApplicationConfig appConfig;
     public static DateTimeService dateTimeService;
 
-    private String dateTimePattern = "MM/dd/yyyy HH:mm [VV]";
+    private String dateTimePattern = "MM/dd/yyyy HH:mm a [VV]";
     private String datePattern = "MM/dd/yyyy";
 
     public void init()
