@@ -55,7 +55,6 @@ public class FileUploadConversionHandler implements PipelineHandler<EcmFile, Ecm
     private FileConverterFactory fileConverterFactory;
     private EcmFileService ecmFileService;
     private EcmFileDao ecmFileDao;
-    private AcmFolderService acmFolderService;
 
     @Value("${document.upload.policy.convertHtmlToPdf:false}")
     private Boolean convertHtmlToPdf;
@@ -78,93 +77,114 @@ public class FileUploadConversionHandler implements PipelineHandler<EcmFile, Ecm
     @Value("${task.plugin.email.folder.relative.path}")
     private String taskIncomingEmailFolderName;
 
-	@Override
-	public void execute(EcmFile entity, EcmFileTransactionPipelineContext pipelineContext)
-			throws PipelineProcessException {
-		entity = pipelineContext.getEcmFile();
-		String fileName = entity.getFileName();
-		String fileType = "." + entity.getFileExtension();
+    @Override
+    public void execute(EcmFile entity, EcmFileTransactionPipelineContext pipelineContext)
+            throws PipelineProcessException
+    {
+        entity = pipelineContext.getEcmFile();
+        String fileName = entity.getFileName();
+        String fileType = "." + entity.getFileExtension();
 
-		FileConverter fileConverter = getFileConverterFactory().getConverterOfType(fileType);
-		if (isConverterEnabledForFileType(fileType) && Objects.nonNull(fileConverter) && !entity.getFolder().getName().equals(outgoingEmailFolderName)
-				&& !entity.getFolder().getName().equals(caseFileIncomingEmailFolderName) && !!entity.getFolder().getName().equals(complaintIncomingEmailFolderName)
-				&& !entity.getFolder().getName().equals(taskIncomingEmailFolderName)) {
-			try {
-				log.debug("Converting file [{}.{}] to PDF started!", entity.getFileName(), entity.getFileExtension());
+        FileConverter fileConverter = getFileConverterFactory().getConverterOfType(fileType);
+        if (isConverterEnabledForFileType(fileType) && Objects.nonNull(fileConverter)
+                && isInEmailFolders(entity))
+        {
+            try
+            {
+                log.debug("Converting file [{}.{}] to PDF started!", entity.getFileName(), entity.getFileExtension());
 
-				File originalFile = pipelineContext.getFileContents();
-				File pdfConvertedFile = fileConverter.convert(new FileInputStream(originalFile), fileName);
-				if (pdfConvertedFile != null && pdfConvertedFile.exists() && pdfConvertedFile.length() > 0) {
-					try (InputStream pdfConvertedFileIs = new FileInputStream(pdfConvertedFile)) {
-						entity.setFileActiveVersionNameExtension(".pdf");
-						entity.setFileActiveVersionMimeType("application/pdf");
-						ecmFileDao.getEm().flush();
-						ecmFileService.update(entity, pdfConvertedFileIs, pipelineContext.getAuthentication());
+                File originalFile = pipelineContext.getFileContents();
+                File pdfConvertedFile = fileConverter.convert(new FileInputStream(originalFile), fileName);
+                if (pdfConvertedFile != null && pdfConvertedFile.exists() && pdfConvertedFile.length() > 0)
+                {
+                    try (InputStream pdfConvertedFileIs = new FileInputStream(pdfConvertedFile))
+                    {
+                        entity.setFileActiveVersionNameExtension(".pdf");
+                        entity.setFileActiveVersionMimeType("application/pdf");
+                        ecmFileDao.getEm().flush();
+                        ecmFileService.update(entity, pdfConvertedFileIs, pipelineContext.getAuthentication());
 
-						entity.getVersions().get(1).setFile(entity);
+                        entity.getVersions().get(1).setFile(entity);
 
-						pipelineContext.setEcmFile(entity);
-					}
-				}
+                        pipelineContext.setEcmFile(entity);
+                    }
+                }
 
-				log.debug("Converting file [{}.{}] to PDF finished successfully!", entity.getFileName(),
-						entity.getFileExtension());
-			} catch (Exception e) {
-				log.debug("Converting file [{}.{}] to PDF failed!", entity.getFileName(), entity.getFileExtension(), e);
-				// Conversion failed and we keep the original file only
-				return;
-			}
-		}
-	}
+                log.debug("Converting file [{}.{}] to PDF finished successfully!", entity.getFileName(),
+                        entity.getFileExtension());
+            }
+            catch (Exception e)
+            {
+                log.debug("Converting file [{}.{}] to PDF failed!", entity.getFileName(), entity.getFileExtension(), e);
+                // Conversion failed and we keep the original file only
+                return;
+            }
+        }
+    }
 
-	@Override
-	public void rollback(EcmFile entity, EcmFileTransactionPipelineContext pipelineContext)
-			throws PipelineProcessException {
-		// nothing to rollback
-	}
+    private boolean isInEmailFolders(EcmFile entity) {
+        return !entity.getFolder().getName().equals(outgoingEmailFolderName)
+                && !entity.getFolder().getName().equals(caseFileIncomingEmailFolderName)
+                && !entity.getFolder().getName().equals(complaintIncomingEmailFolderName)
+                && !entity.getFolder().getName().equals(taskIncomingEmailFolderName);
+    }
 
-	private Boolean isConverterEnabledForFileType(String fileType)
-	{
-		if(".html".equals(fileType))
-		{
-			return Objects.nonNull(getConvertHtmlToPdf()) ? getConvertHtmlToPdf() : false;
-		}
-		else if(".msg".equals(fileType))
-		{
-			return Objects.nonNull(getConvertMsgToPdf()) ? getConvertMsgToPdf() : false;
-		}
-		else if(".eml".equals(fileType))
-		{
-			return Objects.nonNull(getConvertEmlToPdf()) ? getConvertEmlToPdf() : false;
-		}
-		return false;
-	}
+    @Override
+    public void rollback(EcmFile entity, EcmFileTransactionPipelineContext pipelineContext)
+            throws PipelineProcessException
+    {
+        // nothing to rollback
+    }
 
-	public FileConverterFactory getFileConverterFactory() {
-		return fileConverterFactory;
-	}
+    private Boolean isConverterEnabledForFileType(String fileType)
+    {
+        if (".html".equals(fileType))
+        {
+            return Objects.nonNull(getConvertHtmlToPdf()) ? getConvertHtmlToPdf() : false;
+        }
+        else if (".msg".equals(fileType))
+        {
+            return Objects.nonNull(getConvertMsgToPdf()) ? getConvertMsgToPdf() : false;
+        }
+        else if (".eml".equals(fileType))
+        {
+            return Objects.nonNull(getConvertEmlToPdf()) ? getConvertEmlToPdf() : false;
+        }
+        return false;
+    }
 
-	public void setFileConverterFactory(FileConverterFactory fileConverterFactory) {
-		this.fileConverterFactory = fileConverterFactory;
-	}
+    public FileConverterFactory getFileConverterFactory()
+    {
+        return fileConverterFactory;
+    }
 
-	public EcmFileService getEcmFileService() {
-		return ecmFileService;
-	}
+    public void setFileConverterFactory(FileConverterFactory fileConverterFactory)
+    {
+        this.fileConverterFactory = fileConverterFactory;
+    }
 
-	public void setEcmFileService(EcmFileService ecmFileService) {
-		this.ecmFileService = ecmFileService;
-	}
+    public EcmFileService getEcmFileService()
+    {
+        return ecmFileService;
+    }
 
-	public EcmFileDao getEcmFileDao() {
-		return ecmFileDao;
-	}
+    public void setEcmFileService(EcmFileService ecmFileService)
+    {
+        this.ecmFileService = ecmFileService;
+    }
 
-	public void setEcmFileDao(EcmFileDao ecmFileDao) {
-		this.ecmFileDao = ecmFileDao;
-	}
+    public EcmFileDao getEcmFileDao()
+    {
+        return ecmFileDao;
+    }
 
-    public Boolean getConvertHtmlToPdf() {
+    public void setEcmFileDao(EcmFileDao ecmFileDao)
+    {
+        this.ecmFileDao = ecmFileDao;
+    }
+
+    public Boolean getConvertHtmlToPdf()
+    {
         return convertHtmlToPdf;
     }
 
