@@ -189,16 +189,16 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
     private FormattedMergeTerm setExemptionCodesOnExemptDocument(FOIARequest request)
     {
         FormattedMergeTerm exemptionCodesForExemptFiles = new FormattedMergeTerm();
-        List<ExemptionCode> exemptionCodes = foiaExemptionCodeDao.getExemptionCodesForExemptFilesForRequest(request.getId(),
-                request.getObjectType());
-        if (exemptionCodes != null)
+        exemptionCodesOnExemptDoc = foiaExemptionCodeDao.getExemptionCodesForExemptFilesForRequest(request.getId(),
+                request.getObjectType()).stream().distinct().collect(Collectors.toList());
+        if (exemptionCodesOnExemptDoc != null)
         {
             List<StandardLookupEntry> lookupEntries = (List<StandardLookupEntry>) getLookupDao().getLookupByName("annotationTags")
                     .getEntries();
             Map<String, String> codeDescriptions = lookupEntries.stream()
                     .collect(Collectors.toMap(StandardLookupEntry::getKey, StandardLookupEntry::getValue));
             List<FormattedRun> runs = new ArrayList<>();
-            for (ExemptionCode exCode : exemptionCodes)
+            for (ExemptionCode exCode : exemptionCodesOnExemptDoc)
             {
                 foiaExemptionService.createAndStyleRunsForCorrespondenceLetters(codeDescriptions, runs, exCode);
             }
@@ -210,9 +210,12 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
     private FormattedMergeTerm setRedactionsOnReleasedDocument(FOIARequest request)
     {
         FormattedMergeTerm redactionsForReleasedDocuments = new FormattedMergeTerm();
-        List<ExemptionCode> exemptionCodes = foiaExemptionCodeDao.getResponseFolderExemptionCodesForRequest(request);
+        List<ExemptionCode> exemptionCodes = foiaExemptionCodeDao.getResponseFolderExemptionCodesForRequest(request).stream().distinct().collect(Collectors.toList());;
         if (exemptionCodes != null)
         {
+            List<String> mappedExemptionCodesOnExemptDoc = exemptionCodesOnExemptDoc.stream().map(ExemptionCode::getExemptionCode).collect(Collectors.toList());
+            exemptionCodes = exemptionCodes.stream().filter(element-> !mappedExemptionCodesOnExemptDoc.contains(element.getExemptionCode())).collect(Collectors.toList());
+
             List<StandardLookupEntry> lookupEntries = (List<StandardLookupEntry>) getLookupDao().getLookupByName("annotationTags")
                     .getEntries();
             Map<String, String> codeDescriptions = lookupEntries.stream()
