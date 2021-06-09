@@ -349,25 +349,6 @@ public class OrganizationToSolrTransformerTest extends EasyMockSupport
         validateResultToSolrAdvancedSerach_primaryContactWithFullName(result);
     }
 
-    @Test
-    public void toSolrQuickSearch() throws Exception
-    {
-        // given
-        mockSearchAccessControlFields.setAccessControlFields(anyObject(SolrBaseDocument.class), anyObject(AcmAssignedObject.class));
-        expectLastCall();
-        expect(mockUserDao.quietFindByUserId("creator")).andReturn(creator);
-        expect(mockUserDao.quietFindByUserId("modifier")).andReturn(modifier);
-        replayAll();
-
-        // when
-        SolrDocument result = unit.toSolrQuickSearch(in);
-
-        verifyAll();
-
-        // then
-        validateResult(result);
-    }
-
     private void validateResultToSolrAdvancedSerach_primaryContactWithGivenName(SolrAdvancedSearchDocument result)
     {
         assertThat(result.getAdditionalProperties().get("primary_contact_s"), is("Test5"));

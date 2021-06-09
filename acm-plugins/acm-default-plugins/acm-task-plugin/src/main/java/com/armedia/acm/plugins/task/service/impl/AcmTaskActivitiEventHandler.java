@@ -136,9 +136,6 @@ public class AcmTaskActivitiEventHandler implements ApplicationListener<AcmTaskA
 
             SolrAdvancedSearchDocument advancedDocument = getTaskToSolrTransformer().toSolrAdvancedSearch(acmTask);
             getSendDocumentsToSolr().sendSolrAdvancedSearchDocuments(Arrays.asList(advancedDocument));
-
-            SolrDocument quickDocument = getTaskToSolrTransformer().toSolrQuickSearch(acmTask);
-            getSendDocumentsToSolr().sendSolrQuickSearchDocuments(Arrays.asList(quickDocument));
         }
 
     }

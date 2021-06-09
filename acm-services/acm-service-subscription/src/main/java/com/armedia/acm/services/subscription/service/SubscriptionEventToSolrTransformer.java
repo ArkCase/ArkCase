@@ -112,34 +112,6 @@ public class SubscriptionEventToSolrTransformer implements AcmObjectToSolrDocTra
     }
 
     @Override
-    public SolrDocument toSolrQuickSearch(AcmSubscriptionEvent in)
-    {
-
-        SolrDocument solr = new SolrDocument();
-
-        solr.setId(in.getId() + "-" + in.getObjectType());
-        solr.setObject_id_s(in.getId() + "");
-        solr.setObject_type_s(in.getObjectType());
-
-        solr.setCreate_tdt(in.getCreated());
-        solr.setAuthor(in.getCreator());
-        solr.setLast_modified_tdt(in.getModified());
-        solr.setModifier_s(in.getModifier());
-
-        String title = "Subscription on " + in.getEventObjectType() + ":" + in.getEventObjectId() + " - " + in.getEventObjectName();
-        solr.setTitle_parseable(title);
-        solr.setParent_object_id_s(Long.toString(in.getEventObjectId()));
-
-        solr.setParent_ref_s(in.getEventObjectId() + "-" + in.getEventObjectType());
-
-        solr.setParent_object_type_s(in.getEventObjectType());
-
-        solr.setOwner_s(in.getSubscriptionOwner());
-
-        return solr;
-    }
-
-    @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
         return AcmSubscriptionEvent.class.equals(acmObjectType);

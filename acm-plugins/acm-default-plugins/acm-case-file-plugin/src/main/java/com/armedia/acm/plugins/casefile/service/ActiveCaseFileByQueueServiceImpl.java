@@ -75,7 +75,7 @@ public class ActiveCaseFileByQueueServiceImpl implements ActiveCaseFileByQueueSe
 
         try
         {
-            solrResponse = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, start, n,
+            solrResponse = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query, start, n,
                     sortParam);
         }
         catch (SolrException e)
@@ -102,7 +102,7 @@ public class ActiveCaseFileByQueueServiceImpl implements ActiveCaseFileByQueueSe
 
         try
         {
-            solrResponse = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, facetQuery, 0, 1, "");
+            solrResponse = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, facetQuery, 0, 1, "");
         }
         catch (SolrException e)
         {

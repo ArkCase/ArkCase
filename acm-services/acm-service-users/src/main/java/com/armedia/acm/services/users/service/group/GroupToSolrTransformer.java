@@ -131,39 +131,6 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
     }
 
     @Override
-    public SolrDocument toSolrQuickSearch(AcmGroup in)
-    {
-        acmLdapSyncConfig = springContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).get(in.getDirectoryName() + "_sync");
-        LOG.info("Creating Solr quick search document for Group.");
-
-        SolrDocument solr = new SolrDocument();
-        solr.setId(in.getName() + "-GROUP");
-        solr.setObject_id_s(in.getName());
-        solr.setObject_display_name_s(in.getDisplayName());
-        solr.setObject_type_s("GROUP");
-        solr.setName(in.getName());
-        solr.setAuthor(in.getCreator());
-        solr.setCreate_tdt(in.getCreated());
-        solr.setModifier_s(in.getModifier());
-        solr.setLast_modified_tdt(in.getModified());
-
-        solr.setTitle_parseable(in.getName());
-        solr.setStatus_s(in.getStatus().name());
-        solr.setAdditionalProperty("name_partial", in.getName());
-        solr.setAdditionalProperty("name_lcs", in.getName());
-
-        // set hidden_b to true if group is group/user control group
-        if (acmLdapSyncConfig != null) {
-            if (in.getName().equalsIgnoreCase(acmLdapSyncConfig.getGroupControlGroup())
-                    || in.getName().equalsIgnoreCase(acmLdapSyncConfig.getUserControlGroup()))
-            {
-                solr.setHidden_b(true);
-            }
-        }
-        return solr;
-    }
-
-    @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
         return AcmGroup.class.equals(acmObjectType);

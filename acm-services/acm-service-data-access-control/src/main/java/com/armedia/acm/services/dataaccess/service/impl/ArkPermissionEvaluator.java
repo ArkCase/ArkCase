@@ -256,7 +256,7 @@ public class ArkPermissionEvaluator implements PermissionEvaluator, Initializing
             solrDoc = transformer.toContentFileIndex(jpaEntity);
             if (solrDoc == null)
             {
-                solrDoc = transformer.toSolrQuickSearch(jpaEntity);
+                solrDoc = transformer.toSolrAdvancedSearch(jpaEntity);
             }
             if (solrDoc == null)
             {
@@ -350,7 +350,7 @@ public class ArkPermissionEvaluator implements PermissionEvaluator, Initializing
 
             if (result.contains("numFound\":0"))
             {
-                result = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, 0,
+                result = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query, 0,
                         1, "id asc", indent, objectType, filterSubscriptionEvents,
                         SearchConstants.DEFAULT_FIELD, shouldIncludeACLFilter,
                         dataAccessControlConfig.getIncludeDenyAccessFilter(), dataAccessControlConfig.getEnableDocumentACL());

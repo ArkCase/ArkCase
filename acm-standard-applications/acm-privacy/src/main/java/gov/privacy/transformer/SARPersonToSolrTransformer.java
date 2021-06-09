@@ -83,44 +83,8 @@ public class SARPersonToSolrTransformer extends PersonToSolrTransformer
     }
 
     @Override
-    public SolrDocument toSolrQuickSearch(Person in)
-    {
-        SolrDocument solr = null;
-
-        if (in instanceof SARPerson)
-        {
-            SARPerson personIn = (SARPerson) in;
-            solr = super.toSolrQuickSearch(personIn);
-
-            if (solr != null)
-            {
-                mapRequestProperties(personIn, solr.getAdditionalProperties());
-            }
-
-            return solr;
-        }
-        else
-        {
-            log.error("Could not send to quick search class name {}!.", in.getClass().getName());
-        }
-        throw new RuntimeException("Could not send to advanced search class name " + in.getClass().getName() + "!.");
-    }
-
-    @Override
     public Class<?> getAcmObjectTypeSupported()
     {
         return SARPerson.class;
     }
-
-    /**
-     * @param requestIn
-     * @param additionalProperties
-     */
-    protected void mapRequestProperties(SARPerson personIn, Map<String, Object> additionalProperties)
-    {
-        additionalProperties.put("object_sub_type_s", "SAR_PERSON");
-        additionalProperties.put("position_s", personIn.getPosition());
-
-    }
-
 }

@@ -68,13 +68,6 @@ public class OrganizationEmailToSolrTransformer implements AcmObjectToSolrDocTra
         return solrDocument;
     }
 
-    // No implementation needed due to https://arkcase.atlassian.net/browse/ACFP-704
-    @Override
-    public SolrDocument toSolrQuickSearch(Organization in)
-    {
-        return null;
-    }
-
     @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {

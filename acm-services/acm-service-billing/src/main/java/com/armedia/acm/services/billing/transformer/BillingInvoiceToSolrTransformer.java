@@ -97,27 +97,6 @@ public class BillingInvoiceToSolrTransformer implements AcmObjectToSolrDocTransf
     }
 
     @Override
-    public SolrDocument toSolrQuickSearch(BillingInvoice in)
-    {
-        SolrDocument solrDoc = new SolrDocument();
-        solrDoc.setId(String.format("%d-%s", in.getId(), BillingConstants.OBJECT_TYPE_INVOICE));
-        solrDoc.setObject_type_s(BillingConstants.OBJECT_TYPE_INVOICE);
-        solrDoc.setName(String.format("%s_%d", BillingConstants.OBJECT_TYPE_INVOICE, in.getId()));
-        solrDoc.setObject_id_s(in.getId() + "");
-        solrDoc.setCreate_tdt(in.getCreated());
-        solrDoc.setAdditionalProperty("parent_object_type_s", in.getParentObjectType());
-        solrDoc.setAdditionalProperty("parent_object_id_i", in.getParentObjectId());
-        solrDoc.setParent_ref_s(String.format("%d-%s", in.getParentObjectId(), in.getParentObjectType()));
-        solrDoc.setAdditionalProperty("creator_s", in.getCreator());
-
-        solrDoc.setAdditionalProperty("invoice_number_lcs", in.getInvoiceNumber());
-        solrDoc.setAdditionalProperty("invoice_paid_flag_b", in.getInvoicePaidFlag());
-        solrDoc.setAdditionalProperty("invoice_ecm_file_id_i", in.getBillingInvoiceEcmFile().getId());
-
-        return solrDoc;
-    }
-
-    @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
         return BillingInvoice.class.equals(acmObjectType);

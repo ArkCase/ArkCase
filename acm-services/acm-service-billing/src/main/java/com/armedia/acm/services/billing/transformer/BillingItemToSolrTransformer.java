@@ -97,27 +97,6 @@ public class BillingItemToSolrTransformer implements AcmObjectToSolrDocTransform
     }
 
     @Override
-    public SolrDocument toSolrQuickSearch(BillingItem in)
-    {
-        SolrDocument solrDoc = new SolrDocument();
-        solrDoc.setId(String.format("%d-%s", in.getId(), BillingConstants.OBJECT_TYPE_ITEM));
-        solrDoc.setObject_type_s(BillingConstants.OBJECT_TYPE_ITEM);
-        solrDoc.setName(String.format("%s_%d", BillingConstants.OBJECT_TYPE_ITEM, in.getId()));
-        solrDoc.setObject_id_s(in.getId() + "");
-        solrDoc.setCreate_tdt(in.getCreated());
-        solrDoc.setAdditionalProperty("parent_object_type_s", in.getParentObjectType());
-        solrDoc.setAdditionalProperty("parent_object_id_i", in.getParentObjectId());
-        solrDoc.setParent_ref_s(String.format("%d-%s", in.getParentObjectId(), in.getParentObjectType()));
-        solrDoc.setAdditionalProperty("creator_s", in.getCreator());
-
-        solrDoc.setAdditionalProperty("item_number_i", in.getItemNumber());
-        solrDoc.setAdditionalProperty("item_description_s", in.getItemDescription());
-        solrDoc.setAdditionalProperty("item_amount_s", Double.toString(in.getItemAmount()));
-
-        return solrDoc;
-    }
-
-    @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
         return BillingItem.class.equals(acmObjectType);

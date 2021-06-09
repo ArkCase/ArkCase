@@ -90,21 +90,6 @@ public class RecycleBinItemToSolrTransformer implements AcmObjectToSolrDocTransf
         return solr;
     }
 
-    @Override
-    public SolrDocument toSolrQuickSearch(RecycleBinItem in)
-    {
-        SolrDocument solr = new SolrDocument();
-
-        solr.setId(in.getId() + "-" + RecycleBinConstants.OBJECT_TYPE_ITEM);
-        solr.setObject_id_s(in.getSourceObjectId() + "");
-        solr.setObject_id_i(in.getSourceObjectId());
-        solr.setObject_type_s(RecycleBinConstants.OBJECT_TYPE_ITEM);
-        solr.setLast_modified_tdt(in.getModified());
-
-        mapAdditionalPropertiesForRecycleBinItem(in, solr.getAdditionalProperties());
-        return solr;
-    }
-
     private void mapAdditionalPropertiesForRecycleBinItem(RecycleBinItem in, Map<String, Object> additionalProperties)
     {
         try

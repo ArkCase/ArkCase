@@ -232,30 +232,6 @@ public class PersonToSolrTransformer implements AcmObjectToSolrDocTransformer<Pe
     }
 
     @Override
-    public SolrDocument toSolrQuickSearch(Person in)
-    {
-        SolrDocument solrDoc = new SolrDocument();
-
-        getSearchAccessControlFields().setAccessControlFields(solrDoc, in);
-
-        solrDoc.setId(in.getId() + "-PERSON");
-        solrDoc.setObject_type_s("PERSON");
-        solrDoc.setName(in.getGivenName() + " " + in.getFamilyName());
-        solrDoc.setObject_id_s(in.getId() + "");
-
-        solrDoc.setCreate_tdt(in.getCreated());
-        solrDoc.setAuthor_s(in.getCreator());
-        solrDoc.setLast_modified_tdt(in.getModified());
-        solrDoc.setModifier_s(in.getModifier());
-
-        solrDoc.setTitle_parseable(in.getFamilyName() + " " + in.getGivenName());
-        solrDoc.setTitle_parseable_lcs(in.getFamilyName() + " " + in.getGivenName());
-        solrDoc.setStatus_s(in.getStatus());
-
-        return solrDoc;
-    }
-
-    @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
         return Person.class.equals(acmObjectType);

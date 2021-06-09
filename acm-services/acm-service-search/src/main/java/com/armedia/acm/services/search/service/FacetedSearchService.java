@@ -664,7 +664,7 @@ public class FacetedSearchService
 
                 if (StringUtils.isNotEmpty(parentId) && StringUtils.isNotEmpty(parentType))
                 {
-                    String parentResult = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH,
+                    String parentResult = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH,
                             "object_id_s:" + parentId + " AND object_type_s:" + parentType, 0,
                             1, "create_date_tdt DESC");
                     JSONObject parentResponse = new JSONObject(parentResult);

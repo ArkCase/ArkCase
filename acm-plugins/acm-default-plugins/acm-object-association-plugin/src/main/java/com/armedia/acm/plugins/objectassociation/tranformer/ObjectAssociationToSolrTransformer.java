@@ -75,24 +75,6 @@ public class ObjectAssociationToSolrTransformer implements AcmObjectToSolrDocTra
         return solrDoc;
     }
 
-    @Override
-    public SolrDocument toSolrQuickSearch(ObjectAssociation in)
-    {
-        SolrDocument solrDoc = new SolrDocument();
-        solrDoc.setId(in.getAssociationId() + "-" + ObjectAssociationConstants.REFFERENCE_TYPE);
-        solrDoc.setObject_type_s(ObjectAssociationConstants.REFFERENCE_TYPE);
-        solrDoc.setObject_id_s(in.getAssociationId() + "");
-
-        solrDoc.setCreate_tdt(in.getCreated());
-        solrDoc.setAuthor_s(in.getCreator());
-        solrDoc.setLast_modified_tdt(in.getModified());
-        solrDoc.setModifier_s(in.getModifier());
-
-        setAdditionalProperties(solrDoc.getAdditionalProperties(), in);
-
-        return solrDoc;
-    }
-
     private void setAdditionalProperties(Map<String, Object> additionalProperties, ObjectAssociation objectAssociation)
     {
         additionalProperties.put("association_type_s", objectAssociation.getAssociationType());

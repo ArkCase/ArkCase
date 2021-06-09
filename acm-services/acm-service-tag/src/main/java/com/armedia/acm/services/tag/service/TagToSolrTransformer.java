@@ -92,28 +92,6 @@ public class TagToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmTa
     }
 
     @Override
-    public SolrDocument toSolrQuickSearch(AcmTag in)
-    {
-        SolrDocument solr = new SolrDocument();
-
-        solr.setId(in.getId() + "-" + in.getObjectType());
-
-        solr.setObject_id_s(in.getId() + "");
-        solr.setObject_type_s(in.getObjectType());
-
-        solr.setCreate_tdt(in.getCreated());
-        solr.setAuthor(in.getCreator());
-        solr.setLast_modified_tdt(in.getModified());
-        solr.setModifier_s(in.getModifier());
-        solr.setTitle_parseable(in.getTagText());
-        solr.setDescription_parseable(in.getTagDescription());
-
-        solr.setAdditionalProperty("tags_s", in.getTagName());
-
-        return solr;
-    }
-
-    @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
         return AcmTag.class.equals(acmObjectType);

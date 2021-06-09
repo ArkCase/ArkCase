@@ -95,13 +95,6 @@ public class PersonAliasToSolrTransformer implements AcmObjectToSolrDocTransform
         return orgDoc;
     }
 
-    // No implementation needed because we don't want PersonAlias indexed in the SolrQuickSearch
-    @Override
-    public SolrDocument toSolrQuickSearch(PersonAlias in)
-    {
-        return null;
-    }
-
     @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {

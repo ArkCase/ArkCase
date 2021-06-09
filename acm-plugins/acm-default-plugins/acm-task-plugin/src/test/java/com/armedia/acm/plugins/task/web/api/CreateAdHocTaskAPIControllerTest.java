@@ -177,7 +177,7 @@ public class CreateAdHocTaskAPIControllerTest extends EasyMockSupport
         mockHttpSession.setAttribute("acm_ip_address", ipAddress);
 
         expect(mockTaskDao.createAdHocTask(capture(taskSentToDao))).andReturn(found);
-        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, query, 0, 10, ""))
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.ADVANCED_SEARCH, query, 0, 10, ""))
                 .andReturn(solrResponse).atLeastOnce();
 
         Capture<MultipartFile>  captureFile1 = Capture.newInstance();
@@ -263,7 +263,7 @@ public class CreateAdHocTaskAPIControllerTest extends EasyMockSupport
         mockHttpSession.setAttribute("acm_ip_address", ipAddress);
 
         expect(mockExecuteSolrQuery
-                .getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, query, 0, 10, ""))
+                .getResultsByPredefinedQuery(mockAuthentication, SolrCore.ADVANCED_SEARCH, query, 0, 10, ""))
                         .andThrow(new SolrException("test Exception"));
 
         // MVC test classes must call getName() somehow

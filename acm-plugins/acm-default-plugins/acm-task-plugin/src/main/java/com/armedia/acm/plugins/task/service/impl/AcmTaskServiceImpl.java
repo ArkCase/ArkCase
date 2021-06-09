@@ -466,7 +466,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
 
         try
         {
-            String retval = executeSolrQuery.getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, 0, 1000, "");
+            String retval = executeSolrQuery.getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query, 0, 1000, "");
 
             if (retval != null && searchResults.getNumFound(retval) > 0)
             {
@@ -869,7 +869,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
         try
         {
             retval = executeSolrQuery.getResultsByPredefinedQuery(authentication,
-                    SolrCore.QUICK_SEARCH,
+                    SolrCore.ADVANCED_SEARCH,
                     query, 0, 1, "business_process_id_i DESC");
 
             if (retval != null && searchResults.getNumFound(retval) > 0)

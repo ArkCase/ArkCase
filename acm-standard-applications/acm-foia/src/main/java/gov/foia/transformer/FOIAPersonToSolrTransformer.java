@@ -82,42 +82,8 @@ public class FOIAPersonToSolrTransformer extends PersonToSolrTransformer
     }
 
     @Override
-    public SolrDocument toSolrQuickSearch(Person in)
-    {
-        SolrDocument solr = null;
-
-        if (in instanceof FOIAPerson)
-        {
-            FOIAPerson personIn = (FOIAPerson) in;
-            solr = super.toSolrQuickSearch(personIn);
-
-            if (solr != null)
-            {
-                mapRequestProperties(personIn, solr.getAdditionalProperties());
-            }
-
-            return solr;
-        }
-        else
-        {
-            log.error("Could not send to quick search class name {}!.", in.getClass().getName());
-        }
-        throw new RuntimeException("Could not send to advanced search class name " + in.getClass().getName() + "!.");
-    }
-
-    @Override
     public Class<?> getAcmObjectTypeSupported()
     {
         return FOIAPerson.class;
     }
-
-    /**
-     * @param requestIn
-     * @param additionalProperties
-     */
-    protected void mapRequestProperties(FOIAPerson personIn, Map<String, Object> additionalProperties)
-    {
-        additionalProperties.put("object_sub_type_s", "FOIA_PERSON");
-    }
-
 }

@@ -92,30 +92,6 @@ public class QueueToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
     }
 
     @Override
-    public SolrDocument toSolrQuickSearch(AcmQueue in)
-    {
-        SolrDocument solr = new SolrDocument();
-
-        solr.setId(in.getId() + "-QUEUE");
-        solr.setObject_id_s(in.getId() + "");
-        solr.setObject_type_s("QUEUE");
-        solr.setName(in.getName());
-
-        solr.setAuthor(in.getCreator());
-        solr.setCreate_tdt(in.getCreated());
-        solr.setModifier_s(in.getModifier());
-        solr.setLast_modified_tdt(in.getModified());
-
-        Map<String, Object> properties = solr.getAdditionalProperties();
-
-        properties.put(SearchConstants.PROPERTY_QUEUE_ID_S, in.getId().toString());
-        properties.put(SearchConstants.PROPERTY_QUEUE_NAME_S, in.getName());
-        properties.put(SearchConstants.PROPERTY_QUEUE_ORDER, in.getDisplayOrder());
-
-        return solr;
-    }
-
-    @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
         return AcmQueue.class.equals(acmObjectType);

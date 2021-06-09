@@ -76,30 +76,6 @@ public class SARPortalPersonToSolrTransformer extends SARPersonToSolrTransformer
     }
 
     @Override
-    public SolrDocument toSolrQuickSearch(Person in)
-    {
-        SolrDocument solr = null;
-
-        if (in instanceof PortalSARPerson)
-        {
-            PortalSARPerson personIn = (PortalSARPerson) in;
-            solr = super.toSolrQuickSearch(personIn);
-
-            if (solr != null)
-            {
-                solr.getAdditionalProperties().put("object_sub_type_s", "PORTAL_SAR_PERSON");
-            }
-
-            return solr;
-        }
-        else
-        {
-            log.error("Could not send to quick search class name {}!.", in.getClass().getName());
-        }
-        throw new RuntimeException("Could not send to advanced search class name " + in.getClass().getName() + "!.");
-    }
-
-    @Override
     public Class<?> getAcmObjectTypeSupported()
     {
         return PortalSARPerson.class;

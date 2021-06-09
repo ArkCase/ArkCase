@@ -78,36 +78,6 @@ public class TimesheetToSolrTransformer implements AcmObjectToSolrDocTransformer
     }
 
     @Override
-    public SolrDocument toSolrQuickSearch(AcmTimesheet in)
-    {
-        SolrDocument solr = new SolrDocument();
-
-        solr.setId(in.getId() + "-" + TimesheetConstants.OBJECT_TYPE);
-        solr.setName(in.getTimesheetNumber());
-        solr.setTitle_parseable(in.getTitle());
-        solr.setObject_id_s(Long.toString(in.getId()));
-        solr.setObject_id_i(in.getId());
-        solr.setObject_type_s(TimesheetConstants.OBJECT_TYPE);
-        solr.setAuthor_s(in.getUser().getUserId());
-        solr.setStartDate_s(in.getStartDate());
-        solr.setEndDate_s(in.getEndDate());
-
-        if (in.getContainer() != null)
-        {
-            solr.setParent_ref_s(in.getContainer().getContainerObjectId() + "-" + in.getContainer().getContainerObjectType());
-        }
-
-        solr.setAuthor(in.getCreator());
-        solr.setCreate_tdt(in.getCreated());
-        solr.setModifier_s(in.getModifier());
-        solr.setLast_modified_tdt(in.getModified());
-
-        solr.setStatus_s(in.getStatus());
-
-        return solr;
-    }
-
-    @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
         return AcmTimesheet.class.equals(acmObjectType);

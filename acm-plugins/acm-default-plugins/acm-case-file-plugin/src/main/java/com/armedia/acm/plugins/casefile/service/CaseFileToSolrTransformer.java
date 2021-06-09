@@ -132,38 +132,6 @@ public class CaseFileToSolrTransformer implements AcmObjectToSolrDocTransformer<
     }
 
     @Override
-    public SolrDocument toSolrQuickSearch(CaseFile in)
-    {
-        SolrDocument solr = new SolrDocument();
-
-        getSearchAccessControlFields().setAccessControlFields(solr, in);
-
-        solr.setName(in.getCaseNumber());
-        solr.setObject_id_s(in.getId() + "");
-        solr.setObject_id_i(in.getId());
-        solr.setObject_type_s("CASE_FILE");
-        solr.setId(in.getId() + "-CASE_FILE");
-
-        solr.setAuthor(in.getCreator());
-        solr.setCreate_tdt(in.getCreated());
-        solr.setModifier_s(in.getModifier());
-        solr.setLast_modified_tdt(in.getModified());
-
-        solr.setStatus_s(in.getStatus());
-
-        solr.setDescription_no_html_tags_parseable(in.getDetails());
-        solr.setTitle_parseable(in.getTitle());
-
-        String assigneeUserId = ParticipantUtils.getAssigneeIdFromParticipants(in.getParticipants());
-        solr.setAssignee_s(assigneeUserId);
-
-        // needed a _lcs property for sorting
-        solr.setTitle_parseable_lcs(in.getTitle());
-
-        return solr;
-    }
-
-    @Override
     public JSONArray childrenUpdatesToSolr(CaseFile in)
     {
         JSONArray docUpdates = fileAclSolrUpdateHelper.buildFileAclUpdates(in.getContainer().getId(), in);

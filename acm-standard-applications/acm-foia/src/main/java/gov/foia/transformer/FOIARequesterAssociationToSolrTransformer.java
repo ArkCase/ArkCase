@@ -74,30 +74,6 @@ public class FOIARequesterAssociationToSolrTransformer extends PersonAssociation
     }
 
     @Override
-    public SolrDocument toSolrQuickSearch(PersonAssociation in)
-    {
-        SolrDocument solr = null;
-
-        if (in instanceof FOIARequesterAssociation)
-        {
-            FOIARequesterAssociation requesterAssociationIn = (FOIARequesterAssociation) in;
-            solr = super.toSolrQuickSearch(requesterAssociationIn);
-
-            if (solr != null)
-            {
-                mapRequestProperties(requesterAssociationIn, solr.getAdditionalProperties());
-            }
-
-            return solr;
-        }
-        else
-        {
-            log.error("Could not send to quick search class name {}!.", in.getClass().getName());
-        }
-        throw new RuntimeException("Could not send to advanced search class name " + in.getClass().getName() + "!.");
-    }
-
-    @Override
     public Class<?> getAcmObjectTypeSupported()
     {
         return FOIARequesterAssociation.class;

@@ -161,7 +161,7 @@ public class CostsheetServiceImpl implements CostsheetService
 
         try
         {
-            retval = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, startRow, maxRows,
+            retval = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows,
                     sortParams);
 
             log.debug("Objects was retrieved.");
@@ -195,7 +195,7 @@ public class CostsheetServiceImpl implements CostsheetService
 
         try
         {
-            retval = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, startRow, maxRows,
+            retval = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows,
                     sortParams);
 
             log.debug("Objects was retrieved.");

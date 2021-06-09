@@ -967,7 +967,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         {
             String sortParam = listFolderContents_getSortSpec(sortBy, sortDirection);
 
-            String results = getSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.QUICK_SEARCH, query, startRow, maxRows, sortParam,
+            String results = getSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows, sortParam,
                     filterQuery);
             JSONArray docs = getSearchResults().getDocuments(results);
             int numFound = getSearchResults().getNumFound(results);
@@ -1478,7 +1478,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
             do
             {
-                String results = getSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.QUICK_SEARCH, query, startRow, maxRows,
+                String results = getSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows,
                         SearchConstants.PROPERTY_OBJECT_ID_S + " DESC");
                 docs = getSearchResults().getDocuments(results);
 

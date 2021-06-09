@@ -105,13 +105,6 @@ public class PersonAssociationToSolrTransformer implements AcmObjectToSolrDocTra
     }
 
     @Override
-    public SolrDocument toSolrQuickSearch(PersonAssociation in)
-    {
-        // we don't want person associations in quick search, so just return null
-        return null;
-    }
-
-    @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
         return PersonAssociation.class.equals(acmObjectType);

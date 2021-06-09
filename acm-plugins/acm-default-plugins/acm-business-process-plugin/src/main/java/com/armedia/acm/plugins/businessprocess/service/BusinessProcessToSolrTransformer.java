@@ -110,31 +110,6 @@ public class BusinessProcessToSolrTransformer implements AcmObjectToSolrDocTrans
     }
 
     @Override
-    public SolrDocument toSolrQuickSearch(BusinessProcess in)
-    {
-
-        SolrDocument solr = new SolrDocument();
-
-        getSearchAccessControlFields().setAccessControlFields(solr, in);
-
-        solr.setId(String.format("%d-%s", in.getId(), in.getObjectType()));
-        solr.setObject_id_s(Long.toString(in.getId()));
-        solr.setObject_type_s(BusinessProcessConstants.OBJECT_TYPE);
-
-        solr.setAuthor(in.getCreator());
-        solr.setCreate_tdt(in.getCreated());
-        solr.setModifier_s(in.getModifier());
-        solr.setLast_modified_tdt(in.getModified());
-
-        solr.setStatus_s(in.getStatus());
-
-        String assigneeUserId = ParticipantUtils.getOwnerIdFromParticipants(in.getParticipants());
-        solr.setAssignee_s(assigneeUserId);
-
-        return solr;
-    }
-
-    @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
         return BusinessProcess.class.equals(acmObjectType);

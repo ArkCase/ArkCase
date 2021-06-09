@@ -90,26 +90,6 @@ public class UserToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmU
     }
 
     @Override
-    public SolrDocument toSolrQuickSearch(AcmUser in)
-    {
-        SolrDocument solr = new SolrDocument();
-        solr.setName(in.getFullName());
-        solr.setTitle_parseable(in.getFullName());
-        solr.setObject_id_s(in.getUserId() + "");
-        solr.setObject_type_s("USER");
-        solr.setId(in.getUserId() + "-USER");
-
-        solr.setCreate_tdt(in.getCreated());
-        solr.setLast_modified_tdt(in.getModified());
-
-        solr.setStatus_s(in.getUserState().name());
-        solr.setAdditionalProperty("name_partial", in.getFullName());
-        solr.setAdditionalProperty("name_lcs", in.getFullName());
-
-        return solr;
-    }
-
-    @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
         return AcmUser.class.equals(acmObjectType);

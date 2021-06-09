@@ -94,30 +94,6 @@ public class AcmObjectLockToSolrTransformer implements AcmObjectToSolrDocTransfo
     }
 
     @Override
-    public SolrDocument toSolrQuickSearch(AcmObjectLock in)
-    {
-
-        SolrDocument solr = new SolrDocument();
-
-        solr.setObject_id_s(in.getId().toString());
-        solr.setObject_type_s("OBJECT_LOCK");
-        solr.setId(in.getId() + "-OBJECT_LOCK");
-
-        solr.setParent_object_id_s(in.getObjectId().toString());
-        solr.setParent_object_type_s(in.getObjectType());
-        solr.setParent_ref_s(in.getObjectId() + "-" + in.getObjectType());
-
-        solr.setAuthor(in.getCreator());
-        solr.setCreate_tdt(in.getCreated());
-        solr.setModifier_s(in.getModifier());
-        solr.setLast_modified_tdt(in.getModified());
-
-        solr.setAdditionalProperty("expiry", in.getExpiry());
-
-        return solr;
-    }
-
-    @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
         return AcmObjectLock.class.equals(acmObjectType);

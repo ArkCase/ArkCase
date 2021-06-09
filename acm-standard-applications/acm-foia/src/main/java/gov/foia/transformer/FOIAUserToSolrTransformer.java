@@ -71,29 +71,6 @@ public class FOIAUserToSolrTransformer extends UserToSolrTransformer
         return solr;
     }
 
-    @Override
-    public SolrDocument toSolrQuickSearch(AcmUser in)
-    {
-        AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class)
-                .get(String.format("%s_sync", directoryName));
-
-        String userPrefix = prefixTrailingDot(ldapSyncConfig.getUserPrefix());
-
-        SolrDocument solr;
-
-        solr = super.toSolrQuickSearch(in);
-
-        if (solr != null)
-        {
-            // set hidden_b to true if user has portal prefix
-            if (solr.getObject_id_s().startsWith(userPrefix))
-            {
-                solr.setHidden_b(true);
-            }
-        }
-        return solr;
-    }
-
     public SpringContextHolder getAcmContextHolder()
     {
         return acmContextHolder;

@@ -155,7 +155,7 @@ public class CreateSubscriptionAPIController
         String solrResponseJsonString;
         try
         {
-            solrResponseJsonString = getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.QUICK_SEARCH,
+            solrResponseJsonString = getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH,
                     query, FIRST_ROW, MAX_ROWS, SORT);
         }
         catch (SolrException e)

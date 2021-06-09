@@ -75,7 +75,7 @@ public class SolrPostQueueListener
         try
         {
             logger.debug("Sending to quick search");
-            getSolrPostClient().sendToSolr(quickSearchDestinationQueue, SolrCore.QUICK_SEARCH, jsonDocument);
+            getSolrPostClient().sendToSolr(quickSearchDestinationQueue, SolrCore.ADVANCED_SEARCH, jsonDocument);
         }
         catch (SolrPostException e)
         {

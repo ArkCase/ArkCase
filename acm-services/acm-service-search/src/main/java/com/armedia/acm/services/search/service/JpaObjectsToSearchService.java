@@ -178,20 +178,6 @@ public class JpaObjectsToSearchService implements ApplicationListener<AcmDatabas
 
                         try
                         {
-                            SolrDocument quickSearchDocument = transformer.toSolrQuickSearch(jpaObject);
-                            if (quickSearchDocument != null)
-                            {
-                                solrQuickSearchDocs.add(quickSearchDocument);
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            log.error("[{}]: unable to generate Quick search document for [{}]. Reason: [{}]", transformer.getClass(),
-                                    jpaObject.toString(), e.getMessage());
-                        }
-
-                        try
-                        {
                             JSONArray docUpdates = transformer.childrenUpdatesToSolr(jpaObject);
                             if (docUpdates != null && docUpdates.length() != 0)
                             {

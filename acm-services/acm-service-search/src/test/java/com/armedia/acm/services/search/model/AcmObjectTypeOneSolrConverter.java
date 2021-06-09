@@ -58,13 +58,6 @@ public class AcmObjectTypeOneSolrConverter implements AcmObjectToSolrDocTransfor
     }
 
     @Override
-    public SolrDocument toSolrQuickSearch(AcmObjectTypeOne in)
-    {
-        ++handledQuickSearchCount;
-        return new SolrDocument();
-    }
-
-    @Override
     public SolrContentDocument toContentFileIndex(AcmObjectTypeOne in)
     {
         ++handledObjectsCount;
