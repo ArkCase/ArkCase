@@ -128,6 +128,7 @@
         <property name="fileConverterFactory" ref="fileConverterFactory"/>
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
+        <property name="acmFolderService" ref="acmFolderService"/>
     </bean>
     <!-- This pipeline uploads document content to Alfresco and the metadata to the acm3 database -->
     <bean id="ecmFileUploadPipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
