@@ -72,30 +72,6 @@ public class SubscriptionToSolrTransformer implements AcmObjectToSolrDocTransfor
     }
 
     @Override
-    public SolrDocument toSolrQuickSearch(AcmSubscription in)
-    {
-
-        SolrDocument solr = new SolrDocument();
-
-        solr.setId(in.getId() + "-" + in.getObjectType());
-        solr.setObject_id_s(in.getId() + "");
-        solr.setObject_type_s(in.getObjectType());
-
-        solr.setCreate_tdt(in.getCreated());
-        solr.setAuthor(in.getCreator());
-        solr.setLast_modified_tdt(in.getModified());
-        solr.setModifier_s(in.getModifier());
-
-        solr.setParent_object_id_s(Long.toString(in.getObjectId()));
-
-        solr.setParent_object_type_s(in.getSubscriptionObjectType());
-
-        solr.setOwner_s(in.getUserId());
-
-        return solr;
-    }
-
-    @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
         return AcmSubscription.class.equals(acmObjectType);

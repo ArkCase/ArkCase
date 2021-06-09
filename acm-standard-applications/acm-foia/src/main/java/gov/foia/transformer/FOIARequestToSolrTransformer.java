@@ -76,29 +76,6 @@ public class FOIARequestToSolrTransformer extends CaseFileToSolrTransformer
     }
 
     @Override
-    public SolrDocument toSolrQuickSearch(CaseFile in)
-    {
-        SolrDocument solr = null;
-
-        if (in instanceof FOIARequest)
-        {
-            FOIARequest requestIn = (FOIARequest) in;
-            solr = super.toSolrQuickSearch(requestIn);
-            if (solr != null)
-            {
-                mapRequestProperties(requestIn, solr.getAdditionalProperties());
-                solr.getAdditionalProperties().put("object_sub_type_s", "FOIA_REQUEST");
-            }
-            return solr;
-        }
-        else
-        {
-            log.error("Could not send to quick search class name {}!.", in.getClass().getName());
-        }
-        throw new RuntimeException("Could not send to advanced search class name " + in.getClass().getName() + "!.");
-    }
-
-    @Override
     public Class<?> getAcmObjectTypeSupported()
     {
         return FOIARequest.class;

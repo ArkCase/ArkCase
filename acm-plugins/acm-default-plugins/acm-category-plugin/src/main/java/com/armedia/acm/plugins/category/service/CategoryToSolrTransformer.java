@@ -112,36 +112,6 @@ public class CategoryToSolrTransformer implements AcmObjectToSolrDocTransformer<
 
     /*
      * (non-Javadoc)
-     * @see com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer#toSolrQuickSearch(java.lang.Object)
-     */
-    @Override
-    public SolrDocument toSolrQuickSearch(Category in)
-    {
-        SolrDocument solr = new SolrDocument();
-
-        solr.setId(in.getId() + "-CATEGORY");
-        solr.setObject_id_s(in.getId() + "");
-        solr.setObject_type_s("CATEGORY");
-        solr.setTitle_parseable(in.getName());
-        solr.setTitle_parseable_lcs(in.getName());
-        solr.setDescription_no_html_tags_parseable(in.getDescription());
-        solr.setName(in.getName());
-
-        solr.setAuthor(in.getCreator());
-        solr.setCreate_tdt(in.getCreated());
-        solr.setModifier_s(in.getModifier());
-        solr.setLast_modified_tdt(in.getModified());
-
-        if (in.getStatus() != null)
-        {
-            solr.setStatus_s(in.getStatus().name());
-        }
-
-        return solr;
-    }
-
-    /*
-     * (non-Javadoc)
      * @see
      * com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer#isAcmObjectTypeSupported(java.lang.Class)
      */

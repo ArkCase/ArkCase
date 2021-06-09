@@ -77,7 +77,7 @@ public class ChildDocumentsSearchServiceImpl implements ChildDocumentsSearchServ
 
         log.debug("User [{}] is searching by query [{}]", authentication.getName(), query);
 
-        return getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query,
+        return getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query,
                 startRow, maxRows, sort);
     }
 
@@ -104,7 +104,7 @@ public class ChildDocumentsSearchServiceImpl implements ChildDocumentsSearchServ
                 parentId,
                 childTypes.get(0));
 
-        return getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, startRow, maxRows, sort,
+        return getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows, sort,
                 rowQueryParameters);
     }
 

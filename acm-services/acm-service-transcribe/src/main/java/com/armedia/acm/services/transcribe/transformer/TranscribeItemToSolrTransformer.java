@@ -93,25 +93,6 @@ public class TranscribeItemToSolrTransformer implements AcmObjectToSolrDocTransf
     }
 
     @Override
-    public SolrDocument toSolrQuickSearch(TranscribeItem in)
-    {
-        SolrDocument solr = new SolrDocument();
-        solr.setId(String.format("%d-%s", in.getId(), in.getObjectType()));
-        solr.setObject_id_s(String.valueOf(in.getId()));
-        solr.setObject_type_s(in.getObjectType());
-        solr.setName(TranscribeUtils.getFirstWords(in.getText(), 5));
-        solr.setName_lcs(TranscribeUtils.getFirstWords(in.getText(), 5));
-        solr.setTitle_parseable(TranscribeUtils.getFirstWords(in.getText(), 5));
-        solr.setTitle_parseable_lcs(TranscribeUtils.getFirstWords(in.getText(), 5));
-        solr.setTitle_t(TranscribeUtils.getFirstWords(in.getText(), 5));
-        solr.setCreate_tdt(in.getCreated());
-        solr.setModifier_s(in.getModifier());
-        solr.setLast_modified_tdt(in.getModified());
-
-        return solr;
-    }
-
-    @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
         return TranscribeItem.class.equals(acmObjectType);

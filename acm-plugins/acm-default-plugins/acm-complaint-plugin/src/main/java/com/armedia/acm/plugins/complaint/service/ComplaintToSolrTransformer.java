@@ -131,42 +131,6 @@ public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer
     }
 
     @Override
-    public SolrDocument toSolrQuickSearch(Complaint in)
-    {
-        SolrDocument solr = new SolrDocument();
-
-        getSearchAccessControlFields().setAccessControlFields(solr, in);
-
-        solr.setName(in.getComplaintNumber());
-        solr.setObject_id_s(in.getComplaintId() + "");
-        solr.setObject_id_i(in.getId());
-        solr.setObject_type_s("COMPLAINT");
-        solr.setId(in.getComplaintId() + "-COMPLAINT");
-
-        solr.setAuthor(in.getCreator());
-        solr.setCreate_tdt(in.getCreated());
-        solr.setModifier_s(in.getModifier());
-        solr.setLast_modified_tdt(in.getModified());
-
-        solr.setDue_tdt(in.getDueDate());
-        solr.setTitle_parseable(in.getComplaintTitle());
-        solr.setDescription_no_html_tags_parseable(in.getDetails());
-        solr.setStatus_s(in.getStatus());
-
-        if (in.getDisposition() != null && in.getDisposition().getId() != null)
-        {
-            solr.setDisposition_id_s(in.getDisposition().getId() + "-" + in.getDisposition().getObjectType());
-        }
-
-        String assigneeUserId = ParticipantUtils.getAssigneeIdFromParticipants(in.getParticipants());
-        solr.setAssignee_s(assigneeUserId);
-
-        // needed a _lcs property for sorting
-        solr.setTitle_parseable_lcs(in.getComplaintTitle());
-        return solr;
-    }
-
-    @Override
     public JSONArray childrenUpdatesToSolr(Complaint in)
     {
         JSONArray docUpdates = fileAclSolrUpdateHelper.buildFileAclUpdates(in.getContainer().getId(), in);

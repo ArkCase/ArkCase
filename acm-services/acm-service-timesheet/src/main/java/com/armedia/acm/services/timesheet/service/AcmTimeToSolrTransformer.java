@@ -77,34 +77,6 @@ public class AcmTimeToSolrTransformer implements AcmObjectToSolrDocTransformer<A
     }
 
     @Override
-    public SolrDocument toSolrQuickSearch(AcmTime in)
-    {
-        SolrDocument solr = new SolrDocument();
-
-        solr.setId(in.getId() + "-" + TimeConstants.OBJECT_TYPE);
-        solr.setName(in.getCode());
-        solr.setTitle_parseable(in.getCode());
-        solr.setObject_id_s(Long.toString(in.getId()));
-        solr.setObject_id_i(in.getId());
-        solr.setObject_type_s(TimeConstants.OBJECT_TYPE);
-        solr.setAuthor_s(in.getCreator());
-        solr.setStartDate_s(in.getCreated());
-
-        solr.setAuthor(in.getCreator());
-        solr.setCreate_tdt(in.getCreated());
-        solr.setModifier_s(in.getModifier());
-        solr.setLast_modified_tdt(in.getModified());
-
-        solr.setParent_object_id_s(Long.toString(in.getObjectId()));
-        solr.setParent_object_type_s(in.getType());
-        solr.setParent_ref_s(in.getObjectId() + "-" + in.getType());
-
-        solr.setAdditionalProperty("timesheet_id_i", in.getTimesheet().getId());
-
-        return solr;
-    }
-
-    @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
         return AcmTime.class.equals(acmObjectType);

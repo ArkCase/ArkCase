@@ -88,31 +88,6 @@ public class SARFileToSolrTransformer extends EcmFileToSolrTransformer
     }
 
     @Override
-    public SolrDocument toSolrQuickSearch(EcmFile in)
-    {
-        SolrDocument solr = null;
-
-        if (in instanceof SARFile)
-        {
-            SARFile SARFile = (SARFile) in;
-            solr = super.toSolrQuickSearch(SARFile);
-
-            if (solr != null)
-            {
-                mapRequestProperties(SARFile, solr.getAdditionalProperties());
-            }
-            return solr;
-        }
-        else
-        {
-            log.error("Could not send to quick search class name {}!.", in.getClass().getName());
-        }
-
-        throw new RuntimeException("Could not send to quick search class name " + in.getClass().getName() + "!.");
-
-    }
-
-    @Override
     public SolrContentDocument toContentFileIndex(EcmFile in)
     {
         SolrContentDocument solr = null;

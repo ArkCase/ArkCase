@@ -265,7 +265,7 @@ public class TimesheetServiceTest extends EasyMockSupport
         String searchQuery = "*";
         String solrQuery = "object_type_s:" + objectType + " AND name:" + searchQuery + " AND -status_s:DELETE";
 
-        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, solrQuery, 0, 10, ""))
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.ADVANCED_SEARCH, solrQuery, 0, 10, ""))
                 .andReturn(expected);
 
         replayAll();
@@ -293,7 +293,7 @@ public class TimesheetServiceTest extends EasyMockSupport
         String searchQuery = "*";
         String solrQuery = "object_type_s:" + objectType + " AND -status_s:DELETE";
 
-        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, solrQuery, 0, 10, ""))
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.ADVANCED_SEARCH, solrQuery, 0, 10, ""))
                 .andReturn(expected);
 
         replayAll();

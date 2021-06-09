@@ -157,7 +157,7 @@ public class SearchObjectByTypeAPIController
         // try what the user sent, if no sort properties were found
         sortParams = StringUtils.isBlank(sortParams) ? sort : sortParams;
 
-        String results = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query,
+        String results = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query,
                 startRow, maxRows, sortParams, params);
 
         publishSearchEvent(authentication, httpSession, true, results);

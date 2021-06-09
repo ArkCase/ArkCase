@@ -132,7 +132,7 @@ public class CreateSubscriptionAPIControllerTest extends EasyMockSupport
 
         Capture<AcmSubscription> subscriptionToSave = EasyMock.newCapture();
 
-        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, solrQuery, 0, 1, ""))
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.ADVANCED_SEARCH, solrQuery, 0, 1, ""))
                 .andReturn(jsonString).once();
         expect(mockSubscriptionService.saveSubscription(capture(subscriptionToSave))).andReturn(subscription).anyTimes();
 

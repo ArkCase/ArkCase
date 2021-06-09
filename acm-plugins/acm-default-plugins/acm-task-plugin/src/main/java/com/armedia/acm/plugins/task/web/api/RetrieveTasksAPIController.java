@@ -156,7 +156,7 @@ public class RetrieveTasksAPIController
 
         try
         {
-            solrResponse = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, solrQuery, 0, 1, "");
+            solrResponse = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, solrQuery, 0, 1, "");
         }
         catch (SolrException e)
         {

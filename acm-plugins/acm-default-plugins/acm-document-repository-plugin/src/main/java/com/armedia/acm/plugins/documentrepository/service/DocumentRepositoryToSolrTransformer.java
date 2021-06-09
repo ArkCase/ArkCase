@@ -120,37 +120,6 @@ public class DocumentRepositoryToSolrTransformer implements AcmObjectToSolrDocTr
     }
 
     @Override
-    public SolrDocument toSolrQuickSearch(DocumentRepository in)
-    {
-        SolrDocument solr = new SolrDocument();
-
-        getSearchAccessControlFields().setAccessControlFields(solr, in);
-
-        solr.setId(String.format("%d-%s", in.getId(), in.getObjectType()));
-        solr.setName(in.getName());
-        solr.setObject_id_s(Long.toString(in.getId()));
-        solr.setObject_type_s(DocumentRepositoryConstants.OBJECT_TYPE);
-
-        solr.setAuthor(in.getCreator());
-        solr.setCreate_tdt(in.getCreated());
-        solr.setModifier_s(in.getModifier());
-        solr.setLast_modified_tdt(in.getModified());
-
-        solr.setTitle_parseable(in.getName());
-        solr.setDescription_no_html_tags_parseable(in.getDetails());
-        solr.setStatus_s(in.getStatus());
-
-        String assigneeUserId = ParticipantUtils.getOwnerIdFromParticipants(in.getParticipants());
-        solr.setAssignee_s(assigneeUserId);
-
-        // needed a _lcs property for sorting
-        solr.setTitle_parseable_lcs(in.getName());
-
-        solr.setAdditionalProperty("repository_type_s", in.getRepositoryType());
-        return solr;
-    }
-
-    @Override
     public JSONArray childrenUpdatesToSolr(DocumentRepository in)
     {
         return fileAclSolrUpdateHelper.buildFileAclUpdates(in.getContainer().getId(), in);

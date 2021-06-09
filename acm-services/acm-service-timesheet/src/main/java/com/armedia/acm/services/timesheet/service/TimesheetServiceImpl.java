@@ -210,7 +210,7 @@ public class TimesheetServiceImpl implements TimesheetService
 
         try
         {
-            retval = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, startRow, maxRows,
+            retval = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows,
                     sortParams);
 
             LOG.debug("Objects was retrieved.");
@@ -245,7 +245,7 @@ public class TimesheetServiceImpl implements TimesheetService
 
         try
         {
-            retval = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, startRow, maxRows,
+            retval = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows,
                     sortParams);
 
             LOG.debug("Objects was retrieved.");

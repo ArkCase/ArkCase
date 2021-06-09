@@ -75,13 +75,6 @@ public class PersonEmailToSolrTransformer implements AcmObjectToSolrDocTransform
         }
     }
 
-    // No implementation needed due to https://arkcase.atlassian.net/browse/ACFP-704
-    @Override
-    public SolrDocument toSolrQuickSearch(Person in)
-    {
-        return null;
-    }
-
     @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {

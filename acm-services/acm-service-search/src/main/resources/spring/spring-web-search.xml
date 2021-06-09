@@ -7,9 +7,6 @@
         <property name="pluginManager" ref="acmPluginManager"/>
     </bean>
 
-    <bean id="quickSearchAPIController" class="com.armedia.acm.services.search.web.api.QuickSearchAPIController">
-        <property name="executeSolrQuery" ref="executeSolrQuery"/>
-    </bean>
     <bean id="SearchChildrenAPIController" class="com.armedia.acm.services.search.web.api.SearchChildrenAPIController">
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
         <property name="childDocumentsSearchService" ref="childDocumentsSearchService"/>

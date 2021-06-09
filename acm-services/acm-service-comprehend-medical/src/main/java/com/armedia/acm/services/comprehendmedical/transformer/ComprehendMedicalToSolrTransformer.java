@@ -86,29 +86,6 @@ public class ComprehendMedicalToSolrTransformer implements AcmObjectToSolrDocTra
     }
 
     @Override
-    public SolrDocument toSolrQuickSearch(ComprehendMedical in)
-    {
-        LOG.debug("Creating Solr quick search document for Transcribe.");
-
-        SolrDocument solr = new SolrDocument();
-        solr.setId(String.format("%d-%s", in.getId(), in.getObjectType()));
-        solr.setObject_id_s(String.valueOf(in.getId()));
-        solr.setObject_type_s(in.getObjectType());
-        solr.setAuthor(in.getCreator());
-        solr.setCreate_tdt(in.getCreated());
-        solr.setModifier_s(in.getModifier());
-        solr.setLast_modified_tdt(in.getModified());
-        solr.setStatus_s(in.getStatus());
-        solr.setName(in.getMediaEcmFileVersion().getFile().getFileName());
-        solr.setName_lcs(in.getMediaEcmFileVersion().getFile().getFileName());
-        solr.setTitle_parseable(in.getMediaEcmFileVersion().getFile().getFileName());
-        solr.setTitle_parseable_lcs(in.getMediaEcmFileVersion().getFile().getFileName());
-        solr.setTitle_t(in.getMediaEcmFileVersion().getFile().getFileName());
-
-        return solr;
-    }
-
-    @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
         return ComprehendMedical.class.equals(acmObjectType);

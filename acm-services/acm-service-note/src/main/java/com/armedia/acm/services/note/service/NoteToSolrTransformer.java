@@ -98,28 +98,6 @@ public class NoteToSolrTransformer implements AcmObjectToSolrDocTransformer<Note
     }
 
     @Override
-    public SolrDocument toSolrQuickSearch(Note in)
-    {
-        SolrDocument solrDoc = new SolrDocument();
-        solrDoc.setId(String.format("%d-%s", in.getId(), NoteConstants.OBJECT_TYPE));
-        solrDoc.setObject_type_s(NoteConstants.OBJECT_TYPE);
-        solrDoc.setName(String.format("%s_%d", NoteConstants.OBJECT_TYPE, in.getId()));
-        solrDoc.setObject_id_s(in.getId() + "");
-        solrDoc.setCreate_tdt(in.getCreated());
-        solrDoc.setAuthor(in.getAuthor());
-        solrDoc.setLast_modified_tdt(in.getModified());
-        solrDoc.setType_s(in.getType());
-        solrDoc.setAdditionalProperty("parent_object_type_s", in.getParentType());
-        solrDoc.setAdditionalProperty("parent_object_id_i", in.getParentId());
-        solrDoc.setAdditionalProperty("parent_number_lcs", in.getParentTitle());
-        solrDoc.setParent_ref_s(String.format("%d-%s", in.getParentId(), in.getParentType()));
-        solrDoc.setTitle_parseable(in.getNote());
-        solrDoc.setAdditionalProperty("creator_s", in.getCreator());
-
-        return solrDoc;
-    }
-
-    @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
         return Note.class.equals(acmObjectType);

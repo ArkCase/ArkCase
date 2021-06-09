@@ -78,30 +78,6 @@ public class SARPersonAssociationToSolrTransformer extends PersonAssociationToSo
     }
 
     @Override
-    public SolrDocument toSolrQuickSearch(PersonAssociation in)
-    {
-        SolrDocument solr = null;
-
-        if (in instanceof SARPersonAssociation)
-        {
-            SARPersonAssociation sarPersonAssociation = (SARPersonAssociation) in;
-            solr = super.toSolrQuickSearch(sarPersonAssociation);
-
-            if (solr != null)
-            {
-                mapRequestProperties(sarPersonAssociation, solr.getAdditionalProperties());
-            }
-
-            return solr;
-        }
-        else
-        {
-            log.error("Could not send to quick search class name {}!.", in.getClass().getName());
-        }
-        throw new RuntimeException("Could not send to advanced search class name " + in.getClass().getName() + "!.");
-    }
-
-    @Override
     public Class<?> getAcmObjectTypeSupported()
     {
         return SARPersonAssociation.class;

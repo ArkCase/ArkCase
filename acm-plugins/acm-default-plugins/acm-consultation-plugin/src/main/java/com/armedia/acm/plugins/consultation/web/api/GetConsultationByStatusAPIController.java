@@ -189,7 +189,7 @@ public class GetConsultationByStatusAPIController
 
         try
         {
-            solrResponse = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, facetQuery, 0, 1, "");
+            solrResponse = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, facetQuery, 0, 1, "");
         }
         catch (SolrException e)
         {

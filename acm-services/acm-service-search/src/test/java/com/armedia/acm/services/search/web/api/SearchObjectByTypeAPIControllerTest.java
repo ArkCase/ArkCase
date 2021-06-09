@@ -143,7 +143,7 @@ public class SearchObjectByTypeAPIControllerTest extends EasyMockSupport
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
 
-        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, query,
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.ADVANCED_SEARCH, query,
                 firstRow, maxRows, sort, params)).andReturn(solrResponse);
 
         mockSearchEventPublisher.publishSearchEvent(capture(capturedEvent));
@@ -183,7 +183,7 @@ public class SearchObjectByTypeAPIControllerTest extends EasyMockSupport
 
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
-        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, query,
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.ADVANCED_SEARCH, query,
                 firstRow, maxRows, sort, params)).andThrow(new SolrException("Test Exception"));
 
         replayAll();

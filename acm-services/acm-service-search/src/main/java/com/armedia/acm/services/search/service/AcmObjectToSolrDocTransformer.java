@@ -51,8 +51,6 @@ public interface AcmObjectToSolrDocTransformer<T extends Object>
 
     SolrAdvancedSearchDocument toSolrAdvancedSearch(T in);
 
-    SolrDocument toSolrQuickSearch(T in);
-
     default JSONArray childrenUpdatesToSolr(T in)
     {
         return null;

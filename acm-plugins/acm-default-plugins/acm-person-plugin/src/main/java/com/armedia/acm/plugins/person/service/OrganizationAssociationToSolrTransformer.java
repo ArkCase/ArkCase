@@ -100,13 +100,6 @@ public class OrganizationAssociationToSolrTransformer implements AcmObjectToSolr
     }
 
     @Override
-    public SolrDocument toSolrQuickSearch(OrganizationAssociation in)
-    {
-        // we don't want organization associations in quick search, so just return null
-        return null;
-    }
-
-    @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
         return OrganizationAssociation.class.equals(acmObjectType);

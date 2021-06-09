@@ -134,29 +134,6 @@ public class PersonContactToSolrTransformer implements AcmObjectToSolrDocTransfo
     }
 
     @Override
-    public SolrDocument toSolrQuickSearch(PersonContact in)
-    {
-        SolrDocument solrDoc = new SolrDocument();
-        solrDoc.setId(in.getId() + "-PERSON_CONTACT");
-        solrDoc.setObject_type_s("PERSON_CONTACT");
-
-        if (in.getCompanyName() != null && !in.getCompanyName().isEmpty())
-        {
-            solrDoc.setName(in.getCompanyName());
-        }
-        else if (in.getPersonName() != null && !in.getPersonName().isEmpty())
-        {
-            solrDoc.setName(in.getPersonName());
-        }
-
-        solrDoc.setName((in.getFirstName() + " " + in.getLastName()).trim());
-
-        solrDoc.setObject_id_s(in.getId() + "");
-
-        return solrDoc;
-    }
-
-    @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
         return PersonContact.class.equals(acmObjectType);
