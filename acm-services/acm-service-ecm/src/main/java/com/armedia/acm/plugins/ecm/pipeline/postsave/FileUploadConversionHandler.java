@@ -28,8 +28,10 @@ package com.armedia.acm.plugins.ecm.pipeline.postsave;
  */
 
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
+import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.service.FileConverter;
 import com.armedia.acm.service.FileConverterFactory;
@@ -53,6 +55,7 @@ public class FileUploadConversionHandler implements PipelineHandler<EcmFile, Ecm
     private FileConverterFactory fileConverterFactory;
     private EcmFileService ecmFileService;
     private EcmFileDao ecmFileDao;
+    private AcmFolderService acmFolderService;
 
     @Value("${document.upload.policy.convertHtmlToPdf:false}")
     private Boolean convertHtmlToPdf;
@@ -85,7 +88,7 @@ public class FileUploadConversionHandler implements PipelineHandler<EcmFile, Ecm
 
         FileConverter fileConverter = getFileConverterFactory().getConverterOfType(fileType);
         if (isConverterEnabledForFileType(fileType) && Objects.nonNull(fileConverter)
-                && isInEmailFolders(entity))
+                && isNotInEmailFolders(entity))
         {
             try
             {
@@ -120,11 +123,13 @@ public class FileUploadConversionHandler implements PipelineHandler<EcmFile, Ecm
         }
     }
 
-    private boolean isInEmailFolders(EcmFile entity) {
-        return !entity.getFolder().getName().equals(outgoingEmailFolderName)
-                && !entity.getFolder().getName().equals(caseFileIncomingEmailFolderName)
-                && !entity.getFolder().getName().equals(complaintIncomingEmailFolderName)
-                && !entity.getFolder().getName().equals(taskIncomingEmailFolderName);
+    private boolean isNotInEmailFolders(EcmFile file)
+    {
+        AcmFolder parentFolder = file.getFolder();
+        return !getAcmFolderService().isFolderOrParentFolderWithName(parentFolder, outgoingEmailFolderName)
+                && !getAcmFolderService().isFolderOrParentFolderWithName(parentFolder, caseFileIncomingEmailFolderName)
+                && !getAcmFolderService().isFolderOrParentFolderWithName(parentFolder, complaintIncomingEmailFolderName)
+                && !getAcmFolderService().isFolderOrParentFolderWithName(parentFolder, taskIncomingEmailFolderName);
     }
 
     @Override
@@ -209,5 +214,15 @@ public class FileUploadConversionHandler implements PipelineHandler<EcmFile, Ecm
     public void setConvertEmlToPdf(Boolean convertEmlToPdf)
     {
         this.convertEmlToPdf = convertEmlToPdf;
+    }
+
+    public AcmFolderService getAcmFolderService()
+    {
+        return acmFolderService;
+    }
+
+    public void setAcmFolderService(AcmFolderService acmFolderService)
+    {
+        this.acmFolderService = acmFolderService;
     }
 }
