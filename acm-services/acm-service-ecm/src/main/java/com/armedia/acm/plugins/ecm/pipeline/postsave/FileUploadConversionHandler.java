@@ -55,6 +55,7 @@ public class FileUploadConversionHandler implements PipelineHandler<EcmFile, Ecm
     private FileConverterFactory fileConverterFactory;
     private EcmFileService ecmFileService;
     private EcmFileDao ecmFileDao;
+    private AcmFolderService acmFolderService;
 
     @Value("${document.upload.policy.convertHtmlToPdf:false}")
     private Boolean convertHtmlToPdf;
@@ -87,7 +88,7 @@ public class FileUploadConversionHandler implements PipelineHandler<EcmFile, Ecm
 
         FileConverter fileConverter = getFileConverterFactory().getConverterOfType(fileType);
         if (isConverterEnabledForFileType(fileType) && Objects.nonNull(fileConverter)
-                && isInEmailFolders(entity))
+                && isNotInEmailFolders(entity))
         {
             try
             {
@@ -122,11 +123,13 @@ public class FileUploadConversionHandler implements PipelineHandler<EcmFile, Ecm
         }
     }
 
-    private boolean isInEmailFolders(EcmFile entity) {
-        return !entity.getFolder().getName().equals(outgoingEmailFolderName)
-                && !entity.getFolder().getName().equals(caseFileIncomingEmailFolderName)
-                && !entity.getFolder().getName().equals(complaintIncomingEmailFolderName)
-                && !entity.getFolder().getName().equals(taskIncomingEmailFolderName);
+    private boolean isNotInEmailFolders(EcmFile file)
+    {
+        AcmFolder parentFolder = file.getFolder();
+        return !getAcmFolderService().isFolderOrParentFolderWithName(parentFolder, outgoingEmailFolderName)
+                && !getAcmFolderService().isFolderOrParentFolderWithName(parentFolder, caseFileIncomingEmailFolderName)
+                && !getAcmFolderService().isFolderOrParentFolderWithName(parentFolder, complaintIncomingEmailFolderName)
+                && !getAcmFolderService().isFolderOrParentFolderWithName(parentFolder, taskIncomingEmailFolderName);
     }
 
     @Override
