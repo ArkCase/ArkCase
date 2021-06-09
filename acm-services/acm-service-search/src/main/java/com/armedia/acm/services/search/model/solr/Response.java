@@ -32,7 +32,7 @@ import java.util.List;
 public class Response
 {
     private Integer numFound;
-    private List<SolrDocument> docs;
+    private List<SolrAdvancedSearchDocument> docs;
 
     public Integer getNumFound()
     {
@@ -44,12 +44,12 @@ public class Response
         this.numFound = numFound;
     }
 
-    public List<SolrDocument> getDocs()
+    public List<SolrAdvancedSearchDocument> getDocs()
     {
         return docs;
     }
 
-    public void setDocs(List<SolrDocument> docs)
+    public void setDocs(List<SolrAdvancedSearchDocument> docs)
     {
         this.docs = docs;
     }

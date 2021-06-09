@@ -30,7 +30,6 @@ package com.armedia.acm.services.comprehendmedical.transformer;
 import com.armedia.acm.services.comprehendmedical.dao.ComprehendMedicalDao;
 import com.armedia.acm.services.comprehendmedical.model.ComprehendMedical;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

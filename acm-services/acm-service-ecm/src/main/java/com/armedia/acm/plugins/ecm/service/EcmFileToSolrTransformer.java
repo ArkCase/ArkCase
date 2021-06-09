@@ -44,7 +44,6 @@ import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrBaseDocument;
 import com.armedia.acm.services.search.model.solr.SolrConfig;
 import com.armedia.acm.services.search.model.solr.SolrContentDocument;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -103,82 +102,6 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         {
             return mapDocumentProperties(in);
         }
-    }
-
-    @Override
-    public SolrDocument toSolrQuickSearch(EcmFile in)
-    {
-        SolrAdvancedSearchDocument doc = new SolrAdvancedSearchDocument();
-
-        getSearchAccessControlFields().setAccessControlFields(doc, in);
-
-        mapParentAclProperties(doc, in);
-
-        // doc.setAuthor_s(in.getCreator());
-        doc.setCreator_lcs(in.getCreator());
-
-        doc.setAuthor(in.getCreator());
-
-        doc.setObject_type_s(in.getObjectType());
-        doc.setObject_id_s("" + in.getId());
-        // doc.setCreate_tdt(in.getCreated());
-        doc.setCreate_date_tdt(in.getCreated());
-
-        doc.setId(in.getId() + "-" + in.getObjectType());
-        // doc.setLast_modified_tdt(in.getModified());
-
-        doc.setModified_date_tdt(in.getModified());
-        doc.setName(in.getFileName());
-        doc.setExt_s(in.getFileActiveVersionNameExtension());
-        // doc.setModifier_s(in.getModifier());
-        doc.setModifier_lcs(in.getModifier());
-
-        doc.setParent_object_id_i(in.getContainer().getContainerObjectId());
-        // doc.setParent_object_id_s("" + in.getContainer().getContainerObjectId());
-        doc.setParent_id_s(String.valueOf(in.getContainer().getContainerObjectId()));
-        // doc.setParent_object_type_s(in.getContainer().getContainerObjectType());
-        doc.setParent_type_s(in.getContainer().getContainerObjectType());
-
-        doc.setParent_ref_s(in.getContainer().getContainerObjectId() + "-" + in.getContainer().getContainerObjectType());
-
-        doc.setTitle_parseable(in.getFileName());
-        doc.setTitle_parseable_lcs(in.getFileName());
-        doc.setTitle_t(in.getFileName());
-
-
-        doc.setParent_folder_id_i(in.getFolder().getId());
-
-        // doc.setVersion_s(in.getActiveVersionTag());
-        doc.setCmis_version_series_id_s(in.getActiveVersionTag());
-        // doc.setType_s(in.getFileType());
-        doc.setType_lcs(in.getFileType());
-        doc.setCategory_s(in.getCategory());
-
-        // need an _lcs field for sorting
-        // doc.setName_lcs(in.getFileName());
-        doc.setName(in.getFileName());
-
-        doc.setCmis_version_series_id_s(in.getVersionSeriesId());
-
-        doc.setMime_type_s(in.getFileActiveVersionMimeType());
-
-        doc.setStatus_s(in.getStatus());
-        doc.setStatus_lcs(in.getStatus());
-
-        doc.setHidden_b(isHidden(in));
-
-        mapAdditionalProperties(in, doc.getAdditionalProperties());
-
-        String participantsListJson = ParticipantUtils.createParticipantsListJson(in.getParticipants());
-        doc.setAdditionalProperty("acm_participants_lcs", participantsListJson);
-        doc.setAdditionalProperty("duplicate_b", in.isDuplicate());
-        doc.setAdditionalProperty("custodian_s", in.getCustodian());
-
-        if (in.getZylabFileMetadata() != null)
-        {
-            doc.setAdditionalProperty("zylab_review_analysis_lcs", in.getZylabFileMetadata().getReviewedAnalysis());
-        }
-        return doc;
     }
 
     private Long getFileSizeBytes(EcmFile in)

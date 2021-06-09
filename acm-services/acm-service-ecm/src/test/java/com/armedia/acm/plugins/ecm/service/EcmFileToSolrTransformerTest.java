@@ -47,7 +47,6 @@ import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrBaseDocument;
 import com.armedia.acm.services.search.model.solr.SolrConfig;
 import com.armedia.acm.services.search.model.solr.SolrContentDocument;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.tag.model.AcmAssociatedTag;
 import com.armedia.acm.services.tag.model.AcmTag;
 import com.armedia.acm.services.users.dao.UserDao;
@@ -268,22 +267,6 @@ public class EcmFileToSolrTransformerTest extends EasyMockSupport
         assertNull("Content index will index file metadata as well", result);
     }
 
-    @Test
-    public void toSolrQuickSearch()
-    {
-        solrConfig.setEnableContentFileIndexing(false);
-
-        mockSearchAccessControlFields.setAccessControlFields(anyObject(SolrBaseDocument.class), anyObject(AcmAssignedObject.class));
-        expectLastCall();
-
-        replayAll();
-        SolrDocument result = unit.toSolrQuickSearch(in);
-        verifyAll();
-
-        validateResult(result);
-
-    }
-
     private void validateResult(SolrAdvancedSearchDocument result)
     {
         assertNotNull(result);
@@ -305,20 +288,6 @@ public class EcmFileToSolrTransformerTest extends EasyMockSupport
         assertEquals(String.valueOf(in.getParentObjectId()), result.getParent_id_s());
         assertEquals(in.getParentObjectType(), result.getParent_type_s());
         assertEquals(13, result.getAdditionalProperties().size());
-    }
-
-    private void validateResult(SolrDocument result)
-    {
-        assertNotNull(result);
-        assertEquals("101-FILE", result.getId());
-        assertEquals(String.valueOf(in.getFileId()), result.getObject_id_s());
-        assertEquals(in.getObjectType(), result.getObject_type_s());
-        assertEquals(in.getFileName(), result.getName());
-        assertEquals(in.getFileActiveVersionNameExtension(), result.getExt_s());
-        assertEquals(in.getFileActiveVersionMimeType(), result.getMime_type_s());
-        assertEquals(in.getFileName(), result.getTitle_parseable());
-        assertEquals(in.getFileName(), result.getTitle_parseable_lcs());
-        assertEquals(9, result.getAdditionalProperties().size());
     }
 
     private void validateResult(SolrContentDocument result)

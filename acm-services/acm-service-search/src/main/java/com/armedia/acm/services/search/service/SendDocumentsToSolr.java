@@ -32,7 +32,6 @@ import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrBaseDocument;
 import com.armedia.acm.services.search.model.solr.SolrContentDocument;
 import com.armedia.acm.services.search.model.solr.SolrDeleteDocumentByIdRequest;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -63,11 +62,6 @@ public class SendDocumentsToSolr implements InitializingBean
     public void sendSolrAdvancedSearchDocuments(List<SolrAdvancedSearchDocument> solrDocuments)
     {
         sendToJmsQueue(solrDocuments, "solrAdvancedSearch.in");
-    }
-
-    public void sendSolrQuickSearchDocuments(List<SolrDocument> solrDocuments)
-    {
-        sendToJmsQueue(solrDocuments, "solrQuickSearch.in");
     }
 
     public void sendSolrContentFileIndexDocuments(List<SolrContentDocument> solrDocuments)

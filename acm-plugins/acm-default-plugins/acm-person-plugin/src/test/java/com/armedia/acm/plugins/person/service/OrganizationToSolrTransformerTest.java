@@ -46,7 +46,6 @@ import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrBaseDocument;
 import com.armedia.acm.services.search.model.solr.SolrContentDocument;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
@@ -393,24 +392,4 @@ public class OrganizationToSolrTransformerTest extends EasyMockSupport
         assertThat(result.getAdditionalProperties().get("acm_participants_lcs"),
                 is("[{\"ldapId\":\"ldapType\", \"type\":\"participantType\"}]"));
     }
-
-    private void validateResult(SolrDocument result)
-    {
-        assertNotNull(result);
-        assertThat(result.getId(), is(in.getId().toString() + "-ORGANIZATION"));
-        assertThat(result.getObject_id_s(), is(in.getId().toString()));
-        assertThat(result.getObject_type_s(), is(in.getObjectType()));
-        assertThat(result.getCreate_tdt(), is(in.getCreated()));
-        assertThat(result.getAuthor_s(), is(in.getCreator()));
-        assertThat(result.getLast_modified_tdt(), is(in.getModified()));
-        assertThat(result.getModifier_s(), is(in.getModifier()));
-        assertThat(result.getType_s(), is(in.getOrganizationType()));
-        assertThat(result.getData_s(), is(in.getOrganizationValue()));
-        assertThat(result.getName(), is(in.getOrganizationValue()));
-        assertThat(result.getTitle_parseable(), is(in.getOrganizationValue()));
-        assertThat(result.getTitle_parseable_lcs(), is(in.getOrganizationValue()));
-        assertThat(result.getAdditionalProperties().get("creator_full_name_lcs"), is("Create Creator"));
-        assertThat(result.getAdditionalProperties().get("modifier_full_name_lcs"), is("Modify Modifier"));
-    }
-
 }

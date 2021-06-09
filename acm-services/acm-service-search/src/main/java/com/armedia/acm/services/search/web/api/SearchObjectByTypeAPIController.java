@@ -32,8 +32,8 @@ import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.search.model.ApplicationSearchEvent;
 import com.armedia.acm.services.search.model.SearchConstants;
+import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrCore;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.model.solr.SolrResponse;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchEventPublisher;
@@ -266,10 +266,10 @@ public class SearchObjectByTypeAPIController
 
         if (solrResponse.getResponse() != null)
         {
-            List<SolrDocument> solrDocs = solrResponse.getResponse().getDocs();
+            List<SolrAdvancedSearchDocument> solrDocs = solrResponse.getResponse().getDocs();
             String ipAddress = (String) httpSession.getAttribute("acm_ip_address");
             Long objectId = null;
-            for (SolrDocument doc : solrDocs)
+            for (SolrAdvancedSearchDocument doc : solrDocs)
             {
                 // in case when objectID is not Long like in USER case
                 try

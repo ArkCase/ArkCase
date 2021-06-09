@@ -30,7 +30,6 @@ package com.armedia.acm.plugins.ecm.service;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 
 import java.util.Date;
@@ -52,31 +51,24 @@ public class AcmContainerToSolrTransformer implements AcmObjectToSolrDocTransfor
     @Override
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(AcmContainer in)
     {
-        // no implementation needed yet
-        return null;
-    }
 
-    @Override
-    public SolrDocument toSolrQuickSearch(AcmContainer in)
-    {
-
-        SolrDocument doc = new SolrDocument();
+        SolrAdvancedSearchDocument doc = new SolrAdvancedSearchDocument();
 
         // no access control on folders (yet)
         doc.setPublic_doc_b(true);
 
-        doc.setAuthor_s(in.getCreator());
-        doc.setAuthor(in.getCreator());
+        doc.setCreator_s(in.getCreator());
+        doc.setCreator_lcs(in.getCreator());
         doc.setObject_type_s(in.getObjectType());
         doc.setObject_id_s("" + in.getId());
-        doc.setCreate_tdt(in.getCreated());
+        doc.setCreate_date_tdt(in.getCreated());
         doc.setId(in.getId() + "-" + in.getObjectType());
-        doc.setLast_modified_tdt(in.getModified());
+        doc.setModified_date_tdt(in.getModified());
         doc.setName(in.getContainerObjectTitle());
-        doc.setModifier_s(in.getModifier());
-        doc.setParent_object_id_i(in.getContainerObjectId());
-        doc.setParent_object_id_s("" + in.getContainerObjectId());
-        doc.setParent_object_type_s(in.getContainerObjectType());
+        doc.setModifier_lcs(in.getModifier());
+        doc.setParent_folder_id_i(in.getContainerObjectId());
+        doc.setParent_id_s("" + in.getContainerObjectId());
+        doc.setParent_type_s(in.getContainerObjectType());
         doc.setTitle_parseable(in.getContainerObjectTitle());
         doc.setTitle_t(in.getContainerObjectTitle());
 

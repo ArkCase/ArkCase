@@ -33,7 +33,6 @@ import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.services.dataaccess.service.SearchAccessControlFields;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 
 import org.apache.logging.log4j.Logger;
@@ -60,32 +59,24 @@ public class AcmFolderToSolrTransformer implements AcmObjectToSolrDocTransformer
     @Override
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(AcmFolder in)
     {
-        // no implementation needed yet
-        return null;
-    }
-
-    @Override
-    public SolrDocument toSolrQuickSearch(AcmFolder in)
-    {
-
         AcmFolder parentFolder = in.getParentFolder();
 
-        SolrDocument doc = new SolrDocument();
+        SolrAdvancedSearchDocument doc = new SolrAdvancedSearchDocument();
 
         getSearchAccessControlFields().setAccessControlFields(doc, in);
 
-        doc.setAuthor_s(in.getCreator());
-        doc.setAuthor(in.getCreator());
+        doc.setCreator_s(in.getCreator());
+        doc.setCreator_lcs(in.getCreator());
         doc.setObject_type_s(in.getObjectType());
         doc.setObject_id_s("" + in.getId());
-        doc.setCreate_tdt(in.getCreated());
+        doc.setCreate_date_tdt(in.getCreated());
         doc.setId(in.getId() + "-" + in.getObjectType());
-        doc.setLast_modified_tdt(in.getModified());
+        doc.setModified_date_tdt(in.getModified());
         doc.setName(in.getName());
-        doc.setModifier_s(in.getModifier());
-        doc.setParent_object_id_i(parentFolder == null ? null : parentFolder.getId());
-        doc.setParent_object_id_s(parentFolder == null ? null : "" + parentFolder.getId());
-        doc.setParent_object_type_s(parentFolder == null ? null : in.getObjectType());
+        doc.setModifier_lcs(in.getModifier());
+        doc.setParent_folder_id_i(parentFolder == null ? null : parentFolder.getId());
+        doc.setParent_id_s(parentFolder == null ? null : "" + parentFolder.getId());
+        doc.setParent_type_s(parentFolder == null ? null : in.getObjectType());
         doc.setTitle_parseable(in.getName());
         doc.setTitle_t(in.getName());
 
@@ -98,7 +89,7 @@ public class AcmFolderToSolrTransformer implements AcmObjectToSolrDocTransformer
 
         doc.setParent_folder_id_i(parentFolder == null ? null : parentFolder.getId());
 
-        doc.setStatus_s(in.getStatus());
+        doc.setStatus_lcs(in.getStatus());
 
         doc.setAdditionalProperty("name_partial", in.getName());
 

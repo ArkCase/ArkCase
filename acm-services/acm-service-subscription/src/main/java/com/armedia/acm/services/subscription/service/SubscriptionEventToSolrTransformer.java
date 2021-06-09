@@ -30,7 +30,6 @@ package com.armedia.acm.services.subscription.service;
 import com.armedia.acm.audit.model.AuditEventConfig;
 import com.armedia.acm.services.notification.service.NotificationFormatter;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.subscription.dao.SubscriptionEventDao;
 import com.armedia.acm.services.subscription.model.AcmSubscriptionEvent;
