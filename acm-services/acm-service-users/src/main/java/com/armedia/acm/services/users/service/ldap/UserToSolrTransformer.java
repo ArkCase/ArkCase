@@ -28,7 +28,6 @@ package com.armedia.acm.services.users.service.ldap;
  */
 
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;

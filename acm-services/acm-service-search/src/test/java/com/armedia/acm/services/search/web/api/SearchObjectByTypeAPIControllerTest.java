@@ -29,8 +29,8 @@ package com.armedia.acm.services.search.web.api;
 
 import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.search.model.ApplicationSearchEvent;
+import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrCore;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.model.solr.SolrResponse;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchEventPublisher;
@@ -113,7 +113,7 @@ public class SearchObjectByTypeAPIControllerTest extends EasyMockSupport
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         SolrResponse solrResponse = gson.fromJson(jsonPayload, SolrResponse.class);
 
-        List<SolrDocument> solrDocs = solrResponse.getResponse().getDocs();
+        List<SolrAdvancedSearchDocument> solrDocs = solrResponse.getResponse().getDocs();
 
         assertTrue(solrDocs.size() > 0);
 

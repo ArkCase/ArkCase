@@ -30,7 +30,6 @@ package gov.privacy.transformer;
 import static com.armedia.acm.services.users.model.ldap.MapperUtils.prefixTrailingDot;
 
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.service.ldap.UserToSolrTransformer;

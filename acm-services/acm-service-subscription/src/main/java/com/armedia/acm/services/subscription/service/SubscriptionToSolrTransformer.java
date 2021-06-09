@@ -28,7 +28,6 @@ package com.armedia.acm.services.subscription.service;
  */
 
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.subscription.dao.SubscriptionDao;
 import com.armedia.acm.services.subscription.model.AcmSubscription;

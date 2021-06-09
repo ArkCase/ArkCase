@@ -29,7 +29,6 @@ package com.armedia.acm.services.search.service;
 
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrContentDocument;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 
 import org.json.JSONArray;
 

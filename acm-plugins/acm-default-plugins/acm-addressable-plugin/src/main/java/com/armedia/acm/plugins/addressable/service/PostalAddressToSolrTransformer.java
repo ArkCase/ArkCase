@@ -30,7 +30,6 @@ package com.armedia.acm.plugins.addressable.service;
 import com.armedia.acm.plugins.addressable.dao.PostalAddressDao;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;

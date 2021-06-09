@@ -29,7 +29,6 @@ package gov.privacy.transformer;
 
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

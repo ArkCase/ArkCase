@@ -40,7 +40,6 @@ import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.model.RecycleBinConstants;
 import com.armedia.acm.plugins.ecm.model.RecycleBinItem;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 
 import org.apache.logging.log4j.LogManager;
