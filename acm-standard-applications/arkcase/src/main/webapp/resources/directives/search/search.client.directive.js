@@ -180,7 +180,7 @@ angular.module('directives').directive(
                             scope.loadTags = function loadTags(query) {
                                 var deferred = $q.defer();
                                 var autoSuggestObjectType = scope.objectType;
-                                AutoSuggestService.autoSuggest(query, "QUICK", autoSuggestObjectType).then(function(tags) {
+                                AutoSuggestService.autoSuggest(query, "ADVANCED", autoSuggestObjectType).then(function(tags) {
                                     deferred.resolve(tags);
                                 });
                                 return deferred.promise;
@@ -195,13 +195,13 @@ angular.module('directives').directive(
                                         if (typeaheadQuery.length >= 2) {
                                             var deferred = $q.defer();
                                             if (scope.objectType !== 'undefined') {
-                                                AutoSuggestService.autoSuggest(typeaheadQuery, "QUICK", scope.objectType).then(function(res) {
+                                                AutoSuggestService.autoSuggest(typeaheadQuery, "ADVANCED", scope.objectType).then(function(res) {
                                                     var results = _.pluck(res, scope.typeAheadColumn);
                                                     deferred.resolve(results);
                                                 });
                                                 return deferred.promise;
                                             } else {
-                                                AutoSuggestService.autoSuggest(typeaheadQuery, "QUICK", null).then(function(res) {
+                                                AutoSuggestService.autoSuggest(typeaheadQuery, "ADVANCED", null).then(function(res) {
                                                     var results = _.pluck(res, scope.typeAheadColumn);
                                                     deferred.resolve(results);
                                                 });

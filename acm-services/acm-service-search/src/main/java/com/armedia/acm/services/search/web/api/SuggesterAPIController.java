@@ -63,7 +63,7 @@ public class SuggesterAPIController
     @ResponseBody
     public String suggest(
             @RequestParam(value = "q") String query,
-            @RequestParam(value = "core", defaultValue = "QUICK") String core,
+            @RequestParam(value = "core", defaultValue = "ADVANCED") String core,
             @RequestParam(value = "filter", required = false) String[] filter,
             Authentication authentication) throws SolrException
     {
@@ -77,16 +77,12 @@ public class SuggesterAPIController
 
         switch (core)
         {
-        case SearchConstants.CORE_QUICK:
-            return getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SUGGESTER_SEARCH, query, 0,
-                    10, "",
-                    filterQueries);
         case SearchConstants.CORE_ADVANCED:
             return getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SUGGESTER_SEARCH, query,
                     0, 10, "",
                     filterQueries);
         default:
-            return getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SUGGESTER_SEARCH, query, 0,
+            return getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SUGGESTER_SEARCH, query, 0,
                     10, "",
                     filterQueries);
         }

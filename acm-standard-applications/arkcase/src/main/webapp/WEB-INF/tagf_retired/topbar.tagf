@@ -34,9 +34,6 @@
             <div class="input-group"> <span class="input-group-btn">
           <button type="submit" class="btn btn-sm bg-white b-white btn-icon"><i class="fa fa-search"></i></button>
           </span>
-                <%--<input type="text" class="form-control input-sm no-border" placeholder="Search complaints, cases..." id="edtSearch" data-provide="typeahead" autocomplete="off" data-source='["arizona","alaska"]'>--%>
-                <%--<input type="text" name="acmQuickSearch" id="acmQuickSearch" class="form-control input-sm no-border typeahead" placeholder="Search complaints, cases..." />--%>
-
                 <input type="text" class="form-control input-sm no-border typeahead" autocomplete="off" data-provide="typeahead" placeholder="Search complaints, cases...">
                 <input type="hidden" class="span1" title="ctrId" id="ctrId" value="" />
             </div>

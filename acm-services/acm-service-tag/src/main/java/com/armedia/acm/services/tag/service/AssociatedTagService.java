@@ -99,10 +99,10 @@ public class AssociatedTagService
         }
         catch (SolrException e)
         {
-            log.error("Solr exception occurred while performing quick search to fetch tags for object [{}]:[{}]",
+            log.error("Solr exception occurred while performing advanced search to fetch tags for object [{}]:[{}]",
                     objectType, objectId, e);
             throw new AcmObjectNotFoundException(TagConstants.OBJECT_TYPE, null,
-                    "Solr exception occurred while performing quick search to fetch tags for object['" + objectType + "]:[" + objectId
+                    "Solr exception occurred while performing advanced search to fetch tags for object['" + objectType + "]:[" + objectId
                             + "]",
                     e);
         }

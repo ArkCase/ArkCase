@@ -90,19 +90,6 @@ public class SendDocumentsToSolr implements InitializingBean
         }
     }
 
-    public void sendSolrQuickSearchDeletes(List<SolrDeleteDocumentByIdRequest> deletes)
-    {
-        // send separate requests, in case any of them fail, e.g. maybe a doc with this id already is not in the
-        // index.
-        if (deletes != null)
-        {
-            for (SolrDeleteDocumentByIdRequest doc : deletes)
-            {
-                sendToJmsQueue(doc, "solrQuickSearch.in");
-            }
-        }
-    }
-
     public void sendSolrAdvancedSearchDeletes(List<SolrDeleteDocumentByIdRequest> deletes)
     {
         log.debug("Received [{}] to be deleted.", deletes.size());
