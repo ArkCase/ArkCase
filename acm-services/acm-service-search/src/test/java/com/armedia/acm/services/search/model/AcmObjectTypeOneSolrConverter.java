@@ -41,8 +41,6 @@ public class AcmObjectTypeOneSolrConverter implements AcmObjectToSolrDocTransfor
 {
     private int handledObjectsCount = 0;
 
-    private int handledQuickSearchCount = 0;
-
     @Override
     public List<AcmObjectTypeOne> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
     {
@@ -72,11 +70,6 @@ public class AcmObjectTypeOneSolrConverter implements AcmObjectToSolrDocTransfor
     public int getHandledObjectsCount()
     {
         return handledObjectsCount;
-    }
-
-    public int getHandledQuickSearchCount()
-    {
-        return handledQuickSearchCount;
     }
 
     @Override

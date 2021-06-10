@@ -36,7 +36,6 @@ public interface SearchConstants
 {
     String CATCH_ALL_QUERY = "catch_all:";
 
-    String CORE_QUICK = "QUICK";
     String CORE_ADVANCED = "ADVANCED";
 
     String DATE_FACET_PRE_KEY = "date.";

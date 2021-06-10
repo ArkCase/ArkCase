@@ -39,10 +39,8 @@ import java.util.function.Function;
 
 public enum SolrCore
 {
-    QUICK_SEARCH(ArkCaseSolrUtils.quickSearchQueryConfigurer(), SolrConfig::getQuickSearchCore),
     ADVANCED_SEARCH(ArkCaseSolrUtils.advancedSearchQueryConfigurer(), SolrConfig::getAdvancedSearchCore),
-    ADVANCED_SUGGESTER_SEARCH(ArkCaseSolrUtils.advancedSearchSuggesterQueryConfigurer(), SolrConfig::getAdvancedSearchCore),
-    QUICK_SUGGESTER_SEARCH(ArkCaseSolrUtils.quickSearchSuggesterQueryConfigurer(), SolrConfig::getQuickSearchCore);
+    ADVANCED_SUGGESTER_SEARCH(ArkCaseSolrUtils.advancedSearchSuggesterQueryConfigurer(), SolrConfig::getAdvancedSearchCore);
     private BiConsumer<SolrConfig, SolrQuery> queryConfigurer;
     private Function<SolrConfig, String> coreNameMapper;
 

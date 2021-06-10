@@ -32,7 +32,7 @@ angular.module('core').controller(
                             typeAheadColumn = $scope.typeAheadColumn;
                         }
                         if (typeaheadQuery.length >= 2) {
-                            AutoSuggestService.autoSuggest(typeaheadQuery, 'QUICK', null).then(function(res) {
+                            AutoSuggestService.autoSuggest(typeaheadQuery, 'ADVANCED', null).then(function(res) {
                                 var results = _.pluck(res, typeAheadColumn);
                                 deferred.resolve(results);
                             });

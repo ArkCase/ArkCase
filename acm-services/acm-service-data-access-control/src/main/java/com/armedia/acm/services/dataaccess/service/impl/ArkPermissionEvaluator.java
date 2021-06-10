@@ -249,7 +249,7 @@ public class ArkPermissionEvaluator implements PermissionEvaluator, Initializing
     protected SolrAbstractDocument transformJpaEntity(Object jpaEntity, AcmObjectToSolrDocTransformer transformer)
     {
         // Every transformer implements one of these methods. This code mirrors the Solr
-        // lookup in this class, which first checks the advanced search core, and then quick search...
+        // lookup in this class, which checks the advanced search core
         SolrAbstractDocument solrDoc = transformer.toSolrAdvancedSearch(jpaEntity);
         if (solrDoc == null)
         {
