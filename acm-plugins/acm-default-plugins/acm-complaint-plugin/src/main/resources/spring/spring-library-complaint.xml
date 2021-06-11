@@ -281,6 +281,7 @@
     <bean id="complaintUpdatedNotifier" class="com.armedia.acm.plugins.complaint.service.ComplaintUpdatedNotifier">
         <property name="notificationService" ref="notificationService"/>
         <property name="complaintDao" ref="acmComplaintDao"/>
+        <property name="templateManager" ref="correspondenceTemplateManager"/>
     </bean>
 
 </beans>
