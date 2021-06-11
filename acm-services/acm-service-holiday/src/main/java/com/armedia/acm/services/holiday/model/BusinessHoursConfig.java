@@ -39,26 +39,30 @@ import org.springframework.beans.factory.annotation.Value;
 public class BusinessHoursConfig
 {
 
-    @JsonProperty("businessHours.endOfBusinessDayEnabled")
-    @Value("${businessHours.endOfBusinessDayEnabled}")
-    private Boolean endOfBusinessDayEnabled;
+    @JsonProperty("businessHours.businessDayHoursEnabled")
+    @Value("${businessHours.businessDayHoursEnabled}")
+    private Boolean businessDayHoursEnabled;
 
     @JsonProperty("businessHours.endOfBusinessDayTime")
     @Value("${businessHours.endOfBusinessDayTime}")
     private String endOfBusinessDayTime;
 
+    @JsonProperty("businessHours.startOfBusinessDayTime")
+    @Value("${businessHours.startOfBusinessDayTime}")
+    private String startOfBusinessDayTime;
+
     @JsonProperty("businessHours.defaultDueDateGap")
     @Value("${businessHours.defaultDueDateGap}")
     private int defaultDueDateGap;
 
-    public Boolean getEndOfBusinessDayEnabled()
+    public Boolean getBusinessDayHoursEnabled()
     {
-        return endOfBusinessDayEnabled;
+        return businessDayHoursEnabled;
     }
 
-    public void setEndOfBusinessDayEnabled(Boolean endOfBusinessDayEnabled)
+    public void setBusinessDayHoursEnabled(Boolean endOfBusinessDayEnabled)
     {
-        this.endOfBusinessDayEnabled = endOfBusinessDayEnabled;
+        this.businessDayHoursEnabled = endOfBusinessDayEnabled;
     }
 
     public String getEndOfBusinessDayTime()
@@ -79,5 +83,15 @@ public class BusinessHoursConfig
     public void setDefaultDueDateGap(int defaultDueDateGap)
     {
         this.defaultDueDateGap = defaultDueDateGap;
+    }
+
+    public String getStartOfBusinessDayTime()
+    {
+        return startOfBusinessDayTime;
+    }
+
+    public void setStartOfBusinessDayTime(String startOfBusinessDayTime)
+    {
+        this.startOfBusinessDayTime = startOfBusinessDayTime;
     }
 }
