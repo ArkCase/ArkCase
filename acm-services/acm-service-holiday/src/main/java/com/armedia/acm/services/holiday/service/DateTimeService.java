@@ -104,7 +104,7 @@ public class DateTimeService {
 
     public LocalDateTime toClientLocalDateTime(LocalDateTime date)
     {
-        return getZonedDateTimeAtDefaultClientTimezone(date).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime();
+        return getZonedDateTimeAtDefaultClientTimezone(date).toLocalDateTime();
     }
 
     public LocalDate fromDateToClientLocalDate(Date date)
@@ -114,7 +114,7 @@ public class DateTimeService {
 
     public LocalDate toClientLocalDate(LocalDateTime date)
     {
-        return getZonedDateTimeAtDefaultClientTimezone(date).withZoneSameInstant(ZoneOffset.UTC).toLocalDate();
+        return getZonedDateTimeAtDefaultClientTimezone(date).toLocalDate();
     }
 
     public LocalTime fromDateToClientTimeTimezone(LocalDateTime date)
@@ -124,7 +124,7 @@ public class DateTimeService {
 
     public LocalTime toClientLocalTime(LocalDateTime date)
     {
-        return getZonedDateTimeAtDefaultClientTimezone(date).withZoneSameInstant(ZoneOffset.UTC).toLocalTime();
+        return getZonedDateTimeAtDefaultClientTimezone(date).toLocalTime();
     }
 
     public LocalDateTime fromDateToLocalDateTime(Date date)
