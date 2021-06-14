@@ -9,8 +9,9 @@
 angular.module('admin').factory('Admin.BusinessHoursService', ['$http', function ($http) {
     return {
         PROPERTIES: {
-            END_OF_BUSINESS_DAY_FLAG: 'businessHours.endOfBusinessDayEnabled',
+            BUSINESS_DAY_HOURS_FLAG: 'businessHours.businessDayHoursEnabled',
             END_OF_BUSINESS_DAY_TIME: 'businessHours.endOfBusinessDayTime',
+            START_OF_BUSINESS_DAY_TIME: 'businessHours.startOfBusinessDayTime',
         },
 
         /**
