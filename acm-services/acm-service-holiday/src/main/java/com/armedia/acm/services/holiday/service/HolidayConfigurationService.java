@@ -204,27 +204,29 @@ public class HolidayConfigurationService
 
     public LocalDateTime getFirstWorkingDateWithBusinessHoursCalculation(LocalDateTime date)
     {
-
         LocalDateTime resultDate = date;
 
-        while (!isWorkingDay(resultDate.toLocalDate()))
+        if (isWorkingDay(resultDate.toLocalDate()))
         {
-            resultDate = resultDate.plusDays(1);
-        }
+            if (getBusinessHoursConfig().getBusinessDayHoursEnabled() && isTimeBeforeBusinessHours(date))
+            {
+                resultDate = resultDate.toLocalDate().atTime(getStartOfLocalTimeBusinessHoursToUTC(resultDate.toLocalDate()));
+            }
 
-        if (getBusinessHoursConfig().getBusinessDayHoursEnabled() && isWorkingDay(resultDate.toLocalDate())
-                && isTimeBeforeBusinessHours(date))
+            if (getBusinessHoursConfig().getBusinessDayHoursEnabled() && isTimeAfterBusinessHours(date))
+            {
+                resultDate = resultDate.plusDays(1);
+                resultDate = resultDate.toLocalDate().atTime(getStartOfLocalTimeBusinessHoursToUTC(resultDate.toLocalDate()));
+            }
+        }
+        else
         {
+            while (!isWorkingDay(resultDate.toLocalDate()))
+            {
+                resultDate = resultDate.plusDays(1);
+            }
             resultDate = resultDate.toLocalDate().atTime(getStartOfLocalTimeBusinessHoursToUTC(resultDate.toLocalDate()));
         }
-
-        if (getBusinessHoursConfig().getBusinessDayHoursEnabled() && isWorkingDay(resultDate.toLocalDate())
-                && isTimeAfterBusinessHours(date))
-        {
-            resultDate = resultDate.plusDays(1);
-            resultDate = resultDate.toLocalDate().atTime(getStartOfLocalTimeBusinessHoursToUTC(resultDate.toLocalDate()));
-        }
-
         return resultDate;
     }
 
