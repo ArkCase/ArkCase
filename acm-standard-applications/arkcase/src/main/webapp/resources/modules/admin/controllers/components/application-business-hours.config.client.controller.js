@@ -4,14 +4,16 @@ angular.module('admin').controller('Admin.BusinessHoursController',
     ['$scope', 'Admin.BusinessHoursService', function ($scope, BusinessHoursService) {
 
         BusinessHoursService.getBusinessHoursConfig().then(function (response) {
-            $scope.endOfBusinessDayEnabled = response.data[BusinessHoursService.PROPERTIES.END_OF_BUSINESS_DAY_FLAG];
+            $scope.businessDayHoursEnabled = response.data[BusinessHoursService.PROPERTIES.BUSINESS_DAY_HOURS_FLAG];
             $scope.endOfBusinessDayTime = response.data[BusinessHoursService.PROPERTIES.END_OF_BUSINESS_DAY_TIME];
+            $scope.startOfBusinessDayTime = response.data[BusinessHoursService.PROPERTIES.START_OF_BUSINESS_DAY_TIME];
             $scope.configDataModel = response.data;
         });
 
         $scope.applyChanges = function () {
-            $scope.configDataModel[BusinessHoursService.PROPERTIES.END_OF_BUSINESS_DAY_FLAG] = $scope.endOfBusinessDayEnabled;
+            $scope.configDataModel[BusinessHoursService.PROPERTIES.BUSINESS_DAY_HOURS_FLAG] = $scope.businessDayHoursEnabled;
             $scope.configDataModel[BusinessHoursService.PROPERTIES.END_OF_BUSINESS_DAY_TIME] = $scope.endOfBusinessDayTime;
+            $scope.configDataModel[BusinessHoursService.PROPERTIES.START_OF_BUSINESS_DAY_TIME] = $scope.startOfBusinessDayTime;
 
             BusinessHoursService.saveBusinessHoursConfig($scope.configDataModel);
         };

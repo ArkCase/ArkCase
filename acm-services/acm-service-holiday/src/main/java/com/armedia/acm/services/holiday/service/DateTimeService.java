@@ -117,7 +117,7 @@ public class DateTimeService {
         return getZonedDateTimeAtDefaultClientTimezone(date).withZoneSameInstant(ZoneOffset.UTC).toLocalDate();
     }
 
-    public LocalTime fromDateToClientTimeTimezone(Date date)
+    public LocalTime fromDateToClientTimeTimezone(LocalDateTime date)
     {
         return getZonedDateTimeAtDefaultClientTimezone(date).toLocalTime();
     }
@@ -149,12 +149,12 @@ public class DateTimeService {
 
     public ZonedDateTime getZonedDateTimeAtDefaultClientTimezone(Date date)
     {
-        return date.toInstant().atZone(getDefaultClientZoneId());
+        return date.toInstant().atZone(ZoneId.systemDefault()).withZoneSameInstant(getDefaultClientZoneId());
     }
 
     public ZonedDateTime getZonedDateTimeAtDefaultClientTimezone(LocalDateTime date)
     {
-        return date.atZone(getDefaultClientZoneId());
+        return getZonedDateTimeAtUTC(date).withZoneSameInstant(getDefaultClientZoneId());
     }
 
     public ZonedDateTime getZonedDateTimeAtUTC(Date date)
