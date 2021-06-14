@@ -854,6 +854,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         postalAddress.setStreetAddress(user.getAddress1());
         postalAddress.setStreetAddress2(user.getAddress2());
         postalAddress.setZip(user.getZipCode());
+        person.setDefaultAddress(postalAddress);
 
         person.getAddresses().add(postalAddress);
 
