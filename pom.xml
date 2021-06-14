@@ -488,6 +488,13 @@
                 <groupId>io.milton</groupId>
                 <artifactId>milton-server-ent</artifactId>
                 <version>${milton.version}</version>
+                <!-- exclude org.slf4j » slf4j-log4j12 since it's Log4jMDCAdapter class doesn't support null values in the map -->
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-log4j12</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <!-- frevvo forms -->
             <dependency>
