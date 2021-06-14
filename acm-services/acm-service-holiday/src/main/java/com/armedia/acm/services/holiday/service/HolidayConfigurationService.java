@@ -39,7 +39,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.Date;
@@ -130,7 +129,7 @@ public class HolidayConfigurationService
      * @param date
      * @param workingDays
      * @return Date with added Working Days and Businees Hours depending on configuration
-     * (endOfBusinessDaysEnabled & endOfBusinessDayTime)
+     *         (endOfBusinessDaysEnabled & endOfBusinessDayTime)
      */
     public Date addWorkingDaysAndWorkingHoursToDateWithBusinessHours(Date date, int workingDays)
     {
@@ -150,7 +149,8 @@ public class HolidayConfigurationService
     /**
      *
      * @param date
-     * @return Date with added BusinessHours depending on configuration (endOfBusinessDay) adjusted to defaultClientTimezone
+     * @return Date with added BusinessHours depending on configuration (endOfBusinessDay) adjusted to
+     *         defaultClientTimezone
      */
     public Date setEndOfLocalTimeBusinessHoursToDate(LocalDate date)
     {
@@ -174,7 +174,6 @@ public class HolidayConfigurationService
 
         return localTimeInSetTimezone.isBefore(getStartOfClientBusinessDayTime());
     }
-
 
     public boolean isWeekendNonWorkingDay(LocalDate date)
     {
@@ -205,7 +204,13 @@ public class HolidayConfigurationService
 
     public LocalDateTime getFirstWorkingDateWithBusinessHoursCalculation(LocalDateTime date)
     {
+
         LocalDateTime resultDate = date;
+
+        while (!isWorkingDay(resultDate.toLocalDate()))
+        {
+            resultDate = resultDate.plusDays(1);
+        }
 
         if (getBusinessHoursConfig().getBusinessDayHoursEnabled() && isWorkingDay(resultDate.toLocalDate())
                 && isTimeBeforeBusinessHours(date))
@@ -218,11 +223,6 @@ public class HolidayConfigurationService
         {
             resultDate = resultDate.plusDays(1);
             resultDate = resultDate.toLocalDate().atTime(getStartOfLocalTimeBusinessHoursToUTC(resultDate.toLocalDate()));
-        }
-
-        while (!isWorkingDay(resultDate.toLocalDate()))
-        {
-            resultDate = resultDate.plusDays(1);
         }
 
         return resultDate;
@@ -328,11 +328,13 @@ public class HolidayConfigurationService
         this.businessHoursConfig = businessHoursConfig;
     }
 
-    public DateTimeService getDateTimeService() {
+    public DateTimeService getDateTimeService()
+    {
         return dateTimeService;
     }
 
-    public void setDateTimeService(DateTimeService dateTimeService) {
+    public void setDateTimeService(DateTimeService dateTimeService)
+    {
         this.dateTimeService = dateTimeService;
     }
 }
