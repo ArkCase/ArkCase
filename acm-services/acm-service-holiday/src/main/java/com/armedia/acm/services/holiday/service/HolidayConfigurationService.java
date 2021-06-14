@@ -282,12 +282,7 @@ public class HolidayConfigurationService
         }).sorted(Comparator.comparing(HolidayItem::getHolidayDate)).collect(Collectors.toList()));
         return config;
     }
-
-    private LocalDate getLocalDateAtSystemDefault(Date date)
-    {
-        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-    }
-
+    
     private static HolidayConfigurationProps getPropsFromHolidayConfiguration(HolidayConfiguration config)
     {
         HolidayConfigurationProps props = new HolidayConfigurationProps();
