@@ -93,6 +93,10 @@ public class OCRConfiguration implements MediaEngineConfiguration
     @Value("${ocr.tempPath}")
     private String tempPath;
 
+    @JsonProperty("ocr.maxFailedAttempts")
+    @Value("${ocr.maxFailedAttempts}")
+    private int maxFailedAttempts;
+
     @Override
     public boolean isEnabled()
     {
@@ -243,6 +247,16 @@ public class OCRConfiguration implements MediaEngineConfiguration
         return tempPath;
     }
 
+    public int getMaxFailedAttempts()
+    {
+        return maxFailedAttempts;
+    }
+
+    public void setMaxFailedAttempts(int maxFailedAttempts)
+    {
+        this.maxFailedAttempts = maxFailedAttempts;
+    }
+
     @Override
     public void setTempPath(String tempPath)
     {
@@ -269,14 +283,15 @@ public class OCRConfiguration implements MediaEngineConfiguration
                 Objects.equals(providers, that.providers) &&
                 Objects.equals(excludedFileTypes, that.excludedFileTypes) &&
                 Objects.equals(provider, that.provider) &&
-                Objects.equals(tempPath, that.tempPath);
+                Objects.equals(tempPath, that.tempPath) &&
+                maxFailedAttempts == that.maxFailedAttempts;
     }
 
     @Override
     public int hashCode()
     {
         return Objects.hash(enabled, automaticEnabled, newMediaEngineForNewVersion, copyMediaEngineForNewVersion, cost, confidence,
-                numberOfFilesForProcessing, service, providers, providerPurgeAttempts, excludedFileTypes, provider, tempPath);
+                numberOfFilesForProcessing, service, providers, providerPurgeAttempts, excludedFileTypes, provider, tempPath, maxFailedAttempts);
     }
 
     @Override
@@ -296,6 +311,7 @@ public class OCRConfiguration implements MediaEngineConfiguration
                 ", excludedFileTypes='" + excludedFileTypes + '\'' +
                 ", provider='" + provider + '\'' +
                 ", tempPath='" + tempPath + '\'' +
+                ", maxFailedAttempts='" + maxFailedAttempts + '\'' +
                 '}';
     }
 }
