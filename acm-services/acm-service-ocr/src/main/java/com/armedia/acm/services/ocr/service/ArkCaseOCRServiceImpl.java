@@ -210,6 +210,12 @@ public class ArkCaseOCRServiceImpl extends ArkCaseMediaEngineServiceImpl<OCR>
             ocrDao.save(ocr);
             delegateExecution.setVariable(MediaEngineBusinessProcessVariableKey.ACTION.toString(), MediaEngineActionType.PROCESSING.toString());
         }
+        else
+        {
+            ocr.setOcrRetryAttempt(retryAttempt++);
+            ocrDao.save(ocr);
+            delegateExecution.setVariable(MediaEngineBusinessProcessVariableKey.ACTION.toString(), MediaEngineActionType.PROCESSING.toString());
+        }
     }
 
     private MediaEngine saveProcessingStatus(List<Long> ids) throws GetMediaEngineException, SaveMediaEngineException
