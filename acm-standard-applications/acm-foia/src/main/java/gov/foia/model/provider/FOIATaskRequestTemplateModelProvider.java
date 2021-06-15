@@ -52,6 +52,10 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import gov.foia.dao.FOIAExemptionCodeDao;
@@ -190,7 +194,7 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
     {
         FormattedMergeTerm exemptionCodesForExemptFiles = new FormattedMergeTerm();
         exemptionCodesOnExemptDoc = foiaExemptionCodeDao.getExemptionCodesForExemptFilesForRequest(request.getId(),
-                request.getObjectType()).stream().distinct().collect(Collectors.toList());
+                request.getObjectType()).stream().filter(distinctByProperty(ExemptionCode::getExemptionCode)).collect(Collectors.toList());
         if (exemptionCodesOnExemptDoc != null)
         {
             List<StandardLookupEntry> lookupEntries = (List<StandardLookupEntry>) getLookupDao().getLookupByName("annotationTags")
@@ -210,7 +214,8 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
     private FormattedMergeTerm setRedactionsOnReleasedDocument(FOIARequest request)
     {
         FormattedMergeTerm redactionsForReleasedDocuments = new FormattedMergeTerm();
-        List<ExemptionCode> exemptionCodes = foiaExemptionCodeDao.getResponseFolderExemptionCodesForRequest(request).stream().distinct().collect(Collectors.toList());;
+        List<ExemptionCode> exemptionCodes = foiaExemptionCodeDao.getResponseFolderExemptionCodesForRequest(request).stream()
+                .filter(distinctByProperty(ExemptionCode::getExemptionCode)).collect(Collectors.toList());
         if (exemptionCodes != null)
         {
             List<String> mappedExemptionCodesOnExemptDoc = exemptionCodesOnExemptDoc.stream().map(ExemptionCode::getExemptionCode).collect(Collectors.toList());
@@ -228,6 +233,12 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
             redactionsForReleasedDocuments.setRuns(runs);
         }
         return redactionsForReleasedDocuments;
+    }
+
+    private static <T> Predicate<T> distinctByProperty(Function<? super T, ?> propertyExtractor)
+    {
+        Set<Object> seen = ConcurrentHashMap.newKeySet();
+        return t -> seen.add(propertyExtractor.apply(t));
     }
 
     @Override
