@@ -65,7 +65,6 @@ public class AcmFolderToSolrTransformer implements AcmObjectToSolrDocTransformer
 
         getSearchAccessControlFields().setAccessControlFields(doc, in);
 
-        doc.setCreator_s(in.getCreator());
         doc.setCreator_lcs(in.getCreator());
         doc.setObject_type_s(in.getObjectType());
         doc.setObject_id_s("" + in.getId());
@@ -74,22 +73,23 @@ public class AcmFolderToSolrTransformer implements AcmObjectToSolrDocTransformer
         doc.setModified_date_tdt(in.getModified());
         doc.setName(in.getName());
         doc.setModifier_lcs(in.getModifier());
-        doc.setParent_folder_id_i(parentFolder == null ? null : parentFolder.getId());
-        doc.setParent_id_s(parentFolder == null ? null : "" + parentFolder.getId());
-        doc.setParent_type_s(parentFolder == null ? null : in.getObjectType());
         doc.setTitle_parseable(in.getName());
-        doc.setTitle_t(in.getName());
-
-        // folder id will be used to find files and folders that belong to this container
-        doc.setFolder_id_i(in.getId());
-        doc.setFolder_name_s(in.getName());
+        doc.setTitle_parseable_lcs(in.getName());
 
         // need an _lcs field for sorting
-        doc.setName_lcs(in.getName());
+        doc.setName(in.getName());
 
         doc.setParent_folder_id_i(parentFolder == null ? null : parentFolder.getId());
 
         doc.setStatus_lcs(in.getStatus());
+
+        doc.setAdditionalProperty("parent_object_id_i", parentFolder == null ? null : parentFolder.getId());
+        doc.setAdditionalProperty("parent_object_id_s", parentFolder == null ? null : "" + parentFolder.getId());
+        doc.setAdditionalProperty("parent_object_type_s", parentFolder == null ? null : in.getObjectType());
+
+        // folder id will be used to find files and folders that belong to this container
+        doc.setAdditionalProperty("folder_id_i", in.getId());
+        doc.setAdditionalProperty("folder_name_s", in.getName());
 
         doc.setAdditionalProperty("name_partial", in.getName());
 

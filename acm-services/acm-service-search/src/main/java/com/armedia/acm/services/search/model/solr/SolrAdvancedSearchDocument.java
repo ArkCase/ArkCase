@@ -6,22 +6,22 @@ package com.armedia.acm.services.search.model.solr;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
@@ -50,20 +50,14 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
     private String object_type_s;
     private String object_sub_type_s;
     private String name;
-    private String name_lcs;
-    private String title_t;
     private String ext_s;
     private String mime_type_s;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = SearchConstants.SOLR_DATE_FORMAT, timezone = SearchConstants.TIME_ZONE_UTC)
     private Date create_date_tdt;
-    private String creator_s;
     private String creator_lcs;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = SearchConstants.SOLR_DATE_FORMAT, timezone = SearchConstants.TIME_ZONE_UTC)
     private Date modified_date_tdt;
     private String modifier_lcs;
-
-    private Long folder_id_i;
-    private String folder_name_s;
 
     // access control fields
     private boolean public_doc_b;
@@ -141,7 +135,6 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
     private String parent_type_s;
     private String parent_name_t;
     private String parent_number_lcs;
-    private String target_object_number_s;
 
     ////////////////// for objects that own organizations, e.g. persons /////////////////////
     private List<String> organization_id_ss;
@@ -184,10 +177,6 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
     private boolean hidden_b;
 
     private Long parent_folder_id_i;
-
-    ////////////////// disposition id and type //////////////////////////////////////
-    private String disposition_id_s;
-    private String disposition_type_s;
 
     @JsonIgnore
     public String getEcmFileId()
@@ -980,26 +969,22 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "SolrAdvancedSearchDocument{" +
                 "id='" + id + '\'' +
                 ", object_id_s='" + object_id_s + '\'' +
-                ", object_id_i=" + object_id_i +
+                ", object_id_i='" + object_id_i + '\'' +
                 ", object_display_name_s='" + object_display_name_s + '\'' +
                 ", object_type_s='" + object_type_s + '\'' +
                 ", object_sub_type_s='" + object_sub_type_s + '\'' +
                 ", name='" + name + '\'' +
-                ", name_lcs='" + name_lcs + '\'' +
-                ", title_t='" + title_t + '\'' +
                 ", ext_s='" + ext_s + '\'' +
                 ", mime_type_s='" + mime_type_s + '\'' +
                 ", create_date_tdt=" + create_date_tdt +
-                ", creator_s='" + creator_s + '\'' +
                 ", creator_lcs='" + creator_lcs + '\'' +
                 ", modified_date_tdt=" + modified_date_tdt +
                 ", modifier_lcs='" + modifier_lcs + '\'' +
-                ", folder_id_i=" + folder_id_i +
-                ", folder_name_s='" + folder_name_s + '\'' +
                 ", public_doc_b=" + public_doc_b +
                 ", protected_object_b=" + protected_object_b +
                 ", deny_group_ls=" + deny_group_ls +
@@ -1042,7 +1027,6 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
                 ", parent_type_s='" + parent_type_s + '\'' +
                 ", parent_name_t='" + parent_name_t + '\'' +
                 ", parent_number_lcs='" + parent_number_lcs + '\'' +
-                ", target_object_number_s='" + target_object_number_s + '\'' +
                 ", organization_id_ss=" + organization_id_ss +
                 ", postal_address_id_ss=" + postal_address_id_ss +
                 ", contact_method_ss=" + contact_method_ss +
@@ -1066,8 +1050,6 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
                 ", parent_ref_s='" + parent_ref_s + '\'' +
                 ", hidden_b=" + hidden_b +
                 ", parent_folder_id_i=" + parent_folder_id_i +
-                ", disposition_id_s='" + disposition_id_s + '\'' +
-                ", disposition_type_s='" + disposition_type_s + '\'' +
                 '}';
     }
 
@@ -1079,69 +1061,5 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
     public void setObject_id_i(Long object_id_i)
     {
         this.object_id_i = object_id_i;
-    }
-
-    public String getDisposition_type_s() {
-        return disposition_type_s;
-    }
-
-    public void setDisposition_type_s(String disposition_type_s) {
-        this.disposition_type_s = disposition_type_s;
-    }
-
-    public String getTarget_object_number_s() {
-        return target_object_number_s;
-    }
-
-    public void setTarget_object_number_s(String target_object_number_s) {
-        this.target_object_number_s = target_object_number_s;
-    }
-
-    public String getCreator_s() {
-        return creator_s;
-    }
-
-    public void setCreator_s(String creator_s) {
-        this.creator_s = creator_s;
-    }
-
-    public String getDisposition_id_s() {
-        return disposition_id_s;
-    }
-
-    public void setDisposition_id_s(String disposition_id_s) {
-        this.disposition_id_s = disposition_id_s;
-    }
-
-    public Long getFolder_id_i() {
-        return folder_id_i;
-    }
-
-    public void setFolder_id_i(Long folder_id_i) {
-        this.folder_id_i = folder_id_i;
-    }
-
-    public String getFolder_name_s() {
-        return folder_name_s;
-    }
-
-    public void setFolder_name_s(String folder_name_s) {
-        this.folder_name_s = folder_name_s;
-    }
-
-    public String getName_lcs() {
-        return name_lcs;
-    }
-
-    public void setName_lcs(String name_lcs) {
-        this.name_lcs = name_lcs;
-    }
-
-    public String getTitle_t() {
-        return title_t;
-    }
-
-    public void setTitle_t(String title_t) {
-        this.title_t = title_t;
     }
 }
