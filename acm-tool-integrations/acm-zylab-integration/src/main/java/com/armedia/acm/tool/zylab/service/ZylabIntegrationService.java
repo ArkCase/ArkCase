@@ -27,11 +27,11 @@ package com.armedia.acm.tool.zylab.service;
  * #L%
  */
 
-import java.io.File;
-
 import com.armedia.acm.tool.zylab.exception.ZylabProductionSyncException;
 import com.armedia.acm.tool.zylab.model.CreateMatterRequest;
-import com.armedia.acm.tool.zylab.model.MatterDTO;
+import com.armedia.acm.tool.zylab.model.ZylabMatterCreationStatus;
+
+import java.io.File;
 
 /**
  * Created by Aleksandar Acevski <aleksandar.acevski@armedia.com> on February, 2021
@@ -40,17 +40,17 @@ public interface ZylabIntegrationService
 {
     /**
      *
-     * Creates a new Matter in ZyLAB with a specified name and a default template
+     * Creates a new Matter or finds an existing one with the same name in ZyLAB with the default template
      *
      * @param matterName
      *            The name of the matter as it should be called in ZyLAB
      * @return Matter data
      */
-    MatterDTO createMatter(String matterName);
+    ZylabMatterCreationStatus createMatter(String matterName);
 
     /**
      * 
-     * Creates a new Matter in ZyLAB with a specified name and template
+     * Creates a new Matter or finds an existing one with the same name in ZyLAB with a specified template
      * 
      * @param matterName
      *            The name of the matter as it should be called in ZyLAB
@@ -58,17 +58,17 @@ public interface ZylabIntegrationService
      *            The ZyLAB ID of the template that needs to be used for creation of the new matter
      * @return Matter data
      */
-    MatterDTO createMatter(String matterName, long matterTemplateId);
+    ZylabMatterCreationStatus createMatter(String matterName, long matterTemplateId);
 
     /**
      *
-     * Creates a new Matter in ZyLAB with the specified info
+     * Creates a new Matter or finds an existing one with the same name in ZyLAB with a specified template
      *
      * @param createMatterRequest
      *            object that holds the needed info to create a new ZyLAB Matter
      * @return Matter data
      */
-    MatterDTO createMatter(CreateMatterRequest createMatterRequest);
+    ZylabMatterCreationStatus createMatter(CreateMatterRequest createMatterRequest);
 
     /**
      * 

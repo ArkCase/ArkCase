@@ -27,12 +27,12 @@ package com.armedia.acm.tool.zylab.model;
  * #L%
  */
 
-import org.springframework.beans.factory.annotation.Value;
-
 import com.armedia.acm.services.users.model.OAuth2Credentials;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import org.springframework.beans.factory.annotation.Value;
 
 /**
  * Created by Aleksandar Acevski <aleksandar.acevski@armedia.com> on January, 2021
@@ -48,6 +48,10 @@ public class ZylabIntegrationConfig
     @JsonProperty("zylabIntegration.defaultMatterTemplateId")
     @Value("${zylabIntegration.defaultMatterTemplateId}")
     private Long defaultMatterTemplateId;
+
+    @JsonProperty("zylabIntegration.matterCreationWaitInMinutes")
+    @Value("${zylabIntegration.matterCreationWaitInMinutes}")
+    private Long matterCreationWaitInMinutes;
 
     @JsonProperty("zylabIntegration.host")
     @Value("${zylabIntegration.host}")
@@ -96,6 +100,10 @@ public class ZylabIntegrationConfig
     @Value("${zylabIntegration.getMatterTemplatesPath}")
     private String getMatterTemplatesPath;
 
+    @JsonProperty("zylabIntegration.getMattersPath")
+    @Value("${zylabIntegration.getMattersPath}")
+    private String getMattersPath;
+
     @JsonProperty("zylabIntegration.viewDocumentPath")
     @Value("${zylabIntegration.viewDocumentPath}")
     private String viewDocumentPath;
@@ -141,6 +149,14 @@ public class ZylabIntegrationConfig
     public void setDefaultMatterTemplateId(Long defaultMatterTemplateId)
     {
         this.defaultMatterTemplateId = defaultMatterTemplateId;
+    }
+
+    public Long getMatterCreationWaitInMinutes() {
+        return matterCreationWaitInMinutes;
+    }
+
+    public void setMatterCreationWaitInMinutes(Long matterCreationWaitInMinutes) {
+        this.matterCreationWaitInMinutes = matterCreationWaitInMinutes;
     }
 
     public String getHost()
@@ -271,6 +287,14 @@ public class ZylabIntegrationConfig
     public void setGetMatterTemplatesPath(String getMatterTemplatesPath)
     {
         this.getMatterTemplatesPath = getMatterTemplatesPath;
+    }
+
+    public String getGetMattersPath() {
+        return getMattersPath;
+    }
+
+    public void setGetMattersPath(String getMattersPath) {
+        this.getMattersPath = getMattersPath;
     }
 
     public String getRegistrationId()

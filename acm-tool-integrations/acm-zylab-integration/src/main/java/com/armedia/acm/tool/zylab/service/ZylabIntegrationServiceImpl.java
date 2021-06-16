@@ -27,20 +27,25 @@ package com.armedia.acm.tool.zylab.service;
  * #L%
  */
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.List;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
+import com.armedia.acm.tool.zylab.dao.ZylabMatterCreationDao;
 import com.armedia.acm.tool.zylab.exception.ZylabProductionSyncException;
 import com.armedia.acm.tool.zylab.model.CreateMatterRequest;
 import com.armedia.acm.tool.zylab.model.MatterDTO;
 import com.armedia.acm.tool.zylab.model.MatterTemplateDTO;
 import com.armedia.acm.tool.zylab.model.ZylabIntegrationConfig;
+import com.armedia.acm.tool.zylab.model.ZylabMatterCreationStatus;
+import com.armedia.acm.tool.zylab.model.ZylabMatterStatus;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by Aleksandar Acevski <aleksandar.acevski@armedia.com> on February, 2021
@@ -52,6 +57,7 @@ public class ZylabIntegrationServiceImpl implements ZylabIntegrationService
     private transient final Logger log = LogManager.getLogger(getClass());
     private ZylabRestClient zylabRestClient;
     private ZylabIntegrationConfig zylabIntegrationConfig;
+    private ZylabMatterCreationDao zylabMatterCreationDao;
 
     private static boolean isDefaultTemplate(MatterTemplateDTO template)
     {
@@ -59,7 +65,7 @@ public class ZylabIntegrationServiceImpl implements ZylabIntegrationService
     }
 
     @Override
-    public MatterDTO createMatter(String matterName)
+    public ZylabMatterCreationStatus createMatter(String matterName)
     {
         long defaultMatterTemplateId = getDefaultMatterTemplateId();
 
@@ -67,7 +73,7 @@ public class ZylabIntegrationServiceImpl implements ZylabIntegrationService
     }
 
     @Override
-    public MatterDTO createMatter(String matterName, long matterTemplateId)
+    public ZylabMatterCreationStatus createMatter(String matterName, long matterTemplateId)
     {
         CreateMatterRequest createMatterRequest = new CreateMatterRequest();
         createMatterRequest.setMatterName(matterName);
@@ -77,9 +83,64 @@ public class ZylabIntegrationServiceImpl implements ZylabIntegrationService
     }
 
     @Override
-    public MatterDTO createMatter(CreateMatterRequest createMatterRequest)
+    public ZylabMatterCreationStatus createMatter(CreateMatterRequest createMatterRequest)
     {
-        return getZylabRestClient().createMatter(createMatterRequest);
+        Optional<ZylabMatterCreationStatus> matterStatusOptional = getZylabMatterCreationDao()
+                .findByMatterName(createMatterRequest.getMatterName());
+
+        ZylabMatterCreationStatus matterCreationStatus = matterStatusOptional.orElseGet(ZylabMatterCreationStatus::new);
+
+        if (matterStatusOptional.isPresent() && isMatterStatusValid(matterCreationStatus))
+        {
+            return matterCreationStatus;
+
+        }
+        else
+        {
+            matterCreationStatus.setMatterName(createMatterRequest.getMatterName());
+            matterCreationStatus.setStatus(ZylabMatterStatus.IN_PROGRESS);
+            matterCreationStatus.setLastUpdated(LocalDateTime.now());
+            matterCreationStatus = getZylabMatterCreationDao().save(matterCreationStatus);
+
+            try
+            {
+                MatterDTO matter = findOrCreateMatter(createMatterRequest);
+                matterCreationStatus.setZylabId(matter.getId());
+                matterCreationStatus.setStatus(ZylabMatterStatus.CREATED);
+            }
+            catch (Exception e)
+            {
+                matterCreationStatus.setStatus(ZylabMatterStatus.FAILED);
+            }
+            matterCreationStatus.setLastUpdated(LocalDateTime.now());
+            getZylabMatterCreationDao().save(matterCreationStatus);
+            return matterCreationStatus;
+        }
+    }
+
+    private boolean isMatterStatusValid(ZylabMatterCreationStatus matterCreationStatus)
+    {
+        return isMatterCreationInProgressAndActive(matterCreationStatus)
+                || matterCreationStatus.getStatus().equals(ZylabMatterStatus.CREATED);
+    }
+
+    private boolean isMatterCreationInProgressAndActive(ZylabMatterCreationStatus matterCreationStatus)
+    {
+        return matterCreationStatus.getStatus().equals(ZylabMatterStatus.IN_PROGRESS)
+                && matterCreationStatus.getLastUpdated()
+                        .isAfter(LocalDateTime.now().minusMinutes(getZylabIntegrationConfig().getMatterCreationWaitInMinutes()));
+    }
+
+    private MatterDTO findOrCreateMatter(CreateMatterRequest createMatterRequest)
+    {
+        List<MatterDTO> allMatters = getZylabRestClient().getAllMatters();
+
+        // Check if a matter with the same name exists before creating a new one to reduce the chance of duplicate
+        // matters
+        Optional<MatterDTO> existingMatter = allMatters.stream()
+                .filter(matterDTO -> matterDTO.getName().equals(createMatterRequest.getMatterName())).findFirst();
+
+        return existingMatter.orElseGet(() -> getZylabRestClient().createMatter(createMatterRequest));
     }
 
     private long getDefaultMatterTemplateId()
@@ -163,4 +224,13 @@ public class ZylabIntegrationServiceImpl implements ZylabIntegrationService
         this.zylabIntegrationConfig = zylabIntegrationConfig;
     }
 
+    public ZylabMatterCreationDao getZylabMatterCreationDao()
+    {
+        return zylabMatterCreationDao;
+    }
+
+    public void setZylabMatterCreationDao(ZylabMatterCreationDao zylabMatterCreationDao)
+    {
+        this.zylabMatterCreationDao = zylabMatterCreationDao;
+    }
 }
