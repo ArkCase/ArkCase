@@ -17,7 +17,10 @@
     <bean id="zylabIntegrationService" class="com.armedia.acm.tool.zylab.service.ZylabIntegrationServiceImpl">
         <property name="zylabIntegrationConfig" ref="zylabIntegrationConfig"/>
         <property name="zylabRestClient" ref="zylabRestClient"/>
+        <property name="zylabMatterCreationDao" ref="zylabMatterCreationDao"/>
     </bean>
+
+    <bean id="zylabMatterCreationDao" class="com.armedia.acm.tool.zylab.dao.ZylabMatterCreationDao"/>
 
     <bean id="zyLABRestTemplateHeaderModifierInterceptor"
           class="com.armedia.acm.tool.zylab.service.ZyLABRestTemplateHeaderModifierInterceptor">

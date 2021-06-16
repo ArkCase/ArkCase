@@ -27,16 +27,18 @@ package gov.foia.service;
  * #L%
  */
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.services.zylab.model.ZylabMatterCreatedEvent;
 import com.armedia.acm.services.zylab.service.ZylabEventPublisher;
-import com.armedia.acm.tool.zylab.model.MatterDTO;
 import com.armedia.acm.tool.zylab.model.ZylabIntegrationConfig;
+import com.armedia.acm.tool.zylab.model.ZylabMatterCreationStatus;
+import com.armedia.acm.tool.zylab.model.ZylabMatterStatus;
 import com.armedia.acm.tool.zylab.service.ZylabIntegrationService;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import gov.foia.dao.FOIARequestDao;
 import gov.foia.model.FOIARequest;
@@ -54,7 +56,7 @@ public class FOIAZylabMatterService
 
     private transient final Logger log = LogManager.getLogger(getClass());
 
-    public FOIARequest createMatterFromRequest(Long requestId) throws AcmObjectNotFoundException, AcmCreateObjectFailedException
+    public ZylabMatterCreationStatus createMatterFromRequest(Long requestId) throws AcmObjectNotFoundException, AcmCreateObjectFailedException
     {
         FOIARequest request = getFoiaRequestDao().find(requestId);
         if (request == null)
@@ -65,24 +67,30 @@ public class FOIAZylabMatterService
         return createMatterFromRequest(request);
     }
 
-    public FOIARequest createMatterFromRequest(FOIARequest request) throws AcmCreateObjectFailedException
+    public ZylabMatterCreationStatus createMatterFromRequest(FOIARequest request) throws AcmCreateObjectFailedException
     {
-        if (request.getExternalIdentifier() != null)
+        ZylabMatterCreationStatus matterCreationStatus;
+        if (StringUtils.isNotBlank(request.getExternalIdentifier()))
         {
-            log.error("ZyLAB Matter for request [{}] already exists", request.getCaseNumber());
-            throw new AcmCreateObjectFailedException("ZyLAB Matter",
-                    String.format("ZyLAB Matter for request %s already exists.", request.getCaseNumber()), null);
+            log.warn("ZyLAB Matter for request [{}] already exists", request.getCaseNumber());
+            matterCreationStatus = new ZylabMatterCreationStatus();
+            matterCreationStatus.setStatus(ZylabMatterStatus.CREATED);
+            matterCreationStatus.setZylabId(Long.valueOf(request.getExternalIdentifier()));
+            return matterCreationStatus;
         }
 
         String matterName = request.getCaseNumber();
-        MatterDTO matter = getZylabIntegrationService().createMatter(matterName);
+        matterCreationStatus = getZylabIntegrationService().createMatter(matterName);
 
-        request.setExternalIdentifier(String.valueOf(matter.getId()));
-        getFoiaRequestDao().save(request);
-        ZylabMatterCreatedEvent event = new ZylabMatterCreatedEvent(request, request.getId(),
-                request.getObjectType(), matter.getId());
-        getZylabEventPublisher().publishMatterCreatedEvent(event);
-        return request;
+        if(matterCreationStatus.getStatus().equals(ZylabMatterStatus.CREATED)) {
+            request.setExternalIdentifier(String.valueOf(matterCreationStatus.getZylabId()));
+            getFoiaRequestDao().save(request);
+            ZylabMatterCreatedEvent event = new ZylabMatterCreatedEvent(request, request.getId(),
+                    request.getObjectType(), matterCreationStatus.getZylabId());
+            getZylabEventPublisher().publishMatterCreatedEvent(event);
+        }
+
+        return matterCreationStatus;
     }
 
     public ZylabIntegrationService getZylabIntegrationService()
