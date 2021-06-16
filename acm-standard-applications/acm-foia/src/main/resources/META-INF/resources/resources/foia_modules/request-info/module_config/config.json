@@ -399,7 +399,7 @@
                     "name": "eventDate",
                     "displayName": "requests.comp.history.table.columns.date",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.eventDate | date: ('common.defaultDateTimePickerFormat' | translate)}}</div>",
+                    "cellTemplate": "<div>{{ row.entity.eventDate | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
                     "type": "date",
                     "width": 100
                 },
