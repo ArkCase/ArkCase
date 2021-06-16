@@ -27,7 +27,8 @@ package gov.foia.web.api;
  * #L%
  */
 
-import gov.foia.model.FOIARequest;
+import com.armedia.acm.tool.zylab.model.ZylabMatterCreationStatus;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
@@ -59,8 +60,8 @@ public class CreateZylabMatterFromRequestAPIController
         try
         {
             log.debug("Creating ZyLAB Matter for request [{}]", requestId);
-            FOIARequest request = getFoiaZylabMatterService().createMatterFromRequest(requestId);
-            return new ResponseEntity<>(request, HttpStatus.OK);
+            ZylabMatterCreationStatus zylabMatterCreationStatus = getFoiaZylabMatterService().createMatterFromRequest(requestId);
+            return new ResponseEntity<>(zylabMatterCreationStatus, HttpStatus.OK);
         }
         catch (Exception e)
         {
