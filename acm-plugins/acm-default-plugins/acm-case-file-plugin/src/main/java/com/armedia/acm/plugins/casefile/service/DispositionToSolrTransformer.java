@@ -63,10 +63,10 @@ public class DispositionToSolrTransformer implements AcmObjectToSolrDocTransform
         solr.setModified_date_tdt(in.getModified());
         solr.setModifier_lcs(in.getModifier());
 
-        solr.setDisposition_type_s(in.getDispositionType());
+        solr.setAdditionalProperty("disposition_type_s", in.getDispositionType());
         if (in.getExistingCaseNumber() != null)
         {
-            solr.setTarget_object_number_s(in.getExistingCaseNumber());
+            solr.setAdditionalProperty("target_object_number_s", in.getExistingCaseNumber());
         }
 
         return solr;

@@ -57,7 +57,6 @@ public class AcmContainerToSolrTransformer implements AcmObjectToSolrDocTransfor
         // no access control on folders (yet)
         doc.setPublic_doc_b(true);
 
-        doc.setCreator_s(in.getCreator());
         doc.setCreator_lcs(in.getCreator());
         doc.setObject_type_s(in.getObjectType());
         doc.setObject_id_s("" + in.getId());
@@ -66,18 +65,22 @@ public class AcmContainerToSolrTransformer implements AcmObjectToSolrDocTransfor
         doc.setModified_date_tdt(in.getModified());
         doc.setName(in.getContainerObjectTitle());
         doc.setModifier_lcs(in.getModifier());
-        doc.setParent_folder_id_i(in.getContainerObjectId());
-        doc.setParent_id_s("" + in.getContainerObjectId());
-        doc.setParent_type_s(in.getContainerObjectType());
         doc.setTitle_parseable(in.getContainerObjectTitle());
-        doc.setTitle_t(in.getContainerObjectTitle());
+        doc.setTitle_parseable_lcs(in.getContainerObjectTitle());
+
+        doc.setAdditionalProperty("parent_object_id_i", in.getContainerObjectId());
+        doc.setAdditionalProperty("parent_object_id_s", "" + in.getContainerObjectId());
+        doc.setAdditionalProperty("parent_object_type_s", in.getContainerObjectType());
 
         // folder id will be used to find files and folders that belong to this container
-        doc.setFolder_id_i(in.getFolder().getId());
-        doc.setFolder_name_s(in.getFolder().getName());
+        if (in.getFolder() != null)
+        {
+            doc.setAdditionalProperty("folder_id_i", in.getFolder().getId());
+            doc.setAdditionalProperty("folder_name_s", in.getFolder().getName());
+        }
 
         // need an _lcs field for sorting
-        doc.setName_lcs(in.getContainerObjectTitle());
+        doc.setAdditionalProperty("name_lcs", in.getContainerObjectTitle());
 
         return doc;
     }
