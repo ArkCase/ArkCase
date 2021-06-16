@@ -141,6 +141,10 @@ public class SpringLdapUserDao
         {
             throw e;
         }
+        catch (AcmLdapActionFailedException e)
+        {
+            throw e;
+        }
         catch (Exception e)
         {
             throw new AcmLdapActionFailedException("LDAP action failed to execute", e);
