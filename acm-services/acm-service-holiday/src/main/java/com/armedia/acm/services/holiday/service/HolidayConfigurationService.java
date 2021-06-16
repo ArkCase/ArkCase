@@ -119,7 +119,9 @@ public class HolidayConfigurationService
      */
     public Date addWorkingDaysToDateAndSetTimeToBusinessHours(Date date, int workingDays)
     {
-        LocalDate dateWithAddedWorkingDays = addWorkingDaysToDate(getDateTimeService().toUTCDate(date), workingDays);
+        LocalDateTime ldt = getDateTimeService().fromDateToLocalDateTime(date);
+
+        LocalDate dateWithAddedWorkingDays = addWorkingDaysToDate(ldt.toLocalDate(), workingDays);
 
         return setEndOfLocalTimeBusinessHoursToDate(dateWithAddedWorkingDays);
     }
@@ -163,14 +165,14 @@ public class HolidayConfigurationService
 
     public boolean isTimeAfterBusinessHours(LocalDateTime date)
     {
-        LocalTime localTimeInSetTimezone = getDateTimeService().fromDateToClientTimeTimezone(date);
+        LocalTime localTimeInSetTimezone = date.toLocalTime();
 
         return localTimeInSetTimezone.isAfter(getEndOfClientBusinessDayTime());
     }
 
     public boolean isTimeBeforeBusinessHours(LocalDateTime date)
     {
-        LocalTime localTimeInSetTimezone = getDateTimeService().fromDateToClientTimeTimezone(date);
+        LocalTime localTimeInSetTimezone = date.toLocalTime();
 
         return localTimeInSetTimezone.isBefore(getStartOfClientBusinessDayTime());
     }
@@ -204,17 +206,16 @@ public class HolidayConfigurationService
 
     public LocalDateTime getFirstWorkingDateWithBusinessHoursCalculation(LocalDateTime date)
     {
-        LocalDateTime resultDate = date;
+        LocalDateTime resultDate = getDateTimeService().toClientLocalDateTime(date);
 
-        LocalDate localDate = getDateTimeService().toClientLocalDate(resultDate);
-        if (isWorkingDay(localDate))
+        if (isWorkingDay(resultDate.toLocalDate()))
         {
-            if (getBusinessHoursConfig().getBusinessDayHoursEnabled() && isTimeBeforeBusinessHours(date))
+            if (getBusinessHoursConfig().getBusinessDayHoursEnabled() && isTimeBeforeBusinessHours(resultDate))
             {
                 resultDate = resultDate.toLocalDate().atTime(getStartOfLocalTimeBusinessHoursToUTC(resultDate.toLocalDate()));
             }
 
-            if (getBusinessHoursConfig().getBusinessDayHoursEnabled() && isTimeAfterBusinessHours(date))
+            if (getBusinessHoursConfig().getBusinessDayHoursEnabled() && isTimeAfterBusinessHours(resultDate))
             {
                 resultDate = resultDate.plusDays(1);
                 resultDate = resultDate.toLocalDate().atTime(getStartOfLocalTimeBusinessHoursToUTC(resultDate.toLocalDate()));
@@ -222,7 +223,7 @@ public class HolidayConfigurationService
         }
         else
         {
-           resultDate = getFirstWorkingDay(localDate)
+           resultDate = getFirstWorkingDay(resultDate.toLocalDate())
                    .atTime(getStartOfLocalTimeBusinessHoursToUTC(resultDate.toLocalDate()));
         }
         return resultDate;
