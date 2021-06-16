@@ -27,11 +27,12 @@ package com.armedia.acm.tool.zylab.service;
  * #L%
  */
 
-import java.io.File;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.armedia.acm.services.users.service.AcmOAuth2AccessTokenService;
+import com.armedia.acm.tool.zylab.model.CreateMatterRequest;
+import com.armedia.acm.tool.zylab.model.MatterDTO;
+import com.armedia.acm.tool.zylab.model.MatterTemplateDTO;
+import com.armedia.acm.tool.zylab.model.ZylabIntegrationConfig;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
@@ -47,11 +48,11 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.armedia.acm.services.users.service.AcmOAuth2AccessTokenService;
-import com.armedia.acm.tool.zylab.model.CreateMatterRequest;
-import com.armedia.acm.tool.zylab.model.MatterDTO;
-import com.armedia.acm.tool.zylab.model.MatterTemplateDTO;
-import com.armedia.acm.tool.zylab.model.ZylabIntegrationConfig;
+import java.io.File;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Aleksandar Acevski <aleksandar.acevski@armedia.com> on February, 2021
@@ -64,6 +65,22 @@ public class ZylabRestClientImpl implements ZylabRestClient
     private ZylabIntegrationConfig zylabIntegrationConfig;
     private AcmOAuth2AccessTokenService acmOAuth2AccessTokenService;
     private RestTemplate zylabRestTemplate;
+
+    @Override
+    public List<MatterDTO> getAllMatters() {
+
+        return getAcmOAuth2AccessTokenService().executeAuthenticatedRemoteAction(zylabIntegrationConfig.getoAuth2Credentials(),
+                accessToken -> {
+                    String getAllMattersURL = zylabIntegrationConfig.getBaseUrl()
+                            + zylabIntegrationConfig.getGetMattersPath();
+                    HttpHeaders headers = createZylabCommonHeaders(accessToken.getValue());
+                    ResponseEntity<MatterList> response = zylabRestTemplate.exchange(getAllMattersURL, HttpMethod.GET,
+                            new HttpEntity<>(headers), MatterList.class);
+                    MatterList body = response.getBody();
+
+                    return body.getMatters();
+                });
+    }
 
     @Override
     public MatterDTO createMatter(CreateMatterRequest createMatterRequest)
@@ -139,6 +156,21 @@ public class ZylabRestClientImpl implements ZylabRestClient
         headers.add(ZYLAB_REVIEW_CLIENT_VERSION_HEADER, "Arkcase");
         return headers;
     }
+
+    public static class MatterList
+    {
+        @JsonProperty("Items")
+        private List<MatterDTO> matters;
+
+        public List<MatterDTO> getMatters() {
+            return matters;
+        }
+
+        public void setMatters(List<MatterDTO> matters) {
+            this.matters = matters;
+        }
+    }
+
 
     public ZylabIntegrationConfig getZylabIntegrationConfig()
     {
