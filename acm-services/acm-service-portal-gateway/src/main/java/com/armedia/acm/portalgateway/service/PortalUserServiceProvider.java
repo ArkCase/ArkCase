@@ -34,6 +34,8 @@ import com.armedia.acm.portalgateway.model.UserRegistrationResponse;
 import com.armedia.acm.portalgateway.model.UserResetRequest;
 import com.armedia.acm.portalgateway.model.UserResetResponse;
 
+import javax.naming.directory.InvalidAttributeValueException;
+
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jul 11, 2018
  *
@@ -128,7 +130,7 @@ public interface PortalUserServiceProvider
     UserResetResponse resetPassword(String portalId, String resetId, String password) throws PortalUserServiceException;
 
     UserResetResponse changePassword(String portalId, String userId, String acmUserId, PortalUserCredentials portalUserCredentials)
-            throws PortalUserServiceException;
+            throws PortalUserServiceException, InvalidAttributeValueException;
 
     PortalUser retrieveUser(String portalUserId, String portalId);
 
