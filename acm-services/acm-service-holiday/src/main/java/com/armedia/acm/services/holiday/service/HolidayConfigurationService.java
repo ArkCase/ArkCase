@@ -223,21 +223,21 @@ public class HolidayConfigurationService
         {
             if (getBusinessHoursConfig().getBusinessDayHoursEnabled() && isTimeBeforeBusinessHours(resultDate))
             {
-                resultDate = resultDate.toLocalDate().atTime(getStartOfLocalTimeBusinessHoursToUTC(resultDate.toLocalDate()));
+                return resultDate.toLocalDate().atTime(getStartOfLocalTimeBusinessHoursToUTC(resultDate.toLocalDate()));
             }
 
             if (getBusinessHoursConfig().getBusinessDayHoursEnabled() && isTimeAfterBusinessHours(resultDate))
             {
                 resultDate = resultDate.plusDays(1);
-                resultDate = resultDate.toLocalDate().atTime(getStartOfLocalTimeBusinessHoursToUTC(resultDate.toLocalDate()));
+                return resultDate.toLocalDate().atTime(getStartOfLocalTimeBusinessHoursToUTC(resultDate.toLocalDate()));
             }
         }
         else
         {
-           resultDate = getFirstWorkingDay(resultDate.toLocalDate())
+           return getFirstWorkingDay(resultDate.toLocalDate())
                    .atTime(getStartOfLocalTimeBusinessHoursToUTC(resultDate.toLocalDate()));
         }
-        return resultDate;
+        return getDateTimeService().fromClientLocalDateTimeToUTCDateTime(resultDate);
     }
 
     public int countWorkingDates(LocalDate from, LocalDate to)
