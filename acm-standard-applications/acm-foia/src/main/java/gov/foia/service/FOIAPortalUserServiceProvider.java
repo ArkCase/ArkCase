@@ -810,7 +810,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         {
             log.debug(String.format("Couldn't update password for LDAP user %s. Using configured system user %s.", portalUserId,
                     acmSystemUserId));
-            throw new PortalUserServiceException(String.format("Couldn't update password for user %s.", portalUserEmail), e);
+            throw new PortalUserServiceException(String.format("Couldn't update password for user %s. The password is too young to be changed!", portalUserEmail), e);
         }
         catch (AuthenticationException e)
         {
