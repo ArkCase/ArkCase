@@ -196,10 +196,11 @@ public class ArkCaseOCRServiceImpl extends ArkCaseMediaEngineServiceImpl<OCR>
         {
             String action = doFailed(mediaEngine);
             delegateExecution.setVariable(MediaEngineBusinessProcessVariableKey.ACTION.toString(), action);
+            delegateExecution.setVariable(MediaEngineBusinessProcessVariableKey.STATUS.toString(), MediaEngineActionType.FAILED.toString());
         }
         else
         {
-            ocr.setOcrRetryAttempt(retryAttempt++);
+            ocr.setOcrRetryAttempt(++retryAttempt);
             ocrDao.save(ocr);
             delegateExecution.setVariable(MediaEngineBusinessProcessVariableKey.ACTION.toString(), MediaEngineActionType.PROCESSING.toString());
         }
