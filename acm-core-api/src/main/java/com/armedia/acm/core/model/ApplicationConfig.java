@@ -149,6 +149,11 @@ public class ApplicationConfig implements DynamicApplicationConfig
     @Value("${application.properties.templateGuideUrl}")
     private String templateGuideUrl;
 
+    @UnmodifiableConfigProperty
+    @JsonProperty("application.properties.sequenceInstructionUrl")
+    @Value("${application.properties.sequenceInstructionUrl}")
+    private String sequenceInstructionUrl;
+
     @JsonProperty("application.properties.dashboardBannerEnabled")
     @Value("${application.properties.dashboardBannerEnabled}")
     private Boolean dashboardBannerEnabled;
@@ -375,6 +380,16 @@ public class ApplicationConfig implements DynamicApplicationConfig
     public void setTemplateGuideUrl(String templateGuideUrl)
     {
         this.templateGuideUrl = templateGuideUrl;
+    }
+
+    public String getSequenceInstructionUrl()
+    {
+        return sequenceInstructionUrl;
+    }
+
+    public void setSequenceInstructionUrl(String sequenceInstructionUrl)
+    {
+        this.sequenceInstructionUrl = sequenceInstructionUrl;
     }
 
     public Boolean getDashboardBannerEnabled()
