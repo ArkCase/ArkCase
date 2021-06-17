@@ -94,12 +94,6 @@ public class SaveCaseServiceImpl implements SaveCaseService
     {
         boolean isNewCase = caseFile.getId() == null;
 
-        if (isNewCase) {
-            caseFile.setDueDate(holidayConfigurationService.addWorkingDaysAndWorkingHoursToDateWithBusinessHours(
-                    Optional.ofNullable(caseFile.getDueDate()).orElse(new Date()),
-                    holidayConfigurationService.getBusinessHoursConfig().getDefaultDueDateGap()));
-        }
-
         CaseFilePipelineContext pipelineContext = new CaseFilePipelineContext();
         // populate the context
         pipelineContext.setNewCase(isNewCase);
@@ -135,12 +129,6 @@ public class SaveCaseServiceImpl implements SaveCaseService
             throws PipelineProcessException
     {
         boolean isNewCase = caseFile.getId() == null;
-
-        if (isNewCase) {
-            caseFile.setDueDate(holidayConfigurationService.addWorkingDaysAndWorkingHoursToDateWithBusinessHours(
-                    Optional.ofNullable(caseFile.getDueDate()).orElse(new Date()),
-                    holidayConfigurationService.getBusinessHoursConfig().getDefaultDueDateGap()));
-        }
 
         CaseFilePipelineContext pipelineContext = new CaseFilePipelineContext();
         // populate the context
@@ -188,12 +176,6 @@ public class SaveCaseServiceImpl implements SaveCaseService
             throws PipelineProcessException
     {
         boolean isNewCase = in.getId() == null;
-
-        if (isNewCase) {
-            in.setDueDate(holidayConfigurationService.addWorkingDaysAndWorkingHoursToDateWithBusinessHours(
-                    Optional.ofNullable(in.getDueDate()).orElse(new Date()),
-                    holidayConfigurationService.getBusinessHoursConfig().getDefaultDueDateGap()));
-        }
 
         CaseFilePipelineContext pipelineContext = new CaseFilePipelineContext();
         // populate the context
