@@ -193,6 +193,17 @@ public class HolidayConfigurationService
         return !isHoliday(date) && !isWeekendNonWorkingDay(date);
     }
 
+    public LocalDateTime getFirstWorkingDay(LocalDateTime date)
+    {
+        LocalDateTime resultDate = date;
+        while (!isWorkingDay(resultDate.toLocalDate()))
+        {
+            resultDate = resultDate.plusDays(1);
+        }
+
+        return resultDate;
+    }
+
     public LocalDate getFirstWorkingDay(LocalDate date)
     {
         LocalDate resultDate = date;
@@ -212,20 +223,20 @@ public class HolidayConfigurationService
         {
             if (getBusinessHoursConfig().getBusinessDayHoursEnabled() && isTimeBeforeBusinessHours(resultDate))
             {
-                return resultDate.toLocalDate().atTime(getStartOfLocalTimeBusinessHoursToUTC(resultDate.toLocalDate()));
+                return getStartofDay(resultDate);
             }
 
             if (getBusinessHoursConfig().getBusinessDayHoursEnabled() && isTimeAfterBusinessHours(resultDate))
             {
-                resultDate = resultDate.plusDays(1);
-                return resultDate.toLocalDate().atTime(getStartOfLocalTimeBusinessHoursToUTC(resultDate.toLocalDate()));
+
+                return getStartOfNextDay(resultDate);
             }
         }
         else
         {
-           return getFirstWorkingDay(resultDate.toLocalDate())
-                   .atTime(getStartOfLocalTimeBusinessHoursToUTC(resultDate.toLocalDate()));
+            return getFirstWorkingDayAtStartOfDay(resultDate);
         }
+
         return getDateTimeService().fromClientLocalDateTimeToUTCDateTime(resultDate);
     }
 
@@ -241,6 +252,23 @@ public class HolidayConfigurationService
             from = from.plusDays(1);
         }
         return count;
+    }
+
+    public LocalDateTime getStartOfNextDay(LocalDateTime date)
+    {
+        date = date.plusDays(1);
+        return getFirstWorkingDayAtStartOfDay(date);
+    }
+
+    private LocalDateTime getFirstWorkingDayAtStartOfDay(LocalDateTime resultDate)
+    {
+        resultDate = getFirstWorkingDay(resultDate);
+        return getStartofDay(resultDate);
+    }
+
+    private LocalDateTime getStartofDay(LocalDateTime date)
+    {
+        return date.toLocalDate().atTime(getStartOfLocalTimeBusinessHoursToUTC(date.toLocalDate()));
     }
 
     private static HolidayConfiguration getHolidayConfigurationFromProps(HolidayConfigurationProps props)
