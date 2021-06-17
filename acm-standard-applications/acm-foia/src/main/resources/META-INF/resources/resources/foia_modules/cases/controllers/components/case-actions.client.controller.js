@@ -49,6 +49,8 @@ angular.module('cases').controller(
                 var assignee = ObjectModelService.getAssignee(objectInfo);
                 $scope.assignee = assignee;
                 $scope.showBtnChildOutcomes = false;
+                $scope.createMatterInProgress = false;
+                $scope.creatingMatterIcon = "fa fa-gavel";
 
                 var assignee = ObjectModelService.getAssignee(objectInfo);
                 var promiseGetApprovers = CaseLookupService.getApprovers(group, assignee);
@@ -119,10 +121,12 @@ angular.module('cases').controller(
                 RequestZylabMatterService.createMatter(requestInfo.id).then(function (data) {
                     var createMatterResponse = data.data;
                     if (createMatterResponse.status === "CREATED") {
-                        $scope.objectInfo.externalIdentifier = createMatterResponse.zylabId;
                         MessageService.info($translate.instant("cases.comp.actions.createMatter.sucess"));
-                        $scope.openMatter($scope.objectInfo);
                         $scope.createMatterInProgress = false;
+                        $scope.openMatter(createMatterResponse.zylabId);
+                        if ($scope.objectInfo.caseNumber === createMatterResponse.matterName) {
+                            $scope.objectInfo.externalIdentifier = createMatterResponse.zylabId;
+                        }
                     } else if (createMatterResponse.status === "IN_PROGRESS") {
                         MessageService.info($translate.instant("cases.comp.actions.createMatter.inProgress"));
                     } else {
@@ -138,8 +142,8 @@ angular.module('cases').controller(
                 });
             };
 
-            $scope.openMatter = function (requestInfo) {
-                var openMatterPath = $scope.zylabIntegrationConfig["zylabIntegration.openMatterPath"].replace("{matterId}", requestInfo.externalIdentifier);
+            $scope.openMatter = function (matterId) {
+                var openMatterPath = $scope.zylabIntegrationConfig["zylabIntegration.openMatterPath"].replace("{matterId}", matterId);
                 var openMatterURL = $scope.zylabIntegrationConfig["zylabIntegration.url"] + openMatterPath;
 
                 window.open(openMatterURL, '_blank');

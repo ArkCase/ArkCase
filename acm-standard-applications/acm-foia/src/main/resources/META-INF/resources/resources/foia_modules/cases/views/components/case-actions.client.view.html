@@ -54,7 +54,7 @@
                 </button>
 
                 <button class="btn btn-sm btn-default" ng-if="documentReviewEnabled && objectInfo.externalIdentifier"
-                        ng-click="openMatter(objectInfo)" permission="buttonAction" permission-object-type="CASE_FILE"
+                        ng-click="openMatter(objectInfo.externalIdentifier)" permission="buttonAction" permission-object-type="CASE_FILE"
                         permission-properties="objectInfo" permission-action="hide">
                     <i class="fa fa-gavel"></i>
                     <span translate>cases.comp.actions.openMatter.button</span>
