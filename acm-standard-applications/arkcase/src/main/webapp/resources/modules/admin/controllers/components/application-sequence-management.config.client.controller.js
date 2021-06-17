@@ -1,8 +1,12 @@
 'use strict';
 
 angular.module('admin').controller('Admin.SequenceManagement',
-    ['$rootScope', '$scope', '$modal', 'Helper.UiGridService', 'MessageService', 'UtilService', 'Dialog.BootboxService', '$translate', 'Admin.SequenceManagementService', 'Object.LookupService'
-        , function ($rootScope, $scope, $modal, HelperUiGridService, MessageService, Util, DialogService, $translate, AdminSequenceManagementService, ObjectLookupService) {
+    ['$rootScope', '$scope', '$modal', 'Helper.UiGridService', 'MessageService', 'UtilService', 'Dialog.BootboxService', '$translate', 'Admin.SequenceManagementService', 'Object.LookupService', 'Admin.ApplicationSettingsService',
+        function ($rootScope, $scope, $modal, HelperUiGridService, MessageService, Util, DialogService, $translate, AdminSequenceManagementService, ObjectLookupService, ApplicationSettingsService) {
+
+        ApplicationSettingsService.getApplicationPropertiesConfig().then(function (response) {
+            $scope.sequenceInstructionUrl = response.data["application.properties.sequenceInstructionUrl"];
+        });
 
         var gridHelper = new HelperUiGridService.Grid({
             scope: $scope
