@@ -17,6 +17,7 @@
         </property>
         <property name="postSaveHandlers">
             <list value-type="com.armedia.acm.services.pipeline.handler.PipelineHandler">
+                <ref bean="caseFileDueDateHandler"/>
                 <ref bean="caseFileRulesHandler"/>
                 <ref bean="caseFileContainerHandler"/>
                 <ref bean="caseFileEcmFolderHandler"/>
@@ -72,5 +73,9 @@
 
     <bean id="caseFileUploadAttachmentsHandler" class="com.armedia.acm.plugins.casefile.pipeline.postsave.CaseFileUploadAttachmentsHandler">
         <property name="ecmFileService" ref="ecmFileService"/>
+    </bean>
+
+    <bean id="caseFileDueDateHandler" class="com.armedia.acm.plugins.casefile.pipeline.postsave.CaseFileDueDateHandler">
+        <property name="holidayConfigurationService" ref="holidayConfigurationService"/>
     </bean>
 </beans>
